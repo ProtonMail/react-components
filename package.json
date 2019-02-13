@@ -1,0 +1,26 @@
+{
+  "name": "react-components",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ProtonMail/react-components.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ProtonMail/react-components/issues"
+  },
+  "homepage": "https://github.com/ProtonMail/react-components#readme",
+  "dependencies": {
+    "dayjs": "^1.8.5",
+    "keycode": "^2.2.0",
+    "react": "^16.8.1",
+    "react-router-dom": "^4.3.1",
+    "ttag": "^1.7.0"
+  }
+}
