@@ -26,6 +26,7 @@
     "react": "^16.8.1",
     "react-router-dom": "^4.3.1",
     "ttag": "^1.7.0",
-    "proton-shared": "github:ProtonMail/proton-shared.git#master"
+    "proton-shared": "github:ProtonMail/proton-shared.git#master",
+    "design-system": "github:ProtonMail/design-system.git#master"
   }
 }
