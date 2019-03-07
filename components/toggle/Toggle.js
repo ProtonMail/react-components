@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { c } from 'ttag';
 
 import Input from '../input/Input';
-import Label from '../label/Label';
 import Icon from '../icon/Icon';
 
 const label = (type, key) => {
@@ -15,7 +14,7 @@ const label = (type, key) => {
     if (type === 'icon') {
         return (
             <span className="pm-toggle-label-text">
-                <Icon name={key} alt={I18N[key]} />
+                <Icon name={key} alt={I18N[key]} className="pm-toggle-label-img" />
             </span>
         );
     }
@@ -38,10 +37,10 @@ const Toggle = ({ id, checked, onChange, type }) => {
                 className="pm-toggle-checkbox"
                 onChange={() => onChange(value)}
             />
-            <Label htmlFor={id} className="pm-toggle-label" onClick={() => setValue(!value)}>
+            <label htmlFor={id} className="pm-toggle-label" onClick={() => setValue(!value)}>
                 {label(type, 'on')}
                 {label(type, 'off')}
-            </Label>
+            </label>
         </>
     );
 };
