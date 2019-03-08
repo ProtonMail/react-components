@@ -28,15 +28,16 @@ const Toggle = ({ id, checked, onChange }) => {
     useEffect(() => {
         setValue(checked);
     }, [checked]);
+
+    const handleChange = () => {
+        const newVal = !value;
+        setValue(newVal);
+        onChange(newVal);
+    };
+
     return (
         <>
-            <Input
-                type="checkbox"
-                id={id}
-                checked={value}
-                className="pm-toggle-checkbox"
-                onChange={() => (setValue(!value), onChange(value))}
-            />
+            <Input type="checkbox" id={id} checked={value} className="pm-toggle-checkbox" onChange={handleChange} />
             <label htmlFor={id} className="pm-toggle-label">
                 {label('on')}
                 {label('off')}
