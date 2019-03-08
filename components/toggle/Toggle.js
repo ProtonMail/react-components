@@ -54,7 +54,8 @@ Toggle.propTypes = {
 
 Toggle.defaultProps = {
     id: 'toggle',
-    type: 'text'
+    type: 'text',
+    checked: false
 };
 
 export default Toggle;
