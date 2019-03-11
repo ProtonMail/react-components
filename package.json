@@ -30,6 +30,7 @@
   },
   "homepage": "https://github.com/ProtonMail/react-components#readme",
   "dependencies": {
+    "design-system": "github:ProtonMail/design-system.git#master",
     "card-validator": "^6.1.0",
     "dayjs": "^1.8.5",
     "keycode": "^2.2.0",
@@ -54,7 +55,6 @@
     "react": "^16.8.1",
     "react-router-dom": "^4.3.1",
     "ttag": "^1.7.0",
-    "proton-shared": "github:ProtonMail/proton-shared.git#master",
-    "design-system": "github:ProtonMail/design-system.git#master"
+    "proton-shared": "github:ProtonMail/proton-shared.git#master"
   }
 }
