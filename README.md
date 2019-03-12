@@ -32,33 +32,45 @@ For webpack, it needs to be loaded with the `svg-inline-loader`. The rest of the
 ### useApi
 Get the `api` function to perform API calls.
 
-```const api = useApi();```
+```
+const api = useApi();
+```
 
 ### useApiResult
 Get parameters `loading`, `result`, `error`, `request` from the API call.
 
 It runs automatically depending on what dependencies are specified. If `[]` is given it's only run on mount. If no dependencies are given it's not run automatically.
 
+where `fn` is passed whatever arguments is passed from `request`, or nothing if run from a dependency change and should return a route config object.
 
-```const { loading, result, error, request } = useApiResult(routeConfig, [dependencies]);```
+```
+const { loading, result, error, request } = useApiResult(fn, [dependencies]);
+```
 
 ### useApiWithoutResult
 Get parameters `loading`, `request` from the API call.
 
 Does not run automatically. Intended for `POST`, `PUT` requests where a `loading` indicator is wanted.
 
+```
+const { loading, result, error, request } = useApiResult(fn);
+```
 
-```const { loading, result, error, request } = useApiResult(routeConfig, [dependencies]);```
+where `fn` is passed whatever arguments is passed from `request` and should return a route config object.
 
 ### useSrp
 Get the `srp` function to perform SRP calls.
 
-```const srp = useSrp();```
+```
+const srp = useSrp();
+```
 
 ### useAuthenticationStore
 Get the `authenticationStore`. Can be used to retrieve the `UID` or the `mailboxPassword`.  
 
-```const authenticationStore = useAuthentionStore();```
+```
+const authenticationStore = useAuthentionStore();
+```
 
 ### useNotifications
 Create notifications to be displayed in the app.
