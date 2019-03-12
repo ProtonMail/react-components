@@ -27,3 +27,73 @@ There is an SVG file that is inlined as-is from the design-system.
 
 For webpack, it needs to be loaded with the `svg-inline-loader`. The rest of the svg files should be loaded with the `file-loader`.
 
+## Hooks
+
+### useApi
+Get the `api` function to perform API calls.
+
+```const api = useApi();```
+
+### useApiResult
+Get parameters `loading`, `result`, `error`, `request` from the API call.
+
+It runs automatically depending on what dependencies are specified. If `[]` is given it's only run on mount. If no dependencies are given it's not run automatically.
+
+
+```const { loading, result, error, request } = useApiResult(routeConfig, [dependencies]);```
+
+### useApiWithoutResult
+Get parameters `loading`, `request` from the API call.
+
+Does not run automatically. Intended for `POST`, `PUT` requests where a `loading` indicator is wanted.
+
+
+```const { loading, result, error, request } = useApiResult(routeConfig, [dependencies]);```
+
+### useSrp
+Get the `srp` function to perform SRP calls.
+
+```const srp = useSrp();```
+
+### useAuthenticationStore
+Get the `authenticationStore`. Can be used to retrieve the `UID` or the `mailboxPassword`.  
+
+```const authenticationStore = useAuthentionStore();```
+
+### useNotifications
+Create notifications to be displayed in the app.
+
+```
+const { createNotification, removeNotification } = useNotifications();
+
+const handleClick = () => {
+    createNotification({ type: 'error', text: 'Failed to update' });
+}
+```
+
+### usePrompts
+Create a prompt. Intended to show a modal asking for user input. Returns a promise.
+
+```
+const { createPrompt } = usePrompts();
+
+const handleClick = async () => {
+    const password = await createPrompt((resolve, reject) => {
+        return <AskPasswordModal onClose={() => reject()} onSubmit={(value) => resolve(value)} />;
+    });
+    // use password
+};
+
+```
+
+### useAsync
+Get `loading`, `result`, `error` parameters from a promise.
+
+```
+const { loading, result, error, run } = useAsync();
+
+const handleClick = () => {
+    run(promise);
+};
+
+```
