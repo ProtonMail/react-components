@@ -30,7 +30,7 @@ For webpack, it needs to be loaded with the `svg-inline-loader`. The rest of the
 ## Hooks
 
 ### useApi
-Get the `api` function to perform API calls.
+Get the `api` function to perform API calls. In 99% of cases, `useApi` hook *should not be used* because calling the API should required to use at least the `loading` parameter to block the UI.
 
 ```
 const api = useApi();
@@ -66,7 +66,7 @@ const srp = useSrp();
 ```
 
 ### useAuthenticationStore
-Get the `authenticationStore`. Can be used to retrieve the `UID` or the `mailboxPassword`.  
+Get the `authenticationStore`. Can be used to retrieve the `UID` or the `mailboxPassword`.
 
 ```
 const authenticationStore = useAuthentionStore();
