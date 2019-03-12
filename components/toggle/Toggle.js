@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
 
-import Input from '../input/Input';
+import Checkbox from '../input/Checkbox';
 import Icon from '../icon/Icon';
 
 const label = (key) => {
@@ -20,24 +20,15 @@ const label = (key) => {
 
 const Toggle = ({ id, checked, onChange }) => {
     const [value, setValue] = useState(checked);
-
-    /*
-        If you change the checked from the outside -> ex update the prop outside
-        we update the local state with the new value.
-    */
-    useEffect(() => {
-        setValue(checked);
-    }, [checked]);
-
-    const handleChange = () => {
-        const newVal = !value;
+    const handleChange = ({ target }) => {
+        const newVal = target.checked;
         setValue(newVal);
         onChange(newVal);
     };
 
     return (
         <>
-            <Input type="checkbox" id={id} checked={value} className="pm-toggle-checkbox" onChange={handleChange} />
+            <Checkbox id={id} checked={value} className="pm-toggle-checkbox" onChange={handleChange} />
             <label htmlFor={id} className="pm-toggle-label">
                 {label('on')}
                 {label('off')}
@@ -48,14 +39,12 @@ const Toggle = ({ id, checked, onChange }) => {
 
 Toggle.propTypes = {
     id: PropTypes.string.isRequired,
-    type: PropTypes.string,
     checked: PropTypes.bool.isRequired,
     onChange: PropTypes.func.isRequired
 };
 
 Toggle.defaultProps = {
     id: 'toggle',
-    type: 'text',
     checked: false
 };
 
