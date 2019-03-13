@@ -58,13 +58,6 @@ const { loading, result, error, request } = useApiResult(fn);
 
 where `fn` is passed whatever arguments is passed from `request` and should return a route config object.
 
-### useSrp
-Get the `srp` function to perform SRP calls.
-
-```
-const srp = useSrp();
-```
-
 ### useAuthenticationStore
 Get the `authenticationStore`. Can be used to retrieve the `UID` or the `mailboxPassword`.
 
