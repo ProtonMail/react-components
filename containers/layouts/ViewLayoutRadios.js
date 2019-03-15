@@ -1,24 +1,45 @@
 import React from 'react';
 import { c } from 'ttag';
-import { Label, Radio } from 'react-components';
+import { RadioCard, useApiWithoutResult, useMailSettings, useEventManager } from 'react-components';
 import { updateViewLayout } from 'proton-shared/lib/api/mailSettings';
+import { VIEW_LAYOUT } from 'proton-shared/lib/constants';
 
-import useApi from '../../hooks/useApi';
+const { COLUMN, ROW } = VIEW_LAYOUT;
 
 const ViewLayoutRadios = () => {
-    const api = useApi();
-    const handleChange = (mode) => () => api(updateViewLayout(mode));
+    const { ViewLayout } = useMailSettings();
+    const { call } = useEventManager();
+    const { request, loading } = useApiWithoutResult(updateViewLayout);
+
+    const handleChange = (mode) => async () => {
+        await request(mode);
+        call();
+    };
 
     return (
         <>
-            <Label htmlFor="columnRadio">
-                <Radio id="columnRadio" name="viewLayout" onChange={handleChange(0)} />
-                {c('Label').t`Column`}
-            </Label>
-            <Label htmlFor="rowRadio">
-                <Radio id="rowRadio" name="viewLayout" onChange={handleChange(1)} />
-                {c('Label').t`Radio`}
-            </Label>
+            <RadioCard
+                value={COLUMN}
+                checked={ViewLayout === COLUMN}
+                id="columnRadio"
+                disabled={loading}
+                name="viewLayout"
+                label={c('Label to change view layout').t`Column`}
+                onChange={handleChange(COLUMN)}
+            >
+                <img alt="Popup" src="/assets/img/design-system-website/popup.png" />
+            </RadioCard>
+            <RadioCard
+                value={ROW}
+                checked={ViewLayout === ROW}
+                id="rowRadio"
+                disabled={loading}
+                name="viewLayout"
+                label={c('Label to change view layout').t`Row`}
+                onChange={handleChange(COLUMN)}
+            >
+                <img alt="Popup" src="/assets/img/design-system-website/popup.png" />
+            </RadioCard>
         </>
     );
 };
