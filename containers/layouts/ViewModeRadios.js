@@ -27,7 +27,7 @@ const ViewModeRadios = () => {
                 label={c('Label to change view mode').t`Conversation group`}
                 onChange={handleChange(GROUP)}
             >
-                <img alt="Group" src="null" />
+                <img alt="Group" src="todo" />
             </RadioCard>
             <RadioCard
                 value={SINGLE}
@@ -38,7 +38,7 @@ const ViewModeRadios = () => {
                 label={c('Label to change view mode').t`Single messages`}
                 onChange={handleChange(SINGLE)}
             >
-                <img alt="Single" src="null" />
+                <img alt="Single" src="todo" />
             </RadioCard>
         </>
     );

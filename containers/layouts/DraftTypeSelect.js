@@ -18,11 +18,7 @@ const DraftTypeSelect = () => {
         { text: c('Option').t`Plain Text`, value: 'text/plain' }
     ];
 
-    return (
-        <>
-            <Select value={DraftMIMEType} options={options} disabled={loading} onChange={handleChange} />
-        </>
-    );
+    return <Select value={DraftMIMEType} options={options} disabled={loading} onChange={handleChange} />;
 };
 
 export default DraftTypeSelect;
