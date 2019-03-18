@@ -27,7 +27,7 @@ const ViewLayoutRadios = () => {
                 label={c('Label to change view layout').t`Column`}
                 onChange={handleChange(COLUMN)}
             >
-                <img alt="Column" src="todo" />
+                <img alt="Column" src="design-system-website/assets/img/pm-images/inbox-colum.svg" />
             </RadioCard>
             <RadioCard
                 value={ROW}
@@ -38,7 +38,7 @@ const ViewLayoutRadios = () => {
                 label={c('Label to change view layout').t`Row`}
                 onChange={handleChange(ROW)}
             >
-                <img alt="Row" src="todo" />
+                <img alt="Row" src="design-system-website/assets/img/pm-images/inbox-row.svg" />
             </RadioCard>
         </>
     );
