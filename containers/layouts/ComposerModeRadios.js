@@ -27,7 +27,7 @@ const ComposerModeRadios = () => {
                 label={c('Label to change composer mode').t`Popup`}
                 onChange={handleChange(POPUP)}
             >
-                <img alt="Popup" src="design-system-website/assets/img/pm-images/composer-popup.svg" />
+                <img alt="Popup" src="design-system/assets/img/pm-images/composer-popup.svg" />
             </RadioCard>
             <RadioCard
                 value={MAXIMIZED}
@@ -38,7 +38,7 @@ const ComposerModeRadios = () => {
                 label={c('Label to change composer mode').t`Maximized`}
                 onChange={handleChange(MAXIMIZED)}
             >
-                <img alt="Maximized" src="design-system-website/assets/img/pm-images/composer-maximized.svg" />
+                <img alt="Maximized" src="design-system/assets/img/pm-images/composer-maximized.svg" />
             </RadioCard>
         </>
     );
