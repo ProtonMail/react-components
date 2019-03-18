@@ -1,20 +1,24 @@
 import React from 'react';
 import { c } from 'ttag';
-import { Select } from 'react-components';
+import { Select, useApiWithoutResult, useMailSettings, useEventManager } from 'react-components';
 import { updateRightToLeft } from 'proton-shared/lib/api/mailSettings';
 
-import useApi from '../../hooks/useApi';
-
 const TextDirectionSelect = () => {
-    const api = useApi();
-    const handleChange = (event) => api(updateRightToLeft(event.target.value));
+    const { RightToLeft } = useMailSettings();
+    const { call } = useEventManager();
+    const { request, loading } = useApiWithoutResult(updateRightToLeft);
+
+    const handleChange = ({ target }) => async () => {
+        await request(target.value);
+        call();
+    };
 
     const options = [
         { text: c('Option').t`Left to Right`, value: 0 },
         { text: c('Option').t`Right to Left`, value: 1 }
     ];
 
-    return <Select options={options} onChange={handleChange} />;
+    return <Select value={RightToLeft} options={options} disabled={loading} onChange={handleChange} />;
 };
 
 export default TextDirectionSelect;
