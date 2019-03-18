@@ -1,17 +1,21 @@
 import React from 'react';
 import { c } from 'ttag';
-import { Select } from 'react-components';
+import { Select, useApiWithoutResult, useMailSettings, useEventManager } from 'react-components';
 import { updateShowMoved } from 'proton-shared/lib/api/mailSettings';
 
-import useApi from '../../hooks/useApi';
-
 const ShowMovedSelect = () => {
-    const api = useApi();
-    const handleChange = (event) => api(updateShowMoved(event.target.value));
+    const { ShowMoved } = useMailSettings();
+    const { call } = useEventManager();
+    const { request, loading } = useApiWithoutResult(updateShowMoved);
+
+    const handleChange = ({ target }) => async () => {
+        await request(target.value);
+        call();
+    };
 
     const options = [{ text: c('Option').t`Include Moved`, value: 3 }, { text: c('Option').t`Hide Moved`, value: 0 }];
 
-    return <Select options={options} onChange={handleChange} />;
+    return <Select value={ShowMoved} options={options} disabled={loading} onChange={handleChange} />;
 };
 
 export default ShowMovedSelect;
