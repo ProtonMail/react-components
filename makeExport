@@ -10,29 +10,72 @@ const ucFirst = (input) => {
 };
 
 const NO_EXPORT_FILES = [
-    'manager', 'index', 'reducer', 'actions',
+    'manager', 'reducer', 'actions',
     'AddressStatus', 'countries', 'cardValidator'
 ];
 
+const list = [
+    {
+        name: 'Dropdown',
+        newName: 'From DropdownX to XDropdown'
+    },
+    {
+        name: 'Href',
+        newName: 'Link'
+    },
+    {
+        name: 'AddressModal - EditAddressModal - UseAddressModal',
+        newName: 'AddressesModal - EditAddressesModal - UseAddressesModal'
+    },
+    {
+        name: 'AddressActions - AddressStatus - AddressesDomainsSelect',
+        newName: 'AddressesActions - AddressesStatus - AddressesDomainsSelect'
+    },
+    {
+        name: '* domains and * domain',
+        newName: '----'
+    },
+    {
+        name: '* invoices modals',
+        newName: '----'
+    }
+];
+
+console.log('Renamed', JSON.stringify(list, null, 2))
+
 async function main() {
-    const { stdout } = await bash("find {components,containers,context,helpers,hooks} -type f -name '*.js'");
+    const { stdout } = await bash("find {Components,Containers,context,helpers,hooks} -type f -name '*.js'");
 
-    const getExport = ({ fileName, dir, filePath }) => {
-        if (/context$/.test(dir)) {
-            return `${ucFirst(fileName)}Context`;
+    const getExport = ({ fileName, dir, filePath }, mode) => {
+
+        const type = path.basename(dir);
+
+
+        if (mode === 'containers' && type === 'modal') {
+            const component = path.basename(path.resolve(dir, '..'));
+
+            if (fileName === 'index') {
+                return `${ucFirst(component)}Modal`;
+            }
+
+            return `${ucFirst(component)}${ucFirst(fileName)}Modal`;
         }
 
-        // Do not change the userX or Main module
-        if (/modal$/.test(dir) && !fileName.startsWith('use') && fileName !== 'Modal') {
-            return `${ucFirst(fileName)}Modal`;
+        // Custom Case
+        if (fileName === 'SubTitle' || type === 'container') {
+            return ucFirst(fileName);
         }
 
-        if (fileName === 'Provider' || fileName === 'Container') {
-            console.log(`⚠ Broken name for ${filePath} you need to change it`);
-            const type = path.basename(dir);
-            return `${ucFirst(type)}${fileName}`;
+        // index === main module
+        if (fileName === 'index' ) {
+            return ucFirst(type);
         }
-        return fileName;
+
+        if (fileName.startsWith('use')) {
+            return fileName;
+        }
+
+        return `${ucFirst(type)}${ucFirst(fileName)}`;
     };
 
     const getConfig = (file) => {
@@ -65,17 +108,19 @@ async function main() {
         return isExportable && !/(\.test|Model)$/.test(fileName)
     };
 
-    const makeExport = (config) => {
-        return `export { default as ${getExport(config)} } from './${config.filePath}';`;
+    const makeExport = (config, mode) => {
+        return `export { default as ${getExport(config, mode)} } from './${config.filePath}';`;
     };
 
     const content = stdout
         .split('\n')
         .reduce((acc, file) => {
+
+            const [type = ''] = file.split(path.sep)
             const config = getConfig(file);
 
             if (isExportable(config)) {
-                acc.push(makeExport(config));
+                acc.push(makeExport(config, type.toLowerCase()));
             }
             return acc;
         }, [])

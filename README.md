@@ -102,3 +102,72 @@ const handleClick = () => {
 };
 
 ```
+
+
+## How to write components ?
+
+### A new component
+
+Let's create the component **fire**, with 3 flavors, we will have
+- Fire
+- RedFire
+- BlueFire
+- GreenFire
+
+1. Let's create the dir `./components/fire`
+2. Create the main component `index.js` (_it will be exported as_ `Fire`)
+3. Create flavors, `{green,red,blue}.js`
+4. :tada:
+
+Now when we will export them, it will create 4 exports:
+- Fire -> index.js as it's the main component
+- RedFire -> red.js as it's a flavor
+- BlueFire -> blue.js as it's a flavor
+- GreenFire -> greem.js as it's a flavor
+
+ex:
+`import { RedFire } from 'react-components';`
+
+### A new component
+
+### Fresh one
+
+Let's create the component **fire**
+- Fire
+
+1. Let's create the dir `./components/fire`
+2. Create the main component `index.js` (_it will be exported as_ `Fire`)
+3. :tada:
+
+Now when we will export them, it will create 1 export:
+- Fire -> index.js as it's the main component
+
+ex:
+`import { Fire } from 'react-components';`
+
+
+### From an existing one
+
+Let's add a new flavor of an existing component, **button**
+
+1. Let's open the dir `./components/button`
+2. Create the main component `success.js` 
+3. :tada:
+
+
+Now when we will export them, it will create 1 more export:
+- SuccessButton -> success.js as it's a flavor
+
+ex:
+`import { SuccessButton } from 'react-components';`
+
+
+### TL;DR
+
+`<componentName>/index.js` => `export { default as ComponentName }`
+`<componentName>/<flavor>.js` => `export { default as FlavorComponentName }`
+
+ex:
+
+`button/index.js` => `export { default as Button }`
+`button/small.js` => `export { default as SmallButton }`
