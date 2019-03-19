@@ -6,7 +6,7 @@ import { RadioCard, Href } from 'react-components';
 const ThemeCard = ({ checked, theme, onChange, disabled }) => {
     return (
         <RadioCard
-            label={c('Theme label').t`theme.label`}
+            label={c('Theme label').t`${theme.label}`}
             name="themeCard"
             id={theme.id}
             value={theme.value}
