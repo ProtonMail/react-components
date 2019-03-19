@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha -r esm 'test/**/*.spec.js'",
+    "export": "./makeExport",
     "lint": "eslint containers components --ext .js --quiet --cache",
     "pretty": "prettier --write $(find lib -type f -name '*.js')"
   },
