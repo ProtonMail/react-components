@@ -3,6 +3,8 @@ import { c } from 'ttag';
 import { RadioCard, useApiWithoutResult, useMailSettings, useEventManager } from 'react-components';
 import { updateViewMode } from 'proton-shared/lib/api/mailSettings';
 import { VIEW_MODE } from 'proton-shared/lib/constants';
+import { conversationGroupSvg } from 'design-system/assets/img/pm-images/conversation-group.svg';
+import { conversationSingleSvg } from 'design-system/assets/img/pm-images/conversation-single.svg';
 
 const { GROUP, SINGLE } = VIEW_MODE;
 
@@ -27,7 +29,7 @@ const ViewModeRadios = () => {
                 label={c('Label to change view mode').t`Conversation group`}
                 onChange={handleChange(GROUP)}
             >
-                <img alt="Group" src="assets/img/pm-images/conversation-group.svg" />
+                <img alt="Group" src={conversationGroupSvg} />
             </RadioCard>
             <RadioCard
                 value={SINGLE}
@@ -38,7 +40,7 @@ const ViewModeRadios = () => {
                 label={c('Label to change view mode').t`Single messages`}
                 onChange={handleChange(SINGLE)}
             >
-                <img alt="Single" src="assets/img/pm-images/conversation-single.svg" />
+                <img alt="Single" src={conversationSingleSvg} />
             </RadioCard>
         </>
     );

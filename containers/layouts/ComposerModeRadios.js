@@ -3,6 +3,8 @@ import { c } from 'ttag';
 import { RadioCard, useApiWithoutResult, useMailSettings, useEventManager } from 'react-components';
 import { updateComposerMode } from 'proton-shared/lib/api/mailSettings';
 import { COMPOSER_MODE } from 'proton-shared/lib/constants';
+import { composerPopUpSvg } from 'design-system/assets/img/design-system-website/popup.png';
+import { composerMaximizedSvg } from 'design-system/assets/img/design-system-website/popup.png';
 
 const { POPUP, MAXIMIZED } = COMPOSER_MODE;
 
@@ -27,7 +29,7 @@ const ComposerModeRadios = () => {
                 label={c('Label to change composer mode').t`Popup`}
                 onChange={handleChange(POPUP)}
             >
-                <img alt="Popup" src="assets/img/pm-images/composer-popup.svg" />
+                <img alt="Popup" src={composerPopUpSvg} />
             </RadioCard>
             <RadioCard
                 value={MAXIMIZED}
@@ -38,7 +40,7 @@ const ComposerModeRadios = () => {
                 label={c('Label to change composer mode').t`Maximized`}
                 onChange={handleChange(MAXIMIZED)}
             >
-                <img alt="Maximized" src="assets/img/pm-images/composer-maximized.svg" />
+                <img alt="Maximized" src={composerMaximizedSvg} />
             </RadioCard>
         </>
     );
