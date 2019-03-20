@@ -38,6 +38,10 @@ const list = [
     {
         name: '* invoices modals',
         newName: '----'
+    },
+    {
+        name: 'SessionAction',
+        newName: 'SessionsAction'
     }
 ];
 
@@ -95,6 +99,10 @@ async function main() {
                 console.log(`⚠ Broken name for ${filePath} you need to change it`);
                 return false;
             }
+        }
+
+        if(['layouts'].includes(dir)) {
+            return false;
         }
 
         // export only useX
