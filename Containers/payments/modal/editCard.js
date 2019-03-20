@@ -12,9 +12,9 @@ import {
 } from 'react-components';
 import { setPaymentMethod } from 'proton-shared/lib/api/payments';
 
-import Card from './Card';
-import useCard from './useCard';
-import toDetails from './toDetails';
+import Card from '../index';
+import useCard from '../useCard';
+import toDetails from '../toDetails';
 
 const EditCardModal = ({ card: existingCard, show, onClose, onChange }) => {
     const { loading, request } = useApiWithoutResult(setPaymentMethod);

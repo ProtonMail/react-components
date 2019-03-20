@@ -3,8 +3,8 @@ import renderer from 'react-test-renderer';
 import Enzyme, { shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 
-import Dropdown from './Dropdown';
-import Button from '../button/Button';
+import Dropdown from './index';
+import Button from '../button/index';
 
 const myDropdown = () => {
     return (

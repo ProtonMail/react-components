@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { getClasses } from '../../helpers/component';
-import Loader from '../loader/Loader';
+import Loader from '../loader';
 
 const Content = ({ children, loading, className, onSubmit, onReset, autoComplete, ...rest }) => {
     if (loading) {

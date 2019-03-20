@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 
-import Button from '../button/Button';
-import Icon from '../icon/Icon';
+import Button from '../button';
+import Icon from '../icon';
 import { getClasses } from '../../helpers/component';
 
 const DropdownItem = ({ type, link, text, iconName, className, onClick, disabled }) => {

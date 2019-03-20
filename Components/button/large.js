@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { getClasses } from '../../helpers/component';
 
-import Button from './Button';
+import Button from './index';
 
 const LargeButton = ({ children, className, ...rest }) => {
     return (

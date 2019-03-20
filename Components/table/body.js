@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import TableRowBusy from './TableRowBusy';
+import TableRowBusy from './rowBusy';
 
 const TableBody = ({ children, loading, colSpan, ...rest }) => {
     return <tbody {...rest}>{loading ? <TableRowBusy colSpan={colSpan} /> : children}</tbody>;

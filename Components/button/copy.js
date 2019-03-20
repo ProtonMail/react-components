@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { c } from 'ttag';
 
 import { textToClipboard } from 'proton-shared/lib/helpers/browser';
-import Button from './Button';
-import Icon from '../icon/Icon';
+import Button from './index';
+import Icon from '../icon';
 import { getClasses } from '../../helpers/component';
 
 const Copy = ({ className }) => {

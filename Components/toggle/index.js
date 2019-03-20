@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { c } from 'ttag';
 
 import Checkbox from '../input/Checkbox';
-import Icon from '../icon/Icon';
+import Icon from '../icon/index';
 
 const label = (key) => {
     const I18N = {

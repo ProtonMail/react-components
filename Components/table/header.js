@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import TableCell from './TableCell';
+import TableCell from './cell';
 
 const TableHeader = ({ cells, ...rest }) => {
     return (

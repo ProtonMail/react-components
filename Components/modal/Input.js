@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import { ResetButton, PrimaryButton, Input, Label, Row } from 'react-components';
 
-import Modal from './Modal';
+import Modal from './index';
 import Footer from './Footer';
 import Content from './Content';
 import { generateUID } from '../../helpers/component';

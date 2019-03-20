@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Button from './Button';
+import Button from './index';
 import { getClasses } from '../../helpers/component';
 
 const ButtonGroup = ({ children, className, ...rest }) => (

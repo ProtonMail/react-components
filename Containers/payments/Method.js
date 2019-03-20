@@ -5,7 +5,7 @@ import { queryPaymentMethods } from 'proton-shared/lib/api/payments';
 
 import Card from './Card';
 import useCard from './useCard';
-import PaymentMethodDetails from '../paymentMethods/PaymentMethodDetails';
+import PaymentMethodDetails from '../paymentMethods/details';
 import PayPal from './PayPal';
 import Cash from './Cash';
 import Bitcoin from './Bitcoin';

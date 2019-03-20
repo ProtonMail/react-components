@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Href from './Href';
-import Icon from '../icon/Icon';
-import Tooltip from '../tooltip/Tooltip';
+import Href from './href';
+import Icon from '../icon';
+import Tooltip from '../tooltip';
 
 const wrapTooltip = (children, title) => <Tooltip title={title}>{children}</Tooltip>;
 const wrapLink = (children, url) => <Href url={url}>{children}</Href>;

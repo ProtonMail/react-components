@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { t } from 'ttag';
 
-import Button from '../button/Button';
+import Button from '../button';
 import { getClasses } from '../../helpers/component';
 
 const Header = ({ children, modalTitleID, className, hasClose, onClose, ...rest }) => {

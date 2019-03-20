@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import DropdownItem from './DropdownItem';
+import DropdownItem from './item';
 
 const DropdownMenu = ({ list }) => {
     return (

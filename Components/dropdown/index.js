@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import keycode from 'keycode';
 
-import Button from '../button/Button';
+import Button from '../button';
 
 const Dropdown = ({ isOpen, children, className, content, autoClose, autoCloseOutside }) => {
     const [open, setOpen] = useState(isOpen);

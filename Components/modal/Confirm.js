@@ -2,8 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
 
-import { ResetButton, PrimaryButton } from '../button';
-import Modal from './Modal';
+import ResetButton from '../button/reset';
+import PrimaryButton from '../button/primary';
+import Modal from './index';
 import Footer from './Footer';
 import Content from './Content';
 

@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { ButtonGroup, Group } from '../button';
-import { Dropdown, DropdownMenu } from '../dropdown';
-import Icon from '../icon/Icon';
+import ButtonGroup from '../button/group';
+import Group from '../container/Group';
+import DropdownMenu from '../dropdown/menu';
+import Dropdown from '../dropdown';
+import Icon from '../icon';
 
 const Pagination = ({ onNext, onPrevious, onSelect, page, total, limit }) => {
     if (!total) {

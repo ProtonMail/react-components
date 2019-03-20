@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 
-import Button from '../button/Button';
-import Icon from '../icon/Icon';
+import Button from '../button/index';
+import Icon from '../icon/index';
 import NavMenu from './NavMenu';
 
 const NavItem = ({ type, link, text, onClick, iconName, list }) => {

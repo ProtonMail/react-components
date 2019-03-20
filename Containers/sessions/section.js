@@ -21,7 +21,7 @@ import useApi from '../../hooks/useApi';
 import { querySessions, revokeOtherSessions, revokeSession } from 'proton-shared/lib/api/auth';
 import { ELEMENTS_PER_PAGE } from 'proton-shared/lib/constants';
 
-import SessionAction from './SessionAction';
+import SessionAction from './action';
 import useAuthenticationStore from '../../hooks/useAuthenticationStore';
 
 const CLIENTS = {
