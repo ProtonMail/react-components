@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { RadioCard, Href } from 'react-components';
+import { RadioCard } from 'react-components';
 
 const ThemeCard = ({ checked, themeObject, onChange, disabled }) => {
     return (
@@ -15,16 +15,6 @@ const ThemeCard = ({ checked, themeObject, onChange, disabled }) => {
             disabled={disabled}
         >
             <img alt={themeObject.alt} src={themeObject.src} />
-            <br />
-            <br />
-            <div className="flex flex-spacebetween">
-                <div>
-                    <Href url={themeObject.previewURL}>{c('Preview theme').t`Preview`}</Href>
-                </div>
-                <div>
-                    <Href url={themeObject.deleteURL}>{c('Delete theme').t`Delete`}</Href>
-                </div>
-            </div>
         </RadioCard>
     );
 };

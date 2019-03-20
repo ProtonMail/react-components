@@ -9,9 +9,7 @@ export const themeDark = {
     id: 'dark',
     value: 'todo',
     alt: 'theme-dark',
-    src: themeDarkSvg,
-    previewURL: 'todo',
-    deleteURL: 'todo'
+    src: themeDarkSvg
 };
 
 export const themeLight = {
@@ -19,9 +17,7 @@ export const themeLight = {
     id: 'light',
     value: 'todo',
     alt: 'theme-light',
-    src: themeLightSvg,
-    previewURL: 'todo',
-    deleteURL: 'todo'
+    src: themeLightSvg
 };
 
 export const themeBlue = {
@@ -29,9 +25,7 @@ export const themeBlue = {
     id: 'blue',
     value: 'todo',
     alt: 'theme-blue',
-    src: themeBlueSvg,
-    previewURL: 'todo',
-    deleteURL: 'todo'
+    src: themeBlueSvg
 };
 
 export const themeCompany = {
@@ -39,9 +33,7 @@ export const themeCompany = {
     id: 'company',
     value: 'todo',
     alt: 'theme-company',
-    src: themeCompanySvg,
-    previewURL: 'todo',
-    deleteURL: 'todo'
+    src: themeCompanySvg
 };
 
 export const themeTest = {
@@ -49,7 +41,5 @@ export const themeTest = {
     id: 'test',
     value: 'todo',
     alt: 'theme-custom',
-    src: themeTestSvg,
-    previewURL: 'todo',
-    deleteURL: 'todo'
+    src: themeTestSvg
 };
