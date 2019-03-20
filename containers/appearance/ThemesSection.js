@@ -1,24 +1,10 @@
 import React from 'react';
 import { c } from 'ttag';
-import { SubTitle, Alert, ThemeCard } from 'react-components';
+import { SubTitle, Alert } from 'react-components';
+import { DisplayThemes } from './DisplayThemes';
+import { themeDark, themeLight, themeBlue, themeCompany, themeTest } from './availableThemes.js';
 
-const themeDark = {
-    label: 'Dark (Default)',
-    id: 'dark',
-    value: 'todo',
-    alt: 'theme-dark',
-    src: 'assets/img/theme-dark.svg',
-    previewURL: 'todo'
-};
-
-const themeLight = {
-    label: 'Light ',
-    id: 'light',
-    value: 'todo',
-    alt: 'theme-light',
-    src: 'assets/img/theme-light.svg',
-    previewURL: 'todo'
-};
+const availableThemes = [themeDark, themeLight, themeBlue, themeCompany, themeTest];
 
 const ThemesSection = () => {
     const dummyText =
@@ -27,9 +13,9 @@ const ThemesSection = () => {
     return (
         <>
             <SubTitle>{c('Title').t`Themes`}</SubTitle>
-            <Alert learnMore="someURL">{c('Info').t`${dummyText}`}</Alert>
-            <ThemeCard checked={true} theme={themeDark} />
-            <ThemeCard checked={true} theme={themeLight} />
+            <Alert learnMore="todo">{c('Info').t`${dummyText}`}</Alert>
+            <br />
+            <DisplayThemes themeObjects={availableThemes} />
         </>
     );
 };

@@ -3,27 +3,34 @@ import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import { RadioCard, Href } from 'react-components';
 
-const ThemeCard = ({ checked, theme, onChange, disabled }) => {
+const ThemeCard = ({ checked, themeObject, onChange, disabled }) => {
     return (
         <RadioCard
-            label={c('Theme label').t`${theme.label}`}
+            label={c('Theme label').t`${themeObject.label}`}
             name="themeCard"
-            id={theme.id}
-            value={theme.value}
+            id={themeObject.id}
+            value={themeObject.value}
             checked={checked}
             onChange={onChange}
             disabled={disabled}
         >
-            <img alt={theme.alt} src={theme.src} />
+            <img alt={themeObject.alt} src={themeObject.src} />
             <br />
             <br />
-            <Href url={theme.previewURL}>{c('Preview theme').t`Preview`}</Href>
+            <div className="flex flex-spacebetween">
+                <div>
+                    <Href url={themeObject.previewURL}>{c('Preview theme').t`Preview`}</Href>
+                </div>
+                <div>
+                    <Href url={themeObject.deleteURL}>{c('Delete theme').t`Delete`}</Href>
+                </div>
+            </div>
         </RadioCard>
     );
 };
 
 ThemeCard.propTypes = {
-    theme: PropTypes.object,
+    themeObject: PropTypes.object,
     checked: PropTypes.bool,
     disabled: PropTypes.bool,
     onChange: PropTypes.func.isRequired
