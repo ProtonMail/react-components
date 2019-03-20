@@ -1,7 +1,8 @@
 {
   "plugins": [
     "react",
-    "react-hooks"
+    "react-hooks",
+    "import"
   ],
   "parserOptions": {
     "ecmaVersion": 2018,
@@ -20,7 +21,18 @@
   "settings": {
     "react": {
       "version": "detect"
-    }
+    },
+    "import/core-modules": [
+        "ttag",
+        "react-components",
+        "react-router-dom",
+        "react-redux",
+        "react-test-renderer",
+        "enzyme",
+        "enzyme-adapter-react-16",
+        "proton-shared",
+        "proton-shared/*"
+    ]
   },
   "extends": [
     "eslint:recommended",
@@ -29,6 +41,11 @@
   "rules": {
     "react/display-name": "off",
     "react/prop-types": "warn",
-    "react-hooks/rules-of-hooks": "error"
+    "react-hooks/rules-of-hooks": "error",
+    "import/no-unresolved": [2, {"commonjs": true, "amd": true, "ignore": ["proton-shared"]}],
+    "import/named": 2,
+    "import/namespace": 2,
+    "import/default": 2,
+    "import/export": 2
   }
 }
