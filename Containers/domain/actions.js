@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import { Alert, SmallButton, ConfirmModal, useModal, useApiWithoutResult, useNotifications } from 'react-components';
 import { deleteDomain } from 'proton-shared/lib/api/domains';
 
-import DomainModal from './DomainModal';
-import CatchAllModal from './CatchAllModal';
+import DomainModal from './modal';
+import CatchAllModal from './modal/catchAll';
 
 const DomainActions = ({ domain }) => {
     const { request, loading } = useApiWithoutResult(deleteDomain);

@@ -26,6 +26,7 @@
         "ttag",
         "react-components",
         "react-router-dom",
+        "react-router",
         "react-redux",
         "react-test-renderer",
         "enzyme",

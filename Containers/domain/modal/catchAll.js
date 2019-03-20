@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import { Modal, ContentModal, FooterModal, ResetButton } from 'react-components';
 
-import AddressesTable from './AddressesTable';
+import AddressesTable from '../AddressesTable';
 
 const CatchAllModal = ({ domain, show, onClose }) => {
     return (

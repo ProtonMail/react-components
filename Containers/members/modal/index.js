@@ -18,9 +18,9 @@ import {
     useEventManager
 } from 'react-components';
 
-import MemberStorageSelector from './MemberStorageSelector';
-import MemberVPNSelector from './MemberVPNSelector';
-import useMemberModal from './useMemberModal';
+import MemberStorageSelector from '../storageSelector';
+import MemberVPNSelector from '../VPNSelector';
+import useMemberModal from '../useMemberModal';
 
 const MemberModal = ({ show, onClose, organization, domains }) => {
     const { createNotification } = useNotifications();

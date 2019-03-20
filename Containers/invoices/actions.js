@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { INVOICE_STATE } from 'proton-shared/lib/constants';
 
-import DownloadInvoiceButton from './DownloadInvoiceButton';
-import PayButton from './PayButton';
+import DownloadInvoiceButton from './downloadButton';
+import PayButton from './payButton';
 
 const InvoiceActions = ({ invoice, fetchInvoices }) => {
     return (

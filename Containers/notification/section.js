@@ -2,11 +2,11 @@ import React from 'react';
 import { c } from 'ttag';
 import { SubTitle, Label, Row, Info } from 'react-components';
 
-import PasswordResetToggle from './PasswordResetToggle';
-import DailyNotificationsToggle from './DailyNotificationsToggle';
-import DesktopNotificationPanel from './DesktopNotificationPanel';
+import PasswordResetToggle from '../password/resetToggle';
+import DailyNotificationsToggle from './DailyToggle';
+import DesktopNotificationPanel from './DesktopPanel';
 import NewsCheckboxes from './NewsCheckboxes';
-import RecoveryEmailButton from './RecoveryEmailButton';
+import RecoveryEmailButton from '../password/RecoveryEmailButton';
 
 const NotificationSection = () => {
     return (

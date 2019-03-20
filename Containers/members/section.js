@@ -7,12 +7,12 @@ import { Link } from 'react-router-dom';
 import { fetchMembers } from 'proton-shared/lib/state/members/actions';
 import { normalize } from 'proton-shared/lib/helpers/string';
 
-import MemberActions from './MemberActions';
-import MemberAddresses from './MemberAddresses';
-import AddMemberButton from './AddMemberButton';
-import MemberOptions from './MemberOptions';
-import MemberRole from './MemberRole';
-import MemberPrivate from './MemberPrivate';
+import MemberActions from './actions';
+import MemberAddresses from './addresses';
+import AddMemberButton from './addButton';
+import MemberOptions from './options';
+import MemberRole from './role';
+import MemberPrivate from './private';
 
 const MembersSection = ({ organization, members, fetchMembers }) => {
     const [keywords, setKeywords] = useState('');

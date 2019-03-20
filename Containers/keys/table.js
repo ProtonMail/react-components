@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import { Table, TableHeader, TableBody } from 'react-components';
 
-import KeysRow from './KeysRow';
-import KeysActions from './KeysActions';
-import KeysStatus from './KeysStatus';
+import KeysRow from './row';
+import KeysActions from './actions';
+import KeysStatus from './status';
 
 const KeysTable = ({
     email,

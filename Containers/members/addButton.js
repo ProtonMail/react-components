@@ -6,7 +6,7 @@ import { PrimaryButton, useModal, useNotifications } from 'react-components';
 import { fetchDomains } from 'proton-shared/lib/state/domains/actions';
 import { DOMAIN_STATE } from 'proton-shared/lib/constants';
 
-import MemberModal from './MemberModal';
+import MemberModal from './modal';
 
 const { DOMAIN_STATE_ACTIVE } = DOMAIN_STATE;
 

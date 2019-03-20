@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import AddressKeysHeader from './AddressKeysHeader';
-import ContactKeysHeader from './ContactKeysHeader';
-import AddressKeysTable from './AddressKeysTable';
+import AddressKeysHeader from './addressHeader';
+import ContactKeysHeader from './contactHeader';
+import AddressKeysTable from './addressTable';
 import { getAddressesKeys, getUserAddressKeys } from './AddressKeysSectionModel';
 
 const AddressKeysSection = ({ userModel, addressesModel, keysModel }) => {

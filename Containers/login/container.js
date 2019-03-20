@@ -4,7 +4,7 @@ import { c } from 'ttag';
 import { SubTitle, useNotifications } from 'react-components';
 import { FORM } from 'proton-shared/lib/authentication/loginReducer';
 
-import LoginForm from './LoginForm';
+import LoginForm from './form';
 import TOTPForm from './TOTPForm';
 import UnlockForm from './UnlockForm';
 import useLogin from './useLogin';

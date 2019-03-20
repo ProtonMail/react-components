@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import { Table, TableHeader, TableBody } from 'react-components';
 
-import KeysTable from './KeysTable';
-import AddressKeysRow from './AddressKeysRow';
+import KeysTable from './table';
+import AddressKeysRow from './addressRow';
 
 const AddressKeysTable = ({
     addressKeys,

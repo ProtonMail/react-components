@@ -5,9 +5,9 @@ import PropTypes from 'prop-types';
 import { Table, TableHeader, TableBody, TableRow, Alert } from 'react-components';
 import { fetchMembers } from 'proton-shared/lib/state/members/actions';
 
-import DomainStatus from './DomainStatus';
-import DomainActions from './DomainActions';
-import DomainName from './DomainName';
+import DomainStatus from '../domain/status';
+import DomainActions from '../domain/actions';
+import DomainName from '../domain/name';
 
 const DomainsTable = ({ domains, loading, fetchMembers }) => {
     useEffect(() => {

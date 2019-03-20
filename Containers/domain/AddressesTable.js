@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Table, TableHeader, TableBody, TableRow, Info } from 'react-components';
 
-import AddressStatus from './AddressStatus';
-import AddressCatchAll from './AddressCatchAll';
+import AddressStatus from '../domain/AddressStatus';
+import AddressCatchAll from '../domain/AddressCatchAll';
 
 const AddressesTable = ({ domain, members }) => {
     const getMemberName = (memberID) => {

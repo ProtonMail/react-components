@@ -20,11 +20,11 @@ import { queryInvoices } from 'proton-shared/lib/api/payments';
 import { ELEMENTS_PER_PAGE, INVOICE_OWNER, INVOICE_STATE } from 'proton-shared/lib/constants';
 
 import useApiResult from '../../hooks/useApiResult';
-import InvoiceAmount from './InvoiceAmount';
-import InvoiceType from './InvoiceType';
-import InvoiceState from './InvoiceState';
-import InvoiceActions from './InvoiceActions';
-import InvoiceTextModal from './InvoiceTextModal';
+import InvoiceAmount from './amount';
+import InvoiceType from './type';
+import InvoiceState from './state';
+import InvoiceActions from './actions';
+import InvoiceTextModal from './modal/text';
 
 const InvoicesSection = () => {
     const { ORGANIZATION, USER } = INVOICE_OWNER;

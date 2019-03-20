@@ -19,8 +19,8 @@ import downloadFile from 'proton-shared/lib/helpers/downloadFile';
 import { ELEMENTS_PER_PAGE, LOGS_STATE } from 'proton-shared/lib/constants';
 import useApi from '../../hooks/useApi';
 
-import LogsTable from './LogsTable';
-import WipeLogsButton from './WipeLogsButton';
+import LogsTable from './table';
+import WipeLogsButton from './wipeButton';
 
 const EVENTS = {
     0: c('Log event').t`Login password failure`,

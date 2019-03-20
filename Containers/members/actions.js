@@ -14,7 +14,7 @@ import { c } from 'ttag';
 import { removeMember, updateRole, privatizeMember } from 'proton-shared/lib/api/members';
 import { MEMBER_PRIVATE, MEMBER_ROLE } from 'proton-shared/lib/constants';
 
-import EditMemberModal from './EditMemberModal';
+import EditMemberModal from './modal/edit';
 
 const MemberActions = ({ member, organization }) => {
     const { call } = useEventManager();

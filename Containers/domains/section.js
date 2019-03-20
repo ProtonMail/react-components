@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 import { SubTitle, Alert, PrimaryButton, Button, Block, useModal } from 'react-components';
 import { fetchDomains } from 'proton-shared/lib/state/domains/actions';
 
-import DomainModal from './DomainModal';
-import DomainsTable from './DomainsTable';
+import DomainModal from '../domain/modal';
+import DomainsTable from './table';
 
 const DomainsSection = ({ organization, domains, fetchDomains }) => {
     const { isOpen, open, close } = useModal();

@@ -15,10 +15,10 @@ import {
     useNotifications,
     useEventManager
 } from 'react-components';
-
-import MemberStorageSelector from './MemberStorageSelector';
-import MemberVPNSelector from './MemberVPNSelector';
 import { updateName, updateQuota, updateVPN } from 'proton-shared/lib/api/members';
+
+import MemberStorageSelector from '../storageSelector';
+import MemberVPNSelector from '../VPNSelector';
 
 const EditMemberModal = ({ show, onClose, member, organization }) => {
     const { call } = useEventManager();

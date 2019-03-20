@@ -15,13 +15,13 @@ import {
 import { addDomain, getDomain } from 'proton-shared/lib/api/domains';
 import { VERIFY_STATE } from 'proton-shared/lib/constants';
 
-import DomainSection from './DomainSection';
-import VerifySection from './VerifySection';
-import AddressesSection from './AddressesSection';
-import SPFSection from './SPFSection';
-import DKIMSection from './DKIMSection';
-import MXSection from './MXSection';
-import DMARCSection from './DMARCSection';
+import DomainSection from '../section';
+import VerifySection from '../verifySection';
+import AddressesSection from '../AddressesSection';
+import SPFSection from '../SPFSection';
+import DKIMSection from '../DKIMSection';
+import MXSection from '../MXSection';
+import DMARCSection from '../DMARCSection';
 
 const { VERIFY_STATE_DEFAULT, VERIFY_STATE_EXIST, VERIFY_STATE_GOOD } = VERIFY_STATE;
 const DOMAIN_STEP = 0;

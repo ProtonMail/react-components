@@ -15,8 +15,8 @@ import {
 } from 'react-components';
 import { checkInvoice, payInvoice } from 'proton-shared/lib/api/payments';
 
-import Payment from '../payments/Payment';
-import usePayment from '../payments/usePayment';
+import Payment from '../../payments';
+import usePayment from '../../payments/hooks/usePayment';
 
 const PayInvoiceModal = ({ show, invoice, onClose, fetchInvoices }) => {
     const { request, loading: loadingPay } = useApiWithoutResult(payInvoice);

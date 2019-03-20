@@ -62,7 +62,7 @@ async function main() {
                 return `${ucFirst(component)}Modal`;
             }
 
-            return `${ucFirst(component)}${ucFirst(fileName)}Modal`;
+            return `${ucFirst(fileName)}${ucFirst(component)}Modal`;
         }
 
         // Custom Case
@@ -79,7 +79,7 @@ async function main() {
             return fileName;
         }
 
-        return `${ucFirst(type)}${ucFirst(fileName)}`;
+        return `${ucFirst(fileName)}${ucFirst(type)}`;
     };
 
     const getConfig = (file) => {

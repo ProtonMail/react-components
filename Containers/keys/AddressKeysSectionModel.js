@@ -1,7 +1,7 @@
 import { MAIN_USER_KEY } from 'proton-shared/lib/constants';
 import { describe } from 'proton-shared/lib/state/keys/keysAlgorithm';
 
-import { STATUSES } from './KeysStatus';
+import { STATUSES } from './status';
 
 const convertKey = (address) => ({ decryptedPrivateKey, Key, info }, i) => {
     const getStatus = () => {

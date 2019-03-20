@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { ngettext, msgid, c } from 'ttag';
 import { Dropdown, DropdownMenu, SmallButton, useModal } from 'react-components';
 
-import AddressModal from '../addresses/AddressModal';
+import AddressModal from '../addresses/modal';
 
 const MemberAddresses = ({ member }) => {
     const title = member.addresses.map(({ Email }) => Email).join(', ');

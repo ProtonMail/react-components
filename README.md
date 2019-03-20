@@ -164,10 +164,10 @@ ex:
 
 ### TL;DR
 
-`<componentName>/index.js` => `export { default as ComponentName }`
-`<componentName>/<flavor>.js` => `export { default as FlavorComponentName }`
+- `<componentName>/index.js` => `export { default as ComponentName }`
+- `<componentName>/<flavor>.js` => `export { default as FlavorComponentName }`
 
 ex:
 
-`button/index.js` => `export { default as Button }`
-`button/small.js` => `export { default as SmallButton }`
+- `button/index.js` => `export { default as Button }`
+- `button/small.js` => `export { default as SmallButton }`

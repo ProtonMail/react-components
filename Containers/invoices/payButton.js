@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { SmallButton, useApiWithoutResult, useModal, useNotifications } from 'react-components';
 import { getPaymentMethodStatus } from 'proton-shared/lib/api/payments';
 
-import PayInvoiceModal from './PayInvoiceModal';
+import PayInvoiceModal from './modal/pay';
 
 const PayButton = ({ invoice, fetchInvoices }) => {
     const { createNotification } = useNotifications();
