@@ -3,8 +3,8 @@ import { c } from 'ttag';
 import { RadioCard, useApiWithoutResult, useMailSettings, useEventManager } from 'react-components';
 import { updateViewMode } from 'proton-shared/lib/api/mailSettings';
 import { VIEW_MODE } from 'proton-shared/lib/constants';
-import { conversationGroupSvg } from 'design-system/assets/img/pm-images/conversation-group.svg';
-import { conversationSingleSvg } from 'design-system/assets/img/pm-images/conversation-single.svg';
+import conversationGroupSvg from 'design-system/assets/img/pm-images/conversation-group.svg';
+import conversationSingleSvg from 'design-system/assets/img/pm-images/conversation-single.svg';
 
 const { GROUP, SINGLE } = VIEW_MODE;
 

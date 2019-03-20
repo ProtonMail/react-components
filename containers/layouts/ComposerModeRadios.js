@@ -3,8 +3,8 @@ import { c } from 'ttag';
 import { RadioCard, useApiWithoutResult, useMailSettings, useEventManager } from 'react-components';
 import { updateComposerMode } from 'proton-shared/lib/api/mailSettings';
 import { COMPOSER_MODE } from 'proton-shared/lib/constants';
-import { composerPopUpSvg } from 'design-system/assets/img/design-system-website/popup.png';
-import { composerMaximizedSvg } from 'design-system/assets/img/design-system-website/popup.png';
+import composerPopUpSvg from 'design-system/assets/img/design-system-website/popup.png';
+import composerMaximizedSvg from 'design-system/assets/img/design-system-website/popup.png';
 
 const { POPUP, MAXIMIZED } = COMPOSER_MODE;
 

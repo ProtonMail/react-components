@@ -3,8 +3,8 @@ import { c } from 'ttag';
 import { RadioCard, useApiWithoutResult, useMailSettings, useEventManager } from 'react-components';
 import { updateViewLayout } from 'proton-shared/lib/api/mailSettings';
 import { VIEW_LAYOUT } from 'proton-shared/lib/constants';
-import { inboxColumnSvg } from 'design-system/assets/img/pm-images/inbox-colum.svg';
-import { inboxRowSvg } from 'design-system/assets/img/pm-images/inbox-row.svg';
+import inboxColumnSvg from 'design-system/assets/img/pm-images/inbox-colum.svg';
+import inboxRowSvg from 'design-system/assets/img/pm-images/inbox-row.svg';
 
 const { COLUMN, ROW } = VIEW_LAYOUT;
 
