@@ -13,8 +13,8 @@ import {
 import { setPaymentMethod } from 'proton-shared/lib/api/payments';
 
 import Card from '../index';
-import useCard from '../useCard';
-import toDetails from '../toDetails';
+import useCard from '../hooks/useCard';
+import toDetails from '../lib/toDetails';
 
 const EditCardModal = ({ card: existingCard, show, onClose, onChange }) => {
     const { loading, request } = useApiWithoutResult(setPaymentMethod);

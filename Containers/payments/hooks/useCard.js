@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
-import { getErrors } from './cardValidator';
-import getDefaultCard from './getDefaultCard';
+import { getErrors } from '../lib/cardValidator';
+import getDefaultCard from '../lib/getDefaultCard';
 
 const useCard = (initialCard = getDefaultCard()) => {
     const [card, update] = useState(initialCard);

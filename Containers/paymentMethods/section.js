@@ -3,8 +3,8 @@ import { c } from 'ttag';
 import { SubTitle, PrimaryButton, Alert, Block, useApiResult, useModal } from 'react-components';
 import { queryPaymentMethods } from 'proton-shared/lib/api/payments';
 
-import EditCardModal from '../payments/EditCardModal';
-import PaymentMethodsTable from './PaymentMethodsTable';
+import EditCardModal from '../payments/modal/editCard';
+import PaymentMethodsTable from './table';
 
 const PaymentMethodsSection = () => {
     const { isOpen: showCardModal, open: openCardModal, close: closeCardModal } = useModal();

@@ -5,8 +5,8 @@ import { Label, Row } from 'react-components';
 import { CYCLE } from 'proton-shared/lib/constants';
 
 import Method from './Method';
-import PaymentMethodsSelect from '../paymentMethods/PaymentMethodsSelect';
-import toDetails from './toDetails';
+import PaymentMethodsSelect from '../paymentMethods/select';
+import toDetails from './lib/toDetails';
 
 const Payment = ({ type, amount, currency, cycle, onParameters, onMethod, onValidCard }) => {
     const [method, setMethod] = useState('');

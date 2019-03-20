@@ -3,8 +3,8 @@ import { c } from 'ttag';
 import { Table, TableHeader, TableBody, TableRow, Alert } from 'react-components';
 import PropTypes from 'prop-types';
 
-import PaymentMethodActions from './PaymentMethodActions';
-import PaymentMethodState from './PaymentMethodState';
+import PaymentMethodActions from './actions';
+import PaymentMethodState from './state';
 
 const PaymentMethodsTable = ({ methods, loading, fetchMethods }) => {
     if (!loading && !methods.length) {

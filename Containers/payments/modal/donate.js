@@ -15,7 +15,7 @@ import { DEFAULT_CURRENCY, DEFAULT_DONATION_AMOUNT } from 'proton-shared/lib/con
 
 import PaymentSelector from '../selector';
 import Payment from '../index';
-import usePayment from '../usePayment';
+import usePayment from '../hooks/usePayment';
 
 const DonateModal = ({ show, onClose }) => {
     const { method, setMethod, parameters, setParameters, canPay, setCardValidity } = usePayment(handleSubmit);

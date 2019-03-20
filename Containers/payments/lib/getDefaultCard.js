@@ -1,4 +1,4 @@
-import { getFirstTop } from '../../helpers/countries';
+import { getFirstTop } from '../../../helpers/countries';
 
 const getDefault = () => {
     const now = new Date();

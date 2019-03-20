@@ -4,7 +4,7 @@ import { useApiResult } from 'react-components';
 import { queryPaymentMethods } from 'proton-shared/lib/api/payments';
 
 import Card from './Card';
-import useCard from './useCard';
+import useCard from './hooks/useCard';
 import PaymentMethodDetails from '../paymentMethods/details';
 import PayPal from './PayPal';
 import Cash from './Cash';
