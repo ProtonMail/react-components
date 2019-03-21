@@ -1,9 +1,23 @@
 import React from 'react';
-import { render, waitForElement } from 'react-testing-library';
+import { render } from 'react-testing-library';
 
 import Badge from './Badge';
 
-it('renders badge with text', async () => {
-    const { getByText } = render(<Badge>Success</Badge>);
-    await waitForElement(() => getByText(/Success/i));
+describe('Badge component', () => {
+    const text = 'Panda';
+    const { container } = render(<Badge>{text}</Badge>);
+    const { firstChild: badge } = container;
+
+    it('renders children', () => {
+        expect(badge.textContent).toBe(text);
+    });
+
+    it('has default class', () => {
+        expect(badge).toHaveClass('badgeLabel');
+    });
+
+    it('should have success class', () => {
+        const { container } = render(<Badge type="success">{text}</Badge>);
+        expect(container.firstChild).toHaveClass('badgeLabel-success');
+    });
 });
