@@ -10,7 +10,14 @@ import {
     useEventManager,
     useApiWithoutResult
 } from 'react-components';
-import { updateComposerMode, updateViewMode, updateViewLayout } from 'proton-shared/lib/api/mailSettings';
+import {
+    updateComposerMode,
+    updateViewMode,
+    updateViewLayout,
+    updateDraftType,
+    updateRightToLeft,
+    updateShowMoved
+} from 'proton-shared/lib/api/mailSettings';
 
 import DraftTypeSelect from './DraftTypeSelect';
 import TextDirectionSelect from './TextDirectionSelect';
@@ -20,31 +27,37 @@ import ViewLayoutRadios from './ViewLayoutRadios';
 import ViewModeRadios from './ViewModeRadios';
 
 const LayoutsSection = () => {
-    const [{ ComposerMode, ViewMode, ViewLayout }] = useMailSettings();
+    const [{ ComposerMode, ViewMode, ViewLayout, DraftMIMEType, RightToLeft, ShowMoved }] = useMailSettings();
     const { call } = useEventManager();
-    const request = {
-        composerMode: useApiWithoutResult(updateComposerMode).request,
-        viewMode: useApiWithoutResult(updateViewMode).request,
-        viewLayout: useApiWithoutResult(updateViewLayout).request
+    const { request: requestComposerMode, loading: loadingComposerMode } = useApiWithoutResult(updateComposerMode);
+    const { request: requestViewMode, loading: loadingViewMode } = useApiWithoutResult(updateViewMode);
+    const { request: requestViewLayout, loading: loadingViewLayout } = useApiWithoutResult(updateViewLayout);
+    const { request: requestDraftType, loading: loadingDraftType } = useApiWithoutResult(updateDraftType);
+    const { request: requestRightToLeft, loading: loadingRightToLeft } = useApiWithoutResult(updateRightToLeft);
+    const { request: requestShowMoved, loading: loadingShowMoved } = useApiWithoutResult(updateShowMoved);
+    const handleChangeComposerMode = (mode) => async () => {
+        await requestComposerMode(mode);
+        call();
     };
-    const loading = {
-        composerMode: useApiWithoutResult(updateComposerMode).loading,
-        viewMode: useApiWithoutResult(updateViewMode).loading,
-        viewLayout: useApiWithoutResult(updateViewLayout).loading
+    const handleChangeViewMode = (mode) => async () => {
+        await requestViewMode(mode);
+        call();
     };
-    const handleChange = {
-        composerMode: (mode) => async () => {
-            await request.composerMode(mode);
-            call();
-        },
-        viewMode: (mode) => async () => {
-            await request.viewMode(mode);
-            call();
-        },
-        viewLayout: (mode) => async () => {
-            await request.viewLayout(mode);
-            call();
-        }
+    const handleChangeViewLayout = (mode) => async () => {
+        await requestViewLayout(mode);
+        call();
+    };
+    const handleChangeDraftType = ({ target }) => async () => {
+        await requestDraftType(target.value);
+        call();
+    };
+    const handleChangeRightToLeft = ({ target }) => async () => {
+        await requestRightToLeft(target.value);
+        call();
+    };
+    const handleChangeShowMoved = ({ target }) => async () => {
+        await requestShowMoved(target.value);
+        call();
     };
 
     return (
@@ -62,8 +75,8 @@ const LayoutsSection = () => {
                 </Label>
                 <ComposerModeRadios
                     composerMode={ComposerMode}
-                    handleChange={handleChange.composerMode}
-                    loading={loading.composerMode}
+                    handleChange={handleChangeComposerMode}
+                    loading={loadingComposerMode}
                 />
             </Row>
             <Row>
@@ -75,7 +88,7 @@ const LayoutsSection = () => {
                             .t`ProtonMail supports both column and row layouts for the inbox. Using this setting, it is possible to change between the two layouts.`}
                     />
                 </Label>
-                <ViewLayoutRadios viewMode={ViewMode} handleChange={handleChange.viewMode} loading={loading.viewMode} />
+                <ViewLayoutRadios viewMode={ViewMode} handleChange={handleChangeViewMode} loading={loadingViewMode} />
             </Row>
             <Row>
                 <Label>
@@ -87,17 +100,25 @@ const LayoutsSection = () => {
                 </Label>
                 <ViewModeRadios
                     viewLayout={ViewLayout}
-                    handleChange={handleChange.ViewLayout}
-                    loading={loading.ViewLayout}
+                    handleChange={handleChangeViewLayout}
+                    loading={loadingViewLayout}
                 />
             </Row>
             <Row>
                 <Label>{c('Label').t`Composer Mode`}</Label>
-                <DraftTypeSelect />
+                <DraftTypeSelect
+                    draftType={DraftMIMEType}
+                    handleChange={handleChangeDraftType}
+                    loading={loadingDraftType}
+                />
             </Row>
             <Row>
                 <Label>{c('Label').t`Composer Text Direction`}</Label>
-                <TextDirectionSelect />
+                <TextDirectionSelect
+                    rightToLeft={RightToLeft}
+                    handleChange={handleChangeRightToLeft}
+                    loading={loadingRightToLeft}
+                />
             </Row>
             <Row>
                 <Label>
@@ -107,7 +128,11 @@ const LayoutsSection = () => {
                             .t`Setting to 'Include Moved' means that sent / drafts messages that have been moved to other folders will continue to appear in the Sent/Drafts folder.`}
                     />
                 </Label>
-                <ShowMovedSelect />
+                <ShowMovedSelect
+                    showMoved={ShowMoved}
+                    handleChange={handleChangeShowMoved}
+                    loading={loadingShowMoved}
+                />
             </Row>
         </>
     );
