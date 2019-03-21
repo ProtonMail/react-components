@@ -15,7 +15,7 @@ const ThemesSection = () => {
             <SubTitle>{c('Title').t`Themes`}</SubTitle>
             <Alert learnMore="todo">{c('Info').t`${dummyText}`}</Alert>
             <br />
-            <DisplayThemes themeObjects={availableThemes} />
+            <DisplayThemes list={availableThemes} />
         </>
     );
 };
