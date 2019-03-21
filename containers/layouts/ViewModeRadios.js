@@ -1,6 +1,6 @@
 import React from 'react';
 import { c } from 'ttag';
-import { RadioCard, useApiWithoutResult, useMailSettings, useEventManager } from 'react-components';
+import { RadioCards, useApiWithoutResult, useMailSettings, useEventManager } from 'react-components';
 import { updateViewMode } from 'proton-shared/lib/api/mailSettings';
 import { VIEW_MODE } from 'proton-shared/lib/constants';
 import conversationGroupSvg from 'design-system/assets/img/pm-images/conversation-group.svg';
@@ -18,32 +18,28 @@ const ViewModeRadios = () => {
         call();
     };
 
-    return (
-        <>
-            <RadioCard
-                value={GROUP}
-                checked={ViewMode === GROUP}
-                id="groupRadio"
-                disabled={loading}
-                name="viewMode"
-                label={c('Label to change view mode').t`Conversation group`}
-                onChange={handleChange(GROUP)}
-            >
-                <img alt="Group" src={conversationGroupSvg} />
-            </RadioCard>
-            <RadioCard
-                value={SINGLE}
-                checked={ViewMode === SINGLE}
-                id="singleRadio"
-                disabled={loading}
-                name="ViewMode"
-                label={c('Label to change view mode').t`Single messages`}
-                onChange={handleChange(SINGLE)}
-            >
-                <img alt="Single" src={conversationSingleSvg} />
-            </RadioCard>
-        </>
-    );
+    const radioCardGroup = {
+        value: GROUP,
+        checked: ViewMode === GROUP,
+        id: 'groupRadio',
+        disabled: loading,
+        name: 'viewMode',
+        label: c('Label to change view mode').t`Conversation group`,
+        onChange: handleChange(GROUP),
+        children: <img alt="Group" src={conversationGroupSvg} />
+    };
+    const radioCardSingle = {
+        value: SINGLE,
+        checked: ViewMode === SINGLE,
+        id: 'singleRadio',
+        disabled: loading,
+        name: 'viewMode',
+        label: c('Label to change view mode').t`Single messages`,
+        onChange: handleChange(SINGLE),
+        children: <img alt="Single" src={conversationSingleSvg} />
+    };
+
+    return <RadioCards list={[radioCardGroup, radioCardSingle]} />;
 };
 
 export default ViewModeRadios;
