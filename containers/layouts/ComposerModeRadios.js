@@ -1,26 +1,17 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { RadioCards, useApiWithoutResult, useMailSettings, useEventManager } from 'react-components';
-import { updateComposerMode } from 'proton-shared/lib/api/mailSettings';
+import { RadioCards } from 'react-components';
 import { COMPOSER_MODE } from 'proton-shared/lib/constants';
 import composerPopUpSvg from 'design-system/assets/img/design-system-website/popup.svg';
 import composerMaximizedSvg from 'design-system/assets/img/design-system-website/popup.svg';
 
 const { POPUP, MAXIMIZED } = COMPOSER_MODE;
 
-const ComposerModeRadios = () => {
-    const [{ ComposerMode }] = useMailSettings();
-    const { call } = useEventManager();
-    const { request, loading } = useApiWithoutResult(updateComposerMode);
-
-    const handleChange = (mode) => async () => {
-        await request(mode);
-        call();
-    };
-
+const ComposerModeRadios = ({ composerMode, handleChange, loading }) => {
     const radioCardPopup = {
         value: POPUP,
-        checked: ComposerMode === POPUP,
+        checked: composerMode === POPUP,
         id: 'popupRadio',
         disabled: loading,
         name: 'composerMode',
@@ -30,7 +21,7 @@ const ComposerModeRadios = () => {
     };
     const radioCardMaximized = {
         value: MAXIMIZED,
-        checked: ComposerMode === MAXIMIZED,
+        checked: composerMode === MAXIMIZED,
         id: 'maximizedRadio',
         disabled: loading,
         name: 'composerMode',
@@ -40,6 +31,12 @@ const ComposerModeRadios = () => {
     };
 
     return <RadioCards list={[radioCardPopup, radioCardMaximized]} />;
+};
+
+ComposerModeRadios.propTypes = {
+    composerMode: PropTypes.number.isRequired,
+    handleChange: PropTypes.func.isRequired,
+    loading: PropTypes.bool
 };
 
 export default ComposerModeRadios;

@@ -1,26 +1,17 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { RadioCards, useApiWithoutResult, useMailSettings, useEventManager } from 'react-components';
-import { updateViewMode } from 'proton-shared/lib/api/mailSettings';
+import { RadioCards } from 'react-components';
 import { VIEW_MODE } from 'proton-shared/lib/constants';
 import conversationGroupSvg from 'design-system/assets/img/pm-images/conversation-group.svg';
 import conversationSingleSvg from 'design-system/assets/img/pm-images/conversation-single.svg';
 
 const { GROUP, SINGLE } = VIEW_MODE;
 
-const ViewModeRadios = () => {
-    const [{ ViewMode }] = useMailSettings();
-    const { call } = useEventManager();
-    const { request, loading } = useApiWithoutResult(updateViewMode);
-
-    const handleChange = (mode) => async () => {
-        await request(mode);
-        call();
-    };
-
+const ViewModeRadios = ({ viewMode, handleChange, loading }) => {
     const radioCardGroup = {
         value: GROUP,
-        checked: ViewMode === GROUP,
+        checked: viewMode === GROUP,
         id: 'groupRadio',
         disabled: loading,
         name: 'viewMode',
@@ -30,7 +21,7 @@ const ViewModeRadios = () => {
     };
     const radioCardSingle = {
         value: SINGLE,
-        checked: ViewMode === SINGLE,
+        checked: viewMode === SINGLE,
         id: 'singleRadio',
         disabled: loading,
         name: 'viewMode',
@@ -40,6 +31,12 @@ const ViewModeRadios = () => {
     };
 
     return <RadioCards list={[radioCardGroup, radioCardSingle]} />;
+};
+
+ViewModeRadios.propTypes = {
+    viewMode: PropTypes.number.isRequired,
+    handleChange: PropTypes.func.isRequired,
+    loading: PropTypes.bool
 };
 
 export default ViewModeRadios;

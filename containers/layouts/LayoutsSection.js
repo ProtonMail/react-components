@@ -1,6 +1,16 @@
 import React from 'react';
 import { c } from 'ttag';
-import { SubTitle, Alert, Row, Label, Info } from 'react-components';
+import {
+    SubTitle,
+    Alert,
+    Row,
+    Label,
+    Info,
+    useMailSettings,
+    useEventManager,
+    useApiWithoutResult
+} from 'react-components';
+import { updateComposerMode, updateViewMode, updateViewLayout } from 'proton-shared/lib/api/mailSettings';
 
 import DraftTypeSelect from './DraftTypeSelect';
 import TextDirectionSelect from './TextDirectionSelect';
@@ -10,6 +20,33 @@ import ViewLayoutRadios from './ViewLayoutRadios';
 import ViewModeRadios from './ViewModeRadios';
 
 const LayoutsSection = () => {
+    const [{ ComposerMode, ViewMode, ViewLayout }] = useMailSettings();
+    const { call } = useEventManager();
+    const request = {
+        composerMode: useApiWithoutResult(updateComposerMode).request,
+        viewMode: useApiWithoutResult(updateViewMode).request,
+        viewLayout: useApiWithoutResult(updateViewLayout).request
+    };
+    const loading = {
+        composerMode: useApiWithoutResult(updateComposerMode).loading,
+        viewMode: useApiWithoutResult(updateViewMode).loading,
+        viewLayout: useApiWithoutResult(updateViewLayout).loading
+    };
+    const handleChange = {
+        composerMode: (mode) => async () => {
+            await request.composerMode(mode);
+            call();
+        },
+        viewMode: (mode) => async () => {
+            await request.viewMode(mode);
+            call();
+        },
+        viewLayout: (mode) => async () => {
+            await request.viewLayout(mode);
+            call();
+        }
+    };
+
     return (
         <>
             <SubTitle>{c('Title').t`Layouts`}</SubTitle>
@@ -23,7 +60,11 @@ const LayoutsSection = () => {
                             .t`This sets the default composer size. Two sizes are available, a smaller popup composer, and a bigger full screen composer.`}
                     />
                 </Label>
-                <ComposerModeRadios />
+                <ComposerModeRadios
+                    composerMode={ComposerMode}
+                    handleChange={handleChange.composerMode}
+                    loading={loading.composerMode}
+                />
             </Row>
             <Row>
                 <Label>
@@ -34,7 +75,7 @@ const LayoutsSection = () => {
                             .t`ProtonMail supports both column and row layouts for the inbox. Using this setting, it is possible to change between the two layouts.`}
                     />
                 </Label>
-                <ViewLayoutRadios />
+                <ViewLayoutRadios viewMode={ViewMode} handleChange={handleChange.viewMode} loading={loading.viewMode} />
             </Row>
             <Row>
                 <Label>
@@ -44,7 +85,11 @@ const LayoutsSection = () => {
                             .t`Conversation Grouping automatically groups messages in the same conversation together.`}
                     />
                 </Label>
-                <ViewModeRadios />
+                <ViewModeRadios
+                    viewLayout={ViewLayout}
+                    handleChange={handleChange.ViewLayout}
+                    loading={loading.ViewLayout}
+                />
             </Row>
             <Row>
                 <Label>{c('Label').t`Composer Mode`}</Label>
