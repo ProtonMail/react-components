@@ -8,7 +8,7 @@ describe('Breadcrumb component', () => {
     const currentStep = 1;
     const getButtons = (container) => [].slice.call(container.querySelectorAll('button'));
 
-    it('should render all steps', async () => {
+    it('should render all steps', () => {
         const { container } = render(<Breadcrumb list={steps} current={currentStep} />);
         const buttons = getButtons(container);
 
@@ -23,7 +23,7 @@ describe('Breadcrumb component', () => {
         expect(buttons[currentStep]).toHaveAttribute('disabled');
     });
 
-    it('should select the first step', async () => {
+    it('should select the first step', () => {
         const mockOnClick = jest.fn();
         const { container } = render(<Breadcrumb list={steps} current={currentStep} onClick={mockOnClick} />);
         const buttons = getButtons(container);
