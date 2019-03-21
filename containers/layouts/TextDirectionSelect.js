@@ -4,7 +4,7 @@ import { Select, useApiWithoutResult, useMailSettings, useEventManager } from 'r
 import { updateRightToLeft } from 'proton-shared/lib/api/mailSettings';
 
 const TextDirectionSelect = () => {
-    const { RightToLeft } = useMailSettings();
+    const [{ RightToLeft }] = useMailSettings();
     const { call } = useEventManager();
     const { request, loading } = useApiWithoutResult(updateRightToLeft);
 

@@ -4,7 +4,7 @@ import { Select, useApiWithoutResult, useMailSettings, useEventManager } from 'r
 import { updateDraftType } from 'proton-shared/lib/api/mailSettings';
 
 const DraftTypeSelect = () => {
-    const { DraftMIMEType } = useMailSettings();
+    const [{ DraftMIMEType }] = useMailSettings();
     const { call } = useEventManager();
     const { request, loading } = useApiWithoutResult(updateDraftType);
 

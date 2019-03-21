@@ -9,7 +9,7 @@ import inboxRowSvg from 'design-system/assets/img/pm-images/inbox-row.svg';
 const { COLUMN, ROW } = VIEW_LAYOUT;
 
 const ViewLayoutRadios = () => {
-    const { ViewLayout } = useMailSettings();
+    const [{ ViewLayout }] = useMailSettings();
     const { call } = useEventManager();
     const { request, loading } = useApiWithoutResult(updateViewLayout);
 

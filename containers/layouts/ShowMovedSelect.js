@@ -4,7 +4,7 @@ import { Select, useApiWithoutResult, useMailSettings, useEventManager } from 'r
 import { updateShowMoved } from 'proton-shared/lib/api/mailSettings';
 
 const ShowMovedSelect = () => {
-    const { ShowMoved } = useMailSettings();
+    const [{ ShowMoved }] = useMailSettings();
     const { call } = useEventManager();
     const { request, loading } = useApiWithoutResult(updateShowMoved);
 

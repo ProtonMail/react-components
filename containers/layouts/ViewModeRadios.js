@@ -9,7 +9,7 @@ import conversationSingleSvg from 'design-system/assets/img/pm-images/conversati
 const { GROUP, SINGLE } = VIEW_MODE;
 
 const ViewModeRadios = () => {
-    const { ViewMode } = useMailSettings();
+    const [{ ViewMode }] = useMailSettings();
     const { call } = useEventManager();
     const { request, loading } = useApiWithoutResult(updateViewMode);
 
