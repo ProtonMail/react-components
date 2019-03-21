@@ -1,7 +1,7 @@
 import React from 'react';
 import { c } from 'ttag';
 import { SubTitle, Alert } from 'react-components';
-import { DisplayThemes } from './DisplayThemes';
+import { ThemeCards } from './DisplayThemes';
 import { themeDark, themeLight, themeBlue, themeCompany, themeTest } from './availableThemes.js';
 
 const availableThemes = [themeDark, themeLight, themeBlue, themeCompany, themeTest];
@@ -15,7 +15,7 @@ const ThemesSection = () => {
             <SubTitle>{c('Title').t`Themes`}</SubTitle>
             <Alert learnMore="todo">{c('Info').t`${dummyText}`}</Alert>
             <br />
-            <DisplayThemes list={availableThemes} />
+            <ThemeCards list={availableThemes} />
         </>
     );
 };
