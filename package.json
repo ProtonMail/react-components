@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha -r esm 'test/**/*.spec.js'",
+    "test": "jest",
     "export": "./makeExport",
     "lint": "eslint containers components --ext .js --quiet --cache",
     "pretty": "prettier --write $(find lib -type f -name '*.js')"
@@ -41,7 +41,12 @@
     "tooltip.js": "^1.3.1"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-object-rest-spread": "^7.4.0",
+    "@babel/plugin-transform-runtime": "^7.4.0",
+    "@babel/preset-env": "^7.4.1",
+    "@babel/preset-react": "^7.0.0",
     "babel-eslint": "^10.0.1",
+    "babel-jest": "^24.5.0",
     "eslint": "^5.3.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.16.0",
@@ -49,11 +54,14 @@
     "eslint-plugin-react-hooks": "^1.3.0",
     "execa": "^1.0.0",
     "husky": "^1.3.1",
+    "jest": "^24.5.0",
+    "jest-dom": "^3.1.3",
     "lint-staged": "^8.1.4",
     "mocha": "^5.2.0",
     "prettier": "^1.16.1",
     "react": "^16.8.3",
-    "react-dom": "^16.8.3"
+    "react-dom": "^16.8.3",
+    "react-testing-library": "^6.0.1"
   },
   "peerDependencies": {
     "react": "^16.8.1",
