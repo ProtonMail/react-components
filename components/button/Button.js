@@ -62,7 +62,7 @@ const Button = (props) => {
         <button
             role={role}
             disabled={loading ? true : disabled}
-            className={'pm-button mr1 '.concat(className || '')}
+            className={'pm-button '.concat(className || '')}
             type={type}
             tabIndex={disabled ? '-1' : tabIndex}
             title={title}
@@ -98,7 +98,6 @@ Button.propTypes = {
 };
 
 Button.defaultProps = {
-    className: '',
     role: 'button',
     type: 'button',
     disabled: false,
