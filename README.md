@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/ProtonMail/react-components.svg?style=svg)](https://circleci.com/gh/ProtonMail/react-components)
+
 # react-components
 
 ## Install
