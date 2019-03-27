@@ -1,7 +1,6 @@
 import React from 'react';
 import { c } from 'ttag';
-import { SubTitle, Alert } from 'react-components';
-import { ThemeCards } from './DisplayThemes';
+import { SubTitle, Alert, ThemeCards } from 'react-components';
 import { themeDark, themeLight, themeBlue, themeCompany, themeTest } from './availableThemes.js';
 
 const availableThemes = [themeDark, themeLight, themeBlue, themeCompany, themeTest];
