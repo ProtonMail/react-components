@@ -6,6 +6,21 @@ import { themeDark, themeLight, themeBlue, themeCompany, themeTest } from './ava
 const availableThemes = [themeDark, themeLight, themeBlue, themeCompany, themeTest];
 
 const ThemesSection = () => {
+    /*
+    const [{ themeMode }] = useMailSettings();
+    const { call } = useEventManager();
+
+    const { request, loading } = useApiWithoutResult(updateThemeMode);
+    const handleChangeThemeMode = async (mode) => {
+        await requestThemeMode(mode);
+        call();
+    };
+    */
+    // waiting for the hooks
+    const themeMode = 'dark';
+    const handleChangeThemeMode = () => true;
+    const loadingThemeMode = false;
+
     const dummyText =
         'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pretium enim nec massa fringilla, ac ultrices tortor posuere. Fusce sed quam vitae arcu pharetra congue. Quisque in elementum nibh.';
 
@@ -14,7 +29,12 @@ const ThemesSection = () => {
             <SubTitle>{c('Title').t`Themes`}</SubTitle>
             <Alert learnMore="todo">{c('Info').t`${dummyText}`}</Alert>
             <br />
-            <ThemeCards list={availableThemes} />
+            <ThemeCards
+                themeMode={themeMode}
+                onChange={handleChangeThemeMode}
+                loading={loadingThemeMode}
+                list={availableThemes}
+            />
         </>
     );
 };
