@@ -1,13 +1,21 @@
 import { useState } from 'react';
 
 const useModal = (initialState = false) => {
-    const [state, setModalState] = useState({ show: initialState });
-    const open = (data) => setModalState({ show: true, data });
-    const close = () => setModalState({ ...state, show: false });
-    const toggle = () => setModalState({ ...state, show: !state.show });
+    const [isOpen, setModalState] = useState(initialState);
+    const [state, setState] = useState();
+
+    const open = (data) => (setModalState(true), setState(data));
+    const close = () => (setModalState(false), setState());
+    const toggle = () => {
+        const visible = !isOpen;
+        setModalState(visible);
+        !visible && setState();
+    };
 
     return {
+        isOpen,
         state,
+        setState,
         open,
         toggle,
         close
