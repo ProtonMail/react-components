@@ -3,7 +3,7 @@ import { c } from 'ttag';
 import PropTypes from 'prop-types';
 
 const SubSidebar = ({ list, children }) => {
-    const clean = (h) => h.replace(/#/g, '');
+    const clean = (h = '') => h.replace(/#/g, '');
     const [hash, setHash] = useState(clean(location.hash));
     const onHashChange = () => setHash(clean(location.hash));
 
