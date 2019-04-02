@@ -13,13 +13,16 @@ describe('SubSidebar component', () => {
                 <Button>test</Button>
             </SubSidebar>
         );
-        const lis = [].slice.call(container.querySelectorAll('li'));
-        const as = [].slice.call(container.querySelectorAll('a'));
+
+        const anchors = [].slice.call(container.querySelectorAll('a'));
         const buttonNode = container.querySelector('button');
 
-        expect(lis.length).toBe(3);
+        expect(anchors.length).toBe(3);
         expect(buttonNode).not.toBe(null);
-        expect(as[0].getAttribute('href')).toBe('#panda');
-        expect(as[0].textContent).toBe('panda');
+
+        anchors.forEach((anchor, index) => {
+            expect(anchor.getAttribute('href')).toBe(`#${list[index].id}`);
+            expect(anchor.textContent).toBe(list[index].text);
+        });
     });
 });
