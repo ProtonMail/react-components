@@ -9,6 +9,8 @@ describe('SubSidebar component', () => {
     const list = [{ text: 'panda', id: 'panda' }, { text: 'tiger', id: 'tiger' }, { text: 'turtle', id: 'turtle' }];
 
     it('should render the sub sidebar properly', () => {
+        location.hash = `#${list[0].id}`;
+
         const { container } = render(
             <SubSidebar list={list}>
                 <Button>{text}</Button>
@@ -26,5 +28,7 @@ describe('SubSidebar component', () => {
             expect(anchor.getAttribute('href')).toBe(`#${list[index].id}`);
             expect(anchor.textContent).toBe(list[index].text);
         });
+
+        expect(anchors[0].getAttribute('aria-current')).toBe('true');
     });
 });
