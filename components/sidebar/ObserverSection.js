@@ -1,24 +1,14 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-const ObserverSection = ({
-    id,
-    rootElement,
-    threshold,
-    intersectionRatios,
-    index,
-    setIntersectionRatios,
-    children
-}) => {
+const ObserverSection = ({ id, rootElement, threshold, index, setIntersectionRatios, children }) => {
     const handleIntersect = (entries) => {
         entries.forEach(function(entry) {
-            // eslint-disable-next-line no-console
-            console.log('intersectionRatios fed: ', intersectionRatios); // This component receives [0, 0, 0, 0, 0] all the time, which should not be the case
-            let newIntersectionRatios = intersectionRatios.slice();
-            newIntersectionRatios[index] = entry.intersectionRatio;
-            setIntersectionRatios(newIntersectionRatios);
-            // console.log(`new intersectionRatio for ${id}: `, entry.intersectionRatio);
-            // console.log(intersectionRatios);
+            setIntersectionRatios((intersectionRatios) => {
+                let newIntersectionRatios = intersectionRatios.slice();
+                newIntersectionRatios[index] = entry.intersectionRatio;
+                return newIntersectionRatios;
+            });
         });
     };
 
@@ -47,7 +37,6 @@ ObserverSection.propTypes = {
     id: PropTypes.string.isRequired,
     rootElement: PropTypes.node,
     threshold: PropTypes.string.isRequired,
-    intersectionRatios: PropTypes.array.isRequired,
     index: PropTypes.number.isRequired,
     setIntersectionRatios: PropTypes.func.isRequired,
     children: PropTypes.node.isRequired

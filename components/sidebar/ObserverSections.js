@@ -25,7 +25,6 @@ const ObserverSections = ({ list }) => {
                         id={id}
                         rootElement={rootElement}
                         threshold={threshold}
-                        intersectionRatios={intersectionRatios}
                         index={index}
                         setIntersectionRatios={setIntersectionRatios}
                     >
