@@ -18,13 +18,13 @@ const ObserverSections = ({ list }) => {
 
     return (
         <>
-            {list.map(({ id, rootElement, threshold, children }, index) => {
+            {list.map(({ id, rootElement, granularity, children }, index) => {
                 return (
                     <ObserverSection
                         key={id}
                         id={id}
                         rootElement={rootElement}
-                        threshold={threshold}
+                        granularity={granularity}
                         index={index}
                         setIntersectionRatios={setIntersectionRatios}
                     >
