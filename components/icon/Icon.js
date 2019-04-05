@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 const Icon = ({ name, className, viewBox, alt, ...rest }) => {
     return (
         <>
-            <svg viewBox={viewBox} className={className} role="img" focusable="false" {...rest}>
+            <svg viewBox={viewBox} className={`icon-16p `.concat(className)} role="img" focusable="false" {...rest}>
                 <use xlinkHref={`#shape-${name}`} />
             </svg>
             {alt ? <span className="sr-only">{alt}</span> : null}
@@ -30,7 +30,7 @@ Icon.propTypes = {
 
 Icon.defaultProps = {
     viewBox: '0 0 16 16',
-    className: 'icon-16p fill-global-grey'
+    className: ''
 };
 
 export default Icon;
