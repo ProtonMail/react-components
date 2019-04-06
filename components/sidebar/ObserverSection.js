@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-const ObserverSection = ({ id, rootElement, granularity, index, setIntersectionRatios, children }) => {
+const ObserverSection = ({ id, rootElement, rootMargin, granularity, index, setIntersectionRatios, children }) => {
     // the granularity prop should be an integer and is meant to mark how many divisions we make to
     // an area in order to observe it with an intersectionObserver.
     //
@@ -13,9 +13,9 @@ const ObserverSection = ({ id, rootElement, granularity, index, setIntersectionR
 
     const buildThresholds = (granularity) => {
         const steps = parseInt(granularity, 10);
-        const thresholds = [0];
+        const thresholds = [];
 
-        for (let i = 1; i <= steps; i++) {
+        for (let i = 0; i <= steps; i++) {
             thresholds.push(i / steps);
         }
         return thresholds;
@@ -25,17 +25,17 @@ const ObserverSection = ({ id, rootElement, granularity, index, setIntersectionR
         entries.forEach(function(entry) {
             setIntersectionRatios((intersectionRatios) => {
                 let newIntersectionRatios = intersectionRatios.slice();
-                newIntersectionRatios[index] = entry.intersectionRatio;
+                newIntersectionRatios[index] = Math.min(entry.intersectionRatio, 1); // manual fix for bug IntersectionObserverEntry.intersectionRatio > 1
                 return newIntersectionRatios;
             });
         });
     };
 
     useEffect(() => {
-        // Create an observer that triggers when intersectionRatio crosses 50%
+        // Create an observer that triggers when intersectionRatio changes 1/granularity
         const options = {
-            rootMargin: '0px',
             root: rootElement,
+            rootMargin: rootMargin,
             threshold: buildThresholds(granularity)
         };
         const target = document.getElementById(id);
@@ -55,6 +55,7 @@ const ObserverSection = ({ id, rootElement, granularity, index, setIntersectionR
 ObserverSection.propTypes = {
     id: PropTypes.string.isRequired,
     rootElement: PropTypes.node,
+    rootMargin: PropTypes.string,
     granularity: PropTypes.number.isRequired,
     index: PropTypes.number.isRequired,
     setIntersectionRatios: PropTypes.func.isRequired,
@@ -62,7 +63,8 @@ ObserverSection.propTypes = {
 };
 
 ObserverSection.defaultProps = {
-    rootElement: null
+    rootElement: null,
+    rootMargin: '0px'
 };
 
 export default ObserverSection;
