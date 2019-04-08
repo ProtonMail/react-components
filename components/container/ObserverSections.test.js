@@ -13,11 +13,11 @@ describe('ObserverSections component', () => {
             .reduce((acc, cur) => cur + acc, '');
     };
     const list = [
-        { id: 'section1', granularity: 20, children: <div id="text-1">{repeatText(dummyText, 1)}</div> },
-        { id: 'section2', granularity: 20, children: <div id="text-2">{repeatText(dummyText, 2)}</div> },
-        { id: 'section3', granularity: 20, children: <div id="text-3">{repeatText(dummyText, 3)}</div> },
-        { id: 'section4', granularity: 20, children: <div id="text-4">{repeatText(dummyText, 4)}</div> },
-        { id: 'section5', granularity: 20, children: <div id="text-5">{repeatText(dummyText, 5)}</div> }
+        { id: 'section1', granularity: 20, children: <div>{repeatText(dummyText, 1)}</div> },
+        { id: 'section2', granularity: 20, children: <div>{repeatText(dummyText, 2)}</div> },
+        { id: 'section3', granularity: 20, children: <div>{repeatText(dummyText, 3)}</div> },
+        { id: 'section4', granularity: 20, children: <div>{repeatText(dummyText, 4)}</div> },
+        { id: 'section5', granularity: 20, children: <div>{repeatText(dummyText, 5)}</div> }
     ];
 
     it('should render the observer sections properly', () => {

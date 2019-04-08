@@ -1,27 +1,10 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import 'intersection-observer';
+import { buildThresholds } from 'react-components';
+import { debounce } from '../../../proton-shared/lib/helpers/function';
 
 const ObserverSection = ({ id, rootElement, rootMargin, granularity, index, setIntersectionRatios, children }) => {
-    // the granularity prop should be an integer and is meant to mark how many divisions we make to
-    // an area in order to observe it with an intersectionObserver.
-    //
-    // E.g. granularity = 2 will mean that intersectionObserver will emit events when
-    // the 0%, 50% or 100% of the area overlaps with a given target area.
-    //
-    // In general, the higher the granularity, the more sensitive we will be to changes in overlapping areas.
-    // Probably granularity = 20 will suffice for the purpose of updating URL in function of the dislpay area
-
-    const buildThresholds = (granularity) => {
-        const steps = parseInt(granularity, 10);
-        const thresholds = [];
-
-        for (let i = 0; i <= steps; i++) {
-            thresholds.push(i / steps);
-        }
-        return thresholds;
-    };
-
     const handleIntersect = (entries) => {
         entries.forEach(function(entry) {
             setIntersectionRatios((intersectionRatios) => {
@@ -33,7 +16,6 @@ const ObserverSection = ({ id, rootElement, rootMargin, granularity, index, setI
     };
 
     useEffect(() => {
-        // Create an observer that triggers when intersectionRatio changes 1/granularity
         const options = {
             root: rootElement,
             rootMargin: rootMargin,
@@ -41,11 +23,11 @@ const ObserverSection = ({ id, rootElement, rootMargin, granularity, index, setI
         };
         const target = document.getElementById(id);
 
-        const observer = new IntersectionObserver(handleIntersect, options);
+        const wait = 500;
+        const observer = new IntersectionObserver(debounce(handleIntersect, wait), options);
         observer.observe(target);
 
         return () => {
-            // Destroy the observer
             observer.disconnect();
         };
     }, []);
@@ -57,7 +39,7 @@ ObserverSection.propTypes = {
     id: PropTypes.string.isRequired,
     rootElement: PropTypes.node,
     rootMargin: PropTypes.string,
-    granularity: PropTypes.number.isRequired,
+    granularity: PropTypes.number,
     index: PropTypes.number.isRequired,
     setIntersectionRatios: PropTypes.func.isRequired,
     children: PropTypes.node.isRequired
@@ -65,7 +47,8 @@ ObserverSection.propTypes = {
 
 ObserverSection.defaultProps = {
     rootElement: null,
-    rootMargin: '0px'
+    rootMargin: '0px',
+    granularity: 20
 };
 
 export default ObserverSection;
