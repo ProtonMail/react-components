@@ -34,6 +34,7 @@
     "card-validator": "^6.1.0",
     "dayjs": "^1.8.5",
     "design-system": "github:ProtonMail/design-system.git#master",
+    "intersection-observer": "^0.5.1",
     "keycode": "^2.2.0",
     "prop-types": "^15.7.2",
     "push.js": "^1.0.9",

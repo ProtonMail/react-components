@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
+import 'intersection-observer';
 
 const ObserverSection = ({ id, rootElement, rootMargin, granularity, index, setIntersectionRatios, children }) => {
     // the granularity prop should be an integer and is meant to mark how many divisions we make to

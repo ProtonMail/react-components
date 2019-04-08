@@ -1,6 +1,7 @@
 import React from 'react';
 import { render } from 'react-testing-library';
 
+// import ObserverSections from './ObserverSections';
 import ObserverSections from './ObserverSections';
 
 describe('ObserverSections component', () => {
@@ -19,16 +20,16 @@ describe('ObserverSections component', () => {
         { id: 'section5', granularity: 20, children: <div id="text-5">{repeatText(dummyText, 5)}</div> }
     ];
 
-    it('should render the observer section properly', () => {
+    it('should render the observer sections properly', () => {
         const { container } = render(<ObserverSections list={list} />);
 
-        const observerSections = [].slice.call(container.querySelectorAll('ObserverSection'));
+        const sections = [].slice.call(container.querySelectorAll('section'));
 
-        expect(observerSections.length).toBe(5);
+        expect(sections.length).toBe(5);
 
-        observerSections.forEach((observerSection, index) => {
-            expect(observerSection.getAttribute('granularity')).toBe(20);
-            expect(observerSection.textContent).toBe(repeatText(dummyText, index + 1));
+        sections.forEach((section, index) => {
+            expect(section.getAttribute('id')).toBe(`section${index + 1}`);
+            expect(section.textContent).toBe(repeatText(dummyText, index + 1));
         });
     });
 });
