@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import 'intersection-observer';
 import { buildThresholds } from 'react-components';
-import { debounce } from '../../../proton-shared/lib/helpers/function';
+import { debounce } from 'proton-shared/lib/helpers/function';
 
 const ObserverSection = ({
     id,
