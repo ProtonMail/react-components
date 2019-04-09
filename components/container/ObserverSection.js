@@ -16,9 +16,9 @@ const ObserverSection = ({
     children
 }) => {
     const handleIntersect = (entries) => {
-        entries.forEach(function(entry) {
+        entries.forEach((entry) => {
             setIntersectionRatios((intersectionRatios) => {
-                let newIntersectionRatios = intersectionRatios.slice();
+                const newIntersectionRatios = intersectionRatios.slice();
                 newIntersectionRatios[index] = Math.min(entry.intersectionRatio, 1); // manual fix for bug IntersectionObserverEntry.intersectionRatio > 1
                 updateIdToDisplay(newIntersectionRatios);
                 return newIntersectionRatios;
@@ -29,7 +29,7 @@ const ObserverSection = ({
     useEffect(() => {
         const options = {
             root: rootElement,
-            rootMargin: rootMargin,
+            rootMargin,
             threshold: buildThresholds(granularity)
         };
         const target = document.getElementById(id);

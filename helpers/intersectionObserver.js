@@ -3,7 +3,10 @@
  * @param {Array<Number>} numbers   List of numbers
  * @return {number}                 Index of maximum (first instance found). Returns -1 if given an empty list
  */
-export const indexOfMax = (numbers) => numbers.findIndex((elm) => elm === Math.max(...numbers));
+export const indexOfMax = (numbers) => {
+    const max = Math.max(...numbers);
+    return numbers.findIndex((elm) => elm === max);
+};
 
 /**
  * Given a granularity, build the corresponding array of thresholds
