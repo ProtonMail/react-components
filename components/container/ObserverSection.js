@@ -4,12 +4,23 @@ import 'intersection-observer';
 import { buildThresholds } from 'react-components';
 import { debounce } from '../../../proton-shared/lib/helpers/function';
 
-const ObserverSection = ({ id, rootElement, rootMargin, granularity, index, setIntersectionRatios, children }) => {
+const ObserverSection = ({
+    id,
+    rootElement,
+    rootMargin,
+    granularity,
+    index,
+    setIntersectionRatios,
+    updateIdToDisplay,
+    wait,
+    children
+}) => {
     const handleIntersect = (entries) => {
         entries.forEach(function(entry) {
             setIntersectionRatios((intersectionRatios) => {
                 let newIntersectionRatios = intersectionRatios.slice();
                 newIntersectionRatios[index] = Math.min(entry.intersectionRatio, 1); // manual fix for bug IntersectionObserverEntry.intersectionRatio > 1
+                updateIdToDisplay(newIntersectionRatios);
                 return newIntersectionRatios;
             });
         });
@@ -23,7 +34,6 @@ const ObserverSection = ({ id, rootElement, rootMargin, granularity, index, setI
         };
         const target = document.getElementById(id);
 
-        const wait = 500;
         const observer = new IntersectionObserver(debounce(handleIntersect, wait), options);
         observer.observe(target);
 
@@ -42,13 +52,16 @@ ObserverSection.propTypes = {
     granularity: PropTypes.number,
     index: PropTypes.number.isRequired,
     setIntersectionRatios: PropTypes.func.isRequired,
+    updateIdToDisplay: PropTypes.func.isRequired,
+    wait: PropTypes.number,
     children: PropTypes.node.isRequired
 };
 
 ObserverSection.defaultProps = {
     rootElement: null,
     rootMargin: '0px',
-    granularity: 20
+    granularity: 20,
+    wait: 500
 };
 
 export default ObserverSection;
