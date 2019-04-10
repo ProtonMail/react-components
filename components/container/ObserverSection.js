@@ -1,27 +1,21 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import 'intersection-observer';
-import { buildThresholds } from 'react-components';
+import { buildThresholds, indexOfMax } from 'react-components';
 import { debounce } from 'proton-shared/lib/helpers/function';
 
-const ObserverSection = ({
-    id,
-    rootElement,
-    rootMargin,
-    granularity,
-    index,
-    setIntersectionRatios,
-    updateHashToDisplay,
-    wait,
-    children
-}) => {
+const ObserverSection = ({ id, rootElement, rootMargin, granularity, index, setIntersectionData, wait, children }) => {
     const handleIntersect = (entries) => {
         entries.forEach((entry) => {
-            setIntersectionRatios((intersectionRatios) => {
-                const newIntersectionRatios = intersectionRatios.slice();
+            setIntersectionData((intersectionData) => {
+                const newIntersectionRatios = intersectionData.intersectionRatios.slice();
                 newIntersectionRatios[index] = Math.min(entry.intersectionRatio, 1); // manual fix for bug IntersectionObserverEntry.intersectionRatio > 1
-                updateHashToDisplay(newIntersectionRatios);
-                return newIntersectionRatios;
+                const idToDisplay = intersectionData.listOfIds[indexOfMax(newIntersectionRatios)];
+                return {
+                    intersectionRatios: newIntersectionRatios,
+                    listOfIds: intersectionData.listOfIds,
+                    hashToDisplay: `#${idToDisplay}`
+                };
             });
         });
     };
@@ -51,8 +45,7 @@ ObserverSection.propTypes = {
     rootMargin: PropTypes.string,
     granularity: PropTypes.number,
     index: PropTypes.number.isRequired,
-    setIntersectionRatios: PropTypes.func.isRequired,
-    updateHashToDisplay: PropTypes.func.isRequired,
+    setIntersectionData: PropTypes.func.isRequired,
     wait: PropTypes.number,
     children: PropTypes.node.isRequired
 };
