@@ -7,14 +7,14 @@ import { debounce } from 'proton-shared/lib/helpers/function';
 const ObserverSection = ({ id, rootElement, rootMargin, granularity, index, setIntersectionData, wait, children }) => {
     const handleIntersect = (entries) => {
         entries.forEach((entry) => {
-            setIntersectionData((intersectionData) => {
-                const newIntersectionRatios = intersectionData.intersectionRatios.slice();
+            setIntersectionData(({ intersectionRatios, listOfIds }) => {
+                const newIntersectionRatios = intersectionRatios.slice();
                 newIntersectionRatios[index] = Math.min(entry.intersectionRatio, 1); // manual fix for bug IntersectionObserverEntry.intersectionRatio > 1
-                const idToDisplay = intersectionData.listOfIds[indexOfMax(newIntersectionRatios)];
+                const idToDisplay = listOfIds[indexOfMax(newIntersectionRatios)];
                 return {
                     intersectionRatios: newIntersectionRatios,
-                    listOfIds: intersectionData.listOfIds,
-                    hashToDisplay: `#${idToDisplay}`
+                    hashToDisplay: `#${idToDisplay}`,
+                    listOfIds
                 };
             });
         });
