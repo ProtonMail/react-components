@@ -17,21 +17,24 @@ const ObserverSections = ({ granularity, wait, children }) => {
             .fill(0, 1)
     );
     const listOfIds = React.Children.map(children, (child) => child.props.id);
-    const [idToDisplay, setIdToDisplay] = useState(listOfIds[0]);
-    const debouncedIdToDisplay = useDebounceInput(idToDisplay, wait);
+    const [HashToDisplay, setHashToDisplay] = useState('');
+    const debouncedHashToDisplay = useDebounceInput(HashToDisplay, wait);
 
-    const updateIdToDisplay = (intersectionRatios) => {
-        setIdToDisplay(listOfIds[indexOfMax(intersectionRatios)]);
+    const updateHashToDisplay = (intersectionRatios) => {
+        if (!intersectionRatios.length) return;
+
+        const idToDisplay = listOfIds[indexOfMax(intersectionRatios)];
+        setHashToDisplay(`#${idToDisplay}`);
     };
 
     useEffect(() => {
         const currentURL = document.URL;
         const newURL = /#/.test(currentURL)
-            ? currentURL.replace(/#(.*)/, `#${debouncedIdToDisplay}`)
-            : currentURL + `#${debouncedIdToDisplay}`;
-        history.replaceState({ section: `${debouncedIdToDisplay}` }, '', newURL);
+            ? currentURL.replace(/#(.*)/, debouncedHashToDisplay)
+            : currentURL + debouncedHashToDisplay;
+        history.replaceState('', '', newURL);
         window.dispatchEvent(new HashChangeEvent('hashchange'));
-    }, [debouncedIdToDisplay]);
+    }, [debouncedHashToDisplay]);
 
     return React.Children.map(children, (child, index) => {
         return (
@@ -40,7 +43,7 @@ const ObserverSections = ({ granularity, wait, children }) => {
                 granularity={granularity}
                 index={index}
                 setIntersectionRatios={setIntersectionRatios}
-                updateIdToDisplay={updateIdToDisplay}
+                updateHashToDisplay={updateHashToDisplay}
                 wait={wait}
             >
                 {child}

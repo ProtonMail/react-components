@@ -11,7 +11,7 @@ const ObserverSection = ({
     granularity,
     index,
     setIntersectionRatios,
-    updateIdToDisplay,
+    updateHashToDisplay,
     wait,
     children
 }) => {
@@ -20,7 +20,7 @@ const ObserverSection = ({
             setIntersectionRatios((intersectionRatios) => {
                 const newIntersectionRatios = intersectionRatios.slice();
                 newIntersectionRatios[index] = Math.min(entry.intersectionRatio, 1); // manual fix for bug IntersectionObserverEntry.intersectionRatio > 1
-                updateIdToDisplay(newIntersectionRatios);
+                updateHashToDisplay(newIntersectionRatios);
                 return newIntersectionRatios;
             });
         });
@@ -52,7 +52,7 @@ ObserverSection.propTypes = {
     granularity: PropTypes.number,
     index: PropTypes.number.isRequired,
     setIntersectionRatios: PropTypes.func.isRequired,
-    updateIdToDisplay: PropTypes.func.isRequired,
+    updateHashToDisplay: PropTypes.func.isRequired,
     wait: PropTypes.number,
     children: PropTypes.node.isRequired
 };
