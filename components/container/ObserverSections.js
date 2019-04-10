@@ -5,7 +5,7 @@ import { indexOfMax } from 'react-components';
 import useDebounceInput from '../input/useDebounceInput';
 
 const ObserverSections = ({ granularity, wait, children }) => {
-    // throw error if any children does not have id
+    // throw error if any child does not have id
     React.Children.forEach(children, (child) => {
         if (!child.props.id) throw new Error('All sections to be observed need an id');
     });
@@ -21,8 +21,6 @@ const ObserverSections = ({ granularity, wait, children }) => {
     const debouncedHashToDisplay = useDebounceInput(HashToDisplay, wait);
 
     const updateHashToDisplay = (intersectionRatios) => {
-        if (!intersectionRatios.length) return;
-
         const idToDisplay = listOfIds[indexOfMax(intersectionRatios)];
         setHashToDisplay(`#${idToDisplay}`);
     };
