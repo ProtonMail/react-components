@@ -71,7 +71,7 @@ const BugModal = ({ show, onClose }) => {
         return downSize(base64str, MAX_SIZE_SCREENSHOT, file.type);
     };
 
-    const toFormData = (parameters = {}) => {
+    const format = (parameters = {}) => {
         const { promises, formData } = Object.entries(parameters).reduce(
             (acc, [key, value]) => {
                 // NOTE FileList instanceof Array => false
@@ -79,7 +79,7 @@ const BugModal = ({ show, onClose }) => {
                     for (let i = 0; i < value.length; i++) {
                         const file = value[i];
                         const promise = resize(file).then((base64str) => {
-                            acc.formData.append(file.name, toBlob(base64str), file.name);
+                            acc[file.name] = toBlob(base64str);
                         });
 
                         acc.promises.push(promise);
@@ -88,11 +88,11 @@ const BugModal = ({ show, onClose }) => {
                     return acc;
                 }
 
-                acc.formData.append(key, value);
+                acc[key] = value;
 
                 return acc;
             },
-            { promises: [], formData: new FormData() }
+            { promises: [], formData: {} }
         );
 
         return Promise.all(promises)
@@ -101,7 +101,7 @@ const BugModal = ({ show, onClose }) => {
     };
 
     const handleSubmit = async () => {
-        await request(toFormData(model));
+        await request(format(model), 'form');
         onClose();
         createNotification({ text: c('Success').t`Bug reported` });
     };
