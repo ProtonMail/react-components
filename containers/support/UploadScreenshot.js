@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
-import { Text, Icon, Button, Input, LearnMore, useNotifications } from 'react-components';
+import { Text, Icon, Button, InputFile, useNotifications } from 'react-components';
 import PropTypes from 'prop-types';
 
 const UploadScreenshot = ({ id, onUpload, onReset }) => {
@@ -13,7 +13,7 @@ const UploadScreenshot = ({ id, onUpload, onReset }) => {
     };
 
     const handleChange = ({ target }) => {
-        const images = target.files.filter(({ type }) => /^image\//i.test(type));
+        const images = [...target.files].filter(({ type }) => /^image\//i.test(type));
 
         if (images.length) {
             setUpload(true);
@@ -30,8 +30,7 @@ const UploadScreenshot = ({ id, onUpload, onReset }) => {
         return (
             <>
                 <Text>
-                    <Icon name="insert-image" />
-                    {c('Info').t`Screenshot(s) attached`}
+                    <Icon name="insert-image" /> {c('Info').t`Screenshot(s) attached`}
                 </Text>
                 <Button onClick={handleClick}>{c('Action').t`Clear`}</Button>
             </>
@@ -39,10 +38,8 @@ const UploadScreenshot = ({ id, onUpload, onReset }) => {
     }
 
     return (
-        <>
-            <Input className="pm-button" type="file" multiple accept="image/*" id={id} onChange={handleChange} />
-            <LearnMore url="https://protonmail.com/support/knowledge-base/screenshot-reporting-bugs/" />
-        </>
+        <InputFile className="mr1" multiple accept="image/*" id={id} onChange={handleChange}>{c('Action')
+            .t`Add screenshots`}</InputFile>
     );
 };
 

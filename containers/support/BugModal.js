@@ -12,6 +12,7 @@ import {
     Alert,
     Row,
     Input,
+    Info,
     TextArea,
     Label,
     ContentModal,
@@ -169,7 +170,10 @@ const BugModal = ({ show, onClose }) => {
                     />
                 </Row>
                 <Row>
-                    <Label htmlFor="Attachments">{c('Label').t`Attach screenshots`}</Label>
+                    <Label htmlFor="Attachments">
+                        {c('Label').t`Attach screenshots`}{' '}
+                        <Info url="https://protonmail.com/support/knowledge-base/screenshot-reporting-bugs/" />
+                    </Label>
                     <UploadScreenshot id="Attachments" onUpload={handleUpload} onReset={handleReset} />
                 </Row>
                 <Alert>{c('Info').t`Contact us at security@protonmail.com for critical security issues.`}</Alert>
