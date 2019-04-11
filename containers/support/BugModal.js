@@ -80,7 +80,7 @@ const BugModal = ({ show, onClose }) => {
                     for (let i = 0; i < value.length; i++) {
                         const file = value[i];
                         const promise = resize(file).then((base64str) => {
-                            acc[file.name] = toBlob(base64str);
+                            acc.formData[file.name] = toBlob(base64str);
                         });
 
                         acc.promises.push(promise);
@@ -89,7 +89,7 @@ const BugModal = ({ show, onClose }) => {
                     return acc;
                 }
 
-                acc[key] = value;
+                acc.formData[key] = value;
 
                 return acc;
             },
@@ -102,7 +102,8 @@ const BugModal = ({ show, onClose }) => {
     };
 
     const handleSubmit = async () => {
-        await request(format(model), 'form');
+        const form = await format(model);
+        await request(form, 'form');
         onClose();
         createNotification({ text: c('Success').t`Bug reported` });
     };
