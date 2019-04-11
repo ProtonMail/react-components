@@ -17,21 +17,19 @@ import {
     ContentModal,
     FooterModal,
     EmailInput,
-    Button,
     ResetButton,
-    Text,
     PrimaryButton,
     useApiWithoutResult,
-    LearnMore,
     useUser,
     useAddresses,
     useNotifications
 } from 'react-components';
+import UploadScreenshot from './UploadScreenshot';
 
 const BugModal = ({ show, onClose }) => {
     const [{ Name = '' }] = useUser();
     const { createNotification } = useNotifications();
-    const [uploaded, setUpload] = useState(false);
+
     const [addresses = []] = useAddresses();
     const [{ Email = '' } = {}] = addresses;
     const os = getOS();
@@ -60,26 +58,13 @@ const BugModal = ({ show, onClose }) => {
     );
     const handleChange = (key) => ({ target }) => update({ ...model, [key]: target.value });
 
-    const handleClick = () => {
+    const handleReset = () => {
         // eslint-disable-next-line no-unused-vars
         const { Attachments, ...newModel } = model;
         update(newModel);
-        setUpload(false);
     };
 
-    const handleUpload = ({ target }) => {
-        const images = target.files.filter(({ type }) => /^image\//i.test(type));
-
-        if (images.length) {
-            setUpload(true);
-            update({ model, Attachments: images });
-        } else {
-            createNotification({
-                type: 'error',
-                text: c('Error notification in the bug report modal when the user upload file').t`No image selected`
-            });
-        }
-    };
+    const handleUpload = (images) => update({ ...model, Attachments: images });
 
     const resize = async (file) => {
         const base64str = await toBase64(file);
@@ -185,17 +170,7 @@ const BugModal = ({ show, onClose }) => {
                 </Row>
                 <Row>
                     <Label htmlFor="Attachments">{c('Label').t`Attach screenshots`}</Label>
-                    <div>
-                        {uploaded ? (
-                            <>
-                                <Text>{c('Info').t`Screenshot(s) attached`}</Text>
-                                <Button onClick={handleClick}>{c('Action').t`Clear`}</Button>
-                            </>
-                        ) : (
-                            <Input type="file" multiple accept="image/*" id="Attachments" onChange={handleUpload} />
-                        )}
-                        <LearnMore url="https://protonmail.com/support/knowledge-base/screenshot-reporting-bugs/" />
-                    </div>
+                    <UploadScreenshot id="Attachments" onUpload={handleUpload} onReset={handleReset} />
                 </Row>
                 <Alert>{c('Info').t`Contact us at security@protonmail.com for critical security issues.`}</Alert>
                 <FooterModal>
@@ -209,12 +184,7 @@ const BugModal = ({ show, onClose }) => {
 
 BugModal.propTypes = {
     show: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired,
-    extraContent: PropTypes.string
-};
-
-BugModal.defaultProps = {
-    extraContent: ''
+    onClose: PropTypes.func.isRequired
 };
 
 export default BugModal;
