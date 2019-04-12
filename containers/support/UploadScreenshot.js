@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
-import { Text, Icon, Button, InputFile, useNotifications } from 'react-components';
+import { Text, Icon, Button, FileInput, useNotifications } from 'react-components';
 import PropTypes from 'prop-types';
 
 const UploadScreenshot = ({ id, onUpload, onReset }) => {
@@ -38,8 +38,8 @@ const UploadScreenshot = ({ id, onUpload, onReset }) => {
     }
 
     return (
-        <InputFile className="mr1" multiple accept="image/*" id={id} onChange={handleChange}>{c('Action')
-            .t`Add screenshots`}</InputFile>
+        <FileInput className="mr1" multiple accept="image/*" id={id} onChange={handleChange}>{c('Action')
+            .t`Add screenshots`}</FileInput>
     );
 };
 

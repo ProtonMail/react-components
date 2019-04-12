@@ -47,7 +47,7 @@ export { default as Search } from './components/input/Search';
 export { default as TextArea } from './components/input/TextArea';
 export { default as Input } from './components/input/Input';
 export { default as DateInput } from './components/input/DateInput';
-export { default as InputFile } from './components/input/InputFile';
+export { default as FileInput } from './components/input/FileInput';
 export { default as EmailInput } from './components/input/EmailInput';
 export { default as TwoFactorInput } from './components/input/TwoFactorInput';
 export { default as RadioCard } from './components/input/RadioCard';
