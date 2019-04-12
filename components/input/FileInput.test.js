@@ -3,7 +3,7 @@ import { render } from 'react-testing-library';
 
 import FileInput from './FileInput';
 
-describe('PasswordInput component', () => {
+describe('FileInput component', () => {
     const value = 'panda';
 
     it('should render a file input and wrap children', () => {
