@@ -42,9 +42,9 @@ const BugModal = ({ show, onClose }) => {
         Browser: browser.name,
         BrowserVersion: browser.version,
         Resolution: `${window.innerHeight} x ${window.innerWidth}`,
-        Client: 'ProtonMail Settings React',
-        ClientVersion: 'TODO',
-        ClientType: 'TODO',
+        Client: 'Angular', // TODO define a new one with the API
+        ClientVersion: '3.15.23', // TODO get it from app
+        ClientType: 1, // TODO get it from config
         DeviceName: device.vendor,
         DeviceModel: device.model,
         Title: `[ProtonMail Settings React] Bug [${location.path}]`,
