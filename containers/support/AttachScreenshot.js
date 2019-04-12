@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
 import { Text, Icon, Button, FileInput, useNotifications } from 'react-components';
-import { toBase64 } from 'proton-shared/lib/helpers/file';
-import { downSize, toBlob } from 'proton-shared/lib/helpers/image';
+import { toBlob, resize } from 'proton-shared/lib/helpers/image';
 import { MAX_SIZE_SCREENSHOT } from 'proton-shared/lib/constants';
 import PropTypes from 'prop-types';
 
@@ -15,11 +14,6 @@ const AttachScreenshot = ({ id, onUpload, onReset }) => {
         onReset();
     };
 
-    const resize = async (file) => {
-        const base64str = await toBase64(file);
-        return downSize(base64str, MAX_SIZE_SCREENSHOT, file.type);
-    };
-
     const handleChange = async ({ target }) => {
         const images = [...target.files].filter(({ type }) => /^image\//i.test(type));
 
@@ -28,7 +22,7 @@ const AttachScreenshot = ({ id, onUpload, onReset }) => {
             onUpload(
                 await Promise.all(
                     images.map((img) =>
-                        resize(img).then((base64str) => ({
+                        resize(img, MAX_SIZE_SCREENSHOT).then((base64str) => ({
                             name: img.name,
                             blob: toBlob(base64str)
                         }))
