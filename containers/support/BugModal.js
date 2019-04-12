@@ -2,9 +2,6 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { reportBug } from 'proton-shared/lib/api/reports';
 import { getOS, getBrowser, getDevice } from 'proton-shared/lib/helpers/browser';
-import { toBase64 } from 'proton-shared/lib/helpers/file';
-import { downSize, toBlob } from 'proton-shared/lib/helpers/image';
-import { MAX_SIZE_SCREENSHOT } from 'proton-shared/lib/constants';
 import { c } from 'ttag';
 import {
     Modal,
@@ -25,7 +22,7 @@ import {
     useAddresses,
     useNotifications
 } from 'react-components';
-import UploadScreenshot from './UploadScreenshot';
+import AttachScreenshot from './AttachScreenshot';
 
 const BugModal = ({ show, onClose }) => {
     const [{ Name = '' }] = useUser();
@@ -67,43 +64,24 @@ const BugModal = ({ show, onClose }) => {
 
     const handleUpload = (images) => update({ ...model, Attachments: images });
 
-    const resize = async (file) => {
-        const base64str = await toBase64(file);
-        return downSize(base64str, MAX_SIZE_SCREENSHOT, file.type);
-    };
-
     const format = (parameters = {}) => {
-        const { promises, formData } = Object.entries(parameters).reduce(
-            (acc, [key, value]) => {
-                // NOTE FileList instanceof Array => false
-                if (value instanceof FileList || value instanceof Array) {
-                    for (let i = 0; i < value.length; i++) {
-                        const file = value[i];
-                        const promise = resize(file).then((base64str) => {
-                            acc.formData[file.name] = toBlob(base64str);
-                        });
-
-                        acc.promises.push(promise);
-                    }
-
-                    return acc;
-                }
-
-                acc.formData[key] = value;
+        return Object.entries(parameters).reduce((acc, [key, value]) => {
+            if (value instanceof Array) {
+                value.forEach(({ blob, name }) => {
+                    acc[name] = blob;
+                });
 
                 return acc;
-            },
-            { promises: [], formData: {} }
-        );
+            }
 
-        return Promise.all(promises)
-            .then(() => formData)
-            .catch(() => formData);
+            acc[key] = value;
+
+            return acc;
+        }, {});
     };
 
     const handleSubmit = async () => {
-        const form = await format(model);
-        await request(form, 'form');
+        await request(format(model), 'form');
         onClose();
         createNotification({ text: c('Success').t`Bug reported` });
     };
@@ -175,7 +153,7 @@ const BugModal = ({ show, onClose }) => {
                         {c('Label').t`Attach screenshots`}{' '}
                         <Info url="https://protonmail.com/support/knowledge-base/screenshot-reporting-bugs/" />
                     </Label>
-                    <UploadScreenshot id="Attachments" onUpload={handleUpload} onReset={handleReset} />
+                    <AttachScreenshot id="Attachments" onUpload={handleUpload} onReset={handleReset} />
                 </Row>
                 <Alert>{c('Info').t`Contact us at security@protonmail.com for critical security issues.`}</Alert>
                 <FooterModal>

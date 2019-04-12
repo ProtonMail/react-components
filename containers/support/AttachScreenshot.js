@@ -1,23 +1,40 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
 import { Text, Icon, Button, FileInput, useNotifications } from 'react-components';
+import { toBase64 } from 'proton-shared/lib/helpers/file';
+import { downSize, toBlob } from 'proton-shared/lib/helpers/image';
+import { MAX_SIZE_SCREENSHOT } from 'proton-shared/lib/constants';
 import PropTypes from 'prop-types';
 
-const UploadScreenshot = ({ id, onUpload, onReset }) => {
-    const [uploaded, setUpload] = useState(false);
+const AttachScreenshot = ({ id, onUpload, onReset }) => {
+    const [attached, setAttached] = useState(false);
     const { createNotification } = useNotifications();
 
     const handleClick = () => {
-        setUpload(false);
+        setAttached(false);
         onReset();
     };
 
-    const handleChange = ({ target }) => {
+    const resize = async (file) => {
+        const base64str = await toBase64(file);
+        return downSize(base64str, MAX_SIZE_SCREENSHOT, file.type);
+    };
+
+    const handleChange = async ({ target }) => {
         const images = [...target.files].filter(({ type }) => /^image\//i.test(type));
 
         if (images.length) {
-            setUpload(true);
-            onUpload(images);
+            setAttached(true);
+            onUpload(
+                await Promise.all(
+                    images.map((img) =>
+                        resize(img).then((base64str) => ({
+                            name: img.name,
+                            blob: toBlob(base64str)
+                        }))
+                    )
+                )
+            );
         } else {
             createNotification({
                 type: 'error',
@@ -26,7 +43,7 @@ const UploadScreenshot = ({ id, onUpload, onReset }) => {
         }
     };
 
-    if (uploaded) {
+    if (attached) {
         return (
             <>
                 <Text>
@@ -39,14 +56,14 @@ const UploadScreenshot = ({ id, onUpload, onReset }) => {
 
     return (
         <FileInput className="mr1" multiple accept="image/*" id={id} onChange={handleChange}>{c('Action')
-            .t`Add screenshots`}</FileInput>
+            .t`Add screenshot(s)`}</FileInput>
     );
 };
 
-UploadScreenshot.propTypes = {
+AttachScreenshot.propTypes = {
     id: PropTypes.string,
     onUpload: PropTypes.func.isRequired,
     onReset: PropTypes.func.isRequired
 };
 
-export default UploadScreenshot;
+export default AttachScreenshot;
