@@ -45,12 +45,13 @@ const BugModal = ({ show, onClose }) => {
         ClientType: 1, // TODO get it from config
         DeviceName: device.vendor,
         DeviceModel: device.model,
-        Title: `[ProtonMail Settings React] Bug [${location.path}]`,
+        Title: `[ProtonMail Settings React] Bug [${location.path}]`, // TODO Should comes from the config
         Description: '',
         Username: Name,
         Email
     });
     const { state: showDetails, toggle: toggleDetails } = useToggle(false);
+    const [images, setImages] = useState([]);
     const { request, loading } = useApiWithoutResult(reportBug);
     const link = (
         <Href url="https://protonmail.com/support/knowledge-base/how-to-clean-cache-and-cookies/">{c('Link')
@@ -58,32 +59,15 @@ const BugModal = ({ show, onClose }) => {
     );
     const handleChange = (key) => ({ target }) => update({ ...model, [key]: target.value });
 
-    const handleReset = () => {
-        // eslint-disable-next-line no-unused-vars
-        const { Attachments, ...newModel } = model;
-        update(newModel);
-    };
-
-    const handleUpload = (images) => update({ ...model, Attachments: images });
-
-    const format = (parameters = {}) => {
-        return Object.entries(parameters).reduce((acc, [key, value]) => {
-            if (value instanceof Array) {
-                value.forEach(({ blob, name }) => {
-                    acc[name] = blob;
-                });
-
-                return acc;
-            }
-
-            acc[key] = value;
-
+    const getParameters = () => {
+        return images.reduce((acc, { name, blob }) => {
+            acc[name] = blob;
             return acc;
-        }, {});
+        }, model);
     };
 
     const handleSubmit = async () => {
-        await request(format(model), 'form');
+        await request(getParameters(), 'form');
         onClose();
         createNotification({ text: c('Success').t`Bug reported` });
     };
@@ -119,7 +103,7 @@ const BugModal = ({ show, onClose }) => {
                         {c('Label').t`Attach screenshots`}{' '}
                         <Info url="https://protonmail.com/support/knowledge-base/screenshot-reporting-bugs/" />
                     </Label>
-                    <AttachScreenshot id="Attachments" onUpload={handleUpload} onReset={handleReset} />
+                    <AttachScreenshot id="Attachments" onUpload={setImages} onReset={() => setImages([])} />
                 </Row>
                 <Row>
                     <Label>{c('Label').t`System information`}</Label>

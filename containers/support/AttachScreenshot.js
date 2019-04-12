@@ -17,24 +17,24 @@ const AttachScreenshot = ({ id, onUpload, onReset }) => {
     const handleChange = async ({ target }) => {
         const images = [...target.files].filter(({ type }) => /^image\//i.test(type));
 
-        if (images.length) {
-            setAttached(true);
-            onUpload(
-                await Promise.all(
-                    images.map((img) =>
-                        resize(img, MAX_SIZE_SCREENSHOT).then((base64str) => ({
-                            name: img.name,
-                            blob: toBlob(base64str)
-                        }))
-                    )
-                )
-            );
-        } else {
-            createNotification({
+        if (!images.length) {
+            return createNotification({
                 type: 'error',
                 text: c('Error notification in the bug report modal when the user upload file').t`No image selected`
             });
         }
+
+        setAttached(true);
+        onUpload(
+            await Promise.all(
+                images.map((img) =>
+                    resize(img, MAX_SIZE_SCREENSHOT).then((base64str) => ({
+                        name: img.name,
+                        blob: toBlob(base64str)
+                    }))
+                )
+            )
+        );
     };
 
     if (attached) {
