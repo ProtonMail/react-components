@@ -22,11 +22,25 @@ import {
     useApiWithoutResult,
     useUser,
     useAddresses,
-    useNotifications
+    useNotifications,
+    useConfig
 } from 'react-components';
 import AttachScreenshot from './AttachScreenshot';
 
+const CONFIGS = {
+    Web: 'Angular',
+    ProtonMailReact: 'ProtonMail React',
+    ProtonContactReact: 'ProtonContact React',
+    ProtonMailSettingsReact: 'ProtonMail Settings React',
+    ProtonCalendarReact: 'ProtonCalendar React',
+    ProtonDriveReact: 'ProtonDrive React',
+    ProtonWalletReact: 'ProtonWallet React',
+    ProtonVPN: 'ProtonVPN React'
+};
+
 const BugModal = ({ show, onClose }) => {
+    const { CLIENT_ID, APP_VERSION } = useConfig();
+    const Client = CONFIGS[CLIENT_ID];
     const [{ Name = '' }] = useUser();
     const { createNotification } = useNotifications();
     const [addresses = []] = useAddresses();
@@ -40,12 +54,12 @@ const BugModal = ({ show, onClose }) => {
         Browser: browser.name,
         BrowserVersion: browser.version,
         Resolution: `${window.innerHeight} x ${window.innerWidth}`,
-        Client: 'Angular', // TODO define a new one with the API
-        ClientVersion: '3.15.23', // TODO get it from app
-        ClientType: 1, // TODO get it from config
+        Client,
+        ClientVersion: APP_VERSION,
+        ClientType: 1,
         DeviceName: device.vendor,
         DeviceModel: device.model,
-        Title: `[ProtonMail Settings React] Bug [${location.path}]`, // TODO Should comes from the config
+        Title: `[${Client}] Bug [${location.path}]`,
         Description: '',
         Username: Name,
         Email
