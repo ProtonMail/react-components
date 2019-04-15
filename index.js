@@ -211,6 +211,7 @@ export { default as EmbeddedToggle } from './containers/messages/EmbeddedToggle'
 export { default as MessagesSection } from './containers/messages/MessagesSection';
 export { default as NotificationsContext } from './context/notifications';
 export { default as AuthenticationStoreContext } from './context/authenticationStore';
+export { default as ConfigContext } from './context/config';
 export { default as ApiContext } from './context/api';
 export { default as ShortcutsSection } from './containers/general/ShortcutsSection';
 export { default as PromptsContext } from './context/prompts';
@@ -223,6 +224,7 @@ export { default as useNotifications } from './hooks/useNotifications';
 export { default as usePrompts } from './hooks/usePrompts';
 export { default as useIsMounted } from './hooks/useIsMounted';
 export { default as useInstance } from './hooks/useInstance';
+export { default as useConfig } from './hooks/useConfig';
 export { default as useApi } from './hooks/useApi';
 export { default as useApiResult } from './hooks/useApiResult';
 export { default as useAuthenticationStore } from './hooks/useAuthenticationStore';
