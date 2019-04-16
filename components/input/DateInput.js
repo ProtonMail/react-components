@@ -2,13 +2,12 @@ import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import Pikaday from 'pikaday';
 
-const DateInput = ({ onChange: onSelect, disabled, ...rest }) => {
+const DateInput = ({ disabled, ...rest }) => {
     const inputRef = useRef();
 
     useEffect(() => {
         const picker = new Pikaday({
             field: inputRef.current,
-            onSelect,
             ...rest
         });
 
