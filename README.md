@@ -34,7 +34,7 @@ For webpack, it needs to be loaded with the `svg-inline-loader`. The rest of the
 ### useApi
 Get the `api` function to perform API calls. In 99% of cases, `useApi` hook *should not be used* because calling the API should required to use at least the `loading` parameter to block the UI.
 
-```
+``` js
 const api = useApi();
 ```
 
@@ -45,7 +45,7 @@ It runs automatically depending on what dependencies are specified. If `[]` is g
 
 where `fn` is passed whatever arguments is passed from `request`, or nothing if run from a dependency change and should return a route config object.
 
-```
+``` js
 const { loading, result, error, request } = useApiResult(fn, [dependencies]);
 ```
 
@@ -54,7 +54,7 @@ Get parameters `loading`, `request` from the API call.
 
 Does not run automatically. Intended for `POST`, `PUT` requests where a `loading` indicator is wanted.
 
-```
+``` js
 const { loading, result, error, request } = useApiResult(fn);
 ```
 
@@ -63,14 +63,14 @@ where `fn` is passed whatever arguments is passed from `request` and should retu
 ### useAuthenticationStore
 Get the `authenticationStore`. Can be used to retrieve the `UID` or the `mailboxPassword`.
 
-```
+``` js
 const authenticationStore = useAuthentionStore();
 ```
 
 ### useNotifications
 Create notifications to be displayed in the app.
 
-```
+``` js
 const { createNotification, removeNotification } = useNotifications();
 
 const handleClick = () => {
@@ -81,7 +81,7 @@ const handleClick = () => {
 ### usePrompts
 Create a prompt. Intended to show a modal asking for user input. Returns a promise.
 
-```
+``` js
 const { createPrompt } = usePrompts();
 
 const handleClick = async () => {
@@ -90,17 +90,23 @@ const handleClick = async () => {
     });
     // use password
 };
-
 ```
 
 ### useAsync
 Get `loading`, `result`, `error` parameters from a promise.
 
-```
+``` js
 const { loading, result, error, run } = useAsync();
 
 const handleClick = () => {
     run(promise);
 };
+```
 
+### useConfig
+
+Get all variables defined in `config.js` file for a dedicated project.
+
+``` js
+const { CLIENT_ID, CLIENT_VERSION } = useConfig();
 ```
