@@ -16,6 +16,8 @@ import {
 import { updateOrganizationName } from 'proton-shared/lib/api/organization';
 import humanSize from 'proton-shared/lib/helpers/humanSize';
 
+import ActivateOrganizationButton from './ActivateOrganizationButton';
+
 const OrganizationSection = () => {
     const { request } = useApiWithoutResult(updateOrganizationName);
     const [organization] = useOrganization();
@@ -32,6 +34,17 @@ const OrganizationSection = () => {
         MaxAddresses
     } = organization;
     const { createModal } = useModals();
+
+    if (!organization.HasKeys) {
+        return (
+            <>
+                <SubTitle>{c('Title').t`Multi-user support`}</SubTitle>
+                <Alert learnMore="https://protonmail.com/support/knowledge-base/business/">{c('Info')
+                    .t`Create and manage sub-accounts and assign them email addresses on your custom domain.`}</Alert>
+                <ActivateOrganizationButton />
+            </>
+        );
+    }
 
     const handleSubmit = async (name) => {
         await request(name);
