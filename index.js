@@ -217,7 +217,7 @@ export { default as ShortcutsSection } from './containers/general/ShortcutsSecti
 export { default as PromptsContext } from './context/prompts';
 export { default as PmMeSection } from './containers/addresses/PmMeSection';
 export { default as IdentitySection } from './containers/addresses/IdentitySection';
-export { default as useStep } from './helpers/useStep';
+export { default as useStep } from './hooks/useStep';
 export { default as useApiWithoutResult } from './hooks/useApiWithoutResult';
 export { default as useEventManager } from './hooks/useEventManager';
 export { default as useNotifications } from './hooks/useNotifications';
