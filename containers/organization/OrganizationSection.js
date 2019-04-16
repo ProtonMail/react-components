@@ -65,7 +65,8 @@ const OrganizationSection = () => {
     return (
         <>
             <SubTitle>{c('Title').t`Organization`}</SubTitle>
-            <Alert learnMore="todo">{c('Info').t`Lorem ipsum`}</Alert>
+            <Alert learnMore="todo">{c('Info')
+                .t`Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pretium enim nec massa fringilla, ac ultrices tortor posuere. Fusce sed quam vitae arcu pharetra congue. Quisque in elementum nibh.`}</Alert>
             <Row>
                 <Label>{c('Label').t`Organization name`}</Label>
                 <Field>
