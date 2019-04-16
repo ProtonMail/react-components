@@ -36,6 +36,8 @@
     "design-system": "github:ProtonMail/design-system.git#master",
     "intersection-observer": "^0.5.1",
     "keycode": "^2.2.0",
+    "moment": "^2.24.0",
+    "pikaday": "^1.8.0",
     "prop-types": "^15.7.2",
     "push.js": "^1.0.9",
     "qrcodejs2": "0.0.2",
