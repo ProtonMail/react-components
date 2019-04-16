@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { reportBug } from 'proton-shared/lib/api/reports';
-import { getOS, getBrowser, getDevice } from 'proton-shared/lib/helpers/browser';
+
 import { c } from 'ttag';
 import {
     Modal,
@@ -25,40 +25,23 @@ import {
     useNotifications,
     useConfig
 } from 'react-components';
-import AttachScreenshot from './AttachScreenshot';
 
-const CONFIGS = {
-    Web: 'Angular',
-    ProtonMailReact: 'ProtonMail React',
-    ProtonContactReact: 'ProtonContact React',
-    ProtonMailSettingsReact: 'ProtonMail Settings React',
-    ProtonCalendarReact: 'ProtonCalendar React',
-    ProtonDriveReact: 'ProtonDrive React',
-    ProtonWalletReact: 'ProtonWallet React',
-    ProtonVPN: 'ProtonVPN React'
-};
+import AttachScreenshot from './AttachScreenshot';
+import { collectInfo, getClient } from '../../helpers/report';
 
 const BugModal = ({ show, onClose }) => {
-    const { CLIENT_ID, APP_VERSION } = useConfig();
-    const Client = CONFIGS[CLIENT_ID];
+    const { CLIENT_ID, APP_VERSION, CLIENT_TYPE } = useConfig();
+    const Client = getClient(CLIENT_ID);
     const [{ Name = '' }] = useUser();
     const { createNotification } = useNotifications();
     const [addresses = []] = useAddresses();
     const [{ Email = '' } = {}] = addresses;
-    const os = getOS();
-    const browser = getBrowser();
-    const device = getDevice();
+
     const [model, update] = useState({
-        OS: os.name,
-        OSVersion: os.version || '',
-        Browser: browser.name,
-        BrowserVersion: browser.version,
-        Resolution: `${window.innerHeight} x ${window.innerWidth}`,
+        ...collectInfo(),
         Client,
         ClientVersion: APP_VERSION,
-        ClientType: 1,
-        DeviceName: device.vendor,
-        DeviceModel: device.model,
+        ClientType: CLIENT_TYPE,
         Title: `[${Client}] Bug [${location.path}]`,
         Description: '',
         Username: Name,
@@ -74,10 +57,13 @@ const BugModal = ({ show, onClose }) => {
     const handleChange = (key) => ({ target }) => update({ ...model, [key]: target.value });
 
     const getParameters = () => {
-        return images.reduce((acc, { name, blob }) => {
-            acc[name] = blob;
-            return acc;
-        }, model);
+        return images.reduce(
+            (acc, { name, blob }) => {
+                acc[name] = blob;
+                return acc;
+            },
+            { ...model }
+        );
     };
 
     const handleSubmit = async () => {
