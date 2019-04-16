@@ -19,7 +19,8 @@ import {
     useOrganization,
     useApiWithoutResult,
     useMembers,
-    useEventManager
+    useEventManager,
+    useNotifications
 } from 'react-components';
 import { GIGA } from 'proton-shared/lib/constants';
 import { range } from 'proton-shared/lib/helpers/array';
@@ -30,11 +31,18 @@ import { updateVPN, updateQuota } from 'proton-shared/lib/api/members';
 const SetupOrganizationModal = ({ show, onClose }) => {
     const [members = []] = useMembers();
     const { call } = useEventManager();
+    const { createNotification } = useNotifications();
     const { ID: currentMemberID } = members.find(({ Self }) => Self) || {};
-    const { request: requestUpdateOrganizationName } = useApiWithoutResult(updateOrganizationName);
-    const { request: requestUpdateVPN } = useApiWithoutResult(updateVPN);
-    const { request: requestUpdateQuota } = useApiWithoutResult(updateQuota);
+    const { request: requestUpdateOrganizationName, loading: loadingUpdateOrganizationName } = useApiWithoutResult(
+        updateOrganizationName
+    );
+    const { request: requestUpdateVPN, loading: loadingUpdateVPN } = useApiWithoutResult(updateVPN);
+    const { request: requestUpdateQuota, loading: loadingUpdateQuota } = useApiWithoutResult(updateQuota);
+    const loading = loadingUpdateOrganizationName || loadingUpdateVPN || loadingUpdateQuota;
     const [{ MaxSpace, MaxVPN }] = useOrganization();
+    const { step, next, previous } = useStep();
+    const storageOptions = range(0, MaxSpace, GIGA).map((value) => ({ text: `${humanSize(value, 'GB')}`, value }));
+    const vpnOptions = range(0, MaxVPN).map((value) => ({ text: value, value }));
     const [{ hasPaidVpn }] = useUser();
     const [model, setModel] = useState({
         name: '',
@@ -43,10 +51,6 @@ const SetupOrganizationModal = ({ show, onClose }) => {
         storage: 5 * GIGA,
         vpn: 3
     });
-    const { step, next, previous } = useStep();
-    const [loading, setLoading] = useState(false);
-    const storageOptions = range(0, MaxSpace, GIGA).map((value) => ({ text: `${humanSize(value, 'GB')}`, value }));
-    const vpnOptions = range(0, MaxVPN).map((value) => ({ text: value, value }));
     const handleChange = (key) => ({ target }) => setModel({ ...model, [key]: target.value });
     const STEPS = [
         {
@@ -63,14 +67,8 @@ const SetupOrganizationModal = ({ show, onClose }) => {
                 </Row>
             ),
             async onSubmit() {
-                try {
-                    setLoading(true);
-                    await requestUpdateOrganizationName(model.name);
-                    setLoading(false);
-                    next();
-                } catch (err) {
-                    setLoading(false);
-                }
+                await requestUpdateOrganizationName(model.name);
+                next();
             }
         },
         {
@@ -123,6 +121,12 @@ const SetupOrganizationModal = ({ show, onClose }) => {
                 </>
             ),
             onSubmit() {
+                if (model.password !== model.confirm) {
+                    return createNotification({
+                        type: 'error',
+                        text: c('Error').t`Password confirmation doesn't match`
+                    });
+                }
                 // TODO
                 next();
             }
@@ -147,11 +151,14 @@ const SetupOrganizationModal = ({ show, onClose }) => {
             ),
             async onSubmit() {
                 await requestUpdateQuota(currentMemberID, model.storage);
+
                 if (hasPaidVpn) {
                     return next();
                 }
+
                 await call();
                 onClose();
+                createNotification({ text: c('Success').t`Organization activated` });
             }
         }
     ];
@@ -179,6 +186,7 @@ const SetupOrganizationModal = ({ show, onClose }) => {
                 await requestUpdateVPN(currentMemberID, model.vpn);
                 await call();
                 onClose();
+                createNotification({ text: c('Success').t`Organization activated` });
             }
         });
     }
