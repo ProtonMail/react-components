@@ -2,7 +2,8 @@ import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import Pikaday from 'pikaday';
 
-const DateInput = ({ disabled, ...rest }) => {
+// Configuration: https://github.com/Pikaday/Pikaday#configuration
+const DateInput = ({ id, disabled, required, placeholder, className, ...rest }) => {
     const inputRef = useRef();
 
     useEffect(() => {
@@ -14,12 +15,29 @@ const DateInput = ({ disabled, ...rest }) => {
         return picker.destroy;
     });
 
-    return <input className="pm-field" disabled={disabled} ref={inputRef} type="text" />; // Using type="text" as recommended by Pikaday (https://github.com/Pikaday/Pikaday)
+    return (
+        <input
+            id={id}
+            className={`pm-field ${className}`}
+            placeholder={placeholder}
+            disabled={disabled}
+            required={required}
+            ref={inputRef}
+            type="text"
+        />
+    ); // Using type="text" as recommended by Pikaday (https://github.com/Pikaday/Pikaday)
 };
 
 DateInput.propTypes = {
+    id: PropTypes.string,
     disabled: PropTypes.bool,
-    onChange: PropTypes.func
+    required: PropTypes.bool,
+    placeholder: PropTypes.string,
+    className: PropTypes.string
+};
+
+DateInput.defaultProps = {
+    required: false
 };
 
 export default DateInput;
