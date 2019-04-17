@@ -1,13 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'react-components';
 import { ChromePicker } from 'react-color';
 
-const ColorPicker = ({ disabled, onChange, initialColor }) => {
+const ColorPicker = ({ text, initialColor, onColorChange, ...rest }) => {
     const [pickerState, setPickerState] = useState({
         display: false,
         color: initialColor
     });
+
+    const rgbaColor = (color) => {
+        return `rgba(${color.rgb.r}, ${color.rgb.g}, ${color.rgb.b}, ${color.rgb.a})`;
+    };
 
     const handleClick = () => {
         setPickerState((prevState) => {
@@ -31,7 +35,7 @@ const ColorPicker = ({ disabled, onChange, initialColor }) => {
         setPickerState((prevState) => {
             return {
                 ...prevState,
-                color: color.hex
+                color: color
             };
         });
     };
@@ -51,19 +55,20 @@ const ColorPicker = ({ disabled, onChange, initialColor }) => {
     const picker = (
         <div style={popover}>
             <div style={cover} onClick={handleClose} />
-            <ChromePicker onChange={handleChange} />
+            <ChromePicker color={pickerState.color} onChange={handleChange} />
         </div>
     );
 
+    useEffect(() => {
+        if (onColorChange) {
+            onColorChange();
+        }
+    }, [pickerState.color]);
+
     return (
         <div style={{ position: 'relative' }}>
-            <Button
-                onClick={handleClick}
-                onChange={onChange}
-                disabled={disabled}
-                style={{ backgroundColor: pickerState.color }}
-            >
-                Pick Color
+            <Button onClick={handleClick} style={{ backgroundColor: rgbaColor(pickerState.color) }} {...rest}>
+                {text}
             </Button>
             {pickerState.display ? picker : null}
         </div>
@@ -71,13 +76,21 @@ const ColorPicker = ({ disabled, onChange, initialColor }) => {
 };
 
 ColorPicker.propTypes = {
-    disabled: PropTypes.bool,
-    onChange: PropTypes.func,
-    initialColor: PropTypes.string
+    text: PropTypes.string,
+    initialColor: PropTypes.object,
+    onColorChange: PropTypes.func
 };
 
 ColorPicker.defaultProps = {
-    initialColor: 'white'
+    text: '',
+    initialColor: {
+        // white
+        hex: '#ffffff',
+        rgb: { r: 255, g: 255, b: 255, a: 1 },
+        hsl: { h: 0, s: 0, l: 1, a: 1 },
+        hsv: { h: 0, s: 0, v: 1, a: 1 },
+        oldHue: 0
+    }
 };
 
 export default ColorPicker;
