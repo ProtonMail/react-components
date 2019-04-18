@@ -209,6 +209,7 @@ export { default as LayoutsSection } from './containers/layouts/LayoutsSection';
 export { default as ToolbarsSection } from './containers/layouts/ToolbarsSection';
 export { default as ViewLayoutRadios } from './containers/layouts/ViewLayoutRadios';
 export { default as ComposerModeRadios } from './containers/layouts/ComposerModeRadios';
+export { default as ThemeSection } from './containers/themes/ThemeSection';
 export { default as ThemesSection } from './containers/themes/ThemesSection';
 export { default as ThemeCard } from './containers/themes/ThemeCard';
 export { default as ThemeCards } from './containers/themes/ThemeCards';
