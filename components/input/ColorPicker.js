@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Button } from 'react-components';
 import { ChromePicker } from 'react-color';
-import './ColorPickerAux.css';
+import './ColorPicker.css';
 
 const ColorPicker = ({ text, initialRgbaColor, onColorChange, ...rest }) => {
     const [display, setDisplay] = useState(false);
