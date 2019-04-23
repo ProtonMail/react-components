@@ -17,7 +17,7 @@ const InvoiceActions = ({ invoice, fetchInvoices }) => {
 
     const list = [
         {
-            text: c('View').t`Action`,
+            text: c('Action').t`View`,
             type: 'button',
             async onClick() {
                 const buffer = await requestGetInvoice(invoice.ID);
@@ -28,7 +28,7 @@ const InvoiceActions = ({ invoice, fetchInvoices }) => {
             }
         },
         {
-            text: c('Download').t`Action`,
+            text: c('Action').t`Download`,
             type: 'button',
             async onClick() {
                 const buffer = await requestGetInvoice(invoice.ID);
@@ -42,7 +42,7 @@ const InvoiceActions = ({ invoice, fetchInvoices }) => {
 
     if (invoice.State === INVOICE_STATE.UNPAID) {
         list.push({
-            text: c('Pay').t`Action`,
+            text: c('Action').t`Pay`,
             type: 'button',
             async onClick() {
                 const { Stripe, Paymentwall } = await requestGetPaymentMethodStatus();
@@ -62,7 +62,7 @@ const InvoiceActions = ({ invoice, fetchInvoices }) => {
 
     return (
         <>
-            <DropdownActions list={list} className="pm-button--small" />;
+            <DropdownActions list={list} className="pm-button--small" />
             <PayInvoiceModal invoice={invoice} show={isOpen} onClose={close} fetchInvoices={fetchInvoices} />
         </>
     );
