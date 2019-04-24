@@ -4,6 +4,7 @@ import {
     PrimaryButton,
     InputModal,
     Text,
+    Field,
     AskPasswordModal,
     useModal,
     useApi,
@@ -46,7 +47,7 @@ const RecoveryEmail = () => {
     };
 
     return (
-        <>
+        <Field>
             <Text>{email}</Text>
             <PrimaryButton disabled={loading} onClick={open}>{c('Action').t`Edit`}</PrimaryButton>
             <InputModal
@@ -59,7 +60,7 @@ const RecoveryEmail = () => {
                 onSubmit={handleSubmit}
                 onClose={close}
             />
-        </>
+        </Field>
     );
 };
 

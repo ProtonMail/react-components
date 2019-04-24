@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import {
     Row,
+    Field,
     Label,
     TextArea,
     EmailInput,
@@ -97,19 +98,21 @@ const DeleteAccountModal = ({ show, onClose, clientType }) => {
                 </Alert>
                 <Row>
                     <Label htmlFor="feedback">{c('Label').t`Feedback`}</Label>
-                    <TextArea
-                        id="feedback"
-                        autoFocus
-                        required
-                        value={model.feedback}
-                        placeholder={c('Placeholder').t`Feedback`}
-                        onChange={handleChange('feedback')}
-                        disabled={loading}
-                    />
+                    <Field>
+                        <TextArea
+                            id="feedback"
+                            autoFocus
+                            required
+                            value={model.feedback}
+                            placeholder={c('Placeholder').t`Feedback`}
+                            onChange={handleChange('feedback')}
+                            disabled={loading}
+                        />
+                    </Field>
                 </Row>
                 <Row>
                     <Label htmlFor="email">{c('Label').t`Email address (optional)`}</Label>
-                    <div>
+                    <Field>
                         <EmailInput
                             id="email"
                             disabled={loading}
@@ -119,11 +122,11 @@ const DeleteAccountModal = ({ show, onClose, clientType }) => {
                         />
                         <br />
                         <Text>{c('Info').t`Please provide an email address in case we need to contact you.`}</Text>
-                    </div>
+                    </Field>
                 </Row>
                 <Row>
                     <Label htmlFor="password">{c('Label').t`Login password`}</Label>
-                    <div>
+                    <Field>
                         <PasswordInput
                             id="password"
                             disabled={loading}
@@ -133,18 +136,20 @@ const DeleteAccountModal = ({ show, onClose, clientType }) => {
                         />
                         <br />
                         <Text>{c('Info').t`Enter your login password to confirm your identity.`}</Text>
-                    </div>
+                    </Field>
                 </Row>
                 {TwoFactor ? (
                     <Row>
                         <Label htmlFor="twoFa">{c('Label').t`Two-factor passcode`}</Label>
-                        <TwoFactorInput
-                            id="twoFa"
-                            disabled={loading}
-                            value={model.twoFa}
-                            onChange={handleChange('twoFa')}
-                            placeholder={c('Placeholder').t`Two-factor passcode`}
-                        />
+                        <Field>
+                            <TwoFactorInput
+                                id="twoFa"
+                                disabled={loading}
+                                value={model.twoFa}
+                                onChange={handleChange('twoFa')}
+                                placeholder={c('Placeholder').t`Two-factor passcode`}
+                            />
+                        </Field>
                     </Row>
                 ) : null}
                 <FooterModal>

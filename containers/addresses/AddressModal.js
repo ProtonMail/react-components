@@ -10,6 +10,7 @@ import {
     PrimaryButton,
     Alert,
     Row,
+    Field,
     Label,
     Text,
     Input,
@@ -56,11 +57,13 @@ const AddressModal = ({ show, onClose, member }) => {
                 </Alert>
                 <Row>
                     <Label>{c('Label').t`User`}</Label>
-                    <Text className="strong">{member.Name}</Text>
+                    <Field>
+                        <Text className="strong">{member.Name}</Text>
+                    </Field>
                 </Row>
                 <Row>
                     <Label>{c('Label').t`Address`}</Label>
-                    <div className="flex-autogrid">
+                    <Field className="flex-autogrid">
                         <Input
                             value={model.address}
                             className="flex-autogrid-item"
@@ -73,19 +76,23 @@ const AddressModal = ({ show, onClose, member }) => {
                             member={member}
                             onChange={handleChange('domain')}
                         />
-                    </div>
+                    </Field>
                 </Row>
                 <Row>
                     <Label>{c('Label').t`Display name`}</Label>
-                    <Input
-                        value={model.name}
-                        placeholder={c('Placeholder').t`Choose display name`}
-                        onChange={handleChange('name')}
-                    />
+                    <Field>
+                        <Input
+                            value={model.name}
+                            placeholder={c('Placeholder').t`Choose display name`}
+                            onChange={handleChange('name')}
+                        />
+                    </Field>
                 </Row>
                 <Row>
                     <Label>{c('Label').t`Signature`}</Label>
-                    <RichTextEditor value={model.signature} onChange={handleSignature} />
+                    <Field>
+                        <RichTextEditor value={model.signature} onChange={handleSignature} />
+                    </Field>
                 </Row>
                 <FooterModal>
                     <ResetButton>{c('Action').t`Cancel`}</ResetButton>
