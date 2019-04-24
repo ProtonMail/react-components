@@ -26,7 +26,7 @@ const ColorPicker = ({ text, initialRgbaColor, onChange, ...rest }) => {
 
     useEffect(() => {
         setRgbaColor(initialRgbaColor);
-    }, [initialRgbaColor, rgbaColor]);
+    }, [initialRgbaColor]);
 
     const picker = (
         <div className="popover">
