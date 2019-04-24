@@ -12,7 +12,6 @@ import {
     Row,
     Field,
     Label,
-    Text,
     Input,
     RichTextEditor,
     useApiWithoutResult,
@@ -57,9 +56,7 @@ const AddressModal = ({ show, onClose, member }) => {
                 </Alert>
                 <Row>
                     <Label>{c('Label').t`User`}</Label>
-                    <Field>
-                        <Text className="strong">{member.Name}</Text>
-                    </Field>
+                    <Field className="strong">{member.Name}</Field>
                 </Row>
                 <Row>
                     <Label>{c('Label').t`Address`}</Label>
