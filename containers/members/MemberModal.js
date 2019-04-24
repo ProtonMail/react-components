@@ -14,7 +14,6 @@ import {
     Input,
     Checkbox,
     Select,
-    Text,
     useNotifications,
     useEventManager
 } from 'react-components';
@@ -94,7 +93,7 @@ const MemberModal = ({ show, onClose, organization, domains }) => {
                     <Field className="flex-autogrid">
                         <Input onChange={handleChange('address')} placeholder={c('Placeholder').t`Address`} required />
                         {domainOptions.length === 1 ? (
-                            <Text>{`@${domainOptions[0].value}`}</Text>
+                            `@${domainOptions[0].value}`
                         ) : (
                             <Select options={domainOptions} value={model.domain} onChange={handleChange('domain')} />
                         )}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { c } from 'ttag';
-import { SubTitle, Label, Row, Field, Text, useUser } from 'react-components';
+import { SubTitle, Label, Row, Field, useUser } from 'react-components';
 import { Link } from 'react-router-dom';
 
 const UsernameSection = () => {
@@ -13,9 +13,9 @@ const UsernameSection = () => {
             <Row>
                 <Label>{c('Label').t`Name`}</Label>
                 <Field>
-                    <Text className="bold">{Name}</Text>
+                    <span className="bold">{Name}</span>
                     <br />
-                    <Text>{c('Info').jt`To manage your display name and signature, go to ${link}.`}</Text>
+                    {c('Info').jt`To manage your display name and signature, go to ${link}.`}
                 </Field>
             </Row>
         </>

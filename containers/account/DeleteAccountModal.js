@@ -9,7 +9,6 @@ import {
     EmailInput,
     PasswordInput,
     TwoFactorInput,
-    Text,
     Modal,
     ContentModal,
     FooterModal,
@@ -121,7 +120,7 @@ const DeleteAccountModal = ({ show, onClose, clientType }) => {
                             placeholder={c('Placeholder').t`Email address`}
                         />
                         <br />
-                        <Text>{c('Info').t`Please provide an email address in case we need to contact you.`}</Text>
+                        {c('Info').t`Please provide an email address in case we need to contact you.`}
                     </Field>
                 </Row>
                 <Row>
@@ -135,7 +134,7 @@ const DeleteAccountModal = ({ show, onClose, clientType }) => {
                             placeholder={c('Placeholder').t`Password`}
                         />
                         <br />
-                        <Text>{c('Info').t`Enter your login password to confirm your identity.`}</Text>
+                        {c('Info').t`Enter your login password to confirm your identity.`}
                     </Field>
                 </Row>
                 {TwoFactor ? (

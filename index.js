@@ -73,7 +73,6 @@ export { default as Modal } from './components/modal/Modal';
 export { default as FooterModal } from './components/modal/Footer';
 export { default as Price } from './components/price/Price';
 export { default as Progress } from './components/progress/Progress';
-export { default as Text } from './components/text/Text';
 export { default as Legend } from './components/text/Legend';
 export { default as ErrorZone } from './components/text/ErrorZone';
 export { default as LanguageSection } from './containers/general/LanguageSection';

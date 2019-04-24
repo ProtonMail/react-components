@@ -5,7 +5,6 @@ import {
     SubTitle,
     Label,
     Select,
-    Text,
     Info,
     Row,
     Field,
@@ -67,7 +66,7 @@ const IdentitySection = () => {
                     <Info url="https://protonmail.com/support/knowledge-base/display-name-and-signature/" />
                 </Label>
                 <Field className="flex flex-spacebetween">
-                    <Text>{address.DisplayName}</Text>
+                    {address.DisplayName}{' '}
                     <SmallButton className="pm-button--primary" onClick={open}>{c('Action').t`Edit`}</SmallButton>
                 </Field>
             </Row>

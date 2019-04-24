@@ -3,7 +3,6 @@ import { c } from 'ttag';
 import {
     PrimaryButton,
     InputModal,
-    Text,
     Field,
     AskPasswordModal,
     useModal,
@@ -48,7 +47,7 @@ const RecoveryEmail = () => {
 
     return (
         <Field>
-            <Text>{email}</Text>
+            {email}
             <PrimaryButton disabled={loading} onClick={open}>{c('Action').t`Edit`}</PrimaryButton>
             <InputModal
                 loading={loading}
