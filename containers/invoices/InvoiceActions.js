@@ -5,6 +5,7 @@ import { INVOICE_STATE } from 'proton-shared/lib/constants';
 import { DropdownActions, useApiWithoutResult, useModal, useNotifications } from 'react-components';
 import { getInvoice, getPaymentMethodStatus } from 'proton-shared/lib/api/payments';
 import downloadFile from 'proton-shared/lib/helpers/downloadFile';
+import { hasPDFSupport } from 'proton-shared/lib/helpers/browser';
 
 import PayInvoiceModal from './PayInvoiceModal';
 import InvoiceModal from './InvoiceModal';
@@ -30,11 +31,13 @@ const InvoiceActions = ({ invoice, fetchInvoices }) => {
         }
     ];
 
-    list.unshift({
-        text: c('Action').t`View`,
-        type: 'button',
-        onClick: openInvoiceModal
-    });
+    if (hasPDFSupport()) {
+        list.unshift({
+            text: c('Action').t`View`,
+            type: 'button',
+            onClick: openInvoiceModal
+        });
+    }
 
     if (invoice.State === INVOICE_STATE.UNPAID) {
         list.push({
