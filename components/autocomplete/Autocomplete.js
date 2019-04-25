@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
-import Input from '../input/Input';
 import PropTypes from 'prop-types';
 import Awesomplete from 'awesomplete';
+import SelectedItems from './SelectedItems';
+import './Autocomplete.scss';
 
-const createInputEventListener = (inputRef) => (event, callback, deps = []) =>
+const createInputEventListener = (inputRef) => (event, callback, deps) => {
     useEffect(() => {
         inputRef.current.addEventListener(event, callback);
 
@@ -11,72 +12,78 @@ const createInputEventListener = (inputRef) => (event, callback, deps = []) =>
             inputRef.current.removeEventListener(event, callback);
         };
     }, deps);
+};
 
 const Autocomplete = ({
     value = '',
     multiple,
-    autoFirst,
-    minChars,
-    maxItems,
-    onChange = () => {},
+    // onChange = () => {},
     onSelect = () => {},
     onOpen = () => {},
     onClose = () => {},
     onHighlight = () => {},
     ...rest
 }) => {
-    const inputEl = useRef(null);
-    const withInputEventListener = createInputEventListener(inputEl);
-    const [inputValue, setInputValue] = useState(value);
+    const inputRef = useRef(null);
+    const containerRef = useRef(null);
+    const awesompleteEventListener = createInputEventListener(inputRef);
+    const [inputValue, setInputValue] = useState(multiple ? '' : value);
+    const [selected, setSelected] = useState([].concat(value));
 
     useEffect(() => {
-        new Awesomplete(
-            inputEl.current,
-            multiple
-                ? {
-                      filter: (text, input) => Awesomplete.FILTER_CONTAINS(text, input.match(/[^,]*$/)[0]),
-                      item: (text, input) => Awesomplete.ITEM(text, input.match(/[^,]*$/)[0]),
-                      replace: (text) => setInputValue(inputValue.match(/^.+,\s*|/)[0] + text + ', '),
-                      ...rest
-                  }
-                : rest
-        );
+        new Awesomplete(inputRef.current, {
+            ...rest,
+            container: () => containerRef.current
+        });
     }, []);
-
-    // TODO: fix multiple values thingy
-
-    withInputEventListener('awesomplete-selectcomplete', ({ text }) => onSelect(text));
-    withInputEventListener('awesomplete-close', ({ reason }) => onClose(reason));
-    withInputEventListener('awesomplete-highlight', onHighlight);
-    withInputEventListener('awesomplete-open', onOpen);
 
     const handleInputValueChange = (e) => {
         setInputValue(e.target.value);
-        onChange(e.target.value);
+        // onChange(e.target.value);
     };
 
+    const handleUnselect = (item, remaining) => setSelected(remaining);
+
+    const onSelectItem = (item) => {
+        setInputValue('');
+        setSelected([...selected, item]);
+        onSelect(item);
+    };
+
+    awesompleteEventListener('awesomplete-selectcomplete', ({ text }) => onSelectItem(text), [selected]);
+    awesompleteEventListener('awesomplete-close', ({ reason }) => onClose(reason));
+    awesompleteEventListener('awesomplete-highlight', onHighlight);
+    awesompleteEventListener('awesomplete-open', onOpen);
+
     return (
-        <Input
-            value={inputValue}
-            onChange={handleInputValueChange}
-            className="pm-field"
-            inputRef={inputEl}
-            data-multiple={multiple}
-            data-autofirst={autoFirst}
-            data-minchars={minChars}
-            data-maxitems={maxItems}
-        />
+        <div className="awesomplete">
+            <div className="autocomplete-container" ref={containerRef}>
+                <div className="flex pm-field">
+                    {multiple && <SelectedItems selected={selected} onRemove={handleUnselect} />}
+                    <input
+                        value={inputValue}
+                        className="w100"
+                        autoComplete="off"
+                        spellCheck={false}
+                        autoCapitalize="off"
+                        onChange={handleInputValueChange}
+                        ref={inputRef}
+                    />
+                </div>
+                {/* <ul> injected here by awesomplete */}
+            </div>
+        </div>
     );
 };
 
 Autocomplete.propTypes = {
-    value: PropTypes.string,
+    value: PropTypes.oneOf([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
     list: PropTypes.arrayOf(PropTypes.string),
     multiple: PropTypes.bool,
     autoFirst: PropTypes.bool,
     minChars: PropTypes.number,
     maxItems: PropTypes.number,
-    onChange: PropTypes.func,
+    // onChange: PropTypes.func,
     onSelect: PropTypes.func,
     onOpen: PropTypes.func,
     onClose: PropTypes.func,
