@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { noop } from 'proton-shared/lib/helpers/function';
 import { Button } from 'react-components';
@@ -22,10 +22,6 @@ const ColorPicker = ({ text, initialRgbaColor, onChange, ...rest }) => {
         setRgbaColor(color.rgb);
         onChange(color);
     };
-
-    useEffect(() => {
-        setRgbaColor(initialRgbaColor);
-    }, [initialRgbaColor]);
 
     const picker = (
         <div className="popover">
