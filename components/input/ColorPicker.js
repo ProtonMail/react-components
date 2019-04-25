@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { noop } from 'proton-shared/lib/helpers/function';
 import { Button } from 'react-components';
 import { ChromePicker } from 'react-color';
 import './ColorPicker.scss';
@@ -19,9 +20,7 @@ const ColorPicker = ({ text, initialRgbaColor, onChange, ...rest }) => {
     };
     const handleChange = (color) => {
         setRgbaColor(color.rgb);
-        if (onChange) {
-            onChange(color);
-        }
+        onChange(color);
     };
 
     useEffect(() => {
@@ -53,7 +52,8 @@ ColorPicker.propTypes = {
 
 ColorPicker.defaultProps = {
     text: '',
-    initialRgbaColor: { r: 255, g: 255, b: 255, a: 1 } // white
+    initialRgbaColor: { r: 255, g: 255, b: 255, a: 1 }, // white
+    onChange: noop
 };
 
 export default ColorPicker;
