@@ -7,7 +7,7 @@ const SelectedItems = ({ selected, onRemove }) => {
     return (
         <>
             {selected.map((item, i) => (
-                <div key={i} className="mr0-5" onClick={() => handleRemove(item)}>
+                <div key={i} className="mr0-5 autocomplete-selectedItem" onClick={() => handleRemove(item)}>
                     {item.label}
                 </div>
             ))}

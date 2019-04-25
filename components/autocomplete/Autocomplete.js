@@ -14,10 +14,10 @@ const createInputEventListener = (inputRef) => (event, callback, deps) => {
     }, deps);
 };
 
+// TODO: move state to parent (hook?)
 const Autocomplete = ({
     value,
     multiple,
-    // onChange = () => {},
     onSelect = () => {},
     onOpen = () => {},
     onClose = () => {},
@@ -44,8 +44,9 @@ const Autocomplete = ({
 
     const handleUnselect = (item, remaining) => setSelected(remaining);
 
+    // TODO: cleanup this part
     const onSelectItem = (item) => {
-        const newSelected = [...selected, item];
+        const newSelected = multiple ? [...selected, item] : [item];
         setInputValue(multiple ? '' : item.label);
         setSelected(newSelected);
         onSelect(item, newSelected);
@@ -57,7 +58,7 @@ const Autocomplete = ({
     awesompleteEventListener('awesomplete-open', onOpen);
 
     return (
-        <div className="awesomplete">
+        <div className="autocomplete awesomplete">
             <div className="autocomplete-container" ref={containerRef}>
                 <div className="flex pm-field">
                     {multiple && <SelectedItems selected={selected} onRemove={handleUnselect} />}
@@ -79,10 +80,7 @@ const Autocomplete = ({
 
 Autocomplete.propTypes = {
     value: PropTypes.oneOf([
-        PropTypes.shape({
-            label: PropTypes.string,
-            value: PropTypes.any
-        }),
+        PropTypes.string,
         PropTypes.arrayOf(
             PropTypes.shape({
                 label: PropTypes.string,
@@ -95,7 +93,6 @@ Autocomplete.propTypes = {
     autoFirst: PropTypes.bool,
     minChars: PropTypes.number,
     maxItems: PropTypes.number,
-    // onChange: PropTypes.func,
     onSelect: PropTypes.func,
     onOpen: PropTypes.func,
     onClose: PropTypes.func,
