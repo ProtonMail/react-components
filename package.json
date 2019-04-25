@@ -33,6 +33,7 @@
   },
   "homepage": "https://github.com/ProtonMail/react-components#readme",
   "dependencies": {
+    "awesomplete": "^1.1.4",
     "card-validator": "^6.1.0",
     "design-system": "github:ProtonMail/design-system.git#master",
     "intersection-observer": "^0.5.1",
