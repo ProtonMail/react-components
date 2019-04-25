@@ -8,11 +8,15 @@ import downloadFile from 'proton-shared/lib/helpers/downloadFile';
 import { hasPDFSupport } from 'proton-shared/lib/helpers/browser';
 
 import PayInvoiceModal from './PayInvoiceModal';
-import InvoiceModal from './InvoiceModal';
+import PreviewInvoiceModal from './PreviewInvoiceModal';
 
 const InvoiceActions = ({ invoice, fetchInvoices }) => {
     const { isOpen: showPayInvoiceModal, open: openPayInvoiceModal, close: closePayInvoiceModal } = useModal();
-    const { isOpen: showInvoiceModal, open: openInvoiceModal, close: closeInvoiceModal } = useModal();
+    const {
+        isOpen: showPreviewInvoiceModal,
+        open: openPreviewInvoiceModal,
+        close: closePreviewInvoiceModal
+    } = useModal();
     const { request: requestGetInvoice } = useApiWithoutResult(getInvoice);
     const { createNotification } = useNotifications();
     const { request: requestGetPaymentMethodStatus } = useApiWithoutResult(getPaymentMethodStatus);
@@ -35,7 +39,7 @@ const InvoiceActions = ({ invoice, fetchInvoices }) => {
         list.unshift({
             text: c('Action').t`View`,
             type: 'button',
-            onClick: openInvoiceModal
+            onClick: openPreviewInvoiceModal
         });
     }
 
@@ -62,7 +66,7 @@ const InvoiceActions = ({ invoice, fetchInvoices }) => {
     return (
         <>
             <DropdownActions list={list} className="pm-button--small" />
-            <InvoiceModal show={showInvoiceModal} onClose={closeInvoiceModal} invoice={invoice} />
+            <PreviewInvoiceModal show={showPreviewInvoiceModal} onClose={closePreviewInvoiceModal} invoice={invoice} />
             {invoice.State === INVOICE_STATE.UNPAID ? (
                 <PayInvoiceModal
                     invoice={invoice}
