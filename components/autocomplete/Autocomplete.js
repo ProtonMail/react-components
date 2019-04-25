@@ -15,7 +15,7 @@ const createInputEventListener = (inputRef) => (event, callback, deps) => {
 };
 
 const Autocomplete = ({
-    value = '',
+    value,
     multiple,
     // onChange = () => {},
     onSelect = () => {},
@@ -28,7 +28,7 @@ const Autocomplete = ({
     const containerRef = useRef(null);
     const awesompleteEventListener = createInputEventListener(inputRef);
     const [inputValue, setInputValue] = useState(multiple ? '' : value);
-    const [selected, setSelected] = useState([].concat(value));
+    const [selected, setSelected] = useState(value ? [].concat(value) : []);
 
     useEffect(() => {
         new Awesomplete(inputRef.current, {
@@ -45,9 +45,10 @@ const Autocomplete = ({
     const handleUnselect = (item, remaining) => setSelected(remaining);
 
     const onSelectItem = (item) => {
-        setInputValue('');
-        setSelected([...selected, item]);
-        onSelect(item);
+        const newSelected = [...selected, item];
+        setInputValue(multiple ? '' : item.label);
+        setSelected(newSelected);
+        onSelect(item, newSelected);
     };
 
     awesompleteEventListener('awesomplete-selectcomplete', ({ text }) => onSelectItem(text), [selected]);
@@ -77,7 +78,18 @@ const Autocomplete = ({
 };
 
 Autocomplete.propTypes = {
-    value: PropTypes.oneOf([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
+    value: PropTypes.oneOf([
+        PropTypes.shape({
+            label: PropTypes.string,
+            value: PropTypes.any
+        }),
+        PropTypes.arrayOf(
+            PropTypes.shape({
+                label: PropTypes.string,
+                value: PropTypes.any
+            })
+        )
+    ]),
     list: PropTypes.arrayOf(PropTypes.string),
     multiple: PropTypes.bool,
     autoFirst: PropTypes.bool,
