@@ -7,4 +7,5 @@ jobs:
        - checkout
        - run: npm i
        - run: npm run lint
+       - run: npm run i18n:validate
        - run: npm test

@@ -6,6 +6,7 @@
   "scripts": {
     "test": "jest",
     "export": "./makeExport",
+    "i18n:validate": "proton-i18n validate lint-functions .",
     "lint": "eslint containers components --ext .js --quiet --cache",
     "pretty": "prettier --write $(find lib -type f -name '*.js')"
   },
@@ -63,11 +64,12 @@
     "lint-staged": "^8.1.4",
     "mocha": "^5.2.0",
     "prettier": "^1.16.1",
+    "proton-i18n": "github:ProtonMail/proton-i18n#semver:^1.0.0",
     "proton-shared": "github:ProtonMail/proton-shared#master",
     "react": "^16.8.3",
     "react-dom": "^16.8.3",
-    "react-testing-library": "^6.0.1",
     "react-router-dom": "^4.3.1",
+    "react-testing-library": "^6.0.1",
     "ttag": "^1.7.0"
   },
   "peerDependencies": {
