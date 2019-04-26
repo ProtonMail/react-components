@@ -5,7 +5,7 @@ import Icon from '../icon/Icon';
 const SelectedItem = ({ item, onRemove }) => {
     const statusClasses = item.invalid ? 'autocomplete-selectedItem-invalid' : '';
     return (
-        <div className={`mr0-5 mt0-5 pr0-5 pl0-5 flex autocomplete-selectedItem ${statusClasses}`}>
+        <div className={`mr0-5 pr0-5 pl0-5 flex autocomplete-selectedItem ${statusClasses}`}>
             {item.label}
             <button type="button" className="flex ml0-5 autocomplete-selectedItem-closeButton" onClick={onRemove}>
                 <Icon name="close" />

@@ -36,6 +36,12 @@ const Autocomplete = ({
         onSelect(text);
     };
 
+    const handleKeyDown = (e) => {
+        if (e.key === 'Backspace' && !inputValue) {
+            onRemove(selectedItems.length - 1);
+        }
+    };
+
     useEffect(() => {
         const awesomplete = new Awesomplete(inputRef.current, {
             list,
@@ -50,12 +56,13 @@ const Autocomplete = ({
 
         return () => {
             awesomplete.destroy();
+            awesomplete.close();
             inputRef.current.removeEventListener('awesomplete-selectcomplete', handleSelect);
             inputRef.current.removeEventListener('awesomplete-close', onClose);
             inputRef.current.removeEventListener('awesomplete-highlight', onHighlight);
             inputRef.current.removeEventListener('awesomplete-open', onOpen);
         };
-    }, []);
+    }, [list]);
 
     return (
         <form
@@ -80,6 +87,7 @@ const Autocomplete = ({
                         onChange={handleInputValueChange}
                         ref={inputRef}
                         onBlur={() => handleSubmit()}
+                        onKeyDown={handleKeyDown}
                     />
                 </div>
                 {/* <ul> injected here by awesomplete */}
