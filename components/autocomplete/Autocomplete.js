@@ -1,67 +1,75 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import Awesomplete from 'awesomplete';
-import SelectedItems from './SelectedItems';
+import SelectedItem from './SelectedItem';
 import './Autocomplete.scss';
+import { noop } from 'proton-shared/lib/helpers/function';
 
-const createInputEventListener = (inputRef) => (event, callback, deps) => {
-    useEffect(() => {
-        inputRef.current.addEventListener(event, callback);
-
-        return () => {
-            inputRef.current.removeEventListener(event, callback);
-        };
-    }, deps);
-};
-
-// TODO: move state to parent (hook?)
+// TODO: remove+submit = onChange?
 const Autocomplete = ({
     value,
+    inputValue,
     multiple,
-    onSelect = () => {},
-    onOpen = () => {},
-    onClose = () => {},
-    onHighlight = () => {},
+    onRemove,
+    onSubmit,
+    onSelect,
+    onInputValueChange,
+    onOpen,
+    onClose,
+    onHighlight,
     ...rest
 }) => {
     const inputRef = useRef(null);
     const containerRef = useRef(null);
-    const awesompleteEventListener = createInputEventListener(inputRef);
-    const [inputValue, setInputValue] = useState(multiple ? '' : value);
-    const [selected, setSelected] = useState(value ? [].concat(value) : []);
-
-    useEffect(() => {
-        new Awesomplete(inputRef.current, {
-            ...rest,
-            container: () => containerRef.current
-        });
-    }, []);
 
     const handleInputValueChange = (e) => {
-        setInputValue(e.target.value);
-        // onChange(e.target.value);
+        onInputValueChange(e.target.value);
     };
 
-    const handleUnselect = (item, remaining) => setSelected(remaining);
-
-    // TODO: cleanup this part
-    const onSelectItem = (item) => {
-        const newSelected = multiple ? [...selected, item] : [item];
-        setInputValue(multiple ? '' : item.label);
-        setSelected(newSelected);
-        onSelect(item, newSelected);
+    const handleSubmit = (item = { label: inputValue, value: inputValue }) => {
+        if (item.value) {
+            onSubmit(item);
+        }
     };
 
-    awesompleteEventListener('awesomplete-selectcomplete', ({ text }) => onSelectItem(text), [selected]);
-    awesompleteEventListener('awesomplete-close', ({ reason }) => onClose(reason));
-    awesompleteEventListener('awesomplete-highlight', onHighlight);
-    awesompleteEventListener('awesomplete-open', onOpen);
+    const handleSelect = ({ text }) => {
+        handleSubmit(text);
+        onSelect(text);
+    };
+
+    useEffect(() => {
+        const awesomplete = new Awesomplete(inputRef.current, {
+            container: () => containerRef.current,
+            ...rest
+        });
+
+        inputRef.current.addEventListener('awesomplete-selectcomplete', handleSelect);
+        inputRef.current.addEventListener('awesomplete-close', onClose);
+        inputRef.current.addEventListener('awesomplete-highlight', onHighlight);
+        inputRef.current.addEventListener('awesomplete-open', onOpen);
+
+        return () => {
+            awesomplete.destroy();
+            inputRef.current.removeEventListener('awesomplete-selectcomplete', handleSelect);
+            inputRef.current.removeEventListener('awesomplete-close', onClose);
+            inputRef.current.removeEventListener('awesomplete-highlight', onHighlight);
+            inputRef.current.removeEventListener('awesomplete-open', onOpen);
+        };
+    }, []);
 
     return (
-        <div className="autocomplete awesomplete">
+        <form
+            className="autocomplete awesomplete"
+            onSubmit={(e) => {
+                e.preventDefault();
+                handleSubmit();
+            }}
+        >
             <div className="autocomplete-container" ref={containerRef}>
                 <div className="flex pm-field">
-                    {multiple && <SelectedItems selected={selected} onRemove={handleUnselect} />}
+                    {multiple &&
+                        value.map((item, i) => <SelectedItem key={i} item={item} onRemove={() => onRemove(i)} />)}
+
                     <input
                         value={inputValue}
                         className="w100"
@@ -70,11 +78,12 @@ const Autocomplete = ({
                         autoCapitalize="off"
                         onChange={handleInputValueChange}
                         ref={inputRef}
+                        onBlur={() => handleSubmit()}
                     />
                 </div>
                 {/* <ul> injected here by awesomplete */}
             </div>
-        </div>
+        </form>
     );
 };
 
@@ -93,12 +102,26 @@ Autocomplete.propTypes = {
     autoFirst: PropTypes.bool,
     minChars: PropTypes.number,
     maxItems: PropTypes.number,
+    inputValue: PropTypes.string, // TODO: needed?
+    onInputValueChange: PropTypes.func, // TODO: needed?
+    onSubmit: PropTypes.func,
+    onRemove: PropTypes.func, // TODO: needed?
     onSelect: PropTypes.func,
     onOpen: PropTypes.func,
     onClose: PropTypes.func,
     onHighlight: PropTypes.func,
     filter: PropTypes.func,
     data: PropTypes.func
+};
+
+Autocomplete.defaultProps = {
+    onInputValueChange: noop,
+    onRemove: noop,
+    onSubmit: noop,
+    onSelect: noop,
+    onOpen: noop,
+    onClose: noop,
+    onHighlight: noop
 };
 
 export default Autocomplete;
