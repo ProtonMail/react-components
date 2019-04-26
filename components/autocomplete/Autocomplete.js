@@ -6,6 +6,7 @@ import './Autocomplete.scss';
 import { noop } from 'proton-shared/lib/helpers/function';
 
 const Autocomplete = ({
+    list,
     selectedItems,
     inputValue,
     onRemove,
@@ -24,7 +25,7 @@ const Autocomplete = ({
         onInputValueChange(target.value);
     };
 
-    const handleSubmit = (item = { label: inputValue, value: inputValue }) => {
+    const handleSubmit = (item = { label: inputValue, value: inputValue, invalid: true }) => {
         if (item.value) {
             onSubmit(item);
         }
@@ -37,6 +38,7 @@ const Autocomplete = ({
 
     useEffect(() => {
         const awesomplete = new Awesomplete(inputRef.current, {
+            list,
             container: () => containerRef.current,
             ...rest
         });
@@ -71,7 +73,7 @@ const Autocomplete = ({
 
                     <input
                         value={inputValue}
-                        className="w100"
+                        className="w100 autocomplete-input"
                         spellCheck={false}
                         autoComplete="off"
                         autoCapitalize="off"
@@ -90,7 +92,8 @@ Autocomplete.propTypes = {
     selectedItems: PropTypes.arrayOf(
         PropTypes.shape({
             label: PropTypes.string,
-            value: PropTypes.any
+            value: PropTypes.any,
+            invalid: PropTypes.bool
         })
     ),
     list: PropTypes.arrayOf(PropTypes.any),
