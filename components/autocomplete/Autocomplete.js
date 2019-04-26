@@ -73,8 +73,8 @@ const Autocomplete = ({
                     <input
                         value={inputValue}
                         className="w100"
-                        autoComplete="off"
                         spellCheck={false}
+                        autoComplete="off"
                         autoCapitalize="off"
                         onChange={handleInputValueChange}
                         ref={inputRef}
