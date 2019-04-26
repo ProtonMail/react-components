@@ -88,8 +88,8 @@ const Autocomplete = ({
 };
 
 Autocomplete.propTypes = {
-    value: PropTypes.oneOf([
-        PropTypes.string,
+    value: PropTypes.oneOfType([
+        PropTypes.any,
         PropTypes.arrayOf(
             PropTypes.shape({
                 label: PropTypes.string,
@@ -97,7 +97,7 @@ Autocomplete.propTypes = {
             })
         )
     ]),
-    list: PropTypes.arrayOf(PropTypes.string),
+    list: PropTypes.arrayOf(PropTypes.any),
     multiple: PropTypes.bool,
     autoFirst: PropTypes.bool,
     minChars: PropTypes.number,

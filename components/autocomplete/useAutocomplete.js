@@ -1,9 +1,18 @@
 import { useState } from 'react';
 
-const useAutocomplete = (initialValue, multiple) => {
-    const initialSelected = multiple ? [].concat(initialValue) : initialValue;
-    const [selected, setSelected] = useState(initialSelected);
-    const [inputValue, setInputValue] = useState(multiple ? '' : initialValue);
+/**
+ *
+ * @param {Object|Array} initialSelected { label, value } or Array<{ label, value }> for multiple
+ * @param {boolean} multiple is multi-select input
+ *
+ * @returns {Object} {
+ *     selected: { label, value } or Array<{ label, value }> for multiple
+ * }
+ */
+const useAutocomplete = (multiple, initialSelected) => {
+    const defaultSelected = multiple ? [] : undefined;
+    const [selected, setSelected] = useState(defaultSelected);
+    const [inputValue, setInputValue] = useState(multiple || !initialSelected ? '' : initialSelected.label);
 
     const submit = (item) => {
         setInputValue(multiple ? '' : item.label);
