@@ -5,11 +5,9 @@ import SelectedItem from './SelectedItem';
 import './Autocomplete.scss';
 import { noop } from 'proton-shared/lib/helpers/function';
 
-// TODO: remove+submit = onChange?
 const Autocomplete = ({
-    value,
+    selectedItems,
     inputValue,
-    multiple,
     onRemove,
     onSubmit,
     onSelect,
@@ -22,8 +20,8 @@ const Autocomplete = ({
     const inputRef = useRef(null);
     const containerRef = useRef(null);
 
-    const handleInputValueChange = (e) => {
-        onInputValueChange(e.target.value);
+    const handleInputValueChange = ({ target }) => {
+        onInputValueChange(target.value);
     };
 
     const handleSubmit = (item = { label: inputValue, value: inputValue }) => {
@@ -67,8 +65,9 @@ const Autocomplete = ({
         >
             <div className="autocomplete-container" ref={containerRef}>
                 <div className="flex pm-field">
-                    {multiple &&
-                        value.map((item, i) => <SelectedItem key={i} item={item} onRemove={() => onRemove(i)} />)}
+                    {selectedItems.map((item, i) => (
+                        <SelectedItem key={i} item={item} onRemove={() => onRemove(i)} />
+                    ))}
 
                     <input
                         value={inputValue}
@@ -88,33 +87,32 @@ const Autocomplete = ({
 };
 
 Autocomplete.propTypes = {
-    value: PropTypes.oneOfType([
-        PropTypes.any,
-        PropTypes.arrayOf(
-            PropTypes.shape({
-                label: PropTypes.string,
-                value: PropTypes.any
-            })
-        )
-    ]),
+    selectedItems: PropTypes.arrayOf(
+        PropTypes.shape({
+            label: PropTypes.string,
+            value: PropTypes.any
+        })
+    ),
     list: PropTypes.arrayOf(PropTypes.any),
-    multiple: PropTypes.bool,
+    inputValue: PropTypes.string,
+    onInputValueChange: PropTypes.func,
     autoFirst: PropTypes.bool,
-    minChars: PropTypes.number,
-    maxItems: PropTypes.number,
-    inputValue: PropTypes.string, // TODO: needed?
-    onInputValueChange: PropTypes.func, // TODO: needed?
+    onRemove: PropTypes.func,
     onSubmit: PropTypes.func,
-    onRemove: PropTypes.func, // TODO: needed?
     onSelect: PropTypes.func,
     onOpen: PropTypes.func,
     onClose: PropTypes.func,
     onHighlight: PropTypes.func,
+    minChars: PropTypes.number,
+    maxItems: PropTypes.number,
     filter: PropTypes.func,
     data: PropTypes.func
 };
 
 Autocomplete.defaultProps = {
+    selectedItems: [],
+    list: [],
+    inputValue: '',
     onInputValueChange: noop,
     onRemove: noop,
     onSubmit: noop,
