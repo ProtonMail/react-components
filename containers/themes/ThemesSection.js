@@ -1,21 +1,39 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { SubTitle, Alert, ThemeCards } from 'react-components';
-import { themeDark, themeLight, themeBlue, themeCompany, themeTest } from './availableThemes.js';
+import { useMailSettings, useEventManager, useApiWithoutResult, SubTitle, Alert, ThemeCards } from 'react-components';
+import { updateTheme } from 'proton-shared/lib/api/mailSettings';
+import { themeDark, themeLight, themeBlue, themeCustom } from './availableThemes.js';
 
-const availableThemes = [themeDark, themeLight, themeBlue, themeCompany, themeTest];
+const availableThemes = [themeDark, themeLight, themeBlue, themeCustom];
 
-const ThemesSection = ({ themeMode, onChange, loading }) => {
-    const dummyText =
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pretium enim nec massa fringilla, ac ultrices tortor posuere. Fusce sed quam vitae arcu pharetra congue. Quisque in elementum nibh.';
+const ThemesSection = () => {
+    // eslint-disable-next-line no-unused-vars
+    const [{ Theme }] = useMailSettings();
+    const { call } = useEventManager();
+
+    const { request, loading } = useApiWithoutResult(updateTheme);
+
+    const handleChangeTheme = async (theme) => {
+        await request(theme);
+        call();
+    };
+
+    // TODO
+    const themeMode = 0;
+
+    const themeText =
+        'ProtonMail offers 3 default themes to select from. You can also import a custom theme using our CSS editor';
+    const customThemeText =
+        'Selecting another theme will override your current theme and any customization will be lost';
 
     return (
         <>
             <SubTitle>{c('Title').t`Themes`}</SubTitle>
-            <Alert learnMore="todo">{c('Info').t`${dummyText}`}</Alert>
+            <Alert>{c('Info').t`${themeText}`}</Alert>
+            <Alert type="warning">{c('Info').t`${customThemeText}`}</Alert>
             <br />
-            <ThemeCards list={availableThemes} themeMode={themeMode} onChange={onChange} disabled={loading} />
+            <ThemeCards list={availableThemes} themeMode={themeMode} onChange={handleChangeTheme} disabled={loading} />
         </>
     );
 };

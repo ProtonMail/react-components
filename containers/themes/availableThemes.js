@@ -1,7 +1,6 @@
 import themeDarkSvg from 'design-system/assets/img/pm-images/theme-dark.svg';
 import themeLightSvg from 'design-system/assets/img/pm-images/theme-light.svg';
 import themeBlueSvg from 'design-system/assets/img/pm-images/theme-blue.svg';
-import themeCompanySvg from 'design-system/assets/img/pm-images/theme-company.svg';
 import themeTestSvg from 'design-system/assets/img/pm-images/theme-test.svg';
 
 export const themeDark = {
@@ -28,17 +27,9 @@ export const themeBlue = {
     src: themeBlueSvg
 };
 
-export const themeCompany = {
-    label: 'Company (Editor)',
-    id: 'company',
-    value: 'todo',
-    alt: 'theme-company',
-    src: themeCompanySvg
-};
-
-export const themeTest = {
-    label: 'Test (Custom)',
-    id: 'test',
+export const themeCustom = {
+    label: 'Custom theme',
+    id: 'custom',
     value: 'todo',
     alt: 'theme-custom',
     src: themeTestSvg
