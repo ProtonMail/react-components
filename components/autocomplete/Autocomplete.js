@@ -44,12 +44,12 @@ const Autocomplete = ({
     };
 
     useEffect(() => {
-        setAwesomplete(
-            new Awesomplete(inputRef.current, {
-                container: () => containerRef.current,
-                ...rest
-            })
-        );
+        const awesompleteInstance = new Awesomplete(inputRef.current, {
+            container: () => containerRef.current,
+            ...rest
+        });
+
+        setAwesomplete(awesompleteInstance);
 
         inputRef.current.addEventListener('awesomplete-selectcomplete', handleSelect);
         inputRef.current.addEventListener('awesomplete-close', onClose);
@@ -57,7 +57,7 @@ const Autocomplete = ({
         inputRef.current.addEventListener('awesomplete-open', onOpen);
 
         return () => {
-            awesomplete.destroy();
+            awesompleteInstance.destroy();
             inputRef.current.removeEventListener('awesomplete-selectcomplete', handleSelect);
             inputRef.current.removeEventListener('awesomplete-close', onClose);
             inputRef.current.removeEventListener('awesomplete-highlight', onHighlight);
