@@ -11,8 +11,8 @@ const useAutocomplete = (multiple, initialSelectedItems = []) => {
         setSelectedItems((selected) => (multiple ? [...selected, item] : [item]));
     };
 
-    const remove = (i) => {
-        setSelectedItems((selected) => [...selected.slice(0, i), ...selected.slice(i + 1)]);
+    const remove = (index) => {
+        setSelectedItems((selected) => selected.filter((_, i) => i !== index));
     };
 
     return {

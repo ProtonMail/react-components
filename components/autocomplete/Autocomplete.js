@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
+import { noop } from 'proton-shared/lib/helpers/function';
 import Awesomplete from 'awesomplete';
 import SelectedItem from './SelectedItem';
 import './Autocomplete.scss';
-import { noop } from 'proton-shared/lib/helpers/function';
 
 const Autocomplete = ({
     list,
@@ -26,14 +26,19 @@ const Autocomplete = ({
         onInputValueChange(target.value);
     };
 
-    const handleSubmit = (item = { label: inputValue, value: inputValue, invalid: true }) => {
+    const submitItem = (item = { label: inputValue, value: inputValue, invalid: true }) => {
         if (item.value) {
             onSubmit(item);
         }
     };
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        submitItem();
+    };
+
     const handleSelect = ({ text }) => {
-        handleSubmit(text);
+        submitItem(text);
         onSelect(text);
     };
 
@@ -73,13 +78,7 @@ const Autocomplete = ({
     }, [awesomplete, list]);
 
     return (
-        <form
-            className="autocomplete awesomplete"
-            onSubmit={(e) => {
-                e.preventDefault();
-                handleSubmit();
-            }}
-        >
+        <form className="autocomplete awesomplete" onSubmit={handleSubmit}>
             <div className="autocomplete-container" ref={containerRef}>
                 <div className="flex pm-field">
                     {selectedItems.map((item, i) => (
@@ -94,7 +93,7 @@ const Autocomplete = ({
                         autoCapitalize="off"
                         onChange={handleInputValueChange}
                         ref={inputRef}
-                        onBlur={() => handleSubmit()}
+                        onBlur={handleSubmit}
                         onKeyDown={handleKeyDown}
                     />
                 </div>
