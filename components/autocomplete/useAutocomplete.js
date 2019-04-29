@@ -2,12 +2,12 @@ import { useState } from 'react';
 
 const useAutocomplete = (multiple, initialSelectedItems = []) => {
     const [selectedItems, setSelectedItems] = useState(initialSelectedItems);
-    const [inputValue, setInputValue] = useState(
+    const [inputValue, changeInputValue] = useState(
         multiple || initialSelectedItems.length === 0 ? '' : initialSelectedItems[0].label
     );
 
     const submit = (item) => {
-        setInputValue(multiple ? '' : item.label);
+        changeInputValue(multiple ? '' : item.label);
         setSelectedItems((selected) => (multiple ? [...selected, item] : [item]));
     };
 
@@ -16,7 +16,7 @@ const useAutocomplete = (multiple, initialSelectedItems = []) => {
     };
 
     return {
-        changeInputValue: setInputValue,
+        changeInputValue,
         selectedItems,
         inputValue,
         submit,
