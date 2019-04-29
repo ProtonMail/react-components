@@ -9,11 +9,14 @@ import { SubscriptionModel } from 'proton-shared/lib/models/subscriptionModel';
 import { OrganizationModel } from 'proton-shared/lib/models/organizationModel';
 import { setupEventManager, getEventID } from 'proton-shared/lib/models/setupEventManager';
 import { STATUS } from 'proton-shared/lib/models/cache';
+import { loadLocale } from 'proton-shared/lib/i18n';
+import { useConfig } from 'react-components';
 
 const ModelsProvider = ({ children, loginData = {} }) => {
     const api = useApi();
     const eventManagerRef = useRef();
     const cacheRef = useRef();
+    const config = useConfig();
 
     const [{ loading, error }, setState] = useState({ loading: true });
 
@@ -22,11 +25,12 @@ const ModelsProvider = ({ children, loginData = {} }) => {
         const apiWithAbort = (config) => api({ ...config, signal: abortController.signal });
 
         const setup = async () => {
-            const [user, eventID, userSettingsModel, mailSettingsModel] = await Promise.all([
+            const userSettingsModel = await UserSettingsModel.get(api);
+            const [user, eventID, mailSettingsModel] = await Promise.all([
                 loginData.user || UserModel.get(api),
                 loginData.eventID || getEventID(api),
-                UserSettingsModel.get(api),
-                MailSettingsModel.get(api)
+                MailSettingsModel.get(api),
+                loadLocale(config, userSettingsModel.Locale)
             ]);
 
             const models = [user.isPaid && SubscriptionModel, user.isPaid && OrganizationModel].filter(Boolean);

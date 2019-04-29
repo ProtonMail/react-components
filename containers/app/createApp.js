@@ -4,6 +4,7 @@ import { Icons, ConfigContext } from 'react-components';
 import { MAILBOX_PASSWORD_KEY, UID_KEY } from 'proton-shared/lib/constants';
 import createAuthenticationStore from 'proton-shared/lib/authenticationStore';
 import createSecureSessionStorage from 'proton-shared/lib/secureSessionStorage';
+import { loadLocale } from 'proton-shared/lib/i18n';
 
 import AuthenticatedApp from './AuthenticatedApp';
 import UnauthenticatedApp from './UnAuthenticatedApp';
@@ -23,9 +24,7 @@ const wrap = (child) => {
     );
 };
 
-export default (config, AuthenticatedSlot, UnAuthenticatedSlot) => {
-    // TODO: locales?
-
+function main(config, AuthenticatedSlot, UnAuthenticatedSlot) {
     if (!config || !AuthenticatedSlot || !UnAuthenticatedSlot) {
         throw new Error('Config, AuthenticatedSlot and UnAuthenticatedSlot required');
     }
@@ -49,20 +48,18 @@ export default (config, AuthenticatedSlot, UnAuthenticatedSlot) => {
                 user: userResult,
                 eventID: authResult.EventID
             };
-
             setAuthenticated(true);
         };
 
         const handleLogout = () => {
             authenticationStore.setUID();
             authenticationStore.setPassword();
-
             loginDataRef.current = undefined;
-
             setAuthenticated(false);
         };
 
         if (!authenticated) {
+            loadLocale(config);
             return wrap(
                 <ConfigContext.Provider value={config}>
                     <UnauthenticatedApp initApi={initApi}>
@@ -85,4 +82,6 @@ export default (config, AuthenticatedSlot, UnAuthenticatedSlot) => {
             </ConfigContext.Provider>
         );
     };
-};
+}
+
+export default main;
