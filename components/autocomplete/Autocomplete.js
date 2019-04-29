@@ -18,7 +18,7 @@ const Autocomplete = ({
     onHighlight,
     ...rest
 }) => {
-    let [awesomplete, setAwesomplete] = useState(null);
+    const [awesomplete, setAwesomplete] = useState();
     const inputRef = useRef(null);
     const containerRef = useRef(null);
 
