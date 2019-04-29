@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import Awesomplete from 'awesomplete';
 import SelectedItem from './SelectedItem';
@@ -18,6 +18,7 @@ const Autocomplete = ({
     onHighlight,
     ...rest
 }) => {
+    let [awesomplete, setAwesomplete] = useState(null);
     const inputRef = useRef(null);
     const containerRef = useRef(null);
 
@@ -43,11 +44,12 @@ const Autocomplete = ({
     };
 
     useEffect(() => {
-        const awesomplete = new Awesomplete(inputRef.current, {
-            list,
-            container: () => containerRef.current,
-            ...rest
-        });
+        setAwesomplete(
+            new Awesomplete(inputRef.current, {
+                container: () => containerRef.current,
+                ...rest
+            })
+        );
 
         inputRef.current.addEventListener('awesomplete-selectcomplete', handleSelect);
         inputRef.current.addEventListener('awesomplete-close', onClose);
@@ -56,13 +58,19 @@ const Autocomplete = ({
 
         return () => {
             awesomplete.destroy();
-            awesomplete.close();
             inputRef.current.removeEventListener('awesomplete-selectcomplete', handleSelect);
             inputRef.current.removeEventListener('awesomplete-close', onClose);
             inputRef.current.removeEventListener('awesomplete-highlight', onHighlight);
             inputRef.current.removeEventListener('awesomplete-open', onOpen);
         };
-    }, [list]);
+    }, []);
+
+    useEffect(() => {
+        if (awesomplete) {
+            awesomplete.list = list;
+            awesomplete.evaluate();
+        }
+    }, [awesomplete, list]);
 
     return (
         <form
