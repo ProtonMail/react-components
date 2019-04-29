@@ -26,5 +26,5 @@ describe('Autocomplete component', () => {
 
     // it('should render selected items', () => {});
 
-    it('should render invalid selected values', () => {});
+    // it('should render invalid selected values', () => {});
 });
