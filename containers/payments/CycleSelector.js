@@ -7,7 +7,7 @@ import { CYCLE, DEFAULT_CYCLE } from 'proton-shared/lib/constants';
 const { MONTHLY, YEARLY, TWO_YEARS } = CYCLE;
 
 const CycleSelector = ({ cycle, onSelect, twoYear, ...rest }) => {
-    const handleChange = ({ target }) => onSelect(target.value);
+    const handleChange = ({ target }) => onSelect(+target.value);
     const options = [
         { text: c('Billing cycle option').t`Monthly`, value: MONTHLY },
         { text: c('Billing cycle option').t`Annually`, value: YEARLY }
@@ -24,7 +24,7 @@ const CycleSelector = ({ cycle, onSelect, twoYear, ...rest }) => {
 };
 
 CycleSelector.propTypes = {
-    cycle: PropTypes.string.isRequired,
+    cycle: PropTypes.number.isRequired,
     onSelect: PropTypes.func.isRequired,
     twoYear: PropTypes.bool
 };
