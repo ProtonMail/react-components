@@ -33,7 +33,7 @@ const PlansSection = () => {
     const [cycle, setCycle] = useState();
     const handleModal = (action) => {
         // eslint-disable-next-line no-console
-        console.log('open modal', action);
+        console.log('open modal', action); // TODO
     };
 
     useEffect(() => {
@@ -193,12 +193,7 @@ const PlansSection = () => {
                         </tr>
                         {showFeatures ? null : (
                             <tr>
-                                <th>
-                                    <div>{c('Header').t`Additional features`}</div>
-                                    <SmallButton onClick={toggleFeatures}>
-                                        {showFeatures ? c('Action').t`Hide` : c('Action').t`Show all`}
-                                    </SmallButton>
-                                </th>
+                                <th>{c('Header').t`Additional features`}</th>
                                 <td>{c('Plan option').t`Basic email features only`}</td>
                                 <td>{c('Plan option')
                                     .t`Folders, Labels, Filters, Encrypted Contacts, Auto-responder and more`}</td>
@@ -332,7 +327,11 @@ const PlansSection = () => {
                             <td>{c('Plan option').t`Included`}</td>
                         </tr>
                         <tr>
-                            <th />
+                            <th>
+                                <SmallButton onClick={toggleFeatures}>
+                                    {showFeatures ? c('Action').t`Hide` : c('Action').t`Compare all features`}
+                                </SmallButton>
+                            </th>
                             <td>
                                 <SmallButton
                                     className="pm-button--primary"

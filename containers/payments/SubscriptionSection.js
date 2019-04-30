@@ -66,8 +66,7 @@ const SubscriptionSection = () => {
     const mailPlan = Plans.find(({ Type, Services }) => Type === 1 && hasBit(Services, MAIL));
     const vpnPlan = Plans.find(({ Type, Services }) => Type === 1 && hasBit(Services, VPN));
     const handleRemoveCoupon = () => {}; // TODO
-    const handlePayYearly = () => {}; // TODO
-    const handleManage = () => {}; // TODO
+    const handleModal = () => {}; // TODO
 
     return (
         <>
@@ -81,7 +80,7 @@ const SubscriptionSection = () => {
                             <>
                                 <Alert>{c('Info')
                                     .t`Combine paid ProtonMail and ProtonVPN and get a 20% discount on both`}</Alert>
-                                <SmallButton className="pm-button--primary" onClick={handleManage}>{c('Action')
+                                <SmallButton className="pm-button--primary" onClick={handleModal}>{c('Action')
                                     .t`Upgrade`}</SmallButton>
                             </>
                         )}
@@ -91,35 +90,62 @@ const SubscriptionSection = () => {
                     <>
                         <Row>
                             <Label>{c('Label').t`Users`}</Label>
-                            <Field>
-                                <strong>{`${UsedMembers}/${MaxMembers}`}</strong>
-                                <Progress value={(UsedMembers * 100) / MaxMembers} />
-                                <SmallButton onClick={handleManage}>{c('Action').t`Manage`}</SmallButton>
-                            </Field>
+                            <div className="flex-autogrid onmobile-flex-column w100">
+                                <div className="flex-autogrid-item">
+                                    <strong>{`${UsedMembers}/${MaxMembers}`}</strong>
+                                </div>
+                                <div className="flex-autogrid-item">
+                                    <Progress value={(UsedMembers * 100) / MaxMembers} />
+                                </div>
+                                <div className="flex-autogrid-item">
+                                    <SmallButton onClick={handleModal}>{c('Action').t`Manage`}</SmallButton>
+                                </div>
+                            </div>
                         </Row>
                         <Row>
                             <Label>{c('Label').t`Email addresses`}</Label>
-                            <Field>
-                                <strong>{`${UsedAddresses}/${MaxAddresses}`}</strong>
-                                <Progress value={(UsedAddresses * 100) / MaxAddresses} />
-                                <SmallButton onClick={handleManage}>{c('Action').t`Manage`}</SmallButton>
-                            </Field>
+                            <div className="flex-autogrid onmobile-flex-column w100">
+                                <div className="flex-autogrid-item">
+                                    <strong>{`${UsedAddresses}/${MaxAddresses}`}</strong>
+                                </div>
+                                <div className="flex-autogrid-item">
+                                    <Progress value={(UsedAddresses * 100) / MaxAddresses} />
+                                </div>
+                                <div className="flex-autogrid-item">
+                                    <SmallButton onClick={handleModal}>{c('Action').t`Manage`}</SmallButton>
+                                </div>
+                            </div>
                         </Row>
                         <Row>
                             <Label>{c('Label').t`Storage capacity`}</Label>
-                            <Field>
-                                <strong>{`${humanSize(UsedSpace, 'GB', true)}/${humanSize(MaxSpace, 'GB')}`}</strong>
-                                <Progress value={(UsedSpace * 100) / MaxSpace} />
-                                <SmallButton onClick={handleManage}>{c('Action').t`Manage`}</SmallButton>
-                            </Field>
+                            <div className="flex-autogrid onmobile-flex-column w100">
+                                <div className="flex-autogrid-item">
+                                    <strong>{`${humanSize(UsedSpace, 'GB', true)}/${humanSize(
+                                        MaxSpace,
+                                        'GB'
+                                    )}`}</strong>
+                                </div>
+                                <div className="flex-autogrid-item">
+                                    <Progress value={(UsedSpace * 100) / MaxSpace} />
+                                </div>
+                                <div className="flex-autogrid-item">
+                                    <SmallButton onClick={handleModal}>{c('Action').t`Manage`}</SmallButton>
+                                </div>
+                            </div>
                         </Row>
                         <Row>
                             <Label>{c('Label').t`Custom domains`}</Label>
-                            <Field>
-                                <strong>{`${UsedDomains}/${MaxDomains}`}</strong>
-                                <Progress value={(UsedDomains * 100) / MaxDomains} />
-                                <SmallButton onClick={handleManage}>{c('Action').t`Manage`}</SmallButton>
-                            </Field>
+                            <div className="flex-autogrid onmobile-flex-column w100">
+                                <div className="flex-autogrid-item">
+                                    <strong className="mr1">{`${UsedDomains}/${MaxDomains}`}</strong>
+                                </div>
+                                <div className="flex-autogrid-item">
+                                    <Progress value={(UsedDomains * 100) / MaxDomains} />
+                                </div>
+                                <div className="flex-autogrid-item">
+                                    <SmallButton onClick={handleModal}>{c('Action').t`Manage`}</SmallButton>
+                                </div>
+                            </div>
                         </Row>
                     </>
                 ) : null}
@@ -131,7 +157,7 @@ const SubscriptionSection = () => {
                             <>
                                 <Alert>{c('Info')
                                     .t`Combine paid ProtonMail and ProtonVPN and get a 20% discount on both`}</Alert>
-                                <SmallButton className="pm-button--primary" onClick={handleManage}>{c('Action')
+                                <SmallButton className="pm-button--primary" onClick={handleModal}>{c('Action')
                                     .t`Upgrade`}</SmallButton>
                             </>
                         )}
@@ -153,7 +179,7 @@ const SubscriptionSection = () => {
                         {Cycle === YEARLY && <Alert>{c('Info').t`20% rebate applied to your subscription`}</Alert>}
                         {Cycle === TWO_YEARS && <Alert>{c('Info').t`33% rebate applied to your subscription`}</Alert>}
                         {Cycle === MONTHLY && (
-                            <SmallButton onClick={handlePayYearly}>{c('Action').t`Pay yearly`}</SmallButton>
+                            <SmallButton onClick={handleModal('yearly')}>{c('Action').t`Pay yearly`}</SmallButton>
                         )}
                     </Field>
                 </Row>
