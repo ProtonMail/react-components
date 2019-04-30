@@ -1,17 +1,26 @@
 import { useState } from 'react';
 
-const useAutocomplete = (multiple, initialSelectedItems = []) => {
-    const [selectedItems, setSelectedItems] = useState(initialSelectedItems);
-    const [inputValue, changeInputValue] = useState(
-        multiple || initialSelectedItems.length === 0 ? '' : initialSelectedItems[0].label
-    );
+const defaultItemToLabel = (label) => label;
 
-    const submit = (item) => {
-        changeInputValue(multiple ? '' : item.label);
-        setSelectedItems((selected) => (multiple ? [...selected, item] : [item]));
+const useAutocomplete = ({
+    multiple = true,
+    initialSelectedItems = [],
+    initialInputValue = '',
+    labelToItem = defaultItemToLabel
+} = {}) => {
+    const [selectedItems, setSelectedItems] = useState(initialSelectedItems);
+    const [inputValue, changeInputValue] = useState(initialInputValue);
+
+    const select = (item, label) => {
+        changeInputValue(multiple ? '' : label);
+
+        const itemToAdd = !item && label ? labelToItem(label) : item;
+        setSelectedItems((selected) => (multiple ? [...selected, itemToAdd] : [itemToAdd]));
     };
 
-    const remove = (index) => {
+    const submit = (label) => select(null, label);
+
+    const deselect = (index) => {
         setSelectedItems((selected) => selected.filter((_, i) => i !== index));
     };
 
@@ -20,7 +29,8 @@ const useAutocomplete = (multiple, initialSelectedItems = []) => {
         selectedItems,
         inputValue,
         submit,
-        remove
+        select,
+        deselect
     };
 };
 

@@ -2,14 +2,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { noop } from 'proton-shared/lib/helpers/function';
 import Awesomplete from 'awesomplete';
-import SelectedItem from './SelectedItem';
 import './Autocomplete.scss';
 
 const Autocomplete = ({
+    children,
     list,
-    selectedItems,
     inputValue,
-    onRemove,
+    onKeyDown,
     onSubmit,
     onSelect,
     onInputValueChange,
@@ -26,26 +25,13 @@ const Autocomplete = ({
         onInputValueChange(target.value);
     };
 
-    const submitItem = (item = { label: inputValue, value: inputValue, invalid: true }) => {
-        if (item.value) {
-            onSubmit(item);
-        }
-    };
-
     const handleSubmit = (e) => {
         e.preventDefault();
-        submitItem();
+        onSubmit(inputValue);
     };
 
     const handleSelect = ({ text }) => {
-        submitItem(text);
-        onSelect(text);
-    };
-
-    const handleKeyDown = (e) => {
-        if (e.key === 'Backspace' && !inputValue) {
-            onRemove(selectedItems.length - 1);
-        }
+        onSelect(text.value, text.label);
     };
 
     useEffect(() => {
@@ -81,9 +67,7 @@ const Autocomplete = ({
         <form className="autocomplete awesomplete" onSubmit={handleSubmit}>
             <div className="autocomplete-container" ref={containerRef}>
                 <div className="flex pm-field">
-                    {selectedItems.map((item, i) => (
-                        <SelectedItem key={i} item={item} onRemove={() => onRemove(i)} />
-                    ))}
+                    {children}
 
                     <input
                         value={inputValue}
@@ -94,7 +78,7 @@ const Autocomplete = ({
                         onChange={handleInputValueChange}
                         ref={inputRef}
                         onBlur={handleSubmit}
-                        onKeyDown={handleKeyDown}
+                        onKeyDown={onKeyDown}
                     />
                 </div>
                 {/* <ul> injected here by awesomplete */}
@@ -104,18 +88,12 @@ const Autocomplete = ({
 };
 
 Autocomplete.propTypes = {
-    selectedItems: PropTypes.arrayOf(
-        PropTypes.shape({
-            label: PropTypes.string,
-            value: PropTypes.any,
-            invalid: PropTypes.bool
-        })
-    ),
+    children: PropTypes.node,
     list: PropTypes.arrayOf(PropTypes.any),
     inputValue: PropTypes.string,
     onInputValueChange: PropTypes.func,
     autoFirst: PropTypes.bool,
-    onRemove: PropTypes.func,
+    onKeyDown: PropTypes.func,
     onSubmit: PropTypes.func,
     onSelect: PropTypes.func,
     onOpen: PropTypes.func,
@@ -128,11 +106,10 @@ Autocomplete.propTypes = {
 };
 
 Autocomplete.defaultProps = {
-    selectedItems: [],
     list: [],
     inputValue: '',
     onInputValueChange: noop,
-    onRemove: noop,
+    onKeyDown: noop,
     onSubmit: noop,
     onSelect: noop,
     onOpen: noop,

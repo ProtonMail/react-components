@@ -30,7 +30,7 @@ describe('Autocomplete component', () => {
         expect(listItems).toHaveLength(list.length);
     });
 
-    it('should call onSubmit and onSelect when item is selected from the list', () => {
+    it('should call onSelect when item is selected from the list', () => {
         const onSubmitMock = jest.fn();
         const onSelectMock = jest.fn();
         const list = ['test1', 'test2', 'test3'];
@@ -41,10 +41,10 @@ describe('Autocomplete component', () => {
         fireEvent.click(listItem);
 
         expect(onSelectMock).toHaveBeenCalledTimes(1);
-        expect(onSubmitMock).toHaveBeenCalledTimes(1);
+        expect(onSubmitMock).toHaveBeenCalledTimes(0);
     });
 
-    it('should call only onSubmit when item custom item is added', async () => {
+    it('should call onSubmit when item custom item is added', async () => {
         const onSubmitMock = jest.fn();
         const onSelectMock = jest.fn();
         const list = ['test1', 'test2', 'test3'];
@@ -65,23 +65,9 @@ describe('Autocomplete component', () => {
         expect(onSubmitMock).toHaveBeenCalledTimes(1);
     });
 
-    it('should render selected items', () => {
-        const list = ['test1', 'test2', 'test3'];
-        const selected = [{ label: list[0], value: list[0] }, { label: list[1], value: list[1] }];
-        const { getByText } = render(<Autocomplete selectedItems={selected} list={list} />);
-
-        const selectedItems = selected.map((item) => getByText(item.label));
-        expect(selectedItems).toHaveLength(selected.length);
-    });
-
-    it('should render invalid selected values', () => {
-        const list = ['test1', 'test2', 'test3'];
-        const invalid = 'invalid-item';
-        const selected = [{ label: invalid, value: invalid, invalid: true }, { label: list[1], value: list[1] }];
-        const { getByText } = render(<Autocomplete selectedItems={selected} list={list} />);
-
-        const selectedItems = selected.map((item) => getByText(item.label));
-        expect(selectedItems).toHaveLength(selected.length);
-        expect(selectedItems[0].className).toContain('autocomplete-selectedItem-invalid');
+    it('should render children', () => {
+        const children = 'test';
+        const { getByText } = render(<Autocomplete>{children}</Autocomplete>);
+        expect(getByText(children)).toBeDefined();
     });
 });
