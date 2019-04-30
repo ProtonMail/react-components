@@ -1,7 +1,10 @@
 .autocomplete-input {
-    display: flex;
     flex: 1 0 15%;
     outline: none;
+}
+
+.autocomplete-field {
+    padding: 0;
 }
 
 .autocomplete ul {
@@ -18,19 +21,9 @@
     border: 1px solid gray;
 }
 
-.autocomplete-selectedItem {
-    border-radius: 3px;
-    align-items: center;
-    background: lightgray;
-    border: 1px solid grey;
-}
-
-.autocomplete-selectedItem-invalid {
-    border: 1px solid red;
-    color: red;
-}
-
-.autocomplete-selectedItem-closeButton {
-    height: 16px;
-    width: 16px;
+.autocompleteSelection-closeButton {
+    height: 28px;
+    width: 28px;
+    border-radius: 0;
+    border-width: 0 0 0 1px;
 }

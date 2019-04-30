@@ -63,15 +63,17 @@ const Autocomplete = ({
         }
     }, [awesomplete, list]);
 
+    const inputStyleModifier = children.length > 0 ? 'pm-field--tiny' : '';
+
     return (
         <form className="autocomplete awesomplete" onSubmit={handleSubmit}>
             <div className="autocomplete-container" ref={containerRef}>
-                <div className="flex pm-field">
-                    {children}
+                <div className={`flex pm-field ${inputStyleModifier}`}>
+                    {children.length > 0 && <div className="flex">{children}</div>}
 
                     <input
                         value={inputValue}
-                        className="w100 autocomplete-input"
+                        className="w100 flex autocomplete-input"
                         spellCheck={false}
                         autoComplete="off"
                         autoCapitalize="off"
@@ -88,7 +90,7 @@ const Autocomplete = ({
 };
 
 Autocomplete.propTypes = {
-    children: PropTypes.node,
+    children: PropTypes.arrayOf(PropTypes.node),
     list: PropTypes.arrayOf(PropTypes.any),
     inputValue: PropTypes.string,
     onInputValueChange: PropTypes.func,
@@ -106,6 +108,7 @@ Autocomplete.propTypes = {
 };
 
 Autocomplete.defaultProps = {
+    children: [],
     list: [],
     inputValue: '',
     onInputValueChange: noop,
