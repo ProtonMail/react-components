@@ -34,11 +34,16 @@ const Autocomplete = ({
         onSelect(text.value, text.label);
     };
 
+    const inputStyleModifier = children.length > 0 ? 'pm-field--tiny' : '';
+    const dropdownListClasses = 'bg-white w100 bordered-container m0 p0';
+
     useEffect(() => {
         const awesompleteInstance = new Awesomplete(inputRef.current, {
             container: () => containerRef.current,
             ...rest
         });
+
+        awesompleteInstance.ul.className = dropdownListClasses;
 
         setAwesomplete(awesompleteInstance);
 
@@ -62,8 +67,6 @@ const Autocomplete = ({
             awesomplete.evaluate();
         }
     }, [awesomplete, list]);
-
-    const inputStyleModifier = children.length > 0 ? 'pm-field--tiny' : '';
 
     return (
         <form className="autocomplete awesomplete" onSubmit={handleSubmit}>
