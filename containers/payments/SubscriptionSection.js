@@ -6,8 +6,10 @@ import {
     Row,
     Label,
     Field,
+    SmallButton,
     Loader,
     Alert,
+    Progress,
     useSubscription,
     useOrganization,
     useUser
@@ -40,6 +42,7 @@ const SubscriptionSection = () => {
         {
             UsedDomains,
             MaxDomains,
+            UsedSpace,
             MaxSpace,
             UsedAddresses,
             MaxAddresses,
@@ -62,6 +65,9 @@ const SubscriptionSection = () => {
 
     const mailPlan = Plans.find(({ Type, Services }) => Type === 1 && hasBit(Services, MAIL));
     const vpnPlan = Plans.find(({ Type, Services }) => Type === 1 && hasBit(Services, VPN));
+    const handleRemoveCoupon = () => {}; // TODO
+    const handlePayYearly = () => {}; // TODO
+    const handleManage = () => {}; // TODO
 
     return (
         <>
@@ -72,8 +78,12 @@ const SubscriptionSection = () => {
                     <Field>
                         <strong>{hasPaidMail ? PLAN_NAMES[mailPlan.Name] : c('Plan').t`Free`}</strong>
                         {hasPaidMail ? null : (
-                            <Alert>{c('Info')
-                                .t`Combine paid ProtonMail and ProtonVPN and get a 20% discount on both`}</Alert>
+                            <>
+                                <Alert>{c('Info')
+                                    .t`Combine paid ProtonMail and ProtonVPN and get a 20% discount on both`}</Alert>
+                                <SmallButton className="pm-button--primary" onClick={handleManage}>{c('Action')
+                                    .t`Upgrade`}</SmallButton>
+                            </>
                         )}
                     </Field>
                 </Row>
@@ -83,24 +93,32 @@ const SubscriptionSection = () => {
                             <Label>{c('Label').t`Users`}</Label>
                             <Field>
                                 <strong>{`${UsedMembers}/${MaxMembers}`}</strong>
+                                <Progress value={(UsedMembers * 100) / MaxMembers} />
+                                <SmallButton onClick={handleManage}>{c('Action').t`Manage`}</SmallButton>
                             </Field>
                         </Row>
                         <Row>
                             <Label>{c('Label').t`Email addresses`}</Label>
                             <Field>
                                 <strong>{`${UsedAddresses}/${MaxAddresses}`}</strong>
+                                <Progress value={(UsedAddresses * 100) / MaxAddresses} />
+                                <SmallButton onClick={handleManage}>{c('Action').t`Manage`}</SmallButton>
                             </Field>
                         </Row>
                         <Row>
                             <Label>{c('Label').t`Storage capacity`}</Label>
                             <Field>
-                                <strong>{`${humanSize(MaxSpace)}`}</strong>
+                                <strong>{`${humanSize(UsedSpace, 'GB', true)}/${humanSize(MaxSpace, 'GB')}`}</strong>
+                                <Progress value={(UsedSpace * 100) / MaxSpace} />
+                                <SmallButton onClick={handleManage}>{c('Action').t`Manage`}</SmallButton>
                             </Field>
                         </Row>
                         <Row>
                             <Label>{c('Label').t`Custom domains`}</Label>
                             <Field>
                                 <strong>{`${UsedDomains}/${MaxDomains}`}</strong>
+                                <Progress value={(UsedDomains * 100) / MaxDomains} />
+                                <SmallButton onClick={handleManage}>{c('Action').t`Manage`}</SmallButton>
                             </Field>
                         </Row>
                     </>
@@ -110,8 +128,12 @@ const SubscriptionSection = () => {
                     <Field>
                         <strong>{hasPaidVpn ? PLAN_NAMES[vpnPlan.Name] : c('Plan').t`Free`}</strong>
                         {hasPaidMail ? null : (
-                            <Alert>{c('Info')
-                                .t`Combine paid ProtonMail and ProtonVPN and get a 20% discount on both`}</Alert>
+                            <>
+                                <Alert>{c('Info')
+                                    .t`Combine paid ProtonMail and ProtonVPN and get a 20% discount on both`}</Alert>
+                                <SmallButton className="pm-button--primary" onClick={handleManage}>{c('Action')
+                                    .t`Upgrade`}</SmallButton>
+                            </>
                         )}
                     </Field>
                 </Row>
@@ -127,15 +149,24 @@ const SubscriptionSection = () => {
                     <Label>{c('Label').t`Billing cycle`}</Label>
                     <Field>
                         <strong>{CYCLES[Cycle]}</strong>
-                        {Cycle === MONTHLY ? (
-                            <Alert>{c('Info').t`Switch to annual billing for a 20% discount`}</Alert>
-                        ) : null}
+                        {Cycle === MONTHLY && <Alert>{c('Info').t`Switch to annual billing for a 20% discount`}</Alert>}
+                        {Cycle === YEARLY && <Alert>{c('Info').t`20% rebate applied to your subscription`}</Alert>}
+                        {Cycle === TWO_YEARS && <Alert>{c('Info').t`33% rebate applied to your subscription`}</Alert>}
+                        {Cycle === MONTHLY && (
+                            <SmallButton onClick={handlePayYearly}>{c('Action').t`Pay yearly`}</SmallButton>
+                        )}
                     </Field>
                 </Row>
                 <Row>
                     <Label>{c('Label').t`Coupon`}</Label>
                     <Field>
                         <strong>{CouponCode ? CouponCode : c('Label').t`None`}</strong>
+                        {CouponCode === 'BUNDLE' && (
+                            <Alert>{c('Info').t`20% discount applied to your subscription`}</Alert>
+                        )}
+                        {CouponCode && (
+                            <SmallButton onClick={handleRemoveCoupon}>{c('Action').t`Remove coupon`}</SmallButton>
+                        )}
                     </Field>
                 </Row>
             </Bordered>

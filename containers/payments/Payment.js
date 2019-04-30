@@ -67,7 +67,7 @@ Payment.propTypes = {
     onParameters: PropTypes.func,
     onMethod: PropTypes.func,
     onValidCard: PropTypes.func,
-    cycle: PropTypes.oneOf([CYCLE.MONTHLY, CYCLE.YEARLY, CYCLE.TWO_YEAR])
+    cycle: PropTypes.oneOf([CYCLE.MONTHLY, CYCLE.YEARLY, CYCLE.TWO_YEARS])
 };
 
 export default Payment;
