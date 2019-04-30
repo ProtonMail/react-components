@@ -6,7 +6,7 @@ import themeTestSvg from 'design-system/assets/img/pm-images/theme-test.svg';
 export const themeDark = {
     label: 'Dark (Default)',
     id: 'dark',
-    value: 'todo',
+    value: 'dark-theme',
     alt: 'theme-dark',
     src: themeDarkSvg
 };
@@ -14,7 +14,7 @@ export const themeDark = {
 export const themeLight = {
     label: 'Light',
     id: 'light',
-    value: 'todo',
+    value: 'light-theme',
     alt: 'theme-light',
     src: themeLightSvg
 };
@@ -22,7 +22,7 @@ export const themeLight = {
 export const themeBlue = {
     label: 'Blue',
     id: 'blue',
-    value: 'todo',
+    value: 'blue-theme',
     alt: 'theme-blue',
     src: themeBlueSvg
 };
@@ -30,7 +30,7 @@ export const themeBlue = {
 export const themeCustom = {
     label: 'Custom theme',
     id: 'custom',
-    value: 'todo',
+    value: 'custom-theme',
     alt: 'theme-custom',
     src: themeTestSvg
 };
