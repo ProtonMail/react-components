@@ -13,7 +13,7 @@ const CLASSNAMES = {
 const wrapTooltip = (children, title) => <Tooltip title={title}>{children}</Tooltip>;
 
 const Badge = ({ children, type, tooltip }) => {
-    let badge = <span className={CLASSNAMES[type]}>{children}</span>;
+    let badge = <strong className={CLASSNAMES[type]}>{children}</strong>;
 
     if (tooltip) {
         badge = wrapTooltip(badge, tooltip);

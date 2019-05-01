@@ -12,6 +12,7 @@ import {
     useNotifications,
     useApiWithoutResult
 } from 'react-components';
+import { donate } from 'proton-shared/lib/api/payments';
 import { DEFAULT_CURRENCY, DEFAULT_DONATION_AMOUNT } from 'proton-shared/lib/constants';
 
 import PaymentSelector from './PaymentSelector';
@@ -21,7 +22,7 @@ import usePayment from './usePayment';
 const DonateModal = ({ onClose }) => {
     const { method, setMethod, parameters, setParameters, canPay, setCardValidity } = usePayment(handleSubmit);
     const { createNotification } = useNotifications();
-    const { request, loading } = useApiWithoutResult();
+    const { request, loading } = useApiWithoutResult(donate);
     const [currency, setCurrency] = useState(DEFAULT_CURRENCY);
     const [amount, setAmount] = useState(DEFAULT_DONATION_AMOUNT);
 
