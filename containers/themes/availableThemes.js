@@ -1,3 +1,4 @@
+import { c } from 'ttag';
 import {
     DARK_THEME_LABEL,
     DARK_THEME_VALUE,
@@ -14,7 +15,7 @@ import themeBlueSvg from 'design-system/assets/img/pm-images/theme-blue.svg';
 import themeTestSvg from 'design-system/assets/img/pm-images/theme-test.svg';
 
 const themeDark = {
-    label: DARK_THEME_LABEL,
+    label: c('Theme label').t`${DARK_THEME_LABEL}`,
     id: DARK_THEME_VALUE,
     value: DARK_THEME_VALUE,
     alt: DARK_THEME_VALUE,
@@ -23,7 +24,7 @@ const themeDark = {
 };
 
 const themeLight = {
-    label: LIGHT_THEME_LABEL,
+    label: c('Theme label').t`${LIGHT_THEME_LABEL}`,
     id: LIGHT_THEME_VALUE,
     value: LIGHT_THEME_VALUE,
     alt: LIGHT_THEME_VALUE,
@@ -32,7 +33,7 @@ const themeLight = {
 };
 
 const themeBlue = {
-    label: BLUE_THEME_LABEL,
+    label: c('Theme label').t`${BLUE_THEME_LABEL}`,
     id: BLUE_THEME_VALUE,
     value: BLUE_THEME_VALUE,
     alt: BLUE_THEME_VALUE,
@@ -41,7 +42,7 @@ const themeBlue = {
 };
 
 const themeCustom = {
-    label: CUSTOM_THEME_LABEL,
+    label: c('Theme label').t`${CUSTOM_THEME_LABEL}`,
     id: CUSTOM_THEME_VALUE,
     value: CUSTOM_THEME_VALUE,
     alt: CUSTOM_THEME_VALUE,
