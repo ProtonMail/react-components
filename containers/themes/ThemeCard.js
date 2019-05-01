@@ -17,6 +17,7 @@ const ThemeCard = ({ label, id, value, alt, src, checked, onChange, disabled, cu
             <span className="inbl" />
         </>
     );
+
     return (
         <RadioCard
             label={c('Theme label').t`${label}`}
