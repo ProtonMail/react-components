@@ -5,10 +5,8 @@ import {
     Bordered,
     Row,
     Label,
-    Field,
     SmallButton,
     Loader,
-    Alert,
     Progress,
     useSubscription,
     useOrganization,
@@ -65,8 +63,16 @@ const SubscriptionSection = () => {
 
     const mailPlan = Plans.find(({ Type, Services }) => Type === 1 && hasBit(Services, MAIL));
     const vpnPlan = Plans.find(({ Type, Services }) => Type === 1 && hasBit(Services, VPN));
+    const { Name: mailPlanName } = mailPlan || {};
+    const bundleEligible = (['plus', 'professional'].includes(mailPlanName) && !vpnPlan) || (vpnPlan && !mailPlan);
     const handleRemoveCoupon = () => {}; // TODO
-    const handleModal = () => {}; // TODO
+    const handleChangePlan = () => {}; // TODO
+    const handleModal = (action) => {
+        switch (action) {
+            case 'upgrade':
+            case '':
+        }
+    };
 
     return (
         <>
@@ -74,22 +80,29 @@ const SubscriptionSection = () => {
             <Bordered>
                 <Row>
                     <Label>ProtonMail plan</Label>
-                    <Field>
-                        <strong>{hasPaidMail ? PLAN_NAMES[mailPlan.Name] : c('Plan').t`Free`}</strong>
-                        {hasPaidMail ? null : (
-                            <>
-                                <Alert>{c('Info')
-                                    .t`Combine paid ProtonMail and ProtonVPN and get a 20% discount on both`}</Alert>
-                                <SmallButton className="pm-button--primary" onClick={handleModal}>{c('Action')
-                                    .t`Upgrade`}</SmallButton>
-                            </>
-                        )}
-                    </Field>
+                    <div className="flex-autogrid onmobile-flex-column w100">
+                        <div className="flex-autogrid-item">
+                            <strong>{hasPaidMail ? PLAN_NAMES[mailPlanName] : c('Plan').t`Free`}</strong>
+                        </div>
+                        <div className="flex-autogrid-item">
+                            {bundleEligible &&
+                                c('Info').t`Combine paid ProtonMail and ProtonVPN and get a 20% discount on both`}
+                        </div>
+                        <div className="flex-autogrid-item alignright">
+                            {hasPaidMail ? (
+                                <SmallButton onClick={handleChangePlan}>{c('Action').t`Change plan`}</SmallButton>
+                            ) : (
+                                <SmallButton className="pm-button--primary" onClick={handleModal('upgrade')}>{c(
+                                    'Action'
+                                ).t`Upgrade`}</SmallButton>
+                            )}
+                        </div>
+                    </div>
                 </Row>
                 {hasPaidMail ? (
                     <>
                         <Row>
-                            <Label>{c('Label').t`Users`}</Label>
+                            <Label className="pl1">{c('Label').t`Users`}</Label>
                             <div className="flex-autogrid onmobile-flex-column w100">
                                 <div className="flex-autogrid-item">
                                     <strong>{`${UsedMembers}/${MaxMembers}`}</strong>
@@ -97,13 +110,13 @@ const SubscriptionSection = () => {
                                 <div className="flex-autogrid-item">
                                     <Progress value={(UsedMembers * 100) / MaxMembers} />
                                 </div>
-                                <div className="flex-autogrid-item">
+                                <div className="flex-autogrid-item alignright">
                                     <SmallButton onClick={handleModal}>{c('Action').t`Manage`}</SmallButton>
                                 </div>
                             </div>
                         </Row>
                         <Row>
-                            <Label>{c('Label').t`Email addresses`}</Label>
+                            <Label className="pl1">{c('Label').t`Email addresses`}</Label>
                             <div className="flex-autogrid onmobile-flex-column w100">
                                 <div className="flex-autogrid-item">
                                     <strong>{`${UsedAddresses}/${MaxAddresses}`}</strong>
@@ -111,13 +124,13 @@ const SubscriptionSection = () => {
                                 <div className="flex-autogrid-item">
                                     <Progress value={(UsedAddresses * 100) / MaxAddresses} />
                                 </div>
-                                <div className="flex-autogrid-item">
+                                <div className="flex-autogrid-item alignright">
                                     <SmallButton onClick={handleModal}>{c('Action').t`Manage`}</SmallButton>
                                 </div>
                             </div>
                         </Row>
                         <Row>
-                            <Label>{c('Label').t`Storage capacity`}</Label>
+                            <Label className="pl1">{c('Label').t`Storage capacity`}</Label>
                             <div className="flex-autogrid onmobile-flex-column w100">
                                 <div className="flex-autogrid-item">
                                     <strong>{`${humanSize(UsedSpace, 'GB', true)}/${humanSize(
@@ -128,13 +141,13 @@ const SubscriptionSection = () => {
                                 <div className="flex-autogrid-item">
                                     <Progress value={(UsedSpace * 100) / MaxSpace} />
                                 </div>
-                                <div className="flex-autogrid-item">
+                                <div className="flex-autogrid-item alignright">
                                     <SmallButton onClick={handleModal}>{c('Action').t`Manage`}</SmallButton>
                                 </div>
                             </div>
                         </Row>
                         <Row>
-                            <Label>{c('Label').t`Custom domains`}</Label>
+                            <Label className="pl1">{c('Label').t`Custom domains`}</Label>
                             <div className="flex-autogrid onmobile-flex-column w100">
                                 <div className="flex-autogrid-item">
                                     <strong className="mr1">{`${UsedDomains}/${MaxDomains}`}</strong>
@@ -142,58 +155,104 @@ const SubscriptionSection = () => {
                                 <div className="flex-autogrid-item">
                                     <Progress value={(UsedDomains * 100) / MaxDomains} />
                                 </div>
-                                <div className="flex-autogrid-item">
+                                <div className="flex-autogrid-item alignright">
                                     <SmallButton onClick={handleModal}>{c('Action').t`Manage`}</SmallButton>
                                 </div>
                             </div>
                         </Row>
+                        {mailPlanName === 'visionary' ? (
+                            <Row>
+                                <Label className="pl1">{c('Label').t`VPN connections`}</Label>
+                                <div className="flex-autogrid onmobile-flex-column w100">
+                                    <div className="flex-autogrid-item">
+                                        <strong>{`${UsedVPN}/${MaxVPN}`}</strong>
+                                    </div>
+                                    <div className="flex-autogrid-item">
+                                        <Progress value={(UsedVPN * 100) / MaxVPN} />
+                                    </div>
+                                    <div className="flex-autogrid-item alignright">
+                                        <SmallButton onClick={handleModal}>{c('Action').t`Manage`}</SmallButton>
+                                    </div>
+                                </div>
+                            </Row>
+                        ) : null}
                     </>
                 ) : null}
-                <Row>
-                    <Label>ProtonVPN plan</Label>
-                    <Field>
-                        <strong>{hasPaidVpn ? PLAN_NAMES[vpnPlan.Name] : c('Plan').t`Free`}</strong>
-                        {hasPaidMail ? null : (
-                            <>
-                                <Alert>{c('Info')
-                                    .t`Combine paid ProtonMail and ProtonVPN and get a 20% discount on both`}</Alert>
-                                <SmallButton className="pm-button--primary" onClick={handleModal}>{c('Action')
-                                    .t`Upgrade`}</SmallButton>
-                            </>
-                        )}
-                    </Field>
-                </Row>
+                {mailPlanName === 'visionary' ? null : (
+                    <Row>
+                        <Label>ProtonVPN plan</Label>
+                        <div className="flex-autogrid onmobile-flex-column w100">
+                            <div className="flex-autogrid-item">
+                                <strong>{hasPaidVpn ? PLAN_NAMES[vpnPlan.Name] : c('Plan').t`Free`}</strong>
+                            </div>
+                            <div className="flex-autogrid-item">
+                                {bundleEligible &&
+                                    c('Info').t`Combine paid ProtonMail and ProtonVPN and get a 20% discount on both`}
+                            </div>
+                            <div className="flex-autogrid-item alignright">
+                                {hasPaidVpn ? null : (
+                                    <SmallButton className="pm-button--primary" onClick={handleModal}>{c('Action')
+                                        .t`Upgrade`}</SmallButton>
+                                )}
+                            </div>
+                        </div>
+                    </Row>
+                )}
                 {hasPaidVpn ? (
                     <Row>
-                        <Label>{c('Label').t`VPN connections`}</Label>
-                        <Field>
+                        <Label className="pl1">{c('Label').t`VPN connections`}</Label>
+                        <div className="flex-autogrid-item">
                             <strong>{`${UsedVPN}/${MaxVPN}`}</strong>
-                        </Field>
+                        </div>
+                        <div className="flex-autogrid-item">
+                            <Progress value={(UsedVPN * 100) / MaxVPN} />
+                        </div>
+                        <div className="flex-autogrid-item alignright">
+                            <SmallButton onClick={handleModal}>{c('Action').t`Manage`}</SmallButton>
+                        </div>
                     </Row>
                 ) : null}
                 <Row>
                     <Label>{c('Label').t`Billing cycle`}</Label>
-                    <Field>
-                        <strong>{CYCLES[Cycle]}</strong>
-                        {Cycle === MONTHLY && <Alert>{c('Info').t`Switch to annual billing for a 20% discount`}</Alert>}
-                        {Cycle === YEARLY && <Alert>{c('Info').t`20% rebate applied to your subscription`}</Alert>}
-                        {Cycle === TWO_YEARS && <Alert>{c('Info').t`33% rebate applied to your subscription`}</Alert>}
+                    <div className="flex-autogrid onmobile-flex-column w100">
+                        <div className="flex-autogrid-item">
+                            <strong>{CYCLES[Cycle]}</strong>
+                        </div>
                         {Cycle === MONTHLY && (
-                            <SmallButton onClick={handleModal('yearly')}>{c('Action').t`Pay yearly`}</SmallButton>
+                            <div className="flex-autogrid-item">{c('Info')
+                                .t`Switch to annual billing for a 20% discount`}</div>
                         )}
-                    </Field>
+                        {Cycle === YEARLY && (
+                            <div className="flex-autogrid-item color-global-success">{c('Info')
+                                .t`20% rebate applied to your subscription`}</div>
+                        )}
+                        {Cycle === TWO_YEARS && (
+                            <div className="flex-autogrid-item color-global-success">{c('Info')
+                                .t`33% rebate applied to your subscription`}</div>
+                        )}
+                        {Cycle === MONTHLY && (
+                            <div className="flex-autogrid-item alignright">
+                                <SmallButton className="pm-button--primary" onClick={handleModal('yearly')}>{c('Action')
+                                    .t`Pay yearly`}</SmallButton>
+                            </div>
+                        )}
+                    </div>
                 </Row>
                 <Row>
                     <Label>{c('Label').t`Coupon`}</Label>
-                    <Field>
-                        <strong>{CouponCode ? CouponCode : c('Label').t`None`}</strong>
-                        {CouponCode === 'BUNDLE' && (
-                            <Alert>{c('Info').t`20% discount applied to your subscription`}</Alert>
-                        )}
-                        {CouponCode && (
-                            <SmallButton onClick={handleRemoveCoupon}>{c('Action').t`Remove coupon`}</SmallButton>
-                        )}
-                    </Field>
+                    <div className="flex-autogrid onmobile-flex-column w100">
+                        <div className="flex-autogrid-item">
+                            <strong>{CouponCode ? CouponCode : c('Label').t`None`}</strong>
+                        </div>
+                        <div className="flex-autogrid-item color-global-success">
+                            {CouponCode === 'BUNDLE' && c('Info').t`20% discount applied to your subscription`}
+                        </div>
+                        <div className="flex-autogrid-item">
+                            {CouponCode && (
+                                <SmallButton onClick={handleRemoveCoupon}>{c('Action').t`Remove coupon`}</SmallButton>
+                            )}
+                        </div>
+                    </div>
                 </Row>
             </Bordered>
         </>
