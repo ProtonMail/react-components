@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import { ResetButton, PrimaryButton, Input, TextArea, Label, Row, Field } from 'react-components';
@@ -18,6 +18,7 @@ Good candidates:
 */
 
 const InputModal = ({
+    isTextArea,
     label,
     type,
     title,
@@ -57,17 +58,7 @@ const InputModal = ({
             InputField = (
                 <Row>
                     <Label htmlFor={id}>{label}</Label>
-                    <Field>
-                        <Input
-                            id={id}
-                            value={input}
-                            placeholder={placeholder}
-                            onChange={handleChange}
-                            autoFocus={true}
-                            readOnly={loading}
-                            required
-                        />
-                    </Field>
+                    <Field>{InputField}</Field>
                 </Row>
             );
     }

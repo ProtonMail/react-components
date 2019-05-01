@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { c } from 'ttag';
 import {
     useMailSettings,
@@ -7,8 +7,8 @@ import {
     SubTitle,
     Alert,
     ThemeCards,
-    ConfirmModal,
-    TextArea
+    InputModal,
+    useModal
 } from 'react-components';
 import { updateTheme } from 'proton-shared/lib/api/mailSettings';
 import { themeDark, themeLight, themeBlue, themeCustom } from './availableThemes.js';
@@ -17,21 +17,21 @@ const availableThemes = [themeDark, themeLight, themeBlue, themeCustom];
 
 const getThemeName = (Theme) => {
     if (Theme) {
-        if (/\/* light-theme \/*/.test(Theme)) {
-            return 'light-theme';
+        if (Theme.startsWith(`/* ${themeLight.value} */`)) {
+            return themeLight.value;
         }
-        if (/\/* blue-theme \/*/.test(Theme)) {
-            return 'blue-theme';
+        if (Theme.startsWith(`/* ${themeBlue.value} */`)) {
+            return themeBlue.value;
         }
-        return 'custom-theme';
+        return themeCustom.value;
     }
-    return 'dark-theme';
+    return themeDark.value;
 };
 const getCSS = (themeName) => {
     switch (themeName) {
-        case 'light-theme':
+        case themeLight.value:
             return CSSLightTheme;
-        case 'blue-theme':
+        case themeBlue.value:
             return CSSBlueTheme;
         default:
             return '';
@@ -39,42 +39,35 @@ const getCSS = (themeName) => {
 };
 
 const ThemesSection = () => {
-    const [showCustomModal, setShowCustomModal] = useState(false);
-    const [customCSSInput, setCustomCSSInput] = useState('');
+    const { isOpen: showCustomModal, open: openCustomModal, close: closeCustomModal } = useModal();
 
     const [{ Theme }] = useMailSettings();
     const { call } = useEventManager();
     const { request, loading } = useApiWithoutResult(updateTheme);
 
     const themeName = getThemeName(Theme);
+    const customCSS = themeName === themeCustom.value ? Theme : '';
 
     const handleChangeTheme = async (themeName) => {
-        if (themeName === 'custom-theme') {
-            setShowCustomModal(true);
+        if (themeName === themeCustom.value) {
+            openCustomModal();
             return;
         }
-        setCustomCSSInput('');
         await request(getCSS(themeName));
         call();
     };
-    const handleConfirm = async () => {
-        setShowCustomModal(!showCustomModal);
+    const handleSubmit = async (customCSSInput) => {
+        closeCustomModal();
         await request(customCSSInput);
         call();
-    };
-    const handleClose = () => {
-        setShowCustomModal(false);
-    };
-    const handleChangeCSSInput = (event) => {
-        setCustomCSSInput(event.target.value);
     };
 
     const themeText = c('Info')
         .t`ProtonMail offers 3 default themes to select from. You can also import a custom theme using our CSS editor`;
     const customizationThemeText = c('Info')
         .t`Selecting another theme will override your current theme and any customization will be lost`;
-    const customThemeText = c('Info')
-        .t`Custom themes from third parties can potentially betray your privacy. Only use themes from trusted sources`;
+    // const customThemeText = c('Info')
+    //     .t`Custom themes from third parties can potentially betray your privacy. Only use themes from trusted sources`;
 
     return (
         <>
@@ -82,17 +75,25 @@ const ThemesSection = () => {
             <Alert>{themeText}</Alert>
             <Alert type="warning">{customizationThemeText}</Alert>
             <br />
-            <ThemeCards list={availableThemes} themeName={themeName} onChange={handleChangeTheme} disabled={loading} />
-            <ConfirmModal
+            <ThemeCards
+                list={availableThemes}
+                themeName={themeName}
+                onChange={handleChangeTheme}
+                onCustomization={openCustomModal}
+                disabled={loading}
+            />
+            <InputModal
+                isTextArea={true}
                 title={c('Title').t`Custom Theme`}
                 show={showCustomModal}
-                onConfirm={handleConfirm}
-                onClose={handleClose}
-                confirm={c('Action').t`Save`}
+                onSubmit={handleSubmit}
+                onClose={closeCustomModal}
+                submit={c('Action').t`Save`}
+                input={customCSS}
+                placeholder={'Insert CSS code here'}
             >
-                <Alert>{customThemeText}</Alert>
-                <TextArea onChange={handleChangeCSSInput} defaultValue={customCSSInput} />
-            </ConfirmModal>
+                {/* <Alert>{customThemeText}</Alert> */}
+            </InputModal>
         </>
     );
 };
