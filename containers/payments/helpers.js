@@ -75,3 +75,16 @@ export const formatPlans = (plans = []) => {
         return acc;
     }, {});
 };
+
+/**
+ * Define sub-total from current subscription
+ * @param {Array} plans coming from Subscription API
+ * @returns {Number} subTotal
+ */
+export const getSubTotal = (plans = []) => {
+    const config = formatPlans(plans);
+
+    return Object.entries(config).reduce((acc, [, { Amount }]) => {
+        return acc + Amount;
+    }, 0);
+};

@@ -13,7 +13,7 @@ import {
     useModal
 } from 'react-components';
 
-import { formatPlans } from './helpers';
+import { formatPlans, getSubTotal } from './helpers';
 import CycleDiscountBadge from './CycleDiscountBadge';
 import CouponDiscountBadge from './CouponDiscountBadge';
 import GiftCodeModal from './GiftCodeModal';
@@ -46,6 +46,7 @@ const BillingSection = () => {
     }
 
     const { mailPlan, vpnPlan, addressAddon, domainAddon, memberAddon, vpnAddon, spaceAddon } = formatPlans(Plans);
+    const subTotal = getSubTotal(Plans);
 
     return (
         <>
@@ -153,7 +154,11 @@ const BillingSection = () => {
                     <div className="flex-autogrid onmobile-flex-column w100 mb1">
                         <div className="flex-autogrid-item">{c('Label').t`Sub-total`}</div>
                         <div className="flex-autogrid-item" />
-                        <div className="flex-autogrid-item" />
+                        <div className="flex-autogrid-item">
+                            <Price currency={Currency} suffix={c('Suffix').t`/ month`}>
+                                {subTotal / Cycle}
+                            </Price>
+                        </div>
                         <div className="flex-autogrid-item" />
                     </div>
                 ) : null}
@@ -163,7 +168,11 @@ const BillingSection = () => {
                         <div className="flex-autogrid-item bold">
                             {CouponCode} <CouponDiscountBadge code={CouponCode} />
                         </div>
-                        <div className="flex-autogrid-item" />
+                        <div className="flex-autogrid-item">
+                            <Price currency={Currency} suffix={c('Suffix').t`/ month`}>
+                                {(Amount - subTotal) / Cycle}
+                            </Price>
+                        </div>
                         <div className="flex-autogrid-item" />
                     </div>
                 ) : null}

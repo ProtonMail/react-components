@@ -21,11 +21,11 @@ const PaymentSelector = ({ currency, amount, onChangeCurrency, onChangeAmount })
                 <div className="flex-autogrid-item">
                     <AmountButton className="w100" onSelect={onChangeAmount} value={5000} amount={amount} />
                 </div>
-            </div>
-            <div className="flex-autogrid onmobile-flex-column">
                 <div className="flex-autogrid-item">
                     <AmountButton className="w100" onSelect={onChangeAmount} value={10000} amount={amount} />
                 </div>
+            </div>
+            <div className="flex-autogrid onmobile-flex-column">
                 <div className="flex-autogrid-item">
                     <Input className="w100" onChange={handleChange} placeholder={c('Placeholder').t`Other`} />
                 </div>
