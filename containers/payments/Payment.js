@@ -37,7 +37,7 @@ const Payment = ({ type, amount, currency, cycle, onParameters, onMethod, onVali
     return (
         <>
             <Row>
-                <Label>{c('Label').t`Select payment method`}</Label>
+                <Label>{c('Label').t`Payment method`}</Label>
                 <Field>
                     <PaymentMethodsSelect
                         cycle={cycle}

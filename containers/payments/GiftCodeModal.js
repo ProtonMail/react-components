@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import {
     Modal,
+    Alert,
     ContentModal,
     FooterModal,
     ResetButton,
@@ -44,15 +45,22 @@ const GiftCodeModal = ({ show, onClose }) => {
     return (
         <Modal type="small" show={show} onClose={onClose} title={c('Title').t`Gift code`}>
             <ContentModal onSubmit={handleSubmit} onReset={onClose} loading={loading}>
+                <Alert>{c('Info').t`If you purchased or were given a gift code, add it here.`}</Alert>
                 <Row>
                     <Label htmlFor="giftCodeInput">{c('Label').t`Enter gift code`}</Label>
                     <Field>
-                        <GiftCodeInput id="giftCodeInput" value={value} onChange={handleChange} required={true} />
+                        <GiftCodeInput
+                            id="giftCodeInput"
+                            value={value}
+                            onChange={handleChange}
+                            required={true}
+                            autoFocus={true}
+                        />
                     </Field>
                 </Row>
                 <FooterModal>
                     <ResetButton>{c('Action').t`Close`}</ResetButton>
-                    <PrimaryButton type="submit">{c('Action').t`Save`}</PrimaryButton>
+                    <PrimaryButton type="submit">{c('Action').t`Apply`}</PrimaryButton>
                 </FooterModal>
             </ContentModal>
         </Modal>

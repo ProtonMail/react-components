@@ -151,6 +151,14 @@ const BillingSection = () => {
                 ) : null}
                 {CouponCode ? (
                     <div className="flex-autogrid onmobile-flex-column w100 mb1">
+                        <div className="flex-autogrid-item">{c('Label').t`Sub-total`}</div>
+                        <div className="flex-autogrid-item" />
+                        <div className="flex-autogrid-item" />
+                        <div className="flex-autogrid-item" />
+                    </div>
+                ) : null}
+                {CouponCode ? (
+                    <div className="flex-autogrid onmobile-flex-column w100 mb1">
                         <div className="flex-autogrid-item">{c('Label').t`Coupon`}</div>
                         <div className="flex-autogrid-item bold">
                             {CouponCode} <CouponDiscountBadge code={CouponCode} />
@@ -184,9 +192,7 @@ const BillingSection = () => {
                 <div className="flex-autogrid onmobile-flex-column w100 mb1">
                     <div className="flex-autogrid-item">{c('Label').t`Credits`}</div>
                     <div className="flex-autogrid-item" />
-                    <div className="flex-autogrid-item">
-                        <Price currency={Currency}>{Credit}</Price>
-                    </div>
+                    <div className="flex-autogrid-item">{Credit / 100}</div>
                     <div className="flex-autogrid-item alignright">
                         <SmallButton onClick={openCreditsModal}>{c('Action').t`Add credits`}</SmallButton>
                     </div>

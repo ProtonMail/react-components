@@ -4,6 +4,9 @@ import PropTypes from 'prop-types';
 import {
     Label,
     Modal,
+    Row,
+    Field,
+    Alert,
     ContentModal,
     InnerModal,
     FooterModal,
@@ -36,16 +39,22 @@ const DonateModal = ({ onClose }) => {
     };
 
     return (
-        <Modal type="small" onClose={onClose} title={c('Title').t`Donate`}>
+        <Modal type="small" onClose={onClose} title={c('Title').t`Make a donation`}>
             <ContentModal onSubmit={handleSubmit} onReset={onClose}>
                 <InnerModal>
-                    <Label>{c('Label').t`Amount`}</Label>
-                    <PaymentSelector
-                        amount={amount}
-                        onChangeAmount={setAmount}
-                        currency={currency}
-                        onChangeCurrency={setCurrency}
-                    />
+                    <Alert>{c('Info')
+                        .t`Your payment details are protected with TLS encryption and Swiss privacy laws.`}</Alert>
+                    <Row>
+                        <Label>{c('Label').t`Amount`}</Label>
+                        <Field>
+                            <PaymentSelector
+                                amount={amount}
+                                onChangeAmount={setAmount}
+                                currency={currency}
+                                onChangeCurrency={setCurrency}
+                            />
+                        </Field>
+                    </Row>
                     <Payment
                         type="donation"
                         method={method}
