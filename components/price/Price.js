@@ -16,7 +16,7 @@ const Price = ({ children: amount, currency, className, divisor, suffix }) => {
     return (
         <span className={`price ${className}`}>
             {currency === 'USD'
-                ? `${prefix}${symbol}${absValue} ${suffix}`
+                ? `${prefix}${symbol}${absValue} ${suffix}`.trim()
                 : `${prefix}${absValue} ${symbol} ${suffix}`.trim()}
         </span>
     );
