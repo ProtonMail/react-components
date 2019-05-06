@@ -237,7 +237,7 @@ export { default as useAuthenticationStore } from './hooks/useAuthenticationStor
 export { default as useAsync } from './hooks/useAsync';
 export { nestChildren } from './helpers/component';
 export { indexOfMax, buildThresholds } from './helpers/intersectionObserver';
-export { getThemeName } from './helpers/themes';
+export { getThemeIdentifier, stripThemeIdentifier } from './helpers/themes';
 
 export { default as useCache } from './containers/cache/useCache';
 export { default as useCachedResult } from './containers/cache/useCachedResult';

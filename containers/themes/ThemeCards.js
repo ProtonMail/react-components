@@ -2,20 +2,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ThemeCard } from 'react-components';
 
-const ThemeCards = ({ themeName, onChange, onCustomization, loading, list }) => {
+const ThemeCards = ({ themeId, onChange, onCustomization, loading, list }) => {
     return (
         <div>
-            {list.map(({ label, id, value, alt, src, customizable }) => {
+            {list.map(({ label, id, alt, src, customizable }) => {
                 return (
-                    <div className="inbl mr1 mb1" key={value}>
+                    <div className="inbl mr1 mb1" key={id}>
                         <ThemeCard
                             label={label}
                             id={id}
-                            value={value}
                             alt={alt}
                             src={src}
-                            checked={themeName === value}
-                            onChange={() => onChange(value)}
+                            checked={themeId === id}
+                            onChange={() => onChange(id)}
                             disabled={loading}
                             customizable={customizable}
                             onCustomization={onCustomization}
@@ -28,7 +27,7 @@ const ThemeCards = ({ themeName, onChange, onCustomization, loading, list }) => 
 };
 
 ThemeCards.propTypes = {
-    themeName: PropTypes.string.isRequired,
+    themeId: PropTypes.string.isRequired,
     onChange: PropTypes.func,
     onCustomization: PropTypes.func,
     loading: PropTypes.bool,

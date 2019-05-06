@@ -1,26 +1,36 @@
-import {
-    DARK_THEME_VALUE,
-    LIGHT_THEME_VALUE,
-    LIGHT_THEME_IDENTIFIER,
-    BLUE_THEME_VALUE,
-    BLUE_THEME_IDENTIFIER,
-    CUSTOM_THEME_VALUE
-} from 'proton-shared/lib/constants';
+import { THEMES } from 'proton-shared/lib/constants';
+
+const {
+    DARK: { identifier: darkId },
+    LIGHT: { identifier: lightId },
+    BLUE: { identifier: blueId },
+    CUSTOM: { identifier: customId }
+} = THEMES;
 
 /**
- * Given a string with the CSS code for a theme, get theme name
- * @param {Theme} string		CSS code stringified
- * @return {string}             name of the theme corresponding to the CSS code
+ * Given a theme, return identifier
+ * @param {theme} string            CSS associated to a theme
+ * @return {string}                 theme identifier
  */
-export const getThemeName = (Theme) => {
-    if (Theme) {
-        if (Theme.startsWith(LIGHT_THEME_IDENTIFIER)) {
-            return LIGHT_THEME_VALUE;
-        }
-        if (Theme.startsWith(BLUE_THEME_IDENTIFIER)) {
-            return BLUE_THEME_VALUE;
-        }
-        return CUSTOM_THEME_VALUE;
+export const getThemeIdentifier = (theme) => {
+    if (!theme) {
+        return darkId;
     }
-    return DARK_THEME_VALUE;
+    if (theme !== lightId && theme !== blueId) {
+        return customId;
+    }
+    return theme;
+};
+
+/**
+ * Given a theme identifier with commented code as '\/* something *\/', extract 'something'
+ * @param {themeIdentifier} string		theme identifier with comment markers
+ * @return {string}                     theme identifier without comment markers
+ */
+export const stripThemeIdentifier = (themeIdentifier) => {
+    const regex = /\/\*(.*)\*\//;
+    if (regex.test(themeIdentifier)) {
+        return themeIdentifier.match(/\/\*(.*)\*\//)[1].trim();
+    }
+    return themeIdentifier;
 };

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import { RadioCard } from 'react-components';
 
-const ThemeCard = ({ label, id, value, alt, src, checked, onChange, disabled, customizable, onCustomization }) => {
+const ThemeCard = ({ label, id, alt, src, checked, onChange, disabled, customizable, onCustomization }) => {
     const customize = customizable ? (
         <>
             <br />
@@ -23,7 +23,6 @@ const ThemeCard = ({ label, id, value, alt, src, checked, onChange, disabled, cu
             label={c('Theme label').t`${label}`}
             name="themeCard"
             id={id}
-            value={value}
             checked={checked}
             onChange={onChange}
             disabled={disabled}
@@ -37,7 +36,6 @@ const ThemeCard = ({ label, id, value, alt, src, checked, onChange, disabled, cu
 ThemeCard.propTypes = {
     label: PropTypes.string.isRequired,
     id: PropTypes.string.isRequired,
-    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]),
     alt: PropTypes.string.isRequired,
     src: PropTypes.string.isRequired,
     checked: PropTypes.bool.isRequired,
