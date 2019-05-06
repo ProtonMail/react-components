@@ -31,8 +31,7 @@ const ThemesSection = () => {
 
     const handleChangeTheme = async (themeId) => {
         if (themeId === customId) {
-            openCustomModal();
-            return;
+            return openCustomModal();
         }
         await request(themeId);
         call();
