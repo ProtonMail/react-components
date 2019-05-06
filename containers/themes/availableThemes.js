@@ -6,34 +6,41 @@ import themeBlueSvg from 'design-system/assets/img/pm-images/theme-blue.svg';
 import themeTestSvg from 'design-system/assets/img/pm-images/theme-test.svg';
 import { stripThemeIdentifier } from 'react-components';
 
+const {
+    DARK: { label: darkLabel, identifier: darkId },
+    LIGHT: { label: lightLabel, identifier: lightId },
+    BLUE: { label: blueLabel, identifier: blueId },
+    CUSTOM: { label: customLabel, identifier: customId }
+} = THEMES;
+
 const themeDark = {
-    label: c('Theme label').t`${THEMES.DARK.label}`,
-    id: THEMES.DARK.identifier,
-    alt: stripThemeIdentifier(THEMES.DARK.identifier),
+    label: c('Theme label').t`${darkLabel}`,
+    id: darkId,
+    alt: stripThemeIdentifier(darkId),
     src: themeDarkSvg,
     customizable: false
 };
 
 const themeLight = {
-    label: c('Theme label').t`${THEMES.LIGHT.label}`,
-    id: THEMES.LIGHT.identifier,
-    alt: stripThemeIdentifier(THEMES.LIGHT.identifier),
+    label: c('Theme label').t`${lightLabel}`,
+    id: lightId,
+    alt: stripThemeIdentifier(lightId),
     src: themeLightSvg,
     customizable: false
 };
 
 const themeBlue = {
-    label: c('Theme label').t`${THEMES.BLUE.label}`,
-    id: THEMES.BLUE.identifier,
-    alt: stripThemeIdentifier(THEMES.BLUE.identifier),
+    label: c('Theme label').t`${blueLabel}`,
+    id: blueId,
+    alt: stripThemeIdentifier(blueId),
     src: themeBlueSvg,
     customizable: false
 };
 
 const themeCustom = {
-    label: c('Theme label').t`${THEMES.CUSTOM.label}`,
-    id: THEMES.CUSTOM.identifier,
-    alt: stripThemeIdentifier(THEMES.CUSTOM.identifier),
+    label: c('Theme label').t`${customLabel}`,
+    id: customId,
+    alt: stripThemeIdentifier(customId),
     src: themeTestSvg,
     customizable: true
 };
