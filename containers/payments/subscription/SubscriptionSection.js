@@ -14,7 +14,7 @@ import { CYCLE, PLAN_NAMES } from 'proton-shared/lib/constants';
 import humanSize from 'proton-shared/lib/helpers/humanSize';
 
 import { formatPlans } from './helpers';
-import CouponDiscountBadge from './CouponDiscountBadge';
+import CouponDiscountBadge from '../CouponDiscountBadge';
 
 const { MONTHLY, YEARLY, TWO_YEARS } = CYCLE;
 

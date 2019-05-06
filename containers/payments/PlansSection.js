@@ -15,10 +15,12 @@ import {
     useToggle
 } from 'react-components';
 import { hasBit } from 'proton-shared/lib/helpers/bitset';
-import { CYCLE, PLAN_SERVICES } from 'proton-shared/lib/constants';
+import { CYCLE, PLAN_SERVICES, DEFAULT_CURRENCY, DEFAULT_CYCLE } from 'proton-shared/lib/constants';
 
 import CurrencySelector from './CurrencySelector';
 import CycleSelector from './CycleSelector';
+import SubscriptionModal from './subscription/SubscriptionModal';
+import { mergePlansMap } from './subscription/helpers';
 
 const { MAIL } = PLAN_SERVICES;
 const { MONTHLY, YEARLY, TWO_YEARS } = CYCLE;
@@ -29,11 +31,29 @@ const PlansSection = () => {
     const [plans = [], loadingPlans] = usePlans();
     const { state: showPlans, toggle: togglePlans } = useToggle(!isPaid);
     const { state: showFeatures, toggle: toggleFeatures } = useToggle();
-    const [currency, setCurrency] = useState();
-    const [cycle, setCycle] = useState();
-    const handleModal = (action) => {
-        // eslint-disable-next-line no-console
-        console.log('open modal', action); // TODO
+    const [currency, setCurrency] = useState(DEFAULT_CURRENCY);
+    const [cycle, setCycle] = useState(DEFAULT_CYCLE);
+    const [subscriptionModal, setSubscriptionModal] = useState(null);
+    const resetModal = () => setSubscriptionModal(null);
+
+    const handleModal = (newPlansMap) => () => {
+        if (!newPlansMap) {
+            // TODO unsubscribe
+            return;
+        }
+
+        const modal = (
+            <SubscriptionModal
+                step={newPlansMap.vpnplus || 0}
+                onClose={resetModal}
+                plansMap={mergePlansMap(newPlansMap, subscription)}
+                coupon={subscription.CouponCode ? subscription.CouponCode : undefined}
+                currency={currency}
+                cycle={cycle}
+            />
+        );
+
+        setSubscriptionModal(modal);
     };
 
     useEffect(() => {
@@ -310,60 +330,63 @@ const PlansSection = () => {
                                 ProtonVPN <Info title={c('Tooltip').t`ProtonVPN keeps your Internet traffic private`} />
                             </th>
                             <td>
-                                <SmallButton onClick={handleModal('vpn')}>
+                                <SmallButton onClick={handleModal({ vpnplus: 1 })}>
                                     {hasPaidVpn ? c('Action').t`Edit VPN` : c('Action').t`Add VPN`}
                                 </SmallButton>
                             </td>
                             <td>
-                                <SmallButton onClick={handleModal('vpn')}>
+                                <SmallButton onClick={handleModal({ vpnplus: 1, plus: 1 })}>
                                     {hasPaidVpn ? c('Action').t`Edit VPN` : c('Action').t`Add VPN`}
                                 </SmallButton>
                             </td>
                             <td>
-                                <SmallButton onClick={handleModal('vpn')}>
+                                <SmallButton onClick={handleModal({ vpnplus: 1, professional: 1 })}>
                                     {hasPaidVpn ? c('Action').t`Edit VPN` : c('Action').t`Add VPN`}
                                 </SmallButton>
                             </td>
                             <td>{c('Plan option').t`Included`}</td>
                         </tr>
                         <tr>
-                            <th>
+                            <td>
                                 <SmallButton onClick={toggleFeatures}>
-                                    {showFeatures ? c('Action').t`Hide` : c('Action').t`Compare all features`}
+                                    {showFeatures
+                                        ? c('Action').t`Hide additional features`
+                                        : c('Action').t`Compare all features`}
                                 </SmallButton>
-                            </th>
+                            </td>
                             <td>
                                 <SmallButton
                                     className="pm-button--primary"
                                     disabled={currentPlanName === 'free'}
-                                    onClick={handleModal('free')}
+                                    onClick={handleModal()}
                                 >{c('Action').t`Select`}</SmallButton>
                             </td>
                             <td>
                                 <SmallButton
                                     className="pm-button--primary"
                                     disabled={currentPlanName === 'plus'}
-                                    onClick={handleModal('plus')}
+                                    onClick={handleModal({ plus: 1 })}
                                 >{c('Action').t`Select`}</SmallButton>
                             </td>
                             <td>
                                 <SmallButton
                                     className="pm-button--primary"
                                     disabled={currentPlanName === 'professional'}
-                                    onClick={handleModal('professional')}
+                                    onClick={handleModal({ professional: 1 })}
                                 >{c('Action').t`Select`}</SmallButton>
                             </td>
                             <td>
                                 <SmallButton
                                     className="pm-button--primary"
                                     disabled={currentPlanName === 'visionary'}
-                                    onClick={handleModal('visionary')}
+                                    onClick={handleModal({ visionary: 1 })}
                                 >{c('Action').t`Select`}</SmallButton>
                             </td>
                         </tr>
                     </tbody>
                 </table>
             ) : null}
+            {subscriptionModal}
         </>
     );
 };

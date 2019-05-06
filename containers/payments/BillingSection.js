@@ -13,7 +13,7 @@ import {
     useModal
 } from 'react-components';
 
-import { formatPlans, getSubTotal } from './helpers';
+import { formatPlans } from './subscription/helpers';
 import CycleDiscountBadge from './CycleDiscountBadge';
 import CouponDiscountBadge from './CouponDiscountBadge';
 import GiftCodeModal from './GiftCodeModal';
@@ -25,6 +25,19 @@ const CYCLES = {
     [MONTHLY]: c('Billing cycle').t`Monthly`,
     [YEARLY]: c('Billing cycle').t`Yearly`,
     [TWO_YEARS]: c('Billing cycle').t`2-year`
+};
+
+/**
+ * Define sub-total from current subscription
+ * @param {Array} plans coming from Subscription API
+ * @returns {Number} subTotal
+ */
+const getSubTotal = (plans = []) => {
+    const config = formatPlans(plans);
+
+    return Object.entries(config).reduce((acc, [, { Amount }]) => {
+        return acc + Amount;
+    }, 0);
 };
 
 const BillingSection = () => {

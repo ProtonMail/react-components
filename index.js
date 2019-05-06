@@ -120,7 +120,7 @@ export { default as AddressesTable } from './containers/domains/AddressesTable';
 export { default as DomainSection } from './containers/domains/DomainSection';
 export { default as BillingSection } from './containers/payments/BillingSection';
 export { default as PlansSection } from './containers/payments/PlansSection';
-export { default as SubscriptionSection } from './containers/payments/SubscriptionSection';
+export { default as SubscriptionSection } from './containers/payments/subscription/SubscriptionSection';
 export { default as AmountButton } from './containers/payments/AmountButton';
 export { default as Bitcoin } from './containers/payments/Bitcoin';
 export { default as CurrencySelector } from './containers/payments/CurrencySelector';

@@ -22,6 +22,12 @@ import PaymentSelector from './PaymentSelector';
 import Payment from './Payment';
 import usePayment from './usePayment';
 
+const I18N_CURRENCIES = {
+    EUR: c('Monetary unit').t`Euro`,
+    CHF: c('Monetary unit').t`Swiss franc`,
+    USD: c('Monetary unit').t`Dollar`
+};
+
 const CreditsModal = ({ show, onClose }) => {
     const { call } = useEventManager();
     const { method, setMethod, parameters, setParameters, canPay, setCardValidity } = usePayment(handleSubmit);
@@ -29,6 +35,7 @@ const CreditsModal = ({ show, onClose }) => {
     const { request, loading } = useApiWithoutResult(buyCredit);
     const [currency, setCurrency] = useState(DEFAULT_CURRENCY);
     const [amount, setAmount] = useState(DEFAULT_CREDITS_AMOUNT);
+    const i18nCurrency = I18N_CURRENCIES[currency];
 
     const handleSubmit = async () => {
         await request({ Amount: amount, Currency: currency, ...parameters });
@@ -43,7 +50,7 @@ const CreditsModal = ({ show, onClose }) => {
                 <Alert>{c('Info')
                     .t`Your payment details are protected with TLS encryption and Swiss privacy laws.`}</Alert>
                 <Alert learnMore="https://protonmail.com/support/knowledge-base/credit-proration/">{c('Info')
-                    .jt`Top up your accounts with credits that can be used towards subscribing to a new plan or renewing your current plan. You get one credit for every ${currency} spent.`}</Alert>
+                    .jt`Top up your account with credits that you can use to subscribe to a new plan or renew your current plan. You get one credit for every ${i18nCurrency} spent.`}</Alert>
                 <Row>
                     <Label>{c('Label').t`Amount`}</Label>
                     <Field>
