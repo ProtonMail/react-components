@@ -13,7 +13,7 @@ const {
  * @return {string}                 theme identifier
  */
 export const getThemeIdentifier = (theme) => {
-    if (!theme) {
+    if (!theme || theme === darkId) {
         return darkId;
     }
     if (theme !== lightId && theme !== blueId) {

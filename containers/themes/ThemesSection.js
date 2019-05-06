@@ -8,11 +8,11 @@ import {
     Alert,
     ThemeCards,
     InputModal,
-    useModal,
-    getThemeIdentifier
+    useModal
 } from 'react-components';
 import { updateTheme } from 'proton-shared/lib/api/mailSettings';
 import { availableThemes } from './availableThemes.js';
+import { getThemeIdentifier } from 'react-components/helpers/themes';
 import { THEMES } from 'proton-shared/lib/constants';
 
 const {

@@ -4,7 +4,7 @@ import themeDarkSvg from 'design-system/assets/img/pm-images/theme-dark.svg';
 import themeLightSvg from 'design-system/assets/img/pm-images/theme-light.svg';
 import themeBlueSvg from 'design-system/assets/img/pm-images/theme-blue.svg';
 import themeTestSvg from 'design-system/assets/img/pm-images/theme-test.svg';
-import { stripThemeIdentifier } from 'react-components';
+import { stripThemeIdentifier } from 'react-components/helpers/themes';
 
 const {
     DARK: { label: darkLabel, identifier: darkId },
