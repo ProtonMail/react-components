@@ -60,8 +60,8 @@ const AuthenticatedApp = ({ authenticationStore, onLogout, initApi, loginData, c
             <ApiContext.Provider value={api}>
                 <AuthenticationStoreContext.Provider value={authenticationStoreWithLogout}>
                     <ModelsProvider loginData={loginData}>
-                        <PromptsProvider manager={promptsManager}>{children}</PromptsProvider>
                         <ThemeInjector />
+                        <PromptsProvider manager={promptsManager}>{children}</PromptsProvider>
                     </ModelsProvider>
                 </AuthenticationStoreContext.Provider>
             </ApiContext.Provider>
