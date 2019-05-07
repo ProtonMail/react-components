@@ -77,12 +77,9 @@ const InvoiceActions = ({ invoice, fetchInvoices }) => {
                 filename={filename}
             />
             {invoice.State === INVOICE_STATE.UNPAID ? (
-                <PayInvoiceModal
-                    invoice={invoice}
-                    show={showPayInvoiceModal}
-                    onClose={closePayInvoiceModal}
-                    fetchInvoices={fetchInvoices}
-                />
+                showPayInvoiceModal ? (
+                    <PayInvoiceModal invoice={invoice} onClose={closePayInvoiceModal} fetchInvoices={fetchInvoices} />
+                ) : null
             ) : null}
         </>
     );
