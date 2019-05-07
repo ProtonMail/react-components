@@ -70,6 +70,7 @@ const SubscriptionModal = ({ onClose, cycle, currency, step: initialStep, coupon
             return result;
         } catch (error) {
             setLoading(false);
+            throw error;
         }
     };
 
@@ -91,10 +92,12 @@ const SubscriptionModal = ({ onClose, cycle, currency, step: initialStep, coupon
                 if (newModel.gift && !Gift) {
                     return createNotification({ text: c('Error').t`Invalid gift code`, type: 'error' });
                 }
+
                 setLoading(false);
                 setCheck(result);
             } catch (error) {
                 setLoading(false);
+                throw error;
             }
         }
 
@@ -114,6 +117,7 @@ const SubscriptionModal = ({ onClose, cycle, currency, step: initialStep, coupon
             next();
         } catch (error) {
             setLoading(false);
+            throw error;
         }
     };
 
@@ -152,6 +156,7 @@ const SubscriptionModal = ({ onClose, cycle, currency, step: initialStep, coupon
                         setLoading(false);
                     } catch (error) {
                         setLoading(false);
+                        throw error;
                     }
                 }
                 next();

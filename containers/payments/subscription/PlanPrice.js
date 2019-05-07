@@ -5,9 +5,9 @@ import { Price } from 'react-components';
 
 import { DEFAULT_CYCLE, DEFAULT_CURRENCY } from 'proton-shared/lib/constants';
 
-const PlanPrice = ({ quantity, amount, cycle, currency }) => {
+const PlanPrice = ({ quantity, amount, cycle, currency, className }) => {
     return (
-        <Price currency={currency} suffix={c('Suffix').t`/ month`}>
+        <Price className={className} currency={currency} suffix={c('Suffix').t`/ month`}>
             {(quantity * amount) / cycle}
         </Price>
     );
@@ -17,7 +17,8 @@ PlanPrice.propTypes = {
     quantity: PropTypes.number,
     amount: PropTypes.number,
     cycle: PropTypes.number,
-    currency: PropTypes.string
+    currency: PropTypes.string,
+    className: PropTypes.string
 };
 
 PlanPrice.defaultProps = {

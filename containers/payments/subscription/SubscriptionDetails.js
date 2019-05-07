@@ -100,14 +100,20 @@ const SubscriptionDetails = ({ model, plans, check, onChange }) => {
             ) : null}
             {model.coupon ? (
                 <div className="flex flex-spacebetween mb1">
-                    <div className="bold">
-                        {c('Label').t`Coupon`} <CouponDiscountBadge code={check.coupon} />{' '}
-                        {model.coupon ? (
-                            <SmallButton onClick={handleRemoveCoupon}>{c('Action').t`Remove coupon`}</SmallButton>
-                        ) : null}
+                    <div>
+                        <span className="mr1">
+                            {c('Label').t`Coupon`} {model.coupon}
+                        </span>
+                        <CouponDiscountBadge code={model.coupon} />
+                        <SmallButton onClick={handleRemoveCoupon}>{c('Action').t`Remove coupon`}</SmallButton>
                     </div>
-                    <div className="bold">
-                        <PlanPrice amount={check.Amount - subTotal} cycle={model.cycle} currency={model.currency} />
+                    <div>
+                        <PlanPrice
+                            className="color-global-success"
+                            amount={check.Amount - subTotal}
+                            cycle={model.cycle}
+                            currency={model.currency}
+                        />
                     </div>
                 </div>
             ) : null}
