@@ -355,32 +355,24 @@ const PlansSection = () => {
                                 </SmallButton>
                             </td>
                             <td>
-                                <SmallButton
-                                    className="pm-button--primary"
-                                    disabled={currentPlanName === 'free'}
-                                    onClick={handleModal()}
-                                >{c('Action').t`Select`}</SmallButton>
+                                <SmallButton className="pm-button--primary" onClick={handleModal()}>{c('Action')
+                                    .t`Select`}</SmallButton>
+                            </td>
+                            <td>
+                                <SmallButton className="pm-button--primary" onClick={handleModal({ plus: 1 })}>{c(
+                                    'Action'
+                                ).t`Select`}</SmallButton>
                             </td>
                             <td>
                                 <SmallButton
                                     className="pm-button--primary"
-                                    disabled={currentPlanName === 'plus'}
-                                    onClick={handleModal({ plus: 1 })}
-                                >{c('Action').t`Select`}</SmallButton>
-                            </td>
-                            <td>
-                                <SmallButton
-                                    className="pm-button--primary"
-                                    disabled={currentPlanName === 'professional'}
                                     onClick={handleModal({ professional: 1 })}
                                 >{c('Action').t`Select`}</SmallButton>
                             </td>
                             <td>
-                                <SmallButton
-                                    className="pm-button--primary"
-                                    disabled={currentPlanName === 'visionary'}
-                                    onClick={handleModal({ visionary: 1 })}
-                                >{c('Action').t`Select`}</SmallButton>
+                                <SmallButton className="pm-button--primary" onClick={handleModal({ visionary: 1 })}>{c(
+                                    'Action'
+                                ).t`Select`}</SmallButton>
                             </td>
                         </tr>
                     </tbody>

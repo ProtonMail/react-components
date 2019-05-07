@@ -51,59 +51,56 @@ export const mergePlansMap = (plansMap, { Plans = [] }) => {
         return plansMap;
     }
 
-    const currentPlansMap = formatPlans(Plans);
+    const currentPlansMap = toPlanNames(Plans);
 
     if (isEquivalent(plansMap, { vpnplus: 1 })) {
-        const { vpn } = currentPlansMap;
         return {
             ...plansMap,
-            vpn
+            ['1vpn']: currentPlansMap['1vpn']
         };
     }
 
     if (isEquivalent(plansMap, { plus: 1 })) {
-        const { domain, address, space, vpnplus, vpnbasic, vpn } = currentPlansMap;
+        const { vpnplus, vpnbasic } = currentPlansMap;
         return {
             ...plansMap,
-            domain,
-            address,
-            space,
             vpnplus,
             vpnbasic,
-            vpn
+            ['1domain']: currentPlansMap['1domain'],
+            ['5address']: currentPlansMap['5address'],
+            ['1gb']: currentPlansMap['1gb'],
+            ['1vpn']: currentPlansMap['1vpn']
         };
     }
 
     if (isEquivalent(plansMap, { professional: 1 })) {
-        const { domain, member, vpnplus, vpnbasic, vpn } = currentPlansMap;
+        const { vpnplus, vpnbasic } = currentPlansMap;
         return {
             ...plansMap,
-            domain,
-            member,
             vpnplus,
             vpnbasic,
-            vpn
+            ['1domain']: currentPlansMap['1domain'],
+            ['1member']: currentPlansMap['1member'],
+            ['1vpn']: currentPlansMap['1vpn']
         };
     }
 
     if (isEquivalent(plansMap, { vpnplus: 1, plus: 1 })) {
-        const { domain, address, space, vpn } = currentPlansMap;
         return {
             ...plansMap,
-            domain,
-            address,
-            space,
-            vpn
+            ['1domain']: currentPlansMap['1domain'],
+            ['5address']: currentPlansMap['5address'],
+            ['1gb']: currentPlansMap['1gb'],
+            ['1vpn']: currentPlansMap['1vpn']
         };
     }
 
     if (isEquivalent(plansMap, { vpnplus: 1, professional: 1 })) {
-        const { domain, member, vpn } = currentPlansMap;
         return {
             ...plansMap,
-            domain,
-            member,
-            vpn
+            ['1domain']: currentPlansMap['1domain'],
+            ['1member']: currentPlansMap['1member'],
+            ['1vpn']: currentPlansMap['1vpn']
         };
     }
 
@@ -114,10 +111,24 @@ export const getTextOption = (type, value, index) => {
     return `${I18N[type](value)} ${index ? '' : `(${I18N.included})`}`.trim();
 };
 
-export const getTotal = ({ plansMap, cycle, plans }) => {
+/**
+ * Calculate total for a specific subscription configuration
+ * @param {Object} param.plansMap
+ * @param {Number} param.cycle
+ * @param {Array} param.plans
+ * @param {Number} param.services optional
+ * @returns {Number} amount
+ */
+export const getSubTotal = ({ plansMap, cycle, plans, services }) => {
     return Object.entries(plansMap).reduce((acc, [planName, quantity]) => {
         if (quantity) {
-            const { Amount } = plans.find(({ Cycle, Name }) => Name === planName && Cycle === cycle);
+            const { Amount = 0 } =
+                plans.find(({ Cycle, Name, Services }) => {
+                    if (services) {
+                        return Name === planName && Cycle === cycle && hasBit(Services, services);
+                    }
+                    return Name === planName && Cycle === cycle;
+                }) || {};
             return acc + quantity * Amount;
         }
         return acc;

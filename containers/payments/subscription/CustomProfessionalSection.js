@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Price, Select } from 'react-components';
-import { c } from 'ttag';
+import { Select } from 'react-components';
 import { range } from 'proton-shared/lib/helpers/array';
 
-import { getTextOption, getPlan, getAddon, getTotal } from './helpers';
+import PlanPrice from './PlanPrice';
+import { getTextOption, getPlan, getAddon } from './helpers';
 
 const memberOptions = range(1, 5001).map((value, index) => ({
     text: getTextOption('member', value, index),
@@ -25,16 +25,17 @@ const CustomProfessionalSection = ({ plans, model, onChange }) => {
         onChange({ ...model, plansMap: { ...model.plansMap, [key]: +target.value } });
     };
 
-    const total = getTotal({ ...model, plans });
-
     return (
         <>
             <div className="flex flex-spacebetween mb1 border-bottom">
                 <div className="bold">ProtonMail Professional</div>
                 <div>
-                    <Price currency={model.currency} suffix={c('Suffix').t`/ month`}>
-                        {professionalPlan.Amount / professionalPlan.Cycle}
-                    </Price>
+                    <PlanPrice
+                        quantity={model.plansMap.professional}
+                        currency={model.currency}
+                        amount={professionalPlan.Amount}
+                        cycle={professionalPlan.Cycle}
+                    />
                 </div>
             </div>
             <div className="flex flex-spacebetween mb1 border-bottom">
@@ -47,9 +48,12 @@ const CustomProfessionalSection = ({ plans, model, onChange }) => {
                 </div>
                 <div>
                     {model.plansMap['1member'] ? (
-                        <Price currency={model.currency} suffix={c('Suffix').t`/ month`}>
-                            {memberAddon.Amount / memberAddon.Cycle}
-                        </Price>
+                        <PlanPrice
+                            quantity={model.plansMap['1member']}
+                            currency={model.currency}
+                            amount={memberAddon.Amount}
+                            cycle={memberAddon.Cycle}
+                        />
                     ) : (
                         '-'
                     )}
@@ -65,20 +69,15 @@ const CustomProfessionalSection = ({ plans, model, onChange }) => {
                 </div>
                 <div>
                     {model.plansMap['1domain'] ? (
-                        <Price currency={model.currency} suffix={c('Suffix').t`/ month`}>
-                            {domainAddon.Amount / domainAddon.Cycle}
-                        </Price>
+                        <PlanPrice
+                            quantity={model.plansMap['1domain']}
+                            currency={model.currency}
+                            amount={domainAddon.Amount}
+                            cycle={domainAddon.Cycle}
+                        />
                     ) : (
                         '-'
                     )}
-                </div>
-            </div>
-            <div className="flex flex-spacebetween mb1">
-                <div className="bold">{c('Label').t`Total`}</div>
-                <div>
-                    <Price currency={model.currency} suffix={c('Suffix').t`/ month`}>
-                        {total / model.cycle}
-                    </Price>
                 </div>
             </div>
         </>

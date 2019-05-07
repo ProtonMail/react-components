@@ -18,6 +18,7 @@ import CycleDiscountBadge from './CycleDiscountBadge';
 import CouponDiscountBadge from './CouponDiscountBadge';
 import GiftCodeModal from './GiftCodeModal';
 import CreditsModal from './CreditsModal';
+import PlanPrice from './subscription/PlanPrice';
 
 const { MONTHLY, YEARLY, TWO_YEARS } = CYCLE;
 
@@ -70,9 +71,7 @@ const BillingSection = () => {
                         <div className="flex-autogrid-item">ProtonMail plan</div>
                         <div className="flex-autogrid-item bold">{PLAN_NAMES[mailPlan.Name]}</div>
                         <div className="flex-autogrid-item">
-                            <Price currency={mailPlan.Currency} suffix={c('Suffix').t`/ month`}>
-                                {mailPlan.Amount / mailPlan.Cycle}
-                            </Price>
+                            <PlanPrice amount={mailPlan.Amount} currency={mailPlan.Currency} cycle={mailPlan.Cycle} />
                         </div>
                         <div className="flex-autogrid-item">
                             <CycleDiscountBadge cycle={Cycle} />
@@ -84,9 +83,11 @@ const BillingSection = () => {
                         <div className="flex-autogrid-item">{c('Label').t`Extra users`}</div>
                         <div className="flex-autogrid-item bold">+{memberAddon.MaxMembers}</div>
                         <div className="flex-autogrid-item">
-                            <Price currency={memberAddon.Currency} suffix={c('Suffix').t`/ month`}>
-                                {memberAddon.Amount / memberAddon.Cycle}
-                            </Price>
+                            <PlanPrice
+                                amount={memberAddon.Amount}
+                                currency={memberAddon.Currency}
+                                cycle={memberAddon.Cycle}
+                            />
                         </div>
                         <div className="flex-autogrid-item">
                             <CycleDiscountBadge cycle={Cycle} />
@@ -98,9 +99,11 @@ const BillingSection = () => {
                         <div className="flex-autogrid-item">{c('Label').t`Extra email addresses`}</div>
                         <div className="flex-autogrid-item bold">+{addressAddon.MaxAddresses}</div>
                         <div className="flex-autogrid-item">
-                            <Price currency={addressAddon.Currency} suffix={c('Suffix').t`/ month`}>
-                                {addressAddon.Amount / addressAddon.Cycle}
-                            </Price>
+                            <PlanPrice
+                                amount={addressAddon.Amount}
+                                currency={addressAddon.Currency}
+                                cycle={addressAddon.Cycle}
+                            />
                         </div>
                         <div className="flex-autogrid-item">
                             <CycleDiscountBadge cycle={Cycle} />
@@ -112,9 +115,11 @@ const BillingSection = () => {
                         <div className="flex-autogrid-item">{c('Label').t`Extra storage`}</div>
                         <div className="flex-autogrid-item bold">+{spaceAddon.MaxSpace}</div>
                         <div className="flex-autogrid-item">
-                            <Price currency={spaceAddon.Currency} suffix={c('Suffix').t`/ month`}>
-                                {spaceAddon.Amount / spaceAddon.Cycle}
-                            </Price>
+                            <PlanPrice
+                                amount={spaceAddon.Amount}
+                                currency={spaceAddon.Currency}
+                                cycle={spaceAddon.Cycle}
+                            />
                         </div>
                         <div className="flex-autogrid-item">
                             <CycleDiscountBadge cycle={Cycle} />
@@ -126,9 +131,11 @@ const BillingSection = () => {
                         <div className="flex-autogrid-item">{c('Label').t`Extra domains`}</div>
                         <div className="flex-autogrid-item bold">+{domainAddon.MaxDomains}</div>
                         <div className="flex-autogrid-item">
-                            <Price currency={domainAddon.Currency} suffix={c('Suffix').t`/ month`}>
-                                {domainAddon.Amount / domainAddon.Cycle}
-                            </Price>
+                            <PlanPrice
+                                amount={domainAddon.Amount}
+                                currency={domainAddon.Currency}
+                                cycle={domainAddon.Cycle}
+                            />
                         </div>
                         <div className="flex-autogrid-item">
                             <CycleDiscountBadge cycle={Cycle} />
@@ -140,9 +147,7 @@ const BillingSection = () => {
                         <div className="flex-autogrid-item">ProtonVPN plan</div>
                         <div className="flex-autogrid-item bold">{PLAN_NAMES[vpnPlan.Name]}</div>
                         <div className="flex-autogrid-item">
-                            <Price currency={vpnPlan.Currency} suffix={c('Suffix').t`/ month`}>
-                                {vpnPlan.Amount / vpnPlan.Cycle}
-                            </Price>
+                            <PlanPrice amount={vpnPlan.Amount} currency={vpnPlan.Currency} cycle={vpnPlan.Cycle} />
                         </div>
                         <div className="flex-autogrid-item">
                             <CycleDiscountBadge cycle={Cycle} />
@@ -154,9 +159,7 @@ const BillingSection = () => {
                         <div className="flex-autogrid-item">{c('Label').t`Extra VPN connections`}</div>
                         <div className="flex-autogrid-item bold">+{vpnAddon.MaxVPN}</div>
                         <div className="flex-autogrid-item">
-                            <Price currency={vpnAddon.Currency} suffix={c('Suffix').t`/ month`}>
-                                {vpnAddon.Amount / vpnAddon.Cycle}
-                            </Price>
+                            <PlanPrice amount={vpnAddon.Amount} currency={vpnAddon.Currency} cycle={vpnAddon.Cycle} />
                         </div>
                         <div className="flex-autogrid-item">
                             <CycleDiscountBadge cycle={Cycle} />
@@ -168,9 +171,7 @@ const BillingSection = () => {
                         <div className="flex-autogrid-item">{c('Label').t`Sub-total`}</div>
                         <div className="flex-autogrid-item" />
                         <div className="flex-autogrid-item">
-                            <Price currency={Currency} suffix={c('Suffix').t`/ month`}>
-                                {subTotal / Cycle}
-                            </Price>
+                            <PlanPrice amount={subTotal} currency={Currency} cycle={Cycle} />
                         </div>
                         <div className="flex-autogrid-item" />
                     </div>
@@ -182,9 +183,7 @@ const BillingSection = () => {
                             {CouponCode} <CouponDiscountBadge code={CouponCode} />
                         </div>
                         <div className="flex-autogrid-item">
-                            <Price currency={Currency} suffix={c('Suffix').t`/ month`}>
-                                {(Amount - subTotal) / Cycle}
-                            </Price>
+                            <PlanPrice amount={Amount - subTotal} currency={Currency} cycle={Cycle} />
                         </div>
                         <div className="flex-autogrid-item" />
                     </div>
@@ -194,9 +193,7 @@ const BillingSection = () => {
                         <div className="flex-autogrid-item">{c('Label').t`Total`}</div>
                         <div className="flex-autogrid-item" />
                         <div className="flex-autogrid-item">
-                            <Price currency={Currency} suffix={c('Suffix').t`/ month`}>
-                                {Amount / Cycle}
-                            </Price>
+                            <PlanPrice amount={Amount} currency={Currency} cycle={Cycle} />
                         </div>
                         <div className="flex-autogrid-item" />
                     </div>

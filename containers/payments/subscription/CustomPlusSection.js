@@ -1,10 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { Price, Select, Info } from 'react-components';
+import { Select, Info } from 'react-components';
 import { range } from 'proton-shared/lib/helpers/array';
 
-import { getTextOption, getTotal, getPlan, getAddon } from './helpers';
+import PlanPrice from './PlanPrice';
+import { getTextOption, getPlan, getAddon } from './helpers';
 
 const spaceOptions = range(5, 21).map((value, index) => ({
     text: getTextOption('space', value, index),
@@ -31,16 +32,17 @@ const CustomPlusSection = ({ plans, model, onChange }) => {
         onChange({ ...model, plansMap: { ...model.plansMap, [key]: +target.value } });
     };
 
-    const total = getTotal({ ...model, plans });
-
     return (
         <>
             <div className="flex flex-spacebetween mb1 border-bottom">
                 <div className="bold">ProtonMail Plus</div>
                 <div>
-                    <Price currency={model.currency} suffix={c('Suffix').t`/ month`}>
-                        {plusPlan.Amount / plusPlan.Cycle}
-                    </Price>
+                    <PlanPrice
+                        quantity={model.plansMap.plus}
+                        currency={model.currency}
+                        amount={plusPlan.Amount}
+                        cycle={plusPlan.Cycle}
+                    />
                 </div>
             </div>
             <div className="flex flex-spacebetween mb1 border-bottom">
@@ -49,9 +51,12 @@ const CustomPlusSection = ({ plans, model, onChange }) => {
                 </div>
                 <div>
                     {model.plansMap['1gb'] ? (
-                        <Price currency={model.currency} suffix={c('Suffix').t`/ month`}>
-                            {spaceAddon.Amount / spaceAddon.Cycle}
-                        </Price>
+                        <PlanPrice
+                            quantity={model.plansMap['1gb']}
+                            currency={model.currency}
+                            amount={spaceAddon.Amount}
+                            cycle={spaceAddon.Cycle}
+                        />
                     ) : (
                         '-'
                     )}
@@ -68,9 +73,12 @@ const CustomPlusSection = ({ plans, model, onChange }) => {
                 </div>
                 <div>
                     {model.plansMap['5address'] ? (
-                        <Price currency={model.currency} suffix={c('Suffix').t`/ month`}>
-                            {addressAddon.Amount / addressAddon.Cycle}
-                        </Price>
+                        <PlanPrice
+                            quantity={model.plansMap['5address']}
+                            currency={model.currency}
+                            amount={addressAddon.Amount}
+                            cycle={addressAddon.Cycle}
+                        />
                     ) : (
                         '-'
                     )}
@@ -87,20 +95,15 @@ const CustomPlusSection = ({ plans, model, onChange }) => {
                 </div>
                 <div>
                     {model.plansMap['1domain'] ? (
-                        <Price currency={model.currency} suffix={c('Suffix').t`/ month`}>
-                            {domainAddon.Amount / domainAddon.Cycle}
-                        </Price>
+                        <PlanPrice
+                            quantity={model.plansMap['1domain']}
+                            currency={model.currency}
+                            amount={domainAddon.Amount}
+                            cycle={domainAddon.Cycle}
+                        />
                     ) : (
                         '-'
                     )}
-                </div>
-            </div>
-            <div className="flex flex-spacebetween mb1">
-                <div className="bold">{c('Label').t`Total`}</div>
-                <div>
-                    <Price currency={model.currency} suffix={c('Suffix').t`/ month`}>
-                        {total / model.cycle}
-                    </Price>
                 </div>
             </div>
         </>

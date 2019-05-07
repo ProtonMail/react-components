@@ -8,19 +8,27 @@ import {
     FooterModal,
     Button,
     ResetButton,
+    Price,
     PrimaryButton,
+    usePayment,
+    Payment,
     Paragraph,
     useStep,
     useApiWithoutResult,
     useEventManager,
-    SubTitle
+    useNotifications,
+    SubTitle,
+    Label,
+    Row,
+    Field
 } from 'react-components';
 import { DEFAULT_CURRENCY, DEFAULT_CYCLE } from 'proton-shared/lib/constants';
-import { checkSubscription } from 'proton-shared/lib/api/payments';
+import { checkSubscription, subscribe } from 'proton-shared/lib/api/payments';
 
 import CustomMailSection from './CustomMailSection';
 import CustomVPNSection from './CustomVPNSection';
 import OrderSummary from './OrderSummary';
+import FeaturesList from './FeaturesList';
 
 const convert = ({ plansMap, cycle, plans }) => {
     return Object.entries(plansMap).reduce((acc, [planName, quantity]) => {
@@ -33,92 +41,174 @@ const convert = ({ plansMap, cycle, plans }) => {
     }, Object.create(null));
 };
 
+const toParams = (model, plans) => ({
+    GiftCode: model.gift,
+    PlanIDs: convert({ ...model, plans }),
+    CouponCode: model.coupon,
+    Currency: model.currency,
+    Cycle: model.cycle
+});
+
 const SubscriptionModal = ({ onClose, cycle, currency, step: initialStep, coupon, plansMap }) => {
-    const [loading] = useState();
+    const [loading, setLoading] = useState(false);
+    const { method, setMethod, parameters, setParameters, canPay, setCardValidity } = usePayment(handleSubmit);
+    const { createNotification } = useNotifications();
+    const [check, setCheck] = useState({});
     const [plans] = usePlans();
     const [model, setModel] = useState({ cycle, currency, coupon, plansMap });
-    const { request: requestCheckSubscription } = useApiWithoutResult(
-        (
-            params = {
-                PlanIDs: convert({ ...model, plans }),
-                CouponCode: model.coupon,
-                Currency: model.currency,
-                Cycle: model.cycle
-            }
-        ) => checkSubscription(params)
-    );
     const { call } = useEventManager();
     const { step, next, previous } = useStep(initialStep);
+    const { request: requestSubscribe } = useApiWithoutResult(subscribe);
+    const { request: requestCheck } = useApiWithoutResult(checkSubscription);
+
+    const callCheck = async (m = model) => {
+        try {
+            setLoading(true);
+            const result = await requestCheck(toParams(m, plans));
+            setCheck(result);
+            setLoading(false);
+            return result;
+        } catch (error) {
+            setLoading(false);
+        }
+    };
 
     const handleChangeModel = async (newModel = {}, requireCheck = false) => {
         if (requireCheck) {
-            await requestCheckSubscription(newModel);
+            try {
+                setLoading(true);
+                const result = await requestCheck(toParams(newModel, plans));
+                const { Coupon, Gift } = result;
+                const { Code } = Coupon || {}; // Coupon can equals null
+
+                if (newModel.coupon !== Code) {
+                    return createNotification({
+                        text: c('Error').t`Your coupon is invalid or cannot be applied to your plan`,
+                        type: 'error'
+                    });
+                }
+
+                if (newModel.gift && !Gift) {
+                    return createNotification({ text: c('Error').t`Invalid gift code`, type: 'error' });
+                }
+                setLoading(false);
+                setCheck(result);
+            } catch (error) {
+                setLoading(false);
+            }
         }
+
         setModel(newModel);
+    };
+
+    const handleSubmit = async () => {
+        if (!canPay) {
+            return;
+        }
+
+        try {
+            setLoading(true);
+            await requestSubscribe({ Amount: check.AmountDue, ...toParams(model, plans), ...parameters });
+            await call();
+            setLoading(false);
+            next();
+        } catch (error) {
+            setLoading(false);
+        }
     };
 
     const STEPS = [
         {
             title: c('Title').t`Customization`,
+            hasCancel: true,
+            hasNext: true,
             section: <CustomMailSection plans={plans} model={model} onChange={handleChangeModel} />,
             async onSubmit() {
-                await requestCheckSubscription();
+                await callCheck();
                 next();
             }
         },
         {
             title: c('Title').t`VPN protection`,
+            hasPrevious: true,
+            hasNext: true,
             section: <CustomVPNSection plans={plans} model={model} onChange={handleChangeModel} />,
             async onSubmit() {
-                await requestCheckSubscription();
+                await callCheck();
                 next();
             }
         },
         {
             title: c('Title').t`Order summary`,
-            section: <OrderSummary model={model} onChange={handleChangeModel} />,
-            onSubmit: next
-        },
-        {
-            title: c('Title').t`Payment details`,
-            section: <></>,
+            hasPrevious: true,
+            hasNext: true,
+            section: <OrderSummary plans={plans} model={model} check={check} onChange={handleChangeModel} />,
             async onSubmit() {
-                await call();
+                if (!check.AmountDue) {
+                    try {
+                        setLoading(true);
+                        await requestSubscribe({ Amount: check.AmountDue, ...toParams(model, plans) });
+                        await call();
+                        setLoading(false);
+                    } catch (error) {
+                        setLoading(false);
+                    }
+                }
                 next();
             }
         },
         {
             title: c('Title').t`Thank you!`,
+            hasClose: true,
             section: (
                 <>
                     <SubTitle>{c('Info').t`Thank you for your subscription`}</SubTitle>
                     <Paragraph>{c('Info').t`Your new features are now available`}</Paragraph>
-                    <ul>
-                        <li />
-                    </ul>
+                    <FeaturesList />
                 </>
             ),
-            onSubmit() {
-                next();
-            }
+            onSubmit: onClose
         }
     ];
+
+    if (check.AmountDue > 0) {
+        STEPS.splice(4, 0, {
+            title: c('Title').t`Payment details`,
+            hasPrevious: true,
+            hasNext: true,
+            section: (
+                <>
+                    <Row>
+                        <Label>{c('Label').t`Amount due`}</Label>
+                        <Field>
+                            <Price currency={model.currency}>{check.AmountDue}</Price>
+                        </Field>
+                    </Row>
+                    ]
+                    <Payment
+                        type="subscription"
+                        method={method}
+                        amount={check.AmountDue}
+                        currency={model.currency}
+                        onParameters={setParameters}
+                        onMethod={setMethod}
+                        onValidCard={setCardValidity}
+                    />
+                </>
+            ),
+            onSubmit: handleSubmit
+        });
+    }
 
     return (
         <Modal show={true} onClose={onClose} title={STEPS[step].title}>
             <ContentModal onSubmit={STEPS[step].onSubmit} onReset={onClose} loading={loading}>
                 {STEPS[step].section}
                 <FooterModal>
-                    {step === 0 ? (
-                        <ResetButton>{c('Action').t`Cancel`}</ResetButton>
-                    ) : (
-                        <Button onClick={previous}>{c('Action').t`Previous`}</Button>
-                    )}
-                    {step < STEPS.length - 1 ? (
-                        <PrimaryButton type="submit">{c('Action').t`Next`}</PrimaryButton>
-                    ) : (
-                        <PrimaryButton type="reset">{c('Action').t`Close`}</PrimaryButton>
-                    )}
+                    {STEPS[step].hasCancel && <ResetButton>{c('Action').t`Cancel`}</ResetButton>}
+                    {STEPS[step].hasPrevious && <Button onClick={previous}>{c('Action').t`Previous`}</Button>}
+                    {STEPS[step].hasNext && <PrimaryButton type="submit">{c('Action').t`Next`}</PrimaryButton>}
+                    {STEPS[step].hasClose && <PrimaryButton type="reset">{c('Action').t`Close`}</PrimaryButton>}
                 </FooterModal>
             </ContentModal>
         </Modal>

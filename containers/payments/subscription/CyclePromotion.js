@@ -7,7 +7,7 @@ import { Alert, SmallButton } from 'react-components';
 const { MONTHLY, YEARLY, TWO_YEARS } = CYCLE;
 
 const CyclePromotion = ({ model, onChange }) => {
-    const handleClick = () => onChange({ ...model, cycle: YEARLY });
+    const handleClick = () => onChange({ ...model, cycle: YEARLY }, true);
     return (
         <>
             {model.cycle === MONTHLY && (

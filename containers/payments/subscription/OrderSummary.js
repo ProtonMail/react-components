@@ -1,25 +1,16 @@
 import React from 'react';
-import { c } from 'ttag';
 import PropTypes from 'prop-types';
-import { Price } from 'react-components';
 
 import CyclePromotion from './CyclePromotion';
-import { getTotal } from './helpers';
+import SubscriptionDetails from './SubscriptionDetails';
+import PaymentDetails from './PaymentDetails';
 
-const OrderSummary = ({ plans, model, onChange }) => {
-    const total = getTotal({ ...model, plans });
+const OrderSummary = ({ plans, model, onChange, check }) => {
     return (
         <>
             <CyclePromotion model={model} onChange={onChange} />
-            <h4>{c('Title').t`Subscription details`}</h4>
-            <div className="flex flex-spacebetween mb1">
-                <div className="bold">{c('Label').t`Total`}</div>
-                <div>
-                    <Price currency={model.currency} suffix={c('Suffix').t`/ month`}>
-                        {total / model.cycle}
-                    </Price>
-                </div>
-            </div>
+            <SubscriptionDetails model={model} plans={plans} check={check} onChange={onChange} />
+            <PaymentDetails model={model} check={check} onChange={onChange} />
         </>
     );
 };
@@ -27,7 +18,8 @@ const OrderSummary = ({ plans, model, onChange }) => {
 OrderSummary.propTypes = {
     plans: PropTypes.array.isRequired,
     model: PropTypes.object.isRequired,
-    onChange: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired,
+    check: PropTypes.object
 };
 
 export default OrderSummary;

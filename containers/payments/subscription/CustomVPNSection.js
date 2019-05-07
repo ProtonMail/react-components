@@ -4,9 +4,14 @@ import { Alert, Price, Icon, Info, Checkbox, Select, useToggle, SmallButton } fr
 import { c } from 'ttag';
 import { range } from 'proton-shared/lib/helpers/array';
 import { omit } from 'proton-shared/lib/helpers/object';
+import { PLAN_SERVICES } from 'proton-shared/lib/constants';
 
-import { getTextOption, getPlan, getAddon, getTotal } from './helpers';
+import PlanPrice from './PlanPrice';
+import { getTextOption, getPlan, getAddon, getSubTotal } from './helpers';
 import CyclePromotion from './CyclePromotion';
+import CycleDiscountBadge from '../CycleDiscountBadge';
+
+const { VPN } = PLAN_SERVICES;
 
 const vpnOptions = range(5, 501).map((value, index) => ({
     text: getTextOption('vpn', value, index),
@@ -18,6 +23,7 @@ const CustomVPNSection = ({ plans, model, onChange }) => {
     const vpnPlusPlan = getPlan(plans, { name: 'vpnplus', cycle: model.cycle });
     const vpnAddon = getAddon(plans, { name: '1vpn', cycle: model.cycle });
     const { state, toggle } = useToggle();
+    const subTotal = getSubTotal({ ...model, plans, services: VPN });
 
     const handleCheckboxChange = (key) => ({ target }) => {
         const toOmit = ['vpnbasic', 'vpnplus'];
@@ -38,8 +44,6 @@ const CustomVPNSection = ({ plans, model, onChange }) => {
     const handleSelectChange = ({ target }) => {
         onChange({ ...model, plansMap: { ...model.plansMap, ['1vpn']: +target.value } });
     };
-
-    const total = getTotal({ ...model, plans });
 
     return (
         <>
@@ -193,9 +197,12 @@ const CustomVPNSection = ({ plans, model, onChange }) => {
                     </div>
                     <div>
                         {model.plansMap['1vpn'] ? (
-                            <Price currency={model.currency} suffix={c('Suffix').t`/ month`}>
-                                {vpnAddon.Amount / vpnAddon.Cycle}
-                            </Price>
+                            <PlanPrice
+                                quantity={model.plansMap['1vpn']}
+                                currency={model.currency}
+                                amount={vpnAddon.Amount}
+                                cycle={vpnAddon.Cycle}
+                            />
                         ) : (
                             '-'
                         )}
@@ -203,11 +210,15 @@ const CustomVPNSection = ({ plans, model, onChange }) => {
                 </div>
             ) : null}
             <div className="flex flex-spacebetween mb1">
-                <div className="bold">{c('Label').t`Total`}</div>
-                <div>
-                    <Price currency={model.currency} suffix={c('Suffix').t`/ month`}>
-                        {total / model.cycle}
-                    </Price>
+                <div className="bold">
+                    ProtonVPN total <CycleDiscountBadge cycle={model.cycle} />
+                </div>
+                <div className="bold">
+                    {subTotal ? (
+                        <PlanPrice amount={subTotal} cycle={model.cycle} currency={model.currency} />
+                    ) : (
+                        c('Price').t`Free`
+                    )}
                 </div>
             </div>
         </>
