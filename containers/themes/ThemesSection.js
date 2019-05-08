@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { c } from 'ttag';
 import {
     useMailSettings,
@@ -7,7 +7,8 @@ import {
     SubTitle,
     Alert,
     ThemeCards,
-    InputModal
+    InputModal,
+    useModal
 } from 'react-components';
 import { updateTheme } from 'proton-shared/lib/api/mailSettings';
 import { availableThemes } from './availableThemes.js';
@@ -19,13 +20,7 @@ const {
 } = THEMES;
 
 const ThemesSection = () => {
-    const [showModal, setShowModal] = useState(false);
-    const openModal = () => {
-        setShowModal(true);
-    };
-    const closeModal = () => {
-        setShowModal(false);
-    };
+    const { isOpen, open, close } = useModal();
 
     const [{ Theme }] = useMailSettings();
     const { call } = useEventManager();
@@ -36,13 +31,14 @@ const ThemesSection = () => {
 
     const handleChangeTheme = async (themeId) => {
         if (themeId === customId) {
-            return openModal();
+            return open();
         }
         await request(themeId);
         call();
     };
+
     const handleSubmit = async (customCSSInput) => {
-        closeModal();
+        close();
         await request(customCSSInput);
         call();
     };
@@ -51,7 +47,7 @@ const ThemesSection = () => {
         .t`ProtonMail offers 3 default themes to select from. You can also import a custom theme using our CSS editor`;
     const customizationThemeText = c('Info')
         .t`Selecting another theme will override your current theme and any customization will be lost`;
-    const customThemeText = c('Info')
+    const customWarningText = c('Warning')
         .t`Custom themes from third parties can potentially betray your privacy. Only use themes from trusted sources`;
 
     return (
@@ -64,16 +60,16 @@ const ThemesSection = () => {
                 list={availableThemes}
                 themeId={themeId}
                 onChange={handleChangeTheme}
-                onCustomization={openModal}
+                onCustomization={open}
                 disabled={loading}
             />
-            {showModal ? (
+            {isOpen ? (
                 <InputModal
                     type="textarea"
                     title={c('Title').t`Custom Theme`}
-                    subtitle={<Alert>{customThemeText}</Alert>}
+                    warning={customWarningText}
                     onSubmit={handleSubmit}
-                    onClose={closeModal}
+                    onClose={close}
                     submit={c('Action').t`Save`}
                     input={customCSS}
                     placeholder={c('Action').t`Insert CSS code here`}
