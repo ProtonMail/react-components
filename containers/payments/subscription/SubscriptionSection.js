@@ -13,7 +13,7 @@ import {
 import { CYCLE, PLAN_NAMES, COUPON_CODES } from 'proton-shared/lib/constants';
 import humanSize from 'proton-shared/lib/helpers/humanSize';
 
-import { formatPlans, toPlanNames } from './helpers';
+import { formatPlans, toPlanNames, isBundleEligible } from './helpers';
 import CouponDiscountBadge from '../CouponDiscountBadge';
 import SubscriptionModal from './SubscriptionModal';
 
@@ -30,6 +30,7 @@ const SubscriptionSection = () => {
     const [{ hasPaidMail, hasPaidVpn, isPaid }] = useUser();
     const [subscriptionModal, setSubscriptionModal] = useState(null);
     const [subscription, loadingSubscription] = useSubscription();
+    const bundleEligible = isBundleEligible(subscription);
     const { Plans = [], Cycle, CouponCode, Currency } = subscription;
     const [
         {
@@ -58,19 +59,16 @@ const SubscriptionSection = () => {
 
     const { mailPlan, vpnPlan } = formatPlans(Plans);
     const { Name: mailPlanName } = mailPlan || {};
-    const bundleEligible = (['plus', 'professional'].includes(mailPlanName) && !vpnPlan) || (vpnPlan && !mailPlan);
     const resetModal = () => setSubscriptionModal(null);
     const canRemoveCoupon = CouponCode && CouponCode !== BUNDLE;
 
-    const handleModal = (action) => () => {
+    const handleModal = (action = '') => () => {
         const coupon = action === 'remove-coupon' ? '' : CouponCode ? CouponCode : undefined; // CouponCode can equals null
         const cycle = action === 'yearly' ? YEARLY : Cycle;
         const plansMap = isPaid ? toPlanNames(subscription.Plans) : { plus: 1, vpnplus: 1 };
-        const step = ['remove-coupon', 'yearly'].includes(action) ? 2 : 0;
 
         const modal = (
             <SubscriptionModal
-                step={step}
                 onClose={resetModal}
                 plansMap={plansMap}
                 coupon={coupon}
@@ -96,7 +94,9 @@ const SubscriptionSection = () => {
                             c('Info').t`Combine paid ProtonMail and ProtonVPN and get a 20% discount on both`}
                     </div>
                     <div className="flex-autogrid-item alignright">
-                        <SmallButton onClick={handleModal('mail')}>{c('Action').t`Manage plan`}</SmallButton>
+                        <SmallButton onClick={handleModal()}>
+                            {hasPaidMail ? c('Action').t`Manage` : c('Action').t`Upgrade`}
+                        </SmallButton>
                     </div>
                 </div>
                 {hasPaidMail ? (
@@ -166,7 +166,9 @@ const SubscriptionSection = () => {
                                 c('Info').t`Combine paid ProtonMail and ProtonVPN and get a 20% discount on both`}
                         </div>
                         <div className="flex-autogrid-item alignright">
-                            <SmallButton onClick={handleModal('vpn')}>{c('Action').t`Manage plan`}</SmallButton>
+                            <SmallButton onClick={handleModal()}>
+                                {hasPaidVpn ? c('Action').t`Manage` : c('Action').t`Upgrade`}
+                            </SmallButton>
                         </div>
                     </div>
                 )}

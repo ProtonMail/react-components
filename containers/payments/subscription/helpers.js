@@ -254,3 +254,64 @@ export const getPlan = (plans = [], { type = PLAN, name = '', id = '', cycle = M
  * @param {Object} params
  */
 export const getAddon = (plans, params) => getPlan(plans, { ...params, type: ADDON });
+
+/**
+ * Prepare params for /api/subscription/check request
+ * @param {Array} param.plans
+ * @param {Object} param.plansMap
+ * @param {String} param.coupon
+ * @param {String} param.currency
+ * @param {Number} param.cycle
+ * @returns {Object} parameters
+ */
+export const getCheckParams = ({
+    plans = [],
+    plansMap = {},
+    coupon: CouponCode,
+    currency: Currency,
+    cycle: Cycle,
+    ...rest
+}) => {
+    if (!plans.length) {
+        throw new Error('plans not defined');
+    }
+
+    const PlanIDs = Object.entries(plansMap).reduce((acc, [planName, quantity]) => {
+        if (quantity) {
+            const { ID } = plans.find((plan) => plan.Name === planName && plan.Cycle === Cycle);
+            acc[ID] = quantity;
+        }
+        return acc;
+    }, Object.create(null));
+
+    return {
+        PlanIDs,
+        CouponCode,
+        Currency,
+        Cycle,
+        ...rest
+    };
+};
+
+/**
+ * Check if a subscription is eligible to BUNDLE coupon
+ * @param {Array} Subscription.Plans
+ * @param {String} Subscription.CouponCode
+ * @returns {Boolean} is eligible to BUNDLE
+ */
+export const isBundleEligible = ({ Plans, CouponCode } = {}) => {
+    if (CouponCode) {
+        return false;
+    }
+
+    const { plus, professional, visionary, vpnplus, vpnbasic } = toPlanNames(Plans);
+
+    if (visionary) {
+        return false;
+    }
+
+    const mailPlan = plus || professional;
+    const vpnPlan = vpnplus || vpnbasic;
+
+    return (mailPlan && !vpnPlan) || (!mailPlan && vpnplus);
+};

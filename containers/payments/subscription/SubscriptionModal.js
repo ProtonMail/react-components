@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import {
@@ -30,27 +30,9 @@ import CustomMailSection from './CustomMailSection';
 import CustomVPNSection from './CustomVPNSection';
 import OrderSummary from './OrderSummary';
 import FeaturesList from './FeaturesList';
+import { getCheckParams } from './helpers';
 
-const convert = ({ plansMap, cycle, plans }) => {
-    return Object.entries(plansMap).reduce((acc, [planName, quantity]) => {
-        if (quantity) {
-            const { ID } = plans.find(({ Cycle, Name }) => Name === planName && Cycle === cycle);
-            acc[ID] = quantity;
-        }
-
-        return acc;
-    }, Object.create(null));
-};
-
-const toParams = (model, plans) => ({
-    GiftCode: model.gift,
-    PlanIDs: convert({ ...model, plans }),
-    CouponCode: model.coupon,
-    Currency: model.currency,
-    Cycle: model.cycle
-});
-
-const SubscriptionModal = ({ onClose, cycle, currency, step: initialStep, coupon, plansMap }) => {
+const SubscriptionModal = ({ onClose, cycle, currency, coupon, plansMap }) => {
     const [loading, setLoading] = useState(false);
     const { method, setMethod, parameters, setParameters, canPay, setCardValidity } = usePayment(handleSubmit);
     const { createNotification } = useNotifications();
@@ -58,14 +40,14 @@ const SubscriptionModal = ({ onClose, cycle, currency, step: initialStep, coupon
     const [plans] = usePlans();
     const [model, setModel] = useState({ cycle, currency, coupon, plansMap });
     const { call } = useEventManager();
-    const { step, next, previous } = useStep(initialStep);
+    const { step, next, previous } = useStep(0);
     const { request: requestSubscribe } = useApiWithoutResult(subscribe);
     const { request: requestCheck } = useApiWithoutResult(checkSubscription);
 
     const callCheck = async (m = model) => {
         try {
             setLoading(true);
-            const result = await requestCheck(toParams(m, plans));
+            const result = await requestCheck(getCheckParams({ ...m, plans }));
             const { Coupon, Gift } = result;
             const { Code } = Coupon || {}; // Coupon can equals null
 
@@ -105,7 +87,7 @@ const SubscriptionModal = ({ onClose, cycle, currency, step: initialStep, coupon
 
         try {
             setLoading(true);
-            await requestSubscribe({ Amount: check.AmountDue, ...toParams(model, plans), ...parameters });
+            await requestSubscribe({ Amount: check.AmountDue, ...getCheckParams({ ...model, plans }), ...parameters });
             await call();
             setLoading(false);
             next();
@@ -117,35 +99,13 @@ const SubscriptionModal = ({ onClose, cycle, currency, step: initialStep, coupon
 
     const STEPS = [
         {
-            title: c('Title').t`Customization`,
-            hasCancel: true,
-            hasNext: true,
-            section: <CustomMailSection plans={plans} model={model} onChange={handleChangeModel} />,
-            async onSubmit() {
-                await callCheck();
-                next();
-            }
-        },
-        {
-            title: c('Title').t`VPN protection`,
-            hasPrevious: true,
-            hasNext: true,
-            section: <CustomVPNSection plans={plans} model={model} onChange={handleChangeModel} />,
-            async onSubmit() {
-                await callCheck();
-                next();
-            }
-        },
-        {
             title: c('Title').t`Order summary`,
-            hasPrevious: true,
-            hasNext: true,
             section: <OrderSummary plans={plans} model={model} check={check} onChange={handleChangeModel} />,
             async onSubmit() {
                 if (!check.AmountDue) {
                     try {
                         setLoading(true);
-                        await requestSubscribe({ Amount: check.AmountDue, ...toParams(model, plans) });
+                        await requestSubscribe({ Amount: check.AmountDue, ...getCheckParams({ ...model, plans }) });
                         await call();
                         setLoading(false);
                     } catch (error) {
@@ -158,7 +118,6 @@ const SubscriptionModal = ({ onClose, cycle, currency, step: initialStep, coupon
         },
         {
             title: c('Title').t`Thank you!`,
-            hasClose: true,
             section: (
                 <>
                     <SubTitle>{c('Info').t`Thank you for your subscription`}</SubTitle>
@@ -170,11 +129,31 @@ const SubscriptionModal = ({ onClose, cycle, currency, step: initialStep, coupon
         }
     ];
 
+    if (plansMap.vpnplus || plansMap.vpnbasic) {
+        STEPS.unshift({
+            title: c('Title').t`VPN protection`,
+            section: <CustomVPNSection plans={plans} model={model} onChange={handleChangeModel} />,
+            async onSubmit() {
+                await callCheck();
+                next();
+            }
+        });
+    }
+
+    if (plansMap.plus || plansMap.professional) {
+        STEPS.unshift({
+            title: c('Title').t`Customization`,
+            section: <CustomMailSection plans={plans} model={model} onChange={handleChangeModel} />,
+            async onSubmit() {
+                await callCheck();
+                next();
+            }
+        });
+    }
+
     if (check.AmountDue > 0) {
         STEPS.splice(4, 0, {
             title: c('Title').t`Payment details`,
-            hasPrevious: true,
-            hasNext: true,
             section: (
                 <>
                     <Alert>{c('Info')
@@ -203,23 +182,20 @@ const SubscriptionModal = ({ onClose, cycle, currency, step: initialStep, coupon
         });
     }
 
-    useEffect(() => {
-        // When we open the modal from a secondary step we need to check if the current model is valid
-        // Example: remove coupon, switch yearly
-        if (step) {
-            callCheck();
-        }
-    }, []);
+    const hasCancel = !step;
+    const hasClose = step === STEPS.length - 1;
+    const hasPrevious = !hasClose && step > 0;
+    const hasNext = !hasClose;
 
     return (
         <Modal show={true} onClose={onClose} title={STEPS[step].title}>
             <ContentModal onSubmit={STEPS[step].onSubmit} onReset={onClose} loading={loading}>
                 {STEPS[step].section}
                 <FooterModal>
-                    {STEPS[step].hasCancel && <ResetButton>{c('Action').t`Cancel`}</ResetButton>}
-                    {STEPS[step].hasPrevious && <Button onClick={previous}>{c('Action').t`Previous`}</Button>}
-                    {STEPS[step].hasNext && <PrimaryButton type="submit">{c('Action').t`Next`}</PrimaryButton>}
-                    {STEPS[step].hasClose && <PrimaryButton type="reset">{c('Action').t`Close`}</PrimaryButton>}
+                    {hasCancel && <ResetButton>{c('Action').t`Cancel`}</ResetButton>}
+                    {hasPrevious && <Button onClick={previous}>{c('Action').t`Previous`}</Button>}
+                    {hasNext && <PrimaryButton type="submit">{c('Action').t`Next`}</PrimaryButton>}
+                    {hasClose && <PrimaryButton type="reset">{c('Action').t`Close`}</PrimaryButton>}
                 </FooterModal>
             </ContentModal>
         </Modal>
@@ -231,12 +207,10 @@ SubscriptionModal.propTypes = {
     cycle: PropTypes.number,
     coupon: PropTypes.string,
     currency: PropTypes.string,
-    step: PropTypes.number,
     plansMap: PropTypes.object
 };
 
 SubscriptionModal.defaultProps = {
-    step: 0,
     coupon: '',
     currency: DEFAULT_CURRENCY,
     cycle: DEFAULT_CYCLE,
