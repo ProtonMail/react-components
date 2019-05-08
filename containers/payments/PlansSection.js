@@ -412,12 +412,10 @@ const PlansSection = () => {
             {subscriptionModal}
             {isOpen ? (
                 <ConfirmModal title={c('Title').t`Confirm downgrade`} onClose={close} onConfirm={handleUnsubscribe}>
-                    <Alert>
-                        <p>{c('Info')
-                            .t`This will downgrade your account to a free account. ProtonMail is free software that is supported by donations and paid accounts. Please consider making a donation so we can continue to offer the service for free.`}</p>
-                        <p>{c('Info')
-                            .t`Note: Additional addresses, custom domains, and users must be removed/disabled before performing this action.`}</p>
-                    </Alert>
+                    <Alert>{c('Info')
+                        .t`This will downgrade your account to a free account. ProtonMail is free software that is supported by donations and paid accounts. Please consider making a donation so we can continue to offer the service for free.`}</Alert>
+                    <Alert type="warning">{c('Info')
+                        .t`Note: Additional addresses, custom domains, and users must be removed/disabled before performing this action.`}</Alert>
                 </ConfirmModal>
             ) : null}
         </>
