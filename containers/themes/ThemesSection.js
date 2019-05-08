@@ -7,25 +7,26 @@ import {
     SubTitle,
     Alert,
     ThemeCards,
-    InputModal,
-    useModal
+    useModal,
+    useNotifications
 } from 'react-components';
 import { updateTheme } from 'proton-shared/lib/api/mailSettings';
-import { availableThemes } from './availableThemes.js';
 import { getThemeIdentifier } from 'react-components/helpers/themes';
 import { THEMES } from 'proton-shared/lib/constants';
+
+import { availableThemes } from './availableThemes.js';
+import CustomThemeModal from './CustomThemeModal.js';
 
 const {
     CUSTOM: { identifier: customId }
 } = THEMES;
 
 const ThemesSection = () => {
+    const { createNotification } = useNotifications();
     const { isOpen, open, close } = useModal();
-
     const [{ Theme }] = useMailSettings();
     const { call } = useEventManager();
     const { request, loading } = useApiWithoutResult(updateTheme);
-
     const themeId = getThemeIdentifier(Theme);
     const customCSS = themeId === customId ? Theme : '';
 
@@ -37,25 +38,20 @@ const ThemesSection = () => {
         call();
     };
 
-    const handleSubmit = async (customCSSInput) => {
-        close();
+    const handleSaveCustomTheme = async (customCSSInput) => {
         await request(customCSSInput);
         call();
+        close();
+        createNotification({ text: c('Success').t`Custom theme saved` });
     };
-
-    const themeText = c('Info')
-        .t`ProtonMail offers 3 default themes to select from. You can also import a custom theme using our CSS editor`;
-    const customizationThemeText = c('Info')
-        .t`Selecting another theme will override your current theme and any customization will be lost`;
-    const customWarningText = c('Warning')
-        .t`Custom themes from third parties can potentially betray your privacy. Only use themes from trusted sources`;
 
     return (
         <>
             <SubTitle>{c('Title').t`Themes`}</SubTitle>
-            <Alert>{themeText}</Alert>
-            <Alert type="warning">{customizationThemeText}</Alert>
-            <br />
+            <Alert>{c('Info')
+                .t`ProtonMail offers 3 default themes to select from. You can also import a custom theme using our CSS editor`}</Alert>
+            <Alert type="warning">{c('Info')
+                .t`Selecting another theme will override your current theme and any customization will be lost`}</Alert>
             <ThemeCards
                 list={availableThemes}
                 themeId={themeId}
@@ -63,18 +59,7 @@ const ThemesSection = () => {
                 onCustomization={open}
                 disabled={loading}
             />
-            {isOpen ? (
-                <InputModal
-                    type="textarea"
-                    title={c('Title').t`Custom Theme`}
-                    warning={customWarningText}
-                    onSubmit={handleSubmit}
-                    onClose={close}
-                    submit={c('Action').t`Save`}
-                    input={customCSS}
-                    placeholder={c('Action').t`Insert CSS code here`}
-                />
-            ) : null}
+            {isOpen ? <CustomThemeModal onClose={close} theme={customCSS} onSave={handleSaveCustomTheme} /> : null}
         </>
     );
 };
