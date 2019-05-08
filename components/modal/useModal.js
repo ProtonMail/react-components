@@ -8,13 +8,19 @@ const useModal = (initialState = false) => {
 
     const close = () => {
         const modal = document.querySelector('.pm-modalOverlay');
-        modal && modal.classList.add('pm-modalOverlay--fadeOut');
-        id = setTimeout(() => setModalState(false), 500);
+
+        if (modal) {
+            modal.classList.add('pm-modalOverlay--fadeOut');
+            id = setTimeout(() => setModalState(false), 500);
+            return;
+        }
+
+        setModalState(false);
     };
 
     useEffect(() => {
         return () => {
-            clearTimeout(id);
+            id && clearTimeout(id);
         };
     });
 
