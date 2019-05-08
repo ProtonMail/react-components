@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import {
+    Alert,
     usePlans,
     Modal,
     ContentModal,
@@ -65,8 +66,23 @@ const SubscriptionModal = ({ onClose, cycle, currency, step: initialStep, coupon
         try {
             setLoading(true);
             const result = await requestCheck(toParams(m, plans));
-            setCheck(result);
+            const { Coupon, Gift } = result;
+            const { Code } = Coupon || {}; // Coupon can equals null
+
+            if (m.coupon !== Code) {
+                const text = c('Error').t`Your coupon is invalid or cannot be applied to your plan`;
+                createNotification({ text, type: 'error' });
+                throw new Error(text);
+            }
+
+            if (m.gift && !Gift) {
+                const text = c('Error').t`Invalid gift code`;
+                createNotification({ text, type: 'error' });
+                throw new Error(text);
+            }
+
             setLoading(false);
+            setCheck(result);
             return result;
         } catch (error) {
             setLoading(false);
@@ -76,29 +92,7 @@ const SubscriptionModal = ({ onClose, cycle, currency, step: initialStep, coupon
 
     const handleChangeModel = async (newModel = {}, requireCheck = false) => {
         if (requireCheck) {
-            try {
-                setLoading(true);
-                const result = await requestCheck(toParams(newModel, plans));
-                const { Coupon, Gift } = result;
-                const { Code } = Coupon || {}; // Coupon can equals null
-
-                if (newModel.coupon !== Code) {
-                    return createNotification({
-                        text: c('Error').t`Your coupon is invalid or cannot be applied to your plan`,
-                        type: 'error'
-                    });
-                }
-
-                if (newModel.gift && !Gift) {
-                    return createNotification({ text: c('Error').t`Invalid gift code`, type: 'error' });
-                }
-
-                setLoading(false);
-                setCheck(result);
-            } catch (error) {
-                setLoading(false);
-                throw error;
-            }
+            await callCheck(newModel);
         }
 
         setModel(newModel);
@@ -183,6 +177,8 @@ const SubscriptionModal = ({ onClose, cycle, currency, step: initialStep, coupon
             hasNext: true,
             section: (
                 <>
+                    <Alert>{c('Info')
+                        .t`Your payment details are protected with TLS encryption and Swiss privacy laws.`}</Alert>
                     <Row>
                         <Label>{c('Label').t`Amount due`}</Label>
                         <Field>
@@ -199,11 +195,21 @@ const SubscriptionModal = ({ onClose, cycle, currency, step: initialStep, coupon
                         onMethod={setMethod}
                         onValidCard={setCardValidity}
                     />
+                    <Alert learnMore="https://protonmail.com/terms-and-conditions">{c('Info')
+                        .t`By clicking Next, you agree to abide by ProtonMail's terms and conditions.`}</Alert>
                 </>
             ),
             onSubmit: handleSubmit
         });
     }
+
+    useEffect(() => {
+        // When we open the modal from a secondary step we need to check if the current model is valid
+        // Example: remove coupon, switch yearly
+        if (step) {
+            callCheck();
+        }
+    }, []);
 
     return (
         <Modal show={true} onClose={onClose} title={STEPS[step].title}>

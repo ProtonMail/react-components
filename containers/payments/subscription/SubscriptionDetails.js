@@ -5,11 +5,12 @@ import { Button, SmallButton, useToggle } from 'react-components';
 
 import { getSubTotal, getPlan } from './helpers';
 import PlanPrice from './PlanPrice';
-import { PLAN_SERVICES } from 'proton-shared/lib/constants';
+import { PLAN_SERVICES, COUPON_CODES } from 'proton-shared/lib/constants';
 import CycleDiscountBadge from '../CycleDiscountBadge';
 import CouponDiscountBadge from '../CouponDiscountBadge';
 import CouponForm from './CouponForm';
 
+const { BUNDLE } = COUPON_CODES;
 const { MAIL, VPN } = PLAN_SERVICES;
 
 const TITLES = {
@@ -85,6 +86,7 @@ const SubscriptionDetails = ({ model, plans, check, onChange }) => {
     const subTotal = getSubTotal({ ...model, plans });
     const { state, toggle } = useToggle();
     const handleRemoveCoupon = () => onChange({ ...model, coupon: '' }, true);
+    const canRemoveCoupon = model.coupon !== BUNDLE;
 
     return (
         <>
@@ -105,7 +107,9 @@ const SubscriptionDetails = ({ model, plans, check, onChange }) => {
                             {c('Label').t`Coupon`} {model.coupon}
                         </span>
                         <CouponDiscountBadge code={model.coupon} />
-                        <SmallButton onClick={handleRemoveCoupon}>{c('Action').t`Remove coupon`}</SmallButton>
+                        {canRemoveCoupon ? (
+                            <SmallButton onClick={handleRemoveCoupon}>{c('Action').t`Remove coupon`}</SmallButton>
+                        ) : null}
                     </div>
                     <div>
                         <PlanPrice
