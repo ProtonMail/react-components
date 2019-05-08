@@ -19,7 +19,7 @@ import { validateCredit, buyCredit } from 'proton-shared/lib/api/payments';
 
 import GiftCodeInput from './GiftCodeInput';
 
-const GiftCodeModal = ({ show, onClose }) => {
+const GiftCodeModal = ({ onClose }) => {
     const [loading, setLoading] = useState(false);
     const { request: requestBuyCredit } = useApiWithoutResult(buyCredit);
     const { request: requestValidateCredit } = useApiWithoutResult(validateCredit);
@@ -43,7 +43,7 @@ const GiftCodeModal = ({ show, onClose }) => {
     };
 
     return (
-        <Modal type="small" show={show} onClose={onClose} title={c('Title').t`Gift code`}>
+        <Modal type="small" onClose={onClose} title={c('Title').t`Gift code`}>
             <ContentModal onSubmit={handleSubmit} onReset={onClose} loading={loading}>
                 <Alert>{c('Info').t`If you purchased or were given a gift code, add it here.`}</Alert>
                 <Row>
@@ -68,7 +68,6 @@ const GiftCodeModal = ({ show, onClose }) => {
 };
 
 GiftCodeModal.propTypes = {
-    show: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired
 };
 

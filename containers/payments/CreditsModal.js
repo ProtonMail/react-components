@@ -28,7 +28,7 @@ const I18N_CURRENCIES = {
     USD: c('Monetary unit').t`Dollar`
 };
 
-const CreditsModal = ({ show, onClose }) => {
+const CreditsModal = ({ onClose }) => {
     const { call } = useEventManager();
     const { method, setMethod, parameters, setParameters, canPay, setCardValidity } = usePayment(handleSubmit);
     const { createNotification } = useNotifications();
@@ -45,7 +45,7 @@ const CreditsModal = ({ show, onClose }) => {
     };
 
     return (
-        <Modal type="small" show={show} onClose={onClose} title={c('Title').t`Add credits`}>
+        <Modal type="small" onClose={onClose} title={c('Title').t`Add credits`}>
             <ContentModal onSubmit={handleSubmit} onReset={onClose}>
                 <Alert>{c('Info')
                     .t`Your payment details are protected with TLS encryption and Swiss privacy laws.`}</Alert>
@@ -83,7 +83,6 @@ const CreditsModal = ({ show, onClose }) => {
 };
 
 CreditsModal.propTypes = {
-    show: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired
 };
 

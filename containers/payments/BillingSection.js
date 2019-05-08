@@ -225,8 +225,8 @@ const BillingSection = () => {
                     <div className="flex-autogrid-item" />
                 </div>
             </Bordered>
-            <GiftCodeModal show={showGiftCodeModal} onClose={closeGiftCodeModal} />
-            <CreditsModal show={showCreditsModal} onClose={closeCreditsModal} />
+            {showGiftCodeModal ? <GiftCodeModal onClose={closeGiftCodeModal} /> : null}
+            {showCreditsModal ? <CreditsModal onClose={closeCreditsModal} /> : null}
         </>
     );
 };

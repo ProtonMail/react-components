@@ -188,7 +188,7 @@ const SubscriptionModal = ({ onClose, cycle, currency, coupon, plansMap }) => {
     const hasNext = !hasClose;
 
     return (
-        <Modal show={true} onClose={onClose} title={STEPS[step].title}>
+        <Modal onClose={onClose} title={STEPS[step].title}>
             <ContentModal onSubmit={STEPS[step].onSubmit} onReset={onClose} loading={loading}>
                 {STEPS[step].section}
                 <FooterModal>

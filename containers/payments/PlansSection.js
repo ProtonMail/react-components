@@ -3,6 +3,7 @@ import { c } from 'ttag';
 import {
     SubTitle,
     Alert,
+    ConfirmModal,
     useSubscription,
     useApiWithoutResult,
     Button,
@@ -13,10 +14,13 @@ import {
     Price,
     usePlans,
     useUser,
-    useToggle
+    useToggle,
+    useModal,
+    useEventManager,
+    useNotifications
 } from 'react-components';
 import { hasBit } from 'proton-shared/lib/helpers/bitset';
-import { checkSubscription } from 'proton-shared/lib/api/payments';
+import { checkSubscription, deleteSubscription } from 'proton-shared/lib/api/payments';
 import { CYCLE, PLAN_SERVICES, DEFAULT_CURRENCY, DEFAULT_CYCLE } from 'proton-shared/lib/constants';
 
 import CurrencySelector from './CurrencySelector';
@@ -28,6 +32,9 @@ const { MAIL } = PLAN_SERVICES;
 const { MONTHLY, YEARLY, TWO_YEARS } = CYCLE;
 
 const PlansSection = () => {
+    const { call } = useEventManager();
+    const { createNotification } = useNotifications();
+    const { isOpen, open, close } = useModal();
     const [{ isPaid, hasPaidMail, hasPaidVpn }] = useUser();
     const [subscription = {}, loadingSubscription] = useSubscription();
     const [plans = [], loadingPlans] = usePlans();
@@ -37,17 +44,24 @@ const PlansSection = () => {
     const [cycle, setCycle] = useState(DEFAULT_CYCLE);
     const [subscriptionModal, setSubscriptionModal] = useState(null);
     const resetModal = () => setSubscriptionModal(null);
-    const { request } = useApiWithoutResult(checkSubscription);
+    const { request: requestCheckSubscription } = useApiWithoutResult(checkSubscription);
+    const { request: requestDeleteSubscription } = useApiWithoutResult(deleteSubscription);
     const bundleEligible = isBundleEligible(subscription);
+
+    const handleUnsubscribe = async () => {
+        await requestDeleteSubscription();
+        await call();
+        createNotification({ text: c('Success').t`You have successfully unsubscribed` });
+    };
 
     const handleModal = (newPlansMap) => async () => {
         if (!newPlansMap) {
-            // TODO unsubscribe
+            open();
             return;
         }
 
         const plansMap = mergePlansMap(newPlansMap, subscription);
-        const { Coupon } = await request(getCheckParams({ plans, plansMap, currency, cycle, coupon }));
+        const { Coupon } = await requestCheckSubscription(getCheckParams({ plans, plansMap, currency, cycle, coupon }));
         const coupon = Coupon ? Coupon.Code : undefined; // Coupon can equals null
 
         const modal = (
@@ -396,6 +410,16 @@ const PlansSection = () => {
                 </>
             ) : null}
             {subscriptionModal}
+            {isOpen ? (
+                <ConfirmModal title={c('Title').t`Confirm downgrade`} onClose={close} onConfirm={handleUnsubscribe}>
+                    <Alert>
+                        <p>{c('Info')
+                            .t`This will downgrade your account to a free account. ProtonMail is free software that is supported by donations and paid accounts. Please consider making a donation so we can continue to offer the service for free.`}</p>
+                        <p>{c('Info')
+                            .t`Note: Additional addresses, custom domains, and users must be removed/disabled before performing this action.`}</p>
+                    </Alert>
+                </ConfirmModal>
+            ) : null}
         </>
     );
 };
