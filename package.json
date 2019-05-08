@@ -37,6 +37,7 @@
     "intersection-observer": "^0.5.1",
     "keycode": "^2.2.0",
     "moment": "^2.24.0",
+    "moment-timezone": "^0.5.25",
     "pikaday": "^1.8.0",
     "prop-types": "^15.7.2",
     "push.js": "^1.0.9",
