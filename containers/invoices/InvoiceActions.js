@@ -69,13 +69,14 @@ const InvoiceActions = ({ invoice, fetchInvoices }) => {
     return (
         <>
             <DropdownActions list={list} className="pm-button--small" />
-            <PreviewPDFModal
-                show={showPreviewInvoiceModal}
-                onClose={closePreviewInvoiceModal}
-                url={url}
-                title={c('Title').t`Preview invoice`}
-                filename={filename}
-            />
+            {showPreviewInvoiceModal ? (
+                <PreviewPDFModal
+                    onClose={closePreviewInvoiceModal}
+                    url={url}
+                    title={c('Title').t`Preview invoice`}
+                    filename={filename}
+                />
+            ) : null}
             {invoice.State === INVOICE_STATE.UNPAID ? (
                 showPayInvoiceModal ? (
                     <PayInvoiceModal invoice={invoice} onClose={closePayInvoiceModal} fetchInvoices={fetchInvoices} />
