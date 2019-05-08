@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { Button, SmallButton, useToggle } from 'react-components';
+import { SmallButton, Bordered, useToggle } from 'react-components';
+import { PLAN_SERVICES, COUPON_CODES } from 'proton-shared/lib/constants';
 
 import { getSubTotal, getPlan } from './helpers';
 import PlanPrice from './PlanPrice';
-import { PLAN_SERVICES, COUPON_CODES } from 'proton-shared/lib/constants';
 import CycleDiscountBadge from '../CycleDiscountBadge';
 import CouponDiscountBadge from '../CouponDiscountBadge';
 import CouponForm from './CouponForm';
@@ -89,7 +89,7 @@ const SubscriptionDetails = ({ model, plans, check, onChange }) => {
     const canRemoveCoupon = model.coupon !== BUNDLE;
 
     return (
-        <>
+        <Bordered>
             <h4>{c('Title').t`Subscription details`}</h4>
             <Rows model={model} plans={plans} />
             {model.coupon ? (
@@ -121,22 +121,22 @@ const SubscriptionDetails = ({ model, plans, check, onChange }) => {
                     </div>
                 </div>
             ) : null}
-            <div className="flex flex-spacebetween mb1">
+            <div className="flex flex-spacebetween">
                 <div className="bold">{c('Label').t`Total`}</div>
                 <div className="bold">
                     <PlanPrice amount={check.Amount} cycle={model.cycle} currency={model.currency} />
                 </div>
             </div>
             {model.coupon ? null : (
-                <div className="mb1">
+                <div className="mt1">
                     {state ? (
                         <CouponForm model={model} onChange={onChange} />
                     ) : (
-                        <Button onClick={toggle}>{c('Action').t`Add coupon`}</Button>
+                        <SmallButton onClick={toggle}>{c('Action').t`Add coupon`}</SmallButton>
                     )}
                 </div>
             )}
-        </>
+        </Bordered>
     );
 };
 

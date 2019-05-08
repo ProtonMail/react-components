@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { Price, Info, useToggle, Button } from 'react-components';
+import { Price, Info, useToggle, SmallButton, Bordered } from 'react-components';
 import { CYCLE } from 'proton-shared/lib/constants';
 import GiftCodeForm from './GiftCodeForm';
 
@@ -17,7 +17,7 @@ const PaymentDetails = ({ check, model, onChange }) => {
     const { state, toggle } = useToggle();
 
     return (
-        <>
+        <Bordered>
             <h4>{c('Title').t`Payment details`}</h4>
             <div className="flex flex-spacebetween mb1">
                 <div className="bold">
@@ -60,22 +60,22 @@ const PaymentDetails = ({ check, model, onChange }) => {
                     </div>
                 </div>
             ) : null}
-            <div className="flex flex-spacebetween mb1">
+            <div className="flex flex-spacebetween">
                 <div className="bold">{c('Label').t`Amount due`}</div>
                 <div className="bold">
                     <Price currency={model.currency}>{check.AmountDue}</Price>
                 </div>
             </div>
             {model.gift ? null : (
-                <div className="mb1">
+                <div className="mt1">
                     {state ? (
                         <GiftCodeForm model={model} onChange={onChange} />
                     ) : (
-                        <Button onClick={toggle}>{c('Action').t`Add gift code`}</Button>
+                        <SmallButton onClick={toggle}>{c('Action').t`Add gift code`}</SmallButton>
                     )}
                 </div>
             )}
-        </>
+        </Bordered>
     );
 };
 

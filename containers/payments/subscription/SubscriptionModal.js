@@ -51,7 +51,7 @@ const SubscriptionModal = ({ onClose, cycle, currency, coupon, plansMap }) => {
             const { Coupon, Gift } = result;
             const { Code } = Coupon || {}; // Coupon can equals null
 
-            if (m.coupon !== Code) {
+            if (m.coupon && m.coupon !== Code) {
                 const text = c('Error').t`Your coupon is invalid or cannot be applied to your plan`;
                 createNotification({ text, type: 'error' });
                 throw new Error(text);

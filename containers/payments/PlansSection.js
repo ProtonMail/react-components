@@ -46,10 +46,9 @@ const PlansSection = () => {
             return;
         }
 
-        const coupon = subscription.CouponCode ? subscription.CouponCode : undefined;
         const plansMap = mergePlansMap(newPlansMap, subscription);
-
-        await request(getCheckParams({ plans, plansMap, currency, cycle, coupon }));
+        const { Coupon } = await request(getCheckParams({ plans, plansMap, currency, cycle, coupon }));
+        const coupon = Coupon ? Coupon.Code : undefined; // Coupon can equals null
 
         const modal = (
             <SubscriptionModal
