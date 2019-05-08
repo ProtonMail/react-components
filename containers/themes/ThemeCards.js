@@ -4,7 +4,7 @@ import { ThemeCard, Block } from 'react-components';
 
 const ThemeCards = ({ themeId, onChange, onCustomization, loading, list }) => {
     return (
-        <Block>
+        <Block className="flex">
             {list.map(({ label, id, alt, src, customizable }) => {
                 return (
                     <ThemeCard

@@ -39,7 +39,7 @@ const InputModal = ({
     switch (type) {
         case 'textarea':
             InputField = (
-                <>
+                <div className="p1">
                     {warning ? <Alert type="warning">{warning}</Alert> : null}
                     <TextArea
                         id={id}
@@ -50,7 +50,7 @@ const InputModal = ({
                         readOnly={loading}
                         required
                     />
-                </>
+                </div>
             );
             break;
         default:
