@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import { RadioCard } from 'react-components';
 
-const ThemeCard = ({ label, id, alt, src, checked, onChange, disabled, customizable, onCustomization }) => {
+const ThemeCard = ({ label, id, alt, src, checked, onChange, disabled, customizable, onCustomization, ...rest }) => {
     const customize = customizable ? (
         <>
             <br />
@@ -26,6 +26,7 @@ const ThemeCard = ({ label, id, alt, src, checked, onChange, disabled, customiza
             checked={checked}
             onChange={onChange}
             disabled={disabled}
+            {...rest}
         >
             <img alt={alt} src={src} />
             {customize}
