@@ -18,4 +18,13 @@ describe('Dropdown component', () => {
         fireEvent.click(buttonNode);
         expect(getContent(container)).toContainHTML('<div class="dropDown-content">Boo</div>');
     });
+
+    it('should have appropriate default class', async () => {
+        const { container, getByText } = render(<Dropdown content="clickOnMe">Boo</Dropdown>);
+        const buttonNode = getByText('clickOnMe');
+
+        expect(container.querySelector('div')).toHaveClass('dropDown inbl');
+        fireEvent.click(buttonNode);
+        expect(container.firstChild.querySelector('div')).toHaveClass('dropDown-content');
+    });
 });

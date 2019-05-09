@@ -106,7 +106,7 @@ const MemberActions = ({ member, organization }) => {
 
     return (
         <>
-            <DropdownActions list={list} className="pm-button--small" />
+            <DropdownActions list={list} buttonClassName="pm-button--small" />
             {showEdit ? <EditMemberModal onClose={closeEdit} member={member} /> : null}
             {showDelete ? (
                 <ConfirmModal onClose={closeDelete} onConfirm={handleConfirmDelete}>

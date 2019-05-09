@@ -75,7 +75,7 @@ const PaymentMethodActions = ({ method, onChange, methods, index }) => {
 
     return (
         <>
-            <DropdownActions className="pm-button--small" list={list} />
+            <DropdownActions buttonClassName="pm-button--small" list={list} />
             {editModal ? <EditCardModal card={card} onClose={closeEditModal} onChange={onChange} /> : null}
             {deleteModal ? (
                 <ConfirmModal

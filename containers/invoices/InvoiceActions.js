@@ -68,7 +68,7 @@ const InvoiceActions = ({ invoice, fetchInvoices }) => {
 
     return (
         <>
-            <DropdownActions list={list} className="pm-button--small" />
+            <DropdownActions list={list} buttonClassName="pm-button--small" />
             {showPreviewInvoiceModal ? (
                 <PreviewPDFModal
                     onClose={closePreviewInvoiceModal}

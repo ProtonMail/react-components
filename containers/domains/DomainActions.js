@@ -47,7 +47,7 @@ const DomainActions = ({ domain }) => {
 
     return (
         <>
-            <DropdownActions className="pm-button--small" list={list} />
+            <DropdownActions buttonClassName="pm-button--small" list={list} />
             {showEditModal ? <DomainModal onClose={closeEditModal} domain={domain} /> : null}
             {showCatchAllModal ? <CatchAllModal onClose={closeCatchAllModal} domain={domain} /> : null}
             {showDeleteModal ? (

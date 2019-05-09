@@ -6,7 +6,7 @@ import { c } from 'ttag';
 import Dropdown from './Dropdown';
 import DropdownMenu from './DropdownMenu';
 
-const DropdownActions = ({ list, className }) => {
+const DropdownActions = ({ list, buttonClassName }) => {
     if (!list.length) {
         return null;
     }
@@ -15,7 +15,7 @@ const DropdownActions = ({ list, className }) => {
 
     if (list.length === 1) {
         return (
-            <Button className={className} {...restProps}>
+            <Button className={buttonClassName} {...restProps}>
                 {text}
             </Button>
         );
@@ -23,13 +23,13 @@ const DropdownActions = ({ list, className }) => {
 
     return (
         <Group>
-            <ButtonGroup className={className} {...restProps}>
+            <ButtonGroup className={buttonClassName} {...restProps}>
                 {text}
             </ButtonGroup>
             <Dropdown
                 content={<Icon name="caret" />}
                 title={c('Action').t`More`}
-                className={`pm-group-button pm-button--for-icon ${className}`}
+                buttonClassName={`pm-group-button pm-button--for-icon ${buttonClassName}`}
             >
                 <DropdownMenu list={restList} />
             </Dropdown>
@@ -39,7 +39,7 @@ const DropdownActions = ({ list, className }) => {
 
 DropdownActions.propTypes = {
     list: PropTypes.array.isRequired,
-    className: PropTypes.string
+    buttonClassName: PropTypes.string
 };
 
 DropdownActions.defaultProps = {

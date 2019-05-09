@@ -38,7 +38,7 @@ const Pagination = ({ onNext, onPrevious, onSelect, hasNext, hasPrevious, page, 
                 </ButtonGroup>
             ) : null}
             <Dropdown
-                className="pm-group-button page-button"
+                buttonClassName="pm-group-button page-button"
                 content={
                     <>
                         {page} <Icon name="caret" />

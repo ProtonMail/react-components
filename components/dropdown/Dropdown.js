@@ -4,7 +4,16 @@ import keycode from 'keycode';
 
 import Button from '../button/Button';
 
-const Dropdown = ({ isOpen, children, className, content, autoClose, autoCloseOutside }) => {
+const Dropdown = ({
+    isOpen,
+    children,
+    className,
+    buttonClassName,
+    contentClassName,
+    content,
+    autoClose,
+    autoCloseOutside
+}) => {
     const [open, setOpen] = useState(isOpen);
     const wrapperRef = useRef(null);
 
@@ -45,12 +54,12 @@ const Dropdown = ({ isOpen, children, className, content, autoClose, autoCloseOu
     }, []);
 
     return (
-        <div className="dropDown" ref={wrapperRef}>
-            <Button className={className} onClick={handleClick} aria-expanded={open}>
+        <div className={className} ref={wrapperRef}>
+            <Button className={buttonClassName} onClick={handleClick} aria-expanded={open}>
                 {content}
             </Button>
             {open ? (
-                <div className="dropDown-content" onClick={handleClickContent}>
+                <div className={contentClassName} onClick={handleClickContent}>
                     {children}
                 </div>
             ) : null}
@@ -59,7 +68,10 @@ const Dropdown = ({ isOpen, children, className, content, autoClose, autoCloseOu
 };
 
 Dropdown.propTypes = {
+    arrowPosition: PropTypes.string,
     className: PropTypes.string,
+    buttonClassName: PropTypes.string,
+    contentClassName: PropTypes.string,
     children: PropTypes.node.isRequired,
     content: PropTypes.node.isRequired,
     isOpen: PropTypes.bool,
@@ -68,6 +80,8 @@ Dropdown.propTypes = {
 };
 
 Dropdown.defaultProps = {
+    className: 'dropDown inbl',
+    contentClassName: 'dropDown-content',
     isOpen: false,
     autoClose: true,
     autoCloseOutside: true

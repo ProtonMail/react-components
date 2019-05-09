@@ -94,7 +94,7 @@ const AddressActions = ({ address, user, fetchAddresses }) => {
 
     return (
         <>
-            <DropdownActions list={list} className="pm-button--small" />
+            <DropdownActions list={list} buttonClassName="pm-button--small" />
             {isOpen ? <EditAddressModal onClose={close} address={address} /> : null}
         </>
     );
