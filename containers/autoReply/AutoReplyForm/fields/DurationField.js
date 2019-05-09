@@ -5,7 +5,7 @@ import { Select, Label, Row, Field } from 'react-components';
 import { getDurationOptions } from '../../utils';
 
 const DurationField = ({ value, onChange }) => {
-    const handleChange = (e) => onChange(parseInt(e.target.value, 10));
+    const handleChange = ({ target }) => onChange(+target.value);
 
     return (
         <Row className="flex-spacebetween">

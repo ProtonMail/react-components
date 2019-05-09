@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { getWeekdayOptions } from '../../utils';
 
 const EndDayOfWeekField = ({ value, onChange }) => {
-    const handleChange = (e) => onChange(parseInt(e.target.value, 10));
+    const handleChange = ({ target }) => onChange(+target.value);
 
     return (
         <Row className="flex-spacebetween">

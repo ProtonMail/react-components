@@ -7,7 +7,8 @@ import {
     PrimaryButton,
     useMailSettings,
     useApiWithoutResult,
-    useEventManager
+    useEventManager,
+    useNotifications
 } from 'react-components';
 import { updateAutoresponder } from 'proton-shared/lib/api/mailSettings';
 import PropTypes from 'prop-types';
@@ -17,14 +18,16 @@ import useAutoReplyForm from './AutoReplyForm/useAutoReplyForm';
 
 const AutoReplyModal = ({ onClose }) => {
     const [{ AutoResponder }] = useMailSettings();
+    const { createNotification } = useNotifications();
     const { model, updateModel, toAutoResponder } = useAutoReplyForm(AutoResponder);
     const { request } = useApiWithoutResult(updateAutoresponder);
     const { call } = useEventManager();
 
     const handleSubmit = async () => {
         await request(toAutoResponder(model));
-        call();
         onClose();
+        await call();
+        createNotification({ text: c('Success').t`Auto-reply updated` });
     };
 
     return (

@@ -58,12 +58,10 @@ const AutoReplyTemplate = ({ autoresponder, onEdit }) => {
                     </InfoLine>
                 </tbody>
             </table>
-            <div className="flex w100">
-                <div className="mlauto">
-                    <Button onClick={onEdit} className="ml1">
-                        Edit
-                    </Button>
-                </div>
+            <div className="flex">
+                <Button onClick={onEdit} className="mlauto">
+                    Edit
+                </Button>
             </div>
         </div>
     );

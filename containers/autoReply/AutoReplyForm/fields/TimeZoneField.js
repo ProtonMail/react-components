@@ -5,7 +5,7 @@ import { c } from 'ttag';
 import { getTimeZoneOptions } from '../../utils';
 
 const TimeZoneField = ({ value, onChange }) => {
-    const handleChange = (e) => onChange(e.target.value);
+    const handleChange = ({ target }) => onChange(target.value);
 
     return (
         <Row className="flex-spacebetween">
