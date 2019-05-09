@@ -5,12 +5,12 @@ import { Price, Info, useToggle, SmallButton, Bordered } from 'react-components'
 import { CYCLE } from 'proton-shared/lib/constants';
 import GiftCodeForm from './GiftCodeForm';
 
-const { MONTHLY, YEARLY, TWO_YEAR } = CYCLE;
+const { MONTHLY, YEARLY, TWO_YEARS } = CYCLE;
 
 const BILLING_CYCLE = {
     [MONTHLY]: c('Info').t`monthly billing`,
     [YEARLY]: c('Info').t`annual billing`,
-    [TWO_YEAR]: c('Info').t`two year billing`
+    [TWO_YEARS]: c('Info').t`two year billing`
 };
 
 const PaymentDetails = ({ check, model, onChange }) => {

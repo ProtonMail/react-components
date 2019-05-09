@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const Field = ({ children, className }) => {
-    return <span className={`pm-field-container ${className}`}>{children}</span>;
+    return <span className={className}>{children}</span>;
 };
 
 Field.propTypes = {
@@ -11,7 +11,7 @@ Field.propTypes = {
 };
 
 Field.defaultProps = {
-    className: ''
+    className: 'pm-field-container'
 };
 
 export default Field;

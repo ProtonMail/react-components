@@ -116,7 +116,7 @@ const PlansSection = () => {
         return (
             <>
                 <div>{monthlyPrice}</div>
-                <small>({c('Info').jt`billed as ${billedPrice}`})</small>
+                <small>{c('Info').jt`billed as ${billedPrice}`}</small>
             </>
         );
     };
@@ -135,269 +135,276 @@ const PlansSection = () => {
                         <thead>
                             <tr>
                                 <th />
-                                <th>FREE</th>
-                                <th>PLUS</th>
-                                <th>PROFESSIONAL</th>
-                                <th>VISIONARY</th>
+                                <th className="aligncenter">FREE</th>
+                                <th className="aligncenter">PLUS</th>
+                                <th className="aligncenter">PROFESSIONAL</th>
+                                <th className="aligncenter">VISIONARY</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <th>
-                                    {c('Header').t`Pricing`}
-                                    <CurrencySelector currency={currency} onSelect={setCurrency} />
-                                    <CycleSelector
-                                        cycle={cycle}
-                                        onSelect={setCycle}
-                                        twoYear={subscription.Cycle === TWO_YEARS}
-                                    />
-                                </th>
-                                <td>FREE</td>
-                                <td>{getPrice('plus')}</td>
-                                <td>{getPrice('professional')}</td>
-                                <td>{getPrice('visionary')}</td>
+                                <td className="bg-global-muted">
+                                    <div className="mb1">{c('Header').t`Pricing`}</div>
+                                    <div className="flex-autogrid">
+                                        <div className="flex-autogrid-item">
+                                            <CurrencySelector currency={currency} onSelect={setCurrency} />
+                                        </div>
+                                        <div className="flex-autogrid-item">
+                                            <CycleSelector
+                                                cycle={cycle}
+                                                onSelect={setCycle}
+                                                twoYear={subscription.Cycle === TWO_YEARS}
+                                            />
+                                        </div>
+                                    </div>
+                                </td>
+                                <td className="bg-global-muted aligncenter">FREE</td>
+                                <td className="bg-global-muted aligncenter">{getPrice('plus')}</td>
+                                <td className="bg-global-muted aligncenter">{getPrice('professional')}</td>
+                                <td className="bg-global-muted aligncenter">{getPrice('visionary')}</td>
                             </tr>
                             <tr>
-                                <th>{c('Header').t`Users`}</th>
-                                <td>1</td>
-                                <td>1</td>
-                                <td>1-5000*</td>
-                                <td>6</td>
+                                <td className="bg-global-muted">{c('Header').t`Users`}</td>
+                                <td className="aligncenter">1</td>
+                                <td className="aligncenter">1</td>
+                                <td className="aligncenter">1-5000*</td>
+                                <td className="aligncenter">6</td>
                             </tr>
                             <tr>
-                                <th>{c('Header').t`Email addresses`}</th>
-                                <td>1</td>
-                                <td>5*</td>
-                                <td>5 / {c('X / user').t`user`}</td>
-                                <td>25</td>
+                                <td className="bg-global-muted">{c('Header').t`Email addresses`}</td>
+                                <td className="aligncenter">1</td>
+                                <td className="aligncenter">5*</td>
+                                <td className="aligncenter">5 / {c('X / user').t`user`}</td>
+                                <td className="aligncenter">25</td>
                             </tr>
                             <tr>
-                                <th>{c('Header').t`Storage capacity (GB)`}</th>
-                                <td>0.5</td>
-                                <td>5*</td>
-                                <td>5 / {c('X / user').t`user`}</td>
-                                <td>30</td>
+                                <td className="bg-global-muted">{c('Header').t`Storage capacity (GB)`}</td>
+                                <td className="aligncenter">0.5</td>
+                                <td className="aligncenter">5*</td>
+                                <td className="aligncenter">5 / {c('X / user').t`user`}</td>
+                                <td className="aligncenter">30</td>
                             </tr>
                             <tr>
-                                <th>
+                                <td className="bg-global-muted">
                                     {c('Header').t`Messages per day`}{' '}
                                     <Info
                                         title={c('Tooltip').t`ProtonMail cannot be used for bulk sending or spamming`}
                                     />
-                                </th>
-                                <td>150</td>
-                                <td>1000</td>
-                                <td>{c('Plan option').t`Unlimited`}</td>
-                                <td>{c('Plan option').t`Unlimited`}</td>
+                                </td>
+                                <td className="aligncenter">150</td>
+                                <td className="aligncenter">1000</td>
+                                <td className="aligncenter">{c('Plan option').t`Unlimited`}</td>
+                                <td className="aligncenter">{c('Plan option').t`Unlimited`}</td>
                             </tr>
                             {showFeatures ? (
                                 <tr>
-                                    <th>{c('Header').t`Folders`}</th>
-                                    <td>3</td>
-                                    <td>200</td>
-                                    <td>{c('Plan option').t`Unlimited`}</td>
-                                    <td>{c('Plan option').t`Unlimited`}</td>
+                                    <td className="bg-global-muted">{c('Header').t`Folders`}</td>
+                                    <td className="aligncenter">3</td>
+                                    <td className="aligncenter">200</td>
+                                    <td className="aligncenter">{c('Plan option').t`Unlimited`}</td>
+                                    <td className="aligncenter">{c('Plan option').t`Unlimited`}</td>
                                 </tr>
                             ) : null}
                             {showFeatures ? (
                                 <tr>
-                                    <th>{c('Header').t`Labels`}</th>
-                                    <td>3</td>
-                                    <td>200</td>
-                                    <td>{c('Plan option').t`Unlimited`}</td>
-                                    <td>{c('Plan option').t`Unlimited`}</td>
+                                    <td className="bg-global-muted">{c('Header').t`Labels`}</td>
+                                    <td className="aligncenter">3</td>
+                                    <td className="aligncenter">200</td>
+                                    <td className="aligncenter">{c('Plan option').t`Unlimited`}</td>
+                                    <td className="aligncenter">{c('Plan option').t`Unlimited`}</td>
                                 </tr>
                             ) : null}
                             <tr>
-                                <th>
+                                <td className="bg-global-muted">
                                     {c('Header').t`Custom domains`}{' '}
                                     <Info title={c('Tooltip').t`Use your own domain name`} />
-                                </th>
-                                <td>
+                                </td>
+                                <td className="aligncenter">
                                     <Icon name="off" />
                                 </td>
-                                <td>1*</td>
-                                <td>2*</td>
-                                <td>10</td>
+                                <td className="aligncenter">1*</td>
+                                <td className="aligncenter">2*</td>
+                                <td className="aligncenter">10</td>
                             </tr>
                             <tr>
-                                <th>
+                                <td className="bg-global-muted">
                                     {c('Header').t`IMAP / SMTP support`}{' '}
                                     <Info title={c('Tooltip').t`Use ProtonMail with a desktop email client`} />
-                                </th>
-                                <td>
+                                </td>
+                                <td className="aligncenter">
                                     <Icon name="off" />
                                 </td>
-                                <td>
+                                <td className="aligncenter">
                                     <Icon name="on" />
                                 </td>
-                                <td>
+                                <td className="aligncenter">
                                     <Icon name="on" />
                                 </td>
-                                <td>
+                                <td className="aligncenter">
                                     <Icon name="on" />
                                 </td>
                             </tr>
                             {showFeatures ? null : (
                                 <tr>
-                                    <th>{c('Header').t`Additional features`}</th>
-                                    <td>{c('Plan option').t`Basic email features only`}</td>
-                                    <td>{c('Plan option')
+                                    <td className="bg-global-muted">{c('Header').t`Additional features`}</td>
+                                    <td className="aligncenter">{c('Plan option').t`Only basic email features`}</td>
+                                    <td className="aligncenter">{c('Plan option')
                                         .t`Folders, Labels, Filters, Encrypted Contacts, Auto-responder and more`}</td>
-                                    <td>{c('Plan option')
+                                    <td className="aligncenter">{c('Plan option')
                                         .t`All Plus features, and catch-all email, multi-user support and more`}</td>
-                                    <td>{c('Plan option')
+                                    <td className="aligncenter">{c('Plan option')
                                         .t`All Professional features, limited to 6 users, includes ProtonVPN`}</td>
                                 </tr>
                             )}
                             {showFeatures ? (
                                 <tr>
-                                    <th>{c('Header').t`Encrypted contact details`}</th>
-                                    <td>
+                                    <td className="bg-global-muted">{c('Header').t`Encrypted contact details`}</td>
+                                    <td className="aligncenter">
                                         <Icon name="off" />
                                     </td>
-                                    <td>
+                                    <td className="aligncenter">
                                         <Icon name="on" />
                                     </td>
-                                    <td>
+                                    <td className="aligncenter">
                                         <Icon name="on" />
                                     </td>
-                                    <td>
+                                    <td className="aligncenter">
                                         <Icon name="on" />
                                     </td>
                                 </tr>
                             ) : null}
                             {showFeatures ? (
                                 <tr>
-                                    <th>{c('Header').t`Short address (@pm.me)`}</th>
-                                    <td>
+                                    <td className="bg-global-muted">{c('Header').t`Short address (@pm.me)`}</td>
+                                    <td className="aligncenter">
                                         <Icon name="off" />
                                     </td>
-                                    <td>
+                                    <td className="aligncenter">
                                         <Icon name="on" />
                                     </td>
-                                    <td>
+                                    <td className="aligncenter">
                                         <Icon name="on" />
                                     </td>
-                                    <td>
+                                    <td className="aligncenter">
                                         <Icon name="on" />
                                     </td>
                                 </tr>
                             ) : null}
                             {showFeatures ? (
                                 <tr>
-                                    <th>{c('Header').t`Auto-reply`}</th>
-                                    <td>
+                                    <td className="bg-global-muted">{c('Header').t`Auto-reply`}</td>
+                                    <td className="aligncenter">
                                         <Icon name="off" />
                                     </td>
-                                    <td>
+                                    <td className="aligncenter">
                                         <Icon name="on" />
                                     </td>
-                                    <td>
+                                    <td className="aligncenter">
                                         <Icon name="on" />
                                     </td>
-                                    <td>
+                                    <td className="aligncenter">
                                         <Icon name="on" />
                                     </td>
                                 </tr>
                             ) : null}
                             {showFeatures ? (
                                 <tr>
-                                    <th>{c('Header').t`Catch-all email`}</th>
-                                    <td>
+                                    <td className="bg-global-muted">{c('Header').t`Catch-all email`}</td>
+                                    <td className="aligncenter">
                                         <Icon name="off" />
                                     </td>
-                                    <td>
+                                    <td className="aligncenter">
                                         <Icon name="off" />
                                     </td>
-                                    <td>
+                                    <td className="aligncenter">
                                         <Icon name="on" />
                                     </td>
-                                    <td>
-                                        <Icon name="on" />
-                                    </td>
-                                </tr>
-                            ) : null}
-                            {showFeatures ? (
-                                <tr>
-                                    <th>{c('Header').t`Multi-user support`}</th>
-                                    <td>
-                                        <Icon name="off" />
-                                    </td>
-                                    <td>
-                                        <Icon name="off" />
-                                    </td>
-                                    <td>
-                                        <Icon name="on" />
-                                    </td>
-                                    <td>
+                                    <td className="aligncenter">
                                         <Icon name="on" />
                                     </td>
                                 </tr>
                             ) : null}
                             {showFeatures ? (
                                 <tr>
-                                    <th>{c('Header').t`Priority customer support`}</th>
-                                    <td>
+                                    <td className="bg-global-muted">{c('Header').t`Multi-user support`}</td>
+                                    <td className="aligncenter">
                                         <Icon name="off" />
                                     </td>
-                                    <td>
+                                    <td className="aligncenter">
                                         <Icon name="off" />
                                     </td>
-                                    <td>
+                                    <td className="aligncenter">
                                         <Icon name="on" />
                                     </td>
-                                    <td>
+                                    <td className="aligncenter">
+                                        <Icon name="on" />
+                                    </td>
+                                </tr>
+                            ) : null}
+                            {showFeatures ? (
+                                <tr>
+                                    <td className="bg-global-muted">{c('Header').t`Priority customer support`}</td>
+                                    <td className="aligncenter">
+                                        <Icon name="off" />
+                                    </td>
+                                    <td className="aligncenter">
+                                        <Icon name="off" />
+                                    </td>
+                                    <td className="aligncenter">
+                                        <Icon name="on" />
+                                    </td>
+                                    <td className="aligncenter">
                                         <Icon name="on" />
                                     </td>
                                 </tr>
                             ) : null}
                             <tr>
-                                <th>
+                                <td className="bg-global-muted">
                                     ProtonVPN{' '}
                                     <Info title={c('Tooltip').t`ProtonVPN keeps your Internet traffic private`} />
-                                </th>
-                                <td>
+                                </td>
+                                <td className="aligncenter">
                                     <SmallButton onClick={handleModal({ vpnplus: 1 })}>
                                         {hasPaidVpn ? c('Action').t`Edit VPN` : c('Action').t`Add VPN`}
                                     </SmallButton>
                                 </td>
-                                <td>
-                                    <SmallButton onClick={handleModal({ vpnplus: 1, plus: 1 })}>
+                                <td className="aligncenter">
+                                    <SmallButton onClick={handleModal({ plus: 1, vpnplus: 1 })}>
                                         {hasPaidVpn ? c('Action').t`Edit VPN` : c('Action').t`Add VPN`}
                                     </SmallButton>
                                 </td>
-                                <td>
-                                    <SmallButton onClick={handleModal({ vpnplus: 1, professional: 1 })}>
+                                <td className="aligncenter">
+                                    <SmallButton onClick={handleModal({ professional: 1, vpnplus: 1 })}>
                                         {hasPaidVpn ? c('Action').t`Edit VPN` : c('Action').t`Add VPN`}
                                     </SmallButton>
                                 </td>
-                                <td>{c('Plan option').t`Included`}</td>
+                                <td className="aligncenter">{c('Plan option').t`Included`}</td>
                             </tr>
                             <tr>
-                                <td>
+                                <td className="bg-global-muted">
                                     <SmallButton onClick={toggleFeatures}>
                                         {showFeatures
                                             ? c('Action').t`Hide additional features`
                                             : c('Action').t`Compare all features`}
                                     </SmallButton>
                                 </td>
-                                <td>
+                                <td className="aligncenter">
                                     <SmallButton className="pm-button--primary" onClick={handleModal()}>{c('Action')
                                         .t`Select`}</SmallButton>
                                 </td>
-                                <td>
-                                    <SmallButton className="pm-button--primary" onClick={handleModal({ plus: 1 })}>{c(
-                                        'Action'
-                                    ).t`Select`}</SmallButton>
-                                </td>
-                                <td>
+                                <td className="aligncenter">
                                     <SmallButton
                                         className="pm-button--primary"
-                                        onClick={handleModal({ professional: 1 })}
+                                        onClick={handleModal({ plus: 1, vpnplus: 1 })}
                                     >{c('Action').t`Select`}</SmallButton>
                                 </td>
-                                <td>
+                                <td className="aligncenter">
+                                    <SmallButton
+                                        className="pm-button--primary"
+                                        onClick={handleModal({ professional: 1, vpnplus: 1 })}
+                                    >{c('Action').t`Select`}</SmallButton>
+                                </td>
+                                <td className="aligncenter">
                                     <SmallButton
                                         className="pm-button--primary"
                                         onClick={handleModal({ visionary: 1 })}

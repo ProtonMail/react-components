@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Select } from 'react-components';
+import { c } from 'ttag';
+import { Select, Info } from 'react-components';
 import { range } from 'proton-shared/lib/helpers/array';
 
 import PlanPrice from './PlanPrice';
@@ -45,6 +46,10 @@ const CustomProfessionalSection = ({ plans, model, onChange }) => {
                         value={model.plansMap['1member']}
                         onChange={handleChange('1member')}
                     />
+                    <Info
+                        title={c('Tooltip')
+                            .t`For each additional user, 5GB of storage and 5 email addresses are added to your subscription.`}
+                    />
                 </div>
                 <div>
                     {model.plansMap['1member'] ? (
@@ -65,6 +70,10 @@ const CustomProfessionalSection = ({ plans, model, onChange }) => {
                         options={domainOptions}
                         value={model.plansMap['1domain']}
                         onChange={handleChange('1domain')}
+                    />
+                    <Info
+                        title={c('Tooltip')
+                            .t`Allows you to host emails for your own domain(s) at ProtonMail, e.g. thomas.anderson@example.com`}
                     />
                 </div>
                 <div>

@@ -79,7 +79,7 @@ export const mergePlansMap = (plansMap, { Plans = [] }) => {
             ...plansMap,
             vpnplus,
             vpnbasic,
-            ['1domain']: currentPlansMap['1domain'],
+            ['1domain']: currentPlansMap['1domain'] > 1 ? currentPlansMap['1domain'] : undefined, // pro starts with 2 custom domain
             ['1member']: currentPlansMap['1member'],
             ['1vpn']: currentPlansMap['1vpn']
         };
@@ -98,7 +98,7 @@ export const mergePlansMap = (plansMap, { Plans = [] }) => {
     if (isEquivalent(plansMap, { vpnplus: 1, professional: 1 })) {
         return {
             ...plansMap,
-            ['1domain']: currentPlansMap['1domain'],
+            ['1domain']: currentPlansMap['1domain'] > 1 ? currentPlansMap['1domain'] : undefined, // pro starts with 2 custom domain
             ['1member']: currentPlansMap['1member'],
             ['1vpn']: currentPlansMap['1vpn']
         };

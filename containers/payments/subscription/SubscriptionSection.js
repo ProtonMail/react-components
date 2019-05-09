@@ -184,7 +184,7 @@ const SubscriptionSection = () => {
                         <div className="flex-autogrid-item alignright" />
                     </div>
                 ) : null}
-                <div className="flex-autogrid onmobile-flex-column w100 mb1">
+                <div className="flex-autogrid onmobile-flex-column w100">
                     <div className="flex-autogrid-item">{c('Label').t`Billing cycle`}</div>
                     <div className="flex-autogrid-item">
                         <strong>{CYCLES[Cycle]}</strong>
@@ -201,28 +201,30 @@ const SubscriptionSection = () => {
                         <div className="flex-autogrid-item color-global-success">{c('Info')
                             .t`33% rebate applied to your subscription`}</div>
                     )}
-                    {Cycle === MONTHLY && (
-                        <div className="flex-autogrid-item alignright">
+                    <div className="flex-autogrid-item alignright">
+                        {Cycle === MONTHLY ? (
                             <SmallButton className="pm-button--primary" onClick={handleModal('yearly')}>{c('Action')
                                 .t`Pay yearly`}</SmallButton>
-                        </div>
-                    )}
-                </div>
-                <div className="flex-autogrid onmobile-flex-column w100">
-                    <div className="flex-autogrid-item">{c('Label').t`Coupon`}</div>
-                    <div className="flex-autogrid-item">
-                        <strong>{CouponCode ? CouponCode : c('Label').t`None`}</strong>
-                    </div>
-                    <div className="flex-autogrid-item color-global-success">
-                        <CouponDiscountBadge code={CouponCode} />
-                    </div>
-                    <div className="flex-autogrid-item alignright">
-                        {canRemoveCoupon ? (
-                            <SmallButton onClick={handleModal('remove-coupon')}>{c('Action')
-                                .t`Remove coupon`}</SmallButton>
                         ) : null}
                     </div>
                 </div>
+                {CouponCode ? (
+                    <div className="flex-autogrid onmobile-flex-column w100 mt1">
+                        <div className="flex-autogrid-item">{c('Label').t`Coupon`}</div>
+                        <div className="flex-autogrid-item">
+                            <strong>{CouponCode}</strong>
+                        </div>
+                        <div className="flex-autogrid-item color-global-success">
+                            <CouponDiscountBadge code={CouponCode} />
+                        </div>
+                        <div className="flex-autogrid-item alignright">
+                            {canRemoveCoupon ? (
+                                <SmallButton onClick={handleModal('remove-coupon')}>{c('Action')
+                                    .t`Remove coupon`}</SmallButton>
+                            ) : null}
+                        </div>
+                    </div>
+                ) : null}
             </Bordered>
             {subscriptionModal}
         </>

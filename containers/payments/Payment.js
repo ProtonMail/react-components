@@ -48,14 +48,19 @@ const Payment = ({ type, amount, currency, cycle, onParameters, onMethod, onVali
                     />
                 </Field>
             </Row>
-            <Method
-                amount={amount}
-                currency={currency}
-                onCard={handleCard}
-                onPayPal={handlePayPal}
-                type={type}
-                method={method}
-            />
+            <Row>
+                <Label />
+                <Field className="w100">
+                    <Method
+                        amount={amount}
+                        currency={currency}
+                        onCard={handleCard}
+                        onPayPal={handlePayPal}
+                        type={type}
+                        method={method}
+                    />
+                </Field>
+            </Row>
         </>
     );
 };

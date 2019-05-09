@@ -16,6 +16,7 @@ import {
     Paragraph,
     useStep,
     useApiWithoutResult,
+    useApi,
     useEventManager,
     useNotifications,
     SubTitle,
@@ -33,6 +34,7 @@ import FeaturesList from './FeaturesList';
 import { getCheckParams } from './helpers';
 
 const SubscriptionModal = ({ onClose, cycle, currency, coupon, plansMap }) => {
+    const api = useApi();
     const [loading, setLoading] = useState(false);
     const { method, setMethod, parameters, setParameters, canPay, setCardValidity } = usePayment(handleSubmit);
     const { createNotification } = useNotifications();
@@ -41,13 +43,12 @@ const SubscriptionModal = ({ onClose, cycle, currency, coupon, plansMap }) => {
     const [model, setModel] = useState({ cycle, currency, coupon, plansMap });
     const { call } = useEventManager();
     const { step, next, previous } = useStep(0);
-    const { request: requestSubscribe } = useApiWithoutResult(subscribe);
-    const { request: requestCheck } = useApiWithoutResult(checkSubscription);
+    const { request } = useApiWithoutResult(subscribe);
 
     const callCheck = async (m = model) => {
         try {
             setLoading(true);
-            const result = await requestCheck(getCheckParams({ ...m, plans }));
+            const result = await api(checkSubscription(getCheckParams({ ...m, plans })));
             const { Coupon, Gift } = result;
             const { Code } = Coupon || {}; // Coupon can equals null
 
@@ -87,7 +88,7 @@ const SubscriptionModal = ({ onClose, cycle, currency, coupon, plansMap }) => {
 
         try {
             setLoading(true);
-            await requestSubscribe({ Amount: check.AmountDue, ...getCheckParams({ ...model, plans }), ...parameters });
+            await request({ Amount: check.AmountDue, ...getCheckParams({ ...model, plans }), ...parameters });
             await call();
             setLoading(false);
             next();
@@ -105,7 +106,7 @@ const SubscriptionModal = ({ onClose, cycle, currency, coupon, plansMap }) => {
                 if (!check.AmountDue) {
                     try {
                         setLoading(true);
-                        await requestSubscribe({ Amount: check.AmountDue, ...getCheckParams({ ...model, plans }) });
+                        await request({ Amount: check.AmountDue, ...getCheckParams({ ...model, plans }) });
                         await call();
                         setLoading(false);
                     } catch (error) {
@@ -152,7 +153,8 @@ const SubscriptionModal = ({ onClose, cycle, currency, coupon, plansMap }) => {
     }
 
     if (check.AmountDue > 0) {
-        STEPS.splice(4, 0, {
+        // Insert it before the last one
+        STEPS.splice(STEPS.length - 1, 0, {
             title: c('Title').t`Payment details`,
             section: (
                 <>
@@ -164,7 +166,6 @@ const SubscriptionModal = ({ onClose, cycle, currency, coupon, plansMap }) => {
                             <Price currency={model.currency}>{check.AmountDue}</Price>
                         </Field>
                     </Row>
-                    ]
                     <Payment
                         type="subscription"
                         method={method}
