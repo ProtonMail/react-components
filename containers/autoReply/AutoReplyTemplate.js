@@ -27,21 +27,21 @@ const AutoReplyTemplate = ({ autoresponder, onEdit }) => {
             ];
             const weekdays = orderedDaysSelected.map((day) => moment.weekdaysShort(day)).join(', ');
             return autoresponder.DaysSelected.length < 7
-                ? c('AutoReply').t`Every ${weekdays} @ ${hours}`
-                : c('AutoReply').t`Every day @ ${hours}`;
+                ? c('Duration').t`Every ${weekdays} @ ${hours}`
+                : c('Duration').t`Every day @ ${hours}`;
         } else if (autoresponder.Repeat === AutoReplyDuration.FIXED) {
             const date = moment(time).format('LL');
             return `${date} @ ${hours}`;
         } else if (autoresponder.Repeat === AutoReplyDuration.WEEKLY) {
             const dayOfWeek = moment.weekdays(Math.floor(time / DAY_MILLISECONDS));
-            return c('AutoReply').t`Every ${dayOfWeek} @ ${hours}`;
+            return c('Duration').t`Every ${dayOfWeek} @ ${hours}`;
         } else if (autoresponder.Repeat === AutoReplyDuration.MONTHLY) {
             const dayOfMonth = getDaysOfMonthOptions().find(
                 ({ value }) => value === Math.floor(time / DAY_MILLISECONDS)
             ).text;
-            return c('AutoReply').t`Every ${dayOfMonth} @ ${hours}`;
+            return c('Duration').t`Every ${dayOfMonth} @ ${hours}`;
         } else if (autoresponder.Repeat === AutoReplyDuration.PERMANENT) {
-            return c('AutoReply').t`n/a`;
+            return c('Duration').t`n/a`;
         }
     };
 
@@ -60,7 +60,7 @@ const AutoReplyTemplate = ({ autoresponder, onEdit }) => {
             </table>
             <div className="flex">
                 <Button onClick={onEdit} className="mlauto">
-                    Edit
+                    {c('Action').t`Edit`}
                 </Button>
             </div>
         </div>

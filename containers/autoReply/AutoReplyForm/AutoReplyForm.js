@@ -20,7 +20,7 @@ const AutoReplyForm = ({ model, updateModel }) => {
         return (
             <>
                 <DurationField value={model.duration} onChange={updateModel('duration')} />
-                <Alert>{c('AutoReply').t`Auto-reply is active from the start time to the end time`}</Alert>
+                <Alert>{c('Info').t`Auto-reply is active from the start time to the end time`}</Alert>
                 <StartDateField value={model.startDate} onChange={updateModel('startDate')} />
                 <StartTimeField value={model.startTime} onChange={updateModel('startTime')} />
                 <EndDateField value={model.endDate} onChange={updateModel('endDate')} />
@@ -35,7 +35,7 @@ const AutoReplyForm = ({ model, updateModel }) => {
         return (
             <>
                 <DurationField value={model.duration} onChange={updateModel('duration')} />
-                <Alert>{c('AutoReply')
+                <Alert>{c('Info')
                     .t`Auto-reply is always active on the days of the week you select, between the selected hours.`}</Alert>
                 <DaysOfWeekField value={model.daysOfWeek} onChange={updateModel('daysOfWeek')} />
                 <StartTimeField value={model.startTime} onChange={updateModel('startTime')} />
@@ -54,8 +54,7 @@ const AutoReplyForm = ({ model, updateModel }) => {
         return (
             <>
                 <DurationField value={model.duration} onChange={updateModel('duration')} />
-                <Alert>{c('AutoReply')
-                    .t`Auto-reply is active each month between the selected start and end time.`}</Alert>
+                <Alert>{c('Info').t`Auto-reply is active each month between the selected start and end time.`}</Alert>
                 <StartDayOfMonthField value={startDayOfMonth} onChange={handleChangeDayOfMonth('startDate')} />
                 <StartTimeField value={model.startTime} onChange={updateModel('startTime')} />
                 <EndDayOfMonthField value={endDayOfMonth} onChange={handleChangeDayOfMonth('endDate')} />
@@ -74,8 +73,7 @@ const AutoReplyForm = ({ model, updateModel }) => {
         return (
             <>
                 <DurationField value={model.duration} onChange={updateModel('duration')} />
-                <Alert>{c('AutoReply')
-                    .t`Auto-reply is active each week between the selected start and end time.`}</Alert>
+                <Alert>{c('Info').t`Auto-reply is active each week between the selected start and end time.`}</Alert>
                 <StartDayOfWeekField value={startWeekday} onChange={handleChangeWeekday('startDate')} />
                 <StartTimeField value={model.startTime} onChange={updateModel('startTime')} />
                 <EndDayOfWeekField value={endWeekday} onChange={handleChangeWeekday('endDate')} />
@@ -89,7 +87,7 @@ const AutoReplyForm = ({ model, updateModel }) => {
     return (
         <>
             <DurationField value={model.duration} onChange={updateModel('duration')} />
-            <Alert>{c('AutoReply').t`Auto-reply is active until you turn it off.`}</Alert>
+            <Alert>{c('Info').t`Auto-reply is active until you turn it off.`}</Alert>
             <RichTextEditor value={model.message} onChange={updateModel('message')} />
         </>
     );
