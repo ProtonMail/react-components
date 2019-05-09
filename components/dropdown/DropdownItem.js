@@ -8,7 +8,7 @@ import Icon from '../icon/Icon';
 const DropdownItem = ({ type, link, text, iconName, className, onClick, disabled }) => {
     if (type === 'button') {
         return (
-            <li className={`DropdownItem ${className}`}>
+            <li className={`dropDown-item ${className}`}>
                 <Button onClick={onClick} disabled={disabled}>
                     {iconName && <Icon name={iconName} />}
                     {text}
@@ -19,7 +19,7 @@ const DropdownItem = ({ type, link, text, iconName, className, onClick, disabled
 
     if (type === 'link') {
         return (
-            <li className={`DropdownItem ${className}`}>
+            <li className={`dropDown-item ${className}`}>
                 <NavLink to={link}>
                     {iconName && <Icon name={iconName} />}
                     {text}
@@ -30,7 +30,7 @@ const DropdownItem = ({ type, link, text, iconName, className, onClick, disabled
 
     if (type === 'text') {
         return (
-            <li className={`DropdownItem ${className}`}>
+            <li className={`dropDown-item ${className}`}>
                 {iconName && <Icon name={iconName} />}
                 {text}
             </li>

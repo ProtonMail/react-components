@@ -4,7 +4,7 @@ import DropdownItem from './DropdownItem';
 
 const DropdownMenu = ({ list }) => {
     return (
-        <ul className="unstyled">
+        <ul className="unstyled m0-5">
             {list.map((item, index) => (
                 <DropdownItem {...item} key={item.text + index} />
             ))}
