@@ -78,15 +78,17 @@ const handleClick = () => {
 }
 ```
 
-### usePrompts
-Create a prompt. Intended to show a modal asking for user input. Returns a promise.
+### useModals
+Create a modal.
 
 ``` js
-const { createPrompt } = usePrompts();
+const { createModal } = useModals();
 
 const handleClick = async () => {
-    const password = await createPrompt((resolve, reject) => {
-        return <AskPasswordModal onClose={() => reject()} onSubmit={(value) => resolve(value)} />;
+    const { password, totp } = await new Promise((resolve, reject) => {
+        createModal(
+            <AskPasswordModal onClose={reject} onSubmit={resolve} />
+        );
     });
     // use password
 };
