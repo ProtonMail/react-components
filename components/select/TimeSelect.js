@@ -17,7 +17,7 @@ const timeSelectOptions = range(0, 24).reduce((options, hour) => {
 }, []);
 
 const TimeSelect = ({ onChange, value, ...rest }) => {
-    const handleChange = (e) => onChange(parseInt(e.target.value, 10));
+    const handleChange = ({ target }) => onChange(+target.value);
 
     return <Select {...rest} options={timeSelectOptions} value={value} onChange={handleChange} />;
 };
