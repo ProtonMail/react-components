@@ -7,7 +7,7 @@ import { Dropdown, DropdownMenu, Icon } from 'react-components';
 const DomainAddresses = ({ domain }) => {
     const addresses = domain.addresses || [];
     const title = addresses.map(({ Email }) => Email).join(', ');
-    const actions = addresses.map(({ Email: text }) => text);
+    const list = addresses.map(({ Email }) => Email);
     const n = addresses.length;
 
     return (
@@ -21,7 +21,7 @@ const DomainAddresses = ({ domain }) => {
                     </>
                 }
             >
-                <DropdownMenu>{actions}</DropdownMenu>
+                <DropdownMenu>{list}</DropdownMenu>
                 <div className="alignright">
                     <Link className="pm-button pm-button--small" to="/settings/addresses">{c('Link').t`Manage`}</Link>
                 </div>
