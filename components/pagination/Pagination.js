@@ -46,7 +46,6 @@ const Pagination = ({ onNext, onPrevious, onSelect, hasNext, hasPrevious, page, 
             ) : null}
             <Dropdown
                 pagination
-                className="pm-group-button page-button pm-button--for-icon"
                 content={
                     <>
                         {page} <Icon className="pagination-expand-caret" size={12} name="caret" />

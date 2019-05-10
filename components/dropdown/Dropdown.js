@@ -2,8 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import keycode from 'keycode';
 
-import Button from '../button/Button';
-
 const ALIGN_CLASSES = {
     center: 'dropDown',
     right: 'dropDown-rightArrow',
@@ -52,36 +50,18 @@ const Dropdown = ({ isOpen, children, className, content, autoClose, autoCloseOu
 
     const dropdownClassName = ALIGN_CLASSES[align];
 
-    if (pagination) {
-        return (
-            <div
-                className={`${dropdownClassName} relative pm-button pm-group-button pm-button--for-icon pagination-expand`}
-                ref={wrapperRef}
-            >
-                <button
-                    className={`increase-surface-click pagination-expand-button`}
-                    onClick={handleClick}
-                    aria-expanded={open}
-                >
-                    {content}
-                </button>
-                <div
-                    className="dropDown-content dropDown-content--pagination"
-                    onClick={handleClickContent}
-                    hidden={!open}
-                >
-                    {children}
-                </div>
-            </div>
-        );
-    }
+    const dropdownClasses = pagination
+        ? `${dropdownClassName} relative pm-button pm-group-button pm-button--for-icon pagination-expand`
+        : dropdownClassName;
+    const buttonClasses = pagination ? 'increase-surface-click pagination-expand-button' : `pm-button ${className}`;
+    const contentClasses = pagination ? 'dropDown-content dropDown-content--pagination' : 'dropDown-content';
 
     return (
-        <div className={dropdownClassName} ref={wrapperRef}>
-            <Button className={className} onClick={handleClick} aria-expanded={open}>
+        <div className={dropdownClasses} ref={wrapperRef}>
+            <button className={buttonClasses} onClick={handleClick} aria-expanded={open}>
                 {content}
-            </Button>
-            <div className="dropDown-content" onClick={handleClickContent} hidden={!open}>
+            </button>
+            <div className={contentClasses} onClick={handleClickContent} hidden={!open}>
                 {children}
             </div>
         </div>
