@@ -36,23 +36,27 @@ const Pagination = ({ onNext, onPrevious, onSelect, hasNext, hasPrevious, page, 
     return (
         <Group>
             {hasPrevious ? (
-                <ButtonGroup className="previous-button" disabled={disablePrevious} onClick={onPrevious}>
+                <ButtonGroup
+                    className="previous-button pm-button--for-icon"
+                    disabled={disablePrevious}
+                    onClick={onPrevious}
+                >
                     <Icon name="arrow-left" />
                 </ButtonGroup>
             ) : null}
             <Dropdown
                 pagination
-                className="pm-group-button page-button"
+                className="pm-group-button page-button pm-button--for-icon"
                 content={
                     <>
-                        {page} <Icon name="caret" />
+                        {page} <Icon className="pagination-expand-caret" size={12} name="caret" />
                     </>
                 }
             >
                 <DropdownMenu>{actions}</DropdownMenu>
             </Dropdown>
             {hasNext ? (
-                <ButtonGroup className="next-button" disabled={disableNext} onClick={onNext}>
+                <ButtonGroup className="next-button pm-button--for-icon" disabled={disableNext} onClick={onNext}>
                     <Icon name="arrow-right" />
                 </ButtonGroup>
             ) : null}

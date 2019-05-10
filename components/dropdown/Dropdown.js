@@ -51,14 +51,37 @@ const Dropdown = ({ isOpen, children, className, content, autoClose, autoCloseOu
     }, []);
 
     const dropdownClassName = ALIGN_CLASSES[align];
-    const dropdownMenuClassName = pagination ? 'dropDown-content dropDown-content--pagination' : 'dropDown-content';
+
+    if (pagination) {
+        return (
+            <div
+                className={`${dropdownClassName} relative pm-button pm-group-button pm-button--for-icon pagination-expand`}
+                ref={wrapperRef}
+            >
+                <button
+                    className={`increase-surface-click pagination-expand-button`}
+                    onClick={handleClick}
+                    aria-expanded={open}
+                >
+                    {content}
+                </button>
+                <div
+                    className="dropDown-content dropDown-content--pagination"
+                    onClick={handleClickContent}
+                    hidden={!open}
+                >
+                    {children}
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className={dropdownClassName} ref={wrapperRef}>
             <Button className={className} onClick={handleClick} aria-expanded={open}>
                 {content}
             </Button>
-            <div className={dropdownMenuClassName} onClick={handleClickContent} hidden={!open}>
+            <div className="dropDown-content" onClick={handleClickContent} hidden={!open}>
                 {children}
             </div>
         </div>
