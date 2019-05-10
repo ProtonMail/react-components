@@ -46,11 +46,13 @@ const ACTIONS_TO_TEXT = {
 };
 
 const KeysActions = ({ actions }) => {
-    const list = actions.map(({ action, cb }) => ({
-        text: ACTIONS_TO_TEXT[action]().text,
-        type: 'button',
-        onClick: cb
-    }));
+    const list = actions
+        .map(({ action, cb }) => ({
+            text: ACTIONS_TO_TEXT[action]().text,
+            onClick: cb
+        }))
+        .filter(Boolean);
+
     return <DropdownActions list={list} />;
 };
 

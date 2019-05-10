@@ -4,7 +4,13 @@ import keycode from 'keycode';
 
 import Button from '../button/Button';
 
-const Dropdown = ({ isOpen, children, className, content, autoClose, autoCloseOutside }) => {
+const ALIGN_CLASSES = {
+    center: 'dropDown',
+    right: 'dropDown-rightArrow',
+    left: 'dropDown-leftArrow'
+};
+
+const Dropdown = ({ isOpen, children, className, content, autoClose, autoCloseOutside, align, pagination }) => {
     const [open, setOpen] = useState(isOpen);
     const wrapperRef = useRef(null);
 
@@ -44,16 +50,17 @@ const Dropdown = ({ isOpen, children, className, content, autoClose, autoCloseOu
         };
     }, []);
 
+    const dropdownClassName = ALIGN_CLASSES[align];
+    const dropdownMenuClassName = pagination ? 'dropDown-content dropDown-content--pagination' : 'dropDown-content';
+
     return (
-        <div className="dropDown" ref={wrapperRef}>
+        <div className={dropdownClassName} ref={wrapperRef}>
             <Button className={className} onClick={handleClick} aria-expanded={open}>
                 {content}
             </Button>
-            {open ? (
-                <div className="dropDown-content" onClick={handleClickContent}>
-                    {children}
-                </div>
-            ) : null}
+            <div className={dropdownMenuClassName} onClick={handleClickContent} hidden={!open}>
+                {children}
+            </div>
         </div>
     );
 };
@@ -63,6 +70,8 @@ Dropdown.propTypes = {
     children: PropTypes.node.isRequired,
     content: PropTypes.node.isRequired,
     isOpen: PropTypes.bool,
+    align: PropTypes.string,
+    pagination: PropTypes.bool,
     autoClose: PropTypes.bool,
     autoCloseOutside: PropTypes.bool
 };
@@ -70,6 +79,8 @@ Dropdown.propTypes = {
 Dropdown.defaultProps = {
     isOpen: false,
     autoClose: true,
+    align: 'center',
+    pagination: false,
     autoCloseOutside: true
 };
 

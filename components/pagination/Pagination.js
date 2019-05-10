@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { ButtonGroup, Group } from '../button';
-import { Dropdown, DropdownMenu } from '../dropdown';
+import { Dropdown, DropdownMenu, DropdownButton } from '../dropdown';
 import Icon from '../icon/Icon';
 
 const Pagination = ({ onNext, onPrevious, onSelect, hasNext, hasPrevious, page, total, limit }) => {
@@ -16,19 +16,22 @@ const Pagination = ({ onNext, onPrevious, onSelect, hasNext, hasPrevious, page, 
         return null;
     }
 
-    const list = [];
+    const actions = Array.from({ length: pages }, (a, i) => {
+        const index = i + 1;
+        return (
+            <DropdownButton
+                key={index}
+                onClick={() => onSelect(index)}
+                disabled={index === page}
+                className={index === page ? 'is-active aligncenter' : 'aligncenter'}
+            >
+                {index.toString()}
+            </DropdownButton>
+        );
+    });
+
     const disablePrevious = page === 1;
     const disableNext = page === pages;
-
-    for (let index = 1; index <= pages; index++) {
-        list.push({
-            text: index.toString(),
-            type: 'button',
-            disabled: index === page,
-            className: index === page ? 'is-active' : '',
-            onClick: () => onSelect(index)
-        });
-    }
 
     return (
         <Group>
@@ -38,6 +41,7 @@ const Pagination = ({ onNext, onPrevious, onSelect, hasNext, hasPrevious, page, 
                 </ButtonGroup>
             ) : null}
             <Dropdown
+                pagination
                 className="pm-group-button page-button"
                 content={
                     <>
@@ -45,7 +49,7 @@ const Pagination = ({ onNext, onPrevious, onSelect, hasNext, hasPrevious, page, 
                     </>
                 }
             >
-                <DropdownMenu list={list} />
+                <DropdownMenu>{actions}</DropdownMenu>
             </Dropdown>
             {hasNext ? (
                 <ButtonGroup className="next-button" disabled={disableNext} onClick={onNext}>

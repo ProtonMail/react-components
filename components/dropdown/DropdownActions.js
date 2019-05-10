@@ -5,6 +5,7 @@ import { c } from 'ttag';
 
 import Dropdown from './Dropdown';
 import DropdownMenu from './DropdownMenu';
+import DropdownButton from './DropdownButton';
 
 const DropdownActions = ({ list, className }) => {
     if (!list.length) {
@@ -27,11 +28,20 @@ const DropdownActions = ({ list, className }) => {
                 {text}
             </ButtonGroup>
             <Dropdown
+                align="right"
                 content={<Icon name="caret" />}
                 title={c('Action').t`More`}
                 className={`pm-group-button pm-button--for-icon ${className}`}
             >
-                <DropdownMenu list={restList} />
+                <DropdownMenu>
+                    {restList.map(({ text, ...restProps }) => {
+                        return (
+                            <DropdownButton className="alignleft" key={text} {...restProps}>
+                                {text}
+                            </DropdownButton>
+                        );
+                    })}
+                </DropdownMenu>
             </Dropdown>
         </Group>
     );
