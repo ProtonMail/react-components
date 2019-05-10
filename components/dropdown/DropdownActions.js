@@ -29,9 +29,17 @@ const DropdownActions = ({ list, className }) => {
             </ButtonGroup>
             <Dropdown
                 align="right"
-                content={<Icon name="caret" />}
+                className={`relative pm-button pm-group-button pm-button--for-icon pagination-expand ${className}`}
+                button={
+                    <button
+                        className="increase-surface-click pagination-expand-button"
+                        title={c('Title').t`Open actions dropdown`}
+                        type="button"
+                    >
+                        <Icon className="pagination-expand-caret" size={12} name="caret" />
+                    </button>
+                }
                 title={c('Action').t`More`}
-                className={`pm-group-button pm-button--for-icon ${className}`}
             >
                 <DropdownMenu>
                     {restList.map(({ text, ...restProps }) => {

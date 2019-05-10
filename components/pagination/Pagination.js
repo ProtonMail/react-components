@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { c } from 'ttag';
 
 import { ButtonGroup, Group } from '../button';
 import { Dropdown, DropdownMenu, DropdownButton } from '../dropdown';
@@ -46,10 +47,15 @@ const Pagination = ({ onNext, onPrevious, onSelect, hasNext, hasPrevious, page, 
             ) : null}
             <Dropdown
                 pagination
-                content={
-                    <>
+                className="relative pm-button pm-group-button pm-button--for-icon pagination-expand"
+                button={
+                    <button
+                        className="increase-surface-click pagination-expand-button page-button"
+                        title={c('Title').t`Open pagination`}
+                        type="button"
+                    >
                         {page} <Icon className="pagination-expand-caret" size={12} name="caret" />
-                    </>
+                    </button>
                 }
             >
                 <DropdownMenu>{actions}</DropdownMenu>

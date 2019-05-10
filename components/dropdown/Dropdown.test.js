@@ -9,7 +9,7 @@ describe('Dropdown component', () => {
     it('should animate children when clicking on button', async () => {
         const { container, getByText } = render(
             <div>
-                <Dropdown content="clickOnMe">Boo</Dropdown>
+                <Dropdown button={<button>clickOnMe</button>}>Boo</Dropdown>
             </div>
         );
         const buttonNode = getByText('clickOnMe');

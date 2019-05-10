@@ -8,7 +8,7 @@ const ALIGN_CLASSES = {
     left: 'dropDown-leftArrow'
 };
 
-const Dropdown = ({ isOpen, children, className, content, autoClose, autoCloseOutside, align, pagination }) => {
+const Dropdown = ({ isOpen, children, className, button, autoClose, autoCloseOutside, align, pagination }) => {
     const [open, setOpen] = useState(isOpen);
     const wrapperRef = useRef(null);
 
@@ -50,19 +50,12 @@ const Dropdown = ({ isOpen, children, className, content, autoClose, autoCloseOu
 
     const dropdownClassName = ALIGN_CLASSES[align];
 
-    const dropdownClasses = pagination
-        ? `${dropdownClassName} relative pm-button pm-group-button pm-button--for-icon pagination-expand`
-        : dropdownClassName;
-    const buttonClasses = pagination
-        ? 'page-button increase-surface-click pagination-expand-button'
-        : `pm-button ${className}`;
+    // Special pagination case to make it smaller, maybe move this is a prop, or have it on the wrapping div?
     const contentClasses = pagination ? 'dropDown-content dropDown-content--pagination' : 'dropDown-content';
 
     return (
-        <div className={dropdownClasses} ref={wrapperRef}>
-            <button className={buttonClasses} onClick={handleClick} aria-expanded={open}>
-                {content}
-            </button>
+        <div className={`${dropdownClassName} ${className}`} ref={wrapperRef}>
+            {React.cloneElement(button, { 'aria-expanded': open, onClick: handleClick })}
             <div className={contentClasses} onClick={handleClickContent} hidden={!open}>
                 {children}
             </div>
@@ -73,7 +66,7 @@ const Dropdown = ({ isOpen, children, className, content, autoClose, autoCloseOu
 Dropdown.propTypes = {
     className: PropTypes.string,
     children: PropTypes.node.isRequired,
-    content: PropTypes.node.isRequired,
+    button: PropTypes.node.isRequired,
     isOpen: PropTypes.bool,
     align: PropTypes.string,
     pagination: PropTypes.bool,
@@ -86,7 +79,8 @@ Dropdown.defaultProps = {
     autoClose: true,
     align: 'center',
     pagination: false,
-    autoCloseOutside: true
+    autoCloseOutside: true,
+    className: ''
 };
 
 export default Dropdown;
