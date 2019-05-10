@@ -33,12 +33,14 @@ const Pagination = ({ onNext, onPrevious, onSelect, hasNext, hasPrevious, page, 
     return (
         <Group>
             {hasPrevious ? (
-                <ButtonGroup className="previous-button" disabled={disablePrevious} onClick={onPrevious}>
+                <ButtonGroup className="pm-button--for-icon" disabled={disablePrevious} onClick={onPrevious}>
                     <Icon name="arrow-left" />
                 </ButtonGroup>
             ) : null}
             <Dropdown
-                buttonClassName="pm-group-button page-button"
+                className="relative pm-button pm-group-button pm-button--for-icon pagination-expand"
+                buttonClassName="increase-surface-click js-dropDown-button pagination-expand-button"
+                contentClassName="unstyled dropDown-content dropDown-content--pagination"
                 content={
                     <>
                         {page} <Icon name="caret" />
@@ -48,7 +50,7 @@ const Pagination = ({ onNext, onPrevious, onSelect, hasNext, hasPrevious, page, 
                 <DropdownMenu list={list} />
             </Dropdown>
             {hasNext ? (
-                <ButtonGroup className="next-button" disabled={disableNext} onClick={onNext}>
+                <ButtonGroup className="pm-button--for-icon" disabled={disableNext} onClick={onNext}>
                     <Icon name="arrow-right" />
                 </ButtonGroup>
             ) : null}
