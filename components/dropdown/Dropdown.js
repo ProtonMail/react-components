@@ -53,7 +53,9 @@ const Dropdown = ({ isOpen, children, className, content, autoClose, autoCloseOu
     const dropdownClasses = pagination
         ? `${dropdownClassName} relative pm-button pm-group-button pm-button--for-icon pagination-expand`
         : dropdownClassName;
-    const buttonClasses = pagination ? 'increase-surface-click pagination-expand-button' : `pm-button ${className}`;
+    const buttonClasses = pagination
+        ? 'page-button increase-surface-click pagination-expand-button'
+        : `pm-button ${className}`;
     const contentClasses = pagination ? 'dropDown-content dropDown-content--pagination' : 'dropDown-content';
 
     return (
