@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { c, useLocale as setTtagLocale } from 'ttag';
+import { c, getConfig } from 'ttag';
 import {
     SubTitle,
     Row,
@@ -8,15 +8,19 @@ import {
     Select,
     useUserSettings,
     useApiWithoutResult,
-    useNotifications
+    useNotifications,
+    useConfig
 } from 'react-components';
 import { updateLocale } from 'proton-shared/lib/api/settings';
+import { loadLocale } from 'proton-shared/lib/i18n';
 
-const LanguageSection = () => {
+function LanguageSection() {
     const [{ Locale }] = useUserSettings();
     const { createNotification } = useNotifications();
     const { request, loading } = useApiWithoutResult(updateLocale);
     const [locale, setLocale] = useState(Locale);
+    const config = useConfig();
+
     const options = [
         { text: 'Čeština', value: 'cs_CZ' },
         { text: 'Deutsch', value: 'de_DE' },
@@ -37,18 +41,24 @@ const LanguageSection = () => {
         { text: '简体中文', value: 'zh_CN' },
         { text: '繁體中文', value: 'zh_TW' }
     ];
+
     const handleChange = async ({ target }) => {
         const newLocale = target.value;
         await request(newLocale);
+        await loadLocale(config, newLocale);
         setLocale(newLocale);
-        setTtagLocale(newLocale);
+        console.log(getConfig);
         createNotification({ text: c('Success').t`Locale updated` });
     };
+    console.log(getConfig);
+
     return (
-        <>
+        <div>
             <SubTitle>{c('Title').t`Language`}</SubTitle>
             <Row>
-                <Label htmlFor="languageSelect">{c('Label').t`Default language`}</Label>
+                <Label htmlFor="languageSelect">
+                    {c('Label').t`Default language`} <kbd>{locale}</kbd>
+                </Label>
                 <Field>
                     <Select
                         disabled={loading}
@@ -59,8 +69,8 @@ const LanguageSection = () => {
                     />
                 </Field>
             </Row>
-        </>
+        </div>
     );
-};
+}
 
 export default LanguageSection;
