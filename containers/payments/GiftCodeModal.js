@@ -5,6 +5,7 @@ import {
     Modal,
     Alert,
     ContentModal,
+    InnerModal,
     FooterModal,
     ResetButton,
     PrimaryButton,
@@ -45,19 +46,21 @@ const GiftCodeModal = ({ onClose }) => {
     return (
         <Modal type="small" onClose={onClose} title={c('Title').t`Gift code`}>
             <ContentModal onSubmit={handleSubmit} onReset={onClose} loading={loading}>
-                <Alert>{c('Info').t`If you purchased or were given a gift code, add it here.`}</Alert>
-                <Row>
-                    <Label htmlFor="giftCodeInput">{c('Label').t`Enter gift code`}</Label>
-                    <Field>
-                        <GiftCodeInput
-                            id="giftCodeInput"
-                            value={value}
-                            onChange={handleChange}
-                            required={true}
-                            autoFocus={true}
-                        />
-                    </Field>
-                </Row>
+                <InnerModal>
+                    <Alert>{c('Info').t`If you purchased or were given a gift code, add it here.`}</Alert>
+                    <Row>
+                        <Label htmlFor="giftCodeInput">{c('Label').t`Enter gift code`}</Label>
+                        <Field>
+                            <GiftCodeInput
+                                id="giftCodeInput"
+                                value={value}
+                                onChange={handleChange}
+                                required={true}
+                                autoFocus={true}
+                            />
+                        </Field>
+                    </Row>
+                </InnerModal>
                 <FooterModal>
                     <ResetButton>{c('Action').t`Close`}</ResetButton>
                     <PrimaryButton type="submit">{c('Action').t`Apply`}</PrimaryButton>

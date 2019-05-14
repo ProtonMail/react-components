@@ -34,7 +34,7 @@ const CustomPlusSection = ({ plans, model, onChange }) => {
 
     return (
         <>
-            <div className="flex flex-spacebetween mb1 border-bottom">
+            <div className="flex flex-spacebetween pt1 pb1 border-bottom">
                 <div className="bold">ProtonMail Plus</div>
                 <div>
                     <PlanPrice
@@ -45,7 +45,7 @@ const CustomPlusSection = ({ plans, model, onChange }) => {
                     />
                 </div>
             </div>
-            <div className="flex flex-spacebetween mb1 border-bottom">
+            <div className="flex flex-spacebetween pt1 pb1 border-bottom">
                 <div>
                     <Select options={spaceOptions} value={model.plansMap['1gb']} onChange={handleChange('1gb')} />
                 </div>
@@ -62,7 +62,7 @@ const CustomPlusSection = ({ plans, model, onChange }) => {
                     )}
                 </div>
             </div>
-            <div className="flex flex-spacebetween mb1 border-bottom">
+            <div className="flex flex-spacebetween pt1 pb1 border-bottom">
                 <div>
                     <Select
                         options={addressOptions}
@@ -84,7 +84,7 @@ const CustomPlusSection = ({ plans, model, onChange }) => {
                     )}
                 </div>
             </div>
-            <div className="flex flex-spacebetween mb1 border-bottom">
+            <div className="flex flex-spacebetween pt1 pb1 border-bottom">
                 <div>
                     <Select
                         options={domainOptions}

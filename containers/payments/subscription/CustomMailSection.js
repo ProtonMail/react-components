@@ -21,9 +21,9 @@ const CustomMailSection = ({ plans, model, onChange }) => {
             {model.plansMap.professional ? (
                 <CustomProfessionalSection plans={plans} model={model} onChange={onChange} />
             ) : null}
-            <div className="flex flex-spacebetween mb1">
-                <div className="bold">
-                    ProtonMail total <CycleDiscountBadge cycle={model.cycle} />
+            <div className="flex flex-spacebetween pt1 mb1">
+                <div>
+                    <strong>{c('Title').t`ProtonMail total`}</strong> <CycleDiscountBadge cycle={model.cycle} />
                 </div>
                 <div className="bold">
                     {subTotal ? (

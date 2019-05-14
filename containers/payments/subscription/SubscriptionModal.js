@@ -6,6 +6,7 @@ import {
     usePlans,
     Modal,
     ContentModal,
+    InnerModal,
     FooterModal,
     Button,
     ResetButton,
@@ -22,7 +23,8 @@ import {
     SubTitle,
     Label,
     Row,
-    Field
+    Field,
+    Wizard
 } from 'react-components';
 import { DEFAULT_CURRENCY, DEFAULT_CYCLE } from 'proton-shared/lib/constants';
 import { checkSubscription, subscribe } from 'proton-shared/lib/api/payments';
@@ -187,11 +189,15 @@ const SubscriptionModal = ({ onClose, cycle, currency, coupon, plansMap }) => {
     const hasClose = step === STEPS.length - 1;
     const hasPrevious = !hasClose && step > 0;
     const hasNext = !hasClose;
+    const steps = STEPS.map(({ title }) => title);
 
     return (
         <Modal onClose={onClose} title={STEPS[step].title}>
             <ContentModal onSubmit={STEPS[step].onSubmit} onReset={onClose} loading={loading}>
-                {STEPS[step].section}
+                <InnerModal>
+                    <Wizard step={step} steps={steps} hideText={true} />
+                    {STEPS[step].section}
+                </InnerModal>
                 <FooterModal>
                     {hasCancel && <ResetButton>{c('Action').t`Cancel`}</ResetButton>}
                     {hasPrevious && <Button onClick={previous}>{c('Action').t`Previous`}</Button>}

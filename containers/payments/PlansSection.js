@@ -12,6 +12,7 @@ import {
     Info,
     SmallButton,
     Price,
+    Tooltip,
     usePlans,
     useUser,
     useToggle,
@@ -98,7 +99,7 @@ const PlansSection = () => {
     const getPrice = (planName) => {
         const plan = plans.find(({ Name, Cycle }) => Name === planName && Cycle === cycle);
         const monthlyPrice = (
-            <Price currency={currency} suffix={planName === 'professional' ? '/mo/user' : '/mo'}>
+            <Price className="h3" currency={currency} suffix={planName === 'professional' ? '/mo/user' : '/mo'}>
                 {plan.Amount / cycle}
             </Price>
         );
@@ -144,19 +145,21 @@ const PlansSection = () => {
                         <tbody>
                             <tr>
                                 <td className="bg-global-muted">
-                                    <div className="mb1">{c('Header').t`Pricing`}</div>
-                                    <div className="flex-autogrid">
-                                        <div className="flex-autogrid-item">
-                                            <CurrencySelector currency={currency} onSelect={setCurrency} />
+                                    <Tooltip title={c('Tooltip').t`Save 20% when billed annually`}>
+                                        <div className="mb1">{c('Header').t`Pricing`}</div>
+                                        <div className="flex-autogrid">
+                                            <div className="flex-autogrid-item">
+                                                <CurrencySelector currency={currency} onSelect={setCurrency} />
+                                            </div>
+                                            <div className="flex-autogrid-item">
+                                                <CycleSelector
+                                                    cycle={cycle}
+                                                    onSelect={setCycle}
+                                                    twoYear={subscription.Cycle === TWO_YEARS}
+                                                />
+                                            </div>
                                         </div>
-                                        <div className="flex-autogrid-item">
-                                            <CycleSelector
-                                                cycle={cycle}
-                                                onSelect={setCycle}
-                                                twoYear={subscription.Cycle === TWO_YEARS}
-                                            />
-                                        </div>
-                                    </div>
+                                    </Tooltip>
                                 </td>
                                 <td className="bg-global-muted aligncenter">FREE</td>
                                 <td className="bg-global-muted aligncenter">{getPrice('plus')}</td>
@@ -364,17 +367,23 @@ const PlansSection = () => {
                                     <Info title={c('Tooltip').t`ProtonVPN keeps your Internet traffic private`} />
                                 </td>
                                 <td className="aligncenter">
-                                    <SmallButton onClick={handleModal({ vpnplus: 1 })}>
+                                    <SmallButton className="pm-button--link" onClick={handleModal({ vpnplus: 1 })}>
                                         {hasPaidVpn ? c('Action').t`Edit VPN` : c('Action').t`Add VPN`}
                                     </SmallButton>
                                 </td>
                                 <td className="aligncenter">
-                                    <SmallButton onClick={handleModal({ plus: 1, vpnplus: 1 })}>
+                                    <SmallButton
+                                        className="pm-button--link"
+                                        onClick={handleModal({ plus: 1, vpnplus: 1 })}
+                                    >
                                         {hasPaidVpn ? c('Action').t`Edit VPN` : c('Action').t`Add VPN`}
                                     </SmallButton>
                                 </td>
                                 <td className="aligncenter">
-                                    <SmallButton onClick={handleModal({ professional: 1, vpnplus: 1 })}>
+                                    <SmallButton
+                                        className="pm-button--link"
+                                        onClick={handleModal({ professional: 1, vpnplus: 1 })}
+                                    >
                                         {hasPaidVpn ? c('Action').t`Edit VPN` : c('Action').t`Add VPN`}
                                     </SmallButton>
                                 </td>
@@ -382,7 +391,7 @@ const PlansSection = () => {
                             </tr>
                             <tr>
                                 <td className="bg-global-muted">
-                                    <SmallButton onClick={toggleFeatures}>
+                                    <SmallButton className="pm-button--link" onClick={toggleFeatures}>
                                         {showFeatures
                                             ? c('Action').t`Hide additional features`
                                             : c('Action').t`Compare all features`}

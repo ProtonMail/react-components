@@ -8,6 +8,7 @@ import {
     Field,
     Alert,
     ContentModal,
+    InnerModal,
     FooterModal,
     ResetButton,
     PrimaryButton,
@@ -47,30 +48,32 @@ const CreditsModal = ({ onClose }) => {
     return (
         <Modal type="small" onClose={onClose} title={c('Title').t`Add credits`}>
             <ContentModal onSubmit={handleSubmit} onReset={onClose}>
-                <Alert>{c('Info')
-                    .t`Your payment details are protected with TLS encryption and Swiss privacy laws.`}</Alert>
-                <Alert learnMore="https://protonmail.com/support/knowledge-base/credit-proration/">{c('Info')
-                    .jt`Top up your account with credits that you can use to subscribe to a new plan or renew your current plan. You get one credit for every ${i18nCurrency} spent.`}</Alert>
-                <Row>
-                    <Label>{c('Label').t`Amount`}</Label>
-                    <Field>
-                        <PaymentSelector
-                            amount={amount}
-                            onChangeAmount={setAmount}
-                            currency={currency}
-                            onChangeCurrency={setCurrency}
-                        />
-                    </Field>
-                </Row>
-                <Payment
-                    type="donation"
-                    method={method}
-                    amount={amount}
-                    currency={currency}
-                    onParameters={setParameters}
-                    onMethod={setMethod}
-                    onValidCard={setCardValidity}
-                />
+                <InnerModal>
+                    <Alert>{c('Info')
+                        .t`Your payment details are protected with TLS encryption and Swiss privacy laws.`}</Alert>
+                    <Alert learnMore="https://protonmail.com/support/knowledge-base/credit-proration/">{c('Info')
+                        .jt`Top up your account with credits that you can use to subscribe to a new plan or renew your current plan. You get one credit for every ${i18nCurrency} spent.`}</Alert>
+                    <Row>
+                        <Label>{c('Label').t`Amount`}</Label>
+                        <Field>
+                            <PaymentSelector
+                                amount={amount}
+                                onChangeAmount={setAmount}
+                                currency={currency}
+                                onChangeCurrency={setCurrency}
+                            />
+                        </Field>
+                    </Row>
+                    <Payment
+                        type="donation"
+                        method={method}
+                        amount={amount}
+                        currency={currency}
+                        onParameters={setParameters}
+                        onMethod={setMethod}
+                        onValidCard={setCardValidity}
+                    />
+                </InnerModal>
                 <FooterModal>
                     <ResetButton>{c('Action').t`Cancel`}</ResetButton>
                     {canPay ? (
