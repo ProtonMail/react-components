@@ -54,146 +54,151 @@ const CustomVPNSection = ({ plans, model, onChange }) => {
                 <thead>
                     <tr>
                         <th />
-                        <th>Basic</th>
-                        <th>Plus</th>
+                        <th className="aligncenter">BASIC</th>
+                        <th className="aligncenter">PLUS</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <th>{c('Header').t`Pricing`}</th>
-                        <td>
+                        <td className="bg-global-muted">{c('Header').t`Pricing`}</td>
+                        <td className="bg-global-muted aligncenter">
                             <Price currency={model.currency} suffix={c('Suffix').t`/mo`}>
                                 {vpnBasicPlan.Amount / vpnBasicPlan.Cycle}
                             </Price>
                         </td>
-                        <td>
+                        <td className="bg-global-muted aligncenter">
                             <Price currency={model.currency} suffix={c('Suffix').t`/mo`}>
                                 {vpnPlusPlan.Amount / vpnPlusPlan.Cycle}
                             </Price>
                         </td>
                     </tr>
                     <tr>
-                        <th>
+                        <td>
                             {c('Header').t`Speed`}{' '}
                             <Info title={c('Tooltip').t`Download and stream faster with a faster VPN connection.`} />
-                        </th>
-                        <td>{c('VPN speed').t`High`}</td>
-                        <td>{c('VPN speed').t`Highest`}</td>
+                        </td>
+                        <td className="aligncenter">{c('VPN speed').t`High`}</td>
+                        <td className="aligncenter">{c('VPN speed').t`Highest`}</td>
                     </tr>
                     <tr>
-                        <th>
+                        <td>
                             {c('Header').t`Simultaneous connections`}{' '}
                             <Info
                                 title={c('Tooltip')
                                     .t`More connections allows more devices to use ProtonVPN at the same time.`}
                             />
-                        </th>
-                        <td>2</td>
-                        <td>5</td>
+                        </td>
+                        <td className="aligncenter">2</td>
+                        <td className="aligncenter">5</td>
                     </tr>
                     {state ? (
                         <tr>
-                            <th>{c('Header').t`Advanced encryption`}</th>
-                            <td>
+                            <td>{c('Header').t`Advanced encryption`}</td>
+                            <td className="aligncenter">
                                 <Icon name="on" />
                             </td>
-                            <td>
-                                <Icon name="on" />
-                            </td>
-                        </tr>
-                    ) : null}
-                    {state ? (
-                        <tr>
-                            <th>{c('Header').t`No logs policy`}</th>
-                            <td>
-                                <Icon name="on" />
-                            </td>
-                            <td>
+                            <td className="aligncenter">
                                 <Icon name="on" />
                             </td>
                         </tr>
                     ) : null}
                     {state ? (
                         <tr>
-                            <th>{c('Header').t`No data limits`}</th>
-                            <td>
+                            <td>{c('Header').t`No logs policy`}</td>
+                            <td className="aligncenter">
                                 <Icon name="on" />
                             </td>
-                            <td>
+                            <td className="aligncenter">
                                 <Icon name="on" />
                             </td>
                         </tr>
                     ) : null}
                     {state ? (
                         <tr>
-                            <th>{c('Header').t`P2P support`}</th>
-                            <td>
+                            <td>{c('Header').t`No data limits`}</td>
+                            <td className="aligncenter">
                                 <Icon name="on" />
                             </td>
-                            <td>
+                            <td className="aligncenter">
+                                <Icon name="on" />
+                            </td>
+                        </tr>
+                    ) : null}
+                    {state ? (
+                        <tr>
+                            <td>{c('Header').t`P2P support`}</td>
+                            <td className="aligncenter">
+                                <Icon name="on" />
+                            </td>
+                            <td className="aligncenter">
                                 <Icon name="on" />
                             </td>
                         </tr>
                     ) : null}
                     <tr>
-                        <th>{c('Header').t`Secure streaming`}</th>
-                        <td>
+                        <td>{c('Header').t`Secure streaming`}</td>
+                        <td className="aligncenter">
                             <Icon name="off" />
                         </td>
-                        <td>
+                        <td className="aligncenter">
                             <Icon name="on" />
                         </td>
                     </tr>
                     <tr>
-                        <th>
+                        <td>
                             {c('Header').t`Tor over VPN`}{' '}
                             <Info
                                 url="https://protonvpn.com/support/tor-vpn/"
                                 title={c('Tooltip').t`Easily route your traffic through the Tor anonymity network.`}
                             />
-                        </th>
-                        <td>
+                        </td>
+                        <td className="aligncenter">
                             <Icon name="off" />
                         </td>
-                        <td>
+                        <td className="aligncenter">
                             <Icon name="on" />
                         </td>
                     </tr>
                     <tr>
-                        <th>
+                        <td>
                             {c('Header').t`Secure core`}{' '}
                             <Info
                                 url="https://protonvpn.com/support/secure-core-vpn/"
                                 title={c('Tooltip')
                                     .t`Additional protection by routing your traffic through multiple locations before leaving the ProtonVPN network.`}
                             />
-                        </th>
-                        <td>
+                        </td>
+                        <td className="aligncenter">
                             <Icon name="off" />
                         </td>
-                        <td>
+                        <td className="aligncenter">
                             <Icon name="on" />
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <SmallButton onClick={toggle}>
+                            <SmallButton className="pm-button--link" onClick={toggle}>
                                 {state ? c('Action').t`Hide additional features` : c('Action').t`Compare all features`}
                             </SmallButton>
                         </td>
-                        <td>
+                        <td className="aligncenter">
                             <Checkbox checked={!!model.plansMap.vpnbasic} onChange={handleCheckboxChange('vpnbasic')} />
                         </td>
-                        <td>
+                        <td className="aligncenter">
                             <Checkbox checked={!!model.plansMap.vpnplus} onChange={handleCheckboxChange('vpnplus')} />
                         </td>
                     </tr>
                 </tbody>
             </table>
             {model.plansMap.vpnplus ? (
-                <div className="flex flex-spacebetween mb1 border-bottom">
+                <div className="flex flex-spacebetween pb1 border-bottom">
                     <div>
                         <Select options={vpnOptions} value={model.plansMap['1vpn']} onChange={handleSelectChange} />
+                        <Info
+                            title={c(
+                                'Order additional connections to provide ProtonVPN to other users with your organization'
+                            )}
+                        />
                     </div>
                     <div>
                         {model.plansMap['1vpn'] ? (
@@ -209,7 +214,7 @@ const CustomVPNSection = ({ plans, model, onChange }) => {
                     </div>
                 </div>
             ) : null}
-            <div className="flex flex-spacebetween mb1">
+            <div className="flex flex-spacebetween pt1 pb1">
                 <div className="bold">
                     ProtonVPN total <CycleDiscountBadge cycle={model.cycle} />
                 </div>

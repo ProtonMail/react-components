@@ -177,7 +177,7 @@ const SubscriptionModal = ({ onClose, cycle, currency, coupon, plansMap }) => {
                         onMethod={setMethod}
                         onValidCard={setCardValidity}
                     />
-                    <Alert learnMore="https://protonmail.com/terms-and-conditions">{c('Info')
+                    <Alert type="warning" learnMore="https://protonmail.com/terms-and-conditions">{c('Info')
                         .t`By clicking Next, you agree to abide by ProtonMail's terms and conditions.`}</Alert>
                 </>
             ),

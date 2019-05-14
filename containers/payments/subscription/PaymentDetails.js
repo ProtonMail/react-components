@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { Price, Info, useToggle, SmallButton, Bordered } from 'react-components';
+import { Price, Info, useToggle, SmallButton } from 'react-components';
 import { CYCLE } from 'proton-shared/lib/constants';
 import GiftCodeForm from './GiftCodeForm';
 
@@ -17,9 +17,9 @@ const PaymentDetails = ({ check, model, onChange }) => {
     const { state, toggle } = useToggle();
 
     return (
-        <Bordered>
-            <h4>{c('Title').t`Payment details`}</h4>
-            <div className="flex flex-spacebetween mb1">
+        <>
+            <div className="uppercase bold small mb1">{c('Title').t`Payment details`}</div>
+            <div className="flex flex-spacebetween mb1 pb1 border-bottom">
                 <div className="bold">
                     {c('Label').t`Total`} ({BILLING_CYCLE[model.cycle]})
                 </div>
@@ -28,7 +28,7 @@ const PaymentDetails = ({ check, model, onChange }) => {
                 </div>
             </div>
             {check.Credit ? (
-                <div className="flex flex-spacebetween mb1">
+                <div className="flex flex-spacebetween mb1 pb1 border-bottom">
                     <div>{c('Label').t`Credits`}</div>
                     <div>
                         <Price className="color-global-success" currency={model.currency}>
@@ -38,7 +38,7 @@ const PaymentDetails = ({ check, model, onChange }) => {
                 </div>
             ) : null}
             {check.Proration ? (
-                <div className="flex flex-spacebetween mb1">
+                <div className="flex flex-spacebetween mb1 pb1 border-bottom">
                     <div>
                         {c('Label').t`Proration`}{' '}
                         <Info url="https://protonmail.com/support/knowledge-base/credit-proration/" />
@@ -51,7 +51,7 @@ const PaymentDetails = ({ check, model, onChange }) => {
                 </div>
             ) : null}
             {check.Gift ? (
-                <div className="flex flex-spacebetween mb1">
+                <div className="flex flex-spacebetween mb1 pb1 border-bottom">
                     <div>{c('Label').t`Gift`}</div>
                     <div>
                         <Price className="color-global-success" currency={model.currency}>
@@ -71,11 +71,12 @@ const PaymentDetails = ({ check, model, onChange }) => {
                     {state ? (
                         <GiftCodeForm model={model} onChange={onChange} />
                     ) : (
-                        <SmallButton onClick={toggle}>{c('Action').t`Add gift code`}</SmallButton>
+                        <SmallButton className="pm-button--link" onClick={toggle}>{c('Action')
+                            .t`Add gift code`}</SmallButton>
                     )}
                 </div>
             )}
-        </Bordered>
+        </>
     );
 };
 
