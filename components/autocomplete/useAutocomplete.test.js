@@ -1,10 +1,10 @@
 import useAutocomplete from './useAutocomplete';
-import { renderHook } from 'react-hooks-testing-library';
+import { renderHook, act } from 'react-hooks-testing-library';
 
 describe('useAutocomplete hook', () => {
     it('should be able to change input value', () => {
         const { result } = renderHook(() => useAutocomplete({ multiple: true }));
-        result.current.changeInputValue('test');
+        act(() => result.current.changeInputValue('test'));
         expect(result.current.inputValue).toBe('test');
     });
 
@@ -18,7 +18,7 @@ describe('useAutocomplete hook', () => {
         const { result } = renderHook(() =>
             useAutocomplete({ multiple: true, initialSelectedItems: [{ label: 'test', value: 'T' }] })
         );
-        result.current.select(newItem);
+        act(() => result.current.select(newItem));
         expect(result.current.selectedItems).toContain(newItem);
         expect(result.current.inputValue).toBe('');
     });
@@ -30,7 +30,7 @@ describe('useAutocomplete hook', () => {
             { label: 'test3', value: 'T3' }
         ];
         const { result } = renderHook(() => useAutocomplete({ multiple: true, initialSelectedItems: items }));
-        result.current.deselect(1);
+        act(() => result.current.deselect(1));
         expect(result.current.selectedItems).toEqual([items[0], items[2]]);
     });
 
@@ -39,7 +39,7 @@ describe('useAutocomplete hook', () => {
         const { result } = renderHook(() =>
             useAutocomplete({ multiple: false, initialSelectedItems: [{ label: 'test', value: 'T' }] })
         );
-        result.current.select(newItem, newItem.label);
+        act(() => result.current.select(newItem, newItem.label));
         expect(result.current.selectedItems).toEqual([newItem]);
         expect(result.current.inputValue).toBe(newItem.label);
     });
