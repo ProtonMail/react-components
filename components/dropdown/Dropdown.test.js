@@ -9,13 +9,13 @@ describe('Dropdown component', () => {
     it('should animate children when clicking on button', async () => {
         const { container, getByText } = render(
             <div>
-                <Dropdown button={<button>clickOnMe</button>}>Boo</Dropdown>
+                <Dropdown content={'clickOnMe'}>Boo</Dropdown>
             </div>
         );
         const buttonNode = getByText('clickOnMe');
 
-        expect(getContent(container)).toContainHTML('<div class="dropDown-content" hidden="">Boo</div>');
+        expect(getContent(container)).toHaveAttribute('hidden');
         fireEvent.click(buttonNode);
-        expect(getContent(container)).toContainHTML('<div class="dropDown-content">Boo</div>');
+        expect(getContent(container)).not.toHaveAttribute('hidden');
     });
 });

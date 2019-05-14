@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Group, ButtonGroup, Icon } from 'react-components';
+import { Button, Group, ButtonGroup } from 'react-components';
 import { c } from 'ttag';
 
 import Dropdown from './Dropdown';
@@ -29,17 +29,10 @@ const DropdownActions = ({ list, className }) => {
             </ButtonGroup>
             <Dropdown
                 align="right"
-                className={`relative pm-button pm-group-button pm-button--for-icon pagination-expand ${className}`}
-                button={
-                    <button
-                        className="increase-surface-click pagination-expand-button"
-                        title={c('Title').t`Open actions dropdown`}
-                        type="button"
-                    >
-                        <Icon className="pagination-expand-caret" size={12} name="caret" />
-                    </button>
-                }
-                title={c('Action').t`More`}
+                caret
+                className={`pm-button pm-group-button pm-button--for-icon ${className}`}
+                title={c('Title').t`Open actions dropdown`}
+                content={''}
             >
                 <DropdownMenu>
                     {restList.map(({ text, ...restProps }) => {

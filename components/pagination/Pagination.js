@@ -46,17 +46,11 @@ const Pagination = ({ onNext, onPrevious, onSelect, hasNext, hasPrevious, page, 
                 </ButtonGroup>
             ) : null}
             <Dropdown
-                pagination
-                className="relative pm-button pm-group-button pm-button--for-icon pagination-expand"
-                button={
-                    <button
-                        className="increase-surface-click pagination-expand-button page-button"
-                        title={c('Title').t`Open pagination`}
-                        type="button"
-                    >
-                        {page} <Icon className="pagination-expand-caret" size={12} name="caret" />
-                    </button>
-                }
+                narrow
+                caret
+                className="pm-button pm-group-button pm-button--for-icon"
+                title={c('Title').t`Open pagination`}
+                content={page}
             >
                 <DropdownMenu>{actions}</DropdownMenu>
             </Dropdown>

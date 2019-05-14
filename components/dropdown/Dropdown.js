@@ -1,14 +1,25 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import keycode from 'keycode';
+import { Icon } from 'react-components';
 
 const ALIGN_CLASSES = {
-    center: 'dropDown',
     right: 'dropDown-rightArrow',
     left: 'dropDown-leftArrow'
 };
 
-const Dropdown = ({ isOpen, children, className, button, autoClose, autoCloseOutside, align, pagination }) => {
+const Dropdown = ({
+    isOpen,
+    content,
+    title,
+    children,
+    className,
+    autoClose,
+    autoCloseOutside,
+    align,
+    narrow,
+    caret
+}) => {
     const [open, setOpen] = useState(isOpen);
     const wrapperRef = useRef(null);
 
@@ -48,15 +59,25 @@ const Dropdown = ({ isOpen, children, className, button, autoClose, autoCloseOut
         };
     }, []);
 
-    const dropdownClassName = ALIGN_CLASSES[align];
-
-    // Special pagination case to make it smaller, maybe move this is a prop, or have it on the wrapping div?
-    const contentClasses = pagination ? 'dropDown-content dropDown-content--pagination' : 'dropDown-content';
+    const alignClass = ALIGN_CLASSES[align];
+    const dropdownClassName = `dropDown ${alignClass ? alignClass : ''} pm-button`;
+    const contentClassName = `dropDown-content ${narrow ? 'dropDown-content--narrow' : ''}`;
+    const caretContent = caret && <Icon className="expand-caret" size={12} name="caret" />;
 
     return (
         <div className={`${dropdownClassName} ${className}`} ref={wrapperRef}>
-            {React.cloneElement(button, { 'aria-expanded': open, onClick: handleClick })}
-            <div className={contentClasses} onClick={handleClickContent} hidden={!open}>
+            <button
+                title={title}
+                className="increase-surface-click"
+                aria-expanded={open}
+                onClick={handleClick}
+                type="button"
+            >
+                <span className="mauto">
+                    {content} {caretContent}
+                </span>
+            </button>
+            <div className={contentClassName} onClick={handleClickContent} hidden={!open}>
                 {children}
             </div>
         </div>
@@ -66,10 +87,12 @@ const Dropdown = ({ isOpen, children, className, button, autoClose, autoCloseOut
 Dropdown.propTypes = {
     className: PropTypes.string,
     children: PropTypes.node.isRequired,
-    button: PropTypes.node.isRequired,
+    content: PropTypes.node.isRequired,
     isOpen: PropTypes.bool,
     align: PropTypes.string,
-    pagination: PropTypes.bool,
+    title: PropTypes.string,
+    caret: PropTypes.bool,
+    narrow: PropTypes.bool,
     autoClose: PropTypes.bool,
     autoCloseOutside: PropTypes.bool
 };
@@ -78,7 +101,8 @@ Dropdown.defaultProps = {
     isOpen: false,
     autoClose: true,
     align: 'center',
-    pagination: false,
+    narrow: false,
+    caret: false,
     autoCloseOutside: true,
     className: ''
 };

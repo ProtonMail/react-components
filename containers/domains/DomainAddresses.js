@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { msgid, c } from 'ttag';
-import { Button, Dropdown, DropdownMenu, Icon } from 'react-components';
+import { c, msgid } from 'ttag';
+import { Dropdown, DropdownMenu } from 'react-components';
 
 const DomainAddresses = ({ domain }) => {
     const addresses = domain.addresses || [];
@@ -13,13 +13,10 @@ const DomainAddresses = ({ domain }) => {
     return (
         <>
             <Dropdown
+                caret
                 title={title}
-                button={
-                    <Button className="pagination-expand-button pm-button--link">
-                        {c('Info').ngettext(msgid`${n} address`, `${n} addresses`, n)}{' '}
-                        <Icon className="pagination-expand-caret" size={12} name="caret" />
-                    </Button>
-                }
+                className="pm-button pm-button--link"
+                content={c('Info').ngettext(msgid`${n} address`, `${n} addresses`, n)}
             >
                 <DropdownMenu>{list}</DropdownMenu>
                 <div className="alignright">
