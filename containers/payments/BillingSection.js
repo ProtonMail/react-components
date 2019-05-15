@@ -1,7 +1,17 @@
 import React from 'react';
 import { c } from 'ttag';
 import { PLAN_NAMES, CYCLE } from 'proton-shared/lib/constants';
-import { SubTitle, Price, Loader, SmallButton, Time, useUser, useSubscription, useModal } from 'react-components';
+import {
+    SubTitle,
+    Price,
+    Loader,
+    MozillaInfoPanel,
+    SmallButton,
+    Time,
+    useUser,
+    useSubscription,
+    useModal
+} from 'react-components';
 
 import { formatPlans } from './subscription/helpers';
 import CycleDiscountBadge from './CycleDiscountBadge';
@@ -36,9 +46,18 @@ const BillingSection = () => {
     const { isOpen: showGiftCodeModal, open: openGiftCodeModal, close: closeGiftCodeModal } = useModal();
     const [{ hasPaidMail, hasPaidVpn, Credit }] = useUser();
     const [
-        { Plans = [], Cycle, Currency, CouponCode, Amount, PeriodEnd } = {},
+        { Plans = [], Cycle, Currency, CouponCode, Amount, PeriodEnd, isManagedByMozilla } = {},
         loadingSubscription
     ] = useSubscription();
+
+    if (isManagedByMozilla) {
+        return (
+            <>
+                <SubTitle>{c('Title').t`Billing details`}</SubTitle>
+                <MozillaInfoPanel />
+            </>
+        );
+    }
 
     if (loadingSubscription) {
         return (

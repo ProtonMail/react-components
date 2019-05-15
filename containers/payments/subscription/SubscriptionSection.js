@@ -1,6 +1,15 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
-import { SubTitle, SmallButton, Loader, Progress, useSubscription, useOrganization, useUser } from 'react-components';
+import {
+    SubTitle,
+    SmallButton,
+    Loader,
+    MozillaInfoPanel,
+    Progress,
+    useSubscription,
+    useOrganization,
+    useUser
+} from 'react-components';
 import { CYCLE, PLAN_NAMES, COUPON_CODES } from 'proton-shared/lib/constants';
 import humanSize from 'proton-shared/lib/helpers/humanSize';
 
@@ -38,6 +47,15 @@ const SubscriptionSection = () => {
         } = {},
         loadingOrganization
     ] = useOrganization();
+
+    if (subscription.isManagedByMozilla) {
+        return (
+            <>
+                <SubTitle>{c('Title').t`Subscription`}</SubTitle>
+                <MozillaInfoPanel />
+            </>
+        );
+    }
 
     if (loadingSubscription || loadingOrganization) {
         return (

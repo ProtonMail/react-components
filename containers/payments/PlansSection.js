@@ -4,6 +4,7 @@ import {
     SubTitle,
     Alert,
     ConfirmModal,
+    MozillaInfoPanel,
     useSubscription,
     useApiWithoutResult,
     Button,
@@ -83,6 +84,15 @@ const PlansSection = () => {
         setCurrency(subscription.Currency || Currency);
         setCycle(subscription.Cycle || Cycle);
     }, [loadingSubscription, loadingPlans]);
+
+    if (subscription.isManagedByMozilla) {
+        return (
+            <>
+                <SubTitle>{c('Title').t`Plans`}</SubTitle>
+                <MozillaInfoPanel />
+            </>
+        );
+    }
 
     if (loadingSubscription || loadingPlans) {
         return (
