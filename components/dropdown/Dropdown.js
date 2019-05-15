@@ -4,8 +4,8 @@ import keycode from 'keycode';
 import { Icon } from 'react-components';
 
 const ALIGN_CLASSES = {
-    right: 'dropDown-rightArrow',
-    left: 'dropDown-leftArrow'
+    right: 'dropDown--rightArrow',
+    left: 'dropDown--leftArrow'
 };
 
 const Dropdown = ({
