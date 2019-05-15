@@ -38,19 +38,16 @@ const Payment = ({ type, amount, currency, cycle, onParameters, onMethod, onVali
         <>
             <Row>
                 <Label>{c('Label').t`Payment method`}</Label>
-                <Field>
-                    <PaymentMethodsSelect
-                        cycle={cycle}
-                        method={method}
-                        amount={amount}
-                        type={type}
-                        onChange={handleChangeMethod}
-                    />
-                </Field>
-            </Row>
-            <Row>
-                <Label />
                 <Field className="w100">
+                    <div className="mb1">
+                        <PaymentMethodsSelect
+                            cycle={cycle}
+                            method={method}
+                            amount={amount}
+                            type={type}
+                            onChange={handleChangeMethod}
+                        />
+                    </div>
                     <Method
                         amount={amount}
                         currency={currency}

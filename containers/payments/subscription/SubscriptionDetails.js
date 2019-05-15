@@ -27,12 +27,16 @@ const Rows = ({ model, plans }) => {
     const { visionary, plus, vpnbasic, vpnplus, professional } = model.plansMap;
 
     if (visionary) {
-        const visionaryPlan = getPlan(plans, { name: 'visionary', cycle: model.cycle });
+        const visionaryPlan = getPlan(plans, { name: 'visionary' });
         return (
             <div className="flex flex-spacebetween mb1">
                 <div>{TITLES.visionary}</div>
                 <div>
-                    <PlanPrice amount={visionaryPlan.Amount} cycle={model.cycle} currency={model.currency} />
+                    <PlanPrice
+                        amount={visionaryPlan.Pricing[model.cycle]}
+                        cycle={model.cycle}
+                        currency={model.currency}
+                    />
                 </div>
             </div>
         );
@@ -40,8 +44,8 @@ const Rows = ({ model, plans }) => {
 
     const mailPlanName = plus ? 'plus' : professional ? 'professional' : '';
     const vpnPlanName = vpnbasic ? 'vpnbasic' : vpnplus ? 'vpnplus' : '';
-    const mailPlan = mailPlanName ? getPlan(plans, { name: mailPlanName, cycle: model.cycle }) : '';
-    const vpnPlan = vpnPlanName ? getPlan(plans, { name: vpnPlanName, cycle: model.cycle }) : '';
+    const mailPlan = mailPlanName ? getPlan(plans, { name: mailPlanName }) : '';
+    const vpnPlan = vpnPlanName ? getPlan(plans, { name: vpnPlanName }) : '';
     const mailSubTotal = getSubTotal({ ...model, plans, services: MAIL });
     const vpnSubTotal = getSubTotal({ ...model, plans, services: VPN });
     const mailTitle = `${plus || professional ? (plus ? TITLES.plus : TITLES.professional) : TITLES.mailfree}`;

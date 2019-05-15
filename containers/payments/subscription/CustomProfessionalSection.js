@@ -18,9 +18,9 @@ const domainOptions = range(2, 101).map((value, index) => ({
 }));
 
 const CustomProfessionalSection = ({ plans, model, onChange }) => {
-    const professionalPlan = getPlan(plans, { name: 'professional', cycle: model.cycle });
-    const memberAddon = getAddon(plans, { name: '1member', cycle: model.cycle });
-    const domainAddon = getAddon(plans, { name: '1domain', cycle: model.cycle });
+    const professionalPlan = getPlan(plans, { name: 'professional' });
+    const memberAddon = getAddon(plans, { name: '1member' });
+    const domainAddon = getAddon(plans, { name: '1domain' });
 
     const handleChange = (key) => ({ target }) => {
         onChange({ ...model, plansMap: { ...model.plansMap, [key]: +target.value } });
@@ -34,8 +34,8 @@ const CustomProfessionalSection = ({ plans, model, onChange }) => {
                     <PlanPrice
                         quantity={model.plansMap.professional}
                         currency={model.currency}
-                        amount={professionalPlan.Amount}
-                        cycle={professionalPlan.Cycle}
+                        amount={professionalPlan.Pricing[model.cycle]}
+                        cycle={model.cycle}
                     />
                 </div>
             </div>
@@ -56,8 +56,8 @@ const CustomProfessionalSection = ({ plans, model, onChange }) => {
                         <PlanPrice
                             quantity={model.plansMap['1member']}
                             currency={model.currency}
-                            amount={memberAddon.Amount}
-                            cycle={memberAddon.Cycle}
+                            amount={memberAddon.Pricing[model.cycle]}
+                            cycle={model.cycle}
                         />
                     ) : (
                         '-'
@@ -81,8 +81,8 @@ const CustomProfessionalSection = ({ plans, model, onChange }) => {
                         <PlanPrice
                             quantity={model.plansMap['1domain']}
                             currency={model.currency}
-                            amount={domainAddon.Amount}
-                            cycle={domainAddon.Cycle}
+                            amount={domainAddon.Pricing[model.cycle]}
+                            cycle={model.cycle}
                         />
                     ) : (
                         '-'

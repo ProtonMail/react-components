@@ -23,10 +23,10 @@ const domainOptions = range(1, 11).map((value, index) => ({
 }));
 
 const CustomPlusSection = ({ plans, model, onChange }) => {
-    const plusPlan = getPlan(plans, { name: 'plus', cycle: model.cycle });
-    const spaceAddon = getAddon(plans, { name: '1gb', cycle: model.cycle });
-    const addressAddon = getAddon(plans, { name: '5address', cycle: model.cycle });
-    const domainAddon = getAddon(plans, { name: '1domain', cycle: model.cycle });
+    const plusPlan = getPlan(plans, { name: 'plus' });
+    const spaceAddon = getAddon(plans, { name: '1gb' });
+    const addressAddon = getAddon(plans, { name: '5address' });
+    const domainAddon = getAddon(plans, { name: '1domain' });
 
     const handleChange = (key) => ({ target }) => {
         onChange({ ...model, plansMap: { ...model.plansMap, [key]: +target.value } });
@@ -40,8 +40,8 @@ const CustomPlusSection = ({ plans, model, onChange }) => {
                     <PlanPrice
                         quantity={model.plansMap.plus}
                         currency={model.currency}
-                        amount={plusPlan.Amount}
-                        cycle={plusPlan.Cycle}
+                        amount={plusPlan.Pricing[model.cycle]}
+                        cycle={model.cycle}
                     />
                 </div>
             </div>
@@ -54,8 +54,8 @@ const CustomPlusSection = ({ plans, model, onChange }) => {
                         <PlanPrice
                             quantity={model.plansMap['1gb']}
                             currency={model.currency}
-                            amount={spaceAddon.Amount}
-                            cycle={spaceAddon.Cycle}
+                            amount={spaceAddon.Pricing[model.cycle]}
+                            cycle={model.cycle}
                         />
                     ) : (
                         '-'
@@ -76,8 +76,8 @@ const CustomPlusSection = ({ plans, model, onChange }) => {
                         <PlanPrice
                             quantity={model.plansMap['5address']}
                             currency={model.currency}
-                            amount={addressAddon.Amount}
-                            cycle={addressAddon.Cycle}
+                            amount={addressAddon.Pricing[model.cycle]}
+                            cycle={model.cycle}
                         />
                     ) : (
                         '-'
@@ -98,8 +98,8 @@ const CustomPlusSection = ({ plans, model, onChange }) => {
                         <PlanPrice
                             quantity={model.plansMap['1domain']}
                             currency={model.currency}
-                            amount={domainAddon.Amount}
-                            cycle={domainAddon.Cycle}
+                            amount={domainAddon.Pricing[model.cycle]}
+                            cycle={model.cycle}
                         />
                     ) : (
                         '-'

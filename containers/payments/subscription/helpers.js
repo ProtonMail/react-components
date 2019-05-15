@@ -1,11 +1,10 @@
-import { PLAN_SERVICES, PLAN_TYPES, CYCLE } from 'proton-shared/lib/constants';
+import { PLAN_SERVICES, PLAN_TYPES } from 'proton-shared/lib/constants';
 import { hasBit } from 'proton-shared/lib/helpers/bitset';
 import { c, ngettext, msgid } from 'ttag';
 import { isEquivalent } from 'proton-shared/lib/helpers/object';
 
 const { PLAN, ADDON } = PLAN_TYPES;
 const { MAIL, VPN } = PLAN_SERVICES;
-const { MONTHLY } = CYCLE;
 
 const I18N = {
     included: c('Option').t`included`,
@@ -97,14 +96,15 @@ export const getTextOption = (type, value, index) => {
 export const getSubTotal = ({ plansMap, cycle, plans, services }) => {
     return Object.entries(plansMap).reduce((acc, [planName, quantity]) => {
         if (quantity) {
-            const { Amount = 0 } =
-                plans.find(({ Cycle, Name, Services }) => {
+            const { Pricing = {} } =
+                plans.find(({ Name, Services }) => {
                     if (services) {
-                        return Name === planName && Cycle === cycle && hasBit(Services, services);
+                        return Name === planName && hasBit(Services, services);
                     }
-                    return Name === planName && Cycle === cycle;
+                    return Name === planName;
                 }) || {};
-            return acc + quantity * Amount;
+            const amount = Pricing[cycle] || 0;
+            return acc + quantity * amount;
         }
         return acc;
     }, 0);
@@ -204,10 +204,9 @@ export const formatPlans = (plans = []) => {
  * @param {String} params.planName examples: 'plus', 'vpnplus', 'visionary', '5address', '1member'
  * @param {String} params.id plan ID
  * @param {Number} params.type default: plan
- * @param {String} params.cycle default: monthly
  * @returns {Object} plan Object
  */
-export const getPlan = (plans = [], { type = PLAN, name = '', id = '', cycle = MONTHLY }) => {
+export const getPlan = (plans = [], { type = PLAN, name = '', id = '' }) => {
     if (!plans.length) {
         throw new Error('plans not defined');
     }
@@ -217,10 +216,10 @@ export const getPlan = (plans = [], { type = PLAN, name = '', id = '', cycle = M
     }
 
     if (name) {
-        return plans.find(({ Type, Name, Cycle }) => Type === type && Name === name && Cycle === cycle);
+        return plans.find(({ Type, Name }) => Type === type && Name === name);
     }
 
-    return plans.find(({ Type, ID, Cycle }) => Type === type && ID === id && Cycle === cycle);
+    return plans.find(({ Type, ID }) => Type === type && ID === id);
 };
 
 /**
@@ -253,7 +252,7 @@ export const getCheckParams = ({
 
     const PlanIDs = Object.entries(plansMap).reduce((acc, [planName, quantity]) => {
         if (quantity) {
-            const { ID } = plans.find((plan) => plan.Name === planName && plan.Cycle === Cycle);
+            const { ID } = plans.find((plan) => plan.Name === planName);
             acc[ID] = quantity;
         }
         return acc;

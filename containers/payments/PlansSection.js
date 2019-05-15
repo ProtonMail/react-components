@@ -97,10 +97,10 @@ const PlansSection = () => {
     const currentPlanName = hasPaidMail ? currentPlan.Name : 'free';
 
     const getPrice = (planName) => {
-        const plan = plans.find(({ Name, Cycle }) => Name === planName && Cycle === cycle);
+        const plan = plans.find(({ Name }) => Name === planName);
         const monthlyPrice = (
             <Price className="h3" currency={currency} suffix={planName === 'professional' ? '/mo/user' : '/mo'}>
-                {plan.Amount / cycle}
+                {plan.Pricing[cycle] / cycle}
             </Price>
         );
 
@@ -110,7 +110,7 @@ const PlansSection = () => {
 
         const billedPrice = (
             <Price key="planPrice" currency={currency} suffix={cycle === YEARLY ? '/year' : '/2-year'}>
-                {plan.Amount}
+                {plan.Pricing[cycle]}
             </Price>
         );
 

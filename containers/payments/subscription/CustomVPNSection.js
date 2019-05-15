@@ -19,9 +19,9 @@ const vpnOptions = range(5, 501).map((value, index) => ({
 }));
 
 const CustomVPNSection = ({ plans, model, onChange }) => {
-    const vpnBasicPlan = getPlan(plans, { name: 'vpnbasic', cycle: model.cycle });
-    const vpnPlusPlan = getPlan(plans, { name: 'vpnplus', cycle: model.cycle });
-    const vpnAddon = getAddon(plans, { name: '1vpn', cycle: model.cycle });
+    const vpnBasicPlan = getPlan(plans, { name: 'vpnbasic' });
+    const vpnPlusPlan = getPlan(plans, { name: 'vpnplus' });
+    const vpnAddon = getAddon(plans, { name: '1vpn' });
     const { state, toggle } = useToggle();
     const subTotal = getSubTotal({ ...model, plans, services: VPN });
 
@@ -63,12 +63,12 @@ const CustomVPNSection = ({ plans, model, onChange }) => {
                         <td className="bg-global-muted">{c('Header').t`Pricing`}</td>
                         <td className="bg-global-muted aligncenter">
                             <Price currency={model.currency} suffix={c('Suffix').t`/mo`}>
-                                {vpnBasicPlan.Amount / vpnBasicPlan.Cycle}
+                                {vpnBasicPlan.Pricing[model.cycle] / model.cycle}
                             </Price>
                         </td>
                         <td className="bg-global-muted aligncenter">
                             <Price currency={model.currency} suffix={c('Suffix').t`/mo`}>
-                                {vpnPlusPlan.Amount / vpnPlusPlan.Cycle}
+                                {vpnPlusPlan.Pricing[model.cycle] / model.cycle}
                             </Price>
                         </td>
                     </tr>
@@ -195,9 +195,8 @@ const CustomVPNSection = ({ plans, model, onChange }) => {
                     <div>
                         <Select options={vpnOptions} value={model.plansMap['1vpn']} onChange={handleSelectChange} />
                         <Info
-                            title={c(
-                                'Order additional connections to provide ProtonVPN to other users with your organization'
-                            )}
+                            title={c('Tooltip')
+                                .t`Order additional connections to provide ProtonVPN to other users with your organization`}
                         />
                     </div>
                     <div>
@@ -205,8 +204,8 @@ const CustomVPNSection = ({ plans, model, onChange }) => {
                             <PlanPrice
                                 quantity={model.plansMap['1vpn']}
                                 currency={model.currency}
-                                amount={vpnAddon.Amount}
-                                cycle={vpnAddon.Cycle}
+                                amount={vpnAddon.Pricing[model.cycle]}
+                                cycle={model.cycle}
                             />
                         ) : (
                             '-'
