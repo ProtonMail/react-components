@@ -263,6 +263,11 @@ export { default as EventManagerProvider } from './containers/eventManager/Event
 export { default as EventManagerContext } from './containers/eventManager/context';
 
 export { default as createApp } from './containers/app/createApp';
+export { default as LabelsContainer } from './containers/Labels/Container';
+export { default as SpamContainer } from './containers/Filters/SpamContainer';
+export { default as FilterContainer } from './containers/Filters/Container';
+export { default as AddFilterModal } from './containers/Filters/AddFilterModal';
+export { default as AddEmailToListModal } from './containers/Filters/AddEmailToListModal';
 
 export { default as useCachedAsyncResult } from './hooks/useCachedAsyncResult';
 export { useAddresses } from './models/addressesModel';
