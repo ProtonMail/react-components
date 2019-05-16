@@ -15,6 +15,7 @@ import {
     updateComposerMode,
     updateViewMode,
     updateViewLayout,
+    updateStickyLabels,
     updateDraftType,
     updateRightToLeft
 } from 'proton-shared/lib/api/mailSettings';
@@ -24,14 +25,16 @@ import TextDirectionSelect from './TextDirectionSelect';
 import ComposerModeRadios from './ComposerModeRadios';
 import ViewLayoutRadios from './ViewLayoutRadios';
 import ViewModeRadios from './ViewModeRadios';
+import StickyLabelsToggle from './StickyLabelsToggle';
 
 const LayoutsSection = () => {
-    const [{ ComposerMode, ViewMode, ViewLayout, DraftMIMEType, RightToLeft } = {}] = useMailSettings();
+    const [{ ComposerMode, ViewMode, ViewLayout, StickyLabels, DraftMIMEType, RightToLeft } = {}] = useMailSettings();
     const { call } = useEventManager();
 
     const { request: requestComposerMode, loading: loadingComposerMode } = useApiWithoutResult(updateComposerMode);
     const { request: requestViewMode, loading: loadingViewMode } = useApiWithoutResult(updateViewMode);
     const { request: requestViewLayout, loading: loadingViewLayout } = useApiWithoutResult(updateViewLayout);
+    const { request: requestStickyLabels, loading: loadingStickyLabels } = useApiWithoutResult(updateStickyLabels);
     const { request: requestDraftType, loading: loadingDraftType } = useApiWithoutResult(updateDraftType);
     const { request: requestRightToLeft, loading: loadingRightToLeft } = useApiWithoutResult(updateRightToLeft);
 
@@ -47,6 +50,11 @@ const LayoutsSection = () => {
 
     const handleChangeViewLayout = async (mode) => {
         await requestViewLayout(mode);
+        call();
+    };
+
+    const handleToggleStickyLabels = async (value) => {
+        await requestStickyLabels(value);
         call();
     };
 
@@ -108,6 +116,23 @@ const LayoutsSection = () => {
                 </Label>
                 <Field>
                     <ViewModeRadios viewMode={ViewMode} onChange={handleChangeViewMode} loading={loadingViewMode} />
+                </Field>
+            </Row>
+            <Row>
+                <Label>
+                    <span className="mr1">{c('Label').t`Use sticky labels`}</span>
+                    <Info
+                        title={c('Tooltip')
+                            .t`When a label is added to a message in a conversation, all future messages you send or receive will have that same label automatically applied.`}
+                    />
+                </Label>
+                <Field>
+                    <StickyLabelsToggle
+                        id="stickyLabelsToggle"
+                        stickyLabels={StickyLabels}
+                        loading={loadingStickyLabels}
+                        onToggle={handleToggleStickyLabels}
+                    />
                 </Field>
             </Row>
             <Row>
