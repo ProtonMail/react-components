@@ -24,8 +24,7 @@ import DraftTypeSelect from './DraftTypeSelect';
 import TextDirectionSelect from './TextDirectionSelect';
 import ComposerModeRadios from './ComposerModeRadios';
 import ViewLayoutRadios from './ViewLayoutRadios';
-import ViewModeRadios from './ViewModeRadios';
-import StickyLabelsToggle from './StickyLabelsToggle';
+import ConversationGrouping from './ConversationGrouping';
 
 const LayoutsSection = () => {
     const [{ ComposerMode, ViewMode, ViewLayout, StickyLabels, DraftMIMEType, RightToLeft } = {}] = useMailSettings();
@@ -106,35 +105,14 @@ const LayoutsSection = () => {
                     />
                 </Field>
             </Row>
-            <Row>
-                <Label>
-                    <span className="mr1">{c('Label').t`Conversations`}</span>
-                    <Info
-                        title={c('Tooltip')
-                            .t`Conversation Grouping automatically groups messages in the same conversation together.`}
-                    />
-                </Label>
-                <Field>
-                    <ViewModeRadios viewMode={ViewMode} onChange={handleChangeViewMode} loading={loadingViewMode} />
-                </Field>
-            </Row>
-            <Row>
-                <Label>
-                    <span className="mr1">{c('Label').t`Use sticky labels`}</span>
-                    <Info
-                        title={c('Tooltip')
-                            .t`When a label is added to a message in a conversation, all future messages you send or receive will have that same label automatically applied.`}
-                    />
-                </Label>
-                <Field>
-                    <StickyLabelsToggle
-                        id="stickyLabelsToggle"
-                        stickyLabels={StickyLabels}
-                        loading={loadingStickyLabels}
-                        onToggle={handleToggleStickyLabels}
-                    />
-                </Field>
-            </Row>
+            <ConversationGrouping
+                viewMode={ViewMode}
+                stickyLabels={StickyLabels}
+                onChangeViewMode={handleChangeViewMode}
+                onToggleStickyLabels={handleToggleStickyLabels}
+                loadingViewMode={loadingViewMode}
+                loadingStickyLabels={loadingStickyLabels}
+            />
             <Row>
                 <Label>{c('Label').t`Composer Mode`}</Label>
                 <Field>
