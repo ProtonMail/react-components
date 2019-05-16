@@ -271,6 +271,8 @@ export { useDomains } from './models/domainsModel';
 export { useMailSettings } from './models/mailSettingsModel';
 export { useMembers } from './models/membersModel';
 export { useLabels } from './models/labelsModel';
+export { useFormattedLabels } from './models/labelsModel';
+export { useFilters } from './models/filtersModel';
 export { useOrganization } from './models/organizationModel';
 export { useSubscription } from './models/subscriptionModel';
 export { useUser } from './models/userModel';
