@@ -19,12 +19,16 @@ import {
     updateDraftType,
     updateRightToLeft
 } from 'proton-shared/lib/api/mailSettings';
+import { VIEW_MODE } from 'proton-shared/lib/constants';
 
 import DraftTypeSelect from './DraftTypeSelect';
 import TextDirectionSelect from './TextDirectionSelect';
 import ComposerModeRadios from './ComposerModeRadios';
 import ViewLayoutRadios from './ViewLayoutRadios';
-import ConversationGrouping from './ConversationGrouping';
+import ViewModeRadios from './ViewModeRadios';
+import StickyLabelsToggle from './StickyLabelsToggle';
+
+const { GROUP } = VIEW_MODE;
 
 const LayoutsSection = () => {
     const [{ ComposerMode, ViewMode, ViewLayout, StickyLabels, DraftMIMEType, RightToLeft } = {}] = useMailSettings();
@@ -105,18 +109,42 @@ const LayoutsSection = () => {
                     />
                 </Field>
             </Row>
-            <ConversationGrouping
-                viewMode={ViewMode}
-                stickyLabels={StickyLabels}
-                onChangeViewMode={handleChangeViewMode}
-                onToggleStickyLabels={handleToggleStickyLabels}
-                loadingViewMode={loadingViewMode}
-                loadingStickyLabels={loadingStickyLabels}
-            />
             <Row>
-                <Label>{c('Label').t`Composer Mode`}</Label>
+                <Label>
+                    <span className="mr1">{c('Label').t`Conversations`}</span>
+                    <Info
+                        title={c('Tooltip')
+                            .t`Conversation Grouping automatically groups messages in the same conversation together.`}
+                    />
+                </Label>
+                <Field>
+                    <ViewModeRadios viewMode={ViewMode} onChange={handleChangeViewMode} loading={loadingViewMode} />
+                </Field>
+            </Row>
+            {ViewMode === GROUP ? (
+                <Row>
+                    <Label htmlFor={'stickyLabelsToggle'}>
+                        <span className="mr1">{c('Label').t`Use sticky labels`}</span>
+                        <Info
+                            title={c('Tooltip')
+                                .t`When a label is added to a message in a conversation, all future messages you send or receive will have that same label automatically applied.`}
+                        />
+                    </Label>
+                    <Field>
+                        <StickyLabelsToggle
+                            id="stickyLabelsToggle"
+                            stickyLabels={StickyLabels}
+                            loading={loadingStickyLabels}
+                            onToggle={handleToggleStickyLabels}
+                        />
+                    </Field>
+                </Row>
+            ) : null}
+            <Row>
+                <Label htmlFor="draftTypeSelect">{c('Label').t`Composer Mode`}</Label>
                 <Field>
                     <DraftTypeSelect
+                        id="draftTypeSelect"
                         draftType={DraftMIMEType}
                         onChange={handleChangeDraftType}
                         loading={loadingDraftType}
@@ -124,9 +152,10 @@ const LayoutsSection = () => {
                 </Field>
             </Row>
             <Row>
-                <Label>{c('Label').t`Composer Text Direction`}</Label>
+                <Label htmlFor="textDirectionSelect">{c('Label').t`Composer Text Direction`}</Label>
                 <Field>
                     <TextDirectionSelect
+                        id="textDirectionSelect"
                         rightToLeft={RightToLeft}
                         onChange={handleChangeRightToLeft}
                         loading={loadingRightToLeft}
