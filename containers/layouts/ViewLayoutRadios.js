@@ -16,7 +16,7 @@ const ViewLayoutRadios = ({ viewLayout, onChange, loading, id, ...rest }) => {
         disabled: loading,
         name: 'viewLayout',
         label: c('Label to change view layout').t`Column`,
-        async onChange() {
+        onChange() {
             onChange(COLUMN);
         },
         children: <img alt="Column" src={inboxColumnSvg} />
@@ -28,7 +28,7 @@ const ViewLayoutRadios = ({ viewLayout, onChange, loading, id, ...rest }) => {
         disabled: loading,
         name: 'viewLayout',
         label: c('Label to change view layout').t`Row`,
-        async onChange() {
+        onChange() {
             onChange(ROW);
         },
         children: <img alt="Row" src={inboxRowSvg} />

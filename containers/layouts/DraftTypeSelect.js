@@ -12,9 +12,7 @@ const DraftTypeSelect = ({ draftType, onChange, loading }) => {
         { text: c('Option').t`Plain Text`, value: PLAIN_TEXT }
     ];
 
-    const handleChange = ({ target }) => {
-        onChange(target.value);
-    };
+    const handleChange = ({ target }) => onChange(target.value);
 
     return <Select value={draftType} options={options} disabled={loading} onChange={handleChange} />;
 };

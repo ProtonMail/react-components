@@ -36,7 +36,7 @@ const LayoutsSection = () => {
     const { call } = useEventManager();
 
     const { createNotification } = useNotifications();
-    const preferenceSaved = () => createNotification({ text: c('Success').t`Preference saved` });
+    const notifyPreferenceSaved = () => createNotification({ text: c('Success').t`Preference saved` });
 
     const { request: requestComposerMode, loading: loadingComposerMode } = useApiWithoutResult(updateComposerMode);
     const { request: requestViewMode, loading: loadingViewMode } = useApiWithoutResult(updateViewMode);
@@ -48,37 +48,37 @@ const LayoutsSection = () => {
     const handleChangeComposerMode = async (mode) => {
         await requestComposerMode(mode);
         call();
-        preferenceSaved();
+        notifyPreferenceSaved();
     };
 
     const handleChangeViewMode = async (mode) => {
         await requestViewMode(mode);
         call();
-        preferenceSaved();
+        notifyPreferenceSaved();
     };
 
     const handleChangeViewLayout = async (mode) => {
         await requestViewLayout(mode);
         call();
-        preferenceSaved();
+        notifyPreferenceSaved();
     };
 
     const handleToggleStickyLabels = async (value) => {
         await requestStickyLabels(value);
         call();
-        preferenceSaved();
+        notifyPreferenceSaved();
     };
 
     const handleChangeDraftType = async (value) => {
         await requestDraftType(value);
         call();
-        preferenceSaved();
+        notifyPreferenceSaved();
     };
 
     const handleChangeRightToLeft = async (value) => {
         await requestRightToLeft(value);
         call();
-        preferenceSaved();
+        notifyPreferenceSaved();
     };
 
     return (
