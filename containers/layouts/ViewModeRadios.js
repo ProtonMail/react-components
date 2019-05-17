@@ -1,14 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { RadioCards } from 'react-components';
+import { RadioCards, useNotifications } from 'react-components';
 import { VIEW_MODE } from 'proton-shared/lib/constants';
 import conversationGroupSvg from 'design-system/assets/img/pm-images/conversation-group.svg';
 import conversationSingleSvg from 'design-system/assets/img/pm-images/conversation-single.svg';
 
 const { GROUP, SINGLE } = VIEW_MODE;
 
-const ViewModeRadios = ({ viewMode, onChange, loading }) => {
+const ViewModeRadios = ({ viewMode, onChange, loading, id, ...rest }) => {
+    const { createNotification } = useNotifications();
+
     const radioCardGroup = {
         value: GROUP,
         checked: viewMode === GROUP,
@@ -16,7 +18,10 @@ const ViewModeRadios = ({ viewMode, onChange, loading }) => {
         disabled: loading,
         name: 'viewMode',
         label: c('Label to change view mode').t`Conversation group`,
-        onChange: () => onChange(GROUP),
+        onChange: () => {
+            onChange(GROUP);
+            createNotification({ text: c('Success').t`Preference saved` });
+        },
         children: <img alt="Group" src={conversationGroupSvg} />
     };
     const radioCardSingle = {
@@ -26,17 +31,21 @@ const ViewModeRadios = ({ viewMode, onChange, loading }) => {
         disabled: loading,
         name: 'viewMode',
         label: c('Label to change view mode').t`Single messages`,
-        onChange: () => onChange(SINGLE),
+        onChange: () => {
+            onChange(SINGLE);
+            createNotification({ text: c('Success').t`Preference saved` });
+        },
         children: <img alt="Single" src={conversationSingleSvg} />
     };
 
-    return <RadioCards list={[radioCardGroup, radioCardSingle]} />;
+    return <RadioCards list={[radioCardGroup, radioCardSingle]} id={id} {...rest} />;
 };
 
 ViewModeRadios.propTypes = {
     viewMode: PropTypes.number.isRequired,
     onChange: PropTypes.func.isRequired,
-    loading: PropTypes.bool
+    loading: PropTypes.bool,
+    id: PropTypes.string
 };
 
 export default ViewModeRadios;

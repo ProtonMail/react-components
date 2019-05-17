@@ -76,7 +76,7 @@ const LayoutsSection = () => {
             <SubTitle>{c('Title').t`Layouts`}</SubTitle>
             <Alert>{c('Info').t`Lorem ipsum`}</Alert>
             <Row>
-                <Label>
+                <Label htmlFor="composerMode">
                     <span className="mr1">{c('Label').t`Default Composer`}</span>
                     <Info
                         url="https://protonmail.com/support/knowledge-base/composer/"
@@ -84,16 +84,15 @@ const LayoutsSection = () => {
                             .t`This sets the default composer size. Two sizes are available, a smaller popup composer, and a bigger full screen composer.`}
                     />
                 </Label>
-                <Field>
-                    <ComposerModeRadios
-                        composerMode={ComposerMode}
-                        onChange={handleChangeComposerMode}
-                        loading={loadingComposerMode}
-                    />
-                </Field>
+                <ComposerModeRadios
+                    id="composerMode"
+                    composerMode={ComposerMode}
+                    onChange={handleChangeComposerMode}
+                    loading={loadingComposerMode}
+                />
             </Row>
             <Row>
-                <Label>
+                <Label htmlFor="layoutMode">
                     <span className="mr1">{c('Label').t`Default Inbox`}</span>
                     <Info
                         url="https://protonmail.com/support/knowledge-base/change-inbox-layout/"
@@ -101,25 +100,27 @@ const LayoutsSection = () => {
                             .t`ProtonMail supports both column and row layouts for the inbox. Using this setting, it is possible to change between the two layouts.`}
                     />
                 </Label>
-                <Field>
-                    <ViewLayoutRadios
-                        viewLayout={ViewLayout}
-                        onChange={handleChangeViewLayout}
-                        loading={loadingViewLayout}
-                    />
-                </Field>
+                <ViewLayoutRadios
+                    id="layoutMode"
+                    viewLayout={ViewLayout}
+                    onChange={handleChangeViewLayout}
+                    loading={loadingViewLayout}
+                />
             </Row>
             <Row>
-                <Label>
+                <Label htmlFor="viewMode">
                     <span className="mr1">{c('Label').t`Conversations`}</span>
                     <Info
                         title={c('Tooltip')
                             .t`Conversation Grouping automatically groups messages in the same conversation together.`}
                     />
                 </Label>
-                <Field>
-                    <ViewModeRadios viewMode={ViewMode} onChange={handleChangeViewMode} loading={loadingViewMode} />
-                </Field>
+                <ViewModeRadios
+                    viewMode={ViewMode}
+                    onChange={handleChangeViewMode}
+                    loading={loadingViewMode}
+                    id="viewMode"
+                />
             </Row>
             {ViewMode === GROUP ? (
                 <Row>
@@ -141,7 +142,7 @@ const LayoutsSection = () => {
                 </Row>
             ) : null}
             <Row>
-                <Label htmlFor="draftTypeSelect">{c('Label').t`Composer Mode`}</Label>
+                <Label htmlFor="draftType">{c('Label').t`Composer Mode`}</Label>
                 <Field>
                     <DraftTypeSelect
                         id="draftTypeSelect"
@@ -152,10 +153,10 @@ const LayoutsSection = () => {
                 </Field>
             </Row>
             <Row>
-                <Label htmlFor="textDirectionSelect">{c('Label').t`Composer Text Direction`}</Label>
+                <Label htmlFor="textDirection">{c('Label').t`Composer Text Direction`}</Label>
                 <Field>
                     <TextDirectionSelect
-                        id="textDirectionSelect"
+                        id="textDirection"
                         rightToLeft={RightToLeft}
                         onChange={handleChangeRightToLeft}
                         loading={loadingRightToLeft}

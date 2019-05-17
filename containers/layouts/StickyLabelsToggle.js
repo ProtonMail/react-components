@@ -10,8 +10,8 @@ const StickyLabelsToggle = ({ id, stickyLabels, onToggle, loading, ...rest }) =>
     const { state, toggle } = useToggle(stickyLabels === ON);
     const { createNotification } = useNotifications();
 
-    const handleToggle = (event) => {
-        onToggle(event.target.checked ? ON : OFF);
+    const handleToggle = ({ target }) => {
+        onToggle(target.checked ? ON : OFF);
         toggle();
         createNotification({ text: c('Success').t`Preference saved` });
     };
