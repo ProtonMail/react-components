@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { RadioCards, useNotifications } from 'react-components';
+import { RadioCards } from 'react-components';
 import { COMPOSER_MODE } from 'proton-shared/lib/constants';
 import composerPopUpSvg from 'design-system/assets/img/pm-images/composer-popup.svg';
 import composerMaximizedSvg from 'design-system/assets/img/pm-images/composer-maximized.svg';
@@ -9,8 +9,6 @@ import composerMaximizedSvg from 'design-system/assets/img/pm-images/composer-ma
 const { POPUP, MAXIMIZED } = COMPOSER_MODE;
 
 const ComposerModeRadios = ({ composerMode, onChange, loading, id, ...rest }) => {
-    const { createNotification } = useNotifications();
-
     const radioCardPopup = {
         value: POPUP,
         checked: composerMode === POPUP,
@@ -18,9 +16,8 @@ const ComposerModeRadios = ({ composerMode, onChange, loading, id, ...rest }) =>
         disabled: loading,
         name: 'composerMode',
         label: c('Label to change composer mode').t`Popup`,
-        onChange: () => {
+        onChange() {
             onChange(POPUP);
-            createNotification({ text: c('Success').t`Preference saved` });
         },
         children: <img alt="Popup" src={composerPopUpSvg} />
     };
@@ -31,9 +28,8 @@ const ComposerModeRadios = ({ composerMode, onChange, loading, id, ...rest }) =>
         disabled: loading,
         name: 'composerMode',
         label: c('Label to change composer mode').t`Maximized`,
-        onChange: () => {
+        onChange() {
             onChange(MAXIMIZED);
-            createNotification({ text: c('Success').t`Preference saved` });
         },
         children: <img alt="Maximized" src={composerMaximizedSvg} />
     };

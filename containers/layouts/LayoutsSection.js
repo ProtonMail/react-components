@@ -7,6 +7,7 @@ import {
     Field,
     Label,
     Info,
+    useNotifications,
     useMailSettings,
     useEventManager,
     useApiWithoutResult
@@ -34,6 +35,9 @@ const LayoutsSection = () => {
     const [{ ComposerMode, ViewMode, ViewLayout, StickyLabels, DraftMIMEType, RightToLeft } = {}] = useMailSettings();
     const { call } = useEventManager();
 
+    const { createNotification } = useNotifications();
+    const preferenceSaved = () => createNotification({ text: c('Success').t`Preference saved` });
+
     const { request: requestComposerMode, loading: loadingComposerMode } = useApiWithoutResult(updateComposerMode);
     const { request: requestViewMode, loading: loadingViewMode } = useApiWithoutResult(updateViewMode);
     const { request: requestViewLayout, loading: loadingViewLayout } = useApiWithoutResult(updateViewLayout);
@@ -44,31 +48,37 @@ const LayoutsSection = () => {
     const handleChangeComposerMode = async (mode) => {
         await requestComposerMode(mode);
         call();
+        preferenceSaved();
     };
 
     const handleChangeViewMode = async (mode) => {
         await requestViewMode(mode);
         call();
+        preferenceSaved();
     };
 
     const handleChangeViewLayout = async (mode) => {
         await requestViewLayout(mode);
         call();
+        preferenceSaved();
     };
 
     const handleToggleStickyLabels = async (value) => {
         await requestStickyLabels(value);
         call();
+        preferenceSaved();
     };
 
     const handleChangeDraftType = async (value) => {
         await requestDraftType(value);
         call();
+        preferenceSaved();
     };
 
     const handleChangeRightToLeft = async (value) => {
         await requestRightToLeft(value);
         call();
+        preferenceSaved();
     };
 
     return (

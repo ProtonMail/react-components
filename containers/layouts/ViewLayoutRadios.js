@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { RadioCards, useNotifications } from 'react-components';
+import { RadioCards } from 'react-components';
 import { VIEW_LAYOUT } from 'proton-shared/lib/constants';
 import inboxColumnSvg from 'design-system/assets/img/pm-images/inbox-column.svg';
 import inboxRowSvg from 'design-system/assets/img/pm-images/inbox-row.svg';
@@ -9,8 +9,6 @@ import inboxRowSvg from 'design-system/assets/img/pm-images/inbox-row.svg';
 const { COLUMN, ROW } = VIEW_LAYOUT;
 
 const ViewLayoutRadios = ({ viewLayout, onChange, loading, id, ...rest }) => {
-    const { createNotification } = useNotifications();
-
     const radioCardColumn = {
         value: COLUMN,
         checked: viewLayout === COLUMN,
@@ -18,9 +16,8 @@ const ViewLayoutRadios = ({ viewLayout, onChange, loading, id, ...rest }) => {
         disabled: loading,
         name: 'viewLayout',
         label: c('Label to change view layout').t`Column`,
-        onChange: () => {
+        async onChange() {
             onChange(COLUMN);
-            createNotification({ text: c('Success').t`Preference saved` });
         },
         children: <img alt="Column" src={inboxColumnSvg} />
     };
@@ -31,9 +28,8 @@ const ViewLayoutRadios = ({ viewLayout, onChange, loading, id, ...rest }) => {
         disabled: loading,
         name: 'viewLayout',
         label: c('Label to change view layout').t`Row`,
-        onChange: () => {
+        async onChange() {
             onChange(ROW);
-            createNotification({ text: c('Success').t`Preference saved` });
         },
         children: <img alt="Row" src={inboxRowSvg} />
     };

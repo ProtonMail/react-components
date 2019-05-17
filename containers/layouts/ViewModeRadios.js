@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { RadioCards, useNotifications } from 'react-components';
+import { RadioCards } from 'react-components';
 import { VIEW_MODE } from 'proton-shared/lib/constants';
 import conversationGroupSvg from 'design-system/assets/img/pm-images/conversation-group.svg';
 import conversationSingleSvg from 'design-system/assets/img/pm-images/conversation-single.svg';
@@ -9,8 +9,6 @@ import conversationSingleSvg from 'design-system/assets/img/pm-images/conversati
 const { GROUP, SINGLE } = VIEW_MODE;
 
 const ViewModeRadios = ({ viewMode, onChange, loading, id, ...rest }) => {
-    const { createNotification } = useNotifications();
-
     const radioCardGroup = {
         value: GROUP,
         checked: viewMode === GROUP,
@@ -18,9 +16,8 @@ const ViewModeRadios = ({ viewMode, onChange, loading, id, ...rest }) => {
         disabled: loading,
         name: 'viewMode',
         label: c('Label to change view mode').t`Conversation group`,
-        onChange: () => {
+        onChange() {
             onChange(GROUP);
-            createNotification({ text: c('Success').t`Preference saved` });
         },
         children: <img alt="Group" src={conversationGroupSvg} />
     };
@@ -31,9 +28,8 @@ const ViewModeRadios = ({ viewMode, onChange, loading, id, ...rest }) => {
         disabled: loading,
         name: 'viewMode',
         label: c('Label to change view mode').t`Single messages`,
-        onChange: () => {
+        onChange() {
             onChange(SINGLE);
-            createNotification({ text: c('Success').t`Preference saved` });
         },
         children: <img alt="Single" src={conversationSingleSvg} />
     };

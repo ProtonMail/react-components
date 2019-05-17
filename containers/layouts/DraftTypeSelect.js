@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { Select, useNotifications } from 'react-components';
+import { Select } from 'react-components';
 import { DRAFT_TYPE } from 'proton-shared/lib/constants';
 
 const { NORMAL, PLAIN_TEXT } = DRAFT_TYPE;
@@ -11,12 +11,8 @@ const DraftTypeSelect = ({ draftType, onChange, loading }) => {
         { text: c('Option').t`Normal`, value: NORMAL },
         { text: c('Option').t`Plain Text`, value: PLAIN_TEXT }
     ];
-    const { createNotification } = useNotifications();
 
     const handleChange = ({ target }) => {
-        if (target.value != draftType) {
-            createNotification({ text: c('Success').t`Preference saved` });
-        }
         onChange(target.value);
     };
 
