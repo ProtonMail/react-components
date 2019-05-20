@@ -177,7 +177,7 @@ const ShortcutsModal = (props) => {
                 <Summary className="bold h3">{c('Title').t`Contacts`}</Summary>
                 <div className="flex-autogrid onmobile-flex-column">
                     <div className="flex-autogrid-item">
-                        <Legend className="bold">{c('Title').t`Contact List`}</Legend>
+                        <Legend className="bold">{c('Title').t`Contact list`}</Legend>
                         <ul className="unstyled">
                             <li>
                                 <kbd>↑</kbd> + <kbd>↓</kbd> <strong>Moving</strong> between contacts.
@@ -192,7 +192,7 @@ const ShortcutsModal = (props) => {
                     </div>
 
                     <div className="flex-autogrid-item">
-                        <Legend className="bold">{c('Title').t`Contact Details`}</Legend>
+                        <Legend className="bold">{c('Title').t`Contact details`}</Legend>
                         <ul className="unstyled">
                             <li>
                                 <kbd>←</kbd> <strong>Exits</strong> contact details.
