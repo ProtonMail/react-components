@@ -2,6 +2,9 @@ import React from 'react';
 import { c } from 'ttag';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { USER_ROLES } from 'proton-shared/lib/constants';
+
+const { MEMBER_ROLE, ADMIN_ROLE } = USER_ROLES;
 
 import { formatPlans } from '../payments/subscription/helpers';
 
@@ -50,6 +53,10 @@ Rows.propTypes = {
 };
 
 const SummarySection = ({ subscription, user, userSettings }) => {
+    const ROLES = {
+        [MEMBER_ROLE]: c('Role').t`Member`,
+        [ADMIN_ROLE]: c('Role').t`Administrator`
+    };
     return (
         <div className="shadow-container mb1">
             <div className="p1">
@@ -77,6 +84,13 @@ const SummarySection = ({ subscription, user, userSettings }) => {
                     </div>
                 </div>
                 <Rows subscription={subscription} user={user} />
+                {subscription.MaxMembers > 1 ? (
+                    <div className="flex-autogrid onmobile-flex-column w100 mb1">
+                        <div className="flex-autogrid-item">{c('Label').t`Role`}</div>
+                        <div className="flex-autogrid-item bold">{ROLES[user.Role]}</div>
+                        <div className="flex-autogrid-item" />
+                    </div>
+                ) : null}
             </div>
         </div>
     );
