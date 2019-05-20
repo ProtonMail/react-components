@@ -45,7 +45,7 @@ function FilterItemRow({ filter }) {
             </td>
             <td>
                 {!isComplex(filter) ? <EditFilterButton filter={filter} textContent={c('Action').t('Edit')} /> : null}
-                <EditFilterButton filter={filter} mode="complex" textContent={c('Action').t('Edit Sieve')} />
+                <EditFilterButton filter={filter} type="complex" textContent={c('Action').t('Edit Sieve')} />
                 <RemoveFilter filter={filter} />
             </td>
         </tr>

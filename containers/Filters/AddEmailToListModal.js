@@ -17,20 +17,20 @@ function AddEmailToListModal({ type, onAdd, onClose, ...rest }) {
         whitelist: c('Title').t('Add to Whitelist')
     };
 
-    console.log(rest)
-
     const { createNotification } = useNotifications();
     const { request, loading } = useApiWithoutResult(addIncomingDefault);
     const [email, setEmail] = useState('');
 
     const handleChange = setEmail;
     const handleSubmit = async () => {
+        console.log('---CLOCK');
         const Location = type === 'whitelist' ? WHITELIST_TYPE : BLACKLIST_TYPE;
         const { IncomingDefault: data } = await request({ Location, Email: email });
         createNotification({
             text: c('Spam notification').t(`${email} added to ${I18N[type]}`)
         });
         onAdd(type, data);
+        onClose();
     };
 
     return (
@@ -40,7 +40,8 @@ function AddEmailToListModal({ type, onAdd, onClose, ...rest }) {
             title={I18N[type]}
             submit={c('Action').t`Save`}
             onClose={onClose}
-            >
+            {...rest}
+        >
             <AddEmailToList onChange={handleChange} />
         </FormModal>
     );

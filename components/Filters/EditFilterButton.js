@@ -1,31 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { Button, useModals, useEventManager, useNotifications, useApiWithoutResult } from 'react-components';
+import { Button, useModals } from 'react-components';
 import { noop } from 'proton-shared/lib/helpers/function';
 import { updateFilter } from 'proton-shared/lib/api/filters';
 
 import AddFilterModal from '../../containers/Filters/AddFilterModal';
 
-function EditFilterButton({ filter, mode, className, onEditFilter, textContent }) {
-    const { call } = useEventManager();
-    const { createNotification } = useNotifications();
-    const { request } = useApiWithoutResult(updateFilter);
-    // const { isOpen, open, close } = useModal();
+function EditFilterButton({ filter, type, className, onEditFilter, textContent }) {
+    const { createModal } = useModals();
 
-    const handelClick = console.log;
-    // const handelClick = open;
-    // const handleCloseModal = close;
-
-    const handleSubmitModal = async (filter) => {
-        const { Filter } = await request(filter.ID, filter);
-        call();
-        createNotification({
-            text: c('Filter notification').t`Filter ${Filter.Name} updated`
-        });
-        close();
-        onEditFilter(Filter);
-    };
+    const handelClick = () =>
+        createModal(<AddFilterModal mode="update" filter={filter} type={type} onEdit={onEditFilter} />);
 
     return (
         <>
@@ -36,15 +22,6 @@ function EditFilterButton({ filter, mode, className, onEditFilter, textContent }
     );
 }
 
-// {isOpen ? (
-//     <AddFilterModal
-//         show={isOpen}
-//         filter={filter}
-//         type={mode}
-//         onClose={handleCloseModal}
-//         onSubmit={handleSubmitModal}
-//     />
-// ) : null}
 EditFilterButton.propTypes = {
     filter: PropTypes.object.isRequired,
     className: PropTypes.string,

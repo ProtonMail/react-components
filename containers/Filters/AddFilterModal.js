@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { Modal, HeaderModal, InnerModal, FooterModal, ContentModal, PrimaryButton, Button } from 'react-components';
+import { FormModal, useEventManager, useNotifications, useApiWithoutResult } from 'react-components';
 import { newFilter, format as formatFilter } from 'proton-shared/lib/filters/factory';
 import { validate, validateComplex } from 'proton-shared/lib/filters/validator';
+import { addTreeFilter, updateFilter } from 'proton-shared/lib/api/filters';
+import { noop } from 'proton-shared/lib/helpers/function';
 
 import ConditionsEditor from '../../components/Filters/editor/Conditions';
 import ActionsEditor from '../../components/Filters/editor/Actions';
@@ -14,13 +16,38 @@ import NameEditor from '../../components/Filters/editor/Name';
 
 import './AddFilterModal.css';
 
-function AddFilterModal({ filter, type, onSubmit, loading, ...props }) {
+function AddFilterModal({ filter, type, mode, onEdit, ...props }) {
     const filterModel = newFilter(filter, type);
     const [errors, setErrors] = useState({});
     const [model, setModel] = useState(filterModel);
     const [isPreview, setPreview] = useState(false);
     const [isInvalid, setValitidy] = useState(false);
     const [sieveCode, setSieveCode] = useState(filterModel.Sieve || '');
+
+    const { call } = useEventManager();
+    const { createNotification } = useNotifications();
+    const reqCreate = useApiWithoutResult(addTreeFilter);
+    const reqUpdate = useApiWithoutResult(updateFilter);
+
+    const create = async (filter) => {
+        const { Filter } = await reqCreate.request(filter);
+        call();
+        createNotification({
+            text: c('Notification').t`${Filter.Name} created`
+        });
+    };
+
+    const update = async (filter) => {
+        console.log(filter);
+        const { Filter } = await reqCreate.request(filter.ID, filter);
+        call();
+        createNotification({
+            text: c('Filter notification').t`Filter ${Filter.Name} updated`
+        });
+        onEdit(Filter);
+    };
+
+    const ACTIONS = { create, update };
 
     const handleChange = (key) => (data) => {
         setModel((previous) => {
@@ -63,12 +90,12 @@ function AddFilterModal({ filter, type, onSubmit, loading, ...props }) {
                 Sieve: sieveCode
             };
             const isValid = validateFilter(filter);
-            return isValid && onSubmit(formatFilter(filter, 'complex'));
+            return isValid && ACTIONS[mode](formatFilter(filter, 'complex'));
         }
 
         const filter = formatFilter(model, 'simple');
         const isValid = validateFilter(filter);
-        isValid && onSubmit(filter);
+        isValid && ACTIONS[mode](filter);
     };
 
     const handleChangeName = (Name) => setModel({ ...model, Name });
@@ -82,83 +109,76 @@ function AddFilterModal({ filter, type, onSubmit, loading, ...props }) {
     };
 
     return (
-        <Modal {...props} loading={loading}>
-            <HeaderModal onClose={props.onClose}>
-                {!isPreview ? c('Add Filter Modal').t`Custom Filter` : c('Add Filter Modal').t`Custom Filter (Preview)`}
-            </HeaderModal>
+        <FormModal
+            onSubmit={handleSubmit}
+            loading={reqCreate.loading || reqUpdate.loading}
+            className={isPreview ? 'AddFilterModal-isPreview' : ''}
+            title={
+                !isPreview ? c('Add Filter Modal').t`Custom Filter` : c('Add Filter Modal').t`Custom Filter (Preview)`
+            }
+            onClose={props.onClose}
+            {...props}
+        >
+            {type === 'complex' ? (
+                <div className="AddFilterModal-editor">
+                    <NameEditor error={errors.name} filter={filterModel} onChange={handleChangeName} />
+                    <SieveEditor
+                        filter={filterModel}
+                        onChange={handleChangeSieve}
+                        onChangeBeforeLint={handleChangeBeforeLint}
+                    />
+                </div>
+            ) : null}
 
-            <ContentModal
-                onSubmit={handleSubmit}
-                loading={loading}
-                className={isPreview ? 'AddFilterModal-isPreview' : ''}
-                noValidate
-            >
-                {type === 'complex' ? (
-                    <InnerModal className="AddFilterModal-editor">
-                        <NameEditor error={errors.name} filter={filterModel} onChange={handleChangeName} />
-                        <SieveEditor
-                            filter={filterModel}
-                            onChange={handleChangeSieve}
-                            onChangeBeforeLint={handleChangeBeforeLint}
-                        />
-                    </InnerModal>
-                ) : null}
+            {type !== 'complex' ? (
+                <div className="AddFilterModal-editor">
+                    <NameEditor error={errors.name} filter={filterModel} onChange={handleChangeName} />
+                    <OperatorEditor filter={filterModel} onChange={handleChange('Operator')} />
+                    <ConditionsEditor
+                        errors={errors.conditions}
+                        filter={filterModel}
+                        onChange={handleChange('Conditions')}
+                    />
+                    <ActionsEditor errors={errors.actions} filter={filterModel} onChange={handleChange('Actions')} />
+                </div>
+            ) : null}
 
-                {type !== 'complex' ? (
-                    <InnerModal className="AddFilterModal-editor">
-                        <NameEditor error={errors.name} filter={filterModel} onChange={handleChangeName} />
-                        <OperatorEditor filter={filterModel} onChange={handleChange('Operator')} />
-                        <ConditionsEditor
-                            errors={errors.conditions}
-                            filter={filterModel}
-                            onChange={handleChange('Conditions')}
-                        />
-                        <ActionsEditor
-                            errors={errors.actions}
-                            filter={filterModel}
-                            onChange={handleChange('Actions')}
-                        />
-                    </InnerModal>
-                ) : null}
-
-                {isPreview ? (
-                    <InnerModal>
-                        <PreviewFilter filter={model} />
-                    </InnerModal>
-                ) : null}
-
-                {isPreview ? (
-                    <FooterModal>
-                        <Button type="button" onClick={handleClickPreview}>{c('Action').t`Back`}</Button>
-                        <PrimaryButton disabled={loading}>{c('Action').t`Save`}</PrimaryButton>
-                    </FooterModal>
-                ) : null}
-
-                {!isPreview ? (
-                    <FooterModal>
-                        <Button onClick={props.onClose}>{c('Action').t`Close`}</Button>
-                        {type !== 'complex' ? (
-                            <Button type="button" className="mlauto mr1" onClick={handleClickPreview}>{c('Action')
-                                .t`Preview`}</Button>
-                        ) : null}
-                        <PrimaryButton type="submit" disabled={loading}>
-                            {c('Action').t`Save`}
-                        </PrimaryButton>
-                    </FooterModal>
-                ) : null}
-            </ContentModal>
-        </Modal>
+            {isPreview ? <PreviewFilter filter={model} /> : null}
+        </FormModal>
     );
 }
+/*
+
+
+{isPreview ? (
+    <FooterModal>
+        <Button type="button" onClick={handleClickPreview}>{c('Action').t`Back`}</Button>
+        <PrimaryButton disabled={loading}>{c('Action').t`Save`}</PrimaryButton>
+    </FooterModal>
+) : null}
+
+{!isPreview ? (
+    <FooterModal>
+        <Button onClick={props.onClose}>{c('Action').t`Close`}</Button>
+        {type !== 'complex' ? (
+            <Button type="button" className="mlauto mr1" onClick={handleClickPreview}>{c('Action')
+                .t`Preview`}</Button>
+        ) : null}
+        <PrimaryButton type="submit" disabled={loading}>
+            {c('Action').t`Save`}
+        </PrimaryButton>
+    </FooterModal>
+) : null}
+ */
 
 AddFilterModal.propTypes = {
-    show: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired,
-    onSubmit: PropTypes.func.isRequired
+    onEdit: PropTypes.func,
+    mode: PropTypes.string,
+    type: PropTypes.string
 };
 
 AddFilterModal.defaultProps = {
-    show: false,
+    onEdit: noop,
     mode: 'create'
 };
 

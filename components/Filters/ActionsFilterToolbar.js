@@ -1,38 +1,16 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
-import {
-    Button,
-    PrimaryButton,
-    useModals,
-    useEventManager,
-    useNotifications,
-    useApiWithoutResult
-} from 'react-components';
-import { addTreeFilter } from 'proton-shared/lib/api/filters';
+import { Button, PrimaryButton, useModals } from 'react-components';
 
 import AddFilterModal from '../../containers/Filters/AddFilterModal';
 
 function ActionsFilterToolbar() {
     const [type, setType] = useState('');
-    // const { isOpen, open, close } = useModal();
-
-    const { call } = useEventManager();
-    const { createNotification } = useNotifications();
-    const { loading, request } = useApiWithoutResult(addTreeFilter);
-
-    // const handleClose = close;
-    // const handleSubmit = async (filter) => {
-    //     const { Filter } = await request(filter);
-    //     call();
-    //     createNotification({
-    //         text: c('Notification').t`${Filter.Name} created`
-    //     });
-    //     close();
-    // };
+    const { createModal } = useModals();
 
     const handleClickAdd = (type) => () => {
         setType(type);
-        open();
+        createModal(<AddFilterModal type={type} />);
     };
 
     return (
@@ -45,13 +23,4 @@ function ActionsFilterToolbar() {
     );
 }
 
-// {isOpen ? (
-//     <AddFilterModal
-//         show={isOpen}
-//         type={type}
-//         loading={loading}
-//         onClose={handleClose}
-//         onSubmit={handleSubmit}
-//     />
-// ) : null}
 export default ActionsFilterToolbar;

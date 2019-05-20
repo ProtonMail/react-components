@@ -9,7 +9,7 @@ import AddEmailToListModal from '../../../containers/Filters/AddEmailToListModal
 function AddEmailFilterListButton({ type, className, onAdd }) {
     const { createModal } = useModals();
 
-    const handelClick = () => createModal(<AddEmailToListModal type={type} onSubmit={onAdd} />);
+    const handelClick = () => createModal(<AddEmailToListModal type={type} onAdd={onAdd} />);
 
     return (
         <>
