@@ -6,16 +6,20 @@ import { Link } from 'react-router-dom';
 
 const Panel = ({ model }) => {
     return (
-        <div className="bg-global-altgrey color-white p1">
+        <div className="bg-global-altgrey color-white p1 mb1">
             <div className="flex-autogrid onmobile-flex-column w100">
-                <div className="flex-autogrid-item">
+                <div className="flex-autogrid-item flex flex-column flex-spacebetween">
                     <h4>{model.title}</h4>
-                    <p>{model.text}</p>
-                    {model.action ? (
-                        <Link className="pm-button pm-button--primary" to={model.link}>
-                            {model.action}
-                        </Link>
-                    ) : null}
+                    <div className="mb2">{model.text}</div>
+                    <div>
+                        {model.action ? (
+                            <Link className="pm-button pm-button--primary" to={model.link}>
+                                {model.action}
+                            </Link>
+                        ) : (
+                            <div className="p1" />
+                        )}
+                    </div>
                 </div>
                 <div className="flex-autogrid-item">
                     <img src={model.image} alt={model.title} />

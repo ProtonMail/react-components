@@ -51,7 +51,7 @@ Rows.propTypes = {
 
 const SummarySection = ({ subscription, user, userSettings }) => {
     return (
-        <div className="shadow-container">
+        <div className="shadow-container mb1">
             <div className="p1">
                 <div className="flex-autogrid onmobile-flex-column w100 mb1">
                     <div className="flex-autogrid-item">{c('Label').t`Username`}</div>
