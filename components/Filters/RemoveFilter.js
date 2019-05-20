@@ -6,7 +6,7 @@ import {
     ConfirmModal,
     Alert,
     useApiWithoutResult,
-    useModal,
+    // useModals,
     useNotifications,
     useEventManager
 } from 'react-components';
@@ -17,10 +17,11 @@ function RemoveFilter({ filter, className, onRemoveFilter }) {
     const { call } = useEventManager();
     const { createNotification } = useNotifications();
     const { request, loading } = useApiWithoutResult(deleteFilter);
-    const { isOpen: isOpenConfirmModal, open: openConfirmModal, close: closeConfirmModal } = useModal();
+    // const { isOpen: isOpenConfirmModal, open: openConfirmModal, close: closeConfirmModal } = useModal();
 
-    const handelClick = openConfirmModal;
-    const handleCloseConfirmModal = closeConfirmModal;
+    const handelClick = console.log;
+    // const handelClick = openConfirmModal;
+    // const handleCloseConfirmModal = closeConfirmModal;
 
     const handleConfirmConfirmModal = async () => {
         await request(filter.ID);
@@ -37,19 +38,19 @@ function RemoveFilter({ filter, className, onRemoveFilter }) {
             <Button className={className} onClick={handelClick}>
                 {c('Action').t('Delete')}
             </Button>
-            {isOpenConfirmModal ? (
-                <ConfirmModal
-                    loading={loading}
-                    onClose={handleCloseConfirmModal}
-                    onConfirm={handleConfirmConfirmModal}
-                    title={c('Title').t`Delete Filter`}
-                >
-                    <Alert>{c('Info').t`Are you sure you want to delete this filter?`}</Alert>
-                </ConfirmModal>
-            ) : null}
         </>
     );
 }
+            // {isOpenConfirmModal ? (
+            //     <ConfirmModal
+            //         loading={loading}
+            //         onClose={handleCloseConfirmModal}
+            //         onConfirm={handleConfirmConfirmModal}
+            //         title={c('Title').t`Delete Filter`}
+            //     >
+            //         <Alert>{c('Info').t`Are you sure you want to delete this filter?`}</Alert>
+            //     </ConfirmModal>
+            // ) : null}
 
 RemoveFilter.propTypes = {
     filter: PropTypes.object.isRequired,
