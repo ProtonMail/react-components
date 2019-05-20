@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
-const buildSections = ({ route, sections = [] }) => {
+const Sections = ({ route, sections = [] }) => {
     return (
         <ul className="unstyled mt0-5">
             {sections
@@ -21,6 +21,11 @@ const buildSections = ({ route, sections = [] }) => {
     );
 };
 
+Sections.propTypes = {
+    route: PropTypes.string,
+    sections: PropTypes.array
+};
+
 const IndexSection = ({ pages }) => {
     return (
         <div className="settings-grid-container">
@@ -30,7 +35,7 @@ const IndexSection = ({ pages }) => {
                         <h2 className="h6 mb0-5">
                             <strong>{text}</strong>
                         </h2>
-                        {buildSections({ route, sections })}
+                        {Sections({ route, sections })}
                     </div>
                 );
             })}
