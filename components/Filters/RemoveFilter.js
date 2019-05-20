@@ -41,16 +41,16 @@ function RemoveFilter({ filter, className, onRemoveFilter }) {
         </>
     );
 }
-            // {isOpenConfirmModal ? (
-            //     <ConfirmModal
-            //         loading={loading}
-            //         onClose={handleCloseConfirmModal}
-            //         onConfirm={handleConfirmConfirmModal}
-            //         title={c('Title').t`Delete Filter`}
-            //     >
-            //         <Alert>{c('Info').t`Are you sure you want to delete this filter?`}</Alert>
-            //     </ConfirmModal>
-            // ) : null}
+// {isOpenConfirmModal ? (
+//     <ConfirmModal
+//         loading={loading}
+//         onClose={handleCloseConfirmModal}
+//         onConfirm={handleConfirmConfirmModal}
+//         title={c('Title').t`Delete Filter`}
+//     >
+//         <Alert>{c('Info').t`Are you sure you want to delete this filter?`}</Alert>
+//     </ConfirmModal>
+// ) : null}
 
 RemoveFilter.propTypes = {
     filter: PropTypes.object.isRequired,

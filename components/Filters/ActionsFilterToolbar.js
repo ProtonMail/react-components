@@ -45,13 +45,13 @@ function ActionsFilterToolbar() {
     );
 }
 
-            // {isOpen ? (
-            //     <AddFilterModal
-            //         show={isOpen}
-            //         type={type}
-            //         loading={loading}
-            //         onClose={handleClose}
-            //         onSubmit={handleSubmit}
-            //     />
-            // ) : null}
+// {isOpen ? (
+//     <AddFilterModal
+//         show={isOpen}
+//         type={type}
+//         loading={loading}
+//         onClose={handleClose}
+//         onSubmit={handleSubmit}
+//     />
+// ) : null}
 export default ActionsFilterToolbar;

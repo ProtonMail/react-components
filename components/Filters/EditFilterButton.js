@@ -36,15 +36,15 @@ function EditFilterButton({ filter, mode, className, onEditFilter, textContent }
     );
 }
 
-            // {isOpen ? (
-            //     <AddFilterModal
-            //         show={isOpen}
-            //         filter={filter}
-            //         type={mode}
-            //         onClose={handleCloseModal}
-            //         onSubmit={handleSubmitModal}
-            //     />
-            // ) : null}
+// {isOpen ? (
+//     <AddFilterModal
+//         show={isOpen}
+//         filter={filter}
+//         type={mode}
+//         onClose={handleCloseModal}
+//         onSubmit={handleSubmitModal}
+//     />
+// ) : null}
 EditFilterButton.propTypes = {
     filter: PropTypes.object.isRequired,
     className: PropTypes.string,
