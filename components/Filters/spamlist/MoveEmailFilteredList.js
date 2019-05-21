@@ -15,8 +15,8 @@ function MoveEmailFilteredList({ type, dest, email, className, onClick }) {
     const iconName = type === 'whitelist' ? `arrow-right` : `arrow-left`;
 
     const I18N = {
-        blacklist: c('Title').t('blacklist'),
-        whitelist: c('Title').t('whitelist')
+        blacklist: c('Title').t`blacklist`,
+        whitelist: c('Title').t`whitelist`
     };
 
     const handleClick = async () => {
@@ -24,7 +24,7 @@ function MoveEmailFilteredList({ type, dest, email, className, onClick }) {
         const Location = dest === 'whitelist' ? WHITELIST_TYPE : BLACKLIST_TYPE;
         const { IncomingDefault: data } = await request(ID, { Location });
         createNotification({
-            text: c('Moved to black/whitelist').t(`${Email} moved to ${I18N[dest]}`)
+            text: c('Moved to black/whitelist').t`${Email} moved to ${I18N[dest]}`
         });
         onClick(dest, data);
     };

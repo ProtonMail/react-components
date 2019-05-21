@@ -10,15 +10,15 @@ function RemoveEmailFilteredList({ type, email, className, onClick }) {
     const { request } = useApiWithoutResult(deleteIncomingDefaults);
 
     const I18N = {
-        blacklist: c('Title').t('blacklist'),
-        whitelist: c('Title').t('whitelist')
+        blacklist: c('Title').t`blacklist`,
+        whitelist: c('Title').t`whitelist`
     };
 
     const handleClick = async () => {
         const { Email, ID } = email;
         await request([ID]);
         createNotification({
-            text: c('Moved to black/whitelist').t(`${Email} removed from ${I18N[type]}`)
+            text: c('Moved to black/whitelist').t`${Email} removed from ${I18N[type]}`
         });
         onClick(type, email);
     };

@@ -14,7 +14,7 @@ function AddEmailFilterListButton({ type, className, onAdd }) {
     return (
         <>
             <PrimaryButton className={className} onClick={handelClick}>
-                {c('Action').t('Add')}
+                {c('Action').t`Add`}
             </PrimaryButton>
         </>
     );

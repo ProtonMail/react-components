@@ -19,7 +19,7 @@ function AddEmailToList({ onChange }) {
                     id="email"
                     type="email"
                     onChange={handleChange}
-                    placeholder={c('Label').t('Email address')}
+                    placeholder={c('Label').t`Email address`}
                     required={true}
                 />
             </div>

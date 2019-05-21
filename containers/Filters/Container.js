@@ -37,11 +37,10 @@ function FiltersContainer() {
 
     return (
         <>
-            <SubTitle>{c('FilterSettings').t('Custom Filters')}</SubTitle>
+            <SubTitle>{c('FilterSettings').t`Custom Filters`}</SubTitle>
             <Alert learnMore="https://protonmail.com" type="info">
-                {c('FilterSettings').t(
-                    'Add a custom filter to perform actions suche as automatically labeling or archiving messages.'
-                )}
+                {c('FilterSettings')
+                    .t`Add a custom filter to perform actions suche as automatically labeling or archiving messages.`}
             </Alert>
 
             <Group>

@@ -23,7 +23,7 @@ function RemoveFilter({ filter, className, onRemoveFilter }) {
         await request(filter.ID);
         call();
         createNotification({
-            text: c('Filter notification').t('Filter removed')
+            text: c('Filter notification').t`Filter removed`
         });
         onRemoveFilter(filter);
     };
@@ -37,7 +37,7 @@ function RemoveFilter({ filter, className, onRemoveFilter }) {
 
     return (
         <Button className={className} onClick={handelClick}>
-            {c('Action').t('Delete')}
+            {c('Action').t`Delete`}
         </Button>
     );
 }

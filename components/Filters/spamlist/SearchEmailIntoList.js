@@ -18,7 +18,7 @@ function SearchEmailIntoList({ className, onBeforeRequest, onAfterRequest }) {
         <SearchInput
             className={'w100 '.concat(className)}
             onChange={debounce(handleSeachChange, 300)}
-            placeholder={c('FilterSettings').t('Search Whitelist and Blacklist')}
+            placeholder={c('FilterSettings').t`Search Whitelist and Blacklist`}
         />
     );
 }

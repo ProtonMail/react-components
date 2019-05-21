@@ -13,8 +13,8 @@ const WHITELIST_TYPE = +MAILBOX_IDENTIFIERS.inbox;
 
 function AddEmailToListModal({ type, onAdd, onClose, ...rest }) {
     const I18N = {
-        blacklist: c('Title').t('Add to Blacklist'),
-        whitelist: c('Title').t('Add to Whitelist')
+        blacklist: c('Title').t`Add to Blacklist`,
+        whitelist: c('Title').t`Add to Whitelist`
     };
 
     const { createNotification } = useNotifications();
@@ -26,7 +26,7 @@ function AddEmailToListModal({ type, onAdd, onClose, ...rest }) {
         const Location = type === 'whitelist' ? WHITELIST_TYPE : BLACKLIST_TYPE;
         const { IncomingDefault: data } = await request({ Location, Email: email });
         createNotification({
-            text: c('Spam notification').t(`${email} added to ${I18N[type]}`)
+            text: c('Spam notification').t`${email} added to ${I18N[type]}`
         });
         onAdd(type, data);
         onClose();

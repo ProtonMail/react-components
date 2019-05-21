@@ -49,11 +49,10 @@ function SpamFiltersContainer() {
 
     return (
         <>
-            <SubTitle>{c('FilterSettings').t('Spam Filters')}</SubTitle>
+            <SubTitle>{c('FilterSettings').t`Spam Filters`}</SubTitle>
             <p className="block-info-standard mt1 mb1">
-                {c('FilterSettings').t(
-                    'Sender specific spam rules can be applied here. Whitelist addresses always go to Inbox while Blacklist addresses always go to Spam. Marking a message as spam adds the address to the Blacklist. Marking a message as not spam adds it to the Whitelist.'
-                )}
+                {c('FilterSettings')
+                    .t`Sender specific spam rules can be applied here. Whitelist addresses always go to Inbox while Blacklist addresses always go to Spam. Marking a message as spam adds the address to the Blacklist. Marking a message as not spam adds it to the Whitelist.`}
                 <br />
                 <LearnMore url="https://protonmail.com" />
             </p>

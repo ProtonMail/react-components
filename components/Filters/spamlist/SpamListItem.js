@@ -12,11 +12,11 @@ import './SpamListItem.scss';
 
 function SpamListItem({ list, type, dest, onAction, className, loading }) {
     const I18N = {
-        whitelist: c('Title').t('Whitelist'),
-        blacklist: c('Title').t('BlackList'),
+        whitelist: c('Title').t`Whitelist`,
+        blacklist: c('Title').t`BlackList`,
         empty(mode) {
             const type = this[mode];
-            return c('Info').t(`No emails in the ${type}, click Add to add addresses to the ${type}`);
+            return c('Info').t`No emails in the ${type}, click Add to add addresses to the ${type}`;
         }
     };
 
