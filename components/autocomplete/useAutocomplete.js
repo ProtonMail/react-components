@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react';
-import { noop } from 'proton-shared/lib/helpers/function';
-
-const defaultLabelToItem = (label) => label;
+import { noop, identity } from 'proton-shared/lib/helpers/function';
 
 const useAutocomplete = ({
     multiple = true,
     initialSelectedItems = [],
     initialInputValue = '',
-    labelToItem = defaultLabelToItem,
+    labelToItem = identity,
     onChange = noop
 } = {}) => {
     const [initialized, setInitialized] = useState(false);

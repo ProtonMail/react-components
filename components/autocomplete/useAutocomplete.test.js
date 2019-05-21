@@ -55,7 +55,8 @@ describe('useAutocomplete hook', () => {
                 onChange: onChangeSpy
             })
         );
+        expect(onChangeSpy).toHaveBeenCalledTimes(0);
         act(() => result.current.select(newItem, newItem.label));
-        expect(onChangeSpy).toBeCalledWith([...initialSelectedItems, newItem]);
+        expect(onChangeSpy).toHaveBeenCalledWith([...initialSelectedItems, newItem]);
     });
 });
