@@ -69,8 +69,7 @@ function FilterEditorSieve({ filter, onChangeBeforeLint, onChange }) {
                 fixedGutter: false,
                 spellcheck: false,
                 lint: {
-                    delay: 800,
-                    waitingFor: 300
+                    delay: 800
                 },
                 gutters: ['CodeMirror-lint-markers'],
                 autoRefresh: true

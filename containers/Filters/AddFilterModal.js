@@ -1,7 +1,15 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { FormModal, useEventManager, useNotifications, useApiWithoutResult } from 'react-components';
+import {
+    Button,
+    FormModal,
+    ResetButton,
+    PrimaryButton,
+    useEventManager,
+    useNotifications,
+    useApiWithoutResult
+} from 'react-components';
 import { newFilter, format as formatFilter } from 'proton-shared/lib/filters/factory';
 import { validate, validateComplex } from 'proton-shared/lib/filters/validator';
 import { addTreeFilter, updateFilter } from 'proton-shared/lib/api/filters';
@@ -35,16 +43,17 @@ function AddFilterModal({ filter, type, mode, onEdit, ...props }) {
         createNotification({
             text: c('Notification').t`${Filter.Name} created`
         });
+        props.onClose();
     };
 
     const update = async (filter) => {
-        console.log(filter);
-        const { Filter } = await reqCreate.request(filter.ID, filter);
+        const { Filter } = await reqUpdate.request(filter.ID, filter);
         call();
         createNotification({
             text: c('Filter notification').t`Filter ${Filter.Name} updated`
         });
         onEdit(Filter);
+        props.onClose();
     };
 
     const ACTIONS = { create, update };
@@ -63,7 +72,7 @@ function AddFilterModal({ filter, type, mode, onEdit, ...props }) {
 
     const validateFilter = (filter) => {
         if (type === 'complex') {
-            const { isValid, ...errors } = validateComplex(filter);
+            const { isValid, ...errors } = validateComplex(filter, isInvalid);
             if (isInvalid || !isValid) {
                 setErrors(errors);
                 return false;
@@ -83,7 +92,6 @@ function AddFilterModal({ filter, type, mode, onEdit, ...props }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         if (type === 'complex') {
             const filter = {
                 ...model,
@@ -108,6 +116,31 @@ function AddFilterModal({ filter, type, mode, onEdit, ...props }) {
         }
     };
 
+    const getFooter = (loading) => {
+        if (isPreview) {
+            return (
+                <>
+                    <Button type="button" onClick={handleClickPreview}>{c('Action').t`Back`}</Button>
+                    <PrimaryButton loading={loading}>{c('Action').t`Save`}</PrimaryButton>
+                </>
+            );
+        }
+
+        return (
+            <>
+                <ResetButton disabled={loading}>{c('Action').t`Close`}</ResetButton>
+                {type !== 'complex' ? (
+                    <Button type="button" className="mlauto mr1" disabled={loading} onClick={handleClickPreview}>{c(
+                        'Action'
+                    ).t`Preview`}</Button>
+                ) : null}
+                <PrimaryButton type="submit" loading={loading}>
+                    {c('Action').t`Save`}
+                </PrimaryButton>
+            </>
+        );
+    };
+
     return (
         <FormModal
             onSubmit={handleSubmit}
@@ -117,6 +150,7 @@ function AddFilterModal({ filter, type, mode, onEdit, ...props }) {
                 !isPreview ? c('Add Filter Modal').t`Custom Filter` : c('Add Filter Modal').t`Custom Filter (Preview)`
             }
             onClose={props.onClose}
+            footer={getFooter(reqCreate.loading || reqUpdate.loading)}
             {...props}
         >
             {type === 'complex' ? (
@@ -147,29 +181,6 @@ function AddFilterModal({ filter, type, mode, onEdit, ...props }) {
         </FormModal>
     );
 }
-/*
-
-
-{isPreview ? (
-    <FooterModal>
-        <Button type="button" onClick={handleClickPreview}>{c('Action').t`Back`}</Button>
-        <PrimaryButton disabled={loading}>{c('Action').t`Save`}</PrimaryButton>
-    </FooterModal>
-) : null}
-
-{!isPreview ? (
-    <FooterModal>
-        <Button onClick={props.onClose}>{c('Action').t`Close`}</Button>
-        {type !== 'complex' ? (
-            <Button type="button" className="mlauto mr1" onClick={handleClickPreview}>{c('Action')
-                .t`Preview`}</Button>
-        ) : null}
-        <PrimaryButton type="submit" disabled={loading}>
-            {c('Action').t`Save`}
-        </PrimaryButton>
-    </FooterModal>
-) : null}
- */
 
 AddFilterModal.propTypes = {
     onEdit: PropTypes.func,
