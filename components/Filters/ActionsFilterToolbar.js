@@ -1,15 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { c } from 'ttag';
 import { Button, PrimaryButton, useModals } from 'react-components';
 
 import AddFilterModal from '../../containers/Filters/AddFilterModal';
 
 function ActionsFilterToolbar() {
-    const [type, setType] = useState('');
     const { createModal } = useModals();
 
     const handleClickAdd = (type) => () => {
-        setType(type);
         createModal(<AddFilterModal type={type} />);
     };
 

@@ -1,40 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import {
-    PrimaryButton,
-    Icon,
-    useModal,
-    useApiWithoutResult,
-    useEventManager,
-    useNotifications
-} from 'react-components';
-import { createLabel } from 'proton-shared/lib/api/labels';
+import { PrimaryButton, Icon, useModals } from 'react-components';
 import { noop } from 'proton-shared/lib/helpers/function';
 
 import EditLabelModal from '../../containers/Labels/modals/Edit';
 
 function ActionsLabelToolbar({ onAdd }) {
-    const { call } = useEventManager();
-    const { createNotification } = useNotifications();
-    const { request, loading } = useApiWithoutResult(createLabel);
-    const [type, setType] = useState('');
-    const { isOpen: isOpenModal, open: openModal, close: closeModal } = useModal();
+    const { createModal } = useModals();
 
     const handleClickAdd = (type) => () => {
-        setType(type);
-        openModal();
-    };
-    const handleCloseModal = closeModal;
-
-    const handleSubmitModal = async (label = {}) => {
-        const { Label } = await request(label);
-        call();
-        createNotification({
-            text: c('label/folder notification').t`${Label.Name} created`
-        });
-        onAdd(Label);
-        closeModal();
+        return createModal(<EditLabelModal onAdd={onAdd} type={type} />);
     };
 
     return (
@@ -47,16 +23,6 @@ function ActionsLabelToolbar({ onAdd }) {
                 <Icon name="label" style={{ fill: 'currentColor' }} className="mr0-5" />
                 {c('Action').t`Add Label`}
             </PrimaryButton>
-
-            {isOpenModal && (
-                <EditLabelModal
-                    show={isOpenModal}
-                    loading={loading}
-                    type={type}
-                    onClose={handleCloseModal}
-                    onSubmit={handleSubmitModal}
-                />
-            )}
         </>
     );
 }

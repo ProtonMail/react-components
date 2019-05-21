@@ -5,7 +5,7 @@ import {
     ConfirmModal,
     Alert,
     SmallButton,
-    useModal,
+    useModals,
     useApiWithoutResult,
     useEventManager,
     useNotifications
@@ -16,22 +16,9 @@ import { LABEL_TYPES } from 'proton-shared/lib/constants';
 
 function DeleteLabelButton({ label, onRemove }) {
     const { call } = useEventManager();
+    const { createModal } = useModals();
     const { createNotification } = useNotifications();
     const { request, loading } = useApiWithoutResult(deleteLabel);
-    const { isOpen, open, close } = useModal();
-
-    const handleClick = open;
-    const handleCloseConfirmModal = close;
-
-    const handleConfirmConfirmModal = async () => {
-        await request(label.ID);
-        call();
-        createNotification({
-            text: c('Filter notification').t`${label.Name} removed`
-        });
-        onRemove(label);
-        close();
-    };
 
     const I18N = {
         [LABEL_TYPES.LABEL]: {
@@ -46,21 +33,24 @@ function DeleteLabelButton({ label, onRemove }) {
         }
     };
 
-    return (
-        <>
-            <SmallButton onClick={handleClick}>{c('Action').t`Delete`}</SmallButton>
-            {isOpen ? (
-                <ConfirmModal
-                    loading={loading}
-                    onClose={handleCloseConfirmModal}
-                    onConfirm={handleConfirmConfirmModal}
-                    title={I18N[label.Exclusive].title}
-                >
-                    <Alert>{I18N[label.Exclusive].content}</Alert>
-                </ConfirmModal>
-            ) : null}
-        </>
-    );
+    const handleConfirmConfirmModal = async () => {
+        await request(label.ID);
+        call();
+        createNotification({
+            text: c('Filter notification').t`${label.Name} removed`
+        });
+        onRemove(label);
+        close();
+    };
+
+    const handleClick = () =>
+        createModal(
+            <ConfirmModal loading={loading} onConfirm={handleConfirmConfirmModal} title={I18N[label.Exclusive].title}>
+                <Alert>{I18N[label.Exclusive].content}</Alert>
+            </ConfirmModal>
+        );
+
+    return <SmallButton onClick={handleClick}>{c('Action').t`Delete`}</SmallButton>;
 }
 
 DeleteLabelButton.propTypes = {

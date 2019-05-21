@@ -23,7 +23,6 @@ function AddEmailToListModal({ type, onAdd, onClose, ...rest }) {
 
     const handleChange = setEmail;
     const handleSubmit = async () => {
-        console.log('---CLOCK');
         const Location = type === 'whitelist' ? WHITELIST_TYPE : BLACKLIST_TYPE;
         const { IncomingDefault: data } = await request({ Location, Email: email });
         createNotification({
