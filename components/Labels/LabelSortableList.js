@@ -10,20 +10,20 @@ import LabelSortableItem from './LabelSortableItem';
 function LabelSortableList({ items, onEditLabel, onRemoveLabel, onToggleChange }) {
     return (
         <Table className="noborder border-collapse mt1">
-            <caption className="sr-only">{c('Settings/labels').t('Labels/Folders')}</caption>
+            <caption className="sr-only">{c('Settings/labels').t`Labels/Folders`}</caption>
             <thead>
                 <tr>
                     <th scope="col" className="w5">
                         <Icon name="what-is-this" />
                     </th>
                     <th scope="col" className="w45">
-                        {c('Settings/labels - table').t('Name')}
+                        {c('Settings/labels - table').t`Name`}
                     </th>
                     <th scope="col" className="w15">
-                        {c('Settings/labels - table').t('Notification')}
+                        {c('Settings/labels - table').t`Notification`}
                     </th>
                     <th scope="col" className="w30">
-                        {c('Settings/labels - table').t('Action')}
+                        {c('Settings/labels - table').t`Action`}
                     </th>
                 </tr>
             </thead>
@@ -36,6 +36,7 @@ function LabelSortableList({ items, onEditLabel, onRemoveLabel, onToggleChange }
                         onToggleChange={onToggleChange}
                         onEditLabel={onEditLabel}
                         onRemoveLabel={onRemoveLabel}
+                        helperClass="LabelSortableItem-item"
                     />
                 ))}
             </tbody>

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { Loader, Label, Select, Row, useFormattedLabels, ErrorZone } from 'react-components';
+import { Loader, Label, Select, Row, Field, useFormattedLabels, ErrorZone } from 'react-components';
 import { noop } from 'proton-shared/lib/helpers/function';
 
 import LabelActions from './LabelActions';
@@ -95,7 +95,7 @@ function ActionsEditor({ filter, onChange, errors }) {
     return (
         <Row>
             <Label htmlFor="actions">{c('New Label form').t`Actions`}</Label>
-            <div className="w100">
+            <Field className="w100">
                 <div>
                     {loading ? (
                         <Loader />
@@ -127,7 +127,7 @@ function ActionsEditor({ filter, onChange, errors }) {
                 {errors.isValid === false ? (
                     <ErrorZone id="ActionsError">{c('Error').t`A filter must have an action`}</ErrorZone>
                 ) : null}
-            </div>
+            </Field>
         </Row>
     );
 }

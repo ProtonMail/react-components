@@ -1,15 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { c } from 'ttag';
-import {
-    Title,
-    Loader,
-    SubTitle,
-    Alert,
-    Paragraph,
-    useLabels,
-    useEventManager,
-    useApiWithoutResult
-} from 'react-components';
+import { Loader, SubTitle, Alert, Paragraph, useLabels, useEventManager, useApiWithoutResult } from 'react-components';
 import { arrayMove } from 'react-sortable-hoc';
 import { orderLabels } from 'proton-shared/lib/api/labels';
 
@@ -46,30 +37,27 @@ function LabelsContainer() {
 
     return (
         <>
-            <Title>{c('LabelSettings').t`Manage your labels/folders`}</Title>
-            <div className="p1">
-                <SubTitle>{c('LabelSettings').t`Folders and labels`}</SubTitle>
-                <Alert type="info" className="mt1 mb1" learnMore="https://protonmail.com">
-                    {c('LabelSettings')
-                        .t`Multiple Labels can be applied to a single message, but a message can only be in a single Folder.`}
-                </Alert>
-                <nav className="mb1f flex">
-                    <ActionsLabelToolbar />
-                </nav>
+            <SubTitle>{c('LabelSettings').t`Folders and labels`}</SubTitle>
+            <Alert type="info" className="mt1 mb1" learnMore="https://protonmail.com">
+                {c('LabelSettings')
+                    .t`Multiple Labels can be applied to a single message, but a message can only be in a single Folder.`}
+            </Alert>
+            <nav className="mb1f flex">
+                <ActionsLabelToolbar />
+            </nav>
 
-                {loading ? <Loader /> : null}
+            {loading ? <Loader /> : null}
 
-                {!loading && labels.length ? (
-                    <LabelSortableList
-                        getContainer={getScrollContainer}
-                        pressDelay={200}
-                        items={labels}
-                        onSortEnd={onSortEnd}
-                    />
-                ) : (
-                    <Paragraph>{c('LabelSettings').t`No labels/folders available`}</Paragraph>
-                )}
-            </div>
+            {!loading && labels.length ? (
+                <LabelSortableList
+                    getContainer={getScrollContainer}
+                    pressDelay={200}
+                    items={labels}
+                    onSortEnd={onSortEnd}
+                />
+            ) : (
+                <Paragraph>{c('LabelSettings').t`No labels/folders available`}</Paragraph>
+            )}
         </>
     );
 }

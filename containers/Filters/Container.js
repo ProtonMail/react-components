@@ -29,10 +29,14 @@ function FiltersContainer() {
 
     const getScrollContainer = () => document.querySelector('.main-area');
     const onSortEnd = async ({ oldIndex, newIndex }) => {
-        const newList = arrayMove(list, oldIndex, newIndex);
-        setFilters(newList);
-        await orderRequest.request(newList.map(({ ID }) => ID));
-        call();
+        try {
+            const newList = arrayMove(list, oldIndex, newIndex);
+            setFilters(newList);
+            await orderRequest.request(newList.map(({ ID }) => ID));
+            call();
+        } catch (e) {
+            setFilters(filters);
+        }
     };
 
     return (

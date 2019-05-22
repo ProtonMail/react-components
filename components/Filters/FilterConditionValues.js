@@ -16,7 +16,7 @@ function FilterConditionValues({ condition, options, onDelete, onChangeCondition
                 name="filterConditions"
                 className="mb1"
                 onChange={onChangeCondition}
-                defaultValue={condition.Comparator.value}
+                value={condition.Comparator.value}
             />
 
             <div className="flex flex-column w100 mb1">

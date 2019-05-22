@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import { debounce } from 'proton-shared/lib/helpers/function';
-import { Toggle, useApiWithoutResult, useEventManager, useNotifications } from 'react-components';
+import { Toggle, useToggle, useApiWithoutResult, useEventManager, useNotifications } from 'react-components';
 import { updateLabel } from 'proton-shared/lib/api/labels';
 
 const ToggleNotify = ({ label }) => {
-    const [toggled, setToggle] = useState(label.Notify === 1);
+    const { toggle, state: toggled } = useToggle(label.Notify === 1);
     const { call } = useEventManager();
     const { createNotification } = useNotifications();
     const { request, loading } = useApiWithoutResult(updateLabel);
@@ -16,9 +16,9 @@ const ToggleNotify = ({ label }) => {
             ...label,
             Notify: +!label.Notify
         };
+        toggle();
         await request(label.ID, newLabel);
-        setToggle(newLabel.Notify === 1);
-        call();
+        await call();
         createNotification({
             text: c('label/folder notification').t`${label.Name} updated`
         });

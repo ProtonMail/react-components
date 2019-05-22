@@ -19,7 +19,7 @@ function LabelItem({ label, onEditLabel, onRemoveLabel }) {
             <td>
                 {Exclusive === 1 && <Icon name="folder" style={{ fill: Color }} className="icon-16p mr1" alt={Name} />}
                 {Exclusive === 0 && <Icon name="label" style={{ fill: Color }} className="icon-16p mr1" alt={Name} />}
-                {Name}
+                <span>{Name}</span>
             </td>
             <td>
                 <div className="w10">{Exclusive === 1 && <ToggleNotify label={label} />}</div>

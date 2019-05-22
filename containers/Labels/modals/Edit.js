@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import { FormModal, useEventManager, useNotifications, useApiWithoutResult } from 'react-components';
@@ -38,13 +38,9 @@ function EditLabelModal({ label, mode, onEdit, onAdd, ...props }) {
         }
     );
 
-    useEffect(() => {
-        setModel(model);
-    }, [model]);
-
     const create = async (label) => {
         const { Label } = await reqCreate.request(label);
-        call();
+        await call();
         createNotification({
             text: c('label/folder notification').t`${Label.Name} created`
         });
@@ -54,7 +50,7 @@ function EditLabelModal({ label, mode, onEdit, onAdd, ...props }) {
 
     const update = async (label) => {
         const { Label } = await reqUpdate.request(label.ID, label);
-        call();
+        await call();
         createNotification({
             text: c('Filter notification').t`${Label.Name} updated`
         });

@@ -26,7 +26,7 @@ function LabelColors({ selected, onChange, className }) {
                             aria-labelledby={`Color ${color}`}
                             className="LabelColors-input-color"
                         />
-                        <div className="LabelColors-item-mask flex">
+                        <div className="LabelColors-item-mask">
                             <Icon name="on" className="mauto" fill="none" />
                         </div>
                     </li>

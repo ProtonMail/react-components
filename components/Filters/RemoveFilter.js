@@ -21,7 +21,7 @@ function RemoveFilter({ filter, className, onRemoveFilter }) {
 
     const handleConfirmConfirmModal = async () => {
         await request(filter.ID);
-        call();
+        await call();
         createNotification({
             text: c('Filter notification').t`Filter removed`
         });

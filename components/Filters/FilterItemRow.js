@@ -1,18 +1,20 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import { SortableElement } from 'react-sortable-hoc';
 import { debounce } from 'proton-shared/lib/helpers/function';
 import { isComplex } from 'proton-shared/lib/filters/factory';
 import { toggleEnable } from 'proton-shared/lib/api/filters';
-import { Icon, Toggle, useEventManager, useApiWithoutResult, useNotifications } from 'react-components';
+import { FILTER_STATUS } from 'proton-shared/lib/constants';
+
+import { Icon, Toggle, useToggle, useEventManager, useApiWithoutResult, useNotifications } from 'react-components';
 
 import RemoveFilter from './RemoveFilter';
 import EditFilterButton from './EditFilterButton';
 
 function FilterItemRow({ filter }) {
     const { ID, Name, Status } = filter;
-    const [toggled, setToggle] = useState(Status === 1);
+    const { toggle, state: toggled } = useToggle(Status === FILTER_STATUS.ENABLED);
 
     const { call } = useEventManager();
     const { createNotification } = useNotifications();
@@ -20,8 +22,8 @@ function FilterItemRow({ filter }) {
 
     const handleChangeStatus = async () => {
         await request(ID, !toggled);
-        setToggle(!toggled);
-        call();
+        toggle();
+        await call();
         createNotification({
             text: c('Success notification').t`Status updated`
         });
