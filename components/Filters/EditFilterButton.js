@@ -8,11 +8,11 @@ import AddFilterModal from '../../containers/Filters/AddFilterModal';
 function EditFilterButton({ filter, type, className, onEditFilter, textContent }) {
     const { createModal } = useModals();
 
-    const handelClick = () =>
+    const handleClick = () =>
         createModal(<AddFilterModal mode="update" filter={filter} type={type} onEdit={onEditFilter} />);
 
     return (
-        <Button className={className} onClick={handelClick}>
+        <Button className={className} onClick={handleClick}>
             {textContent}
         </Button>
     );

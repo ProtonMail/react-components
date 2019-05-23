@@ -25,7 +25,7 @@ import NameEditor from '../../components/Filters/editor/Name';
 import './AddFilterModal.css';
 
 function AddFilterModal({ filter, type, mode, onEdit, ...props }) {
-    const filterModel = newFilter(filter, type);
+    const [filterModel] = useState(() => newFilter(filter, type));
     const [errors, setErrors] = useState({});
     const [model, setModel] = useState(filterModel);
     const [isPreview, setPreview] = useState(false);

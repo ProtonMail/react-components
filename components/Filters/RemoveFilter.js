@@ -28,7 +28,7 @@ function RemoveFilter({ filter, className, onRemoveFilter }) {
         onRemoveFilter(filter);
     };
 
-    const handelClick = () =>
+    const handleClick = () =>
         createModal(
             <ConfirmModal loading={loading} onConfirm={handleConfirmConfirmModal} title={c('Title').t`Delete Filter`}>
                 <Alert>{c('Info').t`Are you sure you want to delete this filter?`}</Alert>
@@ -36,7 +36,7 @@ function RemoveFilter({ filter, className, onRemoveFilter }) {
         );
 
     return (
-        <Button className={className} onClick={handelClick}>
+        <Button className={className} onClick={handleClick}>
             {c('Action').t`Delete`}
         </Button>
     );

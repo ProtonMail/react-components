@@ -83,9 +83,9 @@ function ActionsEditor({ filter, onChange, errors }) {
     const getSelectedLabels = () => {
         const MAP = labelModel.getLabelsMap();
         const { Labels = [], FileInto } = Actions;
-        const filter = (name) => MAP[name];
-        const list = FileInto.filter(filter);
-        return [...new Set(Labels.concat(list))].map(filter);
+        const toLabel = (name) => MAP[name];
+        const list = FileInto.filter(toLabel);
+        return [...new Set(Labels.concat(list))].map(toLabel);
     };
 
     const handleOnChangeLabel = (labels) => {
