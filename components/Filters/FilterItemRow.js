@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import { SortableElement } from 'react-sortable-hoc';
-import { debounce } from 'proton-shared/lib/helpers/function';
 import { isComplex } from 'proton-shared/lib/filters/factory';
 import { toggleEnable } from 'proton-shared/lib/api/filters';
 import { FILTER_STATUS } from 'proton-shared/lib/constants';
@@ -37,12 +36,7 @@ function FilterItemRow({ filter }) {
             <td>{Name}</td>
             <td>
                 <div className="w10">
-                    <Toggle
-                        id={`item-${ID}`}
-                        loading={loading}
-                        checked={toggled}
-                        onChange={debounce(handleChangeStatus, 300)}
-                    />
+                    <Toggle id={`item-${ID}`} loading={loading} checked={toggled} onChange={handleChangeStatus} />
                 </div>
             </td>
             <td>

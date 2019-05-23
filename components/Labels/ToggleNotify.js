@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { debounce } from 'proton-shared/lib/helpers/function';
 import { Toggle, useToggle, useApiWithoutResult, useEventManager, useNotifications } from 'react-components';
 import { updateLabel } from 'proton-shared/lib/api/labels';
 
@@ -23,9 +22,7 @@ const ToggleNotify = ({ label }) => {
             text: c('label/folder notification').t`${label.Name} updated`
         });
     };
-    return (
-        <Toggle id={`item-${label.ID}`} checked={toggled} onChange={debounce(handleChange, 300)} loading={loading} />
-    );
+    return <Toggle id={`item-${label.ID}`} checked={toggled} onChange={handleChange} loading={loading} />;
 };
 
 ToggleNotify.propTypes = {

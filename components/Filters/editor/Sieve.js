@@ -11,6 +11,8 @@ import { checkSieveFilter } from 'proton-shared/lib/api/filters';
 import 'codemirror/addon/display/autorefresh';
 import 'codemirror/addon/lint/lint';
 import 'codemirror/mode/sieve/sieve';
+import 'codemirror/lib/codemirror.css';
+import 'codemirror/addon/lint/lint.css';
 
 const clean = normalize();
 codemirror.registerHelper(
