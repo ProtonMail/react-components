@@ -112,3 +112,22 @@ Get all variables defined in `config.js` file for a dedicated project.
 ``` js
 const { CLIENT_ID, CLIENT_VERSION } = useConfig();
 ```
+
+### useCachedAsyncResult
+Get `result` and `loading` from an async operation that is persisted in the cache. Indexed by a unique key, and re-evaluated whenever the dependencies change.
+
+Note: If the async operation throws, this hook will throw, so wrap the component using this hook with an ErrorBoundary if the error needs to be handled. Otherwise it will be retried when the component renders the next time.
+
+```js
+const [result, loading] = useCachedAsyncResult(
+    'UNIQUE_KEY',
+    () => {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve('the result')
+            }, 1500);
+        });
+    },
+    [dependencies]
+);
+```
