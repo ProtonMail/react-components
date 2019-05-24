@@ -8,7 +8,7 @@ import { c } from 'ttag';
 
 import { generateUID } from '../../../helpers/component';
 
-const ExportPrivateKeyModal = ({ name, privateKey, onClose, ...rest }) => {
+const ExportPrivateKeyModal = ({ name, privateKey, onSuccess, onClose, ...rest }) => {
     const { createModal } = useModals();
 
     if (!privateKey.isDecrypted()) {
@@ -29,6 +29,7 @@ const ExportPrivateKeyModal = ({ name, privateKey, onClose, ...rest }) => {
         const armoredEncryptedKey = await encryptPrivateKey(privateKey, password);
         const blob = new Blob([armoredEncryptedKey], { type: 'data:text/plain;charset=utf-8;' });
         downloadFile(blob, filename);
+        onSuccess && onSuccess();
         onClose();
     };
 
@@ -65,6 +66,7 @@ const ExportPrivateKeyModal = ({ name, privateKey, onClose, ...rest }) => {
 
 ExportPrivateKeyModal.propTypes = {
     onClose: PropTypes.func,
+    onSuccess: PropTypes.func,
     privateKey: PropTypes.object.isRequired,
     name: PropTypes.string.isRequired
 };

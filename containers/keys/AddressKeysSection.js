@@ -29,6 +29,7 @@ import ImportKeyModal from './importKeys/ImportKeyModal';
 import ReactivateKeysModal from './reactivateKeys/ReactivateKeysModal';
 import ExportPublicKeyModal from './exportKey/ExportPublicKeyModal';
 import ExportPrivateKeyModal from './exportKey/ExportPrivateKeyModal';
+import DeleteKeyModal from './deleteKey/DeleteKeyModal';
 
 const AddressKeysSection = () => {
     const { createModal } = useModals();
@@ -235,10 +236,15 @@ const AddressKeysSection = () => {
             },
             canDelete && {
                 type: ACTIONS.DELETE,
-                onClick: async () => {
-                    const keysManager = createKeysManager(selectedAddressKeys, api);
-                    await keysManager.removeKey(KeyID);
-                    await call();
+                onClick: () => {
+                    createModal(
+                        <DeleteKeyModal
+                            Address={selectedAddress}
+                            addressKeys={selectedAddressKeys}
+                            KeyID={Key.ID}
+                            privateKey={privateKey}
+                        />
+                    );
                 }
             }
         ]
