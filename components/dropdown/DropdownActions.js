@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Group, ButtonGroup, Icon, Tooltip } from 'react-components';
+import { Info, Button, Group, ButtonGroup } from 'react-components';
 import { c } from 'ttag';
 
 import Dropdown from './Dropdown';
@@ -13,10 +13,8 @@ const wrapTooltip = (text, tooltip) => {
     }
     return (
         <>
-            {text}{' '}
-            <Tooltip title={tooltip}>
-                <Icon name="info" />
-            </Tooltip>
+            <span className="mr0-5">{text}</span>
+            <Info title={tooltip} />
         </>
     );
 };
