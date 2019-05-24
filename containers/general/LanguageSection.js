@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { c, getConfig } from 'ttag';
+import { c } from 'ttag';
 import {
     SubTitle,
     Row,
@@ -47,10 +47,10 @@ function LanguageSection() {
         await request(newLocale);
         await loadLocale(config, newLocale);
         setLocale(newLocale);
-        console.log(getConfig);
         createNotification({ text: c('Success').t`Locale updated` });
     };
-    console.log(getConfig);
+    window.tt = c;
+    console.log(c('Title').t`Language`);
 
     return (
         <div>
