@@ -4,7 +4,6 @@ import { Icons, ConfigContext } from 'react-components';
 import { MAILBOX_PASSWORD_KEY, UID_KEY } from 'proton-shared/lib/constants';
 import createAuthenticationStore from 'proton-shared/lib/authenticationStore';
 import createSecureSessionStorage from 'proton-shared/lib/secureSessionStorage';
-import { loadLocale } from 'proton-shared/lib/i18n';
 
 import AuthenticatedApp from './AuthenticatedApp';
 import UnauthenticatedApp from './UnAuthenticatedApp';
@@ -59,7 +58,6 @@ function main(config, AuthenticatedSlot, UnAuthenticatedSlot) {
         };
 
         if (!authenticated) {
-            loadLocale(config);
             return wrap(
                 <ConfigContext.Provider value={config}>
                     <UnauthenticatedApp initApi={initApi}>
@@ -68,7 +66,6 @@ function main(config, AuthenticatedSlot, UnAuthenticatedSlot) {
                 </ConfigContext.Provider>
             );
         }
-
         return wrap(
             <ConfigContext.Provider value={config}>
                 <AuthenticatedApp

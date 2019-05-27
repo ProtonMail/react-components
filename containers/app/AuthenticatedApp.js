@@ -6,7 +6,8 @@ import {
     UnlockModal,
     ModelsProvider,
     NotificationsProvider,
-    ModalsProvider
+    ModalsProvider,
+    LocaleProvider
 } from 'react-components';
 import { revoke } from 'proton-shared/lib/api/auth';
 import { getError } from 'proton-shared/lib/apiHandlers';
@@ -75,14 +76,15 @@ const AuthenticatedApp = ({ authenticationStore, onLogout, initApi, loginData, c
             }
         };
     }
-
     return (
         <NotificationsProvider ref={notificationsRef}>
             <ApiContext.Provider value={apiRef.current}>
                 <AuthenticationStoreContext.Provider value={authenticationRef.current}>
                     <ModelsProvider loginData={loginData}>
                         <ThemeInjector />
-                        <ModalsProvider ref={modalsRef}>{children}</ModalsProvider>
+                        <LocaleProvider>
+                            <ModalsProvider ref={modalsRef}>{children}</ModalsProvider>
+                        </LocaleProvider>
                     </ModelsProvider>
                 </AuthenticationStoreContext.Provider>
             </ApiContext.Provider>

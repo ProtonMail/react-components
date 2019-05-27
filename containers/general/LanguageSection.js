@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { c } from 'ttag';
 import {
     SubTitle,
@@ -6,20 +6,19 @@ import {
     Field,
     Label,
     Select,
-    useUserSettings,
     useApiWithoutResult,
     useNotifications,
-    useConfig
+    useConfig,
+    useLocale
 } from 'react-components';
 import { updateLocale } from 'proton-shared/lib/api/settings';
 import { loadLocale } from 'proton-shared/lib/i18n';
 
 function LanguageSection() {
-    const [{ Locale }] = useUserSettings();
     const { createNotification } = useNotifications();
     const { request, loading } = useApiWithoutResult(updateLocale);
-    const [locale, setLocale] = useState(Locale);
     const config = useConfig();
+    const [{ locale }, dispatchLocale] = useLocale();
 
     const options = [
         { text: 'Čeština', value: 'cs_CZ' },
@@ -46,14 +45,15 @@ function LanguageSection() {
         const newLocale = target.value;
         await request(newLocale);
         await loadLocale(config, newLocale);
-        setLocale(newLocale);
+        dispatchLocale({
+            type: 'setLocale',
+            locale: newLocale
+        });
         createNotification({ text: c('Success').t`Locale updated` });
     };
-    window.tt = c;
-    console.log(c('Title').t`Language`);
 
     return (
-        <div>
+        <>
             <SubTitle>{c('Title').t`Language`}</SubTitle>
             <Row>
                 <Label htmlFor="languageSelect">
@@ -69,7 +69,7 @@ function LanguageSection() {
                     />
                 </Field>
             </Row>
-        </div>
+        </>
     );
 }
 
