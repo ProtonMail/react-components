@@ -2,6 +2,12 @@ import { useCache } from 'react-components';
 import { useEffect, useReducer } from 'react';
 import { STATUS } from 'proton-shared/lib/models/cache';
 
+/**
+ * Shallowly compare the values of the dependency arrays
+ * @param {Array} a
+ * @param {Array} b
+ * @return {boolean}
+ */
 const areDependenciesEqual = (a, b) => {
     if (!a) {
         return false;
