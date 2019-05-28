@@ -25,16 +25,16 @@ import { ELEMENTS_PER_PAGE, LOGS_STATE } from 'proton-shared/lib/constants';
 import LogsTable from './LogsTable';
 import WipeLogsButton from './WipeLogsButton';
 
-const EVENTS = {
-    0: c('Log event').t`Login password failure`,
-    1: c('Log event').t`Login success`,
-    2: c('Log event').t`Logout`,
-    3: c('Log event').t`2FA login failure`
-};
-
 const { DISABLE, BASIC, ADVANCED } = LOGS_STATE;
 
 const LogsSection = () => {
+    const EVENTS = {
+        0: c('Log event').t`Login password failure`,
+        1: c('Log event').t`Login success`,
+        2: c('Log event').t`Logout`,
+        3: c('Log event').t`2FA login failure`
+    };
+
     const [settings] = useUserSettings();
     const { createModal } = useModals();
     const [logAuth, setLogAuth] = useState(settings.LogAuth);

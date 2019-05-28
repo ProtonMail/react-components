@@ -7,13 +7,13 @@ import GiftCodeForm from './GiftCodeForm';
 
 const { MONTHLY, YEARLY, TWO_YEARS } = CYCLE;
 
-const BILLING_CYCLE = {
-    [MONTHLY]: c('Info').t`monthly billing`,
-    [YEARLY]: c('Info').t`annual billing`,
-    [TWO_YEARS]: c('Info').t`two year billing`
-};
-
 const PaymentDetails = ({ check, model, onChange }) => {
+    const BILLING_CYCLE = {
+        [MONTHLY]: c('Info').t`monthly billing`,
+        [YEARLY]: c('Info').t`annual billing`,
+        [TWO_YEARS]: c('Info').t`two year billing`
+    };
+
     const { state, toggle } = useToggle();
 
     return (

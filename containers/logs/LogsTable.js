@@ -7,14 +7,6 @@ import { LOGS_STATE, AUTH_LOG_EVENTS } from 'proton-shared/lib/constants';
 const { DISABLE, ADVANCED } = LOGS_STATE;
 const { LOGIN_FAILURE_PASSWORD, LOGIN_SUCCESS, LOGOUT, LOGIN_FAILURE_2FA, LOGIN_SUCCESS_AWAIT_2FA } = AUTH_LOG_EVENTS;
 
-const EVENTS = {
-    [LOGIN_FAILURE_PASSWORD]: c('Logs status').t`Login failure (Password)`,
-    [LOGIN_SUCCESS]: c('Logs status').t`Login success`,
-    [LOGOUT]: c('Logs status').t`Logout`,
-    [LOGIN_FAILURE_2FA]: c('Logs status').t`Login failure (2FA)`,
-    [LOGIN_SUCCESS_AWAIT_2FA]: c('Logs status').t`Login failure (2FA)`
-};
-
 const ICONS = {
     [LOGIN_FAILURE_PASSWORD]: <Icon name="off" />,
     [LOGIN_SUCCESS]: <Icon name="on" />,
@@ -24,6 +16,14 @@ const ICONS = {
 };
 
 const LogsTable = ({ logs, logAuth, loading }) => {
+    const EVENTS = {
+        [LOGIN_FAILURE_PASSWORD]: c('Logs status').t`Login failure (Password)`,
+        [LOGIN_SUCCESS]: c('Logs status').t`Login success`,
+        [LOGOUT]: c('Logs status').t`Logout`,
+        [LOGIN_FAILURE_2FA]: c('Logs status').t`Login failure (2FA)`,
+        [LOGIN_SUCCESS_AWAIT_2FA]: c('Logs status').t`Login failure (2FA)`
+    };
+
     if (logAuth === DISABLE) {
         return (
             <Alert>{c('Info')

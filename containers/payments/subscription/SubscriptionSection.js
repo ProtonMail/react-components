@@ -23,13 +23,13 @@ import SubscriptionModal from './SubscriptionModal';
 const { MONTHLY, YEARLY, TWO_YEARS } = CYCLE;
 const { BUNDLE } = COUPON_CODES;
 
-const CYCLES = {
-    [MONTHLY]: c('Billing cycle').t`Monthly`,
-    [YEARLY]: c('Billing cycle').t`Yearly`,
-    [TWO_YEARS]: c('Billing cycle').t`2-year`
-};
-
 const SubscriptionSection = ({ permission }) => {
+    const CYCLES = {
+        [MONTHLY]: c('Billing cycle').t`Monthly`,
+        [YEARLY]: c('Billing cycle').t`Yearly`,
+        [TWO_YEARS]: c('Billing cycle').t`2-year`
+    };
+
     const [{ hasPaidMail, hasPaidVpn, isPaid }] = useUser();
     const [subscription, loadingSubscription] = useSubscription();
     const { createModal } = useModals();

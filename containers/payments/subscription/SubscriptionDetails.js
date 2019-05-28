@@ -13,18 +13,17 @@ import CouponForm from './CouponForm';
 const { BUNDLE } = COUPON_CODES;
 const { MAIL, VPN } = PLAN_SERVICES;
 
-const TITLES = {
-    mailfree: `ProtonMail (${c('Info').t`no subuscription`})`,
-    vpnfree: `ProtonVPN (${c('Info').t`no subuscription`})`,
-    plus: 'ProtonMail Plus',
-    professional: 'ProtonMail Professional',
-    visionary: 'Proton Visionary',
-    vpnplus: 'ProtonVPN Plus',
-    vpnbasic: 'ProtonVPN Basic'
-};
-
 const Rows = ({ model, plans }) => {
     const { visionary, plus, vpnbasic, vpnplus, professional } = model.plansMap;
+    const TITLES = {
+        mailfree: `ProtonMail (${c('Info').t`no subuscription`})`,
+        vpnfree: `ProtonVPN (${c('Info').t`no subuscription`})`,
+        plus: 'ProtonMail Plus',
+        professional: 'ProtonMail Professional',
+        visionary: 'Proton Visionary',
+        vpnplus: 'ProtonVPN Plus',
+        vpnbasic: 'ProtonVPN Basic'
+    };
 
     if (visionary) {
         const visionaryPlan = getPlan(plans, { name: 'visionary' });

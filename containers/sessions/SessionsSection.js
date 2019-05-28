@@ -24,22 +24,22 @@ import { ELEMENTS_PER_PAGE } from 'proton-shared/lib/constants';
 import SessionAction from './SessionAction';
 import useAuthenticationStore from '../../hooks/useAuthenticationStore';
 
-const CLIENTS = {
-    Web: c('Badge').t`ProtonMail for web`,
-    WebSettings: c('Badge').t`ProtonMail settings for web`,
-    iOS: c('Badge').t`ProtonMail for iOS`,
-    Android: c('Badge').t`ProtonMail for Android`,
-    ImportExport: c('Badge').t`ProtonMail import-export`,
-    Bridge: c('Badge').t`ProtonMail Bridge`,
-    WebVPN: c('Badge').t`ProtonVPN for web`,
-    VPN: c('Badge').t`ProtonVPN for Windows`,
-    macOSVPN: c('Badge').t`ProtonVPN for macOS`,
-    iOSVPN: c('Badge').t`ProtonVPN for iOS`,
-    AndroidVPN: c('Badge').t`ProtonVPN for Android`,
-    Admin: c('Badge').t`Admin`
-};
-
 const SessionsSection = () => {
+    const CLIENTS = {
+        Web: c('Badge').t`ProtonMail for web`,
+        WebSettings: c('Badge').t`ProtonMail settings for web`,
+        iOS: c('Badge').t`ProtonMail for iOS`,
+        Android: c('Badge').t`ProtonMail for Android`,
+        ImportExport: c('Badge').t`ProtonMail import-export`,
+        Bridge: c('Badge').t`ProtonMail Bridge`,
+        WebVPN: c('Badge').t`ProtonVPN for web`,
+        VPN: c('Badge').t`ProtonVPN for Windows`,
+        macOSVPN: c('Badge').t`ProtonVPN for macOS`,
+        iOSVPN: c('Badge').t`ProtonVPN for iOS`,
+        AndroidVPN: c('Badge').t`ProtonVPN for Android`,
+        Admin: c('Badge').t`Admin`
+    };
+
     const { createNotification } = useNotifications();
     const api = useApi();
     const authenticationStore = useAuthenticationStore();

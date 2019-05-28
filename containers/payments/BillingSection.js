@@ -25,12 +25,6 @@ import PlanPrice from './subscription/PlanPrice';
 
 const { MONTHLY, YEARLY, TWO_YEARS } = CYCLE;
 
-const CYCLES = {
-    [MONTHLY]: c('Billing cycle').t`Monthly`,
-    [YEARLY]: c('Billing cycle').t`Yearly`,
-    [TWO_YEARS]: c('Billing cycle').t`2-year`
-};
-
 /**
  * Define sub-total from current subscription
  * @param {Array} plans coming from Subscription API
@@ -85,6 +79,11 @@ const BillingSection = ({ permission }) => {
 
     const { mailPlan, vpnPlan, addressAddon, domainAddon, memberAddon, vpnAddon, spaceAddon } = formatPlans(Plans);
     const subTotal = getSubTotal(Plans);
+    const CYCLES = {
+        [MONTHLY]: c('Billing cycle').t`Monthly`,
+        [YEARLY]: c('Billing cycle').t`Yearly`,
+        [TWO_YEARS]: c('Billing cycle').t`2-year`
+    };
 
     return (
         <>
