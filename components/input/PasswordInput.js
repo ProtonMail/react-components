@@ -26,6 +26,7 @@ const PasswordInput = (props) => {
                     aria-invalid={error && status.isDirty}
                     aria-describedby={uid}
                     type={type}
+                    disabled={disabled}
                     {...rest}
                     {...handlers}
                 />
