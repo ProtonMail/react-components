@@ -9,7 +9,7 @@ import { SubscriptionModel } from 'proton-shared/lib/models/subscriptionModel';
 import { OrganizationModel } from 'proton-shared/lib/models/organizationModel';
 import { setupEventManager, getEventID } from 'proton-shared/lib/models/setupEventManager';
 import { STATUS } from 'proton-shared/lib/models/cache';
-import { loadLocale } from 'proton-shared/lib/i18n';
+// import { loadLocale } from 'proton-shared/lib/i18n';
 import { useConfig } from 'react-components';
 
 const ModelsProvider = ({ children, loginData = {} }) => {
@@ -29,8 +29,8 @@ const ModelsProvider = ({ children, loginData = {} }) => {
             const [user, eventID, mailSettingsModel] = await Promise.all([
                 loginData.user || UserModel.get(api),
                 loginData.eventID || getEventID(api),
-                MailSettingsModel.get(api),
-                loadLocale(config, userSettingsModel.Locale)
+                MailSettingsModel.get(api)
+                // loadLocale(config, userSettingsModel.Locale)
             ]);
 
             const models = [user.isPaid && SubscriptionModel, user.isPaid && OrganizationModel].filter(Boolean);

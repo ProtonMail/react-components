@@ -8,6 +8,7 @@ import {
     Select,
     useApiWithoutResult,
     useNotifications,
+    useEventManager,
     useConfig,
     useLocale
 } from 'react-components';
@@ -15,10 +16,11 @@ import { updateLocale } from 'proton-shared/lib/api/settings';
 import { loadLocale } from 'proton-shared/lib/i18n';
 
 function LanguageSection() {
+    const config = useConfig();
+    const locale = useLocale();
     const { createNotification } = useNotifications();
     const { request, loading } = useApiWithoutResult(updateLocale);
-    const config = useConfig();
-    const [{ locale }, dispatchLocale] = useLocale();
+    const { call } = useEventManager();
 
     const LANG = {
         cs_CZ: 'Čeština',
@@ -49,11 +51,12 @@ function LanguageSection() {
     const handleChange = async ({ target }) => {
         const newLocale = target.value;
         await request(newLocale);
-        await loadLocale(config, newLocale);
-        dispatchLocale({
-            type: 'setLocale',
-            locale: newLocale
-        });
+        await call();
+        // await loadLocale(config, newLocale);
+        // dispatchLocale({
+        //     type: 'setLocale',
+        //     locale: newLocale
+        // });
         createNotification({ text: c('Success').t`Locale updated` });
     };
 
