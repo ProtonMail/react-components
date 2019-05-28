@@ -25,7 +25,7 @@ function LanguageSection() {
         de_DE: 'Deutsch',
         en_US: 'English',
         es_ES: 'Español',
-        ca_ES: 'Español - catalán',
+        ca_ES: 'Español - català',
         fr_FR: 'Français',
         hr_HR: 'Hrvatski',
         it_IT: 'Italiano',
@@ -41,7 +41,7 @@ function LanguageSection() {
         zh_TW: '繁體中'
     };
 
-    const options = config.TRANSLATIONS.map((value) => ({
+    const options = ['en_US'].concat(config.TRANSLATIONS).map((value) => ({
         text: LANG[value],
         value
     }));
