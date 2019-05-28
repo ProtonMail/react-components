@@ -1,21 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { SmallButton, Icon, Input } from 'react-components';
+import { Button, Icon, Input } from 'react-components';
 import { c } from 'ttag';
+import useToggle from '../toggle/useToggle';
 
-const EditableText = ({ icon, onSubmit, initialText, children, readOnly, className, ...rest }) => {
+const EditableText = ({ icon, onSubmit, initialText, children, readOnly, ...rest }) => {
     const [inputValue, setInputValue] = useState(initialText);
-    const [editing, setEditing] = useState(false);
+    const { state: editing, toggle: toggleEditing, set: setEditing } = useToggle();
 
     useEffect(() => {
         if (editing) {
             setInputValue(initialText);
         }
     }, [editing, initialText]);
-
-    const onToggleEditing = () => {
-        setEditing(!editing);
-    };
 
     const submit = (value) => {
         onSubmit(value);
@@ -31,54 +28,51 @@ const EditableText = ({ icon, onSubmit, initialText, children, readOnly, classNa
 
     return editing ? (
         <form className="flex" onSubmit={handleFormSubmit}>
-            <SmallButton onClick={onToggleEditing} className="mr0-5" title={c('Action').t`Close`}>
-                <Icon name="close" />
-            </SmallButton>
             {children ? (
-                children({ submit })
+                children({ submit, toggleEditing })
             ) : (
                 <>
-                    <SmallButton type="submit" className="mr0-5" title={c('Action').t`Confirm`}>
-                        <Icon name="on" />
-                    </SmallButton>
                     <div className="flex">
-                        <Input
-                            autoFocus
-                            value={inputValue}
-                            onChange={handleChangeInputValue}
-                            className={`pm-field--small ${className}`}
-                            {...rest}
-                        />
+                        <Input autoFocus value={inputValue} onChange={handleChangeInputValue} {...rest} />
                     </div>
+                    <Button type="submit" className={`ml0-5 pm-button--for-icon`} title={c('Action').t`Confirm`}>
+                        <Icon name="on" />
+                    </Button>
                 </>
             )}
+            <Button onClick={toggleEditing} className={`ml0-5 pm-button--for-icon`} title={c('Action').t`Close`}>
+                <Icon name="close" />
+            </Button>
         </form>
     ) : (
         <>
-            {!readOnly && (
-                <SmallButton onClick={onToggleEditing} className="mr0-5" title={c('Action').t`Toggle edit`}>
-                    <Icon name={icon} />
-                </SmallButton>
-            )}
             {initialText === null ? '--' : initialText}
+            {!readOnly && (
+                <Button
+                    onClick={toggleEditing}
+                    className={`ml0-5 pm-button--for-icon`}
+                    title={c('Action').t`Toggle edit`}
+                >
+                    <Icon name={icon} />
+                </Button>
+            )}
         </>
     );
 };
 
 EditableText.propTypes = {
     onSubmit: PropTypes.func.isRequired,
-    className: PropTypes.string,
     initialText: PropTypes.string,
     readOnly: PropTypes.bool,
     children: PropTypes.func,
-    icon: PropTypes.string
+    icon: PropTypes.string,
+    small: PropTypes.bool
 };
 
 EditableText.defaultProps = {
     readOnly: false,
     icon: 'compose',
-    initialText: '',
-    className: ''
+    initialText: ''
 };
 
 export default EditableText;
