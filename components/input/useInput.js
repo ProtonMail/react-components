@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import keycode from 'keycode';
 
-const FOCUSSED_CLASS = 'focused';
+const FOCUSED_CLASS = 'focused';
 const BLURRED_CLASS = 'blurred';
 const DIRTY_CLASS = 'dirty';
 const PRISTINE_CLASS = 'pristine';
@@ -26,7 +26,7 @@ const useInput = (props, initialState = DEFAULT_STATE, prefix = 'field') => {
     if (isPristine) {
         classes.push(PRISTINE_CLASS);
     } else {
-        isFocused && classes.push(`${prefix}-${FOCUSSED_CLASS}`);
+        isFocused && classes.push(`${prefix}-${FOCUSED_CLASS}`);
         isBlurred && classes.push(`${prefix}-${BLURRED_CLASS}`);
         isDirty && classes.push(`${prefix}-${DIRTY_CLASS}`);
     }
