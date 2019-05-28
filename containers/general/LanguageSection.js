@@ -20,26 +20,31 @@ function LanguageSection() {
     const config = useConfig();
     const [{ locale }, dispatchLocale] = useLocale();
 
-    const options = [
-        { text: 'Čeština', value: 'cs_CZ' },
-        { text: 'Deutsch', value: 'de_DE' },
-        { text: 'English', value: 'en_US' },
-        { text: 'Español', value: 'es_ES' },
-        { text: 'Français', value: 'fr_FR' },
-        // { text: 'Bahasa Indonesia', value: 'id_ID' },
-        { text: 'Hrvatski', value: 'hr_HR' },
-        { text: 'Italiano', value: 'it_IT' },
-        { text: '日本語', value: 'ja_JP' },
-        { text: 'Nederlands', value: 'nl_NL' },
-        { text: 'Polski', value: 'pl_PL' },
-        { text: 'Português, brasileiro', value: 'pt_BR' },
-        { text: 'Pусский', value: 'ru_RU' },
-        { text: 'Română', value: 'ro_RO' },
-        { text: 'Türkçe', value: 'tr_TR' },
-        { text: 'Українська', value: 'uk_UA' },
-        { text: '简体中文', value: 'zh_CN' },
-        { text: '繁體中文', value: 'zh_TW' }
-    ];
+    const LANG = {
+        cs_CZ: 'Čeština',
+        de_DE: 'Deutsch',
+        en_US: 'English',
+        es_ES: 'Español',
+        ca_ES: 'Español - catalán',
+        fr_FR: 'Français',
+        hr_HR: 'Hrvatski',
+        it_IT: 'Italiano',
+        ja_JP: '日本語',
+        nl_NL: 'Nederlands',
+        pl_PL: 'Polski',
+        pt_BR: 'Português, brasileiro',
+        ru_RU: 'Pусский',
+        ro_RO: 'Română',
+        tr_TR: 'Türkçe',
+        uk_UA: 'Українська',
+        zh_CN: '简体中文',
+        zh_TW: '繁體中'
+    };
+
+    const options = config.TRANSLATIONS.map((value) => ({
+        text: LANG[value],
+        value
+    }));
 
     const handleChange = async ({ target }) => {
         const newLocale = target.value;
