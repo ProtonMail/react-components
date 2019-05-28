@@ -9,6 +9,16 @@ import TOTPForm from './TOTPForm';
 import UnlockForm from './UnlockForm';
 import useLogin from './useLogin';
 
+const getErrorText = (error) => {
+    if (error.name === 'PasswordError') {
+        return c('Error').t`Incorrect decryption password`;
+    }
+    if (error.data && error.data.Error) {
+        return error.data.Error;
+    }
+    return error.message;
+};
+
 const LoginContainer = ({ onLogin, ignoreUnlock }) => {
     const { form, error, loading, handleLoginSubmit, handleTotpSubmit, handleUnlockSubmit } = useLogin({
         onLogin,
@@ -31,16 +41,6 @@ const LoginContainer = ({ onLogin, ignoreUnlock }) => {
 
         throw new Error('Unsupported form');
     })();
-
-    const getErrorText = (error) => {
-        if (error.name === 'PasswordError') {
-            return c('Error').t`Incorrect decryption password`;
-        }
-        if (error.data && error.data.Error) {
-            return error.data.Error;
-        }
-        return error.message;
-    };
 
     useEffect(() => {
         if (!error) {
