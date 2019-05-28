@@ -11,6 +11,7 @@ import {
     useAuthenticationStore,
     useEventManager,
     useModals,
+    InlineLinkButton,
     FormModal
 } from 'react-components';
 import { getKeySalts } from 'proton-shared/lib/api/keys';
@@ -177,9 +178,9 @@ const ReactivateKeysModal = ({ allKeys: initialAllKeys, onClose, ...rest }) => {
     const { children, ...stepProps } = (() => {
         if (step === STEPS.INFO) {
             const uploadButton = (
-                <a key="0" onClick={() => setStep(STEPS.OR_UPLOAD)}>
+                <InlineLinkButton key="0" onClick={() => setStep(STEPS.OR_UPLOAD)}>
                     {c('Info').t`uploading a backup key`}
-                </a>
+                </InlineLinkButton>
             );
 
             return {
@@ -234,9 +235,9 @@ const ReactivateKeysModal = ({ allKeys: initialAllKeys, onClose, ...rest }) => {
             };
 
             const passwordButton = (
-                <a key="0" onClick={() => setStep(STEPS.INFO)}>
+                <InlineLinkButton key="0" onClick={() => setStep(STEPS.INFO)}>
                     {c('Info').t`entering your old password`}
-                </a>
+                </InlineLinkButton>
             );
 
             return {

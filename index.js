@@ -38,6 +38,7 @@ export { default as ResetButton } from './components/button/ResetButton';
 export { default as Button } from './components/button/Button';
 export { default as LargeButton } from './components/button/LargeButton';
 export { default as LinkButton } from './components/button/LinkButton';
+export { default as InlineLinkButton } from './components/button/InlineLinkButton';
 export { default as ButtonGroup } from './components/button/ButtonGroup';
 export { default as Group } from './components/button/Group';
 export { default as Info } from './components/link/Info';
