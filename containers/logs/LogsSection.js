@@ -20,19 +20,21 @@ import {
 import { queryLogs, clearLogs } from 'proton-shared/lib/api/logs';
 import { updateLogAuth } from 'proton-shared/lib/api/settings';
 import downloadFile from 'proton-shared/lib/helpers/downloadFile';
-import { ELEMENTS_PER_PAGE, LOGS_STATE } from 'proton-shared/lib/constants';
+import { ELEMENTS_PER_PAGE, LOGS_STATE, AUTH_LOG_EVENTS } from 'proton-shared/lib/constants';
 
 import LogsTable from './LogsTable';
 import WipeLogsButton from './WipeLogsButton';
 
 const { DISABLE, BASIC, ADVANCED } = LOGS_STATE;
+const { LOGIN_FAILURE_PASSWORD, LOGIN_SUCCESS, LOGOUT, LOGIN_FAILURE_2FA, LOGIN_SUCCESS_AWAIT_2FA } = AUTH_LOG_EVENTS;
 
 const LogsSection = () => {
     const EVENTS = {
-        0: c('Log event').t`Login password failure`,
-        1: c('Log event').t`Login success`,
-        2: c('Log event').t`Logout`,
-        3: c('Log event').t`2FA login failure`
+        [LOGIN_FAILURE_PASSWORD]: c('Log event').t`Login password failure`,
+        [LOGIN_SUCCESS]: c('Log event').t`Login success`,
+        [LOGOUT]: c('Log event').t`Logout`,
+        [LOGIN_FAILURE_2FA]: c('Log event').t`2FA login failure`,
+        [LOGIN_SUCCESS_AWAIT_2FA]: c('Log event').t`Login password sucess, awaiting 2FA`
     };
 
     const [settings] = useUserSettings();
