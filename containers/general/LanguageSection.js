@@ -7,18 +7,15 @@ import {
     Label,
     Select,
     useApiWithoutResult,
-    useNotifications,
     useEventManager,
     useConfig,
     useLocale
 } from 'react-components';
 import { updateLocale } from 'proton-shared/lib/api/settings';
-import { loadLocale } from 'proton-shared/lib/i18n';
 
 function LanguageSection() {
     const config = useConfig();
     const locale = useLocale();
-    const { createNotification } = useNotifications();
     const { request, loading } = useApiWithoutResult(updateLocale);
     const { call } = useEventManager();
 
@@ -51,13 +48,7 @@ function LanguageSection() {
     const handleChange = async ({ target }) => {
         const newLocale = target.value;
         await request(newLocale);
-        await call();
-        // await loadLocale(config, newLocale);
-        // dispatchLocale({
-        //     type: 'setLocale',
-        //     locale: newLocale
-        // });
-        createNotification({ text: c('Success').t`Locale updated` });
+        await call(); // Then we sync the locale via LocaleProvider
     };
 
     return (
