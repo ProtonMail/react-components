@@ -18,6 +18,12 @@ import PaymentSelector from './PaymentSelector';
 import Payment from './Payment';
 import usePayment from './usePayment';
 
+const getCurrenciesI18N = () => ({
+    EUR: c('Monetary unit').t`Euro`,
+    CHF: c('Monetary unit').t`Swiss franc`,
+    USD: c('Monetary unit').t`Dollar`
+});
+
 const CreditsModal = ({ onClose, ...rest }) => {
     const { call } = useEventManager();
     const { method, setMethod, parameters, setParameters, canPay, setCardValidity } = usePayment(handleSubmit);
@@ -25,12 +31,9 @@ const CreditsModal = ({ onClose, ...rest }) => {
     const { request, loading } = useApiWithoutResult(buyCredit);
     const [currency, setCurrency] = useState(DEFAULT_CURRENCY);
     const [amount, setAmount] = useState(DEFAULT_CREDITS_AMOUNT);
-    const I18N_CURRENCIES = {
-        EUR: c('Monetary unit').t`Euro`,
-        CHF: c('Monetary unit').t`Swiss franc`,
-        USD: c('Monetary unit').t`Dollar`
-    };
-    const i18nCurrency = I18N_CURRENCIES[currency];
+
+    const i18n = getCurrenciesI18N();
+    const i18nCurrency = i18n[currency];
 
     const handleSubmit = async () => {
         await request({ Amount: amount, Currency: currency, ...parameters });

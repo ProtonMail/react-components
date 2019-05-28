@@ -20,6 +20,7 @@ const getStatesI18N = () => ({
 
 const InvoiceState = ({ invoice }) => {
     const i18n = getStatesI18N();
+
     return <Badge type={TYPES[invoice.State]}>{i18n[invoice.State]}</Badge>;
 };
 

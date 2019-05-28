@@ -25,6 +25,12 @@ import PlanPrice from './subscription/PlanPrice';
 
 const { MONTHLY, YEARLY, TWO_YEARS } = CYCLE;
 
+const getCyclesI18N = () => ({
+    [MONTHLY]: c('Billing cycle').t`Monthly`,
+    [YEARLY]: c('Billing cycle').t`Yearly`,
+    [TWO_YEARS]: c('Billing cycle').t`2-year`
+});
+
 /**
  * Define sub-total from current subscription
  * @param {Array} plans coming from Subscription API
@@ -39,6 +45,8 @@ const getSubTotal = (plans = []) => {
 };
 
 const BillingSection = ({ permission }) => {
+    const i18n = getCyclesI18N();
+
     const { createModal } = useModals();
     const handleOpenGiftCodeModal = () => createModal(<GiftCodeModal />);
     const handleOpenCreditsModal = () => createModal(<CreditsModal />);
@@ -79,11 +87,6 @@ const BillingSection = ({ permission }) => {
 
     const { mailPlan, vpnPlan, addressAddon, domainAddon, memberAddon, vpnAddon, spaceAddon } = formatPlans(Plans);
     const subTotal = getSubTotal(Plans);
-    const CYCLES = {
-        [MONTHLY]: c('Billing cycle').t`Monthly`,
-        [YEARLY]: c('Billing cycle').t`Yearly`,
-        [TWO_YEARS]: c('Billing cycle').t`2-year`
-    };
 
     return (
         <>
@@ -234,7 +237,7 @@ const BillingSection = ({ permission }) => {
                 <div className="p1 bg-global-light">
                     <div className="flex-autogrid onmobile-flex-column w100 mb1">
                         <div className="flex-autogrid-item">{c('Label').t`Amount due`}</div>
-                        <div className="flex-autogrid-item bold">{CYCLES[Cycle]}</div>
+                        <div className="flex-autogrid-item bold">{i18n[Cycle]}</div>
                         <div className="flex-autogrid-item bold">
                             <Price currency={Currency}>{Amount}</Price>
                         </div>

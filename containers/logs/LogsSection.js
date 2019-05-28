@@ -28,15 +28,16 @@ import WipeLogsButton from './WipeLogsButton';
 const { DISABLE, BASIC, ADVANCED } = LOGS_STATE;
 const { LOGIN_FAILURE_PASSWORD, LOGIN_SUCCESS, LOGOUT, LOGIN_FAILURE_2FA, LOGIN_SUCCESS_AWAIT_2FA } = AUTH_LOG_EVENTS;
 
-const LogsSection = () => {
-    const EVENTS = {
-        [LOGIN_FAILURE_PASSWORD]: c('Log event').t`Login password failure`,
-        [LOGIN_SUCCESS]: c('Log event').t`Login success`,
-        [LOGOUT]: c('Log event').t`Logout`,
-        [LOGIN_FAILURE_2FA]: c('Log event').t`2FA login failure`,
-        [LOGIN_SUCCESS_AWAIT_2FA]: c('Log event').t`Login password success, awaiting 2FA`
-    };
+const getEventsI18N = () => ({
+    [LOGIN_FAILURE_PASSWORD]: c('Log event').t`Login failure (password)`,
+    [LOGIN_SUCCESS]: c('Log event').t`Login success`,
+    [LOGOUT]: c('Log event').t`Logout`,
+    [LOGIN_FAILURE_2FA]: c('Log event').t`Login failure (2FA)`,
+    [LOGIN_SUCCESS_AWAIT_2FA]: c('Log event').t`Login failure (2FA)`
+});
 
+const LogsSection = () => {
+    const i18n = getEventsI18N();
     const [settings] = useUserSettings();
     const { createModal } = useModals();
     const [logAuth, setLogAuth] = useState(settings.LogAuth);
@@ -61,7 +62,7 @@ const LogsSection = () => {
     const handleDownload = () => {
         const data = logs.reduce(
             (acc, { Event, Time, IP }) => {
-                acc.push(`${EVENTS[Event]},${moment(Time * 1000).toISOString()},${IP}`);
+                acc.push(`${i18n[Event]},${moment(Time * 1000).toISOString()},${IP}`);
                 return acc;
             },
             [['Event', 'Time', 'IP'].join(',')]

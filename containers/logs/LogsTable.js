@@ -15,14 +15,16 @@ const ICONS = {
     [LOGIN_SUCCESS_AWAIT_2FA]: <Icon name="off" />
 };
 
+const getEventsI18N = () => ({
+    [LOGIN_FAILURE_PASSWORD]: c('Log event').t`Login failure (password)`,
+    [LOGIN_SUCCESS]: c('Log event').t`Login success`,
+    [LOGOUT]: c('Log event').t`Logout`,
+    [LOGIN_FAILURE_2FA]: c('Log event').t`Login failure (2FA)`,
+    [LOGIN_SUCCESS_AWAIT_2FA]: c('Log event').t`Login failure (2FA)`
+});
+
 const LogsTable = ({ logs, logAuth, loading }) => {
-    const EVENTS = {
-        [LOGIN_FAILURE_PASSWORD]: c('Logs status').t`Login failure (Password)`,
-        [LOGIN_SUCCESS]: c('Logs status').t`Login success`,
-        [LOGOUT]: c('Logs status').t`Logout`,
-        [LOGIN_FAILURE_2FA]: c('Logs status').t`Login failure (2FA)`,
-        [LOGIN_SUCCESS_AWAIT_2FA]: c('Logs status').t`Login failure (2FA)`
-    };
+    const i18n = getEventsI18N();
 
     if (logAuth === DISABLE) {
         return (
@@ -47,7 +49,7 @@ const LogsTable = ({ logs, logAuth, loading }) => {
                             key={key}
                             cells={[
                                 <>
-                                    {ICONS[Event]} {EVENTS[Event]}
+                                    {ICONS[Event]} {i18n[Event]}
                                 </>,
                                 logAuth === ADVANCED ? IP : '',
                                 <Time key={key} format="LLL">
