@@ -7,7 +7,7 @@
     "test": "jest",
     "export": "./makeExport",
     "i18n:validatejs": "proton-i18n validate lint-functions .",
-    "i18n:validate": "proton-i18n extract && proton-i18n validate",
+    "i18n:validate": "proton-i18n extract reactComponents && proton-i18n validate",
     "lint": "eslint containers components --ext .js --quiet --cache",
     "pretty": "prettier --write $(find lib -type f -name '*.js')"
   },
