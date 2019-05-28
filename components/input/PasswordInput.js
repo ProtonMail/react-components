@@ -30,7 +30,7 @@ const PasswordInput = (props) => {
                     {...handlers}
                 />
                 <button
-                    title={c('Label').t`Reveal password`}
+                    title={type === 'password' ? c('Label').t`Reveal password` : c('Label').t`Hide password`}
                     className="password-revealer inline-flex"
                     disabled={disabled}
                     type="button"
