@@ -34,7 +34,7 @@ const LogsSection = () => {
         [LOGIN_SUCCESS]: c('Log event').t`Login success`,
         [LOGOUT]: c('Log event').t`Logout`,
         [LOGIN_FAILURE_2FA]: c('Log event').t`2FA login failure`,
-        [LOGIN_SUCCESS_AWAIT_2FA]: c('Log event').t`Login password sucess, awaiting 2FA`
+        [LOGIN_SUCCESS_AWAIT_2FA]: c('Log event').t`Login password success, awaiting 2FA`
     };
 
     const [settings] = useUserSettings();
