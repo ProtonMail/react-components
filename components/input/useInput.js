@@ -43,7 +43,7 @@ const useInput = (props, initialState = DEFAULT_STATE, prefix = 'field') => {
                     return;
                 }
 
-                if (!status.isFocused) {
+                if (!isFocused) {
                     changeStatus({
                         ...status,
                         isFocused: true,
@@ -56,7 +56,7 @@ const useInput = (props, initialState = DEFAULT_STATE, prefix = 'field') => {
                 }
             },
             onBlur: (event) => {
-                if (!status.isBlurred) {
+                if (!isBlurred) {
                     changeStatus({
                         ...status,
                         isBlurred: true,
