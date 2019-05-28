@@ -1,6 +1,8 @@
 import useCachedAsyncResult from './useCachedAsyncResult';
+import useGetKeys from './useGetKeys';
 
-const useUserKeys = (getKeysByID, User) => {
+const useUserKeys = (User) => {
+    const getKeysByID = useGetKeys();
     return useCachedAsyncResult(
         'USER_KEYS',
         () => {

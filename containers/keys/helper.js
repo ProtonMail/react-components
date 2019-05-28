@@ -20,69 +20,30 @@ export const getPrimaryKey = (keys) => {
  * @param {Object} Key - Key result from the API
  * @returns {Object}
  */
-export const convertKey = ({
-    Address = {},
-    key: {
-        privateKey,
-        Key: { Primary, Flags }
-    }
-}) => {
+export const convertKey = ({ Address, privateKey, Key: { ID, Primary, Flags } }) => {
     const algorithmInfo = privateKey.getAlgorithmInfo();
     const fingerprint = privateKey.getFingerprint();
     const isDecrypted = privateKey.isDecrypted();
 
-    const { Status } = Address;
-    const isDisabled = Status === 0;
+    const { Status } = Address || {};
+    const isAddressDisabled = Status === 0;
 
     const status = {
+        isAddressKey: !!Address,
         isPrimary: Primary === 1,
         isDecrypted,
+        isEncryptingAndSigning: Flags === ENCRYPTED_AND_SIGNED,
         isCompromised: Flags === CLEAR_TEXT,
-        isObsolete: isDecrypted && !isDisabled && Flags === SIGNED,
-        isDisabled
+        isObsolete: isDecrypted && !isAddressDisabled && Flags === SIGNED,
+        isAddressDisabled
     };
 
     return {
+        ID,
         fingerprint,
-        type: describe(algorithmInfo),
+        algorithm: describe(algorithmInfo),
         ...status
     };
-};
-
-/**
- * @param {Object} User
- * @param {Array} userKeys
- * @return {Array<Object>}
- */
-export const getFormattedUserKeys = (User, userKeys = []) => {
-    return userKeys.map(({ privateKey, Key }) => {
-        return convertKey({
-            User,
-            key: {
-                privateKey,
-                Key
-            }
-        });
-    });
-};
-
-/**
- * @param {Object} User
- * @param {Object} Address
- * @param {Array} addressKeys
- * @return {Array<Object>}
- */
-export const getFormattedAddressKeys = (User, Address, addressKeys = []) => {
-    return addressKeys.map(({ privateKey, Key }) => {
-        return convertKey({
-            User,
-            Address,
-            key: {
-                privateKey,
-                Key
-            }
-        });
-    });
 };
 
 /**
@@ -100,7 +61,7 @@ const getKeysToReactivate = (keys = []) => {
  * @param {Array} userKeysList
  * @return {Array}
  */
-export const getAllKeysToReactivate = ({ Addresses = [], addressesKeysMap, User, userKeysList }) => {
+export const getAllKeysToReactivate = ({ Addresses = [], addressesKeysMap = {}, User, userKeysList = [] }) => {
     const allAddressesKeys = Addresses.map((Address) => {
         const { ID } = Address;
         const addressKeysList = addressesKeysMap[ID];

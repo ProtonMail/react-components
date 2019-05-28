@@ -3,7 +3,7 @@ import React from 'react';
 import { Badge } from 'react-components';
 import { c } from 'ttag';
 
-const KeysStatus = ({ isPrimary, isDecrypted, isCompromised, isObsolete, isDisabled }) => {
+const KeysStatus = ({ isPrimary, isDecrypted, isCompromised, isObsolete, isAddressDisabled }) => {
     return [
         isPrimary && {
             tooltip: c('Tooltip').t`ProtonMail users will use this key by default for sending`,
@@ -32,7 +32,7 @@ const KeysStatus = ({ isPrimary, isDecrypted, isCompromised, isObsolete, isDisab
             title: c('Key state badge').t`Obsolete`,
             type: 'warning'
         },
-        isDisabled && {
+        isAddressDisabled && {
             tooltip: c('Tooltip').t`This address has been disabled`,
             title: c('Key state badge').t`Disabled`,
             type: 'warning'
@@ -53,7 +53,7 @@ KeysStatus.propTypes = {
     isDecrypted: PropTypes.bool,
     isCompromised: PropTypes.bool,
     isObsolete: PropTypes.bool,
-    isDisabled: PropTypes.bool
+    isAddressDisabled: PropTypes.bool
 };
 
 export default KeysStatus;

@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import { Table, TableCell, TableRow, TableBody } from 'react-components';
 
+import KeysActions from './KeysActions';
 import KeysStatus from './KeysStatus';
 
-const KeysTable = ({ keys, getKeyActions }) => {
+const KeysTable = ({ keys, onAction }) => {
     const headerCells = [
         { node: c('Title header for keys table').t`Fingerprint`, className: 'w50' },
         { node: c('Title header for keys table').t`Key type` },
@@ -19,38 +20,41 @@ const KeysTable = ({ keys, getKeyActions }) => {
         );
     });
 
-    const list = keys.map((key, i) => {
-        const actions = getKeyActions(i);
-        const { fingerprint, type, ...rest } = key;
-
-        return (
-            <TableRow
-                key={fingerprint}
-                cells={[
-                    <code key="0" className="mw100 inbl ellipsis">
-                        {fingerprint}
-                    </code>,
-                    type,
-                    actions,
-                    <KeysStatus key={1} {...rest} />
-                ]}
-            />
-        );
-    });
-
     return (
         <Table>
             <thead>
                 <tr>{headerCells}</tr>
             </thead>
-            <TableBody colSpan={4}>{list}</TableBody>
+            <TableBody colSpan={4}>
+                {keys.map(({ ID, fingerprint, algorithm, isLoading, ...rest }, idx) => {
+                    return (
+                        <TableRow
+                            key={ID}
+                            cells={[
+                                <code key={1} className="mw100 inbl ellipsis">
+                                    {fingerprint}
+                                </code>,
+                                algorithm,
+                                <KeysActions
+                                    key={2}
+                                    loading={isLoading}
+                                    onAction={(action) => onAction(action, ID, idx)}
+                                    {...rest}
+                                />,
+                                <KeysStatus key={3} {...rest} />
+                            ]}
+                        />
+                    );
+                })}
+            </TableBody>
         </Table>
     );
 };
 
 KeysTable.propTypes = {
     keys: PropTypes.array,
-    getKeyActions: PropTypes.func.isRequired
+    onAction: PropTypes.func.isRequired,
+    loadingKeyID: PropTypes.bool
 };
 
 KeysTable.defaultProps = {

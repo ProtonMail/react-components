@@ -1,35 +1,31 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { c } from 'ttag';
 import {
     Block,
-    Group,
-    Button,
-    ButtonGroup,
     Select,
     SubTitle,
     Alert,
     useModals,
     useApi,
     useEventManager,
-    useGetKeys,
     useUserKeys,
     useAddressesKeys,
     Loader
 } from 'react-components';
 import createKeysManager from 'proton-shared/lib/keys/keysManager';
-import { KEY_FLAG } from 'proton-shared/lib/constants';
 
-import { getAllKeysToReactivate, getFormattedAddressKeys, getNewKeyFlags, getPrimaryKey } from './helper';
+import { getAllKeysToReactivate, convertKey, getNewKeyFlags, getPrimaryKey } from './helper';
 import { useUser } from '../../models/userModel';
 import { useAddresses } from '../../models/addressesModel';
 import KeysTable from './KeysTable';
-import KeysActions, { ACTIONS } from './KeysActions';
+import { ACTIONS } from './KeysActions';
 import AddKeyModal from './addKey/AddKeyModal';
 import ImportKeyModal from './importKeys/ImportKeyModal';
 import ReactivateKeysModal from './reactivateKeys/ReactivateKeysModal';
 import ExportPublicKeyModal from './exportKey/ExportPublicKeyModal';
 import ExportPrivateKeyModal from './exportKey/ExportPrivateKeyModal';
 import DeleteKeyModal from './deleteKey/DeleteKeyModal';
+import KeysHeaderActions, { ACTIONS as HEADER_ACTIONS } from './KeysHeaderActions';
 
 const AddressKeysSection = () => {
     const { createModal } = useModals();
@@ -37,12 +33,9 @@ const AddressKeysSection = () => {
     const api = useApi();
     const [User] = useUser();
     const [Addresses] = useAddresses();
-    const getKeysByID = useGetKeys();
-    const [userKeysList = []] = useUserKeys(getKeysByID, User);
-    const [addressesKeysMap = {}] = useAddressesKeys(getKeysByID, Addresses, User);
-    const [loadingAction, setLoadingAction] = useState(false);
-    const loadingKeyRef = useRef();
-
+    const [userKeysList] = useUserKeys(User);
+    const [addressesKeysMap = {}, loadingAddressesKeys] = useAddressesKeys(User, Addresses);
+    const [loadingKeyID, setLoadingKeyID] = useState();
     const [addressIndex, setAddressIndex] = useState(() => (Array.isArray(Addresses) ? 0 : -1));
 
     useEffect(() => {
@@ -71,190 +64,137 @@ const AddressKeysSection = () => {
         );
     }
 
-    const formattedAddressesKeys = Addresses.reduce((acc, Address) => {
-        const { ID: AddressID } = Address;
-        acc[AddressID] = getFormattedAddressKeys(User, Address, addressesKeysMap[AddressID]);
-        return acc;
-    }, {});
+    const address = Addresses[addressIndex];
+    const { ID: addressID, Email: addressEmail } = address;
+    const addressKeys = addressesKeysMap[addressID];
 
-    const selectedAddress = Addresses[addressIndex];
-    const { ID: selectedAddressID } = selectedAddress;
+    if (loadingAddressesKeys && !Array.isArray(addressKeys)) {
+        return (
+            <>
+                {title}
+                <Loader />
+            </>
+        );
+    }
 
-    const selectedAddressKeys = addressesKeysMap[selectedAddressID] || [];
-    const selectedAddressFormattedKeys = formattedAddressesKeys[selectedAddressID] || [];
+    const addressKeysFormatted = addressKeys.map(({ Key, privateKey }) => {
+        const { ID } = Key;
+        return {
+            isLoading: loadingKeyID === ID,
+            ...convertKey({
+                Address: address,
+                Key,
+                privateKey
+            })
+        };
+    });
 
-    const withLoading = (fn) => async (...args) => {
+    const addressOptions =
+        Addresses.length > 1
+            ? Addresses.map(({ Email, ID: addressID }, i) => {
+                  const primaryKey = getPrimaryKey(addressesKeysMap[addressID]);
+                  const postfix = primaryKey ? ` (${primaryKey.privateKey.getFingerprint()})` : '';
+                  return {
+                      text: Email + postfix,
+                      value: i
+                  };
+              })
+            : [];
+
+    const { isSubUser } = User;
+    const { privateKey: primaryPrivateKey } = getPrimaryKey(addressKeys) || {};
+    const allKeysToReactivate = getAllKeysToReactivate({ Addresses, User, addressesKeysMap, userKeysList });
+    const totalInactiveKeys = allKeysToReactivate.reduce((acc, { inactiveKeys }) => acc + inactiveKeys.length, 0);
+
+    const keysPermissions = {
+        [HEADER_ACTIONS.ADD]: !isSubUser,
+        [HEADER_ACTIONS.IMPORT]: !isSubUser,
+        [HEADER_ACTIONS.EXPORT_PRIVATE_KEY]: primaryPrivateKey && primaryPrivateKey.isDecrypted(),
+        [HEADER_ACTIONS.EXPORT_PUBLIC_KEY]: !!primaryPrivateKey,
+        [HEADER_ACTIONS.REACTIVATE]: !isSubUser && totalInactiveKeys >= 1
+    };
+
+    const handleKeysAction = (action) => {
+        if (loadingKeyID) {
+            return;
+        }
+        if (action === HEADER_ACTIONS.ADD) {
+            return createModal(<AddKeyModal Address={address} addressKeys={addressKeys} />);
+        }
+        if (action === HEADER_ACTIONS.IMPORT) {
+            return createModal(<ImportKeyModal Address={address} addressKeys={addressKeys} />);
+        }
+        if (action === HEADER_ACTIONS.EXPORT_PUBLIC_KEY) {
+            return createModal(<ExportPublicKeyModal name={addressEmail} privateKey={primaryPrivateKey} />);
+        }
+        if (action === HEADER_ACTIONS.EXPORT_PRIVATE_KEY) {
+            return createModal(<ExportPrivateKeyModal name={addressEmail} privateKey={primaryPrivateKey} />);
+        }
+        if (action === HEADER_ACTIONS.REACTIVATE) {
+            return createModal(<ReactivateKeysModal allKeys={allKeysToReactivate} />);
+        }
+    };
+
+    const handleAction = async (action, targetKey) => {
+        const {
+            Key: { ID },
+            privateKey
+        } = targetKey;
+
+        if (action === ACTIONS.REACTIVATE) {
+            const addressKeysToReactivate = [
+                {
+                    Address: address,
+                    inactiveKeys: [targetKey],
+                    keys: addressKeys
+                }
+            ];
+            return createModal(<ReactivateKeysModal allKeys={addressKeysToReactivate} />);
+        }
+        if (action === ACTIONS.EXPORT_PUBLIC_KEY) {
+            return createModal(<ExportPublicKeyModal name={addressEmail} privateKey={privateKey} />);
+        }
+        if (action === ACTIONS.EXPORT_PRIVATE_KEY) {
+            return createModal(<ExportPrivateKeyModal name={addressEmail} privateKey={privateKey} />);
+        }
+        if (action === ACTIONS.DELETE) {
+            return createModal(
+                <DeleteKeyModal Address={address} addressKeys={addressKeys} KeyID={ID} privateKey={privateKey} />
+            );
+        }
+        if (action === ACTIONS.PRIMARY) {
+            const keysManager = createKeysManager(addressKeys, api);
+            await keysManager.setKeyPrimary(ID);
+            return await call();
+        }
+        if (
+            [
+                ACTIONS.MARK_NOT_COMPROMISED,
+                ACTIONS.MARK_COMPROMISED,
+                ACTIONS.MARK_OBSOLETE,
+                ACTIONS.MARK_NOT_OBSOLETE
+            ].includes(action)
+        ) {
+            const newFlags = getNewKeyFlags(action);
+            const keysManager = createKeysManager(addressKeys, api);
+            await keysManager.setKeyFlags(ID, newFlags);
+            return await call();
+        }
+    };
+
+    const handleKeyAction = async (action, keyID, keyIndex) => {
         // Since an action affects the whole key list, only allow one at a time.
-        if (loadingAction) {
+        if (loadingKeyID) {
             return;
         }
         try {
-            setLoadingAction(true);
-            await fn(...args);
-            setLoadingAction(false);
+            setLoadingKeyID(keyID);
+            const targetKey = addressKeys[keyIndex];
+            await handleAction(action, targetKey);
+            setLoadingKeyID();
         } catch (e) {
-            setLoadingAction(false);
+            setLoadingKeyID();
         }
-    };
-
-    const withLoadingKeyID = (KeyID, fn) => (...args) => {
-        loadingKeyRef.current = KeyID;
-        fn(...args);
-    };
-
-    const { isSubUser } = User;
-    const canAddKey = !isSubUser;
-    const { privateKey: primaryPrivateKey } = getPrimaryKey(selectedAddressKeys) || {};
-    const canExport = primaryPrivateKey && primaryPrivateKey.isDecrypted();
-
-    const buttonGroup = [
-        canAddKey && {
-            className: 'pm-button--primary',
-            onClick: () => {
-                createModal(<AddKeyModal Address={selectedAddress} addressKeys={selectedAddressKeys} />);
-            },
-            text: c('Action').t`Add key`
-        },
-        canAddKey && {
-            onClick: () => {
-                createModal(<ImportKeyModal Address={selectedAddress} addressKeys={selectedAddressKeys} />);
-            },
-            text: c('Action').t`Import key`
-        },
-        canExport && {
-            onClick: () => {
-                const { Email } = selectedAddress;
-                createModal(<ExportPublicKeyModal name={Email} privateKey={primaryPrivateKey} />);
-            },
-            text: c('Action').t`Export public key`
-        },
-        canExport && {
-            onClick: () => {
-                const { Email } = selectedAddress;
-                createModal(<ExportPrivateKeyModal name={Email} privateKey={primaryPrivateKey} />);
-            },
-            text: c('Action').t`Export private key`
-        }
-    ]
-        .filter(Boolean)
-        .map(({ text, onClick, ...props }) => (
-            <ButtonGroup key={text} onClick={withLoading(onClick)} {...props}>
-                {text}
-            </ButtonGroup>
-        ));
-
-    const allKeysToReactivate = getAllKeysToReactivate({ Addresses, User, addressesKeysMap, userKeysList });
-    const totalInactiveKeys = allKeysToReactivate.reduce((acc, { inactiveKeys }) => acc + inactiveKeys.length, 0);
-    const canReactivateKey = !isSubUser && totalInactiveKeys >= 1;
-    const reactivateAllKeysButton = canReactivateKey && (
-        <Button
-            onClick={withLoading(() => {
-                createModal(<ReactivateKeysModal allKeys={allKeysToReactivate} />);
-            })}
-        >
-            {c('Action').t`Reactivate keys (${totalInactiveKeys})`}
-        </Button>
-    );
-
-    const getKeyActions = (keyIndex) => {
-        const formattedKey = selectedAddressFormattedKeys[keyIndex];
-        const { Key, privateKey } = selectedAddressKeys[keyIndex];
-        const Address = selectedAddress;
-
-        const { ID: KeyID, Flags } = Key;
-        const { Email, Status } = Address;
-
-        const { isDisabled, isPrimary, isDecrypted, isCompromised, isObsolete } = formattedKey;
-
-        const canExportPublicKey = true;
-        const canExportPrivateKey = isDecrypted;
-        const canReactivate = !isDecrypted;
-        const canDelete = !isPrimary;
-        const canMakePrimary = !isPrimary && isDecrypted && Flags === KEY_FLAG.ENCRYPTED_AND_SIGNED && Status !== 0;
-        const canMark = !isPrimary;
-        const canMarkObsolete = canMark && !isDisabled && isDecrypted && !isObsolete && !isCompromised;
-        const canMarkCompromised = canMark && !isCompromised;
-        const canMarkNotCompromised = canMark && isCompromised;
-        const canMarkNotObsolete = canMark && isObsolete;
-
-        const createSetFlagsCallback = (actionType) => async () => {
-            const newFlags = getNewKeyFlags(actionType);
-            const keysManager = createKeysManager(selectedAddressKeys, api);
-            await keysManager.setKeyFlags(KeyID, newFlags);
-            await call();
-        };
-
-        const actions = [
-            canReactivate && {
-                type: ACTIONS.REACTIVATE,
-                onClick: () => {
-                    const addressKeysToReactivate = [
-                        {
-                            Address,
-                            inactiveKeys: [selectedAddressKeys[keyIndex]],
-                            keys: selectedAddressKeys
-                        }
-                    ];
-                    createModal(<ReactivateKeysModal allKeys={addressKeysToReactivate} />);
-                }
-            },
-            canExportPublicKey && {
-                type: ACTIONS.EXPORT_PUBLIC_KEY,
-                onClick: () => {
-                    createModal(<ExportPublicKeyModal name={Email} privateKey={privateKey} />);
-                }
-            },
-            canExportPrivateKey && {
-                type: ACTIONS.EXPORT_PRIVATE_KEY,
-                onClick: () => {
-                    createModal(<ExportPrivateKeyModal name={Email} privateKey={privateKey} />);
-                }
-            },
-            canMakePrimary && {
-                type: ACTIONS.PRIMARY,
-                onClick: async () => {
-                    const keysManager = createKeysManager(selectedAddressKeys, api);
-                    await keysManager.setKeyPrimary(KeyID);
-                    await call();
-                }
-            },
-            canMarkObsolete && {
-                type: ACTIONS.MARK_OBSOLETE,
-                onClick: createSetFlagsCallback(ACTIONS.MARK_OBSOLETE)
-            },
-            canMarkNotObsolete && {
-                type: ACTIONS.MARK_NOT_OBSOLETE,
-                onClick: createSetFlagsCallback(ACTIONS.MARK_NOT_OBSOLETE)
-            },
-            canMarkCompromised && {
-                type: ACTIONS.MARK_COMPROMISED,
-                onClick: createSetFlagsCallback(ACTIONS.MARK_COMPROMISED)
-            },
-            canMarkNotCompromised && {
-                type: ACTIONS.MARK_NOT_COMPROMISED,
-                onClick: createSetFlagsCallback(ACTIONS.MARK_NOT_COMPROMISED)
-            },
-            canDelete && {
-                type: ACTIONS.DELETE,
-                onClick: () => {
-                    createModal(
-                        <DeleteKeyModal
-                            Address={selectedAddress}
-                            addressKeys={selectedAddressKeys}
-                            KeyID={Key.ID}
-                            privateKey={privateKey}
-                        />
-                    );
-                }
-            }
-        ]
-            .filter(Boolean)
-            .map(({ onClick, ...rest }) => ({
-                ...rest,
-                onClick: withLoadingKeyID(KeyID, withLoading(onClick))
-            }));
-
-        return <KeysActions loading={loadingKeyRef.current === KeyID && loadingAction} actions={actions} />;
     };
 
     return (
@@ -265,26 +205,16 @@ const AddressKeysSection = () => {
                     .t`Download your PGP Keys for use with other PGP compatible services. Only incoming messages in inline OpenPGP format are currently supported.`}
             </Alert>
             <Block>
-                <Group className="mr1">{buttonGroup}</Group>
-                {reactivateAllKeysButton}
+                <KeysHeaderActions permissions={keysPermissions} onAction={handleKeysAction} />
             </Block>
             {Addresses.length > 1 ? (
                 <Select
                     value={addressIndex}
-                    options={Addresses.map(({ Email, ID: AddressID }, i) => {
-                        const primaryKey = (formattedAddressesKeys[AddressID] || []).find(
-                            ({ isPrimary }) => !!isPrimary
-                        );
-                        const postfix = primaryKey ? ` (${primaryKey.fingerprint})` : '';
-                        return {
-                            text: Email + postfix,
-                            value: i
-                        };
-                    })}
-                    onChange={({ target }) => setAddressIndex(+target.value)}
+                    options={addressOptions}
+                    onChange={({ target: { value } }) => !loadingKeyID && setAddressIndex(+value)}
                 />
             ) : null}
-            <KeysTable keys={selectedAddressFormattedKeys} getKeyActions={getKeyActions} />
+            <KeysTable keys={addressKeysFormatted} onAction={handleKeyAction} />
         </>
     );
 };
