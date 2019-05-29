@@ -15,6 +15,7 @@ function NewLabelForm({ label, onChangeColor, onChangeName }) {
                     value={label.Name}
                     onChange={onChangeName}
                     placeholder={c('New Label form').t`Name`}
+                    autoFocus
                     required
                 />
             </Row>

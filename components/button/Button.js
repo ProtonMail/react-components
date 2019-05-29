@@ -33,7 +33,9 @@ const Button = ({
         }
 
         if (event.target === event.currentTarget && (key === 'space' || key === 'enter')) {
-            event.preventDefault();
+            if (!['reset', 'submit'].includes(event.target.type)) {
+                event.preventDefault();
+            }
 
             if (onClick) {
                 onClick(event);

@@ -20,6 +20,7 @@ const Modal = ({
     loading,
     children,
     modalTitleID,
+    autoFocusClose,
     footer,
     hasClose,
     noValidate,
@@ -51,7 +52,13 @@ function DemoModal({ onAdd, ...rest }) {
 
         return (
             <FooterModal>
-                {typeof close === 'string' ? <ResetButton disabled={loading}>{close}</ResetButton> : close}
+                {typeof close === 'string' ? (
+                    <ResetButton autoFocus={autoFocusClose} disabled={loading}>
+                        {close}
+                    </ResetButton>
+                ) : (
+                    close
+                )}
                 {typeof submit === 'string' ? (
                     <PrimaryButton loading={loading} type="submit">
                         {submit}
@@ -89,6 +96,7 @@ Modal.propTypes = {
     submit: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
     close: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
     noValidate: PropTypes.bool,
+    autoFocusClose: PropTypes.bool,
     small: PropTypes.bool,
     background: PropTypes.bool,
     hasClose: PropTypes.bool
@@ -101,6 +109,7 @@ Modal.defaultProps = {
     isBehind: false,
     isClosing: false,
     noValidate: false,
+    autoFocusClose: false,
     hasClose: true,
     modalTitleID: 'modalTitle'
 };

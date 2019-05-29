@@ -7,7 +7,12 @@ import { FormModal, Details, Summary, Legend } from 'react-components';
 const ShortcutsModal = (props) => {
     const IS_MAC = isMac();
     return (
-        <FormModal title={c('Title').t`Keyboard shortcuts`} close={c('Action').t`Close`} {...props}>
+        <FormModal
+            autoFocusClose={true}
+            title={c('Title').t`Keyboard shortcuts`}
+            close={c('Action').t`Close`}
+            {...props}
+        >
             <Details className="bordered-container mb1" open={true}>
                 <Summary className="bold h3">{c('Title').t`General`}</Summary>
                 <div className="flex-autogrid onmobile-flex-column">

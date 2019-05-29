@@ -13,6 +13,7 @@ const Confirm = ({ title, onClose, onConfirm, children, cancel, confirm, ...rest
             }}
             title={title}
             close={cancel}
+            autoFocusClose={true}
             submit={confirm}
             small
             {...rest}
