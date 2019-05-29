@@ -15,7 +15,7 @@ function ActionsFilterToolbar() {
         <>
             <PrimaryButton onClick={handleClickAdd()}>{c('Action').t`Add Filter`}</PrimaryButton>
             <Button onClick={handleClickAdd('complex')} className="ml1">
-                {c('Action').t`Add Sieve Filter`}
+                {c('Action').t`Add sieve filter`}
             </Button>
         </>
     );

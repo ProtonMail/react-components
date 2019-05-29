@@ -107,7 +107,15 @@ function ConditionsEditor({ filter, onChange, errors }) {
 
                                 <div className="w100">
                                     <Row>
-                                        <Select options={toOptions(TYPES)} defaultValue={condition.Type.value} />
+                                        <Select
+                                            onChange={handleChangeType({
+                                                scope: 'Type',
+                                                condition,
+                                                index
+                                            })}
+                                            options={toOptions(TYPES)}
+                                            defaultValue={condition.Type.value}
+                                        />
                                     </Row>
 
                                     <RadioContainsAttachements

@@ -23,7 +23,6 @@ function LabelActions({ selection, labels, onChange }) {
             <input />
             <Autocomplete
                 placeholder={c('Placeholder').t`Add a label ...`}
-                className="w100"
                 inputValue={inputValue}
                 onSelect={select}
                 onInputValueChange={changeInputValue}
@@ -39,7 +38,7 @@ function LabelActions({ selection, labels, onChange }) {
                         <li key={Name} className={className}>
                             <Icon name="label" style={{ fill: Color }} className="mr1" alt={Name} />
                             <span>{Name}</span>
-                            <SmallButton type="button" onClick={() => deselect(i)} className="mlauto">{c('Action')
+                            <SmallButton onClick={() => deselect(i)} className="mlauto">{c('Action')
                                 .t`Remove`}</SmallButton>
                         </li>
                     );

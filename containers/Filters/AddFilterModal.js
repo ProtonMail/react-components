@@ -145,6 +145,7 @@ function AddFilterModal({ filter, type, mode, onEdit, ...props }) {
         <FormModal
             onSubmit={handleSubmit}
             loading={reqCreate.loading || reqUpdate.loading}
+            noValidate={true}
             className={isPreview ? 'AddFilterModal-isPreview' : ''}
             title={
                 !isPreview ? c('Add Filter Modal').t`Custom Filter` : c('Add Filter Modal').t`Custom Filter (Preview)`

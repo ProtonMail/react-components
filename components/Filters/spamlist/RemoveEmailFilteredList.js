@@ -7,7 +7,7 @@ import { noop } from 'proton-shared/lib/helpers/function';
 
 function RemoveEmailFilteredList({ type, email, className, onClick }) {
     const { createNotification } = useNotifications();
-    const { request } = useApiWithoutResult(deleteIncomingDefaults);
+    const { request, loading } = useApiWithoutResult(deleteIncomingDefaults);
 
     const I18N = {
         blacklist: c('Title').t`blacklist`,
@@ -25,7 +25,7 @@ function RemoveEmailFilteredList({ type, email, className, onClick }) {
 
     return (
         <>
-            <SmallButton className={className} onClick={handleClick}>
+            <SmallButton className={className} onClick={handleClick} loading={loading}>
                 <Icon name="close" />
             </SmallButton>
         </>
