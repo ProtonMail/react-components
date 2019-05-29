@@ -9,15 +9,11 @@ import { SubscriptionModel } from 'proton-shared/lib/models/subscriptionModel';
 import { OrganizationModel } from 'proton-shared/lib/models/organizationModel';
 import { setupEventManager, getEventID } from 'proton-shared/lib/models/setupEventManager';
 import { STATUS } from 'proton-shared/lib/models/cache';
-// import { loadLocale } from 'proton-shared/lib/i18n';
-import { useConfig } from 'react-components';
 
 const ModelsProvider = ({ children, loginData = {} }) => {
     const api = useApi();
     const eventManagerRef = useRef();
     const cacheRef = useRef();
-    const config = useConfig();
-
     const [{ loading, error }, setState] = useState({ loading: true });
 
     useEffect(() => {
