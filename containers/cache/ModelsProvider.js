@@ -26,7 +26,6 @@ const ModelsProvider = ({ children, loginData = {} }) => {
                 loginData.user || UserModel.get(api),
                 loginData.eventID || getEventID(api),
                 MailSettingsModel.get(api)
-                // loadLocale(config, userSettingsModel.Locale)
             ]);
 
             const models = [user.isPaid && SubscriptionModel, user.isPaid && OrganizationModel].filter(Boolean);

@@ -20,13 +20,15 @@ export const LocaleProvider = ({ children }) => {
         });
     }, []);
 
-    // Only when the locale changes via event
-    if (state !== Locale) {
-        loadLocale(config, Locale).then(() => {
-            setState(Locale); // force refresh children
-            createNotification({ text: c('Success').t`Locale updated` });
-        });
-    }
+    useEffect(() => {
+        // Only when the locale changes via event
+        if (state !== Locale) {
+            loadLocale(config, Locale).then(() => {
+                setState(Locale); // force refresh children
+                createNotification({ text: c('Success').t`Locale updated` });
+            });
+        }
+    });
 
     return <LocaleContext.Provider value={state}>{children}</LocaleContext.Provider>;
 };
