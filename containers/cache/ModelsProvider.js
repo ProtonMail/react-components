@@ -14,6 +14,7 @@ const ModelsProvider = ({ children, loginData = {} }) => {
     const api = useApi();
     const eventManagerRef = useRef();
     const cacheRef = useRef();
+
     const [{ loading, error }, setState] = useState({ loading: true });
 
     useEffect(() => {
@@ -21,10 +22,10 @@ const ModelsProvider = ({ children, loginData = {} }) => {
         const apiWithAbort = (config) => api({ ...config, signal: abortController.signal });
 
         const setup = async () => {
-            const userSettingsModel = await UserSettingsModel.get(api);
-            const [user, eventID, mailSettingsModel] = await Promise.all([
+            const [user, eventID, userSettingsModel, mailSettingsModel] = await Promise.all([
                 loginData.user || UserModel.get(api),
                 loginData.eventID || getEventID(api),
+                UserSettingsModel.get(api),
                 MailSettingsModel.get(api)
             ]);
 
