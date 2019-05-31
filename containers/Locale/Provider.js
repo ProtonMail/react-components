@@ -2,7 +2,6 @@ import { c } from 'ttag';
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useUserSettings, useConfig, useNotifications } from 'react-components';
-import { DEFAULT_TRANSLATION } from 'proton-shared/lib/constants';
 import { loadLocale } from 'proton-shared/lib/i18n';
 
 export const LocaleContext = createContext();
@@ -10,7 +9,7 @@ export const LocaleContext = createContext();
 export const LocaleProvider = ({ children }) => {
     const config = useConfig();
     const { createNotification } = useNotifications();
-    const [{ Locale = DEFAULT_TRANSLATION } = { Locale }] = useUserSettings();
+    const [{ Locale } = { Locale }] = useUserSettings();
     const [state, setState] = useState(Locale);
 
     // Load the translations when we load the app
