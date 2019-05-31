@@ -7,7 +7,7 @@ import {
     ModelsProvider,
     NotificationsProvider,
     ModalsProvider,
-    LocaleProvider
+    LocaleAuthProvider
 } from 'react-components';
 import { revoke } from 'proton-shared/lib/api/auth';
 import { getError } from 'proton-shared/lib/apiHandlers';
@@ -82,9 +82,9 @@ const AuthenticatedApp = ({ authenticationStore, onLogout, initApi, loginData, c
                 <AuthenticationStoreContext.Provider value={authenticationRef.current}>
                     <ModelsProvider loginData={loginData}>
                         <ThemeInjector />
-                        <LocaleProvider>
+                        <LocaleAuthProvider>
                             <ModalsProvider ref={modalsRef}>{children}</ModalsProvider>
-                        </LocaleProvider>
+                        </LocaleAuthProvider>
                     </ModelsProvider>
                 </AuthenticationStoreContext.Provider>
             </ApiContext.Provider>
