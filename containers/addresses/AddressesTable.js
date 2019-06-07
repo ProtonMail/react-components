@@ -112,6 +112,7 @@ const AddressesTable = ({ member, members }) => {
                 onSortEnd={handleSort}
                 pressDelay={200}
                 fetchAddresses={fetchAddresses}
+                helperClass="line color-global-grey bg-white w10"
                 loading={loading || loadingAddresses}
             />
         </Table>
