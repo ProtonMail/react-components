@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { c, msgid } from 'ttag';
-import { Block, Loader, SubTitle, useOrganization, useMembers } from 'react-components';
+import {
+    Block,
+    Loader,
+    SubTitle,
+    useOrganization,
+    useMembers,
+    useEventManager,
+    useApiWithoutResult
+} from 'react-components';
 
 import AddressesToolbar from './AddressesToolbar';
 import AddressesTable from './AddressesTable';
@@ -8,12 +16,17 @@ import AddressesTable from './AddressesTable';
 const AddressesWithMembers = () => {
     const [member, setMember] = useState();
     const [members = [], loading] = useMembers();
+    const [list, setList] = useState(list);
 
     useEffect(() => {
         if (members.length) {
             setMember(members.find(({ Self }) => Self));
         }
     }, [loading]);
+
+    useEffect(() => {
+        setList(members);
+    }, [members]);
 
     if (loading || !member) {
         return <Loader />;

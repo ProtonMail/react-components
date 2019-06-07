@@ -1,14 +1,49 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { Table, TableHeader, TableBody, TableRow, useUser, useAddresses, useApiWithoutResult } from 'react-components';
+import { SortableContainer, SortableElement } from 'react-sortable-hoc';
+import { arrayMove } from 'react-sortable-hoc';
+import {
+    Table,
+    TableHeader,
+    TableBody,
+    TableRow,
+    useUser,
+    useAddresses,
+    useApiWithoutResult,
+    useEventManager
+} from 'react-components';
 import { ALL_MEMBERS_ID } from 'proton-shared/lib/constants';
 import { queryAddresses } from 'proton-shared/lib/api/members';
+import { orderAddress } from 'proton-shared/lib/api/addresses';
 
 import AddressActions from './AddressActions';
 import AddressStatus from './AddressStatus';
 
 const formatAddresses = (addresses = {}, member = {}) => addresses.map((address) => ({ ...address, member }));
+
+function addressList({ addresses, user, allMembers, fetchAddresses, ...props }) {
+    return (
+        <TableBody colSpan={allMembers ? 4 : 3} {...props}>
+            {addresses.map((address, index) => {
+                const key = address.ID;
+                const cells = [
+                    address.Email,
+                    <AddressStatus key={key} address={address} index={index} />,
+                    <AddressActions user={user} key={key} address={address} fetchAddresses={fetchAddresses} />
+                ];
+
+                if (allMembers) {
+                    cells.splice(1, 0, address.member.Name);
+                }
+
+                return <TableRow key={key} cells={cells} index={index} />;
+            })}
+        </TableBody>
+    );
+}
+
+const AddressList = SortableContainer(addressList);
 
 const AddressesTable = ({ member, members }) => {
     const [user] = useUser();
@@ -21,6 +56,9 @@ const AddressesTable = ({ member, members }) => {
         c('Header for addresses table').t`Status`,
         c('Header for addresses table').t`Actions`
     ];
+
+    const { call } = useEventManager();
+    const orderRequest = useApiWithoutResult(orderAddress);
 
     if (allMembers) {
         header.splice(1, 0, c('Header for addresses table').t`Username`);
@@ -53,6 +91,13 @@ const AddressesTable = ({ member, members }) => {
         setAddresses(formatAddresses(Addresses, member));
     };
 
+    const handleSort = async ({ oldIndex, newIndex }) => {
+        const newList = arrayMove(addresses, oldIndex, newIndex);
+        setAddresses(newList);
+        await orderRequest.request(newList.map(({ ID }) => ID));
+        await call();
+    };
+
     useEffect(() => {
         fetchAddresses();
     }, [member, loadingAddresses]);
@@ -60,22 +105,15 @@ const AddressesTable = ({ member, members }) => {
     return (
         <Table>
             <TableHeader cells={header} />
-            <TableBody loading={loading || loadingAddresses} colSpan={allMembers ? 4 : 3}>
-                {addresses.map((address, index) => {
-                    const key = address.ID;
-                    const cells = [
-                        address.Email,
-                        <AddressStatus key={key} address={address} index={index} />,
-                        <AddressActions user={user} key={key} address={address} fetchAddresses={fetchAddresses} />
-                    ];
-
-                    if (allMembers) {
-                        cells.splice(1, 0, address.member.Name);
-                    }
-
-                    return <TableRow key={key} cells={cells} />;
-                })}
-            </TableBody>
+            <AddressList
+                user={user}
+                addresses={addresses}
+                allMembers={allMembers}
+                onSortEnd={handleSort}
+                pressDelay={200}
+                fetchAddresses={fetchAddresses}
+                loading={loading || loadingAddresses}
+            />
         </Table>
     );
 };
