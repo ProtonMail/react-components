@@ -51,6 +51,7 @@ const LogsSection = () => {
         [page]
     );
     const { Logs: logs = [], Total: total = 0 } = result;
+    const requestDownload = useApiWithoutResult(queryLogs);
     const { request: requestClearLogs } = useApiWithoutResult(clearLogs);
     const { request: requestUpdateLogAuth } = useApiWithoutResult(updateLogAuth);
 
@@ -59,8 +60,9 @@ const LogsSection = () => {
         await requestQueryLogs();
     };
 
-    const handleDownload = () => {
-        const data = logs.reduce(
+    const handleDownload = async () => {
+        const { Logs = [] } = await requestDownload.request();
+        const data = Logs.reduce(
             (acc, { Event, Time, IP }) => {
                 acc.push(`${i18n[Event]},${moment(Time * 1000).toISOString()},${IP}`);
                 return acc;
@@ -127,7 +129,10 @@ const LogsSection = () => {
                         <Icon name="reload" />
                     </Button>
                     {logs.length ? <WipeLogsButton className="mr1" onWipe={handleWipe} /> : null}
-                    {logs.length ? <Button onClick={handleDownload}>{c('Action').t`Download`}</Button> : null}
+                    {logs.length ? (
+                        <Button onClick={handleDownload} loading={requestDownload.loading}>{c('Action')
+                            .t`Download`}</Button>
+                    ) : null}
                 </div>
                 <Pagination
                     onNext={onNext}
