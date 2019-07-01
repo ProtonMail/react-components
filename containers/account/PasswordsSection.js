@@ -15,9 +15,8 @@ import {
 import ChangePasswordModal, { MODES } from './ChangePasswordModal';
 
 const PasswordsSection = () => {
-    const [{ PasswordMode, '2FA': { Enabled } } = {}, loading] = useUserSettings();
+    const [{ PasswordMode } = {}, loading] = useUserSettings();
     const { createModal } = useModals();
-    const hasTotp = !!Enabled;
 
     const title = <SubTitle>{c('Title').t`Passwords`}</SubTitle>;
 
@@ -35,7 +34,7 @@ const PasswordsSection = () => {
     const passwordButtonLabel = isOnePasswordMode ? c('Title').t`Change password` : c('Title').t`Change login password`;
 
     const handleChangePassword = (mode) => {
-        createModal(<ChangePasswordModal mode={mode} hasTotp={hasTotp} />);
+        createModal(<ChangePasswordModal mode={mode} />);
     };
 
     return (
@@ -82,9 +81,9 @@ const PasswordsSection = () => {
                         <Info url="https://protonmail.com/support/knowledge-base/single-password" />
                     </Label>
                     <Field>
-                        <PrimaryButton onClick={() => handleChangePassword(MODES.CHANGE_TWO_PASSWORD_MAILBOX_MODE)}>{c(
-                            'Action'
-                        ).t`Change mailbox password`}</PrimaryButton>
+                        <PrimaryButton onClick={() => handleChangePassword(MODES.CHANGE_TWO_PASSWORD_MAILBOX_MODE)}>
+                            {c('Action').t`Change mailbox password`}
+                        </PrimaryButton>
                     </Field>
                 </Row>
             )}

@@ -4,7 +4,7 @@ import { c } from 'ttag';
 import {
     Alert,
     PasswordInput,
-    Input,
+    TwoFactorInput,
     Row,
     Label,
     Field,
@@ -16,6 +16,7 @@ import {
     useAddresses,
     useUser,
     useUserKeys,
+    useUserSettings,
     useAddressesKeys,
     useOrganizationKey,
     useOrganization,
@@ -38,6 +39,13 @@ export const MODES = {
     SWITCH_TWO_PASSWORD: 5
 };
 
+/**
+ * Encrypt a private key with a new password if it's decrypted.
+ * @param {String} ID
+ * @param {Object} privateKey
+ * @param {String} newKeyPassword
+ * @return {Promise}
+ */
 const getEncryptedArmoredKey = ({ Key: { ID }, privateKey }, newKeyPassword) => {
     if (!privateKey.isDecrypted()) {
         return;
@@ -49,6 +57,12 @@ const getEncryptedArmoredKey = ({ Key: { ID }, privateKey }, newKeyPassword) => 
         .catch(noop);
 };
 
+/**
+ * Encrypt the organization key with a new password if it exists.
+ * @param {Object} organizationKey
+ * @param {String} newKeyPassword
+ * @return {Promise}
+ */
 const getEncryptedArmoredOrganizationKey = (organizationKey, newKeyPassword) => {
     if (!organizationKey || !organizationKey.isDecrypted()) {
         return;
@@ -56,6 +70,11 @@ const getEncryptedArmoredOrganizationKey = (organizationKey, newKeyPassword) => 
     return encryptPrivateKey(organizationKey, newKeyPassword).catch(noop);
 };
 
+/**
+ * Get the new key salt and password.
+ * @param {String} newPassword
+ * @return {Promise}
+ */
 const generateKeySaltAndPassword = async (newPassword) => {
     const newKeySalt = generateKeySalt();
     return {
@@ -64,6 +83,14 @@ const generateKeySaltAndPassword = async (newPassword) => {
     };
 };
 
+/**
+ * Get all private keys encrypted with a new password.
+ * @param {Array} userKeysList
+ * @param {Object} addressesKeysMap
+ * @param {Object} organizationKey
+ * @param {String} keyPassword
+ * @return {Promise}
+ */
 const getArmoredPrivateKeys = async ({ userKeysList, addressesKeysMap, organizationKey, keyPassword }) => {
     const userKeysPromises = userKeysList.map((key) => getEncryptedArmoredKey(key, keyPassword));
     const userKeysAndAddressesKeysPromises = Object.keys(addressesKeysMap).reduce((acc, addressKey) => {
@@ -72,6 +99,7 @@ const getArmoredPrivateKeys = async ({ userKeysList, addressesKeysMap, organizat
 
     const armoredKeys = (await Promise.all(userKeysAndAddressesKeysPromises)).filter(Boolean);
 
+    // There should always be some decrypted in the mail application.
     if (armoredKeys.length === 0) {
         const decryptedError = new Error('No decrypted keys exist');
         decryptedError.name = 'NoDecryptedKeys';
@@ -122,12 +150,13 @@ const handleChangeLoginPassword = async ({ api, newPassword, totp }) => {
     });
 };
 
-const ChangePasswordModal = ({ onClose, mode, hasTotp, ...rest }) => {
+const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
     const api = useApi();
     const { call } = useEventManager();
     const authenticationStore = useAuthenticationStore();
 
     const [User] = useUser();
+    const [{ '2FA': { Enabled } } = {}, loadingUserSettings] = useUserSettings();
     const [Addresses, loadingAddresses] = useAddresses();
     const [Organization, loadingOrganization] = useOrganization();
     const [userKeysList, loadingUserKeys] = useUserKeys(User);
@@ -343,7 +372,12 @@ const ChangePasswordModal = ({ onClose, mode, hasTotp, ...rest }) => {
     })();
 
     const isLoadingKeys =
-        loadingAddresses || loadingOrganization || loadingOrganizationKey || loadingUserKeys || loadingAddressesKeys;
+        loadingAddresses ||
+        loadingUserSettings ||
+        loadingOrganization ||
+        loadingOrganizationKey ||
+        loadingUserKeys ||
+        loadingAddressesKeys;
 
     const eye = <Icon key="0" name="read" />;
     const alert = (
@@ -363,6 +397,8 @@ const ChangePasswordModal = ({ onClose, mode, hasTotp, ...rest }) => {
         </>
     );
 
+    const hasTotp = !!Enabled;
+
     const children = isLoadingKeys ? (
         <Loader />
     ) : (
@@ -378,6 +414,20 @@ const ChangePasswordModal = ({ onClose, mode, hasTotp, ...rest }) => {
                             onChange={({ target: { value } }) => setOldPassword(value)}
                             error={loginError}
                             placeholder={c('Placeholder').t`Password`}
+                            required
+                        />
+                    </Field>
+                </Row>
+            )}
+            {!isSecondPhase && hasTotp && (
+                <Row>
+                    <Label>{c('Label').t`Two factor code`}</Label>
+                    <Field>
+                        <TwoFactorInput
+                            value={totp}
+                            onChange={({ target: { value } }) => setTotp(value)}
+                            error={loginError}
+                            placeholder={c('Placeholder').t`Two factor code`}
                             required
                         />
                     </Field>
@@ -407,20 +457,6 @@ const ChangePasswordModal = ({ onClose, mode, hasTotp, ...rest }) => {
                     />
                 </Field>
             </Row>
-            {!isSecondPhase && hasTotp && (
-                <Row>
-                    <Label>{c('Label').t`Two factor authentication`}</Label>
-                    <Field>
-                        <Input
-                            value={totp}
-                            onChange={({ target: { value } }) => setTotp(value)}
-                            error={loginError}
-                            placeholder={c('Placeholder').t`Two factor authentication`}
-                            required
-                        />
-                    </Field>
-                </Row>
-            )}
         </>
     );
 
@@ -455,8 +491,7 @@ const ChangePasswordModal = ({ onClose, mode, hasTotp, ...rest }) => {
 
 ChangePasswordModal.propTypes = {
     onClose: PropTypes.func,
-    mode: PropTypes.oneOf([...Object.values(MODES)]).isRequired,
-    hasTotp: PropTypes.bool.isRequired
+    mode: PropTypes.oneOf([...Object.values(MODES)]).isRequired
 };
 
 export default ChangePasswordModal;

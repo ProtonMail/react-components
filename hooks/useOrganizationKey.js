@@ -13,7 +13,7 @@ const useOrganizationKey = (Organization) => {
     return useCachedAsyncResult(
         'ORGANIZATION_KEY',
         async () => {
-            if (!user.isAdmin) {
+            if (!user.isAdmin || !Organization) {
                 return;
             }
             const { PrivateKey } = await api(getOrganizationKeys());
