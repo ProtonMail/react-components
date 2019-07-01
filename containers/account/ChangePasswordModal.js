@@ -144,27 +144,206 @@ const ChangePasswordModal = ({ onClose, mode, hasTotp, ...rest }) => {
     const [isSecondPhase, setSecondPhase] = useState(false);
     const [fatalError, setFatalError] = useState(false);
 
-    const title = (() => {
-        if (mode === MODES.SWITCH_ONE_PASSWORD) {
-            return c('Title').t`Switch to one-password mode`;
+    const validateConfirmPassword = () => {
+        if (confirmNewPassword !== newPassword) {
+            setConfirmPasswordError(c('Error').t`Passwords do not match`);
+            throw new Error('PasswordMatch');
+        }
+        setConfirmPasswordError();
+    };
+
+    const checkLoginError = ({ data: { Code, Error } = {} }) => {
+        if (Code === PASSWORD_WRONG_ERROR) {
+            setLoginError(Error);
+        }
+    };
+
+    const checkFatalError = (e) => {
+        if (e.name === 'NoDecryptedKeys') {
+            setFatalError(true);
+        }
+    };
+
+    const { labels, extraAlert, ...modalProps } = (() => {
+        if (mode === MODES.CHANGE_TWO_PASSWORD_LOGIN_MODE) {
+            return {
+                title: c('Title').t`Change login password`,
+                labels: {
+                    oldPassword: c('Label').t`Old login password`,
+                    newPassword: c('Label').t`New login password`,
+                    confirmPassword: c('Label').t`Confirm login password`
+                },
+                onSubmit: async () => {
+                    try {
+                        validateConfirmPassword();
+                        setLoading(true);
+                        setLoginError();
+
+                        await handleUnlock({ api, oldPassword, totp });
+                        await handleChangeLoginPassword({ api, newPassword, totp });
+                        await api(lockSensitiveSettings());
+
+                        onClose();
+                    } catch (e) {
+                        setLoading(false);
+                        checkLoginError(e);
+                    }
+                }
+            };
         }
 
-        if (mode === MODES.SWITCH_TWO_PASSWORD) {
-            return c('Title').t`Switch to two-password mode`;
+        if (mode === MODES.SWITCH_TWO_PASSWORD && !isSecondPhase) {
+            return {
+                title: c('Title').t`Switch to two-password mode`,
+                extraAlert: (
+                    <Alert>
+                        {c('Info')
+                            .t`Two-password mode uses separate passwords for login and mailbox decryption. This provides a minor security benefit in some situations, however we recommend one-password mode for most users. To switch to two password mode, first set a login password and then set a mailbox password.`}
+                    </Alert>
+                ),
+                labels: {
+                    oldPassword: c('Label').t`Old password`,
+                    newPassword: c('Label').t`New login password`,
+                    confirmPassword: c('Label').t`Confirm login password`
+                },
+                onSubmit: async () => {
+                    try {
+                        validateConfirmPassword();
+                        setLoading(true);
+                        setLoginError();
+
+                        await handleUnlock({ api, oldPassword, totp });
+                        await handleChangeLoginPassword({ api, newPassword, totp });
+
+                        setNewPassword('');
+                        setConfirmNewPassword('');
+                        setSecondPhase(true);
+                        setLoading(false);
+                    } catch (e) {
+                        setLoading(false);
+                        checkLoginError(e);
+                    }
+                }
+            };
+        }
+
+        if (mode === MODES.SWITCH_TWO_PASSWORD && isSecondPhase) {
+            return {
+                title: c('Title').t`Switch to two-password mode`,
+                labels: {
+                    newPassword: c('Label').t`New mailbox password`,
+                    confirmPassword: c('Label').t`Confirm mailbox password`
+                },
+                onSubmit: async () => {
+                    try {
+                        validateConfirmPassword();
+                        setLoading(true);
+
+                        const { keyPassword, keySalt } = await generateKeySaltAndPassword(newPassword);
+                        const { armoredOrganizationKey, armoredKeys } = await getArmoredPrivateKeys({
+                            userKeysList,
+                            addressesKeysMap,
+                            organizationKey,
+                            keyPassword
+                        });
+                        await handleChangeMailboxPassword({ api, keySalt, armoredOrganizationKey, armoredKeys });
+                        authenticationStore.setPassword(keyPassword);
+                        await api(lockSensitiveSettings());
+                        await call();
+
+                        onClose();
+                    } catch (e) {
+                        setLoading(false);
+                        checkFatalError(e);
+                    }
+                }
+            };
+        }
+
+        const onSubmit = async () => {
+            try {
+                validateConfirmPassword();
+                setLoginError();
+                setLoading(true);
+
+                const { keyPassword, keySalt } = await generateKeySaltAndPassword(newPassword);
+                const { armoredOrganizationKey, armoredKeys } = await getArmoredPrivateKeys({
+                    userKeysList,
+                    addressesKeysMap,
+                    organizationKey,
+                    keyPassword
+                });
+
+                await handleUnlock({ api, oldPassword, totp });
+                if (mode === MODES.CHANGE_TWO_PASSWORD_MAILBOX_MODE) {
+                    await handleChangeMailboxPassword({ api, armoredKeys, armoredOrganizationKey, keySalt });
+                } else {
+                    await handleChangeOnePassword({
+                        api,
+                        armoredKeys,
+                        armoredOrganizationKey,
+                        keySalt,
+                        newPassword,
+                        totp
+                    });
+                }
+                authenticationStore.setPassword(keyPassword);
+                await api(lockSensitiveSettings());
+                await call();
+
+                onClose();
+            } catch (e) {
+                setLoading(false);
+                checkFatalError(e);
+                checkLoginError(e);
+            }
+        };
+
+        if (mode === MODES.SWITCH_ONE_PASSWORD) {
+            return {
+                title: c('Title').t`Switch to one-password mode`,
+                labels: {
+                    oldPassword: c('Label').t`Old login password`,
+                    newPassword: c('Label').t`New password`,
+                    confirmPassword: c('Label').t`Confirm password`
+                },
+                extraAlert: (
+                    <Alert>
+                        {c('Info')
+                            .t`ProtonMail can also be used with a single password which replaces both the login and mailbox password. To switch to single password mode, enter the single password you would like to use and click Save.`}
+                    </Alert>
+                ),
+                onSubmit
+            };
         }
 
         if (mode === MODES.CHANGE_ONE_PASSWORD_MODE) {
-            return c('Title').t`Change password`;
-        }
-
-        if (mode === MODES.CHANGE_TWO_PASSWORD_LOGIN_MODE) {
-            return c('Title').t`Change login password`;
+            return {
+                title: c('Title').t`Change password`,
+                labels: {
+                    oldPassword: c('Label').t`Old password`,
+                    newPassword: c('Label').t`New password`,
+                    confirmPassword: c('Label').t`Confirm password`
+                },
+                onSubmit
+            };
         }
 
         if (mode === MODES.CHANGE_TWO_PASSWORD_MAILBOX_MODE) {
-            return c('Title').t`Change mailbox password`;
+            return {
+                title: c('Title').t`Change mailbox password`,
+                labels: {
+                    oldPassword: c('Label').t`Old login password`,
+                    newPassword: c('Label').t`New mailbox password`,
+                    confirmPassword: c('Label').t`Confirm mailbox password`
+                },
+                onSubmit
+            };
         }
     })();
+
+    const isLoadingKeys =
+        loadingAddresses || loadingOrganization || loadingOrganizationKey || loadingUserKeys || loadingAddressesKeys;
 
     const eye = <Icon key="0" name="read" />;
     const alert = (
@@ -184,146 +363,6 @@ const ChangePasswordModal = ({ onClose, mode, hasTotp, ...rest }) => {
         </>
     );
 
-    const extraAlert = (() => {
-        if (mode === MODES.SWITCH_ONE_PASSWORD) {
-            return (
-                <Alert>
-                    {c('Info')
-                        .t`ProtonMail can also be used with a single password which replaces both the login and mailbox password. To switch to single password mode, enter the single password you would like to use and click Save.`}
-                </Alert>
-            );
-        }
-
-        if (mode === MODES.SWITCH_TWO_PASSWORD && !isSecondPhase) {
-            return (
-                <Alert>
-                    {c('Info')
-                        .t`Two-password mode uses separate passwords for login and mailbox decryption. This provides a minor security benefit in some situations, however we recommend one-password mode for most users. To switch to two password mode, first set a login password and then set a mailbox password.`}
-                </Alert>
-            );
-        }
-    })();
-
-    const { oldPasswordLabel, newPasswordLabel, confirmPasswordLabel } = (() => {
-        if (mode === MODES.SWITCH_ONE_PASSWORD || mode === MODES.CHANGE_ONE_PASSWORD_MODE) {
-            return {
-                oldPasswordLabel: c('Label').t`Old password`,
-                newPasswordLabel: c('Label').t`New password`,
-                confirmPasswordLabel: c('Label').t`Confirm password`
-            };
-        }
-
-        if (mode === MODES.CHANGE_TWO_PASSWORD_MAILBOX_MODE || isSecondPhase) {
-            return {
-                oldPasswordLabel: c('Label').t`Old login password`,
-                newPasswordLabel: c('Label').t`New mailbox password`,
-                confirmPasswordLabel: c('Label').t`Confirm mailbox password`
-            };
-        }
-
-        if (mode === MODES.SWITCH_TWO_PASSWORD) {
-            return {
-                oldPasswordLabel: c('Label').t`Old password`,
-                newPasswordLabel: c('Label').t`New login password`,
-                confirmPasswordLabel: c('Label').t`Confirm login password`
-            };
-        }
-
-        if (mode === MODES.CHANGE_TWO_PASSWORD_LOGIN_MODE) {
-            return {
-                oldPasswordLabel: c('Label').t`Old login password`,
-                newPasswordLabel: c('Label').t`New login password`,
-                confirmPasswordLabel: c('Label').t`Confirm login password`
-            };
-        }
-    })();
-
-    const handleSubmitMode = async () => {
-        if (mode === MODES.CHANGE_TWO_PASSWORD_LOGIN_MODE) {
-            await handleUnlock({ api, oldPassword, totp });
-            await handleChangeLoginPassword({ api, newPassword, totp });
-            await api(lockSensitiveSettings());
-            return onClose();
-        }
-
-        if (mode === MODES.SWITCH_TWO_PASSWORD && !isSecondPhase) {
-            await handleUnlock({ api, oldPassword, totp });
-            await handleChangeLoginPassword({ api, newPassword, totp });
-
-            setNewPassword('');
-            setConfirmNewPassword('');
-            setSecondPhase(true);
-            setLoading(false);
-
-            return;
-        }
-
-        if (mode === MODES.SWITCH_TWO_PASSWORD && isSecondPhase) {
-            const { keyPassword, keySalt } = await generateKeySaltAndPassword(newPassword);
-            const { armoredOrganizationKey, armoredKeys } = await getArmoredPrivateKeys({
-                userKeysList,
-                addressesKeysMap,
-                organizationKey,
-                keyPassword
-            });
-            await handleChangeMailboxPassword({ api, keySalt, armoredOrganizationKey, armoredKeys });
-            authenticationStore.setPassword(keyPassword);
-            await api(lockSensitiveSettings());
-            await call();
-            return onClose();
-        }
-
-        if (
-            mode === MODES.SWITCH_ONE_PASSWORD ||
-            mode === MODES.CHANGE_ONE_PASSWORD_MODE ||
-            mode === MODES.CHANGE_TWO_PASSWORD_MAILBOX_MODE
-        ) {
-            const { keyPassword, keySalt } = await generateKeySaltAndPassword(newPassword);
-            const { armoredOrganizationKey, armoredKeys } = await getArmoredPrivateKeys({
-                userKeysList,
-                addressesKeysMap,
-                organizationKey,
-                keyPassword
-            });
-
-            await handleUnlock({ api, oldPassword, totp });
-            if (mode === MODES.CHANGE_TWO_PASSWORD_MAILBOX_MODE) {
-                await handleChangeMailboxPassword({ api, armoredKeys, armoredOrganizationKey, keySalt });
-            } else {
-                await handleChangeOnePassword({ api, armoredKeys, armoredOrganizationKey, keySalt, newPassword, totp });
-            }
-            authenticationStore.setPassword(keyPassword);
-            await api(lockSensitiveSettings());
-            await call();
-            return onClose();
-        }
-    };
-
-    const handleSubmit = () => {
-        if (confirmNewPassword !== newPassword) {
-            setConfirmPasswordError(c('Error').t`Passwords do not match`);
-            return;
-        }
-        setConfirmPasswordError();
-        setLoginError();
-        setLoading(true);
-        handleSubmitMode().catch((e) => {
-            console.error(e);
-            // To display the login error under the TOTP and old password inputs.
-            if (e.data && e.data.Code === PASSWORD_WRONG_ERROR) {
-                setLoginError(e.data.Error);
-            }
-            // This error should never happen, but we might as well cover it.
-            if (e.name === 'NoDecryptedKeys') {
-                setFatalError(true);
-            }
-            setLoading(false);
-        });
-    };
-
-    const isLoadingKeys =
-        loadingAddresses || loadingOrganization || loadingOrganizationKey || loadingUserKeys || loadingAddressesKeys;
-
     const children = isLoadingKeys ? (
         <Loader />
     ) : (
@@ -332,7 +371,7 @@ const ChangePasswordModal = ({ onClose, mode, hasTotp, ...rest }) => {
             {alert}
             {!isSecondPhase && (
                 <Row>
-                    <Label>{oldPasswordLabel}</Label>
+                    <Label>{labels.oldPassword}</Label>
                     <Field>
                         <PasswordInput
                             value={oldPassword}
@@ -345,7 +384,7 @@ const ChangePasswordModal = ({ onClose, mode, hasTotp, ...rest }) => {
                 </Row>
             )}
             <Row>
-                <Label>{newPasswordLabel}</Label>
+                <Label>{labels.newPassword}</Label>
                 <Field>
                     <PasswordInput
                         value={newPassword}
@@ -357,7 +396,7 @@ const ChangePasswordModal = ({ onClose, mode, hasTotp, ...rest }) => {
                 </Field>
             </Row>
             <Row>
-                <Label>{confirmPasswordLabel}</Label>
+                <Label>{labels.confirmPassword}</Label>
                 <Field>
                     <PasswordInput
                         value={confirmNewPassword}
@@ -388,10 +427,10 @@ const ChangePasswordModal = ({ onClose, mode, hasTotp, ...rest }) => {
     if (fatalError) {
         return (
             <FormModal
-                title={title}
                 close={c('Action').t`Close`}
                 submit={c('Action').t`Ok`}
                 onClose={onClose}
+                {...modalProps}
                 onSubmit={onClose}
                 {...rest}
             >
@@ -402,12 +441,11 @@ const ChangePasswordModal = ({ onClose, mode, hasTotp, ...rest }) => {
 
     return (
         <FormModal
-            title={title}
             close={c('Action').t`Close`}
             submit={c('Action').t`Save`}
             loading={loading || isLoadingKeys}
             onClose={onClose}
-            onSubmit={handleSubmit}
+            {...modalProps}
             {...rest}
         >
             {children}
