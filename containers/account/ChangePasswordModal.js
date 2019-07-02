@@ -163,35 +163,41 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
     const [addressesKeysMap, loadingAddressesKeys] = useAddressesKeys(User, Addresses);
     const [organizationKey, loadingOrganizationKey] = useOrganizationKey(Organization);
 
-    const [oldPassword, setOldPassword] = useState('');
-    const [newPassword, setNewPassword] = useState('');
-    const [confirmNewPassword, setConfirmNewPassword] = useState('');
-    const [totp, setTotp] = useState('');
+    const [inputs, setInputs] = useState({
+        oldPassword: '',
+        newPassword: '',
+        confirmPassword: '',
+        totp: ''
+    });
     const [loading, setLoading] = useState(false);
-    const [loginError, setLoginError] = useState('');
-    const [confirmPasswordError, setConfirmPasswordError] = useState('');
+    const [errors, setErrors] = useState({
+        loginError: '',
+        confirmPasswordError: '',
+        fatalError: false
+    });
     const [isSecondPhase, setSecondPhase] = useState(false);
-    const [fatalError, setFatalError] = useState(false);
 
     const validateConfirmPassword = () => {
-        if (confirmNewPassword !== newPassword) {
-            setConfirmPasswordError(c('Error').t`Passwords do not match`);
+        if (inputs.confirmPassword !== inputs.newPassword) {
+            setErrors({ confirmPasswordError: c('Error').t`Passwords do not match` });
             throw new Error('PasswordMatch');
         }
-        setConfirmPasswordError();
     };
 
     const checkLoginError = ({ data: { Code, Error } = {} }) => {
         if (Code === PASSWORD_WRONG_ERROR) {
-            setLoginError(Error);
+            setErrors({ loginError: Error });
         }
     };
 
     const checkFatalError = (e) => {
         if (e.name === 'NoDecryptedKeys') {
-            setFatalError(true);
+            setErrors({ fatalError: true });
         }
     };
+
+    const setInput = (object) => setInputs((oldState) => ({ ...oldState, ...object }));
+    const resetErrors = () => setErrors({});
 
     const { labels, extraAlert, ...modalProps } = (() => {
         if (mode === MODES.CHANGE_TWO_PASSWORD_LOGIN_MODE) {
@@ -202,14 +208,14 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
                     newPassword: c('Label').t`New login password`,
                     confirmPassword: c('Label').t`Confirm login password`
                 },
-                onSubmit: async () => {
+                async onSubmit() {
                     try {
                         validateConfirmPassword();
+                        resetErrors();
                         setLoading(true);
-                        setLoginError();
 
-                        await handleUnlock({ api, oldPassword, totp });
-                        await handleChangeLoginPassword({ api, newPassword, totp });
+                        await handleUnlock({ api, oldPassword: inputs.oldPassword, totp: inputs.totp });
+                        await handleChangeLoginPassword({ api, newPassword: inputs.newPassword, totp: inputs.totp });
                         await api(lockSensitiveSettings());
 
                         onClose();
@@ -235,18 +241,17 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
                     newPassword: c('Label').t`New login password`,
                     confirmPassword: c('Label').t`Confirm login password`
                 },
-                onSubmit: async () => {
+                async onSubmit() {
                     try {
                         validateConfirmPassword();
+                        resetErrors();
                         setLoading(true);
-                        setLoginError();
 
-                        await handleUnlock({ api, oldPassword, totp });
-                        await handleChangeLoginPassword({ api, newPassword, totp });
+                        await handleUnlock({ api, oldPassword: inputs.oldPassword, totp: inputs.totp });
+                        await handleChangeLoginPassword({ api, newPassword: inputs.newPassword, totp: inputs.totp });
 
-                        setNewPassword('');
-                        setConfirmNewPassword('');
                         setSecondPhase(true);
+                        setInputs({ newPassword: '', confirmPassword: '' });
                         setLoading(false);
                     } catch (e) {
                         setLoading(false);
@@ -263,12 +268,13 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
                     newPassword: c('Label').t`New mailbox password`,
                     confirmPassword: c('Label').t`Confirm mailbox password`
                 },
-                onSubmit: async () => {
+                async onSubmit() {
                     try {
                         validateConfirmPassword();
+                        resetErrors();
                         setLoading(true);
 
-                        const { keyPassword, keySalt } = await generateKeySaltAndPassword(newPassword);
+                        const { keyPassword, keySalt } = await generateKeySaltAndPassword(inputs.newPassword);
                         const { armoredOrganizationKey, armoredKeys } = await getArmoredPrivateKeys({
                             userKeysList,
                             addressesKeysMap,
@@ -292,10 +298,10 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
         const onSubmit = async () => {
             try {
                 validateConfirmPassword();
-                setLoginError();
+                resetErrors();
                 setLoading(true);
 
-                const { keyPassword, keySalt } = await generateKeySaltAndPassword(newPassword);
+                const { keyPassword, keySalt } = await generateKeySaltAndPassword(inputs.newPassword);
                 const { armoredOrganizationKey, armoredKeys } = await getArmoredPrivateKeys({
                     userKeysList,
                     addressesKeysMap,
@@ -303,7 +309,7 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
                     keyPassword
                 });
 
-                await handleUnlock({ api, oldPassword, totp });
+                await handleUnlock({ api, oldPassword: inputs.oldPassword, totp: inputs.totp });
                 if (mode === MODES.CHANGE_TWO_PASSWORD_MAILBOX_MODE) {
                     await handleChangeMailboxPassword({ api, armoredKeys, armoredOrganizationKey, keySalt });
                 } else {
@@ -312,8 +318,8 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
                         armoredKeys,
                         armoredOrganizationKey,
                         keySalt,
-                        newPassword,
-                        totp
+                        newPassword: inputs.newPassword,
+                        totp: inputs.totp
                     });
                 }
                 authenticationStore.setPassword(keyPassword);
@@ -410,9 +416,9 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
                     <Label>{labels.oldPassword}</Label>
                     <Field>
                         <PasswordInput
-                            value={oldPassword}
-                            onChange={({ target: { value } }) => setOldPassword(value)}
-                            error={loginError}
+                            value={inputs.oldPassword}
+                            onChange={({ target: { value } }) => setInput({ oldPassword: value })}
+                            error={errors.loginError}
                             placeholder={c('Placeholder').t`Password`}
                             required
                         />
@@ -424,9 +430,9 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
                     <Label>{c('Label').t`Two factor code`}</Label>
                     <Field>
                         <TwoFactorInput
-                            value={totp}
-                            onChange={({ target: { value } }) => setTotp(value)}
-                            error={loginError}
+                            value={inputs.totp}
+                            onChange={({ target: { value } }) => setInput({ totp: value })}
+                            error={errors.loginError}
                             placeholder={c('Placeholder').t`Two factor code`}
                             required
                         />
@@ -437,9 +443,9 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
                 <Label>{labels.newPassword}</Label>
                 <Field>
                     <PasswordInput
-                        value={newPassword}
-                        onChange={({ target: { value } }) => setNewPassword(value)}
-                        error={confirmPasswordError}
+                        value={inputs.newPassword}
+                        onChange={({ target: { value } }) => setInput({ newPassword: value })}
+                        error={errors.confirmPasswordError}
                         placeholder={c('Placeholder').t`Password`}
                         required
                     />
@@ -449,9 +455,9 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
                 <Label>{labels.confirmPassword}</Label>
                 <Field>
                     <PasswordInput
-                        value={confirmNewPassword}
-                        onChange={({ target: { value } }) => setConfirmNewPassword(value)}
-                        error={confirmPasswordError}
+                        value={inputs.confirmPassword}
+                        onChange={({ target: { value } }) => setInput({ confirmPassword: value })}
+                        error={errors.confirmPasswordError}
                         placeholder={c('Placeholder').t`Confirm`}
                         required
                     />
@@ -460,7 +466,7 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
         </>
     );
 
-    if (fatalError) {
+    if (errors.fatalError) {
         return (
             <FormModal
                 close={c('Action').t`Close`}
