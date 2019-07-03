@@ -1,25 +1,13 @@
 import React from 'react';
 import { c } from 'ttag';
 import { Link } from 'react-router-dom';
-import {
-    SubTitle,
-    Alert,
-    Row,
-    Field,
-    Label,
-    SmallButton,
-    useModals,
-    useOrganization,
-    InputModal,
-    useApiWithoutResult
-} from 'react-components';
-import { updateOrganizationName } from 'proton-shared/lib/api/organization';
+import { SubTitle, Alert, Row, Field, Label, SmallButton, useModals, useOrganization } from 'react-components';
 import humanSize from 'proton-shared/lib/helpers/humanSize';
 
+import OrganizationNameModal from './OrganizationNameModal';
 import ActivateOrganizationButton from './ActivateOrganizationButton';
 
 const OrganizationSection = () => {
-    const { request } = useApiWithoutResult(updateOrganizationName);
     const [organization] = useOrganization();
     const {
         Name,
@@ -46,22 +34,6 @@ const OrganizationSection = () => {
         );
     }
 
-    const handleSubmit = async (name) => {
-        await request(name);
-    };
-
-    const handleOpenModal = () => {
-        createModal(
-            <InputModal
-                input={Name}
-                title={c('Title').t`Change organization name`}
-                label={c('Label').t`Organization name`}
-                placeholder={c('Placeholder').t`Choose a name`}
-                onSubmit={(name) => handleSubmit(name)}
-            />
-        );
-    };
-
     return (
         <>
             <SubTitle>{c('Title').t`Organization`}</SubTitle>
@@ -71,7 +43,9 @@ const OrganizationSection = () => {
                 <Label>{c('Label').t`Organization name`}</Label>
                 <Field>
                     <span className="mr0-5">{Name}</span>
-                    <SmallButton onClick={handleOpenModal}>{c('Action').t`Edit`}</SmallButton>
+                    <SmallButton onClick={() => createModal(<OrganizationNameModal organizationName={Name} />)}>{c(
+                        'Action'
+                    ).t`Edit`}</SmallButton>
                 </Field>
             </Row>
             <Row>

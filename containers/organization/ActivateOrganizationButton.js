@@ -6,8 +6,7 @@ import {
     useOrganization,
     useNotifications,
     useApi,
-    usePrompts,
-    useModal
+    useModals
 } from 'react-components';
 import { srpAuth } from 'proton-shared/lib/srp';
 import { unlockPasswordChanges } from 'proton-shared/lib/api/user';
@@ -17,8 +16,7 @@ import SetupOrganizationModal from './SetupOrganizationModal';
 const ActivateOrganizationButton = () => {
     const [{ MaxMembers }] = useOrganization();
     const { createNotification } = useNotifications();
-    const { createPrompt } = usePrompts();
-    const { isOpen, open, close } = useModal();
+    const { createModal } = useModals();
     const api = useApi();
 
     const handleClick = async () => {
@@ -30,9 +28,9 @@ const ActivateOrganizationButton = () => {
             });
         }
 
-        const { password, totp } = await createPrompt((resolve, reject) => (
-            <AskPasswordModal onClose={reject} onSubmit={resolve} />
-        ));
+        const { password, totp } = await new Promise((resolve, reject) => {
+            createModal(<AskPasswordModal onClose={reject} onSubmit={resolve} />);
+        });
 
         await srpAuth({
             api,
@@ -40,14 +38,9 @@ const ActivateOrganizationButton = () => {
             config: unlockPasswordChanges()
         });
 
-        open();
+        createModal(<SetupOrganizationModal />);
     };
-    return (
-        <>
-            <PrimaryButton onClick={handleClick}>{c('Action').t`Enable multi-user support`}</PrimaryButton>
-            <SetupOrganizationModal show={isOpen} onClose={close} />
-        </>
-    );
+    return <PrimaryButton onClick={handleClick}>{c('Action').t`Enable multi-user support`}</PrimaryButton>;
 };
 
 export default ActivateOrganizationButton;

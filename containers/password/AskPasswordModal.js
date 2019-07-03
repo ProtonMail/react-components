@@ -36,6 +36,7 @@ const AskPasswordModal = ({ onClose, onSubmit, hideTwoFactor, ...rest }) => {
                         value={model.password}
                         onChange={handleChange('password')}
                         autoFocus={true}
+                        autoComplete="current-password"
                         required
                     />
                 </Field>
