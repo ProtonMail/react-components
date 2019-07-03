@@ -304,9 +304,10 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
             {alert}
             {!isSecondPhase && (
                 <Row>
-                    <Label>{labels.oldPassword}</Label>
+                    <Label htmlFor="oldPassword">{labels.oldPassword}</Label>
                     <Field>
                         <PasswordInput
+                            id="oldPassword"
                             value={inputs.oldPassword}
                             onChange={({ target: { value } }) => setInput({ oldPassword: value })}
                             error={errors.loginError}
@@ -319,9 +320,10 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
             )}
             {!isSecondPhase && hasTotp && (
                 <Row>
-                    <Label>{c('Label').t`Two factor code`}</Label>
+                    <Label htmlFor="totp">{c('Label').t`Two factor code`}</Label>
                     <Field>
                         <TwoFactorInput
+                            id="totp"
                             value={inputs.totp}
                             onChange={({ target: { value } }) => setInput({ totp: value })}
                             error={errors.loginError}
@@ -332,9 +334,10 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
                 </Row>
             )}
             <Row>
-                <Label>{labels.newPassword}</Label>
+                <Label htmlFor="newPassword">{labels.newPassword}</Label>
                 <Field>
                     <PasswordInput
+                        id="newPassword"
                         value={inputs.newPassword}
                         onChange={({ target: { value } }) => setInput({ newPassword: value })}
                         error={errors.confirmPasswordError}
@@ -345,9 +348,10 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
                 </Field>
             </Row>
             <Row>
-                <Label>{labels.confirmPassword}</Label>
+                <Label htmlFor="confirmPassword">{labels.confirmPassword}</Label>
                 <Field>
                     <PasswordInput
+                        id="confirmPassword"
                         value={inputs.confirmPassword}
                         onChange={({ target: { value } }) => setInput({ confirmPassword: value })}
                         error={errors.confirmPasswordError}

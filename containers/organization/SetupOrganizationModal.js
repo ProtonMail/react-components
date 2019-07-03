@@ -17,10 +17,9 @@ import {
     useMembers,
     useEventManager,
     useAuthenticationStore,
+    useLoading,
     useNotifications
 } from 'react-components';
-import { encryptPrivateKey, generateKey } from 'pmcrypto';
-import { generateKeySalt, computeKeyPassword } from 'pm-srp';
 import { GIGA } from 'proton-shared/lib/constants';
 import { range } from 'proton-shared/lib/helpers/array';
 import humanSize from 'proton-shared/lib/helpers/humanSize';
@@ -29,6 +28,7 @@ import { updateVPN, updateQuota } from 'proton-shared/lib/api/members';
 import { DEFAULT_ENCRYPTION_CONFIG, ENCRYPTION_CONFIGS } from 'proton-shared/lib/constants';
 
 import SelectEncryption from '../keys/addKey/SelectEncryption';
+import { generateOrganizationKeys } from './helpers/organizationKeysHelper';
 
 const SetupOrganizationModal = ({ onClose, ...rest }) => {
     const api = useApi();
@@ -37,7 +37,7 @@ const SetupOrganizationModal = ({ onClose, ...rest }) => {
     const { createNotification } = useNotifications();
 
     const [members = []] = useMembers();
-    const [loading, setLoading] = useState(false);
+    const [loading, withLoading] = useLoading();
     const [confirmPasswordError, setConfirmPasswordError] = useState();
     const [encryptionType, setEncryptionType] = useState(DEFAULT_ENCRYPTION_CONFIG);
     const [{ MaxSpace, MaxVPN }] = useOrganization();
@@ -52,19 +52,6 @@ const SetupOrganizationModal = ({ onClose, ...rest }) => {
         storage: 5 * GIGA,
         vpn: 3
     });
-
-    const wrapLoading = (promise) => {
-        if (!promise) {
-            return;
-        }
-        setLoading(true);
-        return promise
-            .then(() => setLoading(false))
-            .catch((e) => {
-                setLoading(false);
-                throw e;
-            });
-    };
 
     const handleChange = (key) => ({ target }) => setModel({ ...model, [key]: target.value });
 
@@ -154,24 +141,20 @@ const SetupOrganizationModal = ({ onClose, ...rest }) => {
                     }
                     setConfirmPasswordError();
 
-                    const keyPassword = authenticationStore.getPassword();
-
-                    const { key: privateKey, privateKeyArmored: armoredPrivateKey } = await generateKey({
-                        userIds: [{ name: 'not_for_email_use@domain.tld', email: 'not_for_email_use@domain.tld' }],
-                        passphrase: keyPassword,
-                        ...ENCRYPTION_CONFIGS[encryptionType]
+                    const {
+                        privateKeyArmored,
+                        backupKeySalt,
+                        backupArmoredPrivateKey
+                    } = await generateOrganizationKeys({
+                        keyPassword: authenticationStore.getPassword(),
+                        backupPassword: model.password,
+                        encryptionConfig: ENCRYPTION_CONFIGS[encryptionType]
                     });
-
-                    await privateKey.decrypt(keyPassword);
-
-                    const backupKeySalt = generateKeySalt();
-                    const backupKeyPassword = await computeKeyPassword(model.password, backupKeySalt);
-                    const armoredBackupPrivateKey = await encryptPrivateKey(privateKey, backupKeyPassword);
 
                     await api(
                         updateOrganizationKeys({
-                            PrivateKey: armoredPrivateKey,
-                            BackupPrivateKey: armoredBackupPrivateKey,
+                            PrivateKey: privateKeyArmored,
+                            BackupPrivateKey: backupArmoredPrivateKey,
                             BackupKeySalt: backupKeySalt,
                             Tokens: []
                         })
@@ -250,7 +233,7 @@ const SetupOrganizationModal = ({ onClose, ...rest }) => {
             title={title}
             submit={c('Action').t`Submit`}
             onClose={onClose}
-            onSubmit={() => wrapLoading(onSubmit())}
+            onSubmit={() => withLoading(onSubmit())}
             loading={loading}
             close={step ? <Button onClick={previous}>{c('Action').t`Back`}</Button> : c('Action').t`Close`}
             {...rest}

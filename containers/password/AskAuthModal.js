@@ -3,28 +3,21 @@ import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import { FormModal, Row, Field, Label, PasswordInput, TwoFactorInput, useUserSettings } from 'react-components';
 
-const AskPasswordModal = ({ onClose, onSubmit, hideTwoFactor, ...rest }) => {
-    const [model, set] = useState({
-        password: '',
-        totp: ''
-    });
+const AskAuthModal = ({ onClose, onSubmit, error, hideTotp, ...rest }) => {
+    const [password, setPassword] = useState('');
+    const [totp, setTotp] = useState('');
+    const [{ '2FA': { Enabled } } = {}] = useUserSettings();
 
-    const handleChange = (key) => ({ target }) => set({ ...model, [key]: target.value });
-
-    const handleSubmit = () => {
-        onSubmit(model);
-        onClose();
-    };
-
-    const [{ TwoFactor } = {}] = useUserSettings();
+    const showTotp = !hideTotp && !!Enabled;
 
     return (
         <FormModal
             onClose={onClose}
-            onSubmit={handleSubmit}
+            onSubmit={() => onSubmit({ password, totp })}
             title={c('Title').t`Sign in again to continue`}
             close={c('Label').t`Cancel`}
             submit={c('Label').t`Submit`}
+            error={error}
             small
             {...rest}
         >
@@ -32,35 +25,41 @@ const AskPasswordModal = ({ onClose, onSubmit, hideTwoFactor, ...rest }) => {
                 <Label htmlFor="password">{c('Label').t`Password`}</Label>
                 <Field>
                     <PasswordInput
+                        placeholder={c('Placeholder').t`Password`}
                         id="password"
-                        value={model.password}
-                        onChange={handleChange('password')}
+                        value={password}
+                        onChange={({ target: { value } }) => setPassword(value)}
+                        error={error}
                         autoFocus={true}
                         autoComplete="current-password"
                         required
                     />
                 </Field>
             </Row>
-            {hideTwoFactor ? null : TwoFactor ? (
+            {showTotp && (
                 <Row>
                     <Label htmlFor="totp">{c('Label').t`Two factor code`}</Label>
                     <Field>
-                        <TwoFactorInput id="totp" value={model.totp} onChange={handleChange('totp')} required />
+                        <TwoFactorInput
+                            placeholder={c('Placeholder').t`Two factor code`}
+                            id="totp"
+                            value={totp}
+                            error={error}
+                            onChange={({ target: { value } }) => setTotp(value)}
+                            required
+                        />
                     </Field>
                 </Row>
-            ) : null}
+            )}
         </FormModal>
     );
 };
 
-AskPasswordModal.propTypes = {
+AskAuthModal.propTypes = {
     onClose: PropTypes.func,
     onSubmit: PropTypes.func.isRequired,
-    hideTwoFactor: PropTypes.bool
+    error: PropTypes.string,
+    hideTotp: PropTypes.bool
 };
 
-AskPasswordModal.defaultProps = {
-    hideTwoFactor: false
-};
-
-export default AskPasswordModal;
+export default AskAuthModal;
