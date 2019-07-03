@@ -311,6 +311,7 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
                             onChange={({ target: { value } }) => setInput({ oldPassword: value })}
                             error={errors.loginError}
                             placeholder={c('Placeholder').t`Password`}
+                            autoComplete="current-password"
                             required
                         />
                     </Field>
@@ -338,6 +339,7 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
                         onChange={({ target: { value } }) => setInput({ newPassword: value })}
                         error={errors.confirmPasswordError}
                         placeholder={c('Placeholder').t`Password`}
+                        autoComplete="new-password"
                         required
                     />
                 </Field>
@@ -350,6 +352,7 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
                         onChange={({ target: { value } }) => setInput({ confirmPassword: value })}
                         error={errors.confirmPasswordError}
                         placeholder={c('Placeholder').t`Confirm`}
+                        autoComplete="new-password"
                         required
                     />
                 </Field>
