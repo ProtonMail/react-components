@@ -29,7 +29,9 @@ const ModelsProvider = ({ children, loginData = {} }) => {
                 MailSettingsModel.get(api)
             ]);
 
-            const models = [user.isPaid && SubscriptionModel, user.isPaid && OrganizationModel].filter(Boolean);
+            const models = [user.isPaid && user.isAdmin && SubscriptionModel, user.isPaid && OrganizationModel].filter(
+                Boolean
+            );
             const modelsResult = await Promise.all(models.map(({ get }) => get(api)));
 
             const initialCache = {

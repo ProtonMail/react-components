@@ -205,11 +205,9 @@ export { default as InvoiceAmount } from './containers/invoices/InvoiceAmount';
 export { default as InvoiceTextModal } from './containers/invoices/InvoiceTextModal';
 export { default as InvoicesSection } from './containers/invoices/InvoicesSection';
 export { default as InvoiceActions } from './containers/invoices/InvoiceActions';
-export { default as AddMemberButton } from './containers/members/AddMemberButton';
 export { default as MembersSection } from './containers/members/MembersSection';
 export { default as MemberPrivate } from './containers/members/MemberPrivate';
 export { default as EditMemberModal } from './containers/members/EditMemberModal';
-export { default as useMemberModal } from './containers/members/useMemberModal';
 export { default as MemberRole } from './containers/members/MemberRole';
 export { default as MemberStorageSelector } from './containers/members/MemberStorageSelector';
 export { default as MemberFeatures } from './containers/members/MemberFeatures';
@@ -277,6 +275,7 @@ export { default as AddFilterModal } from './containers/filters/AddFilterModal';
 export { default as AddEmailToListModal } from './containers/filters/AddEmailToListModal';
 
 export { default as useCachedAsyncResult } from './hooks/useCachedAsyncResult';
+export { default as usePromiseResult } from './hooks/usePromiseResult';
 export { useAddresses } from './models/addressesModel';
 export { useDomains } from './models/domainsModel';
 export { useContacts } from './models/useContacts';
@@ -292,7 +291,7 @@ export { useSubscription } from './models/subscriptionModel';
 export { useUser } from './models/userModel';
 export { useUserSettings } from './models/userSettingsModel';
 
-export { default as useGetKeys } from './hooks/useGetKeys';
+export { default as useMemberAddresses } from './hooks/useMemberAddresses';
 export { default as useUserKeys } from './hooks/useUserKeys';
 export { default as useAddressesKeys } from './hooks/useAddressesKeys';
 export { default as useOrganizationKey } from './hooks/useOrganizationKey';

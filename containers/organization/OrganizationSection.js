@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { SubTitle, Alert, Row, Field, Label, SmallButton, useModals, useOrganization } from 'react-components';
 import humanSize from 'proton-shared/lib/helpers/humanSize';
 
+import RestoreAdministratorPrivileges from './RestoreAdministratorPrivileges';
 import OrganizationNameModal from './OrganizationNameModal';
 import ActivateOrganizationButton from './ActivateOrganizationButton';
 
@@ -36,6 +37,7 @@ const OrganizationSection = () => {
 
     return (
         <>
+            <RestoreAdministratorPrivileges />
             <SubTitle>{c('Title').t`Organization`}</SubTitle>
             <Alert learnMore="todo">{c('Info')
                 .t`Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pretium enim nec massa fringilla, ac ultrices tortor posuere. Fusce sed quam vitae arcu pharetra congue. Quisque in elementum nibh.`}</Alert>

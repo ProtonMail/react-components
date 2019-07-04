@@ -48,22 +48,15 @@ const DomainModal = ({ onClose, domain, ...rest }) => {
         );
     }
 
-    const verifyDomain = async () => {
-        const { Domain = {} } = await api(getDomain(domainModel.ID));
-        const { VerifyState } = Domain;
-
+    const verifyDomain = ({ VerifyState }) => {
         if (VerifyState === VERIFY_STATE_DEFAULT) {
-            throw new Error(c('Error').t`Verification did not succeed, please try again in an hour.`);
+            return c('Error').t`Verification did not succeed, please try again in an hour.`;
         }
 
         if (VerifyState === VERIFY_STATE_EXIST) {
-            throw new Error(
-                c('Error')
-                    .t`Wrong verification code. Please make sure you copied the verification code correctly and try again. It can take up to 24 hours for changes to take effect.`
-            );
+            return c('Error')
+                .t`Wrong verification code. Please make sure you copied the verification code correctly and try again. It can take up to 24 hours for changes to take effect.`;
         }
-
-        return Domain;
     };
 
     const handleSubmit = async () => {
@@ -77,7 +70,11 @@ const DomainModal = ({ onClose, domain, ...rest }) => {
             step === VERIFY_STEP &&
             (domainModel.VerifyState === VERIFY_STATE_DEFAULT || domainModel.VerifyState === VERIFY_STATE_EXIST)
         ) {
-            const { Domain } = await verifyDomain();
+            const { Domain = {} } = await api(getDomain(domainModel.ID));
+            const error = verifyDomain(domain);
+            if (error) {
+                return createNotification({ text: error, type: 'error' });
+            }
             setDomain(Domain);
             createNotification({ text: c('Success').t`Domain verified` });
             return next();

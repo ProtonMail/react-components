@@ -22,6 +22,7 @@ import ChangeOrganizationPasswordModal from './ChangeOrganizationPasswordModal';
 import ChangeOrganizationKeysModal from './ChangeOrganizationKeysModal';
 import ReactivateOrganizationKeysModal from './ReactivateOrganizationKeysModal';
 import { describe } from 'proton-shared/lib/keys/keysAlgorithm';
+import { getOrganizationKeyInfo } from './helpers/organizationKeysHelper';
 
 const OrganizationSection = () => {
     const [organization, loadingOrganization] = useOrganization();
@@ -29,11 +30,6 @@ const OrganizationSection = () => {
     const { createModal } = useModals();
     const { createNotification } = useNotifications();
     const [organizationKey, loadingOrganizationKey] = useOrganizationKey(organization);
-
-    // Organization is not setup.
-    if (!organization.HasKeys) {
-        return null;
-    }
 
     const title = <SubTitle>{c('Title').t`Password & key`}</SubTitle>;
 
@@ -46,10 +42,14 @@ const OrganizationSection = () => {
         );
     }
 
-    // The member of an organization might not have setup the key for him.
-    const hasKey = !!organizationKey;
-    const isOrganizationKeyActive = hasKey && organizationKey.isDecrypted();
-    const isOrganizationKeyInactive = hasKey && !organizationKey.isDecrypted();
+    // Organization is not setup.
+    if (!organization.HasKeys) {
+        return title;
+    }
+
+    const { hasOrganizationKey, isOrganizationKeyActive, isOrganizationKeyInactive } = getOrganizationKeyInfo(
+        organizationKey
+    );
 
     const hasOtherAdmins = members.some(({ Role, Self }) => Self !== 1 && Role === USER_ROLES.ADMIN_ROLE);
 
@@ -78,55 +78,69 @@ const OrganizationSection = () => {
                 .t`Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed pretium enim nec massa fringilla, ac ultrices tortor posuere. Fusce sed quam vitae arcu pharetra congue. Quisque in elementum nibh.`}</Alert>
             <Block>
                 {isOrganizationKeyActive && (
-                    <PrimaryButton
-                        onClick={() =>
-                            createModal(
-                                <ChangeOrganizationPasswordModal
-                                    hasOtherAdmins={hasOtherAdmins}
-                                    organizationKey={organizationKey}
-                                />
-                            )
-                        }
-                        className="mr1"
-                    >
-                        {c('Action').t`Change password`}
-                    </PrimaryButton>
+                    <>
+                        <PrimaryButton
+                            onClick={() =>
+                                createModal(
+                                    <ChangeOrganizationPasswordModal
+                                        hasOtherAdmins={hasOtherAdmins}
+                                        organizationKey={organizationKey}
+                                    />
+                                )
+                            }
+                            className="mr1"
+                        >
+                            {c('Action').t`Change password`}
+                        </PrimaryButton>
+                        <PrimaryButton onClick={handleOpenOrganizationKeys} className="mr1">
+                            {c('Action').t`Change organization keys`}
+                        </PrimaryButton>
+                    </>
                 )}
-                <PrimaryButton onClick={handleOpenOrganizationKeys} className="mr1">
-                    {c('Action').t`Change organization keys`}
-                </PrimaryButton>
                 {isOrganizationKeyInactive && (
-                    <PrimaryButton
-                        onClick={() => createModal(<ReactivateOrganizationKeysModal mode="reactivate" />)}
-                        className="mr1"
-                    >
-                        {c('Action').t`Reactivate organization key`}
-                    </PrimaryButton>
+                    <>
+                        <Alert type="error">
+                            {c('Error')
+                                .t`You have lost access to your organization keys. Without restoration you will not be able to create new users, add addresses to existing users, or access non-private user accounts.`}
+                        </Alert>
+                        <PrimaryButton
+                            onClick={() => createModal(<ReactivateOrganizationKeysModal mode="reactivate" />)}
+                            className="mr1"
+                        >
+                            {c('Action').t`Restore administrator privileges`}
+                        </PrimaryButton>
+                    </>
                 )}
-                {!hasKey && (
-                    <PrimaryButton
-                        onClick={() => createModal(<ReactivateOrganizationKeysModal mode="activate" />)}
-                        className="mr1"
-                    >
-                        {c('Action').t`Activate organization key`}
-                    </PrimaryButton>
-                )}
-                {hasKey && (
-                    <Table>
-                        <TableHeader cells={[c('Header').t`Organization key fingerprint`, c('Header').t`Key type`]} />
-                        <TableBody colSpan={2}>
-                            <TableRow
-                                cells={[
-                                    <code key={1} className="mw100 inbl ellipsis">
-                                        {organizationKey.getFingerprint()}
-                                    </code>,
-                                    describe(organizationKey.getAlgorithmInfo())
-                                ]}
-                            />
-                        </TableBody>
-                    </Table>
+                {!hasOrganizationKey && (
+                    <>
+                        <Alert type="error">
+                            {c('Error')
+                                .t`You must activate your organization keys. Without activation you will not be able to create new users, add addresses to existing users, or access non-private user accounts.`}
+                        </Alert>
+                        <PrimaryButton
+                            onClick={() => createModal(<ReactivateOrganizationKeysModal mode="activate" />)}
+                            className="mr1"
+                        >
+                            {c('Action').t`Activate organization key`}
+                        </PrimaryButton>
+                    </>
                 )}
             </Block>
+            {hasOrganizationKey && (
+                <Table>
+                    <TableHeader cells={[c('Header').t`Organization key fingerprint`, c('Header').t`Key type`]} />
+                    <TableBody colSpan={2}>
+                        <TableRow
+                            cells={[
+                                <code key={1} className="mw100 inbl ellipsis">
+                                    {organizationKey.getFingerprint()}
+                                </code>,
+                                describe(organizationKey.getAlgorithmInfo())
+                            ]}
+                        />
+                    </TableBody>
+                </Table>
+            )}
         </>
     );
 };
