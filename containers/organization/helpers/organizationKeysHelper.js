@@ -42,15 +42,21 @@ export const generateOrganizationKeys = async ({ keyPassword, backupPassword, en
 
 /**
  * @param {Array} nonPrivateMembers
+ * @param {Array} nonPrivateMembersAddresses
  * @param {Object} oldOrganizationKey
  * @param {Object} newOrganizationKey
  * @return {Promise<Array>}
  */
-export const reEncryptOrganizationTokens = ({ nonPrivateMembers = [], oldOrganizationKey, newOrganizationKey }) => {
+export const reEncryptOrganizationTokens = ({
+    nonPrivateMembers = [],
+    nonPrivateMembersAddresses = [],
+    oldOrganizationKey,
+    newOrganizationKey
+}) => {
     const newOrganizationPublicKey = newOrganizationKey.toPublic();
 
-    const getMemberTokens = ({ Keys = [], Addresses = [] }) => {
-        const memberKeys = Addresses.reduce((acc, { Keys: AddressKeys }) => {
+    const getMemberTokens = ({ Keys = [] }, i) => {
+        const memberKeys = nonPrivateMembersAddresses[i].reduce((acc, { Keys: AddressKeys }) => {
             return acc.concat(AddressKeys);
         }, Keys);
 

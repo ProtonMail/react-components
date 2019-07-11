@@ -9,6 +9,7 @@ import {
     useNotifications,
     useAuthenticationStore,
     useStep,
+    useApi,
     AuthModal,
     FormModal,
     Alert,
@@ -21,8 +22,10 @@ import {
 import SelectEncryption from '../keys/addKey/SelectEncryption';
 import { generateOrganizationKeys, reEncryptOrganizationTokens } from './helpers/organizationKeysHelper';
 import { DEFAULT_ENCRYPTION_CONFIG, ENCRYPTION_CONFIGS } from 'proton-shared/lib/constants';
+import { queryAddresses } from 'proton-shared/lib/api/members';
 
 const ChangeOrganizationKeysModal = ({ onClose, organizationKey, hasOtherAdmins, nonPrivateMembers, ...rest }) => {
+    const api = useApi();
     const { call } = useEventManager();
     const { createModal } = useModals();
     const { createNotification } = useNotifications();
@@ -56,8 +59,14 @@ const ChangeOrganizationKeysModal = ({ onClose, organizationKey, hasOtherAdmins,
         if (nonPrivateMembers.length >= 1 && !organizationKey) {
             throw new Error('Private members received without an existing organization key.');
         }
+
+        const nonPrivateMembersAddresses = await Promise.all(
+            nonPrivateMembers.map((member) => api(queryAddresses(member.ID)).then(({ Addresses = [] }) => Addresses))
+        );
+
         const tokens = await reEncryptOrganizationTokens({
             nonPrivateMembers,
+            nonPrivateMembersAddresses,
             oldOrganizationKey: organizationKey,
             newOrganizationKey: privateKey
         });
