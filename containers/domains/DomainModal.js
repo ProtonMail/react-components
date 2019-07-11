@@ -17,7 +17,7 @@ const { VERIFY_STATE_DEFAULT, VERIFY_STATE_EXIST, VERIFY_STATE_GOOD } = VERIFY_S
 const DOMAIN_STEP = 0;
 const VERIFY_STEP = 1;
 
-const DomainModal = ({ onClose, domain, ...rest }) => {
+const DomainModal = ({ onClose, onRedirect, domain, ...rest }) => {
     const [domainModel, setDomain] = useState(domain);
     const { createNotification } = useNotifications();
     const [loading, withLoading] = useLoading();
@@ -25,6 +25,11 @@ const DomainModal = ({ onClose, domain, ...rest }) => {
     const api = useApi();
     const { step, next, goTo } = useStep();
     const handleClick = (index) => goTo(index);
+
+    const handleRedirect = (route) => {
+        onRedirect(route);
+        onClose();
+    };
 
     const STEPS = [
         {
@@ -40,7 +45,10 @@ const DomainModal = ({ onClose, domain, ...rest }) => {
     if (domainModel.VerifyState === VERIFY_STATE_GOOD) {
         STEPS.push(
             ...[
-                { label: c('Label in domain modal').t`Addresses`, section: <AddressesSection domain={domainModel} /> },
+                {
+                    label: c('Label in domain modal').t`Addresses`,
+                    section: <AddressesSection onRedirect={handleRedirect} domain={domainModel} />
+                },
                 { label: 'MX', section: <MXSection /> },
                 { label: 'SPF', section: <SPFSection /> },
                 { label: 'DKIM', section: <DKIMSection domain={domainModel} /> },
@@ -106,6 +114,7 @@ const DomainModal = ({ onClose, domain, ...rest }) => {
 
 DomainModal.propTypes = {
     onClose: PropTypes.func,
+    onRedirect: PropTypes.func.isRequired,
     domain: PropTypes.object.isRequired
 };
 
