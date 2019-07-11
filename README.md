@@ -32,7 +32,7 @@ For webpack, it needs to be loaded with the `svg-inline-loader`. The rest of the
 ## Hooks
 
 ### useApi
-Get the `api` function to perform API calls. In 99% of cases, `useApi` hook *should not be used* because calling the API should required to use at least the `loading` parameter to block the UI.
+Get the `api` function to perform API calls.
 
 ``` js
 const api = useApi();
@@ -94,15 +94,19 @@ const handleClick = async () => {
 };
 ```
 
-### useAsync
-Get `loading`, `result`, `error` parameters from a promise.
+### useLoading
+Get `loading` from a promise.
 
 ``` js
-const { loading, result, error, run } = useAsync();
+const [loading, withLoading] = useLoading();
 
-const handleClick = () => {
-    run(promise);
+const handleClick = async () => {
+    await promise1;
+    await promise2;
+    await promise3;
 };
+
+return <Button onClick={() => withLoading(handleClick())} disabled={loading} />
 ```
 
 ### useConfig
@@ -131,3 +135,4 @@ const [result, loading] = useCachedAsyncResult(
     [dependencies]
 );
 ```
+
