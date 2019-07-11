@@ -61,7 +61,7 @@ function FiltersSection() {
                     onSortEnd={onSortEnd}
                 />
             ) : (
-                <Paragraph>No filers available</Paragraph>
+                <Paragraph>{c('FilterSettings').t`No filters available`}</Paragraph>
             )}
         </>
     );
