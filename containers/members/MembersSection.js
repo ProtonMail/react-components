@@ -144,7 +144,7 @@ const MembersSection = () => {
                 <TableBody loading={membersLoading || memberAddressesLoading} colSpan={6}>
                     {membersSelected.map((member) => {
                         const key = member.ID;
-                        const memberAddresses = memberAddressesMap ? memberAddressesMap[member.ID] : [];
+                        const memberAddresses = (memberAddressesMap && memberAddressesMap[member.ID]) || [];
                         return (
                             <TableRow
                                 key={key}
