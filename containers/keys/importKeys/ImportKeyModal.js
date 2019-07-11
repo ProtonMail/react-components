@@ -136,14 +136,15 @@ const ImportKeyModal = ({ Address, addressKeys, onClose, ...rest }) => {
         );
     };
 
-    const handleFiles = (files) => {
-        if (files.length === 0) {
+    const handleFiles = (keys) => {
+        const privateKeys = keys.filter((key) => key.isPrivate());
+        if (privateKeys.length === 0) {
             return createNotification({
                 type: 'error',
                 text: c('Error').t`Invalid private key file`
             });
         }
-        handleUpload(files);
+        handleUpload(privateKeys);
     };
 
     useEffect(() => {

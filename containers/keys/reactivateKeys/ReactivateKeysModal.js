@@ -227,12 +227,13 @@ const ReactivateKeysModal = ({ allKeys: initialAllKeys, onClose, ...rest }) => {
         }
 
         if (step === STEPS.OR_UPLOAD) {
-            const handleUpload = (inactiveKey, files) => {
-                if (files.length === 0) {
+            const handleUpload = (inactiveKey, keys) => {
+                const privateKeys = keys.filter((key) => key.isPrivate());
+                if (privateKeys.length === 0) {
                     return notifyError(c('Error').t`Invalid private key file`);
                 }
 
-                const matchingKeys = files.filter((key) => key.getFingerprint() === inactiveKey.fingerprint);
+                const matchingKeys = privateKeys.filter((key) => key.getFingerprint() === inactiveKey.fingerprint);
                 if (matchingKeys.length === 0) {
                     return notifyError(c('Error').t`Uploaded key does not match fingerprint`);
                 }
