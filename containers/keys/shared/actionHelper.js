@@ -4,6 +4,12 @@ import { getKeyFlagsAddress, getKeyFlagsUser } from 'proton-shared/lib/keys/keyF
 import { createAddressKeyRoute, reactivateKeyRoute } from 'proton-shared/lib/api/keys';
 import getSignedKeyList from 'proton-shared/lib/keys/getSignedKeyList';
 
+/**
+ * @param {String} email
+ * @param {String} passphrase
+ * @param {Object} encryptionConfig
+ * @return {Promise<{privateKeyArmored, privateKey}>}
+ */
 export const generateAddressKey = async ({ email, passphrase, encryptionConfig }) => {
     const { key: privateKey, privateKeyArmored } = await generateKey({
         userIds: [{ name: email, email }],
@@ -16,6 +22,12 @@ export const generateAddressKey = async ({ email, passphrase, encryptionConfig }
     return { privateKey, privateKeyArmored };
 };
 
+/**
+ * @param {String} email
+ * @param {String} passphrase
+ * @param {Object} originalKey
+ * @return {Promise<{privateKeyArmored, privateKey}>}
+ */
 export const reformatAddressKey = async ({ email, passphrase, privateKey: originalKey }) => {
     const { key: privateKey, privateKeyArmored } = await reformatKey({
         userIds: [{ name: email, email }],
@@ -28,6 +40,15 @@ export const reformatAddressKey = async ({ email, passphrase, privateKey: origin
     return { privateKey, privateKeyArmored };
 };
 
+/**
+ * Add a private key to the list of address keys.
+ * @param {Function} api
+ * @param {Object} privateKey
+ * @param {String} privateKeyArmored
+ * @param {Array} keys
+ * @param {Object} Address
+ * @return {Promise<Array>} - The updated list of address keys
+ */
 export const createKeyHelper = async ({ api, privateKey, privateKeyArmored, keys, Address }) => {
     const updatedKeys = createKey({
         keyID: 'temp',
@@ -56,6 +77,16 @@ export const createKeyHelper = async ({ api, privateKey, privateKeyArmored, keys
     return updatedKeys;
 };
 
+/**
+ * Reactivate a private key in the address or user keys list.
+ * @param {Function} api
+ * @param {String} keyID
+ * @param {Object} privateKey
+ * @param {String} privateKeyArmored
+ * @param {Array} keys
+ * @param {Object} [Address]
+ * @return {Promise<Array>} - The updated list of keys.
+ */
 export const reactivateKeyHelper = async ({ api, keyID, privateKey, privateKeyArmored, keys, Address }) => {
     const isAddressKey = !!Address;
 

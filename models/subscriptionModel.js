@@ -9,7 +9,7 @@ export const useSubscription = () => {
     return useCachedAsyncResult(
         SubscriptionModel.key,
         () => {
-            if (user.isPaid && user.isAdmin) {
+            if (user.isPaid) {
                 return SubscriptionModel.get(api);
             }
             return Promise.resolve(FREE_SUBSCRIPTION);

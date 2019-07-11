@@ -16,7 +16,7 @@ import { generateAddressKey } from '../keys/shared/actionHelper';
  * @param {string} password
  * @param {Object} organizationKey
  * @param {Object} encryptionConfig
- * @return {Promise}
+ * @return {Promise<Array>} - The updated list of keys.
  */
 export const setupMemberKey = async ({ api, Member, Address, password, organizationKey, encryptionConfig }) => {
     const keySalt = generateKeySalt();
@@ -120,7 +120,7 @@ export const generateMemberAddressKey = async ({ email, primaryKey, organization
  * @param {String} activationToken
  * @param {String} privateKeyArmoredOrganization
  * @param {String} organizationToken
- * @return {Promise}
+ * @return {Promise<Array>} - The updated list of keys
  */
 export const createMemberAddressKeys = async ({
     api,

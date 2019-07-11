@@ -4,7 +4,7 @@
  * @param {String} key
  * @param {Function} miss
  * @param {any} dependency
- * @return {*|Promise<any>|*}
+ * @return {Promise}
  */
 export const cachedPromise = (cache, key, miss, dependency) => {
     if (cache.has(key)) {

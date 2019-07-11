@@ -154,7 +154,6 @@ const ChangeOrganizationKeysModal = ({ onClose, organizationKey, hasOtherAdmins,
             submit={c('Action').t`Save`}
             onClose={onClose}
             loading={loading}
-            onSubmit={() => withLoading(handleSubmit())}
             {...modalProps}
             {...rest}
         >

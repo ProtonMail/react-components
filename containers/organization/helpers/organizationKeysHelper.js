@@ -2,6 +2,11 @@ import { encryptMessage, encryptPrivateKey, generateKey } from 'pmcrypto';
 import { computeKeyPassword, generateKeySalt } from 'pm-srp';
 import { decryptMemberToken } from 'proton-shared/lib/keys/keys';
 
+/**
+ * @param {String} backupPassword
+ * @param {Object} organizationKey
+ * @return {Promise<{backupKeySalt, backupArmoredPrivateKey}>}
+ */
 export const getBackupKeyData = async ({ backupPassword, organizationKey }) => {
     const backupKeySalt = generateKeySalt();
     const backupKeyPassword = await computeKeyPassword(backupPassword, backupKeySalt);
@@ -13,6 +18,12 @@ export const getBackupKeyData = async ({ backupPassword, organizationKey }) => {
     };
 };
 
+/**
+ * @param {String} keyPassword
+ * @param {String} backupPassword
+ * @param {Object} encryptionConfig
+ * @return {Promise<{privateKeyArmored, privateKey}>}
+ */
 export const generateOrganizationKeys = async ({ keyPassword, backupPassword, encryptionConfig }) => {
     const { key: privateKey, privateKeyArmored } = await generateKey({
         userIds: [{ name: 'not_for_email_use@domain.tld', email: 'not_for_email_use@domain.tld' }],
@@ -29,6 +40,12 @@ export const generateOrganizationKeys = async ({ keyPassword, backupPassword, en
     };
 };
 
+/**
+ * @param {Array} nonPrivateMembers
+ * @param {Object} oldOrganizationKey
+ * @param {Object} newOrganizationKey
+ * @return {Promise<Array>}
+ */
 export const reEncryptOrganizationTokens = ({ nonPrivateMembers = [], oldOrganizationKey, newOrganizationKey }) => {
     const newOrganizationPublicKey = newOrganizationKey.toPublic();
 
@@ -53,6 +70,10 @@ export const reEncryptOrganizationTokens = ({ nonPrivateMembers = [], oldOrganiz
     return Promise.all(nonPrivateMembers.map(getMemberTokens).flat());
 };
 
+/**
+ * @param {Object} organizationKey
+ * @return {Object}
+ */
 export const getOrganizationKeyInfo = (organizationKey) => {
     return {
         hasOrganizationKey: !!organizationKey, // If the member has the organization key (not the organization itself).
