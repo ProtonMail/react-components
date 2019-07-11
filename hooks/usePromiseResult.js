@@ -1,4 +1,4 @@
-import { useLayoutEffect, useReducer, useRef } from 'react';
+import { useEffect, useReducer, useRef } from 'react';
 import { STATUS } from 'proton-shared/lib/models/cache';
 
 /**
@@ -52,12 +52,16 @@ const reducer = (oldValue, record = { status: STATUS.PENDING }) => {
  */
 const usePromiseResult = (miss, dependencies) => {
     const ref = useRef();
+    const unmountedRef = useRef(false);
     const [state, dispatch] = useReducer(reducer, undefined, getState);
 
-    /**
-     * use layout effect instead of use effect for when the promise resolves instantly to avoid fouc
-     */
-    useLayoutEffect(() => {
+    useEffect(() => {
+        return () => {
+            unmountedRef.current = true;
+        };
+    }, []);
+
+    useEffect(() => {
         const promise = miss();
 
         const record = {
@@ -85,6 +89,10 @@ const usePromiseResult = (miss, dependencies) => {
                 };
             })
             .then((record) => {
+                if (unmountedRef.current) {
+                    ref.current = undefined;
+                    return;
+                }
                 const oldRecord = ref.current;
                 // Ensure it's the latest promise that is running
                 if (oldRecord.promise !== promise) {

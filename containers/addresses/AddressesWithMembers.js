@@ -20,6 +20,7 @@ import AddressActions from './AddressActions';
 
 const AddressesWithMembers = ({ user, organization }) => {
     const [members, loadingMembers] = useMembers();
+    const [memberAddressesMap, loadingMemberAddresses] = useMemberAddresses(members);
     const [memberIndex, setMemberIndex] = useState(-1);
     const [organizationKey, loadingOrganizationKey] = useOrganizationKey(organization);
 
@@ -39,9 +40,7 @@ const AddressesWithMembers = ({ user, organization }) => {
         return [members[memberIndex]];
     }, [members, memberIndex]);
 
-    const [addressesMap, loadingAddresses] = useMemberAddresses(selectedMembers);
-
-    if (loadingMembers || memberIndex === -1 || (loadingAddresses && !addressesMap)) {
+    if (loadingMembers || memberIndex === -1 || (loadingMemberAddresses && !memberAddressesMap)) {
         return <Loader />;
     }
 
@@ -61,11 +60,11 @@ const AddressesWithMembers = ({ user, organization }) => {
                 />
                 <TableBody
                     colSpan={showUsername ? 4 : 3}
-                    loading={selectedMembers.some(({ ID }) => !Array.isArray(addressesMap[ID]))}
+                    loading={selectedMembers.some(({ ID }) => !Array.isArray(memberAddressesMap[ID]))}
                 >
                     {selectedMembers
                         .map((member) => {
-                            const addresses = addressesMap[member.ID];
+                            const addresses = memberAddressesMap[member.ID];
 
                             if (!Array.isArray(addresses)) {
                                 return null;
