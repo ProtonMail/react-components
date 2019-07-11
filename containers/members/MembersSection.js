@@ -68,7 +68,7 @@ const MembersSection = () => {
     const [organization, loadingOrganization] = useOrganization();
     const [organizationKey, loadingOrganizationKey] = useOrganizationKey(organization);
     const [domains, loadingDomains] = useDomains();
-    const [memberAddresses, memberAddressesLoading] = useMemberAddresses(members);
+    const [memberAddressesMap, memberAddressesLoading] = useMemberAddresses(members);
     const [keywords, setKeywords] = useState('');
 
     const { createNotification } = useNotifications();
@@ -144,6 +144,7 @@ const MembersSection = () => {
                 <TableBody loading={membersLoading || memberAddressesLoading} colSpan={6}>
                     {membersSelected.map((member) => {
                         const key = member.ID;
+                        const memberAddresses = memberAddressesMap ? memberAddressesMap[member.ID] : [];
                         return (
                             <TableRow
                                 key={key}
@@ -151,12 +152,12 @@ const MembersSection = () => {
                                     member.Name,
                                     <MemberRole key={key} member={member} />,
                                     <MemberPrivate key={key} member={member} />,
-                                    <MemberAddresses key={key} member={member} />,
+                                    <MemberAddresses key={key} addresses={memberAddresses} />,
                                     <MemberFeatures key={key} member={member} />,
                                     <MemberActions
                                         key={key}
                                         member={member}
-                                        addresses={memberAddresses[member.ID]}
+                                        addresses={memberAddresses}
                                         organization={organization}
                                     />
                                 ]}

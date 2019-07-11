@@ -4,8 +4,7 @@ import { Link } from 'react-router-dom';
 import { msgid, c } from 'ttag';
 import { Dropdown, DropdownMenu } from 'react-components';
 
-const MemberAddresses = ({ member }) => {
-    const addresses = member.addresses || [];
+const MemberAddresses = ({ addresses }) => {
     const title = addresses.map(({ Email }) => Email).join(', ');
     const list = addresses.map(({ Email }) => Email);
     const n = list.length;
@@ -28,7 +27,7 @@ const MemberAddresses = ({ member }) => {
 };
 
 MemberAddresses.propTypes = {
-    member: PropTypes.object.isRequired
+    addresses: PropTypes.object.isRequired
 };
 
 export default MemberAddresses;
