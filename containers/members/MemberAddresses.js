@@ -5,8 +5,8 @@ import { msgid, c } from 'ttag';
 import { Dropdown, DropdownMenu } from 'react-components';
 
 const MemberAddresses = ({ addresses }) => {
-    const title = addresses.map(({ Email }) => Email).join(', ');
     const list = addresses.map(({ Email }) => Email);
+    const title = list.join(', ');
     const n = list.length;
 
     return (
@@ -27,7 +27,7 @@ const MemberAddresses = ({ addresses }) => {
 };
 
 MemberAddresses.propTypes = {
-    addresses: PropTypes.object.isRequired
+    addresses: PropTypes.array.isRequired
 };
 
 export default MemberAddresses;
