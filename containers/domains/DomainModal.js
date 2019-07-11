@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
 import PropTypes from 'prop-types';
-import { FormModal, useApi, useStep, Breadcrumb, useNotifications } from 'react-components';
+import { FormModal, useLoading, useApi, useStep, Breadcrumb, useNotifications } from 'react-components';
 import { addDomain, getDomain } from 'proton-shared/lib/api/domains';
 import { VERIFY_STATE } from 'proton-shared/lib/constants';
 
@@ -20,6 +20,7 @@ const VERIFY_STEP = 1;
 const DomainModal = ({ onClose, domain, ...rest }) => {
     const [domainModel, setDomain] = useState(domain);
     const { createNotification } = useNotifications();
+    const [loading, withLoading] = useLoading();
     const [domainName, updateDomainName] = useState(domainModel.DomainName);
     const api = useApi();
     const { step, next, goTo } = useStep();
@@ -90,10 +91,11 @@ const DomainModal = ({ onClose, domain, ...rest }) => {
     return (
         <FormModal
             onClose={onClose}
-            onSubmit={handleSubmit}
+            onSubmit={() => withLoading(handleSubmit())}
             close={c('Action').t`Close`}
             submit={c('Action').t`Next`}
             title={domainModel.ID ? c('Title').t`Edit domain` : c('Title').t`Add domain`}
+            loading={loading}
             {...rest}
         >
             {<Breadcrumb list={STEPS.map(({ label }) => label)} current={step} onClick={handleClick} />}
