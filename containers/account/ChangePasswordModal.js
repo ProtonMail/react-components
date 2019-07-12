@@ -20,6 +20,7 @@ import {
     useAddressesKeys,
     useOrganizationKey,
     useOrganization,
+    useNotifications,
     useApi
 } from 'react-components';
 import { lockSensitiveSettings } from 'proton-shared/lib/api/user';
@@ -45,6 +46,7 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
     const api = useApi();
     const { call } = useEventManager();
     const authenticationStore = useAuthenticationStore();
+    const { createNotification } = useNotifications();
 
     const [User] = useUser();
     const [{ '2FA': { Enabled } } = {}, loadingUserSettings] = useUserSettings();
@@ -188,6 +190,18 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
 
         const onSubmit = async () => {
             try {
+                /**
+                 * This is the case for a user who does not have any keys set-up.
+                 * They will be in 2-password mode, but not have any keys.
+                 * Changing to one-password mode or mailbox password is not allowed.
+                 * It's not handled better because it's a rare case.
+                 */
+                if (userKeysList.length === 0) {
+                    return createNotification({
+                        type: 'error',
+                        text: c('Error').t`Please generate keys before you try to change your password.`
+                    });
+                }
                 validateConfirmPassword();
                 resetErrors();
                 setLoading(true);
