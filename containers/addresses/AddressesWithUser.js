@@ -21,16 +21,17 @@ const AddressesUser = ({ user }) => {
                 ]}
             />
             <TableBody colSpan={3} loading={loadingAddresses}>
-                {addresses.map((address, i) => (
-                    <TableRow
-                        key={address.ID}
-                        cells={[
-                            address.Email,
-                            <AddressStatus key={1} {...getStatus({ address, i })} />,
-                            <AddressActions key={2} member={member} address={address} user={user} />
-                        ]}
-                    />
-                ))}
+                {addresses &&
+                    addresses.map((address, i) => (
+                        <TableRow
+                            key={address.ID}
+                            cells={[
+                                address.Email,
+                                <AddressStatus key={1} {...getStatus({ address, i })} />,
+                                <AddressActions key={2} member={member} address={address} user={user} />
+                            ]}
+                        />
+                    ))}
             </TableBody>
         </Table>
     );
