@@ -6,13 +6,14 @@ import { ChromePicker } from 'react-color';
 
 import './ColorPicker.scss';
 
-const ColorPicker = ({ children, initialRgbaColor, onChange, ...rest }) => {
-    const [display, setDisplay] = useState(false);
-    const [rgbaColor, setRgbaColor] = useState(initialRgbaColor);
+const toBackgroundColor = (color) => {
+    return color instanceof String ? color : `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`;
+};
 
-    const rgbaColorString = (rgbaColor) => {
-        return `rgba(${rgbaColor.r}, ${rgbaColor.g}, ${rgbaColor.b}, ${rgbaColor.a})`;
-    };
+const ColorPicker = ({ children, initialColor, onChange, ...rest }) => {
+    const [display, setDisplay] = useState(false);
+    const [color, setColor] = useState(initialColor);
+
     const handleClick = () => {
         setDisplay(!display);
     };
@@ -20,20 +21,20 @@ const ColorPicker = ({ children, initialRgbaColor, onChange, ...rest }) => {
         setDisplay(false);
     };
     const handleChange = (color) => {
-        setRgbaColor(color.rgb);
+        setColor(color.rgb);
         onChange(color);
     };
 
     const picker = (
         <div className="popover">
             <div className="cover" onClick={handleClose} />
-            <ChromePicker color={rgbaColor} onChange={handleChange} />
+            <ChromePicker color={color} onChange={handleChange} />
         </div>
     );
 
     return (
         <div className="relative">
-            <Button onClick={handleClick} style={{ backgroundColor: rgbaColorString(rgbaColor) }} {...rest}>
+            <Button onClick={handleClick} style={{ backgroundColor: toBackgroundColor(color) }} {...rest}>
                 {children}
             </Button>
             {display ? picker : null}
@@ -43,12 +44,20 @@ const ColorPicker = ({ children, initialRgbaColor, onChange, ...rest }) => {
 
 ColorPicker.propTypes = {
     children: PropTypes.node.isRequired,
-    initialRgbaColor: PropTypes.object,
+    initialColor: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.shape({
+            r: PropTypes.number,
+            g: PropTypes.number,
+            b: PropTypes.number,
+            a: PropTypes.number
+        })
+    ]),
     onChange: PropTypes.func
 };
 
 ColorPicker.defaultProps = {
-    initialRgbaColor: { r: 255, g: 255, b: 255, a: 1 }, // white
+    initialRgbaColor: '#ffffff', // white
     onChange: noop
 };
 
