@@ -7,8 +7,6 @@ import {
     useNotifications,
     useEventManager,
     useLoading,
-    Badge,
-    LoaderIcon,
     FormModal,
     Table,
     TableHeader,
@@ -16,42 +14,12 @@ import {
     TableRow
 } from 'react-components';
 import { DEFAULT_ENCRYPTION_CONFIG, ENCRYPTION_CONFIGS } from 'proton-shared/lib/constants';
-
-import SelectEncryption from '../keys/addKey/SelectEncryption';
-import { createMemberAddressKeys, generateMemberAddressKey } from '../members/actionHelper';
-import { createKeyHelper, generateAddressKey } from '../keys/shared/actionHelper';
 import { prepareMemberKeys } from 'proton-shared/lib/keys/keys';
 
-const STATUS = {
-    QUEUED: 0,
-    DONE: 1,
-    FAILURE: 2,
-    LOADING: 3
-};
-
-const Status = ({ type, tooltip }) => {
-    if (type === STATUS.QUEUED) {
-        return <Badge type="default">{c('Info').t`Queued`}</Badge>;
-    }
-
-    if (type === STATUS.DONE) {
-        return <Badge type="success">{c('Info').t`Done`}</Badge>;
-    }
-
-    if (type === STATUS.FAILURE) {
-        return <Badge type="error" tooltip={tooltip}>{c('Error').t`Error`}</Badge>;
-    }
-
-    if (type === STATUS.LOADING) {
-        return <LoaderIcon />;
-    }
-    return null;
-};
-
-Status.propTypes = {
-    type: PropTypes.number,
-    tooltip: PropTypes.string
-};
+import SelectEncryption from '../keys/addKey/SelectEncryption';
+import MissingKeysStatus, { STATUS } from './MissingKeysStatus';
+import { createMemberAddressKeys, generateMemberAddressKey } from '../members/actionHelper';
+import { createKeyHelper, generateAddressKey } from '../keys/shared/actionHelper';
 
 const updateAddress = (oldAddresses, address, status) => {
     return oldAddresses.map((oldAddress) => {
@@ -180,7 +148,10 @@ const CreateMissingKeysAddressModal = ({ onClose, member, addresses, organizatio
                 />
                 <TableBody colSpan={2}>
                     {formattedAddresses.map((address) => (
-                        <TableRow key={address.ID} cells={[address.Email, <Status key={0} {...address.status} />]} />
+                        <TableRow
+                            key={address.ID}
+                            cells={[address.Email, <MissingKeysStatus key={0} {...address.status} />]}
+                        />
                     ))}
                 </TableBody>
             </Table>
