@@ -20,7 +20,7 @@ const TwoFactorSection = () => {
         <>
             <SubTitle>{c('Title').t`Two-factor authentication`}</SubTitle>
             <Row>
-                <Label htmlFor="passwordModeToggle">
+                <Label htmlFor="twoFactorToggle">
                     <span className="mr0-5">{c('Label').t`Two-factor authentication`}</span>
                     <Info url="https://protonmail.com/support/knowledge-base/single-password" />
                 </Label>
