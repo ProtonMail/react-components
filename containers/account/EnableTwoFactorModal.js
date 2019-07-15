@@ -22,6 +22,7 @@ import { setupTotp, TOTP_WRONG_ERROR } from 'proton-shared/lib/api/settings';
 import { srpAuth } from 'proton-shared/lib/srp';
 import { PASSWORD_WRONG_ERROR } from 'proton-shared/lib/api/auth';
 import downloadFile from 'proton-shared/lib/helpers/downloadFile';
+import { TWO_FA_CONFIG } from 'proton-shared/lib/constants';
 
 const STEPS = {
     INFO: 1,
@@ -30,8 +31,7 @@ const STEPS = {
     RECOVERY_CODES: 4
 };
 
-const PERIOD = 30;
-const DIGITS = 6;
+const { PERIOD, DIGITS, ALGORITHM } = TWO_FA_CONFIG;
 
 const EnableTwoFactorModal = (props) => {
     const [addresses] = useAddresses();
@@ -59,7 +59,13 @@ const EnableTwoFactorModal = (props) => {
         const identifier = (primaryAddress && primaryAddress.Email) || `${user.Name}@protonmail`;
 
         setTotpData({
-            uri: getUri({ identifier, sharedSecret: generatedSharedSecret, period: PERIOD, digits: DIGITS }),
+            uri: getUri({
+                identifier,
+                sharedSecret: generatedSharedSecret,
+                period: PERIOD,
+                digits: DIGITS,
+                algorithm: ALGORITHM
+            }),
             sharedSecret: generatedSharedSecret
         });
     }, [addresses]);
