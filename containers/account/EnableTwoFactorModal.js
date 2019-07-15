@@ -24,14 +24,14 @@ import { PASSWORD_WRONG_ERROR } from 'proton-shared/lib/api/auth';
 import downloadFile from 'proton-shared/lib/helpers/downloadFile';
 import { TWO_FA_CONFIG } from 'proton-shared/lib/constants';
 
+const { PERIOD, DIGITS, ALGORITHM } = TWO_FA_CONFIG;
+
 const STEPS = {
     INFO: 1,
     SCAN_CODE: 2,
     CONFIRM_CODE: 3,
     RECOVERY_CODES: 4
 };
-
-const { PERIOD, DIGITS, ALGORITHM } = TWO_FA_CONFIG;
 
 const EnableTwoFactorModal = (props) => {
     const [addresses] = useAddresses();
