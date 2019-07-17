@@ -14,6 +14,7 @@ import { c } from 'ttag';
 const Modal = ({
     onClose,
     onSubmit,
+    onReset,
     title,
     close = c('Action').t`Cancel`,
     submit = c('Action').t`Submit`,
@@ -75,7 +76,7 @@ function DemoModal({ onAdd, ...rest }) {
                     {title}
                 </HeaderModal>
             ) : null}
-            <ContentModal onSubmit={onSubmit} onReset={onClose} noValidate={noValidate}>
+            <ContentModal onSubmit={onSubmit} onReset={onReset || onClose} noValidate={noValidate}>
                 <InnerModal>{children}</InnerModal>
                 {getFooter()}
             </ContentModal>
@@ -88,6 +89,7 @@ Modal.propTypes = {
     modalTitleID: PropTypes.string,
     onClose: PropTypes.func.isRequired,
     onSubmit: PropTypes.func,
+    onReset: PropTypes.func,
     title: PropTypes.string.isRequired,
     children: PropTypes.node.isRequired,
     loading: PropTypes.bool,
