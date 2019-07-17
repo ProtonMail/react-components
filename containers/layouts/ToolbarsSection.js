@@ -45,6 +45,7 @@ const ToolbarsSection = () => {
                             disabled={loading}
                             onChange={hanldeChange}
                             value={READ_UNREAD}
+                            data-cy-appearance-toolbar="read-unread"
                         >
                             <Group className="ml1 no-pointer-events">
                                 <Button icon="read" className="pm-button-group" title={c('Action').t`Read`} />
@@ -58,6 +59,7 @@ const ToolbarsSection = () => {
                             disabled={loading}
                             onChange={hanldeChange}
                             value={UNREAD_READ}
+                            data-cy-appearance-toolbar="unread-read"
                         >
                             <Group className="ml1 no-pointer-events">
                                 <Button icon="unread" className="pm-button-group" title={c('Action').t`Unread`} />
