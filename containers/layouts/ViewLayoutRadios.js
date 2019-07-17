@@ -19,7 +19,8 @@ const ViewLayoutRadios = ({ viewLayout, onChange, loading, id, ...rest }) => {
         onChange() {
             onChange(COLUMN);
         },
-        children: <img alt="Column" src={inboxColumnSvg} />
+        children: <img alt="Column" src={inboxColumnSvg}
+        data-cy-appearance-inbox="column" />
     };
     const radioCardRow = {
         value: ROW,
@@ -31,7 +32,8 @@ const ViewLayoutRadios = ({ viewLayout, onChange, loading, id, ...rest }) => {
         onChange() {
             onChange(ROW);
         },
-        children: <img alt="Row" src={inboxRowSvg} />
+        children: <img alt="Row" src={inboxRowSvg}
+        data-cy-appearance-inbox="row" />
     };
 
     return <RadioCards list={[radioCardColumn, radioCardRow]} id={id} {...rest} />;
