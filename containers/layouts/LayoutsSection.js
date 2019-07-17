@@ -150,6 +150,7 @@ const LayoutsSection = () => {
                             stickyLabels={StickyLabels}
                             loading={loadingStickyLabels}
                             onToggle={(value) => withLoadingStickyLabels(handleToggleStickyLabels(value))}
+                            data-cy-appearance="sticky-labels"
                         />
                     </Field>
                 </Row>
