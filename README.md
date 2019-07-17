@@ -60,11 +60,11 @@ const { loading, result, error, request } = useApiResult(fn);
 
 where `fn` is passed whatever arguments is passed from `request` and should return a route config object.
 
-### useAuthenticationStore
-Get the `authenticationStore`. Can be used to retrieve the `UID` or the `mailboxPassword`.
+### useAuthentication
+Get the `authentication`. Can be used to retrieve the `UID` or the `mailboxPassword`.
 
 ``` js
-const authenticationStore = useAuthentionStore();
+const { UID, login, logout, ...} = useAuthentication();
 ```
 
 ### useNotifications
@@ -117,14 +117,13 @@ Get all variables defined in `config.js` file for a dedicated project.
 const { CLIENT_ID, CLIENT_VERSION } = useConfig();
 ```
 
-### useCachedAsyncResult
+### usePromiseResult
 Get `result` and `loading` from an async operation that is persisted in the cache. Indexed by a unique key, and re-evaluated whenever the dependencies change.
 
-Note: If the async operation throws, this hook will throw, so wrap the component using this hook with an ErrorBoundary if the error needs to be handled. Otherwise it will be retried when the component renders the next time.
+Note: If the async operation throws, this hook will throw, so wrap the component using this hook with an ErrorBoundary if the error needs to be handled. Otherwise it will be retried when the component remounts the next time.
 
 ```js
-const [result, loading] = useCachedAsyncResult(
-    'UNIQUE_KEY',
+const [result, loading] = usePromiseResult(
     () => {
         return new Promise((resolve) => {
             setTimeout(() => {
