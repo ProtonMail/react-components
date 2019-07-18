@@ -2,14 +2,14 @@
   "name": "react-components",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
   "sideEffects": false,
   "scripts": {
     "test": "jest",
     "export": "./makeExport",
     "i18n:validatejs": "proton-i18n validate lint-functions .",
     "i18n:validate": "proton-i18n extract reactComponents && proton-i18n validate",
-    "lint": "eslint containers components --ext .js --quiet --cache",
+    "lint": "eslint containers components --ext .js,.ts,.tsx --quiet --cache",
     "pretty": "prettier --write $(find lib -type f -name '*.js')"
   },
   "repository": {
