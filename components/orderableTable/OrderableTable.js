@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { Table } from '../table';
 import OrderableContainer from '../orderable/OrderableContainer';
@@ -12,6 +13,15 @@ const OrderableTable = ({ children, className, caption, ...props }) => (
     </OrderableContainer>
 );
 
-OrderableTable.propTypes = Table.propTypes;
+OrderableTable.propTypes = {
+    className: PropTypes.string,
+    children: PropTypes.node.isRequired,
+    caption: PropTypes.string
+};
+
+OrderableTable.defaultProps = {
+    children: [],
+    className: ''
+};
 
 export default OrderableTable;
