@@ -5,6 +5,7 @@ import createCache from 'proton-shared/lib/helpers/cache';
 import { formatUser, UserModel } from 'proton-shared/lib/models/userModel';
 import { STATUS } from 'proton-shared/lib/models/cache';
 
+import CompatibilityCheck from './CompatibilityCheck';
 import Icons from '../../components/icon/Icons';
 import useInstance from '../../hooks/useInstance';
 import ConfigProvider from '../config/Provider';
@@ -14,7 +15,6 @@ import ApiProvider from '../api/ApiProvider';
 import CacheProvider from '../cache/Provider';
 import AuthenticationProvider from '../authentication/Provider';
 import PublicApiProvider from '../api/PublicApiProvider';
-import CompatibilityCheck from './CompatibilityCheck';
 
 const ProtonApp = ({ storage, config, children }) => {
     const authentication = useInstance(() => createAuthentication(storage));

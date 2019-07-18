@@ -7,6 +7,7 @@ const isGoodPrngAvailable = () => {
     return typeof window.msCrypto === 'object' && typeof window.msCrypto.getRandomValues === 'function';
 };
 
+// Locale is not loaded here so no translations
 const compats = [
     {
         name: 'Cookies',
