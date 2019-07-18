@@ -1,0 +1,18 @@
+.orderableHelper {
+    z-index: 666;
+    display: flex;
+    align-items: center;
+    color: black;
+    background: white;
+    border-top: 1px solid #dde6ec;
+    border-bottom: 1px solid #dde6ec;
+
+    td {
+        flex: 1;
+        border: none;
+        &:first-child {
+            flex-grow: 0;
+            flex-basis: 35px;
+        }
+    }
+}
