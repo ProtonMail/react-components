@@ -7,7 +7,7 @@ import OrderableElement from '../orderable/OrderableElement';
 
 const OrderableTableRow = ({ index, cells, ...rest }) => (
     <OrderableElement index={index}>
-        <TableRow cells={[<Icon key="icon" name="text-justify" />, ...cells]} {...rest}></TableRow>
+        <TableRow cells={[<Icon key="icon" name="text-justify" />, ...cells]} {...rest} />
     </OrderableElement>
 );
 
