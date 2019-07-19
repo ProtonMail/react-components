@@ -260,7 +260,6 @@ export { default as usePlans } from './hooks/usePlans';
 export { default as usePermissions } from './hooks/usePermissions';
 export { nestChildren } from './helpers/component';
 export { indexOfMax, buildThresholds } from './helpers/intersectionObserver';
-export { arrayMove, arrayMoveMutate } from './helpers/arrayMove';
 
 export { default as useCache } from './containers/cache/useCache';
 export { default as CacheProvider } from './containers/cache/CacheProvider';
