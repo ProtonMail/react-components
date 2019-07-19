@@ -5,6 +5,8 @@ import lightTheme from 'design-system/_sass/pm-styles/_pm-light-theme.scss';
 import blueTheme from 'design-system/_sass/pm-styles/_pm-blue-theme.scss';
 import { THEMES } from 'proton-shared/lib/constants';
 
+import { toStyle } from '../../helpers/themes';
+
 const {
     DARK: { identifier: darkId },
     LIGHT: { identifier: lightId },
@@ -19,18 +21,18 @@ const ThemeInjector = () => {
 
     useEffect(() => {
         if (themeId === darkId) {
-            return setStyle(`${orgTheme}`);
+            return setStyle(orgTheme);
         }
 
         if (themeId === lightId) {
-            return setStyle(`${lightTheme}\n${orgTheme}`);
+            return setStyle(toStyle([lightTheme, orgTheme]));
         }
 
         if (themeId === blueId) {
-            return setStyle(`${blueTheme}\n${orgTheme}`);
+            return setStyle(toStyle([blueTheme, orgTheme]));
         }
 
-        setStyle(`${userTheme}\n${orgTheme}`);
+        setStyle(toStyle([userTheme, orgTheme]));
     }, [userTheme, orgTheme]);
 
     return <style>{style}</style>;
