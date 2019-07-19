@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useMailSettings } from 'react-components';
+import { useMailSettings, useOrganization } from 'react-components';
 import { getThemeIdentifier } from 'react-components/helpers/themes';
 import lightTheme from 'design-system/_sass/pm-styles/_pm-light-theme.scss';
 import blueTheme from 'design-system/_sass/pm-styles/_pm-blue-theme.scss';
@@ -12,22 +12,26 @@ const {
 } = THEMES;
 
 const ThemeInjector = () => {
-    const [{ Theme } = {}] = useMailSettings();
-    const themeId = getThemeIdentifier(Theme);
-    const [style, setStyle] = useState(Theme);
+    const [{ Theme: userTheme = '' } = {}] = useMailSettings();
+    const [{ Theme: orgTheme = '' } = {}] = useOrganization();
+    const themeId = getThemeIdentifier(userTheme);
+    const [style, setStyle] = useState('');
 
     useEffect(() => {
         if (themeId === darkId) {
-            return setStyle('');
+            return setStyle(`${orgTheme}`);
         }
+
         if (themeId === lightId) {
-            return setStyle(lightTheme.toString());
+            return setStyle(`${lightTheme}\n${orgTheme}`);
         }
+
         if (themeId === blueId) {
-            return setStyle(blueTheme.toString());
+            return setStyle(`${blueTheme}\n${orgTheme}`);
         }
-        setStyle(Theme);
-    }, [Theme]);
+
+        setStyle(`${userTheme}\n${orgTheme}`);
+    }, [userTheme, orgTheme]);
 
     return <style>{style}</style>;
 };
