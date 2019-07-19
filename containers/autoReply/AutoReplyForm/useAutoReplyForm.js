@@ -1,13 +1,10 @@
 import { useState } from 'react';
 import moment from 'moment-timezone';
-import { startOfDayUTC, getRoundedHours } from '../utils';
+import { startOfDay, getRoundedHours } from '../utils';
 
 /* 
     BE sends times and dates in UNIX format
-    FE always works with UTC
-    ---
-    FE converts from UTC to selected timezone before sending to BE
-    FE converts from selected timezone to UTC after receiving from BE
+    FE always works with locale times and converts to specified timezone before saving
 */
 const toModel = (AutoResponder) => {
     const start = moment.unix(AutoResponder.StartTime).tz(AutoResponder.Zone);
@@ -20,8 +17,8 @@ const toModel = (AutoResponder) => {
         timeZone: AutoResponder.Zone,
         subject: AutoResponder.Subject,
         enabled: AutoResponder.IsEnabled,
-        startDate: startOfDayUTC(start),
-        endDate: startOfDayUTC(end),
+        startDate: startOfDay(start),
+        endDate: startOfDay(end),
         startTime: getRoundedHours(start),
         endTime: getRoundedHours(end)
     };
@@ -34,12 +31,10 @@ const toAutoResponder = (model) => ({
     Zone: model.timeZone,
     Subject: model.subject,
     IsEnabled: model.enabled,
-    StartTime: moment
-        .utc(model.startDate + model.startTime)
+    StartTime: moment(model.startDate + model.startTime)
         .tz(model.timeZone, true)
         .unix(),
-    EndTime: moment
-        .utc(model.endDate + model.endTime)
+    EndTime: moment(model.endDate + model.endTime)
         .tz(model.timeZone, true)
         .unix()
 });

@@ -94,8 +94,7 @@ export const getRoundedHours = (time) => {
         .valueOf();
 };
 
-export const startOfDayUTC = (date) =>
+export const startOfDay = (date) =>
     moment(date)
-        .utc(true)
         .startOf('day')
         .valueOf();
