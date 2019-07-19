@@ -16,8 +16,9 @@ const AutoReplyTemplate = ({ autoresponder, onEdit }) => {
     const durationLabel = getDurationOptions().find(({ value }) => value === autoresponder.Repeat).text;
     const timezone = getTimeZoneOptions().find(({ value }) => value === autoresponder.Zone).text;
 
+    // TODO: time = moment obj
     const formatTime = (time) => {
-        const hours = moment.utc(time).format('LT');
+        const hours = moment.tz(time, autoresponder.Zone).format('LT');
 
         if (autoresponder.Repeat === AutoReplyDuration.DAILY) {
             const firstDayOfWeek = moment.localeData().firstDayOfWeek();
@@ -30,7 +31,7 @@ const AutoReplyTemplate = ({ autoresponder, onEdit }) => {
                 ? c('Duration').t`Every ${weekdays} @ ${hours}`
                 : c('Duration').t`Every day @ ${hours}`;
         } else if (autoresponder.Repeat === AutoReplyDuration.FIXED) {
-            const date = moment(time).format('LL');
+            const date = moment.tz(time, autoresponder.Zone).format('LL');
             return `${date} @ ${hours}`;
         } else if (autoresponder.Repeat === AutoReplyDuration.WEEKLY) {
             const dayOfWeek = moment.weekdays(Math.floor(time / DAY_MILLISECONDS));

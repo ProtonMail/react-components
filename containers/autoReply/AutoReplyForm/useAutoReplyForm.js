@@ -1,31 +1,29 @@
 import { useState } from 'react';
-import moment from 'moment';
+import moment from 'moment-timezone';
 
+/* 
+    BE sends times and dates in UNIX format
+    FE always works with UTC
+    ---
+    FE converts from UTC to selected timezone before sending to BE
+    FE converts from selected timezone to UTC after receiving from BE
+*/
 const toModel = (AutoResponder) => {
-    const start = AutoResponder.StartTime * 1000;
-    const end = AutoResponder.EndTime * 1000;
+    const start = moment.unix(AutoResponder.StartTime).tz(AutoResponder.Zone);
+    const end = moment.unix(AutoResponder.EndTime).tz(AutoResponder.Zone);
 
-    const startDate = moment
-        .utc(start)
-        .startOf('day')
-        .valueOf();
-    const endDate = moment
-        .utc(end)
-        .startOf('day')
-        .valueOf();
+    const startDate = moment(start).startOf('day');
+    const endDate = moment(end).startOf('day');
     const startTime =
-        moment
-            .utc(start)
+        moment(start)
             .startOf('hour')
             .add(30 * Math.floor(moment(start).minutes() / 30), 'minutes')
-            .valueOf() - startDate;
+            .valueOf() - startDate.valueOf();
     const endTime =
-        moment
-            .utc(end)
+        moment(end)
             .startOf('hour')
             .add(30 * Math.floor(moment(end).minutes() / 30), 'minutes')
-            .valueOf() - endDate;
-
+            .valueOf() - endDate.valueOf();
     return {
         message: AutoResponder.Message,
         duration: AutoResponder.Repeat,
@@ -34,8 +32,8 @@ const toModel = (AutoResponder) => {
         subject: AutoResponder.Subject,
         enabled: AutoResponder.IsEnabled,
 
-        startDate,
-        endDate,
+        startDate: startDate.utc(true).valueOf(),
+        endDate: endDate.utc(true).valueOf(),
         startTime,
         endTime
     };
@@ -48,8 +46,14 @@ const toAutoResponder = (model) => ({
     Zone: model.timeZone,
     Subject: model.subject,
     IsEnabled: model.enabled,
-    StartTime: (model.startDate + model.startTime) / 1000,
-    EndTime: (model.endDate + model.endTime) / 1000
+    StartTime: moment
+        .utc(model.startDate + model.startTime)
+        .tz(model.timeZone, true)
+        .unix(),
+    EndTime: moment
+        .utc(model.endDate + model.endTime)
+        .tz(model.timeZone, true)
+        .unix()
 });
 
 const useAutoReplyForm = (AutoResponder) => {

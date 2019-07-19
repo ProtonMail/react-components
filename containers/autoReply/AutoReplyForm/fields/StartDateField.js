@@ -5,7 +5,13 @@ import { c } from 'ttag';
 import moment from 'moment';
 
 const StartDateField = ({ value, onChange }) => {
-    const handleChange = (date) => onChange(new Date(date).getTime());
+    const handleChange = (date) =>
+        onChange(
+            moment(date)
+                .utc(true)
+                .startOf('day')
+                .valueOf()
+        );
 
     return (
         <Row className="flex-spacebetween">
