@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import moment from 'moment-timezone';
+import { startOfDayUTC, getRoundedHours } from '../utils';
 
 /* 
     BE sends times and dates in UNIX format
@@ -12,18 +13,6 @@ const toModel = (AutoResponder) => {
     const start = moment.unix(AutoResponder.StartTime).tz(AutoResponder.Zone);
     const end = moment.unix(AutoResponder.EndTime).tz(AutoResponder.Zone);
 
-    const startDate = moment(start).startOf('day');
-    const endDate = moment(end).startOf('day');
-    const startTime =
-        moment(start)
-            .startOf('hour')
-            .add(30 * Math.floor(moment(start).minutes() / 30), 'minutes')
-            .valueOf() - startDate.valueOf();
-    const endTime =
-        moment(end)
-            .startOf('hour')
-            .add(30 * Math.floor(moment(end).minutes() / 30), 'minutes')
-            .valueOf() - endDate.valueOf();
     return {
         message: AutoResponder.Message,
         duration: AutoResponder.Repeat,
@@ -31,11 +20,10 @@ const toModel = (AutoResponder) => {
         timeZone: AutoResponder.Zone,
         subject: AutoResponder.Subject,
         enabled: AutoResponder.IsEnabled,
-
-        startDate: startDate.utc(true).valueOf(),
-        endDate: endDate.utc(true).valueOf(),
-        startTime,
-        endTime
+        startDate: startOfDayUTC(start),
+        endDate: startOfDayUTC(end),
+        startTime: getRoundedHours(start),
+        endTime: getRoundedHours(end)
     };
 };
 
