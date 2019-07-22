@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import {
@@ -15,9 +15,9 @@ import {
     useApi,
     useEventManager,
     useNotifications,
-    useSubscription,
     SubTitle,
     Label,
+    Field,
     Row,
     Wizard
 } from 'react-components';
@@ -33,8 +33,6 @@ import { getCheckParams } from './helpers';
 
 const SubscriptionModal = ({ onClose, cycle, currency, coupon, plansMap, ...rest }) => {
     const api = useApi();
-    const [subscription] = useSubscription();
-    const initialRun = useRef(true);
     const [loading, setLoading] = useState(false);
     const { method, setMethod, parameters, setParameters, canPay, setCardValidity } = usePayment(handleSubmit);
     const { createNotification } = useNotifications();
@@ -51,8 +49,9 @@ const SubscriptionModal = ({ onClose, cycle, currency, coupon, plansMap, ...rest
             const result = await api(checkSubscription(getCheckParams({ ...m, plans })));
             const { Coupon, Gift } = result;
             const { Code } = Coupon || {}; // Coupon can equals null
+            const { checkCouponCode } = STEPS[step];
 
-            if (m.coupon && m.coupon !== Code) {
+            if (checkCouponCode && m.coupon && m.coupon !== Code) {
                 const text = c('Error').t`Your coupon is invalid or cannot be applied to your plan`;
                 createNotification({ text, type: 'error' });
                 throw new Error(text);
@@ -66,6 +65,7 @@ const SubscriptionModal = ({ onClose, cycle, currency, coupon, plansMap, ...rest
 
             setLoading(false);
             setCheck(result);
+            setModel({ ...model, coupon: Code });
             return result;
         } catch (error) {
             setLoading(false);
@@ -108,10 +108,11 @@ const SubscriptionModal = ({ onClose, cycle, currency, coupon, plansMap, ...rest
             closeIfSubscriptionChange: true,
             section: <OrderSummary plans={plans} model={model} check={check} onChange={handleChangeModel} />,
             async onSubmit() {
-                if (!check.AmountDue) {
+                const checkResult = await callCheck(); // Use check result instead of state because it's not yet updated
+                if (!checkResult.AmountDue) {
                     try {
                         setLoading(true);
-                        await request({ Amount: check.AmountDue, ...getCheckParams({ ...model, plans }) });
+                        await request({ Amount: checkResult.AmountDue, ...getCheckParams({ ...model, plans }) });
                         await call();
                         setLoading(false);
                     } catch (error) {
@@ -163,19 +164,20 @@ const SubscriptionModal = ({ onClose, cycle, currency, coupon, plansMap, ...rest
         // Insert it before the last one
         STEPS.splice(STEPS.length - 1, 0, {
             title: c('Title').t`Payment details`,
+            checkCouponCode: true,
             section: (
                 <>
                     <Alert>{c('Info')
                         .t`Your payment details are protected with TLS encryption and Swiss privacy laws.`}</Alert>
                     <Row>
                         <Label>{c('Label').t`Amount due`}</Label>
-                        <div className="w100">
+                        <Field>
                             <Input
                                 className="pm-field--highlight no-pointer-events strong alignright"
                                 readOnly={true}
                                 value={toPrice(check.AmountDue, model.currency)}
                             />
-                        </div>
+                        </Field>
                     </Row>
                     <Payment
                         type="subscription"
@@ -211,15 +213,6 @@ const SubscriptionModal = ({ onClose, cycle, currency, coupon, plansMap, ...rest
             return <Button onClick={previous}>{c('Action').t`Previous`}</Button>;
         }
     })();
-
-    useEffect(() => {
-        // If the subscription changes when we are editing the config, we close the modal
-        if (!initialRun.current && STEPS[step].closeIfSubscriptionChange) {
-            onClose();
-            return createNotification({ text: c('Warning').t`You subscription has changed`, type: 'warning' });
-        }
-        initialRun.current = false;
-    }, [subscription]);
 
     return (
         <FormModal

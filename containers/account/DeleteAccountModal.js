@@ -17,7 +17,7 @@ import {
     useNotifications,
     useUserSettings,
     useApi,
-    useAuthenticationStore,
+    useAuthentication,
     useConfig
 } from 'react-components';
 import { deleteUser } from 'proton-shared/lib/api/user';
@@ -28,7 +28,7 @@ const DeleteAccountModal = ({ onClose, ...rest }) => {
     const { createNotification } = useNotifications();
     const { CLIENT_TYPE } = useConfig();
     const api = useApi();
-    const authenticationStore = useAuthenticationStore();
+    const authentication = useAuthentication();
     const [{ isAdmin, Name } = {}] = useUser();
     const [{ TwoFactor } = {}] = useUserSettings();
     const [addresses = []] = useAddresses();
@@ -77,7 +77,7 @@ const DeleteAccountModal = ({ onClose, ...rest }) => {
 
         onClose();
         createNotification({ text: c('Success').t`Account deleted` });
-        authenticationStore.logout();
+        authentication.logout();
     };
 
     return (
@@ -143,14 +143,14 @@ const DeleteAccountModal = ({ onClose, ...rest }) => {
             </Row>
             {TwoFactor ? (
                 <Row>
-                    <Label htmlFor="twoFa">{c('Label').t`Two-factor passcode`}</Label>
+                    <Label htmlFor="twoFa">{c('Label').t`Two-factor code`}</Label>
                     <Field>
                         <TwoFactorInput
                             id="twoFa"
                             disabled={loading}
                             value={model.twoFa}
                             onChange={handleChange('twoFa')}
-                            placeholder={c('Placeholder').t`Two-factor passcode`}
+                            placeholder={c('Placeholder').t`Two-factor code`}
                         />
                     </Field>
                 </Row>

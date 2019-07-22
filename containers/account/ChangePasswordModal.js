@@ -11,7 +11,7 @@ import {
     Icon,
     FormModal,
     Loader,
-    useAuthenticationStore,
+    useAuthentication,
     useEventManager,
     useAddresses,
     useUser,
@@ -45,7 +45,7 @@ export const MODES = {
 const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
     const api = useApi();
     const { call } = useEventManager();
-    const authenticationStore = useAuthenticationStore();
+    const authentication = useAuthentication();
     const { createNotification } = useNotifications();
 
     const [User] = useUser();
@@ -175,7 +175,7 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
                             keyPassword
                         });
                         await handleChangeMailboxPassword({ api, keySalt, armoredOrganizationKey, armoredKeys });
-                        authenticationStore.setPassword(keyPassword);
+                        authentication.setPassword(keyPassword);
                         await api(lockSensitiveSettings());
                         await call();
 
@@ -227,7 +227,7 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
                         totp: inputs.totp
                     });
                 }
-                authenticationStore.setPassword(keyPassword);
+                authentication.setPassword(keyPassword);
                 await api(lockSensitiveSettings());
                 await call();
 
@@ -334,14 +334,14 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
             )}
             {!isSecondPhase && hasTotp && (
                 <Row>
-                    <Label htmlFor="totp">{c('Label').t`Two factor code`}</Label>
+                    <Label htmlFor="totp">{c('Label').t`Two-factor code`}</Label>
                     <Field>
                         <TwoFactorInput
                             id="totp"
                             value={inputs.totp}
                             onChange={({ target: { value } }) => setInput({ totp: value })}
                             error={errors.loginError}
-                            placeholder={c('Placeholder').t`Two factor code`}
+                            placeholder={c('Placeholder').t`Two-factor code`}
                             required
                         />
                     </Field>
