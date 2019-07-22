@@ -19,7 +19,8 @@ const ViewModeRadios = ({ viewMode, onChange, loading, id, ...rest }) => {
         onChange() {
             onChange(GROUP);
         },
-        children: <img alt="Group" src={conversationGroupSvg} />
+        children: <img alt="Group" src={conversationGroupSvg}
+        data-cy-appearance-conversations="group" />
     };
     const radioCardSingle = {
         value: SINGLE,
@@ -31,7 +32,8 @@ const ViewModeRadios = ({ viewMode, onChange, loading, id, ...rest }) => {
         onChange() {
             onChange(SINGLE);
         },
-        children: <img alt="Single" src={conversationSingleSvg} />
+        children: <img alt="Single" src={conversationSingleSvg}
+        data-cy-appearance-conversations="single" />
     };
 
     return <RadioCards list={[radioCardGroup, radioCardSingle]} id={id} {...rest} />;
