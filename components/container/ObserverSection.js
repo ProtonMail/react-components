@@ -5,6 +5,16 @@ import { debounce } from 'proton-shared/lib/helpers/function';
 
 import { buildThresholds, indexOfMax } from '../../helpers/intersectionObserver';
 
+/**
+ * IntersectionObserverEntry.intersectionRatio is a bit buggy, and looks to be
+ * slightly off sometimes. This is a manual fix for this.
+ * @param {Number} ratio
+ */
+const toFaithful = (ratio) => {
+    const rounded = Math.round(ratio * 100) / 100;
+    return Math.min(rounded, 1);
+};
+
 const ObserverSection = ({
     id,
     className,
@@ -36,7 +46,7 @@ const ObserverSection = ({
             entries.forEach((entry) => {
                 setIntersectionData(({ intersectionRatios, listOfIds }) => {
                     const newIntersectionRatios = intersectionRatios.slice();
-                    newIntersectionRatios[index] = Math.min(entry.intersectionRatio, 1); // manual fix for bug IntersectionObserverEntry.intersectionRatio > 1
+                    newIntersectionRatios[index] = toFaithful(entry.intersectionRatio);
                     const idToDisplay = listOfIds[indexOfMax(newIntersectionRatios)];
                     return {
                         intersectionRatios: newIntersectionRatios,
