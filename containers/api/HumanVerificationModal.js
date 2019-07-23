@@ -19,17 +19,19 @@ const HumanVerificationModal = ({ token, onSubmit, ...rest }) => {
             {VerifyMethods.includes('captcha') ? (
                 <Row>
                     <Label htmlFor="captcha">
-                        <Radio
-                            id="captcha"
-                            checked={method === 'captcha'}
-                            value="captcha"
-                            className="mr0-5"
-                            onChange={handleChange}
-                        />
+                        {VerifyMethods.length ? (
+                            <Radio
+                                id="captcha"
+                                checked={method === 'captcha'}
+                                value="captcha"
+                                className="mr0-5"
+                                onChange={handleChange}
+                            />
+                        ) : null}
                         <span>{c('Label').t`Captcha`}</span>
                     </Label>
                     <div className="w100">
-                        <Captcha token={token} onSubmit={onSubmit} />
+                        <Captcha token={token} onSubmit={(token) => onSubmit(token, method)} />
                     </div>
                 </Row>
             ) : null}
