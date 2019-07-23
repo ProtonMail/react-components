@@ -5,7 +5,7 @@ import { getHost } from 'proton-shared/lib/helpers/url';
 import { createUrl } from 'proton-shared/lib/fetch/helpers';
 
 const Captcha = ({ token, onSubmit }) => {
-    const [style, setStyle] = useState({});
+    const [style, setStyle] = useState();
     const { API_URL } = useConfig();
     const client = 'web';
     const host = getHost(API_URL);
