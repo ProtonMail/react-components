@@ -13,6 +13,11 @@ const HumanVerificationModal = ({ token, onSubmit, ...rest }) => {
     const { VerifyMethods = [] } = result;
     const handleChange = ({ target }) => target.checked && setMethod(target.value);
 
+    const handleCaptcha = (token) => {
+        onSubmit(token, method);
+        rest.onClose();
+    };
+
     return (
         <FormModal hasClose={false} noValidate={true} title={title} loading={loading} {...rest}>
             <Alert>{c('Info').t`For security reasons, please verify that you are not a robot.`}</Alert>
@@ -31,7 +36,7 @@ const HumanVerificationModal = ({ token, onSubmit, ...rest }) => {
                         <span>{c('Label').t`Captcha`}</span>
                     </Label>
                     <div className="w100">
-                        <Captcha token={token} onSubmit={(token) => onSubmit(token, method)} />
+                        <Captcha token={token} onSubmit={handleCaptcha} />
                     </div>
                 </Row>
             ) : null}
