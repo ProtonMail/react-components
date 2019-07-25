@@ -85,7 +85,7 @@ export const getDaysOfMonthOptions = () => [
     { text: c('Option').t`31st of the month`, value: 30 }
 ];
 
-export const getRoundedHours = (time) => {
+export const getRoundedHours = (time: moment.MomentInput) => {
     const startOfDay = moment(time).startOf('day');
 
     return moment(moment(time).diff(startOfDay))
@@ -94,7 +94,7 @@ export const getRoundedHours = (time) => {
         .valueOf();
 };
 
-export const startOfDay = (date) =>
+export const startOfDay = (date: moment.MomentInput) =>
     moment(date)
         .startOf('day')
         .valueOf();

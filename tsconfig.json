@@ -2,6 +2,7 @@
     "compilerOptions": {
         "target": "es5",
         "lib": ["dom", "dom.iterable", "esnext"],
+        "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
         "strict": true,
         "noImplicitAny": true,

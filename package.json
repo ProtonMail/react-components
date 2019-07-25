@@ -8,7 +8,8 @@
     "i18n:validatejs": "proton-i18n validate lint-functions .",
     "i18n:validate": "proton-i18n extract reactComponents && proton-i18n validate",
     "lint": "eslint containers components --ext .js,.ts,.tsx --quiet --cache",
-    "pretty": "prettier --write $(find lib -type f -name '*.js')"
+    "pretty": "prettier --write $(find lib -type f -name '*.js')",
+    "check-types": "tsc"
   },
   "repository": {
     "type": "git",
@@ -60,6 +61,7 @@
     "@testing-library/jest-dom": "^4.0.0",
     "@testing-library/react": "^8.0.7",
     "@types/codemirror": "0.0.76",
+    "@types/moment-timezone": "^0.5.12",
     "@typescript-eslint/eslint-plugin": "^1.13.0",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^24.5.0",
