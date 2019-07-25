@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { useUser, useOrganization, Href } from 'react-components';
+import { useUser, useOrganization, Href, Icon } from 'react-components';
 import { Link } from 'react-router-dom';
 
 const FeaturesList = () => {
@@ -20,17 +20,25 @@ const FeaturesList = () => {
         { to: 'https://protonvpn.com/download/', text: c('Link').t`Use ProtonVPN`, external: true }
     ];
     return (
-        <ul className="unstyled flex">
+        <ul className="unstyled flex flex-nowrap flex-spacebetween">
             {features.map(({ to, text, external, internal }, index) => {
                 const key = `${index}`;
                 return (
-                    <li key={key} className="w25 mb0-5">
+                    <li key={key} className="mb0-5 aligncenter">
                         {external || internal ? (
                             <Href href={to} target={external ? '_blank' : '_self'}>
+                                <div>
+                                    <Icon name="on" />
+                                </div>
                                 {text}
                             </Href>
                         ) : (
-                            <Link to={to}>{text}</Link>
+                            <Link to={to}>
+                                <div>
+                                    <Icon name="on" />
+                                </div>
+                                {text}
+                            </Link>
                         )}
                     </li>
                 );

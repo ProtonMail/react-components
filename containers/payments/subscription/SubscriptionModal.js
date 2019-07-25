@@ -9,13 +9,11 @@ import {
     Input,
     usePayment,
     Payment,
-    Paragraph,
     useStep,
     useApiWithoutResult,
     useApi,
     useEventManager,
     useNotifications,
-    SubTitle,
     Label,
     Field,
     Row,
@@ -25,10 +23,12 @@ import { DEFAULT_CURRENCY, DEFAULT_CYCLE } from 'proton-shared/lib/constants';
 import { checkSubscription, subscribe } from 'proton-shared/lib/api/payments';
 import { toPrice } from 'proton-shared/lib/helpers/string';
 
+import './SubscriptionModal.scss';
+import FeaturesList from './FeaturesList';
 import CustomMailSection from './CustomMailSection';
 import CustomVPNSection from './CustomVPNSection';
 import OrderSummary from './OrderSummary';
-import FeaturesList from './FeaturesList';
+import Thanks from './Thanks';
 import { getCheckParams } from './helpers';
 
 const SubscriptionModal = ({ onClose, cycle, currency, coupon, plansMap, ...rest }) => {
@@ -124,15 +124,11 @@ const SubscriptionModal = ({ onClose, cycle, currency, coupon, plansMap, ...rest
             }
         },
         {
-            title: c('Title').t`Thank you!`,
-            section: (
-                <>
-                    <SubTitle>{c('Info').t`Thank you for your subscription`}</SubTitle>
-                    <Paragraph>{c('Info').t`Your new features are now available`}</Paragraph>
-                    <FeaturesList />
-                </>
-            ),
-            onSubmit: onClose
+            title: '',
+            noWizard: true,
+            footer: <FeaturesList />,
+            className: 'thanks-modal-container',
+            section: <Thanks onClose={onClose} />
         }
     ];
 
@@ -216,6 +212,8 @@ const SubscriptionModal = ({ onClose, cycle, currency, coupon, plansMap, ...rest
 
     return (
         <FormModal
+            className={STEPS[step].className}
+            footer={STEPS[step].footer}
             onClose={onClose}
             onSubmit={STEPS[step].onSubmit}
             title={STEPS[step].title}
@@ -224,7 +222,7 @@ const SubscriptionModal = ({ onClose, cycle, currency, coupon, plansMap, ...rest
             submit={hasNext && c('Action').t`Next`}
             {...rest}
         >
-            <Wizard step={step} steps={steps} hideText={true} />
+            {STEPS[step].noWizard ? null : <Wizard step={step} steps={steps} hideText={true} />}
             {STEPS[step].section}
         </FormModal>
     );
