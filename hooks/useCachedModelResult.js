@@ -43,8 +43,8 @@ const getRecordThen = (promise) => {
 
 /**
  * The strategy to re-fetch is:
- * 1) When no record exists for that key
- * 2) Or the if the old record failed to fetch.
+ * 1) When no record exists for that key.
+ * 2) If the old record has failed to fetch.
  * This should only happen when:
  * 1) When the component is initially mounted.
  * 2) A mounted component that receives an update from the cache that the key has been removed.
