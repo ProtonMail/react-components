@@ -2,8 +2,6 @@
   "name": "react-components",
   "version": "1.0.0",
   "description": "",
-  "main": "index.ts",
-  "sideEffects": false,
   "scripts": {
     "test": "jest",
     "export": "./makeExport",
@@ -61,6 +59,8 @@
     "@babel/preset-react": "^7.0.0",
     "@testing-library/jest-dom": "^4.0.0",
     "@testing-library/react": "^8.0.7",
+    "@types/codemirror": "0.0.76",
+    "@typescript-eslint/eslint-plugin": "^1.13.0",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^24.5.0",
     "babel-plugin-transform-require-context": "^0.1.1",
@@ -82,7 +82,9 @@
     "react-hooks-testing-library": "^0.5.0",
     "react-router-dom": "^4.3.1",
     "react-test-renderer": "^16.8.6",
-    "ttag": "^1.7.0"
+    "react-testing-library": "^7.0.0",
+    "ttag": "^1.7.0",
+    "typescript": "^3.5.3"
   },
   "peerDependencies": {
     "pm-srp": "github:ProtonMail/pm-srp.git#semver:^1.0.0",

@@ -32,7 +32,7 @@ const useApiResult = <R, U extends any[]>(fn: QueryFunction<U>, dependencies: st
     useEffect(() => {
         // If user has specified any dependencies, auto request
         if (dependencies) {
-            requestAndSetResults(...([] as U)).catch(() => {
+            requestAndSetResults(...([] as unknown as U)).catch(() => {
                 // catch the error to stop the "uncaught exception error"
             });
         }

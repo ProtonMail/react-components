@@ -2,8 +2,6 @@
     "compilerOptions": {
         "target": "es5",
         "lib": ["dom", "dom.iterable", "esnext"],
-        "rootDir": "src",
-        "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
         "strict": true,
         "noImplicitAny": true,
@@ -15,9 +13,8 @@
         "noUnusedLocals": true,
         "noEmit": true,
         "jsx": "preserve",
-        "typeRoots": ["./node_modules/@types"],
         "allowJs": true,
-        "skipLibCheck": true
+        "typeRoots": ["./typings/", "./typings.index.d.ts"]
     },
-    "include": ["src"]
+    "exclude": ["node_modules", "dist"]
 }
