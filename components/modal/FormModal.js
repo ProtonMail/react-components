@@ -46,6 +46,10 @@ function DemoModal({ onAdd, ...rest }) {
     }
 
     const getFooter = () => {
+        if (footer === false) {
+            return null;
+        }
+
         if (footer) {
             return <FooterModal>{footer}</FooterModal>;
         }
@@ -93,6 +97,7 @@ Modal.propTypes = {
     loading: PropTypes.bool,
     submit: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
     close: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+    footer: PropTypes.oneOfType([PropTypes.bool, PropTypes.node]),
     noValidate: PropTypes.bool,
     small: PropTypes.bool,
     background: PropTypes.bool,
