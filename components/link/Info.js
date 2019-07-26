@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import Href from './Href';
 import Icon from '../icon/Icon';
-import Tooltip from '../tooltip/SuperTooltip';
+import Tooltip from '../tooltip/Tooltip';
 
 const wrapTooltip = (children, title) => <Tooltip title={title}>{children}</Tooltip>;
 const wrapLink = (children, url) => <Href url={url}>{children}</Href>;
