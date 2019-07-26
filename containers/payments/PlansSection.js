@@ -14,7 +14,7 @@ import {
     Info,
     SmallButton,
     Price,
-    Tooltip,
+    SuperTooltip,
     usePlans,
     useUser,
     useToggle,
@@ -172,7 +172,7 @@ const PlansSection = () => {
                         <tbody>
                             <tr>
                                 <td className="bg-global-muted">
-                                    <Tooltip title={c('Tooltip').t`Save 20% when billed annually`}>
+                                    <SuperTooltip title={c('Tooltip').t`Save 20% when billed annually`}>
                                         <div className="flex flex-column">
                                             <div className="mb0-5">
                                                 <CurrencySelector currency={currency} onSelect={setCurrency} />
@@ -185,7 +185,7 @@ const PlansSection = () => {
                                                 />
                                             </div>
                                         </div>
-                                    </Tooltip>
+                                    </SuperTooltip>
                                 </td>
                                 <td className="bg-global-muted aligncenter">FREE</td>
                                 <td className="bg-global-muted aligncenter">{getPrice('plus')}</td>
