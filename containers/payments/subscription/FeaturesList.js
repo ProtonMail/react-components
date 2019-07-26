@@ -28,14 +28,14 @@ const FeaturesList = () => {
                         {external || internal ? (
                             <Href href={to} target={external ? '_blank' : '_self'}>
                                 <div>
-                                    <Icon name="on" />
+                                    <Icon name="add" size={25} />
                                 </div>
                                 {text}
                             </Href>
                         ) : (
                             <Link to={to}>
                                 <div>
-                                    <Icon name="on" />
+                                    <Icon name="add" size={25} />
                                 </div>
                                 {text}
                             </Link>

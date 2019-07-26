@@ -15,3 +15,7 @@
     padding: 0;
     background: linear-gradient($pm-global-grey, $pm-global-altgrey);
 }
+
+.thanks-modal-container [class*="icon-"] {
+    fill: $white;
+}
