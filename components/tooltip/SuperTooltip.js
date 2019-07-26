@@ -1,9 +1,36 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import { generateUID } from '../../helpers/component';
 
 const TOOLTIP_OFFSET = 10;
+
+const calculatePosition = (target, tooltip, placement) => {
+    let top;
+    let left;
+
+    if (placement === 'top') {
+        top = target.top - tooltip.height - TOOLTIP_OFFSET;
+        left = target.left + target.width / 2 - tooltip.width / 2;
+    }
+
+    if (placement === 'bottom') {
+        top = target.top + target.height + TOOLTIP_OFFSET;
+        left = target.left + target.width / 2 - tooltip.width / 2;
+    }
+
+    if (placement === 'left') {
+        top = target.top + target.height / 2 - tooltip.height / 2;
+        left = target.left - tooltip.width - TOOLTIP_OFFSET;
+    }
+
+    if (placement === 'right') {
+        top = target.top + target.height / 2 - tooltip.height / 2;
+        left = target.left + target.width + TOOLTIP_OFFSET;
+    }
+
+    return { top, left };
+};
 
 const SuperTooltip = ({ children, title, placement }) => {
     const tooltipRef = useRef();
@@ -12,25 +39,21 @@ const SuperTooltip = ({ children, title, placement }) => {
     const [visible, setVisible] = useState(false);
     const [position, setPosition] = useState({ top: -1000, left: -1000 });
 
-    const updatePosition = useCallback(() => {
-        if (visible && wrapperRef.current && tooltipRef.current) {
-            const targetBounds = wrapperRef.current.getBoundingClientRect();
-            const tooltipBounds = tooltipRef.current.getBoundingClientRect();
-            const top = targetBounds.top - tooltipBounds.height - TOOLTIP_OFFSET;
-            const left = targetBounds.left + targetBounds.width / 2 - tooltipBounds.width / 2;
-            setPosition({ top, left });
-        } else {
-            setPosition({ top: -1000, left: -1000 });
-        }
-    }, [visible]);
-
     useEffect(() => {
-        updatePosition();
-    }, [visible]);
+        const updatePosition = () => {
+            if (visible && wrapperRef.current && tooltipRef.current) {
+                const targetBounds = wrapperRef.current.getBoundingClientRect();
+                const tooltipBounds = tooltipRef.current.getBoundingClientRect();
+                setPosition(calculatePosition(targetBounds, tooltipBounds, placement));
+            } else {
+                setPosition({ top: -1000, left: -1000 });
+            }
+        };
 
-    useEffect(() => {
         const contentArea = document.querySelector('.main');
         contentArea.addEventListener('scroll', updatePosition);
+        updatePosition();
+
         return () => {
             contentArea.removeEventListener('scroll', updatePosition);
         };
