@@ -31,7 +31,7 @@ export const calculateAdjustedPosition = (target, tooltip, placement) => {
         return reorientTo('bottom');
     } else if (originalPosition.left + tooltip.width > window.innerWidth) {
         return reorientTo('left');
-    } else if (originalPosition.left > 0) {
+    } else if (originalPosition.left < 0) {
         return reorientTo('right');
     }
 

@@ -24,10 +24,12 @@ const Tooltip = ({ children, title, placement, scrollContainerClass }) => {
 
         updatePosition();
 
-        const contentArea = document.getElementsByClassName(scrollContainerClass)[0] || document.body;
-        contentArea.addEventListener('scroll', updatePosition);
-        return () => contentArea.removeEventListener('scroll', updatePosition);
-    }, [visible]);
+        if (visible) {
+            const contentArea = document.getElementsByClassName(scrollContainerClass)[0] || document.body;
+            contentArea.addEventListener('scroll', updatePosition);
+            return () => contentArea.removeEventListener('scroll', updatePosition);
+        }
+    }, [visible, wrapperRef.current, tooltipRef.current]);
 
     const show = () => setVisible(true);
     const hide = () => setVisible(false);
