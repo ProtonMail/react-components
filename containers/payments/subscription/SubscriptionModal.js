@@ -14,6 +14,8 @@ import {
     useApi,
     useEventManager,
     useNotifications,
+    useUser,
+    useOrganization,
     Label,
     Field,
     Row,
@@ -33,6 +35,8 @@ import { getCheckParams } from './helpers';
 
 const SubscriptionModal = ({ onClose, cycle, currency, coupon, plansMap, ...rest }) => {
     const api = useApi();
+    const [{ hasPaidMail } = {}] = useUser();
+    const [{ MaxMembers } = {}] = useOrganization();
     const [loading, setLoading] = useState(false);
     const { method, setMethod, parameters, setParameters, canPay, setCardValidity } = usePayment(handleSubmit);
     const { createNotification } = useNotifications();
@@ -42,6 +46,19 @@ const SubscriptionModal = ({ onClose, cycle, currency, coupon, plansMap, ...rest
     const { call } = useEventManager();
     const { step, next, previous } = useStep(0);
     const { request } = useApiWithoutResult(subscribe);
+
+    const features = [
+        ...(hasPaidMail
+            ? [
+                  c('Link').t`Add auto-reply`,
+                  c('Link').t`Add custom domain`,
+                  c('Link').t`Add filters`,
+                  c('Link').t`Manage encrypted contacts`
+              ]
+            : []),
+        ...(MaxMembers > 1 ? [c('Link').t`Add new users`] : []),
+        c('Link').t`Use ProtonVPN`
+    ];
 
     const callCheck = async (m = model) => {
         try {
@@ -126,7 +143,7 @@ const SubscriptionModal = ({ onClose, cycle, currency, coupon, plansMap, ...rest
         {
             title: '',
             noWizard: true,
-            footer: <FeaturesList />,
+            footer: <FeaturesList features={features} />,
             className: 'thanks-modal-container',
             section: <Thanks onClose={onClose} />
         }
