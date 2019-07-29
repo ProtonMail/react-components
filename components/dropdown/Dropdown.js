@@ -1,14 +1,17 @@
-import React, { useState, useEffect, useRef, useImperativeHandle } from 'react';
+import React, { useEffect, useImperativeHandle, forwardRef } from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import keycode from 'keycode';
 import { Icon } from 'react-components';
+import usePopper from '../tooltip/usePopper';
+import { classnames } from '../../helpers/component';
 
 const ALIGN_CLASSES = {
-    right: 'dropDown--rightArrow',
-    left: 'dropDown--leftArrow'
+    right: 'dropDown-content--rightArrow',
+    left: 'dropDown-content--leftArrow'
 };
 
-const Dropdown = React.forwardRef(
+const Dropdown = forwardRef(
     (
         {
             isOpen,
@@ -26,39 +29,48 @@ const Dropdown = React.forwardRef(
         },
         ref
     ) => {
-        const [open, setOpen] = useState(isOpen);
-        const wrapperRef = useRef(null);
-        const handleClick = () => setOpen(!open);
+        const { position, visible, show, hide, wrapperRef, tooltipRef } = usePopper({
+            scrollContainerClass: 'main',
+            visible: isOpen,
+            offset: 20,
+            placement: {
+                left: 'bottom-left',
+                right: 'bottom-right',
+                center: 'bottom'
+            }[align]
+        });
+
+        const handleClick = () => (visible ? hide() : show());
 
         const handleKeydown = (event) => {
             const key = keycode(event);
 
             if (key === 'escape' && event.target === document.activeElement) {
-                setOpen(false);
+                hide();
             }
         };
 
         const handleClickOutside = (event) => {
             // Do nothing if clicking ref's element or descendent elements
-            if (!autoCloseOutside || !wrapperRef.current || wrapperRef.current.contains(event.target)) {
+            if (
+                !autoCloseOutside ||
+                (tooltipRef.current && tooltipRef.current.contains(event.target)) ||
+                (wrapperRef.current && wrapperRef.current.contains(event.target))
+            ) {
                 return;
             }
-            setOpen(false);
+            hide();
         };
 
         const handleClickContent = () => {
             if (autoClose) {
-                setOpen(false);
+                hide();
             }
         };
 
         useImperativeHandle(ref, () => ({
-            close() {
-                setOpen(false);
-            },
-            open() {
-                setOpen(true);
-            }
+            close: hide,
+            open: show
         }));
 
         useEffect(() => {
@@ -73,19 +85,19 @@ const Dropdown = React.forwardRef(
             };
         }, []);
 
+        const { top, left, placement } = position;
         const alignClass = ALIGN_CLASSES[align];
-        const dropdownClassName = ['dropDown pm-button', alignClass, (loading || disabled) && 'is-disabled', className]
-            .filter(Boolean)
-            .join(' ');
-        const contentClassName = `dropDown-content ${narrow ? 'dropDown-content--narrow' : ''}`;
+        const dropdownClassName = classnames(['dropDown pm-button', (loading || disabled) && 'is-disabled', className]);
+        const contentClassName = classnames(['dropDown-content', alignClass, narrow && 'dropDown-content--narrow']);
+        const placementClassName = placement.startsWith('top') ? 'dropDown-content--above' : '';
         const caretContent = caret && <Icon className="expand-caret" size={12} name="caret" />;
-
         return (
-            <div className={`${dropdownClassName} ${className}`} ref={wrapperRef}>
+            <>
                 <button
                     title={title}
-                    className="increase-surface-click"
-                    aria-expanded={open}
+                    ref={wrapperRef}
+                    className={classnames([dropdownClassName, className])}
+                    aria-expanded={visible}
                     aria-busy={loading}
                     onClick={handleClick}
                     type="button"
@@ -95,10 +107,20 @@ const Dropdown = React.forwardRef(
                         {content} {caretContent}
                     </span>
                 </button>
-                <div className={contentClassName} onClick={handleClickContent} hidden={!open}>
-                    {children}
-                </div>
-            </div>
+                {ReactDOM.createPortal(
+                    <div
+                        style={{ top, left }}
+                        aria-hidden={!visible}
+                        ref={tooltipRef}
+                        className={classnames([contentClassName, placementClassName])}
+                        onClick={handleClickContent}
+                        hidden={!visible}
+                    >
+                        {children}
+                    </div>,
+                    document.body
+                )}
+            </>
         );
     }
 );

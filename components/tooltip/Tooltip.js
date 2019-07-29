@@ -1,39 +1,12 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import { generateUID } from '../../helpers/component';
-import { calculateAdjustedPosition } from './utils';
+import usePopper from './usePopper';
 
 const Tooltip = ({ children, title, placement, scrollContainerClass }) => {
-    const tooltipRef = useRef();
-    const wrapperRef = useRef();
     const [uid] = useState(generateUID('tooltip'));
-    const [visible, setVisible] = useState(false);
-    const [position, setPosition] = useState({ top: -1000, left: -1000, placement });
-
-    useEffect(() => {
-        const updatePosition = () => {
-            if (visible && wrapperRef.current && tooltipRef.current) {
-                const targetBounds = wrapperRef.current.getBoundingClientRect();
-                const tooltipBounds = tooltipRef.current.getBoundingClientRect();
-                setPosition(calculateAdjustedPosition(targetBounds, tooltipBounds, placement));
-            } else {
-                setPosition({ top: -1000, left: -1000, placement });
-            }
-        };
-
-        updatePosition();
-
-        if (visible) {
-            const contentArea = document.getElementsByClassName(scrollContainerClass)[0] || document.body;
-            contentArea.addEventListener('scroll', updatePosition);
-            return () => contentArea.removeEventListener('scroll', updatePosition);
-        }
-    }, [visible, wrapperRef.current, tooltipRef.current]);
-
-    const show = () => setVisible(true);
-    const hide = () => setVisible(false);
-
+    const { position, visible, show, hide, wrapperRef, tooltipRef } = usePopper({ placement, scrollContainerClass });
     const { top, left, placement: adjustedPlacement } = position;
 
     return (
