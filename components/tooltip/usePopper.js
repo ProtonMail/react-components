@@ -50,7 +50,11 @@ const usePopper = ({ placement = 'bottom', visible: visibleInitially = false, sc
         if (visible) {
             const contentArea = document.getElementsByClassName(scrollContainerClass)[0] || document.body;
             contentArea.addEventListener('scroll', updatePosition);
-            return () => contentArea.removeEventListener('scroll', updatePosition);
+            window.addEventListener('resize', updatePosition);
+            return () => {
+                contentArea.removeEventListener('scroll', updatePosition);
+                window.removeEventListener('resize', updatePosition);
+            };
         }
     }, [visible, wrapperRef.current, tooltipRef.current]);
 
