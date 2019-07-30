@@ -55,6 +55,9 @@ const LayoutsSection = () => {
     };
 
     const handleChangeViewMode = async (mode) => {
+        if (mode !== VIEW_MODE.GROUP) {
+            await api(updateStickyLabels(0));
+        }
         await api(updateViewMode(mode));
         await call();
         notifyPreferenceSaved();
