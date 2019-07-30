@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+// TODO: Rename to DropdownMenuLink
 const DropdownLink = ({ className, children, ...rest }) => {
     return (
         <a className={`w100 pt0-5 pb0-5 inbl nodecoration ${className}`} {...rest}>

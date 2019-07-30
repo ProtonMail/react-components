@@ -1,23 +1,23 @@
 import React from 'react';
 import Button from '../button/Button';
 import PropTypes from 'prop-types';
-import SuperDropdownCaret from './SuperDropdownCaret';
+import DropdownCaret from './DropdownCaret';
 
-const SuperDropdownButton = ({ hasCaret = false, isOpen, children, ...rest }) => {
+const DropdownAnchorButton = ({ hasCaret = false, isOpen, children, ...rest }) => {
     return (
         <Button aria-expanded={isOpen} {...rest}>
             <span className="mauto">
                 {children}
-                {hasCaret && <SuperDropdownCaret isOpen={isOpen} />}
+                {hasCaret && <DropdownCaret isOpen={isOpen} />}
             </span>
         </Button>
     );
 };
 
-SuperDropdownButton.propTypes = {
+DropdownAnchorButton.propTypes = {
     hasCaret: PropTypes.bool,
     isOpen: PropTypes.bool,
     children: PropTypes.node
 };
 
-export default SuperDropdownButton;
+export default DropdownAnchorButton;

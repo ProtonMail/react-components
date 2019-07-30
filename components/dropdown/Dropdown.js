@@ -1,48 +1,32 @@
-import React, { useEffect } from 'react';
-import ReactDOM from 'react-dom';
+import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import keycode from 'keycode';
-import { Icon } from 'react-components';
-import usePopper from '../tooltip/usePopper';
 import { classnames } from '../../helpers/component';
-
-const ALIGN_CLASSES = {
-    right: 'dropDown--rightArrow',
-    left: 'dropDown--leftArrow'
-};
+import { usePopper, Popper } from '../Popper';
+import { noop } from '@babel/types';
 
 const Dropdown = ({
-    isOpen,
-    content,
-    title,
+    anchorRef,
     children,
-    className,
-    autoClose,
-    autoCloseOutside,
-    align,
-    narrow,
-    loading,
-    disabled,
-    caret
+    originalPlacement = 'bottom',
+    close = noop,
+    isOpen = false,
+    narrow = false,
+    autoClose = true,
+    autoCloseOutside = true
 }) => {
-    const { position, visible, show, hide, wrapperRef, tooltipRef } = usePopper({
-        scrollContainerClass: 'main',
-        visible: isOpen,
+    const popperRef = useRef();
+    const { placement, position } = usePopper(popperRef, anchorRef, isOpen, {
+        originalPlacement,
         offset: 20,
-        placement: {
-            left: 'bottom-left',
-            right: 'bottom-right',
-            center: 'bottom'
-        }[align]
+        scrollContainerClass: 'main'
     });
-
-    const handleClick = () => (visible ? hide() : show());
 
     const handleKeydown = (event) => {
         const key = keycode(event);
 
         if (key === 'escape' && event.target === document.activeElement) {
-            hide();
+            close();
         }
     };
 
@@ -50,17 +34,18 @@ const Dropdown = ({
         // Do nothing if clicking ref's element or descendent elements
         if (
             !autoCloseOutside ||
-            (tooltipRef.current && tooltipRef.current.contains(event.target)) ||
-            (wrapperRef.current && wrapperRef.current.contains(event.target))
+            (anchorRef.current && anchorRef.current.contains(event.target)) ||
+            (popperRef.current && popperRef.current.contains(event.target))
         ) {
             return;
         }
-        hide();
+
+        close();
     };
 
     const handleClickContent = () => {
         if (autoClose) {
-            hide();
+            close();
         }
     };
 
@@ -76,70 +61,30 @@ const Dropdown = ({
         };
     }, []);
 
-    const { top, left, placement } = position;
-    const alignClass = ALIGN_CLASSES[align];
-    const dropdownClassName = classnames(['pm-button', (loading || disabled) && 'is-disabled', className]);
-    const contentClassName = classnames(['dropDown', alignClass, narrow && 'dropDown--narrow']);
-    const placementClassName = placement.startsWith('top') ? 'dropDown--above' : '';
-    const caretContent = caret && <Icon className="expand-caret" size={12} name="caret" />;
+    const contentClassName = classnames(['dropDown', `dropDown--${placement}`, narrow && 'dropDown--narrow']);
     return (
-        <>
-            <button
-                title={title}
-                ref={wrapperRef}
-                className={classnames([dropdownClassName, className])}
-                aria-expanded={visible}
-                aria-busy={loading}
-                onClick={handleClick}
-                type="button"
-                disabled={loading || disabled}
-            >
-                <span className="mauto">
-                    {content} {caretContent}
-                </span>
-            </button>
-            {ReactDOM.createPortal(
-                <div
-                    style={{ top, left }}
-                    aria-hidden={!visible}
-                    ref={tooltipRef}
-                    className={classnames([contentClassName, placementClassName])}
-                    onClick={handleClickContent}
-                    hidden={!visible}
-                >
-                    {children}
-                </div>,
-                document.body
-            )}
-        </>
+        <Popper
+            ref={popperRef}
+            position={position}
+            isOpen={isOpen}
+            role="dialog"
+            className={contentClassName}
+            onClick={handleClickContent}
+        >
+            {children}
+        </Popper>
     );
 };
 
 Dropdown.propTypes = {
-    className: PropTypes.string,
+    anchorRef: PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
     children: PropTypes.node.isRequired,
-    content: PropTypes.node.isRequired,
+    close: PropTypes.func,
     isOpen: PropTypes.bool,
-    align: PropTypes.string,
-    title: PropTypes.string,
-    caret: PropTypes.bool,
-    disabled: PropTypes.bool,
-    loading: PropTypes.bool,
+    originalPlacement: PropTypes.string,
     narrow: PropTypes.bool,
     autoClose: PropTypes.bool,
     autoCloseOutside: PropTypes.bool
-};
-
-Dropdown.defaultProps = {
-    isOpen: false,
-    autoClose: true,
-    align: 'center',
-    narrow: false,
-    caret: false,
-    disabled: false,
-    loading: false,
-    autoCloseOutside: true,
-    className: ''
 };
 
 export default Dropdown;

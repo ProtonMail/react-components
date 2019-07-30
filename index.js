@@ -49,6 +49,8 @@ export { default as Time } from './components/time/Time';
 export { default as DropdownActions } from './components/dropdown/DropdownActions';
 export { default as DropdownMenu } from './components/dropdown/DropdownMenu';
 export { default as DropdownButton } from './components/dropdown/DropdownButton';
+export { default as DropdownAnchorButton } from './components/dropdown/DropdownAnchorButton';
+export { default as DropdownCaret } from './components/dropdown/DropdownCaret';
 export { default as DropdownLink } from './components/dropdown/DropdownLink';
 export { default as Dropdown } from './components/dropdown/Dropdown';
 export { default as ExampleDropdown } from './components/dropdown/ExampleDropdown';
