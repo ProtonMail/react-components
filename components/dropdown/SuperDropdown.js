@@ -7,8 +7,8 @@ import { noop } from '@babel/types';
 
 // TODO: rework according to placement
 const ALIGN_CLASSES = {
-    right: 'dropDown-content--rightArrow',
-    left: 'dropDown-content--leftArrow'
+    right: 'dropDown--rightArrow',
+    left: 'dropDown--leftArrow'
 };
 
 const SuperDropdown = ({
@@ -68,8 +68,8 @@ const SuperDropdown = ({
     }, []);
 
     const alignClass = ALIGN_CLASSES[placement];
-    const contentClassName = classnames(['dropDown-content', alignClass, narrow && 'dropDown-content--narrow']);
-    const placementClassName = placement.startsWith('top') ? 'dropDown-content--above' : '';
+    const contentClassName = classnames(['dropDown', alignClass, narrow && 'dropDown--narrow']);
+    const placementClassName = placement.startsWith('top') ? 'dropDown--above' : '';
     return (
         <Popper
             ref={popperRef}

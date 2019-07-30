@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { generateUID } from '../../helpers/component';
+import { generateUID, classnames } from '../../helpers/component';
 import { usePopper, Popper, usePopperToggle } from '../Popper';
 
 const Tooltip = ({ children, title, originalPlacement, scrollContainerClass }) => {
@@ -25,7 +25,13 @@ const Tooltip = ({ children, title, originalPlacement, scrollContainerClass }) =
             >
                 {children}
             </span>
-            <Popper ref={popperRef} id={uid} isOpen={isOpen} style={position} className={`tooltip-${placement}`}>
+            <Popper
+                ref={popperRef}
+                id={uid}
+                isOpen={isOpen}
+                style={position}
+                className={classnames(['tooltip', `tooltip--${placement}`])}
+            >
                 {title}
             </Popper>
         </>

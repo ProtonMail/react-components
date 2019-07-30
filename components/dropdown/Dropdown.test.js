@@ -4,7 +4,7 @@ import { render, fireEvent } from 'react-testing-library';
 import Dropdown from './Dropdown';
 
 describe('Dropdown component', () => {
-    const getContent = (container) => container.firstChild.querySelector('.dropDown-content');
+    const getContent = (container) => container.firstChild.querySelector('.dropDown');
 
     it('should animate children when clicking on button', async () => {
         const { container, getByText } = render(

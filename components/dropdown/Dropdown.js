@@ -7,8 +7,8 @@ import usePopper from '../tooltip/usePopper';
 import { classnames } from '../../helpers/component';
 
 const ALIGN_CLASSES = {
-    right: 'dropDown-content--rightArrow',
-    left: 'dropDown-content--leftArrow'
+    right: 'dropDown--rightArrow',
+    left: 'dropDown--leftArrow'
 };
 
 const Dropdown = ({
@@ -78,9 +78,9 @@ const Dropdown = ({
 
     const { top, left, placement } = position;
     const alignClass = ALIGN_CLASSES[align];
-    const dropdownClassName = classnames(['dropDown pm-button', (loading || disabled) && 'is-disabled', className]);
-    const contentClassName = classnames(['dropDown-content', alignClass, narrow && 'dropDown-content--narrow']);
-    const placementClassName = placement.startsWith('top') ? 'dropDown-content--above' : '';
+    const dropdownClassName = classnames(['pm-button', (loading || disabled) && 'is-disabled', className]);
+    const contentClassName = classnames(['dropDown', alignClass, narrow && 'dropDown--narrow']);
+    const placementClassName = placement.startsWith('top') ? 'dropDown--above' : '';
     const caretContent = caret && <Icon className="expand-caret" size={12} name="caret" />;
     return (
         <>
