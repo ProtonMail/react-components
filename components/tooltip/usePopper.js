@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from 'react';
-import { calculateAdjustedPosition } from './utils';
+import { calculateAdjustedPosition } from '../Popper/utils';
 
 const computedSize = (stylePixels, boundsSize) => {
     const computedStyleSize = Number(stylePixels.replace('px', ''));

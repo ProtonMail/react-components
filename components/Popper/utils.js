@@ -24,12 +24,10 @@ const calculatePosition = (target, tooltip, placement, offset = DEFAULT_TOOLTIP_
         'top-right': { left: target.left - tooltip.width + target.width, top: alignBelow }
     }[placement];
 
-    return { ...position, placement };
+    return { position, placement };
 };
 
 /**
- *
- *
  * @param {{ top, left, width, height }} target
  * @param {{ top, left, width, height }} tooltip
  * @param {'left' | 'right' | 'bottom' | 'top' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'} placement
@@ -55,4 +53,9 @@ export const calculateAdjustedPosition = (target, tooltip, placement, offset) =>
     }
 
     return originalPosition;
+};
+
+export const computedSize = (stylePixels, boundsSize) => {
+    const computedStyleSize = Number(stylePixels.replace('px', ''));
+    return isNaN(computedStyleSize) ? boundsSize : computedStyleSize;
 };
