@@ -1,6 +1,16 @@
-import { classnames } from '../../helpers/component';
-
 const DEFAULT_TOOLTIP_OFFSET = 10;
+
+// TODO: FIXME: top-center overflow on the right might go to bottom-right first.
+export const ALL_PLACEMENTS = [
+    'bottom',
+    'bottom-left',
+    'bottom-right',
+    'top',
+    'top-left',
+    'top-right',
+    'left',
+    'right'
+];
 
 const calculatePosition = (target, tooltip, placement, offset = DEFAULT_TOOLTIP_OFFSET) => {
     const center = {
@@ -13,7 +23,7 @@ const calculatePosition = (target, tooltip, placement, offset = DEFAULT_TOOLTIP_
     const alignLeft = target.left - tooltip.width - offset;
     const alignRight = target.left + target.width + offset;
 
-    const position = {
+    return {
         top: { left: center.left, top: alignAbove },
         bottom: { left: center.left, top: alignBelow },
         left: { top: center.top, left: alignLeft },
@@ -23,36 +33,36 @@ const calculatePosition = (target, tooltip, placement, offset = DEFAULT_TOOLTIP_
         'bottom-right': { left: target.left - tooltip.width + target.width, top: alignBelow },
         'top-right': { left: target.left - tooltip.width + target.width, top: alignBelow }
     }[placement];
-
-    return { position, placement };
 };
 
-/**
- * @param {{ top, left, width, height }} target
- * @param {{ top, left, width, height }} tooltip
- * @param {'left' | 'right' | 'bottom' | 'top' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'} placement
- * @param {number} offset
- */
-export const calculateAdjustedPosition = (target, tooltip, placement, offset) => {
-    const alignment = placement.split('-')[1];
-    const reorientTo = (orientation) =>
-        calculatePosition(target, tooltip, classnames([orientation, alignment]), offset);
-    const originalPosition = calculatePosition(target, tooltip, placement, offset);
+const isOutOfScreen = (tooltip, position) => {
+    return (
+        position.top + tooltip.height > window.innerHeight ||
+        position.left + tooltip.width > window.innerWidth ||
+        position.top < 0 ||
+        position.left < 0
+    );
+};
 
-    if (originalPosition.top + tooltip.height > window.innerHeight) {
-        return reorientTo('top');
+const findAlternativePosition = (target, tooltip, offset, availablePlacements = ALL_PLACEMENTS) => {
+    if (!availablePlacements.length) {
+        return null;
     }
-    if (originalPosition.left + tooltip.width > window.innerWidth) {
-        return reorientTo('left');
-    }
-    if (originalPosition.top < 0) {
-        return reorientTo('bottom');
-    }
-    if (originalPosition.left < 0) {
-        return reorientTo('right');
-    }
+    const [placement, ...rest] = availablePlacements;
+    const position = calculatePosition(target, tooltip, placement, offset);
 
-    return originalPosition;
+    return isOutOfScreen(tooltip, position)
+        ? findAlternativePosition(target, tooltip, offset, rest)
+        : { position, placement };
+};
+
+export const adjustPosition = (target, tooltip, placement, offset, availablePlacements = ALL_PLACEMENTS) => {
+    const position = calculatePosition(target, tooltip, placement, offset);
+    if (isOutOfScreen(tooltip, position)) {
+        const alternativePosition = findAlternativePosition(target, tooltip, offset, availablePlacements);
+        return alternativePosition || { position, placement };
+    }
+    return { position, placement };
 };
 
 export const computedSize = (stylePixels, boundsSize) => {

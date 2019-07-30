@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 const Popper = React.forwardRef(({ children, position, isOpen, role = 'tooltip', ...rest }, ref) => {
     return ReactDOM.createPortal(
-        <div ref={ref} style={position} role={role} hidden={!isOpen} aria-hidden={!isOpen} {...rest}>
+        <div {...rest} ref={ref} style={position} role={role} hidden={!isOpen} aria-hidden={!isOpen}>
             {children}
         </div>,
         document.body
@@ -12,8 +12,8 @@ const Popper = React.forwardRef(({ children, position, isOpen, role = 'tooltip',
 });
 
 Popper.propTypes = {
-    children: PropTypes.node,
-    position: PropTypes.shape({ top: PropTypes.number, left: PropTypes.number }),
+    children: PropTypes.node.isRequired,
+    position: PropTypes.shape({ top: PropTypes.number, left: PropTypes.number }).isRequired,
     isOpen: PropTypes.bool,
     role: PropTypes.string
 };

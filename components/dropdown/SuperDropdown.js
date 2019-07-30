@@ -5,16 +5,10 @@ import { classnames } from '../../helpers/component';
 import { usePopper, Popper } from '../Popper';
 import { noop } from '@babel/types';
 
-// TODO: rework according to placement
-const ALIGN_CLASSES = {
-    right: 'dropDown--rightArrow',
-    left: 'dropDown--leftArrow'
-};
-
 const SuperDropdown = ({
     anchorRef,
     children,
-    originalPlacement = 'bottom',
+    originalPlacement = 'right',
     close = noop,
     isOpen = false,
     narrow = false,
@@ -67,16 +61,14 @@ const SuperDropdown = ({
         };
     }, []);
 
-    const alignClass = ALIGN_CLASSES[placement];
-    const contentClassName = classnames(['dropDown', alignClass, narrow && 'dropDown--narrow']);
-    const placementClassName = placement.startsWith('top') ? 'dropDown--above' : '';
+    const contentClassName = classnames(['dropDown', `dropDown--${placement}`, narrow && 'dropDown--narrow']);
     return (
         <Popper
             ref={popperRef}
             position={position}
             isOpen={isOpen}
             role="dialog"
-            className={classnames([contentClassName, placementClassName])}
+            className={contentClassName}
             onClick={handleClickContent}
         >
             {children}

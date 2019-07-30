@@ -1,13 +1,13 @@
 import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { generateUID, classnames } from '../../helpers/component';
-import { usePopper, Popper, usePopperToggle } from '../Popper';
+import { usePopper, Popper, usePopperAnchor } from '../Popper';
 
-const Tooltip = ({ children, title, originalPlacement, scrollContainerClass }) => {
+const Tooltip = ({ children, title, originalPlacement = 'top', scrollContainerClass = 'main' }) => {
     const [uid] = useState(generateUID('tooltip'));
 
     const popperRef = useRef();
-    const { anchorRef, open, close, isOpen } = usePopperToggle();
+    const { anchorRef, open, close, isOpen } = usePopperAnchor();
     const { position, placement } = usePopper(popperRef, anchorRef, isOpen, {
         originalPlacement,
         scrollContainerClass
@@ -29,7 +29,7 @@ const Tooltip = ({ children, title, originalPlacement, scrollContainerClass }) =
                 ref={popperRef}
                 id={uid}
                 isOpen={isOpen}
-                style={position}
+                position={position}
                 className={classnames(['tooltip', `tooltip--${placement}`])}
             >
                 {title}
@@ -43,11 +43,6 @@ Tooltip.propTypes = {
     title: PropTypes.node.isRequired,
     children: PropTypes.node.isRequired,
     scrollContainerClass: PropTypes.string
-};
-
-Tooltip.defaultProps = {
-    originalPlacement: 'top',
-    scrollContainerClass: 'main'
 };
 
 export default Tooltip;

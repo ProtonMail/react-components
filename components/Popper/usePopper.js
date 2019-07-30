@@ -1,14 +1,11 @@
 import { useState, useEffect } from 'react';
-import { calculateAdjustedPosition, computedSize } from './utils';
+import { adjustPosition, computedSize } from './utils';
 
-/**
- * Available placements: bottom-left, bottom, bottom-right, top-left, top, top-right, left, right
- */
 const usePopper = (
     popperRef,
     anchorRef,
     visible,
-    { originalPlacement = 'bottom', offset = 10, scrollContainerClass }
+    { originalPlacement = 'bottom', offset = 10, scrollContainerClass = null } = {}
 ) => {
     const [placement, setPlacement] = useState(originalPlacement);
     const [position, setPosition] = useState({ top: -1000, left: -1000 });
@@ -20,7 +17,7 @@ const usePopper = (
                 const tooltipBounds = popperRef.current.getBoundingClientRect();
                 const wrapperStyles = window.getComputedStyle(anchorRef.current);
                 const tooltipStyles = window.getComputedStyle(popperRef.current);
-                const { placement: adjustedPlacement, position: adjustedPosition } = calculateAdjustedPosition(
+                const { placement: adjustedPlacement, position: adjustedPosition } = adjustPosition(
                     {
                         top: wrapperBounds.top,
                         left: wrapperBounds.left,

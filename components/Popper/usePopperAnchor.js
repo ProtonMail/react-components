@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 
-const usePopperToggle = () => {
+const usePopperAnchor = () => {
     const anchorRef = useRef();
     const [isOpen, setOpen] = useState(false);
 
@@ -11,4 +11,4 @@ const usePopperToggle = () => {
     return { anchorRef, isOpen, toggle, open, close };
 };
 
-export default usePopperToggle;
+export default usePopperAnchor;

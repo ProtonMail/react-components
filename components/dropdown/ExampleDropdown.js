@@ -1,10 +1,10 @@
 import React from 'react';
 import SuperDropdown from './SuperDropdown';
-import { usePopperToggle } from '../Popper';
+import { usePopperAnchor } from '../Popper';
 import SuperDropdownButton from './SuperDropdownButton';
 
 const ExampleDropdown = () => {
-    const { anchorRef, isOpen, toggle, close } = usePopperToggle();
+    const { anchorRef, isOpen, toggle, close } = usePopperAnchor();
 
     return (
         <>
