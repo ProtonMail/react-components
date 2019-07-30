@@ -1,4 +1,4 @@
-import React, { useEffect, useImperativeHandle, forwardRef } from 'react';
+import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import keycode from 'keycode';
@@ -11,119 +11,109 @@ const ALIGN_CLASSES = {
     left: 'dropDown-content--leftArrow'
 };
 
-const Dropdown = forwardRef(
-    (
-        {
-            isOpen,
-            content,
-            title,
-            children,
-            className,
-            autoClose,
-            autoCloseOutside,
-            align,
-            narrow,
-            loading,
-            disabled,
-            caret
-        },
-        ref
-    ) => {
-        const { position, visible, show, hide, wrapperRef, tooltipRef } = usePopper({
-            scrollContainerClass: 'main',
-            visible: isOpen,
-            offset: 20,
-            placement: {
-                left: 'bottom-left',
-                right: 'bottom-right',
-                center: 'bottom'
-            }[align]
-        });
+const Dropdown = ({
+    isOpen,
+    content,
+    title,
+    children,
+    className,
+    autoClose,
+    autoCloseOutside,
+    align,
+    narrow,
+    loading,
+    disabled,
+    caret
+}) => {
+    const { position, visible, show, hide, wrapperRef, tooltipRef } = usePopper({
+        scrollContainerClass: 'main',
+        visible: isOpen,
+        offset: 20,
+        placement: {
+            left: 'bottom-left',
+            right: 'bottom-right',
+            center: 'bottom'
+        }[align]
+    });
 
-        const handleClick = () => (visible ? hide() : show());
+    const handleClick = () => (visible ? hide() : show());
 
-        const handleKeydown = (event) => {
-            const key = keycode(event);
+    const handleKeydown = (event) => {
+        const key = keycode(event);
 
-            if (key === 'escape' && event.target === document.activeElement) {
-                hide();
-            }
-        };
-
-        const handleClickOutside = (event) => {
-            // Do nothing if clicking ref's element or descendent elements
-            if (
-                !autoCloseOutside ||
-                (tooltipRef.current && tooltipRef.current.contains(event.target)) ||
-                (wrapperRef.current && wrapperRef.current.contains(event.target))
-            ) {
-                return;
-            }
+        if (key === 'escape' && event.target === document.activeElement) {
             hide();
+        }
+    };
+
+    const handleClickOutside = (event) => {
+        // Do nothing if clicking ref's element or descendent elements
+        if (
+            !autoCloseOutside ||
+            (tooltipRef.current && tooltipRef.current.contains(event.target)) ||
+            (wrapperRef.current && wrapperRef.current.contains(event.target))
+        ) {
+            return;
+        }
+        hide();
+    };
+
+    const handleClickContent = () => {
+        if (autoClose) {
+            hide();
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+        document.addEventListener('touchstart', handleClickOutside);
+        document.addEventListener('keydown', handleKeydown);
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('touchstart', handleClickOutside);
+            document.removeEventListener('keydown', handleKeydown);
         };
+    }, []);
 
-        const handleClickContent = () => {
-            if (autoClose) {
-                hide();
-            }
-        };
-
-        useImperativeHandle(ref, () => ({
-            close: hide,
-            open: show
-        }));
-
-        useEffect(() => {
-            document.addEventListener('mousedown', handleClickOutside);
-            document.addEventListener('touchstart', handleClickOutside);
-            document.addEventListener('keydown', handleKeydown);
-
-            return () => {
-                document.removeEventListener('mousedown', handleClickOutside);
-                document.removeEventListener('touchstart', handleClickOutside);
-                document.removeEventListener('keydown', handleKeydown);
-            };
-        }, []);
-
-        const { top, left, placement } = position;
-        const alignClass = ALIGN_CLASSES[align];
-        const dropdownClassName = classnames(['dropDown pm-button', (loading || disabled) && 'is-disabled', className]);
-        const contentClassName = classnames(['dropDown-content', alignClass, narrow && 'dropDown-content--narrow']);
-        const placementClassName = placement.startsWith('top') ? 'dropDown-content--above' : '';
-        const caretContent = caret && <Icon className="expand-caret" size={12} name="caret" />;
-        return (
-            <>
-                <button
-                    title={title}
-                    ref={wrapperRef}
-                    className={classnames([dropdownClassName, className])}
-                    aria-expanded={visible}
-                    aria-busy={loading}
-                    onClick={handleClick}
-                    type="button"
-                    disabled={loading || disabled}
+    const { top, left, placement } = position;
+    const alignClass = ALIGN_CLASSES[align];
+    const dropdownClassName = classnames(['dropDown pm-button', (loading || disabled) && 'is-disabled', className]);
+    const contentClassName = classnames(['dropDown-content', alignClass, narrow && 'dropDown-content--narrow']);
+    const placementClassName = placement.startsWith('top') ? 'dropDown-content--above' : '';
+    const caretContent = caret && <Icon className="expand-caret" size={12} name="caret" />;
+    return (
+        <>
+            <button
+                title={title}
+                ref={wrapperRef}
+                className={classnames([dropdownClassName, className])}
+                aria-expanded={visible}
+                aria-busy={loading}
+                onClick={handleClick}
+                type="button"
+                disabled={loading || disabled}
+            >
+                <span className="mauto">
+                    {content} {caretContent}
+                </span>
+            </button>
+            {ReactDOM.createPortal(
+                <div
+                    style={{ top, left }}
+                    aria-hidden={!visible}
+                    ref={tooltipRef}
+                    className={classnames([contentClassName, placementClassName])}
+                    onClick={handleClickContent}
+                    hidden={!visible}
                 >
-                    <span className="mauto">
-                        {content} {caretContent}
-                    </span>
-                </button>
-                {ReactDOM.createPortal(
-                    <div
-                        style={{ top, left }}
-                        aria-hidden={!visible}
-                        ref={tooltipRef}
-                        className={classnames([contentClassName, placementClassName])}
-                        onClick={handleClickContent}
-                        hidden={!visible}
-                    >
-                        {children}
-                    </div>,
-                    document.body
-                )}
-            </>
-        );
-    }
-);
+                    {children}
+                </div>,
+                document.body
+            )}
+        </>
+    );
+};
 
 Dropdown.propTypes = {
     className: PropTypes.string,
