@@ -109,11 +109,7 @@ const AddKeyModal = ({ onClose, Address, addressKeys, ...rest }) => {
         if (step === STEPS.FAILURE) {
             return {
                 submit: c('Action').t`Ok`,
-                children: (
-                    <Alert type="error">
-                        <GenericError />
-                    </Alert>
-                )
+                children: <GenericError />
             };
         }
 

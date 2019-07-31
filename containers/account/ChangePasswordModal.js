@@ -389,9 +389,7 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
                 onSubmit={onClose}
                 {...rest}
             >
-                <Alert type="error">
-                    <GenericError />
-                </Alert>
+                <GenericError />
             </FormModal>
         );
     }

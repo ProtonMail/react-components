@@ -101,11 +101,7 @@ const DeleteKeyModal = ({ onClose, Address, addressKeys, KeyID, privateKey, ...r
         if (step === STEPS.FAILURE) {
             return {
                 submit: c('Action').t`Ok`,
-                children: (
-                    <Alert type="error">
-                        <GenericError />
-                    </Alert>
-                )
+                children: <GenericError />
             };
         }
 
