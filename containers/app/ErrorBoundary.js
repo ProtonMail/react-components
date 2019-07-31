@@ -1,7 +1,16 @@
 import React from 'react';
 import { c } from 'ttag';
+import PropTypes from 'prop-types';
 
-// https://reactjs.org/docs/error-boundaries.html#introducing-error-boundaries
+import IllustrationPlaceholder from './IllustrationPlaceholder';
+
+import errorImg from 'design-system/assets/img/shared/generic-error.svg';
+
+/*
+    https://reactjs.org/docs/error-boundaries.html#introducing-error-boundaries
+    Hooks not supported yet for this sort of component
+    https://reactjs.org/docs/hooks-faq.html#do-hooks-cover-all-use-cases-for-classes
+*/
 class ErrorBoundary extends React.Component {
     constructor(props) {
         super(props);
@@ -16,14 +25,25 @@ class ErrorBoundary extends React.Component {
         if (!this.state.hasError) {
             return this.props.children;
         }
-        const error = this.state.error ? this.state.error.toString() : undefined;
         return (
             <>
-                <h1>{c('Title').t`Something went wrong.`}</h1>
-                <span>{error}</span>
+                <IllustrationPlaceholder
+                    title={c('Error message').t`Aaah! Something went wrong`}
+                    text={
+                        <>
+                            <span>{c('Error message').t`Brace yourself till we get the error fixed.`}</span>
+                            <span>{c('Error message').t`You may also refresh the page or try again later.`}</span>
+                        </>
+                    }
+                    url={errorImg}
+                />
             </>
         );
     }
 }
+
+ErrorBoundary.propTypes = {
+    children: PropTypes.node
+};
 
 export default ErrorBoundary;
