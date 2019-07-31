@@ -1,6 +1,5 @@
 const DEFAULT_TOOLTIP_OFFSET = 10;
 
-// TODO: FIXME: top-center overflow on the right might go to bottom-right first.
 export const ALL_PLACEMENTS = [
     'bottom',
     'bottom-left',
