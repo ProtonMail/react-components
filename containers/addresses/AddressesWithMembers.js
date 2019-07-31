@@ -67,35 +67,25 @@ const AddressesWithMembers = ({ user, organization }) => {
                         colSpan={showUsername ? 4 : 3}
                         loading={selectedMembers.some(({ ID }) => !Array.isArray(memberAddressesMap[ID]))}
                     >
-                        {selectedMembers
-                            .map((member) => {
-                                const addresses = memberAddressesMap[member.ID];
-
-                                if (!Array.isArray(addresses)) {
-                                    return null;
-                                }
-
-                                return addresses.map((address, i) => {
-                                    return (
-                                        <TableRow
-                                            key={address.ID}
-                                            cells={[
-                                                address.Email,
-                                                showUsername && member.Name,
-                                                <AddressStatus key={1} {...getStatus({ address, i })} />,
-                                                <AddressActions
-                                                    key={2}
-                                                    member={member}
-                                                    address={address}
-                                                    user={user}
-                                                    organizationKey={loadingOrganizationKey ? null : organizationKey}
-                                                />
-                                            ].filter(Boolean)}
+                        {selectedMembers.flatMap((member) =>
+                            (memberAddressesMap[member.ID] || []).map((address, i) => (
+                                <TableRow
+                                    key={address.ID}
+                                    cells={[
+                                        address.Email,
+                                        showUsername && member.Name,
+                                        <AddressStatus key={1} {...getStatus({ address, i })} />,
+                                        <AddressActions
+                                            key={2}
+                                            member={member}
+                                            address={address}
+                                            user={user}
+                                            organizationKey={loadingOrganizationKey ? null : organizationKey}
                                         />
-                                    );
-                                });
-                            })
-                            .flat()}
+                                    ].filter(Boolean)}
+                                />
+                            ))
+                        )}
                     </TableBody>
                 </Table>
             )}
