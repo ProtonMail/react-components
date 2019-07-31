@@ -12,7 +12,7 @@ const Captcha = ({ token, onSubmit }) => {
     const url = createUrl('https://secure.protonmail.com/captcha/captcha.html', { token, client, host });
     const src = url.toString();
 
-    const receiveMessage = (event) => {
+    const handleMessage = (event) => {
         const { origin, originalEvent, data } = event;
 
         if (typeof origin === 'undefined' && typeof originalEvent.origin === 'undefined') {
@@ -38,10 +38,10 @@ const Captcha = ({ token, onSubmit }) => {
     };
 
     useEffect(() => {
-        window.addEventListener('message', receiveMessage, false);
+        window.addEventListener('message', handleMessage, false);
 
         return () => {
-            window.removeEventListener('message', receiveMessage, false);
+            window.removeEventListener('message', handleMessage, false);
         };
     }, []);
 

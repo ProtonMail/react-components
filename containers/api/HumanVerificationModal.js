@@ -1,16 +1,13 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { FormModal, Alert, Row, Label, Radio, useApiResult } from 'react-components';
+import { FormModal, Alert, Row, Label, Radio } from 'react-components';
 import { c } from 'ttag';
-import { getHumanVerificationMethods } from 'proton-shared/lib/api/users';
 
 import Captcha from './Captcha';
 
-const HumanVerificationModal = ({ token, onSubmit, ...rest }) => {
+const HumanVerificationModal = ({ token, methods = [], onSubmit, ...rest }) => {
     const title = c('Title').t`Human verification`;
-    const { result, loading } = useApiResult(getHumanVerificationMethods, []);
     const [method, setMethod] = useState('captcha');
-    const { VerifyMethods = [] } = result;
     const handleChange = ({ target }) => target.checked && setMethod(target.value);
 
     const handleCaptcha = (token) => {
@@ -19,12 +16,12 @@ const HumanVerificationModal = ({ token, onSubmit, ...rest }) => {
     };
 
     return (
-        <FormModal hasClose={false} noValidate={true} title={title} loading={loading} {...rest}>
+        <FormModal hasClose={false} noValidate={true} title={title} {...rest}>
             <Alert>{c('Info').t`For security reasons, please verify that you are not a robot.`}</Alert>
-            {VerifyMethods.includes('captcha') ? (
+            {methods.includes('captcha') ? (
                 <Row>
                     <Label htmlFor="captcha">
-                        {VerifyMethods.length ? (
+                        {methods.length ? (
                             <Radio
                                 id="captcha"
                                 checked={method === 'captcha'}
@@ -46,6 +43,7 @@ const HumanVerificationModal = ({ token, onSubmit, ...rest }) => {
 
 HumanVerificationModal.propTypes = {
     token: PropTypes.string,
+    methods: PropTypes.arrayOf(PropTypes.string),
     onSubmit: PropTypes.func
 };
 
