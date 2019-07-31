@@ -21,6 +21,10 @@ class ErrorBoundary extends React.Component {
         return { hasError: true, error };
     }
 
+    componentDidCatch(error, info) {
+        this.props.onError(error, info);
+    }
+
     render() {
         if (!this.state.hasError) {
             return this.props.children;
@@ -43,7 +47,8 @@ class ErrorBoundary extends React.Component {
 }
 
 ErrorBoundary.propTypes = {
-    children: PropTypes.node
+    children: PropTypes.node,
+    onError: PropTypes.func
 };
 
 export default ErrorBoundary;
