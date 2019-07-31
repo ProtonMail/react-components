@@ -21,7 +21,7 @@ const HumanVerificationModal = ({ token, methods = [], onSubmit, ...rest }) => {
             {methods.includes('captcha') ? (
                 <Row>
                     <Label htmlFor="captcha">
-                        {methods.length ? (
+                        {methods.length > 1 ? (
                             <Radio
                                 id="captcha"
                                 checked={method === 'captcha'}
