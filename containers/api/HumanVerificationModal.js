@@ -1,37 +1,25 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { FormModal, Alert, Row, Label, Radio } from 'react-components';
+import { FormModal, Alert, Row, Label } from 'react-components';
 import { c } from 'ttag';
 
 import Captcha from './Captcha';
 
-const HumanVerificationModal = ({ token, methods = [], onSubmit, ...rest }) => {
+const HumanVerificationModal = ({ token, methods = [], onSuccess, ...rest }) => {
     const title = c('Title').t`Human verification`;
-    const [method, setMethod] = useState('captcha');
-    const handleChange = ({ target }) => target.checked && setMethod(target.value);
+    const [method] = useState('captcha');
 
     const handleCaptcha = (token) => {
-        onSubmit(token, method);
+        onSuccess({ token, method });
         rest.onClose();
     };
 
     return (
-        <FormModal hasClose={false} noValidate={true} title={title} {...rest}>
-            <Alert>{c('Info').t`For security reasons, please verify that you are not a robot.`}</Alert>
+        <FormModal hasClose={false} hasSubmit={false} title={title} {...rest}>
+            <Alert type="warning">{c('Info').t`For security reasons, please verify that you are not a robot.`}</Alert>
             {methods.includes('captcha') ? (
                 <Row>
-                    <Label htmlFor="captcha">
-                        {methods.length > 1 ? (
-                            <Radio
-                                id="captcha"
-                                checked={method === 'captcha'}
-                                value="captcha"
-                                className="mr0-5"
-                                onChange={handleChange}
-                            />
-                        ) : null}
-                        <span>{c('Label').t`Captcha`}</span>
-                    </Label>
+                    <Label htmlFor="captcha">{c('Label').t`Captcha`}</Label>
                     <div className="w100">
                         <Captcha token={token} onSubmit={handleCaptcha} />
                     </div>
@@ -44,7 +32,7 @@ const HumanVerificationModal = ({ token, methods = [], onSubmit, ...rest }) => {
 HumanVerificationModal.propTypes = {
     token: PropTypes.string,
     methods: PropTypes.arrayOf(PropTypes.string),
-    onSubmit: PropTypes.func
+    onSuccess: PropTypes.func
 };
 
 export default HumanVerificationModal;
