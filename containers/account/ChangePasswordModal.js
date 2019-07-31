@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import {
     Alert,
+    GenericError,
     PasswordInput,
     TwoFactorInput,
     Row,
@@ -388,7 +389,9 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
                 onSubmit={onClose}
                 {...rest}
             >
-                <Alert type="error">{c('Error').t`Something went wrong`}</Alert>
+                <Alert type="error">
+                    <GenericError />
+                </Alert>
             </FormModal>
         );
     }
