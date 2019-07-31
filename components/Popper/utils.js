@@ -12,6 +12,21 @@ export const ALL_PLACEMENTS = [
     'right'
 ];
 
+// First checks the same orientation (all bottom-* if bottom, etc.) then alignment
+const orderPlacements = (originalPlacement, placements = ALL_PLACEMENTS) => {
+    const orientation = originalPlacement.split('-')[0];
+    const alignment = originalPlacement.split('-')[1];
+    return [...placements].sort((a, b) => {
+        if (a.startsWith(orientation) && !b.startsWith(orientation)) {
+            return -1;
+        }
+        if (a.endsWith(alignment) && !a.startsWith(alignment) && !b.endsWith(alignment)) {
+            return -1;
+        }
+        return 0;
+    });
+};
+
 const calculatePosition = (target, tooltip, placement, offset = DEFAULT_TOOLTIP_OFFSET) => {
     const center = {
         top: target.top + target.height / 2 - tooltip.height / 2,
@@ -31,7 +46,7 @@ const calculatePosition = (target, tooltip, placement, offset = DEFAULT_TOOLTIP_
         'bottom-left': { left: target.left, top: alignBelow },
         'top-left': { left: target.left, top: alignAbove },
         'bottom-right': { left: target.left - tooltip.width + target.width, top: alignBelow },
-        'top-right': { left: target.left - tooltip.width + target.width, top: alignBelow }
+        'top-right': { left: target.left - tooltip.width + target.width, top: alignAbove }
     }[placement];
 };
 
@@ -44,7 +59,7 @@ const isOutOfScreen = (tooltip, position) => {
     );
 };
 
-const findAlternativePosition = (target, tooltip, offset, availablePlacements = ALL_PLACEMENTS) => {
+const optimisePositionAndPlacement = (target, tooltip, offset, availablePlacements = ALL_PLACEMENTS) => {
     if (!availablePlacements.length) {
         return null;
     }
@@ -52,17 +67,22 @@ const findAlternativePosition = (target, tooltip, offset, availablePlacements = 
     const position = calculatePosition(target, tooltip, placement, offset);
 
     return isOutOfScreen(tooltip, position)
-        ? findAlternativePosition(target, tooltip, offset, rest)
+        ? optimisePositionAndPlacement(target, tooltip, offset, rest)
         : { position, placement };
 };
 
 export const adjustPosition = (target, tooltip, placement, offset, availablePlacements = ALL_PLACEMENTS) => {
-    const position = calculatePosition(target, tooltip, placement, offset);
-    if (isOutOfScreen(tooltip, position)) {
-        const alternativePosition = findAlternativePosition(target, tooltip, offset, availablePlacements);
-        return alternativePosition || { position, placement };
+    const placementsByPriority = orderPlacements(placement, availablePlacements);
+    const optimalLocation = optimisePositionAndPlacement(target, tooltip, offset, placementsByPriority);
+    if (!optimalLocation) {
+        // No good position on screen, fallback to original
+        const position = calculatePosition(target, tooltip, placement, offset);
+        return {
+            position,
+            placement
+        };
     }
-    return { position, placement };
+    return optimalLocation;
 };
 
 export const computedSize = (stylePixels, boundsSize) => {
