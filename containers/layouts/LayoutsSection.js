@@ -21,7 +21,7 @@ import {
     updateDraftType,
     updateRightToLeft
 } from 'proton-shared/lib/api/mailSettings';
-import { VIEW_MODE } from 'proton-shared/lib/constants';
+import { VIEW_MODE, STICKY_LABELS } from 'proton-shared/lib/constants';
 
 import DraftTypeSelect from './DraftTypeSelect';
 import TextDirectionSelect from './TextDirectionSelect';
@@ -56,7 +56,7 @@ const LayoutsSection = () => {
 
     const handleChangeViewMode = async (mode) => {
         if (mode !== VIEW_MODE.GROUP) {
-            await api(updateStickyLabels(0));
+            await api(updateStickyLabels(STICKY_LABELS.OFF));
         }
         await api(updateViewMode(mode));
         await call();
