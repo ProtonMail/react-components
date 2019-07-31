@@ -13,7 +13,8 @@ const Dropdown = ({
     isOpen = false,
     narrow = false,
     autoClose = true,
-    autoCloseOutside = true
+    autoCloseOutside = true,
+    ...rest
 }) => {
     const popperRef = useRef();
     const { placement, position } = usePopper(popperRef, anchorRef, isOpen, {
@@ -70,6 +71,7 @@ const Dropdown = ({
             role="dialog"
             className={contentClassName}
             onClick={handleClickContent}
+            {...rest}
         >
             {children}
         </Popper>

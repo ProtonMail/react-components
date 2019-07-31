@@ -1,18 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Dropdown from './Dropdown';
 import { usePopperAnchor } from '../Popper';
 import DropdownButton from './DropdownButton';
+import { generateUID } from '../../helpers/component';
 
 const SimpleDropdown = ({ content, children, originalPlacement, narrow, autoClose, ...rest }) => {
+    const [uid] = useState(generateUID('dropdown'));
+
     const { anchorRef, isOpen, toggle, close } = usePopperAnchor();
 
     return (
         <>
-            <DropdownButton {...rest} buttonRef={anchorRef} isOpen={isOpen} onClick={toggle} hasCaret>
+            <DropdownButton
+                {...rest}
+                aria-describedby={uid}
+                buttonRef={anchorRef}
+                isOpen={isOpen}
+                onClick={toggle}
+                hasCaret
+            >
                 {content}
             </DropdownButton>
             <Dropdown
+                id={uid}
                 originalPlacement={originalPlacement}
                 narrow={narrow}
                 autoClose={autoClose}

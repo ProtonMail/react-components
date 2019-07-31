@@ -7,7 +7,7 @@ const DropdownMenu = ({ children, className }) => {
             <ul className={`unstyled mt0 mb0 ml1 mr1 ${className}`}>
                 {React.Children.toArray(children).map((child) => {
                     return (
-                        <li className={`dropDown-item`} key={child.key}>
+                        <li className="dropDown-item" key={child.key}>
                             {child}
                         </li>
                     );
