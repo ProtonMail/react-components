@@ -6,6 +6,7 @@ import { formatPlans } from '../../containers/payments/subscription/helpers';
 import { APPS } from 'proton-shared/lib/constants';
 
 import MailLogo from './MailLogo';
+import VpnLogo from './VpnLogo';
 
 const {
     PROTONMAIL: mail,
@@ -21,28 +22,16 @@ const MainLogo = ({ currentApp, url = 'https://mail.protonmail.com/' }) => {
 
     const { mailPlan = {}, vpnPlan = {} } = formatPlans(Plans);
 
-    let logo = null;
-    switch (currentApp) {
-        case mail:
-            logo = <MailLogo planName={mailPlan.Name} />;
-            break;
-        case mailSettings:
-            logo = <MailLogo planName={mailPlan.Name} />;
-            break;
+    const logo = (() => {
         // we do not have the proper logos for all the products yet. Use mail logo in the meantime
-        case contacts:
-            logo = <MailLogo planName={mailPlan.Name} />;
-            break;
-        case drive:
-            logo = <MailLogo planName={mailPlan.Name} />;
-            break;
-        case calendar:
-            logo = <MailLogo planName={mailPlan.Name} />;
-            break;
-        case vpn:
-            logo = <MailLogo planName={vpnPlan.Name} />;
-            break;
-    }
+        if ([mail, mailSettings, contacts, drive, calendar].includes(currentApp)) {
+            return <MailLogo planName={mailPlan.Name} />;
+        }
+        if (currentApp === vpn) {
+            return <VpnLogo planName={vpnPlan.Name} />;
+        }
+        return null;
+    })();
 
     return (
         <Href url={url} rel="noreferrer help" className="logo-container nodecoration flex-item-centered-vert">
