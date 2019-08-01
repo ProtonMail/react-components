@@ -1,12 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { OverlayModal } from 'react-components';
+import { withRouter } from 'react-router-dom';
 
 const ESC_KEY = 27;
 
-const ModalsContainer = ({ modals, removeModal, hideModal }) => {
+const ModalsContainer = ({ modals, removeModal, hideModal, resetModals, location }) => {
     const latestModals = useRef(modals);
     const [containerIsClosing, setContainerIsClosing] = useState(false);
+
+    useEffect(() => {
+        resetModals();
+    }, [location]);
 
     useEffect(() => {
         latestModals.current = modals;
@@ -98,7 +103,9 @@ const ModalsContainer = ({ modals, removeModal, hideModal }) => {
 ModalsContainer.propTypes = {
     modals: PropTypes.arrayOf(PropTypes.object).isRequired,
     removeModal: PropTypes.func.isRequired,
-    hideModal: PropTypes.func.isRequired
+    hideModal: PropTypes.func.isRequired,
+    resetModals: PropTypes.func.isRequired,
+    location: PropTypes.object
 };
 
-export default ModalsContainer;
+export default withRouter(ModalsContainer);
