@@ -4,7 +4,7 @@ import { classnames } from '../../helpers/component';
 import Icon from '../icon/Icon';
 
 const DropdownCaret = ({ isOpen }) => {
-    return <Icon className={classnames(['expand-caret', isOpen && 'rotateX-180'])} size={12} name="caret" />;
+    return <Icon className={classnames(['fill-currentColor', isOpen && 'rotateX-180'])} size={12} name="caret" />;
 };
 
 DropdownCaret.propTypes = {
