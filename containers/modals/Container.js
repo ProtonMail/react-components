@@ -5,12 +5,15 @@ import { withRouter } from 'react-router-dom';
 
 const ESC_KEY = 27;
 
-const ModalsContainer = ({ modals, removeModal, hideModal, resetModals, location }) => {
+const ModalsContainer = ({ modals, removeModal, hideModal, location }) => {
     const latestModals = useRef(modals);
     const [containerIsClosing, setContainerIsClosing] = useState(false);
 
     useEffect(() => {
-        resetModals();
+        latestModals.current.forEach(({ id, content }) => {
+            content.props.onClose && content.props.onClose();
+            hideModal(id);
+        });
     }, [location]);
 
     useEffect(() => {
@@ -104,7 +107,6 @@ ModalsContainer.propTypes = {
     modals: PropTypes.arrayOf(PropTypes.object).isRequired,
     removeModal: PropTypes.func.isRequired,
     hideModal: PropTypes.func.isRequired,
-    resetModals: PropTypes.func.isRequired,
     location: PropTypes.object
 };
 
