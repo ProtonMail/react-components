@@ -55,7 +55,7 @@ const LayoutsSection = () => {
     };
 
     const handleChangeViewMode = async (mode) => {
-        if (mode !== VIEW_MODE.GROUP) {
+        if (mode === VIEW_MODE.SINGLE) {
             await api(updateStickyLabels(STICKY_LABELS.OFF));
         }
         await api(updateViewMode(mode));
