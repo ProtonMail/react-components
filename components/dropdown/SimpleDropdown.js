@@ -29,7 +29,7 @@ const SimpleDropdown = ({ content, children, originalPlacement, narrow, autoClos
                 autoClose={autoClose}
                 isOpen={isOpen}
                 anchorRef={anchorRef}
-                close={close}
+                onClose={close}
             >
                 {children}
             </Dropdown>

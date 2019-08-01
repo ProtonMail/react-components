@@ -9,7 +9,7 @@ const Dropdown = ({
     anchorRef,
     children,
     originalPlacement = 'bottom',
-    close = noop,
+    onClose = noop,
     isOpen = false,
     narrow = false,
     autoClose = true,
@@ -27,7 +27,7 @@ const Dropdown = ({
         const key = keycode(event);
 
         if (key === 'escape' && event.target === document.activeElement) {
-            close();
+            onClose();
         }
     };
 
@@ -41,12 +41,12 @@ const Dropdown = ({
             return;
         }
 
-        close();
+        onClose();
     };
 
     const handleClickContent = () => {
         if (autoClose) {
-            close();
+            onClose();
         }
     };
 
@@ -81,7 +81,7 @@ const Dropdown = ({
 Dropdown.propTypes = {
     anchorRef: PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
     children: PropTypes.node.isRequired,
-    close: PropTypes.func,
+    onClose: PropTypes.func,
     isOpen: PropTypes.bool,
     originalPlacement: PropTypes.string,
     narrow: PropTypes.bool,
