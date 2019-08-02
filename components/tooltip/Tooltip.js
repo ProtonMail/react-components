@@ -2,14 +2,20 @@ import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { generateUID, classnames } from '../../helpers/component';
 import { usePopper, Popper, usePopperAnchor } from '../Popper';
+import useRightToLeft from '../../containers/rightToLeft/useRightToLeft';
 
 const Tooltip = ({ children, title, originalPlacement = 'top', scrollContainerClass = 'main' }) => {
     const [uid] = useState(generateUID('tooltip'));
 
+    const { isRTL } = useRightToLeft();
+    const rtlAdjustedPlacement = originalPlacement.includes('right')
+        ? originalPlacement.replace('right', 'left')
+        : originalPlacement.replace('left', 'right');
+
     const popperRef = useRef();
     const { anchorRef, open, close, isOpen } = usePopperAnchor();
     const { position, placement } = usePopper(popperRef, anchorRef, isOpen, {
-        originalPlacement,
+        originalPlacement: isRTL ? rtlAdjustedPlacement : originalPlacement,
         scrollContainerClass
     });
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { c } from 'ttag';
 import { PropTypes, IllustrationPlaceholder } from 'prop-types';
 
-import errorImg from 'design-system/assets/img/shared/generic-error.svg';
+// import errorImg from 'design-system/assets/img/shared/generic-error.svg';
 
 const GenericError = ({ className }) => {
     return (
@@ -15,7 +15,7 @@ const GenericError = ({ className }) => {
                     <span>{c('Error message').t`You may also refresh the page or try again later.`}</span>
                 </>
             }
-            url={errorImg}
+            url={'errorImg'}
         />
     );
 };

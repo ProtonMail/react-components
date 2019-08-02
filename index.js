@@ -271,6 +271,9 @@ export { default as useCache } from './containers/cache/useCache';
 export { default as CacheProvider } from './containers/cache/Provider';
 export { default as EventManagerProvider } from './containers/eventManager/EventManagerProvider';
 
+export { default as useRightToLeft } from './containers/rightToLeft/useRightToLeft';
+export { default as RightToLeftProvider } from './containers/rightToLeft/Provider';
+
 export { default as useForceRefresh } from './containers/forceRefresh/useForceRefresh';
 export { default as ForceRefreshProvider } from './containers/forceRefresh/Provider';
 export { default as LocaleInjector } from './containers/locale/LocaleInjector';

@@ -4,6 +4,7 @@ import keycode from 'keycode';
 import { classnames } from '../../helpers/component';
 import { usePopper, Popper } from '../Popper';
 import { noop } from '@babel/types';
+import useRightToLeft from '../../containers/rightToLeft/useRightToLeft';
 
 const Dropdown = ({
     anchorRef,
@@ -16,9 +17,14 @@ const Dropdown = ({
     autoCloseOutside = true,
     ...rest
 }) => {
+    const { isRTL } = useRightToLeft();
+    const rtlAdjustedPlacement = originalPlacement.includes('right')
+        ? originalPlacement.replace('right', 'left')
+        : originalPlacement.replace('left', 'right');
+
     const popperRef = useRef();
     const { placement, position } = usePopper(popperRef, anchorRef, isOpen, {
-        originalPlacement,
+        originalPlacement: isRTL ? rtlAdjustedPlacement : originalPlacement,
         offset: 20,
         scrollContainerClass: 'main'
     });
@@ -40,7 +46,6 @@ const Dropdown = ({
         ) {
             return;
         }
-
         onClose();
     };
 
