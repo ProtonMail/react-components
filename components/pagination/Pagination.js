@@ -6,7 +6,7 @@ import DropdownMenuButton from '../dropdown/DropdownMenuButton';
 import DropdownMenu from '../dropdown/DropdownMenu';
 import SimpleDropdown from '../dropdown/SimpleDropdown';
 
-const Pagination = ({ onNext, onPrevious, onSelect, hasNext, hasPrevious, page, total, limit }) => {
+const Pagination = ({ onNext, onPrevious, onSelect, hasNext = true, hasPrevious = true, page = 1, total, limit }) => {
     if (!total) {
         return null;
     }
@@ -73,12 +73,6 @@ Pagination.propTypes = {
     limit: PropTypes.number.isRequired,
     hasNext: PropTypes.bool.isRequired,
     hasPrevious: PropTypes.bool.isRequired
-};
-
-Pagination.defaultProps = {
-    page: 1,
-    hasNext: true,
-    hasPrevious: true
 };
 
 export default Pagination;

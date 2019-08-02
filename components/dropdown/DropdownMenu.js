@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const DropdownMenu = ({ children, className }) => {
+const DropdownMenu = ({ children, className = '' }) => {
     return (
         <div className="dropDown-content">
             <ul className={`unstyled mt0 mb0 ml1 mr1 ${className}`}>
@@ -20,10 +20,6 @@ const DropdownMenu = ({ children, className }) => {
 DropdownMenu.propTypes = {
     children: PropTypes.node.isRequired,
     className: PropTypes.string
-};
-
-DropdownMenu.defaultProps = {
-    className: ''
 };
 
 export default DropdownMenu;
