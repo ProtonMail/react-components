@@ -28,8 +28,8 @@ const AddressesWithMembers = ({ match, user, organization }) => {
 
     useEffect(() => {
         if (memberIndex === -1 && Array.isArray(members)) {
-            if (match.params.memberId) {
-                setMemberIndex(members.findIndex(({ ID }) => ID === match.params.memberId));
+            if (match.params.memberID) {
+                setMemberIndex(members.findIndex(({ ID }) => ID === match.params.memberID));
             } else {
                 setMemberIndex(members.findIndex(({ Self }) => Self));
             }
