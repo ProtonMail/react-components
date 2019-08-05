@@ -9,27 +9,24 @@ import PaymentSelector from './PaymentSelector';
 import Payment from './Payment';
 import usePayment from './usePayment';
 
-const DonateModal = ({ onClose, ...rest }) => {
+const DonateModal = ({ ...rest }) => {
     const { createNotification } = useNotifications();
     const { request, loading } = useApiWithoutResult(donate);
     const [currency, setCurrency] = useState(DEFAULT_CURRENCY);
     const [amount, setAmount] = useState(DEFAULT_DONATION_AMOUNT);
+    const { method, setMethod, parameters, setParameters, canPay, setCardValidity } = usePayment(handleSubmit);
 
     const handleSubmit = async () => {
         await request({ Amount: amount, Currency: currency, ...parameters });
-        if (onClose) {
-            onClose();
-        }
+        rest.onClose();
         createNotification({
             text: c('Success')
                 .t`Your support is essential to keeping ProtonMail running. Thank you for supporting internet privacy!`
         });
     };
-    const { method, setMethod, parameters, setParameters, canPay, setCardValidity } = usePayment(handleSubmit);
 
     return (
         <FormModal
-            onClose={onClose}
             onSubmit={handleSubmit}
             loading={loading}
             close={c('Action').t`Cancel`}
