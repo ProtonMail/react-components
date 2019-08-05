@@ -63,13 +63,12 @@ const UserDropdown = (props) => {
                         </a>
                     </li>
                     <li className="dropDown-item pl1 pr1">
-                        <a className="w100 flex flex-nowrap pm-button--link p0" href="/support" target="_blank">
-                            <Icon className="mt0-25 mr0-5 fill-currentColor" name="support1" />
-                            {c('Action').t`Troubleshooting & Help`}
-                        </a>
-                    </li>
-                    <li className="dropDown-item pl1 pr1">
-                        <a className="w100 flex flex-nowrap pm-button--link p0" href="/support-form" target="_blank">
+                        <a
+                            className="w100 flex flex-nowrap pm-button--link p0"
+                            href="https://protonmail.com/support/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
                             <Icon className="mt0-25 mr0-5 fill-currentColor" name="help-answer" />
                             {c('Action').t`Contact support`}
                         </a>
