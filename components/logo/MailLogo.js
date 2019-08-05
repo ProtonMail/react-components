@@ -2,6 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const MailLogo = ({ planName = '' }) => {
+    const getPlanColor = (plan) => {
+        if (plan === 'plus') {
+            return 'fill-plus';
+        }
+        if (plan === 'professional') {
+            return 'fill-professional';
+        }
+        if (plan === 'visionary') {
+            return 'fill-visionary';
+        }
+        return '';
+    };
+    const planColor = getPlanColor(planName);
+
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -29,7 +43,14 @@ const MailLogo = ({ planName = '' }) => {
             </g>
             <title id="logo__title">ProtonMail</title>
             {planName ? (
-                <text textAnchor="end" className="plan uppercase bold" x="147" y="42" id="plan" focusable="false">
+                <text
+                    textAnchor="end"
+                    className={`plan ${planColor} uppercase bold`}
+                    x="147"
+                    y="42"
+                    id="plan"
+                    focusable="false"
+                >
                     {planName}
                 </text>
             ) : null}
@@ -38,7 +59,7 @@ const MailLogo = ({ planName = '' }) => {
 };
 
 MailLogo.propTypes = {
-    planName: PropTypes.string
+    planName: PropTypes.oneOf(['', 'plus', 'proffesional', 'visionary'])
 };
 
 export default MailLogo;
