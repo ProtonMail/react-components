@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { c } from 'ttag';
 import {
     useAddresses,
-    useUser,
+    useOrganization,
     useAuthentication,
     useModals,
     usePopperAnchor,
@@ -15,8 +15,8 @@ import {
 import UserDropdownButton from './UserDropdownButton';
 
 const UserDropdown = (props) => {
-    const [[{ Email = '' }] = []] = useAddresses();
-    const [{ Name }] = useUser();
+    const [[{ Email, DisplayName } = {}] = []] = useAddresses();
+    const [{ Name: organizationName } = {}] = useOrganization();
     const { logout } = useAuthentication();
     const { createModal } = useModals();
     const [uid] = useState(generateUID('dropdown'));
@@ -42,11 +42,14 @@ const UserDropdown = (props) => {
             <Dropdown id={uid} isOpen={isOpen} anchorRef={anchorRef} onClose={close} originalPlacement="bottom-right">
                 <ul className="unstyled mt0-5 mb0-5">
                     <li className="dropDown-item p1 flex flex-column">
-                        <strong title="Yiin" className="ellipsis mw100 capitalize">
-                            {Name}
+                        <strong title={DisplayName} className="ellipsis mw100 capitalize">
+                            {DisplayName}
                         </strong>
-                        <span title="assvxcvsddsa@pm.me" className="ellipsis mw100">
+                        <span title={Email} className="ellipsis mw100">
                             {Email}
+                        </span>
+                        <span title={organizationName} className="ellipsis mw100">
+                            {organizationName}
                         </span>
                     </li>
                     <li className="dropDown-item pl1 pr1">
@@ -56,13 +59,13 @@ const UserDropdown = (props) => {
                         </a>
                     </li>
                     <li className="dropDown-item pl1 pr1">
-                        <a className="w100 flex flex-nowrap pm-button--link p0" href="/support">
+                        <a className="w100 flex flex-nowrap pm-button--link p0" href="/support" target="_blank">
                             <Icon className="mt0-25 mr0-5 fill-currentColor" size={16} name="support1" />
                             {c('Action').t`Troubleshooting & Help`}
                         </a>
                     </li>
                     <li className="dropDown-item pl1 pr1">
-                        <a className="w100 flex flex-nowrap pm-button--link p0" href="/support-form">
+                        <a className="w100 flex flex-nowrap pm-button--link p0" href="/support-form" target="_blank">
                             <Icon className="mt0-25 mr0-5 fill-currentColor" size={16} name="help-answer" />
                             {c('Action').t`Contact support`}
                         </a>
@@ -74,7 +77,12 @@ const UserDropdown = (props) => {
                         </button>
                     </li>
                     <li className="dropDown-item pl1 pr1">
-                        <a className="w100 flex flex-nowrap pm-button--link p0" href="https://shop.protonmail.com">
+                        <a
+                            className="w100 flex flex-nowrap pm-button--link p0"
+                            href="https://shop.protonmail.com"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
                             <Icon className="mt0-25 mr0-5 fill-currentColor" size={16} name="shop" />
                             {c('Action').t`Proton shop`}
                         </a>
