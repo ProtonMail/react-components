@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 
 import { PLAN_NAMES } from 'proton-shared/lib/constants';
 
-const planNames = ['', ...Object.keys(PLAN_NAMES)];
-
 const MailLogo = ({ planName = '' }) => {
     return (
         <svg
@@ -49,7 +47,7 @@ const MailLogo = ({ planName = '' }) => {
 };
 
 MailLogo.propTypes = {
-    planName: PropTypes.oneOf(planNames)
+    planName: PropTypes.oneOf(Object.keys(PLAN_NAMES))
 };
 
 export default MailLogo;
