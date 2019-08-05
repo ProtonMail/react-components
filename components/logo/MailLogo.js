@@ -2,20 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 const MailLogo = ({ planName = '' }) => {
-    const getPlanColor = (plan) => {
-        if (plan === 'plus') {
-            return 'fill-plus';
-        }
-        if (plan === 'professional') {
-            return 'fill-professional';
-        }
-        if (plan === 'visionary') {
-            return 'fill-visionary';
-        }
-        return '';
-    };
-    const planColor = getPlanColor(planName);
-
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -45,7 +31,7 @@ const MailLogo = ({ planName = '' }) => {
             {planName ? (
                 <text
                     textAnchor="end"
-                    className={`plan ${planColor} uppercase bold`}
+                    className={`plan fill-${planName} uppercase bold`}
                     x="147"
                     y="42"
                     id="plan"
