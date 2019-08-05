@@ -10,12 +10,14 @@ import {
     Dropdown,
     BugModal,
     DonateModal,
-    generateUID
+    generateUID,
+    PrimaryButton
 } from 'react-components';
 import UserDropdownButton from './UserDropdownButton';
 
 const UserDropdown = (props) => {
-    const [[{ Email, DisplayName } = {}] = []] = useAddresses();
+    const [addresses] = useAddresses();
+    const [{ Email, DisplayName } = {}] = addresses || [];
     const [{ Name: organizationName } = {}] = useOrganization();
     const { logout } = useAuthentication();
     const { createModal } = useModals();
@@ -41,38 +43,40 @@ const UserDropdown = (props) => {
             />
             <Dropdown id={uid} isOpen={isOpen} anchorRef={anchorRef} onClose={close} originalPlacement="bottom-right">
                 <ul className="unstyled mt0-5 mb0-5">
-                    <li className="dropDown-item p1 flex flex-column">
+                    <li className="dropDown-item pt0-5 pb0-5 pl1 pr1 flex flex-column">
                         <strong title={DisplayName} className="ellipsis mw100 capitalize">
                             {DisplayName}
                         </strong>
                         <span title={Email} className="ellipsis mw100">
                             {Email}
                         </span>
-                        <span title={organizationName} className="ellipsis mw100">
-                            {organizationName}
-                        </span>
+                        {organizationName ? (
+                            <span title={organizationName} className="ellipsis mw100">
+                                {organizationName}
+                            </span>
+                        ) : null}
                     </li>
                     <li className="dropDown-item pl1 pr1">
                         <a className="w100 flex flex-nowrap pm-button--link p0" href="/settings">
-                            <Icon className="mt0-25 mr0-5 fill-currentColor" size={16} name="settings" />
+                            <Icon className="mt0-25 mr0-5 fill-currentColor" name="settings" />
                             {c('Action').t`Settings`}
                         </a>
                     </li>
                     <li className="dropDown-item pl1 pr1">
                         <a className="w100 flex flex-nowrap pm-button--link p0" href="/support" target="_blank">
-                            <Icon className="mt0-25 mr0-5 fill-currentColor" size={16} name="support1" />
+                            <Icon className="mt0-25 mr0-5 fill-currentColor" name="support1" />
                             {c('Action').t`Troubleshooting & Help`}
                         </a>
                     </li>
                     <li className="dropDown-item pl1 pr1">
                         <a className="w100 flex flex-nowrap pm-button--link p0" href="/support-form" target="_blank">
-                            <Icon className="mt0-25 mr0-5 fill-currentColor" size={16} name="help-answer" />
+                            <Icon className="mt0-25 mr0-5 fill-currentColor" name="help-answer" />
                             {c('Action').t`Contact support`}
                         </a>
                     </li>
                     <li className="dropDown-item pl1 pr1">
                         <button className="w100 flex link pt0-5 pb0-5 alignleft" onClick={handleBugReportClick}>
-                            <Icon className="mt0-25 mr0-5 fill-currentColor" size={16} name="report-bug" />
+                            <Icon className="mt0-25 mr0-5 fill-currentColor" name="report-bug" />
                             {c('Action').t`Report bug`}
                         </button>
                     </li>
@@ -83,20 +87,20 @@ const UserDropdown = (props) => {
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            <Icon className="mt0-25 mr0-5 fill-currentColor" size={16} name="shop" />
+                            <Icon className="mt0-25 mr0-5 fill-currentColor" name="shop" />
                             {c('Action').t`Proton shop`}
                         </a>
                     </li>
-                    <li className="dropDown-item pt0-5 pb0-5 pl1 pr1">
+                    <li className="dropDown-item pl1 pr1">
                         <button className="w100 flex link pt0-5 pb0-5 alignleft" onClick={handleSupportUsClick}>
-                            <Icon className="mt0-25 mr0-5 fill-currentColor" size={16} name="donate" />
+                            <Icon className="mt0-25 mr0-5 fill-currentColor" name="donate" />
                             {c('Action').t`Support us`}
                         </button>
                     </li>
-                    <li className="dropDown-item p1 flex">
-                        <button className="w100 pm-button--primary aligncenter navigationUser-logout" onClick={logout}>
+                    <li className="dropDown-item pt0-5 pb0-5 pl1 pr1 flex">
+                        <PrimaryButton className="w100 aligncenter navigationUser-logout" onClick={logout}>
                             {c('Action').t`Logout`}
-                        </button>
+                        </PrimaryButton>
                     </li>
                 </ul>
             </Dropdown>
