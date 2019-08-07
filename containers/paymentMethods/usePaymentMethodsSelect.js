@@ -14,7 +14,16 @@ const usePaymentMethodsSelect = ({ amount, cycle, coupon, type }) => {
     const isInvoice = type === 'invoice';
     const isSignup = type === 'signup';
 
-    const cardNumber = (details) => `[${details.Brand}] •••• ${details.Last4}`;
+    const getMethod = (type, { Brand = '', Last4 = '', BillingAgreementID = '' }) => {
+        switch (type) {
+            case 'card':
+                return `[${Brand}] •••• ${Last4}`;
+            case 'paypal':
+                return `[PayPal] ${BillingAgreementID}`;
+            default:
+                return '';
+        }
+    };
 
     const methods = [
         {
@@ -25,10 +34,14 @@ const usePaymentMethodsSelect = ({ amount, cycle, coupon, type }) => {
 
     if (PaymentMethods.length) {
         methods.unshift(
-            ...PaymentMethods.map(({ ID: value, Details }, index) => ({
-                text: `${cardNumber(Details)} ${isExpired(Details) ? `(${c('Info').t`Expired`})` : ''} ${
-                    !index ? `(${c('Info').t`default`})` : ''
-                }`.trim(),
+            ...PaymentMethods.map(({ ID: value, Details, Type }, index) => ({
+                text: [
+                    getMethod(Type, Details),
+                    isExpired(Details) && `(${c('Info').t`Expired`})`,
+                    index === 0 && `(${c('Info').t`default`})`
+                ]
+                    .filter(Boolean)
+                    .join(' '),
                 value,
                 disabled: isExpired(Details)
             }))

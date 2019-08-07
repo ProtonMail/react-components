@@ -1,43 +1,150 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { Alert, PrimaryButton, SmallButton, useApiResult, Price } from 'react-components';
-import { createPayPalPayment } from 'proton-shared/lib/api/payments';
-import { API_CUSTOM_ERROR_CODES } from 'proton-shared/lib/errors';
-import { parseURL } from 'proton-shared/lib/helpers/browser';
-import { MIN_PAYPAL_AMOUNT, MAX_PAYPAL_AMOUNT } from 'proton-shared/lib/constants';
+import { Alert, PrimaryButton, SmallButton, Price, useApi, useLoading, Loader } from 'react-components';
+import { createToken, getTokenStatus } from 'proton-shared/lib/api/payments';
+import { MIN_PAYPAL_AMOUNT, MAX_PAYPAL_AMOUNT, PAYMENT_TOKEN_STATUS } from 'proton-shared/lib/constants';
+import { wait } from 'proton-shared/lib/helpers/promise';
+
+const {
+    STATUS_PENDING,
+    STATUS_CHARGEABLE,
+    STATUS_FAILED,
+    STATUS_CONSUMED,
+    STATUS_NOT_SUPPORTED
+} = PAYMENT_TOKEN_STATUS;
+
+const DELAY = 5000;
 
 const PayPal = ({ amount, currency, onPay, type }) => {
-    const { result = {}, loading, error = {}, request } = useApiResult(() => createPayPalPayment(amount, currency), []);
-    const { ApprovalURL } = result;
-    const reset = () => window.removeEventListener('message', receivePaypalMessage, false);
-    const handleClick = () => window.open(ApprovalURL, 'PayPal');
+    const [loading, withLoading] = useLoading();
+    const tabRef = useRef(null);
+    const timerRef = useRef(0);
+    const processRef = useRef(true);
+    const api = useApi();
+    const [token, setToken] = useState('');
+    const [approvalURL, setAppovalURL] = useState('');
+    const [error, setError] = useState(null);
 
-    const receivePaypalMessage = (event) => {
+    const I18N = {
+        processCancelled: c('Error').t`Payment process cancelled`,
+        timeout: c('Error').t`Payment process cancelled, please try again`,
+        unknownStatus: c('Error').t`Unknown status, please try again`,
+        failed: c('Error').t`Payment process failed, please try again`,
+        consumed: c('Error').t`Payment process consumed, please try again`,
+        notSupported: c('Error').t`Payment process not supported`
+    };
+
+    const reset = () => {
+        tabRef.current && tabRef.current.close();
+        tabRef.current = null;
+        processRef.current = true;
+        timerRef.current = 0;
+        setError(null);
+        window.removeEventListener('message', onMessage, false);
+    };
+
+    const load = async () => {
+        const { ApprovalURL, Token } = await api(
+            createToken({
+                Amount: amount,
+                Currency: currency,
+                Payment: {
+                    Type: 'paypal'
+                }
+            })
+        );
+        setAppovalURL(ApprovalURL);
+        setToken(Token);
+    };
+
+    const pull = async () => {
+        if (!processRef.current) {
+            const error = new Error(I18N.processCancelled);
+            error.tryAgain = true;
+            throw error;
+        }
+
+        if (timerRef.current > DELAY * 30) {
+            const error = new Error(I18N.timeout);
+            error.tryAgain = true;
+            throw error;
+        }
+
+        const { Status } = await api(getTokenStatus(token));
+
+        if (Status === STATUS_FAILED) {
+            const error = new Error(I18N.failed);
+            error.tryAgain = true;
+            throw error;
+        }
+
+        if (Status === STATUS_CONSUMED) {
+            const error = new Error(I18N.consumed);
+            error.tryAgain = true;
+            throw error;
+        }
+
+        if (Status === STATUS_NOT_SUPPORTED) {
+            throw new Error(I18N.notSupported);
+        }
+
+        if (Status === STATUS_CHARGEABLE) {
+            return;
+        }
+
+        if (Status === STATUS_PENDING) {
+            await wait(DELAY);
+            timerRef.current += DELAY;
+            return pull();
+        }
+
+        const error = new Error(I18N.unknownStatus);
+        error.tryAgain = true;
+        throw error;
+    };
+
+    const handleClick = async () => {
+        tabRef.current = window.open(approvalURL, 'PayPal');
+        try {
+            await pull();
+            onPay({ Token: token });
+        } catch (error) {
+            setError(error);
+            throw error;
+        }
+    };
+
+    const onMessage = (event) => {
         const origin = event.origin || event.originalEvent.origin; // For Chrome, the origin property is in the event.originalEvent object.
 
         if (origin !== 'https://secure.protonmail.com') {
             return;
         }
 
-        const { payerID: PayerID, paymentID: PaymentID, cancel: Cancel, token } = event.data;
-        const { searchObject = {} } = parseURL(ApprovalURL);
-
-        if (token !== searchObject.token) {
+        if (event.source !== tabRef.current) {
             return;
         }
 
-        reset();
-        onPay({ PayerID, PaymentID, Cancel });
+        const { cancel } = event.data;
+
+        if (cancel) {
+            processRef.current = false;
+            reset();
+        }
     };
 
     useEffect(() => {
         reset();
-        window.addEventListener('message', receivePaypalMessage, false);
+        window.addEventListener('message', onMessage, false);
         return () => {
             reset();
         };
-    }, [ApprovalURL]);
+    }, [approvalURL]);
+
+    useEffect(() => {
+        load();
+    }, []);
 
     if (type === 'payment' && amount < MIN_PAYPAL_AMOUNT) {
         return (
@@ -51,12 +158,16 @@ const PayPal = ({ amount, currency, onPay, type }) => {
         return <Alert type="error">{c('Error').t`Amount above the maximum.`}</Alert>;
     }
 
-    if (error.Code === API_CUSTOM_ERROR_CODES.PAYMENTS_PAYPAL_CONNECTION_EXCEPTION) {
+    if (error) {
         return (
             <Alert type="error">
-                {c('Error').t`Error connecting to PayPal.`}
-                <br />
-                <SmallButton onClick={request}>{c('Action').t`Click here to try again`}</SmallButton>
+                {error.message}
+                {error.tryAgain ? (
+                    <div>
+                        <SmallButton loading={loading} onClick={() => withLoading(load())}>{c('Action')
+                            .t`Click here to try again`}</SmallButton>
+                    </div>
+                ) : null}
             </Alert>
         );
     }
@@ -65,8 +176,9 @@ const PayPal = ({ amount, currency, onPay, type }) => {
         <>
             <Alert>{c('Info')
                 .t`You will need to login to your PayPal account to complete this transaction. We will open a new tab with PayPal for you. If you use any pop-up blockers, please disable them to continue.`}</Alert>
-            <PrimaryButton loading={loading} onClick={handleClick}>{c('Action')
+            <PrimaryButton onClick={() => withLoading(handleClick())}>{c('Action')
                 .t`Check out with PayPal`}</PrimaryButton>
+            {loading ? <Loader /> : null}
         </>
     );
 };
