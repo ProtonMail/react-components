@@ -312,6 +312,7 @@ export { default as useMemberAddresses } from './hooks/useMemberAddresses';
 export { default as useUserKeys } from './hooks/useUserKeys';
 export { default as useAddressesKeys } from './hooks/useAddressesKeys';
 export { default as useOrganizationKey } from './hooks/useOrganizationKey';
+export { default as useSortedList } from './hooks/useSortedList';
 
 export { default as ErrorBoundary } from './containers/app/ErrorBoundary';
 export { default as ProtonApp } from './containers/app/ProtonApp';
