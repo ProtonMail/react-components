@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import ReactDOM from 'react-dom';
 
 const CLASSES = {
     MODAL: 'pm-modal',
@@ -34,7 +35,7 @@ const Dialog = ({
         }
     };
 
-    return (
+    return ReactDOM.createPortal(
         <dialog
             className={className}
             aria-labelledby={modalTitleID}
@@ -45,7 +46,8 @@ const Dialog = ({
             {...rest}
         >
             {children}
-        </dialog>
+        </dialog>,
+        document.querySelector('.modal-root') || document.body
     );
 };
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import ReactDOM from 'react-dom';
 
 const CLASSES = {
     OVERLAY: 'pm-modalOverlay',
@@ -22,10 +23,11 @@ const Overlay = ({ children, isClosing, onClick, className: extraClassName, onEx
 
     const className = [CLASSES.OVERLAY, isClosing && CLASSES.OVERLAY_OUT, extraClassName].filter(Boolean).join(' ');
 
-    return (
+    return ReactDOM.createPortal(
         <div className={className} onClick={handleClick} onAnimationEnd={handleAnimationEnd} {...rest}>
             {children}
-        </div>
+        </div>,
+        document.querySelector('.modal-root') || document.body
     );
 };
 
