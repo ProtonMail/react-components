@@ -1,12 +1,19 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
-const usePayment = (submit) => {
+const usePayment = () => {
     const [method, setMethod] = useState('');
     const [parameters, setParameters] = useState({});
     const [isCardValid, setCardValidity] = useState(false);
 
+    const hasToken = () => {
+        const { Payment = {} } = parameters;
+        const { Details = {} } = Payment;
+        const { Token } = Details;
+        return !!Token;
+    };
+
     const canPay = () => {
-        if (['paypal', 'bitcoin', 'cash'].includes(method)) {
+        if (['bitcoin', 'cash'].includes(method)) {
             return false;
         }
 
@@ -14,14 +21,12 @@ const usePayment = (submit) => {
             return false;
         }
 
+        if (method === 'paypal' && !hasToken()) {
+            return false;
+        }
+
         return true;
     };
-
-    useEffect(() => {
-        if (method === 'paypal') {
-            submit();
-        }
-    }, [parameters]);
 
     return {
         method,

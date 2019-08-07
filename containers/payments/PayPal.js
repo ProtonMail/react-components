@@ -21,8 +21,8 @@ const PayPal = ({ amount, currency, onPay, type }) => {
     const tabRef = useRef(null);
     const timerRef = useRef(0);
     const processRef = useRef(true);
+    const tokenRef = useRef('');
     const api = useApi();
-    const [token, setToken] = useState('');
     const [approvalURL, setAppovalURL] = useState('');
     const [error, setError] = useState(null);
 
@@ -40,6 +40,7 @@ const PayPal = ({ amount, currency, onPay, type }) => {
         tabRef.current = null;
         processRef.current = true;
         timerRef.current = 0;
+        tokenRef.current = '';
         setError(null);
         window.removeEventListener('message', onMessage, false);
     };
@@ -54,8 +55,9 @@ const PayPal = ({ amount, currency, onPay, type }) => {
                 }
             })
         );
+        window.addEventListener('message', onMessage, false);
+        tokenRef.current = Token;
         setAppovalURL(ApprovalURL);
-        setToken(Token);
     };
 
     const pull = async () => {
@@ -71,7 +73,7 @@ const PayPal = ({ amount, currency, onPay, type }) => {
             throw error;
         }
 
-        const { Status } = await api(getTokenStatus(token));
+        const { Status } = await api(getTokenStatus(tokenRef.current));
 
         if (Status === STATUS_FAILED) {
             const error = new Error(I18N.failed);
@@ -108,7 +110,8 @@ const PayPal = ({ amount, currency, onPay, type }) => {
         tabRef.current = window.open(approvalURL, 'PayPal');
         try {
             await pull();
-            onPay({ Token: token });
+            onPay({ Token: tokenRef.current });
+            reset();
         } catch (error) {
             setError(error);
             throw error;
@@ -135,15 +138,10 @@ const PayPal = ({ amount, currency, onPay, type }) => {
     };
 
     useEffect(() => {
-        reset();
-        window.addEventListener('message', onMessage, false);
+        withLoading(load());
         return () => {
             reset();
         };
-    }, [approvalURL]);
-
-    useEffect(() => {
-        load();
     }, []);
 
     if (type === 'payment' && amount < MIN_PAYPAL_AMOUNT) {
@@ -176,8 +174,10 @@ const PayPal = ({ amount, currency, onPay, type }) => {
         <>
             <Alert>{c('Info')
                 .t`You will need to login to your PayPal account to complete this transaction. We will open a new tab with PayPal for you. If you use any pop-up blockers, please disable them to continue.`}</Alert>
-            <PrimaryButton onClick={() => withLoading(handleClick())}>{c('Action')
-                .t`Check out with PayPal`}</PrimaryButton>
+            {approvalURL ? (
+                <PrimaryButton onClick={() => withLoading(handleClick())}>{c('Action')
+                    .t`Check out with PayPal`}</PrimaryButton>
+            ) : null}
             {loading ? <Loader /> : null}
         </>
     );

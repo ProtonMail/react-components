@@ -8,22 +8,21 @@ import { toPrice } from 'proton-shared/lib/helpers/string';
 import Payment from '../payments/Payment';
 import usePayment from '../payments/usePayment';
 
-const PayInvoiceModal = ({ invoice, fetchInvoices, onClose, ...rest }) => {
+const PayInvoiceModal = ({ invoice, fetchInvoices, ...rest }) => {
     const { request, loading: loadingPay } = useApiWithoutResult(payInvoice);
     const { result = {}, loading: loadingCheck } = useApiResult(() => checkInvoice(invoice.ID), []);
     const { AmountDue, Amount, Currency } = result;
-    const { method, setMethod, parameters, setParameters, canPay, setCardValidity } = usePayment(handleSubmit);
+    const { method, setMethod, parameters, setParameters, canPay, setCardValidity } = usePayment();
 
     const handleSubmit = async () => {
         await request(invoice.ID, { Amount: AmountDue, Currency, ...parameters });
         fetchInvoices();
-        onClose();
+        rest.onClose();
     };
 
     return (
         <FormModal
             small
-            onClose={onClose}
             onSubmit={handleSubmit}
             loading={loadingPay}
             close={c('Action').t`Close`}
@@ -56,6 +55,7 @@ const PayInvoiceModal = ({ invoice, fetchInvoices, onClose, ...rest }) => {
                         method={method}
                         amount={AmountDue}
                         currency={Currency}
+                        parameters={parameters}
                         onParameters={setParameters}
                         onMethod={setMethod}
                         onValidCard={setCardValidity}
@@ -68,7 +68,6 @@ const PayInvoiceModal = ({ invoice, fetchInvoices, onClose, ...rest }) => {
 
 PayInvoiceModal.propTypes = {
     invoice: PropTypes.object.isRequired,
-    onClose: PropTypes.func,
     fetchInvoices: PropTypes.func.isRequired
 };
 

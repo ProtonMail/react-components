@@ -14,7 +14,7 @@ const DonateModal = ({ ...rest }) => {
     const { request, loading } = useApiWithoutResult(donate);
     const [currency, setCurrency] = useState(DEFAULT_CURRENCY);
     const [amount, setAmount] = useState(DEFAULT_DONATION_AMOUNT);
-    const { method, setMethod, parameters, setParameters, canPay, setCardValidity } = usePayment(handleSubmit);
+    const { method, setMethod, parameters, setParameters, canPay, setCardValidity } = usePayment();
 
     const handleSubmit = async () => {
         await request({ Amount: amount, Currency: currency, ...parameters });
@@ -51,6 +51,7 @@ const DonateModal = ({ ...rest }) => {
                 method={method}
                 amount={amount}
                 currency={currency}
+                parameters={parameters}
                 onParameters={setParameters}
                 onMethod={setMethod}
                 onValidCard={setCardValidity}

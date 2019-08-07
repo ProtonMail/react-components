@@ -26,7 +26,7 @@ const getCurrenciesI18N = () => ({
 
 const CreditsModal = ({ onClose, ...rest }) => {
     const { call } = useEventManager();
-    const { method, setMethod, parameters, setParameters, canPay, setCardValidity } = usePayment(handleSubmit);
+    const { method, setMethod, parameters, setParameters, canPay, setCardValidity } = usePayment();
     const { createNotification } = useNotifications();
     const { request, loading } = useApiWithoutResult(buyCredit);
     const [currency, setCurrency] = useState(DEFAULT_CURRENCY);
@@ -68,10 +68,11 @@ const CreditsModal = ({ onClose, ...rest }) => {
                 </Field>
             </Row>
             <Payment
-                type="donation"
+                type="credit"
                 method={method}
                 amount={amount}
                 currency={currency}
+                parameters={parameters}
                 onParameters={setParameters}
                 onMethod={setMethod}
                 onValidCard={setCardValidity}

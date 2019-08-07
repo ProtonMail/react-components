@@ -38,7 +38,7 @@ const SubscriptionModal = ({ onClose, cycle, currency, coupon, plansMap, ...rest
     const [{ hasPaidMail } = {}] = useUser();
     const [{ MaxMembers } = {}] = useOrganization();
     const [loading, setLoading] = useState(false);
-    const { method, setMethod, parameters, setParameters, canPay, setCardValidity } = usePayment(handleSubmit);
+    const { method, setMethod, parameters, setParameters, canPay, setCardValidity } = usePayment();
     const { createNotification } = useNotifications();
     const [check, setCheck] = useState({});
     const [plans] = usePlans();
@@ -196,7 +196,9 @@ const SubscriptionModal = ({ onClose, cycle, currency, coupon, plansMap, ...rest
                         type="subscription"
                         method={method}
                         amount={check.AmountDue}
+                        cycle={model.cycle}
                         currency={model.currency}
+                        parameters={parameters}
                         onParameters={setParameters}
                         onMethod={setMethod}
                         onValidCard={setCardValidity}

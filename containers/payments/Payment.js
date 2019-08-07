@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import { Label, Row, Field } from 'react-components';
@@ -8,31 +8,21 @@ import Method from './Method';
 import PaymentMethodsSelect from '../paymentMethods/PaymentMethodsSelect';
 import toDetails from './toDetails';
 
-const Payment = ({ type, amount, currency, cycle, onParameters, onMethod, onValidCard }) => {
-    const [method, setMethod] = useState('');
-    const [parameters, setParameters] = useState({});
-    const handlePayPal = (Details) => setParameters({ Payment: { Type: 'paypal', Details } });
+const Payment = ({ type, amount, currency, cycle, onParameters, method, onMethod, onValidCard }) => {
+    const handleToken = (Details) => onParameters({ Payment: { Type: 'token', Details } });
 
     const handleCard = ({ card, isValid }) => {
         onValidCard(isValid);
-        isValid && setParameters({ Payment: { Type: 'card', Details: toDetails(card) } });
+        isValid && onParameters({ Payment: { Type: 'card', Details: toDetails(card) } });
     };
 
     const handleChangeMethod = (newMethod) => {
-        setMethod(newMethod);
+        onMethod(newMethod);
 
         if (!['card', 'paypal', 'cash', 'bitcoin'].includes(newMethod)) {
-            setParameters({ PaymentMethodID: newMethod });
+            onParameters({ PaymentMethodID: newMethod });
         }
     };
-
-    useEffect(() => {
-        onParameters(parameters);
-    }, [parameters]);
-
-    useEffect(() => {
-        onMethod(method);
-    }, [method]);
 
     return (
         <>
@@ -52,7 +42,7 @@ const Payment = ({ type, amount, currency, cycle, onParameters, onMethod, onVali
                         amount={amount}
                         currency={currency}
                         onCard={handleCard}
-                        onPayPal={handlePayPal}
+                        onPayPal={handleToken}
                         type={type}
                         method={method}
                     />
@@ -66,7 +56,9 @@ Payment.propTypes = {
     type: PropTypes.oneOf(['signup', 'subscription', 'invoice', 'donation', 'credit']),
     amount: PropTypes.number.isRequired,
     currency: PropTypes.oneOf(['EUR', 'CHF', 'USD']),
+    parameters: PropTypes.object,
     onParameters: PropTypes.func,
+    method: PropTypes.string,
     onMethod: PropTypes.func,
     onValidCard: PropTypes.func,
     cycle: PropTypes.oneOf([CYCLE.MONTHLY, CYCLE.YEARLY, CYCLE.TWO_YEARS])
