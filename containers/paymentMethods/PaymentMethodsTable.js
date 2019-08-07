@@ -22,21 +22,11 @@ const PaymentMethodsTable = ({ methods, loading, fetchMethods }) => {
         }
     };
 
-    const getName = (method) => {
-        switch (method.Type) {
-            case 'card':
-                return method.Details.Name;
-            default:
-                return '';
-        }
-    };
-
     return (
         <Table>
             <TableHeader
                 cells={[
                     c('Title for payment methods table').t`Method`,
-                    c('Title for payment methods table').t`Name`,
                     c('Title for payment methods table').t`Status`,
                     c('Title for payment methods table').t`Actions`
                 ]}
@@ -48,7 +38,6 @@ const PaymentMethodsTable = ({ methods, loading, fetchMethods }) => {
                             key={method.ID}
                             cells={[
                                 getMethod(method),
-                                getName(method),
                                 <PaymentMethodState key={method.ID} method={method} index={index} />,
                                 <PaymentMethodActions
                                     key={method.ID}
