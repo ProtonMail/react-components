@@ -1,17 +1,29 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { isSecureCoreEnabled } from './utils';
-import { groupWith } from 'proton-shared/lib/helpers/array';
+import { groupWith, compare } from 'proton-shared/lib/helpers/array';
 import { Details, Summary, useUser, useUserVPN } from 'react-components';
 import ConfigsTable, { CATEGORY } from './ConfigsTable';
 import Country from './Country';
 
-// TODO: free servers first in list
+const getServerNum = (server) => Number(server.Name.replace('-TOR', '').split('#')[1]);
+const getServerRegion = (server) => server.Name.split('#')[0];
+const serverRegionAsc = (a, b) => compare(getServerRegion(a), getServerRegion(b));
+const serverNumAsc = (a, b) => compare(getServerNum(a), getServerNum(b));
+const serverNameAsc = (a, b) => serverRegionAsc(a, b) || serverNumAsc(a, b);
+
 const ServerConfigs = ({ servers, ...rest }) => {
     const groupedServers = groupWith(
         (a, b) => a.Country === b.Country,
         servers.filter(({ Features = 0 }) => !isSecureCoreEnabled(Features))
     );
+
+    // Free servers at the top, then sorted by Name#ID
+    const sortedGroups = groupedServers.map((group) => {
+        const freeServers = group.filter(({ Name }) => Name.includes('FREE')).sort(serverNameAsc);
+        const otherServers = group.filter(({ Name }) => !Name.includes('FREE')).sort(serverNameAsc);
+        return [...freeServers, ...otherServers];
+    });
 
     const { isBasic, userVPN } = useUserVPN();
     const { hasPaidVPN } = useUser();
@@ -20,7 +32,7 @@ const ServerConfigs = ({ servers, ...rest }) => {
 
     return (
         <div className="mb1-5">
-            {groupedServers.map((group) => {
+            {sortedGroups.map((group) => {
                 const server = group[0];
                 return (
                     <Details key={server.Country}>
