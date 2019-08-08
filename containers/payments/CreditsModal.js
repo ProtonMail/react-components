@@ -35,8 +35,8 @@ const CreditsModal = ({ onClose, ...rest }) => {
     const i18n = getCurrenciesI18N();
     const i18nCurrency = i18n[currency];
 
-    const handleSubmit = async () => {
-        await request({ Amount: amount, Currency: currency, ...parameters });
+    const handleSubmit = async (params = parameters) => {
+        await request({ Amount: amount, Currency: currency, ...params });
         await call();
         onClose();
         createNotification({ text: c('Success').t`Credits added` });
@@ -76,6 +76,7 @@ const CreditsModal = ({ onClose, ...rest }) => {
                 onParameters={setParameters}
                 onMethod={setMethod}
                 onValidCard={setCardValidity}
+                onPay={handleSubmit}
             />
         </FormModal>
     );

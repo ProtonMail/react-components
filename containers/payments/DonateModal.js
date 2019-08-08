@@ -16,8 +16,8 @@ const DonateModal = ({ ...rest }) => {
     const [amount, setAmount] = useState(DEFAULT_DONATION_AMOUNT);
     const { method, setMethod, parameters, setParameters, canPay, setCardValidity } = usePayment();
 
-    const handleSubmit = async () => {
-        await request({ Amount: amount, Currency: currency, ...parameters });
+    const handleSubmit = async (params = parameters) => {
+        await request({ Amount: amount, Currency: currency, ...params });
         rest.onClose();
         createNotification({
             text: c('Success')
@@ -55,6 +55,7 @@ const DonateModal = ({ ...rest }) => {
                 onParameters={setParameters}
                 onMethod={setMethod}
                 onValidCard={setCardValidity}
+                onPay={handleSubmit}
             />
         </FormModal>
     );

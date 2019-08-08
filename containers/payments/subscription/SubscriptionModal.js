@@ -102,14 +102,14 @@ const SubscriptionModal = ({ onClose, cycle, currency, coupon, plansMap, ...rest
         setModel(newModel);
     };
 
-    const handleSubmit = async () => {
-        if (!canPay) {
-            return;
-        }
-
+    const handleSubmit = async (params = parameters) => {
         try {
             setLoading(true);
-            await request({ Amount: check.AmountDue, ...getCheckParams({ ...model, plans }), ...parameters });
+            await request({
+                Amount: check.AmountDue,
+                ...getCheckParams({ ...model, plans }),
+                ...params
+            });
             await call();
             setLoading(false);
             next();
@@ -202,12 +202,18 @@ const SubscriptionModal = ({ onClose, cycle, currency, coupon, plansMap, ...rest
                         onParameters={setParameters}
                         onMethod={setMethod}
                         onValidCard={setCardValidity}
+                        onPay={handleSubmit}
                     />
                     <Alert type="warning" learnMore="https://protonmail.com/terms-and-conditions">{c('Info')
                         .t`By clicking Next, you agree to abide by ProtonMail's terms and conditions.`}</Alert>
                 </>
             ),
-            onSubmit: handleSubmit
+            onSubmit: () => {
+                if (!canPay) {
+                    return;
+                }
+                handleSubmit();
+            }
         });
     }
 

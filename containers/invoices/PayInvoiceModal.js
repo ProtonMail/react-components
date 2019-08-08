@@ -14,8 +14,8 @@ const PayInvoiceModal = ({ invoice, fetchInvoices, ...rest }) => {
     const { AmountDue, Amount, Currency } = result;
     const { method, setMethod, parameters, setParameters, canPay, setCardValidity } = usePayment();
 
-    const handleSubmit = async () => {
-        await request(invoice.ID, { Amount: AmountDue, Currency, ...parameters });
+    const handleSubmit = async (params = parameters) => {
+        await request(invoice.ID, { Amount: AmountDue, Currency, ...params });
         fetchInvoices();
         rest.onClose();
     };
@@ -59,6 +59,7 @@ const PayInvoiceModal = ({ invoice, fetchInvoices, ...rest }) => {
                         onParameters={setParameters}
                         onMethod={setMethod}
                         onValidCard={setCardValidity}
+                        onPay={handleSubmit}
                     />
                 </>
             )}

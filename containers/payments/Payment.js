@@ -8,8 +8,8 @@ import Method from './Method';
 import PaymentMethodsSelect from '../paymentMethods/PaymentMethodsSelect';
 import toDetails from './toDetails';
 
-const Payment = ({ type, amount, currency, cycle, onParameters, method, onMethod, onValidCard }) => {
-    const handleToken = (Details) => onParameters({ Payment: { Type: 'token', Details } });
+const Payment = ({ type, amount, currency, cycle, onParameters, method, onMethod, onValidCard, onPay }) => {
+    const handleToken = (Details) => onPay({ Payment: { Type: 'token', Details } });
 
     const handleCard = ({ card, isValid }) => {
         onValidCard(isValid);
@@ -61,7 +61,8 @@ Payment.propTypes = {
     method: PropTypes.string,
     onMethod: PropTypes.func,
     onValidCard: PropTypes.func,
-    cycle: PropTypes.oneOf([CYCLE.MONTHLY, CYCLE.YEARLY, CYCLE.TWO_YEARS])
+    cycle: PropTypes.oneOf([CYCLE.MONTHLY, CYCLE.YEARLY, CYCLE.TWO_YEARS]),
+    onPay: PropTypes.func
 };
 
 export default Payment;
