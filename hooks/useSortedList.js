@@ -4,7 +4,7 @@ import { SORT_DIRECTION } from 'proton-shared/lib/constants';
 /**
  * Handles sorting logic for lists that are used in sortable tables.
  *
- * @param {array} list
+ * @param {Array} list
  * @param {{ key: string, direction: string }} [initialConfig]
  */
 const useSortedList = (list, initialConfig) => {
