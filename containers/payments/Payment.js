@@ -2,24 +2,26 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import { Label, Row, Field } from 'react-components';
-import { CYCLE } from 'proton-shared/lib/constants';
+import { CYCLE, PAYMENT_METHOD_TYPES } from 'proton-shared/lib/constants';
 
 import Method from './Method';
 import PaymentMethodsSelect from '../paymentMethods/PaymentMethodsSelect';
 import toDetails from './toDetails';
+
+const { CARD, PAYPAL, CASH, BITCOIN } = PAYMENT_METHOD_TYPES;
 
 const Payment = ({ type, amount, currency, cycle, onParameters, method, onMethod, onValidCard, onPay }) => {
     const handleToken = (Details) => onPay({ Payment: { Type: 'token', Details } });
 
     const handleCard = ({ card, isValid }) => {
         onValidCard(isValid);
-        isValid && onParameters({ Payment: { Type: 'card', Details: toDetails(card) } });
+        isValid && onParameters({ Payment: { Type: CARD, Details: toDetails(card) } });
     };
 
     const handleChangeMethod = (newMethod) => {
         onMethod(newMethod);
 
-        if (!['card', 'paypal', 'cash', 'bitcoin'].includes(newMethod)) {
+        if (![CARD, PAYPAL, CASH, BITCOIN].includes(newMethod)) {
             onParameters({ PaymentMethodID: newMethod });
         }
     };

@@ -2,10 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Bordered } from 'react-components';
 import { c } from 'ttag';
+import { PAYMENT_METHOD_TYPES } from 'proton-shared/lib/constants';
 
 const PaymentMethodDetails = ({ type, details = {} }) => {
     const { Last4, Name, ExpMonth, ExpYear, BillingAgreementID } = details;
-    if (type === 'card') {
+    if (type === PAYMENT_METHOD_TYPES.CARD) {
         return (
             <Bordered className="bg-global-light">
                 <h4>
@@ -27,7 +28,7 @@ const PaymentMethodDetails = ({ type, details = {} }) => {
         );
     }
 
-    if (type === 'paypal') {
+    if (type === PAYMENT_METHOD_TYPES.PAYPAL) {
         return (
             <Bordered className="bg-global-light">
                 <h4>

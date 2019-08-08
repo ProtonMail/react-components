@@ -2,6 +2,7 @@ import React from 'react';
 import { c } from 'ttag';
 import { Table, TableHeader, TableBody, TableRow, Alert } from 'react-components';
 import PropTypes from 'prop-types';
+import { PAYMENT_METHOD_TYPES } from 'proton-shared/lib/constants';
 
 import PaymentMethodActions from './PaymentMethodActions';
 import PaymentMethodState from './PaymentMethodState';
@@ -13,9 +14,9 @@ const PaymentMethodsTable = ({ methods, loading, fetchMethods }) => {
 
     const getMethod = (method) => {
         switch (method.Type) {
-            case 'card':
+            case PAYMENT_METHOD_TYPES.CARD:
                 return `${method.Details.Brand} (•••• ${method.Details.Last4})`;
-            case 'paypal':
+            case PAYMENT_METHOD_TYPES.PAYPAL:
                 return `PayPal ${method.Details.BillingAgreementID}`;
             default:
                 return '';

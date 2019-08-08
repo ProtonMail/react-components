@@ -3,7 +3,12 @@ import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import { Alert, PrimaryButton, SmallButton, Price, useApi, useLoading, Loader } from 'react-components';
 import { createToken, getTokenStatus } from 'proton-shared/lib/api/payments';
-import { MIN_PAYPAL_AMOUNT, MAX_PAYPAL_AMOUNT, PAYMENT_TOKEN_STATUS } from 'proton-shared/lib/constants';
+import {
+    MIN_PAYPAL_AMOUNT,
+    MAX_PAYPAL_AMOUNT,
+    PAYMENT_TOKEN_STATUS,
+    PAYMENT_METHOD_TYPES
+} from 'proton-shared/lib/constants';
 import { wait } from 'proton-shared/lib/helpers/promise';
 
 const {
@@ -51,7 +56,7 @@ const PayPal = ({ amount, currency, onPay, type }) => {
                 Amount: amount,
                 Currency: currency,
                 Payment: {
-                    Type: 'paypal'
+                    Type: PAYMENT_METHOD_TYPES.PAYPAL
                 }
             })
         );

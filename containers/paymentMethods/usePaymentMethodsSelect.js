@@ -1,6 +1,6 @@
 import { c } from 'ttag';
 import { useApiResult } from 'react-components';
-import { CYCLE, BLACK_FRIDAY } from 'proton-shared/lib/constants';
+import { CYCLE, BLACK_FRIDAY, PAYMENT_METHOD_TYPES } from 'proton-shared/lib/constants';
 import { queryPaymentMethods } from 'proton-shared/lib/api/payments';
 import { isIE11 } from 'proton-shared/lib/helpers/browser';
 import { isExpired } from 'proton-shared/lib/helpers/card';
@@ -16,9 +16,9 @@ const usePaymentMethodsSelect = ({ amount, cycle, coupon, type }) => {
 
     const getMethod = (type, { Brand = '', Last4 = '', BillingAgreementID = '' }) => {
         switch (type) {
-            case 'card':
+            case PAYMENT_METHOD_TYPES.CARD:
                 return `[${Brand}] •••• ${Last4}`;
-            case 'paypal':
+            case PAYMENT_METHOD_TYPES.PAYPAL:
                 return `[PayPal] ${BillingAgreementID}`;
             default:
                 return '';
@@ -27,7 +27,7 @@ const usePaymentMethodsSelect = ({ amount, cycle, coupon, type }) => {
 
     const methods = [
         {
-            value: 'card',
+            value: PAYMENT_METHOD_TYPES.CARD,
             text: c('Payment method option').t`Pay with credit/debit card`
         }
     ];
@@ -52,7 +52,7 @@ const usePaymentMethodsSelect = ({ amount, cycle, coupon, type }) => {
     if (!isIE11() && (isYearly || isTwoYear || isMonthlyValid || isInvoice)) {
         methods.push({
             text: c('Payment method option').t`Pay with PayPal`,
-            value: 'paypal'
+            value: PAYMENT_METHOD_TYPES.PAYPAL
         });
     }
 

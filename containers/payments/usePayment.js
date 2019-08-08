@@ -1,4 +1,7 @@
 import { useState } from 'react';
+import { PAYMENT_METHOD_TYPES } from 'proton-shared/lib/constants';
+
+const { CARD, BITCOIN, CASH, PAYPAL } = PAYMENT_METHOD_TYPES;
 
 const usePayment = () => {
     const [method, setMethod] = useState('');
@@ -13,15 +16,15 @@ const usePayment = () => {
     };
 
     const canPay = () => {
-        if (['bitcoin', 'cash'].includes(method)) {
+        if ([BITCOIN, CASH].includes(method)) {
             return false;
         }
 
-        if (method === 'card' && !isCardValid) {
+        if (method === CARD && !isCardValid) {
             return false;
         }
 
-        if (method === 'paypal' && !hasToken()) {
+        if (method === PAYPAL && !hasToken()) {
             return false;
         }
 
