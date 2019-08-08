@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ReactDOM from 'react-dom';
+import Portal from '../portal/Portal';
 
 const CLASSES = {
     MODAL: 'pm-modal',
@@ -35,19 +35,20 @@ const Dialog = ({
         }
     };
 
-    return ReactDOM.createPortal(
-        <dialog
-            className={className}
-            aria-labelledby={modalTitleID}
-            aria-modal="true"
-            role="dialog"
-            open
-            onAnimationEnd={handleAnimationEnd}
-            {...rest}
-        >
-            {children}
-        </dialog>,
-        document.querySelector('.modal-root') || document.body
+    return (
+        <Portal>
+            <dialog
+                className={className}
+                aria-labelledby={modalTitleID}
+                aria-modal="true"
+                role="dialog"
+                open
+                onAnimationEnd={handleAnimationEnd}
+                {...rest}
+            >
+                {children}
+            </dialog>
+        </Portal>
     );
 };
 
