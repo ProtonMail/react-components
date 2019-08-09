@@ -18,20 +18,20 @@ import useNotifications from '../../notifications/useNotifications';
 
 const OpenVPNAccountSection = () => {
     const { createNotification } = useNotifications();
-    const { userVPN } = useUserVPN();
+    const { result, fetch: fetchUserVPN } = useUserVPN();
     const [credentials, setCredentials] = useState({});
     const { loading: loadingUsername, request: updateUsername } = useApiWithoutResult(updateVPNName);
     const { loading: loadingPassword, request: updatePassword } = useApiWithoutResult(updateVPNPassword);
 
     // VPN Info might not have been loaded yet
     useEffect(() => {
-        if (userVPN) {
+        if (result && result.VPN) {
             setCredentials({
-                username: userVPN.Name,
-                password: userVPN.Password
+                username: result.VPN.Name,
+                password: result.VPN.Password
             });
         }
-    }, [userVPN]);
+    }, [result]);
 
     const { username, password } = credentials;
 
@@ -41,10 +41,12 @@ const OpenVPNAccountSection = () => {
     const handleUpdateUsername = async () => {
         await updateUsername(credentials.username);
         createNotification({ text: c('Notification').t`OpenVPN username updated` });
+        fetchUserVPN();
     };
     const handleUpdatePassword = async () => {
         await updatePassword(credentials.password);
         createNotification({ text: c('Notification').t`OpenVPN password updated` });
+        fetchUserVPN();
     };
 
     return (
