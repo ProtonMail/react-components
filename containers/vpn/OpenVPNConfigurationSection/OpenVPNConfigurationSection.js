@@ -3,7 +3,6 @@ import { c } from 'ttag';
 import {
     Alert,
     Row,
-    Radio,
     ButtonGroup,
     Group,
     useApiResult,
@@ -14,7 +13,8 @@ import {
     useUser,
     Tooltip,
     useSortedList,
-    useUserVPN
+    useUserVPN,
+    RadioGroup
 } from 'react-components';
 import { queryVPNLogicalServerInfo, getVPNServerConfig } from 'proton-shared/lib/api/vpn';
 import ConfigsTable, { CATEGORY } from './ConfigsTable';
@@ -82,9 +82,6 @@ const OpenVPNConfigurationSection = () => {
         allServers.filter(({ Tier }) => Tier === 1)
     ).map((groups) => minBy(({ Load }) => Number(Load), groups));
 
-    const handleChangePlatform = (platform) => () => setPlatform(platform);
-    const handleChangeProtocol = (protocol) => () => setProtocol(protocol);
-
     const isUpgradeRequiredForSecureCore = () => !userVPN || !hasPaidVPN || isBasic;
     const isUpgradeRequiredForCountries = () => !userVPN || !hasPaidVPN;
     const isUpgradeRequiredForDownloadAll =
@@ -102,58 +99,32 @@ const OpenVPNConfigurationSection = () => {
 
             <h3 className="mt2">{c('Title').t`1. Select platform`}</h3>
             <Row>
-                <Radio
-                    onChange={handleChangePlatform(PLATFORM.MACOS)}
-                    checked={platform === PLATFORM.MACOS}
+                <RadioGroup
                     name="platform"
-                    className="mr2"
-                >{c('Option').t`MacOS`}</Radio>
-                <Radio
-                    onChange={handleChangePlatform(PLATFORM.LINUX)}
-                    checked={platform === PLATFORM.LINUX}
-                    name="platform"
-                    className="mr2"
-                >{c('Option').t`Linux`}</Radio>
-                <Radio
-                    onChange={handleChangePlatform(PLATFORM.WINDOWS)}
-                    checked={platform === PLATFORM.WINDOWS}
-                    name="platform"
-                    className="mr2"
-                >{c('Option').t`Windows`}</Radio>
-                <Radio
-                    onChange={handleChangePlatform(PLATFORM.ANDROID)}
-                    checked={platform === PLATFORM.ANDROID}
-                    name="platform"
-                    className="mr2"
-                >{c('Option').t`Android`}</Radio>
-                <Radio
-                    onChange={handleChangePlatform(PLATFORM.IOS)}
-                    checked={platform === PLATFORM.IOS}
-                    name="platform"
-                    className="mr2"
-                >{c('Option').t`iOS`}</Radio>
-                <Radio
-                    onChange={handleChangePlatform(PLATFORM.ROUTER)}
-                    checked={platform === PLATFORM.ROUTER}
-                    name="platform"
-                    className="mr2"
-                >{c('Option').t`Router`}</Radio>
+                    value={platform}
+                    onChange={setPlatform}
+                    options={[
+                        { value: PLATFORM.MACOS, label: c('Option').t`MacOS` },
+                        { value: PLATFORM.LINUX, label: c('Option').t`Linux` },
+                        { value: PLATFORM.WINDOWS, label: c('Option').t`Windows` },
+                        { value: PLATFORM.ANDROID, label: c('Option').t`Android` },
+                        { value: PLATFORM.IOS, label: c('Option').t`iOS` },
+                        { value: PLATFORM.ROUTER, label: c('Option').t`Router` }
+                    ]}
+                />
             </Row>
 
             <h3 className="mt2">{c('Title').t`2. Select protocol`}</h3>
             <Row>
-                <Radio
-                    onChange={handleChangeProtocol(PROTOCOL.UDP)}
-                    checked={protocol === PROTOCOL.UDP}
+                <RadioGroup
                     name="protocol"
-                    className="mr2"
-                >{c('Option').t`UDP`}</Radio>
-                <Radio
-                    onChange={handleChangeProtocol(PROTOCOL.TCP)}
-                    checked={protocol === PROTOCOL.TCP}
-                    name="protocol"
-                    className="mr2"
-                >{c('Option').t`TCP`}</Radio>
+                    value={protocol}
+                    onChange={setProtocol}
+                    options={[
+                        { value: PROTOCOL.UDP, label: c('Option').t`UDP` },
+                        { value: PROTOCOL.TCP, label: c('Option').t`TCP` }
+                    ]}
+                />
             </Row>
 
             <h3 className="mt2">{c('Title').t`3. Select connection and download`}</h3>
