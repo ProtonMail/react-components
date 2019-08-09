@@ -16,6 +16,7 @@ const TOTPForm = ({ totp, setTotp }) => {
                 id="twoFa"
                 required
                 value={totp}
+                className="w100 mb1"
                 placeholder={c('Placeholder').t`Two-factor code`}
                 onChange={({ target: { value } }) => setTotp(value)}
                 data-cy-login="TOTP"

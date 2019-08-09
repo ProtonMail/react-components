@@ -27,16 +27,16 @@ const ProtonApp = ({ storage, config, children }) => {
         cacheRef.current = createCache();
     }
 
-    const handleLogin = useCallback(({ authResult: { UID: newUID, EventID }, keyPassword, userResult: user }) => {
+    const handleLogin = useCallback(({ UID: newUID, EventID, keyPassword, User }) => {
         authentication.setUID(newUID);
         authentication.setPassword(keyPassword);
 
         const cache = createCache();
 
         // If the user was received from the login call, pre-set it directly.
-        user &&
+        User &&
             cache.set(UserModel.key, {
-                value: formatUser(user),
+                value: formatUser(User),
                 status: STATUS.RESOLVED
             });
         cache.set('tmp', { eventID: EventID });

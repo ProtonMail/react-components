@@ -1,24 +1,26 @@
 import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { useApi, useLoading, Button, SubTitle, useNotifications } from 'react-components';
+import { useApi, useLoading, LinkButton, PrimaryButton, SubTitle, useNotifications } from 'react-components';
 import { Link } from 'react-router-dom';
-import { decryptPrivateKey } from 'pmcrypto';
 import { getKeySalts } from 'proton-shared/lib/api/keys';
 import { getUser } from 'proton-shared/lib/api/user';
 import { auth2FA, getInfo, setCookies } from 'proton-shared/lib/api/auth';
 import { upgradePassword } from 'proton-shared/lib/api/settings';
 import loginWithFallback from 'proton-shared/lib/authentication/loginWithFallback';
 import { getRandomString } from 'proton-shared/lib/helpers/string';
-import { AUTH_VERSION, computeKeyPassword } from 'pm-srp';
+import { AUTH_VERSION } from 'pm-srp';
 import { srpVerify } from 'proton-shared/lib/srp';
 import { noop } from 'proton-shared/lib/helpers/function';
-import { withUIDHeaders } from 'proton-shared/lib/authentication/helpers';
-import { getPrimaryKeyWithSalt } from 'proton-shared/lib/keys/keys';
+import { mergeHeaders } from 'proton-shared/lib/fetch/helpers';
+import { getAuthHeaders } from 'proton-shared/lib/api';
+
+const withAuthHeaders = (UID, AccessToken, config) => mergeHeaders(config, getAuthHeaders(UID, AccessToken));
 
 import LoginForm from './LoginForm';
 import TOTPForm from './TOTPForm';
 import UnlockForm from './UnlockForm';
+import { getAuthTypes, getErrorText, handleUnlockKey } from './helper';
 
 const FORM = {
     LOGIN: 0,
@@ -27,39 +29,7 @@ const FORM = {
     UNLOCK: 3
 };
 
-const getAuthTypes = ({ '2FA': { Enabled }, PasswordMode } = {}) => {
-    return {
-        hasTotp: Enabled & 1,
-        hasU2F: Enabled & 2,
-        hasUnlock: PasswordMode !== 1
-    };
-};
-
-const getErrorText = (error) => {
-    if (error.name === 'PasswordError') {
-        return c('Error').t`Incorrect decryption password`;
-    }
-    if (error.data && error.data.Error) {
-        return error.data.Error;
-    }
-    return error.message;
-};
-
-const handleUnlockKey = async (User, KeySalts, rawKeyPassword) => {
-    const { KeySalt, PrivateKey } = getPrimaryKeyWithSalt(User.Keys, KeySalts);
-
-    // Support for versions without a key salt.
-    const keyPassword = KeySalt ? await computeKeyPassword(rawKeyPassword, KeySalt) : rawKeyPassword;
-    const primaryKey = await decryptPrivateKey(PrivateKey, keyPassword).catch(() => {
-        const error = new Error('Wrong private key password');
-        error.name = 'PasswordError';
-        throw error;
-    });
-
-    return { primaryKey, keyPassword };
-};
-
-const LoginContainer = ({ onLogin, ignoreUnlock }) => {
+const LoginContainer = ({ onLogin, ignoreUnlock = false }) => {
     const { createNotification } = useNotifications();
     const cacheRef = useRef();
     const api = useApi();
@@ -79,9 +49,10 @@ const LoginContainer = ({ onLogin, ignoreUnlock }) => {
         const {
             authResult: { UID, AccessToken, RefreshToken }
         } = cacheRef.current;
-        await api(setCookies({ UID, AccessToken, RefreshToken, State: getRandomString(24) }));
 
         cacheRef.current = undefined;
+
+        await api(setCookies({ UID, AccessToken, RefreshToken, State: getRandomString(24) }));
         onLogin({ UID });
     };
 
@@ -96,16 +67,12 @@ const LoginContainer = ({ onLogin, ignoreUnlock }) => {
             authResult: { UID, EventID, AccessToken, RefreshToken }
         } = cacheRef.current;
 
-        if (!cacheRef.current.hasCookies) {
-            await api(setCookies({ UID, AccessToken, RefreshToken, State: getRandomString(24) }));
-            cacheRef.current.hasCookies = true;
-        }
-
         const [{ User }, { KeySalts }] =
             cacheRef.current.result ||
-            (await Promise.all([api(withUIDHeaders(UID, getUser())), api(withUIDHeaders(UID, getKeySalts()))]).then(
-                (result) => (cacheRef.current.result = result)
-            ));
+            (await Promise.all([
+                api(withAuthHeaders(UID, AccessToken, getUser())),
+                api(withAuthHeaders(UID, AccessToken, getKeySalts()))
+            ]).then((result) => (cacheRef.current.result = result)));
 
         const { keyPassword } = await handleUnlockKey(User, KeySalts, password);
 
@@ -113,12 +80,14 @@ const LoginContainer = ({ onLogin, ignoreUnlock }) => {
             await srpVerify({
                 api,
                 credentials: { password },
-                config: withUIDHeaders(UID, upgradePassword())
+                config: withAuthHeaders(UID, AccessToken, upgradePassword())
             });
         }
 
         cacheRef.current = undefined;
-        onLogin({ UID, userResult: User, keyPassword, EventID });
+
+        await api(setCookies({ UID, AccessToken, RefreshToken, State: getRandomString(24) }));
+        onLogin({ UID, User, keyPassword, EventID });
     };
 
     /**
@@ -129,10 +98,10 @@ const LoginContainer = ({ onLogin, ignoreUnlock }) => {
     const handleTotp = async () => {
         const {
             authResult,
-            authResult: { UID }
+            authResult: { UID, AccessToken }
         } = cacheRef.current;
 
-        await api(withUIDHeaders(UID, auth2FA({ totp })));
+        await api(withAuthHeaders(UID, AccessToken, auth2FA({ totp })));
 
         const { hasU2F, hasUnlock } = getAuthTypes(authResult);
 
@@ -189,11 +158,16 @@ const LoginContainer = ({ onLogin, ignoreUnlock }) => {
     const handleCancel = () => {
         cacheRef.current = undefined;
         setForm(FORM.LOGIN);
+        setPassword('');
+        setTotp('');
+        setKeyPassword('');
     };
 
     const formComponent = (() => {
         if (form === FORM.LOGIN) {
-            const handleSubmit = () => {
+            const handleSubmit = (event) => {
+                event.preventDefault();
+
                 withLoading(
                     handleLogin().catch((e) => {
                         createNotification({ type: 'error', text: getErrorText(e) });
@@ -209,42 +183,55 @@ const LoginContainer = ({ onLogin, ignoreUnlock }) => {
                         password={password}
                         setPassword={loading ? noop : setPassword}
                     />
-                    <Button type="submit" className="pm-button-blue w100" loading={loading} data-cy-login="submit">
-                        Login
-                    </Button>
+                    <PrimaryButton type="submit" className="w100" loading={loading} data-cy-login="submit">
+                        {c('Action').t`Login`}
+                    </PrimaryButton>
                     <p>
-                        <Link to="/support/login">Need help?</Link>
+                        <Link to="/support/login">{c('Action').t`Need help?`}</Link>
                     </p>
                     <p>
-                        <Link to="/signup">Create an account</Link>
+                        <Link to="/signup">{c('Action').t`Create an account`}</Link>
                     </p>
                 </form>
             );
         }
 
+        const cancelButton = (
+            <LinkButton type="reset" disabled={loading} onClick={handleCancel}>
+                {c('Action').t`Cancel`}
+            </LinkButton>
+        );
+
         if (form === FORM.TOTP) {
-            const handleSubmit = () => {
+            const handleSubmit = (event) => {
+                event.preventDefault();
+
                 withLoading(
                     handleTotp().catch((e) => {
                         createNotification({ type: 'error', text: getErrorText(e) });
+
+                        // 422 -> incorrect attempt, and it can be retried. Any other valid code would cancel.
+                        if (e.status && e.status !== 422) {
+                            return handleCancel();
+                        }
                     })
                 );
             };
             return (
                 <form name="totpForm" onSubmit={handleSubmit}>
                     <TOTPForm totp={totp} setTotp={loading ? noop : setTotp} />
-                    <Button type="reset" disabled={loading} onClick={handleCancel}>
-                        Cancel
-                    </Button>
-                    <Button type="submit" loading={loading} data-cy-login="submit TOTP">
-                        Submit
-                    </Button>
+                    <PrimaryButton type="submit" className="w100" loading={loading} data-cy-login="submit TOTP">
+                        {c('Action').t`Submit`}
+                    </PrimaryButton>
+                    <p>{cancelButton}</p>
                 </form>
             );
         }
 
         if (form === FORM.UNLOCK) {
-            const handleSubmit = () => {
+            const handleSubmit = (event) => {
+                event.preventDefault();
+
                 withLoading(
                     handleUnlock(keyPassword).catch((e) => {
                         createNotification({ type: 'error', text: getErrorText(e) });
@@ -254,12 +241,15 @@ const LoginContainer = ({ onLogin, ignoreUnlock }) => {
             return (
                 <form name="unlockForm" onSubmit={handleSubmit}>
                     <UnlockForm password={keyPassword} setPassword={loading ? noop : setKeyPassword} />
-                    <Button type="reset" disabled={loading} onClick={handleCancel}>
-                        Cancel
-                    </Button>
-                    <Button type="submit" loading={loading} data-cy-login="submit mailbox password">
-                        Submit
-                    </Button>
+                    <PrimaryButton
+                        type="submit"
+                        className="w100"
+                        loading={loading}
+                        data-cy-login="submit mailbox password"
+                    >
+                        {c('Action').t`Submit`}
+                    </PrimaryButton>
+                    <p>{cancelButton}</p>
                 </form>
             );
         }
@@ -282,10 +272,6 @@ const LoginContainer = ({ onLogin, ignoreUnlock }) => {
 LoginContainer.propTypes = {
     onLogin: PropTypes.func.isRequired,
     ignoreUnlock: PropTypes.bool
-};
-
-LoginContainer.defaultProps = {
-    ignoreUnlock: false
 };
 
 export default LoginContainer;
