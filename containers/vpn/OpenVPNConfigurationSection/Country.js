@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import { getCountryByAbbr } from 'react-components/helpers/countries';
+
+// require.context would be replaced by a dummy function in tests
 const flags = require.context('design-system/assets/img/shared/flags/4x3', true, /.svg$/);
 
 const getFlagSvg = (abbreviation) => flags(`./${abbreviation.toLowerCase()}.svg`);
