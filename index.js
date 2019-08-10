@@ -266,7 +266,6 @@ export { default as useLoading } from './hooks/useLoading';
 export { default as usePlans } from './hooks/usePlans';
 export { default as usePermissions } from './hooks/usePermissions';
 export { nestChildren, classnames } from './helpers/component';
-export { useUserVPN, UserVPNProvider } from './containers/userVPN';
 
 export { default as useCache } from './containers/cache/useCache';
 export { default as CacheProvider } from './containers/cache/Provider';
@@ -290,6 +289,7 @@ export {
     default as OpenVPNConfigurationSection
 } from './containers/vpn/OpenVPNConfigurationSection/OpenVPNConfigurationSection';
 export { default as ProtonVPNClientsSection } from './containers/vpn/ProtonVPNClientsSection/ProtonVPNClientsSection';
+export { default as OpenVPNAccountSection } from './containers/vpn/OpenVPNAccountSection/OpenVPNAccountSection';
 
 export { default as useUser } from './hooks/useUser';
 export { default as useCachedModelResult } from './hooks/useCachedModelResult';
