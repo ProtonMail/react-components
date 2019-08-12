@@ -61,29 +61,29 @@ const OpenVPNAccountSection = () => {
                 <Label htmlFor="openvpn-username">{c('Label').t`OpenVPN / IKEv2 Username`}</Label>
                 <Field>
                     <Input id="openvpn-username" value={username} onChange={handleChangeUsername} />
-                    <Row className="mt1">
-                        <Copy className="mr1" value={username} />
-                        <PrimaryButton
-                            disabled={!credentials || !credentials.username}
-                            loading={loadingUsername}
-                            onClick={handleUpdateUsername}
-                        >{c('Action').t`Change Username`}</PrimaryButton>
-                    </Row>
                 </Field>
+                <div className="ml1">
+                    <Copy className="mr1" value={username} />
+                    <PrimaryButton
+                        disabled={!credentials || !credentials.username}
+                        loading={loadingUsername}
+                        onClick={handleUpdateUsername}
+                    >{c('Action').t`Change Username`}</PrimaryButton>
+                </div>
             </Row>
             <Row>
                 <Label htmlFor="openvpn-password">{c('Label').t`OpenVPN / IKEv2 Password`}</Label>
                 <Field>
                     <PasswordInput id="openvpn-password" value={password} onChange={handleChangePassword} />
-                    <Row className="mt1">
-                        <Copy className="mr1" value={password} />
-                        <PrimaryButton
-                            disabled={!credentials || !credentials.password}
-                            loading={loadingPassword}
-                            onClick={handleUpdatePassword}
-                        >{c('Action').t`Change Password`}</PrimaryButton>
-                    </Row>
                 </Field>
+                <div className="mt1">
+                    <Copy className="mr1" value={password} />
+                    <PrimaryButton
+                        disabled={!credentials || !credentials.password}
+                        loading={loadingPassword}
+                        onClick={handleUpdatePassword}
+                    >{c('Action').t`Change Password`}</PrimaryButton>
+                </div>
             </Row>
         </>
     );
