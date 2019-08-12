@@ -2,12 +2,11 @@ import React from 'react';
 import { SubTitle, Row, Label, Field, Alert, Href } from 'react-components';
 import { c } from 'ttag';
 import useUser from '../../../hooks/useUser';
-import { isMember } from 'proton-shared/lib/user/helpers';
 
 const ProtonVPNCredentialsSection = () => {
     const [user] = useUser();
 
-    const username = isMember(user) ? user.Email : user.Name;
+    const username = user.isMember ? user.Email : user.Name;
 
     const downloadLink = (
         <Href className="mr0-5" url="https://protonvpn.com/download">{c('Link').t`ProtonVPN native clients.`}</Href>
