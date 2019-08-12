@@ -17,7 +17,7 @@ const PaymentMethodsTable = ({ methods, loading, fetchMethods }) => {
             case PAYMENT_METHOD_TYPES.CARD:
                 return `${method.Details.Brand} (•••• ${method.Details.Last4})`;
             case PAYMENT_METHOD_TYPES.PAYPAL:
-                return `PayPal ${method.Details.BillingAgreementID}`;
+                return `PayPal ${method.Details.Payer}`;
             default:
                 return '';
         }

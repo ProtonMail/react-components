@@ -14,12 +14,12 @@ const usePaymentMethodsSelect = ({ amount, cycle, coupon, type }) => {
     const isInvoice = type === 'invoice';
     const isSignup = type === 'signup';
 
-    const getMethod = (type, { Brand = '', Last4 = '', BillingAgreementID = '' }) => {
+    const getMethod = (type, { Brand = '', Last4 = '', Payer = '' }) => {
         switch (type) {
             case PAYMENT_METHOD_TYPES.CARD:
                 return `[${Brand}] •••• ${Last4}`;
             case PAYMENT_METHOD_TYPES.PAYPAL:
-                return `[PayPal] ${BillingAgreementID}`;
+                return `[PayPal] ${Payer}`;
             default:
                 return '';
         }

@@ -5,7 +5,7 @@ import { c } from 'ttag';
 import { PAYMENT_METHOD_TYPES } from 'proton-shared/lib/constants';
 
 const PaymentMethodDetails = ({ type, details = {} }) => {
-    const { Last4, Name, ExpMonth, ExpYear, BillingAgreementID } = details;
+    const { Last4, Name, ExpMonth, ExpYear, Payer } = details;
     if (type === PAYMENT_METHOD_TYPES.CARD) {
         return (
             <Bordered className="bg-global-light">
@@ -32,7 +32,7 @@ const PaymentMethodDetails = ({ type, details = {} }) => {
         return (
             <Bordered className="bg-global-light">
                 <h4>
-                    <code>PayPal {BillingAgreementID}</code>
+                    <code>PayPal {Payer}</code>
                 </h4>
             </Bordered>
         );
