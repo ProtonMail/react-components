@@ -5,7 +5,7 @@ import { c } from 'ttag';
 const ProtonVPNResourcesSection = () => {
     return (
         <>
-            <SubTitle>{c('Title').t`ProtonVPN Resources`}</SubTitle>
+            <SubTitle>{c('Title').t`ProtonVPN resources`}</SubTitle>
             <Row>
                 <Label>{c('Label').t`Download ProtonVPN`}</Label>
                 <Field>
@@ -13,13 +13,13 @@ const ProtonVPNResourcesSection = () => {
                 </Field>
             </Row>
             <Row>
-                <Label>{c('Label').t`ProtonVPN Homepage`}</Label>
+                <Label>{c('Label').t`ProtonVPN homepage`}</Label>
                 <Field>
                     <Href url="https://protonvpn.com/">{c('Link').t`Homepage`}</Href>
                 </Field>
             </Row>
             <Row>
-                <Label>{c('Label').t`Get Support for ProtonVPN`}</Label>
+                <Label>{c('Label').t`Get support for ProtonVPN`}</Label>
                 <Field>
                     <Href url="https://protonvpn.com/support">{c('Link').t`Support page`}</Href>
                 </Field>

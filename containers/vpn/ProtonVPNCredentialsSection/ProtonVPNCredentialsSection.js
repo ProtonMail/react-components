@@ -2,25 +2,23 @@ import React from 'react';
 import { SubTitle, Row, Label, Field, Alert, Href } from 'react-components';
 import { c } from 'ttag';
 import useUser from '../../../hooks/useUser';
-import useAddresses from '../../../hooks/useAddresses';
 import { isMember } from 'proton-shared/lib/user/helpers';
 
 const ProtonVPNCredentialsSection = () => {
     const [user] = useUser();
-    const [addresses] = useAddresses();
 
-    const getFirstEmail = ([{ Email = '' } = {}] = []) => Email;
-    const username = isMember(user) ? getFirstEmail(addresses) : user.Name;
+    const username = isMember(user) ? user.Email : user.Name;
+
+    const downloadLink = (
+        <Href className="mr0-5" url="https://protonvpn.com/download">{c('Link').t`ProtonVPN native clients.`}</Href>
+    );
 
     return (
         <>
-            <SubTitle>{c('Title').t`ProtonVPN Credentials`}</SubTitle>
-            <Alert>
-                Use the following credentials to log into the{' '}
-                <Href url="https://protonvpn.com/download">ProtonVPN native clients.</Href>
-            </Alert>
+            <SubTitle>{c('Title').t`ProtonVPN credentials`}</SubTitle>
+            <Alert>{c('Info').jt`Use the following credentials to log into the ${downloadLink}`}</Alert>
             <Row>
-                <Label>{c('Label').t`Proton Username`}</Label>
+                <Label>{c('Label').t`Proton username`}</Label>
                 <Field className="mt0-5">
                     <strong>{username}</strong>
                 </Field>
