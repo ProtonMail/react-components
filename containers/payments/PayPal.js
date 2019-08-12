@@ -111,8 +111,11 @@ const PayPal = ({ amount, currency, onPay, type }) => {
         throw error;
     };
 
-    const handleClick = async () => {
+    const handleClick = () => {
         tabRef.current = window.open(approvalURL, 'PayPal');
+    };
+
+    const startPulling = async () => {
         try {
             await pull();
             onPay({ Token: tokenRef.current });
@@ -139,7 +142,10 @@ const PayPal = ({ amount, currency, onPay, type }) => {
         if (cancel) {
             processRef.current = false;
             reset();
+            return;
         }
+
+        startPulling();
     };
 
     useEffect(() => {
