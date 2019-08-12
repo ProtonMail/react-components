@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { Alert, PrimaryButton, SmallButton, Price, useApi, useLoading, Loader } from 'react-components';
+import { Alert, PrimaryButton, SmallButton, Price, useApi, useLoading } from 'react-components';
 import { createToken, getTokenStatus } from 'proton-shared/lib/api/payments';
 import {
     MIN_PAYPAL_AMOUNT,
@@ -19,7 +19,8 @@ const {
     STATUS_NOT_SUPPORTED
 } = PAYMENT_TOKEN_STATUS;
 
-const DELAY = 5000;
+const DELAY_PULLING = 5000;
+const DELAY_PAYPAL_TAB_LISTENER = 1000;
 
 const PayPal = ({ amount, currency, onPay, type }) => {
     const [loading, withLoading] = useLoading();
@@ -51,7 +52,8 @@ const PayPal = ({ amount, currency, onPay, type }) => {
     };
 
     const load = async () => {
-        const { ApprovalURL, Token } = await api(
+        reset();
+        const { ApprovalURL, Token, Status } = await api(
             createToken({
                 Amount: amount,
                 Currency: currency,
@@ -60,7 +62,12 @@ const PayPal = ({ amount, currency, onPay, type }) => {
                 }
             })
         );
-        window.addEventListener('message', onMessage, false);
+
+        if (Status === STATUS_CHARGEABLE) {
+            onPay({ Token });
+            return reset();
+        }
+
         tokenRef.current = Token;
         setAppovalURL(ApprovalURL);
     };
@@ -72,7 +79,7 @@ const PayPal = ({ amount, currency, onPay, type }) => {
             throw error;
         }
 
-        if (timerRef.current > DELAY * 30) {
+        if (timerRef.current > DELAY_PULLING * 30) {
             const error = new Error(I18N.timeout);
             error.tryAgain = true;
             throw error;
@@ -101,8 +108,8 @@ const PayPal = ({ amount, currency, onPay, type }) => {
         }
 
         if (Status === STATUS_PENDING) {
-            await wait(DELAY);
-            timerRef.current += DELAY;
+            await wait(DELAY_PULLING);
+            timerRef.current += DELAY_PULLING;
             return pull();
         }
 
@@ -111,8 +118,18 @@ const PayPal = ({ amount, currency, onPay, type }) => {
         throw error;
     };
 
+    const listenPayPalTab = async () => {
+        await wait(DELAY_PAYPAL_TAB_LISTENER);
+        if (tabRef.current.closed) {
+            return;
+        }
+        return listenPayPalTab();
+    };
+
     const handleClick = () => {
+        window.addEventListener('message', onMessage, false);
         tabRef.current = window.open(approvalURL, 'PayPal');
+        withLoading(listenPayPalTab());
     };
 
     const startPulling = async () => {
@@ -145,7 +162,7 @@ const PayPal = ({ amount, currency, onPay, type }) => {
             return;
         }
 
-        startPulling();
+        withLoading(startPulling());
     };
 
     useEffect(() => {
@@ -173,8 +190,7 @@ const PayPal = ({ amount, currency, onPay, type }) => {
                 {error.message}
                 {error.tryAgain ? (
                     <div>
-                        <SmallButton loading={loading} onClick={() => withLoading(load())}>{c('Action')
-                            .t`Click here to try again`}</SmallButton>
+                        <SmallButton onClick={() => withLoading(load())}>{c('Action').t`Try again`}</SmallButton>
                     </div>
                 ) : null}
             </Alert>
@@ -185,11 +201,8 @@ const PayPal = ({ amount, currency, onPay, type }) => {
         <>
             <Alert>{c('Info')
                 .t`You will need to login to your PayPal account to complete this transaction. We will open a new tab with PayPal for you. If you use any pop-up blockers, please disable them to continue.`}</Alert>
-            {approvalURL ? (
-                <PrimaryButton onClick={() => withLoading(handleClick())}>{c('Action')
-                    .t`Check out with PayPal`}</PrimaryButton>
-            ) : null}
-            {loading ? <Loader /> : null}
+            <PrimaryButton onClick={handleClick} loading={loading}>{c('Action')
+                .t`Check out with PayPal`}</PrimaryButton>
         </>
     );
 };
