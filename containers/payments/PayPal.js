@@ -156,7 +156,7 @@ const PayPal = ({ amount, currency, onPay, type }) => {
 
         const { cancel } = event.data;
 
-        if (cancel) {
+        if (cancel === '1') {
             processRef.current = false;
             reset();
             return;
