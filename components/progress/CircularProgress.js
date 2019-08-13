@@ -1,8 +1,8 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
+import { classnames } from '../../helpers/component';
 
 import './CircularProgress.scss';
-import { classnames } from '../../helpers/component';
 
 const CircularProgress = ({
     children,
@@ -10,24 +10,10 @@ const CircularProgress = ({
     progress,
     rootRef,
     size = 32,
-    backgroundColor = '#555',
-    color = '#4cc75a',
+    backgroundColor = 'global-altgrey',
+    color = 'pm-blue',
     ...rest
 }) => {
-    const backgroundCircleStyle = useMemo(
-        () => ({
-            stroke: backgroundColor
-        }),
-        backgroundColor
-    );
-
-    const circleStyle = useMemo(
-        () => ({
-            stroke: color
-        }),
-        color
-    );
-
     return (
         <svg
             ref={rootRef}
@@ -38,20 +24,18 @@ const CircularProgress = ({
             {...rest}
         >
             <path
-                style={backgroundCircleStyle}
-                className="circle"
+                className={classnames(['circle', `stroke-${backgroundColor}`])}
                 strokeDasharray="100, 100"
                 d="M18 2.0845
-            a 15.9155 15.9155 0 0 1 0 31.831
-            a 15.9155 15.9155 0 0 1 0 -31.831"
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831"
             />
             <path
-                circleStyle={circleStyle}
-                className="circle"
+                className={classnames(['circle', `stroke-${color}`])}
                 strokeDasharray={`${progress}, 100`}
                 d="M18 2.0845
-            a 15.9155 15.9155 0 0 1 0 31.831
-            a 15.9155 15.9155 0 0 1 0 -31.831"
+                    a 15.9155 15.9155 0 0 1 0 31.831
+                    a 15.9155 15.9155 0 0 1 0 -31.831"
             />
             {children}
         </svg>

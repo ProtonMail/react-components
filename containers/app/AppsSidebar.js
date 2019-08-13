@@ -3,11 +3,10 @@ import PropTypes from 'prop-types';
 import { Icon, useUser } from 'react-components';
 import { APPS } from 'proton-shared/lib/constants';
 import { c } from 'ttag';
-import StorageSpaceStatus from './StorageSpaceStatus';
 
 const { PROTONMAIL, PROTONCONTACTS, PROTONCALENDAR, PROTONMAIL_SETTINGS, PROTONVPN_SETTINGS } = APPS;
 
-const AppsSidebar = ({ currentApp = '' }) => {
+const AppsSidebar = ({ currentApp = '', items = [] }) => {
     const [{ isPaid }] = useUser();
     const apps = [
         { ids: [PROTONMAIL, PROTONMAIL_SETTINGS], icon: 'protonmail', title: 'ProtonMail', link: '/inbox' },
@@ -38,16 +37,24 @@ const AppsSidebar = ({ currentApp = '' }) => {
                     );
                 })}
                 <li className="flex-item-fluid" />
-                <li key="storageStatus" className="mb0-5">
-                    <StorageSpaceStatus />
-                </li>
+                {items.map((item, index) => (
+                    <li key={index} className="mb0-5">
+                        {item}
+                    </li>
+                ))}
             </ul>
         </aside>
     );
 };
 
 AppsSidebar.propTypes = {
-    currentApp: PropTypes.string
+    currentApp: PropTypes.string,
+    items: PropTypes.arrayOf(
+        PropTypes.shape({
+            item: PropTypes.node.isRequired,
+            key: PropTypes.string.isRequired
+        }).isRequired
+    )
 };
 
 export default AppsSidebar;

@@ -13,9 +13,7 @@ const Dropdown = ({
     originalPlacement = 'bottom',
     onClose = noop,
     isOpen = false,
-    narrow = false,
-    wide = false,
-    auto = false,
+    size = 'normal',
     autoClose = true,
     autoCloseOutside = true,
     ...rest
@@ -73,9 +71,7 @@ const Dropdown = ({
     const contentClassName = classnames([
         'dropDown',
         `dropDown--${placement}`,
-        narrow && 'dropDown--narrow',
-        wide && 'dropDown--wide',
-        auto && 'dropDown--auto',
+        size !== 'normal' && `dropDown--${size}`,
         className
     ]);
     return (
@@ -100,9 +96,7 @@ Dropdown.propTypes = {
     onClose: PropTypes.func,
     isOpen: PropTypes.bool,
     originalPlacement: PropTypes.string,
-    narrow: PropTypes.bool,
-    wide: PropTypes.bool,
-    auto: PropTypes.bool,
+    size: PropTypes.oneOf(['normal', 'narrow', 'wide', 'auto']),
     autoClose: PropTypes.bool,
     autoCloseOutside: PropTypes.bool
 };

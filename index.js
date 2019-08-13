@@ -290,6 +290,7 @@ export { default as SpamFiltersSection } from './containers/filters/SpamFiltersS
 export { default as FiltersSection } from './containers/filters/FiltersSection';
 export { default as AddFilterModal } from './containers/filters/AddFilterModal';
 export { default as AddEmailToListModal } from './containers/filters/AddEmailToListModal';
+export { default as StorageSpaceStatus } from './containers/sidebar/StorageSpaceStatus';
 
 export {
     default as OpenVPNConfigurationSection
