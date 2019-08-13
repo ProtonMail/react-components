@@ -46,7 +46,7 @@ const CreditsModal = ({ onClose, ...rest }) => {
         <FormModal
             type="small"
             onClose={onClose}
-            onSubmit={handleSubmit}
+            onSubmit={() => handleSubmit()}
             close={c('Action').t`Cancel`}
             loading={loading}
             submit={canPay && c('Action').t`Top up`}

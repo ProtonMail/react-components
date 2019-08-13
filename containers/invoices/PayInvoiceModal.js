@@ -23,7 +23,7 @@ const PayInvoiceModal = ({ invoice, fetchInvoices, ...rest }) => {
     return (
         <FormModal
             small
-            onSubmit={handleSubmit}
+            onSubmit={() => handleSubmit()}
             loading={loadingPay}
             close={c('Action').t`Close`}
             submit={canPay && c('Action').t`Pay`}
