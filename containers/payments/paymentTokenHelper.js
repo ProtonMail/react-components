@@ -101,21 +101,20 @@ const process = ({ ApprovalURL, Token, api }) => {
     });
 };
 
-const toParams = ({ Amount, Currency, Token }) => {
+const toParams = (params, Token) => {
     return {
-        Amount,
-        Currency,
         Payment: {
             Type: 'token',
             Details: {
                 Token
             }
-        }
+        },
+        ...params
     };
 };
 
 export const handle3DS = async (params = {}, api) => {
-    const { Payment = {}, Amount, Currency } = params;
+    const { Payment = {} } = params;
     const { Type } = Payment;
 
     if (![CARD, PAYPAL].includes(Type)) {
@@ -125,9 +124,9 @@ export const handle3DS = async (params = {}, api) => {
     const { Token, Status, ApprovalURL } = await api(createToken(params));
 
     if (Status === STATUS_CHARGEABLE) {
-        return toParams({ Amount, Currency, Token });
+        return toParams(params, Token);
     }
 
     await process({ ApprovalURL, Token, api });
-    return toParams({ Amount, Currency, Token });
+    return toParams(params, Token);
 };
