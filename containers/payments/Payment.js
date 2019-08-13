@@ -11,8 +11,6 @@ import toDetails from './toDetails';
 const { CARD, PAYPAL, CASH, BITCOIN } = PAYMENT_METHOD_TYPES;
 
 const Payment = ({ type, amount, currency, cycle, onParameters, method, onMethod, onValidCard, onPay }) => {
-    const handleToken = (Details) => onPay({ Payment: { Type: 'token', Details } });
-
     const handleCard = ({ card, isValid }) => {
         onValidCard(isValid);
         isValid && onParameters({ Payment: { Type: CARD, Details: toDetails(card) } });
@@ -44,7 +42,7 @@ const Payment = ({ type, amount, currency, cycle, onParameters, method, onMethod
                         amount={amount}
                         currency={currency}
                         onCard={handleCard}
-                        onPayPal={handleToken}
+                        onPayPal={onPay}
                         type={type}
                         method={method}
                     />

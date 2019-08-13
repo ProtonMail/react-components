@@ -11,6 +11,8 @@ const {
     STATUS_NOT_SUPPORTED
 } = PAYMENT_TOKEN_STATUS;
 
+const { CARD, PAYPAL } = PAYMENT_METHOD_TYPES;
+
 const DELAY_PULLING = 5000;
 const DELAY_LISTENING = 1000;
 
@@ -71,7 +73,7 @@ const process = ({ ApprovalURL, Token, api }) => {
         const onMessage = (event) => {
             const origin = event.origin || event.originalEvent.origin; // For Chrome, the origin property is in the event.originalEvent object.
 
-            if (origin !== 'https://secure.protonmail.com') {
+            if (origin !== 'https://secure.protonmail.blue') {
                 return reject();
             }
 
@@ -99,6 +101,7 @@ const process = ({ ApprovalURL, Token, api }) => {
         };
 
         window.addEventListener('message', onMessage, false);
+        listen = true;
         listenTab();
     });
 };
@@ -120,7 +123,7 @@ export const handle3DS = async (params = {}, api) => {
     const { Payment = {}, Amount, Currency } = params;
     const { Type } = Payment;
 
-    if (Type !== PAYMENT_METHOD_TYPES.CARD) {
+    if (![CARD, PAYPAL].includes(Type)) {
         return params;
     }
 
