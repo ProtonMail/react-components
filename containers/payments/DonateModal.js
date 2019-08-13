@@ -8,7 +8,7 @@ import { DEFAULT_CURRENCY, DEFAULT_DONATION_AMOUNT } from 'proton-shared/lib/con
 import PaymentSelector from './PaymentSelector';
 import Payment from './Payment';
 import usePayment from './usePayment';
-import { handle3DS } from './tokenHelper';
+import { handle3DS } from './paymentTokenHelper';
 
 const DonateModal = ({ ...rest }) => {
     const api = useApi();
