@@ -53,6 +53,7 @@ const process = ({ ApprovalURL, Token, api }) => {
         const tab = window.open(ApprovalURL, '3DS support');
 
         const reset = () => {
+            listen = false;
             window.removeEventListener('message', onMessage, false);
             tab.close();
         };
@@ -74,30 +75,26 @@ const process = ({ ApprovalURL, Token, api }) => {
             const origin = event.origin || event.originalEvent.origin; // For Chrome, the origin property is in the event.originalEvent object.
 
             if (origin !== 'https://secure.protonmail.com') {
+                reset();
                 return reject();
             }
 
             if (event.source !== tab) {
+                reset();
                 return reject();
             }
 
+            reset();
+
             const { cancel } = event.data;
-            listen = false;
-            tab.close();
 
             if (cancel === '1') {
                 return reject();
             }
 
-            pull({ Token, api, tab })
-                .then(() => {
-                    reset();
-                    resolve();
-                })
-                .catch((error) => {
-                    reset();
-                    reject(error);
-                });
+            pull({ Token, api })
+                .then(resolve)
+                .catch(reject);
         };
 
         window.addEventListener('message', onMessage, false);
