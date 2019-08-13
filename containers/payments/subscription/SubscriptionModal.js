@@ -32,6 +32,7 @@ import CustomVPNSection from './CustomVPNSection';
 import OrderSummary from './OrderSummary';
 import Thanks from './Thanks';
 import { getCheckParams } from './helpers';
+import { handle3DS } from '../paymentTokenHelper';
 
 const SubscriptionModal = ({ onClose, cycle, currency, coupon, plansMap, ...rest }) => {
     const api = useApi();
@@ -105,10 +106,14 @@ const SubscriptionModal = ({ onClose, cycle, currency, coupon, plansMap, ...rest
     const handleSubmit = async (params = parameters) => {
         try {
             setLoading(true);
+            const checkParams = getCheckParams({ ...model, plans });
+            const requestBody = await handle3DS(
+                { ...params, Amount: check.AmountDue, Currency: checkParams.Currency },
+                api
+            );
             await request({
-                Amount: check.AmountDue,
-                ...getCheckParams({ ...model, plans }),
-                ...params
+                ...checkParams,
+                ...requestBody
             });
             await call();
             setLoading(false);

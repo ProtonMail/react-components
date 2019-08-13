@@ -9,7 +9,8 @@ import {
     Alert,
     useNotifications,
     useApiWithoutResult,
-    useEventManager
+    useEventManager,
+    useApi
 } from 'react-components';
 import { buyCredit } from 'proton-shared/lib/api/payments';
 import { DEFAULT_CURRENCY, DEFAULT_CREDITS_AMOUNT } from 'proton-shared/lib/constants';
@@ -17,6 +18,7 @@ import { DEFAULT_CURRENCY, DEFAULT_CREDITS_AMOUNT } from 'proton-shared/lib/cons
 import PaymentSelector from './PaymentSelector';
 import Payment from './Payment';
 import usePayment from './usePayment';
+import { handle3DS } from './paymentTokenHelper';
 
 const getCurrenciesI18N = () => ({
     EUR: c('Monetary unit').t`Euro`,
@@ -25,6 +27,7 @@ const getCurrenciesI18N = () => ({
 });
 
 const CreditsModal = ({ onClose, ...rest }) => {
+    const api = useApi();
     const { call } = useEventManager();
     const { method, setMethod, parameters, setParameters, canPay, setCardValidity } = usePayment();
     const { createNotification } = useNotifications();
@@ -36,7 +39,8 @@ const CreditsModal = ({ onClose, ...rest }) => {
     const i18nCurrency = i18n[currency];
 
     const handleSubmit = async (params = parameters) => {
-        await request({ Amount: amount, Currency: currency, ...params });
+        const requestBody = await handle3DS({ ...params, Amount: amount, Currency: currency }, api);
+        await request(requestBody);
         await call();
         onClose();
         createNotification({ text: c('Success').t`Credits added` });
