@@ -40,7 +40,7 @@ const AddressesUser = ({ user }) => {
                 if (isDisabled && isDefault) {
                     createNotification({
                         type: 'error',
-                        text: c('Notification').t`Primary address cannot be disabled`
+                        text: c('Notification').t`A disabled address cannot be primary`
                     });
                     setAddresses(addresses);
                     return;
