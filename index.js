@@ -96,6 +96,7 @@ export { default as PreviewPDFModal } from './components/modal/PreviewPDFModal';
 export { default as FooterModal } from './components/modal/Footer';
 export { default as Price } from './components/price/Price';
 export { default as Progress } from './components/progress/Progress';
+export { default as CircularProgress } from './components/progress/CircularProgress';
 export { default as Legend } from './components/text/Legend';
 export { default as ErrorZone } from './components/text/ErrorZone';
 export { default as Preformatted } from './components/text/Preformatted';

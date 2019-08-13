@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Icon, useUser } from 'react-components';
 import { APPS } from 'proton-shared/lib/constants';
 import { c } from 'ttag';
+import StorageSpaceStatus from './StorageSpaceStatus';
 
 const { PROTONMAIL, PROTONCONTACTS, PROTONCALENDAR, PROTONMAIL_SETTINGS, PROTONVPN_SETTINGS } = APPS;
 
@@ -17,7 +18,7 @@ const AppsSidebar = ({ currentApp = '' }) => {
 
     return (
         <aside className="aside noprint" id="aside-bar">
-            <ul className="unstyled m0 aligncenter">
+            <ul className="unstyled m0 aligncenter  flex flex-column h100">
                 {apps.map(({ ids = [], icon, title, link, target }, index) => {
                     const isCurrent = ids.includes(currentApp);
                     const key = `${index}`;
@@ -36,6 +37,10 @@ const AppsSidebar = ({ currentApp = '' }) => {
                         </li>
                     );
                 })}
+                <li className="flex-item-fluid" />
+                <li key="storageStatus" className="mb0-5">
+                    <StorageSpaceStatus />
+                </li>
             </ul>
         </aside>
     );

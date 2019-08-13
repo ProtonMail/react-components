@@ -9,10 +9,13 @@ import { noop } from 'proton-shared/lib/helpers/function';
 const Dropdown = ({
     anchorRef,
     children,
+    className,
     originalPlacement = 'bottom',
     onClose = noop,
     isOpen = false,
     narrow = false,
+    wide = false,
+    auto = false,
     autoClose = true,
     autoCloseOutside = true,
     ...rest
@@ -67,7 +70,14 @@ const Dropdown = ({
         };
     }, []);
 
-    const contentClassName = classnames(['dropDown', `dropDown--${placement}`, narrow && 'dropDown--narrow']);
+    const contentClassName = classnames([
+        'dropDown',
+        `dropDown--${placement}`,
+        narrow && 'dropDown--narrow',
+        wide && 'dropDown--wide',
+        auto && 'dropDown--auto',
+        className
+    ]);
     return (
         <Popper
             ref={popperRef}
@@ -86,10 +96,13 @@ const Dropdown = ({
 Dropdown.propTypes = {
     anchorRef: PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
     children: PropTypes.node.isRequired,
+    className: PropTypes.string,
     onClose: PropTypes.func,
     isOpen: PropTypes.bool,
     originalPlacement: PropTypes.string,
     narrow: PropTypes.bool,
+    wide: PropTypes.bool,
+    auto: PropTypes.bool,
     autoClose: PropTypes.bool,
     autoCloseOutside: PropTypes.bool
 };
