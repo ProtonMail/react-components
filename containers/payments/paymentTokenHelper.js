@@ -75,13 +75,11 @@ const process = ({ ApprovalURL, Token, api }) => {
             const origin = event.origin || event.originalEvent.origin; // For Chrome, the origin property is in the event.originalEvent object.
 
             if (origin !== 'https://secure.protonmail.com') {
-                reset();
-                return reject();
+                return;
             }
 
             if (event.source !== tab) {
-                reset();
-                return reject();
+                return;
             }
 
             reset();
