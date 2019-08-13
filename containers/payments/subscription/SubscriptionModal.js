@@ -34,7 +34,14 @@ import Thanks from './Thanks';
 import { getCheckParams } from './helpers';
 import { handle3DS } from '../paymentTokenHelper';
 
-const SubscriptionModal = ({ onClose, cycle, currency, coupon, plansMap, ...rest }) => {
+const SubscriptionModal = ({
+    onClose,
+    cycle = DEFAULT_CYCLE,
+    currency = DEFAULT_CURRENCY,
+    coupon = '',
+    plansMap = {},
+    ...rest
+}) => {
     const api = useApi();
     const [{ hasPaidMail } = {}] = useUser();
     const [{ MaxMembers } = {}] = useOrganization();
@@ -264,13 +271,6 @@ SubscriptionModal.propTypes = {
     coupon: PropTypes.string,
     currency: PropTypes.string,
     plansMap: PropTypes.object
-};
-
-SubscriptionModal.defaultProps = {
-    coupon: '',
-    currency: DEFAULT_CURRENCY,
-    cycle: DEFAULT_CYCLE,
-    plansMap: {}
 };
 
 export default SubscriptionModal;

@@ -7,7 +7,7 @@ import humanSize from 'proton-shared/lib/helpers/humanSize';
 
 const FIVE_GIGA = 5 * GIGA;
 
-const MemberStorageSelector = ({ member, organization, onChange }) => {
+const MemberStorageSelector = ({ member = {}, organization, onChange }) => {
     const minPadding = 0;
     const maxPadding = organization.MaxSpace - organization.AssignedSpace;
     const startNewMember = maxPadding > FIVE_GIGA ? FIVE_GIGA : maxPadding;
@@ -24,13 +24,9 @@ const MemberStorageSelector = ({ member, organization, onChange }) => {
 };
 
 MemberStorageSelector.propTypes = {
-    member: PropTypes.object.isRequired,
+    member: PropTypes.object,
     onChange: PropTypes.func.isRequired,
     organization: PropTypes.object.isRequired
-};
-
-MemberStorageSelector.defaultProps = {
-    member: {}
 };
 
 export default MemberStorageSelector;

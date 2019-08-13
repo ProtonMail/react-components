@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Select } from 'react-components';
 import { range } from 'proton-shared/lib/helpers/array';
 
-const MemberVPNSelector = ({ member, organization, onChange }) => {
+const MemberVPNSelector = ({ member = {}, organization, onChange }) => {
     const minPadding = 0;
     const maxPadding = organization.MaxVPN - organization.UsedVPN;
     const options = range(minPadding, maxPadding).map((value) => ({ text: value, value }));
@@ -18,13 +18,9 @@ const MemberVPNSelector = ({ member, organization, onChange }) => {
 };
 
 MemberVPNSelector.propTypes = {
-    member: PropTypes.object.isRequired,
+    member: PropTypes.object,
     onChange: PropTypes.func.isRequired,
     organization: PropTypes.object.isRequired
-};
-
-MemberVPNSelector.defaultProps = {
-    member: {}
 };
 
 export default MemberVPNSelector;
