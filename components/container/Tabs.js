@@ -1,30 +1,29 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 const toKey = (index, prefix = '') => `${prefix}${index}`;
 
-const Tabs = ({ panels = [], index = 0 }) => {
-    const [selected, setSelected] = useState(index);
-    const key = toKey(selected, 'key_');
-    const label = toKey(selected, 'label_');
-    const { content } = panels[selected];
+const Tabs = ({ tabs = [], selectedTab, updateSelectedTab }) => {
+    const key = toKey(selectedTab, 'key_');
+    const label = toKey(selectedTab, 'label_');
+    const { content } = tabs[selectedTab];
 
     return (
         <div className="tabs-container">
             <ul className="tabs-list" role="tablist">
-                {panels.map(({ title }, index) => {
+                {tabs.map(({ title }, index) => {
                     const key = toKey(index, 'key_');
                     const label = toKey(index, 'label_');
                     return (
                         <li key={key} className="tabs-list-item" role="presentation">
                             <a
-                                onClick={() => setSelected(index)}
+                                onClick={() => updateSelectedTab(index)}
                                 className="tabs-list-link"
                                 id={label}
                                 role="tab"
                                 aria-controls={key}
-                                tabIndex={selected === index ? '0' : '-1'}
-                                aria-selected={selected === index}
+                                tabIndex={selectedTab === index ? '0' : '-1'}
+                                aria-selected={selectedTab === index}
                             >
                                 {title}
                             </a>
@@ -40,13 +39,14 @@ const Tabs = ({ panels = [], index = 0 }) => {
 };
 
 Tabs.propTypes = {
-    panels: PropTypes.arrayOf(
+    tabs: PropTypes.arrayOf(
         PropTypes.shape({
             title: PropTypes.string,
             content: PropTypes.node
         })
     ),
-    index: PropTypes.number
+    selectedTab: PropTypes.number,
+    updateSelectedTab: PropTypes.func
 };
 
 export default Tabs;
