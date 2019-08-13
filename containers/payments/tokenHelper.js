@@ -61,7 +61,7 @@ const process = ({ ApprovalURL, Token, api }) => {
             }
 
             if (tab.closed) {
-                throw new Error(c('Error').t`Tab closed`);
+                reject(new Error(c('Error').t`Tab closed`));
             }
 
             await wait(DELAY_LISTENING);
