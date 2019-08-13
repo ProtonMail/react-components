@@ -4,26 +4,66 @@ import PropTypes from 'prop-types';
 import { generateUID } from '../../helpers/component';
 import useInput from './useInput';
 import ErrorZone from '../text/ErrorZone';
-import { omit } from 'proton-shared/lib/helpers/object';
 
-const Input = React.forwardRef((props, ref) => {
-    const { className, error, ...rest } = omit(props, ['onPressEnter']);
-    const { handlers, statusClasses, status } = useInput(props);
-    const [uid] = useState(generateUID('input'));
-    return (
-        <>
-            <input
-                className={`pm-field w100 ${className} ${statusClasses}`}
-                aria-invalid={error && status.isDirty}
-                aria-describedby={uid}
-                ref={ref}
-                {...rest}
-                {...handlers}
-            />
-            <ErrorZone id={uid}>{error && status.isDirty ? error : ''}</ErrorZone>
-        </>
-    );
-});
+const Input = React.forwardRef(
+    (
+        {
+            error,
+            autoComplete = 'off',
+            autoFocus,
+            className = '',
+            disabled,
+            id,
+            name,
+            onBlur,
+            onChange,
+            onFocus,
+            onKeyDown,
+            onKeyUp,
+            onPressEnter,
+            placeholder,
+            readOnly,
+            required,
+            type = 'text',
+            value
+        },
+        ref
+    ) => {
+        const { handlers, statusClasses, status } = useInput({
+            onFocus,
+            onBlur,
+            onChange,
+            onPressEnter,
+            onKeyDown,
+            disabled
+        });
+        const [uid] = useState(generateUID('input'));
+
+        return (
+            <>
+                <input
+                    id={id}
+                    name={name}
+                    type={type}
+                    value={value}
+                    className={`pm-field w100 ${className} ${statusClasses}`}
+                    aria-invalid={error && status.isDirty}
+                    aria-describedby={uid}
+                    ref={ref}
+                    onKeyUp={onKeyUp}
+                    disabled={disabled}
+                    placeholder={placeholder}
+                    required={required}
+                    readOnly={readOnly}
+                    autoFocus={autoFocus}
+                    autoComplete={autoComplete}
+                    {...handlers}
+                />
+                <ErrorZone id={uid}>{error && status.isDirty ? error : ''}</ErrorZone>
+            </>
+        );
+    }
+);
 
 Input.propTypes = {
     error: PropTypes.string,
@@ -44,12 +84,6 @@ Input.propTypes = {
     required: PropTypes.bool,
     type: PropTypes.string,
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool])
-};
-
-Input.defaultProps = {
-    type: 'text',
-    autoComplete: 'off',
-    className: ''
 };
 
 export default Input;
