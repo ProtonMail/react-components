@@ -56,9 +56,9 @@ const AddressKeysSection = () => {
     const { call } = useEventManager();
     const api = useApi();
     const [User] = useUser();
-    const [Addresses] = useAddresses();
+    const [Addresses, loadingAddresses] = useAddresses();
     const [userKeysList] = useUserKeys(User);
-    const [addressesKeysMap, loadingAddressesKeys] = useAddressesKeys(User, Addresses);
+    const [addressesKeysMap, loadingAddressesKeys] = useAddressesKeys(User, Addresses, userKeysList);
     const [loadingKeyIdx, setLoadingKeyIdx] = useState(-1);
     const [addressIndex, setAddressIndex] = useState(() => (Array.isArray(Addresses) ? 0 : -1));
 
@@ -70,7 +70,7 @@ const AddressKeysSection = () => {
 
     const title = <SubTitle>{c('Title').t`Email encryption keys`}</SubTitle>;
 
-    if (addressIndex === -1 || !Array.isArray(Addresses)) {
+    if (addressIndex === -1 || loadingAddresses) {
         return (
             <>
                 {title}
@@ -79,7 +79,7 @@ const AddressKeysSection = () => {
         );
     }
 
-    if (!Addresses.length) {
+    if (!Array.isArray(Addresses) || !Addresses.length) {
         return (
             <>
                 {title}
@@ -92,7 +92,7 @@ const AddressKeysSection = () => {
     const { ID: addressID, Email: addressEmail } = address;
     const addressKeys = addressesKeysMap && addressesKeysMap[addressID];
 
-    if (loadingAddressesKeys && !Array.isArray(addressKeys)) {
+    if (loadingAddressesKeys || !Array.isArray(addressKeys)) {
         return (
             <>
                 {title}

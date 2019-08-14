@@ -21,7 +21,7 @@ import {
     Row,
     Wizard
 } from 'react-components';
-import { DEFAULT_CURRENCY, DEFAULT_CYCLE } from 'proton-shared/lib/constants';
+import { DEFAULT_CURRENCY, DEFAULT_CYCLE, APPS } from 'proton-shared/lib/constants';
 import { checkSubscription, subscribe } from 'proton-shared/lib/api/payments';
 import { toPrice } from 'proton-shared/lib/helpers/string';
 
@@ -34,7 +34,10 @@ import Thanks from './Thanks';
 import { getCheckParams } from './helpers';
 import { handle3DS } from '../paymentTokenHelper';
 
+const { PROTONMAIL_SETTINGS } = APPS;
+
 const SubscriptionModal = ({
+    currentApp = PROTONMAIL_SETTINGS,
     onClose,
     cycle = DEFAULT_CYCLE,
     currency = DEFAULT_CURRENCY,
@@ -173,7 +176,7 @@ const SubscriptionModal = ({
         });
     }
 
-    if (plansMap.plus || plansMap.professional) {
+    if (currentApp === PROTONMAIL_SETTINGS && (plansMap.plus || plansMap.professional)) {
         STEPS.unshift({
             title: c('Title').t`Customization`,
             closeIfSubscriptionChange: true,
@@ -270,7 +273,8 @@ SubscriptionModal.propTypes = {
     cycle: PropTypes.number,
     coupon: PropTypes.string,
     currency: PropTypes.string,
-    plansMap: PropTypes.object
+    plansMap: PropTypes.object,
+    currentApp: PropTypes.string
 };
 
 export default SubscriptionModal;
