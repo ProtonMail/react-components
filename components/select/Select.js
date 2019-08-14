@@ -5,28 +5,17 @@ import { generateUID } from '../../helpers/component';
 import useInput from '../input/useInput';
 import ErrorZone from '../text/ErrorZone';
 
-const Select = ({
-    options,
-    error,
-    disabled,
-    size = 1,
-    className = '',
-    multiple = false,
-    onChange,
-    onBlur,
-    onFocus,
-    ...rest
-}) => {
-    const { handlers, statusClasses, status } = useInput({ onFocus, onBlur, onChange, disabled, ...rest });
+const Select = ({ options, error, size = 1, className = '', multiple = false, ...rest }) => {
+    const { handlers, statusClasses, status } = useInput({ ...rest });
     const [uid] = useState(generateUID('select'));
 
     return (
         <>
             <select
                 className={`pm-field w100 ${className} ${statusClasses}`}
-                disabled={disabled}
                 size={size}
                 multiple={multiple}
+                {...rest}
                 {...handlers}
             >
                 {options.map(({ text, ...rest }, index) => (
