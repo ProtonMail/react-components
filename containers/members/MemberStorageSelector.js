@@ -13,7 +13,7 @@ const MemberStorageSelector = ({ member, organization, onChange }) => {
     const maxPadding =
         Math.ceil((organization.MaxSpace - organization.UsedSpace + member.UsedSpace) / GIGA) * GIGA + step;
     const startNewMember = maxPadding > FIVE_GIGA ? FIVE_GIGA : maxPadding;
-    const options = range(minPadding, maxPadding, GIGA).map((value) => ({ text: `${humanSize(value, 'GB')}`, value }));
+    const options = range(minPadding, maxPadding, step).map((value) => ({ text: `${humanSize(value, 'GB')}`, value }));
     const [storage, setStorage] = useState(member.ID ? member.MaxSpace : startNewMember);
 
     const handleChange = ({ target }) => {
