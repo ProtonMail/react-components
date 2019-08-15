@@ -5,7 +5,7 @@ import { generateUID } from '../../helpers/component';
 import useInput from './useInput';
 import ErrorZone from '../text/ErrorZone';
 
-const useAutoGrow = ({ maxRows = 5, minRows = 1, autoGrow = false }, handlers) => {
+const useAutoGrow = ({ maxRows = 5, minRows = 1, autoGrow = false }) => {
     const [rows, setRows] = useState(minRows);
 
     const updateTextArea = useCallback(
@@ -28,26 +28,34 @@ const useAutoGrow = ({ maxRows = 5, minRows = 1, autoGrow = false }, handlers) =
             }
 
             setRows(currentRows);
-
-            handlers.onChange(event);
         },
-        [minRows, maxRows, handlers]
+        [minRows, maxRows]
     );
 
     if (!autoGrow) {
         return {
-            rows: maxRows,
-            updateTextArea: handlers.onChange
+            rows: maxRows
         };
     }
+
     return { rows, updateTextArea };
 };
 
 const TextArea = (props) => {
-    const { className = '', error, ...rest } = props;
-    const { handlers, statusClasses, status } = useInput(props);
+    const { className = '', error, rows: maxRows = 5, minRows = 1, autoGrow = false, onChange, ...rest } = props;
+    const { rows, updateTextArea } = useAutoGrow({ maxRows, minRows, autoGrow });
+    const { handlers, statusClasses, status } = useInput({
+        ...props,
+        onChange(e) {
+            if (updateTextArea) {
+                updateTextArea(e);
+            }
+            if (onChange) {
+                onChange(e);
+            }
+        }
+    });
     const [uid] = useState(generateUID('textarea'));
-    const { rows, updateTextArea } = useAutoGrow(props, handlers);
 
     return (
         <>
@@ -58,7 +66,6 @@ const TextArea = (props) => {
                 aria-describedby={uid}
                 {...rest}
                 {...handlers}
-                onChange={updateTextArea}
             />
             <ErrorZone id={uid}>{error && status.isDirty ? error : ''}</ErrorZone>
         </>
@@ -79,6 +86,7 @@ TextArea.propTypes = {
     placeholder: PropTypes.string,
     required: PropTypes.bool,
     rows: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    minRows: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     textareaRef: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 };
