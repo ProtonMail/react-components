@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useRef, useMemo } from 'react';
 import PropTypes from 'prop-types';
+import * as Sentry from '@sentry/browser';
 import createAuthentication from 'proton-shared/lib/authenticationStore';
 import createCache from 'proton-shared/lib/helpers/cache';
 import { formatUser, UserModel } from 'proton-shared/lib/models/userModel';
@@ -22,6 +23,17 @@ const ProtonApp = ({ storage, config, children }) => {
     const [UID, setUID] = useState(() => authentication.getUID());
     const tempDataRef = useRef({});
 
+    // No need to configure it if we don't load the DSN
+    if (config.SENTRY_DSN && !document.URL.includes('localhost:')) {
+        Sentry.init({
+            dsn: config.SENTRY_DSN,
+            release: config.SENTRY_RELEASE
+        });
+
+        Sentry.configureScope((scope) => {
+            scope.setTag('appVersion', config.APP_VERSION);
+        });
+    }
     if (UID && !cacheRef.current) {
         cacheRef.current = createCache();
     }
