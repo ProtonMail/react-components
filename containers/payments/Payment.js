@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { Label, Row, Field } from 'react-components';
-import { CYCLE, PAYMENT_METHOD_TYPES } from 'proton-shared/lib/constants';
+import { Label, Row, Field, Alert, Price } from 'react-components';
+import { CYCLE, PAYMENT_METHOD_TYPES, MIN_DONATION_AMOUNT, MIN_CREDIT_AMOUNT } from 'proton-shared/lib/constants';
 
 import Method from './Method';
 import PaymentMethodsSelect from '../paymentMethods/PaymentMethodsSelect';
@@ -11,6 +11,11 @@ import toDetails from './toDetails';
 const { CARD, PAYPAL, CASH, BITCOIN } = PAYMENT_METHOD_TYPES;
 
 const Payment = ({ type, amount, currency, cycle, onParameters, method, onMethod, onValidCard, onPay }) => {
+    const price = (a = 0) => (
+        <Price key="price" currency={currency}>
+            {a}
+        </Price>
+    );
     const handleCard = ({ card, isValid }) => {
         onValidCard(isValid);
         isValid && onParameters({ Payment: { Type: CARD, Details: toDetails(card) } });
@@ -23,6 +28,26 @@ const Payment = ({ type, amount, currency, cycle, onParameters, method, onMethod
             onParameters({ PaymentMethodID: newMethod });
         }
     };
+
+    if (type === 'donation' && amount < MIN_DONATION_AMOUNT) {
+        return (
+            <Alert type="error">{c('Error').jt`The minimum amount that can be donated is ${price(
+                MIN_DONATION_AMOUNT
+            )}`}</Alert>
+        );
+    }
+
+    if (type === 'credit' && amount < MIN_CREDIT_AMOUNT) {
+        return (
+            <Alert type="error">{c('Error').jt`The minimum amount of credit that can be added is ${price(
+                MIN_CREDIT_AMOUNT
+            )}`}</Alert>
+        );
+    }
+
+    if (amount <= 0) {
+        return <Alert type="error">{c('Error').jt`The minimum payment we accept is ${price(0)}`}</Alert>;
+    }
 
     return (
         <>
