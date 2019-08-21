@@ -11,11 +11,6 @@ import toDetails from './toDetails';
 const { CARD, PAYPAL, CASH, BITCOIN } = PAYMENT_METHOD_TYPES;
 
 const Payment = ({ type, amount, currency, cycle, onParameters, method, onMethod, onValidCard, onPay }) => {
-    const price = (a = 0) => (
-        <Price key="price" currency={currency}>
-            {a}
-        </Price>
-    );
     const handleCard = ({ card, isValid }) => {
         onValidCard(isValid);
         isValid && onParameters({ Payment: { Type: CARD, Details: toDetails(card) } });
@@ -30,23 +25,30 @@ const Payment = ({ type, amount, currency, cycle, onParameters, method, onMethod
     };
 
     if (type === 'donation' && amount < MIN_DONATION_AMOUNT) {
-        return (
-            <Alert type="error">{c('Error').jt`The minimum amount that can be donated is ${price(
-                MIN_DONATION_AMOUNT
-            )}`}</Alert>
+        const price = (
+            <Price key="price" currency={currency}>
+                {MIN_DONATION_AMOUNT}
+            </Price>
         );
+        return <Alert type="error">{c('Error').jt`The minimum amount that can be donated is ${price}`}</Alert>;
     }
 
     if (type === 'credit' && amount < MIN_CREDIT_AMOUNT) {
-        return (
-            <Alert type="error">{c('Error').jt`The minimum amount of credit that can be added is ${price(
-                MIN_CREDIT_AMOUNT
-            )}`}</Alert>
+        const price = (
+            <Price key="price" currency={currency}>
+                {MIN_CREDIT_AMOUNT}
+            </Price>
         );
+        return <Alert type="error">{c('Error').jt`The minimum amount of credit that can be added is ${price}`}</Alert>;
     }
 
     if (amount <= 0) {
-        return <Alert type="error">{c('Error').jt`The minimum payment we accept is ${price(0)}`}</Alert>;
+        const price = (
+            <Price key="price" currency={currency}>
+                {0}
+            </Price>
+        );
+        return <Alert type="error">{c('Error').jt`The minimum payment we accept is ${price}`}</Alert>;
     }
 
     return (
