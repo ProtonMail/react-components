@@ -30,7 +30,7 @@ const MainLogo = ({ url = '/inbox', external = false }) => {
 
     const logo = (() => {
         // we do not have the proper logos for all the products yet. Use mail logo in the meantime
-        if ([PROTONMAIL, PROTONMAIL_SETTINGS, PROTONCONTACTS, PROTONDRIVE, PROTONCALENDAR].includes(APP_NAME)) {
+        if ([PROTONMAIL, PROTONMAIL_SETTINGS, PROTONDRIVE].includes(APP_NAME)) {
             return <MailLogo planName={Name} />;
         }
         if (APP_NAME === PROTONCALENDAR) {
