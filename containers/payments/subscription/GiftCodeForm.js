@@ -4,7 +4,7 @@ import { c } from 'ttag';
 import { PrimaryButton, GiftCodeInput, useNotifications } from 'react-components';
 import { isValid } from 'proton-shared/lib/helpers/giftCode';
 
-const GiftCodeForm = ({ onChange, model }) => {
+const GiftCodeForm = ({ onChange, model, id }) => {
     const { createNotification } = useNotifications();
     const [gift, setGift] = useState(model.gift || '');
     const handleChange = ({ target }) => setGift(target.value);
@@ -20,7 +20,7 @@ const GiftCodeForm = ({ onChange, model }) => {
     return (
         <div className="flex">
             <div className="mr1">
-                <GiftCodeInput value={gift} onChange={handleChange} />
+                <GiftCodeInput id={id} value={gift} onChange={handleChange} />
             </div>
             <div>
                 <PrimaryButton onClick={handleClick}>{c('Action').t`Apply`}</PrimaryButton>
@@ -30,6 +30,7 @@ const GiftCodeForm = ({ onChange, model }) => {
 };
 
 GiftCodeForm.propTypes = {
+    id: PropTypes.string,
     onChange: PropTypes.func.isRequired,
     model: PropTypes.object.isRequired
 };

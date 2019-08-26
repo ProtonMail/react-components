@@ -83,15 +83,31 @@ const ProtonApp = ({ config, children }) => {
                 <RightToLeftProvider>
                     <Router>
                         <React.Fragment key={UID}>
-                            <NotificationsProvider>
-                                <ModalsProvider>
-                                    <ApiProvider UID={UID} config={config} onLogout={handleLogout}>
-                                        <AuthenticationProvider store={authenticationValue}>
-                                            <CacheProvider cache={cacheRef.current}>{children}</CacheProvider>
-                                        </AuthenticationProvider>
-                                    </ApiProvider>
-                                </ModalsProvider>
-                            </NotificationsProvider>
+                            <CacheProvider cache={cacheRef.current}>
+                                {UID ? (
+                                    <React.Fragment key={UID}>
+                                        <NotificationsProvider>
+                                            <ModalsProvider>
+                                                <ApiProvider UID={UID} config={config} onLogout={handleLogout}>
+                                                    <AuthenticationProvider store={authenticationValue}>
+                                                        {children}
+                                                    </AuthenticationProvider>
+                                                </ApiProvider>
+                                            </ModalsProvider>
+                                        </NotificationsProvider>
+                                    </React.Fragment>
+                                ) : (
+                                    <NotificationsProvider>
+                                        <ModalsProvider>
+                                            <ApiProvider config={config}>
+                                                <AuthenticationProvider store={authenticationValue}>
+                                                    {children}
+                                                </AuthenticationProvider>
+                                            </ApiProvider>
+                                        </ModalsProvider>
+                                    </NotificationsProvider>
+                                )}
+                            </CacheProvider>
                         </React.Fragment>
                     </Router>
                 </RightToLeftProvider>
