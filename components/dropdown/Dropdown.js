@@ -1,10 +1,12 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import keycode from 'keycode';
 import { classnames } from '../../helpers/component';
 import { usePopper, Popper } from '../popper';
 import useRightToLeft from '../../containers/rightToLeft/useRightToLeft';
 import { noop } from 'proton-shared/lib/helpers/function';
+
+const scrollContainerClass = 'main';
 
 const Dropdown = ({
     anchorRef,
@@ -27,18 +29,18 @@ const Dropdown = ({
     const { placement, position } = usePopper(popperRef, anchorRef, isOpen, {
         originalPlacement: isRTL ? rtlAdjustedPlacement : originalPlacement,
         offset: 20,
-        scrollContainerClass: 'main'
+        scrollContainerClass
     });
 
-    const handleKeydown = (event) => {
+    const handleKeydown = useCallback((event) => {
         const key = keycode(event);
 
         if (key === 'escape' && event.target === document.activeElement) {
             onClose();
         }
-    };
+    }, []);
 
-    const handleClickOutside = (event) => {
+    const handleClickOutside = useCallback((event) => {
         // Do nothing if clicking ref's element or descendent elements
         if (
             !autoCloseOutside ||
@@ -48,7 +50,13 @@ const Dropdown = ({
             return;
         }
         onClose();
-    };
+    }, []);
+
+    const handleScroll = useCallback(() => {
+        if (autoCloseOutside) {
+            onClose();
+        }
+    }, []);
 
     const handleClickContent = () => {
         if (autoClose) {
@@ -61,10 +69,13 @@ const Dropdown = ({
         document.addEventListener('touchstart', handleClickOutside);
         document.addEventListener('keydown', handleKeydown);
 
+        const scrollContainer = document.getElementsByClassName(scrollContainerClass)[0] || document.body;
+        scrollContainer.addEventListener('scroll', handleScroll);
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
             document.removeEventListener('touchstart', handleClickOutside);
             document.removeEventListener('keydown', handleKeydown);
+            scrollContainer.removeEventListener('scroll', handleScroll);
         };
     }, []);
 
