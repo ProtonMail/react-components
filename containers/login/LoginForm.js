@@ -220,7 +220,6 @@ const LoginForm = ({ onLogin, needHelp, ignoreUnlock = false }) => {
                 handleTotp().catch((e) => {
                     // In case of any other error than retry error, automatically cancel here to allow the user to retry.
                     if (e.name !== 'RetryTOTPError') {
-                        console.error(e);
                         return handleCancel();
                     }
                 })
@@ -247,7 +246,6 @@ const LoginForm = ({ onLogin, needHelp, ignoreUnlock = false }) => {
                 handleUnlock(keyPassword).catch((e) => {
                     // In case of any other error than password error, automatically cancel here to allow the user to retry.
                     if (e.name !== 'PasswordError') {
-                        console.error(e);
                         return handleCancel();
                     } else {
                         createNotification({ type: 'error', text: getErrorText(e) });
