@@ -1,7 +1,6 @@
 import React from 'react';
-import { FormModal, Alert } from 'react-components';
+import { FormModal, Alert, Href } from 'react-components';
 import { c } from 'ttag';
-import { Href } from '../../index';
 
 const AbuseModal = (props) => {
     const title = c('Title').t`Account disabled`;
