@@ -1,8 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { classnames } from '../../helpers/component';
-
 const Radio = ({ id, children, className = 'inline-flex', ...rest }) => {
     return (
         <label htmlFor={id} className={className}>
