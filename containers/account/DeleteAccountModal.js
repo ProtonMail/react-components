@@ -18,7 +18,9 @@ import {
     useUserSettings,
     useApi,
     useAuthentication,
-    useConfig
+    useConfig,
+    ResetButton,
+    ErrorButton
 } from 'react-components';
 import { deleteUser } from 'proton-shared/lib/api/user';
 import { reportBug } from 'proton-shared/lib/api/reports';
@@ -82,11 +84,16 @@ const DeleteAccountModal = ({ onClose, ...rest }) => {
 
     return (
         <FormModal
+            footer={
+                <>
+                    <ResetButton disabled={loading}>{c('Action').t`Cancel`}</ResetButton>
+                    <ErrorButton loading={loading} type="submit">{c('Action').t`Delete`}</ErrorButton>
+                </>
+            }
             onSubmit={handleSubmit}
             onClose={onClose}
             title={c('Title').t`Delete account`}
             loading={loading}
-            submit={c('Action').t`Delete`}
             {...rest}
         >
             <Alert type="warning">
