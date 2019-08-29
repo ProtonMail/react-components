@@ -18,7 +18,7 @@ const AbuseModal = (props) => {
     );
 
     return (
-        <FormModal hasClose={false} hasSubmit={false} title={title} {...props}>
+        <FormModal hasClose={false} hasSubmit={false} title={title} close={c('Action').t`Close`} {...props}>
             <Alert type="warning">
                 <div className="mb1">{c('Info').jt`Account disabled due to ${abuseOrFraudLink}.`}</div>
                 <div>{c('Info').jt`You can find more information and contact us ${contactLink}.`}</div>
