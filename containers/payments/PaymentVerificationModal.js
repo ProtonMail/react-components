@@ -22,6 +22,7 @@ const PaymentVerificationModal = ({ params, token, url, onSubmit, ...rest }) => 
         } catch (error) {
             rest.onClose();
 
+            // if not coming from API error
             if (error.message && !error.config) {
                 createNotification({ text: error.message, type: 'error' });
             }
