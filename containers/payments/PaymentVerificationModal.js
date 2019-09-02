@@ -20,10 +20,11 @@ const PaymentVerificationModal = ({ params, token, url, onSubmit, ...rest }) => 
             onSubmit(toParams(params, token));
             rest.onClose();
         } catch (error) {
-            if (error.message) {
+            rest.onClose();
+
+            if (error.message && !error.config) {
                 createNotification({ text: error.message, type: 'error' });
             }
-            rest.onClose();
         }
     };
 
