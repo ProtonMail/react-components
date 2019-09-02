@@ -1,19 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { FormModal, useNotifications, useApi, useLoading } from 'react-components';
+import { FormModal, PaymentVerificationModal, useNotifications, useApi, useLoading, useModals } from 'react-components';
 import { setPaymentMethod } from 'proton-shared/lib/api/payments';
 import { PAYMENT_METHOD_TYPES } from 'proton-shared/lib/constants';
 
 import Card from './Card';
 import useCard from './useCard';
 import toDetails from './toDetails';
-import { handle3DS } from './paymentTokenHelper';
 
 const EditCardModal = ({ card: existingCard, onClose, onChange, ...rest }) => {
     const api = useApi();
     const [loading, withLoading] = useLoading();
     const { createNotification } = useNotifications();
+    const { createModal } = useModals();
     const title = existingCard ? c('Title').t`Edit credit/debit card` : c('Title').t`Add credit/debit card`;
     const { card, updateCard, errors, isValid } = useCard(existingCard);
 
@@ -23,17 +23,22 @@ const EditCardModal = ({ card: existingCard, onClose, onChange, ...rest }) => {
             return;
         }
         // 1 CHF to allow card authorizations
-        const { Payment } = await handle3DS(
-            {
-                Amount: 100,
-                Currency: 'CHF',
-                Payment: {
-                    Type: PAYMENT_METHOD_TYPES.CARD,
-                    Details: toDetails(card)
-                }
-            },
-            api
-        );
+        const { Payment } = await new Promise((resolve, reject) => {
+            createModal(
+                <PaymentVerificationModal
+                    params={{
+                        Amount: 100,
+                        Currency: 'CHF',
+                        Payment: {
+                            Type: PAYMENT_METHOD_TYPES.CARD,
+                            Details: toDetails(card)
+                        }
+                    }}
+                    onSubmit={resolve}
+                    onClose={reject}
+                />
+            );
+        });
         await api(setPaymentMethod(Payment));
         await onChange();
         onClose();

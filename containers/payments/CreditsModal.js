@@ -7,11 +7,12 @@ import {
     Row,
     Field,
     Alert,
+    PaymentVerificationModal,
     useNotifications,
     useApiWithoutResult,
     useEventManager,
-    useApi,
-    useConfig
+    useConfig,
+    useModals
 } from 'react-components';
 import { buyCredit } from 'proton-shared/lib/api/payments';
 import { DEFAULT_CURRENCY, DEFAULT_CREDITS_AMOUNT, APPS } from 'proton-shared/lib/constants';
@@ -19,7 +20,6 @@ import { DEFAULT_CURRENCY, DEFAULT_CREDITS_AMOUNT, APPS } from 'proton-shared/li
 import PaymentSelector from './PaymentSelector';
 import Payment from './Payment';
 import usePayment from './usePayment';
-import { handle3DS } from './paymentTokenHelper';
 
 const getCurrenciesI18N = () => ({
     EUR: c('Monetary unit').t`Euro`,
@@ -31,8 +31,8 @@ const { PROTONVPN_SETTINGS } = APPS;
 
 const CreditsModal = ({ onClose, ...rest }) => {
     const { APP_NAME } = useConfig();
-    const api = useApi();
     const { call } = useEventManager();
+    const { createModal } = useModals();
     const { method, setMethod, parameters, setParameters, canPay, setCardValidity } = usePayment();
     const { createNotification } = useNotifications();
     const { request, loading } = useApiWithoutResult(buyCredit);
@@ -43,7 +43,15 @@ const CreditsModal = ({ onClose, ...rest }) => {
     const i18nCurrency = i18n[currency];
 
     const handleSubmit = async (params = parameters) => {
-        const requestBody = await handle3DS({ ...params, Amount: amount, Currency: currency }, api);
+        const requestBody = await new Promise((resolve, reject) => {
+            createModal(
+                <PaymentVerificationModal
+                    params={{ ...params, Amount: amount, Currency: currency }}
+                    onSubmit={resolve}
+                    onClose={reject}
+                />
+            );
+        });
         await request(requestBody);
         await call();
         onClose();

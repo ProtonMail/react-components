@@ -1,28 +1,39 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { Alert, PrimaryButton, SmallButton, Price, useApi, useLoading } from 'react-components';
+import {
+    Alert,
+    PrimaryButton,
+    SmallButton,
+    Price,
+    PaymentVerificationModal,
+    useModals,
+    useLoading
+} from 'react-components';
 import { MIN_PAYPAL_AMOUNT, MAX_PAYPAL_AMOUNT } from 'proton-shared/lib/constants';
-
-import { handle3DS } from './paymentTokenHelper';
 
 const PayPal = ({ amount: Amount, currency: Currency, onPay, type }) => {
     const [loading, withLoading] = useLoading();
-    const api = useApi();
+    const { createModal } = useModals();
     const [error, setError] = useState();
 
     const handleClick = async () => {
         try {
-            const requestBody = await handle3DS(
-                {
-                    Amount,
-                    Currency,
-                    Payment: {
-                        Type: 'paypal'
-                    }
-                },
-                api
-            );
+            const requestBody = await new Promise((resolve, reject) => {
+                createModal(
+                    <PaymentVerificationModal
+                        params={{
+                            Amount,
+                            Currency,
+                            Payment: {
+                                Type: 'paypal'
+                            }
+                        }}
+                        onSubmit={resolve}
+                        onClose={reject}
+                    />
+                );
+            });
             onPay(requestBody);
         } catch (error) {
             setError(error);

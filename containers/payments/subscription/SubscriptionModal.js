@@ -8,6 +8,7 @@ import {
     Button,
     PrimaryButton,
     Input,
+    PaymentVerificationModal,
     usePayment,
     Payment,
     useStep,
@@ -21,7 +22,8 @@ import {
     Field,
     Row,
     Wizard,
-    useConfig
+    useConfig,
+    useModals
 } from 'react-components';
 import { DEFAULT_CURRENCY, DEFAULT_CYCLE, APPS } from 'proton-shared/lib/constants';
 import { checkSubscription, subscribe } from 'proton-shared/lib/api/payments';
@@ -34,7 +36,6 @@ import CustomVPNSection from './CustomVPNSection';
 import OrderSummary from './OrderSummary';
 import Thanks from './Thanks';
 import { getCheckParams } from './helpers';
-import { handle3DS } from '../paymentTokenHelper';
 
 const { PROTONMAIL_SETTINGS, PROTONVPN_SETTINGS } = APPS;
 
@@ -48,6 +49,7 @@ const SubscriptionModal = ({
 }) => {
     const { APP_NAME } = useConfig();
     const api = useApi();
+    const { createModal } = useModals();
     const [{ hasPaidMail } = {}] = useUser();
     const [{ MaxMembers } = {}] = useOrganization();
     const [loading, setLoading] = useState(false);
@@ -119,10 +121,15 @@ const SubscriptionModal = ({
         try {
             setLoading(true);
             const checkParams = getCheckParams({ ...model, plans });
-            const requestBody = await handle3DS(
-                { ...params, Amount: check.AmountDue, Currency: checkParams.Currency },
-                api
-            );
+            const requestBody = await new Promise((resolve, reject) => {
+                createModal(
+                    <PaymentVerificationModal
+                        params={{ ...params, Amount: check.AmountDue, Currency: checkParams.Currency }}
+                        onSubmit={resolve}
+                        onClose={reject}
+                    />
+                );
+            });
             await request({
                 ...checkParams,
                 ...requestBody
