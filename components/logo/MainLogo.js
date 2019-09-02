@@ -22,7 +22,7 @@ const { PROTONMAIL, PROTONCONTACTS, PROTONDRIVE, PROTONCALENDAR, PROTONVPN_SETTI
 const MainLogo = ({ url = '/inbox', external = false }) => {
     const { APP_NAME } = useConfig();
     const [subscription] = useSubscription();
-    const className = 'logo-container nodecoration flex-item-centered-vert';
+    const className = 'logo-container nodecoration flex-item-centered-vert nomobile';
     const planName = getPlanName(subscription, APP_NAME === PROTONVPN_SETTINGS ? VPN : MAIL);
 
     const logo = (() => {
