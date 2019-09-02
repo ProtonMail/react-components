@@ -1,13 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { FormModal, PaymentVerificationModal, useNotifications, useApi, useLoading, useModals } from 'react-components';
+import { FormModal, useNotifications, useApi, useLoading, useModals } from 'react-components';
 import { setPaymentMethod } from 'proton-shared/lib/api/payments';
 import { PAYMENT_METHOD_TYPES } from 'proton-shared/lib/constants';
 
 import Card from './Card';
 import useCard from './useCard';
 import toDetails from './toDetails';
+import { handlePaymentToken } from './paymentTokenHelper';
 
 const EditCardModal = ({ card: existingCard, onClose, onChange, ...rest }) => {
     const api = useApi();
@@ -23,21 +24,17 @@ const EditCardModal = ({ card: existingCard, onClose, onChange, ...rest }) => {
             return;
         }
         // 1 CHF to allow card authorizations
-        const { Payment } = await new Promise((resolve, reject) => {
-            createModal(
-                <PaymentVerificationModal
-                    params={{
-                        Amount: 100,
-                        Currency: 'CHF',
-                        Payment: {
-                            Type: PAYMENT_METHOD_TYPES.CARD,
-                            Details: toDetails(card)
-                        }
-                    }}
-                    onSubmit={resolve}
-                    onClose={reject}
-                />
-            );
+        const { Payment } = handlePaymentToken({
+            params: {
+                Amount: 100,
+                Currency: 'CHF',
+                Payment: {
+                    Type: PAYMENT_METHOD_TYPES.CARD,
+                    Details: toDetails(card)
+                }
+            },
+            api,
+            createModal
         });
         await api(setPaymentMethod(Payment));
         await onChange();

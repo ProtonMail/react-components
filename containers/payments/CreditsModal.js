@@ -7,12 +7,12 @@ import {
     Row,
     Field,
     Alert,
-    PaymentVerificationModal,
     useNotifications,
-    useApiWithoutResult,
     useEventManager,
     useConfig,
-    useModals
+    useModals,
+    useApi,
+    useLoading
 } from 'react-components';
 import { buyCredit } from 'proton-shared/lib/api/payments';
 import { DEFAULT_CURRENCY, DEFAULT_CREDITS_AMOUNT, APPS } from 'proton-shared/lib/constants';
@@ -20,6 +20,7 @@ import { DEFAULT_CURRENCY, DEFAULT_CREDITS_AMOUNT, APPS } from 'proton-shared/li
 import PaymentSelector from './PaymentSelector';
 import Payment from './Payment';
 import usePayment from './usePayment';
+import { handlePaymentToken } from './paymentTokenHelper';
 
 const getCurrenciesI18N = () => ({
     EUR: c('Monetary unit').t`Euro`,
@@ -30,12 +31,13 @@ const getCurrenciesI18N = () => ({
 const { PROTONVPN_SETTINGS } = APPS;
 
 const CreditsModal = ({ onClose, ...rest }) => {
+    const api = useApi();
     const { APP_NAME } = useConfig();
     const { call } = useEventManager();
     const { createModal } = useModals();
     const { method, setMethod, parameters, setParameters, canPay, setCardValidity } = usePayment();
     const { createNotification } = useNotifications();
-    const { request, loading } = useApiWithoutResult(buyCredit);
+    const [loading, withLoading] = useLoading();
     const [currency, setCurrency] = useState(DEFAULT_CURRENCY);
     const [amount, setAmount] = useState(DEFAULT_CREDITS_AMOUNT);
 
@@ -43,16 +45,12 @@ const CreditsModal = ({ onClose, ...rest }) => {
     const i18nCurrency = i18n[currency];
 
     const handleSubmit = async (params = parameters) => {
-        const requestBody = await new Promise((resolve, reject) => {
-            createModal(
-                <PaymentVerificationModal
-                    params={{ ...params, Amount: amount, Currency: currency }}
-                    onSubmit={resolve}
-                    onClose={reject}
-                />
-            );
+        const requestBody = await handlePaymentToken({
+            params: { ...params, Amount: amount, Currency: currency },
+            api,
+            createModal
         });
-        await request(requestBody);
+        await api(buyCredit(requestBody));
         await call();
         onClose();
         createNotification({ text: c('Success').t`Credits added` });
@@ -62,7 +60,7 @@ const CreditsModal = ({ onClose, ...rest }) => {
         <FormModal
             type="small"
             onClose={onClose}
-            onSubmit={() => handleSubmit()}
+            onSubmit={() => withLoading(handleSubmit())}
             loading={loading}
             submit={canPay && c('Action').t`Top up`}
             title={c('Title').t`Add credits`}

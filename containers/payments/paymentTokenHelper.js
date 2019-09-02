@@ -1,7 +1,9 @@
+import React from 'react';
 import { PAYMENT_METHOD_TYPES, PAYMENT_TOKEN_STATUS } from 'proton-shared/lib/constants';
-import { getTokenStatus } from 'proton-shared/lib/api/payments';
+import { getTokenStatus, createToken } from 'proton-shared/lib/api/payments';
 import { wait } from 'proton-shared/lib/helpers/promise';
 import { c } from 'ttag';
+import { PaymentVerificationModal } from 'react-components';
 
 const {
     STATUS_PENDING,
@@ -11,7 +13,7 @@ const {
     STATUS_NOT_SUPPORTED
 } = PAYMENT_TOKEN_STATUS;
 
-const { TOKEN } = PAYMENT_METHOD_TYPES;
+const { TOKEN, BITCOIN, CASH } = PAYMENT_METHOD_TYPES;
 
 const DELAY_PULLING = 5000;
 const DELAY_LISTENING = 1000;
@@ -129,4 +131,31 @@ export const toParams = (params, Token) => {
             }
         }
     };
+};
+
+export const handlePaymentToken = async ({ params, api, createModal }) => {
+    const { Payment, Amount, Currency, PaymentMethodID } = params;
+    const { Type } = Payment || {};
+
+    if ([CASH, BITCOIN, TOKEN].includes(Type)) {
+        return params;
+    }
+
+    const { Token, Status, ApprovalURL } = await api(createToken({ Payment, Amount, Currency, PaymentMethodID }));
+
+    if (Status === STATUS_CHARGEABLE) {
+        return toParams(params, Token);
+    }
+
+    return new Promise((resolve, reject) => {
+        createModal(
+            <PaymentVerificationModal
+                params={params}
+                url={ApprovalURL}
+                token={Token}
+                onSubmit={resolve}
+                onClose={reject}
+            />
+        );
+    });
 };

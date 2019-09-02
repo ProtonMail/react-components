@@ -8,11 +8,9 @@ import {
     Button,
     PrimaryButton,
     Input,
-    PaymentVerificationModal,
     usePayment,
     Payment,
     useStep,
-    useApiWithoutResult,
     useApi,
     useEventManager,
     useNotifications,
@@ -36,6 +34,7 @@ import CustomVPNSection from './CustomVPNSection';
 import OrderSummary from './OrderSummary';
 import Thanks from './Thanks';
 import { getCheckParams } from './helpers';
+import { handlePaymentToken } from '../paymentTokenHelper';
 
 const { PROTONMAIL_SETTINGS, PROTONVPN_SETTINGS } = APPS;
 
@@ -60,7 +59,6 @@ const SubscriptionModal = ({
     const [model, setModel] = useState({ cycle, currency, coupon, plansMap });
     const { call } = useEventManager();
     const { step, next, previous } = useStep(0);
-    const { request } = useApiWithoutResult(subscribe);
 
     const features = [
         ...(hasPaidMail
@@ -121,19 +119,17 @@ const SubscriptionModal = ({
         try {
             setLoading(true);
             const checkParams = getCheckParams({ ...model, plans });
-            const requestBody = await new Promise((resolve, reject) => {
-                createModal(
-                    <PaymentVerificationModal
-                        params={{ ...params, Amount: check.AmountDue, Currency: checkParams.Currency }}
-                        onSubmit={resolve}
-                        onClose={reject}
-                    />
-                );
+            const requestBody = await handlePaymentToken({
+                params: { ...params, Amount: check.AmountDue, Currency: checkParams.Currency },
+                api,
+                createModal
             });
-            await request({
-                ...checkParams,
-                ...requestBody
-            });
+            await api(
+                subscribe({
+                    ...checkParams,
+                    ...requestBody
+                })
+            );
             await call();
             setLoading(false);
             next();
@@ -154,7 +150,7 @@ const SubscriptionModal = ({
                 if (!checkResult.AmountDue) {
                     try {
                         setLoading(true);
-                        await request({ Amount: checkResult.AmountDue, ...getCheckParams({ ...model, plans }) });
+                        await api(subscribe({ Amount: checkResult.AmountDue, ...getCheckParams({ ...model, plans }) }));
                         await call();
                         setLoading(false);
                     } catch (error) {

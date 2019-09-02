@@ -1,24 +1,14 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
 import PropTypes from 'prop-types';
-import {
-    Label,
-    FormModal,
-    Row,
-    Field,
-    Alert,
-    PaymentVerificationModal,
-    useNotifications,
-    useApi,
-    useLoading,
-    useModals
-} from 'react-components';
+import { Label, FormModal, Row, Field, Alert, useNotifications, useApi, useLoading, useModals } from 'react-components';
 import { donate } from 'proton-shared/lib/api/payments';
 import { DEFAULT_CURRENCY, DEFAULT_DONATION_AMOUNT } from 'proton-shared/lib/constants';
 
 import PaymentSelector from './PaymentSelector';
 import Payment from './Payment';
 import usePayment from './usePayment';
+import { handlePaymentToken } from './paymentTokenHelper';
 
 const DonateModal = ({ ...rest }) => {
     const api = useApi();
@@ -30,14 +20,10 @@ const DonateModal = ({ ...rest }) => {
     const { createModal } = useModals();
 
     const handleSubmit = async (params = parameters) => {
-        const requestBody = await new Promise((resolve, reject) => {
-            createModal(
-                <PaymentVerificationModal
-                    params={{ ...params, Amount: amount, Currency: currency }}
-                    onSubmit={resolve}
-                    onClose={reject}
-                />
-            );
+        const requestBody = await handlePaymentToken({
+            params: { ...params, Amount: amount, Currency: currency },
+            api,
+            createModal
         });
         await api(donate(requestBody));
         rest.onClose();
