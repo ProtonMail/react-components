@@ -4,7 +4,7 @@ import { c } from 'ttag';
 import { PrimaryButton, GiftCodeInput, useNotifications } from 'react-components';
 import { isValid } from 'proton-shared/lib/helpers/giftCode';
 
-const GiftCodeForm = ({ onChange, loading, model, id }) => {
+const GiftCodeForm = ({ onChange, model }) => {
     const { createNotification } = useNotifications();
     const [gift, setGift] = useState(model.gift || '');
     const handleChange = ({ target }) => setGift(target.value);
@@ -20,20 +20,18 @@ const GiftCodeForm = ({ onChange, loading, model, id }) => {
     return (
         <div className="flex">
             <div className="mr1">
-                <GiftCodeInput id={id} value={gift} onChange={handleChange} />
+                <GiftCodeInput value={gift} onChange={handleChange} />
             </div>
             <div>
-                <PrimaryButton loading={loading} onClick={handleClick}>{c('Action').t`Apply`}</PrimaryButton>
+                <PrimaryButton onClick={handleClick}>{c('Action').t`Apply`}</PrimaryButton>
             </div>
         </div>
     );
 };
 
 GiftCodeForm.propTypes = {
-    id: PropTypes.string,
     onChange: PropTypes.func.isRequired,
-    model: PropTypes.object.isRequired,
-    loading: PropTypes.bool.isRequired
+    model: PropTypes.object.isRequired
 };
 
 export default GiftCodeForm;
