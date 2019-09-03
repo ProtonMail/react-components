@@ -69,7 +69,7 @@ const ConfigsTable = ({ loading, servers = [], platform, protocol, category, isU
         });
         const blob = new Blob([buffer], { type: 'application/x-openvpn-profile' });
         const [country, ...rest] = Domain.split('.');
-        const domain = CATEGORY.COUNTRY ? [country.substring(0, 2), ...rest].join('.') : Domain;
+        const domain = category === CATEGORY.COUNTRY ? [country.substring(0, 2), ...rest].join('.') : Domain;
         downloadFile(blob, `${domain}.${protocol}.ovpn`);
     };
 
