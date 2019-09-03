@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "side-effects": false,
+  "sideEffects": false,
   "scripts": {
     "test": "jest",
     "export": "./makeExport",
