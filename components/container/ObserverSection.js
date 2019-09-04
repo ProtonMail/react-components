@@ -62,9 +62,14 @@ const ObserverSection = ({
     }, [ref.current]);
 
     return (
-        <section id={id} className={className} ref={ref}>
-            {children}
-        </section>
+        <>
+            <div className="relative">
+                <div id={id} className="header-height-anchor" />
+            </div>
+            <section className={className} ref={ref}>
+                {children}
+            </section>
+        </>
     );
 };
 
