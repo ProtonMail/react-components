@@ -10,7 +10,6 @@ export { default as TableCell } from './components/table/TableCell';
 export { default as TableFooter } from './components/table/TableFooter';
 export { default as TableCellBusy } from './components/table/TableCellBusy';
 export { default as Select } from './components/select/Select';
-export { default as TimeSelect } from './components/select/TimeSelect';
 export { default as Breadcrumb } from './components/breadcrumb/Breadcrumb';
 export { default as Wizard } from './components/wizard/Wizard';
 export { default as Alert } from './components/alert/Alert';
@@ -59,6 +58,7 @@ export { default as Dropdown } from './components/dropdown/Dropdown';
 export { default as SimpleDropdown } from './components/dropdown/SimpleDropdown';
 export { usePopper, Popper, usePopperAnchor } from './components/popper';
 export { default as ColorSelector } from './components/color/ColorSelector';
+export { default as TimeInput } from './components/input/TimeInput';
 export { default as RichTextEditor } from './components/input/RichTextEditor';
 export { default as Checkbox } from './components/input/Checkbox';
 export { default as ColorPicker } from './components/input/ColorPicker';
@@ -99,6 +99,7 @@ export { default as ConfirmModal } from './components/modal/Confirm';
 export { default as SimpleFormModal } from './components/modal/SimpleFormModal';
 export { default as PreviewPDFModal } from './components/modal/PreviewPDFModal';
 export { default as FooterModal } from './components/modal/Footer';
+export { default as MiniCalendar } from './components/miniCalendar/MiniCalendar';
 export { default as Price } from './components/price/Price';
 export { default as Progress } from './components/progress/Progress';
 export { default as CircularProgress } from './components/progress/CircularProgress';
@@ -290,8 +291,7 @@ export { default as EventManagerProvider } from './containers/eventManager/Event
 export { default as useRightToLeft } from './containers/rightToLeft/useRightToLeft';
 export { default as RightToLeftProvider } from './containers/rightToLeft/Provider';
 
-export { default as useForceRefresh } from './containers/forceRefresh/useForceRefresh';
-export { default as ForceRefreshProvider } from './containers/forceRefresh/Provider';
+export { default as useLocaleLoader } from './containers/locale/useLocaleLoader';
 export { default as LocaleInjector } from './containers/locale/LocaleInjector';
 
 export { default as LabelsSection } from './containers/labels/LabelsSection';

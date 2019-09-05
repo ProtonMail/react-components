@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import {
     SubTitle,
@@ -8,15 +7,13 @@ import {
     Label,
     Select,
     useApi,
-    useForceRefresh,
     useLoading,
     useNotifications,
     useEventManager,
+    useLocaleLoader,
     useUserSettings
 } from 'react-components';
 import { updateLocale } from 'proton-shared/lib/api/settings';
-import { loadLocale } from 'proton-shared/lib/i18n';
-import { DEFAULT_LOCALE } from 'proton-shared/lib/constants';
 
 const LOCALES = {
     cs_CZ: 'Čeština',
@@ -39,15 +36,15 @@ const LOCALES = {
     zh_TW: '繁體中'
 };
 
-function LanguageSection({ locales }) {
+const LanguageSection = () => {
+    const loadLocale = useLocaleLoader();
     const [{ Locale }] = useUserSettings();
     const api = useApi();
     const { call } = useEventManager();
     const { createNotification } = useNotifications();
     const [loading, withLoading] = useLoading();
-    const forceRefresh = useForceRefresh();
 
-    const options = [DEFAULT_LOCALE].concat(Object.keys(locales)).map((value) => ({
+    const options = Object.keys(LOCALES).map((value) => ({
         text: LOCALES[value],
         value
     }));
@@ -55,7 +52,7 @@ function LanguageSection({ locales }) {
     const handleChange = async ({ target }) => {
         const newLocale = target.value;
         await api(updateLocale(newLocale));
-        await loadLocale(newLocale, locales);
+        await loadLocale(newLocale);
         await call();
         createNotification({ text: c('Success').t`Locale updated` });
     };
@@ -72,19 +69,13 @@ function LanguageSection({ locales }) {
                         id="languageSelect"
                         options={options}
                         onChange={(e) => {
-                            withLoading(handleChange(e))
-                                // To avoid state change on unmounted component
-                                .then(forceRefresh);
+                            withLoading(handleChange(e));
                         }}
                     />
                 </Field>
             </Row>
         </>
     );
-}
-
-LanguageSection.propTypes = {
-    locales: PropTypes.object.isRequired
 };
 
 export default LanguageSection;

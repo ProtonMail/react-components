@@ -1,29 +1,21 @@
 import { useEffect } from 'react';
-import PropTypes from 'prop-types';
-import { loadLocale, currentLocale, getBestMatch } from 'proton-shared/lib/i18n';
-import { useUserSettings } from 'react-components';
+import { useUserSettings, useLocaleLoader } from 'react-components';
 
 /**
  * The purpose of this component is to load the locale for a user
  * when it's been changed in another tab.
  */
-export const LocaleInjector = ({ locales, refresh }) => {
+export const LocaleInjector = () => {
     const [{ Locale } = {}] = useUserSettings();
+    const loadLocale = useLocaleLoader();
 
     useEffect(() => {
-        // Already changed in the same window.
-        if (currentLocale === getBestMatch(Locale, locales)) {
-            return;
-        }
-        loadLocale(Locale, locales).then(refresh.current);
+        loadLocale(Locale);
     }, [Locale]);
 
     return null;
 };
 
-LocaleInjector.propTypes = {
-    locales: PropTypes.object.isRequired,
-    refresh: PropTypes.object
-};
+LocaleInjector.propTypes = {};
 
 export default LocaleInjector;

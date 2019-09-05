@@ -131,7 +131,9 @@ const InvoicesSection = () => {
                                     <InvoiceAmount key={key} invoice={invoice} />,
                                     <InvoiceType key={key} invoice={invoice} />,
                                     <InvoiceState key={key} invoice={invoice} />,
-                                    <Time key={key}>{invoice.CreateTime}</Time>,
+                                    <Time key={key}>
+                                        {invoice.CreateTime}
+                                    </Time>,
                                     <InvoiceActions key={key} invoice={invoice} fetchInvoices={request} />
                                 ]}
                             />

@@ -8,7 +8,6 @@ import { STATUS } from 'proton-shared/lib/models/cache';
 import createSecureSessionStorage from 'proton-shared/lib/createSecureSessionStorage';
 import { MAILBOX_PASSWORD_KEY, UID_KEY } from 'proton-shared/lib/constants';
 
-import CompatibilityCheck from './CompatibilityCheck';
 import Icons from '../../components/icon/Icons';
 import useInstance from '../../hooks/useInstance';
 import ConfigProvider from '../config/Provider';
@@ -18,8 +17,10 @@ import ApiProvider from '../api/ApiProvider';
 import CacheProvider from '../cache/Provider';
 import AuthenticationProvider from '../authentication/Provider';
 import RightToLeftProvider from '../rightToLeft/Provider';
+import LocaleLoaderProvider from '../locale/LocaleLoaderProvider';
+import CompatibilityCheck from './CompatibilityCheck';
 
-const ProtonApp = ({ config, children }) => {
+const ProtonApp = ({ config, locales, children }) => {
     const authentication = useInstance(() =>
         createAuthentication(createSecureSessionStorage([MAILBOX_PASSWORD_KEY, UID_KEY]))
     );
@@ -76,32 +77,38 @@ const ProtonApp = ({ config, children }) => {
         };
     }, [UID]);
 
+    const [, setRefresh] = useState();
+    const handleRefresh = () => setRefresh(Object.create(null));
+
     return (
         <CompatibilityCheck>
-            <Icons />
-            <ConfigProvider config={config}>
-                <RightToLeftProvider>
-                    <Router>
-                        <React.Fragment key={UID}>
-                            <NotificationsProvider>
-                                <ModalsProvider>
-                                    <ApiProvider UID={UID} config={config} onLogout={handleLogout}>
-                                        <AuthenticationProvider store={authenticationValue}>
-                                            <CacheProvider cache={cacheRef.current}>{children}</CacheProvider>
-                                        </AuthenticationProvider>
-                                    </ApiProvider>
-                                </ModalsProvider>
-                            </NotificationsProvider>
-                        </React.Fragment>
-                    </Router>
-                </RightToLeftProvider>
-            </ConfigProvider>
+            <LocaleLoaderProvider locales={locales} onRefresh={handleRefresh}>
+                <Icons />
+                <ConfigProvider config={config}>
+                    <RightToLeftProvider>
+                        <Router>
+                            <React.Fragment key={UID}>
+                                <NotificationsProvider>
+                                    <ModalsProvider>
+                                        <ApiProvider UID={UID} config={config} onLogout={handleLogout}>
+                                            <AuthenticationProvider store={authenticationValue}>
+                                                <CacheProvider cache={cacheRef.current}>{children}</CacheProvider>
+                                            </AuthenticationProvider>
+                                        </ApiProvider>
+                                    </ModalsProvider>
+                                </NotificationsProvider>
+                            </React.Fragment>
+                        </Router>
+                    </RightToLeftProvider>
+                </ConfigProvider>
+            </LocaleLoaderProvider>
         </CompatibilityCheck>
     );
 };
 
 ProtonApp.propTypes = {
     config: PropTypes.object.isRequired,
+    locales: PropTypes.object,
     children: PropTypes.node.isRequired
 };
 

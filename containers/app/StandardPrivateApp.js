@@ -1,20 +1,19 @@
-import React, { useState, useRef, useLayoutEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
     EventManagerProvider,
-    ForceRefreshProvider,
     ModalsChildren,
     ThemeInjector,
     LocaleInjector,
     useApi,
-    useCache
+    useCache,
+    useLocaleLoader
 } from 'react-components';
 import { UserModel, UserSettingsModel } from 'proton-shared/lib/models';
 
 import createEventManager from 'proton-shared/lib/eventManager/eventManager';
 import { loadModels } from 'proton-shared/lib/models/helper';
 import { loadOpenPGP } from 'proton-shared/lib/openpgp';
-import { loadLocale } from 'proton-shared/lib/i18n';
 import { uniqueBy } from 'proton-shared/lib/helpers/array';
 import { getLatestID } from 'proton-shared/lib/api/events';
 
@@ -29,18 +28,19 @@ const getEventID = ({ cache, api }) => {
     return Promise.resolve(tmpEventID || api(getLatestID()).then(({ EventID }) => EventID));
 };
 
-const Preload = ({ locales = {}, preloadModels = [], onSuccess, onError }) => {
+const Preload = ({ preloadModels = [], onSuccess, onError }) => {
+    const loadLocale = useLocaleLoader();
     const api = useApi();
     const cache = useCache();
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         (async () => {
             const [[userSettings], eventID] = await Promise.all([
                 loadModels(uniqueBy([UserSettingsModel, UserModel, ...preloadModels], (x) => x), { api, cache }),
                 getEventID({ api, cache }),
                 loadOpenPGP()
             ]);
-            await loadLocale(userSettings.Locale, locales);
+            await loadLocale(userSettings.Locale);
             return createEventManager({ api, eventID });
         })()
             .then(onSuccess)
@@ -50,10 +50,9 @@ const Preload = ({ locales = {}, preloadModels = [], onSuccess, onError }) => {
     return null;
 };
 
-const StandardPrivateApp = ({ onLogout, locales = {}, preloadModels = [], eventModels = [], children }) => {
+const StandardPrivateApp = ({ onLogout, preloadModels = [], eventModels = [], children }) => {
     const [loading, setLoading] = useState(true);
     const eventManagerRef = useRef();
-    const refreshRef = useRef();
 
     if (loading) {
         return (
@@ -61,7 +60,6 @@ const StandardPrivateApp = ({ onLogout, locales = {}, preloadModels = [], eventM
                 <Preload
                     eventModels={eventModels}
                     preloadModels={preloadModels}
-                    locales={locales}
                     onSuccess={(ev) => {
                         eventManagerRef.current = ev;
                         setLoading(false);
@@ -79,11 +77,9 @@ const StandardPrivateApp = ({ onLogout, locales = {}, preloadModels = [], eventM
             <ModelListener models={eventModels} />
             <EventNotices />
             <ThemeInjector />
-            <LocaleInjector locales={locales} refresh={refreshRef} />
-            <ForceRefreshProvider ref={refreshRef}>
-                <ModalsChildren />
-                {children}
-            </ForceRefreshProvider>
+            <LocaleInjector />
+            <ModalsChildren />
+            {children}
         </EventManagerProvider>
     );
 };
