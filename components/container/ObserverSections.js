@@ -51,7 +51,11 @@ const ObserverSections = ({ children, history, location }) => {
         const options = {
             root: null,
             rootMargin: '0px',
-            threshold: 0.5
+            threshold: [0.5, 0.99]
+            /*
+                A 0.5 threshold takes care of observing changes in big sections, while the 0.99 takes care of small sections.
+                Using 0.99 instead of 1 should help in case intersectionRatio doesn't fully reach 1, which has been observed to happen
+            */
         };
 
         const observer = new IntersectionObserver(handleIntersect, options);
@@ -72,8 +76,8 @@ const ObserverSections = ({ children, history, location }) => {
 
 ObserverSections.propTypes = {
     children: PropTypes.node.isRequired,
-    granularity: PropTypes.number,
-    wait: PropTypes.number
+    history: PropTypes.object.isRequired,
+    location: PropTypes.object.isRequired
 };
 
 export default withRouter(ObserverSections);
