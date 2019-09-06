@@ -1,27 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import {
-    SubTitle,
-    Alert,
-    Row,
-    Field,
-    Input,
-    Label,
-    Copy,
-    PrimaryButton,
-    PasswordInput,
-    useUserVPN
-} from 'react-components';
+import { SubTitle, Alert, Row, Field, Label, Copy, PrimaryButton, useUserVPN, useModals } from 'react-components';
 import { c } from 'ttag';
-import useApiWithoutResult from '../../../hooks/useApiWithoutResult';
-import { updateVPNName, updateVPNPassword } from 'proton-shared/lib/api/vpn';
-import useNotifications from '../../notifications/useNotifications';
+
+import OpenVPNCredentialsModal from './OpenVPNCredentialsModal';
 
 const OpenVPNAccountSection = () => {
-    const { createNotification } = useNotifications();
     const { result, fetch: fetchUserVPN } = useUserVPN();
+    const { createModal } = useModals();
     const [credentials, setCredentials] = useState({ username: '', password: '' });
-    const { loading: loadingUsername, request: updateUsername } = useApiWithoutResult(updateVPNName);
-    const { loading: loadingPassword, request: updatePassword } = useApiWithoutResult(updateVPNPassword);
+    const { username, password } = credentials;
 
     // VPN Info might not have been loaded yet
     useEffect(() => {
@@ -33,20 +20,8 @@ const OpenVPNAccountSection = () => {
         }
     }, [result]);
 
-    const { username, password } = credentials;
-
-    const handleChangeUsername = ({ target }) => setCredentials((prev) => ({ ...prev, username: target.value }));
-    const handleChangePassword = ({ target }) => setCredentials((prev) => ({ ...prev, password: target.value }));
-
-    const handleUpdateUsername = async () => {
-        await updateUsername(credentials.username);
-        createNotification({ text: c('Notification').t`OpenVPN username updated` });
-        fetchUserVPN();
-    };
-    const handleUpdatePassword = async () => {
-        await updatePassword(credentials.password);
-        createNotification({ text: c('Notification').t`OpenVPN password updated` });
-        fetchUserVPN();
+    const handleEditCredentials = () => {
+        createModal(<OpenVPNCredentialsModal username={username} password={password} fetchUserVPN={fetchUserVPN} />);
     };
 
     return (
@@ -60,20 +35,8 @@ const OpenVPNAccountSection = () => {
             <Row className="mb1-5">
                 <Label htmlFor="openvpn-username">{c('Label').t`OpenVPN / IKEv2 username`}</Label>
                 <Field>
-                    <div className="mb0-5">
-                        <Input
-                            id="openvpn-username"
-                            autoComplete="off"
-                            value={username}
-                            onChange={handleChangeUsername}
-                        />
-                    </div>
-                    <div>
-                        <PrimaryButton
-                            disabled={!credentials || !credentials.username}
-                            loading={loadingUsername}
-                            onClick={handleUpdateUsername}
-                        >{c('Action').t`Change username`}</PrimaryButton>
+                    <div className="pt0-5">
+                        <strong>{username}</strong>
                     </div>
                 </Field>
                 <div className="ml1 flex-item-noshrink onmobile-ml0 onmobile-mt0-5">
@@ -83,21 +46,11 @@ const OpenVPNAccountSection = () => {
             <Row>
                 <Label htmlFor="openvpn-password">{c('Label').t`OpenVPN / IKEv2 password`}</Label>
                 <Field>
-                    <div className="mb0-5">
-                        <PasswordInput
-                            id="openvpn-password"
-                            autoComplete="off"
-                            value={password}
-                            onChange={handleChangePassword}
-                        />
+                    <div className="mb1 pt0-5">
+                        <strong>{password}</strong>
                     </div>
-                    <div>
-                        <PrimaryButton
-                            disabled={!credentials || !credentials.password}
-                            loading={loadingPassword}
-                            onClick={handleUpdatePassword}
-                        >{c('Action').t`Change password`}</PrimaryButton>
-                    </div>
+                    <PrimaryButton disabled={!credentials} onClick={handleEditCredentials}>{c('Action')
+                        .t`Edit credentials`}</PrimaryButton>
                 </Field>
                 <div className="ml1 flex-item-noshrink onmobile-ml0 onmobile-mt0-5">
                     <Copy value={password} />
