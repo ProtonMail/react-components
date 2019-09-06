@@ -27,7 +27,7 @@ const OpenVPNCredentialsModal = ({ username = '', password = '', fetchUserVPN, .
     const handleSubmit = async () => {
         await api(updateVPNName(credentials.username));
         await api(updateVPNPassword(credentials.password));
-        fetchUserVPN();
+        await fetchUserVPN();
         rest.onClose();
         createNotification({ text: c('Notification').t`OpenVPN / IKEv2 credentials updated` });
     };
