@@ -32,8 +32,8 @@ const OpenVPNAccountSection = () => {
                     .t`Use the following credentials when connecting to ProtonVPN servers without application. Examples use cases include: Tunnelblick on MacOS, OpenVPN on GNU/Linux.
                     Do not use the OpenVPN / IKEv2 credentials in ProtonVPN applications or on the ProtonVPN dashboard.`}
             </Alert>
-            <Row className="mb1-5">
-                <Label htmlFor="openvpn-username">{c('Label').t`OpenVPN / IKEv2 username`}</Label>
+            <Row>
+                <Label>{c('Label').t`OpenVPN / IKEv2 username`}</Label>
                 <Field>
                     <div className="pt0-5">
                         <strong>{username}</strong>
@@ -44,7 +44,7 @@ const OpenVPNAccountSection = () => {
                 </div>
             </Row>
             <Row>
-                <Label htmlFor="openvpn-password">{c('Label').t`OpenVPN / IKEv2 password`}</Label>
+                <Label>{c('Label').t`OpenVPN / IKEv2 password`}</Label>
                 <Field>
                     <div className="mb1 pt0-5">
                         <strong>{password}</strong>

@@ -39,6 +39,7 @@ const OpenVPNCredentialsModal = ({ username = '', password = '', fetchUserVPN, .
             close={c('Action').t`Cancel`}
             submit={c('Action').t`Update`}
             onSubmit={() => withLoading(handleSubmit())}
+            small={true}
             {...rest}
         >
             <Row>
