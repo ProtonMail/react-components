@@ -19,17 +19,17 @@ const OpenVPNCredentialsModal = ({ username = '', password = '', fetchUserVPN, .
     const api = useApi();
     const { createNotification } = useNotifications();
     const [credentials, setCredentials] = useState({ username, password });
-    const title = c('Title').t`Edit OpenVPN credentials`;
+    const title = c('Title').t`Edit OpenVPN / IKEv2 credentials`;
 
-    const handleChangeUsername = ({ target }) => setCredentials((prev) => ({ ...prev, username: target.value }));
-    const handleChangePassword = ({ target }) => setCredentials((prev) => ({ ...prev, password: target.value }));
+    const handleChangeUsername = ({ target }) => setCredentials({ ...credentials, username: target.value });
+    const handleChangePassword = ({ target }) => setCredentials({ ...credentials, password: target.value });
 
     const handleSubmit = async () => {
         await api(updateVPNName(credentials.username));
         await api(updateVPNPassword(credentials.password));
         fetchUserVPN();
         rest.onClose();
-        createNotification({ text: c('Notification').t`OpenVPN credentials updated` });
+        createNotification({ text: c('Notification').t`OpenVPN / IKEv2 credentials updated` });
     };
 
     return (
