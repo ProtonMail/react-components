@@ -1,24 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { SubTitle, Alert, Row, Field, Label, Copy, PrimaryButton, useUserVPN, useModals } from 'react-components';
 import { c } from 'ttag';
 
 import OpenVPNCredentialsModal from './OpenVPNCredentialsModal';
 
 const OpenVPNAccountSection = () => {
-    const { result, fetch: fetchUserVPN } = useUserVPN();
     const { createModal } = useModals();
-    const [credentials, setCredentials] = useState();
-    const { username = '', password = '' } = credentials;
-
-    // VPN Info might not have been loaded yet
-    useEffect(() => {
-        if (result && result.VPN) {
-            setCredentials({
-                username: result.VPN.Name,
-                password: result.VPN.Password
-            });
-        }
-    }, [result]);
+    const { result = {}, fetch: fetchUserVPN } = useUserVPN();
+    const { VPN = {} } = result;
+    const { username = '', password = '' } = VPN;
 
     const handleEditCredentials = () => {
         createModal(<OpenVPNCredentialsModal username={username} password={password} fetchUserVPN={fetchUserVPN} />);
@@ -49,7 +39,7 @@ const OpenVPNAccountSection = () => {
                     <div className="mb1 pt0-5">
                         <strong>{password}</strong>
                     </div>
-                    <PrimaryButton disabled={!credentials} onClick={handleEditCredentials}>{c('Action')
+                    <PrimaryButton disabled={!username || !password} onClick={handleEditCredentials}>{c('Action')
                         .t`Edit credentials`}</PrimaryButton>
                 </Field>
                 <div className="ml1 flex-item-noshrink onmobile-ml0 onmobile-mt0-5">

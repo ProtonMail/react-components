@@ -50,6 +50,7 @@ const OpenVPNCredentialsModal = ({ username = '', password = '', fetchUserVPN, .
                         autoComplete="off"
                         value={credentials.username}
                         onChange={handleChangeUsername}
+                        required
                     />
                 </Field>
             </Row>
@@ -61,6 +62,7 @@ const OpenVPNCredentialsModal = ({ username = '', password = '', fetchUserVPN, .
                         autoComplete="off"
                         value={credentials.password}
                         onChange={handleChangePassword}
+                        required
                     />
                 </Field>
             </Row>
