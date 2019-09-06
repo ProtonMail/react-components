@@ -7,8 +7,8 @@ import OpenVPNCredentialsModal from './OpenVPNCredentialsModal';
 const OpenVPNAccountSection = () => {
     const { result, fetch: fetchUserVPN } = useUserVPN();
     const { createModal } = useModals();
-    const [credentials, setCredentials] = useState({ username: '', password: '' });
-    const { username, password } = credentials;
+    const [credentials, setCredentials] = useState();
+    const { username = '', password = '' } = credentials;
 
     // VPN Info might not have been loaded yet
     useEffect(() => {
