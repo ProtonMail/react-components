@@ -39,7 +39,7 @@
         "codemirror": "^5.46.0",
         "design-system": "github:ProtonMail/design-system.git#master",
         "intersection-observer": "^0.5.1",
-        "libphonenumber-js-utils": "^8.10.5",
+        "libphonenumber-js": "^1.7.23",
         "moment": "^2.24.0",
         "moment-timezone": "^0.5.25",
         "pikaday": "^1.8.0",

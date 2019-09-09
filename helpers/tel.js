@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import 'libphonenumber-js-utils';
+import examples from 'libphonenumber-js/examples.mobile.json';
+import { getExampleNumber } from 'libphonenumber-js';
 
 // Array of country objects for the flag dropdown.
 // Each contains a name, country code (ISO 3166-1 alpha-2) and dial code.
@@ -42,7 +42,7 @@ import 'libphonenumber-js-utils';
 //    Order (if >1 country with same dial code),
 //    Area codes (if >1 country with same dial code)
 // ]
-const countriesData = [
+export const countriesData = [
     ['Afghanistan (‫افغانستان‬‎)', 'af', '93'],
     ['Albania (Shqipëri)', 'al', '355'],
     ['Algeria (‫الجزائر‬‎)', 'dz', '213'],
@@ -341,25 +341,9 @@ const countriesData = [
     dialCode: country[2],
     priority: country[3] || 0,
     areaCodes: country[4] || null,
-    exampleNumber: window.intlTelInputUtils.getExampleNumber(
-        country[1],
-        true,
-        window.intlTelInputUtils.numberType.MOBILE
-    )
+    exampleNumber: getExampleNumber(country[1].toUpperCase(), examples).number
 }));
 
-const useIntlTelNumbers = () => {
-    const [selectedCountryIndex, setSelectedCountryIndex] = useState(0);
-
-    return {
-        countries: countriesData,
-        selectedCountry: countriesData[selectedCountryIndex],
-        getClickHandler(index) {
-            return () => {
-                setSelectedCountryIndex(index);
-            };
-        }
-    };
+export const findIndexCountry = (countryCode = '') => {
+    return countriesData.findIndex(({ iso2 }) => iso2 === countryCode.toLowerCase());
 };
-
-export default useIntlTelNumbers;

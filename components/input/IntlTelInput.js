@@ -1,9 +1,15 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { noop } from 'proton-shared/lib/helpers/function';
+import { parsePhoneNumberFromString } from 'libphonenumber-js';
+
 import Input from './Input';
 import SimpleDropdown from '../dropdown/SimpleDropdown';
+import DropdownMenu from '../dropdown/DropdownMenu';
+import DropdownMenuButton from '../dropdown/DropdownMenuButton';
 import { classnames } from '../../helpers/component';
-import useIntlTelNumbers from '../../hooks/useIntlTelNumbers';
+import { countriesData, findIndexCountry } from '../../helpers/tel';
+
 import './IntlTelInput.scss';
 
 // require.context would be replaced by a dummy function in tests
@@ -17,8 +23,34 @@ const getFlagSvg = (abbreviation) => {
     }
 };
 
-const IntlTelInput = ({ containerClassName, inputClassName, ...rest }) => {
-    const { countries, getClickHandler, selectedCountry } = useIntlTelNumbers();
+const DEFAULT_COUNTRY = 'us';
+
+const IntlTelInput = ({ containerClassName, inputClassName, value = '', onChange = noop, ...rest }) => {
+    const [index, setIndex] = useState(0);
+    const selectedCountry = countriesData[index];
+
+    const handleClick = (i) => {
+        const newValue = `${countriesData[i].dialCode}${value.replace(selectedCountry.dialCode, '')}`;
+
+        onChange(newValue);
+        setIndex(i);
+    };
+
+    const handleChange = ({ target }) => {
+        const phoneNumber = parsePhoneNumberFromString(target.value);
+
+        phoneNumber && setIndex(findIndexCountry(phoneNumber.country));
+        onChange(phoneNumber ? phoneNumber.number : target.value);
+    };
+
+    useEffect(() => {
+        const phoneNumber = parsePhoneNumberFromString(value);
+        const countryCode = phoneNumber ? phoneNumber.country : DEFAULT_COUNTRY;
+        const index = findIndexCountry(countryCode);
+
+        setIndex(index);
+    }, []);
+
     return (
         <div className={classnames(['flex flex-nowrap', containerClassName])}>
             <SimpleDropdown
@@ -27,21 +59,20 @@ const IntlTelInput = ({ containerClassName, inputClassName, ...rest }) => {
                 content={<img width={20} src={getFlagSvg(selectedCountry.iso2)} alt={`flag-${selectedCountry.name}`} />}
                 originalPlacement="bottom-left"
             >
-                <ul className="dropDown-contentInner intltelinput-list">
-                    {countries.map(({ iso2, name, dialCode }, index) => (
-                        <li key={name} className="dropDown-item" onClick={getClickHandler(index)}>
-                            <button className="w100 pt0-5 pb0-5 alignleft">
-                                <img className="mr0-5" width={20} src={getFlagSvg(iso2)} alt={`flag-${name}`} />
-                                {name}
-                                <span className="smaller color-global-altgrey">+{dialCode}</span>
-                            </button>
-                        </li>
+                <DropdownMenu>
+                    {countriesData.map(({ iso2, name, dialCode }, index) => (
+                        <DropdownMenuButton className="alignleft" key={iso2} onClick={() => handleClick(index)}>
+                            <img className="mr0-5" width={20} src={getFlagSvg(iso2)} alt={`flag-${name}`} />
+                            <span className="bold mr0-5">+{dialCode}</span>
+                            <span className="ellipsis">{name}</span>
+                        </DropdownMenuButton>
                     ))}
-                </ul>
+                </DropdownMenu>
             </SimpleDropdown>
             <Input
                 className={classnames(['intltelinput-input rounded0-left', inputClassName])}
                 placeholder={selectedCountry.exampleNumber}
+                onChange={handleChange}
                 {...rest}
             />
         </div>
@@ -50,7 +81,9 @@ const IntlTelInput = ({ containerClassName, inputClassName, ...rest }) => {
 
 IntlTelInput.propTypes = {
     containerClassName: PropTypes.string,
-    inputClassName: PropTypes.string
+    inputClassName: PropTypes.string,
+    onChange: PropTypes.func,
+    value: PropTypes.string
 };
 
 export default IntlTelInput;
