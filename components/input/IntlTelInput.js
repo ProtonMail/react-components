@@ -27,29 +27,30 @@ const DEFAULT_COUNTRY = 'us';
 
 const IntlTelInput = ({ containerClassName, inputClassName, value = '', onChange = noop, ...rest }) => {
     const [index, setIndex] = useState(0);
+    const [input, setInput] = useState(value);
     const selectedCountry = countriesData[index];
 
-    const handleClick = (i) => {
-        const newValue = `${countriesData[i].dialCode}${value.replace(selectedCountry.dialCode, '')}`;
-
-        onChange(newValue);
-        setIndex(i);
-    };
+    const handleClick = (index) => setIndex(index);
 
     const handleChange = ({ target }) => {
-        const phoneNumber = parsePhoneNumberFromString(target.value);
+        const phoneNumber = parsePhoneNumberFromString(target.value, selectedCountry.iso2.toUpperCase());
 
         phoneNumber && setIndex(findIndexCountry(phoneNumber.country));
-        onChange(phoneNumber ? phoneNumber.number : target.value);
+        setInput(phoneNumber ? phoneNumber.nationalNumber : target.value);
     };
 
     useEffect(() => {
-        const phoneNumber = parsePhoneNumberFromString(value);
+        const phoneNumber = parsePhoneNumberFromString(value, selectedCountry.iso2.toUpperCase());
         const countryCode = phoneNumber ? phoneNumber.country : DEFAULT_COUNTRY;
         const index = findIndexCountry(countryCode);
 
         setIndex(index);
     }, []);
+
+    useEffect(() => {
+        const { dialCode } = countriesData[index];
+        onChange(`+${dialCode}${input}`);
+    }, [index, input]);
 
     return (
         <div className={classnames(['flex flex-nowrap', containerClassName])}>
@@ -70,9 +71,11 @@ const IntlTelInput = ({ containerClassName, inputClassName, value = '', onChange
                 </DropdownMenu>
             </SimpleDropdown>
             <Input
+                type="tel"
                 className={classnames(['intltelinput-input rounded0-left', inputClassName])}
                 placeholder={selectedCountry.exampleNumber}
                 onChange={handleChange}
+                value={input}
                 {...rest}
             />
         </div>
