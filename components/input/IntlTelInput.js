@@ -20,7 +20,7 @@ const getFlagSvg = (abbreviation) => {
 const IntlTelInput = ({ containerClassName, inputClassName, ...rest }) => {
     const { countries, getClickHandler, selectedCountry } = useIntlTelNumbers();
     return (
-        <div className={classnames(['flex flex-nowrap', containerClassName])} {...rest}>
+        <div className={classnames(['flex flex-nowrap', containerClassName])}>
             <SimpleDropdown
                 className="rounded0-right"
                 size="wide"
@@ -42,6 +42,7 @@ const IntlTelInput = ({ containerClassName, inputClassName, ...rest }) => {
             <Input
                 className={classnames(['intltelinput-input rounded0-left', inputClassName])}
                 placeholder={selectedCountry.exampleNumber}
+                {...rest}
             />
         </div>
     );
