@@ -114,7 +114,7 @@ Payment.propTypes = {
     onValidCard: PropTypes.func,
     cycle: PropTypes.oneOf([CYCLE.MONTHLY, CYCLE.YEARLY, CYCLE.TWO_YEARS]),
     onPay: PropTypes.func,
-    fluidDisplay: PropTypes.bool
+    fieldClassName: PropTypes.string
 };
 
 export default Payment;
