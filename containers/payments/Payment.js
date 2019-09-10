@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
+import { classnames } from '../../helpers/component';
 import { Label, Row, Field, Alert, Price } from 'react-components';
 import { CYCLE, PAYMENT_METHOD_TYPES, MIN_DONATION_AMOUNT, MIN_CREDIT_AMOUNT } from 'proton-shared/lib/constants';
 
@@ -22,7 +23,8 @@ const Payment = ({
     method,
     onMethod,
     onValidCard,
-    onPay
+    onPay,
+    fluidDisplay
 }) => {
     const { methods, options, loading } = usePaymentMethods({ amount, cycle, coupon, type });
 
@@ -70,7 +72,7 @@ const Payment = ({
         <>
             <Row>
                 <Label>{c('Label').t`Payment method`}</Label>
-                <Field>
+                <Field className={classnames([fluidDisplay && 'auto flex-item-fluid-auto'])}>
                     <div className="mb1">
                         <PaymentMethodsSelect
                             loading={loading}
@@ -111,7 +113,8 @@ Payment.propTypes = {
     onMethod: PropTypes.func,
     onValidCard: PropTypes.func,
     cycle: PropTypes.oneOf([CYCLE.MONTHLY, CYCLE.YEARLY, CYCLE.TWO_YEARS]),
-    onPay: PropTypes.func
+    onPay: PropTypes.func,
+    fluidDisplay: PropTypes.bool
 };
 
 export default Payment;
