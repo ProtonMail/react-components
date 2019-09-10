@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { classnames } from '../../helpers/component';
 import { Label, Row, Field, Alert, Price } from 'react-components';
 import { CYCLE, PAYMENT_METHOD_TYPES, MIN_DONATION_AMOUNT, MIN_CREDIT_AMOUNT } from 'proton-shared/lib/constants';
 
@@ -24,7 +23,7 @@ const Payment = ({
     onMethod,
     onValidCard,
     onPay,
-    fluidDisplay
+    fieldClassName
 }) => {
     const { methods, options, loading } = usePaymentMethods({ amount, cycle, coupon, type });
 
