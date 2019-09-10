@@ -72,7 +72,7 @@ const Payment = ({
         <>
             <Row>
                 <Label>{c('Label').t`Payment method`}</Label>
-                <Field className={classnames([fluidDisplay && 'auto flex-item-fluid-auto'])}>
+                <Field className={fieldClassName}>
                     <div className="mb1">
                         <PaymentMethodsSelect
                             loading={loading}
