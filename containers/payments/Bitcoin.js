@@ -45,17 +45,13 @@ const Bitcoin = ({ amount, currency, type }) => {
         return <Loader />;
     }
 
-    if (error) {
+    if (error || !amountBitcoin || !address) {
         return (
             <>
                 <Alert type="error">{c('Error').t`Error connecting to the Bitcoin API.`}</Alert>
                 <Button onClick={() => withLoading(request)}>{c('Action').t`Try again`}</Button>
             </>
         );
-    }
-
-    if (!amountBitcoin || !address) {
-        return null;
     }
 
     return (
