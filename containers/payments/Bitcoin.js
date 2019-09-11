@@ -45,10 +45,6 @@ const Bitcoin = ({ amount, currency, type }) => {
         return <Loader />;
     }
 
-    if (!amountBitcoin || !address) {
-        return null;
-    }
-
     if (error) {
         return (
             <>
@@ -56,6 +52,10 @@ const Bitcoin = ({ amount, currency, type }) => {
                 <Button onClick={() => withLoading(request)}>{c('Action').t`Try again`}</Button>
             </>
         );
+    }
+
+    if (!amountBitcoin || !address) {
+        return null;
     }
 
     return (
