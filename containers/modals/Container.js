@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { OverlayModal } from 'react-components';
 import { withRouter } from 'react-router-dom';
 
+import ModalErrorBoundary from '../../components/modal/ModalErrorBoundary';
+
 const ModalsContainer = ({ modals, removeModal, hideModal, location }) => {
     const [containerIsClosing, setContainerIsClosing] = useState(false);
 
@@ -64,13 +66,18 @@ const ModalsContainer = ({ modals, removeModal, hideModal, location }) => {
             hideModal(id);
         };
 
-        return React.cloneElement(content, {
+        const props = {
             onClose: handleModalClose,
             onExit: handleModalExit,
             isBehind: !isLast,
-            isClosing,
-            key: id
-        });
+            isClosing
+        };
+
+        return (
+            <ModalErrorBoundary key={id} {...props}>
+                {React.cloneElement(content, props)}
+            </ModalErrorBoundary>
+        );
     });
 
     const handleContainerAnimationEnd = () => {
