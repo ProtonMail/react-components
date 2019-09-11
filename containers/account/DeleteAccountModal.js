@@ -11,6 +11,7 @@ import {
     TwoFactorInput,
     FormModal,
     Alert,
+    useEventManager,
     useAddresses,
     useApiWithoutResult,
     useUser,
@@ -21,13 +22,14 @@ import {
     useConfig,
     ErrorButton
 } from 'react-components';
-import { deleteUser } from 'proton-shared/lib/api/user';
+import { deleteUser, unlockPasswordChanges } from 'proton-shared/lib/api/user';
 import { reportBug } from 'proton-shared/lib/api/reports';
 import { srpAuth } from 'proton-shared/lib/srp';
 
 const DeleteAccountModal = ({ onClose, ...rest }) => {
     const { createNotification } = useNotifications();
     const { CLIENT_TYPE } = useConfig();
+    const eventManager = useEventManager();
     const api = useApi();
     const authentication = useAuthentication();
     const [{ isAdmin, Name } = {}] = useUser();
@@ -48,6 +50,15 @@ const DeleteAccountModal = ({ onClose, ...rest }) => {
     const handleSubmit = async () => {
         try {
             setLoading(true);
+
+            eventManager.stop();
+
+            // This is just used to verify that the entered password and totp code is correct
+            await srpAuth({
+                api,
+                credentials: { password: model.password, totp: model.twoFa },
+                config: unlockPasswordChanges()
+            });
 
             if (isAdmin) {
                 await request({
@@ -72,15 +83,14 @@ const DeleteAccountModal = ({ onClose, ...rest }) => {
                 config: deleteUser()
             });
 
-            setLoading(false);
+            onClose();
+            createNotification({ text: c('Success').t`Account deleted` });
+            authentication.logout();
         } catch (error) {
+            eventManager.start();
             setLoading(false);
             throw error;
         }
-
-        onClose();
-        createNotification({ text: c('Success').t`Account deleted` });
-        authentication.logout();
     };
 
     return (
