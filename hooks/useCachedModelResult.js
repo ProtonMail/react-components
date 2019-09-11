@@ -81,7 +81,7 @@ const useCachedModelResult = (cache, key, miss) => {
 
     if (state && state[2]) {
         // Throw in render to allow the error boundary to catch it
-        throw new Error(state[2]);
+        throw state[2];
     }
 
     useEffect(() => {
