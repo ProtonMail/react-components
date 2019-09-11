@@ -48,11 +48,6 @@ const DeleteAccountModal = ({ onClose, ...rest }) => {
     const handleSubmit = async () => {
         try {
             setLoading(true);
-            await srpAuth({
-                api,
-                credentials: { password: model.password, totp: model.twoFa },
-                config: deleteUser()
-            });
 
             if (isAdmin) {
                 await request({
@@ -70,6 +65,13 @@ const DeleteAccountModal = ({ onClose, ...rest }) => {
                     Description: model.feedback
                 });
             }
+
+            await srpAuth({
+                api,
+                credentials: { password: model.password, totp: model.twoFa },
+                config: deleteUser()
+            });
+
             setLoading(false);
         } catch (error) {
             setLoading(false);
