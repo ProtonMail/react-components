@@ -7,7 +7,11 @@ const useApiResult = (fn, dependencies) => {
     const request = useApi();
     const { loading, result, error, run } = useAsync(true);
 
-    // Either user specified dependencies or empty array to always cancel requests on unmount.
+    if (error) {
+        // Throw in render to allow the error boundary to catch it
+        throw error;
+    }
+
     const hookDependencies = dependencies || [];
 
     // Callback updates

@@ -79,6 +79,11 @@ const useCachedModelResult = (cache, key, miss) => {
     });
     const keyRef = useRef(key);
 
+    if (state && state[2]) {
+        // Throw in render to allow the error boundary to catch it
+        throw new Error(state[2]);
+    }
+
     useEffect(() => {
         const cacheListener = (changedKey) => {
             if (changedKey !== key) {
