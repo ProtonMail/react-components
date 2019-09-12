@@ -28,7 +28,7 @@ const PasswordInput = (props) => {
             <span className={classNameContainer}>
                 <input
                     className={`pm-field w100 ${className} ${statusClasses}`}
-                    aria-invalid={error && status.isDirty}
+                     aria-invalid={isInvalid}
                     aria-describedby={uid}
                     type={type}
                     disabled={disabled}
