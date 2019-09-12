@@ -20,7 +20,7 @@ const PasswordInput = (props) => {
     const isInvalid = error && status.isDirty;
     const classNameContainer = classnames([
         'relative password-revealer-container',
-        error && status.isDirty && 'password-revealer-container--invalid'
+        isInvalid && 'password-revealer-container--invalid'
     ]);
 
     return (
