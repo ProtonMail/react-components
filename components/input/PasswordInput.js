@@ -17,6 +17,7 @@ const PasswordInput = (props) => {
     const { className, disabled, error, ...rest } = props;
     const { handlers, statusClasses, status } = useInput(props);
     const [uid] = useState(generateUID('passwordInput'));
+    const isInvalid = error && status.isDirty;
     const classNameContainer = classnames([
         'relative password-revealer-container',
         error && status.isDirty && 'password-revealer-container--invalid'
