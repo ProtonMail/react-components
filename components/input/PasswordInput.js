@@ -3,7 +3,7 @@ import { c } from 'ttag';
 import PropTypes from 'prop-types';
 import { Icon } from 'react-components';
 
-import { generateUID } from '../../helpers/component';
+import { generateUID, classnames } from '../../helpers/component';
 import useInput from './useInput';
 import ErrorZone from '../text/ErrorZone';
 
@@ -17,10 +17,14 @@ const PasswordInput = (props) => {
     const { className, disabled, error, ...rest } = props;
     const { handlers, statusClasses, status } = useInput(props);
     const [uid] = useState(generateUID('passwordInput'));
+    const classNameContainer = classnames([
+        'relative password-revealer-container',
+        error && status.isDirty && 'password-revealer-container--invalid'
+    ]);
 
     return (
         <>
-            <span className="relative password-revealer-container">
+            <span className={classNameContainer}>
                 <input
                     className={`pm-field w100 ${className} ${statusClasses}`}
                     aria-invalid={error && status.isDirty}
