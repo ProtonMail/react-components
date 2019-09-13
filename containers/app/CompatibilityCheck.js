@@ -93,7 +93,7 @@ const CompatibilityCheck = ({ children }) => {
                     </Href>
                     .
                 </p>
-                <Href className="primary-link bold" url={kbUrl}>
+                <Href className="primary-link bold" url={kbUrl} target="_self">
                     More info
                 </Href>
             </div>
