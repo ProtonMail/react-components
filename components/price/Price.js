@@ -13,7 +13,7 @@ const Price = ({ children: amount = 0, currency = '', className = '', divisor = 
     const p = value < 0 ? <span className="prefix">-</span> : null;
     const v = <span className="amount">{Math.abs(value)}</span>;
     const s = suffix ? (
-        <span className="plan-price-suffix" data-suffix={suffix}>
+        <span className="ml0-5 suffix">
             {suffix}
         </span>
     ) : null;
