@@ -1,5 +1,17 @@
-import React from 'react';
-import { SubTitle, Alert, Row, Field, Label, Copy, PrimaryButton, useUserVPN, useModals } from 'react-components';
+import React, { useState } from 'react';
+import {
+    Button,
+    Icon,
+    SubTitle,
+    Alert,
+    Row,
+    Field,
+    Label,
+    Copy,
+    PrimaryButton,
+    useUserVPN,
+    useModals
+} from 'react-components';
 import { c } from 'ttag';
 
 import OpenVPNCredentialsModal from './OpenVPNCredentialsModal';
@@ -9,6 +21,7 @@ const OpenVPNAccountSection = () => {
     const { result = {}, fetch: fetchUserVPN } = useUserVPN();
     const { VPN = {} } = result;
     const { Name = '', Password = '' } = VPN;
+    const [show, setShow] = useState(false);
 
     const handleEditCredentials = () => {
         createModal(<OpenVPNCredentialsModal username={Name} password={Password} fetchUserVPN={fetchUserVPN} />);
@@ -26,7 +39,7 @@ const OpenVPNAccountSection = () => {
                 <Label>{c('Label').t`OpenVPN / IKEv2 username`}</Label>
                 <Field>
                     <div className="pt0-5">
-                        <strong>{Name}</strong>
+                        <code>{Name}</code>
                     </div>
                 </Field>
                 <div className="ml1 flex-item-noshrink onmobile-ml0 onmobile-mt0-5">
@@ -37,12 +50,15 @@ const OpenVPNAccountSection = () => {
                 <Label>{c('Label').t`OpenVPN / IKEv2 password`}</Label>
                 <Field>
                     <div className="mb1 pt0-5">
-                        <strong>{Password}</strong>
+                        <code>{show ? Password : '••••••••••••••••••••'}</code>
                     </div>
                     <PrimaryButton disabled={!Name || !Password} onClick={handleEditCredentials}>{c('Action')
                         .t`Edit credentials`}</PrimaryButton>
                 </Field>
                 <div className="ml1 flex-item-noshrink onmobile-ml0 onmobile-mt0-5">
+                    <Button onClick={() => setShow(!show)}>
+                        <Icon name={show ? 'unread' : 'read'} />
+                    </Button>
                     <Copy value={Password} />
                 </div>
             </Row>
