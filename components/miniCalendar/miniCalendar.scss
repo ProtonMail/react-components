@@ -1,0 +1,47 @@
+@import "~design-system/_sass/reusable-components/design-system-config";
+
+@mixin muted {
+    opacity: 0.4;
+}
+
+.minicalendar-weekdays {
+    @include muted;
+}
+
+.minicalendar-weeknumbers {
+    @include muted;
+}
+
+.minicalendar-day {
+    cursor: pointer;
+}
+
+.minicalendar-days {
+    user-select: none;
+}
+
+.minicalendar-day[aria-selected=true] {
+    color: $white;
+    font-weight: bold;
+    background: $pm-primary;
+    border-radius: 100px;
+}
+
+.minicalendar-day[aria-current=true] {
+    color: $white;
+    font-weight: bold;
+    background: $pm-primary-dark;
+    border-radius: 100px;
+}
+
+.minicalendar-day--inactive-month {
+    @include muted;
+}
+
+.minicalendar-day--range-bound {
+    background: $pm-primary;
+}
+
+.minicalendar-day--range {
+    background: $pm-primary-light;
+}
