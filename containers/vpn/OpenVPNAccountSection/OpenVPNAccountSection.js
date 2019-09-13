@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
     Button,
-    Icon,
     SubTitle,
     Alert,
     Row,
@@ -56,9 +55,11 @@ const OpenVPNAccountSection = () => {
                         .t`Edit credentials`}</PrimaryButton>
                 </Field>
                 <div className="ml1 flex-item-noshrink onmobile-ml0 onmobile-mt0-5">
-                    <Button onClick={() => setShow(!show)}>
-                        <Icon name={show ? 'unread' : 'read'} />
-                    </Button>
+                    <Button
+                        icon={show ? 'unread' : 'read'}
+                        onClick={() => setShow(!show)}
+                        title={show ? c('Action').t`Hide` : c('Action').t`Show`}
+                    />
                     <Copy value={Password} />
                 </div>
             </Row>
