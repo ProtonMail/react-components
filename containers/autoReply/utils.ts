@@ -1,8 +1,10 @@
-import moment from 'moment-timezone';
 import { c } from 'ttag';
 import { AutoReplyDuration } from 'proton-shared/lib/constants';
+import { findTimeZone, getUTCOffset, listTimeZones } from 'timezone-support';
 
-export const DAY_MILLISECONDS = 24 * 60 * 60 * 1000;
+export const DAY_SECONDS = 24 * 60 * 60;
+export const HOUR_SECONDS = 60 * 60;
+export const MINUTES_SECONDS = 60;
 
 export const getDurationOptions = () => [
     {
@@ -27,23 +29,52 @@ export const getDurationOptions = () => [
     }
 ];
 
-export const getWeekdayOptions = () => {
-    const firstDayOfWeek = moment.localeData().firstDayOfWeek();
-    return moment.weekdays(true).map((text, index) => ({ text, value: (index + firstDayOfWeek) % 7 }));
+export const getMatchingTimezone = (timezone: string, timezoneOptions: { text: string; value: string }[]) => {
+    const fullMatch = timezoneOptions.find(({ value }) => {
+        return value === timezone;
+    });
+    if (fullMatch) {
+        return fullMatch;
+    }
+    // Can be stored as "Singapore", now expecting Asia/Singapore
+    const otherMatch = timezoneOptions.find(({ value }) => {
+        return value.includes(timezone);
+    });
+    if (otherMatch) {
+        return otherMatch;
+    }
 };
 
+/**
+ * Get a list of all IANA time zones
+ * @return {Array<Object>}      [{ text: 'Africa/Nairobi: UTC +03:00', value: 'Africa/Nairobi'}, ...]
+ */
 export const getTimeZoneOptions = () => {
-    const momentNow = moment(new Date());
+    const dummyDate = new Date(); // recent date required for proper use
 
-    return moment.tz.names().map((name) => {
-        const offset = momentNow.tz(name).format('Z');
+    return listTimeZones().map((name) => {
+        const { offset } = getUTCOffset(dummyDate, findTimeZone(name));
+        // offset comes with the opposite sign in the timezone-support library
+        const sign = Math.sign(offset) === 1 ? '-' : '+';
+        const minutes = Math.abs(offset % 60);
+        const hours = (Math.abs(offset) - minutes) / 60;
+        // TODO: AM/PM
+        const mm = minutes < 10 ? `0${minutes}` : `${minutes}`;
+        const hh = hours < 10 ? `0${hours}` : `${hours}`;
+
         return {
-            text: `${name}: UTC ${offset}`,
+            text: `${name}: UTC ${sign}${hh}:${mm}`,
             value: name
         };
     });
 };
 
+/**
+ * Get a list with the days of the month and their
+ * index position (in the week) according to current locale
+ *
+ * @return {Object} [{ text: 'name of day', value: index position in week }]
+ */
 export const getDaysOfMonthOptions = () => [
     { text: c('Option').t`1st of the month`, value: 0 },
     { text: c('Option').t`2nd of the month`, value: 1 },
@@ -77,17 +108,3 @@ export const getDaysOfMonthOptions = () => [
     { text: c('Option').t`30th of the month`, value: 29 },
     { text: c('Option').t`31st of the month`, value: 30 }
 ];
-
-export const getRoundedHours = (time: moment.MomentInput) => {
-    const startOfDay = moment(time).startOf('day');
-
-    return moment(moment(time).diff(startOfDay))
-        .startOf('hour')
-        .add(30 * Math.floor(moment(time).minutes() / 30), 'minutes')
-        .valueOf();
-};
-
-export const startOfDay = (date: moment.MomentInput) =>
-    moment(date)
-        .startOf('day')
-        .valueOf();

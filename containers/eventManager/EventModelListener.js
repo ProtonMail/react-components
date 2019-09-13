@@ -1,4 +1,4 @@
-import { useLayoutEffect } from 'react';
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { ContactEmailsModel, ContactsModel, UserModel } from 'proton-shared/lib/models';
 import { useEventManager, useCache } from 'react-components';
@@ -9,11 +9,11 @@ import { MembersModel } from 'proton-shared/lib/models/membersModel';
 import { EVENT_ERRORS } from 'proton-shared/lib/errors';
 import { hasBit } from 'proton-shared/lib/helpers/bitset';
 
-const ModelListener = ({ models }) => {
+const EventModelListener = ({ models }) => {
     const { subscribe } = useEventManager();
     const cache = useCache();
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         const modelsMap = models.reduce((acc, model) => {
             return {
                 ...acc,
@@ -63,8 +63,8 @@ const ModelListener = ({ models }) => {
     return null;
 };
 
-ModelListener.propTypes = {
+EventModelListener.propTypes = {
     models: PropTypes.array.isRequired
 };
 
-export default ModelListener;
+export default EventModelListener;
