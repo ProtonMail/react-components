@@ -46,7 +46,7 @@ const PayPal = ({ amount: Amount, currency: Currency, onPay, type }) => {
     };
 
     useEffect(() => {
-        generateToken();
+        withLoading(generateToken());
     }, [Amount, Currency]);
 
     if (type === 'payment' && Amount < MIN_PAYPAL_AMOUNT) {

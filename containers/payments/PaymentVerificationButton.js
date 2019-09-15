@@ -20,7 +20,7 @@ const PaymentVerificationButton = ({ children, approvalURL, token, onError, onSu
     };
 
     useEffect(() => {
-        onLoading(loading);
+        onLoading && onLoading(loading);
     }, [loading]);
 
     return <PrimaryButton onClick={() => withLoading(handleClick())}>{children}</PrimaryButton>;
@@ -28,8 +28,8 @@ const PaymentVerificationButton = ({ children, approvalURL, token, onError, onSu
 
 PaymentVerificationButton.propTypes = {
     children: PropTypes.node.isRequired,
-    approvalURL: PropTypes.string.isRequired,
-    token: PropTypes.string.isRequired,
+    approvalURL: PropTypes.string,
+    token: PropTypes.string,
     onSubmit: PropTypes.func.isRequired,
     onError: PropTypes.func,
     onLoading: PropTypes.func
