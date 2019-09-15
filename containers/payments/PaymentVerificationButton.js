@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { PrimaryButton, useApi } from 'react-components';
+import { PrimaryButton, useApi, useLoading } from 'react-components';
 
 import { process } from './paymentTokenHelper';
 
-const PaymentVerificationButton = ({ children, approvalURL, token, onError, onSubmit }) => {
+const PaymentVerificationButton = ({ children, approvalURL, token, onError, onSubmit, onLoading }) => {
     const api = useApi();
+    const [loading, withLoading] = useLoading();
 
     const handleClick = async () => {
         const tab = window.open(approvalURL);
@@ -18,15 +19,20 @@ const PaymentVerificationButton = ({ children, approvalURL, token, onError, onSu
         }
     };
 
-    return <PrimaryButton onClick={handleClick}>{children}</PrimaryButton>;
+    useEffect(() => {
+        onLoading(loading);
+    }, [loading]);
+
+    return <PrimaryButton onClick={() => withLoading(handleClick())}>{children}</PrimaryButton>;
 };
 
 PaymentVerificationButton.propTypes = {
     children: PropTypes.node.isRequired,
     approvalURL: PropTypes.string.isRequired,
     token: PropTypes.string.isRequired,
+    onSubmit: PropTypes.func.isRequired,
     onError: PropTypes.func,
-    onSubmit: PropTypes.func
+    onLoading: PropTypes.func
 };
 
 export default PaymentVerificationButton;

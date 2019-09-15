@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { FormModal, Alert, useLoading, useNotifications } from 'react-components';
+import { FormModal, Alert, Loader, useNotifications } from 'react-components';
 import { c } from 'ttag';
 import tabSvg from 'design-system/assets/img/pm-images/tab.svg';
 
@@ -9,7 +9,7 @@ import PaymentVerificationButton from './PaymentVerificationButton';
 
 const PaymentVerificationModal = ({ params, token, approvalURL, onSubmit, ...rest }) => {
     const { createNotification } = useNotifications();
-    const [loading] = useLoading();
+    const [loading, setLoading] = useState(false);
     const title = loading ? c('Title').t`Payment verification in progress` : c('Title').t`Payment verification`;
 
     const handleSubmit = async () => {
@@ -35,13 +35,19 @@ const PaymentVerificationModal = ({ params, token, approvalURL, onSubmit, ...res
                     token={token}
                     onError={handleError}
                     onSubmit={handleSubmit}
+                    onLoading={setLoading}
                 >{c('Action').t`Verify payment`}</PaymentVerificationButton>
             }
             small={true}
             {...rest}
         >
-            <img src={tabSvg} alt={c('Title').t`New tab`} />
-            <Alert>{c('Info').t`A new tab will open to confirm the payment, please disable any popup blockers.`}</Alert>
+            {loading ? <Loader /> : <img src={tabSvg} alt={c('Title').t`New tab`} />}
+            {loading ? (
+                <Alert>{c('Info').t`Please verify the payment in the new tab.`}</Alert>
+            ) : (
+                <Alert>{c('Info')
+                    .t`A new tab will open to confirm the payment, please disable any popup blockers.`}</Alert>
+            )}
         </FormModal>
     );
 };
