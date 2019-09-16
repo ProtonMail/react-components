@@ -12,6 +12,7 @@ const { TOKEN } = PAYMENT_METHOD_TYPES;
 const PayPal = ({ amount: Amount, currency: Currency, onPay, type }) => {
     const api = useApi();
     const [loading, withLoading] = useLoading();
+    const [loadingVerification, setLoadingVerification] = useState(false);
     const [error, setError] = useState();
     const [approvalURL, setApprovalURL] = useState();
     const [token, setToken] = useState();
@@ -84,13 +85,21 @@ const PayPal = ({ amount: Amount, currency: Currency, onPay, type }) => {
 
     return (
         <>
-            <Alert>{c('Info')
-                .t`You will need to login to your PayPal account to complete this transaction. We will open a new tab with PayPal for you. If you use any pop-up blockers, please disable them to continue.`}</Alert>
+            {loadingVerification ? (
+                <>
+                    <Loader />
+                    <Alert>{c('Info').t`Please verify the payment in the new tab.`}</Alert>
+                </>
+            ) : (
+                <Alert>{c('Info')
+                    .t`You will need to login to your PayPal account to complete this transaction. We will open a new tab with PayPal for you. If you use any pop-up blockers, please disable them to continue.`}</Alert>
+            )}
             <PaymentVerificationButton
                 approvalURL={approvalURL}
                 token={token}
                 onSubmit={handleSubmit}
                 onError={handleError}
+                onLoading={setLoadingVerification}
             >{c('Action').t`Check out with PayPal`}</PaymentVerificationButton>
         </>
     );
