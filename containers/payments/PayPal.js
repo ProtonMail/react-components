@@ -1,36 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { Alert, Loader, SmallButton, Price, useApi, useLoading } from 'react-components';
-import { MIN_PAYPAL_AMOUNT, MAX_PAYPAL_AMOUNT, PAYMENT_METHOD_TYPES } from 'proton-shared/lib/constants';
+import { Alert, Loader, SmallButton, Price, useApi, useLoading, PrimaryButton } from 'react-components';
+import { MIN_PAYPAL_AMOUNT, MAX_PAYPAL_AMOUNT } from 'proton-shared/lib/constants';
 import { createToken } from 'proton-shared/lib/api/payments';
 
-import PaymentVerificationButton from './PaymentVerificationButton';
-
-const { TOKEN } = PAYMENT_METHOD_TYPES;
+import { toParams, process } from './paymentTokenHelper';
 
 const PayPal = ({ amount: Amount, currency: Currency, onPay, type }) => {
     const api = useApi();
     const [loading, withLoading] = useLoading();
-    const [loadingVerification, setLoadingVerification] = useState(false);
+    const [loadingVerification, withLoadingVerification] = useLoading();
     const [error, setError] = useState();
     const [approvalURL, setApprovalURL] = useState();
     const [token, setToken] = useState();
 
-    const handleSubmit = () => {
-        onPay({
-            Amount,
-            Currency,
-            Payment: {
-                Type: TOKEN,
-                Details: {
-                    Token: token
-                }
-            }
-        });
-    };
+    const handleClick = async () => {
+        const tab = window.open(approvalURL);
 
-    const handleError = (error) => setError(error);
+        try {
+            await process({ Token: token, api, tab });
+            onPay(toParams({ Amount, Currency }, token));
+        } catch (error) {
+            setError(error);
+        }
+    };
 
     const generateToken = async () => {
         const { Token, ApprovalURL } = await api(
@@ -94,13 +88,8 @@ const PayPal = ({ amount: Amount, currency: Currency, onPay, type }) => {
                 <Alert>{c('Info')
                     .t`You will need to login to your PayPal account to complete this transaction. We will open a new tab with PayPal for you. If you use any pop-up blockers, please disable them to continue.`}</Alert>
             )}
-            <PaymentVerificationButton
-                approvalURL={approvalURL}
-                token={token}
-                onSubmit={handleSubmit}
-                onError={handleError}
-                onLoading={setLoadingVerification}
-            >{c('Action').t`Check out with PayPal`}</PaymentVerificationButton>
+            <PrimaryButton onClick={() => withLoadingVerification(handleClick())}>{c('Action')
+                .t`Check out with PayPal`}</PrimaryButton>
         </>
     );
 };
