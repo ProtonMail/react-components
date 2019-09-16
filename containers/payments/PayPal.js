@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { Alert, Loader, SmallButton, Price, useApi, useLoading, PrimaryButton } from 'react-components';
+import { Alert, Loader, SmallButton, Price, useApi, useLoading, PrimaryButton, useConfig } from 'react-components';
 import { MIN_PAYPAL_AMOUNT, MAX_PAYPAL_AMOUNT } from 'proton-shared/lib/constants';
 import { createToken } from 'proton-shared/lib/api/payments';
 
@@ -14,12 +14,11 @@ const PayPal = ({ amount: Amount, currency: Currency, onPay, type }) => {
     const [error, setError] = useState();
     const [approvalURL, setApprovalURL] = useState();
     const [token, setToken] = useState();
+    const { SECURE_URL: secureURL } = useConfig();
 
     const handleClick = async () => {
-        const tab = window.open(approvalURL);
-
         try {
-            await process({ Token: token, api, tab });
+            await process({ Token: token, api, approvalURL, secureURL });
             onPay(toParams({ Amount, Currency }, token));
         } catch (error) {
             setError(error);
