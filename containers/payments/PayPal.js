@@ -9,7 +9,7 @@ import { toParams, process } from './paymentTokenHelper';
 
 const PayPal = ({ amount: Amount, currency: Currency, onPay, type }) => {
     const api = useApi();
-    const [loading, withLoading] = useLoading();
+    const [loadingToken, withLoadingToken] = useLoading();
     const [loadingVerification, withLoadingVerification] = useLoading();
     const [error, setError] = useState();
     const [approvalURL, setApprovalURL] = useState();
@@ -40,7 +40,7 @@ const PayPal = ({ amount: Amount, currency: Currency, onPay, type }) => {
     };
 
     useEffect(() => {
-        withLoading(generateToken());
+        withLoadingToken(generateToken());
     }, [Amount, Currency]);
 
     if (type === 'payment' && Amount < MIN_PAYPAL_AMOUNT) {
@@ -61,10 +61,10 @@ const PayPal = ({ amount: Amount, currency: Currency, onPay, type }) => {
                 <div className="mb0-5">{error.message}</div>
                 <div>
                     <SmallButton
-                        loading={loading}
+                        loading={loadingToken}
                         onClick={() => {
                             setError();
-                            withLoading(generateToken());
+                            withLoadingToken(generateToken());
                         }}
                     >{c('Action').t`Try again`}</SmallButton>
                 </div>
@@ -72,7 +72,7 @@ const PayPal = ({ amount: Amount, currency: Currency, onPay, type }) => {
         );
     }
 
-    if (loading) {
+    if (loadingToken) {
         return <Loader />;
     }
 
