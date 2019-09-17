@@ -2,22 +2,13 @@ import React from 'react';
 import { c } from 'ttag';
 import PropTypes from 'prop-types';
 import { Block, Input, Select } from 'react-components';
-import { isNumber } from 'proton-shared/lib/helpers/validators';
 
 import { getFullList } from '../../helpers/countries';
-
-const isValidMonth = (m) => !m || (isNumber(m) && m.length <= 2);
-const isValidYear = (y) => !y || (isNumber(y) && y.length <= 4);
+import ExpInput from './ExpInput';
 
 const Card = ({ card, errors, onChange, loading = false }) => {
     const countries = getFullList().map(({ value, label: text }) => ({ value, text }));
     const handleChange = (key) => ({ target }) => onChange(key, target.value);
-
-    const handleChangeExp = ({ target }) => {
-        const [month = '', year = ''] = target.value.split('/');
-        isValidMonth(month) && onChange('month', month);
-        isValidYear(year) && onChange('year', year);
-    };
 
     return (
         <>
@@ -48,15 +39,13 @@ const Card = ({ card, errors, onChange, loading = false }) => {
             </Block>
             <div className="flex-autogrid">
                 <div className="flex-autogrid-item ">
-                    <Input
-                        value={`${card.month}/${card.year}`}
-                        autoComplete="cc-exp"
-                        maxLength={7}
-                        placeholder={c("Placeholder for card expiracy, don't change order between MM and YYYY")
-                            .t`MM/YYYY`}
-                        onChange={handleChangeExp}
-                        disabled={loading}
-                        error={errors.month}
+                    <ExpInput
+                        month={card.month}
+                        year={card.year}
+                        onChange={({ month, year }) => {
+                            onChange('month', month);
+                            onChange('year', year);
+                        }}
                     />
                 </div>
                 <div className="flex-autogrid-item">
