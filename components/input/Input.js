@@ -30,9 +30,11 @@ const Input = React.forwardRef(
 
         return (
             <>
-                <label className="sr-only" htmlFor={id}>
-                    {placeholder}
-                </label>
+                {id && placeholder ? (
+                    <label className="sr-only" htmlFor={id}>
+                        {placeholder}
+                    </label>
+                ) : null}
                 <input
                     className={`pm-field w100 ${className} ${statusClasses}`}
                     aria-invalid={errorZone && status.isDirty}
