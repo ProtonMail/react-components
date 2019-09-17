@@ -42,6 +42,8 @@ const Card = ({ card, errors, onChange, loading = false }) => {
                     <ExpInput
                         month={card.month}
                         year={card.year}
+                        error={errors.month}
+                        disabled={loading}
                         onChange={({ month, year }) => {
                             onChange('month', month);
                             onChange('year', year);
