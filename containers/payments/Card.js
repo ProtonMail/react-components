@@ -2,22 +2,22 @@ import React from 'react';
 import { c } from 'ttag';
 import PropTypes from 'prop-types';
 import { Block, Input, Select } from 'react-components';
-import { range } from 'proton-shared/lib/helpers/array';
+import { isNumber } from 'proton-shared/lib/helpers/validators';
 
 import { getFullList } from '../../helpers/countries';
+
+const isValidMonth = (m) => !m || (isNumber(m) && m.length <= 2);
+const isValidYear = (y) => !y || (isNumber(y) && y.length <= 4);
 
 const Card = ({ card, errors, onChange, loading = false }) => {
     const countries = getFullList().map(({ value, label: text }) => ({ value, text }));
     const handleChange = (key) => ({ target }) => onChange(key, target.value);
-    const currentYear = new Date().getFullYear();
-    const months = range(1, 13).map((i) => {
-        const value = `0${i}`.slice(-2);
-        return { text: value, value };
-    });
-    const years = range(currentYear, currentYear + 12).map((i) => {
-        const value = i.toString();
-        return { text: value, value };
-    });
+
+    const handleChangeExp = ({ target }) => {
+        const [month = '', year = ''] = target.value.split('/');
+        isValidMonth(month) && onChange('month', month);
+        isValidYear(year) && onChange('year', year);
+    };
 
     return (
         <>
@@ -48,16 +48,15 @@ const Card = ({ card, errors, onChange, loading = false }) => {
             </Block>
             <div className="flex-autogrid">
                 <div className="flex-autogrid-item ">
-                    <Select
-                        value={card.month}
-                        onChange={handleChange('month')}
-                        options={months}
+                    <Input
+                        value={`${card.month}/${card.year}`}
+                        maxLength={7}
+                        placeholder={c("Placeholder for card expiracy, don't change order between MM and YYYY")
+                            .t`MM/YYYY`}
+                        onChange={handleChangeExp}
                         disabled={loading}
                         error={errors.month}
                     />
-                </div>
-                <div className="flex-autogrid-item ">
-                    <Select value={card.year} onChange={handleChange('year')} options={years} disabled={loading} />
                 </div>
                 <div className="flex-autogrid-item">
                     <Input
@@ -65,10 +64,9 @@ const Card = ({ card, errors, onChange, loading = false }) => {
                         name="cvc"
                         value={card.cvc}
                         onChange={handleChange('cvc')}
-                        placeholder={c('Placeholder').t`CVV`}
+                        placeholder={c('Placeholder, make it short').t`Security code`}
                         error={errors.cvc}
                         disabled={loading}
-                        title={c('Title').t`Security code`}
                         required
                     />
                 </div>
