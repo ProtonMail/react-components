@@ -50,6 +50,7 @@ const Card = ({ card, errors, onChange, loading = false }) => {
                 <div className="flex-autogrid-item ">
                     <Input
                         value={`${card.month}/${card.year}`}
+                        autoComplete="cc-exp"
                         maxLength={7}
                         placeholder={c("Placeholder for card expiracy, don't change order between MM and YYYY")
                             .t`MM/YYYY`}
