@@ -5,6 +5,7 @@ import { Block, Input, Select } from 'react-components';
 
 import { getFullList } from '../../helpers/countries';
 import ExpInput from './ExpInput';
+import CardNumberInput from './CardNumberInput';
 
 const Card = ({ card, errors, onChange, loading = false }) => {
     const countries = getFullList().map(({ value, label: text }) => ({ value, text }));
@@ -25,15 +26,11 @@ const Card = ({ card, errors, onChange, loading = false }) => {
                 />
             </Block>
             <Block>
-                <Input
-                    autoComplete="cc-number"
+                <CardNumberInput
                     value={card.number}
-                    name="cardnumber"
                     onChange={handleChange('number')}
-                    placeholder={c('Placeholder').t`Card number`}
                     error={errors.number}
                     disabled={loading}
-                    maxLength={20}
                     required
                 />
             </Block>
