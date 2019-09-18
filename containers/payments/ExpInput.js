@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Input } from 'react-components';
-import { c } from 'ttag';
 import { isNumber } from 'proton-shared/lib/helpers/validators';
 
 const isValidMonth = (m) => !m || (isNumber(m) && m.length <= 2);
@@ -39,8 +38,8 @@ const ExpInput = ({ month, year, onChange, ...rest }) => {
         <Input
             value={`${month}${month.length === 2 || year.length ? '/' : ''}${year}`}
             autoComplete="cc-exp"
-            maxLength={7}
-            placeholder={c("Placeholder for card expiracy, don't change order between MM and YYYY").t`MM/YYYY`}
+            maxLength={5}
+            placeholder="MM/YY"
             onChange={handleChange}
             {...rest}
         />
