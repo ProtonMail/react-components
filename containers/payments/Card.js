@@ -28,7 +28,7 @@ const Card = ({ card, errors, onChange, loading = false }) => {
             <Block>
                 <CardNumberInput
                     value={card.number}
-                    onChange={handleChange('number')}
+                    onChange={(value) => onChange('number', value)}
                     error={errors.number}
                     disabled={loading}
                     required

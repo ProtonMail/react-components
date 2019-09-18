@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import { Input, Icon } from 'react-components';
 import creditCardType from 'credit-card-type';
+import { isNumber } from 'proton-shared/lib/helpers/validators';
 
 const banks = require.context('design-system/assets/img/shared/bank-icons', true, /.svg$/);
 
@@ -19,20 +20,30 @@ const getBankSvg = (type = '') => {
     return banksMap[key]();
 };
 
-const CardNumberInput = (props) => {
-    const [{ type, niceType }] = creditCardType(props.value) || [];
+const isValidNumber = (v) => !v || isNumber(v);
+
+const CardNumberInput = ({ value, onChange, ...rest }) => {
+    const [{ type = '', niceType = '' } = {}] = creditCardType(value) || [];
     const bankIcon = getBankSvg(type);
+
+    const handleChange = ({ target }) => {
+        const val = target.value.replace(/\s/g, '');
+        isValidNumber(val) && onChange(val);
+    };
+
     return (
         <div className="relative">
             <Input
                 autoComplete="cc-number"
                 name="cardnumber"
                 placeholder={c('Placeholder').t`Card number`}
-                maxLength={20}
-                {...props}
+                maxLength={23}
+                onChange={handleChange}
+                value={(value.match(/.{1,4}/g) || []).join(' ')}
+                {...rest}
             />
             <span className="right-icon absolute flex">
-                {props.value && bankIcon ? (
+                {value && bankIcon ? (
                     <img src={bankIcon} className="mauto" title={niceType} alt={niceType} width="20" />
                 ) : (
                     <Icon className="mauto" name="payments-type-card" />
@@ -43,7 +54,8 @@ const CardNumberInput = (props) => {
 };
 
 CardNumberInput.propTypes = {
-    value: PropTypes.string
+    value: PropTypes.string,
+    onChange: PropTypes.func
 };
 
 export default CardNumberInput;
