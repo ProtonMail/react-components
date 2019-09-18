@@ -23,7 +23,7 @@ const ExpInput = ({ month, year, onChange, ...rest }) => {
             // User removes the '/' and year is empty
             const [first = ''] = newMonth;
             onChange({
-                year,
+                year: '',
                 month: isValidMonth(first) ? first : month
             });
         } else {
