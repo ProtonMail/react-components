@@ -29,7 +29,7 @@ const ExpInput = ({ month, year, onChange, ...rest }) => {
         } else {
             const [first = '', second = ''] = newMonth;
             onChange({
-                year,
+                year: '',
                 month: isValidMonth(`${first}${second}`) ? `${first}${second}` : month
             });
         }
