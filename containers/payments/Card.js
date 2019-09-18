@@ -62,6 +62,15 @@ const Card = ({ card, errors, onChange, loading = false }) => {
             </div>
             <div className="flex-autogrid">
                 <div className="flex-autogrid-item">
+                    <Select
+                        value={card.country}
+                        onChange={handleChange('country')}
+                        options={countries}
+                        disabled={loading}
+                        autoComplete="country"
+                    />
+                </div>
+                <div className="flex-autogrid-item">
                     <Input
                         autoComplete="postal-code"
                         value={card.zip}
@@ -73,15 +82,6 @@ const Card = ({ card, errors, onChange, loading = false }) => {
                         minLength={3}
                         maxLength={9}
                         required
-                    />
-                </div>
-                <div className="flex-autogrid-item">
-                    <Select
-                        value={card.country}
-                        onChange={handleChange('country')}
-                        options={countries}
-                        disabled={loading}
-                        autoComplete="country"
                     />
                 </div>
             </div>
