@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { Input, Icon } from 'react-components';
+import { Input, Icon, classnames } from 'react-components';
 import creditCardType from 'credit-card-type';
 import { isNumber } from 'proton-shared/lib/helpers/validators';
 
@@ -22,7 +22,7 @@ const getBankSvg = (type = '') => {
 
 const isValidNumber = (v) => !v || isNumber(v);
 
-const CardNumberInput = ({ value, onChange, ...rest }) => {
+const CardNumberInput = ({ value, onChange, errors, ...rest }) => {
     const [{ type = '', niceType = '' } = {}] = creditCardType(value) || [];
     const bankIcon = getBankSvg(type);
 
@@ -32,12 +32,18 @@ const CardNumberInput = ({ value, onChange, ...rest }) => {
     };
 
     return (
-        <div className="relative">
+        <div
+            className={classnames([
+                'relative pm-field-icon-container w100',
+                errors.length && 'pm-field-icon-container--invalid'
+            ])}
+        >
             <Input
                 autoComplete="cc-number"
                 name="cardnumber"
                 placeholder={c('Placeholder').t`Card number`}
                 maxLength={23}
+                errors={errors}
                 onChange={handleChange}
                 value={(value.match(/.{1,4}/g) || []).join(' ')}
                 {...rest}
@@ -55,7 +61,8 @@ const CardNumberInput = ({ value, onChange, ...rest }) => {
 
 CardNumberInput.propTypes = {
     value: PropTypes.string,
-    onChange: PropTypes.func
+    onChange: PropTypes.func,
+    errors: PropTypes.array
 };
 
 export default CardNumberInput;
