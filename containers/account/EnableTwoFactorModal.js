@@ -82,8 +82,9 @@ const EnableTwoFactorModal = (props) => {
         }
 
         if (step === STEPS.INFO) {
+            const { VPN } = CLIENT_TYPES;
             const twoFactorAuthLink =
-                CLIENT_TYPE === CLIENT_TYPES.VPN
+                CLIENT_TYPE === VPN
                     ? 'https://protonvpn.com/support/two-factor-authentication'
                     : 'https://protonmail.com/support/knowledge-base/two-factor-authentication';
 
