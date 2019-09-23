@@ -28,7 +28,8 @@ const PROCESSING_DELAY = 5000;
 
 const PaymentVerificationModal = ({ params, token, approvalURL, onSubmit, ...rest }) => {
     const TITLES = {
-        redirect: c('Title').t`Card verification`,
+        [STEPS.REDIRECT]: c('Title').t`Card verification`,
+        ...
         redirecting: c('Title').t`Processing...`,
         redirected: c('Title').t`Payment verification in progress`,
         fail: c('Title').t`3-D secure payment verification failed`
