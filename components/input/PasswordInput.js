@@ -19,7 +19,7 @@ const PasswordInput = ({ disabled, ...rest }) => {
             icon={
                 <button
                     title={type === 'password' ? c('Label').t`Reveal password` : c('Label').t`Hide password`}
-                    className="password-revealer inline-flex flex-item-noshrink"
+                    className="inline-flex flex-item-noshrink"
                     tabIndex="-1"
                     disabled={disabled}
                     type="button"
