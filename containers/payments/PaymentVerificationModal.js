@@ -84,7 +84,29 @@ const PaymentVerificationModal = ({ params, token, approvalURL, onSubmit, ...res
             }
             {...rest}
         >
-            {step === STEPS.REDIRECT ? (
+            {{
+                [STEPS.REDIRECT]: (
+                    <>
+                        <p className="aligncenter">{c('Info')
+                            .t`Your bank requires 3-D Secure verification for security purposes.`}</p>
+                        <p className="aligncenter">
+                            <img src={tabSvg} alt={c('Title').t`New tab`} />
+                        </p>
+                        <Alert>{c('Info')
+                            .t`Verification will open a new tab. Please disable any popup blockers. <b>You will not be charged</b>. Any amount used to verify your card will be refunded immediately.`}</Alert>
+                    </>
+                ),
+                [STEPS.REDIRECTING]: (
+                    <>
+                        <p className="aligncenter">{c('Info')
+                            .t`You will be soon redirected to your bank to verify your payment.`}</p>
+                        <Loader />
+                        <Alert>{c('Info').t`Verification will open a new tab, please disable any popup blockers.`}</Alert>
+                    </>
+                )
+                ,
+                ...
+            }[step]}
                 <>
                     <p className="aligncenter">{c('Info')
                         .t`Your bank requires 3-D Secure verification for security purposes.`}</p>
