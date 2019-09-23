@@ -2,6 +2,8 @@
   "name": "react-components",
   "version": "1.0.0",
   "description": "",
+  "main": "index.ts",
+  "sideEffects": false,
   "scripts": {
     "test": "jest",
     "export": "./makeExport",
