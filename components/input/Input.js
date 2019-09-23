@@ -42,7 +42,9 @@ const Input = React.forwardRef(
                     ])}
                 >
                     {child}
-                    <span className="right-icon absolute flex">{icon}</span>
+                    {React.cloneElement(icon, {
+                        className: classnames([icon.props.className, 'right-icon absolute flex'])
+                    })}
                 </div>
             );
         };
