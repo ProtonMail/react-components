@@ -34,11 +34,12 @@ const PaymentVerificationModal = ({ params, token, approvalURL, onSubmit, paymen
         [STEPS.FAILS]: c('Title').t`3-D secure payment verification failed`
     };
     const [step, setStep] = useState(STEPS.REDIRECT);
-    const [error, setError] = useState();
+    const [error, setError] = useState({});
     const api = useApi();
     const { createNotification } = useNotifications();
     const { SECURE_URL: secureURL } = useConfig();
     const abortRef = useRef();
+    const notCharged = <b key="not-charged">{c('Info').t`You will not be charged`}</b>;
 
     const handleCancel = () => {
         abortRef.current && abortRef.current.abort();
@@ -60,9 +61,9 @@ const PaymentVerificationModal = ({ params, token, approvalURL, onSubmit, paymen
             clearTimeout(timeoutID);
             rest.onClose();
             setStep(STEPS.FAIL);
-            setError(error);
             // if not coming from API error
             if (error.message && !error.config) {
+                setError(error);
                 createNotification({ text: error.message, type: 'error' });
             }
         }
@@ -95,7 +96,7 @@ const PaymentVerificationModal = ({ params, token, approvalURL, onSubmit, paymen
                                 <PaymentVerificationImage payment={payment} />
                             </p>
                             <Alert>{c('Info')
-                                .t`Verification will open a new tab. Please disable any popup blockers. <b>You will not be charged</b>. Any amount used to verify your card will be refunded immediately.`}</Alert>
+                                .jt`Verification will open a new tab. Please disable any popup blockers. ${notCharged}. Any amount used to verify your card will be refunded immediately.`}</Alert>
                         </>
                     ),
                     [STEPS.REDIRECTING]: (
