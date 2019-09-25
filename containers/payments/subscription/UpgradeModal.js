@@ -25,6 +25,7 @@ const UpgradeModal = ({ plans, onUpgrade, onComparePlans, ...rest }) => {
                 <div className="flex flex-justify-end pt0-5 pr0-5 pb1">
                     <button className="inline-flex" type="reset">
                         <Icon name="close" fill="light" />
+                        <span className="sr-only">{c('Action').t`Close`}</span>
                     </button>
                 </div>
                 <div className="pl2 pr2 pb2">
