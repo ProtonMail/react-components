@@ -37,7 +37,7 @@ const UpgradeModal = ({ plans, onUpgrade, onComparePlans, ...rest }) => {
                                 <div>
                                     {c('Info').t`ProtonMail Plus for as low as`}{' '}
                                     <PlanPrice
-                                        className="bold color-pm-blue"
+                                        className="bold color-primary"
                                         amount={Pricing[DEFAULT_CYCLE]}
                                         cycle={DEFAULT_CYCLE}
                                         currency={DEFAULT_CURRENCY}
