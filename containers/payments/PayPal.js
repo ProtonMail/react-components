@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { Alert, Loader, SmallButton, Price, useApi, useLoading, PrimaryButton, useConfig } from 'react-components';
+import { Alert, Loader, SmallButton, Price, useApi, useLoading, PrimaryButton } from 'react-components';
 import { MIN_PAYPAL_AMOUNT, MAX_PAYPAL_AMOUNT } from 'proton-shared/lib/constants';
 import { createToken } from 'proton-shared/lib/api/payments';
 
@@ -13,9 +13,9 @@ const PayPal = ({ amount: Amount, currency: Currency, onPay, type }) => {
     const [loadingToken, withLoadingToken] = useLoading();
     const [loadingVerification, withLoadingVerification] = useLoading();
     const [textError, setTextError] = useState('');
-    const [approvalURL, setApprovalURL] = useState();
-    const [token, setToken] = useState();
-    const { SECURE_URL: secureURL } = useConfig();
+    const [ApprovalURL, setApprovalURL] = useState();
+    const [Token, setToken] = useState();
+    const [ReturnHost, setReturnHost] = useState();
 
     const handleCancel = () => {
         abortRef.current && abortRef.current.abort();
@@ -24,8 +24,8 @@ const PayPal = ({ amount: Amount, currency: Currency, onPay, type }) => {
     const handleClick = async () => {
         try {
             abortRef.current = new AbortController();
-            await process({ Token: token, api, approvalURL, secureURL, signal: abortRef.current.signal });
-            onPay(toParams({ Amount, Currency }, token));
+            await process({ Token, api, ApprovalURL, ReturnHost, signal: abortRef.current.signal });
+            onPay(toParams({ Amount, Currency }, Token));
         } catch (error) {
             // if not coming from API error
             if (error.message && !error.config) {
@@ -35,7 +35,7 @@ const PayPal = ({ amount: Amount, currency: Currency, onPay, type }) => {
     };
 
     const generateToken = async () => {
-        const { Token, ApprovalURL } = await api(
+        const { Token, ApprovalURL, ReturnHost } = await api(
             createToken({
                 Amount,
                 Currency,
@@ -46,6 +46,7 @@ const PayPal = ({ amount: Amount, currency: Currency, onPay, type }) => {
         );
         setApprovalURL(ApprovalURL);
         setToken(Token);
+        setReturnHost(ReturnHost);
     };
 
     useEffect(() => {
