@@ -10,7 +10,7 @@
     "i18n:validatejs": "proton-i18n validate lint-functions .",
     "i18n:validate": "proton-i18n extract reactComponents && proton-i18n validate",
     "lint": "eslint containers components --ext .js,.ts,.tsx --quiet --cache",
-    "pretty": "prettier --write $(find lib -type f -name (*.js|*.ts)|*.tsx)",
+    "pretty": "prettier --write $(find . -path ./node_modules -prune -o -type f -name '*.js' -o -name '*.ts' -o -name '*.tsx')",
     "check-types": "tsc"
   },
   "repository": {
@@ -19,11 +19,16 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "tsc && lint-staged"
     }
   },
   "lint-staged": {
     "*.js": [
+      "prettier --write",
+      "eslint",
+      "git add"
+    ],
+    "(*.ts|*.tsx)": [
       "prettier --write",
       "eslint",
       "git add"
