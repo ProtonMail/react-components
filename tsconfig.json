@@ -1,21 +1,3 @@
 {
-    "compilerOptions": {
-        "target": "es5",
-        "lib": ["dom", "dom.iterable", "esnext"],
-        "allowSyntheticDefaultImports": true,
-        "esModuleInterop": true,
-        "strict": true,
-        "noImplicitAny": true,
-        "forceConsistentCasingInFileNames": true,
-        "module": "esnext",
-        "moduleResolution": "node",
-        "resolveJsonModule": true,
-        "isolatedModules": true,
-        "noUnusedLocals": true,
-        "noEmit": true,
-        "jsx": "preserve",
-        "allowJs": true,
-        "typeRoots": ["./typings/", "./typings.index.d.ts"]
-    },
-    "exclude": ["node_modules", "dist"]
+    "extends": "proton-shared/tsconfig.base.json"
 }
