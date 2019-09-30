@@ -16,9 +16,8 @@ import { ALL_THEMES } from 'proton-shared/lib/themes/themes.js';
 
 import CustomThemeModal from './CustomThemeModal.js';
 
-const { DARK, CUSTOM } = ALL_THEMES;
-const availableThemes = [DARK, CUSTOM];
-const customIdentifier = CUSTOM.identifier;
+const { DARK, LIGHT, BLUE, CUSTOM } = ALL_THEMES;
+const availableThemes = [DARK, LIGHT, BLUE, CUSTOM];
 
 const ThemesSection = () => {
     const { createNotification } = useNotifications();
@@ -27,7 +26,7 @@ const ThemesSection = () => {
     const { call } = useEventManager();
     const { request, loading } = useApiWithoutResult(updateTheme);
     const themeIdentifier = getThemeIdentifier(Theme);
-    const customCSS = themeIdentifier === customIdentifier ? Theme : '';
+    const customCSS = themeIdentifier === CUSTOM.identifier ? Theme : '';
 
     const themes = availableThemes.map((theme) => {
         const id = stripThemeIdentifier(theme.identifier);
@@ -35,7 +34,7 @@ const ThemesSection = () => {
     });
 
     const handleChangeTheme = async (themeIdentifier) => {
-        if (themeIdentifier === customIdentifier) {
+        if (themeIdentifier === CUSTOM.identifier) {
             return handleOpenModal();
         }
         await request(themeIdentifier);

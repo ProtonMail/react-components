@@ -35,7 +35,6 @@ const CustomThemeModal = ({ onSave, theme: initialTheme = '', ...rest }) => {
 };
 
 CustomThemeModal.propTypes = {
-    onClose: PropTypes.func,
     onSave: PropTypes.func.isRequired,
     theme: PropTypes.string
 };
