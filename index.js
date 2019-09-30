@@ -32,6 +32,7 @@ export { default as Field } from './components/container/Field';
 export { default as Information } from './components/container/Information';
 export { default as ObserverSection } from './components/container/ObserverSection';
 export { default as ObserverSections } from './components/container/ObserverSections';
+export { default as MainContainer } from './components/container/MainContainer';
 export { default as Tooltip } from './components/tooltip/Tooltip';
 export { default as PrimaryButton } from './components/button/PrimaryButton';
 export { default as WarningButton } from './components/button/WarningButton';
