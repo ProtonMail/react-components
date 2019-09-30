@@ -148,6 +148,7 @@ PaymentVerificationModal.propTypes = {
     onClose: PropTypes.func.isRequired,
     token: PropTypes.string.isRequired,
     approvalURL: PropTypes.string.isRequired,
+    returnHost: PropTypes.string.isRequired,
     params: PropTypes.object,
     payment: PropTypes.object
 };

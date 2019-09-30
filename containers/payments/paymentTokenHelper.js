@@ -4,6 +4,7 @@ import { getTokenStatus, createToken } from 'proton-shared/lib/api/payments';
 import { wait } from 'proton-shared/lib/helpers/promise';
 import { c } from 'ttag';
 import { PaymentVerificationModal } from 'react-components';
+import { getHostname } from 'proton-shared/lib/helpers/url';
 
 const {
     STATUS_PENDING,
@@ -63,10 +64,10 @@ const pull = async ({ timer = 0, Token, api, signal }) => {
 
 /**
  * Initialize new tab and listen it
- * @param {String} String
+ * @param {String} Token from API
  * @param {Object} api useApi
- * @param {String} ApprovalURL
- * @param {String} ReturnHost
+ * @param {String} ApprovalURL from API
+ * @param {String} ReturnHost from API
  * @param {AbortSignal} signal instance
  * @returns {Promise}
  */
@@ -101,7 +102,7 @@ export const process = ({ Token, api, ApprovalURL, ReturnHost, signal }) => {
         const onMessage = (event) => {
             const origin = event.origin || event.originalEvent.origin; // For Chrome, the origin property is in the event.originalEvent object.
 
-            if (!origin.includes(ReturnHost)) {
+            if (getHostname(origin) !== getHostname(ReturnHost)) {
                 return;
             }
 

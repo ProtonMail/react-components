@@ -13,9 +13,7 @@ const PayPal = ({ amount: Amount, currency: Currency, onPay, type }) => {
     const [loadingToken, withLoadingToken] = useLoading();
     const [loadingVerification, withLoadingVerification] = useLoading();
     const [textError, setTextError] = useState('');
-    const [ApprovalURL, setApprovalURL] = useState();
-    const [Token, setToken] = useState();
-    const [ReturnHost, setReturnHost] = useState();
+    const modelRef = useRef({});
 
     const handleCancel = () => {
         abortRef.current && abortRef.current.abort();
@@ -24,6 +22,7 @@ const PayPal = ({ amount: Amount, currency: Currency, onPay, type }) => {
     const handleClick = async () => {
         try {
             abortRef.current = new AbortController();
+            const { Token, ReturnHost, ApprovalURL } = modelRef.current;
             await process({ Token, api, ApprovalURL, ReturnHost, signal: abortRef.current.signal });
             onPay(toParams({ Amount, Currency }, Token));
         } catch (error) {
@@ -44,9 +43,7 @@ const PayPal = ({ amount: Amount, currency: Currency, onPay, type }) => {
                 }
             })
         );
-        setApprovalURL(ApprovalURL);
-        setToken(Token);
-        setReturnHost(ReturnHost);
+        modelRef.current = { Token, ApprovalURL, ReturnHost };
     };
 
     useEffect(() => {
