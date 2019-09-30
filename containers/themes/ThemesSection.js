@@ -11,15 +11,14 @@ import {
     useNotifications
 } from 'react-components';
 import { updateTheme } from 'proton-shared/lib/api/mailSettings';
-import { getThemeIdentifier } from 'react-components/helpers/themes';
-import { THEMES } from 'proton-shared/lib/constants';
+import { getThemeIdentifier, stripThemeIdentifier } from 'proton-shared/lib/themes/helpers';
+import { ALL_THEMES } from 'proton-shared/lib/themes/themes.js';
 
-import { availableThemes } from './availableThemes.js';
 import CustomThemeModal from './CustomThemeModal.js';
 
-const {
-    CUSTOM: { identifier: customId }
-} = THEMES;
+const { DARK, LIGHT, BLUE, CUSTOM } = ALL_THEMES;
+const availableThemes = [DARK, LIGHT, BLUE, CUSTOM];
+const customIdentifier = CUSTOM.identifier;
 
 const ThemesSection = () => {
     const { createNotification } = useNotifications();
@@ -27,14 +26,19 @@ const ThemesSection = () => {
     const [{ Theme }] = useMailSettings();
     const { call } = useEventManager();
     const { request, loading } = useApiWithoutResult(updateTheme);
-    const themeId = getThemeIdentifier(Theme);
-    const customCSS = themeId === customId ? Theme : '';
+    const themeIdentifier = getThemeIdentifier(Theme);
+    const customCSS = themeIdentifier === customIdentifier ? Theme : '';
 
-    const handleChangeTheme = async (themeId) => {
-        if (themeId === customId) {
+    const themes = availableThemes.map((theme) => {
+        const id = stripThemeIdentifier(theme.identifier);
+        return { ...theme, label: c('Theme').t`${theme.label}`, id, alt: id };
+    });
+
+    const handleChangeTheme = async (themeIdentifier) => {
+        if (themeIdentifier === customIdentifier) {
             return handleOpenModal();
         }
-        await request(themeId);
+        await request(themeIdentifier);
         call();
     };
 
@@ -56,8 +60,8 @@ const ThemesSection = () => {
             <Alert type="warning">{c('Info')
                 .t`Selecting another theme will override your current theme and any customization will be lost.`}</Alert>
             <ThemeCards
-                list={availableThemes}
-                themeId={themeId}
+                list={themes}
+                themeIdentifier={themeIdentifier}
                 onChange={handleChangeTheme}
                 onCustomization={handleOpenModal}
                 disabled={loading}

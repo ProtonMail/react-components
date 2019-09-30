@@ -3,15 +3,17 @@ import { c } from 'ttag';
 import PropTypes from 'prop-types';
 import { FormModal, Label, Alert, TextArea } from 'react-components';
 
-const CustomThemeModal = ({ onClose, onSave, theme: initialTheme = '', ...rest }) => {
+const CustomThemeModal = ({ onSave, theme: initialTheme = '', ...rest }) => {
     const [theme, setTheme] = useState(initialTheme);
 
     const handleChange = ({ target }) => setTheme(target.value);
-    const handleSubmit = () => onSave(theme);
+    const handleSubmit = async () => {
+        await onSave(theme);
+        rest.onClose();
+    };
 
     return (
         <FormModal
-            onClose={onClose}
             onSubmit={handleSubmit}
             submit={c('Action').t`Save`}
             title={c('Title').t`Custom Theme`}
