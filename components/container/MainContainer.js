@@ -12,9 +12,9 @@ const MainContainer = ({ children, location, rootRef }) => {
     }, [location.pathname]);
 
     return (
-        <div ref={containerRef} className="main flex-item-fluid main-area scroll-smooth-touch">
+        <main ref={containerRef} className="main flex-item-fluid main-area scroll-smooth-touch">
             {children}
-        </div>
+        </main>
     );
 };
 
