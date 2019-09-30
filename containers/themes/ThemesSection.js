@@ -16,8 +16,8 @@ import { ALL_THEMES } from 'proton-shared/lib/themes/themes.js';
 
 import CustomThemeModal from './CustomThemeModal.js';
 
-const { DARK, LIGHT, BLUE, CUSTOM } = ALL_THEMES;
-const availableThemes = [DARK, LIGHT, BLUE, CUSTOM];
+const { DARK, CUSTOM } = ALL_THEMES;
+const availableThemes = [DARK, CUSTOM];
 const customIdentifier = CUSTOM.identifier;
 
 const ThemesSection = () => {
