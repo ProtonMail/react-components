@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Info, Button, Group, ButtonGroup } from 'react-components';
 import { c } from 'ttag';
-import { classnames } from '../../helpers/component';
 
 import DropdownMenu from './DropdownMenu';
 import DropdownMenuButton from './DropdownMenuButton';
 import SimpleDropdown from './SimpleDropdown';
+import { classnames } from '../../helpers/component';
 
 const wrapTooltip = (text, tooltip) => {
     if (!tooltip) {

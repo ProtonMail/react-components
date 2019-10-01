@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Portal from '../portal/Portal';
+import { classnames } from '../../helpers/component';
 
 const CLASSES = {
     OVERLAY: 'pm-modalOverlay',
@@ -14,7 +15,7 @@ const Overlay = ({ isClosing = false, className: extraClassName = '', onExit, ..
         }
     };
 
-    const className = [CLASSES.OVERLAY, isClosing && CLASSES.OVERLAY_OUT, extraClassName].filter(Boolean).join(' ');
+    const className = classnames([CLASSES.OVERLAY, isClosing && CLASSES.OVERLAY_OUT, extraClassName]);
 
     return (
         <Portal>
