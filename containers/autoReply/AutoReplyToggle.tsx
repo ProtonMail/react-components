@@ -5,21 +5,12 @@ import useToggle from '../../components/toggle/useToggle';
 import useEventManager from '../eventManager/useEventManager';
 import useApiWithoutResult from '../../hooks/useApiWithoutResult';
 import Toggle from '../../components/toggle/Toggle';
-
-// TODO: move to shared interfaces
-
-enum AutoresponderRepeat {
-    FIXED,
-    DAILY,
-    WEEKLY,
-    MONTHLY,
-    PERMANENT
-}
+import { AutoReplyDuration } from 'proton-shared/lib/constants';
 
 interface Autoresponder {
     StartTime: number;
     Endtime: number;
-    Repeat: AutoresponderRepeat;
+    Repeat: AutoReplyDuration;
     DaysSelected: number[];
     Subject: string;
     Message: string;
