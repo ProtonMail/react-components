@@ -5,21 +5,10 @@ import useToggle from '../../components/toggle/useToggle';
 import useEventManager from '../eventManager/useEventManager';
 import useApiWithoutResult from '../../hooks/useApiWithoutResult';
 import Toggle from '../../components/toggle/Toggle';
-import { AutoReplyDuration } from 'proton-shared/lib/constants';
-
-interface Autoresponder {
-    StartTime: number;
-    Endtime: number;
-    Repeat: AutoReplyDuration;
-    DaysSelected: number[];
-    Subject: string;
-    Message: string;
-    IsEnabled: boolean;
-    Zone: string;
-}
+import { AutoResponder } from 'proton-shared/lib/interfaces/AutoResponder';
 
 interface Props {
-    autoresponder: Autoresponder;
+    autoresponder: AutoResponder;
 }
 
 const AutoReplyToggle = ({ autoresponder, ...rest }: Props) => {
