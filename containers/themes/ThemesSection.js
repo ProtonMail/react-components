@@ -3,7 +3,8 @@ import { c } from 'ttag';
 import {
     useMailSettings,
     useEventManager,
-    useApiWithoutResult,
+    useApi,
+    useLoading,
     SubTitle,
     Alert,
     ThemeCards,
@@ -16,35 +17,35 @@ import { ALL_THEMES } from 'proton-shared/lib/themes/themes.js';
 
 import CustomThemeModal from './CustomThemeModal.js';
 
-const { DARK, LIGHT, BLUE, CUSTOM } = ALL_THEMES;
-const availableThemes = [DARK, LIGHT, BLUE, CUSTOM];
+const { DARK, CUSTOM } = ALL_THEMES;
+const availableThemes = [DARK, CUSTOM];
 
 const ThemesSection = () => {
+    const api = useApi();
     const { createNotification } = useNotifications();
     const { createModal } = useModals();
     const [{ Theme }] = useMailSettings();
     const { call } = useEventManager();
-    const { request, loading } = useApiWithoutResult(updateTheme);
+    const [loading, withLoading] = useLoading();
     const themeIdentifier = getThemeIdentifier(Theme);
     const customCSS = themeIdentifier === CUSTOM.identifier ? Theme : '';
 
-    const themes = availableThemes.map((theme) => {
-        const id = stripThemeIdentifier(theme.identifier);
-        return { ...theme, label: c('Theme').t`${theme.label}`, id, alt: id };
+    const themes = availableThemes.map(({ identifier, getI18NLabel, src, customizable }) => {
+        const id = stripThemeIdentifier(identifier);
+        return { identifier, id, label: getI18NLabel(), alt: id, src, customizable };
     });
 
     const handleChangeTheme = async (themeIdentifier) => {
         if (themeIdentifier === CUSTOM.identifier) {
             return handleOpenModal();
         }
-        await request(themeIdentifier);
-        call();
+        await api(updateTheme(themeIdentifier));
+        await call();
     };
 
     const handleSaveCustomTheme = async (customCSSInput) => {
-        await request(customCSSInput);
-        call();
-        close();
+        await api(updateTheme(customCSSInput));
+        await call();
         createNotification({ text: c('Success').t`Custom theme saved` });
     };
 
@@ -61,7 +62,7 @@ const ThemesSection = () => {
             <ThemeCards
                 list={themes}
                 themeIdentifier={themeIdentifier}
-                onChange={handleChangeTheme}
+                onChange={(identifier) => withLoading(handleChangeTheme(identifier))}
                 onCustomization={handleOpenModal}
                 disabled={loading}
             />

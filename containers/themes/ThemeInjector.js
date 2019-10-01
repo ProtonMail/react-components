@@ -18,7 +18,6 @@ const ThemeInjector = () => {
         if (protonThemeIdentifiers.includes(themeIdentifier)) {
             return setStyle(toStyle([getTheme(themeIdentifier), orgTheme]));
         }
-
         setStyle(toStyle([userTheme, orgTheme]));
     }, [userTheme, orgTheme]);
 
