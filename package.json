@@ -89,7 +89,7 @@
     "react-test-renderer": "^16.8.6",
     "react-testing-library": "^7.0.0",
     "ttag": "^1.7.0",
-    "typescript": "^3.5.3"
+    "typescript": "^3.6.3"
   },
   "peerDependencies": {
     "pm-srp": "github:ProtonMail/pm-srp.git#semver:^1.0.0",
