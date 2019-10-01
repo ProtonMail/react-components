@@ -1,15 +1,8 @@
 import moment from 'moment-timezone';
 import { c } from 'ttag';
+import { AutoReplyDuration } from 'proton-shared/lib/constants';
 
 export const DAY_MILLISECONDS = 24 * 60 * 60 * 1000;
-
-export const AutoReplyDuration = {
-    FIXED: 0,
-    DAILY: 1,
-    WEEKLY: 2,
-    MONTHLY: 3,
-    PERMANENT: 4
-};
 
 export const getDurationOptions = () => [
     {
