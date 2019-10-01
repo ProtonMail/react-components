@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Info, Button, Group, ButtonGroup } from 'react-components';
 import { c } from 'ttag';
+import { classnames } from '../../helpers/component';
 
 import DropdownMenu from './DropdownMenu';
 import DropdownMenuButton from './DropdownMenuButton';
@@ -43,7 +44,7 @@ const DropdownActions = ({ loading = false, disabled = false, list = [], classNa
                 originalPlacement="bottom-right"
                 disabled={disabled}
                 loading={loading}
-                className={`pm-group-button pm-button--for-icon ${className}`}
+                className={classnames(['pm-group-button pm-button--for-icon', className])}
                 title={c('Title').t`Open actions dropdown`}
                 content=""
             >
