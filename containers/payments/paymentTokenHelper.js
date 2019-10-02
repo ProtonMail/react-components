@@ -151,7 +151,7 @@ export const toParams = (params, Token) => {
     };
 };
 
-export const handlePaymentToken = async ({ params, api, createModal }) => {
+export const handlePaymentToken = async ({ params, api, createModal, ...rest }) => {
     const { Payment, Amount, Currency, PaymentMethodID } = params;
     const { Type } = Payment || {};
 
@@ -186,6 +186,7 @@ export const handlePaymentToken = async ({ params, api, createModal }) => {
                 token={Token}
                 onSubmit={resolve}
                 onClose={reject}
+                {...rest}
             />
         );
     });

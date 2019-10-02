@@ -25,6 +25,7 @@ const EditCardModal = ({ card: existingCard, onClose, onChange, ...rest }) => {
         }
 
         const { Payment } = await handlePaymentToken({
+            failButtonText: c('Action').t`Use a different card`,
             params: {
                 Payment: {
                     Type: PAYMENT_METHOD_TYPES.CARD,

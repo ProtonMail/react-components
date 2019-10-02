@@ -25,7 +25,16 @@ const STEPS = {
 
 const PROCESSING_DELAY = 5000;
 
-const PaymentVerificationModal = ({ params, token, approvalURL, returnHost, onSubmit, payment = {}, ...rest }) => {
+const PaymentVerificationModal = ({
+    params,
+    token,
+    approvalURL,
+    returnHost,
+    onSubmit,
+    payment = {},
+    failButtonText,
+    ...rest
+}) => {
     const TITLES = {
         [STEPS.REDIRECT]: c('Title').t`Payment verification`,
         [STEPS.REDIRECTING]: c('Title').t`Processing...`,
@@ -132,8 +141,9 @@ const PaymentVerificationModal = ({ params, token, approvalURL, returnHost, onSu
                                 </p>
                             ) : null}
                             <p>
-                                <PrimaryButton onClick={handleCancel}>{c('Action')
-                                    .t`Use a different payment method`}</PrimaryButton>
+                                <PrimaryButton onClick={handleCancel}>
+                                    {failButtonText || c('Action').t`Use a different payment method`}
+                                </PrimaryButton>
                             </p>
                         </div>
                     )
@@ -150,7 +160,8 @@ PaymentVerificationModal.propTypes = {
     approvalURL: PropTypes.string.isRequired,
     returnHost: PropTypes.string.isRequired,
     params: PropTypes.object,
-    payment: PropTypes.object
+    payment: PropTypes.object,
+    failButtonText: PropTypes.string
 };
 
 export default PaymentVerificationModal;
