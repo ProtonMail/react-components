@@ -4,13 +4,13 @@ import { classnames } from '../../helpers/component';
 
 const Wizard = ({ step = 0, steps = [], hideText = false }) => {
     return (
-        <div className={classnames(['wizard-container', hideText ? 'wizard-container--noTextDisplayed' : ''])}>
+        <div className={classnames(['wizard-container', hideText && 'wizard-container--noTextDisplayed'])}>
             <ul className="wizard unstyled flex flex-nowrap flex-spacebetween">
                 {steps.map((text = '', index) => {
                     return (
                         <li
                             key={index.toString()}
-                            className={classnames(['wizard-item', index < step ? 'is-complete' : ''])}
+                            className={classnames(['wizard-item', index < step && 'is-complete'])}
                             aria-current={index === step ? 'step' : null}
                         >
                             <span className="wizard-marker" />

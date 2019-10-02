@@ -15,11 +15,13 @@ const Overlay = ({ isClosing = false, className: extraClassName = '', onExit, ..
         }
     };
 
-    const className = classnames([CLASSES.OVERLAY, isClosing && CLASSES.OVERLAY_OUT, extraClassName]);
-
     return (
         <Portal>
-            <div className={className} onAnimationEnd={handleAnimationEnd} {...rest} />
+            <div
+                className={classnames([CLASSES.OVERLAY, isClosing && CLASSES.OVERLAY_OUT, extraClassName])}
+                onAnimationEnd={handleAnimationEnd}
+                {...rest}
+            />
         </Portal>
     );
 };

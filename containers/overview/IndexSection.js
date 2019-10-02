@@ -13,7 +13,7 @@ const IndexSection = ({ pages }) => {
                 return (
                     <div
                         key={route}
-                        className={classnames(['setting-grid', sections.length > 4 ? 'setting-grid--tall' : ''])}
+                        className={classnames(['setting-grid', sections.length > 4 && 'setting-grid--tall'])}
                     >
                         <h2 className="h6 mb0-5">
                             <strong>{text}</strong>

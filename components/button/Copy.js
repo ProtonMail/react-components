@@ -21,7 +21,7 @@ const Copy = ({ value, className = '' }) => {
         <Button
             onClick={handleClick}
             icon="clipboard"
-            className={classnames([className, copied ? 'copied' : ''])}
+            className={classnames([className, copied && 'copied'])}
             title={copied ? c('Label').t`Copied` : c('Label').t`Copy`}
         />
     );

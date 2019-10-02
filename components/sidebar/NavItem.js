@@ -24,7 +24,7 @@ const NavItem = ({ type = 'link', link, isActive, text, aside, onClick, icon, li
     if (type === 'link') {
         return (
             <li className="navigation__item">
-                <NavLink className={classnames(['navigation__ling', className])} isActive={isActive} to={link}>
+                <NavLink className={classnames(['navigation__link', className])} isActive={isActive} to={link}>
                     {content}
                 </NavLink>
                 {list.length ? <NavMenu list={list} /> : null}
