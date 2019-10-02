@@ -110,8 +110,12 @@ const PaymentVerificationModal = ({
                             <p className="aligncenter">
                                 <PaymentVerificationImage payment={payment} />
                             </p>
-                            <Alert>{c('Info')
-                                .t`Verification will open a new tab, please disable any popup blockers.`}</Alert>
+                            <Alert>
+                                {isAddCard
+                                    ? c('Info')
+                                          .t`Verification will open a new tab, please disable any popup blockers. You will not be charged. Any amount used to verify the card will be refunded immediately.`
+                                    : c('Info').t`Verification will open a new tab, please disable any popup blockers.`}
+                            </Alert>
                         </>
                     ),
                     [STEPS.REDIRECTING]: (
@@ -125,13 +129,20 @@ const PaymentVerificationModal = ({
                     ),
                     [STEPS.REDIRECTED]: (
                         <>
-                            <p className="aligncenter">{c('Info')
-                                .t`Please verify payment at the new tab which was opened.`}</p>
+                            <p className="aligncenter">
+                                {isAddCard
+                                    ? c('Info').t`Please verify the card in the new tab which was opened.`
+                                    : c('Info').t`Please verify payment at the new tab which was opened.`}
+                            </p>
                             <Loader />
                             <p className="aligncenter">
                                 <Button onClick={handleCancel}>{c('Action').t`Cancel`}</Button>
                             </p>
-                            <Alert>{c('Info').t`Payment can take a few minutes to fully verify.`}</Alert>
+                            <Alert>
+                                {isAddCard
+                                    ? c('Info').t`Verification can take a few minutes to fully verify.`
+                                    : c('Info').t`Payment can take a few minutes to fully verify.`}
+                            </Alert>
                         </>
                     ),
                     [STEPS.FAIL]: (
