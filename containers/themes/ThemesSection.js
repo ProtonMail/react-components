@@ -13,12 +13,11 @@ import {
 } from 'react-components';
 import { updateTheme } from 'proton-shared/lib/api/mailSettings';
 import { getThemeIdentifier, stripThemeIdentifier } from 'proton-shared/lib/themes/helpers';
-import { ALL_THEMES } from 'proton-shared/lib/themes/themes.js';
+import { PROTON_THEMES, CUSTOM_THEME } from 'proton-shared/lib/themes/themes.js';
 
 import CustomThemeModal from './CustomThemeModal.js';
 
-const { DARK, CUSTOM } = ALL_THEMES;
-const availableThemes = [DARK, CUSTOM];
+const availableThemes = [PROTON_THEMES.DARK, CUSTOM_THEME];
 
 const ThemesSection = () => {
     const api = useApi();
@@ -28,7 +27,7 @@ const ThemesSection = () => {
     const { call } = useEventManager();
     const [loading, withLoading] = useLoading();
     const themeIdentifier = getThemeIdentifier(Theme);
-    const customCSS = themeIdentifier === CUSTOM.identifier ? Theme : '';
+    const customCSS = themeIdentifier === CUSTOM_THEME.identifier ? Theme : '';
 
     const themes = availableThemes.map(({ identifier, getI18NLabel, src, customizable }) => {
         const id = stripThemeIdentifier(identifier);
@@ -36,11 +35,12 @@ const ThemesSection = () => {
     });
 
     const handleChangeTheme = async (themeIdentifier) => {
-        if (themeIdentifier === CUSTOM.identifier) {
+        if (themeIdentifier === CUSTOM_THEME.identifier) {
             return handleOpenModal();
         }
         await api(updateTheme(themeIdentifier));
         await call();
+        createNotification({ text: c('Success').t`Theme saved` });
     };
 
     const handleSaveCustomTheme = async (customCSSInput) => {
