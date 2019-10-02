@@ -13,11 +13,11 @@ import {
 } from 'react-components';
 import { updateTheme } from 'proton-shared/lib/api/mailSettings';
 import { getThemeIdentifier, stripThemeIdentifier } from 'proton-shared/lib/themes/helpers';
-import { PROTON_THEMES, CUSTOM_THEME } from 'proton-shared/lib/themes/themes.js';
+import { DEFAULT_THEME, CUSTOM_THEME } from 'proton-shared/lib/themes/themes.js';
 
 import CustomThemeModal from './CustomThemeModal.js';
 
-const availableThemes = [PROTON_THEMES.DARK, CUSTOM_THEME];
+const availableThemes = [DEFAULT_THEME, CUSTOM_THEME];
 
 const ThemesSection = () => {
     const api = useApi();
