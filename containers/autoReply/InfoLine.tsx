@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { classnames } from '../../helpers/component';
 
 interface Props {
     plain: boolean;
