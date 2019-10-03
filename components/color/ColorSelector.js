@@ -8,12 +8,12 @@ import { classnames } from '../../helpers/component';
 
 const ColorSelector = ({ selected, onChange, className, colors = LABEL_COLORS }) => {
     return (
-        <ul className={classnames('ColorSelector-container unstyled', className)}>
+        <ul className={classnames(['ColorSelector-container unstyled', className])}>
             {colors.map((color, i) => {
                 return (
                     <li
                         key={'mykey' + i}
-                        className={classnames('ColorSelector-item', selected === color && 'selected')}
+                        className={classnames(['ColorSelector-item', selected === color && 'selected'])}
                         style={{ color }}
                     >
                         <Input
