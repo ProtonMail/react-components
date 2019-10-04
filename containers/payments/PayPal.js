@@ -123,8 +123,10 @@ const PayPal = ({ amount: Amount, currency: Currency, onPay, type }) => {
                 loading={loadingVerification}
                 onClick={() => withLoadingVerification(handleClick(paypalRef.current))}
             >{c('Action').t`Check out with PayPal`}</PrimaryButton>
-            <Alert>{c('Info')
-                .jt`You must have a credit card or bank account linked with your PayPal account. If your PayPal account doesn't have that, please ${clickHere}.`}</Alert>
+            {type === 'update' ? null : (
+                <Alert className="mt1">{c('Info')
+                    .jt`You must have a credit card or bank account linked with your PayPal account. If your PayPal account doesn't have that, please ${clickHere}.`}</Alert>
+            )}
         </>
     );
 };
