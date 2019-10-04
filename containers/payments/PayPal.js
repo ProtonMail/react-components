@@ -119,14 +119,16 @@ const PayPal = ({ amount: Amount, currency: Currency, onPay, type }) => {
                 <Alert>{c('Info')
                     .t`You will need to login to your PayPal account to complete this transaction. We will open a new tab with PayPal for you. If you use any pop-up blockers, please disable them to continue.`}</Alert>
             )}
-            <PrimaryButton
-                loading={loadingVerification}
-                onClick={() => withLoadingVerification(handleClick(paypalRef.current))}
-            >{c('Action').t`Check out with PayPal`}</PrimaryButton>
-            {type === 'update' ? null : (
+            {['signup', 'subscription', 'invoice', 'credit', 'update'].includes(type) ? (
+                <PrimaryButton
+                    loading={loadingVerification}
+                    onClick={() => withLoadingVerification(handleClick(paypalRef.current))}
+                >{c('Action').t`Check out with PayPal`}</PrimaryButton>
+            ) : null}
+            {['signup', 'subscription', 'invoice', 'donation', 'credit'].includes(type) ? (
                 <Alert className="mt1">{c('Info')
                     .jt`You must have a credit card or bank account linked with your PayPal account. If your PayPal account doesn't have that, please ${clickHere}.`}</Alert>
-            )}
+            ) : null}
         </>
     );
 };
