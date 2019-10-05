@@ -21,7 +21,7 @@ const TopNavbarLink = ({ to, icon, text, ...rest }) => {
 
 TopNavbarLink.propTypes = {
     to: PropTypes.string.isRequired,
-    icon: PropTypes.string.isRequired,
+    icon: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
     text: PropTypes.string.isRequired
 };
 
