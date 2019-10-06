@@ -35,8 +35,8 @@ Confirm.propTypes = {
     onConfirm: PropTypes.func,
     title: PropTypes.string.isRequired,
     children: PropTypes.node.isRequired,
-    cancel: PropTypes.string,
-    confirm: PropTypes.string,
+    cancel: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+    confirm: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
     loading: PropTypes.bool
 };
 
