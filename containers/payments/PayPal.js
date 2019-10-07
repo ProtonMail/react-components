@@ -115,19 +115,50 @@ const PayPal = ({ amount: Amount, currency: Currency, onPay, type }) => {
                         </div>
                     </Alert>
                 </>
-            ) : (
-                <Alert>{c('Info')
-                    .t`You will need to login to your PayPal account to complete this transaction. We will open a new tab with PayPal for you. If you use any pop-up blockers, please disable them to continue.`}</Alert>
-            )}
-            {['signup', 'subscription', 'invoice', 'credit', 'update'].includes(type) ? (
-                <PrimaryButton
-                    loading={loadingVerification}
-                    onClick={() => withLoadingVerification(handleClick(paypalRef.current))}
-                >{c('Action').t`Check out with PayPal`}</PrimaryButton>
             ) : null}
-            {['signup', 'subscription', 'invoice', 'donation', 'credit'].includes(type) ? (
-                <Alert className="mt1">{c('Info')
-                    .jt`You must have a credit card or bank account linked with your PayPal account. If your PayPal account doesn't have that, please ${clickHere}.`}</Alert>
+            {!loadingVerification && ['signup', 'subscription', 'invoice', 'credit'].includes(type) ? (
+                <>
+                    <Alert>
+                        {c('Info')
+                            .t`We will redirect you to PayPal in a new browser tab to complete this transaction. If you use any pop-up blockers, please disable them to continue.`}
+                    </Alert>
+                    <div className="mb1">
+                        <PrimaryButton
+                            loading={loadingVerification}
+                            onClick={() => withLoadingVerification(handleClick(paypalRef.current))}
+                        >{c('Action').t`Check out with PayPal`}</PrimaryButton>
+                    </div>
+                    <Alert>{c('Info')
+                        .jt`You must have a credit card or bank account linked with your PayPal account. If your PayPal account doesn't have that, please ${clickHere}.`}</Alert>
+                </>
+            ) : null}
+            {!loadingVerification && type === 'update' ? (
+                <>
+                    <Alert>
+                        {c('Info')
+                            .t`We will redirect you to PayPal in a new browser tab to pay for your Proton subscription. If you use any pop-up blockers, please disable them to continue.`}
+                    </Alert>
+                    <div className="mb1">
+                        <PrimaryButton
+                            loading={loadingVerification}
+                            onClick={() => withLoadingVerification(handleClick(paypalRef.current))}
+                        >{c('Action').t`Add PayPal payment method`}</PrimaryButton>
+                    </div>
+                    <Alert>{c('Info')
+                        .t`You must have a credit card or bank account linked with your PayPal account in order to add it as a payment method.`}</Alert>
+                </>
+            ) : null}
+            {!loadingVerification && type === 'donation' ? (
+                <>
+                    <Alert>
+                        {c('Info')
+                            .t`We will redirect you to PayPal in a new browser tab to complete this transaction. If you use any pop-up blockers, please disable them to continue.`}
+                    </Alert>
+                    <PrimaryButton
+                        loading={loadingVerification}
+                        onClick={() => withLoadingVerification(handleClick(paypalCreditRef.current))}
+                    >{c('Action').t`Check out with PayPal`}</PrimaryButton>
+                </>
             ) : null}
         </>
     );
