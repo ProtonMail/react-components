@@ -4,12 +4,7 @@ import { Icon } from 'react-components';
 import { Link } from 'react-router-dom';
 
 const TopNavbarLink = ({ to, icon, text, ...rest }) => {
-    const iconComponent =
-        typeof icon === 'string' ? (
-            <Icon className="topnav-icon mr0-5 flex-item-centered-vert fill-white" name={icon} />
-        ) : (
-            icon
-        );
+    const iconComponent = <Icon className="topnav-icon mr0-5 flex-item-centered-vert fill-white" name={icon} />;
 
     return (
         <Link to={to} {...rest}>
@@ -21,7 +16,7 @@ const TopNavbarLink = ({ to, icon, text, ...rest }) => {
 
 TopNavbarLink.propTypes = {
     to: PropTypes.string.isRequired,
-    icon: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+    icon: PropTypes.string,
     text: PropTypes.string.isRequired
 };
 
