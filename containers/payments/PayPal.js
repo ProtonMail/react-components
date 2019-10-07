@@ -136,7 +136,7 @@ const PayPal = ({ amount: Amount, currency: Currency, onPay, type }) => {
                 <>
                     <Alert>
                         {c('Info')
-                            .t`We will redirect you to PayPal in a new browser tab to pay for your Proton subscription. If you use any pop-up blockers, please disable them to continue.`}
+                            .t`This will enable PayPal to be used to pay for your Proton subscription. We will redirect you to PayPal in a new browser tab. If you use any pop-up blockers, please disable them to continue.`}
                     </Alert>
                     <div className="mb1">
                         <PrimaryButton
