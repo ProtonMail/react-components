@@ -7,6 +7,7 @@ jobs:
        - run: sudo apt-get install -y gawk
        - checkout
        - run: npm i
+       - run: npm run check-types
        - run: npm run lint
        - run: npm run i18n:validatejs
        - run: npm run i18n:validate
