@@ -96,11 +96,9 @@ const PayPal = ({ amount: Amount, currency: Currency, onPay, type }) => {
     }
 
     const clickHere = (
-        <LinkButton
-            loading={loadingVerification}
-            key="click-here"
-            onClick={() => withLoadingVerification(handleClick(paypalCreditRef.current))}
-        >{c('Link').t`click here`}</LinkButton>
+        <LinkButton key="click-here" onClick={() => withLoadingVerification(handleClick(paypalCreditRef.current))}>{c(
+            'Link'
+        ).t`click here`}</LinkButton>
     );
 
     return (
@@ -123,10 +121,9 @@ const PayPal = ({ amount: Amount, currency: Currency, onPay, type }) => {
                             .t`We will redirect you to PayPal in a new browser tab to complete this transaction. If you use any pop-up blockers, please disable them to continue.`}
                     </Alert>
                     <div className="mb1">
-                        <PrimaryButton
-                            loading={loadingVerification}
-                            onClick={() => withLoadingVerification(handleClick(paypalRef.current))}
-                        >{c('Action').t`Check out with PayPal`}</PrimaryButton>
+                        <PrimaryButton onClick={() => withLoadingVerification(handleClick(paypalRef.current))}>{c(
+                            'Action'
+                        ).t`Check out with PayPal`}</PrimaryButton>
                     </div>
                     <Alert>{c('Info')
                         .jt`You must have a credit card or bank account linked with your PayPal account. If your PayPal account doesn't have that, please ${clickHere}.`}</Alert>
@@ -139,10 +136,9 @@ const PayPal = ({ amount: Amount, currency: Currency, onPay, type }) => {
                             .t`This will enable PayPal to be used to pay for your Proton subscription. We will redirect you to PayPal in a new browser tab. If you use any pop-up blockers, please disable them to continue.`}
                     </Alert>
                     <div className="mb1">
-                        <PrimaryButton
-                            loading={loadingVerification}
-                            onClick={() => withLoadingVerification(handleClick(paypalRef.current))}
-                        >{c('Action').t`Add PayPal payment method`}</PrimaryButton>
+                        <PrimaryButton onClick={() => withLoadingVerification(handleClick(paypalRef.current))}>{c(
+                            'Action'
+                        ).t`Add PayPal payment method`}</PrimaryButton>
                     </div>
                     <Alert>{c('Info')
                         .t`You must have a credit card or bank account linked with your PayPal account in order to add it as a payment method.`}</Alert>
@@ -154,10 +150,9 @@ const PayPal = ({ amount: Amount, currency: Currency, onPay, type }) => {
                         {c('Info')
                             .t`We will redirect you to PayPal in a new browser tab to complete this transaction. If you use any pop-up blockers, please disable them to continue.`}
                     </Alert>
-                    <PrimaryButton
-                        loading={loadingVerification}
-                        onClick={() => withLoadingVerification(handleClick(paypalCreditRef.current))}
-                    >{c('Action').t`Check out with PayPal`}</PrimaryButton>
+                    <PrimaryButton onClick={() => withLoadingVerification(handleClick(paypalCreditRef.current))}>{c(
+                        'Action'
+                    ).t`Check out with PayPal`}</PrimaryButton>
                 </>
             ) : null}
         </>
