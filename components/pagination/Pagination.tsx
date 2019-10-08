@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { c } from 'ttag';
 import { Group, Button } from '../button';
 import DropdownMenuButton from '../dropdown/DropdownMenuButton';
