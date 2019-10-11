@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { PAYMENT_METHOD_TYPES } from 'proton-shared/lib/constants';
-import { Loader, useCache } from 'react-components';
+import { Loader } from 'react-components';
 
 import Card from './Card';
 import useCard from './useCard';
@@ -12,12 +12,11 @@ import Bitcoin from './Bitcoin';
 
 const { CARD, PAYPAL, BITCOIN, CASH } = PAYMENT_METHOD_TYPES;
 
-const Method = ({ type, amount = 0, currency, onCard, onPayPal, method, methods, loading }) => {
-    const cache = useCache();
-    const { card, updateCard, errors, isValid } = useCard(cache.get('card'));
+const Method = ({ type, amount = 0, currency, onCard, onPayPal, method, methods, loading, cardToUse }) => {
+    const fallbackCard = useCard();
+    const { card, updateCard, errors, isValid } = cardToUse || fallbackCard;
 
     useEffect(() => {
-        cache.set('card', card);
         onCard({ card, isValid });
     }, [card]);
 
@@ -56,6 +55,7 @@ Method.propTypes = {
     methods: PropTypes.array,
     type: PropTypes.oneOf(['signup', 'subscription', 'invoice', 'donation', 'credit']),
     amount: PropTypes.number,
+    cardToUse: PropTypes.object,
     onCard: PropTypes.func,
     onPayPal: PropTypes.func,
     currency: PropTypes.oneOf(['EUR', 'CHF', 'USD'])
