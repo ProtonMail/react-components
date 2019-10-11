@@ -44,7 +44,7 @@ const PaymentMethodsSection = () => {
         createModal(<PayPalModal onChange={request} />);
     };
 
-    const isPayPalAdded = paymentMethods.some((method) => method.Type === PAYMENT_METHOD_TYPES.PAYPAL);
+    const hasPayPal = paymentMethods.some((method) => method.Type === PAYMENT_METHOD_TYPES.PAYPAL);
 
     return (
         <>
@@ -60,7 +60,7 @@ const PaymentMethodsSection = () => {
             <Block>
                 <PrimaryButton className="mr1" onClick={handleCard}>{c('Action')
                     .t`Add credit / debit card`}</PrimaryButton>
-                {!isPayPalAdded && <PrimaryButton onClick={handlePayPal}>{c('Action').t`Add PayPal`}</PrimaryButton>}
+                {hasPayPal ? null : <PrimaryButton onClick={handlePayPal}>{c('Action').t`Add PayPal`}</PrimaryButton>}
             </Block>
             <PaymentMethodsTable loading={loading} methods={paymentMethods} fetchMethods={request} />
         </>
