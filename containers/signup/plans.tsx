@@ -32,12 +32,21 @@ export const PLAN_NAMES = {
 };
 
 type VPNPlans = PLAN.FREE | PLAN.VPNBASIC | PLAN.VPNPLUS | PLAN.VISIONARY;
-
 export const VPN_PLANS = [PLAN.FREE, PLAN.VPNBASIC, PLAN.VPNPLUS, PLAN.VISIONARY];
-export const MAIL_PLANS = [PLAN.FREE, PLAN.PLUS, PLAN.VISIONARY, PLAN.PROFESSIONAL];
 export const VPN_BEST_DEAL_PLANS = [PLAN.VPNBASIC, PLAN.VPNPLUS, PLAN.VISIONARY];
 
+type MailPlans = PLAN.FREE | PLAN.PLUS | PLAN.VISIONARY | PLAN.PROFESSIONAL;
+export const MAIL_PLANS = [PLAN.FREE, PLAN.PLUS, PLAN.VISIONARY, PLAN.PROFESSIONAL];
+
 export const getPlusPlan = (clientType: CLIENT_TYPES) => (clientType === CLIENT_TYPES.VPN ? PLAN.VPNPLUS : PLAN.PLUS);
+
+export const getAvailablePlans = (clientType: CLIENT_TYPES, bestDeal?: boolean) => {
+    if (clientType === CLIENT_TYPES.VPN) {
+        return bestDeal ? VPN_BEST_DEAL_PLANS : VPN_PLANS;
+    }
+
+    return MAIL_PLANS;
+};
 
 const getVPNPlanFeatures = (plan: VPNPlans, maxConnections: number, countries: PlanCountries) =>
     ({
@@ -145,17 +154,24 @@ const getPlanPrice = (plan: any, cycle: number) => {
     return { monthly, total, totalMonthly, saved };
 };
 
-// TODO: Hhigher order function with client type
-export const getVPNPlan = (
-    planName: VPNPlans,
+export const getPlan = (
+    clientType: CLIENT_TYPES,
+    planName: VPNPlans | MailPlans,
     cycle: number,
     plans: any = [],
     countries: PlanCountries = { free: [], basic: [], all: [] }
 ) => {
     const plan = plans.find(({ Type, Name }: any) => Type === PLAN_TYPES.PLAN && Name === planName);
     const price = plan ? getPlanPrice(plan, cycle) : { monthly: 0, total: 0, totalMonthly: 0, saved: 0 };
+
+    // TODO: get Mail plan features
+    const planFeatures =
+        clientType === CLIENT_TYPES.VPN
+            ? getVPNPlanFeatures(planName as VPNPlans, plan ? plan.MaxVPN : 1, countries)
+            : {};
+
     return {
-        ...getVPNPlanFeatures(planName, plan ? plan.MaxVPN : 1, countries),
+        ...planFeatures,
         planName,
         title: PLAN_NAMES[planName],
         id: plan && plan.ID,

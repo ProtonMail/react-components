@@ -1,15 +1,6 @@
 import { useState, useEffect } from 'react';
 import { handlePaymentToken } from 'react-components/containers/payments/paymentTokenHelper';
 import { srpVerify, srpAuth } from 'proton-shared/lib/srp';
-import {
-    useApi,
-    usePlans,
-    useConfig,
-    useApiResult,
-    useModals,
-    useVPNCountries,
-    useNotifications
-} from 'react-components';
 import { queryCreateUser, queryDirectSignupStatus } from 'proton-shared/lib/api/user';
 import { auth, setCookies } from 'proton-shared/lib/api/auth';
 import { subscribe, setPaymentMethod, verifyPayment, checkSubscription } from 'proton-shared/lib/api/payments';
@@ -24,8 +15,15 @@ import {
     CURRENCIES,
     PAYMENT_METHOD_TYPES
 } from 'proton-shared/lib/constants';
-import { getVPNPlan, PLAN, getPlusPlan } from './plans';
+import { getPlan, PLAN, getPlusPlan } from './plans';
 import { c } from 'ttag';
+import useApi from '../api/useApi';
+import useNotifications from '../notifications/useNotifications';
+import useModals from '../modals/useModals';
+import useConfig from '../config/useConfig';
+import useApiResult from '../../hooks/useApiResult';
+import usePlans from '../../hooks/usePlans';
+import useVPNCountries from '../../hooks/useVPNCountries';
 
 const getSignupAvailability = (isDirectSignupEnabled, allowedMethods = []) => {
     const email = allowedMethods.includes(TOKEN_TYPES.EMAIL);
@@ -82,16 +80,16 @@ const useSignup = (onLogin, { coupon, invite, availablePlans } = {}, initialMode
     });
 
     const getPlanByName = (planName, cycle = model.cycle) =>
-        getVPNPlan(planName, cycle, plansWithCoupons || [], countries);
+        getPlan(CLIENT_TYPE, planName, cycle, plansWithCoupons || [], countries);
 
     // Until we can query plans+coupons at once, we need to check each plan individually
     useEffect(() => {
         const applyCoupon = async () => {
-            const vpnPlans = plans.filter(
+            const selectablePlans = plans.filter(
                 ({ Name, Type }) => Type === PLAN_TYPES.PLAN && availablePlans.includes(Name)
             );
             const plansWithCoupons = await Promise.all(
-                vpnPlans.map(async (plan) => {
+                selectablePlans.map(async (plan) => {
                     const {
                         AmountDue,
                         CouponDiscount,

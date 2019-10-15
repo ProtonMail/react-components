@@ -9,11 +9,12 @@ import PlanStep from './PlanStep/PlanStep';
 import useSignup from './useSignup';
 import VerificationStep from './VerificationStep/VerificationStep';
 import PaymentStep from './PaymentStep/PaymentStep';
-import { PLAN, VPN_PLANS, VPN_BEST_DEAL_PLANS } from './plans';
+import { PLAN, getAvailablePlans } from './plans';
 import PlanDetails from './SelectedPlan/PlanDetails';
 import PlanUpsell from './SelectedPlan/PlanUpsell';
 import useVerification from './VerificationStep/useVerification';
 import MobileRedirectionStep from './MobileRedirectionStep/MobileRedirectionStep';
+import useConfig from '../config/useConfig';
 
 const SignupState = {
     Plan: 'plan',
@@ -25,10 +26,11 @@ const SignupState = {
 
 // TODO: Flexible urls and plans for reuse between project
 const SignupContainer = ({ match, history, onLogin, stopRedirect, renderPlansTable }) => {
+    const { CLIENT_TYPE } = useConfig();
     const searchParams = new URLSearchParams(history.location.search);
     const preSelectedPlan = searchParams.get('plan');
     const redirectToMobile = searchParams.get('from') === 'mobile';
-    const availablePlans = checkCookie('offer', 'bestdeal') ? VPN_BEST_DEAL_PLANS : VPN_PLANS;
+    const availablePlans = getAvailablePlans(CLIENT_TYPE, checkCookie('offer', 'bestdeal'));
 
     useEffect(() => {
         document.title = c('Title').t`Sign up - ProtonVPN`;
