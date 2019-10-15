@@ -36,7 +36,7 @@ export const VPN_PLANS = [PLAN.FREE, PLAN.VPNBASIC, PLAN.VPNPLUS, PLAN.VISIONARY
 export const VPN_BEST_DEAL_PLANS = [PLAN.VPNBASIC, PLAN.VPNPLUS, PLAN.VISIONARY];
 
 type MailPlans = PLAN.FREE | PLAN.PLUS | PLAN.VISIONARY | PLAN.PROFESSIONAL;
-export const MAIL_PLANS = [PLAN.FREE, PLAN.PLUS, PLAN.VISIONARY, PLAN.PROFESSIONAL];
+export const MAIL_PLANS = [PLAN.FREE, PLAN.PLUS, PLAN.PROFESSIONAL, PLAN.VISIONARY];
 
 export const getPlusPlan = (clientType: CLIENT_TYPES) => (clientType === CLIENT_TYPES.VPN ? PLAN.VPNPLUS : PLAN.PLUS);
 
@@ -141,6 +141,70 @@ const getVPNPlanFeatures = (plan: VPNPlans, maxConnections: number, countries: P
         }
     }[plan]);
 
+const getMailPlanFeatures = (plan: MailPlans) =>
+    ({
+        [PLAN.FREE]: {
+            image: <div>FREE PLAN IMAGE</div>,
+            description: c('Plan Description').t`Free plan description`,
+            upsell: {
+                planName: PLAN.PLUS,
+                features: [
+                    c('Plan Feature').t`Upsell feature 1`,
+                    c('Plan Feature').t`Upsell feature 2`,
+                    c('Plan Feature').t`Upsell feature 3`
+                ]
+            },
+            features: [
+                c('Plan Feature').t`Feature 1`,
+                c('Plan Feature').t`Feature 2`,
+                c('Plan Feature').t`Feature 3`,
+                c('Plan Feature').t`Feature 4`
+            ]
+        },
+        [PLAN.PLUS]: {
+            image: <div>PLUS PLAN IMAGE</div>,
+            isBest: true,
+            description: c('Plan Description').t`Plus plan description`,
+            additionalFeatures: c('Plan feature').t`All ${PLAN_NAMES[PLAN.FREE]} plan features`,
+            upsell: {
+                planName: PLAN.PROFESSIONAL,
+                features: [
+                    c('Plan Feature').t`Upsell feature 1`,
+                    c('Plan Feature').t`Upsell feature 2`,
+                    c('Plan Feature').t`Upsell feature 3`
+                ]
+            },
+            features: [
+                c('Plan Feature').t`Feature 1`,
+                c('Plan Feature').t`Feature 2`,
+                c('Plan Feature').t`Feature 3`,
+                c('Plan Feature').t`Feature 4`
+            ]
+        },
+        [PLAN.PROFESSIONAL]: {
+            image: <div>PROFESSIONAL PLAN IMAGE</div>,
+            description: c('Plan Description').t`Professional plan description`,
+            additionalFeatures: c('Plan feature').t`All ${PLAN_NAMES[PLAN.PLUS]} plan features`,
+            features: [
+                c('Plan Feature').t`Feature 1`,
+                c('Plan Feature').t`Feature 2`,
+                c('Plan Feature').t`Feature 3`,
+                c('Plan Feature').t`Feature 4`
+            ]
+        },
+        [PLAN.VISIONARY]: {
+            image: <div>VISIONARY PLAN IMAGE</div>,
+            description: c('Plan Description').t`Visionary plan description`,
+            additionalFeatures: c('Plan feature').t`All ${PLAN_NAMES[PLAN.PROFESSIONAL]} plan features`,
+            features: [
+                c('Plan Feature').t`Feature 1`,
+                c('Plan Feature').t`Feature 2`,
+                c('Plan Feature').t`Feature 3`,
+                c('Plan Feature').t`Feature 4`
+            ]
+        }
+    }[plan]);
+
 // To use coupon, AmountDue from coupon must be merged into plan.
 const getPlanPrice = (plan: any, cycle: number) => {
     const monthly = plan.Pricing[CYCLE.MONTHLY];
@@ -168,7 +232,7 @@ export const getPlan = (
     const planFeatures =
         clientType === CLIENT_TYPES.VPN
             ? getVPNPlanFeatures(planName as VPNPlans, plan ? plan.MaxVPN : 1, countries)
-            : {};
+            : getMailPlanFeatures(planName as MailPlans);
 
     return {
         ...planFeatures,
