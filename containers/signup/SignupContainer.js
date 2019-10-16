@@ -25,15 +25,16 @@ const SignupState = {
     MobileRedirection: 'mobile-redirection'
 };
 
-const SignupContainer = ({ match, history, onLogin, stopRedirect, renderPlansTable, homepageUrl }) => {
+const SignupContainer = ({ match, history, onLogin, redirectUrl, stopRedirect, renderPlansTable, homepageUrl }) => {
     const { CLIENT_TYPE } = useConfig();
     const searchParams = new URLSearchParams(history.location.search);
     const preSelectedPlan = searchParams.get('plan');
     const redirectToMobile = searchParams.get('from') === 'mobile';
     const availablePlans = getAvailablePlans(CLIENT_TYPE, checkCookie('offer', 'bestdeal'));
+    const appName = CLIENT_TYPE === CLIENT_TYPES.VPN ? 'ProtonVPN' : 'ProtonMail';
 
     useEffect(() => {
-        document.title = c('Title').t`Sign up - ProtonVPN`;
+        document.title = c('Title').t`Sign up - ${appName}`;
         // Always start at plans, or account if plan is preselected
         if (preSelectedPlan) {
             history.replace(`/signup/${SignupState.Account}`, history.location.state);
@@ -57,7 +58,7 @@ const SignupContainer = ({ match, history, onLogin, stopRedirect, renderPlansTab
         }
 
         stopRedirect();
-        history.push('/downloads');
+        history.push(redirectUrl);
         onLogin(...args);
     };
 
@@ -221,6 +222,7 @@ const SignupContainer = ({ match, history, onLogin, stopRedirect, renderPlansTab
 };
 
 SignupContainer.propTypes = {
+    redirectUrl: PropTypes.string.isRequired,
     homepageUrl: PropTypes.string.isRequired,
     stopRedirect: PropTypes.func.isRequired,
     onLogin: PropTypes.func.isRequired,
