@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import { Button, Title, useLoading, TextLoader, VpnLogo, Href, FullLoader, SupportDropdown } from 'react-components';
 import { checkCookie } from 'proton-shared/lib/helpers/cookies';
-import { CYCLE } from 'proton-shared/lib/constants';
+import { CYCLE, CLIENT_TYPES } from 'proton-shared/lib/constants';
 import AccountStep from './AccountStep/AccountStep';
 import PlanStep from './PlanStep/PlanStep';
 import useSignup from './useSignup';
@@ -15,6 +15,7 @@ import PlanUpsell from './SelectedPlan/PlanUpsell';
 import useVerification from './VerificationStep/useVerification';
 import MobileRedirectionStep from './MobileRedirectionStep/MobileRedirectionStep';
 import useConfig from '../config/useConfig';
+import MailLogo from '../../components/logo/MailLogo';
 
 const SignupState = {
     Plan: 'plan',
@@ -24,8 +25,7 @@ const SignupState = {
     MobileRedirection: 'mobile-redirection'
 };
 
-// TODO: Flexible urls and plans for reuse between project
-const SignupContainer = ({ match, history, onLogin, stopRedirect, renderPlansTable }) => {
+const SignupContainer = ({ match, history, onLogin, stopRedirect, renderPlansTable, homepageUrl }) => {
     const { CLIENT_TYPE } = useConfig();
     const searchParams = new URLSearchParams(history.location.search);
     const preSelectedPlan = searchParams.get('plan');
@@ -154,13 +154,17 @@ const SignupContainer = ({ match, history, onLogin, stopRedirect, renderPlansTab
                             (signupState && signupState !== SignupState.Plan ? (
                                 <Button onClick={() => history.goBack()}>{c('Action').t`Back`}</Button>
                             ) : (
-                                <Href className="pm-button" url="https://protonvpn.com" target="_self">{c('Action')
+                                <Href className="pm-button" url={homepageUrl} target="_self">{c('Action')
                                     .t`Homepage`}</Href>
                             ))}
                     </div>
                     <div className="onmobile-min-w100 onmobile-aligncenter onmobile-mt0-5">
                         <Href url="https://protonvpn.com" target="_self">
-                            <VpnLogo className="fill-primary" />
+                            {CLIENT_TYPE === CLIENT_TYPES.VPN ? (
+                                <VpnLogo className="fill-primary" />
+                            ) : (
+                                <MailLogo className="fill-primary" />
+                            )}
                         </Href>
                     </div>
                     <div className="flex-item-fluid alignright plan-help-button">
@@ -217,6 +221,7 @@ const SignupContainer = ({ match, history, onLogin, stopRedirect, renderPlansTab
 };
 
 SignupContainer.propTypes = {
+    homepageUrl: PropTypes.string.isRequired,
     stopRedirect: PropTypes.func.isRequired,
     onLogin: PropTypes.func.isRequired,
     match: PropTypes.shape({

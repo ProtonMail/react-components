@@ -3,12 +3,17 @@ import PropTypes from 'prop-types';
 import { FormModal, PrimaryButton, Alert } from 'react-components';
 import { c } from 'ttag';
 import { Link } from 'react-router-dom';
+import useConfig from '../../config/useConfig';
+import { CLIENT_TYPES } from 'proton-shared/lib/constants';
 
-// TODO: make it more generic (title, login url)
 const LoginPromptModal = ({ email, ...rest }) => {
+    const { CLIENT_TYPE } = useConfig();
+
+    const title = CLIENT_TYPE === CLIENT_TYPES.VPN ? 'ProtonVPN' : 'ProtonMail';
+
     return (
         <FormModal
-            title={c('Title').t`ProtonVPN`}
+            title={title}
             close={c('Action').t`Cancel`}
             submit={
                 <Link to="/login">

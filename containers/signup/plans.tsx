@@ -36,7 +36,7 @@ export const VPN_PLANS = [PLAN.FREE, PLAN.VPNBASIC, PLAN.VPNPLUS, PLAN.VISIONARY
 export const VPN_BEST_DEAL_PLANS = [PLAN.VPNBASIC, PLAN.VPNPLUS, PLAN.VISIONARY];
 
 type MailPlans = PLAN.FREE | PLAN.PLUS | PLAN.VISIONARY | PLAN.PROFESSIONAL;
-export const MAIL_PLANS = [PLAN.FREE, PLAN.PLUS, PLAN.PROFESSIONAL, PLAN.VISIONARY];
+export const MAIL_PLANS = [PLAN.FREE, PLAN.PLUS, PLAN.VISIONARY, PLAN.PROFESSIONAL];
 
 export const getPlusPlan = (clientType: CLIENT_TYPES) => (clientType === CLIENT_TYPES.VPN ? PLAN.VPNPLUS : PLAN.PLUS);
 
@@ -145,7 +145,7 @@ const getMailPlanFeatures = (plan: MailPlans) =>
     ({
         [PLAN.FREE]: {
             image: <div>FREE PLAN IMAGE</div>,
-            description: c('Plan Description').t`Free plan description`,
+            description: c('Plan Description').t`Basic account with limited features`,
             upsell: {
                 planName: PLAN.PLUS,
                 features: [
@@ -155,47 +155,51 @@ const getMailPlanFeatures = (plan: MailPlans) =>
                 ]
             },
             features: [
-                c('Plan Feature').t`Feature 1`,
-                c('Plan Feature').t`Feature 2`,
-                c('Plan Feature').t`Feature 3`,
-                c('Plan Feature').t`Feature 4`
+                c('Plan Feature').t`500MB storage`,
+                c('Plan Feature').t`150 messages per day`,
+                c('Plan Feature').t`Limited Support`
             ]
         },
         [PLAN.PLUS]: {
             image: <div>PLUS PLAN IMAGE</div>,
             isBest: true,
-            description: c('Plan Description').t`Plus plan description`,
-            additionalFeatures: c('Plan feature').t`All ${PLAN_NAMES[PLAN.FREE]} plan features`,
+            description: c('Plan Description').t`Secure email with advanced features`,
             upsell: {
-                planName: PLAN.PROFESSIONAL,
+                planName: PLAN.VISIONARY,
                 features: [
                     c('Plan Feature').t`Upsell feature 1`,
                     c('Plan Feature').t`Upsell feature 2`,
-                    c('Plan Feature').t`Upsell feature 3`
+                    c('Plan Feature').t`Upsell feature 3`,
+                    c('Plan Feature').t`Upsell feature 4`
                 ]
             },
             features: [
-                c('Plan Feature').t`Feature 1`,
-                c('Plan Feature').t`Feature 2`,
-                c('Plan Feature').t`Feature 3`,
-                c('Plan Feature').t`Feature 4`
-            ]
-        },
-        [PLAN.PROFESSIONAL]: {
-            image: <div>PROFESSIONAL PLAN IMAGE</div>,
-            description: c('Plan Description').t`Professional plan description`,
-            additionalFeatures: c('Plan feature').t`All ${PLAN_NAMES[PLAN.PLUS]} plan features`,
-            features: [
-                c('Plan Feature').t`Feature 1`,
-                c('Plan Feature').t`Feature 2`,
-                c('Plan Feature').t`Feature 3`,
-                c('Plan Feature').t`Feature 4`
+                c('Plan Feature').t`5 GB storage`,
+                c('Plan Feature').t`1000 messages per day`,
+                c('Plan Feature').t`Labels, Custom Filters, and Folders`,
+                c('Plan Feature').t`Send encrypted messages to external recipients`,
+                c('Plan Feature').t`Use your own domain (e.g. john@smith.com)`,
+                c('Plan Feature').t`Up to 5 email aliases`,
+                c('Plan Feature').t`Priority Customer Support`
             ]
         },
         [PLAN.VISIONARY]: {
             image: <div>VISIONARY PLAN IMAGE</div>,
-            description: c('Plan Description').t`Visionary plan description`,
-            additionalFeatures: c('Plan feature').t`All ${PLAN_NAMES[PLAN.PROFESSIONAL]} plan features`,
+            description: c('Plan Description').t`Special accounts for our supporters`,
+            additionalFeatures: c('Plan feature').t`All ${PLAN_NAMES[PLAN.PLUS]} plan features`,
+            features: [
+                c('Plan Feature').t`20GB storage`,
+                c('Plan Feature').t`No sending limits*`, // TODO: asterisk info
+                c('Plan Feature').t`Support for up to 10 domains`,
+                c('Plan Feature').t`Up to 50 email aliases`,
+                c('Plan Feature').t`Multi-User Support (6 total)`,
+                c('Plan Feature').t`Early access to new features`,
+                c('Plan Feature').t`Includes access to ProtonVPN`
+            ]
+        },
+        [PLAN.PROFESSIONAL]: {
+            image: <div>PROFESSIONAL PLAN IMAGE</div>,
+            description: c('Plan Description').t`Encrypted Email for your Organization`,
             features: [
                 c('Plan Feature').t`Feature 1`,
                 c('Plan Feature').t`Feature 2`,
@@ -228,7 +232,6 @@ export const getPlan = (
     const plan = plans.find(({ Type, Name }: any) => Type === PLAN_TYPES.PLAN && Name === planName);
     const price = plan ? getPlanPrice(plan, cycle) : { monthly: 0, total: 0, totalMonthly: 0, saved: 0 };
 
-    // TODO: get Mail plan features
     const planFeatures =
         clientType === CLIENT_TYPES.VPN
             ? getVPNPlanFeatures(planName as VPNPlans, plan ? plan.MaxVPN : 1, countries)

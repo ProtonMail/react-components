@@ -26,11 +26,12 @@ const PlansTable = ({
     cycle = DEFAULT_CYCLE,
     updateCurrency,
     updateCycle,
-    onSelect
+    onSelect,
+    expand = false
 }) => {
     const planName = getPlanName(subscription) || FREE;
     const { hasPaidVpn } = user;
-    const { state, toggle } = useToggle();
+    const { state, toggle } = useToggle(expand);
     const mySubscription = c('Title').t`My subscription`;
 
     const getPrice = (planName) => {
@@ -310,54 +311,65 @@ const PlansTable = ({
                         </td>
                     </tr>
                 ) : null}
-                <tr>
-                    <th scope="row" className="pm-simple-table-row-th alignleft bg-global-light">
-                        <span className="mr0-5">ProtonVPN</span>
-                        <Info title={c('Tooltip').t`ProtonVPN keeps your Internet traffic private`} />
-                    </th>
-                    <td className="aligncenter">
-                        <SmallButton className="pm-button--link" onClick={onSelect({ vpnplus: 1 })}>
-                            {hasPaidVpn ? c('Action').t`Edit VPN` : c('Action').t`Add VPN`}
-                        </SmallButton>
-                    </td>
-                    <td className="aligncenter">
-                        <SmallButton className="pm-button--link" onClick={onSelect({ plus: 1, vpnplus: 1 })}>
-                            {hasPaidVpn ? c('Action').t`Edit VPN` : c('Action').t`Add VPN`}
-                        </SmallButton>
-                    </td>
-                    <td className="aligncenter">
-                        <SmallButton className="pm-button--link" onClick={onSelect({ professional: 1, vpnplus: 1 })}>
-                            {hasPaidVpn ? c('Action').t`Edit VPN` : c('Action').t`Add VPN`}
-                        </SmallButton>
-                    </td>
-                    <td className="aligncenter">{c('Plan option').t`Included`}</td>
-                </tr>
-                <tr>
-                    <th scope="row" className="pm-simple-table-row-th alignleft bg-global-light">
-                        <SmallButton className="pm-button--link" onClick={toggle}>
-                            {state ? c('Action').t`Hide additional features` : c('Action').t`Compare all features`}
-                        </SmallButton>
-                    </th>
-                    <td className="aligncenter">
-                        <SmallButton className="pm-button--primary" onClick={onSelect()}>{c('Action')
-                            .t`Update`}</SmallButton>
-                    </td>
-                    <td className="aligncenter">
-                        <SmallButton className="pm-button--primary" onClick={onSelect({ plus: 1, vpnplus: 1 })}>{c(
-                            'Action'
-                        ).t`Update`}</SmallButton>
-                    </td>
-                    <td className="aligncenter">
-                        <SmallButton
-                            className="pm-button--primary"
-                            onClick={onSelect({ professional: 1, vpnplus: 1 })}
-                        >{c('Action').t`Update`}</SmallButton>
-                    </td>
-                    <td className="aligncenter">
-                        <SmallButton className="pm-button--primary" onClick={onSelect({ visionary: 1 })}>{c('Action')
-                            .t`Update`}</SmallButton>
-                    </td>
-                </tr>
+                {onSelect && (
+                    <>
+                        <tr>
+                            <th scope="row" className="pm-simple-table-row-th alignleft bg-global-light">
+                                <span className="mr0-5">ProtonVPN</span>
+                                <Info title={c('Tooltip').t`ProtonVPN keeps your Internet traffic private`} />
+                            </th>
+                            <td className="aligncenter">
+                                <SmallButton className="pm-button--link" onClick={onSelect({ vpnplus: 1 })}>
+                                    {hasPaidVpn ? c('Action').t`Edit VPN` : c('Action').t`Add VPN`}
+                                </SmallButton>
+                            </td>
+                            <td className="aligncenter">
+                                <SmallButton className="pm-button--link" onClick={onSelect({ plus: 1, vpnplus: 1 })}>
+                                    {hasPaidVpn ? c('Action').t`Edit VPN` : c('Action').t`Add VPN`}
+                                </SmallButton>
+                            </td>
+                            <td className="aligncenter">
+                                <SmallButton
+                                    className="pm-button--link"
+                                    onClick={onSelect({ professional: 1, vpnplus: 1 })}
+                                >
+                                    {hasPaidVpn ? c('Action').t`Edit VPN` : c('Action').t`Add VPN`}
+                                </SmallButton>
+                            </td>
+                            <td className="aligncenter">{c('Plan option').t`Included`}</td>
+                        </tr>
+                        <tr>
+                            <th scope="row" className="pm-simple-table-row-th alignleft bg-global-light">
+                                <SmallButton className="pm-button--link" onClick={toggle}>
+                                    {state
+                                        ? c('Action').t`Hide additional features`
+                                        : c('Action').t`Compare all features`}
+                                </SmallButton>
+                            </th>
+                            <td className="aligncenter">
+                                <SmallButton className="pm-button--primary" onClick={onSelect()}>{c('Action')
+                                    .t`Update`}</SmallButton>
+                            </td>
+                            <td className="aligncenter">
+                                <SmallButton
+                                    className="pm-button--primary"
+                                    onClick={onSelect({ plus: 1, vpnplus: 1 })}
+                                >{c('Action').t`Update`}</SmallButton>
+                            </td>
+                            <td className="aligncenter">
+                                <SmallButton
+                                    className="pm-button--primary"
+                                    onClick={onSelect({ professional: 1, vpnplus: 1 })}
+                                >{c('Action').t`Update`}</SmallButton>
+                            </td>
+                            <td className="aligncenter">
+                                <SmallButton className="pm-button--primary" onClick={onSelect({ visionary: 1 })}>{c(
+                                    'Action'
+                                ).t`Update`}</SmallButton>
+                            </td>
+                        </tr>
+                    </>
+                )}
             </tbody>
         </table>
     );
@@ -371,7 +383,8 @@ PlansTable.propTypes = {
     user: PropTypes.object,
     updateCurrency: PropTypes.func,
     updateCycle: PropTypes.func,
-    onSelect: PropTypes.func
+    onSelect: PropTypes.func,
+    expand: PropTypes.bool
 };
 
 export default PlansTable;
