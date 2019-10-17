@@ -7,6 +7,8 @@ import { createToken } from 'proton-shared/lib/api/payments';
 
 import { toParams, process } from './paymentTokenHelper';
 
+const { PAYPAL, PAYPAL_CREDIT, TOKEN } = PAYMENT_METHOD_TYPES;
+
 const PayPal = ({ amount: Amount, currency: Currency, onPay, type }) => {
     const api = useApi();
     const abortRef = useRef();
@@ -21,10 +23,16 @@ const PayPal = ({ amount: Amount, currency: Currency, onPay, type }) => {
     };
 
     const handleClick = async ({ Token, ReturnHost, ApprovalURL }) => {
+        const paymentMethodType =
+            {
+                [paypalRef.current.Token]: PAYPAL,
+                [paypalCreditRef.current.Token]: PAYPAL_CREDIT
+            }[Token] || TOKEN;
+
         try {
             abortRef.current = new AbortController();
             await process({ Token, api, ApprovalURL, ReturnHost, signal: abortRef.current.signal });
-            onPay(toParams({ Amount, Currency }, Token));
+            onPay(toParams({ Amount, Currency }, Token, paymentMethodType));
         } catch (error) {
             // if not coming from API error
             if (error.message && !error.config) {
@@ -40,7 +48,7 @@ const PayPal = ({ amount: Amount, currency: Currency, onPay, type }) => {
                     Amount,
                     Currency,
                     Payment: {
-                        Type: PAYMENT_METHOD_TYPES.PAYPAL
+                        Type: PAYPAL
                     }
                 })
             ),
@@ -49,7 +57,7 @@ const PayPal = ({ amount: Amount, currency: Currency, onPay, type }) => {
                     Amount,
                     Currency,
                     Payment: {
-                        Type: PAYMENT_METHOD_TYPES.PAYPAL_CREDIT
+                        Type: PAYPAL_CREDIT
                     }
                 })
             )

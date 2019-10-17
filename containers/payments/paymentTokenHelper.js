@@ -141,11 +141,11 @@ export const process = ({ Token, api, ApprovalURL, ReturnHost, signal }) => {
  * @param {String} Token
  * @returns {Object}
  */
-export const toParams = (params, Token) => {
+export const toParams = (params, Token, PaymentMethodType = TOKEN) => {
     return {
         ...params,
         Payment: {
-            Type: TOKEN,
+            Type: PaymentMethodType,
             Details: {
                 Token
             }
