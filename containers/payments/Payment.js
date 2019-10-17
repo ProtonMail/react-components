@@ -29,7 +29,7 @@ const Payment = ({
 
     const handleCard = ({ card, isValid }) => {
         onValidCard(isValid);
-        isValid && onParameters({ Payment: { Type: CARD, Details: toDetails(card) } });
+        isValid && onParameters({ Payment: { Type: CARD, Details: toDetails(card) }, type: CARD });
     };
 
     const handleChangeMethod = (newMethod) => {
