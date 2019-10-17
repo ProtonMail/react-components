@@ -47,7 +47,7 @@ const EditAddressModal = ({ onClose, address, ...rest }) => {
         >
             <Row>
                 <Label>{c('Label').t`Address`}</Label>
-                <Field>{address.Email}</Field>
+                <Field className="pt0-5">{address.Email}</Field>
             </Row>
             <Row>
                 <Label>{c('Label').t`Display name`}</Label>
@@ -62,9 +62,9 @@ const EditAddressModal = ({ onClose, address, ...rest }) => {
             </Row>
             <Row>
                 <Label>{c('Label').t`Signature`}</Label>
-                <Field>
+                <div className="pm-field-container--full">
                     <RichTextEditor value={model.signature} onChange={handleSignature} />
-                </Field>
+                </div>
             </Row>
         </FormModal>
     );
