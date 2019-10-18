@@ -9,7 +9,7 @@ import createEventManager from 'proton-shared/lib/eventManager/eventManager';
 import { getBrowserLocale, getClosestMatches } from 'proton-shared/lib/i18n/helper';
 import { getLatestID } from 'proton-shared/lib/api/events';
 
-const getEventID = ({ cache, api }) => {
+export const getEventID = ({ cache, api }) => {
     // Set from <ProtonApp/> on login.
     const { eventID: tmpEventID } = cache.get('tmp') || {};
     cache.set('tmp', undefined);

@@ -302,6 +302,8 @@ export { classnames } from './helpers/component';
 export { default as useCache } from './containers/cache/useCache';
 export { default as CacheProvider } from './containers/cache/Provider';
 export { default as EventManagerProvider } from './containers/eventManager/EventManagerProvider';
+export { default as EventNotices } from './containers/eventManager/EventNotices';
+export { default as EventModelListener } from './containers/eventManager/EventModelListener';
 
 export { default as useRightToLeft } from './containers/rightToLeft/useRightToLeft';
 export { default as RightToLeftProvider } from './containers/rightToLeft/Provider';
