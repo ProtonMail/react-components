@@ -1,28 +1,11 @@
-import { getKeys } from 'pmcrypto';
-import { decryptMemberToken } from 'proton-shared/lib/keys/organizationKeys';
 import {
-    decryptPrivateKey,
+    decryptKeyWithFormat,
     decryptPrivateKeyArmored,
-    decryptAddressKeyToken,
-    splitKeys
+    splitKeys,
+    getAddressKeyPassword,
 } from 'proton-shared/lib/keys/keys';
 import { usePromiseResult, useAuthentication } from 'react-components';
 import { noop } from 'proton-shared/lib/helpers/function';
-
-const getAddressKeyToken = ({ Token, Signature, organizationKey, privateKeys, publicKeys }) => {
-    // New address key format
-    if (Signature) {
-        return decryptAddressKeyToken({
-            Token,
-            Signature,
-            privateKeys,
-            // Verify against the organization key in case an admin is signed in to a non-private member.
-            publicKeys: organizationKey ? [organizationKey.toPublic()] : publicKeys
-        });
-    }
-    // Old address key format for an admin signed into a non-private user
-    return decryptMemberToken(Token, organizationKey);
-};
 
 const useAddressesKeys = (user, addresses, userKeysList) => {
     const authentication = useAuthentication();
@@ -46,23 +29,10 @@ const useAddressesKeys = (user, addresses, userKeysList) => {
             addresses.map(({ Keys }) => {
                 return Promise.all(
                     Keys.map(async (Key) => {
-                        const { PrivateKey, Token, Signature } = Key;
-                        const [privateKey] = await getKeys(PrivateKey).catch(() => []);
-                        try {
-                            const privateKeyPassword = Token
-                                ? await getAddressKeyToken({
-                                      Token,
-                                      Signature,
-                                      organizationKey,
-                                      privateKeys,
-                                      publicKeys
-                                  })
-                                : keyPassword;
-                            await decryptPrivateKey(privateKey, privateKeyPassword);
-                            return { Key, privateKey, publicKey: privateKey.toPublic() };
-                        } catch (e) {
-                            return { Key, privateKey, publicKey: privateKey.toPublic(), error: e };
-                        }
+                        return decryptKeyWithFormat(
+                            Key,
+                            await getAddressKeyPassword(Key, { organizationKey, privateKeys, publicKeys, keyPassword })
+                        );
                     })
                 );
             })
