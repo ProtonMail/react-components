@@ -1,9 +1,11 @@
 import { usePromiseResult, useAuthentication } from 'react-components';
-import { getKeys } from 'pmcrypto';
-import { decryptMemberToken } from 'proton-shared/lib/keys/organizationKeys';
 import { noop } from 'proton-shared/lib/helpers/function';
 
-import { decryptPrivateKey, decryptPrivateKeyArmored } from 'proton-shared/lib/keys/keys';
+import {
+    decryptKeyWithFormat,
+    decryptPrivateKeyArmored,
+    getUserKeyPassword
+} from 'proton-shared/lib/keys/keys';
 
 const useUserKeys = (User) => {
     const authentication = useAuthentication();
@@ -19,15 +21,10 @@ const useUserKeys = (User) => {
 
         return Promise.all(
             Keys.map(async (Key) => {
-                const { PrivateKey, Token } = Key;
-                const [privateKey] = await getKeys(PrivateKey).catch(() => []);
-                try {
-                    const privateKeyPassword = Token ? await decryptMemberToken(Token, organizationKey) : keyPassword;
-                    await decryptPrivateKey(privateKey, privateKeyPassword);
-                    return { Key, privateKey, publicKey: privateKey.toPublic() };
-                } catch (e) {
-                    return { Key, privateKey, publicKey: privateKey.toPublic(), error: e };
-                }
+                return decryptKeyWithFormat(
+                    Key,
+                    await getUserKeyPassword(Key, { organizationKey, keyPassword })
+                );
             })
         );
     }, [User]);
