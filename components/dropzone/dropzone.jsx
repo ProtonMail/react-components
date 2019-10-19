@@ -1,73 +1,93 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { classnames } from '../../helpers/component';
+
 import './dropzone.sass';
 
 const CLASSNAMES = {
-    default: 'dropBorder-default',
-    error: 'dropBorder-error',
-    success: 'dropBorder-success'
+  default: 'dropBorder-default',
+  error: 'dropBorder-error',
+  success: 'dropBorder-success'
 };
 
-class DropZone extends React.Component {
-    state = {
-        status: 'default'
-    };
+const DropZone = ({
+  children,
+  validTypes,
+  onDrop,
+  onDragEnter,
+  onDragExit
+}) => {
+  const [status, setStatus] = useState('default');
 
-    handleDrag = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-    };
+  DropZone.defaultProps = {
+    validTypes: [
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'text/x-vcard'
+    ],
+    onDragEnter: () => {},
+    onDragExit: () => {}
+  };
 
-    handleDragIn = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (e.dataTransfer.items) {
-            if (e.dataTransfer.items.length === 1 && this.props.validTypes.includes(e.dataTransfer.items[0].type)) {
-                this.setState({ status: 'success' });
-            } else {
-                this.setState({ status: 'error' });
-            }
-        }
-    };
+  const handleDrag = e => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
 
-    handleDragOut = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        this.setState({ status: 'default' });
-    };
-
-    handleDrop = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        this.setState({ status: 'default' });
-        if (
-            e.dataTransfer.files &&
-            e.dataTransfer.files.length === 1 &&
-            this.props.validTypes.includes(e.dataTransfer.items[0].type)
-        ) {
-            this.props.handleDrop(e.dataTransfer.files[0]);
-        }
-    };
-
-    render() {
-        return (
-            <div
-                className={`dropBorder ${CLASSNAMES[this.state.status]}`}
-                onDrag={this.handleDrag}
-                onDrop={this.handleDrop}
-                onDragOver={this.handleDragIn}
-                onDragLeave={this.handleDragOut}
-            >
-                {this.props.children}
-            </div>
-        );
+  const handleDragIn = e => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.dataTransfer.items) {
+      const isFileValid =
+        e.dataTransfer.items.length === 1 &&
+        validTypes.includes(e.dataTransfer.items[0].type);
+      onDragEnter(isFileValid);
+      if (isFileValid) {
+        setStatus('success');
+      } else {
+        setStatus('error');
+      }
     }
-}
+  };
+
+  const handleDragOut = e => {
+    e.preventDefault();
+    e.stopPropagation();
+    setStatus('default');
+    onDragExit();
+  };
+
+  const handleDrop = e => {
+    e.preventDefault();
+    e.stopPropagation();
+    setStatus('default');
+    if (
+      e.dataTransfer.files &&
+      e.dataTransfer.files.length === 1 &&
+      validTypes.includes(e.dataTransfer.items[0].type)
+    ) {
+      onDrop(e.dataTransfer.files[0]);
+    }
+  };
+
+  return (
+    <div
+      className={classnames([CLASSNAMES[status], 'dropBorder'])}
+      onDrag={handleDrag}
+      onDrop={handleDrop}
+      onDragOver={handleDragIn}
+      onDragLeave={handleDragOut}
+    >
+      {children}
+    </div>
+  );
+};
 
 DropZone.propTypes = {
-    children: PropTypes.node.isRequired,
-    handleDrop: PropTypes.func,
-    validTypes: PropTypes.array
+  children: PropTypes.node.isRequired,
+  onDrop: PropTypes.func.isRequired,
+  onDragEnter: PropTypes.func,
+  onDragExit: PropTypes.func,
+  validTypes: PropTypes.array
 };
 
 export default DropZone;
