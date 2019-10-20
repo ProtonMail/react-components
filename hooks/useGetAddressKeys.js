@@ -6,21 +6,22 @@ import {
     splitKeys
 } from 'proton-shared/lib/keys/keys';
 import { noop } from 'proton-shared/lib/helpers/function';
-import useUserAsync from './useUserAsync';
 import useAuthentication from '../containers/authentication/useAuthentication';
 import useCache from '../containers/cache/useCache';
-import useCachedModelAsync from './useCachedModelAsync';
-import useAddressesAsync from './useAddressesAsync';
-import useUserKeysAsync from './useUserKeysAsync';
+import { useGetAddresses } from './useAddresses';
+import { useGetUserKeys } from './useUserKeys';
+import { getPromiseValue } from './useCachedModelResult';
+import { useGetUser } from './useUser';
 
-const useAddressKeysAsync = () => {
-    const cache = useCache();
+export const CACHE_KEY = 'ADDRESS_KEYS';
+
+export const useGetAddressKeysRaw = () => {
     const authentication = useAuthentication();
-    const getUser = useUserAsync();
-    const getAddresses = useAddressesAsync();
-    const getUserKeys = useUserKeysAsync();
+    const getUser = useGetUser();
+    const getAddresses = useGetAddresses();
+    const getUserKeys = useGetUserKeys();
 
-    const miss = useCallback(
+    return useCallback(
         async (addressID) => {
             const [{ OrganizationPrivateKey }, Addresses, userKeys] = await Promise.all([
                 getUser(),
@@ -51,13 +52,20 @@ const useAddressKeysAsync = () => {
         },
         [getUser, getAddresses, getUserKeys]
     );
-
-    if (!cache.has('addressKeys')) {
-        cache.set('addressKeys', new Map());
-    }
-    const addressKeyCache = cache.get('addressKeys');
-
-    return useCachedModelAsync(addressKeyCache, miss);
 };
 
-export default useAddressKeysAsync;
+export const useGetAddressKeys = () => {
+    const cache = useCache();
+    const miss = useGetAddressKeysRaw();
+
+    return useCallback(
+        (key) => {
+            if (!cache.has(CACHE_KEY)) {
+                cache.set(CACHE_KEY, new Map());
+            }
+            const subCache = cache.get(CACHE_KEY);
+            return getPromiseValue(subCache, key, miss);
+        },
+        [cache, miss]
+    );
+};
