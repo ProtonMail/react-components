@@ -328,11 +328,11 @@ export {
     default as ProtonVPNCredentialsSection
 } from './containers/vpn/ProtonVPNCredentialsSection/ProtonVPNCredentialsSection';
 
-export { default as useUser } from './hooks/useUser';
+export { useUser, useGetUser } from './hooks/useUser';
 export { default as useUserVPN } from './hooks/useUserVPN';
 export { default as useCachedModelResult } from './hooks/useCachedModelResult';
 export { default as usePromiseResult } from './hooks/usePromiseResult';
-export { default as useAddresses } from './hooks/useAddresses';
+export { useAddresses, useGetAddresses } from './hooks/useAddresses';
 export { default as useDomains } from './hooks/useDomains';
 export { default as useCalendars } from './hooks/useCalendars';
 export { default as useActiveBreakpoint } from './hooks/useActiveBreakpoint';
@@ -349,8 +349,12 @@ export { default as useOrganization } from './hooks/useOrganization';
 export { default as useSubscription } from './hooks/useSubscription';
 export { default as useUserSettings } from './hooks/userSettingsModel';
 export { default as useMemberAddresses } from './hooks/useMemberAddresses';
-export { default as useUserKeys } from './hooks/useUserKeys';
-export { default as useAddressesKeys } from './hooks/useAddressesKeys';
+export { useUserKeys, useGetUserKeys } from './hooks/useUserKeys';
+export { useAddressesKeys, useGetAddressesKeys } from './hooks/useAddressesKeys';
+export { useGetAddressKeys } from './hooks/useGetAddressKeys';
+export { useGetPublicKeys } from './hooks/useGetPublicKeys';
+export { useGetCalendarBootstrap } from './hooks/useGetCalendarBootstrap';
+export { useGetCalendarKeys } from './hooks/useGetCalendarKeys';
 export { default as useOrganizationKey } from './hooks/useOrganizationKey';
 export { default as useSortedList, useSortedListAsync } from './hooks/useSortedList';
 export { useMainArea, MainAreaContext } from './hooks/useMainArea';
