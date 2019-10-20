@@ -54,10 +54,10 @@ const getRecordThen = (promise) => {
  * @param {Function} miss
  * @return {Object}
  */
-const update = (cache, key, miss) => {
+export const update = (cache, key, miss) => {
     const oldRecord = cache.get(key);
     if (!oldRecord || oldRecord.status === STATUS.REJECTED) {
-        const promise = miss();
+        const promise = miss(key);
         const record = getRecordPending(promise);
         cache.set(key, record);
         getRecordThen(promise).then((newRecord) => cache.get(key) === record && cache.set(key, newRecord));
