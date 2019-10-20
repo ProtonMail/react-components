@@ -5,7 +5,7 @@ const useUserKeys = () => {
     const getUserKeysAsync = useUserKeysAsync();
 
     // TODO: Fix to use the existing cached result
-    return usePromiseResult(() => {
+    return usePromiseResult(async () => {
         return getUserKeysAsync();
     }, []);
 };
