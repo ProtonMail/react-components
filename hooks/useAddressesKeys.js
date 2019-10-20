@@ -7,7 +7,7 @@ const useAddressesKeys = () => {
     const getAddressKeys = useAddressKeysAsync();
 
     return usePromiseResult(async () => {
-        const addresses = await Promise.all(getAddresses());
+        const addresses = await getAddresses();
         const keys = await Promise.all(addresses.map(({ ID: addressID }) => getAddressKeys(addressID)));
         return addresses.reduce((acc, { ID }, i) => {
             return {
