@@ -1,12 +1,16 @@
-import { usePromiseResult } from 'react-components';
-import useAddressesAsync from './useAddressesAsync';
-import useAddressKeysAsync from './useAddressKeysAsync';
+import { useCallback } from 'react';
+import useCache from '../containers/cache/useCache';
+import { useGetAddresses } from './useAddresses';
+import useCachedModelResult from './useCachedModelResult';
+import { useGetAddressKeys } from './useGetAddressKeys';
 
-const useAddressesKeys = () => {
-    const getAddresses = useAddressesAsync();
-    const getAddressKeys = useAddressKeysAsync();
+export const CACHE_KEY = 'ADDRESS_KEYS';
+export const KEY = 'ADDRESSES_KEYS';
 
-    return usePromiseResult(async () => {
+export const useGetAddressesKeys = () => {
+    const getAddresses = useGetAddresses();
+    const getAddressKeys = useGetAddressKeys();
+    return useCallback(async () => {
         const addresses = await getAddresses();
         const keys = await Promise.all(addresses.map(({ ID: addressID }) => getAddressKeys(addressID)));
         return addresses.reduce((acc, { ID }, i) => {
@@ -15,7 +19,11 @@ const useAddressesKeys = () => {
                 [ID]: keys[i]
             };
         }, {});
-    }, []);
+    }, [getAddresses, getAddressKeys]);
 };
 
-export default useAddressesKeys;
+export const useAddressesKeys = () => {
+    const cache = useCache();
+    const miss = useGetAddressesKeys();
+    return useCachedModelResult(cache, KEY, miss);
+};

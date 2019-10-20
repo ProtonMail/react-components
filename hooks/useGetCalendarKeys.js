@@ -3,18 +3,19 @@ import { splitKeys } from 'proton-shared/lib/keys/keys';
 import { noop } from 'proton-shared/lib/helpers/function';
 import { decryptCalendarKeys, decryptPassphrase, getAddressesMembersMap } from 'proton-shared/lib/keys/calendarKeys';
 import useCache from '../containers/cache/useCache';
-import useCachedModelAsync from './useCachedModelAsync';
-import useAddressesAsync from './useAddressesAsync';
-import useCalendarBootstrapAsync from './useCalendarBootstrapAsync';
-import useAddressKeysAsync from './useAddressKeysAsync';
+import { useGetAddresses } from './useAddresses';
+import { useGetAddressKeys } from './useGetAddressKeys';
+import useGetCalendarBootstrap from './useGetCalendarBootstrap';
+import { getPromiseValue } from './useCachedModelResult';
 
-const useCalendarKeysAsync = () => {
-    const cache = useCache();
-    const getAddresses = useAddressesAsync();
-    const getAddressKeys = useAddressKeysAsync();
-    const getCalendarBootstrap = useCalendarBootstrapAsync();
+export const CACHE_KEY = 'CALENDAR_KEYS';
 
-    const miss = useCallback(
+const useGetCalendarKeysRaw = () => {
+    const getAddresses = useGetAddresses();
+    const getAddressKeys = useGetAddressKeys();
+    const getCalendarBootstrap = useGetCalendarBootstrap();
+
+    return useCallback(
         async (calendarID) => {
             const [{ Keys, Passphrase = {}, Members }, Addresses] = await Promise.all([
                 getCalendarBootstrap(calendarID),
@@ -48,13 +49,20 @@ const useCalendarKeysAsync = () => {
         },
         [getAddresses, getAddressKeys, getCalendarBootstrap]
     );
-
-    if (!cache.has('calendarKeys')) {
-        cache.set('calendarKeys', new Map());
-    }
-    const calendarKeysCache = cache.get('calendarKeys');
-
-    return useCachedModelAsync(calendarKeysCache, miss);
 };
 
-export default useCalendarKeysAsync;
+export const useGetCalendarKeys = () => {
+    const cache = useCache();
+    const miss = useGetCalendarKeysRaw();
+
+    return useCallback(
+        (key) => {
+            if (!cache.has(CACHE_KEY)) {
+                cache.set(CACHE_KEY, new Map());
+            }
+            const subCache = cache.get(CACHE_KEY);
+            return getPromiseValue(subCache, key, miss);
+        },
+        [cache, miss]
+    );
+};
