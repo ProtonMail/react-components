@@ -30,7 +30,7 @@ const useGetCalendarKeysRaw = () => {
                     if (!Address) {
                         continue;
                     }
-                    const addressKeys = await getAddressKeys(Address.ID).catch(noop);
+                    const addressKeys = await getAddressKeys(Address.ID);
                     const result = await decryptPassphrase({
                         armoredPassphrase: Passphrase,
                         armoredSignature: Signature,
