@@ -74,6 +74,16 @@ export const getPromiseValue = (cache, key, miss) => {
 const useCachedModelResult = (cache, key, miss) => {
     const [forceRefresh, setForceRefresh] = useState();
     const latestValue = useRef();
+
+    const result = useMemo(() => {
+        return getState(update(cache, key, miss), latestValue.current);
+    }, [cache, key, miss, forceRefresh]);
+
+    useEffect(() => {
+        // https://reactjs.org/docs/hooks-faq.html#how-to-read-an-often-changing-value-from-usecallback
+        latestValue.current = result;
+    });
+
     useEffect(() => {
         const checkForChange = () => {
             const newValue = getState(cache.get(key), latestValue.current);
@@ -91,11 +101,7 @@ const useCachedModelResult = (cache, key, miss) => {
         return cache.subscribe(cacheListener);
     }, [cache, key, miss]);
 
-    latestValue.current = useMemo(() => {
-        return getState(update(cache, key, miss), latestValue.current);
-    }, [cache, key, miss, forceRefresh]);
-
-    return latestValue.current;
+    return result;
 };
 
 export default useCachedModelResult;
