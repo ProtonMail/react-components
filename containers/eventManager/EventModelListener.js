@@ -13,6 +13,7 @@ import { KEY as USER_KEYS_CACHE_KEY } from '../../hooks/useUserKeys';
 import { CACHE_KEY as ADDRESS_KEYS_CACHE, KEY as ADDRESSES_KEYS_CACHE } from '../../hooks/useAddressesKeys';
 import { KEY as CALENDAR_BOOTSTRAP_CACHE } from '../../hooks/useGetCalendarBootstrap';
 import { CACHE_KEY as CALENDAR_KEYS_CACHE } from '../../hooks/useGetCalendarKeys';
+import { updateObject as updateCalendarObject } from 'proton-shared/lib/models/calendarBootstrap'
 
 const EventModelListener = ({ models }) => {
     const { subscribe } = useEventManager();
@@ -72,40 +73,8 @@ const EventModelListener = ({ models }) => {
                 cache.delete(ADDRESSES_KEYS_CACHE);
             }
 
-            if (data.CalendarKeys && cache.get(CALENDAR_BOOTSTRAP_CACHE)) {
-                const calendarBootstrapCache = cache.get(CALENDAR_BOOTSTRAP_CACHE);
-                const calendarKeysCache = cache.get(CALENDAR_KEYS_CACHE);
-
-                const deleteCalendarFromCache = (calendarID) => {
-                    if (calendarBootstrapCache) {
-                        cache.delete(calendarID);
-                    }
-                    if (calendarKeysCache) {
-                        cache.delete(calendarID);
-                    }
-                };
-
-                data.CalendarKeys.forEach(({ ID: KeyID, Key }) => {
-                    // When a new calendar key is received, the entire calendar cache is invalidated.
-                    // TODO: Fix this by merging the bootstrapped version with the result.
-                    if (Key && Key.CalendarID) {
-                        deleteCalendarFromCache(Key.CalendarID);
-                        return;
-                    }
-                    // For delete events, the calendar ID is not received, so find if this calendar exists.
-                    for (const [calendarID, record] of calendarBootstrapCache) {
-                        // The old bootstrapped result
-                        if (
-                            record &&
-                            record.value &&
-                            Array.isArray(record.value.Keys) &&
-                            record.value.Keys.find(({ ID: otherID }) => otherID === KeyID)
-                        ) {
-                            deleteCalendarFromCache(calendarID);
-                            break;
-                        }
-                    }
-                });
+            if (data) {
+                updateCalendarObject(data, cache.get(CALENDAR_BOOTSTRAP_CACHE), cache.get(CALENDAR_KEYS_CACHE));
             }
         });
     }, []);
