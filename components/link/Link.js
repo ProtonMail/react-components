@@ -12,6 +12,7 @@ const Link = ({ to, external = false, children, ...rest }) => {
             </Href>
         );
     }
+
     return (
         <ReactRouterLink to={to} {...rest}>
             {children}
