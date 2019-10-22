@@ -35,7 +35,7 @@ Sidebar.propTypes = {
     list: PropTypes.arrayOf(PropTypes.object),
     mobileLinks: PropTypes.arrayOf(PropTypes.object),
     url: PropTypes.string.isRequired,
-    expanded: PropTypes.bool
+    expanded: PropTypes.bool,
     onToggleExpand: PropTypes.func,
     children: PropTypes.node
 };
