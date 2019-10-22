@@ -4,7 +4,7 @@ import { Icon, Link } from 'react-components';
 
 const MobileNavLink = ({ icon = '', to = '', external = false, current = false }) => {
     return (
-        <Link to={to} external={external} aria-current={current} className="flex-item-fluid aside-link">
+        <Link to={to} external={external} aria-current={current} className="flex aside-link">
             <Icon name={icon} className="aside-linkIcon mauto fill-global-light" />
         </Link>
     );
