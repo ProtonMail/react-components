@@ -272,6 +272,7 @@ export { default as EmbeddedToggle } from './containers/messages/EmbeddedToggle'
 export { default as MessagesSection } from './containers/messages/MessagesSection';
 export { default as SearchSection } from './containers/search/SearchSection';
 export { default as Searchbox } from './containers/search/Searchbox';
+export { default as SearchDropdown } from './containers/search/SearchDropdown';
 export { default as ShortcutsSection } from './containers/general/ShortcutsSection';
 export { default as PmMeSection } from './containers/addresses/PmMeSection';
 export { default as IdentitySection } from './containers/addresses/IdentitySection';
@@ -333,6 +334,7 @@ export { default as usePromiseResult } from './hooks/usePromiseResult';
 export { default as useAddresses } from './hooks/useAddresses';
 export { default as useDomains } from './hooks/useDomains';
 export { default as useCalendars } from './hooks/useCalendars';
+export { default as useActiveBreakpoint } from './hooks/useActiveBreakpoint';
 export { default as useContacts } from './hooks/useContacts';
 export { default as useContactGroups } from './hooks/useContactGroups';
 export { default as useContactEmails } from './hooks/useContactEmails';
