@@ -8,9 +8,11 @@ import Hamburger from './Hamburger';
 const Sidebar = ({ expanded = false, onToggleExpand, list = [], url = '/account', children }) => {
     return (
         <div className="sidebar flex flex-column noprint" data-expanded={expanded}>
-            <div className="nodesktop notablet flex flex-spacebetween flex-items-center">
-                <MainLogo url={url} />
-                <Hamburger expanded={expanded} onToggle={onToggleExpand} />
+            <div className="nodesktop notablet">
+                <div className="flex flex-spacebetween flex-items-center">
+                    <MainLogo url={url} />
+                    <Hamburger expanded={expanded} onToggle={onToggleExpand} />
+                </div>
             </div>
             {children}
             <nav className="navigation mw100 flex-item-fluid scroll-if-needed mb1">
