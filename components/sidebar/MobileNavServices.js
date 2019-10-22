@@ -10,7 +10,7 @@ const MobileNavServices = ({ children }) => {
         return null;
     }
 
-    return <div className="p1 flex flex-spacearound flex-item-noshrink">{children}</div>;
+    return <nav className="p1 flex flex-row flex-spacearound flex-item-noshrink bg-global-grey">{children}</nav>;
 };
 
 MobileNavServices.propTypes = {
