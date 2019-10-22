@@ -1,14 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { classnames } from 'react-components';
+import { useActiveBreakpoint } from 'react-components';
+import { isMobile } from 'proton-shared/lib/helpers/responsive';
 
-const MobileNavServices = ({ children, className }) => {
-    return <div className={classnames(['p1', className])}>{children}</div>;
+const MobileNavServices = ({ children }) => {
+    const breakpoint = useActiveBreakpoint();
+
+    if (!isMobile(breakpoint)) {
+        return null;
+    }
+
+    return <div className="p1 flex flex-spacearound flex-item-noshrink">{children}</div>;
 };
 
 MobileNavServices.propTypes = {
-    children: PropTypes.node.isRequired,
-    className: PropTypes.string
+    children: PropTypes.node.isRequired
 };
 
 export default MobileNavServices;

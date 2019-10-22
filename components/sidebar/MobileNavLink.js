@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Icon, Link } from 'react-components';
 
-const MobileNavLink = ({ icon = '', to = '', external = false }) => {
+const MobileNavLink = ({ icon = '', to = '', external = false, current = false }) => {
     return (
-        <Link to={to} external={external} className="mr1">
-            <Icon name={icon} />
+        <Link to={to} external={external} aria-current={current} className="center flex aside-link">
+            <Icon name={icon} className="aside-linkIcon mauto fill-global-light" />
         </Link>
     );
 };
@@ -13,7 +13,8 @@ const MobileNavLink = ({ icon = '', to = '', external = false }) => {
 MobileNavLink.propTypes = {
     icon: PropTypes.string.isRequired,
     to: PropTypes.string.isRequired,
-    external: PropTypes.bool
+    external: PropTypes.bool,
+    current: PropTypes.bool
 };
 
 export default MobileNavLink;

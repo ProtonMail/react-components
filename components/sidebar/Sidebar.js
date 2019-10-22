@@ -16,9 +16,9 @@ const Sidebar = ({ expanded = false, list = [], mobileLinks = [], url = '' }) =>
                 <NavMenu list={list} />
             </nav>
             {mobileLinks.length ? (
-                <MobileNavServices className="nodesktop notablet flex-item-noshrink">
-                    {mobileLinks.map(({ to, icon, external }) => {
-                        return <MobileNavLink key={icon} to={to} icon={icon} external={external} />;
+                <MobileNavServices>
+                    {mobileLinks.map(({ to, icon, external, current }) => {
+                        return <MobileNavLink key={icon} to={to} icon={icon} external={external} current={current} />;
                     })}
                 </MobileNavServices>
             ) : null}
