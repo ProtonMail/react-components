@@ -20,7 +20,8 @@ const DropdownButton = ({
             type="button"
             className={classnames(['flex-item-noshrink', className])}
             aria-expanded={isOpen}
-            disabled={disabled || loading}
+            aria-busy={loading}
+            disabled={loading ? true : disabled}
             {...rest}
         >
             <span className="mauto">
