@@ -10,6 +10,8 @@ const DropdownButton = ({
     isOpen,
     children,
     caretClassName,
+    disabled,
+    loading,
     ...rest
 }) => {
     return (
@@ -18,6 +20,7 @@ const DropdownButton = ({
             type="button"
             className={classnames(['flex-item-noshrink', className])}
             aria-expanded={isOpen}
+            disabled={disabled || loading}
             {...rest}
         >
             <span className="mauto">
@@ -34,7 +37,9 @@ DropdownButton.propTypes = {
     hasCaret: PropTypes.bool,
     isOpen: PropTypes.bool,
     children: PropTypes.node,
-    className: PropTypes.string
+    className: PropTypes.string,
+    disabled: PropTypes.bool,
+    loading: PropTypes.bool
 };
 
 export default DropdownButton;
