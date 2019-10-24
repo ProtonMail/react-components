@@ -12,7 +12,8 @@ const WeekNumbers = ({ gridSize, days, numberOfWeeks }) => {
 
     const weekNumberLabels = useMemo(() => {
         return Array.from({ length: numberOfWeeks }, (a, i) => {
-            return <span>{getWeek(days[i + i * 7])}</span>;
+            const weekNumber = getWeek(days[i + i * 7]);
+            return <span key={weekNumber}>{weekNumber}</span>;
         });
     }, [days]);
 
