@@ -45,7 +45,7 @@ const ThemesSection = () => {
         createModal(<CustomThemeModal theme={customCSS} onSave={handleSaveCustomTheme} />);
     };
 
-    const handleChangeTheme = async (themeID) => {
+    const handleChangeTheme = async (newThemeIdentifier) => {
         if (themeIdentifier === CUSTOM_THEME.identifier) {
             await new Promise((resolve, reject) => {
                 createModal(
@@ -56,15 +56,15 @@ const ThemesSection = () => {
                         onClose={reject}
                     >
                         <Alert type="warning">{c('Warning')
-                            .t`This action will permanently override your current theme. Are you sure you want to apply this new theme?`}</Alert>
+                            .t`This action will erase your current custom theme. Are you sure you want to apply this new theme?`}</Alert>
                     </ConfirmModal>
                 );
             });
         }
-        if (themeID === CUSTOM_THEME.identifier) {
+        if (newThemeIdentifier === CUSTOM_THEME.identifier) {
             return handleOpenModal();
         }
-        await api(updateTheme(themeID));
+        await api(updateTheme(newThemeIdentifier));
         await call();
         createNotification({ text: c('Success').t`Theme saved` });
     };
