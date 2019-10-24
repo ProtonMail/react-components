@@ -10,8 +10,8 @@ const DropdownButton = ({
     isOpen,
     children,
     caretClassName,
-    disabled,
-    loading,
+    disabled = false,
+    loading = false,
     ...rest
 }) => {
     return (
