@@ -19,6 +19,23 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
         [TWO_YEARS]: c('Title').t`2 year deal`
     };
 
+    const BILLED_DESCRIPTION = ({ cycle, amount, notice }) =>
+        ({
+            [MONTHLY]: c('Title').jt`Billed as ${amount} (${notice})`,
+            [YEARLY]: c('Title').jt`Billed as ${amount} (${notice})`,
+            [TWO_YEARS]: c('Title').jt`Billed as ${amount} (${notice})`
+        }[cycle]);
+
+    const AFTER_INFO = ({ cycle, amount, notice }) =>
+        ({
+            [MONTHLY]: c('Title')
+                .jt`(${notice}) After one month, your subscription will automatically renew at the regular price of ${amount} every month.`,
+            [YEARLY]: c('Title')
+                .jt`(${notice}) After one year, your subscription will automatically renew at the regular price of ${amount} every year.`,
+            [TWO_YEARS]: c('Title')
+                .jt`(${notice}) After two years, your subscription will automatically renew at the regular price of ${amount} every two years.`
+        }[cycle]);
+
     const getBundlePrices = async () => {
         const result = await Promise.all(
             bundles.map(({ planIDs = [], cycle = DEFAULT_CYCLE, couponCode }) => {
@@ -85,12 +102,20 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
                             <small>{c('Info').jt`Regular price: ${regularPrice}`}</small>
                             <button type="button" onClick={() => onSelect({ planIDs, cycle, currency })}>{c('Action')
                                 .t`Get the deal`}</button>
-                            <p>{c('Info').jt`Billed as ${amountDue} (${index + 1})`}</p>
+                            <p>{BILLED_DESCRIPTION({ cycle, amount: amountDue, notice: index + 1 })}</p>
                         </div>
                     );
                 })}
             </div>
             <CurrencySelector currency={currency} onSelect={updateCurrency} />
+            {bundles.map(({ name, cycle }, index) => {
+                const amount = (
+                    <Price key={name} currency={currency}>
+                        {pricing[name].withoutCoupon[cycle]}
+                    </Price>
+                );
+                return <p key={name}>{AFTER_INFO({ cycle, notice: index + 1, amount })}</p>;
+            })}
         </FormModal>
     );
 };
