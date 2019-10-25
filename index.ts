@@ -172,6 +172,7 @@ export { default as PlansSection } from './containers/payments/PlansSection';
 export { default as SubscriptionSection } from './containers/payments/subscription/SubscriptionSection';
 export { default as SubscriptionModal } from './containers/payments/subscription/SubscriptionModal';
 export { default as BlackFridayModal } from './containers/payments/subscription/BlackFridayModal';
+export { default as BlackFridayNavbarLink } from './containers/payments/subscription/BlackFridayNavbarLink';
 export { default as UpgradeModal } from './containers/payments/subscription/UpgradeModal';
 export { default as AmountButton } from './containers/payments/AmountButton';
 export { default as Bitcoin } from './containers/payments/Bitcoin';

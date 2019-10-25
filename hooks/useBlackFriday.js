@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
-import { isBlackFriday } from 'proton-shared/lib/helpers/blackfriday';
+import { isBlackFridayPeriod } from 'proton-shared/lib/helpers/blackfriday';
 
 const EVERY_TEN_MINUTES = 10 * 60 * 1000;
 
 const useBlackFriday = () => {
-    const [blackFriday, setBlackFriday] = useState(isBlackFriday);
+    const [blackFriday, setBlackFriday] = useState(isBlackFridayPeriod);
 
     useEffect(() => {
         const intervalID = setInterval(() => {
-            setBlackFriday(isBlackFriday());
+            setBlackFriday(isBlackFridayPeriod());
         }, EVERY_TEN_MINUTES);
 
         return () => {
