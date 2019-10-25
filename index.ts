@@ -338,6 +338,7 @@ export { default as useDomains } from './hooks/useDomains';
 export { default as usePremiumDomains } from './hooks/usePremiumDomains';
 export { default as useCalendars } from './hooks/useCalendars';
 export { default as useActiveBreakpoint } from './hooks/useActiveBreakpoint';
+export { default as useWindowSize } from './hooks/useWindowSize';
 export { default as useContacts } from './hooks/useContacts';
 export { default as useContactGroups } from './hooks/useContactGroups';
 export { default as useContactEmails } from './hooks/useContactEmails';
