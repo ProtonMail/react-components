@@ -9,11 +9,19 @@ const useWindowSize = () => {
     const [windowSize, setWindowSize] = useState(() => getWindowSize());
 
     useEffect(() => {
+        const reducer = (oldValue, newValue) => {
+            if (oldValue[0] === newValue[0] && oldValue[1] === newValue[1]) {
+                return oldValue;
+            }
+            return newValue;
+        };
+
         const onResize = debounce(() => {
-            setWindowSize(getWindowSize());
-        }, 250);
+            setWindowSize((old) => reducer(old, getWindowSize()));
+        }, 100);
 
         window.addEventListener('resize', onResize);
+        setWindowSize((old) => reducer(old, getWindowSize()));
         return () => {
             window.removeEventListener('resize', onResize);
         };
