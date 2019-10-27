@@ -45,7 +45,7 @@ const MiniCalendar = ({
 
     const days = useMemo(() => {
         return getDaysInMonth(activeDate, { weekStartsOn, weeks: numberOfWeeks - 1 });
-    }, [activeDate]);
+    }, [activeDate, weekStartsOn, numberOfWeeks]);
 
     const monthLabel = useMemo(() => {
         return (
