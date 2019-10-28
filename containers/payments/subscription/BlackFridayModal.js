@@ -1,6 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { FormModal, Alert, CurrencySelector, useLoading, useApi, Price } from 'react-components';
+import {
+    classnames,
+    FormModal,
+    Loader,
+    Button,
+    Alert,
+    CurrencySelector,
+    useLoading,
+    useApi,
+    Price
+} from 'react-components';
 import { checkSubscription } from 'proton-shared/lib/api/payments';
 import { CYCLE, DEFAULT_CURRENCY, DEFAULT_CYCLE } from 'proton-shared/lib/constants';
 import { c } from 'ttag';
@@ -58,64 +68,87 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
                 ]);
             })
         );
+
         updatePricing(
-            result.reduce((acc, [withCoupon, withoutCoupon], index) => {
-                acc[bundles[index].name] = {};
-                acc[bundles[index].name].withCoupon = withCoupon.Pricing;
-                acc[bundles[index].name].withoutCoupon = withoutCoupon.Pricing;
+            result.reduce((acc, [withCoupon, withoutCouponMonthly], index) => {
+                acc[bundles[index].name] = {
+                    withCoupon: withCoupon.Amount + withCoupon.CouponDiscount,
+                    withoutCoupon: withCoupon.Amount,
+                    withoutCouponMonthly: withoutCouponMonthly.Amount
+                };
                 return acc;
             }, {})
         );
     };
 
     useEffect(() => {
-        withLoading(getBundlePrices);
+        withLoading(getBundlePrices());
     }, []);
 
     return (
         <FormModal title={c('Title').t`Black Friday sale`} loading={loading} footer={null} {...rest}>
-            <Alert>{c('Info').t`Don't miss out on limited time discounts for newcomers!`}</Alert>
-            <div className="flex flex-nowrap">
-                {bundles.map(({ name, cycle, planIDs, popular }, index) => {
-                    const monthlyPrice = (
-                        <Price currency={currency} suffix="/mo">
-                            {pricing[name].withCoupon[cycle] / cycle}
-                        </Price>
-                    );
-                    const amountDue = (
-                        <Price key={name} currency={currency}>
-                            {pricing[name].withCoupon[cycle]}
-                        </Price>
-                    );
-                    const regularPrice = (
-                        <Price key={name} currency={currency} suffix="/mo">
-                            {pricing[name].withoutCoupon[MONTHLY] * cycle}
-                        </Price>
-                    );
+            {loading ? (
+                <Loader />
+            ) : (
+                <>
+                    <Alert>{c('Info').t`Don't miss out on limited time discounts for newcomers!`}</Alert>
+                    <div className="flex flex-nowrap">
+                        {bundles.map(({ name, cycle, planIDs, popular }, index) => {
+                            const key = `${index}${name}`;
+                            const { withCoupon = 0, withoutCouponMonthly = 0 } = pricing[name] || {};
+                            const monthlyPrice = (
+                                <Price currency={currency} suffix="/mo">
+                                    {withCoupon / cycle}
+                                </Price>
+                            );
+                            const amountDue = (
+                                <Price key={key} currency={currency}>
+                                    {withCoupon}
+                                </Price>
+                            );
+                            const regularPrice = (
+                                <Price key={key} currency={currency} suffix="/mo">
+                                    {withoutCouponMonthly}
+                                </Price>
+                            );
 
-                    return (
-                        <div key={name} className="plan p1 flex flex-column">
-                            {popular ? <span>{c('Title').t`Most popular`}</span> : null}
-                            <span>{DEAL_TITLE[cycle]}</span>
-                            <strong>{name}</strong>
-                            <h1>{monthlyPrice}</h1>
-                            <small>{c('Info').jt`Regular price: ${regularPrice}`}</small>
-                            <button type="button" onClick={() => onSelect({ planIDs, cycle, currency })}>{c('Action')
-                                .t`Get the deal`}</button>
-                            <p>{BILLED_DESCRIPTION({ cycle, amount: amountDue, notice: index + 1 })}</p>
-                        </div>
-                    );
-                })}
-            </div>
-            <CurrencySelector currency={currency} onSelect={updateCurrency} />
-            {bundles.map(({ name, cycle }, index) => {
-                const amount = (
-                    <Price key={name} currency={currency}>
-                        {pricing[name].withoutCoupon[cycle]}
-                    </Price>
-                );
-                return <p key={name}>{AFTER_INFO({ cycle, notice: index + 1, amount })}</p>;
-            })}
+                            return (
+                                <div
+                                    key={key}
+                                    className={classnames([
+                                        'plan bordered-container p1 mb1 flex flex-column flex-items-center flex-justify-end',
+                                        index < bundles.length - 1 && 'mr1'
+                                    ])}
+                                >
+                                    {popular ? <span>{c('Title').t`Most popular`}</span> : null}
+                                    <span>{DEAL_TITLE[cycle]}</span>
+                                    <strong>{name}</strong>
+                                    <h1>{monthlyPrice}</h1>
+                                    <small>{c('Info').jt`Regular price: ${regularPrice}`}</small>
+                                    <Button
+                                        onClick={() => {
+                                            rest.onClose();
+                                            onSelect({ planIDs, cycle, currency });
+                                        }}
+                                    >{c('Action').t`Get the deal`}</Button>
+                                    <p>{BILLED_DESCRIPTION({ cycle, amount: amountDue, notice: index + 1 })}</p>
+                                </div>
+                            );
+                        })}
+                    </div>
+                    <CurrencySelector currency={currency} onSelect={updateCurrency} />
+                    {bundles.map(({ name, cycle }, index) => {
+                        const key = `${index}${name}`;
+                        const { withoutCoupon = 0 } = pricing[name] || {};
+                        const amount = (
+                            <Price key={key} currency={currency}>
+                                {withoutCoupon}
+                            </Price>
+                        );
+                        return <p key={key}>{AFTER_INFO({ cycle, notice: index + 1, amount })}</p>;
+                    })}
+                </>
+            )}
         </FormModal>
     );
 };
