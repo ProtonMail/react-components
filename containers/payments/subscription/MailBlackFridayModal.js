@@ -25,7 +25,7 @@ const MailBlackFridayModal = ({ plans = [], ...rest }) => {
             popular: true
         },
         {
-            name: 'ProtonMail Plus & ProtonVPN Plus',
+            name: 'Mail Plus & VPN Plus',
             cycle: CYCLE.TWO_YEARS,
             pourcentage: 50,
             planIDs: [plansMap.plus.ID, plansMap.vpnplus.ID],

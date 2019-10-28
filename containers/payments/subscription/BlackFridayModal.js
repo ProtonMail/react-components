@@ -17,6 +17,8 @@ import { c } from 'ttag';
 
 const { MONTHLY, YEARLY, TWO_YEARS } = CYCLE;
 
+import './BlackFridayModal.scss';
+
 const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
     const api = useApi();
     const [loading, withLoading] = useLoading();
@@ -92,7 +94,7 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
             ) : (
                 <>
                     <Alert>{c('Info').t`Don't miss out on limited time discounts for newcomers!`}</Alert>
-                    <div className="flex flex-nowrap">
+                    <div className="flex flex-nowrap flex-spacebetween">
                         {bundles.map(({ name, cycle, planIDs, popular, couponCode, pourcentage }, index) => {
                             const key = `${index}`;
                             const { withCoupon = 0, withoutCouponMonthly = 0 } = pricing[index] || {};
@@ -107,21 +109,28 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
                                 </Price>
                             );
                             const regularPrice = (
-                                <Price key={key} currency={currency} suffix="/mo">
-                                    {withoutCouponMonthly}
-                                </Price>
+                                <del>
+                                    <Price key={key} currency={currency} suffix="/mo">
+                                        {withoutCouponMonthly}
+                                    </Price>
+                                </del>
                             );
 
                             return (
                                 <div
                                     key={key}
-                                    className={classnames([
-                                        'plan bordered-container p1 mb1 flex flex-column flex-items-center flex-justify-end',
-                                        index < bundles.length - 1 && 'mr1'
-                                    ])}
+                                    className="blackfriday-plan relative bordered-container p1 mb1 flex flex-column flex-items-center flex-justify-end"
                                 >
-                                    {popular ? <span>{c('Title').t`Most popular`}</span> : null}
-                                    {pourcentage ? <span>{pourcentage}% off</span> : null}
+                                    {popular ? (
+                                        <span className="blackfriday-popular uppercase small bg-global-light w100 mt0 mb0 aligncenter">{c(
+                                            'Title'
+                                        ).t`Most popular`}</span>
+                                    ) : null}
+                                    {pourcentage ? (
+                                        <span className="blackfriday-pourcentage bold aligncenter absolute rounded50 bg-global-warning color-white uppercase">
+                                            {pourcentage}% off
+                                        </span>
+                                    ) : null}
                                     <span>{DEAL_TITLE[cycle]}</span>
                                     <strong>{name}</strong>
                                     <div className="h2 mb0">{monthlyPrice}</div>
@@ -138,7 +147,12 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
                             );
                         })}
                     </div>
-                    <CurrencySelector currency={currency} onSelect={updateCurrency} />
+                    <div className="mb1 flex flex-nowrap flex-items-center">
+                        <label htmlFor="currency-selector" className="mr1">{c('Label').t`Select currency:`}</label>
+                        <div>
+                            <CurrencySelector id="currency-select" currency={currency} onSelect={updateCurrency} />
+                        </div>
+                    </div>
                     {bundles.map(({ cycle }, index) => {
                         const key = `${index}`;
                         const { withoutCoupon = 0 } = pricing[index] || {};
@@ -147,7 +161,11 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
                                 {withoutCoupon}
                             </Price>
                         );
-                        return <p key={key}>{AFTER_INFO({ cycle, notice: index + 1, amount })}</p>;
+                        return (
+                            <p key={key} className="small mt0 mb0">
+                                {AFTER_INFO({ cycle, notice: index + 1, amount })}
+                            </p>
+                        );
                     })}
                 </>
             )}

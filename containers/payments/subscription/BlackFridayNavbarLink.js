@@ -19,7 +19,7 @@ const BlackFridayNavbarLink = ({ to }) => {
         const { LastSubscriptionEnd = 0 } = await api(getLastCancelledSubscription());
         const now = new Date();
 
-        setEligibility(LastSubscriptionEnd ? differenceInDays(now, new Date(LastSubscriptionEnd)) >= ONE_MONTH : false);
+        setEligibility(LastSubscriptionEnd ? differenceInDays(now, new Date(LastSubscriptionEnd)) >= ONE_MONTH : false); // TODO change LastSubscriptionEnd < 30th September
     };
 
     useEffect(() => {
