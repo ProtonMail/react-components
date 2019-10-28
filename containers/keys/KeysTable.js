@@ -33,7 +33,7 @@ const KeysTable = ({ keys = [], onAction }) => {
                             key={ID}
                             cells={[
                                 <div key={1} className="flex flex-row flex-nowrap flex-items-center">
-                                    <Copy value={fingerprint} />
+                                    <Copy value={fingerprint} className="pm-button--small" />
                                     <code className="ml1 mw100 inbl ellipsis" title={fingerprint}>
                                         {fingerprint}
                                     </code>
