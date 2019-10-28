@@ -4,6 +4,7 @@ import { toMap } from 'proton-shared/lib/helpers/object';
 import { CYCLE, BLACK_FRIDAY } from 'proton-shared/lib/constants';
 
 import BlackFridayModal from './BlackFridayModal';
+import './MailBlackFridayModal.scss';
 
 const MailBlackFridayModal = ({ plans = [], ...rest }) => {
     const plansMap = toMap(plans, 'Name');

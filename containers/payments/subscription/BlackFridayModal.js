@@ -71,7 +71,7 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
 
         updatePricing(
             result.reduce((acc, [withCoupon, withoutCouponMonthly], index) => {
-                acc[bundles[index].name] = {
+                acc[index] = {
                     withCoupon: withCoupon.Amount + withCoupon.CouponDiscount,
                     withoutCoupon: withCoupon.Amount,
                     withoutCouponMonthly: withoutCouponMonthly.Amount
@@ -93,9 +93,9 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
                 <>
                     <Alert>{c('Info').t`Don't miss out on limited time discounts for newcomers!`}</Alert>
                     <div className="flex flex-nowrap">
-                        {bundles.map(({ name, cycle, planIDs, popular }, index) => {
-                            const key = `${index}${name}`;
-                            const { withCoupon = 0, withoutCouponMonthly = 0 } = pricing[name] || {};
+                        {bundles.map(({ name, cycle, planIDs, popular, couponCode, pourcentage }, index) => {
+                            const key = `${index}`;
+                            const { withCoupon = 0, withoutCouponMonthly = 0 } = pricing[index] || {};
                             const monthlyPrice = (
                                 <Price currency={currency} suffix="/mo">
                                     {withCoupon / cycle}
@@ -121,25 +121,27 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
                                     ])}
                                 >
                                     {popular ? <span>{c('Title').t`Most popular`}</span> : null}
+                                    {pourcentage ? <span>{pourcentage}% off</span> : null}
                                     <span>{DEAL_TITLE[cycle]}</span>
                                     <strong>{name}</strong>
-                                    <h1>{monthlyPrice}</h1>
+                                    <div className="h2 mb0">{monthlyPrice}</div>
                                     <small>{c('Info').jt`Regular price: ${regularPrice}`}</small>
                                     <Button
+                                        className={classnames([popular && 'pm-button--primary'])}
                                         onClick={() => {
                                             rest.onClose();
-                                            onSelect({ planIDs, cycle, currency });
+                                            onSelect({ planIDs, cycle, currency, couponCode });
                                         }}
                                     >{c('Action').t`Get the deal`}</Button>
-                                    <p>{BILLED_DESCRIPTION({ cycle, amount: amountDue, notice: index + 1 })}</p>
+                                    <small>{BILLED_DESCRIPTION({ cycle, amount: amountDue, notice: index + 1 })}</small>
                                 </div>
                             );
                         })}
                     </div>
                     <CurrencySelector currency={currency} onSelect={updateCurrency} />
-                    {bundles.map(({ name, cycle }, index) => {
-                        const key = `${index}${name}`;
-                        const { withoutCoupon = 0 } = pricing[name] || {};
+                    {bundles.map(({ cycle }, index) => {
+                        const key = `${index}`;
+                        const { withoutCoupon = 0 } = pricing[index] || {};
                         const amount = (
                             <Price key={key} currency={currency}>
                                 {withoutCoupon}

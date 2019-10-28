@@ -9,14 +9,14 @@ const VPNBlackFridayModal = ({ plans = [], ...rest }) => {
     const plansMap = toMap(plans, 'Name');
     const bundles = [
         {
-            name: 'ProtonMail Plus',
+            name: 'ProtonVPN Plus',
             cycle: CYCLE.YEARLY,
             pourcentage: 35,
             planIDs: [plansMap.vpnplus.ID],
             couponCode: BLACK_FRIDAY.COUPON_CODE
         },
         {
-            name: 'ProtonMail Plus',
+            name: 'ProtonVPN Plus',
             cycle: CYCLE.TWO_YEARS,
             pourcentage: 40,
             planIDs: [plansMap.vpnplus.ID],
@@ -24,7 +24,7 @@ const VPNBlackFridayModal = ({ plans = [], ...rest }) => {
             popular: true
         },
         {
-            name: 'ProtonMail Plus & ProtonVPN Plus',
+            name: 'ProtonVPN Plus & ProtonMail Plus',
             cycle: CYCLE.TWO_YEARS,
             pourcentage: 50,
             planIDs: [plansMap.plus.ID, plansMap.vpnplus.ID],
