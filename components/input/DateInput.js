@@ -10,11 +10,11 @@ import { generateUID } from '../../helpers/component';
 import LocalizedMiniCalendar from '../miniCalendar/LocalizedMiniCalendar';
 
 const toFormatted = (value, locale) => {
-    return format(value, 'P', { locale });
+    return format(value, 'PP', { locale });
 };
 
 const fromFormatted = (value, locale) => {
-    return parse(value, 'P', new Date(), { locale });
+    return parse(value, 'PP', new Date(), { locale });
 };
 
 const DateInput = ({ value, min, max, onChange, ...rest }) => {
