@@ -25,8 +25,8 @@ const OpenVPNCredentialsModal = ({ username = '', password = '', fetchUserVPN, .
     const handleChangePassword = ({ target }) => setCredentials({ ...credentials, password: target.value });
 
     const handleSubmit = async () => {
-        const RESERVED_WORDS = ['guest'];
-        if (RESERVED_WORDS.includes(credentials.username.toLowerCase())) {
+        const RESERVED_USERNAMES = ['guest'];
+        if (RESERVED_USERNAMES.includes(credentials.username.toLowerCase())) {
             createNotification({
                 text: c('Error').t`'${credentials.username}' is a reserved word. Please set another username.`
             });
