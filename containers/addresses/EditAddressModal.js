@@ -15,9 +15,9 @@ import {
     useEventManager
 } from 'react-components';
 
-const RichTextEditorEmptyValue = '<div><br></div>';
+const EMPTY_VALUES = [/<div><br><\/div>/, /<div>\s*<\/div>/];
 
-const formatSignature = (value) => (value === RichTextEditorEmptyValue ? '' : value);
+const formatSignature = (value) => (EMPTY_VALUES.some((regex) => regex.test(value)) ? '' : value);
 
 const EditAddressModal = ({ onClose, address, ...rest }) => {
     const api = useApi();
@@ -31,10 +31,12 @@ const EditAddressModal = ({ onClose, address, ...rest }) => {
 
     const handleDisplayName = ({ target }) => updateModel({ ...model, displayName: target.value });
 
-    const handleSignature = (value) => updateModel({ ...model, signature: formatSignature(value) });
+    const handleSignature = (value) => updateModel({ ...model, signature: value });
 
     const handleSubmit = async () => {
-        await api(updateAddress(address.ID, { DisplayName: model.displayName, Signature: model.signature }));
+        await api(
+            updateAddress(address.ID, { DisplayName: model.displayName, Signature: formatSignature(model.signature) })
+        );
         await call();
         onClose();
         createNotification({ text: c('Success').t`Address updated` });
