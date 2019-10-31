@@ -4,7 +4,7 @@ import { hasPermission } from 'proton-shared/lib/helpers/permissions';
 
 import LinkItem from './LinkItem';
 
-const Sections = ({ route, sections = [], text, permissions = [], pagePermissions }) => {
+const Sections = ({ route, sections = [], text, permissions = [], pagePermissions, history }) => {
     return (
         <ul className="unstyled mt0-5">
             {sections.length ? (
@@ -22,6 +22,7 @@ const Sections = ({ route, sections = [], text, permissions = [], pagePermission
                                     route={route}
                                     text={text}
                                     permission={hasPermission(permissions, pagePermissions, sectionPermissions)}
+                                    history={history}
                                 />
                             </li>
                         );
@@ -32,6 +33,7 @@ const Sections = ({ route, sections = [], text, permissions = [], pagePermission
                         route={{ pathname: route }}
                         text={text}
                         permission={hasPermission(permissions, pagePermissions)}
+                        history={history}
                     />
                 </li>
             )}
@@ -44,7 +46,8 @@ Sections.propTypes = {
     sections: PropTypes.array,
     text: PropTypes.string,
     permissions: PropTypes.array,
-    pagePermissions: PropTypes.array
+    pagePermissions: PropTypes.array,
+    history: PropTypes.object.isRequired
 };
 
 export default Sections;

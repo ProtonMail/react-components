@@ -1,14 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
 import { Tooltip, Icon } from 'react-components';
 import { c } from 'ttag';
+
+const href = (route) => `${route.pathname}#${route.hash}`;
 
 const LinkItem = ({ route, text, permission, history }) => {
     const handleClick = async (event) => {
         event.preventDefault();
 
-        history.push(route.pathname);
+        history.push(href(route));
 
         // Let the router do the navigation
         await null;
@@ -20,7 +21,7 @@ const LinkItem = ({ route, text, permission, history }) => {
     };
 
     return (
-        <a onClick={handleClick} href={`${route.pathname}#${route.hash}`}>
+        <a onClick={handleClick} href={href(route)}>
             <span className="mr0-5">{text}</span>
             {permission ? null : (
                 <Tooltip title={c('Tag').t`Premium feature`}>
@@ -35,7 +36,7 @@ LinkItem.propTypes = {
     route: PropTypes.object,
     permission: PropTypes.bool,
     text: PropTypes.string,
-    history: PropTypes.object
+    history: PropTypes.object.isRequired
 };
 
-export default withRouter(LinkItem);
+export default LinkItem;
