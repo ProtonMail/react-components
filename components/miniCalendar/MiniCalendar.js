@@ -37,7 +37,7 @@ const MiniCalendar = ({
     ],
     numberOfDays = 7,
     numberOfWeeks = 6,
-    hasWeekNumbers = true
+    displayWeekNumbers = true
 }) => {
     const [temporaryDate, setTemporaryDate] = useState();
 
@@ -64,7 +64,7 @@ const MiniCalendar = ({
     }, [selectedDate]);
 
     const gridSize = '1fr';
-    const style = hasWeekNumbers
+    const style = displayWeekNumbers
         ? {
               display: 'grid',
               gridTemplateColumns: '30px auto',
@@ -88,7 +88,9 @@ const MiniCalendar = ({
                 </button>
             </div>
             <div style={style}>
-                {hasWeekNumbers ? <WeekNumbers gridSize={gridSize} numberOfWeeks={numberOfWeeks} days={days} /> : null}
+                {displayWeekNumbers ? (
+                    <WeekNumbers gridSize={gridSize} numberOfWeeks={numberOfWeeks} days={days} />
+                ) : null}
                 <div>
                     <WeekDays
                         gridSize={gridSize}
@@ -132,7 +134,7 @@ MiniCalendar.propTypes = {
     weekdaysLong: PropTypes.array,
     months: PropTypes.array,
     now: PropTypes.instanceOf(Date),
-    hasWeekNumbers: PropTypes.bool
+    displayWeekNumbers: PropTypes.bool
 };
 
 export default MiniCalendar;
