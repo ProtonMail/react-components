@@ -217,6 +217,7 @@ export { default as RecoveryEmail } from './containers/notification/RecoveryEmai
 export { default as EmailSection } from './containers/notification/EmailSection';
 export { default as AddressKeysSection } from './containers/keys/AddressKeysSection';
 export { default as UserKeysSection } from './containers/keys/UserKeysSection';
+export { default as CalendarKeysSection } from './containers/keys/CalendarKeysSection';
 export { default as SelectKeyFiles } from './containers/keys/shared/SelectKeyFiles';
 export { default as PaymentMethodState } from './containers/paymentMethods/PaymentMethodState';
 export { default as PaymentMethodActions } from './containers/paymentMethods/PaymentMethodActions';
