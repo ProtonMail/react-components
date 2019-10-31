@@ -99,3 +99,5 @@ export const getAllKeysToReactivate = ({ Addresses = [], addressesKeysMap = {}, 
         }
     ].filter(Boolean);
 };
+
+export const convertCalendarKey = () => {};
