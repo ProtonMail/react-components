@@ -2,13 +2,13 @@ import { useMemo, useState } from 'react';
 import { c } from 'ttag';
 import { fromUnixTime, getUnixTime, addDays, addHours, startOfDay } from 'date-fns';
 import {
-    toLocalDate,
     fromUTCDate,
     fromLocalDate,
     toUTCDate,
     convertUTCDateTimeToZone,
     convertZonedDateTimeToUTC,
-    getTimezone
+    getTimezone,
+    toLocalDate
 } from 'proton-shared/lib/date/timezone';
 import { AutoReplyDuration } from 'proton-shared/lib/constants';
 import {
@@ -43,19 +43,19 @@ const toDateTimes = (unixTimestamp, timezone, repeat) => {
     }
 
     if (repeat === AutoReplyDuration.FIXED) {
-        const localTime = toLocalDate(convertUTCDateTimeToZone(fromUTCDate(fromUnixTime(unixTimestamp)), timezone));
+        const zonedTime = convertUTCDateTimeToZone(fromUTCDate(fromUnixTime(unixTimestamp)), timezone);
         return {
-            date: startOfDay(localTime),
-            time: localTime
+            date: startOfDay(toLocalDate(zonedTime)),
+            time: new Date(2000, 0, 1, zonedTime.hours, zonedTime.minutes)
         };
     }
 
     const day = Math.floor(unixTimestamp / DAY_SECONDS);
-    const time = unixTimestamp % DAY_SECONDS;
-    const hours = Math.floor(time / HOUR_SECONDS);
-    const minutes = Math.floor((time - hours * HOUR_SECONDS) / 60);
+    const secondsInDay = unixTimestamp % DAY_SECONDS;
+    const hours = Math.floor(secondsInDay / HOUR_SECONDS);
+    const minutes = Math.floor((secondsInDay - hours * HOUR_SECONDS) / 60);
 
-    const localTime = new Date(0, 0, 0, hours, minutes);
+    const localTime = new Date(2000, 0, 0, hours, minutes);
 
     if (repeat === AutoReplyDuration.DAILY) {
         return {
@@ -101,35 +101,38 @@ export const toModel = ({ Message, StartTime, EndTime, DaysSelected, Subject, Is
     };
 };
 
-const mergeDateTime = (date, dateWithTime) => {
-    const result = new Date(date);
-    result.setHours(dateWithTime.getHours());
-    result.setMinutes(dateWithTime.getMinutes());
-    result.setSeconds(dateWithTime.getSeconds());
-    return result;
-};
-
 const toUnixTime = ({ date, time, day }, timezone, repeat) => {
     if (repeat === AutoReplyDuration.PERMANENT) {
         return 0;
     }
 
     if (repeat === AutoReplyDuration.FIXED) {
-        return getUnixTime(toUTCDate(convertZonedDateTimeToUTC(fromLocalDate(mergeDateTime(date, time)), timezone)));
+        return getUnixTime(
+            toUTCDate(
+                convertZonedDateTimeToUTC(
+                    {
+                        ...fromLocalDate(date),
+                        hours: time.getHours(),
+                        minutes: time.getMinutes()
+                    },
+                    timezone
+                )
+            )
+        );
     }
 
-    const utcUnixTime = time.getHours() * HOUR_SECONDS + time.getMinutes() * MINUTES_SECONDS;
+    const UTCUnixTime = time.getHours() * HOUR_SECONDS + time.getMinutes() * MINUTES_SECONDS;
 
     if (repeat === AutoReplyDuration.DAILY) {
-        return utcUnixTime;
+        return UTCUnixTime;
     }
 
     if (repeat === AutoReplyDuration.WEEKLY) {
-        return day * DAY_SECONDS + utcUnixTime;
+        return day * DAY_SECONDS + UTCUnixTime;
     }
 
     if (repeat === AutoReplyDuration.MONTHLY) {
-        return day * DAY_SECONDS + utcUnixTime;
+        return day * DAY_SECONDS + UTCUnixTime;
     }
 };
 
