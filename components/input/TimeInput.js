@@ -1,54 +1,46 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import PropTypes from 'prop-types';
+import { addMinutes, startOfDay, format, parse } from 'date-fns';
+import { dateLocale } from 'proton-shared/lib/i18n';
 import { findLongestMatchingIndex } from 'proton-shared/lib/helpers/string';
-import { formatTime } from 'proton-shared/lib/date/time';
 
 import Input from './Input';
 import Dropdown from '../dropdown/Dropdown';
 import { usePopperAnchor } from '../popper';
 import { classnames, generateUID } from '../../helpers/component';
 
-const fromObject = ({ hours, minutes }) => hours * 60 + minutes;
-const toObject = (value) => {
-    const minutes = value % 60;
-    return {
-        hours: (value - minutes) / 60,
-        minutes
-    };
+const toFormatted = (value, locale) => {
+    return format(value, 'p', { locale });
 };
 
-const toFormatted = (value, isAmPm) => {
-    const { hours, minutes } = toObject(value);
-    return formatTime(hours, minutes, isAmPm);
+const fromFormatted = (value, locale) => {
+    return parse(value, 'p', new Date(), { locale });
 };
 
-const fromFormatted = (value, isAmPm) => {
-    return parseTime(value, isAmPm);
-};
-
-const TimeInput = ({ onChange, value, interval = 30, displayAmPm = false, ...rest }) => {
+const TimeInput = ({ onChange, value, interval = 30, ...rest }) => {
     const [uid] = useState(generateUID('dropdown'));
     const { anchorRef, isOpen, open, close } = usePopperAnchor();
-    const [temporaryInput, setTemporaryInput] = useState(() => formatTime(value.hours, value.minutes, displayAmPm));
+    const [temporaryInput, setTemporaryInput] = useState(() => toFormatted(value, dateLocale));
 
     useEffect(() => {
-        setTemporaryInput(formatTime(value.hours, value.minutes, displayAmPm));
+        setTemporaryInput(toFormatted(value, dateLocale));
     }, [value]);
+
+    const handleSelectDate = (newDate) => {
+        onChange(newDate);
+    };
 
     const parseAndSetDate = () => {
         try {
-            /*
-            const newDate = fromFormatted(temporaryInput, isAmPm);
+            const newDate = fromFormatted(temporaryInput, dateLocale);
             const newDateTime = +newDate;
             if (!isNaN(newDateTime)) {
-                onChange(newDate);
+                handleSelectDate(newDate);
             }
             // eslint-disable-next-line no-empty
-             */
         } catch (e) {}
 
-        console.log(value);
-        setTemporaryInput(formatTime(value.hours, value.minutes, displayAmPm));
+        setTemporaryInput(toFormatted(value, dateLocale));
     };
 
     const handleBlur = () => {
@@ -65,11 +57,11 @@ const TimeInput = ({ onChange, value, interval = 30, displayAmPm = false, ...res
         }
 
         if (key === 'ArrowDown') {
-            onChange(toObject(fromObject(value) + interval));
+            handleSelectDate(addMinutes(value, interval));
         }
 
         if (key === 'ArrowUp') {
-            onChange(toObject(fromObject(value) - interval));
+            handleSelectDate(addMinutes(value, -1 * interval));
         }
     };
 
@@ -77,15 +69,15 @@ const TimeInput = ({ onChange, value, interval = 30, displayAmPm = false, ...res
     const listRef = useRef();
     const options = useMemo(() => {
         const multiplier = (24 * 60) / interval;
-        const base = 0;
+        const base = startOfDay(value);
         return Array.from({ length: multiplier }, (a, i) => {
-            const value = toObject(base + i * interval);
+            const value = addMinutes(base, i * interval);
             return {
                 value,
-                label: formatTime(value.hours, value.minutes, displayAmPm)
+                label: format(value, 'p', { locale: dateLocale })
             };
         });
-    }, [displayAmPm]);
+    }, []);
 
     const matchingIndex = useMemo(() => {
         const idx = findLongestMatchingIndex(options.map(({ label }) => label), temporaryInput);
@@ -125,7 +117,7 @@ const TimeInput = ({ onChange, value, interval = 30, displayAmPm = false, ...res
                                 <li className={classnames(['pt0-5 pb0-5 p1', isSelected && 'bold'])} key={i}>
                                     <button
                                         onClick={() => {
-                                            onChange(otherValue);
+                                            handleSelectDate(otherValue);
                                             close();
                                         }}
                                     >
@@ -142,10 +134,9 @@ const TimeInput = ({ onChange, value, interval = 30, displayAmPm = false, ...res
 };
 
 TimeInput.propTypes = {
-    value: PropTypes.object.isRequired,
+    value: PropTypes.instanceOf(Date).isRequired,
     onChange: PropTypes.func.isRequired,
-    interval: PropTypes.number,
-    displayAmPm: PropTypes.boolean
+    interval: PropTypes.number
 };
 
 export default TimeInput;

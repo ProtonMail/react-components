@@ -60,13 +60,17 @@ const AutoReplyTemplate = ({ autoresponder, onEdit }) => {
         }
     };
 
+    const [startText, endText] = useMemo(() => {
+        return [formatTime(model.start, model.duration), formatTime(model.end, model.duration)];
+    }, [model]);
+
     return (
         <div className="bordered-container p2 mw650p">
             <table>
                 <tbody>
                     <InfoLine label={c('Label').t`Duration`}>{durationText}</InfoLine>
-                    <InfoLine label={c('Label').t`Start`}>{formatTime(model.start, model.duration)}</InfoLine>
-                    <InfoLine label={c('Label').t`End`}>{formatTime(model.end, model.duration)}</InfoLine>
+                    <InfoLine label={c('Label').t`Start`}>{startText}</InfoLine>
+                    <InfoLine label={c('Label').t`End`}>{endText}</InfoLine>
                     <InfoLine label={c('Label').t`Timezone`}>{timezoneText}</InfoLine>
                     <InfoLine plain label={c('Label').t`Message`}>
                         <div className="cut" dangerouslySetInnerHTML={{ __html: model.message }} />
