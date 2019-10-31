@@ -134,7 +134,8 @@ const CalendarKeysSection = () => {
     return (
         <>
             {title}
-            <Alert>{c('Info').t`Download your PGP keys in order to recover your Calendar data.`}</Alert>
+            <Alert learnMore="https://protonmail.com/support/knowledge-base/pgp-key-management/">{c('Info')
+                .t`Download your PGP keys in order to recover your Calendar data.`}</Alert>
             {canReactivate && (
                 <Block>
                     <PrimaryButton
