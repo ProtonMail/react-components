@@ -26,13 +26,13 @@ const fromFormatted = (value, isAmPm) => {
     return parseTime(value, isAmPm);
 };
 
-const TimeInput = ({ onChange, value, interval = 30, isAmPm = false, ...rest }) => {
+const TimeInput = ({ onChange, value, interval = 30, displayAmPm = false, ...rest }) => {
     const [uid] = useState(generateUID('dropdown'));
     const { anchorRef, isOpen, open, close } = usePopperAnchor();
-    const [temporaryInput, setTemporaryInput] = useState(() => formatTime(value.hours, value.minutes, isAmPm));
+    const [temporaryInput, setTemporaryInput] = useState(() => formatTime(value.hours, value.minutes, displayAmPm));
 
     useEffect(() => {
-        setTemporaryInput(formatTime(value.hours, value.minutes, isAmPm));
+        setTemporaryInput(formatTime(value.hours, value.minutes, displayAmPm));
     }, [value]);
 
     const parseAndSetDate = () => {
@@ -47,11 +47,12 @@ const TimeInput = ({ onChange, value, interval = 30, isAmPm = false, ...rest }) 
              */
         } catch (e) {}
 
-        //setTemporaryInput(toFormatted(value, isAmPm));
+        console.log(value);
+        setTemporaryInput(formatTime(value.hours, value.minutes, displayAmPm));
     };
 
     const handleBlur = () => {
-        //parseAndSetDate(temporaryInput);
+        parseAndSetDate(temporaryInput);
         close();
     };
 
@@ -81,10 +82,10 @@ const TimeInput = ({ onChange, value, interval = 30, isAmPm = false, ...rest }) 
             const value = toObject(base + i * interval);
             return {
                 value,
-                label: formatTime(value.hours, value.minutes, isAmPm)
+                label: formatTime(value.hours, value.minutes, displayAmPm)
             };
         });
-    }, [isAmPm]);
+    }, [displayAmPm]);
 
     const matchingIndex = useMemo(() => {
         const idx = findLongestMatchingIndex(options.map(({ label }) => label), temporaryInput);
@@ -144,7 +145,7 @@ TimeInput.propTypes = {
     value: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
     interval: PropTypes.number,
-    isAmPm: PropTypes.boolean
+    displayAmPm: PropTypes.boolean
 };
 
 export default TimeInput;
