@@ -19,7 +19,6 @@ const SearchDropdown = ({
     const handleSubmit = (event) => {
         event.preventDefault();
         onSearch(search);
-        updateSearch('');
         close();
     };
 
