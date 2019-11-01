@@ -334,7 +334,7 @@ export { default as useCachedModelResult } from './hooks/useCachedModelResult';
 export { default as usePromiseResult } from './hooks/usePromiseResult';
 export { useAddresses, useGetAddresses } from './hooks/useAddresses';
 export { default as useDomains } from './hooks/useDomains';
-export { default as useCalendars } from './hooks/useCalendars';
+export { useCalendars, useGetCalendars } from './hooks/useCalendars';
 export { default as useActiveBreakpoint } from './hooks/useActiveBreakpoint';
 export { default as useWindowSize } from './hooks/useWindowSize';
 export { default as useElementRect } from './hooks/useElementRect';

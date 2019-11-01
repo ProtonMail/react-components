@@ -163,4 +163,4 @@ MonthDays.propTypes = {
     activeDate: PropTypes.instanceOf(Date)
 };
 
-export default MonthDays;
+export default React.memo(MonthDays);
