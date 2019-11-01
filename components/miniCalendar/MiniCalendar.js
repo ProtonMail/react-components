@@ -21,6 +21,7 @@ const MiniCalendar = ({
     nextMonth = 'Next month',
     prevMonth = 'Prev month',
     formatDay,
+    markers = {},
     months = [
         'January',
         'February',
@@ -100,6 +101,7 @@ const MiniCalendar = ({
                         weekStartsOn={weekStartsOn}
                     />
                     <MonthDays
+                        markers={markers}
                         gridSize={gridSize}
                         numberOfWeeks={numberOfWeeks}
                         numberOfDays={numberOfDays}
@@ -119,6 +121,7 @@ const MiniCalendar = ({
 };
 
 MiniCalendar.propTypes = {
+    markers: PropTypes.object,
     date: PropTypes.instanceOf(Date).isRequired,
     dateRange: PropTypes.arrayOf(PropTypes.instanceOf(Date)),
     dateFnLocale: PropTypes.object.isRequired,

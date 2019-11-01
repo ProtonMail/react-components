@@ -26,6 +26,7 @@ const getRangeClass = (range, dayDate) => {
 const MonthDays = ({
     days,
     onSelectDate,
+    markers = {},
     onSelectDateRange,
     dateRange,
     formatDay,
@@ -121,6 +122,7 @@ const MonthDays = ({
                 const isActiveMonth = isSameMonth(dayDate, activeDate);
                 const isCurrent = isSameDay(now, dayDate);
                 const isSelected = isSameDay(selectedDate, dayDate);
+                const hasMarker = markers[dayDate.getTime()];
 
                 const className = classnames([
                     'minicalendar-day',
@@ -138,6 +140,7 @@ const MonthDays = ({
                         data-i={i}
                     >
                         {dayDate.getDate()}
+                        {hasMarker ? <span className="minicalendar-day--marker" /> : null}
                     </button>
                 );
             })}
@@ -146,7 +149,8 @@ const MonthDays = ({
 };
 
 MonthDays.propTypes = {
-    days: PropTypes.array.isRequired,
+    markers: PropTypes.object,
+    days: PropTypes.arrayOf(PropTypes.instanceOf(Date)).isRequired,
     dateRange: PropTypes.arrayOf(PropTypes.instanceOf(Date)),
     formatDay: PropTypes.func.isRequired,
     onSelectDate: PropTypes.func.isRequired,
