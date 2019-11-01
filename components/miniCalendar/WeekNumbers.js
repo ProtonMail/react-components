@@ -1,13 +1,11 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
-
+import { c } from 'ttag';
 import { getWeek } from './helper';
 
-const WeekNumbers = ({ gridSize, days, numberOfWeeks }) => {
+const WeekNumbers = ({ days, numberOfWeeks }) => {
     const style = {
-        display: 'grid',
-        gridTemplateColumns: gridSize,
-        gridTemplateRows: `repeat(${numberOfWeeks + 1}, ${gridSize})`
+        '--minicalendar-weeknumbers-numberOfWeeks': numberOfWeeks + 1
     };
 
     const weekNumberLabels = useMemo(() => {
@@ -19,14 +17,15 @@ const WeekNumbers = ({ gridSize, days, numberOfWeeks }) => {
 
     return (
         <div className="aligncenter minicalendar-weeknumbers" style={style}>
-            <span />
+            <span>
+                <span className="sr-only">{c('Info').t`Week number`}</span>
+            </span>
             {weekNumberLabels}
         </div>
     );
 };
 
 WeekNumbers.propTypes = {
-    gridSize: PropTypes.string,
     days: PropTypes.array.isRequired,
     numberOfWeeks: PropTypes.number.isRequired
 };

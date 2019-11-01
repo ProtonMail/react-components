@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import { addMonths } from 'date-fns';
 
 import { getDaysInMonth } from './helper';
+import { classnames } from '../../helpers/component';
 import MonthDays from './MonthDays';
 import WeekDays from './WeekDays';
 import WeekNumbers from './WeekNumbers';
 import Icon from '../icon/Icon';
-import './miniCalendar.scss';
 
 const MiniCalendar = ({
     hasCursors = true,
@@ -50,11 +50,7 @@ const MiniCalendar = ({
     }, [activeDate, weekStartsOn, numberOfWeeks]);
 
     const monthLabel = useMemo(() => {
-        return (
-            <span className="pl0-5">
-                {months[activeDate.getMonth()]} {activeDate.getFullYear()}
-            </span>
-        );
+        return `${months[activeDate.getMonth()]} ${activeDate.getFullYear()}`;
     }, [activeDate, months]);
 
     const handleSwitchMonth = (direction) => {
@@ -65,14 +61,7 @@ const MiniCalendar = ({
         setTemporaryDate();
     }, [selectedDate]);
 
-    const gridSize = '1fr';
-    const style = displayWeekNumbers
-        ? {
-              display: 'grid',
-              gridTemplateColumns: '30px auto',
-              gridTemplateRows: 'auto'
-          }
-        : {};
+    const classWeekNumber = displayWeekNumbers ? 'mini-calendar-grid--displayWeekNumber' : '';
 
     const preventLeaveFocus = (e) => e.preventDefault();
 
@@ -83,23 +72,20 @@ const MiniCalendar = ({
                 {hasCursors ? (
                     <>
                         <button type="button" className="mr1" onClick={() => handleSwitchMonth(-1)}>
-                            <Icon name="caret" className="rotateZ-90" />
+                            <Icon name="caret" size="12" className="rotateZ-90 fill-white" />
                             <span className="sr-only">{prevMonth}</span>
                         </button>
                         <button type="button" onClick={() => handleSwitchMonth(1)}>
-                            <Icon name="caret" className="rotateZ-270" />
+                            <Icon name="caret" size="12" className="rotateZ-270 fill-white" />
                             <span className="sr-only">{nextMonth}</span>
                         </button>
                     </>
                 ) : null}
             </div>
-            <div style={style}>
-                {displayWeekNumbers ? (
-                    <WeekNumbers gridSize={gridSize} numberOfWeeks={numberOfWeeks} days={days} />
-                ) : null}
+            <div className={classnames(['mini-calendar-grid', classWeekNumber])}>
+                {displayWeekNumbers ? <WeekNumbers numberOfWeeks={numberOfWeeks} days={days} /> : null}
                 <div>
                     <WeekDays
-                        gridSize={gridSize}
                         numberOfDays={numberOfDays}
                         weekdaysShort={weekdaysShort}
                         weekdaysLong={weekdaysLong}
@@ -107,7 +93,6 @@ const MiniCalendar = ({
                     />
                     <MonthDays
                         markers={markers}
-                        gridSize={gridSize}
                         numberOfWeeks={numberOfWeeks}
                         numberOfDays={numberOfDays}
                         days={days}
