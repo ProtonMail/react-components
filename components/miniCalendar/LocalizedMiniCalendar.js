@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { c } from 'ttag';
 import { getFormattedMonths, getFormattedWeekdays, getWeekStartsOn } from 'proton-shared/lib/date/date';
 import { dateLocale } from 'proton-shared/lib/i18n';
@@ -19,6 +19,13 @@ const LocalizedMiniCalendar = (props) => {
         return getFormattedMonths('MMMM', { locale: dateLocale });
     }, [dateLocale]);
 
+    const formatDay = useCallback(
+        (date) => {
+            return format(date, 'PPPP', { locale: dateLocale });
+        },
+        [dateLocale]
+    );
+
     return (
         <MiniCalendar
             nextMonth={c('Action').t`Next month`}
@@ -28,7 +35,7 @@ const LocalizedMiniCalendar = (props) => {
             months={months}
             dateFnLocale={dateLocale}
             weekStartsOn={getWeekStartsOn(dateLocale)}
-            formatDay={(date) => format(date, 'PPPP', { locale: dateLocale })}
+            formatDay={formatDay}
             {...props}
         />
     );
