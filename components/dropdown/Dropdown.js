@@ -40,7 +40,7 @@ const Dropdown = ({
         // Do nothing if clicking ref's element or descendent elements
         if (
             !autoCloseOutside ||
-            (anchorRef.current && anchorRef.current.contains(event.target)) ||
+            (anchorRef && anchorRef.current && anchorRef.current.contains(event.target)) ||
             (popperRef.current && popperRef.current.contains(event.target))
         ) {
             return;
@@ -88,7 +88,10 @@ const Dropdown = ({
 };
 
 Dropdown.propTypes = {
-    anchorRef: PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
+    anchorRef: PropTypes.oneOfType([
+        PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
+        PropTypes.shape({ x: PropTypes.number, y: PropTypes.number })
+    ]),
     children: PropTypes.node.isRequired,
     className: PropTypes.string,
     onClose: PropTypes.func,

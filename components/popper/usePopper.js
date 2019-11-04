@@ -3,7 +3,7 @@ import { adjustPosition, computedSize } from './utils';
 
 const usePopper = (
     popperRef,
-    anchorRef,
+    anchor,
     visible,
     { originalPlacement = 'bottom', offset = 10, scrollContainerClass = null } = {}
 ) => {
@@ -12,29 +12,38 @@ const usePopper = (
 
     useEffect(() => {
         const updatePosition = () => {
-            if (visible && anchorRef.current && popperRef.current) {
-                const wrapperBounds = anchorRef.current.getBoundingClientRect();
+            if (visible && popperRef && anchor) {
                 const tooltipBounds = popperRef.current.getBoundingClientRect();
-                const wrapperStyles = window.getComputedStyle(anchorRef.current);
                 const tooltipStyles = window.getComputedStyle(popperRef.current);
-                const { placement: adjustedPlacement, position: adjustedPosition } = adjustPosition(
-                    {
+                const tooltipTarget = {
+                    top: tooltipBounds.top,
+                    left: tooltipBounds.left,
+                    width: computedSize(tooltipStyles.width, tooltipBounds.width),
+                    height: computedSize(tooltipStyles.height, tooltipBounds.height)
+                };
+
+                let anchorTarget;
+
+                if (anchor.current) {
+                    const wrapperBounds = anchor.current.getBoundingClientRect();
+                    const wrapperStyles = window.getComputedStyle(anchor.current);
+                    anchorTarget = {
                         top: wrapperBounds.top,
                         left: wrapperBounds.left,
                         width: computedSize(wrapperStyles.width, wrapperBounds.width),
                         height: computedSize(wrapperStyles.height, wrapperBounds.height)
-                    },
-                    {
-                        top: tooltipBounds.top,
-                        left: tooltipBounds.left,
-                        width: computedSize(tooltipStyles.width, tooltipBounds.width),
-                        height: computedSize(tooltipStyles.height, tooltipBounds.height)
-                    },
-                    originalPlacement,
-                    offset
-                );
-                setPlacement(adjustedPlacement);
-                setPosition(adjustedPosition);
+                    };
+                } else {
+                    anchorTarget = {
+                        top: anchor.y,
+                        left: anchor.x,
+                        width: 0,
+                        height: 0
+                    };
+                }
+                const adjusted = adjustPosition(anchorTarget, tooltipTarget, originalPlacement, offset);
+                setPlacement(adjusted.placement);
+                setPosition(adjusted.position);
             } else {
                 setPlacement(originalPlacement);
                 setPosition({ top: -1000, left: -1000 });
@@ -53,7 +62,7 @@ const usePopper = (
                 window.removeEventListener('resize', updatePosition);
             };
         }
-    }, [visible, anchorRef.current, popperRef.current]);
+    }, [visible, anchor, popperRef.current]);
 
     return { position, placement };
 };
