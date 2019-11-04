@@ -13,7 +13,7 @@ import { KEY as USER_KEYS_CACHE_KEY } from '../../hooks/useUserKeys';
 import { CACHE_KEY as ADDRESS_KEYS_CACHE, KEY as ADDRESSES_KEYS_CACHE } from '../../hooks/useAddressesKeys';
 import { KEY as CALENDAR_BOOTSTRAP_CACHE } from '../../hooks/useGetCalendarBootstrap';
 import { CACHE_KEY as CALENDAR_KEYS_CACHE } from '../../hooks/useGetCalendarKeys';
-import { updateObject as updateCalendarObject } from 'proton-shared/lib/models/calendarBootstrap'
+import { updateObject as updateCalendarObject } from 'proton-shared/lib/models/calendarBootstrap';
 
 const EventModelListener = ({ models }) => {
     const { subscribe } = useEventManager();
@@ -37,7 +37,8 @@ const EventModelListener = ({ models }) => {
                 const { value: oldValue, status } = cache.get(key) || {};
 
                 if (status === STATUS.PENDING) {
-                    throw new Error('Event manager tried to update a pending model');
+                    // Keep while in beta
+                    console.warn('Event manager tried to update a pending model');
                 }
 
                 if (status === STATUS.RESOLVED) {
