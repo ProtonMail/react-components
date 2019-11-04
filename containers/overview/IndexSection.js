@@ -5,7 +5,7 @@ import { classnames } from '../../helpers/component';
 
 import Sections from './Sections';
 
-const IndexSection = ({ pages, history }) => {
+const IndexSection = ({ pages }) => {
     const permissions = usePermissions();
     return (
         <div className="settings-grid-container">
@@ -18,7 +18,7 @@ const IndexSection = ({ pages, history }) => {
                         <h2 className="h6 mb0-5">
                             <strong>{text}</strong>
                         </h2>
-                        {Sections({ route, sections, text, permissions, pagePermissions, history })}
+                        {Sections({ route, sections, text, permissions, pagePermissions })}
                     </div>
                 );
             })}
@@ -27,8 +27,7 @@ const IndexSection = ({ pages, history }) => {
 };
 
 IndexSection.propTypes = {
-    pages: PropTypes.array,
-    history: PropTypes.object.isRequired
+    pages: PropTypes.array
 };
 
 export default IndexSection;
