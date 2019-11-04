@@ -17,7 +17,7 @@ const fromFormatted = (value, locale) => {
     return parse(value, 'PP', new Date(), { locale });
 };
 
-const DateInput = ({ value, min, max, onChange, displayWeekNumbers, ...rest }) => {
+const DateInput = ({ value, min, max, onChange, displayWeekNumbers, weekStartsOn, ...rest }) => {
     const [uid] = useState(generateUID('dropdown'));
     const { anchorRef, isOpen, open, close } = usePopperAnchor();
     const [temporaryInput, setTemporaryInput] = useState(() => toFormatted(value, dateLocale));
@@ -83,6 +83,7 @@ const DateInput = ({ value, min, max, onChange, displayWeekNumbers, ...rest }) =
                     date={value}
                     onSelectDate={handleSelectDate}
                     displayWeekNumbers={displayWeekNumbers}
+                    weekStartsOn={weekStartsOn}
                 />
             </Dropdown>
         </>
@@ -94,6 +95,8 @@ DateInput.propTypes = {
     disabled: PropTypes.bool,
     required: PropTypes.bool,
     className: PropTypes.string,
+    displayWeekNumbers: PropTypes.bool,
+    weekStartsOn: PropTypes.number,
     value: PropTypes.instanceOf(Date).isRequired,
     min: PropTypes.instanceOf(Date),
     max: PropTypes.instanceOf(Date),
