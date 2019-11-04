@@ -10,6 +10,7 @@ import Icon from '../icon/Icon';
 import './miniCalendar.scss';
 
 const MiniCalendar = ({
+    hasCursors = true,
     now = new Date(),
     date: selectedDate,
     dateRange,
@@ -79,14 +80,18 @@ const MiniCalendar = ({
         <div className="minicalendar" onMouseDown={preventLeaveFocus} aria-label={monthLabel}>
             <div className="flex">
                 <span className="bold flex-item-fluid">{monthLabel}</span>
-                <button className="mr1" onClick={() => handleSwitchMonth(-1)}>
-                    <Icon name="caret" className="rotateZ-90" />
-                    <span className="sr-only">{prevMonth}</span>
-                </button>
-                <button onClick={() => handleSwitchMonth(1)}>
-                    <Icon name="caret" className="rotateZ-270" />
-                    <span className="sr-only">{nextMonth}</span>
-                </button>
+                {hasCursors ? (
+                    <>
+                        <button type="button" className="mr1" onClick={() => handleSwitchMonth(-1)}>
+                            <Icon name="caret" className="rotateZ-90" />
+                            <span className="sr-only">{prevMonth}</span>
+                        </button>
+                        <button type="button" onClick={() => handleSwitchMonth(1)}>
+                            <Icon name="caret" className="rotateZ-270" />
+                            <span className="sr-only">{nextMonth}</span>
+                        </button>
+                    </>
+                ) : null}
             </div>
             <div style={style}>
                 {displayWeekNumbers ? (
@@ -121,6 +126,7 @@ const MiniCalendar = ({
 };
 
 MiniCalendar.propTypes = {
+    hasCursors: PropTypes.bool,
     markers: PropTypes.object,
     date: PropTypes.instanceOf(Date).isRequired,
     dateRange: PropTypes.arrayOf(PropTypes.instanceOf(Date)),
