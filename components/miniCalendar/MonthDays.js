@@ -34,17 +34,15 @@ const MonthDays = ({
     selectedDate,
     activeDate,
     numberOfDays,
-    numberOfWeeks,
-    gridSize
+    numberOfWeeks
 }) => {
     const [temporaryDateRange, setTemporaryDateRange] = useState();
     const rangeStartRef = useRef();
     const rangeEndRef = useRef();
 
     const style = {
-        display: 'grid',
-        gridTemplateColumns: `repeat(${numberOfDays}, ${gridSize})`,
-        gridTemplateRows: `repeat(${numberOfWeeks}, ${gridSize})`
+        '--minicalendar-days-numberOfDays': numberOfDays,
+        '--minicalendar-days-numberOfWeeks': numberOfWeeks
     };
 
     const getDate = (el) => {
@@ -157,7 +155,6 @@ MonthDays.propTypes = {
     onSelectDateRange: PropTypes.func,
     numberOfDays: PropTypes.number.isRequired,
     numberOfWeeks: PropTypes.number.isRequired,
-    gridSize: PropTypes.string,
     now: PropTypes.instanceOf(Date),
     selectedDate: PropTypes.instanceOf(Date),
     activeDate: PropTypes.instanceOf(Date)

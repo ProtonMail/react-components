@@ -2,11 +2,9 @@ import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import Tooltip from '../tooltip/Tooltip';
 
-const WeekDays = ({ weekdaysShort, weekdaysLong, weekStartsOn, gridSize, numberOfDays }) => {
+const WeekDays = ({ weekdaysShort, weekdaysLong, weekStartsOn, numberOfDays }) => {
     const style = {
-        display: 'grid',
-        gridTemplateColumns: `repeat(${numberOfDays}, ${gridSize})`,
-        gridTemplateRows: gridSize
+        '--minicalendar-weekdays-numberOfDaysInWeek': numberOfDays
     };
 
     const weekDaysLabels = useMemo(() => {
@@ -31,7 +29,6 @@ const WeekDays = ({ weekdaysShort, weekdaysLong, weekStartsOn, gridSize, numberO
 };
 
 WeekDays.propTypes = {
-    gridSize: PropTypes.string,
     numberOfDays: PropTypes.number.isRequired,
     weekStartsOn: PropTypes.number.isRequired,
     weekdaysShort: PropTypes.array.isRequired,
