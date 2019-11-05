@@ -39,7 +39,8 @@ const MiniCalendar = ({
     ],
     numberOfDays = 7,
     numberOfWeeks = 6,
-    displayWeekNumbers = true
+    displayWeekNumbers = true,
+    displayedOnDarkBackground = false
 }) => {
     const [temporaryDate, setTemporaryDate] = useState();
 
@@ -63,10 +64,16 @@ const MiniCalendar = ({
 
     const classWeekNumber = displayWeekNumbers ? 'mini-calendar-grid--displayWeekNumber' : '';
 
+    const classMiniCalendarOnDarkBackground = displayedOnDarkBackground ? 'minicalendar--onDarkBackground' : '';
+
     const preventLeaveFocus = (e) => e.preventDefault();
 
     return (
-        <div className="minicalendar" onMouseDown={preventLeaveFocus} aria-label={monthLabel}>
+        <div
+            className={classnames(['mini-calendar', classMiniCalendarOnDarkBackground])}
+            onMouseDown={preventLeaveFocus}
+            aria-label={monthLabel}
+        >
             <div className="flex">
                 <span className="bold flex-item-fluid">{monthLabel}</span>
                 {hasCursors ? (
@@ -128,7 +135,8 @@ MiniCalendar.propTypes = {
     weekdaysLong: PropTypes.array,
     months: PropTypes.array,
     now: PropTypes.instanceOf(Date),
-    displayWeekNumbers: PropTypes.bool
+    displayWeekNumbers: PropTypes.bool,
+    displayedOnDarkBackground: PropTypes.bool
 };
 
 export default MiniCalendar;
