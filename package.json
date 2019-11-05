@@ -79,7 +79,6 @@
     "lint-staged": "^8.1.4",
     "mocha": "^5.2.0",
     "prettier": "^1.16.1",
-    "timezone-support": "^2.0.2",
     "proton-i18n": "github:ProtonMail/proton-i18n#semver:^1.6.12",
     "proton-shared": "github:ProtonMail/proton-shared#master",
     "react": "^16.8.3",

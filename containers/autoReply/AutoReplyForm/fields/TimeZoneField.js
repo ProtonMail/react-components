@@ -2,8 +2,7 @@ import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Select, Row, Label, Field } from 'react-components';
 import { c } from 'ttag';
-
-import { getTimeZoneOptions } from '../../utils';
+import { getTimeZoneOptions } from 'proton-shared/lib/date/timezone';
 
 const TimeZoneField = ({ value, onChange }) => {
     const handleChange = ({ target }) => onChange(target.value);

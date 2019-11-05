@@ -8,17 +8,11 @@ import {
     convertUTCDateTimeToZone,
     convertZonedDateTimeToUTC,
     getTimezone,
+    getTimeZoneOptions,
     toLocalDate
 } from 'proton-shared/lib/date/timezone';
 import { AutoReplyDuration } from 'proton-shared/lib/constants';
-import {
-    DAY_SECONDS,
-    HOUR_SECONDS,
-    MINUTES_SECONDS,
-    getDurationOptions,
-    getMatchingTimezone,
-    getTimeZoneOptions
-} from '../utils';
+import { DAY_SECONDS, HOUR_SECONDS, MINUTES_SECONDS, getDurationOptions, getMatchingTimezone } from '../utils';
 
 const getDefaultFixedTimes = () => ({
     StartTime: getUnixTime(new Date()),

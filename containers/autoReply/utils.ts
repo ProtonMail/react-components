@@ -1,6 +1,5 @@
 import { c } from 'ttag';
 import { AutoReplyDuration } from 'proton-shared/lib/constants';
-import { findTimeZone, getUTCOffset, listTimeZones } from 'timezone-support';
 
 export const DAY_SECONDS = 24 * 60 * 60;
 export const HOUR_SECONDS = 60 * 60;
@@ -43,30 +42,6 @@ export const getMatchingTimezone = (timezone: string, timezoneOptions: { text: s
     if (otherMatch) {
         return otherMatch;
     }
-};
-
-/**
- * Get a list of all IANA time zones
- * @return {Array<Object>}      [{ text: 'Africa/Nairobi: UTC +03:00', value: 'Africa/Nairobi'}, ...]
- */
-export const getTimeZoneOptions = () => {
-    const dummyDate = new Date(); // recent date required for proper use
-
-    return listTimeZones().map((name) => {
-        const { offset } = getUTCOffset(dummyDate, findTimeZone(name));
-        // offset comes with the opposite sign in the timezone-support library
-        const sign = Math.sign(offset) === 1 ? '-' : '+';
-        const minutes = Math.abs(offset % 60);
-        const hours = (Math.abs(offset) - minutes) / 60;
-        // TODO: AM/PM
-        const mm = minutes < 10 ? `0${minutes}` : `${minutes}`;
-        const hh = hours < 10 ? `0${hours}` : `${hours}`;
-
-        return {
-            text: `${name}: UTC ${sign}${hh}:${mm}`,
-            value: name
-        };
-    });
 };
 
 /**
