@@ -63,14 +63,13 @@ const MiniCalendar = ({
     }, [selectedDate]);
 
     const classWeekNumber = displayWeekNumbers ? 'mini-calendar-grid--displayWeekNumber' : '';
-
-    const classMiniCalendarOnDarkBackground = displayedOnDarkBackground ? 'minicalendar--onDarkBackground' : '';
+    const classDark = displayedOnDarkBackground ? 'minicalendar--onDarkBackground' : '';
 
     const preventLeaveFocus = (e) => e.preventDefault();
 
     return (
         <div
-            className={classnames(['mini-calendar', classMiniCalendarOnDarkBackground])}
+            className={classnames(['mini-calendar', classDark])}
             onMouseDown={preventLeaveFocus}
             aria-label={monthLabel}
         >
