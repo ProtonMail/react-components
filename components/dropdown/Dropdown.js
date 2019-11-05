@@ -48,7 +48,8 @@ const Dropdown = ({
         onClose();
     };
 
-    const handleClickContent = () => {
+    const handleClickContent = (e) => {
+        e.stopPropagation();
         if (autoClose) {
             onClose();
         }
