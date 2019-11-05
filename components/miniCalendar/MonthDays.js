@@ -4,25 +4,6 @@ import PropTypes from 'prop-types';
 
 import { classnames } from '../../helpers/component';
 
-const getRangeClass = (range, dayDate) => {
-    if (!range) {
-        return;
-    }
-
-    const [rangeStart, rangeEnd] = range;
-    if (!rangeStart || !rangeEnd) {
-        return;
-    }
-
-    if (isSameDay(rangeStart, dayDate) || isSameDay(rangeEnd, dayDate)) {
-        return 'minicalendar-day--range-bound';
-    }
-
-    if (isWithinInterval(dayDate, { start: rangeStart, end: rangeEnd })) {
-        return 'minicalendar-day--range';
-    }
-};
-
 const MonthDays = ({
     days,
     onSelectDate,
@@ -108,6 +89,8 @@ const MonthDays = ({
         onSelectDate(getDate(target));
     };
 
+    const [rangeStart, rangeEnd] = temporaryDateRange || dateRange || [];
+
     return (
         <div
             className="aligncenter minicalendar-days"
@@ -119,13 +102,18 @@ const MonthDays = ({
             {days.map((dayDate, i) => {
                 const isActiveMonth = isSameMonth(dayDate, activeDate);
                 const isCurrent = isSameDay(now, dayDate);
-                const isSelected = isSameDay(selectedDate, dayDate);
+                const isInterval =
+                    rangeStart && rangeEnd && isWithinInterval(dayDate, { start: rangeStart, end: rangeEnd });
+                const isIntervalBound = isSameDay(rangeStart, dayDate) || isSameDay(rangeEnd, dayDate);
+                const isSelected = isSameDay(selectedDate, dayDate) || isInterval;
+
                 const hasMarker = markers[dayDate.getTime()];
 
                 const className = classnames([
                     'minicalendar-day',
                     !isActiveMonth && 'minicalendar-day--inactive-month',
-                    getRangeClass(temporaryDateRange || dateRange || undefined, dayDate)
+                    isIntervalBound && 'minicalendar-day--range-bound',
+                    isInterval && 'minicalendar-day--range'
                 ]);
 
                 return (
