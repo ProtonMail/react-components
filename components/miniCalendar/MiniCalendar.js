@@ -78,11 +78,11 @@ const MiniCalendar = ({
                 {hasCursors ? (
                     <>
                         <button type="button" className="mr1" onClick={() => handleSwitchMonth(-1)}>
-                            <Icon name="caret" size="12" className="rotateZ-90 fill-white" />
+                            <Icon name="caret" size={12} className="rotateZ-90 fill-white" />
                             <span className="sr-only">{prevMonth}</span>
                         </button>
                         <button type="button" onClick={() => handleSwitchMonth(1)}>
-                            <Icon name="caret" size="12" className="rotateZ-270 fill-white" />
+                            <Icon name="caret" size={12} className="rotateZ-270 fill-white" />
                             <span className="sr-only">{nextMonth}</span>
                         </button>
                     </>
