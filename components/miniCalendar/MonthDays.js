@@ -119,8 +119,8 @@ const MonthDays = ({
                 return (
                     <button
                         aria-label={formatDay(dayDate)}
-                        aria-current={isCurrent ? 'date' : false}
-                        aria-pressed={isPressed}
+                        aria-current={isCurrent ? 'date' : undefined}
+                        aria-pressed={isPressed ? true : undefined}
                         key={dayDate.toString()}
                         className={className}
                         data-i={i}
