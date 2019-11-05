@@ -105,7 +105,7 @@ const MonthDays = ({
                 const isInterval =
                     rangeStart && rangeEnd && isWithinInterval(dayDate, { start: rangeStart, end: rangeEnd });
                 const isIntervalBound = isSameDay(rangeStart, dayDate) || isSameDay(rangeEnd, dayDate);
-                const isSelected = isSameDay(selectedDate, dayDate) || isInterval;
+                const isPressed = isSameDay(selectedDate, dayDate) || isInterval;
 
                 const hasMarker = markers[dayDate.getTime()];
 
@@ -120,7 +120,7 @@ const MonthDays = ({
                     <button
                         aria-label={formatDay(dayDate)}
                         aria-current={isCurrent ? 'date' : false}
-                        aria-selected={isSelected}
+                        aria-pressed={isPressed}
                         key={dayDate.toString()}
                         className={className}
                         data-i={i}
