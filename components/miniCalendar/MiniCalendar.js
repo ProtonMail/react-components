@@ -39,7 +39,7 @@ const MiniCalendar = ({
     ],
     numberOfDays = 7,
     numberOfWeeks = 6,
-    displayWeekNumbers = true,
+    displayWeekNumbers = false,
     displayedOnDarkBackground = false
 }) => {
     const [temporaryDate, setTemporaryDate] = useState();
