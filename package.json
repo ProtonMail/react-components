@@ -42,9 +42,6 @@
     "codemirror": "^5.46.0",
     "design-system": "github:ProtonMail/design-system.git#master",
     "intersection-observer": "^0.5.1",
-    "moment": "^2.24.0",
-    "moment-timezone": "^0.5.25",
-    "pikaday": "^1.8.0",
     "prop-types": "^15.7.2",
     "push.js": "^1.0.9",
     "qrcode.react": "^0.9.3",
@@ -93,6 +90,7 @@
     "typescript": "^3.6.3"
   },
   "peerDependencies": {
+    "date-fns": "^2.0.0",
     "pm-srp": "github:ProtonMail/pm-srp.git#semver:^1.0.0",
     "pmcrypto": "github:ProtonMail/pmcrypto.git#semver:^6.0.0",
     "proton-shared": "github:ProtonMail/proton-shared.git#master",
