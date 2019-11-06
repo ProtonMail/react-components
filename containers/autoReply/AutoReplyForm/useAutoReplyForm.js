@@ -22,6 +22,7 @@ const getDefaultFixedTimes = () => ({
 const getDefaultAutoResponder = (AutoResponder) => {
     return {
         ...AutoResponder,
+        // Comment copied from anglar:
         // Not translated: it's not editable, foreign people doing international business wouldn't want it to be translated
         // if we make it editable we can translate it again.
         Subject: 'Auto',
@@ -49,7 +50,7 @@ const toDateTimes = (unixTimestamp, timezone, repeat) => {
     const hours = Math.floor(secondsInDay / HOUR_SECONDS);
     const minutes = Math.floor((secondsInDay - hours * HOUR_SECONDS) / 60);
 
-    const localTime = new Date(2000, 0, 0, hours, minutes);
+    const localTime = new Date(2000, 0, 1, hours, minutes);
 
     if (repeat === AutoReplyDuration.DAILY) {
         return {
@@ -115,18 +116,18 @@ const toUnixTime = ({ date, time, day }, timezone, repeat) => {
         );
     }
 
-    const UTCUnixTime = time.getHours() * HOUR_SECONDS + time.getMinutes() * MINUTES_SECONDS;
+    const utcUnixTime = time.getHours() * HOUR_SECONDS + time.getMinutes() * MINUTES_SECONDS;
 
     if (repeat === AutoReplyDuration.DAILY) {
-        return UTCUnixTime;
+        return utcUnixTime;
     }
 
     if (repeat === AutoReplyDuration.WEEKLY) {
-        return day * DAY_SECONDS + UTCUnixTime;
+        return day * DAY_SECONDS + utcUnixTime;
     }
 
     if (repeat === AutoReplyDuration.MONTHLY) {
-        return day * DAY_SECONDS + UTCUnixTime;
+        return day * DAY_SECONDS + utcUnixTime;
     }
 };
 
