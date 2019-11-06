@@ -6,6 +6,7 @@ import { format } from 'date-fns';
 import { getWeekStartsOn, getFormattedWeekdays } from 'proton-shared/lib/date/date';
 import { dateLocale } from 'proton-shared/lib/i18n';
 import { AutoReplyDuration } from 'proton-shared/lib/constants';
+import { sanitizeString } from 'proton-shared/lib/sanitize';
 import { getDaysOfMonthOptions } from './utils';
 import InfoLine from './InfoLine';
 import { getMatchingValues, toModel } from './AutoReplyForm/useAutoReplyForm';
@@ -64,6 +65,10 @@ const AutoReplyTemplate = ({ autoresponder, onEdit }) => {
         return [formatTime(model.start, model.duration), formatTime(model.end, model.duration)];
     }, [model]);
 
+    const sanitizedMessage = useMemo(() => {
+        return sanitizeString(model.message);
+    }, [model.message]);
+
     return (
         <div className="bordered-container p2 mw650p">
             <table>
@@ -73,7 +78,7 @@ const AutoReplyTemplate = ({ autoresponder, onEdit }) => {
                     <InfoLine label={c('Label').t`End`}>{endText}</InfoLine>
                     <InfoLine label={c('Label').t`Timezone`}>{timezoneText}</InfoLine>
                     <InfoLine plain label={c('Label').t`Message`}>
-                        <div className="cut" dangerouslySetInnerHTML={{ __html: model.message }} />
+                        <div className="cut" dangerouslySetInnerHTML={{ __html: sanitizedMessage }} />
                     </InfoLine>
                 </tbody>
             </table>

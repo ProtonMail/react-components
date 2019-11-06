@@ -29,19 +29,15 @@ export const getDurationOptions = () => [
 ];
 
 export const getMatchingTimezone = (timezone: string, timezoneOptions: { text: string; value: string }[]) => {
-    const fullMatch = timezoneOptions.find(({ value }) => {
-        return value === timezone;
-    });
-    if (fullMatch) {
-        return fullMatch;
-    }
-    // Can be stored as "Singapore", now expecting Asia/Singapore
-    const otherMatch = timezoneOptions.find(({ value }) => {
-        return value.includes(timezone);
-    });
-    if (otherMatch) {
-        return otherMatch;
-    }
+    return (
+        timezoneOptions.find(({ value }) => {
+            return value === timezone;
+            // Can be stored as "Singapore", now expecting Asia/Singapore
+        }) ||
+        timezoneOptions.find(({ value }) => {
+            return value.includes(timezone);
+        })
+    );
 };
 
 /**
