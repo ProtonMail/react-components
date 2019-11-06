@@ -7,7 +7,8 @@ import {
     ContentModal,
     InnerModal,
     ResetButton,
-    PrimaryButton
+    PrimaryButton,
+    TestId
 } from 'react-components';
 import { c } from 'ttag';
 
@@ -66,25 +67,29 @@ function DemoModal({ onAdd, ...rest }) {
         const submitBtn = hasSubmit ? nodeSubmit : null;
 
         return (
-            <FooterModal>
-                {typeof close === 'string' ? <ResetButton disabled={loading}>{close}</ResetButton> : close}
-                {submitBtn}
-            </FooterModal>
+            <TestId id="Footer">
+                <FooterModal>
+                    {typeof close === 'string' ? <ResetButton disabled={loading}>{close}</ResetButton> : close}
+                    {submitBtn}
+                </FooterModal>
+            </TestId>
         );
     };
 
     return (
-        <DialogModal modalTitleID={modalTitleID} onClose={onClose} {...rest}>
-            {title ? (
-                <HeaderModal hasClose={hasClose} modalTitleID={modalTitleID} onClose={onClose}>
-                    {title}
-                </HeaderModal>
-            ) : null}
-            <ContentModal onSubmit={onSubmit} onReset={onClose} noValidate={noValidate}>
-                <InnerModal>{children}</InnerModal>
-                {getFooter()}
-            </ContentModal>
-        </DialogModal>
+        <TestId id="Modal">
+            <DialogModal modalTitleID={modalTitleID} onClose={onClose} {...rest}>
+                {title ? (
+                    <HeaderModal hasClose={hasClose} modalTitleID={modalTitleID} onClose={onClose}>
+                        {title}
+                    </HeaderModal>
+                ) : null}
+                <ContentModal onSubmit={onSubmit} onReset={onClose} noValidate={noValidate}>
+                    <InnerModal>{children}</InnerModal>
+                    {getFooter()}
+                </ContentModal>
+            </DialogModal>
+        </TestId>
     );
 };
 

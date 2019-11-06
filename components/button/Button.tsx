@@ -1,6 +1,7 @@
 import React from 'react';
 import Icon from '../icon/Icon';
 import { classnames } from '../../helpers/component';
+import { useTestId } from '../testId/TestId';
 
 export interface Props
     extends React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
@@ -23,6 +24,7 @@ const Button = ({
 }: Props) => {
     const iconComponent = typeof icon === 'string' ? <Icon className="flex-item-noshrink" name={icon} /> : icon;
     const iconButtonClass = !children ? 'pm-button--for-icon' : '';
+    const testId = useTestId('Button');
 
     return (
         <button
@@ -33,6 +35,7 @@ const Button = ({
             tabIndex={disabled ? -1 : tabIndex}
             ref={buttonRef}
             aria-busy={loading}
+            data-test-id={testId}
             {...rest}
         >
             {iconComponent}
