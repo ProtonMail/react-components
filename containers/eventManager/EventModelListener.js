@@ -36,11 +36,6 @@ const EventModelListener = ({ models }) => {
 
                 const { value: oldValue, status } = cache.get(key) || {};
 
-                if (status === STATUS.PENDING) {
-                    // Keep while in beta
-                    console.warn('Event manager tried to update a pending model');
-                }
-
                 if (status === STATUS.RESOLVED) {
                     cache.set(key, {
                         status: STATUS.RESOLVED,
