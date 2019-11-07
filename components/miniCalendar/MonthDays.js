@@ -125,7 +125,7 @@ const MonthDays = ({
                         className={className}
                         data-i={i}
                     >
-                        {dayDate.getDate()}
+                        <span className="minicalendar-day-inner">{dayDate.getDate()}</span>
                         {hasMarker ? <span className="minicalendar-day--marker" /> : null}
                     </button>
                 );
