@@ -110,7 +110,7 @@ const MonthDays = ({
                 const hasMarker = markers[dayDate.getTime()];
 
                 const className = classnames([
-                    'minicalendar-day',
+                    'minicalendar-day no-pointer-events-children',
                     !isActiveMonth && 'minicalendar-day--inactive-month',
                     isIntervalBound && 'minicalendar-day--range-bound',
                     isInterval && 'minicalendar-day--range'
