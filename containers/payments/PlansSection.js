@@ -4,6 +4,7 @@ import {
     SubTitle,
     Alert,
     DowngradeModal,
+    LossLoyaltyModal,
     MozillaInfoPanel,
     useSubscription,
     useOrganization,
@@ -23,7 +24,6 @@ import { getPlans, isBundleEligible, hasLayoltyBonus } from 'proton-shared/lib/h
 import SubscriptionModal from './subscription/SubscriptionModal';
 import { mergePlansMap, getCheckParams } from './subscription/helpers';
 import PlansTable from './PlansTable';
-import LossLoyaltyModal from './LossLoyaltyModal';
 
 const PlansSection = () => {
     const { call } = useEventManager();
@@ -59,7 +59,7 @@ const PlansSection = () => {
         });
         if (hasLayoltyBonus(organization)) {
             await new Promise((resolve, reject) => {
-                createModal(<LossLoyaltyModal onConfirm={resolve} onClose={reject} />);
+                createModal(<LossLoyaltyModal user={user} onConfirm={resolve} onClose={reject} />);
             });
         }
         return handleUnsubscribe();
