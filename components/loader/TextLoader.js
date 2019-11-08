@@ -5,7 +5,7 @@ import { classnames } from '../../helpers/component';
 
 const TextLoader = ({ children, className }) => {
     const classNameLoader = classnames(['atomLoader-text', className]);
-    return <p className={classNameLoader}>{children}</p>;
+    return <p className={classnames(['atomLoader-text', className])}>{children}</p>;
 };
 
 TextLoader.propTypes = {
