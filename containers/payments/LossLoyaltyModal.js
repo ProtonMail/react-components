@@ -10,12 +10,11 @@ const LossLoyaltyModal = ({ user = {}, ...rest }) => {
             confirm={<ErrorButton type="submit">{c('Action').t`Confirm`}</ErrorButton>}
             {...rest}
         >
-            <Paragraph>{c('Info')
-                .t`You are currently entitled to Proton loyalty benefits for being a long term paid user.`}</Paragraph>
+            <Paragraph>{c('Info').t`As a long-term paid user, you are entitled to Proton Loyalty Benefits.`}</Paragraph>
             <Alert type="warning">
-                {c('Info').t`By downgrading you will irreversible loss your current loyalty benefits:`}
-                {user.hasPaidMail ? <div>{c('Info').t`+ 5 GB free storage`}</div> : null}
-                {user.hasPaidVpn ? <div>{c('Info').t`+ 2 VPN free connections`}</div> : null}
+                {c('Info').t`By downgrading to a Free plan, you will permanently lose your current benefits:`}
+                {user.hasPaidMail ? <div>{c('Info').t`+5 GB storage for ProtonMail`}</div> : null}
+                {user.hasPaidVpn ? <div>{c('Info').t`+2 devices connected at once for ProtonVPN`}</div> : null}
             </Alert>
         </ConfirmModal>
     );

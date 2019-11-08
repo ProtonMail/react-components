@@ -19,7 +19,8 @@ import {
 
 import { checkSubscription, deleteSubscription } from 'proton-shared/lib/api/payments';
 import { DEFAULT_CURRENCY, DEFAULT_CYCLE } from 'proton-shared/lib/constants';
-import { getPlans, isBundleEligible, hasLayoltyBonus } from 'proton-shared/lib/helpers/subscription';
+import { getPlans, isBundleEligible } from 'proton-shared/lib/helpers/subscription';
+import { isLoyal } from 'proton-shared/lib/helpers/organization';
 
 import SubscriptionModal from './subscription/SubscriptionModal';
 import { mergePlansMap, getCheckParams } from './subscription/helpers';
@@ -57,7 +58,7 @@ const PlansSection = () => {
         await new Promise((resolve, reject) => {
             createModal(<DowngradeModal onConfirm={resolve} onClose={reject} />);
         });
-        if (hasLayoltyBonus(organization)) {
+        if (isLoyal(organization)) {
             await new Promise((resolve, reject) => {
                 createModal(<LossLoyaltyModal user={user} onConfirm={resolve} onClose={reject} />);
             });
