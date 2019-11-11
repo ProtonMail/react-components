@@ -7,15 +7,34 @@ import { CLIENT_TYPES } from 'proton-shared/lib/constants';
 
 import PublicHeader from './PublicHeader';
 
-const { VPN } = CLIENT_TYPES;
+const { VPN, MAIL, DRIVE } = CLIENT_TYPES;
 
 const SignInLayout = ({ children, title }) => {
     const { CLIENT_TYPE } = useConfig();
-    const isVPN = CLIENT_TYPE === VPN;
-    const staticURL = isVPN ? 'protonvpn.com' : 'protonmail.com';
+
+    const envSpecific = {
+        [MAIL]: {
+            title: 'ProtonMail',
+            staticURL: 'protonmail.com',
+            logo: <MailLogo className="fill-primary" />,
+            footerLinkText: 'ProtonMail.com'
+        },
+        [VPN]: {
+            title: 'ProtonVPN',
+            staticURL: 'protonvpn.com',
+            logo: <VpnLogo className="fill-primary" />,
+            footerLinkText: 'ProtonVPN.com'
+        },
+        [DRIVE]: {
+            title: 'ProtonDrive',
+            staticURL: 'protondrive.com',
+            logo: 'Drive Logo',
+            footerLinkText: 'ProtonDrive.com'
+        }
+    }[CLIENT_TYPE];
 
     useEffect(() => {
-        document.title = `${title} - ${isVPN ? 'ProtonVPN' : 'ProtonMail'}`;
+        document.title = `${title} - ${envSpecific.title}`;
     }, []);
 
     return (
@@ -25,17 +44,17 @@ const SignInLayout = ({ children, title }) => {
                     <>
                         <span className="opacity-50">{c('Label').t`Back to:`}</span>{' '}
                         <Href
-                            url={`https://${staticURL}`}
+                            url={`https://${envSpecific.staticURL}`}
                             className="inbl color-white nodecoration hover-same-color"
                             target="_self"
                         >
-                            {staticURL}
+                            {envSpecific.staticURL}
                         </Href>
                     </>
                 }
                 middle={
-                    <Href url={staticURL} target="_self">
-                        {isVPN ? <VpnLogo className="fill-primary" /> : <MailLogo className="fill-primary" />}
+                    <Href url={envSpecific.staticURL} target="_self">
+                        {envSpecific.logo}
                     </Href>
                 }
                 right={
@@ -60,7 +79,7 @@ const SignInLayout = ({ children, title }) => {
                     </p>
                 </div>
                 <footer className="opacity-50 mtauto flex-item-noshrink aligncenter pb1">
-                    <FooterDetails link={<a href={staticURL}>{isVPN ? 'ProtonVPN.com' : 'ProtonMail.com'}</a>} />
+                    <FooterDetails link={<a href={envSpecific.staticURL}>{envSpecific.footerLinkText}</a>} />
                 </footer>
             </div>
         </div>
