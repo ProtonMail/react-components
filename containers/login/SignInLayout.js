@@ -28,7 +28,7 @@ const SignInLayout = ({ children, title }) => {
         [DRIVE]: {
             title: 'ProtonDrive',
             staticURL: 'protondrive.com',
-            logo: 'Drive Logo',
+            logo: <MailLogo className="fill-primary" />,
             footerLinkText: 'ProtonDrive.com'
         }
     }[CLIENT_TYPE];
