@@ -94,10 +94,10 @@ function ConditionsEditor({ filter, onChange = noop, errors = [] }) {
         syncModel(target.value, config, newComparator);
     };
 
-    const handleDeleteValue = (config) => (value) => {
+    const handleDeleteValue = (config) => (index) => {
         const { condition, scope } = config;
-        const newScoped = condition[scope].filter((val) => val !== value);
-        syncModel(value, config, newScoped);
+        const newScoped = condition[scope].filter((_, i) => i !== index);
+        syncModel(null, config, newScoped);
     };
 
     const handleAddValue = (config) => (value) => {
@@ -106,11 +106,9 @@ function ConditionsEditor({ filter, onChange = noop, errors = [] }) {
         syncModel(value, config, newScoped);
     };
 
-    const handleEditValue = (config) => ({ before, value }) => {
+    const handleEditValue = (config) => ({ index, value }) => {
         const { condition, scope } = config;
-        const newScoped = condition[scope].map((val) => {
-            return before === val ? value : val;
-        });
+        const newScoped = condition[scope].map((existingValue, i) => (i === index ? value : existingValue));
         syncModel(value, config, newScoped);
     };
 
