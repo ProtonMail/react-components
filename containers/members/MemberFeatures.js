@@ -4,12 +4,16 @@ import { Icon } from 'react-components';
 import humanSize from 'proton-shared/lib/helpers/humanSize';
 
 const MemberFeatures = ({ member }) => {
-    const { MaxSpace, MaxVPN } = member;
+    const { UsedSpace, MaxSpace, MaxVPN } = member;
 
     return (
         <>
-            <Icon name="alias" /> {humanSize(MaxSpace, 'GB')}
-            <Icon name="protonvpn" /> {MaxVPN}
+            <div>
+                <Icon name="user-storage" /> {humanSize(UsedSpace, 'GB')} / {humanSize(MaxSpace, 'GB')}
+            </div>
+            <div>
+                <Icon name="protonvpn" /> {MaxVPN}
+            </div>
         </>
     );
 };

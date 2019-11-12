@@ -4,7 +4,7 @@ import { c } from 'ttag';
 import { Label, Input, Row, ErrorZone, Field } from 'react-components';
 import { noop } from 'proton-shared/lib/helpers/function';
 
-function NameEditor({ filter, onChange, error }) {
+function NameEditor({ filter, onChange = noop, error = {} }) {
     const handleChange = ({ target }) => onChange(target.value);
 
     return (
@@ -17,9 +17,10 @@ function NameEditor({ filter, onChange, error }) {
                     defaultValue={filter.Name}
                     onChange={handleChange}
                     placeholder={c('Placeholder').t`Name`}
-                    required
                 />
-                {error.isEmpty ? <ErrorZone id="filterNameError">{c('Error').t`Username required`}</ErrorZone> : null}
+                {error.isEmpty ? (
+                    <ErrorZone id="filterNameError">{c('Error').t`Filter name required`}</ErrorZone>
+                ) : null}
             </Field>
         </Row>
     );
@@ -29,11 +30,6 @@ NameEditor.propTypes = {
     filter: PropTypes.object.isRequired,
     error: PropTypes.object,
     onChange: PropTypes.func
-};
-
-NameEditor.defaultProps = {
-    onChange: noop,
-    error: {}
 };
 
 export default NameEditor;

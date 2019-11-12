@@ -40,7 +40,7 @@ const getStatus = (status, result) => {
     }
 };
 
-const ReactivateKeysList = ({ loading, allKeys, onUpload }) => {
+const ReactivateKeysList = ({ loading = false, allKeys, onUpload }) => {
     const inactiveKeyRef = useRef();
     const selectRef = useRef();
 
@@ -61,7 +61,7 @@ const ReactivateKeysList = ({ loading, allKeys, onUpload }) => {
                 const keyStatus = loading && !result ? <LoaderIcon /> : getStatus(status, result);
 
                 const uploadColumn = uploadedPrivateKey ? (
-                    <Badge type="success">{c('Action').t`Key uploaded`}</Badge>
+                    <Badge type="success">{c('Key status displayed in a badge').t`Key uploaded`}</Badge>
                 ) : (
                     <Button
                         onClick={() => {
@@ -103,7 +103,7 @@ const ReactivateKeysList = ({ loading, allKeys, onUpload }) => {
                     autoClick={false}
                 />
             ) : null}
-            <Table>
+            <Table className="pm-simple-table--has-actions">
                 <TableHeader
                     cells={[
                         c('Title header for keys table').t`Email`,
@@ -123,10 +123,6 @@ ReactivateKeysList.propTypes = {
     onUpload: PropTypes.func,
     loading: PropTypes.bool,
     onError: PropTypes.func
-};
-
-ReactivateKeysList.defaultProps = {
-    loading: false
 };
 
 export default ReactivateKeysList;

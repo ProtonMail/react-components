@@ -56,9 +56,9 @@ const AddressKeysSection = () => {
     const { call } = useEventManager();
     const api = useApi();
     const [User] = useUser();
-    const [Addresses] = useAddresses();
+    const [Addresses, loadingAddresses] = useAddresses();
     const [userKeysList] = useUserKeys(User);
-    const [addressesKeysMap, loadingAddressesKeys] = useAddressesKeys(User, Addresses);
+    const [addressesKeysMap, loadingAddressesKeys] = useAddressesKeys(User, Addresses, userKeysList);
     const [loadingKeyIdx, setLoadingKeyIdx] = useState(-1);
     const [addressIndex, setAddressIndex] = useState(() => (Array.isArray(Addresses) ? 0 : -1));
 
@@ -70,7 +70,7 @@ const AddressKeysSection = () => {
 
     const title = <SubTitle>{c('Title').t`Email encryption keys`}</SubTitle>;
 
-    if (addressIndex === -1 || !Array.isArray(Addresses)) {
+    if (addressIndex === -1 || loadingAddresses) {
         return (
             <>
                 {title}
@@ -79,7 +79,7 @@ const AddressKeysSection = () => {
         );
     }
 
-    if (!Addresses.length) {
+    if (!Array.isArray(Addresses) || !Addresses.length) {
         return (
             <>
                 {title}
@@ -104,7 +104,8 @@ const AddressKeysSection = () => {
     const handleAction = async (action, targetKey) => {
         const {
             Key: { ID },
-            privateKey
+            privateKey,
+            publicKey
         } = targetKey;
 
         if (action === ACTIONS.REACTIVATE) {
@@ -118,7 +119,7 @@ const AddressKeysSection = () => {
             return createModal(<ReactivateKeysModal allKeys={addressKeysToReactivate} />);
         }
         if (action === ACTIONS.EXPORT_PUBLIC_KEY) {
-            return createModal(<ExportPublicKeyModal name={addressEmail} privateKey={privateKey} />);
+            return createModal(<ExportPublicKeyModal name={addressEmail} publicKey={publicKey} />);
         }
         if (action === ACTIONS.EXPORT_PRIVATE_KEY) {
             return createModal(<ExportPrivateKeyModal name={addressEmail} privateKey={privateKey} />);
@@ -200,7 +201,7 @@ const AddressKeysSection = () => {
     return (
         <>
             {title}
-            <Alert learnMore="todo">
+            <Alert learnMore="https://protonmail.com/support/knowledge-base/pgp-key-management/">
                 {c('Info')
                     .t`Download your PGP Keys for use with other PGP compatible services. Only incoming messages in inline OpenPGP format are currently supported.`}
             </Alert>

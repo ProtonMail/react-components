@@ -2,10 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Button from './Button';
+import { classnames } from '../../helpers/component';
 
-const SmallButton = ({ children, className, ...rest }) => {
+const SmallButton = ({ children, className = '', ...rest }) => {
     return (
-        <Button className={`pm-button--small ${className}`} {...rest}>
+        <Button className={classnames(['pm-button--small', className])} {...rest}>
             {children}
         </Button>
     );
@@ -14,10 +15,6 @@ const SmallButton = ({ children, className, ...rest }) => {
 SmallButton.propTypes = {
     children: PropTypes.node,
     className: PropTypes.string
-};
-
-SmallButton.defaultProps = {
-    className: ''
 };
 
 export default SmallButton;

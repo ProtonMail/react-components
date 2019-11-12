@@ -1,33 +1,44 @@
-import { useCache, usePromiseResult, useAuthenticationStore } from 'react-components';
-import { prepareKeys, prepareMemberKeys } from 'proton-shared/lib/keys/keys';
-import { decryptPrivateKey } from 'pmcrypto';
+import { useCallback } from 'react';
+import { decryptKeyWithFormat, decryptPrivateKeyArmored, getUserKeyPassword } from 'proton-shared/lib/keys/keys';
 import { noop } from 'proton-shared/lib/helpers/function';
+import useCachedModelResult, { getPromiseValue } from './useCachedModelResult';
+import useAuthentication from '../containers/authentication/useAuthentication';
+import { useGetUser } from './useUser';
+import useCache from '../containers/cache/useCache';
 
-import { cachedPromise } from './helpers/cachedPromise';
+export const KEY = 'USER_KEYS';
 
-const useUserKeys = (User) => {
-    const cache = useCache();
-    const authenticationStore = useAuthenticationStore();
+export const useGetUserKeysRaw = () => {
+    const authentication = useAuthentication();
+    const getUser = useGetUser();
 
-    return usePromiseResult(() => {
-        const { ID, OrganizationPrivateKey, Keys } = User;
+    return useCallback(async () => {
+        const { OrganizationPrivateKey, Keys } = await getUser();
 
-        return cachedPromise(
-            cache,
-            ID,
-            async () => {
-                const keyPassword = authenticationStore.getPassword();
+        const keyPassword = authentication.getPassword();
 
-                if (OrganizationPrivateKey) {
-                    const organizationKey = await decryptPrivateKey(OrganizationPrivateKey, keyPassword).catch(noop);
-                    return prepareMemberKeys(Keys, organizationKey);
-                }
+        const organizationKey = OrganizationPrivateKey
+            ? await decryptPrivateKeyArmored(OrganizationPrivateKey, keyPassword).catch(noop)
+            : undefined;
 
-                return prepareKeys(Keys, keyPassword);
-            },
-            Keys
+        return Promise.all(
+            Keys.map(async (Key) => {
+                return decryptKeyWithFormat(Key, await getUserKeyPassword(Key, { organizationKey, keyPassword }));
+            })
         );
-    }, [User]);
+    }, [getUser]);
 };
 
-export default useUserKeys;
+export const useGetUserKeys = () => {
+    const cache = useCache();
+    const miss = useGetUserKeysRaw();
+    return useCallback(async () => {
+        return getPromiseValue(cache, KEY, miss);
+    }, [miss]);
+};
+
+export const useUserKeys = () => {
+    const cache = useCache();
+    const getUserKeysAsync = useGetUserKeys();
+    return useCachedModelResult(cache, KEY, getUserKeysAsync);
+};

@@ -1,60 +1,44 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { SortableContainer } from 'react-sortable-hoc';
-import { Icon, Table } from 'react-components';
+import { OrderableTable, OrderableTableHeader, OrderableTableBody } from 'react-components';
 import { noop } from 'proton-shared/lib/helpers/function';
 
 import LabelSortableItem from './LabelSortableItem';
 
-function LabelSortableList({ items, onEditLabel, onRemoveLabel, onToggleChange }) {
+function LabelSortableList({ items, onEditLabel = noop, onRemoveLabel = noop, ...rest }) {
     return (
-        <Table className="noborder border-collapse mt1">
+        <OrderableTable className="noborder border-collapse mt1" {...rest}>
             <caption className="sr-only">{c('Settings/labels').t`Labels/Folders`}</caption>
-            <thead>
+            <OrderableTableHeader>
                 <tr>
-                    <th scope="col" className="w5">
-                        <Icon name="what-is-this" />
-                    </th>
+                    <th scope="col" className="w5" />
                     <th scope="col" className="w45">
                         {c('Settings/labels - table').t`Name`}
                     </th>
-                    <th scope="col" className="w15">
-                        {c('Settings/labels - table').t`Notification`}
-                    </th>
-                    <th scope="col" className="w30">
-                        {c('Settings/labels - table').t`Actions`}
-                    </th>
+                    <th scope="col">{c('Settings/labels - table').t`Notification`}</th>
+                    <th scope="col">{c('Settings/labels - table').t`Actions`}</th>
                 </tr>
-            </thead>
-            <tbody>
+            </OrderableTableHeader>
+            <OrderableTableBody>
                 {items.map((label, index) => (
                     <LabelSortableItem
                         key={`item-${index}`}
                         index={index}
                         label={label}
-                        onToggleChange={onToggleChange}
                         onEditLabel={onEditLabel}
                         onRemoveLabel={onRemoveLabel}
-                        helperClass="LabelSortableItem-item"
                     />
                 ))}
-            </tbody>
-        </Table>
+            </OrderableTableBody>
+        </OrderableTable>
     );
 }
 
 LabelSortableList.propTypes = {
     items: PropTypes.array.isRequired,
     onEditLabel: PropTypes.func,
-    onRemoveLabel: PropTypes.func,
-    onToggleChange: PropTypes.func
+    onRemoveLabel: PropTypes.func
 };
 
-LabelSortableList.defaultProps = {
-    onEditLabel: noop,
-    onRemoveLabel: noop,
-    onToggleChange: noop
-};
-
-export default SortableContainer(LabelSortableList);
+export default LabelSortableList;

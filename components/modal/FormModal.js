@@ -11,19 +11,25 @@ import {
 } from 'react-components';
 import { c } from 'ttag';
 
+/** @type any */
 const Modal = ({
     onClose,
     onSubmit,
     title,
     close = c('Action').t`Cancel`,
     submit = c('Action').t`Submit`,
-    loading,
+    loading = false,
     children,
-    modalTitleID,
+    modalTitleID = 'modalTitle',
     footer,
-    hasSubmit,
-    hasClose,
-    noValidate,
+    hasSubmit = true,
+    hasClose = true,
+    noValidate = false,
+    // Destructure these options so they are not passed to the DOM.
+    // eslint-disable-next-line no-unused-vars,@typescript-eslint/no-unused-vars
+    disableCloseOnLocation,
+    // eslint-disable-next-line no-unused-vars,@typescript-eslint/no-unused-vars
+    disableCloseOnOnEscape,
     ...rest
 }) => {
     // Because we will forget
@@ -46,6 +52,10 @@ function DemoModal({ onAdd, ...rest }) {
     }
 
     const getFooter = () => {
+        if (footer === null) {
+            return null;
+        }
+
         if (footer) {
             return <FooterModal>{footer}</FooterModal>;
         }
@@ -69,7 +79,7 @@ function DemoModal({ onAdd, ...rest }) {
     };
 
     return (
-        <DialogModal modalTitleID={modalTitleID} {...rest}>
+        <DialogModal modalTitleID={modalTitleID} onClose={onClose} {...rest}>
             {title ? (
                 <HeaderModal hasClose={hasClose} modalTitleID={modalTitleID} onClose={onClose}>
                     {title}
@@ -97,19 +107,9 @@ Modal.propTypes = {
     small: PropTypes.bool,
     background: PropTypes.bool,
     hasSubmit: PropTypes.bool,
-    hasClose: PropTypes.bool
-};
-
-Modal.defaultProps = {
-    className: '',
-    small: false,
-    loading: false,
-    isBehind: false,
-    isClosing: false,
-    noValidate: false,
-    hasClose: true,
-    hasSubmit: true,
-    modalTitleID: 'modalTitle'
+    hasClose: PropTypes.bool,
+    disableCloseOnLocation: PropTypes.bool,
+    disableCloseOnOnEscape: PropTypes.bool
 };
 
 export default Modal;

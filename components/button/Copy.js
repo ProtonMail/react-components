@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-
+import { Icon, Button, classnames, Tooltip } from 'react-components';
 import { textToClipboard } from 'proton-shared/lib/helpers/browser';
-import { Button } from '../button';
 
-const Copy = ({ value, className }) => {
+const Copy = ({ value, className = '' }) => {
     const [copied, setCopied] = useState(false);
 
     const handleClick = () => {
@@ -17,22 +16,17 @@ const Copy = ({ value, className }) => {
     };
 
     return (
-        <Button
-            onClick={handleClick}
-            icon="clipboard"
-            className={`${className} ${copied ? 'copied' : ''}`}
-            title={copied ? c('Label').t`Copied` : c('Label').t`Copy`}
-        />
+        <Button onClick={handleClick} className={classnames([className, copied && 'copied'])}>
+            <Tooltip title={copied ? c('Label').t`Copied` : c('Label').t`Copy`}>
+                <Icon name="clipboard" />
+            </Tooltip>
+        </Button>
     );
 };
 
 Copy.propTypes = {
     value: PropTypes.string.isRequired,
     className: PropTypes.string
-};
-
-Copy.defaultProps = {
-    className: ''
 };
 
 export default Copy;

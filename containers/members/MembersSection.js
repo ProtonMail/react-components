@@ -6,6 +6,7 @@ import {
     Info,
     SubTitle,
     Block,
+    Loader,
     Alert,
     SearchInput,
     TableBody,
@@ -19,7 +20,6 @@ import {
     useModals,
     useOrganizationKey
 } from 'react-components';
-import { Link } from 'react-router-dom';
 import { normalize } from 'proton-shared/lib/helpers/string';
 import { DOMAIN_STATE } from 'proton-shared/lib/constants';
 
@@ -31,12 +31,14 @@ import MemberPrivate from './MemberPrivate';
 import RestoreAdministratorPrivileges from '../organization/RestoreAdministratorPrivileges';
 import MemberModal from './MemberModal';
 import { getOrganizationKeyInfo } from '../organization/helpers/organizationKeysHelper';
+import useDomainsAddresses from '../../hooks/useDomainsAddresses';
 
 const validateAddUser = (organization, organizationKey, verifiedDomains) => {
     const { isOrganizationKeyActive, hasOrganizationKey } = getOrganizationKeyInfo(organizationKey);
     const { MaxMembers, HasKeys, UsedMembers, MaxAddresses, UsedAddresses, MaxSpace, AssignedSpace } = organization;
     if (MaxMembers === 1) {
-        return c('Error').t`Multi-user support requires either a Professional or Visionary plan.`;
+        return c('Error')
+            .t`Please upgrade to a Professional plan with more than 1 user, or a Visionary account, to manage multiple users.`;
     }
     if (!HasKeys) {
         return c('Error').t`Please enable multi-user support before adding users to your organization.`;
@@ -68,7 +70,8 @@ const MembersSection = () => {
     const [organization, loadingOrganization] = useOrganization();
     const [organizationKey, loadingOrganizationKey] = useOrganizationKey(organization);
     const [domains, loadingDomains] = useDomains();
-    const [memberAddressesMap, memberAddressesLoading] = useMemberAddresses(members);
+    const [domainsAddressesMap, loadingDomainAddresses] = useDomainsAddresses(domains);
+    const [memberAddressesMap, loadingMemberAddresses] = useMemberAddresses(members);
     const [keywords, setKeywords] = useState('');
 
     const { createNotification } = useNotifications();
@@ -96,21 +99,28 @@ const MembersSection = () => {
         }
 
         createModal(
-            <MemberModal organization={organization} organizationKey={organizationKey} domains={verifiedDomains} />
+            <MemberModal
+                organization={organization}
+                organizationKey={organizationKey}
+                domains={verifiedDomains}
+                domainsAddressesMap={domainsAddressesMap}
+            />
         );
     };
+
+    if (loadingOrganization) {
+        return <Loader />;
+    }
 
     return (
         <>
             <RestoreAdministratorPrivileges />
             <SubTitle>{c('Title').t`Users`}</SubTitle>
-            <Alert learnMore="todo">
-                {c('Info for members section')
-                    .t`Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.`}
-            </Alert>
+            <Alert learnMore="https://protonmail.com/support/knowledge-base/user-roles/">{c('Info for members section')
+                .t`Add, remove, and manage users within your organization. Here you can adjust their allocated storage space, grant admin rights, and more.`}</Alert>
             <Block className="flex flex-spacebetween">
                 <PrimaryButton
-                    disabled={loadingOrganization || loadingDomains || loadingOrganizationKey}
+                    disabled={loadingOrganization || loadingDomains || loadingDomainAddresses || loadingOrganizationKey}
                     onClick={handleAddUser}
                 >
                     {c('Action').t`Add user`}
@@ -118,13 +128,13 @@ const MembersSection = () => {
                 <div>
                     <SearchInput
                         onChange={handleSearch}
-                        placeholder={c('Placeholder').t`Search for User and Addresses`}
+                        placeholder={c('Placeholder').t`Search users`}
                         delay={500}
                         value={keywords}
                     />
                 </div>
             </Block>
-            <Table>
+            <Table className="pm-simple-table--has-actions">
                 <TableHeader
                     cells={[
                         c('Title header for members table').t`Name`,
@@ -141,7 +151,7 @@ const MembersSection = () => {
                         c('Title header for members table').t`Actions`
                     ]}
                 />
-                <TableBody loading={membersLoading || memberAddressesLoading} colSpan={6}>
+                <TableBody loading={membersLoading || loadingMemberAddresses} colSpan={6}>
                     {membersSelected.map((member) => {
                         const key = member.ID;
                         const memberAddresses = (memberAddressesMap && memberAddressesMap[member.ID]) || [];
@@ -152,7 +162,7 @@ const MembersSection = () => {
                                     member.Name,
                                     <MemberRole key={key} member={member} />,
                                     <MemberPrivate key={key} member={member} />,
-                                    <MemberAddresses key={key} addresses={memberAddresses} />,
+                                    <MemberAddresses key={key} member={member} addresses={memberAddresses} />,
                                     <MemberFeatures key={key} member={member} />,
                                     <MemberActions
                                         key={key}
@@ -168,12 +178,8 @@ const MembersSection = () => {
             </Table>
             <Block className="opacity-50">
                 {organization.UsedMembers} / {organization.MaxMembers}{' '}
-                {c('Info').ngettext(msgid`member used`, `members used`, organization.UsedMembers)}
+                {c('Info').ngettext(msgid`user used`, `users used`, organization.UsedMembers)}
             </Block>
-            <Alert>
-                <span className="mr0-5">{c('Info').t`You can add and manage addresses for the user in your`}</span>
-                <Link to="/settings/addresses">{c('Link').t`Address settings`}</Link>
-            </Alert>
         </>
     );
 };

@@ -1,9 +1,9 @@
 module.exports = {
     setupFilesAfterEnv: ['./rtl.setup.js'],
     verbose: true,
-    moduleDirectories: ['node_modules', 'node_modules/proton-shared'],
+    moduleDirectories: ['node_modules'],
     transform: {
-        '^.+\\.js$': 'babel-jest'
+        '^.+\\.(js|tsx?)$': 'babel-jest'
     },
     moduleNameMapper: {
         '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2)$': '<rootDir>/__mocks__/fileMock.js',

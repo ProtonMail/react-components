@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { memo } from 'react';
 import PropTypes from 'prop-types';
+import { classnames } from '../../helpers/component';
 
 /**
  * Component to print svg icon
@@ -9,18 +10,33 @@ import PropTypes from 'prop-types';
  * @param {String} fill      To construct the fill-global className
  * @param {Number} size      To construct the icon size className icon-<size>p (default 16)
  * @param {String} viewBox
- * @param {String} alt used by screen reader
+ * @param {String} alt       Used by screen reader
+ * @param {Number} rotate    How many degrees the icon should be rotated
  * @return {React.Component}
  */
-const Icon = ({ name, className, viewBox, alt, fill, color, size, ...rest }) => {
+const Icon = ({
+    name,
+    className = '',
+    viewBox = '0 0 16 16',
+    alt,
+    fill = 'grey',
+    color,
+    size = 16,
+    rotate = 0,
+    ...rest
+}) => {
     const fillClass = fill ? `fill-global-${fill} ` : '';
-    const style = color ? { fill: color } : undefined;
+    const style = {
+        ...(color && { fill: color }),
+        ...(rotate && { transform: `rotate(${rotate}deg)` })
+    };
+
     return (
         <>
             <svg
                 style={style}
                 viewBox={viewBox}
-                className={`icon-${size}p `.concat(fillClass, className).trim()}
+                className={classnames([`icon-${size}p`, fillClass, className])}
                 role="img"
                 focusable="false"
                 {...rest}
@@ -39,14 +55,8 @@ Icon.propTypes = {
     className: PropTypes.string,
     fill: PropTypes.string,
     size: PropTypes.number,
-    color: PropTypes.string
+    color: PropTypes.string,
+    rotate: PropTypes.number
 };
 
-Icon.defaultProps = {
-    viewBox: '0 0 16 16',
-    size: 16,
-    fill: 'grey',
-    className: ''
-};
-
-export default Icon;
+export default memo(Icon);

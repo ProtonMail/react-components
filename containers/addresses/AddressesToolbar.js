@@ -1,12 +1,10 @@
 import React from 'react';
 import { c } from 'ttag';
 import PropTypes from 'prop-types';
-import { Block, Select } from 'react-components';
+import { Block, Select, PrimaryButton } from 'react-components';
 import { ALL_MEMBERS_ID } from 'proton-shared/lib/constants';
 
-import AddAddressButton from './AddAddressButton';
-
-const AddressesToolbar = ({ memberIndex, onChangeMemberIndex, members }) => {
+const AddressesToolbar = ({ memberIndex, onAddAddress, onChangeMemberIndex, members }) => {
     const options = [
         {
             text: c('Option').t`All users`,
@@ -20,15 +18,23 @@ const AddressesToolbar = ({ memberIndex, onChangeMemberIndex, members }) => {
 
     return (
         <>
-            <Block>
-                <Select
-                    id="memberSelect"
-                    value={memberIndex}
-                    options={options}
-                    onChange={({ target: { value } }) => onChangeMemberIndex(+value)}
-                />
-            </Block>
-            <Block>{memberIndex === ALL_MEMBERS_ID ? null : <AddAddressButton member={members[memberIndex]} />}</Block>
+            {options.length > 2 ? (
+                <Block>
+                    <Select
+                        id="memberSelect"
+                        value={memberIndex}
+                        options={options}
+                        onChange={({ target: { value } }) => onChangeMemberIndex(+value)}
+                    />
+                </Block>
+            ) : null}
+            {memberIndex === ALL_MEMBERS_ID ? null : (
+                <Block>
+                    <PrimaryButton onClick={() => onAddAddress(members[memberIndex])}>
+                        {c('Action').t`Add address`}
+                    </PrimaryButton>
+                </Block>
+            )}
         </>
     );
 };
@@ -36,7 +42,8 @@ const AddressesToolbar = ({ memberIndex, onChangeMemberIndex, members }) => {
 AddressesToolbar.propTypes = {
     memberIndex: PropTypes.number.isRequired,
     members: PropTypes.array,
-    onChangeMemberIndex: PropTypes.func.isRequired
+    onChangeMemberIndex: PropTypes.func.isRequired,
+    onAddAddress: PropTypes.func.isRequired
 };
 
 export default AddressesToolbar;

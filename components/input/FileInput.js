@@ -1,10 +1,20 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useRef } from 'react';
 import PropTypes from 'prop-types';
+import { classnames } from '../../helpers/component';
 
-const FileInput = forwardRef(({ children, id, className, ...rest }, ref) => {
+const FileInput = forwardRef(({ children, id = 'fileInput', className, onChange, ...rest }, ref) => {
+    const newRef = useRef();
+    const fileRef = ref || newRef;
+
+    const handleChange = (e) => {
+        onChange(e);
+        // Reset it to allow to select the same file again.
+        fileRef.current.value = '';
+    };
+
     return (
-        <label className={'pm-button '.concat(className || '')} htmlFor={id}>
-            <input id={id} type="file" className="hidden" {...rest} ref={ref} />
+        <label className={classnames(['pm-button', className])} htmlFor={id}>
+            <input id={id} type="file" className="hidden" onChange={handleChange} {...rest} ref={fileRef} />
             {children}
         </label>
     );
@@ -12,12 +22,9 @@ const FileInput = forwardRef(({ children, id, className, ...rest }, ref) => {
 
 FileInput.propTypes = {
     children: PropTypes.node.isRequired,
-    id: PropTypes.string.isRequired,
+    id: PropTypes.string,
+    onChange: PropTypes.func,
     className: PropTypes.string
-};
-
-FileInput.defaultProps = {
-    id: 'fileInput'
 };
 
 export default FileInput;

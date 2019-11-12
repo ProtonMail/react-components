@@ -1,17 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { FormModal, useApiWithoutResult, useNotifications } from 'react-components';
+import { FormModal, useNotifications, useApi, useLoading, useModals } from 'react-components';
 import { setPaymentMethod } from 'proton-shared/lib/api/payments';
+import { PAYMENT_METHOD_TYPES, ADD_CARD_MODE } from 'proton-shared/lib/constants';
 
 import Card from './Card';
 import useCard from './useCard';
 import toDetails from './toDetails';
+import { handlePaymentToken } from './paymentTokenHelper';
 
 const EditCardModal = ({ card: existingCard, onClose, onChange, ...rest }) => {
-    const { loading, request } = useApiWithoutResult(setPaymentMethod);
+    const api = useApi();
+    const [loading, withLoading] = useLoading();
     const { createNotification } = useNotifications();
-    const title = existingCard ? c('Title').t`Edit credit card` : c('Title').t`Add credit card`;
+    const { createModal } = useModals();
+    const title = existingCard ? c('Title').t`Edit credit/debit card` : c('Title').t`Add credit/debit card`;
     const { card, updateCard, errors, isValid } = useCard(existingCard);
 
     const handleSubmit = async (event) => {
@@ -20,7 +24,18 @@ const EditCardModal = ({ card: existingCard, onClose, onChange, ...rest }) => {
             return;
         }
 
-        await request({ Type: 'card', Details: toDetails(card) });
+        const { Payment } = await handlePaymentToken({
+            params: {
+                Payment: {
+                    Type: PAYMENT_METHOD_TYPES.CARD,
+                    Details: toDetails(card)
+                }
+            },
+            mode: ADD_CARD_MODE,
+            api,
+            createModal
+        });
+        await api(setPaymentMethod(Payment));
         await onChange();
         onClose();
         createNotification({ text: c('Success').t`Payment method updated` });
@@ -29,11 +44,10 @@ const EditCardModal = ({ card: existingCard, onClose, onChange, ...rest }) => {
     return (
         <FormModal
             small
-            onSubmit={handleSubmit}
+            onSubmit={(event) => withLoading(handleSubmit(event))}
             onClose={onClose}
             title={title}
             loading={loading}
-            close={c('Action').t`Close`}
             submit={c('Action').t`Save`}
             {...rest}
         >

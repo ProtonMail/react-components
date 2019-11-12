@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import codemirror from 'codemirror';
 import PropTypes from 'prop-types';
 import { UnControlled as CodeMirror } from 'react-codemirror2';
 import { useApi } from 'react-components';
-import { noop, debounce } from 'proton-shared/lib/helpers/function';
+import { noop } from 'proton-shared/lib/helpers/function';
 import { normalize } from 'proton-shared/lib/filters/sieve';
 import { FILTER_VERSION } from 'proton-shared/lib/constants';
 import { checkSieveFilter } from 'proton-shared/lib/api/filters';
@@ -15,29 +15,30 @@ import 'codemirror/lib/codemirror.css';
 import 'codemirror/addon/lint/lint.css';
 
 const clean = normalize();
-codemirror.registerHelper(
-    'lint',
-    'sieve',
-    debounce((text) => {
-        if (text.trim() === '') {
-            const [line = ''] = text.split('\n');
-            return [
-                {
-                    message: 'A sieve script cannot be empty',
-                    severity: 'error',
-                    from: codemirror.Pos(0, 0),
-                    to: codemirror.Pos(0, line.length)
-                }
-            ];
-        }
 
-        const lint = codemirror._uglyGlobal;
-        return lint ? lint(clean(text)) : [];
-    }, 500)
-);
+const lint = (text) => {
+    if (text.trim() === '') {
+        const [line = ''] = text.split('\n');
+        return [
+            {
+                message: 'A sieve script cannot be empty',
+                severity: 'error',
+                from: codemirror.Pos(0, 0),
+                to: codemirror.Pos(0, line.length)
+            }
+        ];
+    }
 
-function FilterEditorSieve({ filter, onChangeBeforeLint, onChange }) {
+    const lint = codemirror._uglyGlobal;
+    return lint ? lint(clean(text)) : [];
+};
+
+codemirror.registerHelper('lint', 'sieve', lint);
+
+function FilterEditorSieve({ filter, onChangeBeforeLint = noop, onChange = noop }) {
     const api = useApi();
+
+    const [value, setValue] = useState(null);
 
     useEffect(() => {
         /*
@@ -51,18 +52,21 @@ function FilterEditorSieve({ filter, onChangeBeforeLint, onChange }) {
             return list;
         };
 
+        setTimeout(() => setValue(filter.Sieve), 300);
+
         return () => {
             delete codemirror._uglyGlobal;
         };
     }, []);
 
-    const handleChange = (editor, opt, input) => {
+    const handleChange = (_editor, _opt, input) => {
         onChangeBeforeLint(clean(input));
     };
 
     return (
         <CodeMirror
-            value={filter.Sieve}
+            className="bordered-container"
+            value={value}
             options={{
                 mode: 'sieve',
                 lineNumbers: true,
@@ -85,11 +89,6 @@ FilterEditorSieve.propTypes = {
     filter: PropTypes.object.isRequired,
     onChangeBeforeLint: PropTypes.func,
     onChange: PropTypes.func
-};
-
-FilterEditorSieve.defaultProps = {
-    onChangeBeforeLint: noop,
-    onChange: noop
 };
 
 export default FilterEditorSieve;

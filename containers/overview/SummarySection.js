@@ -9,19 +9,7 @@ const { MEMBER_ROLE, ADMIN_ROLE } = USER_ROLES;
 import { formatPlans } from '../payments/subscription/helpers';
 
 const Rows = ({ subscription, user }) => {
-    const { mailPlan, vpnPlan } = formatPlans(subscription.Plans);
-
-    if (user.hasPaidMail && mailPlan.Name === 'visionary') {
-        return (
-            <div className="flex-autogrid onmobile-flex-column w100">
-                <div className="flex-autogrid-item">ProtonMail plan</div>
-                <div className="flex-autogrid-item bold">Visionary</div>
-                <div className="flex-autogrid-item alignright">
-                    <Link to="/settings/subscription">{c('Link').t`Manage`}</Link>
-                </div>
-            </div>
-        );
-    }
+    const { mailPlan = {}, vpnPlan = {} } = formatPlans(subscription.Plans);
 
     return (
         <>
@@ -57,18 +45,21 @@ const SummarySection = ({ subscription, user, userSettings }) => {
         [MEMBER_ROLE]: c('Role').t`Member`,
         [ADMIN_ROLE]: c('Role').t`Administrator`
     };
+
     return (
-        <div className="shadow-container mb1">
+        <div className="flex-item-fluid rounded shadow-container mb1">
             <div className="p1">
                 <div className="flex-autogrid onmobile-flex-column w100 mb1">
                     <div className="flex-autogrid-item">{c('Label').t`Username`}</div>
-                    <div className="flex-autogrid-item bold">{user.Name}</div>
+                    <div className="flex-autogrid-item bold ellipsis" title={user.Name}>
+                        {user.Name}
+                    </div>
                     <div className="flex-autogrid-item" />
                 </div>
                 <div className="flex-autogrid onmobile-flex-column w100 mb1">
                     <div className="flex-autogrid-item">{c('Label').t`Recovery email`}</div>
-                    <div className="flex-autogrid-item bold">
-                        {userSettings.Email.Status ? c('Status').t`Active` : c('Status').t`Not set`}
+                    <div className="flex-autogrid-item bold ellipsis" title={userSettings.Email.Value}>
+                        {userSettings.Email.Value || c('Status').t`Not set`}
                     </div>
                     <div className="flex-autogrid-item alignright">
                         <Link to="/settings/account">{c('Link').t`Edit`}</Link>

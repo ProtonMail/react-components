@@ -1,37 +1,44 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
 import PropTypes from 'prop-types';
-import { Label, FormModal, Row, Field, Alert, useNotifications, useApiWithoutResult } from 'react-components';
+import { Label, FormModal, Row, Field, Alert, useNotifications, useApi, useLoading, useModals } from 'react-components';
 import { donate } from 'proton-shared/lib/api/payments';
 import { DEFAULT_CURRENCY, DEFAULT_DONATION_AMOUNT } from 'proton-shared/lib/constants';
 
 import PaymentSelector from './PaymentSelector';
 import Payment from './Payment';
 import usePayment from './usePayment';
+import useCard from './useCard';
+import { handlePaymentToken } from './paymentTokenHelper';
 
-const DonateModal = ({ onClose, ...rest }) => {
-    const { method, setMethod, parameters, setParameters, canPay, setCardValidity } = usePayment(handleSubmit);
+const DonateModal = ({ ...rest }) => {
+    const api = useApi();
+    const [loading, withLoading] = useLoading();
     const { createNotification } = useNotifications();
-    const { request, loading } = useApiWithoutResult(donate);
     const [currency, setCurrency] = useState(DEFAULT_CURRENCY);
     const [amount, setAmount] = useState(DEFAULT_DONATION_AMOUNT);
+    const { method, setMethod, parameters, setParameters, canPay, setCardValidity } = usePayment();
+    const { createModal } = useModals();
+    const card = useCard();
 
-    const handleSubmit = async () => {
-        await request({ Amount: amount, Currency: currency, ...parameters });
-        onClose();
+    const handleSubmit = async (params = parameters) => {
+        const requestBody = await handlePaymentToken({
+            params: { ...params, Amount: amount, Currency: currency },
+            api,
+            createModal
+        });
+        await api(donate(requestBody));
+        rest.onClose();
         createNotification({
             text: c('Success')
-                .t`Your support is essential to keeping ProtonMail running. Thank you for supporting internet privacy!`
+                .t`Your support is essential to keeping Proton running. Thank you for supporting internet privacy!`
         });
     };
 
     return (
         <FormModal
-            small
-            onClose={onClose}
-            onSubmit={handleSubmit}
+            onSubmit={() => withLoading(handleSubmit())}
             loading={loading}
-            close={c('Action').t`Cancel`}
             title={c('Title').t`Make a donation`}
             submit={canPay && c('Action').t`Donate`}
             {...rest}
@@ -53,17 +60,19 @@ const DonateModal = ({ onClose, ...rest }) => {
                 method={method}
                 amount={amount}
                 currency={currency}
+                parameters={parameters}
+                card={card}
                 onParameters={setParameters}
                 onMethod={setMethod}
                 onValidCard={setCardValidity}
+                onPay={handleSubmit}
             />
         </FormModal>
     );
 };
 
 DonateModal.propTypes = {
-    onClose: PropTypes.func,
-    onSubmit: PropTypes.func.isRequired
+    onClose: PropTypes.func
 };
 
 export default DonateModal;

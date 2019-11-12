@@ -1,5 +1,8 @@
 import React from 'react';
-import { c } from 'ttag';
+import { GenericError } from 'react-components';
+import { PropTypes } from 'prop-types';
+
+import { traceError } from 'proton-shared/lib/helpers/sentry';
 
 // https://reactjs.org/docs/error-boundaries.html#introducing-error-boundaries
 class ErrorBoundary extends React.Component {
@@ -12,18 +15,23 @@ class ErrorBoundary extends React.Component {
         return { hasError: true, error };
     }
 
+    componentDidCatch(error, info) {
+        this.props.onError && this.props.onError(error, info);
+        traceError(error);
+        console.error(error);
+    }
+
     render() {
         if (!this.state.hasError) {
             return this.props.children;
         }
-        const error = this.state.error ? this.state.error.toString() : undefined;
-        return (
-            <>
-                <h1>{c('Title').t`Something went wrong.`}</h1>
-                <span>{error}</span>
-            </>
-        );
+        return <GenericError className="pt2" />;
     }
 }
+
+ErrorBoundary.propTypes = {
+    children: PropTypes.node,
+    onError: PropTypes.func
+};
 
 export default ErrorBoundary;

@@ -1,31 +1,51 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { Input, FormModal, Row, Label, Price, useApiWithoutResult, useApiResult } from 'react-components';
+import {
+    Input,
+    FormModal,
+    Row,
+    Label,
+    Field,
+    Price,
+    useApiResult,
+    useModals,
+    useApi,
+    useLoading
+} from 'react-components';
 import { checkInvoice, payInvoice } from 'proton-shared/lib/api/payments';
 import { toPrice } from 'proton-shared/lib/helpers/string';
 
 import Payment from '../payments/Payment';
 import usePayment from '../payments/usePayment';
+import useCard from '../payments/useCard';
+import { handlePaymentToken } from '../payments/paymentTokenHelper';
 
-const PayInvoiceModal = ({ invoice, fetchInvoices, onClose, ...rest }) => {
-    const { request, loading: loadingPay } = useApiWithoutResult(payInvoice);
+const PayInvoiceModal = ({ invoice, fetchInvoices, ...rest }) => {
+    const { createModal } = useModals();
+    const [loading, withLoading] = useLoading();
+    const api = useApi();
+    const card = useCard();
     const { result = {}, loading: loadingCheck } = useApiResult(() => checkInvoice(invoice.ID), []);
-    const { AmountDue, Amount, Currency } = result;
-    const { method, setMethod, parameters, setParameters, canPay, setCardValidity } = usePayment(handleSubmit);
+    const { AmountDue, Amount, Currency, Credit } = result;
+    const { method, setMethod, parameters, setParameters, canPay, setCardValidity } = usePayment();
 
-    const handleSubmit = async () => {
-        await request(invoice.ID, { Amount: AmountDue, Currency, ...parameters });
+    const handleSubmit = async (params = parameters) => {
+        const requestBody = await handlePaymentToken({
+            params: { ...params, Amount: AmountDue, Currency },
+            api,
+            createModal
+        });
+        await api(payInvoice(invoice.ID, requestBody));
         fetchInvoices();
-        onClose();
+        rest.onClose();
     };
 
     return (
         <FormModal
             small
-            onClose={onClose}
-            onSubmit={handleSubmit}
-            loading={loadingPay}
+            onSubmit={() => withLoading(handleSubmit())}
+            loading={loading}
             close={c('Action').t`Close`}
             submit={canPay && c('Action').t`Pay`}
             title={c('Title').t`Pay invoice`}
@@ -35,31 +55,46 @@ const PayInvoiceModal = ({ invoice, fetchInvoices, onClose, ...rest }) => {
                 <>
                     <Row>
                         <Label>{c('Label').t`Amount`}</Label>
-                        <div className="w100 alignright">
+                        <Field className="alignright">
                             <Price className="pm-label" currency={Currency}>
                                 {Amount}
                             </Price>
-                        </div>
+                        </Field>
                     </Row>
+                    {Credit ? (
+                        <Row>
+                            <Label>{c('Label').t`Credits used`}</Label>
+                            <Field className="alignright">
+                                <Price className="pm-label" currency={Currency}>
+                                    {Credit}
+                                </Price>
+                            </Field>
+                        </Row>
+                    ) : null}
                     <Row>
                         <Label>{c('Label').t`Amount due`}</Label>
-                        <div className="w100">
+                        <Field>
                             <Input
                                 className="pm-field--highlight no-pointer-events strong alignright"
                                 readOnly={true}
                                 value={toPrice(AmountDue, Currency)}
                             />
-                        </div>
+                        </Field>
                     </Row>
-                    <Payment
-                        type="invoice"
-                        method={method}
-                        amount={AmountDue}
-                        currency={Currency}
-                        onParameters={setParameters}
-                        onMethod={setMethod}
-                        onValidCard={setCardValidity}
-                    />
+                    {AmountDue > 0 ? (
+                        <Payment
+                            type="invoice"
+                            method={method}
+                            amount={AmountDue}
+                            currency={Currency}
+                            parameters={parameters}
+                            card={card}
+                            onParameters={setParameters}
+                            onMethod={setMethod}
+                            onValidCard={setCardValidity}
+                            onPay={handleSubmit}
+                        />
+                    ) : null}
                 </>
             )}
         </FormModal>
@@ -68,7 +103,6 @@ const PayInvoiceModal = ({ invoice, fetchInvoices, onClose, ...rest }) => {
 
 PayInvoiceModal.propTypes = {
     invoice: PropTypes.object.isRequired,
-    onClose: PropTypes.func,
     fetchInvoices: PropTypes.func.isRequired
 };
 

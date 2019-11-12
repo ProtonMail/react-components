@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { render } from 'react-testing-library';
+import { render } from '@testing-library/react';
 import ObserverSections from './ObserverSections';
 import { Bordered } from 'react-components';
 
@@ -24,7 +24,7 @@ DummyComponent.propTypes = {
 describe('ObserverSections component', () => {
     it('should render the observer sections properly', () => {
         const { container } = render(
-            <ObserverSections granularity={20} wait={500}>
+            <ObserverSections>
                 <DummyComponent index={1} text={dummyText} id="section1" />
                 <DummyComponent index={2} text={dummyText} id="section2" />
                 <DummyComponent index={3} text={dummyText} id="section3" />
@@ -38,7 +38,7 @@ describe('ObserverSections component', () => {
         expect(sections.length).toBe(5);
 
         sections.forEach((section, index) => {
-            expect(section.getAttribute('id')).toBe(`section${index + 1}`);
+            expect(section.dataset.targetId).toBe(`section${index + 1}`);
             expect(section.textContent).toBe(repeatText(dummyText, index + 1));
         });
     });
@@ -55,7 +55,7 @@ describe('ObserverSections component', () => {
         const sections = [].slice.call(container.querySelectorAll('section'));
 
         expect(sections.length).toBe(1);
-        expect(sections[0].getAttribute('id')).toBe('bordered');
+        expect(sections[0].dataset.targetId).toBe('bordered');
     });
 
     it('should throw an error if it has no children', () => {
@@ -67,7 +67,7 @@ describe('ObserverSections component', () => {
     it('should throw an error if some child has no id', () => {
         expect(() => {
             render(
-                <ObserverSections granularity={20} wait={500}>
+                <ObserverSections>
                     <DummyComponent index={1} text={dummyText} id="section1" />
                     <DummyComponent index={2} text={dummyText} id="section2" />
                     <DummyComponent index={3} text={dummyText} />

@@ -16,7 +16,7 @@ import {
     useApi,
     useMembers,
     useEventManager,
-    useAuthenticationStore,
+    useAuthentication,
     useLoading,
     useNotifications
 } from 'react-components';
@@ -26,13 +26,13 @@ import humanSize from 'proton-shared/lib/helpers/humanSize';
 import { updateOrganizationName, updateOrganizationKeys } from 'proton-shared/lib/api/organization';
 import { updateVPN, updateQuota } from 'proton-shared/lib/api/members';
 import { DEFAULT_ENCRYPTION_CONFIG, ENCRYPTION_CONFIGS } from 'proton-shared/lib/constants';
+import { generateOrganizationKeys } from 'proton-shared/lib/keys/organizationKeys';
 
 import SelectEncryption from '../keys/addKey/SelectEncryption';
-import { generateOrganizationKeys } from './helpers/organizationKeysHelper';
 
 const SetupOrganizationModal = ({ onClose, ...rest }) => {
     const api = useApi();
-    const authenticationStore = useAuthenticationStore();
+    const authentication = useAuthentication();
     const { call } = useEventManager();
     const { createNotification } = useNotifications();
 
@@ -146,7 +146,7 @@ const SetupOrganizationModal = ({ onClose, ...rest }) => {
                         backupKeySalt,
                         backupArmoredPrivateKey
                     } = await generateOrganizationKeys({
-                        keyPassword: authenticationStore.getPassword(),
+                        keyPassword: authentication.getPassword(),
                         backupPassword: model.password,
                         encryptionConfig: ENCRYPTION_CONFIGS[encryptionType]
                     });
@@ -185,7 +185,7 @@ const SetupOrganizationModal = ({ onClose, ...rest }) => {
                     </>
                 ),
                 async onSubmit() {
-                    await api(updateQuota(currentMemberID, model.storage));
+                    await api(updateQuota(currentMemberID, +model.storage));
 
                     if (hasPaidVpn) {
                         return next();
@@ -218,7 +218,7 @@ const SetupOrganizationModal = ({ onClose, ...rest }) => {
                     </>
                 ),
                 async onSubmit() {
-                    await api(updateVPN(currentMemberID, model.vpn));
+                    await api(updateVPN(currentMemberID, +model.vpn));
                     await call();
 
                     createNotification({ text: c('Success').t`Organization activated` });

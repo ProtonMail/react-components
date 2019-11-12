@@ -4,7 +4,7 @@ import { c } from 'ttag';
 import { Input, Button } from 'react-components';
 import { noop } from 'proton-shared/lib/helpers/function';
 
-function AddCondtionValue({ onAdd }) {
+function AddCondtionValue({ onAdd = noop }) {
     const [state, setState] = useState('');
 
     const addEffect = () => {
@@ -35,17 +35,13 @@ function AddCondtionValue({ onAdd }) {
                 onInput={handleInput}
                 placeholder={c('Info').t`Text or pattern`}
             />
-            <Button disabled={!state} onClick={handleClick}>{c('Action').t`Add`}</Button>
+            <Button className="flex-item-noshrink" disabled={!state} onClick={handleClick}>{c('Action').t`Add`}</Button>
         </div>
     );
 }
 
 AddCondtionValue.propTypes = {
     onAdd: PropTypes.func
-};
-
-AddCondtionValue.defaultProps = {
-    onAdd: noop
 };
 
 export default AddCondtionValue;

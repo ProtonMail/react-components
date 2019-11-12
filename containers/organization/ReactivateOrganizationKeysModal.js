@@ -6,7 +6,8 @@ import {
     useCache,
     useLoading,
     useNotifications,
-    useAuthenticationStore,
+    useAuthentication,
+    useEventManager,
     useApi,
     FormModal,
     LearnMore,
@@ -19,11 +20,13 @@ import {
 import { encryptPrivateKey } from 'pmcrypto';
 
 import { decryptArmoredKey } from '../keys/reactivateKeys/ReactivateKeysModal';
+import { OrganizationModel } from 'proton-shared/lib/models';
 
 const ReactivateOrganizationKeysModal = ({ onClose, mode, ...rest }) => {
     const cache = useCache();
     const { createNotification } = useNotifications();
-    const authenticationStore = useAuthenticationStore();
+    const { call } = useEventManager();
+    const authentication = useAuthentication();
     const api = useApi();
 
     const [loading, withLoading] = useLoading();
@@ -69,11 +72,13 @@ const ReactivateOrganizationKeysModal = ({ onClose, mode, ...rest }) => {
                 password: backupPassword,
                 keySalt: KeySalt
             });
-            const armoredPrivateKey = await encryptPrivateKey(decryptedPrivateKey, authenticationStore.getPassword());
+            const armoredPrivateKey = await encryptPrivateKey(decryptedPrivateKey, authentication.getPassword());
             await api(activateOrganizationKey(armoredPrivateKey));
-
-            // Warning: Since there is no event for this, the organization key cache is reset.
-            cache.set('ORGANIZATION_KEY', { ...cache.get('ORGANIZATION_KEY'), value: decryptedPrivateKey });
+            await call();
+            // Warning: The organization model is deleted because there is no event manager notification for when the
+            // organization key gets reactivated. Thus the organization is deleted from the cache which would trigger
+            // the organizationKeys hook to re-run.
+            cache.delete(OrganizationModel.key);
 
             createNotification({ text: success });
             onClose();

@@ -1,18 +1,25 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-import { generateUID } from '../../helpers/component';
+import { generateUID, classnames } from '../../helpers/component';
 import useInput from '../input/useInput';
 import ErrorZone from '../text/ErrorZone';
 
-const Select = (props) => {
-    const { options, className, error, ...rest } = props;
-    const { handlers, statusClasses, status } = useInput(props);
+/** @type any */
+const Select = ({ options, error, size = 1, className = '', multiple = false, loading = false, ...rest }) => {
+    const { handlers, statusClasses, status } = useInput({ ...rest });
     const [uid] = useState(generateUID('select'));
 
     return (
         <>
-            <select className={`pm-field w100 ${className} ${statusClasses}`} {...rest} {...handlers}>
+            <select
+                className={classnames(['pm-field w100', className, statusClasses])}
+                size={size}
+                multiple={multiple}
+                disabled={loading || rest.disabled}
+                {...rest}
+                {...handlers}
+            >
                 {options.map(({ text, ...rest }, index) => (
                     <option key={index.toString()} {...rest}>
                         {text}
@@ -27,19 +34,14 @@ const Select = (props) => {
 Select.propTypes = {
     error: PropTypes.string,
     disabled: PropTypes.bool,
-    size: PropTypes.number.isRequired,
+    loading: PropTypes.bool,
+    size: PropTypes.number,
     onChange: PropTypes.func,
     onBlur: PropTypes.func,
     onFocus: PropTypes.func,
-    options: PropTypes.arrayOf(PropTypes.object).isRequired,
+    options: PropTypes.arrayOf(PropTypes.object),
     multiple: PropTypes.bool,
     className: PropTypes.string
-};
-
-Select.defaultProps = {
-    multiple: false,
-    className: '',
-    size: 1
 };
 
 export default Select;

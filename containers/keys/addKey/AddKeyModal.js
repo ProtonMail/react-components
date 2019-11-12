@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { Alert, FormModal, useEventManager, useAuthenticationStore, useApi } from 'react-components';
+import { Alert, GenericError, FormModal, useEventManager, useAuthentication, useApi } from 'react-components';
 import { getAlgorithmExists } from 'proton-shared/lib/keys/keysAlgorithm';
 import { DEFAULT_ENCRYPTION_CONFIG, ENCRYPTION_CONFIGS } from 'proton-shared/lib/constants';
+import { generateAddressKey } from 'proton-shared/lib/keys/keys';
 
 import SelectEncryption from './SelectEncryption';
-import { createKeyHelper, generateAddressKey } from '../shared/actionHelper';
+import { createKeyHelper } from '../shared/actionHelper';
 
 const STEPS = {
     SELECT_ENCRYPTION: 1,
@@ -17,7 +18,7 @@ const STEPS = {
 };
 
 const AddKeyModal = ({ onClose, Address, addressKeys, ...rest }) => {
-    const authenticationStore = useAuthenticationStore();
+    const authentication = useAuthentication();
     const api = useApi();
     const { call } = useEventManager();
 
@@ -28,7 +29,7 @@ const AddKeyModal = ({ onClose, Address, addressKeys, ...rest }) => {
     const process = async () => {
         const { privateKey, privateKeyArmored } = await generateAddressKey({
             email: Address.Email,
-            passphrase: authenticationStore.getPassword(),
+            passphrase: authentication.getPassword(),
             encryptionConfig: ENCRYPTION_CONFIGS[encryptionType]
         });
         await createKeyHelper({ api, privateKey, privateKeyArmored, Address, keys: addressKeys });
@@ -92,7 +93,7 @@ const AddKeyModal = ({ onClose, Address, addressKeys, ...rest }) => {
                 children: (
                     <Alert>
                         {c('alert')
-                            .t`We are now generating encryption keys for your address, this may take several minutes and temporarily freeze your browser.`}
+                            .t`The encryption keys for your address are being generated. This may take several minutes and temporarily freeze your browser.`}
                     </Alert>
                 )
             };
@@ -109,7 +110,7 @@ const AddKeyModal = ({ onClose, Address, addressKeys, ...rest }) => {
         if (step === STEPS.FAILURE) {
             return {
                 submit: c('Action').t`Ok`,
-                children: <Alert type="error">{c('Error').t`Something went wrong`}</Alert>
+                children: <GenericError />
             };
         }
 

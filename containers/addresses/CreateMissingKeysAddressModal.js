@@ -3,23 +3,26 @@ import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import {
     useApi,
-    useAuthenticationStore,
+    useAuthentication,
     useNotifications,
     useEventManager,
     useLoading,
     FormModal,
+    Alert,
     Table,
     TableHeader,
     TableBody,
     TableRow
 } from 'react-components';
 import { DEFAULT_ENCRYPTION_CONFIG, ENCRYPTION_CONFIGS } from 'proton-shared/lib/constants';
-import { prepareMemberKeys } from 'proton-shared/lib/keys/keys';
+import { generateMemberAddressKey } from 'proton-shared/lib/keys/organizationKeys';
+import { decryptMemberToken } from 'proton-shared/lib/keys/memberToken';
+import { decryptPrivateKeyArmored, generateAddressKey } from 'proton-shared/lib/keys/keys';
 
 import SelectEncryption from '../keys/addKey/SelectEncryption';
 import MissingKeysStatus, { STATUS } from './MissingKeysStatus';
-import { createMemberAddressKeys, generateMemberAddressKey } from '../members/actionHelper';
-import { createKeyHelper, generateAddressKey } from '../keys/shared/actionHelper';
+import { createMemberAddressKeys } from '../members/actionHelper';
+import { createKeyHelper } from '../keys/shared/actionHelper';
 
 const updateAddress = (oldAddresses, address, status) => {
     return oldAddresses.map((oldAddress) => {
@@ -32,7 +35,7 @@ const updateAddress = (oldAddresses, address, status) => {
 
 const CreateMissingKeysAddressModal = ({ onClose, member, addresses, organizationKey, ...rest }) => {
     const api = useApi();
-    const authenticationStore = useAuthenticationStore();
+    const authentication = useAuthentication();
     const { call } = useEventManager();
     const { createNotification } = useNotifications();
     const [loading, withLoading] = useLoading();
@@ -51,12 +54,14 @@ const CreateMissingKeysAddressModal = ({ onClose, member, addresses, organizatio
     const processMember = async () => {
         const encryptionConfig = ENCRYPTION_CONFIGS[encryptionType];
 
-        const preparedMemberKeys = await prepareMemberKeys(member.Keys, organizationKey);
-        const { privateKey: primaryMemberKey } = preparedMemberKeys.find(({ Key: { Primary } }) => Primary === 1) || {};
+        const PrimaryKey = member.Keys.find(({ Primary }) => Primary === 1);
 
-        if (!primaryMemberKey) {
+        if (!PrimaryKey) {
             return createNotification({ text: c('Error').t`Member keys are not set up.` });
         }
+
+        const decryptedToken = await decryptMemberToken(PrimaryKey.Token, organizationKey);
+        const primaryMemberKey = await decryptPrivateKeyArmored(PrimaryKey.PrivateKey, decryptedToken);
 
         await Promise.all(
             addresses.map(async (address) => {
@@ -98,7 +103,7 @@ const CreateMissingKeysAddressModal = ({ onClose, member, addresses, organizatio
 
                     const { privateKey, privateKeyArmored } = await generateAddressKey({
                         email: address.Email,
-                        passphrase: authenticationStore.getPassword(),
+                        passphrase: authentication.getPassword(),
                         encryptionConfig
                     });
 
@@ -141,6 +146,8 @@ const CreateMissingKeysAddressModal = ({ onClose, member, addresses, organizatio
             loading={loading}
             {...rest}
         >
+            <Alert>{c('Info')
+                .t`Before you can start sending and receiving emails from your new addresses you need to create encryption keys for them.`}</Alert>
             <SelectEncryption encryptionType={encryptionType} setEncryptionType={setEncryptionType} />
             <Table>
                 <TableHeader

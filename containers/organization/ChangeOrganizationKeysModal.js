@@ -7,7 +7,7 @@ import {
     useLoading,
     useModals,
     useNotifications,
-    useAuthenticationStore,
+    useAuthentication,
     useStep,
     useApi,
     AuthModal,
@@ -18,18 +18,18 @@ import {
     Field,
     PasswordInput
 } from 'react-components';
+import { DEFAULT_ENCRYPTION_CONFIG, ENCRYPTION_CONFIGS } from 'proton-shared/lib/constants';
+import { generateOrganizationKeys, reEncryptOrganizationTokens } from 'proton-shared/lib/keys/organizationKeys';
+import { queryAddresses } from 'proton-shared/lib/api/members';
 
 import SelectEncryption from '../keys/addKey/SelectEncryption';
-import { generateOrganizationKeys, reEncryptOrganizationTokens } from './helpers/organizationKeysHelper';
-import { DEFAULT_ENCRYPTION_CONFIG, ENCRYPTION_CONFIGS } from 'proton-shared/lib/constants';
-import { queryAddresses } from 'proton-shared/lib/api/members';
 
 const ChangeOrganizationKeysModal = ({ onClose, organizationKey, hasOtherAdmins, nonPrivateMembers, ...rest }) => {
     const api = useApi();
     const { call } = useEventManager();
     const { createModal } = useModals();
     const { createNotification } = useNotifications();
-    const authenticationStore = useAuthenticationStore();
+    const authentication = useAuthentication();
 
     const { step, next, previous } = useStep();
     const [loading, withLoading] = useLoading();
@@ -50,7 +50,7 @@ const ChangeOrganizationKeysModal = ({ onClose, organizationKey, hasOtherAdmins,
             backupKeySalt,
             backupArmoredPrivateKey
         } = await generateOrganizationKeys({
-            keyPassword: authenticationStore.getPassword(),
+            keyPassword: authentication.getPassword(),
             backupPassword: newPassword,
             encryptionConfig: ENCRYPTION_CONFIGS[encryptionType]
         });
@@ -77,9 +77,11 @@ const ChangeOrganizationKeysModal = ({ onClose, organizationKey, hasOtherAdmins,
             BackupKeySalt: backupKeySalt,
             Tokens: tokens
         });
+
         await new Promise((resolve, reject) => {
             createModal(<AuthModal onClose={reject} onSuccess={resolve} config={apiConfig} />);
         });
+
         await call();
         createNotification({ text: c('Success').t`Keys updated` });
         onClose();

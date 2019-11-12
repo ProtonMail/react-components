@@ -8,21 +8,23 @@ import {
     Label,
     PasswordInput,
     useNotifications,
-    useAuthenticationStore,
+    useAuthentication,
     useEventManager,
     useModals,
     InlineLinkButton,
-    FormModal
+    FormModal,
+    GenericError
 } from 'react-components';
-import { getKeySalts } from 'proton-shared/lib/api/keys';
-import { decryptPrivateKey, encryptPrivateKey, getKeys } from 'pmcrypto';
+import { encryptPrivateKey, getKeys } from 'pmcrypto';
 import { computeKeyPassword } from 'pm-srp';
-import { createDecryptionError } from '../shared/DecryptionError';
+import { getKeySalts } from 'proton-shared/lib/api/keys';
+import { reformatAddressKey } from 'proton-shared/lib/keys/keys';
+import { decryptPrivateKeyArmored } from 'proton-shared/lib/keys/keys';
+import { findKeyByFingerprint } from 'proton-shared/lib/keys/keysReducer';
 
 import ReactivateKeysList, { STATUS } from './ReactivateKeysList';
 import DecryptFileKeyModal from '../shared/DecryptFileKeyModal';
-import { findKeyByFingerprint } from 'proton-shared/lib/keys/keysReducer';
-import { reactivateKeyHelper, reformatAddressKey } from '../shared/actionHelper';
+import { reactivateKeyHelper } from '../shared/actionHelper';
 
 const STEPS = {
     INFO: 0,
@@ -94,14 +96,12 @@ const getUploadedKeys = (allKeys) => {
 
 export const decryptArmoredKey = async ({ password, keySalt, armoredPrivateKey }) => {
     const keyPassword = keySalt ? await computeKeyPassword(password, keySalt) : password;
-    return decryptPrivateKey(armoredPrivateKey, keyPassword).catch(() => {
-        throw createDecryptionError();
-    });
+    return decryptPrivateKeyArmored(armoredPrivateKey, keyPassword);
 };
 
 const ReactivateKeysModal = ({ allKeys: initialAllKeys, onClose, ...rest }) => {
     const api = useApi();
-    const authenticationStore = useAuthenticationStore();
+    const authentication = useAuthentication();
     const { createNotification } = useNotifications();
     const { call } = useEventManager();
     const { createModal } = useModals();
@@ -117,7 +117,7 @@ const ReactivateKeysModal = ({ allKeys: initialAllKeys, onClose, ...rest }) => {
     };
 
     const startProcess = async () => {
-        const newPassword = authenticationStore.getPassword();
+        const newPassword = authentication.getPassword();
         const keySalts = keySaltsRef.current;
 
         for (const { Address, inactiveKeys, keys } of allKeys) {
@@ -137,7 +137,7 @@ const ReactivateKeysModal = ({ allKeys: initialAllKeys, onClose, ...rest }) => {
                         if (!oldKeyContainer) {
                             throw new Error(c('Error').t`Key does not exist`);
                         }
-                        if (!oldKeyContainer.Key.ID !== keyID) {
+                        if (oldKeyContainer.Key.ID !== keyID) {
                             throw new Error(c('Error').t`Key ID mismatch`);
                         }
 
@@ -167,7 +167,7 @@ const ReactivateKeysModal = ({ allKeys: initialAllKeys, onClose, ...rest }) => {
                             password: oldPassword
                         });
                         const privateKeyArmored = await encryptPrivateKey(oldPrivateKey, newPassword);
-                        const privateKey = await decryptPrivateKey(privateKeyArmored, newPassword);
+                        const privateKey = await decryptPrivateKeyArmored(privateKeyArmored, newPassword);
                         updatedKeyList = await reactivateKeyHelper({
                             api,
                             keyID,
@@ -356,7 +356,7 @@ const ReactivateKeysModal = ({ allKeys: initialAllKeys, onClose, ...rest }) => {
         if (step === STEPS.FAILURE) {
             return {
                 submit: c('Action').t`Ok`,
-                children: <Alert type="error">{c('Error').t`Something went wrong`}</Alert>
+                children: <GenericError />
             };
         }
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from 'react-testing-library';
+import { render } from '@testing-library/react';
 import readableTime from 'proton-shared/lib/helpers/readableTime';
 
 import Time from './Time';
@@ -10,7 +10,7 @@ describe('Time component', () => {
     it('should handle default when time is not set', () => {
         const { container } = render(<Time />);
 
-        expect(container.firstChild.textContent).toBe('January 1, 1970');
+        expect(container.firstChild.textContent).toBe('Jan 1, 1970');
     });
 
     it('should display time', () => {
@@ -20,8 +20,8 @@ describe('Time component', () => {
     });
 
     it('should support format', () => {
-        const { container } = render(<Time format="LLL">{unixDate}</Time>);
+        const { container } = render(<Time format="PPp">{unixDate}</Time>);
 
-        expect(container.firstChild.textContent).toBe(readableTime(unixDate, 'LLL'));
+        expect(container.firstChild.textContent).toBe(readableTime(unixDate, 'PPp'));
     });
 });

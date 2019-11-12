@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import {
+    Alert,
     Button,
     FormModal,
     ResetButton,
@@ -24,7 +25,7 @@ import NameEditor from '../../containers/filters/editor/Name';
 
 import './AddFilterModal.css';
 
-function AddFilterModal({ filter, type, mode, onEdit, ...props }) {
+function AddFilterModal({ filter, type, mode = 'create', onEdit = noop, ...props }) {
     const [filterModel] = useState(() => newFilter(filter, type));
     const [errors, setErrors] = useState({});
     const [model, setModel] = useState(filterModel);
@@ -38,12 +39,17 @@ function AddFilterModal({ filter, type, mode, onEdit, ...props }) {
     const reqUpdate = useApiWithoutResult(updateFilter);
 
     const create = async (filter) => {
-        const { Filter } = await reqCreate.request(filter);
-        call();
-        createNotification({
-            text: c('Notification').t`${Filter.Name} created`
-        });
-        props.onClose();
+        try {
+            const { Filter } = await reqCreate.request(filter);
+            createNotification({
+                text: c('Notification').t`${Filter.Name} created`
+            });
+        } finally {
+            // Some failed request will add the filter but in disabled mode
+            // So we have to refresh the list in both cases
+            call();
+            props.onClose();
+        }
     };
 
     const update = async (filter) => {
@@ -121,7 +127,7 @@ function AddFilterModal({ filter, type, mode, onEdit, ...props }) {
             return (
                 <>
                     <Button onClick={handleClickPreview}>{c('Action').t`Back`}</Button>
-                    <PrimaryButton loading={loading}>{c('Action').t`Save`}</PrimaryButton>
+                    <PrimaryButton type="submit" loading={loading}>{c('Action').t`Save`}</PrimaryButton>
                 </>
             );
         }
@@ -147,7 +153,7 @@ function AddFilterModal({ filter, type, mode, onEdit, ...props }) {
             noValidate={true}
             className={isPreview ? 'AddFilterModal-isPreview' : ''}
             title={
-                !isPreview ? c('Add Filter Modal').t`Custom Filter` : c('Add Filter Modal').t`Custom Filter (Preview)`
+                !isPreview ? c('Add filter modal').t`Custom filter` : c('Add filter modal').t`Custom filter (preview)`
             }
             onClose={props.onClose}
             footer={getFooter(reqCreate.loading || reqUpdate.loading)}
@@ -155,6 +161,10 @@ function AddFilterModal({ filter, type, mode, onEdit, ...props }) {
         >
             {type === 'complex' ? (
                 <div className="AddFilterModal-editor">
+                    <Alert learnMore="https://protonmail.com/support/knowledge-base/sieve-advanced-custom-filters/">{c(
+                        'Info'
+                    )
+                        .t`Custom filters work on all new emails, including incoming emails as well as sent emails. To find out how to write Sieve filters.`}</Alert>
                     <NameEditor error={errors.name} filter={filterModel} onChange={handleChangeName} />
                     <SieveEditor
                         filter={filterModel}
@@ -183,15 +193,11 @@ function AddFilterModal({ filter, type, mode, onEdit, ...props }) {
 }
 
 AddFilterModal.propTypes = {
+    filter: PropTypes.object,
     onEdit: PropTypes.func,
     onClose: PropTypes.func,
     mode: PropTypes.string,
     type: PropTypes.string
-};
-
-AddFilterModal.defaultProps = {
-    onEdit: noop,
-    mode: 'create'
 };
 
 export default AddFilterModal;

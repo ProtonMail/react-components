@@ -3,20 +3,23 @@ import PropTypes from 'prop-types';
 import { noop } from 'proton-shared/lib/helpers/function';
 import Awesomplete from 'awesomplete';
 import './Autocomplete.scss';
+import { classnames } from '../../helpers/component';
 
+/** @type any */
 const Autocomplete = ({
     children,
-    list,
-    inputValue,
-    placeholder,
-    className,
-    onKeyDown,
-    onSubmit,
-    onSelect,
-    onInputValueChange,
-    onOpen,
-    onClose,
-    onHighlight,
+    list = [],
+    inputValue = '',
+    placeholder = '',
+    className = '',
+    onKeyDown = noop,
+    onSubmit = noop,
+    onSelect = noop,
+    onInputValueChange = noop,
+    onOpen = noop,
+    onClose = noop,
+    onHighlight = noop,
+    minChars,
     ...rest
 }) => {
     const [awesomplete, setAwesomplete] = useState();
@@ -36,12 +39,20 @@ const Autocomplete = ({
         onSelect(text.value, text.label);
     };
 
-    const inputStyleModifier = children.length > 0 ? 'pm-field--tiny' : '';
+    const handleFocus = () => {
+        if (inputValue.length >= minChars && awesomplete) {
+            awesomplete.evaluate();
+        }
+    };
+
+    const childrenCount = React.Children.count(children);
+    const inputStyleModifier = childrenCount > 0 ? 'pm-field--tiny' : '';
     const dropdownListClasses = 'bg-white w100 bordered-container m0 p0';
 
     useEffect(() => {
         const awesompleteInstance = new Awesomplete(inputRef.current, {
             container: () => containerRef.current,
+            minChars,
             ...rest
         });
 
@@ -66,15 +77,18 @@ const Autocomplete = ({
     useEffect(() => {
         if (awesomplete) {
             awesomplete.list = list;
-            awesomplete.evaluate();
+
+            if (awesomplete.isOpened) {
+                awesomplete.evaluate();
+            }
         }
     }, [awesomplete, list]);
 
     return (
-        <div className={'autocomplete awesomplete w100'.concat(className)} onSubmit={handleSubmit}>
+        <div className={classnames(['autocomplete awesomplete w100', className])} onSubmit={handleSubmit}>
             <div className="autocomplete-container" ref={containerRef}>
-                <div className={`flex pm-field ${inputStyleModifier}`}>
-                    {children.length > 0 && <div className="flex">{children}</div>}
+                <div className={classnames(['flex pm-field', inputStyleModifier])}>
+                    {childrenCount > 0 && <div className="flex">{children}</div>}
 
                     <input
                         value={inputValue}
@@ -87,6 +101,7 @@ const Autocomplete = ({
                         ref={inputRef}
                         onBlur={handleSubmit}
                         onKeyDown={onKeyDown}
+                        onFocus={handleFocus}
                     />
                 </div>
                 {/* <ul> injected here by awesomplete */}
@@ -96,7 +111,7 @@ const Autocomplete = ({
 };
 
 Autocomplete.propTypes = {
-    children: PropTypes.arrayOf(PropTypes.node),
+    children: PropTypes.node,
     list: PropTypes.arrayOf(PropTypes.any),
     placeholder: PropTypes.string,
     className: PropTypes.string,
@@ -113,21 +128,6 @@ Autocomplete.propTypes = {
     maxItems: PropTypes.number,
     filter: PropTypes.func,
     data: PropTypes.func
-};
-
-Autocomplete.defaultProps = {
-    children: [],
-    list: [],
-    placeholder: '',
-    inputValue: '',
-    className: '',
-    onInputValueChange: noop,
-    onKeyDown: noop,
-    onSubmit: noop,
-    onSelect: noop,
-    onOpen: noop,
-    onClose: noop,
-    onHighlight: noop
 };
 
 export default Autocomplete;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { c } from 'ttag';
 import {
     Alert,
@@ -16,35 +16,16 @@ import {
 import { ADDRESS_STATUS, RECEIVE_ADDRESS, SEND_ADDRESS } from 'proton-shared/lib/constants';
 
 import EditAddressModal from './EditAddressModal';
-import PMSignatureToggle from './PMSignatureToggle';
+import PMSignatureField from './PMSignatureField';
 
 const IdentitySection = () => {
-    const [addresses = [], loading] = useAddresses();
+    const [addresses, loading] = useAddresses();
+    const [addressIndex, setAddressIndex] = useState(0);
     const { createModal } = useModals();
-    const [address, setAddress] = useState();
-
-    useEffect(() => {
-        if (addresses.length) {
-            const [address] = addresses;
-            setAddress(address);
-        }
-    }, [loading]);
-
-    useEffect(() => {
-        if (!addresses.length || !address) {
-            return;
-        }
-        // Update the address when the event manager triggers
-        const newAddress = addresses.find(({ ID }) => ID === address.ID);
-        if (newAddress) {
-            return setAddress(newAddress);
-        }
-        setAddress(addresses[0]);
-    }, [addresses]);
 
     const title = <SubTitle>{c('Title').t`Display name & signature`}</SubTitle>;
 
-    if (loading || !address) {
+    if (loading && !Array.isArray(addresses)) {
         return (
             <>
                 {title}
@@ -53,6 +34,16 @@ const IdentitySection = () => {
         );
     }
 
+    if (!addresses.length) {
+        return (
+            <>
+                <Alert>{c('Info').t`No addresses exist`}</Alert>
+            </>
+        );
+    }
+
+    const address = addresses[addressIndex];
+
     const options = addresses
         .filter(
             ({ Status, Receive, Send }) =>
@@ -60,16 +51,21 @@ const IdentitySection = () => {
                 Receive === RECEIVE_ADDRESS.RECEIVE_YES &&
                 Send === SEND_ADDRESS.SEND_YES
         )
-        .map(({ ID: value, Email: text }) => ({ text, value }));
+        .map(({ Email: text }, i) => ({ text, value: i }));
 
-    const handleChange = ({ target }) => setAddress(addresses.find(({ ID }) => ID === target.value));
+    const handleChange = ({ target }) => {
+        setAddressIndex(target.value);
+    };
 
-    const handleOpenModal = () => createModal(<EditAddressModal address={address} />);
+    const handleOpenModal = () => {
+        createModal(<EditAddressModal address={address} />);
+    };
 
     return (
         <>
             {title}
-            <Alert>{c('Info').t`TODO`}</Alert>
+            <Alert learnMore="https://protonmail.com/support/knowledge-base/display-name-and-signature/">{c('Info')
+                .t`Click the Edit button to personalize your email address. Your Display Name appears in the From field when people receive an email from you. Your Signature is appended at the bottom of your messages. Or leave each field empty for more privacy.`}</Alert>
             <Row>
                 <Label htmlFor="addressSelector">{c('Label').t`Select an address`}</Label>
                 <Field>
@@ -81,8 +77,10 @@ const IdentitySection = () => {
                     <span className="mr0-5">{c('Label').t`Display name`}</span>
                     <Info url="https://protonmail.com/support/knowledge-base/display-name-and-signature/" />
                 </Label>
-                <Field>
-                    <span className="mt0-5">{address.DisplayName}</span>
+                <Field className="bordered-container">
+                    <div className="pl1 pr1 pt0-5 pb0-5 ellipsis" title={address.DisplayName}>
+                        {address.DisplayName}
+                    </div>
                 </Field>
                 <span className="ml1">
                     <Button className="pm-button--primary" onClick={handleOpenModal}>{c('Action').t`Edit`}</Button>
@@ -90,8 +88,15 @@ const IdentitySection = () => {
             </Row>
             <Row>
                 <Label>{c('Label').t`Signature`}</Label>
-                <Field>
-                    <div className="bordered-container p1" dangerouslySetInnerHTML={{ __html: address.Signature }} />
+                <Field className="bordered-container">
+                    {address.Signature ? (
+                        <div
+                            className="break pl1 pr1 pt0-5 pb0-5"
+                            dangerouslySetInnerHTML={{ __html: address.Signature }}
+                        />
+                    ) : (
+                        <div className="pl1 pr1 pt0-5 pb0-5">{c('Info').t`Not set`}</div>
+                    )}
                 </Field>
                 <span className="ml1">
                     <Button className="pm-button--primary" onClick={handleOpenModal}>{c('Action').t`Edit`}</Button>
@@ -99,9 +104,7 @@ const IdentitySection = () => {
             </Row>
             <Row>
                 <Label htmlFor="pmSignatureToggle">{c('Label').t`ProtonMail signature`}</Label>
-                <Field>
-                    <PMSignatureToggle id="pmSignatureToggle" />
-                </Field>
+                <PMSignatureField id="pmSignatureToggle" />
             </Row>
         </>
     );

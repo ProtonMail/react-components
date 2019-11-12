@@ -8,13 +8,16 @@ import LabelSortableList from './LabelSortableList';
 import ActionsLabelToolbar from './ActionsLabelToolbar';
 
 function LabelsSection() {
-    const [list = [], loading] = useLabels();
+    const [list, loading] = useLabels();
     const { call } = useEventManager();
     const orderRequest = useApiWithoutResult(orderLabels);
 
-    const [labels, setLabels] = useState(list);
+    const [labels, setLabels] = useState(() => list || []);
 
     useEffect(() => {
+        if (!Array.isArray(list)) {
+            return;
+        }
         setLabels(list);
     }, [list]);
 
@@ -38,7 +41,11 @@ function LabelsSection() {
     return (
         <>
             <SubTitle>{c('LabelSettings').t`Folders and labels`}</SubTitle>
-            <Alert type="info" className="mt1 mb1" learnMore="TODO">
+            <Alert
+                type="info"
+                className="mt1 mb1"
+                learnMore="https://protonmail.com/support/knowledge-base/creating-folders/"
+            >
                 {c('LabelSettings')
                     .t`Multiple labels can be applied to a single message, but a message can only be in a single folder.`}
             </Alert>
@@ -49,12 +56,7 @@ function LabelsSection() {
             {loading ? (
                 <Loader />
             ) : labels.length ? (
-                <LabelSortableList
-                    getContainer={getScrollContainer}
-                    pressDelay={200}
-                    items={labels}
-                    onSortEnd={onSortEnd}
-                />
+                <LabelSortableList getContainer={getScrollContainer} items={labels} onSortEnd={onSortEnd} />
             ) : (
                 <Alert>{c('LabelSettings').t`No labels/folders available`}</Alert>
             )}

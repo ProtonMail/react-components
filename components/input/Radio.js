@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Radio = ({ id, children, className, cypressTag, ...rest }) => {
+
+const Radio = ({ id, children, className = 'inline-flex', cypressTag, ...rest }) => {
     return (
         <label htmlFor={id} className={className}>
             <input id={id} type="radio" className="pm-radio" {...rest} />

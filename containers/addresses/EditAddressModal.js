@@ -15,6 +15,10 @@ import {
     useEventManager
 } from 'react-components';
 
+const EMPTY_VALUES = [/^(<div><br><\/div>)+$/, /^(<div>\s*<\/div>)+$/];
+
+const formatSignature = (value) => (EMPTY_VALUES.some((regex) => regex.test(value)) ? '' : value);
+
 const EditAddressModal = ({ onClose, address, ...rest }) => {
     const api = useApi();
     const { call } = useEventManager();
@@ -30,7 +34,9 @@ const EditAddressModal = ({ onClose, address, ...rest }) => {
     const handleSignature = (value) => updateModel({ ...model, signature: value });
 
     const handleSubmit = async () => {
-        await api(updateAddress(address.ID, { DisplayName: model.displayName, Signature: model.signature }));
+        await api(
+            updateAddress(address.ID, { DisplayName: model.displayName, Signature: formatSignature(model.signature) })
+        );
         await call();
         onClose();
         createNotification({ text: c('Success').t`Address updated` });
@@ -41,14 +47,13 @@ const EditAddressModal = ({ onClose, address, ...rest }) => {
             onClose={onClose}
             onSubmit={() => withLoading(handleSubmit())}
             title={c('Title').t`Edit address`}
-            close={c('Action').t`Cancel`}
             submit={c('Action').t`Save`}
             loading={loading}
             {...rest}
         >
             <Row>
                 <Label>{c('Label').t`Address`}</Label>
-                <Field>{address.Email}</Field>
+                <Field className="pt0-5">{address.Email}</Field>
             </Row>
             <Row>
                 <Label>{c('Label').t`Display name`}</Label>
@@ -57,13 +62,12 @@ const EditAddressModal = ({ onClose, address, ...rest }) => {
                         value={model.displayName}
                         placeholder={c('Placeholder').t`Choose display name`}
                         onChange={handleDisplayName}
-                        required
                     />
                 </Field>
             </Row>
             <Row>
                 <Label>{c('Label').t`Signature`}</Label>
-                <Field>
+                <Field className="pm-field-container--full">
                     <RichTextEditor value={model.signature} onChange={handleSignature} />
                 </Field>
             </Row>

@@ -1,32 +1,55 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { Alert, Price, Button, useApiResult } from 'react-components';
+import { Alert, Price, Button, Loader, useConfig, useApi, useLoading } from 'react-components';
 import { createBitcoinPayment } from 'proton-shared/lib/api/payments';
-import { MIN_BITCOIN_AMOUNT, BTC_DONATION_ADDRESS } from 'proton-shared/lib/constants';
+import { MIN_BITCOIN_AMOUNT, BTC_DONATION_ADDRESS, CLIENT_TYPES } from 'proton-shared/lib/constants';
 
 import BitcoinQRCode from './BitcoinQRCode';
 import BitcoinDetails from './BitcoinDetails';
 
+const { VPN } = CLIENT_TYPES;
+
 const Bitcoin = ({ amount, currency, type }) => {
-    const { result = {}, request, error = {} } = useApiResult(() => createBitcoinPayment(amount, currency), []);
-    const { AmountBitcoin, Address } = result;
-    const address = type === 'donation' ? BTC_DONATION_ADDRESS : Address;
+    const api = useApi();
+    const { CLIENT_TYPE } = useConfig();
+    const [loading, withLoading] = useLoading();
+    const [error, setError] = useState(false);
+    const [amountBitcoin, setAmountBitcoin] = useState();
+    const [address, setAddress] = useState();
+
+    const request = async () => {
+        setError(false);
+        try {
+            const { AmountBitcoin, Address } = await api(createBitcoinPayment(amount, currency));
+
+            setAmountBitcoin(AmountBitcoin);
+            setAddress(type === 'donation' ? BTC_DONATION_ADDRESS : Address);
+        } catch (error) {
+            setError(true);
+        }
+    };
+
+    useEffect(() => {
+        if (amount > MIN_BITCOIN_AMOUNT) {
+            withLoading(request());
+        }
+    }, [amount]);
 
     if (amount < MIN_BITCOIN_AMOUNT) {
         const i18n = (amount) => c('Info').jt`Amount below minimum. (${amount})`;
         return <Alert type="warning">{i18n(<Price currency={currency}>{amount}</Price>)}</Alert>;
     }
 
-    if (!AmountBitcoin || !Address) {
-        return null;
+    if (loading) {
+        return <Loader />;
     }
 
-    if (error.Error) {
+    if (error || !amountBitcoin || !address) {
         return (
             <>
                 <Alert type="error">{c('Error').t`Error connecting to the Bitcoin API.`}</Alert>
-                <Button onClick={request}>{c('Action').t`Try again`}</Button>
+                <Button onClick={() => withLoading(request())}>{c('Action').t`Try again`}</Button>
             </>
         );
     }
@@ -34,14 +57,20 @@ const Bitcoin = ({ amount, currency, type }) => {
     return (
         <>
             <figure role="group">
-                <BitcoinQRCode className="mb1 w50 center" amount={AmountBitcoin} address={address} type={type} />
-                <BitcoinDetails amount={AmountBitcoin} address={address} />
+                <BitcoinQRCode className="mb1 w50 center" amount={amountBitcoin} address={address} type={type} />
+                <BitcoinDetails amount={amountBitcoin} address={address} />
             </figure>
             {type === 'invoice' ? (
                 <Alert>{c('Info')
                     .t`Bitcoin transactions can take some time to be confirmed (up to 24 hours). Once confirmed, we will add credits to your account. After transaction confirmation, you can pay your invoice with the credits.`}</Alert>
             ) : (
-                <Alert learnMore="https://protonmail.com/support/knowledge-base/paying-with-bitcoin">{c('Info')
+                <Alert
+                    learnMore={
+                        CLIENT_TYPE === VPN
+                            ? 'https://protonvpn.com/support/vpn-bitcoin-payments/'
+                            : 'https://protonmail.com/support/knowledge-base/paying-with-bitcoin'
+                    }
+                >{c('Info')
                     .t`After making your Bitcoin payment, please follow the instructions below to upgrade.`}</Alert>
             )}
         </>

@@ -1,8 +1,9 @@
 import React from 'react';
 import { c } from 'ttag';
 import { Alert, Button, Block, Loader, SubTitle, useUser, useModals, useUserKeys } from 'react-components';
+import { getPrimaryKey } from 'proton-shared/lib/keys/keys';
 
-import { convertKey, getPrimaryKey } from './shared/helper';
+import { convertKey } from './shared/helper';
 import { ACTIONS } from './KeysActions';
 import ReactivateKeysModal from './reactivateKeys/ReactivateKeysModal';
 import ExportPublicKeyModal from './exportKey/ExportPublicKeyModal';
@@ -39,7 +40,7 @@ const UserKeysSections = () => {
 
     const handleAction = async (action, keyIndex) => {
         const targetKey = userKeysList[keyIndex];
-        const { privateKey } = targetKey;
+        const { privateKey, publicKey } = targetKey;
 
         if (action === ACTIONS.REACTIVATE) {
             const userKeysToReactivate = [
@@ -52,7 +53,7 @@ const UserKeysSections = () => {
             return createModal(<ReactivateKeysModal allKeys={userKeysToReactivate} />);
         }
         if (action === ACTIONS.EXPORT_PUBLIC_KEY) {
-            return createModal(<ExportPublicKeyModal name={userName} privateKey={privateKey} />);
+            return createModal(<ExportPublicKeyModal name={userName} publicKey={publicKey} />);
         }
         if (action === ACTIONS.EXPORT_PRIVATE_KEY) {
             return createModal(<ExportPrivateKeyModal name={userName} privateKey={privateKey} />);

@@ -11,12 +11,14 @@ import {
     useModals,
     useSubscription,
     useOrganization,
-    useUser
+    useUser,
+    useAddresses
 } from 'react-components';
 import { CYCLE, PLAN_NAMES, COUPON_CODES } from 'proton-shared/lib/constants';
 import humanSize from 'proton-shared/lib/helpers/humanSize';
+import { isBundleEligible } from 'proton-shared/lib/helpers/subscription';
 
-import { formatPlans, toPlanNames, isBundleEligible } from './helpers';
+import { formatPlans, toPlanNames } from './helpers';
 import CouponDiscountBadge from '../CouponDiscountBadge';
 import SubscriptionModal from './SubscriptionModal';
 
@@ -30,7 +32,8 @@ const getCyclesi18n = () => ({
 });
 
 const SubscriptionSection = ({ permission }) => {
-    const [{ hasPaidMail, hasPaidVpn, isPaid }] = useUser();
+    const [{ hasPaidMail, hasPaidVpn }] = useUser();
+    const [addresses = [], loadingAddresses] = useAddresses();
     const [subscription, loadingSubscription] = useSubscription();
     const { createModal } = useModals();
     const [
@@ -43,17 +46,27 @@ const SubscriptionSection = ({ permission }) => {
             MaxAddresses,
             UsedMembers,
             MaxMembers,
-            UsedVPN,
             MaxVPN
         } = {},
         loadingOrganization
     ] = useOrganization();
 
+    const subTitle = <SubTitle>{c('Title').t`Subscription`}</SubTitle>;
+
     if (!permission) {
         return (
             <>
-                <SubTitle>{c('Title').t`Subscription`}</SubTitle>
+                {subTitle}
                 <Alert>{c('Info').t`No subscription yet`}</Alert>
+            </>
+        );
+    }
+
+    if (loadingSubscription || loadingOrganization || loadingAddresses) {
+        return (
+            <>
+                {subTitle}
+                <Loader />
             </>
         );
     }
@@ -64,50 +77,60 @@ const SubscriptionSection = ({ permission }) => {
     if (subscription.isManagedByMozilla) {
         return (
             <>
-                <SubTitle>{c('Title').t`Subscription`}</SubTitle>
+                {subTitle}
                 <MozillaInfoPanel />
-            </>
-        );
-    }
-
-    if (loadingSubscription || loadingOrganization) {
-        return (
-            <>
-                <SubTitle>{c('Title').t`Subscription`}</SubTitle>
-                <Loader />
             </>
         );
     }
 
     const { mailPlan, vpnPlan } = formatPlans(Plans);
     const { Name: mailPlanName } = mailPlan || {};
+    const { Name: vpnPlanName } = vpnPlan || {};
     const canRemoveCoupon = CouponCode && CouponCode !== BUNDLE;
     const i18n = getCyclesi18n();
 
+    /**
+     * Open subscription modal with criteria
+     * @param {String} action remove-coupon, yearly, upgrade, update
+     */
     const handleModal = (action = '') => () => {
         const coupon = action === 'remove-coupon' ? '' : CouponCode ? CouponCode : undefined; // CouponCode can equals null
         const cycle = action === 'yearly' ? YEARLY : Cycle;
-        const plansMap = isPaid ? toPlanNames(subscription.Plans) : { plus: 1, vpnplus: 1 };
+        const plansMap = action === 'upgrade' ? { plus: 1, vpnplus: 1 } : toPlanNames(subscription.Plans);
 
-        createModal(<SubscriptionModal plansMap={plansMap} coupon={coupon} currency={Currency} cycle={cycle} />);
+        createModal(
+            <SubscriptionModal
+                subscription={subscription}
+                plansMap={plansMap}
+                coupon={coupon}
+                currency={Currency}
+                cycle={cycle}
+            />
+        );
     };
 
     return (
         <>
-            <SubTitle>{c('Title').t`Subscription`}</SubTitle>
+            {subTitle}
             <div className="shadow-container">
                 <div className="p1">
                     <div className="flex-autogrid onmobile-flex-column w100 mb1">
                         <div className="flex-autogrid-item">ProtonMail plan</div>
                         <div className="flex-autogrid-item">
-                            <strong>{hasPaidMail ? PLAN_NAMES[mailPlanName] : c('Plan').t`Free`}</strong>
+                            <strong>
+                                {hasPaidMail
+                                    ? PLAN_NAMES[mailPlanName]
+                                    : addresses.length
+                                    ? c('Plan').t`Free`
+                                    : c('Info').t`Not activated`}
+                            </strong>
                         </div>
                         <div className="flex-autogrid-item">
                             {bundleEligible &&
                                 c('Info').t`Combine paid ProtonMail and ProtonVPN and get a 20% discount on both`}
                         </div>
                         <div className="flex-autogrid-item alignright">
-                            <SmallButton onClick={handleModal()}>
+                            <SmallButton onClick={handleModal(hasPaidMail ? 'update' : 'upgrade')}>
                                 {hasPaidMail ? c('Action').t`Update` : c('Action').t`Upgrade`}
                             </SmallButton>
                         </div>
@@ -161,11 +184,9 @@ const SubscriptionSection = ({ permission }) => {
                                 <div className="flex-autogrid onmobile-flex-column w100 mb1">
                                     <div className="flex-autogrid-item pl1">{c('Label').t`VPN connections`}</div>
                                     <div className="flex-autogrid-item">
-                                        <strong>{`${UsedVPN}/${MaxVPN}`}</strong>
+                                        <strong>{`${MaxVPN}`}</strong>
                                     </div>
-                                    <div className="flex-autogrid-item">
-                                        <Progress value={(UsedVPN * 100) / MaxVPN} />
-                                    </div>
+                                    <div className="flex-autogrid-item" />
                                     <div className="flex-autogrid-item alignright" />
                                 </div>
                             ) : null}
@@ -175,28 +196,26 @@ const SubscriptionSection = ({ permission }) => {
                         <div className="flex-autogrid onmobile-flex-column w100 mb1">
                             <div className="flex-autogrid-item">ProtonVPN plan</div>
                             <div className="flex-autogrid-item">
-                                <strong>{hasPaidVpn ? PLAN_NAMES[vpnPlan.Name] : c('Plan').t`Free`}</strong>
+                                <strong>{hasPaidVpn ? PLAN_NAMES[vpnPlanName] : c('Plan').t`Free`}</strong>
                             </div>
                             <div className="flex-autogrid-item">
                                 {bundleEligible &&
                                     c('Info').t`Combine paid ProtonMail and ProtonVPN and get a 20% discount on both`}
                             </div>
                             <div className="flex-autogrid-item alignright">
-                                <SmallButton onClick={handleModal()}>
+                                <SmallButton onClick={handleModal(hasPaidVpn ? 'update' : 'upgrade')}>
                                     {hasPaidVpn ? c('Action').t`Update` : c('Action').t`Upgrade`}
                                 </SmallButton>
                             </div>
                         </div>
                     )}
-                    {hasPaidVpn ? (
+                    {hasPaidVpn && mailPlanName !== 'visionary' ? (
                         <div className="flex-autogrid onmobile-flex-column w100 mb1">
                             <div className="flex-autogrid-item pl1">{c('Label').t`VPN connections`}</div>
                             <div className="flex-autogrid-item">
-                                <strong>{`${UsedVPN}/${MaxVPN}`}</strong>
+                                <strong>{`${MaxVPN}`}</strong>
                             </div>
-                            <div className="flex-autogrid-item">
-                                <Progress value={(UsedVPN * 100) / MaxVPN} />
-                            </div>
+                            <div className="flex-autogrid-item" />
                             <div className="flex-autogrid-item alignright" />
                         </div>
                     ) : null}

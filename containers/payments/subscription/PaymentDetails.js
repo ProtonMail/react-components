@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { Price, Info, useToggle, SmallButton } from 'react-components';
-import { CYCLE } from 'proton-shared/lib/constants';
+import { Price, Info, useToggle, SmallButton, useConfig } from 'react-components';
+import { CYCLE, CLIENT_TYPES } from 'proton-shared/lib/constants';
 import GiftCodeForm from './GiftCodeForm';
 
 const { MONTHLY, YEARLY, TWO_YEARS } = CYCLE;
+const { VPN } = CLIENT_TYPES;
 
 const getBillingCycleI18N = () => ({
     [MONTHLY]: c('Info').t`monthly billing`,
@@ -14,20 +15,25 @@ const getBillingCycleI18N = () => ({
 });
 
 const PaymentDetails = ({ check, model, onChange }) => {
+    const { CLIENT_TYPE } = useConfig();
     const { state, toggle } = useToggle();
     const i18n = getBillingCycleI18N();
 
     return (
         <>
             <div className="uppercase bold small mb1">{c('Title').t`Payment details`}</div>
-            <div className="flex flex-spacebetween mb1 pb1 border-bottom">
-                <div className="bold">
-                    {c('Label').t`Total`} ({i18n[model.cycle]})
+            {check.Credit || check.Proration || check.Gift ? (
+                <div className="flex flex-spacebetween mb1 pb1 border-bottom">
+                    <div className="bold">
+                        {c('Label').t`Total`} ({i18n[model.cycle]})
+                    </div>
+                    <div className="bold">
+                        <Price currency={model.currency}>
+                            {check.AmountDue - (check.Credit + check.Proration + check.Gift)}
+                        </Price>
+                    </div>
                 </div>
-                <div className="bold">
-                    <Price currency={model.currency}>{check.Amount}</Price>
-                </div>
-            </div>
+            ) : null}
             {check.Credit ? (
                 <div className="flex flex-spacebetween mb1 pb1 border-bottom">
                     <div>{c('Label').t`Credits`}</div>
@@ -42,7 +48,13 @@ const PaymentDetails = ({ check, model, onChange }) => {
                 <div className="flex flex-spacebetween mb1 pb1 border-bottom">
                     <div>
                         <span className="mr0-5">{c('Label').t`Proration`}</span>
-                        <Info url="https://protonmail.com/support/knowledge-base/credit-proration/" />
+                        <Info
+                            url={
+                                CLIENT_TYPE === VPN
+                                    ? 'https://protonvpn.com/support/vpn-credit-proration/'
+                                    : 'https://protonmail.com/support/knowledge-base/credit-proration/'
+                            }
+                        />
                     </div>
                     <div>
                         <Price className="color-global-success" currency={model.currency}>

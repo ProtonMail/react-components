@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import {
     Alert,
+    GenericError,
     PasswordInput,
     TwoFactorInput,
     Row,
@@ -11,7 +12,7 @@ import {
     Icon,
     FormModal,
     Loader,
-    useAuthenticationStore,
+    useAuthentication,
     useEventManager,
     useAddresses,
     useUser,
@@ -24,15 +25,17 @@ import {
     useApi
 } from 'react-components';
 import { lockSensitiveSettings } from 'proton-shared/lib/api/user';
-import { PASSWORD_WRONG_ERROR } from 'proton-shared/lib/api/auth';
+import { getInfo, PASSWORD_WRONG_ERROR } from 'proton-shared/lib/api/auth';
 import {
     handleUnlock,
     handleChangeMailboxPassword,
     handleChangeLoginPassword,
     handleChangeOnePassword,
-    generateKeySaltAndPassword,
     getArmoredPrivateKeys
 } from './changePasswordHelper';
+import { generateKeySaltAndPassphrase } from 'proton-shared/lib/keys/keys';
+import { hasBit } from 'proton-shared/lib/helpers/bitset';
+import { TWO_FA_FLAGS } from 'proton-shared/lib/constants';
 
 export const MODES = {
     CHANGE_ONE_PASSWORD_MODE: 1,
@@ -45,16 +48,34 @@ export const MODES = {
 const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
     const api = useApi();
     const { call } = useEventManager();
-    const authenticationStore = useAuthenticationStore();
+    const authentication = useAuthentication();
     const { createNotification } = useNotifications();
 
     const [User] = useUser();
-    const [{ '2FA': { Enabled } } = {}, loadingUserSettings] = useUserSettings();
+    const [{ '2FA': userAuth2FA } = {}, loadingUserSettings] = useUserSettings();
     const [Addresses, loadingAddresses] = useAddresses();
-    const [Organization, loadingOrganization] = useOrganization();
+    const [organization, loadingOrganization] = useOrganization();
+    const [organizationKey, loadingOrganizationKey] = useOrganizationKey(organization);
     const [userKeysList, loadingUserKeys] = useUserKeys(User);
-    const [addressesKeysMap, loadingAddressesKeys] = useAddressesKeys(User, Addresses);
-    const [organizationKey, loadingOrganizationKey] = useOrganizationKey(Organization);
+    const [addressesKeysMap, loadingAddressesKeys] = useAddressesKeys(User, Addresses, userKeysList);
+
+    const { isSubUser } = User;
+    const [adminAuthTwoFA, setAdminAuthTwoFA] = useState();
+
+    useEffect(() => {
+        if (!isSubUser) {
+            return;
+        }
+        (async () => {
+            const infoResult = await api(getInfo());
+            /**
+             * There is a special case for admins logged into non-private users. User settings returns two factor
+             * information for the non-private user, and not for the admin to which the session actually belongs.
+             * So we query auth info to get the information about the admin.
+             */
+            setAdminAuthTwoFA(infoResult['2FA']);
+        })();
+    }, []);
 
     const [inputs, setInputs] = useState({
         oldPassword: '',
@@ -89,6 +110,10 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
         }
     };
 
+    const notifySuccess = () => {
+        createNotification({ text: c('Success').t`Password updated` });
+    };
+
     const setInput = (object) => setInputs((oldState) => ({ ...oldState, ...object }));
     const resetErrors = () => setErrors({});
 
@@ -108,9 +133,10 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
                         setLoading(true);
 
                         await handleUnlock({ api, oldPassword: inputs.oldPassword, totp: inputs.totp });
-                        await handleChangeLoginPassword({ api, newPassword: inputs.newPassword, totp: inputs.totp });
+                        await handleChangeLoginPassword({ api, newPassword: inputs.newPassword });
                         await api(lockSensitiveSettings());
 
+                        notifySuccess();
                         onClose();
                     } catch (e) {
                         setLoading(false);
@@ -141,7 +167,7 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
                         setLoading(true);
 
                         await handleUnlock({ api, oldPassword: inputs.oldPassword, totp: inputs.totp });
-                        await handleChangeLoginPassword({ api, newPassword: inputs.newPassword, totp: inputs.totp });
+                        await handleChangeLoginPassword({ api, newPassword: inputs.newPassword });
 
                         setSecondPhase(true);
                         setInputs({ newPassword: '', confirmPassword: '' });
@@ -167,7 +193,9 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
                         resetErrors();
                         setLoading(true);
 
-                        const { keyPassword, keySalt } = await generateKeySaltAndPassword(inputs.newPassword);
+                        const { passphrase: keyPassword, salt: keySalt } = await generateKeySaltAndPassphrase(
+                            inputs.newPassword
+                        );
                         const { armoredOrganizationKey, armoredKeys } = await getArmoredPrivateKeys({
                             userKeysList,
                             addressesKeysMap,
@@ -175,10 +203,11 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
                             keyPassword
                         });
                         await handleChangeMailboxPassword({ api, keySalt, armoredOrganizationKey, armoredKeys });
-                        authenticationStore.setPassword(keyPassword);
+                        authentication.setPassword(keyPassword);
                         await api(lockSensitiveSettings());
                         await call();
 
+                        notifySuccess();
                         onClose();
                     } catch (e) {
                         setLoading(false);
@@ -206,7 +235,9 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
                 resetErrors();
                 setLoading(true);
 
-                const { keyPassword, keySalt } = await generateKeySaltAndPassword(inputs.newPassword);
+                const { passphrase: keyPassword, salt: keySalt } = await generateKeySaltAndPassphrase(
+                    inputs.newPassword
+                );
                 const { armoredOrganizationKey, armoredKeys } = await getArmoredPrivateKeys({
                     userKeysList,
                     addressesKeysMap,
@@ -227,10 +258,11 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
                         totp: inputs.totp
                     });
                 }
-                authenticationStore.setPassword(keyPassword);
+                authentication.setPassword(keyPassword);
                 await api(lockSensitiveSettings());
                 await call();
 
+                notifySuccess();
                 onClose();
             } catch (e) {
                 setLoading(false);
@@ -282,13 +314,14 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
         }
     })();
 
-    const isLoadingKeys =
+    const isLoading =
         loadingAddresses ||
         loadingUserSettings ||
         loadingOrganization ||
         loadingOrganizationKey ||
         loadingUserKeys ||
-        loadingAddressesKeys;
+        loadingAddressesKeys ||
+        (isSubUser && adminAuthTwoFA === -1);
 
     const eye = <Icon key="0" name="read" />;
     const alert = (
@@ -308,9 +341,10 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
         </>
     );
 
-    const hasTotp = !!Enabled;
+    const twoFAEnabledFlag = isSubUser ? adminAuthTwoFA && adminAuthTwoFA.Enabled : userAuth2FA.Enabled;
+    const hasTotp = hasBit(twoFAEnabledFlag, TWO_FA_FLAGS.TOTP);
 
-    const children = isLoadingKeys ? (
+    const children = isLoading ? (
         <Loader />
     ) : (
         <>
@@ -334,14 +368,14 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
             )}
             {!isSecondPhase && hasTotp && (
                 <Row>
-                    <Label htmlFor="totp">{c('Label').t`Two factor code`}</Label>
+                    <Label htmlFor="totp">{c('Label').t`Two-factor code`}</Label>
                     <Field>
                         <TwoFactorInput
                             id="totp"
                             value={inputs.totp}
                             onChange={({ target: { value } }) => setInput({ totp: value })}
                             error={errors.loginError}
-                            placeholder={c('Placeholder').t`Two factor code`}
+                            placeholder={c('Placeholder').t`Two-factor code`}
                             required
                         />
                     </Field>
@@ -352,6 +386,7 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
                 <Field>
                     <PasswordInput
                         id="newPassword"
+                        key={`${isSecondPhase}${labels.newPassword}`}
                         value={inputs.newPassword}
                         onChange={({ target: { value } }) => setInput({ newPassword: value })}
                         error={errors.confirmPasswordError}
@@ -366,6 +401,7 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
                 <Field>
                     <PasswordInput
                         id="confirmPassword"
+                        key={`${isSecondPhase}${labels.confirmPassword}`}
                         value={inputs.confirmPassword}
                         onChange={({ target: { value } }) => setInput({ confirmPassword: value })}
                         error={errors.confirmPasswordError}
@@ -388,7 +424,7 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
                 onSubmit={onClose}
                 {...rest}
             >
-                <Alert type="error">{c('Error').t`Something went wrong`}</Alert>
+                <GenericError />
             </FormModal>
         );
     }
@@ -397,7 +433,7 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }) => {
         <FormModal
             close={c('Action').t`Close`}
             submit={c('Action').t`Save`}
-            loading={loading || isLoadingKeys}
+            loading={loading || isLoading}
             onClose={onClose}
             {...modalProps}
             {...rest}

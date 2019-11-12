@@ -14,12 +14,16 @@ import {
     useUserSettings,
     useLoading,
     useEventManager,
-    useNotifications
+    useNotifications,
+    useConfig
 } from 'react-components';
 
 import RecoveryEmail from './RecoveryEmail';
 import EmailModal from './EmailModal';
 import { updateNotifyEmail, updateResetEmail } from 'proton-shared/lib/api/settings';
+import { CLIENT_TYPES } from 'proton-shared/lib/constants';
+
+const { VPN } = CLIENT_TYPES;
 
 const EmailSection = () => {
     const { createModal } = useModals();
@@ -29,6 +33,7 @@ const EmailSection = () => {
     const { createNotification } = useNotifications();
     const { call } = useEventManager();
     const api = useApi();
+    const { CLIENT_TYPE } = useConfig();
 
     const handleRecoveryEmail = () => {
         createModal(<EmailModal email={email || '' /* can be null */} hasReset={!!Reset} hasNotify={!!Notify} />);
@@ -57,8 +62,8 @@ const EmailSection = () => {
             <SubTitle>{c('Title').t`Recovery & notification`}</SubTitle>
             <Alert>{c('Info')
                 .t`The selected method can be used to recover an account in the event you forget your password and to be notified about missed emails.`}</Alert>
-            <Row>
-                <Label>{c('Label').t`Email address`}</Label>
+            <Row className="flex-items-center">
+                <Label className="pt0">{c('Label').t`Email address`}</Label>
                 <RecoveryEmail email={email} onClick={handleRecoveryEmail} />
             </Row>
             <Row>
@@ -72,24 +77,26 @@ const EmailSection = () => {
                     />
                 </Field>
             </Row>
-            <Row>
-                <Label htmlFor="dailyNotificationsToggle">
-                    <span className="mr0-5">{c('Label').t`Daily email notifications`}</span>
-                    <Info
-                        url="https://protonmail.com/blog/notification-emails/"
-                        title={c('Info')
-                            .t`When notifications are enabled, we'll send an alert to your recovery/notification address if you have new messages in your ProtonMail account.`}
-                    />
-                </Label>
-                <Field>
-                    <Toggle
-                        loading={loadingNotify}
-                        checked={!!Notify && !!email}
-                        id="dailyNotificationsToggle"
-                        onChange={({ target: { checked } }) => withLoadingNotify(handleChangeEmailNotify(+checked))}
-                    />
-                </Field>
-            </Row>
+            {CLIENT_TYPE === VPN ? null : (
+                <Row>
+                    <Label htmlFor="dailyNotificationsToggle">
+                        <span className="mr0-5">{c('Label').t`Daily email notifications`}</span>
+                        <Info
+                            url="https://protonmail.com/blog/notification-emails/"
+                            title={c('Info')
+                                .t`When notifications are enabled, we'll send an alert to your recovery/notification address if you have new messages in your ProtonMail account.`}
+                        />
+                    </Label>
+                    <Field>
+                        <Toggle
+                            loading={loadingNotify}
+                            checked={!!Notify && !!email}
+                            id="dailyNotificationsToggle"
+                            onChange={({ target: { checked } }) => withLoadingNotify(handleChangeEmailNotify(+checked))}
+                        />
+                    </Field>
+                </Row>
+            )}
         </>
     );
 };

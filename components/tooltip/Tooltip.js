@@ -1,36 +1,56 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
+import { generateUID, classnames } from '../../helpers/component';
+import { usePopper, Popper, usePopperAnchor } from '../popper';
+import useRightToLeft from '../../containers/rightToLeft/useRightToLeft';
 
-import { generateUID } from '../../helpers/component';
-
-const Tooltip = ({ title, children, placement }) => {
+const Tooltip = ({ children, title, originalPlacement = 'top', scrollContainerClass = 'main', className }) => {
     const [uid] = useState(generateUID('tooltip'));
-    const [show, setShow] = useState(false);
+
+    const { isRTL } = useRightToLeft();
+    const rtlAdjustedPlacement = originalPlacement.includes('right')
+        ? originalPlacement.replace('right', 'left')
+        : originalPlacement.replace('left', 'right');
+
+    const popperRef = useRef();
+    const { anchorRef, open, close, isOpen } = usePopperAnchor();
+    const { position, placement } = usePopper(popperRef, anchorRef, isOpen, {
+        originalPlacement: isRTL ? rtlAdjustedPlacement : originalPlacement,
+        scrollContainerClass
+    });
 
     return (
-        <span
-            className="tooltip-container"
-            onMouseEnter={() => setShow(true)}
-            onMouseLeave={() => setShow(false)}
-            onFocus={() => setShow(true)}
-            onBlur={() => setShow(false)}
-        >
-            <span aria-describedby={uid}>{children}</span>
-            <span className={`tooltip-${placement}`} id={uid} role="tooltip" aria-hidden={!show}>
-                {title}
+        <>
+            <span
+                ref={anchorRef}
+                onMouseEnter={open}
+                onMouseLeave={close}
+                onFocus={open}
+                onBlur={close}
+                aria-describedby={uid}
+                className={className}
+            >
+                {children}
             </span>
-        </span>
+            <Popper
+                ref={popperRef}
+                id={uid}
+                isOpen={isOpen}
+                position={position}
+                className={classnames(['tooltip', `tooltip--${placement}`])}
+            >
+                {title}
+            </Popper>
+        </>
     );
 };
 
 Tooltip.propTypes = {
+    originalPlacement: PropTypes.oneOf(['top', 'bottom', 'left', 'right']),
     title: PropTypes.node.isRequired,
     children: PropTypes.node.isRequired,
-    placement: PropTypes.oneOf(['top', 'bottom', 'left', 'right']).isRequired
-};
-
-Tooltip.defaultProps = {
-    placement: 'top'
+    scrollContainerClass: PropTypes.string,
+    className: PropTypes.string
 };
 
 export default Tooltip;

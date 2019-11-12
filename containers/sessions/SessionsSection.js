@@ -12,17 +12,17 @@ import {
     Block,
     SubTitle,
     ConfirmModal,
+    useApi,
+    useAuthentication,
     useModals,
     useLoading,
     usePagination,
     useNotifications
 } from 'react-components';
-import useApi from '../../hooks/useApi';
 import { querySessions, revokeOtherSessions, revokeSession } from 'proton-shared/lib/api/auth';
 import { ELEMENTS_PER_PAGE } from 'proton-shared/lib/constants';
 
 import SessionAction from './SessionAction';
-import useAuthenticationStore from '../../hooks/useAuthenticationStore';
 
 const getClientsI18N = () => ({
     Web: c('Badge').t`ProtonMail for web`,
@@ -36,18 +36,18 @@ const getClientsI18N = () => ({
     macOSVPN: c('Badge').t`ProtonVPN for macOS`,
     iOSVPN: c('Badge').t`ProtonVPN for iOS`,
     AndroidVPN: c('Badge').t`ProtonVPN for Android`,
-    Admin: c('Badge').t`Admin`
+    Admin: c('Badge').t`Admin`,
+    WebVPNSettings: c('Badge').t`ProtonVPN settings for web`
 });
 
 const SessionsSection = () => {
     const { createNotification } = useNotifications();
     const api = useApi();
-    const authenticationStore = useAuthenticationStore();
+    const authentication = useAuthentication();
     const [loading, withLoading] = useLoading();
     const [table, setTable] = useState({ sessions: [], total: 0 });
     const { page, list, onNext, onPrevious, onSelect } = usePagination(table.sessions);
     const { createModal } = useModals();
-    const currentUID = authenticationStore.getUID();
 
     const fetchSessions = async () => {
         const { Sessions } = await api(querySessions());
@@ -73,6 +73,7 @@ const SessionsSection = () => {
     }, []);
 
     const i18n = getClientsI18N();
+    const currentUID = authentication.getUID();
 
     return (
         <>
@@ -102,11 +103,11 @@ const SessionsSection = () => {
                                 key={key}
                                 cells={[
                                     i18n[session.ClientID],
-                                    <Time format="LLL" key={key}>
+                                    <Time format="PPp" key={1}>
                                         {session.CreateTime}
                                     </Time>,
                                     <SessionAction
-                                        key={key}
+                                        key={2}
                                         session={session}
                                         currentUID={currentUID}
                                         onRevoke={() => withLoading(handleRevoke(session.UID))}

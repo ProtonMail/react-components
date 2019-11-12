@@ -5,8 +5,9 @@ import { Table, TableCell, TableRow, TableBody } from 'react-components';
 
 import KeysActions from './KeysActions';
 import KeysStatus from './KeysStatus';
+import { Copy } from '../../components/button';
 
-const KeysTable = ({ keys, onAction }) => {
+const KeysTable = ({ keys = [], onAction }) => {
     const headerCells = [
         { node: c('Title header for keys table').t`Fingerprint`, className: 'w50' },
         { node: c('Title header for keys table').t`Key type` },
@@ -21,7 +22,7 @@ const KeysTable = ({ keys, onAction }) => {
     });
 
     return (
-        <Table>
+        <Table className="pm-simple-table--has-actions">
             <thead>
                 <tr>{headerCells}</tr>
             </thead>
@@ -31,9 +32,12 @@ const KeysTable = ({ keys, onAction }) => {
                         <TableRow
                             key={ID}
                             cells={[
-                                <code key={1} className="mw100 inbl ellipsis">
-                                    {fingerprint}
-                                </code>,
+                                <div key={1} className="flex flex-row flex-nowrap flex-items-center">
+                                    <Copy value={fingerprint} className="pm-button--small" />
+                                    <code className="ml1 mw100 inbl ellipsis" title={fingerprint}>
+                                        {fingerprint}
+                                    </code>
+                                </div>,
                                 algorithm,
                                 <KeysStatus key={2} {...status} />,
                                 <KeysActions
@@ -55,10 +59,6 @@ KeysTable.propTypes = {
     keys: PropTypes.array,
     onAction: PropTypes.func.isRequired,
     loadingKeyID: PropTypes.bool
-};
-
-KeysTable.defaultProps = {
-    keys: []
 };
 
 export default KeysTable;

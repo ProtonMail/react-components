@@ -1,7 +1,7 @@
-import { PLAN_SERVICES, PLAN_TYPES } from 'proton-shared/lib/constants';
+import { PLAN_SERVICES, PLAN_TYPES, ADDON_NAMES } from 'proton-shared/lib/constants';
 import { hasBit } from 'proton-shared/lib/helpers/bitset';
 import { c, msgid } from 'ttag';
-import { isEquivalent } from 'proton-shared/lib/helpers/object';
+import { isEquivalent, pick } from 'proton-shared/lib/helpers/object';
 
 const { PLAN, ADDON } = PLAN_TYPES;
 const { MAIL, VPN } = PLAN_SERVICES;
@@ -9,21 +9,45 @@ const { MAIL, VPN } = PLAN_SERVICES;
 const I18N = {
     included: c('Option').t`included`,
     address(value) {
-        return c('Option').ngettext(msgid`1 address`, `${value} addresses`, value);
+        return c('Option').ngettext(msgid`${value} address`, `${value} addresses`, value);
     },
     space(value) {
-        return c('Option').ngettext(msgid`1 GB storage`, `${value} GB storage`, value);
+        return c('Option').ngettext(msgid`${value} GB storage`, `${value} GB storage`, value);
     },
     domain(value) {
-        return c('Option').ngettext(msgid`1 custom domain`, `${value} custom domains`, value);
+        return c('Option').ngettext(msgid`${value} custom domain`, `${value} custom domains`, value);
     },
     member(value) {
-        return c('Option').ngettext(msgid`1 user`, `${value} users`, value);
+        return c('Option').ngettext(msgid`${value} user`, `${value} users`, value);
     },
     vpn(value) {
-        return c('Option').ngettext(msgid`1 VPN connection`, `${value} VPN connections`, value);
+        return c('Option').ngettext(msgid`${value} VPN connection`, `${value} VPN connections`, value);
     }
 };
+
+/**
+ * Check if a plans map contains at least b plans map
+ * @param {Object} a plans map
+ * @param {Object} b plans map
+ * @returns {Boolean}
+ */
+export const containsSamePlans = (a, b) => isEquivalent(pick(a, Object.keys(b)), b);
+
+/**
+ * Convert subscription plans to PlanIDs format required by API requests
+ * @param {Array} plans coming from Subscription API
+ * @returns {Object}
+ */
+export const toPlanMap = (plans = [], key = 'ID') => {
+    return plans.reduce((acc, plan) => {
+        acc[plan[key]] = acc[plan[key]] || 0;
+        acc[plan[key]] += 1;
+        return acc;
+    }, Object.create(null));
+};
+
+export const toPlanIDs = toPlanMap;
+export const toPlanNames = (plans = []) => toPlanMap(plans, 'Name');
 
 /**
  * Build plansMap from current subscription and user demand
@@ -31,13 +55,16 @@ const I18N = {
  * Possible entries for plansMap
  * {}
  * { vpnplus: 1 }
- * { plus: 1 }, { vpnplus: 1, plus: 1 }
- * { professional: 1 }, { vpnplus: 1, professional: 1 }
+ * { vpnbasic: 1 }
+ * { plus: 1 }
+ * { vpnplus: 1, plus: 1 }
+ * { professional: 1 }
+ * { vpnplus: 1, professional: 1 }
  * { visionary: 1 }
  * @param {Array} subscription.Plans
  * @returns {Object} plansMap
  */
-export const mergePlansMap = (plansMap, { Plans = [] }) => {
+export const mergePlansMap = (plansMap = {}, { Plans = [] }) => {
     // Free user subscribing
     if (!Plans.length) {
         return plansMap;
@@ -52,29 +79,36 @@ export const mergePlansMap = (plansMap, { Plans = [] }) => {
 
     const currentPlansMap = toPlanNames(Plans);
 
-    if (isEquivalent(plansMap, { vpnplus: 1 })) {
+    if (containsSamePlans(plansMap, { vpnplus: 1, plus: 1 })) {
         return {
             ...plansMap,
-            ['1vpn']: currentPlansMap['1vpn']
+            [ADDON_NAMES.DOMAIN]: currentPlansMap[ADDON_NAMES.DOMAIN],
+            [ADDON_NAMES.ADDRESS]: currentPlansMap[ADDON_NAMES.ADDRESS],
+            [ADDON_NAMES.SPACE]: currentPlansMap[ADDON_NAMES.SPACE]
         };
     }
 
-    if (isEquivalent(plansMap, { vpnplus: 1, plus: 1 })) {
+    if (containsSamePlans(plansMap, { vpnplus: 1, professional: 1 })) {
         return {
             ...plansMap,
-            ['1domain']: currentPlansMap['1domain'],
-            ['5address']: currentPlansMap['5address'],
-            ['1gb']: currentPlansMap['1gb'],
-            ['1vpn']: currentPlansMap['1vpn']
+            [ADDON_NAMES.DOMAIN]:
+                currentPlansMap[ADDON_NAMES.DOMAIN] > 1 ? currentPlansMap[ADDON_NAMES.DOMAIN] : undefined, // pro starts with 2 custom domain
+            [ADDON_NAMES.MEMBER]: currentPlansMap[ADDON_NAMES.MEMBER],
+            [ADDON_NAMES.VPN]: currentPlansMap[ADDON_NAMES.VPN] // Only possible with vpnplus and professional
         };
     }
 
-    if (isEquivalent(plansMap, { vpnplus: 1, professional: 1 })) {
+    // Only concern ProtonVPN dashboard
+    if (containsSamePlans(plansMap, { vpnplus: 1 }) || containsSamePlans(plansMap, { vpnbasic: 1 })) {
         return {
             ...plansMap,
-            ['1domain']: currentPlansMap['1domain'] > 1 ? currentPlansMap['1domain'] : undefined, // pro starts with 2 custom domain
-            ['1member']: currentPlansMap['1member'],
-            ['1vpn']: currentPlansMap['1vpn']
+            plus: currentPlansMap.plus,
+            professional: currentPlansMap.professional,
+            [ADDON_NAMES.DOMAIN]: currentPlansMap[ADDON_NAMES.DOMAIN],
+            [ADDON_NAMES.ADDRESS]: currentPlansMap[ADDON_NAMES.ADDRESS],
+            [ADDON_NAMES.SPACE]: currentPlansMap[ADDON_NAMES.SPACE],
+            [ADDON_NAMES.MEMBER]: currentPlansMap[ADDON_NAMES.MEMBER],
+            [ADDON_NAMES.VPN]: currentPlansMap[ADDON_NAMES.VPN]
         };
     }
 
@@ -109,22 +143,6 @@ export const getSubTotal = ({ plansMap, cycle, plans, services }) => {
         return acc;
     }, 0);
 };
-
-/**
- * Convert subscription plans to PlanIDs format required by API requests
- * @param {Array} plans coming from Subscription API
- * @returns {Object}
- */
-export const toPlanMap = (plans = [], key = 'ID') => {
-    return plans.reduce((acc, plan) => {
-        acc[plan[key]] = acc[plan[key]] || 0;
-        acc[plan[key]] += 1;
-        return acc;
-    }, Object.create(null));
-};
-
-export const toPlanIDs = toPlanMap;
-export const toPlanNames = (plans = []) => toPlanMap(plans, 'Name');
 
 /**
  * Merge addon to addition parameters
@@ -176,19 +194,19 @@ export const formatPlans = (plans = []) => {
         }
 
         if (plan.Type === ADDON) {
-            if (plan.Name === '1domain') {
+            if (plan.Name === ADDON_NAMES.DOMAIN) {
                 acc.domainAddon = mergeAddons(acc.domainAddon, plan);
             }
-            if (plan.Name === '1member') {
+            if (plan.Name === ADDON_NAMES.MEMBER) {
                 acc.memberAddon = mergeAddons(acc.memberAddon, plan);
             }
-            if (plan.Name === '1vpn') {
+            if (plan.Name === ADDON_NAMES.VPN) {
                 acc.vpnAddon = mergeAddons(acc.vpnAddon, plan);
             }
-            if (plan.Name === '5address') {
+            if (plan.Name === ADDON_NAMES.ADDRESS) {
                 acc.addressAddon = mergeAddons(acc.addressAddon, plan);
             }
-            if (plan.Name === '1gb') {
+            if (plan.Name === ADDON_NAMES.SPACE) {
                 acc.spaceAddon = mergeAddons(acc.spaceAddon, plan);
             }
             return acc;
@@ -201,7 +219,7 @@ export const formatPlans = (plans = []) => {
 /**
  * Helper to find plans from Subscription.Plans or Plans
  * @param {Array} plans from Subscription.Plans or Plans
- * @param {String} params.planName examples: 'plus', 'vpnplus', 'visionary', '5address', '1member'
+ * @param {String} params.planName examples: 'plus', 'vpnplus', 'visionary', ADDON_NAMES.ADDRESS, ADDON_NAMES.MEMBER
  * @param {String} params.id plan ID
  * @param {Number} params.type default: plan
  * @returns {Object} plan Object
@@ -265,27 +283,4 @@ export const getCheckParams = ({
         Cycle,
         ...rest
     };
-};
-
-/**
- * Check if a subscription is eligible to BUNDLE coupon
- * @param {Array} Subscription.Plans
- * @param {String} Subscription.CouponCode
- * @returns {Boolean} is eligible to BUNDLE
- */
-export const isBundleEligible = ({ Plans, CouponCode } = {}) => {
-    if (CouponCode) {
-        return false;
-    }
-
-    const { plus, professional, visionary, vpnplus, vpnbasic } = toPlanNames(Plans);
-
-    if (visionary) {
-        return false;
-    }
-
-    const mailPlan = plus || professional;
-    const vpnPlan = vpnplus || vpnbasic;
-
-    return (mailPlan && !vpnPlan) || (!mailPlan && vpnplus);
 };

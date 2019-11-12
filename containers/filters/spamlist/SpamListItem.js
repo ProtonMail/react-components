@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { SubTitle, Bordered, Loader, Alert, Group } from 'react-components';
+import { Bordered, Loader, Alert, Group, classnames } from 'react-components';
 import { noop } from 'proton-shared/lib/helpers/function';
 
 import AddEmailFilterListButton from './AddEmailFilterListButton';
@@ -10,7 +10,7 @@ import RemoveEmailFilteredList from './RemoveEmailFilteredList';
 
 import './SpamListItem.scss';
 
-function SpamListItem({ list, type, dest, onAction, className, loading }) {
+function SpamListItem({ list, type, dest, onAction = noop, className, loading }) {
     const I18N = {
         whitelist: c('Title').t`Whitelist`,
         blacklist: c('Title').t`BlackList`,
@@ -21,9 +21,9 @@ function SpamListItem({ list, type, dest, onAction, className, loading }) {
     };
 
     return (
-        <Bordered className={'flex-autogrid-item '.concat(className)}>
-            <header className="mt1 flex flex-spacebetween">
-                <SubTitle>{I18N[type]}</SubTitle>
+        <Bordered className={classnames(['flex-autogrid-item', className])}>
+            <header className="mt1 flex flex-spacebetween flex-items-center">
+                <h3 className="mb0">{I18N[type]}</h3>
                 <div>
                     <AddEmailFilterListButton type={type} onAdd={onAction('create')} />
                 </div>
@@ -67,11 +67,8 @@ SpamListItem.propTypes = {
     className: PropTypes.string,
     loading: PropTypes.bool,
     type: PropTypes.string.isRequired,
+    dest: PropTypes.string.isRequired,
     onAction: PropTypes.func
-};
-
-SpamListItem.defaultProps = {
-    onAction: noop
 };
 
 export default SpamListItem;

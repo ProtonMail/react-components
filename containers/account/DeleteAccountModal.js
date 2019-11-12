@@ -11,29 +11,27 @@ import {
     TwoFactorInput,
     FormModal,
     Alert,
-    useAddresses,
-    useApiWithoutResult,
+    useEventManager,
     useUser,
     useNotifications,
     useUserSettings,
     useApi,
-    useAuthenticationStore,
-    useConfig
+    useAuthentication,
+    useConfig,
+    ErrorButton
 } from 'react-components';
-import { deleteUser } from 'proton-shared/lib/api/user';
+import { deleteUser, unlockPasswordChanges } from 'proton-shared/lib/api/user';
 import { reportBug } from 'proton-shared/lib/api/reports';
 import { srpAuth } from 'proton-shared/lib/srp';
+import { collectInfo, getClient } from '../../helpers/report';
 
 const DeleteAccountModal = ({ onClose, ...rest }) => {
     const { createNotification } = useNotifications();
-    const { CLIENT_TYPE } = useConfig();
+    const eventManager = useEventManager();
     const api = useApi();
-    const authenticationStore = useAuthenticationStore();
+    const authentication = useAuthentication();
     const [{ isAdmin, Name } = {}] = useUser();
     const [{ TwoFactor } = {}] = useUserSettings();
-    const [addresses = []] = useAddresses();
-    const [{ Email } = {}] = addresses;
-    const { request } = useApiWithoutResult(reportBug);
     const [loading, setLoading] = useState(false);
     const [model, setModel] = useState({
         feedback: '',
@@ -41,58 +39,68 @@ const DeleteAccountModal = ({ onClose, ...rest }) => {
         password: '',
         twoFa: ''
     });
+    const { CLIENT_ID, APP_VERSION, CLIENT_TYPE } = useConfig();
+    const Client = getClient(CLIENT_ID);
 
     const handleChange = (key) => ({ target }) => setModel({ ...model, [key]: target.value });
 
     const handleSubmit = async () => {
         try {
             setLoading(true);
+
+            eventManager.stop();
+
+            // This is just used to verify that the entered password and totp code is correct
+            await srpAuth({
+                api,
+                credentials: { password: model.password, totp: model.twoFa },
+                config: unlockPasswordChanges()
+            });
+
+            if (isAdmin) {
+                await api(
+                    reportBug({
+                        ...collectInfo(),
+                        Client,
+                        ClientVersion: APP_VERSION,
+                        ClientType: CLIENT_TYPE,
+                        Title: `[DELETION FEEDBACK] ${Name}`,
+                        Username: Name,
+                        Email: model.email,
+                        Description: model.feedback
+                    })
+                );
+            }
+
             await srpAuth({
                 api,
                 credentials: { password: model.password, totp: model.twoFa },
                 config: deleteUser()
             });
 
-            if (isAdmin) {
-                await request({
-                    OS: '--',
-                    OSVersion: '--',
-                    Browser: '--',
-                    BrowserVersion: '--',
-                    BrowserExtensions: '--',
-                    Client: '--',
-                    ClientVersion: '--',
-                    ClientType: CLIENT_TYPE,
-                    Title: `[DELETION FEEDBACK] ${Name}`,
-                    Username: Name,
-                    Email: model.email || Email,
-                    Description: model.feedback
-                });
-            }
-            setLoading(false);
+            onClose();
+            createNotification({ text: c('Success').t`Account deleted` });
+            authentication.logout();
         } catch (error) {
+            eventManager.start();
             setLoading(false);
             throw error;
         }
-
-        onClose();
-        createNotification({ text: c('Success').t`Account deleted` });
-        authenticationStore.logout();
     };
 
     return (
         <FormModal
             onSubmit={handleSubmit}
             onClose={onClose}
+            close={c('Action').t`Cancel`}
+            submit={<ErrorButton loading={loading} type="submit">{c('Action').t`Delete`}</ErrorButton>}
             title={c('Title').t`Delete account`}
             loading={loading}
-            close={c('Action').t`Cancel`}
-            submit={c('Action').t`Delete`}
             {...rest}
         >
             <Alert type="warning">
                 <div className="bold uppercase">{c('Info').t`Warning: This also deletes all connected services`}</div>
-                <div>{c('Info').t`Example: ProtonContact ProtonVPN, ProtonWallet, ProtonDrive, ProtonCalendar`}</div>
+                <div>{c('Info').t`Example: ProtonMail, ProtonContact, ProtonVPN, ProtonDrive, ProtonCalendar`}</div>
             </Alert>
             <Alert type="warning" learnMore="https://protonmail.com/support/knowledge-base/combine-accounts/">
                 <div className="bold uppercase">{c('Info').t`Warning: deletion is permanent`}</div>
@@ -114,10 +122,11 @@ const DeleteAccountModal = ({ onClose, ...rest }) => {
                 </Field>
             </Row>
             <Row>
-                <Label htmlFor="email">{c('Label').t`Email address (optional)`}</Label>
+                <Label htmlFor="email">{c('Label').t`Email address`}</Label>
                 <Field>
                     <EmailInput
                         id="email"
+                        required={true}
                         disabled={loading}
                         value={model.email}
                         onChange={handleChange('email')}
@@ -143,14 +152,14 @@ const DeleteAccountModal = ({ onClose, ...rest }) => {
             </Row>
             {TwoFactor ? (
                 <Row>
-                    <Label htmlFor="twoFa">{c('Label').t`Two-factor passcode`}</Label>
+                    <Label htmlFor="twoFa">{c('Label').t`Two-factor code`}</Label>
                     <Field>
                         <TwoFactorInput
                             id="twoFa"
                             disabled={loading}
                             value={model.twoFa}
                             onChange={handleChange('twoFa')}
-                            placeholder={c('Placeholder').t`Two-factor passcode`}
+                            placeholder={c('Placeholder').t`Two-factor code`}
                         />
                     </Field>
                 </Row>

@@ -1,33 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { useMailSettings } from 'react-components';
-import { getThemeIdentifier } from 'react-components/helpers/themes';
-import lightTheme from 'design-system/_sass/pm-styles/_pm-light-theme.scss';
-import blueTheme from 'design-system/_sass/pm-styles/_pm-blue-theme.scss';
-import { THEMES } from 'proton-shared/lib/constants';
+import { useMailSettings, useOrganization } from 'react-components';
+import { getThemeIdentifier, getTheme, toStyle } from 'proton-shared/lib/themes/helpers';
+import { PROTON_THEMES, DEFAULT_THEME } from 'proton-shared/lib/themes/themes';
 
-const {
-    DARK: { identifier: darkId },
-    LIGHT: { identifier: lightId },
-    BLUE: { identifier: blueId }
-} = THEMES;
+const protonThemeIdentifiers = Object.values(PROTON_THEMES).map(({ identifier }) => identifier);
 
 const ThemeInjector = () => {
-    const [{ Theme }] = useMailSettings();
-    const themeId = getThemeIdentifier(Theme);
-    const [style, setStyle] = useState(Theme);
+    const [{ Theme: userTheme = '' } = {}] = useMailSettings();
+    const [{ Theme: orgTheme = '' } = {}] = useOrganization();
+    const themeIdentifier = getThemeIdentifier(userTheme);
+    const [style, setStyle] = useState('');
 
     useEffect(() => {
-        if (themeId === darkId) {
-            return setStyle('');
+        if (themeIdentifier === DEFAULT_THEME.identifier) {
+            return setStyle(orgTheme);
         }
-        if (themeId === lightId) {
-            return setStyle(lightTheme.toString());
+        if (protonThemeIdentifiers.includes(themeIdentifier)) {
+            return setStyle(toStyle([getTheme(themeIdentifier), orgTheme]));
         }
-        if (themeId === blueId) {
-            return setStyle(blueTheme.toString());
-        }
-        setStyle(Theme);
-    }, [Theme]);
+        setStyle(toStyle([userTheme, orgTheme]));
+    }, [userTheme, orgTheme]);
 
     return <style>{style}</style>;
 };

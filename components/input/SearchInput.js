@@ -12,14 +12,19 @@ import useDebounceInput from './useDebounceInput';
  * @param {String} value initial
  * @returns {React.Component}
  */
-const SearchInput = ({ delay, onChange, value, ...rest }) => {
+const SearchInput = ({ delay = 200, onChange = noop, value = '', ...rest }) => {
     const [keywords, setKeywords] = useState(value);
     const words = useDebounceInput(keywords, delay);
+
     const handleChange = ({ target }) => setKeywords(target.value);
 
     useEffect(() => {
         onChange(words);
     }, [words]);
+
+    useEffect(() => {
+        setKeywords(value);
+    }, [value]);
 
     return <Input value={keywords} onChange={handleChange} type="search" {...rest} />;
 };
@@ -28,12 +33,6 @@ SearchInput.propTypes = {
     delay: PropTypes.number,
     onChange: PropTypes.func,
     value: PropTypes.string
-};
-
-SearchInput.defaultProps = {
-    delay: 200,
-    onChange: noop,
-    value: ''
 };
 
 export default SearchInput;

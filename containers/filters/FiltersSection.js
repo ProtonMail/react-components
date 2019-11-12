@@ -12,10 +12,13 @@ function FiltersSection() {
     const [filters, loading] = useFilters();
     const orderRequest = useApiWithoutResult(updateFilterOrder);
 
-    const [list, setFilters] = useState(filters || []);
+    const [list, setFilters] = useState(() => filters || []);
 
     useEffect(() => {
-        setFilters(filters || []);
+        if (!Array.isArray(filters)) {
+            return;
+        }
+        setFilters(filters);
     }, [filters]);
 
     const getScrollContainer = () => document.querySelector('.main-area');
@@ -33,9 +36,9 @@ function FiltersSection() {
     return (
         <>
             <SubTitle>{c('FilterSettings').t`Custom Filters`}</SubTitle>
-            <Alert learnMore="https://protonmail.com" type="info">
+            <Alert type="info">
                 {c('FilterSettings')
-                    .t`Add a custom filter to perform actions suche as automatically labeling or archiving messages.`}
+                    .t`Add a custom filter to perform actions such as automatically labeling or archiving messages.`}
             </Alert>
 
             <Block>
@@ -45,12 +48,7 @@ function FiltersSection() {
             {loading ? (
                 <Loader />
             ) : list.length ? (
-                <FilterSortableList
-                    getContainer={getScrollContainer}
-                    pressDelay={200}
-                    items={list}
-                    onSortEnd={onSortEnd}
-                />
+                <FilterSortableList getContainer={getScrollContainer} items={list} onSortEnd={onSortEnd} />
             ) : (
                 <Alert>{c('FilterSettings').t`No filters available`}</Alert>
             )}

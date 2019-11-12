@@ -1,30 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Select } from 'react-components';
 import { range } from 'proton-shared/lib/helpers/array';
 
-const MemberVPNSelector = ({ member, organization, onChange }) => {
-    const minPadding = 0;
-    const maxPadding = organization.MaxVPN - organization.UsedVPN;
-    const options = range(minPadding, maxPadding).map((value) => ({ text: value, value }));
-    const [vpn, setVpn] = useState(member.ID ? member.MaxVPN : 1);
-    const handleChange = ({ target }) => setVpn(target.value);
+export const getVPNRange = (
+    { MaxVPN: memberMaxVPN = 0 } = {},
+    { UsedVPN: organizationUsedVPN = 0, MaxVPN: organizationMaxVPN = 0 }
+) => {
+    return [0, organizationMaxVPN - organizationUsedVPN + memberMaxVPN];
+};
 
-    useEffect(() => {
-        onChange(vpn);
-    }, vpn);
-
-    return <Select value={vpn} options={options} onChange={handleChange} />;
+const MemberVPNSelector = ({ range: [min, max], step, value, onChange }) => {
+    const options = range(min, max + step, step).map((value) => ({ text: value, value }));
+    return <Select value={value} options={options} onChange={({ target }) => onChange(+target.value)} />;
 };
 
 MemberVPNSelector.propTypes = {
-    member: PropTypes.object.isRequired,
-    onChange: PropTypes.func.isRequired,
-    organization: PropTypes.object.isRequired
-};
-
-MemberVPNSelector.defaultProps = {
-    member: {}
+    range: PropTypes.array.isRequired,
+    step: PropTypes.number.isRequired,
+    value: PropTypes.number.isRequired,
+    onChange: PropTypes.func.isRequired
 };
 
 export default MemberVPNSelector;

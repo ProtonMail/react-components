@@ -15,8 +15,8 @@ import {
     useEventManager
 } from 'react-components';
 
-import MemberStorageSelector from './MemberStorageSelector';
-import MemberVPNSelector from './MemberVPNSelector';
+import MemberStorageSelector, { getStorageRange } from './MemberStorageSelector';
+import MemberVPNSelector, { getVPNRange } from './MemberVPNSelector';
 import { DEFAULT_ENCRYPTION_CONFIG, ENCRYPTION_CONFIGS, GIGA } from 'proton-shared/lib/constants';
 import { createMember, createMemberAddress } from 'proton-shared/lib/api/members';
 import { setupMemberKey } from './actionHelper';
@@ -25,10 +25,12 @@ import { srpVerify } from 'proton-shared/lib/srp';
 
 const FIVE_GIGA = 5 * GIGA;
 
-const MemberModal = ({ onClose, organization, organizationKey, domains, ...rest }) => {
+const MemberModal = ({ onClose, organization, organizationKey, domains, domainsAddressesMap, ...rest }) => {
     const { createNotification } = useNotifications();
     const { call } = useEventManager();
     const api = useApi();
+    const storageRange = getStorageRange({}, organization);
+    const vpnRange = getVPNRange({}, organization);
     const [model, updateModel] = useState({
         name: '',
         private: false,
@@ -36,8 +38,8 @@ const MemberModal = ({ onClose, organization, organizationKey, domains, ...rest 
         confirm: '',
         address: '',
         domain: domains[0].DomainName,
-        vpn: 1,
-        storage: FIVE_GIGA
+        vpn: vpnRange[0],
+        storage: Math.min(storageRange[1], FIVE_GIGA)
     });
     const update = (key, value) => updateModel({ ...model, [key]: value });
 
@@ -60,7 +62,7 @@ const MemberModal = ({ onClose, organization, organizationKey, domains, ...rest 
             config: createMember({
                 Name: model.name,
                 Private: +model.private,
-                MaxSpace: model.storage,
+                MaxSpace: +model.storage,
                 MaxVPN: model.vpn
             })
         });
@@ -98,7 +100,9 @@ const MemberModal = ({ onClose, organization, organizationKey, domains, ...rest 
         }
 
         const domain = domains.find(({ DomainName }) => DomainName === model.domain);
-        const address = domain.addresses.find(({ Email }) => Email === `${model.address}@${model.domain}`);
+        const address = (domainsAddressesMap[domain.ID] || []).find(
+            ({ Email }) => Email === `${model.address}@${model.domain}`
+        );
 
         if (address) {
             return c('Error').t`Address already associated to a user`;
@@ -132,75 +136,88 @@ const MemberModal = ({ onClose, organization, organizationKey, domains, ...rest 
             loading={loading}
             onSubmit={handleSubmit}
             onClose={onClose}
-            close={c('Action').t`Cancel`}
             submit={c('Action').t`Save`}
             {...rest}
         >
             <Row>
                 <Label htmlFor="nameInput">{c('Label').t`Name`}</Label>
-                <Field className="flex-autogrid">
+                <Field>
                     <Input
                         id="nameInput"
-                        className="flex-autogrid-item"
                         placeholder="Thomas A. Anderson"
                         onChange={handleChange('name')}
+                        value={model.name}
                         required
                     />
-                    <Label className="flex-autogrid-item">
-                        <Checkbox checked={model.private} onChange={handleChangePrivate} />
-                        {c('Label for new member').t`Private`}
-                    </Label>
                 </Field>
+                <div className="ml1">
+                    <Checkbox checked={model.private} onChange={handleChangePrivate}>{c('Label for new member')
+                        .t`Private`}</Checkbox>
+                </div>
             </Row>
             {model.private ? null : (
                 <Row>
                     <Label>{c('Label').t`Key strength`}</Label>
-                    <Field className="flex-autogrid">
+                    <div>
                         <SelectEncryption encryptionType={encryptionType} setEncryptionType={setEncryptionType} />
-                    </Field>
+                    </div>
                 </Row>
             )}
             <Row>
                 <Label>{c('Label').t`Password`}</Label>
-                <Field className="flex-autogrid">
-                    <PasswordInput
-                        value={model.password}
-                        className="flex-autogrid-item mb1"
-                        onChange={handleChange('password')}
-                        placeholder={c('Placeholder').t`Password`}
-                        required
-                    />
-                    <PasswordInput
-                        value={model.confirm}
-                        className="flex-autogrid-item"
-                        onChange={handleChange('confirm')}
-                        placeholder={c('Placeholder').t`Confirm password`}
-                        required
-                    />
+                <Field>
+                    <div className="mb1">
+                        <PasswordInput
+                            value={model.password}
+                            onChange={handleChange('password')}
+                            placeholder={c('Placeholder').t`Password`}
+                            required
+                        />
+                    </div>
+                    <div>
+                        <PasswordInput
+                            value={model.confirm}
+                            onChange={handleChange('confirm')}
+                            placeholder={c('Placeholder').t`Confirm password`}
+                            required
+                        />
+                    </div>
                 </Field>
             </Row>
             <Row>
                 <Label>{c('Label').t`Address`}</Label>
-                <Field className="flex-autogrid">
-                    <Input onChange={handleChange('address')} placeholder={c('Placeholder').t`Address`} required />
+                <Field>
+                    <Input
+                        value={model.address}
+                        onChange={handleChange('address')}
+                        placeholder={c('Placeholder').t`Address`}
+                        required
+                    />
+                </Field>
+                <div className="ml1 flex flex-nowrap flex-items-center">
                     {domainOptions.length === 1 ? (
                         `@${domainOptions[0].value}`
                     ) : (
                         <Select options={domainOptions} value={model.domain} onChange={handleChange('domain')} />
                     )}
-                </Field>
+                </div>
             </Row>
             <Row>
                 <Label>{c('Label').t`Account storage`}</Label>
                 <Field>
-                    <MemberStorageSelector organization={organization} onChange={handleChangeStorage} />
+                    <MemberStorageSelector
+                        value={model.storage}
+                        step={GIGA}
+                        range={storageRange}
+                        onChange={handleChangeStorage}
+                    />
                 </Field>
             </Row>
             {hasVPN ? (
                 <Row>
                     <Label>{c('Label').t`VPN connections`}</Label>
                     <Field>
-                        <MemberVPNSelector organization={organization} onChange={handleChangeVPN} />
+                        <MemberVPNSelector value={model.vpn} step={1} range={vpnRange} onChange={handleChangeVPN} />
                     </Field>
                 </Row>
             ) : null}
@@ -212,7 +229,8 @@ MemberModal.propTypes = {
     onClose: PropTypes.func,
     organization: PropTypes.object.isRequired,
     organizationKey: PropTypes.object.isRequired,
-    domains: PropTypes.array.isRequired
+    domains: PropTypes.array.isRequired,
+    domainsAddressesMap: PropTypes.object.isRequired
 };
 
 export default MemberModal;

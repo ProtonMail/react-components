@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from 'react-testing-library';
+import { render, fireEvent } from '@testing-library/react';
 
 import Copy from './Copy';
 
@@ -12,8 +12,8 @@ describe('Copy component', () => {
         const { container } = render(<Copy value={value} />);
         const { firstChild } = container;
 
-        expect(firstChild.getAttribute('title')).toBe('Copy');
+        expect(firstChild.getAttribute('class')).not.toContain('copied');
         fireEvent.click(firstChild);
-        expect(firstChild.getAttribute('title')).toBe('Copied');
+        expect(firstChild.getAttribute('class')).toContain('copied');
     });
 });

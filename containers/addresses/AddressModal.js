@@ -2,6 +2,7 @@ import React from 'react';
 import { c } from 'ttag';
 import PropTypes from 'prop-types';
 import { createAddress } from 'proton-shared/lib/api/addresses';
+import { ADDRESS_TYPE, MEMBER_PRIVATE } from 'proton-shared/lib/constants';
 import {
     FormModal,
     Alert,
@@ -9,42 +10,68 @@ import {
     Field,
     Label,
     Input,
-    RichTextEditor,
     useLoading,
     useNotifications,
     useEventManager,
-    useApi
+    useModals,
+    useApi,
+    useAddresses,
+    usePremiumDomains,
+    useUser
 } from 'react-components';
 
 import useAddressModal from './useAddressModal';
 import DomainsSelect from './DomainsSelect';
+import CreateMissingKeysAddressModal from './CreateMissingKeysAddressModal';
 
-const AddressModal = ({ onClose, member, ...rest }) => {
+const AddressModal = ({ onClose, member, organizationKey, ...rest }) => {
+    const { createModal } = useModals();
     const { call } = useEventManager();
+    const [user, loadingUser] = useUser();
+    const [addresses, loadingAddresses] = useAddresses();
+    const [premiumDomains, loadingPremiumDomains] = usePremiumDomains();
+    const [premiumDomain = ''] = premiumDomains || [];
     const api = useApi();
     const { model, update } = useAddressModal(member);
     const { createNotification } = useNotifications();
     const [loading, withLoading] = useLoading();
-
+    const hasPremium = addresses.some(({ Type }) => Type === ADDRESS_TYPE.TYPE_PREMIUM);
     const handleChange = (key) => ({ target }) => update(key, target.value);
-    const handleSignature = (value) => update('signature', value);
 
     const handleSubmit = async () => {
-        const { name: DisplayName, signature: Signature, address: Local, domain: Domain } = model;
+        const { name: DisplayName, address: Local, domain: Domain } = model;
 
-        await api(
+        if (!hasPremium && `${user.Name}@${premiumDomain}`.toLowerCase() === `${Local}@${Domain}`.toLowerCase()) {
+            return createNotification({
+                text: c('Error')
+                    .t`${Local} is your username. To create ${Local}@${Domain}, please go to Settings > Identity > Short domain (pm.me)`,
+                type: 'error'
+            });
+        }
+
+        const { Address } = await api(
             createAddress({
                 MemberID: member.ID,
                 Local,
                 Domain,
-                DisplayName,
-                Signature
+                DisplayName
             })
         );
+
         await call();
 
         onClose();
         createNotification({ text: c('Success').t`Address added` });
+
+        if (member.Self || member.Private === MEMBER_PRIVATE.READABLE) {
+            createModal(
+                <CreateMissingKeysAddressModal
+                    organizationKey={organizationKey}
+                    member={member}
+                    addresses={[Address]}
+                />
+            );
+        }
     };
 
     return (
@@ -52,7 +79,7 @@ const AddressModal = ({ onClose, member, ...rest }) => {
             title={c('Title').t`Create address`}
             submit={c('Action').t`Save`}
             cancel={c('Action').t`Cancel`}
-            loading={loading}
+            loading={loading || loadingAddresses || loadingPremiumDomains || loadingUser}
             onSubmit={() => withLoading(handleSubmit())}
             onClose={onClose}
             {...rest}
@@ -93,19 +120,14 @@ const AddressModal = ({ onClose, member, ...rest }) => {
                     />
                 </Field>
             </Row>
-            <Row>
-                <Label>{c('Label').t`Signature`}</Label>
-                <Field>
-                    <RichTextEditor value={model.signature} onChange={handleSignature} />
-                </Field>
-            </Row>
         </FormModal>
     );
 };
 
 AddressModal.propTypes = {
     onClose: PropTypes.func,
-    member: PropTypes.object
+    member: PropTypes.object,
+    organizationKey: PropTypes.object
 };
 
 export default AddressModal;

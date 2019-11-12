@@ -1,36 +1,30 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { Select } from 'react-components';
 import { range } from 'proton-shared/lib/helpers/array';
 import { GIGA } from 'proton-shared/lib/constants';
 import humanSize from 'proton-shared/lib/helpers/humanSize';
 
-const FIVE_GIGA = 5 * GIGA;
+export const getStorageRange = (
+    { UsedSpace: memberUsedSpace = 0 } = {},
+    { MaxSpace: organizationMaxSpace = 0, UsedSpace: organizationUsedSpace = 0 }
+) => {
+    return [
+        Math.ceil(memberUsedSpace / GIGA) * GIGA,
+        Math.ceil((organizationMaxSpace - organizationUsedSpace + memberUsedSpace) / GIGA) * GIGA
+    ];
+};
 
-const MemberStorageSelector = ({ member, organization, onChange }) => {
-    const minPadding = 0;
-    const maxPadding = organization.MaxSpace - organization.AssignedSpace;
-    const startNewMember = maxPadding > FIVE_GIGA ? FIVE_GIGA : maxPadding;
-    const options = range(minPadding, maxPadding, GIGA).map((value) => ({ text: `${humanSize(value, 'GB')}`, value }));
-    const [storage, setStorage] = useState(member.ID ? member.MaxSpace : startNewMember);
-
-    const handleChange = ({ target }) => {
-        const newValue = target.value;
-        setStorage(newValue);
-        onChange(newValue);
-    };
-
-    return <Select value={storage} options={options} onChange={handleChange} />;
+const MemberStorageSelector = ({ range: [min, max], step, value, onChange }) => {
+    const options = range(min, max + step, step).map((value) => ({ text: `${humanSize(value, 'GB')}`, value }));
+    return <Select value={value} options={options} onChange={({ target }) => onChange(+target.value)} />;
 };
 
 MemberStorageSelector.propTypes = {
-    member: PropTypes.object.isRequired,
-    onChange: PropTypes.func.isRequired,
-    organization: PropTypes.object.isRequired
-};
-
-MemberStorageSelector.defaultProps = {
-    member: {}
+    range: PropTypes.array.isRequired,
+    step: PropTypes.number.isRequired,
+    value: PropTypes.number.isRequired,
+    onChange: PropTypes.func.isRequired
 };
 
 export default MemberStorageSelector;

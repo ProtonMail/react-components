@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { LearnMore } from 'react-components';
+import { classnames } from '../../helpers/component';
 
 const CLASSES = {
     info: 'mb1 block-info-standard',
@@ -9,9 +10,9 @@ const CLASSES = {
     success: 'mb1 block-info-standard-success'
 };
 
-const Alert = ({ type, children, learnMore, className }) => {
+const Alert = ({ type = 'info', children, learnMore, className }) => {
     return (
-        <div className={CLASSES[type].concat(` ${className || ''}`)}>
+        <div className={classnames([CLASSES[type], className])}>
             <div>{children}</div>
             {learnMore ? (
                 <div>
@@ -23,14 +24,10 @@ const Alert = ({ type, children, learnMore, className }) => {
 };
 
 Alert.propTypes = {
-    type: PropTypes.oneOf(['info', 'error', 'warning', 'success']).isRequired,
+    type: PropTypes.oneOf(['info', 'error', 'warning', 'success']),
     children: PropTypes.node.isRequired,
     className: PropTypes.string,
     learnMore: PropTypes.string
-};
-
-Alert.defaultProps = {
-    type: 'info'
 };
 
 export default Alert;

@@ -11,17 +11,22 @@ import {
     useNotifications
 } from 'react-components';
 import { deletePaymentMethod, orderPaymentMethods } from 'proton-shared/lib/api/payments';
+import { isExpired } from 'proton-shared/lib/helpers/card';
+import { PAYMENT_METHOD_TYPES } from 'proton-shared/lib/constants';
 
-const toCard = ({ Details }) => {
-    return {
-        fullname: Details.Name,
-        month: Details.ExpMonth,
-        number: `•••• •••• •••• ${Details.Last4}`,
-        year: Details.ExpYear,
-        cvc: '•••',
-        zip: Details.ZIP,
-        country: Details.Country
-    };
+const toCard = ({ Details = {}, Type }) => {
+    if (Type === 'card') {
+        return {
+            fullname: Details.Name,
+            month: Details.ExpMonth,
+            number: '',
+            year: Details.ExpYear.slice(-2),
+            cvc: '',
+            zip: Details.ZIP,
+            country: Details.Country
+        };
+    }
+    return Details;
 };
 
 const PaymentMethodActions = ({ method, onChange, methods, index }) => {
@@ -41,21 +46,21 @@ const PaymentMethodActions = ({ method, onChange, methods, index }) => {
 
         IDs.splice(index, 1);
         IDs.unshift(method.ID);
-
-        await orderPaymentMethods(IDs);
+        await api(orderPaymentMethods(IDs));
         await onChange();
         createNotification({ text: c('Success').t`Payment method updated` });
     };
 
     const list = [
-        method.Type === 'card' && {
+        method.Type === PAYMENT_METHOD_TYPES.CARD && {
             text: c('Action').t`Edit`,
             onClick: () => createModal(<EditCardModal card={card} onChange={onChange} />)
         },
-        index > 0 && {
-            text: c('Action').t`Mark as default`,
-            onClick: markAsDefault
-        },
+        index > 0 &&
+            !isExpired(method.Details) && {
+                text: c('Action').t`Mark as default`,
+                onClick: markAsDefault
+            },
         {
             text: c('Action').t`Delete`,
             onClick: () => {

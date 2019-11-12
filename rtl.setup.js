@@ -1,3 +1,6 @@
-// See https://github.com/kentcdodds/react-testing-library#global-config
-import 'jest-dom/extend-expect';
-import 'react-testing-library/cleanup-after-each';
+import '@testing-library/react/cleanup-after-each';
+import '@testing-library/jest-dom/extend-expect';
+
+// Silence warnings on expect to throw https://github.com/testing-library/react-testing-library/issues/157
+console.error = () => {};
+console.warn = () => {};

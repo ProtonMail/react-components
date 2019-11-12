@@ -1,51 +1,29 @@
-import { decryptPrivateKey } from 'pmcrypto';
-import { prepareKeys, prepareMemberKeys } from 'proton-shared/lib/keys/keys';
-import { useCache, usePromiseResult, useAuthenticationStore } from 'react-components';
-import { noop } from 'proton-shared/lib/helpers/function';
+import { useCallback } from 'react';
+import useCache from '../containers/cache/useCache';
+import { useGetAddresses } from './useAddresses';
+import useCachedModelResult from './useCachedModelResult';
+import { useGetAddressKeys } from './useGetAddressKeys';
 
-import { cachedPromise } from './helpers/cachedPromise';
+export const CACHE_KEY = 'ADDRESS_KEYS';
+export const KEY = 'ADDRESSES_KEYS';
 
-const useAddressesKeys = (user, addresses) => {
-    const cache = useCache();
-    const authenticationStore = useAuthenticationStore();
-
-    return usePromiseResult(async () => {
-        if (!Array.isArray(addresses)) {
-            return;
-        }
-
-        const { OrganizationPrivateKey } = user;
-        const keyPassword = authenticationStore.getPassword();
-
-        const keys = await Promise.all(
-            addresses.map((address) => {
-                const { ID, Keys } = address;
-
-                return cachedPromise(
-                    cache,
-                    ID,
-                    async () => {
-                        if (OrganizationPrivateKey) {
-                            const organizationKey = await decryptPrivateKey(OrganizationPrivateKey, keyPassword).catch(
-                                noop
-                            );
-                            return prepareMemberKeys(Keys, organizationKey);
-                        }
-
-                        return prepareKeys(Keys, keyPassword);
-                    },
-                    Keys
-                );
-            })
-        );
-
+export const useGetAddressesKeys = () => {
+    const getAddresses = useGetAddresses();
+    const getAddressKeys = useGetAddressKeys();
+    return useCallback(async () => {
+        const addresses = await getAddresses();
+        const keys = await Promise.all(addresses.map(({ ID: addressID }) => getAddressKeys(addressID)));
         return addresses.reduce((acc, { ID }, i) => {
             return {
                 ...acc,
                 [ID]: keys[i]
             };
         }, {});
-    }, [addresses]);
+    }, [getAddresses, getAddressKeys]);
 };
 
-export default useAddressesKeys;
+export const useAddressesKeys = () => {
+    const cache = useCache();
+    const miss = useGetAddressesKeys();
+    return useCachedModelResult(cache, KEY, miss);
+};
