@@ -103,9 +103,9 @@ const MonthDays = ({
                 const isActiveMonth = isSameMonth(dayDate, activeDate);
                 const isCurrent = isSameDay(now, dayDate);
                 const isInterval =
-                    rangeStart && rangeEnd && isWithinInterval(dayDate, { start: rangeStart, end: rangeEnd });
+                    (rangeStart && rangeEnd && isWithinInterval(dayDate, { start: rangeStart, end: rangeEnd })) ||
+                    (rangeStart && isSameDay(rangeStart, dayDate));
                 const isIntervalBound = isSameDay(rangeStart, dayDate) || isSameDay(rangeEnd, dayDate);
-
                 const isPressed = isSameDay(selectedDate, dayDate) || isInterval;
 
                 // only for CSS layout: beginning/end of week OR beginning/end of interval in week
