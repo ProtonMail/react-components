@@ -113,7 +113,8 @@ const MonthDays = ({
                     (isInterval && i % numberOfDays === 0) || (isInterval && isSameDay(rangeStart, dayDate));
                 const isIntervalBoundEnd =
                     (isInterval && i % numberOfDays === numberOfDays - 1) ||
-                    (isInterval && isSameDay(rangeEnd, dayDate));
+                    (isInterval && isSameDay(rangeEnd, dayDate)) ||
+                    (!rangeEnd && isIntervalBoundBegin);
 
                 const hasMarker = markers[dayDate.getTime()];
 
