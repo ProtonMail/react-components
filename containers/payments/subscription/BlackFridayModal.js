@@ -63,6 +63,13 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
                         checkSubscription({
                             PlanIDs: planIDs,
                             Currency: currency,
+                            Cycle: cycle
+                        })
+                    ),
+                    api(
+                        checkSubscription({
+                            PlanIDs: planIDs,
+                            Currency: currency,
                             Cycle: MONTHLY
                         })
                     )
@@ -71,10 +78,10 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
         );
 
         updatePricing(
-            result.reduce((acc, [withCoupon, withoutCouponMonthly], index) => {
+            result.reduce((acc, [withCoupon, withoutCoupon, withoutCouponMonthly], index) => {
                 acc[index] = {
                     withCoupon: withCoupon.Amount + withCoupon.CouponDiscount,
-                    withoutCoupon: withCoupon.Amount,
+                    withoutCoupon: withoutCoupon.Amount + withoutCoupon.CouponDiscount,
                     withoutCouponMonthly: withoutCouponMonthly.Amount,
                     save:
                         withoutCouponMonthly.Amount * withCoupon.Cycle - (withCoupon.Amount + withCoupon.CouponDiscount)
