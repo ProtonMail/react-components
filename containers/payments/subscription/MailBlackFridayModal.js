@@ -12,14 +12,12 @@ const MailBlackFridayModal = ({ plans = [], ...rest }) => {
         {
             name: 'ProtonMail Plus',
             cycle: CYCLE.YEARLY,
-            pourcentage: 35,
             planIDs: [plansMap.plus.ID],
             couponCode: BLACK_FRIDAY.COUPON_CODE
         },
         {
             name: 'ProtonMail Plus',
             cycle: CYCLE.TWO_YEARS,
-            pourcentage: 40,
             planIDs: [plansMap.plus.ID],
             couponCode: BLACK_FRIDAY.COUPON_CODE,
             popular: true
@@ -27,7 +25,6 @@ const MailBlackFridayModal = ({ plans = [], ...rest }) => {
         {
             name: 'Mail Plus & VPN Plus',
             cycle: CYCLE.TWO_YEARS,
-            pourcentage: 50,
             planIDs: [plansMap.plus.ID, plansMap.vpnplus.ID],
             couponCode: BLACK_FRIDAY.COUPON_CODE
         }

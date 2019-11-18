@@ -103,9 +103,11 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
                 <>
                     <Alert>{c('Info').t`Don't miss out on limited time discounts for newcomers!`}</Alert>
                     <div className="flex-autogrid flex-items-end">
-                        {bundles.map(({ name, cycle, planIDs, popular, couponCode, pourcentage }, index) => {
+                        {bundles.map(({ name, cycle, planIDs, popular, couponCode }, index) => {
                             const key = `${index}`;
                             const { withCoupon = 0, withoutCouponMonthly = 0, save = 0 } = pricing[index] || {};
+                            const withCouponMonthly = withCoupon / cycle;
+                            const pourcentage = 100 - (withCouponMonthly * 100) / withoutCouponMonthly;
                             const monthlyPrice = (
                                 <Price currency={currency} suffix="/mo">
                                     {withCoupon / cycle}
