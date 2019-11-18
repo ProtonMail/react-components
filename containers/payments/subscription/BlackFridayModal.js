@@ -37,15 +37,15 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
             [TWO_YEARS]: c('Title').jt`Billed as ${amount} (${notice})`
         }[cycle]);
 
-    const AFTER_INFO = ({ cycle, amount, notice }) =>
+    const AFTER_INFO = ({ amount, notice }) =>
         ({
-            [MONTHLY]: c('Title')
-                .jt`(${notice}) After one month, your subscription will automatically renew at the regular price of ${amount} every month.`,
-            [YEARLY]: c('Title')
-                .jt`(${notice}) After one year, your subscription will automatically renew at the regular price of ${amount} every year.`,
-            [TWO_YEARS]: c('Title')
-                .jt`(${notice}) After two years, your subscription will automatically renew at the regular price of ${amount} every two years.`
-        }[cycle]);
+            1: c('Title')
+                .jt`(${notice}) Renews after 1 year at a discounted annual price of ${amount} per year (20% discount).`,
+            2: c('Title')
+                .jt`(${notice}) Renews after 2 years at a discounted 2-year price of ${amount} per year (33% discount).`,
+            3: c('Title')
+                .jt`(${notice}) Renews after 2 years at a discounted 2-year & bundle price of ${amount} per year (49% discount).`
+        }[notice]);
 
     const getBundlePrices = async () => {
         const result = await Promise.all(
@@ -172,7 +172,7 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
                             onSelect={updateCurrency}
                         />
                     </div>
-                    {bundles.map(({ cycle }, index) => {
+                    {bundles.map((b, index) => {
                         const key = `${index}`;
                         const { withoutCoupon = 0 } = pricing[index] || {};
                         const amount = (
@@ -182,7 +182,7 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
                         );
                         return (
                             <p key={key} className="smaller mt0 mb0 opacity-50 aligncenter">
-                                {AFTER_INFO({ cycle, notice: index + 1, amount })}
+                                {AFTER_INFO({ notice: index + 1, amount })}
                             </p>
                         );
                     })}
