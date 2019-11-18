@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import differenceInDays from 'date-fns/difference_in_days';
+import differenceInDays from 'date-fns/differenceInDays';
 import PropTypes from 'prop-types';
 import { useUser, useApi, useLoading, useBlackFriday, TopNavbarLink } from 'react-components';
 import { getLastCancelledSubscription } from 'proton-shared/lib/api/payments';

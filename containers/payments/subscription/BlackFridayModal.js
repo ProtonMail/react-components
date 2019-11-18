@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
     classnames,
+    Badge,
     FormModal,
     Loader,
     Button,
@@ -16,8 +17,6 @@ import { CYCLE, DEFAULT_CURRENCY, DEFAULT_CYCLE } from 'proton-shared/lib/consta
 import { c } from 'ttag';
 
 const { MONTHLY, YEARLY, TWO_YEARS } = CYCLE;
-
-import './BlackFridayModal.scss';
 
 const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
     const api = useApi();
@@ -94,7 +93,7 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
             ) : (
                 <>
                     <Alert>{c('Info').t`Don't miss out on limited time discounts for newcomers!`}</Alert>
-                    <div className="flex flex-nowrap flex-spacebetween">
+                    <div className="flex-autogrid flex-items-end">
                         {bundles.map(({ name, cycle, planIDs, popular, couponCode, pourcentage }, index) => {
                             const key = `${index}`;
                             const { withCoupon = 0, withoutCouponMonthly = 0 } = pricing[index] || {};
@@ -109,49 +108,55 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
                                 </Price>
                             );
                             const regularPrice = (
-                                <del>
-                                    <Price key={key} currency={currency} suffix="/mo">
+                                <del key={key}>
+                                    <Price currency={currency} suffix="/mo">
                                         {withoutCouponMonthly}
                                     </Price>
                                 </del>
                             );
 
                             return (
-                                <div
-                                    key={key}
-                                    className="blackfriday-plan relative bordered-container p1 mb1 flex flex-column flex-items-center flex-justify-end"
-                                >
+                                <div key={key} className="flex-autogrid-item">
                                     {popular ? (
-                                        <span className="blackfriday-popular uppercase small bg-global-light w100 mt0 mb0 aligncenter">{c(
+                                        <div className="uppercase smaller bold rounded bg-primary color-white mt0 mb0 aligncenter">{c(
                                             'Title'
-                                        ).t`Most popular`}</span>
+                                        ).t`Most popular`}</div>
                                     ) : null}
-                                    {pourcentage ? (
-                                        <span className="blackfriday-pourcentage bold aligncenter absolute rounded50 bg-global-warning color-white uppercase">
-                                            {pourcentage}% off
-                                        </span>
-                                    ) : null}
-                                    <span>{DEAL_TITLE[cycle]}</span>
-                                    <strong>{name}</strong>
-                                    <div className="h2 mb0">{monthlyPrice}</div>
-                                    <small>{c('Info').jt`Regular price: ${regularPrice}`}</small>
-                                    <Button
-                                        className={classnames([popular && 'pm-button--primary'])}
-                                        onClick={() => {
-                                            rest.onClose();
-                                            onSelect({ planIDs, cycle, currency, couponCode });
-                                        }}
-                                    >{c('Action').t`Get the deal`}</Button>
-                                    <small>{BILLED_DESCRIPTION({ cycle, amount: amountDue, notice: index + 1 })}</small>
+                                    <div className="blackfriday-plan bordered-container p1 mb1 flex flex-column flex-items-center flex-justify-end">
+                                        {pourcentage ? (
+                                            <Badge type="primary" className="bold mb1">
+                                                {pourcentage}% off
+                                            </Badge>
+                                        ) : null}
+                                        <strong>{DEAL_TITLE[cycle]}</strong>
+                                        <strong>{name}</strong>
+                                        <div className="h2 mb0">{monthlyPrice}</div>
+                                        <small className="mb1">{c('Info').jt`Regular price: ${regularPrice}`}</small>
+                                        <Button
+                                            className={classnames([
+                                                'mb1',
+                                                popular ? 'pm-button--primary' : 'pm-button--primaryborder'
+                                            ])}
+                                            onClick={() => {
+                                                rest.onClose();
+                                                onSelect({ planIDs, cycle, currency, couponCode });
+                                            }}
+                                        >{c('Action').t`Get the deal`}</Button>
+                                        <small>
+                                            {BILLED_DESCRIPTION({ cycle, amount: amountDue, notice: index + 1 })}
+                                        </small>
+                                    </div>
                                 </div>
                             );
                         })}
                     </div>
-                    <div className="mb1 flex flex-nowrap flex-items-center">
-                        <label htmlFor="currency-selector" className="mr1">{c('Label').t`Select currency:`}</label>
-                        <div>
-                            <CurrencySelector id="currency-select" currency={currency} onSelect={updateCurrency} />
-                        </div>
+                    <div className="mb1 aligncenter">
+                        <CurrencySelector
+                            id="currency-select"
+                            mode="buttons"
+                            currency={currency}
+                            onSelect={updateCurrency}
+                        />
                     </div>
                     {bundles.map(({ cycle }, index) => {
                         const key = `${index}`;
@@ -162,7 +167,7 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
                             </Price>
                         );
                         return (
-                            <p key={key} className="small mt0 mb0">
+                            <p key={key} className="small mt0 mb0 opacity-50 aligncenter">
                                 {AFTER_INFO({ cycle, notice: index + 1, amount })}
                             </p>
                         );

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Tooltip } from 'react-components';
+import { Tooltip, classnames } from 'react-components';
 
 const CLASSNAMES = {
     success: 'mr1 badgeLabel-success',
@@ -13,8 +13,8 @@ const CLASSNAMES = {
 
 const wrapTooltip = (children, title) => <Tooltip title={title}>{children}</Tooltip>;
 
-const Badge = ({ children, type = 'default', tooltip }) => {
-    let badge = <span className={CLASSNAMES[type]}>{children}</span>;
+const Badge = ({ children, type = 'default', tooltip, className }) => {
+    let badge = <span className={classnames([CLASSNAMES[type], className])}>{children}</span>;
 
     if (tooltip) {
         badge = wrapTooltip(badge, tooltip);
@@ -24,6 +24,7 @@ const Badge = ({ children, type = 'default', tooltip }) => {
 };
 
 Badge.propTypes = {
+    className: PropTypes.string,
     children: PropTypes.node.isRequired,
     type: PropTypes.string,
     tooltip: PropTypes.string
