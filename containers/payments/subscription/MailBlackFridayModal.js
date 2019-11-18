@@ -34,7 +34,12 @@ const MailBlackFridayModal = ({ plans = [], ...rest }) => {
 };
 
 MailBlackFridayModal.propTypes = {
-    plans: PropTypes.array.isRequired
+    plans: PropTypes.arrayOf(
+        PropTypes.shape({
+            ID: PropTypes.string.isRequired,
+            Name: PropTypes.string.isRequired
+        })
+    ).isRequired
 };
 
 export default MailBlackFridayModal;

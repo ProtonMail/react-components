@@ -16,7 +16,7 @@ const BlackFridayNavbarLink = ({ to }) => {
 
     const check = async () => {
         // Return the latest subscription cancellation time, return null if the user never had any subscription, 0 if the user currently has an active subscription
-        const { LastSubscriptionEnd = 0 } = await api(getLastCancelledSubscription());
+        const { LastSubscriptionEnd = 0 } = (await api(getLastCancelledSubscription())) || {};
         const now = new Date();
 
         setEligibility(LastSubscriptionEnd ? differenceInDays(now, new Date(LastSubscriptionEnd)) >= ONE_MONTH : false); // TODO change LastSubscriptionEnd < 30th September
