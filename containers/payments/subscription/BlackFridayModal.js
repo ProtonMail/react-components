@@ -75,7 +75,9 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
                 acc[index] = {
                     withCoupon: withCoupon.Amount + withCoupon.CouponDiscount,
                     withoutCoupon: withCoupon.Amount,
-                    withoutCouponMonthly: withoutCouponMonthly.Amount
+                    withoutCouponMonthly: withoutCouponMonthly.Amount,
+                    save:
+                        withoutCouponMonthly.Amount * withCoupon.Cycle - (withCoupon.Amount + withCoupon.CouponDiscount)
                 };
                 return acc;
             }, {})
@@ -96,7 +98,7 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
                     <div className="flex-autogrid flex-items-end">
                         {bundles.map(({ name, cycle, planIDs, popular, couponCode, pourcentage }, index) => {
                             const key = `${index}`;
-                            const { withCoupon = 0, withoutCouponMonthly = 0 } = pricing[index] || {};
+                            const { withCoupon = 0, withoutCouponMonthly = 0, save = 0 } = pricing[index] || {};
                             const monthlyPrice = (
                                 <Price currency={currency} suffix="/mo">
                                     {withCoupon / cycle}
@@ -114,6 +116,11 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
                                     </Price>
                                 </del>
                             );
+                            const savePrice = (
+                                <Price key={key} currency={currency}>
+                                    {save}
+                                </Price>
+                            );
 
                             return (
                                 <div key={key} className="flex-autogrid-item">
@@ -124,7 +131,7 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
                                     ) : null}
                                     <div className="blackfriday-plan bordered-container p1 mb1 flex flex-column flex-items-center flex-justify-end">
                                         {pourcentage ? (
-                                            <Badge type="primary" className="bold mb1">
+                                            <Badge type="primary" className="bold mb1 mr0">
                                                 {pourcentage}% off
                                             </Badge>
                                         ) : null}
@@ -132,6 +139,11 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
                                         <strong>{name}</strong>
                                         <div className="h2 mb0">{monthlyPrice}</div>
                                         <small className="mb1">{c('Info').jt`Regular price: ${regularPrice}`}</small>
+                                        {popular ? (
+                                            <small className="mb1 bold uppercase color-primary">
+                                                {c('Text').t`Save`} {savePrice}
+                                            </small>
+                                        ) : null}
                                         <Button
                                             className={classnames([
                                                 'mb1',

@@ -3,17 +3,17 @@ import PropTypes from 'prop-types';
 import { Tooltip, classnames } from 'react-components';
 
 const CLASSNAMES = {
-    success: 'mr1 badgeLabel-success',
-    default: 'mr1 badgeLabel',
-    origin: 'mr1 badgeLabel-grey',
-    warning: 'mr1 badgeLabel-warning',
-    error: 'mr1 badgeLabel-error',
-    primary: 'mr1 badgeLabel-primary'
+    success: 'badgeLabel-success',
+    default: 'badgeLabel',
+    origin: 'badgeLabel-grey',
+    warning: 'badgeLabel-warning',
+    error: 'badgeLabel-error',
+    primary: 'badgeLabel-primary'
 };
 
 const wrapTooltip = (children, title) => <Tooltip title={title}>{children}</Tooltip>;
 
-const Badge = ({ children, type = 'default', tooltip, className }) => {
+const Badge = ({ children, type = 'default', tooltip, className = 'mr1' }) => {
     let badge = <span className={classnames([CLASSNAMES[type], className])}>{children}</span>;
 
     if (tooltip) {
