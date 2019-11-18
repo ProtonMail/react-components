@@ -81,7 +81,7 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
             result.reduce((acc, [withCoupon, withoutCoupon, withoutCouponMonthly], index) => {
                 acc[index] = {
                     withCoupon: withCoupon.Amount + withCoupon.CouponDiscount,
-                    withoutCoupon: withoutCoupon.Amount + withoutCoupon.CouponDiscount,
+                    withoutCoupon: withoutCoupon.Amount + withoutCoupon.CouponDiscount, // BUNDLE discount can be applied
                     withoutCouponMonthly: withoutCouponMonthly.Amount,
                     save:
                         withoutCouponMonthly.Amount * withCoupon.Cycle - (withCoupon.Amount + withCoupon.CouponDiscount)
@@ -107,7 +107,7 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
                             const key = `${index}`;
                             const { withCoupon = 0, withoutCouponMonthly = 0, save = 0 } = pricing[index] || {};
                             const withCouponMonthly = withCoupon / cycle;
-                            const percentage = 100 - (withCouponMonthly * 100) / withoutCouponMonthly;
+                            const percentage = 100 - Math.round((withCouponMonthly * 100) / withoutCouponMonthly);
                             const monthlyPrice = (
                                 <Price currency={currency} suffix="/mo">
                                     {withCoupon / cycle}
@@ -141,7 +141,7 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
                                     <div className="blackfriday-plan bordered-container p1 mb1 flex flex-column flex-items-center flex-justify-end">
                                         {percentage ? (
                                             <Badge type="primary" className="bold mb1 mr0">
-                                                {percentage}% off
+                                                {c('Badge plan').t`${percentage}% off`}
                                             </Badge>
                                         ) : null}
                                         <strong>{DEAL_TITLE[cycle]}</strong>
