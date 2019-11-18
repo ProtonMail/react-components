@@ -137,7 +137,9 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
                                         ) : null}
                                         <strong>{DEAL_TITLE[cycle]}</strong>
                                         <strong>{name}</strong>
-                                        <div className="h2 mb0">{monthlyPrice}</div>
+                                        <div className={classnames(['h2 mb0', popular && 'color-primary bold'])}>
+                                            {monthlyPrice}
+                                        </div>
                                         <small className="mb1">{c('Info').jt`Regular price: ${regularPrice}`}</small>
                                         {popular ? (
                                             <small className="mb1 bold uppercase color-primary">
@@ -179,7 +181,7 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
                             </Price>
                         );
                         return (
-                            <p key={key} className="small mt0 mb0 opacity-50 aligncenter">
+                            <p key={key} className="smaller mt0 mb0 opacity-50 aligncenter">
                                 {AFTER_INFO({ cycle, notice: index + 1, amount })}
                             </p>
                         );
