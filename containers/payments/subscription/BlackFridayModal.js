@@ -107,7 +107,7 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
                             const key = `${index}`;
                             const { withCoupon = 0, withoutCouponMonthly = 0, save = 0 } = pricing[index] || {};
                             const withCouponMonthly = withCoupon / cycle;
-                            const pourcentage = 100 - (withCouponMonthly * 100) / withoutCouponMonthly;
+                            const percentage = 100 - (withCouponMonthly * 100) / withoutCouponMonthly;
                             const monthlyPrice = (
                                 <Price currency={currency} suffix="/mo">
                                     {withCoupon / cycle}
@@ -139,9 +139,9 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
                                         ).t`Most popular`}</div>
                                     ) : null}
                                     <div className="blackfriday-plan bordered-container p1 mb1 flex flex-column flex-items-center flex-justify-end">
-                                        {pourcentage ? (
+                                        {percentage ? (
                                             <Badge type="primary" className="bold mb1 mr0">
-                                                {pourcentage}% off
+                                                {percentage}% off
                                             </Badge>
                                         ) : null}
                                         <strong>{DEAL_TITLE[cycle]}</strong>
@@ -209,7 +209,7 @@ BlackFridayModal.propTypes = {
             name: PropTypes.string.isRequired,
             cycle: PropTypes.oneOf([MONTHLY, YEARLY, TWO_YEARS]).isRequired,
             couponCode: PropTypes.string,
-            pourcentage: PropTypes.number,
+            percentage: PropTypes.number,
             popular: PropTypes.bool
         })
     )
