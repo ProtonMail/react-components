@@ -42,9 +42,9 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
             1: c('Title')
                 .jt`(${notice}) Renews after 1 year at a discounted annual price of ${amount} per year (20% discount).`,
             2: c('Title')
-                .jt`(${notice}) Renews after 2 years at a discounted 2-year price of ${amount} per year (33% discount).`,
+                .jt`(${notice}) Renews after 2 years at a discounted 2-year price of ${amount} every 2 years (33% discount).`,
             3: c('Title')
-                .jt`(${notice}) Renews after 2 years at a discounted 2-year & bundle price of ${amount} per year (49% discount).`
+                .jt`(${notice}) Renews after 2 years at a discounted 2-year & bundle price of ${amount} every 2 years (47% discount).`
         }[notice]);
 
     const getBundlePrices = async () => {
