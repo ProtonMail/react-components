@@ -13,7 +13,7 @@ const DEFAULT_STATE = {
 };
 
 const useInput = (
-    { onFocus, onBlur, onChange, onPressEnter, onKeyDown, disabled },
+    { onFocus, onBlur, onChange, onPressEnter, onKeyDown, disabled, isSubmitted },
     initialState = DEFAULT_STATE,
     prefix = 'field'
 ) => {
@@ -30,7 +30,7 @@ const useInput = (
             isPristine && PRISTINE_CLASS,
             isFocused && FOCUSED_CLASS,
             isBlurred && BLURRED_CLASS,
-            isDirty && DIRTY_CLASS
+            (isDirty || isSubmitted) && DIRTY_CLASS
         ]
             .filter(Boolean)
             .map((className) => `${prefix}-${className}`)
