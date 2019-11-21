@@ -209,9 +209,9 @@ const BillingSection = ({ permission }) => {
                 {CouponCode || [YEARLY, TWO_YEARS].includes(Cycle) ? (
                     <div className="border-bottom pt1 pl1 pr1">
                         <div className="flex-autogrid onmobile-flex-column w100 mb1">
-                            <div className="flex-autogrid-item">{c('Label').t`Sub-total`}</div>
+                            <div className="flex-autogrid-item h4 mb0">{c('Label').t`Sub-total`}</div>
                             <div className="flex-autogrid-item" />
-                            <div className="flex-autogrid-item bold alignright">
+                            <div className="flex-autogrid-item h4 mb0 bold alignright">
                                 <PlanPrice amount={subTotal} currency={Currency} cycle={MONTHLY} />
                             </div>
                         </div>
@@ -229,9 +229,9 @@ const BillingSection = ({ permission }) => {
                 ) : null}
                 <div className="pt1 pl1 pr1">
                     <div className="flex-autogrid onmobile-flex-column w100 mb1">
-                        <div className="flex-autogrid-item">{c('Label').t`Total`}</div>
+                        <div className="flex-autogrid-item h4 mb0">{c('Label').t`Total`}</div>
                         <div className="flex-autogrid-item" />
-                        <div className="flex-autogrid-item bold alignright">
+                        <div className="flex-autogrid-item h4 mb0 bold alignright">
                             <PlanPrice amount={Amount} currency={Currency} cycle={Cycle} />
                         </div>
                     </div>
