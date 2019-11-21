@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { c, ngettext, msgid } from 'ttag';
-import { PLAN_NAMES, CYCLE, LOYAL_STORAGE_BONUS, LOYAL_CONNECTION_BONUS } from 'proton-shared/lib/constants';
+import { PLAN_NAMES, CYCLE, LOYAL_BONUS_STORAGE, LOYAL_BONUS_CONNECTION } from 'proton-shared/lib/constants';
 import { isLoyal } from 'proton-shared/lib/helpers/organization';
 import {
     Button,
@@ -194,7 +194,7 @@ const BillingSection = ({ permission }) => {
                         {loyal ? (
                             <div className="flex-autogrid onmobile-flex-column w100 mb1">
                                 <div className="flex-autogrid-item">{c('Label').t`Bonus storage`}</div>
-                                <div className="flex-autogrid-item bold">+{humanSize(LOYAL_STORAGE_BONUS)}</div>
+                                <div className="flex-autogrid-item bold">+{humanSize(LOYAL_BONUS_STORAGE)}</div>
                                 <div className="flex-autogrid-item bold alignright">
                                     <PlanPrice amount={0} currency={Currency} cycle={MONTHLY} />
                                 </div>
@@ -263,9 +263,9 @@ const BillingSection = ({ permission }) => {
                                 <div className="flex-autogrid-item bold">
                                     +
                                     {ngettext(
-                                        msgid`${LOYAL_CONNECTION_BONUS} connection`,
-                                        `${LOYAL_CONNECTION_BONUS} connections`,
-                                        LOYAL_CONNECTION_BONUS
+                                        msgid`${LOYAL_BONUS_CONNECTION} connection`,
+                                        `${LOYAL_BONUS_CONNECTION} connections`,
+                                        LOYAL_BONUS_CONNECTION
                                     )}
                                 </div>
                                 <div className="flex-autogrid-item bold alignright">
