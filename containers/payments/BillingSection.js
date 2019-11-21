@@ -18,11 +18,12 @@ import {
 } from 'react-components';
 import { getMonthlyBaseAmount } from 'proton-shared/lib/helpers/subscription';
 
-import { formatPlans } from './subscription/helpers';
+import { formatPlans, toPlanNames } from './subscription/helpers';
 import DiscountBadge from './DiscountBadge';
 import GiftCodeModal from './GiftCodeModal';
 import CreditsModal from './CreditsModal';
 import PlanPrice from './subscription/PlanPrice';
+import SubscriptionModal from './subscription/SubscriptionModal';
 
 const { MONTHLY, YEARLY, TWO_YEARS } = CYCLE;
 
@@ -48,11 +49,21 @@ const getSubTotal = (plans = []) => {
 const BillingSection = ({ permission }) => {
     const i18n = getCyclesI18N();
     const { createModal } = useModals();
-    const handleOpenGiftCodeModal = () => createModal(<GiftCodeModal />);
-    const handleOpenCreditsModal = () => createModal(<CreditsModal />);
     const [{ hasPaidMail, hasPaidVpn, Credit }] = useUser();
     const [plans, loadingPlans] = usePlans();
     const [subscription, loadingSubscription] = useSubscription();
+    const handleOpenGiftCodeModal = () => createModal(<GiftCodeModal />);
+    const handleOpenCreditsModal = () => createModal(<CreditsModal />);
+    const handleOpenSubscriptionModal = () =>
+        createModal(
+            <SubscriptionModal
+                subscription={subscription}
+                plansMap={toPlanNames(subscription.Plans)}
+                coupon={subscription.CouponCode}
+                currency={subscription.Currency}
+                cycle={YEARLY}
+            />
+        );
 
     if (!permission) {
         return (
@@ -262,7 +273,8 @@ const BillingSection = ({ permission }) => {
                         <div className="flex-autogrid-item">{c('Label').t`Billing cycle`}</div>
                         <div className="flex-autogrid-item">
                             {Cycle === MONTHLY ? (
-                                <LinkButton>{c('Action').t`Pay annualy and save 20%!`}</LinkButton>
+                                <LinkButton onClick={handleOpenSubscriptionModal}>{c('Action')
+                                    .t`Pay annualy and save 20%!`}</LinkButton>
                             ) : null}
                         </div>
                         <div className="flex-autogrid-item bold alignright">{i18n[Cycle]}</div>
@@ -270,7 +282,7 @@ const BillingSection = ({ permission }) => {
                     <div className="flex-autogrid onmobile-flex-column w100">
                         <div className="flex-autogrid-item">{c('Label').t`Gift code`}</div>
                         <div className="flex-autogrid-item">
-                            <LinkButton>{c('Action').t`Use gift code`}</LinkButton>
+                            <LinkButton onClick={handleOpenGiftCodeModal}>{c('Action').t`Use gift code`}</LinkButton>
                         </div>
                         <div className="flex-autogrid-item" />
                     </div>
