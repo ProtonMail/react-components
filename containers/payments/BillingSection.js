@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { c, ngettext, msgid } from 'ttag';
+import { c, msgid } from 'ttag';
 import { PLAN_NAMES, CYCLE, LOYAL_BONUS_STORAGE, LOYAL_BONUS_CONNECTION } from 'proton-shared/lib/constants';
 import { isLoyal } from 'proton-shared/lib/helpers/organization';
 import {
@@ -143,7 +143,7 @@ const BillingSection = ({ permission }) => {
                                 <div className="flex-autogrid-item">{c('Label').t`Extra users`}</div>
                                 <div className="flex-autogrid-item bold">
                                     +
-                                    {ngettext(
+                                    {c('Addon unit for subscription').ngettext(
                                         msgid`${memberAddon.MaxMembers} user`,
                                         `${memberAddon.MaxMembers} users`,
                                         memberAddon.MaxMembers
@@ -163,7 +163,7 @@ const BillingSection = ({ permission }) => {
                                 <div className="flex-autogrid-item">{c('Label').t`Extra email addresses`}</div>
                                 <div className="flex-autogrid-item bold">
                                     +
-                                    {ngettext(
+                                    {c('Addon unit for subscription').ngettext(
                                         msgid`${addressAddon.MaxAddresses} address`,
                                         `${addressAddon.MaxAddresses} addresses`,
                                         addressAddon.MaxAddresses
@@ -205,7 +205,7 @@ const BillingSection = ({ permission }) => {
                                 <div className="flex-autogrid-item">{c('Label').t`Extra domains`}</div>
                                 <div className="flex-autogrid-item bold">
                                     +
-                                    {ngettext(
+                                    {c('Addon unit for subscription').ngettext(
                                         msgid`${domainAddon.MaxDomains} domain`,
                                         `${domainAddon.MaxDomains} domains`,
                                         domainAddon.MaxDomains
@@ -242,7 +242,7 @@ const BillingSection = ({ permission }) => {
                                 <div className="flex-autogrid-item">{c('Label').t`Extra connections`}</div>
                                 <div className="flex-autogrid-item bold">
                                     +
-                                    {ngettext(
+                                    {c('Addon unit for subscription').ngettext(
                                         msgid`${vpnAddon.MaxVPN} connection`,
                                         `${vpnAddon.MaxVPN} connections`,
                                         vpnAddon.MaxVPN
@@ -262,7 +262,7 @@ const BillingSection = ({ permission }) => {
                                 <div className="flex-autogrid-item">{c('Label').t`Bonus connections`}</div>
                                 <div className="flex-autogrid-item bold">
                                     +
-                                    {ngettext(
+                                    {c('Addon unit for subscription').ngettext(
                                         msgid`${LOYAL_BONUS_CONNECTION} connection`,
                                         `${LOYAL_BONUS_CONNECTION} connections`,
                                         LOYAL_BONUS_CONNECTION
