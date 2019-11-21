@@ -18,7 +18,7 @@ import {
     useModals,
     usePlans
 } from 'react-components';
-import { getMonthlyBaseAmount } from 'proton-shared/lib/helpers/subscription';
+import { getMonthlyBaseAmount, hasVisionary } from 'proton-shared/lib/helpers/subscription';
 
 import { formatPlans, toPlanNames } from './subscription/helpers';
 import DiscountBadge from './DiscountBadge';
@@ -222,7 +222,7 @@ const BillingSection = ({ permission }) => {
                         ) : null}
                     </div>
                 ) : null}
-                {hasPaidVpn ? (
+                {hasPaidVpn && !hasVisionary(subscription) ? (
                     <div className="border-bottom pt1 pl1 pr1">
                         {vpnPlan ? (
                             <div className="flex-autogrid onmobile-flex-column w100 mb1">
