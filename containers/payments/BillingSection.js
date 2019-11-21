@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { c } from 'ttag';
-import { PLAN_NAMES, CYCLE } from 'proton-shared/lib/constants';
+import { c, ngettext, msgid } from 'ttag';
+import { PLAN_NAMES, CYCLE, LOYAL_STORAGE_BONUS, LOYAL_CONNECTION_BONUS } from 'proton-shared/lib/constants';
+import { isLoyal } from 'proton-shared/lib/helpers/organization';
 import {
     Button,
     Alert,
@@ -13,6 +14,7 @@ import {
     Time,
     useUser,
     useSubscription,
+    useOrganization,
     useModals,
     usePlans
 } from 'react-components';
@@ -24,6 +26,7 @@ import GiftCodeModal from './GiftCodeModal';
 import CreditsModal from './CreditsModal';
 import PlanPrice from './subscription/PlanPrice';
 import SubscriptionModal from './subscription/SubscriptionModal';
+import humanSize from 'proton-shared/lib/helpers/humanSize';
 
 const { MONTHLY, YEARLY, TWO_YEARS } = CYCLE;
 
@@ -52,6 +55,7 @@ const BillingSection = ({ permission }) => {
     const [{ hasPaidMail, hasPaidVpn, Credit }] = useUser();
     const [plans, loadingPlans] = usePlans();
     const [subscription, loadingSubscription] = useSubscription();
+    const [organization, loadingOrganization] = useOrganization();
     const handleOpenGiftCodeModal = () => createModal(<GiftCodeModal />);
     const handleOpenCreditsModal = () => createModal(<CreditsModal />);
     const handleOpenSubscriptionModal = () =>
@@ -90,7 +94,7 @@ const BillingSection = ({ permission }) => {
         );
     }
 
-    if (loadingSubscription || loadingPlans) {
+    if (loadingSubscription || loadingPlans || loadingOrganization) {
         return (
             <>
                 <SubTitle>{c('Title').t`Billing details`}</SubTitle>
@@ -112,6 +116,7 @@ const BillingSection = ({ permission }) => {
     const { mailPlan, vpnPlan, addressAddon, domainAddon, memberAddon, vpnAddon, spaceAddon } = formatPlans(Plans);
     const subTotal = getSubTotal(Plans);
     const discount = Amount - subTotal;
+    const loyal = isLoyal(organization);
 
     return (
         <>
@@ -127,7 +132,7 @@ const BillingSection = ({ permission }) => {
                                 <div className="flex-autogrid-item bold alignright">
                                     <PlanPrice
                                         amount={getMonthlyBaseAmount(mailPlan.Name, plans, subscription)}
-                                        currency={mailPlan.Currency}
+                                        currency={Currency}
                                         cycle={MONTHLY}
                                     />
                                 </div>
@@ -136,11 +141,18 @@ const BillingSection = ({ permission }) => {
                         {memberAddon ? (
                             <div className="flex-autogrid onmobile-flex-column w100 mb1">
                                 <div className="flex-autogrid-item">{c('Label').t`Extra users`}</div>
-                                <div className="flex-autogrid-item bold">+{memberAddon.MaxMembers}</div>
+                                <div className="flex-autogrid-item bold">
+                                    +
+                                    {ngettext(
+                                        msgid`${memberAddon.MaxMembers} user`,
+                                        `${memberAddon.MaxMembers} users`,
+                                        memberAddon.MaxMembers
+                                    )}
+                                </div>
                                 <div className="flex-autogrid-item bold alignright">
                                     <PlanPrice
                                         amount={getMonthlyBaseAmount(memberAddon.Name, plans, subscription)}
-                                        currency={memberAddon.Currency}
+                                        currency={Currency}
                                         cycle={MONTHLY}
                                     />
                                 </div>
@@ -149,11 +161,18 @@ const BillingSection = ({ permission }) => {
                         {addressAddon ? (
                             <div className="flex-autogrid onmobile-flex-column w100 mb1">
                                 <div className="flex-autogrid-item">{c('Label').t`Extra email addresses`}</div>
-                                <div className="flex-autogrid-item bold">+{addressAddon.MaxAddresses}</div>
+                                <div className="flex-autogrid-item bold">
+                                    +
+                                    {ngettext(
+                                        msgid`${addressAddon.MaxAddresses} address`,
+                                        `${addressAddon.MaxAddresses} addresses`,
+                                        addressAddon.MaxAddresses
+                                    )}
+                                </div>
                                 <div className="flex-autogrid-item bold alignright">
                                     <PlanPrice
                                         amount={getMonthlyBaseAmount(addressAddon.Name, plans, subscription)}
-                                        currency={addressAddon.Currency}
+                                        currency={Currency}
                                         cycle={MONTHLY}
                                     />
                                 </div>
@@ -162,24 +181,40 @@ const BillingSection = ({ permission }) => {
                         {spaceAddon ? (
                             <div className="flex-autogrid onmobile-flex-column w100 mb1">
                                 <div className="flex-autogrid-item">{c('Label').t`Extra storage`}</div>
-                                <div className="flex-autogrid-item bold">+{spaceAddon.MaxSpace}</div>
+                                <div className="flex-autogrid-item bold">+{humanSize(spaceAddon.MaxSpace)}</div>
                                 <div className="flex-autogrid-item bold alignright">
                                     <PlanPrice
                                         amount={getMonthlyBaseAmount(spaceAddon.Name, plans, subscription)}
-                                        currency={spaceAddon.Currency}
+                                        currency={Currency}
                                         cycle={MONTHLY}
                                     />
+                                </div>
+                            </div>
+                        ) : null}
+                        {loyal ? (
+                            <div className="flex-autogrid onmobile-flex-column w100 mb1">
+                                <div className="flex-autogrid-item">{c('Label').t`Bonus storage`}</div>
+                                <div className="flex-autogrid-item bold">+{humanSize(LOYAL_STORAGE_BONUS)}</div>
+                                <div className="flex-autogrid-item bold alignright">
+                                    <PlanPrice amount={0} currency={Currency} cycle={MONTHLY} />
                                 </div>
                             </div>
                         ) : null}
                         {domainAddon ? (
                             <div className="flex-autogrid onmobile-flex-column w100 mb1">
                                 <div className="flex-autogrid-item">{c('Label').t`Extra domains`}</div>
-                                <div className="flex-autogrid-item bold">+{domainAddon.MaxDomains}</div>
+                                <div className="flex-autogrid-item bold">
+                                    +
+                                    {ngettext(
+                                        msgid`${domainAddon.MaxDomains} domain`,
+                                        `${domainAddon.MaxDomains} domains`,
+                                        domainAddon.MaxDomains
+                                    )}
+                                </div>
                                 <div className="flex-autogrid-item bold alignright">
                                     <PlanPrice
                                         amount={getMonthlyBaseAmount(domainAddon.Name, plans, subscription)}
-                                        currency={domainAddon.Currency}
+                                        currency={Currency}
                                         cycle={MONTHLY}
                                     />
                                 </div>
@@ -196,7 +231,7 @@ const BillingSection = ({ permission }) => {
                                 <div className="flex-autogrid-item bold alignright">
                                     <PlanPrice
                                         amount={getMonthlyBaseAmount(vpnPlan.Name, plans, subscription)}
-                                        currency={vpnPlan.Currency}
+                                        currency={Currency}
                                         cycle={MONTHLY}
                                     />
                                 </div>
@@ -205,13 +240,36 @@ const BillingSection = ({ permission }) => {
                         {vpnAddon ? (
                             <div className="flex-autogrid onmobile-flex-column w100 mb1">
                                 <div className="flex-autogrid-item">{c('Label').t`Extra connections`}</div>
-                                <div className="flex-autogrid-item bold">+{vpnAddon.MaxVPN}</div>
+                                <div className="flex-autogrid-item bold">
+                                    +
+                                    {ngettext(
+                                        msgid`${vpnAddon.MaxVPN} connection`,
+                                        `${vpnAddon.MaxVPN} connections`,
+                                        vpnAddon.MaxVPN
+                                    )}
+                                </div>
                                 <div className="flex-autogrid-item bold alignright">
                                     <PlanPrice
                                         amount={getMonthlyBaseAmount(vpnAddon.Name, plans, subscription)}
-                                        currency={vpnAddon.Currency}
+                                        currency={Currency}
                                         cycle={MONTHLY}
                                     />
+                                </div>
+                            </div>
+                        ) : null}
+                        {loyal ? (
+                            <div className="flex-autogrid onmobile-flex-column w100 mb1">
+                                <div className="flex-autogrid-item">{c('Label').t`Bonus connections`}</div>
+                                <div className="flex-autogrid-item bold">
+                                    +
+                                    {ngettext(
+                                        msgid`${LOYAL_CONNECTION_BONUS} connection`,
+                                        `${LOYAL_CONNECTION_BONUS} connections`,
+                                        LOYAL_CONNECTION_BONUS
+                                    )}
+                                </div>
+                                <div className="flex-autogrid-item bold alignright">
+                                    <PlanPrice amount={0} currency={Currency} cycle={MONTHLY} />
                                 </div>
                             </div>
                         ) : null}
