@@ -4,7 +4,6 @@ import { c, msgid } from 'ttag';
 import { PLAN_NAMES, CYCLE, LOYAL_BONUS_STORAGE, LOYAL_BONUS_CONNECTION } from 'proton-shared/lib/constants';
 import { isLoyal } from 'proton-shared/lib/helpers/organization';
 import {
-    Button,
     Alert,
     SubTitle,
     Price,
@@ -74,22 +73,22 @@ const BillingSection = ({ permission }) => {
             <>
                 <SubTitle>{c('Title').t`Billing details`}</SubTitle>
                 <Alert>{c('Info').t`There are no billing details available for your current subscription.`}</Alert>
-                {Credit ? (
-                    <div className="shadow-container mb1">
-                        <div className="p1 bg-global-light">
-                            <div className="flex-autogrid onmobile-flex-column w100">
-                                <div className="flex-autogrid-item pb0">{c('Label').t`Credits`}</div>
-                                <div className="flex-autogrid-item pb0">
-                                    <LinkButton onClick={handleOpenCreditsModal}>{c('Action')
-                                        .t`Add credits`}</LinkButton>
-                                </div>
-                                <div className="flex-autogrid-item pb0 bold alignright">{Credit / 100}</div>
-                            </div>
+                <div className="shadow-container mb1">
+                    <div className="flex-autogrid onmobile-flex-column w100 mb1">
+                        <div className="flex-autogrid-item">{c('Label').t`Credits`}</div>
+                        <div className="flex-autogrid-item">
+                            <LinkButton onClick={handleOpenCreditsModal}>{c('Action').t`Add credits`}</LinkButton>
                         </div>
+                        <div className="flex-autogrid-item bold alignright">{Credit / 100}</div>
                     </div>
-                ) : null}
-                <Button onClick={handleOpenGiftCodeModal} className="mr1">{c('Action').t`Use gift code`}</Button>
-                {Credit ? null : <Button onClick={handleOpenCreditsModal}>{c('Action').t`Add credits`}</Button>}
+                    <div className="flex-autogrid onmobile-flex-column w100">
+                        <div className="flex-autogrid-item">{c('Label').t`Gift code`}</div>
+                        <div className="flex-autogrid-item">
+                            <LinkButton onClick={handleOpenGiftCodeModal}>{c('Action').t`Use gift code`}</LinkButton>
+                        </div>
+                        <div className="flex-autogrid-item" />
+                    </div>
+                </div>
             </>
         );
     }
