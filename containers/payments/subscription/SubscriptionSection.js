@@ -16,11 +16,12 @@ import {
 } from 'react-components';
 import { PLAN_NAMES } from 'proton-shared/lib/constants';
 import humanSize from 'proton-shared/lib/helpers/humanSize';
+import { identity } from 'proton-shared/lib/helpers/function';
 
 import { formatPlans, toPlanNames } from './helpers';
 import SubscriptionModal from './SubscriptionModal';
 
-const AddonRow = ({ label = '', used, max, format = (v) => v }) => {
+const AddonRow = ({ label, used, max, format = identity }) => {
     return (
         <div className="flex-autogrid onmobile-flex-column w100 mb1">
             <div className="flex-autogrid-item pl1">{label}</div>
@@ -98,7 +99,7 @@ const SubscriptionSection = ({ permission }) => {
             <SubscriptionModal
                 subscription={subscription}
                 plansMap={toPlanNames(subscription.Plans)}
-                coupon={CouponCode || undefined} // CouponCode can equals null
+                coupon={CouponCode || undefined} // CouponCode can equal null
                 currency={Currency}
                 cycle={Cycle}
             />
