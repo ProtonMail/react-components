@@ -82,7 +82,7 @@ const TimeInput = ({ onChange, value, interval = 30, min, max, ...rest }) => {
     const filteredOptions = useMemo(() => {
         return options.filter(({ value }) => {
             const minCondition = min ? value >= min : true;
-            const maxCondition = max ? value >= min : true;
+            const maxCondition = max ? value <= max : true;
             return minCondition && maxCondition;
         });
     }, [options, min, max]);
