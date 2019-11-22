@@ -28,7 +28,6 @@ const AddonRow = ({ label = '', used, max, format = (v) => v }) => {
                 <strong>{used ? `${format(used)} ${c('x of y').t`of`} ${format(max)}` : format(max)}</strong>
             </div>
             <div className="flex-autogrid-item">{used ? <Progress value={(used * 100) / max} /> : null}</div>
-            <div className="flex-autogrid-item" />
         </div>
     );
 };
@@ -94,17 +93,11 @@ const SubscriptionSection = ({ permission }) => {
     const { Name: mailPlanName } = mailPlan || {};
     const { Name: vpnPlanName } = vpnPlan || {};
 
-    /**
-     * Open subscription modal with criteria
-     * @param {String} action upgrade, update
-     */
-    const handleModal = (action = '') => () => {
-        const plansMap = action === 'upgrade' ? { plus: 1, vpnplus: 1 } : toPlanNames(subscription.Plans);
-
+    const handleModal = () => {
         createModal(
             <SubscriptionModal
                 subscription={subscription}
-                plansMap={plansMap}
+                plansMap={toPlanNames(subscription.Plans)}
                 coupon={CouponCode || undefined} // CouponCode can equals null
                 currency={Currency}
                 cycle={Cycle}
@@ -134,7 +127,16 @@ const SubscriptionSection = ({ permission }) => {
             <Alert>{c('Info')
                 .t`To manage your subscription, update your current plan or select another one from the plan's table.`}</Alert>
             <div className="shadow-container">
-                <div className="border-bottom pt1 pl1 pr1">
+                <div className="border-bottom pt1 pl1 pr1 relative">
+                    {hasPaidMail && mailPlanName !== 'visionary' ? (
+                        <SmallButton
+                            className="pm-button--primary absolute"
+                            style={{ right: '2em', top: '1em' }}
+                            onClick={handleModal}
+                        >
+                            {c('Action').t`Customize`}
+                        </SmallButton>
+                    ) : null}
                     <div className="flex-autogrid onmobile-flex-column w100 mb1">
                         <div className="flex-autogrid-item">ProtonMail plan</div>
                         <div className="flex-autogrid-item">
@@ -147,14 +149,6 @@ const SubscriptionSection = ({ permission }) => {
                             </strong>
                         </div>
                         <div className="flex-autogrid-item" />
-                        <div className="flex-autogrid-item alignright">
-                            <SmallButton
-                                className="pm-button--primary"
-                                onClick={handleModal(hasPaidMail ? 'update' : 'upgrade')}
-                            >
-                                {hasPaidMail ? c('Action').t`Update` : c('Action').t`Upgrade`}
-                            </SmallButton>
-                        </div>
                     </div>
                     {mailAddons.map((props, index) => (
                         <AddonRow key={index} {...props} />
@@ -168,14 +162,6 @@ const SubscriptionSection = ({ permission }) => {
                                 <strong>{hasPaidVpn ? PLAN_NAMES[vpnPlanName] : c('Plan').t`Free`}</strong>
                             </div>
                             <div className="flex-autogrid-item" />
-                            <div className="flex-autogrid-item alignright">
-                                <SmallButton
-                                    className="pm-button--primary"
-                                    onClick={handleModal(hasPaidVpn ? 'update' : 'upgrade')}
-                                >
-                                    {hasPaidVpn ? c('Action').t`Update` : c('Action').t`Upgrade`}
-                                </SmallButton>
-                            </div>
                         </div>
                         {vpnAddons.map((props, index) => (
                             <AddonRow key={index} {...props} />
