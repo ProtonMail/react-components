@@ -134,6 +134,7 @@ const MonthDays = ({
 
                 return (
                     <button
+                        disabled={isOutsideMinMax}
                         aria-label={formatDay(dayDate)}
                         aria-current={isCurrent ? 'date' : undefined}
                         aria-pressed={isPressed ? true : undefined}
