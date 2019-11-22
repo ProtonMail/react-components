@@ -11,6 +11,7 @@ import {
     MozillaInfoPanel,
     LinkButton,
     Time,
+    Info,
     useUser,
     useSubscription,
     useOrganization,
@@ -82,7 +83,13 @@ const BillingSection = ({ permission }) => {
                         <div className="flex-autogrid-item bold alignright">{Credit / 100}</div>
                     </div>
                     <div className="flex-autogrid onmobile-flex-column w100">
-                        <div className="flex-autogrid-item">{c('Label').t`Gift code`}</div>
+                        <div className="flex-autogrid-item">
+                            {c('Label').t`Gift code`}{' '}
+                            <Info
+                                title={c('Info')
+                                    .t`If you purchased a gift code or received one from our support team, you can enter it here.`}
+                            />
+                        </div>
                         <div className="flex-autogrid-item">
                             <LinkButton onClick={handleOpenGiftCodeModal}>{c('Action').t`Use gift code`}</LinkButton>
                         </div>
@@ -337,7 +344,13 @@ const BillingSection = ({ permission }) => {
                         <div className="flex-autogrid-item bold alignright">{i18n[Cycle]}</div>
                     </div>
                     <div className="flex-autogrid onmobile-flex-column w100">
-                        <div className="flex-autogrid-item">{c('Label').t`Gift code`}</div>
+                        <div className="flex-autogrid-item">
+                            {c('Label').t`Gift code`}{' '}
+                            <Info
+                                title={c('Info')
+                                    .t`If you purchased a gift code or received one from our support team, you can enter it here.`}
+                            />
+                        </div>
                         <div className="flex-autogrid-item">
                             <LinkButton onClick={handleOpenGiftCodeModal}>{c('Action').t`Use gift code`}</LinkButton>
                         </div>
