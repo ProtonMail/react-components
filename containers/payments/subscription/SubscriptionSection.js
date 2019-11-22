@@ -126,7 +126,7 @@ const SubscriptionSection = ({ permission }) => {
         <>
             {subTitle}
             <Alert>{c('Info')
-                .t`To manage your subscription, update your current plan or select another one from the plan's table.`}</Alert>
+                .t`To manage your subscription, customize your current plan or select another one from the plan's table.`}</Alert>
             <div className="shadow-container">
                 <div className="border-bottom pt1 pl1 pr1 relative">
                     {hasPaidMail && mailPlanName !== 'visionary' ? (
