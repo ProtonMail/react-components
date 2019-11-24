@@ -4,7 +4,7 @@ import { useToggle, Button, classnames, LinkButton } from 'react-components';
 import { c } from 'ttag';
 
 const SubscriptionTable = ({ plans, onSelect, currentPlanIndex = 0, mostPopularIndex = 0 }) => {
-    const { state: showAllFeatures, toggle } = useToggle();
+    const { state: showAllFeatures, toggle: toggleFeatures } = useToggle(false);
 
     return (
         <div className="bordered-container">
@@ -27,9 +27,16 @@ const SubscriptionTable = ({ plans, onSelect, currentPlanIndex = 0, mostPopularI
                             </div>
                             <p className="aligncenter mb1">{description}</p>
                             <ul className="small mb1">
-                                {features.map((feature, index) => {
-                                    return <li key={index}>{feature}</li>;
-                                })}
+                                {features
+                                    .filter(({ advanced = false }) => {
+                                        if (!advanced) {
+                                            return true;
+                                        }
+                                        return showAllFeatures;
+                                    })
+                                    .map(({ feature }, index) => {
+                                        return <li key={index}>{feature}</li>;
+                                    })}
                             </ul>
                             <div className="aligncenter">
                                 <Button
@@ -45,7 +52,7 @@ const SubscriptionTable = ({ plans, onSelect, currentPlanIndex = 0, mostPopularI
             </div>
             {showAllFeatures ? (
                 <div className="aligncenter p1 border-top">
-                    <LinkButton onClick={toggle}>{c('Action').t`Compare all features`}</LinkButton>
+                    <LinkButton onClick={toggleFeatures}>{c('Action').t`Compare all features`}</LinkButton>
                 </div>
             ) : null}
         </div>
@@ -55,11 +62,16 @@ const SubscriptionTable = ({ plans, onSelect, currentPlanIndex = 0, mostPopularI
 SubscriptionTable.propTypes = {
     plans: PropTypes.arrayOf(
         PropTypes.shape({
-            planName: PropTypes.string,
-            price: PropTypes.node,
-            imageSrc: PropTypes.string,
-            description: PropTypes.node,
-            features: PropTypes.arrayOf(PropTypes.node)
+            planName: PropTypes.string.isRequired,
+            price: PropTypes.node.isRequired,
+            imageSrc: PropTypes.string.isRequired,
+            description: PropTypes.node.isRequired,
+            features: PropTypes.arrayOf(
+                PropTypes.shape({
+                    feature: PropTypes.node.isRequired,
+                    advanced: PropTypes.bool
+                })
+            )
         })
     ),
     onSelect: PropTypes.func.isRequired,
