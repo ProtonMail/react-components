@@ -101,7 +101,7 @@ const PayPal = ({ amount: Amount, currency: Currency, onPay, type }) => {
     if (isDuckDuckGo()) {
         return (
             <Alert type="error">{c('Error')
-                .t`The browser you are using does not support this payment type. Please use a different browser or log in via a computer.`}</Alert>
+                .t`The browser you are using does not allow the payment to be fully authorized. Please use a different browser or log in via a computer.`}</Alert>
         );
     }
 
