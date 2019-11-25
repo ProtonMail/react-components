@@ -41,7 +41,7 @@ const PaymentVerificationModal = ({
 }) => {
     const isAddCard = mode === ADD_CARD_MODE;
     const TITLES = {
-        [STEPS.DUCKDUCKGO]: c('Title').c`Unsupported browser`,
+        [STEPS.DUCKDUCKGO]: c('Title').t`Unsupported browser`,
         [STEPS.REDIRECT]: isAddCard ? c('Title').t`Card verification` : c('Title').t`Payment verification`,
         [STEPS.REDIRECTING]: c('Title').t`Processing...`,
         [STEPS.REDIRECTED]: isAddCard
