@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import {
     FormModal,
@@ -49,7 +49,7 @@ const PaymentVerificationModal = ({
             : c('Title').t`Payment verification in progress`,
         [STEPS.FAIL]: c('Title').t`3-D Secure verification failed`
     };
-    const [step, setStep] = useState(STEPS.REDIRECT);
+    const [step, setStep] = useState(() => (isDuckDuckGo() ? STEPS.DUCKDUCKGO : STEPS.REDIRECT));
     const [error, setError] = useState({});
     const api = useApi();
     const { createNotification } = useNotifications();
@@ -87,12 +87,6 @@ const PaymentVerificationModal = ({
             }
         }
     };
-
-    useEffect(() => {
-        if (isDuckDuckGo()) {
-            setStep(STEPS.DUCKDUCKGO);
-        }
-    }, []);
 
     return (
         <FormModal
