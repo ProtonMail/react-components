@@ -5,6 +5,7 @@ import { wait } from 'proton-shared/lib/helpers/promise';
 import { c } from 'ttag';
 import { PaymentVerificationModal } from 'react-components';
 import { getHostname } from 'proton-shared/lib/helpers/url';
+import { isDuckDuckGo } from 'proton-shared/lib/helpers/browser';
 
 const {
     STATUS_PENDING,
@@ -178,6 +179,13 @@ export const handlePaymentToken = async ({ params, api, createModal, mode }) => 
 
     if (Status === STATUS_CHARGEABLE) {
         return toParams(params, Token, Type);
+    }
+
+    if (isDuckDuckGo()) {
+        throw new Error(
+            c('Error')
+                .t`The browser you are using does not support 3D-Secure payments. Please use a different browser or log in via a computer.`
+        );
     }
 
     return new Promise((resolve, reject) => {
