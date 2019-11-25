@@ -1,7 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { Alert, Loader, SmallButton, Price, useApi, useLoading, PrimaryButton, LinkButton } from 'react-components';
+import {
+    Alert,
+    Loader,
+    SmallButton,
+    Price,
+    useApi,
+    useLoading,
+    PrimaryButton,
+    LinkButton,
+    DuckDuckGoAlertError
+} from 'react-components';
 import { MIN_PAYPAL_AMOUNT, MAX_PAYPAL_AMOUNT, PAYMENT_METHOD_TYPES } from 'proton-shared/lib/constants';
 import { createToken } from 'proton-shared/lib/api/payments';
 
@@ -99,10 +109,7 @@ const PayPal = ({ amount: Amount, currency: Currency, onPay, type }) => {
     }
 
     if (isDuckDuckGo()) {
-        return (
-            <Alert type="error">{c('Error')
-                .t`The browser you are using does not allow the payment to be fully authorized. Please use a different browser or log in via a computer.`}</Alert>
-        );
+        return <DuckDuckGoAlertError />;
     }
 
     if (loadingToken) {
