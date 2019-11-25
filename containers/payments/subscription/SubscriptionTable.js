@@ -8,7 +8,7 @@ const SubscriptionTable = ({ plans, onSelect, currentPlanIndex = 0, mostPopularI
 
     return (
         <div className="bordered-container">
-            <div className="flex flex-nowrap border-bottom">
+            <div className="flex flex-nowrap onmobile-flex-column border-bottom">
                 {plans.map(({ planName, price, imageSrc, description, features = [] }, index) => {
                     return (
                         <div
@@ -18,10 +18,10 @@ const SubscriptionTable = ({ plans, onSelect, currentPlanIndex = 0, mostPopularI
                             data-most-popular={index === mostPopularIndex}
                         >
                             {index === mostPopularIndex ? (
-                                <div className="mb0-5 aligncenter capitalize">{c('Title for subscription plan')
+                                <div className="mb0-5 aligncenter uppercase">{c('Title for subscription plan')
                                     .t`Most popular`}</div>
                             ) : null}
-                            <div className="bold aligncenter mb0-5 capitalize">{planName}</div>
+                            <div className="bold aligncenter mb0-5 uppercase">{planName}</div>
                             <div className="aligncenter mb0-5">{price}</div>
                             <div className="aligncenter">
                                 <img src={imageSrc} alt={planName} />
