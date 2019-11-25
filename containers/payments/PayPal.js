@@ -6,6 +6,7 @@ import { MIN_PAYPAL_AMOUNT, MAX_PAYPAL_AMOUNT, PAYMENT_METHOD_TYPES } from 'prot
 import { createToken } from 'proton-shared/lib/api/payments';
 
 import { toParams, process } from './paymentTokenHelper';
+import { isDuckDuckGo } from 'proton-shared/lib/helpers/browser';
 
 const PayPal = ({ amount: Amount, currency: Currency, onPay, type }) => {
     const api = useApi();
@@ -94,6 +95,13 @@ const PayPal = ({ amount: Amount, currency: Currency, onPay, type }) => {
                     >{c('Action').t`Try again`}</SmallButton>
                 </div>
             </Alert>
+        );
+    }
+
+    if (isDuckDuckGo()) {
+        return (
+            <Alert type="error">{c('Error')
+                .t`The browser you are using does not support this payment type. Please use a different browser or log in via a computer.`}</Alert>
         );
     }
 
