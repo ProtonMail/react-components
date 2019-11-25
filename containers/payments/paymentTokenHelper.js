@@ -184,7 +184,7 @@ export const handlePaymentToken = async ({ params, api, createModal, mode }) => 
     if (isDuckDuckGo()) {
         throw new Error(
             c('Error')
-                .t`The browser you are using does not support 3D-Secure payments. Please use a different browser or log in via a computer.`
+                .t`The browser you are using does not support this payment type. Please use a different browser or log in via a computer.`
         );
     }
 
