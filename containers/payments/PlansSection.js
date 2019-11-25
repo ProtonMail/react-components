@@ -23,8 +23,8 @@ import { getPlans, isBundleEligible } from 'proton-shared/lib/helpers/subscripti
 import { isLoyal } from 'proton-shared/lib/helpers/organization';
 
 import SubscriptionModal from './subscription/SubscriptionModal';
+import MailSubscriptionTable from './subscription/MailSubscriptionTable';
 import { mergePlansMap, getCheckParams } from './subscription/helpers';
-import PlansTable from './PlansTable';
 
 const PlansSection = () => {
     const { call } = useEventManager();
@@ -128,15 +128,15 @@ const PlansSection = () => {
                 ) : null}
                 {Plans.length ? <div>{c('Info').t`You are currently subscribed to ${names}.`}</div> : null}
             </Alert>
-            <PlansTable
-                currency={currency}
-                cycle={cycle}
-                updateCurrency={setCurrency}
-                updateCycle={setCycle}
-                onSelect={handleModal}
-                user={user}
-                subscription={subscription}
+            <MailSubscriptionTable
                 plans={plans}
+                subscription={subscription}
+                cycle={cycle}
+                currency={currency}
+                onSelect={(planIndex) => {
+                    const { Name } = plans[planIndex];
+                    handleModal({ [Name]: 1 });
+                }}
             />
             <p className="small">* {c('Info concerning plan features').t`denotes customizable features`}</p>
         </>

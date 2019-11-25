@@ -181,6 +181,7 @@ export { default as MailBlackFridayModal } from './containers/payments/subscript
 export { default as VPNBlackFridayModal } from './containers/payments/subscription/VPNBlackFridayModal';
 export { default as BlackFridayNavbarLink } from './containers/payments/subscription/BlackFridayNavbarLink';
 export { default as UpgradeModal } from './containers/payments/subscription/UpgradeModal';
+export { default as SubscriptionTable } from './containers/payments/subscription/SubscriptionTable';
 export { default as AmountButton } from './containers/payments/AmountButton';
 export { default as Bitcoin } from './containers/payments/Bitcoin';
 export { default as CurrencySelector } from './containers/payments/CurrencySelector';
