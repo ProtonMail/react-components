@@ -2,7 +2,7 @@ import React from 'react';
 import { SubscriptionTable } from 'react-components';
 import PropTypes from 'prop-types';
 import { PLAN_NAMES, PLANS, CYCLE } from 'proton-shared/lib/constants';
-import { getPlan } from 'proton-shared/lib/subscription';
+import { getPlan } from 'proton-shared/lib/helpers/subscription';
 import { c } from 'ttag';
 import freePlanSvg from 'design-system/assets/img/pm-images/free-plan.svg';
 import plusPlanSvg from 'design-system/assets/img/pm-images/plus-plan.svg';
@@ -38,21 +38,21 @@ const MailSubscriptionTable = ({ subscription = {}, plans: apiPlans = [], cycle,
             features: []
         },
         plusPlan && {
-            planName: PLAN_NAMES.PLUS,
+            planName: PLAN_NAMES[PLANS.PLUS],
             price: <SubscriptionPrices cycle={cycle} currency={currency} plan={plusPlan} />,
             imageSrc: plusPlanSvg,
             description: c('Description').t`Full-featured mailbox with advanced protection`,
             features: []
         },
         professionalPlan && {
-            planName: PLAN_NAMES.PROFESSIONAL,
+            planName: PLAN_NAMES[PLANS.PROFESSIONAL],
             price: <SubscriptionPrices cycle={cycle} currency={currency} plan={professionalPlan} />,
             imageSrc: professionalPlanSvg,
             description: c('Description').t`ProtonMail for professionals and businesses`,
             features: []
         },
         visionaryPlan && {
-            planName: PLAN_NAMES.VISIONARY,
+            planName: PLAN_NAMES[PLANS.VISIONARY],
             price: <SubscriptionPrices cycle={cycle} currency={currency} plan={visionaryPlan} />,
             imageSrc: visionaryPlanSvg,
             description: c('Description').t`ProtonMail for families and small businesses`,
