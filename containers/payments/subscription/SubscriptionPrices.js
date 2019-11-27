@@ -12,11 +12,15 @@ const SubscriptionPrices = ({ cycle, currency, plan }) => {
     );
     return (
         <>
-            <Price currency={currency} suffix={c('Suffix').t`/mo`}>
+            <Price currency={currency} className="subscriptionPrices-monthly" suffix={c('Suffix').t`/mo`}>
                 {plan.Pricing[cycle] / cycle}
             </Price>
-            {cycle === CYCLE.YEARLY && <small>{c('Details').jt`Billed as ${billiedAmount} per year`}</small>}
-            {cycle === CYCLE.TWO_YEARS && <small>{c('Details').jt`Billed as ${billiedAmount} every 2 year`}</small>}
+            {cycle === CYCLE.YEARLY && (
+                <div className="small mt0 mb0">{c('Details').jt`Billed as ${billiedAmount} per year`}</div>
+            )}
+            {cycle === CYCLE.TWO_YEARS && (
+                <div className="small mt0 mb0">{c('Details').jt`Billed as ${billiedAmount} every 2 year`}</div>
+            )}
         </>
     );
 };

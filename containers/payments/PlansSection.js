@@ -3,6 +3,8 @@ import { c } from 'ttag';
 import {
     SubTitle,
     Alert,
+    CurrencySelector,
+    CycleSelector,
     DowngradeModal,
     LossLoyaltyModal,
     MozillaInfoPanel,
@@ -121,13 +123,19 @@ const PlansSection = () => {
     return (
         <>
             <SubTitle>{c('Title').t`Plans`}</SubTitle>
-            <Alert learnMore="https://protonmail.com/support/knowledge-base/paid-plans/">
-                {bundleEligible ? (
-                    <div>{c('Info')
-                        .t`Get 20% bundle discount when you purchase ProtonMail and ProtonVPN together.`}</div>
-                ) : null}
-                {Plans.length ? <div>{c('Info').t`You are currently subscribed to ${names}.`}</div> : null}
-            </Alert>
+            <div className="flex flex-spacebetween onmobile-flex-column">
+                <Alert learnMore="https://protonmail.com/support/knowledge-base/paid-plans/">
+                    {bundleEligible ? (
+                        <div>{c('Info')
+                            .t`Get 20% bundle discount when you purchase ProtonMail and ProtonVPN together.`}</div>
+                    ) : null}
+                    {Plans.length ? <div>{c('Info').t`You are currently subscribed to ${names}.`}</div> : null}
+                </Alert>
+                <div className="flex flex-nowrap">
+                    <CycleSelector cycle={cycle} onSelect={setCycle} className="mr1" />
+                    <CurrencySelector currency={currency} onSelect={setCurrency} />
+                </div>
+            </div>
             <MailSubscriptionTable
                 plans={plans}
                 subscription={subscription}
