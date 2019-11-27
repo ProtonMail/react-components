@@ -7,27 +7,38 @@ const SubscriptionTable = ({ plans, onSelect, currentPlanIndex = 0, mostPopularI
     const { state: showAllFeatures, toggle: toggleFeatures } = useToggle(false);
 
     return (
-        <div className="bordered-container">
+        <div className="bordered-container mt2">
             <div className="flex flex-nowrap onmobile-flex-column border-bottom">
-                {plans.map(({ planName, price, imageSrc, description, features = [] }, index) => {
+                {plans.map(({ planName, price, imageSrc, description, features = [], canCustomize }, index) => {
                     return (
                         <div
                             key={planName}
-                            className={classnames(['pt2 pb2 pl1 pr1', index && 'border-left'])}
+                            className={classnames([
+                                'subsctiptionTable-plan w25 onmobile-w100 pt2 pb2 pl1 pr1 flex flex-column relative',
+                                index && 'border-left'
+                            ])}
                             data-current-plan={index === currentPlanIndex}
                             data-most-popular={index === mostPopularIndex}
                         >
-                            {index === mostPopularIndex ? (
-                                <div className="mb0-5 aligncenter uppercase">{c('Title for subscription plan')
-                                    .t`Most popular`}</div>
-                            ) : null}
-                            <div className="bold aligncenter mb0-5 uppercase">{planName}</div>
-                            <div className="aligncenter mb0-5">{price}</div>
-                            <div className="aligncenter">
-                                <img src={imageSrc} alt={planName} />
-                            </div>
-                            <p className="aligncenter mb1">{description}</p>
-                            <ul className="small mb1">
+                            <header className="flex flex-column flex-justify-end subsctiptionTable-header">
+                                {index === currentPlanIndex ? (
+                                    <div className="subsctiptionTable-currentPlan-container aligncenter uppercase bold smaller mb0 mt0">{c(
+                                        'Title for subscription plan'
+                                    ).t`Current plan`}</div>
+                                ) : null}
+                                {index === mostPopularIndex ? (
+                                    <div className="mb0-5 aligncenter color-global-success bold small mt0 uppercase">{c(
+                                        'Title for subscription plan'
+                                    ).t`Most popular`}</div>
+                                ) : null}
+                                <div className="bold aligncenter mb0-5 uppercase">{planName}</div>
+                                <div className="aligncenter mb0-5">{price}</div>
+                                <div className="flex flex-items-center flex-justify-center subsctiptionTable-image-container">
+                                    <img src={imageSrc} alt={planName} />
+                                </div>
+                            </header>
+                            <p className="aligncenter mt0 mb1">{description}</p>
+                            <ul className="unstyled small mb2 flex-item-fluid-auto subsctiptionTable-features-container">
                                 {features
                                     .filter(({ advanced = false }) => {
                                         if (!advanced) {
@@ -36,26 +47,38 @@ const SubscriptionTable = ({ plans, onSelect, currentPlanIndex = 0, mostPopularI
                                         return showAllFeatures;
                                     })
                                     .map(({ feature }, index) => {
-                                        return <li key={index}>{feature}</li>;
+                                        return (
+                                            <li className="subsctiptionTable-features" key={index}>
+                                                {feature}
+                                            </li>
+                                        );
                                     })}
                             </ul>
-                            <div className="aligncenter">
-                                <Button
-                                    className={classnames([index !== currentPlanIndex && 'pm-button--primary'])}
-                                    onClick={() => onSelect(index)}
-                                >
-                                    {index === currentPlanIndex ? c('Action').t`Customize` : c('Action').t`Select`}
-                                </Button>
-                            </div>
+                            <footer className="aligncenter">
+                                {index === currentPlanIndex && !canCustomize ? (
+                                    c('Label').t`Current plan`
+                                ) : (
+                                    <Button
+                                        className={classnames([index !== currentPlanIndex && 'pm-button--primary'])}
+                                        onClick={() => onSelect(index)}
+                                    >
+                                        {index === currentPlanIndex ? c('Action').t`Update` : c('Action').t`Select`}
+                                    </Button>
+                                )}
+                                {canCustomize ? (
+                                    <LinkButton onClick={() => onSelect(index)}>{c('Action').t`Customize`}</LinkButton>
+                                ) : null}
+                            </footer>
                         </div>
                     );
                 })}
             </div>
-            <div className="aligncenter p1">
+            <div className="aligncenter pt0-5 pb0-5 nomobile">
                 <LinkButton onClick={toggleFeatures}>
-                    {showAllFeatures ? c('Action').t`Display less features` : c('Action').t`Compare all features`}
+                    {showAllFeatures ? c('Action').t`Close feature comparison` : c('Action').t`Compare all features`}
                 </LinkButton>
             </div>
+            {showAllFeatures ? <div className="flex onmobile-flex-column nomobile"></div> : null}
         </div>
     );
 };

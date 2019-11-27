@@ -130,7 +130,7 @@ const SubscriptionSection = ({ permission }) => {
         <>
             {subTitle}
             <Alert>{c('Info')
-                .t`To manage your subscription, customize your current plan or select another one from the plan's table.`}</Alert>
+                .t`To manage your subscription, update your current plan or select another one from the plan's table.`}</Alert>
             <div className="shadow-container">
                 <div className="border-bottom pt1 pl1 pr1 relative">
                     {hasPaidMail && mailPlanName !== 'visionary' ? (
@@ -139,7 +139,7 @@ const SubscriptionSection = ({ permission }) => {
                             style={{ right: '2em', top: '1em' }}
                             onClick={handleModal}
                         >
-                            {c('Action').t`Customize`}
+                            {c('Action').t`Update`}
                         </SmallButton>
                     ) : null}
                     <div className="flex-autogrid onmobile-flex-column w100 mb1">

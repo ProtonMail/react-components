@@ -32,31 +32,62 @@ const MailSubscriptionTable = ({ subscription = {}, plans: apiPlans = [], cycle,
     const plans = [
         {
             planName: 'Free',
+            canCustomize: true,
             price: <SubscriptionPrices cycle={cycle} currency={currency} plan={FREE_PLAN} />,
             imageSrc: freePlanSvg,
             description: c('Description').t`The basics for private and secure communications`,
-            features: []
+            features: [
+                { feature: c('Feature').t`1 user` },
+                { feature: c('Feature').t`500 MB storage` },
+                { feature: c('Feature').t`1 address` },
+                { feature: c('Feature').t`No domain support` },
+                { feature: c('Feature').t`ProtonVPN (optional) *` }
+            ]
         },
         plusPlan && {
             planName: PLAN_NAMES[PLANS.PLUS],
+            canCustomize: true,
             price: <SubscriptionPrices cycle={cycle} currency={currency} plan={plusPlan} />,
             imageSrc: plusPlanSvg,
             description: c('Description').t`Full-featured mailbox with advanced protection`,
-            features: []
+            features: [
+                { feature: c('Feature').t`1 user` },
+                { feature: c('Feature').t`5 GB storage *` },
+                { feature: c('Feature').t`5 addresses *` },
+                { feature: c('Feature').t`Supports 1 domain *` },
+                { feature: c('Feature').t`Supports folder, labels, filters, auto-reply, IMAP/SMTP and more` },
+                { feature: c('Feature').t`ProtonVPN (optional) *` }
+            ]
         },
         professionalPlan && {
             planName: PLAN_NAMES[PLANS.PROFESSIONAL],
+            canCustomize: true,
             price: <SubscriptionPrices cycle={cycle} currency={currency} plan={professionalPlan} />,
             imageSrc: professionalPlanSvg,
             description: c('Description').t`ProtonMail for professionals and businesses`,
-            features: []
+            features: [
+                { feature: c('Feature').t`1 - 5000 user *` },
+                { feature: c('Feature').t`5 GB storage per user *` },
+                { feature: c('Feature').t`5 addresses per user *` },
+                { feature: c('Feature').t`Supports 2 domains *` },
+                { feature: c('Feature').t`Catch all email, multi user management, priority support and more` },
+                { feature: c('Feature').t`ProtonVPN (optional) *` }
+            ]
         },
         visionaryPlan && {
             planName: PLAN_NAMES[PLANS.VISIONARY],
+            canCustomize: false,
             price: <SubscriptionPrices cycle={cycle} currency={currency} plan={visionaryPlan} />,
             imageSrc: visionaryPlanSvg,
             description: c('Description').t`ProtonMail for families and small businesses`,
-            features: []
+            features: [
+                { feature: c('Feature').t`6 users` },
+                { feature: c('Feature').t`20 GB storage` },
+                { feature: c('Feature').t`Supports 10 domains` },
+                { feature: c('Feature').t`Includes all features` },
+                { feature: c('Feature').t`Priority support` },
+                { feature: c('Feature').t`Includes ProtonVPN` }
+            ]
         }
     ];
     const { Name } = getPlan(subscription);
