@@ -14,15 +14,15 @@ const SubscriptionTable = ({ plans, onSelect, currentPlanIndex = 0, mostPopularI
                         <div
                             key={planName}
                             className={classnames([
-                                'subsctiptionTable-plan w25 onmobile-w100 pt2 pb2 pl1 pr1 flex flex-column relative',
+                                'subscriptionTable-plan w25 onmobile-w100 pt2 pb2 pl1 pr1 flex flex-column relative',
                                 index && 'border-left'
                             ])}
                             data-current-plan={index === currentPlanIndex}
                             data-most-popular={index === mostPopularIndex}
                         >
-                            <header className="flex flex-column flex-justify-end subsctiptionTable-header">
+                            <header className="flex flex-column flex-justify-end subscriptionTable-header">
                                 {index === currentPlanIndex ? (
-                                    <div className="subsctiptionTable-currentPlan-container aligncenter uppercase bold smaller mb0 mt0">{c(
+                                    <div className="subscriptionTable-currentPlan-container aligncenter uppercase bold smaller mb0 mt0">{c(
                                         'Title for subscription plan'
                                     ).t`Current plan`}</div>
                                 ) : null}
@@ -33,26 +33,19 @@ const SubscriptionTable = ({ plans, onSelect, currentPlanIndex = 0, mostPopularI
                                 ) : null}
                                 <div className="bold aligncenter mb0-5 uppercase">{planName}</div>
                                 <div className="aligncenter mb0-5">{price}</div>
-                                <div className="flex flex-items-center flex-justify-center subsctiptionTable-image-container">
+                                <div className="flex flex-items-center flex-justify-center subscriptionTable-image-container">
                                     <img src={imageSrc} alt={planName} />
                                 </div>
                             </header>
                             <p className="aligncenter mt0 mb1">{description}</p>
-                            <ul className="unstyled small mb2 flex-item-fluid-auto subsctiptionTable-features-container">
-                                {features
-                                    .filter(({ advanced = false }) => {
-                                        if (!advanced) {
-                                            return true;
-                                        }
-                                        return showAllFeatures;
-                                    })
-                                    .map(({ feature }, index) => {
-                                        return (
-                                            <li className="subsctiptionTable-features" key={index}>
-                                                {feature}
-                                            </li>
-                                        );
-                                    })}
+                            <ul className="unstyled small mb2 flex-item-fluid-auto">
+                                {features.map((feature, index) => {
+                                    return (
+                                        <li className="subscriptionTable-feature" key={index}>
+                                            {feature}
+                                        </li>
+                                    );
+                                })}
                             </ul>
                             <footer className="aligncenter">
                                 {index === currentPlanIndex && !canCustomize ? (
@@ -78,7 +71,50 @@ const SubscriptionTable = ({ plans, onSelect, currentPlanIndex = 0, mostPopularI
                     {showAllFeatures ? c('Action').t`Close feature comparison` : c('Action').t`Compare all features`}
                 </LinkButton>
             </div>
-            {showAllFeatures ? <div className="flex onmobile-flex-column nomobile"></div> : null}
+            {showAllFeatures ? (
+                <div className="flex flex-nowrap nomobile border-top">
+                    {plans.map(({ planName, allFeatures = [], canCustomize }, index) => {
+                        return (
+                            <div
+                                key={planName}
+                                className={classnames([
+                                    'w25 pt2 pb2 flex flex-column relative',
+                                    index && 'border-left'
+                                ])}
+                            >
+                                <ul className="unstyled mb2 flex-item-fluid-auto">
+                                    {allFeatures.map((feature, index) => {
+                                        return (
+                                            <li
+                                                className={classnames(['pl1 pr1', index & 1 && 'bg-global-light'])}
+                                                key={index}
+                                            >
+                                                {feature}
+                                            </li>
+                                        );
+                                    })}
+                                </ul>
+                                <footer className="aligncenter">
+                                    {index === currentPlanIndex && !canCustomize ? (
+                                        c('Label').t`Current plan`
+                                    ) : (
+                                        <Button
+                                            className={classnames([index !== currentPlanIndex && 'pm-button--primary'])}
+                                            onClick={() => onSelect(index)}
+                                        >
+                                            {index === currentPlanIndex ? c('Action').t`Update` : c('Action').t`Select`}
+                                        </Button>
+                                    )}
+                                    {canCustomize ? (
+                                        <LinkButton onClick={() => onSelect(index)}>{c('Action')
+                                            .t`Customize`}</LinkButton>
+                                    ) : null}
+                                </footer>
+                            </div>
+                        );
+                    })}
+                </div>
+            ) : null}
         </div>
     );
 };
@@ -90,12 +126,7 @@ SubscriptionTable.propTypes = {
             price: PropTypes.node.isRequired,
             imageSrc: PropTypes.string.isRequired,
             description: PropTypes.node.isRequired,
-            features: PropTypes.arrayOf(
-                PropTypes.shape({
-                    feature: PropTypes.node.isRequired,
-                    advanced: PropTypes.bool
-                })
-            )
+            features: PropTypes.arrayOf(PropTypes.node).isRequired
         })
     ),
     onSelect: PropTypes.func.isRequired,

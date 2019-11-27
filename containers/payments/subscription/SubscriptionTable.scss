@@ -1,11 +1,11 @@
-.subsctiptionTable-plan[data-current-plan="true"] {
+.subscriptionTable-plan[data-current-plan="true"] {
     border-left: 2px solid $pm-primary;
     border-right: 2px solid $pm-primary;
     border-bottom: 2px solid $pm-primary;
     background-color: $pm-global-light;
 }
 
-.subsctiptionTable-currentPlan-container {
+.subscriptionTable-currentPlan-container {
     background-color: $pm-primary;
     color: $white;
     position: absolute;
@@ -15,11 +15,11 @@
     border-radius: $global-border-radius $global-border-radius 0 0;
 }
 
-.subsctiptionTable-header {
+.subscriptionTable-header {
     height: 220px;
 }
 
-.subsctiptionTable-image-container {
+.subscriptionTable-image-container {
     height: 100px;
 }
 
@@ -32,10 +32,14 @@
     font-size: smaller;
 }
 
-.subsctiptionTable-features {
+.subscriptionTable-feature {
     background-image: url('#{$path-images}sprite-for-css-only.svg#css-arrow-right');
     background-size: 10px;
     padding-left: 20px;
     background-repeat: no-repeat;
     background-position: 5px 5px;
+}
+
+.subscriptionTable-feature {
+
 }
