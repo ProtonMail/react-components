@@ -12,7 +12,6 @@ import {
     Price
 } from 'react-components';
 import { checkSubscription } from 'proton-shared/lib/api/payments';
-import { range } from 'proton-shared/lib/helpers/array';
 import { CYCLE, DEFAULT_CURRENCY, DEFAULT_CYCLE, BLACK_FRIDAY, SECOND } from 'proton-shared/lib/constants';
 import { c } from 'ttag';
 import { isAfter } from 'date-fns';
@@ -20,7 +19,11 @@ import { isAfter } from 'date-fns';
 const { MONTHLY, YEARLY, TWO_YEARS } = CYCLE;
 const EVERY_SECOND = SECOND;
 
-const formatNotice = (time) => range(0, time).reduce((acc) => acc + '*', '');
+const NOTICES = {
+    1: '*',
+    2: '**',
+    3: '***'
+};
 
 const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
     const api = useApi();
@@ -37,22 +40,19 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
 
     const BILLED_DESCRIPTION = ({ cycle, amount, notice }) =>
         ({
-            [MONTHLY]: c('Title').jt`Billed as ${amount} ${formatNotice(notice)} for 1 month`,
-            [YEARLY]: c('Title').jt`Billed as ${amount} ${formatNotice(notice)} for 1 year`,
-            [TWO_YEARS]: c('Title').jt`Billed as ${amount} ${formatNotice(notice)} for 2 years`
+            [MONTHLY]: c('Title').jt`Billed as ${amount} ${NOTICES[notice]} for 1 month`,
+            [YEARLY]: c('Title').jt`Billed as ${amount} ${NOTICES[notice]} for 1 year`,
+            [TWO_YEARS]: c('Title').jt`Billed as ${amount} ${NOTICES[notice]} for 2 years`
         }[cycle]);
 
     const AFTER_INFO = ({ amount, notice }) =>
         ({
-            1: c('Title').jt`${formatNotice(
-                notice
-            )} Renews after 1 year at a discounted annual price of ${amount} per year (20% discount).`,
-            2: c('Title').jt`${formatNotice(
-                notice
-            )} Renews after 2 years at a discounted 2-year price of ${amount} every 2 years (33% discount).`,
-            3: c('Title').jt`${formatNotice(
-                notice
-            )} Renews after 2 years at a discounted 2-year & bundle price of ${amount} every 2 years (47% discount).`
+            1: c('Title')
+                .jt`${NOTICES[notice]} Renews after 1 year at a discounted annual price of ${amount} per year (20% discount).`,
+            2: c('Title')
+                .jt`${NOTICES[notice]} Renews after 2 years at a discounted 2-year price of ${amount} every 2 years (33% discount).`,
+            3: c('Title')
+                .jt`${NOTICES[notice]} Renews after 2 years at a discounted 2-year & bundle price of ${amount} every 2 years (47% discount).`
         }[notice]);
 
     const getBundlePrices = async () => {
