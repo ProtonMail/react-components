@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { c } from 'ttag';
+import { c, msgid } from 'ttag';
 import { DAY, HOUR, MINUTE, SECOND } from 'proton-shared/lib/constants';
 import { isBefore, isAfter, differenceInMilliseconds } from 'date-fns';
 
@@ -36,10 +36,10 @@ const Countdown = ({ start, end, separator = ' | ' }) => {
     return (
         <>
             {[
-                c('Countdown unit').t`${days} days`,
-                c('Countdown unit').t`${hours} hours`,
-                c('Countdown unit').t`${minutes} minutes`,
-                c('Countdown unit').t`${seconds} seconds`
+                c('Countdown unit').ngettext(msgid`${days} day`, `${days} days`, days),
+                c('Countdown unit').ngettext(msgid`${hours} hour`, `${hours} hours`, days),
+                c('Countdown unit').ngettext(msgid`${minutes} minute`, `${minutes} minutes`, days),
+                c('Countdown unit').ngettext(msgid`${seconds} second`, `${seconds} seconds`, days)
             ].join(separator)}
         </>
     );
