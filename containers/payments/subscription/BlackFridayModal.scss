@@ -16,3 +16,13 @@
     border-radius: 50%;
     padding: 0.5em;
 }
+
+.blackfriday-countdown-container {
+    margin-bottom: 4em;
+}
+
+@include respond-to($breakpoint-small) {
+    .blackfriday-plan-container {
+        margin-bottom: 4em;
+    }
+}
