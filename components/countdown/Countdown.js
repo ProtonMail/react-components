@@ -37,9 +37,9 @@ const Countdown = ({ start, end, separator = ' | ' }) => {
         <>
             {[
                 c('Countdown unit').ngettext(msgid`${days} day`, `${days} days`, days),
-                c('Countdown unit').ngettext(msgid`${hours} hour`, `${hours} hours`, days),
-                c('Countdown unit').ngettext(msgid`${minutes} minute`, `${minutes} minutes`, days),
-                c('Countdown unit').ngettext(msgid`${seconds} second`, `${seconds} seconds`, days)
+                c('Countdown unit').ngettext(msgid`${hours} hour`, `${hours} hours`, hours),
+                c('Countdown unit').ngettext(msgid`${minutes} minute`, `${minutes} minutes`, minutes),
+                c('Countdown unit').ngettext(msgid`${seconds} second`, `${seconds} seconds`, seconds)
             ].join(separator)}
         </>
     );
