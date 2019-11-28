@@ -119,7 +119,7 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
                 <Loader />
             ) : (
                 <>
-                    <div className="bold big aligncenter mt0" style={{ marginBottom: '50px' }}>
+                    <div className="bold big aligncenter mt0" style={{ marginBottom: '4em' }}>
                         <Countdown
                             end={isAfter(now, BLACK_FRIDAY.FIRST_END) ? BLACK_FRIDAY.END : BLACK_FRIDAY.FIRST_END}
                         />
@@ -154,7 +154,7 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
                             );
 
                             return (
-                                <div key={key} className="flex-autogrid-item relative shadow onmobile-mb5">
+                                <div key={key} className="flex-autogrid-item relative" style={{ marginBottom: '4em' }}>
                                     {percentage ? (
                                         <span className="uppercase bold mb1 mr0 absolute bg-global-warning color-white blackfriday-percentage aligncenter">
                                             {c('Badge plan').t`${percentage}% off`}
