@@ -40,9 +40,9 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
 
     const BILLED_DESCRIPTION = ({ cycle, amount, notice }) =>
         ({
-            [MONTHLY]: c('Title').jt`Billed as ${amount} ${NOTICES[notice]} for 1 month`,
-            [YEARLY]: c('Title').jt`Billed as ${amount} ${NOTICES[notice]} for 1 year`,
-            [TWO_YEARS]: c('Title').jt`Billed as ${amount} ${NOTICES[notice]} for 2 years`
+            [MONTHLY]: c('Title').jt`Billed as ${amount} for 1 month ${NOTICES[notice]}`,
+            [YEARLY]: c('Title').jt`Billed as ${amount} for 1 year ${NOTICES[notice]}`,
+            [TWO_YEARS]: c('Title').jt`Billed as ${amount} for 2 years ${NOTICES[notice]}`
         }[cycle]);
 
     const AFTER_INFO = ({ amount, notice }) =>
