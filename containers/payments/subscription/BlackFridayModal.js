@@ -154,9 +154,9 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
                             );
 
                             return (
-                                <div key={key} className="flex-autogrid-item relative">
+                                <div key={key} className="flex-autogrid-item relative shadow onmobile-mb5">
                                     {percentage ? (
-                                        <span className="nomobile uppercase bold mb1 mr0 absolute bg-global-warning color-white blackfriday-percentage aligncenter">
+                                        <span className="uppercase bold mb1 mr0 absolute bg-global-warning color-white blackfriday-percentage aligncenter">
                                             {c('Badge plan').t`${percentage}% off`}
                                         </span>
                                     ) : null}
