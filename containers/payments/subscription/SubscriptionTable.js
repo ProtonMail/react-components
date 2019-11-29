@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useToggle, Button, classnames, LinkButton } from 'react-components';
-import { range } from 'proton-shared/lib/helpers/array';
 import { c } from 'ttag';
 
 const SubscriptionTable = ({ plans, onSelect, currentPlanIndex = 0, mostPopularIndex = 0 }) => {
