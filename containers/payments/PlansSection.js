@@ -146,7 +146,6 @@ const PlansSection = () => {
                     handleModal({ [Name]: 1 });
                 }}
             />
-            <p className="small">* {c('Info concerning plan features').t`denotes customizable features`}</p>
         </>
     );
 };
