@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Select, Group, ButtonGroup } from 'react-components';
+import { Select, Group, ButtonGroup, classnames } from 'react-components';
 import { CURRENCIES, DEFAULT_CURRENCY } from 'proton-shared/lib/constants';
-import { classnames } from '../../helpers/component';
 
 const CurrencySelector = ({ currency = DEFAULT_CURRENCY, onSelect, mode = 'select', ...rest }) => {
     const handleChange = ({ target }) => onSelect(target.value);
