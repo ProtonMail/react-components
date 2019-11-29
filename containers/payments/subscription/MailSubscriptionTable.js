@@ -67,7 +67,7 @@ const MailSubscriptionTable = ({ subscription = {}, plans: apiPlans = [], cycle,
             canCustomize: true,
             price: <SubscriptionPrices cycle={cycle} currency={currency} plan={plusPlan} />,
             imageSrc: plusPlanSvg,
-            description: c('Description').t`Full-featured mailbox with advanced protection`,
+            description: c('Description').t`Full-featured individual mailbox`,
             features: [
                 c('Feature').t`1 user`,
                 c('Feature').t`5 GB storage *`,
@@ -99,7 +99,7 @@ const MailSubscriptionTable = ({ subscription = {}, plans: apiPlans = [], cycle,
             canCustomize: true,
             price: <SubscriptionPrices cycle={cycle} currency={currency} plan={professionalPlan} />,
             imageSrc: professionalPlanSvg,
-            description: c('Description').t`ProtonMail for professionals and businesses`,
+            description: c('Description').t`For large organizations and businesses`,
             features: [
                 c('Feature').t`1 - 5000 user *`,
                 c('Feature').t`5 GB storage per user *`,
@@ -131,7 +131,7 @@ const MailSubscriptionTable = ({ subscription = {}, plans: apiPlans = [], cycle,
             canCustomize: false,
             price: <SubscriptionPrices cycle={cycle} currency={currency} plan={visionaryPlan} />,
             imageSrc: visionaryPlanSvg,
-            description: c('Description').t`ProtonMail for families and small businesses`,
+            description: c('Description').t`For families and small businesses`,
             features: [
                 c('Feature').t`6 users`,
                 c('Feature').t`20 GB storage`,
@@ -162,12 +162,16 @@ const MailSubscriptionTable = ({ subscription = {}, plans: apiPlans = [], cycle,
     const { Name } = getPlan(subscription);
 
     return (
-        <SubscriptionTable
-            currentPlanIndex={INDEXES[Name] || 0}
-            mostPopularIndex={1}
-            plans={plans}
-            onSelect={onSelect}
-        />
+        <>
+            <SubscriptionTable
+                currentPlanIndex={INDEXES[Name] || 0}
+                mostPopularIndex={1}
+                plans={plans}
+                onSelect={onSelect}
+            />
+            <p className="small mt1 mb0">* {c('Info concerning plan features').t`Customizable features`}</p>
+            <p className="small mt0 mb0">** {c('Info concerning plan features').t`ProtonMail cannot be used for mass emailing or spamming. Legitimate emails are unlimited.`}</p>
+        </>
     );
 };
 

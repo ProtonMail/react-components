@@ -47,7 +47,7 @@ const SubscriptionTable = ({ plans, onSelect, currentPlanIndex = 0, mostPopularI
                                     );
                                 })}
                             </ul>
-                            <footer className="aligncenter flex flex-column">
+                            <footer className="subscriptionTable-footer aligncenter flex flex-column">
                                 {index === currentPlanIndex && !canCustomize ? (
                                     c('Label').t`Current plan`
                                 ) : (
@@ -73,7 +73,7 @@ const SubscriptionTable = ({ plans, onSelect, currentPlanIndex = 0, mostPopularI
             </div>
             {showAllFeatures ? (
                 <div className="nomobile border-top">
-                    <table className="w100">
+                    <table className="w100 noborder border-collapse mb0">
                         <tbody>
                             {plans[0].allFeatures
                                 .map((f, i) => {
@@ -86,7 +86,7 @@ const SubscriptionTable = ({ plans, onSelect, currentPlanIndex = 0, mostPopularI
                                             key={`tr${index}`}
                                         >
                                             {features.map((feature, index) => (
-                                                <td className="pl1 pr1 pt0-5 pb0-5" key={`td${index}`}>
+                                                <td className={classnames(['pl1 pr1 pt0-5 pb0-5 aligncenter', index && 'border-left'])} key={`td${index}`}>
                                                     {feature}
                                                 </td>
                                             ))}
