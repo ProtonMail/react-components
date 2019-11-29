@@ -97,7 +97,7 @@ const MailSubscriptionTable = ({ subscription = {}, plans: apiPlans = [], cycle,
         professionalPlan && {
             planName: PLAN_NAMES[PLANS.PROFESSIONAL],
             canCustomize: true,
-            price: <SubscriptionPrices cycle={cycle} currency={currency} plan={professionalPlan} />,
+            price: <SubscriptionPrices cycle={cycle} currency={currency} plan={professionalPlan} suffix={c('Suffix').t`/month/user`} />,
             imageSrc: professionalPlanSvg,
             description: c('Description').t`For large organizations and businesses`,
             features: [

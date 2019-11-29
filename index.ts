@@ -176,6 +176,7 @@ export { default as GiftCodeInput } from './containers/payments/GiftCodeInput';
 export { default as PlansSection } from './containers/payments/PlansSection';
 export { default as SubscriptionSection } from './containers/payments/subscription/SubscriptionSection';
 export { default as SubscriptionModal } from './containers/payments/subscription/SubscriptionModal';
+export { default as NewSubscriptionModal } from './containers/payments/subscription/NewSubscriptionModal';
 export { default as BlackFridayModal } from './containers/payments/subscription/BlackFridayModal';
 export { default as MailBlackFridayModal } from './containers/payments/subscription/MailBlackFridayModal';
 export { default as VPNBlackFridayModal } from './containers/payments/subscription/VPNBlackFridayModal';
