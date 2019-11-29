@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useToggle, Button, classnames, LinkButton } from 'react-components';
+import { range } from 'proton-shared/lib/helpers/array';
 import { c } from 'ttag';
 
 const SubscriptionTable = ({ plans, onSelect, currentPlanIndex = 0, mostPopularIndex = 0 }) => {
@@ -47,7 +48,7 @@ const SubscriptionTable = ({ plans, onSelect, currentPlanIndex = 0, mostPopularI
                                     );
                                 })}
                             </ul>
-                            <footer className="aligncenter">
+                            <footer className="aligncenter flex flex-column">
                                 {index === currentPlanIndex && !canCustomize ? (
                                     c('Label').t`Current plan`
                                 ) : (
@@ -72,47 +73,29 @@ const SubscriptionTable = ({ plans, onSelect, currentPlanIndex = 0, mostPopularI
                 </LinkButton>
             </div>
             {showAllFeatures ? (
-                <div className="flex flex-nowrap nomobile border-top">
-                    {plans.map(({ planName, allFeatures = [], canCustomize }, index) => {
-                        return (
-                            <div
-                                key={planName}
-                                className={classnames([
-                                    'w25 pt2 pb2 flex flex-column relative',
-                                    index && 'border-left'
-                                ])}
-                            >
-                                <ul className="unstyled mb2 flex-item-fluid-auto">
-                                    {allFeatures.map((feature, index) => {
-                                        return (
-                                            <li
-                                                className={classnames(['pl1 pr1', index & 1 && 'bg-global-light'])}
-                                                key={index}
-                                            >
-                                                {feature}
-                                            </li>
-                                        );
-                                    })}
-                                </ul>
-                                <footer className="aligncenter">
-                                    {index === currentPlanIndex && !canCustomize ? (
-                                        c('Label').t`Current plan`
-                                    ) : (
-                                        <Button
-                                            className={classnames([index !== currentPlanIndex && 'pm-button--primary'])}
-                                            onClick={() => onSelect(index)}
+                <div className="nomobile border-top">
+                    <table className="w100">
+                        <tbody>
+                            {plans[0].allFeatures
+                                .map((f, i) => {
+                                    return plans.map(({ allFeatures = [] }) => allFeatures[i]);
+                                })
+                                .map((features = [], index) => {
+                                    return (
+                                        <tr
+                                            className={classnames(['w25', index & 1 && 'bg-global-light'])}
+                                            key={`tr${index}`}
                                         >
-                                            {index === currentPlanIndex ? c('Action').t`Update` : c('Action').t`Select`}
-                                        </Button>
-                                    )}
-                                    {canCustomize ? (
-                                        <LinkButton onClick={() => onSelect(index)}>{c('Action')
-                                            .t`Customize`}</LinkButton>
-                                    ) : null}
-                                </footer>
-                            </div>
-                        );
-                    })}
+                                            {features.map((feature, index) => (
+                                                <td className="pl1 pr1 pt0-5 pb0-5" key={`td${index}`}>
+                                                    {feature}
+                                                </td>
+                                            ))}
+                                        </tr>
+                                    );
+                                })}
+                        </tbody>
+                    </table>
                 </div>
             ) : null}
         </div>
@@ -126,7 +109,8 @@ SubscriptionTable.propTypes = {
             price: PropTypes.node.isRequired,
             imageSrc: PropTypes.string.isRequired,
             description: PropTypes.node.isRequired,
-            features: PropTypes.arrayOf(PropTypes.node).isRequired
+            features: PropTypes.arrayOf(PropTypes.node).isRequired,
+            allFeatures: PropTypes.arrayOf(PropTypes.node).isRequired
         })
     ),
     onSelect: PropTypes.func.isRequired,
