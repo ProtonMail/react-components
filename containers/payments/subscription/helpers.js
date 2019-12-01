@@ -288,8 +288,18 @@ export const getCheckParams = ({
     };
 };
 
+/**
+ * Check if the current user is eligible to Black Friday discount
+ * @param {Function} api useApi hook
+ * @returns {Promise<Boolean>}
+ */
 export const checkLastCancelledSubscription = async (api) => {
     // Return the latest subscription cancellation time, return null if the user never had any subscription, 0 if the user currently has an active subscription
-    const { LastSubscriptionEnd = 0 } = (await api(getLastCancelledSubscription())) || {};
+    const { LastSubscriptionEnd = 0 } = await api(getLastCancelledSubscription());
+
+    if (LastSubscriptionEnd === null) {
+        return true;
+    }
+
     return LastSubscriptionEnd ? LastSubscriptionEnd < SEPTEMBER_30 : false;
 };
