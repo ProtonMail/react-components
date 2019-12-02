@@ -1,13 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { CYCLE } from 'proton-shared/lib/constants';
+import { CYCLE, BLACK_FRIDAY } from 'proton-shared/lib/constants';
 import { Alert, SmallButton } from 'react-components';
 
 const { MONTHLY, YEARLY, TWO_YEARS } = CYCLE;
 
 const CyclePromotion = ({ model, onChange }) => {
     const handleClick = () => onChange({ ...model, cycle: YEARLY }, true);
+
+    if (model.coupon === BLACK_FRIDAY.COUPON_CODE) {
+        return <Alert>{c('Info').t`Black Friday 2019 newcomer discount has been applied!`}</Alert>;
+    }
+
     return (
         <>
             {model.cycle === MONTHLY && (

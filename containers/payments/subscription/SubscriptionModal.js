@@ -223,6 +223,7 @@ const SubscriptionModal = ({
                         amount={check.AmountDue}
                         cycle={model.cycle}
                         currency={model.currency}
+                        coupon={model.coupon}
                         parameters={parameters}
                         card={card}
                         onParameters={setParameters}
