@@ -109,7 +109,7 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
                             const withCouponMonthly = withCoupon / cycle;
                             const percentage = 100 - Math.round((withCouponMonthly * 100) / withoutCouponMonthly);
                             const monthlyPrice = (
-                                <Price currency={currency} suffix="/mo">
+                                <Price currency={currency} className="blackfriday-monthly-price" suffix="/mo">
                                     {withCoupon / cycle}
                                 </Price>
                             );
@@ -145,7 +145,7 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
                                             </Badge>
                                         ) : null}
                                         <strong>{DEAL_TITLE[cycle]}</strong>
-                                        <strong>{name}</strong>
+                                        <strong className="aligncenter">{name}</strong>
                                         <div className={classnames(['h2 mb0', popular && 'color-primary bold'])}>
                                             {monthlyPrice}
                                         </div>
