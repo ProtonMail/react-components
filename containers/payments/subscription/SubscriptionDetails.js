@@ -56,8 +56,7 @@ const Rows = ({ model, plans }) => {
         <>
             <div className="flex flex-spacebetween mb1">
                 <div>
-                    {mailTitle}{' '}
-                    {plus || professional ? <CycleDiscountBadge cycle={model.cycle} coupon={model.coupon} /> : null}
+                    {mailTitle} {plus || professional ? <CycleDiscountBadge cycle={model.cycle} /> : null}
                 </div>
                 <div>
                     {mailPlan ? (
@@ -69,8 +68,7 @@ const Rows = ({ model, plans }) => {
             </div>
             <div className="flex flex-spacebetween mb1 pb1 border-bottom">
                 <div>
-                    {vpnTitle}{' '}
-                    {vpnbasic || vpnplus ? <CycleDiscountBadge cycle={model.cycle} coupon={model.coupon} /> : null}
+                    {vpnTitle} {vpnbasic || vpnplus ? <CycleDiscountBadge cycle={model.cycle} /> : null}
                 </div>
                 <div>
                     {vpnPlan ? (

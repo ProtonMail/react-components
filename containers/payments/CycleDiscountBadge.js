@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Badge } from 'react-components';
 import { c } from 'ttag';
-import { CYCLE, BLACK_FRIDAY } from 'proton-shared/lib/constants';
+import { CYCLE } from 'proton-shared/lib/constants';
 
 const { MONTHLY, YEARLY, TWO_YEARS } = CYCLE;
 
@@ -16,10 +16,7 @@ const getTooltipI18N = () => ({
     [TWO_YEARS]: c('Tooltip').t`Discount applied for two-year billing cycle`
 });
 
-const CycleDiscountBadge = ({ cycle = MONTHLY, coupon = '' }) => {
-    if (coupon === BLACK_FRIDAY.COUPON_CODE) {
-        return null;
-    }
+const CycleDiscountBadge = ({ cycle = MONTHLY }) => {
     if (cycle === MONTHLY) {
         return null;
     }
@@ -33,8 +30,7 @@ const CycleDiscountBadge = ({ cycle = MONTHLY, coupon = '' }) => {
 };
 
 CycleDiscountBadge.propTypes = {
-    cycle: PropTypes.number.isRequired,
-    coupon: PropTypes.string
+    cycle: PropTypes.number.isRequired
 };
 
 export default CycleDiscountBadge;
