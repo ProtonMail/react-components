@@ -88,13 +88,13 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
             onVerification: handleVerification
         });
 
-        apiRef.current = ({ output = 'json', ...rest }) => {
+        apiRef.current = ({ output = 'json', stream = false, ...rest }) => {
             return callWithApiHandlers(rest).then((response) => {
                 const serverTime = getDateHeader(response.headers);
                 if (serverTime) {
                     updateServerTime(serverTime);
                 }
-                return response[output]();
+                return stream ? response.body.getReader() : response[output]();
             });
         };
     }
