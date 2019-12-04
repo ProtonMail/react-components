@@ -21,12 +21,11 @@ import {
 
 import { checkSubscription, deleteSubscription } from 'proton-shared/lib/api/payments';
 import { DEFAULT_CURRENCY, DEFAULT_CYCLE } from 'proton-shared/lib/constants';
-import { getPlans, isBundleEligible } from 'proton-shared/lib/helpers/subscription';
+import { getPlans, isBundleEligible, getPlan } from 'proton-shared/lib/helpers/subscription';
 import { isLoyal } from 'proton-shared/lib/helpers/organization';
 
-import SubscriptionModal from './subscription/SubscriptionModal';
+import NewSubscriptionModal from './subscription/NewSubscriptionModal';
 import MailSubscriptionTable from './subscription/MailSubscriptionTable';
-import { mergePlansMap, getCheckParams } from './subscription/helpers';
 
 const PlansSection = () => {
     const { call } = useEventManager();
@@ -38,6 +37,7 @@ const PlansSection = () => {
     const [organization = {}, loadingOrganization] = useOrganization();
     const [plans = [], loadingPlans] = usePlans();
     const api = useApi();
+    const { Name } = getPlan(subscription) || {};
 
     const [currency, setCurrency] = useState(DEFAULT_CURRENCY);
     const [cycle, setCycle] = useState(DEFAULT_CYCLE);
@@ -68,29 +68,25 @@ const PlansSection = () => {
         return handleUnsubscribe();
     };
 
-    const handleModal = (newPlansMap, step) => async () => {
-        if (!newPlansMap) {
+    const handleModal = async (planID) => {
+        if (!planID) {
             handleOpenModal();
             return;
         }
 
-        const plansMap = mergePlansMap(newPlansMap, subscription);
         const couponCode = CouponCode ? CouponCode : undefined; // From current subscription; CouponCode can be null
         const { Coupon } = await api(
-            checkSubscription(getCheckParams({ plans, plansMap, currency, cycle, coupon: couponCode }))
+            checkSubscription({
+                PlanIDs: [planID],
+                Currency: currency,
+                Cycle: cycle,
+                CouponCode: couponCode
+            })
         );
+
         const coupon = Coupon ? Coupon.Code : undefined; // Coupon can equals null
 
-        createModal(
-            <SubscriptionModal
-                subscription={subscription}
-                plansMap={plansMap}
-                coupon={coupon}
-                currency={currency}
-                cycle={cycle}
-                step={step}
-            />
-        );
+        createModal(<NewSubscriptionModal planIDs={[planID]} coupon={coupon} currency={currency} cycle={cycle} />);
     };
 
     useEffect(() => {
@@ -138,13 +134,10 @@ const PlansSection = () => {
             </div>
             <MailSubscriptionTable
                 plans={plans}
-                subscription={subscription}
+                planNameSelected={Name}
                 cycle={cycle}
                 currency={currency}
-                onSelect={(planIndex) => {
-                    const { Name } = plans[planIndex];
-                    handleModal({ [Name]: 1 });
-                }}
+                onSelect={handleModal}
             />
         </>
     );
