@@ -2,7 +2,7 @@ import React from 'react';
 import { SubscriptionTable } from 'react-components';
 import PropTypes from 'prop-types';
 import { PLAN_NAMES, PLANS, CYCLE } from 'proton-shared/lib/constants';
-import { getPlan } from 'proton-shared/lib/helpers/subscription';
+import { toMap } from 'proton-shared/lib/helpers/object';
 import { c } from 'ttag';
 import freePlanSvg from 'design-system/assets/img/pm-images/free-plan.svg';
 import plusPlanSvg from 'design-system/assets/img/pm-images/plus-plan.svg';
@@ -25,10 +25,11 @@ const FREE_PLAN = {
     }
 };
 
-const MailSubscriptionTable = ({ subscription = {}, plans: apiPlans = [], cycle, currency, onSelect }) => {
-    const plusPlan = apiPlans.find(({ Name }) => Name === PLANS.PLUS);
-    const professionalPlan = apiPlans.find(({ Name }) => Name === PLANS.PROFESSIONAL);
-    const visionaryPlan = apiPlans.find(({ Name }) => Name === PLANS.VISIONARY);
+const MailSubscriptionTable = ({ planNameSelected, plans: apiPlans = [], cycle, currency, onSelect }) => {
+    const plansMap = toMap(apiPlans, 'Name');
+    const plusPlan = plansMap[PLANS.PLUS];
+    const professionalPlan = plansMap[PLANS.PROFESSIONAL];
+    const visionaryPlan = plansMap[PLANS.VISIONARY];
     const plans = [
         {
             planName: 'Free',
@@ -63,6 +64,7 @@ const MailSubscriptionTable = ({ subscription = {}, plans: apiPlans = [], cycle,
             ]
         },
         plusPlan && {
+            planID: plusPlan.ID,
             planName: PLAN_NAMES[PLANS.PLUS],
             canCustomize: true,
             price: <SubscriptionPrices cycle={cycle} currency={currency} plan={plusPlan} />,
@@ -95,9 +97,17 @@ const MailSubscriptionTable = ({ subscription = {}, plans: apiPlans = [], cycle,
             ]
         },
         professionalPlan && {
+            planID: professionalPlan.ID,
             planName: PLAN_NAMES[PLANS.PROFESSIONAL],
             canCustomize: true,
-            price: <SubscriptionPrices cycle={cycle} currency={currency} plan={professionalPlan} suffix={c('Suffix').t`/month/user`} />,
+            price: (
+                <SubscriptionPrices
+                    cycle={cycle}
+                    currency={currency}
+                    plan={professionalPlan}
+                    suffix={c('Suffix').t`/month/user`}
+                />
+            ),
             imageSrc: professionalPlanSvg,
             description: c('Description').t`For large organizations and businesses`,
             features: [
@@ -127,6 +137,7 @@ const MailSubscriptionTable = ({ subscription = {}, plans: apiPlans = [], cycle,
             ]
         },
         visionaryPlan && {
+            planID: visionaryPlan.ID,
             planName: PLAN_NAMES[PLANS.VISIONARY],
             canCustomize: false,
             price: <SubscriptionPrices cycle={cycle} currency={currency} plan={visionaryPlan} />,
@@ -159,24 +170,27 @@ const MailSubscriptionTable = ({ subscription = {}, plans: apiPlans = [], cycle,
             ]
         }
     ];
-    const { Name } = getPlan(subscription);
 
     return (
         <>
             <SubscriptionTable
-                currentPlanIndex={INDEXES[Name] || 0}
+                currentPlanIndex={INDEXES[planNameSelected] || 0}
                 mostPopularIndex={1}
                 plans={plans}
-                onSelect={onSelect}
+                onSelect={(index) => onSelect(plans[index].planID)}
             />
             <p className="small mt1 mb0">* {c('Info concerning plan features').t`Customizable features`}</p>
-            <p className="small mt0 mb0">** {c('Info concerning plan features').t`ProtonMail cannot be used for mass emailing or spamming. Legitimate emails are unlimited.`}</p>
+            <p className="small mt0 mb0">
+                **{' '}
+                {c('Info concerning plan features')
+                    .t`ProtonMail cannot be used for mass emailing or spamming. Legitimate emails are unlimited.`}
+            </p>
         </>
     );
 };
 
 MailSubscriptionTable.propTypes = {
-    subscription: PropTypes.object,
+    planNameSelected: PropTypes.string,
     plans: PropTypes.arrayOf(PropTypes.object),
     onSelect: PropTypes.func.isRequired,
     cycle: PropTypes.oneOf([CYCLE.MONTHLY, CYCLE.YEARLY, CYCLE.TWO_YEARS]).isRequired,

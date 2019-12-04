@@ -2,7 +2,7 @@ import React from 'react';
 import { SubscriptionTable } from 'react-components';
 import PropTypes from 'prop-types';
 import { PLAN_NAMES, PLANS, CYCLE } from 'proton-shared/lib/constants';
-import { getPlan } from 'proton-shared/lib/helpers/subscription';
+import { toMap } from 'proton-shared/lib/helpers/object';
 import { c } from 'ttag';
 import freePlanSvg from 'design-system/assets/img/pv-images/plans/free-plan.svg';
 import plusPlanSvg from 'design-system/assets/img/pv-images/plans/vpnbasic-plan.svg';
@@ -25,10 +25,11 @@ const FREE_PLAN = {
     }
 };
 
-const VpnSubscriptionTable = ({ subscription = {}, plans: apiPlans = [], cycle, currency, onSelect }) => {
-    const vpnBasicPlan = apiPlans.find(({ Name }) => Name === PLANS.VPNBASIC);
-    const vpnPlusPlan = apiPlans.find(({ Name }) => Name === PLANS.PROFESSIONAL);
-    const visionaryPlan = apiPlans.find(({ Name }) => Name === PLANS.VISIONARY);
+const VpnSubscriptionTable = ({ planNameSelected, plans: apiPlans = [], cycle, currency, onSelect }) => {
+    const plansMap = toMap(apiPlans, 'Name');
+    const vpnBasicPlan = plansMap[PLANS.VPNBASIC];
+    const vpnPlusPlan = plansMap[PLANS.PROFESSIONAL];
+    const visionaryPlan = plansMap[PLANS.VISIONARY];
     const plans = [
         {
             planName: 'Free',
@@ -47,6 +48,7 @@ const VpnSubscriptionTable = ({ subscription = {}, plans: apiPlans = [], cycle, 
             ]
         },
         vpnBasicPlan && {
+            planID: vpnBasicPlan.ID,
             planName: PLAN_NAMES[PLANS.VPNBASIC],
             price: <SubscriptionPrices cycle={cycle} currency={currency} plan={vpnBasicPlan} />,
             imageSrc: plusPlanSvg,
@@ -63,6 +65,7 @@ const VpnSubscriptionTable = ({ subscription = {}, plans: apiPlans = [], cycle, 
             ]
         },
         vpnPlusPlan && {
+            planID: vpnPlusPlan.ID,
             planName: PLAN_NAMES[PLANS.VPNPLUS],
             price: <SubscriptionPrices cycle={cycle} currency={currency} plan={vpnPlusPlan} />,
             imageSrc: professionalPlanSvg,
@@ -79,6 +82,7 @@ const VpnSubscriptionTable = ({ subscription = {}, plans: apiPlans = [], cycle, 
             ]
         },
         visionaryPlan && {
+            planID: visionaryPlan.ID,
             planName: PLAN_NAMES[PLANS.VISIONARY],
             price: <SubscriptionPrices cycle={cycle} currency={currency} plan={visionaryPlan} />,
             imageSrc: visionaryPlanSvg,
@@ -90,20 +94,19 @@ const VpnSubscriptionTable = ({ subscription = {}, plans: apiPlans = [], cycle, 
             ]
         }
     ];
-    const { Name } = getPlan(subscription);
 
     return (
         <SubscriptionTable
-            currentPlanIndex={INDEXES[Name] || 0}
+            currentPlanIndex={INDEXES[planNameSelected] || 0}
             mostPopularIndex={2}
             plans={plans}
-            onSelect={onSelect}
+            onSelect={(index) => onSelect(plans[index].planID)}
         />
     );
 };
 
 VpnSubscriptionTable.propTypes = {
-    subscription: PropTypes.object,
+    planNameSelected: PropTypes.string,
     plans: PropTypes.arrayOf(PropTypes.object),
     onSelect: PropTypes.func.isRequired,
     cycle: PropTypes.oneOf([CYCLE.MONTHLY, CYCLE.YEARLY, CYCLE.TWO_YEARS]).isRequired,
