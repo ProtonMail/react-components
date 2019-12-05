@@ -5,28 +5,23 @@ import {
     CircularProgress,
     Dropdown,
     Icon,
+    Loader,
     generateUID,
     useUser,
     usePopperAnchor,
     useSubscription
 } from 'react-components';
 import humanSize from 'proton-shared/lib/helpers/humanSize';
-import { getPlanName, hasLifetime } from 'proton-shared/lib/helpers/subscription';
-import { PLANS } from 'proton-shared/lib/constants';
+import { hasVisionary, hasLifetime } from 'proton-shared/lib/helpers/subscription';
 
 import { classnames } from '../../helpers/component';
 
-const { VISIONARY } = PLANS;
-
 const StorageSpaceStatus = ({ upgradeButton }) => {
     const [{ MaxSpace, UsedSpace }] = useUser();
-    const [subscription = {}] = useSubscription();
+    const [subscription, loadingSubscription] = useSubscription();
     const [uid] = useState(generateUID('dropdown'));
     const { anchorRef, isOpen, toggle, close } = usePopperAnchor();
-    const planName = getPlanName(subscription);
-    const hasVisionaryPlan = planName === VISIONARY;
-    const hasLifetimePlan = hasLifetime(subscription);
-    const canUpgradeStorage = !hasVisionaryPlan && !hasLifetimePlan;
+    const canUpgradeStorage = !hasVisionary(subscription) && !hasLifetime(subscription);
 
     // round with 0.01 precision
     const usedPercent = Math.round((UsedSpace / MaxSpace) * 10000) / 100;
@@ -86,7 +81,7 @@ const StorageSpaceStatus = ({ upgradeButton }) => {
                                     {c('Info').t`Your storage space is shared across all Proton products.`}
                                 </span>
                             </div>
-                            {canUpgradeStorage ? upgradeButton : null}
+                            {loadingSubscription ? <Loader /> : canUpgradeStorage ? upgradeButton : null}
                         </div>
                     </div>
                 </div>
@@ -96,7 +91,7 @@ const StorageSpaceStatus = ({ upgradeButton }) => {
 };
 
 StorageSpaceStatus.propTypes = {
-    upgradeButton: PropTypes.node
+    upgradeButton: PropTypes.node.isRequired
 };
 
 export default StorageSpaceStatus;
