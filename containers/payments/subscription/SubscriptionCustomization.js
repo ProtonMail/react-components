@@ -2,19 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { SubTitle, Alert, Price, useConfig } from 'react-components';
 import { c, msgid } from 'ttag';
-import { PLANS, CYCLE, ADDON_NAMES, CLIENT_TYPES, PLAN_SERVICES } from 'proton-shared/lib/constants';
-import { getTotal } from 'proton-shared/lib/helpers/subscription';
+import { PLANS, CYCLE, ADDON_NAMES, CLIENT_TYPES, PLAN_SERVICES, FREE, PLAN_TYPES } from 'proton-shared/lib/constants';
 import { toMap } from 'proton-shared/lib/helpers/object';
 import humanSize from 'proton-shared/lib/helpers/humanSize';
+import { hasBit } from 'proton-shared/lib/helpers/bitset';
 
 import SubscriptionPlan from './SubscriptionPlan';
 import SubscriptionAddonRow from './SubscriptionAddonRow';
 import SubscriptionFeatureRow from './SubscriptionFeatureRow';
 import MailSubscriptionTable from './MailSubscriptionTable';
 import VpnSubscriptionTable from './VpnSubscriptionTable';
-import { hasBit } from 'proton-shared/lib/helpers/bitset';
 
-const FREE = 'free';
 const VPNFREE = 'vpnfree';
 
 const TITLE = {
@@ -27,16 +25,63 @@ const TITLE = {
     [PLANS.VPNPLUS]: 'ProtonVPN Plus'
 };
 
-const Description = ({ planName, setModel, model }) => {
+const removeService = (planIDs = {}, plansMap = {}, service = PLAN_SERVICES.MAIL) => {
+    return Object.entries(planIDs).reduce((acc, [planID = '', quantity = 0]) => {
+        const { Services } = plansMap[planID];
+
+        if (!hasBit(Services, service)) {
+            acc[planID] = quantity;
+        }
+
+        return acc;
+    }, {});
+};
+
+const Description = ({ planName, setModel, model, plans }) => {
+    const plansMap = toMap(plans, 'Name');
+    const plusPlan = plansMap[PLANS.PLUS];
+    const vpnPlusPlan = plansMap[PLANS.VPNPLUS];
+    const upgradeToPlus = (
+        <a
+            key="upgrade-to-plus"
+            onClick={() =>
+                setModel({
+                    ...model,
+                    planIDs: {
+                        ...removeService(model.planIDs, plansMap, PLAN_SERVICES.MAIL),
+                        [plusPlan.ID]: 1
+                    }
+                })
+            }
+        >{c('Action').t`Upgrade to ProtonMail Plus`}</a>
+    );
+    const upgradeToVpnPlus = (
+        <a
+            key="upgrade-to-vpnplus"
+            onClick={() =>
+                setModel({
+                    ...model,
+                    planIDs: {
+                        ...removeService(model.planIDs, plansMap, PLAN_SERVICES.VPN),
+                        [vpnPlusPlan.ID]: 1
+                    }
+                })
+            }
+        >{c('Link').t`upgrade to ProtonVPN Plus`}</a>
+    );
+
     const DESCRIPTION = {
-        [FREE]: c('Description plan').t`To get more features and security, upgrade to ProtonMail Plus`,
+        [FREE]: c('Description plan').jt`To get more features and security, ${upgradeToPlus}.`,
         [PLANS.PLUS]: c('Description plan')
-            .t`You can customize the storage, number of addresses, etc, included with ProtonMail Plus`,
-        [PLANS.PROFESSIONAL]: c('Description plan').t`Select the number of users within your organization`,
-        [PLANS.VISIONARY]: '???', // TODO
-        [VPNFREE]: '???', // TODO
-        [PLANS.VPNBASIC]: '???', // TODO
-        [PLANS.VPNPLUS]: '???' // TODO
+            .t`You can customize the storage, number of addresses, etc, included with ProtonMail Plus.`,
+        [PLANS.PROFESSIONAL]: c('Description plan').t`Select the number of users within your organization.`,
+        [PLANS.VISIONARY]: c('Description plan').t`Your plan includes both ProtonMail and ProtonVPN Visionary.`,
+        [VPNFREE]: c('Description plan')
+            .t`To get advanced security features and the highest speed, ${upgradeToVpnPlus}.`,
+        [PLANS.VPNBASIC]: c('Description plan')
+            .t`To get advanced security features and the highest speed, ${upgradeToVpnPlus}.`,
+        [PLANS.VPNPLUS]: c('Description plan')
+            .t`You can customize the number of connections when combining ProtonVPN with ProtonMail Professional.`
     };
 
     const annualBilling = (
@@ -53,24 +98,13 @@ const Description = ({ planName, setModel, model }) => {
 };
 
 Description.propTypes = {
+    plans: PropTypes.array.isRequired,
     planName: PropTypes.string.isRequired,
     model: PropTypes.object.isRequired,
     setModel: PropTypes.func.isRequired
 };
 
-const removeService = (planIDs = {}, plansMap = {}, service = PLAN_SERVICES.MAIL) => {
-    return Object.entries(planIDs).reduce((acc, [planID = '', quantity = 0]) => {
-        const { Services } = plansMap[planID];
-
-        if (!hasBit(Services, service)) {
-            acc[planID] = quantity;
-        }
-
-        return acc;
-    }, {});
-};
-
-const SubscriptionCustomization = ({ plans, planName, model, setModel, expanded = false }) => {
+const SubscriptionCustomization = ({ plans, model, setModel, expanded = false }) => {
     const { CLIENT_TYPE } = useConfig();
     const plansMap = toMap(plans, 'Name');
     const plusPlan = plansMap[PLANS.PLUS];
@@ -81,6 +115,27 @@ const SubscriptionCustomization = ({ plans, planName, model, setModel, expanded 
     const domainAddon = plansMap[ADDON_NAMES.DOMAIN];
     const memberAddon = plansMap[ADDON_NAMES.MEMBER];
     const vpnAddon = plansMap[ADDON_NAMES.VPN];
+
+    const { mailPlan, vpnPlan } = Object.entries(model.planIDs).reduce(
+        (acc, [planID, quantity]) => {
+            if (!quantity) {
+                return acc;
+            }
+
+            const plan = plans.find(({ ID }) => ID === planID);
+
+            if (plan.Type === PLAN_TYPES.PLAN) {
+                if (hasBit(plan.Services, PLAN_SERVICES.MAIL)) {
+                    acc.mailPlan = plan;
+                } else if (hasBit(plan.Services, PLAN_SERVICES.VPN)) {
+                    acc.vpnPlan = plan;
+                }
+            }
+
+            return acc;
+        },
+        { mailPlan: { Name: FREE }, vpnPlan: { Name: VPNFREE } }
+    );
 
     const CAN_CUSTOMIZE = {
         [FREE]: false,
@@ -105,25 +160,25 @@ const SubscriptionCustomization = ({ plans, planName, model, setModel, expanded 
                 key="storage"
                 icon="user-storage"
                 feature={humanSize(
-                    model.planIDs[storageAddon.ID] * storageAddon.MaxSpace + plusPlan.MaxSpace,
-                    'GB',
-                    true
+                    (model.planIDs[storageAddon.ID] || 0) * storageAddon.MaxSpace + plusPlan.MaxSpace,
+                    'GB'
                 )}
             />,
             <SubscriptionFeatureRow
                 key="address"
                 icon="email-address"
-                feature={c('Feature').t`${model.planIDs[addressAddon.ID] * addressAddon.MaxAddresses +
+                feature={c('Feature').t`${(model.planIDs[addressAddon.ID] || 0) * addressAddon.MaxAddresses +
                     plusPlan.MaxAddresses} email addresses`}
             />,
             <SubscriptionFeatureRow
                 key="domain"
                 icon="domains"
                 feature={c('Feature').ngettext(
-                    msgid`${model.planIDs[domainAddon.ID] * domainAddon.MaxDomains +
+                    msgid`${(model.planIDs[domainAddon.ID] || 0) * domainAddon.MaxDomains +
                         plusPlan.MaxDomains} custom domain`,
-                    `${model.planIDs[domainAddon.ID] * domainAddon.MaxDomains + plusPlan.MaxDomains} custom domains`,
-                    model.planIDs[domainAddon.ID] * domainAddon.MaxDomains + plusPlan.MaxDomains
+                    `${(model.planIDs[domainAddon.ID] || 0) * domainAddon.MaxDomains +
+                        plusPlan.MaxDomains} custom domains`,
+                    (model.planIDs[domainAddon.ID] || 0) * domainAddon.MaxDomains + plusPlan.MaxDomains
                 )}
             />,
             <SubscriptionFeatureRow key="all" icon="add" feature={c('Feature').t`All plus features`} />
@@ -133,54 +188,74 @@ const SubscriptionCustomization = ({ plans, planName, model, setModel, expanded 
                 key="member"
                 icon="organization-users"
                 feature={c('Feature').ngettext(
-                    msgid`${model.planIDs[memberAddon.ID] * memberAddon.MaxMembers + professionalPlan.MaxMembers}`,
-                    `${model.planIDs[memberAddon.ID] * memberAddon.MaxMembers + professionalPlan.MaxMembers}`,
-                    model.planIDs[memberAddon.ID] * memberAddon.MaxMembers + professionalPlan.MaxMembers
+                    msgid`${(model.planIDs[memberAddon.ID] || 0) * memberAddon.MaxMembers +
+                        professionalPlan.MaxMembers} user`,
+                    `${(model.planIDs[memberAddon.ID] || 0) * memberAddon.MaxMembers +
+                        professionalPlan.MaxMembers} users`,
+                    (model.planIDs[memberAddon.ID] || 0) * memberAddon.MaxMembers + professionalPlan.MaxMembers
                 )}
             />,
             <SubscriptionFeatureRow
                 key="storage"
                 icon="user-storage"
-                feature={c('Feature').ngettext(
-                    msgid`${model.planIDs[memberAddon.ID] * memberAddon.MaxSpace + professionalPlan.MaxSpace}`,
-                    `${model.planIDs[memberAddon.ID] * memberAddon.MaxSpace + professionalPlan.MaxSpace}`,
-                    model.planIDs[memberAddon.ID] * memberAddon.MaxSpace + professionalPlan.MaxSpace
+                feature={humanSize(
+                    (model.planIDs[storageAddon.ID] || 0) * storageAddon.MaxSpace + professionalPlan.MaxSpace,
+                    'GB'
                 )}
             />,
             <SubscriptionFeatureRow
                 key="address"
                 icon="email-address"
                 feature={c('Feature').ngettext(
-                    msgid`${model.planIDs[memberAddon.ID] * memberAddon.MaxAddresses + professionalPlan.MaxAddresses}`,
-                    `${model.planIDs[memberAddon.ID] * memberAddon.MaxAddresses + professionalPlan.MaxAddresses}`,
-                    model.planIDs[memberAddon.ID] * memberAddon.MaxAddresses + professionalPlan.MaxAddresses
+                    msgid`${(model.planIDs[memberAddon.ID] || 0) * memberAddon.MaxAddresses +
+                        professionalPlan.MaxAddresses} email address`,
+                    `${(model.planIDs[memberAddon.ID] || 0) * memberAddon.MaxAddresses +
+                        professionalPlan.MaxAddresses} email addresses`,
+                    (model.planIDs[memberAddon.ID] || 0) * memberAddon.MaxAddresses + professionalPlan.MaxAddresses
                 )}
             />,
             <SubscriptionFeatureRow
                 key="domain"
                 icon="domains"
                 feature={c('Feature').ngettext(
-                    msgid`${model.planIDs[memberAddon.ID] * memberAddon.MaxDomains + professionalPlan.MaxDomains}`,
-                    `${model.planIDs[memberAddon.ID] * memberAddon.MaxDomains + professionalPlan.MaxDomains}`,
-                    model.planIDs[memberAddon.ID] * memberAddon.MaxDomains + professionalPlan.MaxDomains
+                    msgid`${(model.planIDs[memberAddon.ID] || 0) * memberAddon.MaxDomains +
+                        professionalPlan.MaxDomains} custom domain`,
+                    `${(model.planIDs[memberAddon.ID] || 0) * memberAddon.MaxDomains +
+                        professionalPlan.MaxDomains} custom domains`,
+                    (model.planIDs[memberAddon.ID] || 0) * memberAddon.MaxDomains + professionalPlan.MaxDomains
                 )}
             />,
             <SubscriptionFeatureRow key="all" icon="add" feature={c('Feature').t`All professional features`} />
         ],
         [PLANS.VISIONARY]: [
-            <SubscriptionFeatureRow key="user" icon="organization-users" feature={c('Feature').t`6 Users`} />,
+            <SubscriptionFeatureRow key="user" icon="organization-users" feature={c('Feature').t`6 users`} />,
             <SubscriptionFeatureRow key="storage" icon="user-storage" feature={c('Feature').t`20 GB storage`} />,
             <SubscriptionFeatureRow key="address" icon="email-address" feature={c('Feature').t`50 email addresses`} />,
-            <SubscriptionFeatureRow key="all" icon="domains" feature={c('Feature').t`10 custom domains`} />
+            <SubscriptionFeatureRow key="domain" icon="domains" feature={c('Feature').t`10 custom domains`} />,
+            <SubscriptionFeatureRow key="all" icon="add" feature={c('Feature').t`All visionary features`} />
         ],
         [VPNFREE]: [
-            '???' // TODO
+            <SubscriptionFeatureRow key="connection" icon="connection" feature={c('Feature').t`1 VPN connection`} />,
+            <SubscriptionFeatureRow key="country" icon="country" feature={c('Feature').t`3 countries`} />,
+            <SubscriptionFeatureRow key="speed" icon="speed" feature={c('Feature').t`Medium speed`} />,
+            <SubscriptionFeatureRow key="bandwidth" icon="bandwidth" feature={c('Feature').t`Unlimited bandwidth`} />
         ],
         [PLANS.VPNBASIC]: [
-            '???' // TODO
+            <SubscriptionFeatureRow key="connection" icon="connection" feature={c('Feature').t`2 VPN connections`} />,
+            <SubscriptionFeatureRow key="country" icon="country" feature={c('Feature').t`XX countries`} />, // TODO
+            <SubscriptionFeatureRow key="speed" icon="speed" feature={c('Feature').t`High speed`} />,
+            <SubscriptionFeatureRow key="bandwidth" icon="bandwidth" feature={c('Feature').t`P2P/Bittorrent support`} />
         ],
         [PLANS.VPNPLUS]: [
-            '???' // TODO
+            <SubscriptionFeatureRow key="connection" icon="connection" feature={c('Feature').t`5 VPN connections`} />,
+            <SubscriptionFeatureRow key="country" icon="country" feature={c('Feature').t`XX countries`} />, // TODO
+            <SubscriptionFeatureRow key="speed" icon="speed" feature={c('Feature').t`Highest speed`} />,
+            <SubscriptionFeatureRow
+                key="bandwidth"
+                icon="bandwidth"
+                feature={c('Feature').t`P2P/Bittorrent support`}
+            />,
+            <SubscriptionFeatureRow key="access" icon="access" feature={c('Feature').t`Access blocked content`} />
         ]
     };
 
@@ -191,7 +266,7 @@ const SubscriptionCustomization = ({ plans, planName, model, setModel, expanded 
                 label={c('Label').t`Storage space`}
                 price={
                     <Price currency={model.currency} prefix="+" suffix={c('Suffix').t`/month`}>
-                        {model.planIDs[storageAddon.ID] * storageAddon.Pricing[CYCLE.MONTHLY]}
+                        {(model.planIDs[storageAddon.ID] || 0) * storageAddon.Pricing[CYCLE.MONTHLY]}
                     </Price>
                 }
                 format={(value) => humanSize(value, 'GB')}
@@ -207,7 +282,7 @@ const SubscriptionCustomization = ({ plans, planName, model, setModel, expanded 
                 label={c('Label').t`Email addresses`}
                 price={
                     <Price currency={model.currency} prefix="+" suffix={c('Suffix').t`/month`}>
-                        {model.planIDs[addressAddon.ID] * plansMap[ADDON_NAMES.ADDRESS].Pricing[CYCLE.MONTHLY]}
+                        {(model.planIDs[addressAddon.ID] || 0) * plansMap[ADDON_NAMES.ADDRESS].Pricing[CYCLE.MONTHLY]}
                     </Price>
                 }
                 step={addressAddon.MaxAddresses}
@@ -222,7 +297,7 @@ const SubscriptionCustomization = ({ plans, planName, model, setModel, expanded 
                 label={c('Label').t`Custom domains`}
                 price={
                     <Price currency={model.currency} prefix="+" suffix={c('Suffix').t`/month`}>
-                        {model.planIDs[domainAddon.ID] * plansMap[ADDON_NAMES.DOMAIN].Pricing[CYCLE.MONTHLY]}
+                        {(model.planIDs[domainAddon.ID] || 0) * plansMap[ADDON_NAMES.DOMAIN].Pricing[CYCLE.MONTHLY]}
                     </Price>
                 }
                 step={domainAddon.MaxDomains}
@@ -239,7 +314,7 @@ const SubscriptionCustomization = ({ plans, planName, model, setModel, expanded 
                 label={c('Label').t`Users`}
                 price={
                     <Price currency={model.currency} prefix="+" suffix={c('Suffix').t`/month`}>
-                        {model.planIDs[memberAddon.ID] * plansMap[ADDON_NAMES.MEMBER].Pricing[CYCLE.MONTHLY]}
+                        {(model.planIDs[memberAddon.ID] || 0) * plansMap[ADDON_NAMES.MEMBER].Pricing[CYCLE.MONTHLY]}
                     </Price>
                 }
                 step={memberAddon.MaxMembers}
@@ -254,7 +329,7 @@ const SubscriptionCustomization = ({ plans, planName, model, setModel, expanded 
                 label={c('Label').t`Custom domains`}
                 price={
                     <Price currency={model.currency} prefix="+" suffix={c('Suffix').t`/month`}>
-                        {model.planIDs[domainAddon.ID] * plansMap[ADDON_NAMES.DOMAIN].Pricing[CYCLE.MONTHLY]}
+                        {(model.planIDs[domainAddon.ID] || 0) * plansMap[ADDON_NAMES.DOMAIN].Pricing[CYCLE.MONTHLY]}
                     </Price>
                 }
                 step={domainAddon.MaxDomains}
@@ -271,7 +346,7 @@ const SubscriptionCustomization = ({ plans, planName, model, setModel, expanded 
                 label={c('Label').t`VPN connections`}
                 price={
                     <Price currency={model.currency} prefix="+" suffix={c('Suffix').t`/month`}>
-                        {model.planIDs[vpnAddon.ID] * plansMap[ADDON_NAMES.VPN].Pricing[CYCLE.MONTHLY]}
+                        {(model.planIDs[vpnAddon.ID] || 0) * plansMap[ADDON_NAMES.VPN].Pricing[CYCLE.MONTHLY]}
                     </Price>
                 }
                 step={vpnAddon.MaxVpn}
@@ -282,100 +357,73 @@ const SubscriptionCustomization = ({ plans, planName, model, setModel, expanded 
         ]
     };
 
-    return (
+    const sections = [
         <>
-            <SubTitle>{TITLE[planName]}</SubTitle>
-            <Description planName={planName} cycle={model.cycle} setModel={setModel} />
-            <SubscriptionPlan
-                canCustomize={CAN_CUSTOMIZE[planName]}
-                addons={ADDONS[planName]}
-                features={FEATURES[planName]}
+            <SubTitle>{TITLE[mailPlan.Name]}</SubTitle>
+            <Description plans={plans} planName={mailPlan.Name} model={model} setModel={setModel} />
+            <MailSubscriptionTable
+                planNameSelected={mailPlan.Name}
+                plans={plans}
+                cycle={model.cycle}
                 currency={model.currency}
-                totalPerMonth={getTotal({
-                    plans,
-                    planIDs: model.planIDs,
-                    cycle: CYCLE.MONTHLY,
-                    service: CLIENT_TYPE === CLIENT_TYPES.MAIL ? PLAN_SERVICES.MAIL : PLAN_SERVICES.VPN
-                })}
-                expanded={expanded}
+                onSelect={(planID) => {
+                    setModel({
+                        ...model,
+                        planIDs: {
+                            ...removeService(model.planIDs, plansMap, PLAN_SERVICES.MAIL),
+                            [planID]: 1
+                        }
+                    });
+                }}
             />
-
-            {CLIENT_TYPE === CLIENT_TYPES.MAIL ? (
-                <>
-                    <SubTitle>{c('Title').t`Add ProtonVPN`}</SubTitle>
-                    <Alert learnMore="https://protonvpn.com">{c('Info')
-                        .t`ProtonVPN encrypts your internet connection, adding a powerful layer of security to your devices and ensuring your online activity stays private.`}</Alert>
-                    <VpnSubscriptionTable
-                        planNameSelected={planName}
-                        plans={plans}
-                        cycle={model.cycle}
-                        currency={model.currency}
-                        onSelect={(planID) => {
-                            setModel({
-                                ...model,
-                                planIDs: {
-                                    ...removeService(model.planIDs, plansMap, PLAN_SERVICES.VPN),
-                                    [planID]: 1
-                                }
-                            });
-                        }}
-                    />
-                    <SubscriptionPlan
-                        canCustomize={CAN_CUSTOMIZE[planName]}
-                        addons={ADDONS[planName]}
-                        features={FEATURES[planName]}
-                        currency={model.currency}
-                        totalPerMonth={getTotal({
-                            plans,
-                            planIDs: model.planIDs,
-                            cycle: CYCLE.MONTHLY,
-                            service: PLAN_SERVICES.VPN
-                        })}
-                    />
-                </>
-            ) : null}
-
-            {CLIENT_TYPE === CLIENT_TYPES.VPN ? (
-                <>
-                    <SubTitle>{c('Title').t`Add ProtonMail`}</SubTitle>
-                    <Alert>{c('Info').t`Get 20% off when you buy both ProtonMail and ProtonVPN.`}</Alert>
-                    <MailSubscriptionTable
-                        planNameSelected={planName}
-                        plans={plans}
-                        cycle={model.cycle}
-                        currency={model.currency}
-                        onSelect={(planID) => {
-                            setModel({
-                                ...model,
-                                planIDs: {
-                                    ...removeService(model.planIDs, plansMap, PLAN_SERVICES.MAIL),
-                                    [planID]: 1
-                                }
-                            });
-                        }}
-                    />
-                    <SubscriptionPlan
-                        canCustomize={CAN_CUSTOMIZE[planName]}
-                        addons={ADDONS[planName]}
-                        features={FEATURES[planName]}
-                        currency={model.currency}
-                        totalPerMonth={getTotal({
-                            plans,
-                            planIDs: model.planIDs,
-                            cycle: CYCLE.MONTHLY,
-                            service: PLAN_SERVICES.MAIL
-                        })}
-                    />
-                </>
-            ) : null}
+            <SubscriptionPlan
+                expanded={expanded}
+                canCustomize={CAN_CUSTOMIZE[mailPlan.Name]}
+                addons={ADDONS[mailPlan.Name]}
+                features={FEATURES[mailPlan.Name]}
+                currency={model.currency}
+                plan={mailPlan}
+            />
+        </>,
+        <>
+            <SubTitle>{TITLE[vpnPlan.Name]}</SubTitle>
+            <Description plans={plans} planName={vpnPlan.Name} model={model} setModel={setModel} />
+            <VpnSubscriptionTable
+                planNameSelected={vpnPlan.Name}
+                plans={plans}
+                cycle={model.cycle}
+                currency={model.currency}
+                onSelect={(planID) => {
+                    setModel({
+                        ...model,
+                        planIDs: {
+                            ...removeService(model.planIDs, plansMap, PLAN_SERVICES.VPN),
+                            [planID]: 1
+                        }
+                    });
+                }}
+            />
+            <SubscriptionPlan
+                expanded={expanded}
+                canCustomize={CAN_CUSTOMIZE[vpnPlan.Name]}
+                addons={ADDONS[vpnPlan.Name]}
+                features={FEATURES[vpnPlan.Name]}
+                currency={model.currency}
+                plan={vpnPlan}
+            />
         </>
-    );
+    ].filter(Boolean);
+
+    if (CLIENT_TYPE === CLIENT_TYPES.VPN) {
+        return sections.reverse();
+    }
+
+    return sections;
 };
 
 SubscriptionCustomization.propTypes = {
     plans: PropTypes.arrayOf(PropTypes.object).isRequired,
     expanded: PropTypes.bool,
-    planName: PropTypes.string,
     model: PropTypes.object.isRequired,
     setModel: PropTypes.func.isRequired
 };
