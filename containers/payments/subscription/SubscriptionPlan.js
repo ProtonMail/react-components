@@ -2,16 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { LinkButton, useToggle, Price, Icon } from 'react-components';
 import { c } from 'ttag';
-import { CURRENCIES } from 'proton-shared/lib/constants';
+import { CURRENCIES, CYCLE } from 'proton-shared/lib/constants';
 
-const SubscriptionPlan = ({
-    canCustomize = false,
-    expanded = false,
-    features = [],
-    addons = [],
-    totalPerMonth = 0,
-    currency
-}) => {
+const SubscriptionPlan = ({ canCustomize = false, expanded = false, features = [], addons = [], plan, currency }) => {
     const { state, toggle } = useToggle(expanded);
 
     return (
@@ -21,16 +14,16 @@ const SubscriptionPlan = ({
                     <div className="bold mb1">{c('Title').t`Plan summary`}</div>
                     <ul className="unstyled mb1">
                         {features.map((feature, index) => {
-                            return <div key={index}>{feature}</div>;
+                            return <li key={index}>{feature}</li>;
                         })}
                     </ul>
                 </div>
                 {canCustomize && state ? (
-                    <div className="border-left p1">
-                        <div className="flex flex-nowrap flex-items-center flex-spacebetween">
+                    <div className="border-left p1" style={{ width: '370px' }}>
+                        <div className="flex flex-nowrap flex-items-center flex-spacebetween mb1">
                             <div className="bold">{c('Title').t`Configure plan`}</div>
-                            <Price currency={currency} suffix={c('Suffix').t`/month`}>
-                                {totalPerMonth}
+                            <Price className="big mt0 mb0" currency={currency} suffix={c('Suffix').t`/month`}>
+                                {plan.Pricing[CYCLE.MONTHLY]}
                             </Price>
                         </div>
                         {addons.map((addon) => addon)}
@@ -58,8 +51,8 @@ SubscriptionPlan.propTypes = {
     expanded: PropTypes.bool,
     features: PropTypes.arrayOf(PropTypes.node),
     addons: PropTypes.arrayOf(PropTypes.node),
-    totalPerMonth: PropTypes.number,
-    currency: PropTypes.oneOf(CURRENCIES)
+    currency: PropTypes.oneOf(CURRENCIES),
+    plan: PropTypes.object.isRequired
 };
 
 export default SubscriptionPlan;

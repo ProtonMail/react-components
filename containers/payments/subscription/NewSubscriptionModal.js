@@ -1,26 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import {
-    FormModal,
-    usePlans,
-    useNotifications,
-    useApi,
-    useLoading,
-    useSubscription,
-    useConfig
-} from 'react-components';
-import {
-    DEFAULT_CURRENCY,
-    DEFAULT_CYCLE,
-    CYCLE,
-    CURRENCIES,
-    PLAN_SERVICES,
-    PLAN_TYPES,
-    CLIENT_TYPES
-} from 'proton-shared/lib/constants';
+import { FormModal, usePlans, useApi, useLoading, useSubscription, useNotifications } from 'react-components';
+import { DEFAULT_CURRENCY, DEFAULT_CYCLE, CYCLE, CURRENCIES } from 'proton-shared/lib/constants';
 import { checkSubscription, subscribe } from 'proton-shared/lib/api/payments';
-import { toMap } from 'proton-shared/lib/helpers/object';
 
 import SubscriptionCustomization from './SubscriptionCustomization';
 import SubscriptionPayment from './SubscriptionPayment';
@@ -35,9 +18,14 @@ const STEPS = {
     THANKS: 3
 };
 
-const SERVICES = {
-    [CLIENT_TYPES.MAIL]: PLAN_SERVICES.MAIL,
-    [CLIENT_TYPES.VPN]: PLAN_SERVICES.VPN
+const clearPlanIDs = (planIDs = {}) => {
+    return Object.entries(planIDs).reduce((acc, [planID, quantity]) => {
+        if (!quantity) {
+            return acc;
+        }
+        acc[planID] = quantity;
+        return acc;
+    }, {});
 };
 
 const NewSubscriptionModal = ({
@@ -56,13 +44,13 @@ const NewSubscriptionModal = ({
         [STEPS.THANKS]: c('Title').t`???` // TODO
     };
 
-    const { CLIENT_TYPE } = useConfig();
     const api = useApi();
     const [plans, loadingPlans] = usePlans();
     const [subscription, loadingSubscription] = useSubscription();
     const [loading, withLoading] = useLoading();
     const { createNotification } = useNotifications();
-    const plansMap = toMap(plans || []);
+    const [loadingCheck, withLoadingCheck] = useLoading();
+    const [checkResult, setCheckResult] = useState({});
     const [model, setModel] = useState({
         cycle,
         currency,
@@ -71,36 +59,31 @@ const NewSubscriptionModal = ({
     });
     const [step, setStep] = useState(initialStep);
 
-    const { Name = 'free' } =
-        Object.entries(model.planIDs)
-            .filter(([, quantity]) => quantity)
-            .map(([planID]) => plansMap[planID])
-            .find(({ Type, Services }) => Type === PLAN_TYPES.PLAN && Services & SERVICES[CLIENT_TYPE]) || {};
-
     const check = async (newModel = model) => {
         try {
-            const { Coupon, Gift } = await api(
+            const result = await api(
                 checkSubscription({
-                    PlanIDs: newModel.planIDs,
+                    PlanIDs: clearPlanIDs(newModel.planIDs),
                     CouponCode: newModel.coupon,
                     Currency: newModel.currency,
                     Cycle: newModel.cycle
                 })
             );
 
-            if (newModel.coupon && newModel.coupon !== Coupon) {
+            if (newModel.coupon && newModel.coupon !== result.Coupon.Code) {
                 const text = c('Error').t`Your coupon is invalid or cannot be applied to your plan`;
                 createNotification({ text, type: 'error' });
                 throw new Error(text);
             }
 
-            if (newModel.gift && !Gift) {
+            if (newModel.gift && !result.Gift) {
                 const text = c('Error').t`Invalid gift code`;
                 createNotification({ text, type: 'error' });
                 throw new Error(text);
             }
 
             setModel(newModel);
+            setCheckResult(result);
         } catch (error) {
             throw error;
         }
@@ -108,19 +91,21 @@ const NewSubscriptionModal = ({
 
     const handleSubscribe = async () => {
         setStep(STEPS.UPGRADE);
-        await api(subscribe(subscription));
+        await withLoading(api(subscribe(subscription)));
     };
 
-    const handleCheckout = async () => {};
+    const handleCheckout = () => {
+        setStep(STEPS.PAYMENT);
+    };
 
     useEffect(() => {
-        withLoading(check());
-    }, []);
+        withLoadingCheck(check());
+    }, [model.cycle, model.planIDs]);
 
     return (
         <FormModal
             footer={null}
-            className="pm-modal--wider" // TODO need a fullscreen class
+            className="pm-modal--full"
             title={TITLE[step]}
             loading={loading || loadingPlans || loadingSubscription}
             {...rest}
@@ -129,7 +114,6 @@ const NewSubscriptionModal = ({
                 <div className="flex flex-spacebetween">
                     <div className="w75 pr1">
                         <SubscriptionCustomization
-                            planName={Name}
                             plans={plans}
                             expanded={expanded}
                             model={model}
@@ -138,17 +122,26 @@ const NewSubscriptionModal = ({
                     </div>
                     <div className="w25">
                         <SubscriptionCheckout
+                            plans={plans}
+                            checkResult={checkResult}
+                            loading={loadingCheck}
                             onCheckout={handleCheckout}
                             model={model}
                             setModel={setModel}
-                            onSubscribe={handleSubscribe}
                         />
                     </div>
                 </div>
             )}
-            {step === STEPS.PAYMENT && <SubscriptionPayment model={model} setModel={setModel} />}
+            {step === STEPS.PAYMENT && (
+                <SubscriptionPayment
+                    loading={loading}
+                    model={model}
+                    setModel={setModel}
+                    onSubscribe={handleSubscribe}
+                />
+            )}
             {step === STEPS.UPGRADE && <SubscriptionUpgrade />}
-            {step === STEPS.THANKS && <SubscriptionThanks />}
+            {step === STEPS.THANKS && <SubscriptionThanks onClose={rest.onClose} />}
         </FormModal>
     );
 };
@@ -159,7 +152,8 @@ NewSubscriptionModal.propTypes = {
     cycle: PropTypes.oneOf([CYCLE.MONTHLY, CYCLE.TWO_YEARS, CYCLE.YEARLY]),
     currency: PropTypes.oneOf(CURRENCIES),
     coupon: PropTypes.string,
-    planIDs: PropTypes.object
+    planIDs: PropTypes.object,
+    onClose: PropTypes.func.isRequired
 };
 
 export default NewSubscriptionModal;

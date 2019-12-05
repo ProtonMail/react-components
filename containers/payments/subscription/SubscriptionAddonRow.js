@@ -17,8 +17,8 @@ const SubscriptionAddonRow = ({
     step = 1
 }) => {
     const idRef = useRef();
-    const options = range(min, max, step).map((number, quantity) => ({
-        text: format(start + number),
+    const options = range(min, max).map((quantity) => ({
+        text: format(start + quantity * step),
         value: quantity
     }));
 
@@ -35,7 +35,7 @@ const SubscriptionAddonRow = ({
                 <div className="w25">
                     <Button
                         className="w100"
-                        onClick={() => onChange(quantity - step)}
+                        onClick={() => onChange(quantity - 1)}
                         disabled={quantity === min}
                         icon="minus"
                     />
@@ -52,13 +52,13 @@ const SubscriptionAddonRow = ({
                 <div className="w25">
                     <Button
                         className="w100"
-                        onClick={() => onChange(quantity + step)}
+                        onClick={() => onChange(quantity + 1)}
                         disabled={quantity === max}
                         icon="plus"
                     />
                 </div>
             </div>
-            <div className="w30 big mb0 mt0">{quantity ? price : c('Info').t`Included`}</div>
+            <div className="w30 big mb0 mt0 alignright">{quantity ? price : c('Info').t`Included`}</div>
         </div>
     );
 };
