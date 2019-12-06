@@ -52,10 +52,10 @@ const SubscriptionCheckout = ({ plans, model, setModel, checkResult, onCheckout,
     const vpnAddon = plans.find(({ Name }) => Name === ADDON_NAMES.VPN);
     const [organization, loadingOrganization] = useOrganization();
     const loyal = isLoyal(organization);
-    const subTotal = getSubTotal({ plansMap: model.planIDs, cycle: CYCLE.MONTHLY, plans });
+    const subTotal = getSubTotal({ plansMap: model.planIDs, cycle: model.cycle, plans }) / model.cycle;
     const total = checkResult.Amount + checkResult.CouponDiscount;
     const monthlyTotal = total / model.cycle;
-    const discount = total - subTotal;
+    const discount = monthlyTotal - subTotal;
     const collection = orderBy(
         Object.entries(model.planIDs).map(([planID, quantity]) => ({ ...plansMap[planID], quantity })),
         'Type'
@@ -105,7 +105,7 @@ const SubscriptionCheckout = ({ plans, model, setModel, checkResult, onCheckout,
                         key={ID}
                         className={Type === PLAN_TYPES.PLAN ? 'bold' : ''}
                         title={Type === PLAN_TYPES.PLAN ? Title : getTitle(Name, quantity)}
-                        amount={quantity * Pricing[CYCLE.MONTHLY]}
+                        amount={(quantity * Pricing[model.cycle]) / model.cycle}
                         currency={model.currency}
                     />
                 );
@@ -176,7 +176,7 @@ const SubscriptionCheckout = ({ plans, model, setModel, checkResult, onCheckout,
                 </div>
             </div>
             <div className="rounded p1 mb1 bg-global-light">
-                {model.coupon || [CYCLE.YEARLY, CYCLE.TWO_YEARS].includes(model.cycle) ? (
+                {model.coupon ? (
                     <div className="border-bottom border-bottom--dashed mb0-5">
                         <CheckoutRow title={c('Title').t`Sub-total`} amount={subTotal} currency={model.currency} />
                         <CheckoutRow

@@ -112,7 +112,7 @@ Description.propTypes = {
     setModel: PropTypes.func.isRequired
 };
 
-const SubscriptionCustomization = ({ plans, model, setModel, expanded = false }) => {
+const SubscriptionCustomization = ({ vpnCountries = {}, plans, model, setModel, expanded = false }) => {
     const { CLIENT_TYPE } = useConfig();
     const plansMap = toMap(plans, 'Name');
     const plusPlan = plansMap[PLANS.PLUS];
@@ -161,8 +161,7 @@ const SubscriptionCustomization = ({ plans, model, setModel, expanded = false })
         [PLANS.VPNPLUS]: c('Decription')
             .t`VPN connections can be allocated to users within your organization. Each device requires one connection.`,
         [PLANS.PROFESSIONAL]: c('Decription')
-            .t`Each additional user comes automatically with 5 GB storage space and 5 email addresses.`,
-        [PLANS.PLUS]: c('Decription').t`.`
+            .t`Each additional user comes automatically with 5 GB storage space and 5 email addresses.`
     };
 
     const FEATURES = {
@@ -254,19 +253,31 @@ const SubscriptionCustomization = ({ plans, model, setModel, expanded = false })
         ],
         [VPNFREE]: [
             <SubscriptionFeatureRow key="connection" icon="connection" feature={c('Feature').t`1 VPN connection`} />,
-            <SubscriptionFeatureRow key="country" icon="country" feature={c('Feature').t`3 countries`} />,
+            <SubscriptionFeatureRow
+                key="country"
+                icon="country"
+                feature={c('Feature').t`${vpnCountries.free.length} countries`}
+            />,
             <SubscriptionFeatureRow key="speed" icon="speed" feature={c('Feature').t`Medium speed`} />,
             <SubscriptionFeatureRow key="bandwidth" icon="bandwidth" feature={c('Feature').t`Unlimited bandwidth`} />
         ],
         [PLANS.VPNBASIC]: [
             <SubscriptionFeatureRow key="connection" icon="connection" feature={c('Feature').t`2 VPN connections`} />,
-            <SubscriptionFeatureRow key="country" icon="country" feature={c('Feature').t`XX countries`} />, // TODO
+            <SubscriptionFeatureRow
+                key="country"
+                icon="country"
+                feature={c('Feature').t`${vpnCountries.basic.length} countries`}
+            />,
             <SubscriptionFeatureRow key="speed" icon="speed" feature={c('Feature').t`High speed`} />,
             <SubscriptionFeatureRow key="bandwidth" icon="bandwidth" feature={c('Feature').t`P2P/Bittorrent support`} />
         ],
         [PLANS.VPNPLUS]: [
             <SubscriptionFeatureRow key="connection" icon="connection" feature={c('Feature').t`5 VPN connections`} />,
-            <SubscriptionFeatureRow key="country" icon="country" feature={c('Feature').t`XX countries`} />, // TODO
+            <SubscriptionFeatureRow
+                key="country"
+                icon="country"
+                feature={c('Feature').t`${vpnCountries.all.length} countries`}
+            />,
             <SubscriptionFeatureRow key="speed" icon="speed" feature={c('Feature').t`Highest speed`} />,
             <SubscriptionFeatureRow
                 key="bandwidth"
@@ -446,6 +457,11 @@ const SubscriptionCustomization = ({ plans, model, setModel, expanded = false })
 };
 
 SubscriptionCustomization.propTypes = {
+    vpnCountries: PropTypes.shape({
+        free: PropTypes.array,
+        basic: PropTypes.array,
+        all: PropTypes.array
+    }),
     plans: PropTypes.arrayOf(PropTypes.object).isRequired,
     expanded: PropTypes.bool,
     model: PropTypes.object.isRequired,

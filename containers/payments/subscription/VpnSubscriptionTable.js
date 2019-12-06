@@ -1,5 +1,5 @@
 import React from 'react';
-import { SubscriptionTable } from 'react-components';
+import { SubscriptionTable, useVPNCountries } from 'react-components';
 import PropTypes from 'prop-types';
 import { PLAN_NAMES, PLANS, CYCLE } from 'proton-shared/lib/constants';
 import { toMap } from 'proton-shared/lib/helpers/object';
@@ -30,15 +30,17 @@ const VpnSubscriptionTable = ({ planNameSelected, plans: apiPlans = [], cycle, c
     const vpnBasicPlan = plansMap[PLANS.VPNBASIC];
     const vpnPlusPlan = plansMap[PLANS.PROFESSIONAL];
     const visionaryPlan = plansMap[PLANS.VISIONARY];
+    const [vpnCountries] = useVPNCountries();
     const plans = [
         {
-            planName: 'Free',
+            name: '',
+            title: 'Free',
             price: <SubscriptionPrices cycle={cycle} currency={currency} plan={FREE_PLAN} />,
             imageSrc: freePlanSvg,
             description: c('Description').t`Privacy and security for everyone`,
             features: [
                 c('Feature').t`1 VPN connection`,
-                c('Feature').t`Servers in 3 countries`,
+                c('Feature').t`Servers in ${vpnCountries.free.length} countries`,
                 c('Feature').t`Medium speed`,
                 c('Feature').t`No logs/No ads`,
                 <del key="filesharing">{c('Feature').t`Filesharing/bitorrent support`}</del>,
@@ -48,14 +50,15 @@ const VpnSubscriptionTable = ({ planNameSelected, plans: apiPlans = [], cycle, c
             ]
         },
         vpnBasicPlan && {
+            name: vpnBasicPlan.Name,
             planID: vpnBasicPlan.ID,
-            planName: PLAN_NAMES[PLANS.VPNBASIC],
+            title: PLAN_NAMES[PLANS.VPNBASIC],
             price: <SubscriptionPrices cycle={cycle} currency={currency} plan={vpnBasicPlan} />,
             imageSrc: plusPlanSvg,
             description: c('Description').t`Basic privacy features`,
             features: [
                 c('Feature').t`2 VPN connection`,
-                c('Feature').t`Servers in XX countries`, // TODO
+                c('Feature').t`Servers in ${vpnCountries.basic.length} countries`,
                 c('Feature').t`High speed`,
                 c('Feature').t`No logs/No ads`,
                 <del key="filesharing">{c('Feature').t`Filesharing/bitorrent support`}</del>,
@@ -65,14 +68,15 @@ const VpnSubscriptionTable = ({ planNameSelected, plans: apiPlans = [], cycle, c
             ]
         },
         vpnPlusPlan && {
+            name: vpnPlusPlan.Name,
             planID: vpnPlusPlan.ID,
-            planName: PLAN_NAMES[PLANS.VPNPLUS],
+            title: PLAN_NAMES[PLANS.VPNPLUS],
             price: <SubscriptionPrices cycle={cycle} currency={currency} plan={vpnPlusPlan} />,
             imageSrc: professionalPlanSvg,
             description: c('Description').t`Advanced security features`,
             features: [
                 c('Feature').t`5 VPN connection`,
-                c('Feature').t`Servers in XX countries`, // TODO
+                c('Feature').t`Servers in ${vpnCountries.all.length} countries`,
                 c('Feature').t`Highest speed (10 Gbps)`,
                 c('Feature').t`No logs/No ads`,
                 c('Feature').t`Filesharing/bitorrent support`,
@@ -82,8 +86,9 @@ const VpnSubscriptionTable = ({ planNameSelected, plans: apiPlans = [], cycle, c
             ]
         },
         visionaryPlan && {
+            name: visionaryPlan.Name,
             planID: visionaryPlan.ID,
-            planName: PLAN_NAMES[PLANS.VISIONARY],
+            title: PLAN_NAMES[PLANS.VISIONARY],
             price: <SubscriptionPrices cycle={cycle} currency={currency} plan={visionaryPlan} />,
             imageSrc: visionaryPlanSvg,
             description: c('Description').t`The complete privacy suite`,

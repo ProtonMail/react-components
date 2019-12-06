@@ -15,9 +15,9 @@ const SubscriptionTable = ({
     return (
         <div className="mt2 subscriptionTable">
             <div className="flex-autogrid onmobile-flex-column">
-                {plans.map(({ planName, price, imageSrc, description, features = [], canCustomize }, index) => {
+                {plans.map(({ name, title, price, imageSrc, description, features = [], canCustomize }, index) => {
                     return (
-                        <div key={planName} className="flex-autogrid-item flex">
+                        <div key={title} className="flex-autogrid-item flex" data-plan-name={name}>
                             <div
                                 className="bordered-container subscriptionTable-plan pt2 pb2 pl0-5 pr0-5 flex flex-column relative w100"
                                 data-current-plan={index === currentPlanIndex}
@@ -34,10 +34,10 @@ const SubscriptionTable = ({
                                             'Title for subscription plan'
                                         ).t`Most popular`}</div>
                                     ) : null}
-                                    <div className="bold aligncenter mb0-5 uppercase">{planName}</div>
+                                    <div className="bold aligncenter mb0-5 uppercase">{title}</div>
                                     <div className="aligncenter mb0-5">{price}</div>
                                     <div className="flex flex-items-center flex-justify-center subscriptionTable-image-container">
-                                        <img src={imageSrc} alt={planName} />
+                                        <img src={imageSrc} alt={title} />
                                     </div>
                                 </header>
                                 <p className="subscriptionTable-description aligncenter mt0 mb1 italic">
@@ -120,7 +120,8 @@ SubscriptionTable.propTypes = {
     currentPlan: PropTypes.string,
     plans: PropTypes.arrayOf(
         PropTypes.shape({
-            planName: PropTypes.string.isRequired,
+            name: PropTypes.string.isRequired,
+            title: PropTypes.string.isRequired,
             price: PropTypes.node.isRequired,
             imageSrc: PropTypes.string.isRequired,
             description: PropTypes.node.isRequired,
