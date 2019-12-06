@@ -8,8 +8,22 @@
     display: none;
 }
 
+.subscription-modal .subscriptionTable [data-plan-name="visionary"] {
+    display: none;
+}
+
 // Hide first subscription table in the subscription modal
 .subscription-modal .subscriptionCustomization-section:first-child .vpnSubscriptionTable-container,
 .subscription-modal .subscriptionCustomization-section:first-child .mailSubscriptionTable-container {
     display: none;
+}
+
+// Adjust header height
+.subscription-modal .subscriptionTable-header {
+    min-height: 11rem;
+}
+
+.subscription-modal .subscriptionTable-description,
+.subscription-modal .subscriptionTable-footer {
+    min-height: auto;
 }

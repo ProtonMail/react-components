@@ -32,7 +32,8 @@ const MailSubscriptionTable = ({ planNameSelected, plans: apiPlans = [], cycle, 
     const visionaryPlan = plansMap[PLANS.VISIONARY];
     const plans = [
         {
-            planName: 'Free',
+            name: '',
+            title: 'Free',
             canCustomize: true,
             price: <SubscriptionPrices cycle={cycle} currency={currency} plan={FREE_PLAN} />,
             imageSrc: freePlanSvg,
@@ -64,8 +65,9 @@ const MailSubscriptionTable = ({ planNameSelected, plans: apiPlans = [], cycle, 
             ]
         },
         plusPlan && {
+            name: plusPlan.Name,
             planID: plusPlan.ID,
-            planName: PLAN_NAMES[PLANS.PLUS],
+            title: PLAN_NAMES[PLANS.PLUS],
             canCustomize: true,
             price: <SubscriptionPrices cycle={cycle} currency={currency} plan={plusPlan} />,
             imageSrc: plusPlanSvg,
@@ -97,8 +99,9 @@ const MailSubscriptionTable = ({ planNameSelected, plans: apiPlans = [], cycle, 
             ]
         },
         professionalPlan && {
+            name: professionalPlan.Name,
             planID: professionalPlan.ID,
-            planName: PLAN_NAMES[PLANS.PROFESSIONAL],
+            title: PLAN_NAMES[PLANS.PROFESSIONAL],
             canCustomize: true,
             price: (
                 <SubscriptionPrices
@@ -137,8 +140,9 @@ const MailSubscriptionTable = ({ planNameSelected, plans: apiPlans = [], cycle, 
             ]
         },
         visionaryPlan && {
+            name: visionaryPlan.Name,
             planID: visionaryPlan.ID,
-            planName: PLAN_NAMES[PLANS.VISIONARY],
+            title: PLAN_NAMES[PLANS.VISIONARY],
             canCustomize: false,
             price: <SubscriptionPrices cycle={cycle} currency={currency} plan={visionaryPlan} />,
             imageSrc: visionaryPlanSvg,

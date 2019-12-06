@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { FormModal, usePlans, useApi, useLoading, useSubscription, useNotifications } from 'react-components';
+import {
+    FormModal,
+    usePlans,
+    useApi,
+    useLoading,
+    useSubscription,
+    useNotifications,
+    useVPNCountries
+} from 'react-components';
 import { DEFAULT_CURRENCY, DEFAULT_CYCLE, CYCLE, CURRENCIES } from 'proton-shared/lib/constants';
 import { checkSubscription, subscribe } from 'proton-shared/lib/api/payments';
 
@@ -47,6 +55,7 @@ const NewSubscriptionModal = ({
     };
 
     const api = useApi();
+    const [vpnCountries, loadingVpnCountries] = useVPNCountries();
     const [plans, loadingPlans] = usePlans();
     const [subscription, loadingSubscription] = useSubscription();
     const [loading, withLoading] = useLoading();
@@ -109,13 +118,14 @@ const NewSubscriptionModal = ({
             footer={null}
             className="pm-modal--full subscription-modal"
             title={TITLE[step]}
-            loading={loading || loadingPlans || loadingSubscription}
+            loading={loading || loadingPlans || loadingSubscription || loadingVpnCountries}
             {...rest}
         >
             {step === STEPS.CUSTOMIZATION && (
                 <div className="flex flex-spacebetween">
                     <div className="w75 pr1">
                         <SubscriptionCustomization
+                            vpnCountries={vpnCountries}
                             plans={plans}
                             expanded={expanded}
                             model={model}
