@@ -16,11 +16,15 @@
 }
 
 .subscriptionTable-header {
-    height: 220px;
+    min-height: 22rem;
+}
+
+.subscriptionTable-description {
+    min-height: 7rem;
 }
 
 .subscriptionTable-footer {
-    height: 70px;
+    min-height: 7rem;
 }
 
 .subscriptionTable-image-container {

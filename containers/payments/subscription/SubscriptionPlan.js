@@ -4,12 +4,20 @@ import { LinkButton, useToggle, Price, Icon } from 'react-components';
 import { c } from 'ttag';
 import { CURRENCIES, CYCLE } from 'proton-shared/lib/constants';
 
-const SubscriptionPlan = ({ canCustomize = false, expanded = false, features = [], addons = [], plan, currency }) => {
+const SubscriptionPlan = ({
+    canCustomize = false,
+    expanded = false,
+    features = [],
+    addons = [],
+    description,
+    plan,
+    currency
+}) => {
     const { state, toggle } = useToggle(expanded);
 
     return (
         <>
-            <div className="bordered-container flex flex-nowrap onmobile-flex-column mb1">
+            <div className="bordered-container inline-flex flex-nowrap onmobile-flex-column mb1">
                 <div className="p1" style={{ width: '230px' }}>
                     <div className="bold mb1">{c('Title').t`Plan summary`}</div>
                     <ul className="unstyled mb1">
@@ -26,14 +34,17 @@ const SubscriptionPlan = ({ canCustomize = false, expanded = false, features = [
                                 {plan.Pricing[CYCLE.MONTHLY]}
                             </Price>
                         </div>
-                        {addons.map((addon) => addon)}
+                        <div className="flex flex-column">
+                            <div className="flex-item-fluid-auto">{addons.map((addon) => addon)}</div>
+                            {description ? <div>{description}</div> : null}
+                        </div>
                     </div>
                 ) : null}
             </div>
             {canCustomize ? (
                 <div className="mb1">
                     <LinkButton className="flex flex-nowrap flex-items-center" onClick={toggle}>
-                        <Icon name="caret" className="mr1" />
+                        <Icon name="caret" className={state ? 'rotateZ-90' : 'rotateZ-270'} />
                         <span>
                             {state
                                 ? c('Action').t`Hide customization options`
@@ -52,7 +63,8 @@ SubscriptionPlan.propTypes = {
     features: PropTypes.arrayOf(PropTypes.node),
     addons: PropTypes.arrayOf(PropTypes.node),
     currency: PropTypes.oneOf(CURRENCIES),
-    plan: PropTypes.object.isRequired
+    plan: PropTypes.object.isRequired,
+    description: PropTypes.string
 };
 
 export default SubscriptionPlan;

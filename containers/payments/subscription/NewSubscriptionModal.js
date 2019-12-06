@@ -11,6 +11,8 @@ import SubscriptionUpgrade from './SubscriptionUpgrade';
 import SubscriptionThanks from './SubscriptionThanks';
 import SubscriptionCheckout from './SubscriptionCheckout';
 
+import './NewSubscriptionModal.scss';
+
 const STEPS = {
     CUSTOMIZATION: 0,
     PAYMENT: 1,
@@ -105,7 +107,7 @@ const NewSubscriptionModal = ({
     return (
         <FormModal
             footer={null}
-            className="pm-modal--full"
+            className="pm-modal--full subscription-modal"
             title={TITLE[step]}
             loading={loading || loadingPlans || loadingSubscription}
             {...rest}
@@ -153,7 +155,7 @@ NewSubscriptionModal.propTypes = {
     currency: PropTypes.oneOf(CURRENCIES),
     coupon: PropTypes.string,
     planIDs: PropTypes.object,
-    onClose: PropTypes.func.isRequired
+    onClose: PropTypes.func
 };
 
 export default NewSubscriptionModal;

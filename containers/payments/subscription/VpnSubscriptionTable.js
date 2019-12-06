@@ -25,7 +25,7 @@ const FREE_PLAN = {
     }
 };
 
-const VpnSubscriptionTable = ({ planNameSelected, plans: apiPlans = [], cycle, currency, onSelect }) => {
+const VpnSubscriptionTable = ({ planNameSelected, plans: apiPlans = [], cycle, currency, onSelect, currentPlan }) => {
     const plansMap = toMap(apiPlans, 'Name');
     const vpnBasicPlan = plansMap[PLANS.VPNBASIC];
     const vpnPlusPlan = plansMap[PLANS.PROFESSIONAL];
@@ -96,16 +96,20 @@ const VpnSubscriptionTable = ({ planNameSelected, plans: apiPlans = [], cycle, c
     ];
 
     return (
-        <SubscriptionTable
-            currentPlanIndex={INDEXES[planNameSelected] || 0}
-            mostPopularIndex={2}
-            plans={plans}
-            onSelect={(index) => onSelect(plans[index].planID)}
-        />
+        <div className="vpnSubscriptionTable-container">
+            <SubscriptionTable
+                currentPlanIndex={INDEXES[planNameSelected] || 0}
+                mostPopularIndex={2}
+                plans={plans}
+                onSelect={(index) => onSelect(plans[index].planID)}
+                currentPlan={currentPlan}
+            />
+        </div>
     );
 };
 
 VpnSubscriptionTable.propTypes = {
+    currentPlan: PropTypes.string,
     planNameSelected: PropTypes.string,
     plans: PropTypes.arrayOf(PropTypes.object),
     onSelect: PropTypes.func.isRequired,

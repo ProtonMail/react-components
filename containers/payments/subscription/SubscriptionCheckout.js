@@ -4,7 +4,7 @@ import { c, msgid } from 'ttag';
 import {
     CurrencySelector,
     CycleSelector,
-    Button,
+    PrimaryButton,
     Icon,
     Loader,
     Price,
@@ -75,30 +75,25 @@ const SubscriptionCheckout = ({ plans, model, setModel, checkResult, onCheckout,
     const bonusStorage = humanSize(LOYAL_BONUS_STORAGE, 'GB');
 
     const getTitle = (planName, quantity) => {
-        switch (planName) {
-            case [ADDON_NAMES.ADDRESS]:
-                return c('Addon').t`${quantity * addressAddon.MaxAddresses} email addresses`;
-            case [ADDON_NAMES.SPACE]:
-                return humanSize(quantity * storageAddon.MaxSpace, 'GB');
-            case [ADDON_NAMES.DOMAIN]:
-                return c('Addon').ngettext(
-                    msgid`${quantity * domainAddon.MaxDomains} custom domain`,
-                    `${quantity * domainAddon.MaxDomains} custom domains`,
-                    quantity * domainAddon.MaxDomains
-                );
-            case [ADDON_NAMES.MEMBER]:
-                return c('Addon').ngettext(
-                    msgid`${quantity * memberAddon.MaxMembers} user`,
-                    `${quantity * memberAddon.MaxMembers} users`,
-                    quantity * memberAddon.MaxMembers
-                );
-            case [ADDON_NAMES.VPN]:
-                return c('Addon').ngettext(
-                    msgid`${quantity * vpnAddon.MaxMembers} connection`,
-                    `${quantity * vpnAddon.MaxMembers} connections`,
-                    quantity * vpnAddon.MaxMembers
-                );
-        }
+        return {
+            [ADDON_NAMES.ADDRESS]: c('Addon').t`+ ${quantity * addressAddon.MaxAddresses} email addresses`,
+            [ADDON_NAMES.SPACE]: c('Addon').t`+ ${humanSize(quantity * storageAddon.MaxSpace, 'GB')} storage`,
+            [ADDON_NAMES.DOMAIN]: c('Addon').ngettext(
+                msgid`+ ${quantity * domainAddon.MaxDomains} custom domain`,
+                `+ ${quantity * domainAddon.MaxDomains} custom domains`,
+                quantity * domainAddon.MaxDomains
+            ),
+            [ADDON_NAMES.MEMBER]: c('Addon').ngettext(
+                msgid`+ ${quantity * memberAddon.MaxMembers} user`,
+                `+ ${quantity * memberAddon.MaxMembers} users`,
+                quantity * memberAddon.MaxMembers
+            ),
+            [ADDON_NAMES.VPN]: c('Addon').ngettext(
+                msgid`+ ${quantity * vpnAddon.MaxMembers} connection`,
+                `+ ${quantity * vpnAddon.MaxMembers} connections`,
+                quantity * vpnAddon.MaxMembers
+            )
+        }[planName];
     };
 
     const printSummary = (service = PLAN_SERVICES.MAIL) => {
@@ -144,14 +139,14 @@ const SubscriptionCheckout = ({ plans, model, setModel, checkResult, onCheckout,
                         )}
                         {loyal && (
                             <CheckoutRow
-                                title={c('Info').t`${bonusStorage} bonus storage`}
+                                title={c('Info').t`+ ${bonusStorage} bonus storage`}
                                 amount={0}
                                 currency={model.currency}
                             />
                         )}
                         {hasVisionary && loyal && (
                             <CheckoutRow
-                                title={c('Info').t`${LOYAL_BONUS_CONNECTION} bonus connections`}
+                                title={c('Info').t`+ ${LOYAL_BONUS_CONNECTION} bonus connections`}
                                 amount={0}
                                 currency={model.currency}
                             />
@@ -171,7 +166,7 @@ const SubscriptionCheckout = ({ plans, model, setModel, checkResult, onCheckout,
                             )}
                             {loyal && (
                                 <CheckoutRow
-                                    title={c('Info').t`${LOYAL_BONUS_CONNECTION} bonus connections`}
+                                    title={c('Info').t`+ ${LOYAL_BONUS_CONNECTION} bonus connections`}
                                     amount={0}
                                     currency={model.currency}
                                 />
@@ -180,7 +175,7 @@ const SubscriptionCheckout = ({ plans, model, setModel, checkResult, onCheckout,
                     )}
                 </div>
             </div>
-            <div className="rounded p1 mb1 bg-primary color-white">
+            <div className="rounded p1 mb1 bg-global-light">
                 {model.coupon || [CYCLE.YEARLY, CYCLE.TWO_YEARS].includes(model.cycle) ? (
                     <div className="border-bottom border-bottom--dashed mb0-5">
                         <CheckoutRow title={c('Title').t`Sub-total`} amount={subTotal} currency={model.currency} />
@@ -234,7 +229,9 @@ const SubscriptionCheckout = ({ plans, model, setModel, checkResult, onCheckout,
                     className="bold"
                 />
                 <div className="mt1">
-                    <Button loading={loading} onClick={onCheckout} className="w100">{c('Action').t`Checkout`}</Button>
+                    <PrimaryButton loading={loading} onClick={onCheckout} className="w100">
+                        {checkResult.AmountDue ? c('Action').t`Checkout` : c('Action').t`Confirm`}
+                    </PrimaryButton>
                 </div>
             </div>
             <div className="aligncenter">
