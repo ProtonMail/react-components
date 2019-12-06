@@ -25,7 +25,7 @@ const FREE_PLAN = {
     }
 };
 
-const MailSubscriptionTable = ({ planNameSelected, plans: apiPlans = [], cycle, currency, onSelect }) => {
+const MailSubscriptionTable = ({ planNameSelected, plans: apiPlans = [], cycle, currency, onSelect, currentPlan }) => {
     const plansMap = toMap(apiPlans, 'Name');
     const plusPlan = plansMap[PLANS.PLUS];
     const professionalPlan = plansMap[PLANS.PROFESSIONAL];
@@ -172,24 +172,26 @@ const MailSubscriptionTable = ({ planNameSelected, plans: apiPlans = [], cycle, 
     ];
 
     return (
-        <>
+        <div className="mailSubscriptionTable-container">
             <SubscriptionTable
+                currentPlan={currentPlan}
                 currentPlanIndex={INDEXES[planNameSelected] || 0}
                 mostPopularIndex={1}
                 plans={plans}
                 onSelect={(index) => onSelect(plans[index].planID)}
             />
             <p className="small mt1 mb0">* {c('Info concerning plan features').t`Customizable features`}</p>
-            <p className="small mt0 mb0">
+            <p className="small mt0 mb1">
                 **{' '}
                 {c('Info concerning plan features')
                     .t`ProtonMail cannot be used for mass emailing or spamming. Legitimate emails are unlimited.`}
             </p>
-        </>
+        </div>
     );
 };
 
 MailSubscriptionTable.propTypes = {
+    currentPlan: PropTypes.string,
     planNameSelected: PropTypes.string,
     plans: PropTypes.arrayOf(PropTypes.object),
     onSelect: PropTypes.func.isRequired,

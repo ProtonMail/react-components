@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { SubTitle, Alert, Price, useConfig } from 'react-components';
+import { Alert, Price, useConfig } from 'react-components';
 import { c, msgid } from 'ttag';
 import { PLANS, CYCLE, ADDON_NAMES, CLIENT_TYPES, PLAN_SERVICES, FREE, PLAN_TYPES } from 'proton-shared/lib/constants';
 import { toMap } from 'proton-shared/lib/helpers/object';
@@ -25,7 +25,15 @@ const TITLE = {
     [PLANS.VPNPLUS]: 'ProtonVPN Plus'
 };
 
-const removeService = (planIDs = {}, plansMap = {}, service = PLAN_SERVICES.MAIL) => {
+/**
+ * Remove all plans concerned by a service
+ * @param {Object} planIDs
+ * @param {Array} plans
+ * @param {Integer} service
+ * @returns {Object} new planIDs
+ */
+const removeService = (planIDs = {}, plans = [], service = PLAN_SERVICES.MAIL) => {
+    const plansMap = toMap(plans);
     return Object.entries(planIDs).reduce((acc, [planID = '', quantity = 0]) => {
         const { Services } = plansMap[planID];
 
@@ -48,7 +56,7 @@ const Description = ({ planName, setModel, model, plans }) => {
                 setModel({
                     ...model,
                     planIDs: {
-                        ...removeService(model.planIDs, plansMap, PLAN_SERVICES.MAIL),
+                        ...removeService(model.planIDs, plans, PLAN_SERVICES.MAIL),
                         [plusPlan.ID]: 1
                     }
                 })
@@ -62,7 +70,7 @@ const Description = ({ planName, setModel, model, plans }) => {
                 setModel({
                     ...model,
                     planIDs: {
-                        ...removeService(model.planIDs, plansMap, PLAN_SERVICES.VPN),
+                        ...removeService(model.planIDs, plans, PLAN_SERVICES.VPN),
                         [vpnPlusPlan.ID]: 1
                     }
                 })
@@ -77,9 +85,9 @@ const Description = ({ planName, setModel, model, plans }) => {
         [PLANS.PROFESSIONAL]: c('Description plan').t`Select the number of users within your organization.`,
         [PLANS.VISIONARY]: c('Description plan').t`Your plan includes both ProtonMail and ProtonVPN Visionary.`,
         [VPNFREE]: c('Description plan')
-            .t`To get advanced security features and the highest speed, ${upgradeToVpnPlus}.`,
+            .jt`To get advanced security features and the highest speed, ${upgradeToVpnPlus}.`,
         [PLANS.VPNBASIC]: c('Description plan')
-            .t`To get advanced security features and the highest speed, ${upgradeToVpnPlus}.`,
+            .jt`To get advanced security features and the highest speed, ${upgradeToVpnPlus}.`,
         [PLANS.VPNPLUS]: c('Description plan')
             .t`You can customize the number of connections when combining ProtonVPN with ProtonMail Professional.`
     };
@@ -108,6 +116,7 @@ const SubscriptionCustomization = ({ plans, model, setModel, expanded = false })
     const { CLIENT_TYPE } = useConfig();
     const plansMap = toMap(plans, 'Name');
     const plusPlan = plansMap[PLANS.PLUS];
+    const visionaryPlan = plansMap[PLANS.VISIONARY];
     const vpnplusPlan = plansMap[PLANS.VPNPLUS];
     const professionalPlan = plansMap[PLANS.PROFESSIONAL];
     const storageAddon = plansMap[ADDON_NAMES.SPACE];
@@ -115,6 +124,7 @@ const SubscriptionCustomization = ({ plans, model, setModel, expanded = false })
     const domainAddon = plansMap[ADDON_NAMES.DOMAIN];
     const memberAddon = plansMap[ADDON_NAMES.MEMBER];
     const vpnAddon = plansMap[ADDON_NAMES.VPN];
+    const hasVisionary = !!model.planIDs[visionaryPlan.ID];
 
     const { mailPlan, vpnPlan } = Object.entries(model.planIDs).reduce(
         (acc, [planID, quantity]) => {
@@ -145,6 +155,14 @@ const SubscriptionCustomization = ({ plans, model, setModel, expanded = false })
         [VPNFREE]: false,
         [PLANS.VPNBASIC]: false,
         [PLANS.VPNPLUS]: !!model.planIDs[professionalPlan.ID]
+    };
+
+    const DESCRIPTIONS = {
+        [PLANS.VPNPLUS]: c('Decription')
+            .t`VPN connections can be allocated to users within your organization. Each device requires one connection.`,
+        [PLANS.PROFESSIONAL]: c('Decription')
+            .t`Each additional user comes automatically with 5 GB storage space and 5 email addresses.`,
+        [PLANS.PLUS]: c('Decription').t`.`
     };
 
     const FEATURES = {
@@ -358,10 +376,11 @@ const SubscriptionCustomization = ({ plans, model, setModel, expanded = false })
     };
 
     const sections = [
-        <>
-            <SubTitle>{TITLE[mailPlan.Name]}</SubTitle>
+        <section className="subscriptionCustomization-section" key="mail-section">
+            <h3>{TITLE[mailPlan.Name]}</h3>
             <Description plans={plans} planName={mailPlan.Name} model={model} setModel={setModel} />
             <MailSubscriptionTable
+                currentPlan={c('Status').t`Selected`}
                 planNameSelected={mailPlan.Name}
                 plans={plans}
                 cycle={model.cycle}
@@ -370,7 +389,7 @@ const SubscriptionCustomization = ({ plans, model, setModel, expanded = false })
                     setModel({
                         ...model,
                         planIDs: {
-                            ...removeService(model.planIDs, plansMap, PLAN_SERVICES.MAIL),
+                            ...removeService(model.planIDs, plans, PLAN_SERVICES.MAIL),
                             [planID]: 1
                         }
                     });
@@ -383,42 +402,47 @@ const SubscriptionCustomization = ({ plans, model, setModel, expanded = false })
                 features={FEATURES[mailPlan.Name]}
                 currency={model.currency}
                 plan={mailPlan}
+                description={DESCRIPTIONS[mailPlan.Name]}
             />
-        </>,
-        <>
-            <SubTitle>{TITLE[vpnPlan.Name]}</SubTitle>
-            <Description plans={plans} planName={vpnPlan.Name} model={model} setModel={setModel} />
-            <VpnSubscriptionTable
-                planNameSelected={vpnPlan.Name}
-                plans={plans}
-                cycle={model.cycle}
-                currency={model.currency}
-                onSelect={(planID) => {
-                    setModel({
-                        ...model,
-                        planIDs: {
-                            ...removeService(model.planIDs, plansMap, PLAN_SERVICES.VPN),
-                            [planID]: 1
-                        }
-                    });
-                }}
-            />
-            <SubscriptionPlan
-                expanded={expanded}
-                canCustomize={CAN_CUSTOMIZE[vpnPlan.Name]}
-                addons={ADDONS[vpnPlan.Name]}
-                features={FEATURES[vpnPlan.Name]}
-                currency={model.currency}
-                plan={vpnPlan}
-            />
-        </>
+        </section>,
+        !hasVisionary && (
+            <section className="subscriptionCustomization-section" key="vpn-section">
+                <h3>{TITLE[vpnPlan.Name]}</h3>
+                <Description plans={plans} planName={vpnPlan.Name} model={model} setModel={setModel} />
+                <VpnSubscriptionTable
+                    currentPlan={c('Status').t`Selected`}
+                    planNameSelected={vpnPlan.Name}
+                    plans={plans}
+                    cycle={model.cycle}
+                    currency={model.currency}
+                    onSelect={(planID) => {
+                        setModel({
+                            ...model,
+                            planIDs: {
+                                ...removeService(model.planIDs, plans, PLAN_SERVICES.VPN),
+                                [planID]: 1
+                            }
+                        });
+                    }}
+                />
+                <SubscriptionPlan
+                    expanded={expanded}
+                    canCustomize={CAN_CUSTOMIZE[vpnPlan.Name]}
+                    addons={ADDONS[vpnPlan.Name]}
+                    features={FEATURES[vpnPlan.Name]}
+                    currency={model.currency}
+                    plan={vpnPlan}
+                    description={DESCRIPTIONS[vpnPlan.Name]}
+                />
+            </section>
+        )
     ].filter(Boolean);
 
     if (CLIENT_TYPE === CLIENT_TYPES.VPN) {
-        return sections.reverse();
+        return <div className="subscriptionCustomization-container">{sections.reverse()}</div>;
     }
 
-    return sections;
+    return <div className="subscriptionCustomization-container">{sections}</div>;
 };
 
 SubscriptionCustomization.propTypes = {
