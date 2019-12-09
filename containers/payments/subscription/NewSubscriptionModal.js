@@ -1,8 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { FormModal, usePlans, useApi, useLoading, useSubscription, useVPNCountries } from 'react-components';
-import { DEFAULT_CURRENCY, DEFAULT_CYCLE, CYCLE, CURRENCIES } from 'proton-shared/lib/constants';
+import {
+    FormModal,
+    PrimaryButton,
+    Button,
+    Icon,
+    usePlans,
+    useApi,
+    useLoading,
+    useSubscription,
+    useVPNCountries
+} from 'react-components';
+import { DEFAULT_CURRENCY, DEFAULT_CYCLE, CYCLE, CURRENCIES, COUPON_CODES } from 'proton-shared/lib/constants';
 import { checkSubscription, subscribe } from 'proton-shared/lib/api/payments';
 
 import SubscriptionCustomization from './SubscriptionCustomization';
@@ -18,6 +28,71 @@ const STEPS = {
     PAYMENT: 1,
     UPGRADE: 2,
     THANKS: 3
+};
+
+const Footer = ({ step, model, checkResult, loading }) => {
+    if ([STEPS.UPGRADE, STEPS.THANKS].includes(step)) {
+        return null;
+    }
+
+    const cancel = step === STEPS.CUSTOMIZATION ? c('Action').t`Cancel` : c('Action').t`Back`;
+    const submit =
+        step === STEPS.CUSTOMIZATION
+            ? checkResult.AmountDue
+                ? c('Action').t`Continue`
+                : c('Action').t`Finish`
+            : c('Action').t`Finish`;
+    const upsells = [
+        model.cycle === CYCLE.MONTHLY && (
+            <div className="nomobile">
+                <Icon className="mr0-5" fill="warning" name="off" />
+                {c('Info').t`Save 20% by switching to annual billing`}
+            </div>
+        ), // TODO
+        model.cycle === CYCLE.YEARLY && (
+            <div className="nomobile">
+                <Icon className="mr0-5" fill="success" name="on" />
+                {c('Info').t`You are saving 20% with annual billing`}
+            </div>
+        ), // TODO
+        model.cycle === CYCLE.TWO_YEARS && (
+            <div className="nomobile">
+                <Icon className="mr0-5" fill="success" name="on" />
+                {c('Info').t`You are saving 33% with 2-year billing`}
+            </div>
+        ), // TODO
+        model.coupon !== COUPON_CODES.BUNDLE && (
+            <div className="nomobile">
+                <Icon className="mr0-5" fill="warning" name="off" />
+                {c('Info').t`Save an extra 20% by combining Mail and VPN`}
+            </div>
+        ), // TODO
+        model.coupon === COUPON_CODES.BUNDLE && (
+            <div className="nomobile">
+                <Icon className="mr0-5" fill="success" name="on" />
+                {c('Info').t`You are saving an extra 20% with the bundle discount`}
+            </div>
+        ) // TODO
+    ].filter(Boolean);
+
+    return (
+        <>
+            <Button disabled={loading} type="reset">
+                {cancel}
+            </Button>
+            {upsells}
+            <PrimaryButton disabled={loading} type="submit">
+                {submit}
+            </PrimaryButton>
+        </>
+    );
+};
+
+Footer.propTypes = {
+    loading: PropTypes.bool,
+    step: PropTypes.number,
+    model: PropTypes.object,
+    checkResult: PropTypes.object
 };
 
 const clearPlanIDs = (planIDs = {}) => {
@@ -101,7 +176,14 @@ const NewSubscriptionModal = ({
 
     return (
         <FormModal
-            footer={null}
+            footer={
+                <Footer
+                    step={step}
+                    model={model}
+                    checkResult={checkResult}
+                    loading={loading || loadingPlans || loadingSubscription || loadingVpnCountries}
+                />
+            }
             className="pm-modal--full subscription-modal"
             title={TITLE[step]}
             loading={loading || loadingPlans || loadingSubscription || loadingVpnCountries}
@@ -119,17 +201,15 @@ const NewSubscriptionModal = ({
                             setModel={setModel}
                         />
                     </div>
-                    <div className="w25 onmobile-w100 relative">
-                        <div className="fixed onmobile-static">
-                            <SubscriptionCheckout
-                                plans={plans}
-                                checkResult={checkResult}
-                                loading={loadingCheck}
-                                onCheckout={handleCheckout}
-                                model={model}
-                                setModel={setModel}
-                            />
-                        </div>
+                    <div className="w25 onmobile-w100">
+                        <SubscriptionCheckout
+                            plans={plans}
+                            checkResult={checkResult}
+                            loading={loadingCheck}
+                            onCheckout={handleCheckout}
+                            model={model}
+                            setModel={setModel}
+                        />
                     </div>
                 </div>
             )}

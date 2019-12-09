@@ -419,7 +419,7 @@ const SubscriptionCustomization = ({
                             ...model,
                             planIDs: {
                                 ...removeService(model.planIDs, plans, PLAN_SERVICES.MAIL),
-                                [planID]: 1
+                                ...(planID ? { [planID]: 1 } : {})
                             }
                         });
                     }}
@@ -452,7 +452,7 @@ const SubscriptionCustomization = ({
                             ...model,
                             planIDs: {
                                 ...removeService(model.planIDs, plans, PLAN_SERVICES.VPN),
-                                [planID]: 1
+                                ...(planID ? { [planID]: 1 } : {})
                             }
                         });
                     }}
