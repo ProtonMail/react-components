@@ -25,9 +25,12 @@ import {
     ADDON_NAMES
 } from 'proton-shared/lib/constants';
 import humanSize from 'proton-shared/lib/helpers/humanSize';
-import { getSubTotal } from './helpers';
 
-const CheckoutRow = ({ title = '', amount = 0, currency, className = '' }) => {
+import { getSubTotal } from './helpers';
+import CycleDiscountBadge from '../CycleDiscountBadge';
+import DiscountBadge from '../DiscountBadge';
+
+const CheckoutRow = ({ title, amount = 0, currency, className = '' }) => {
     return (
         <div className={classnames(['flex flex-nowrap flex-spacebetween mb0-5', className])}>
             <div>{title}</div>
@@ -38,7 +41,7 @@ const CheckoutRow = ({ title = '', amount = 0, currency, className = '' }) => {
 
 CheckoutRow.propTypes = {
     className: PropTypes.string,
-    title: PropTypes.string.isRequired,
+    title: PropTypes.node.isRequired,
     amount: PropTypes.number.isRequired,
     currency: PropTypes.string.isRequired
 };
@@ -104,7 +107,16 @@ const SubscriptionCheckout = ({ plans, model, setModel, checkResult, onCheckout,
                     <CheckoutRow
                         key={ID}
                         className={Type === PLAN_TYPES.PLAN ? 'bold' : ''}
-                        title={Type === PLAN_TYPES.PLAN ? Title : getTitle(Name, quantity)}
+                        title={
+                            <>
+                                <span className="mr0-5">
+                                    {Type === PLAN_TYPES.PLAN ? Title : getTitle(Name, quantity)}
+                                </span>
+                                {[CYCLE.YEARLY, CYCLE.TWO_YEARS].includes(model.cycle) && (
+                                    <CycleDiscountBadge cycle={model.cycle} />
+                                )}
+                            </>
+                        }
                         amount={(quantity * Pricing[model.cycle]) / model.cycle}
                         currency={model.currency}
                     />
@@ -180,7 +192,12 @@ const SubscriptionCheckout = ({ plans, model, setModel, checkResult, onCheckout,
                     <div className="border-bottom border-bottom--dashed mb0-5">
                         <CheckoutRow title={c('Title').t`Sub-total`} amount={subTotal} currency={model.currency} />
                         <CheckoutRow
-                            title={c('Title').t`Discount`}
+                            title={
+                                <>
+                                    <span className="mr0-5">{c('Title').t`Coupon discount`}</span>
+                                    <DiscountBadge code={model.coupon} cycle={model.cycle} />
+                                </>
+                            }
                             amount={discount}
                             currency={model.currency}
                             className="small mt0 mb0"

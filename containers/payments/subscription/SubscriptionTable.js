@@ -8,7 +8,10 @@ const SubscriptionTable = ({
     onSelect,
     currentPlanIndex = 0,
     mostPopularIndex = 0,
-    currentPlan = c('Title for subscription plan').t`Current plan`
+    currentPlan = c('Title for subscription plan').t`Current plan`,
+    selected = c('Info').t`Current plan`,
+    update = c('Action').t`Update`,
+    select = c('Action').t`Select`
 }) => {
     const { state: showAllFeatures, toggle: toggleFeatures } = useToggle(false);
 
@@ -54,13 +57,13 @@ const SubscriptionTable = ({
                                 </ul>
                                 <footer className="subscriptionTable-footer aligncenter flex flex-column">
                                     {index === currentPlanIndex && !canCustomize ? (
-                                        c('Label').t`Current plan`
+                                        selected
                                     ) : (
                                         <Button
                                             className={classnames([index !== currentPlanIndex && 'pm-button--primary'])}
                                             onClick={() => onSelect(index)}
                                         >
-                                            {index === currentPlanIndex ? c('Action').t`Update` : c('Action').t`Select`}
+                                            {index === currentPlanIndex ? update : select}
                                         </Button>
                                     )}
                                     {canCustomize ? (
@@ -131,7 +134,10 @@ SubscriptionTable.propTypes = {
     ),
     onSelect: PropTypes.func.isRequired,
     currentPlanIndex: PropTypes.number,
-    mostPopularIndex: PropTypes.number
+    mostPopularIndex: PropTypes.number,
+    selected: PropTypes.string,
+    update: PropTypes.string,
+    select: PropTypes.string
 };
 
 export default SubscriptionTable;

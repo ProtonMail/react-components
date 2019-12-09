@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Alert, Price, useConfig } from 'react-components';
+import { Alert, Price, Loader, useConfig, useAddresses } from 'react-components';
 import { c, msgid } from 'ttag';
 import { PLANS, CYCLE, ADDON_NAMES, CLIENT_TYPES, PLAN_SERVICES, FREE, PLAN_TYPES } from 'proton-shared/lib/constants';
 import { toMap } from 'proton-shared/lib/helpers/object';
@@ -125,6 +125,8 @@ const SubscriptionCustomization = ({ vpnCountries = {}, plans, model, setModel, 
     const memberAddon = plansMap[ADDON_NAMES.MEMBER];
     const vpnAddon = plansMap[ADDON_NAMES.VPN];
     const hasVisionary = !!model.planIDs[visionaryPlan.ID];
+    const [addresses, loadingAddresses] = useAddresses();
+    const hasMailActive = addresses.length > 0;
 
     const { mailPlan, vpnPlan } = Object.entries(model.planIDs).reduce(
         (acc, [planID, quantity]) => {
@@ -387,41 +389,47 @@ const SubscriptionCustomization = ({ vpnCountries = {}, plans, model, setModel, 
     };
 
     const sections = [
-        <section className="subscriptionCustomization-section" key="mail-section">
-            <h3>{TITLE[mailPlan.Name]}</h3>
-            <Description plans={plans} planName={mailPlan.Name} model={model} setModel={setModel} />
-            <MailSubscriptionTable
-                currentPlan={c('Status').t`Selected`}
-                planNameSelected={mailPlan.Name}
-                plans={plans}
-                cycle={model.cycle}
-                currency={model.currency}
-                onSelect={(planID) => {
-                    setModel({
-                        ...model,
-                        planIDs: {
-                            ...removeService(model.planIDs, plans, PLAN_SERVICES.MAIL),
-                            [planID]: 1
-                        }
-                    });
-                }}
-            />
-            <SubscriptionPlan
-                expanded={expanded}
-                canCustomize={CAN_CUSTOMIZE[mailPlan.Name]}
-                addons={ADDONS[mailPlan.Name]}
-                features={FEATURES[mailPlan.Name]}
-                currency={model.currency}
-                plan={mailPlan}
-                description={DESCRIPTIONS[mailPlan.Name]}
-            />
-        </section>,
+        hasMailActive && (
+            <section className="subscriptionCustomization-section" key="mail-section">
+                <h3>{TITLE[mailPlan.Name]}</h3>
+                <Description plans={plans} planName={mailPlan.Name} model={model} setModel={setModel} />
+                <MailSubscriptionTable
+                    currentPlan={c('Status').t`Selected`}
+                    update={c('Action').t`Selected`}
+                    selected={c('Action').t`Selected`}
+                    planNameSelected={mailPlan.Name}
+                    plans={plans}
+                    cycle={model.cycle}
+                    currency={model.currency}
+                    onSelect={(planID) => {
+                        setModel({
+                            ...model,
+                            planIDs: {
+                                ...removeService(model.planIDs, plans, PLAN_SERVICES.MAIL),
+                                [planID]: 1
+                            }
+                        });
+                    }}
+                />
+                <SubscriptionPlan
+                    expanded={expanded}
+                    canCustomize={CAN_CUSTOMIZE[mailPlan.Name]}
+                    addons={ADDONS[mailPlan.Name]}
+                    features={FEATURES[mailPlan.Name]}
+                    currency={model.currency}
+                    plan={mailPlan}
+                    description={DESCRIPTIONS[mailPlan.Name]}
+                />
+            </section>
+        ),
         !hasVisionary && (
             <section className="subscriptionCustomization-section" key="vpn-section">
                 <h3>{TITLE[vpnPlan.Name]}</h3>
                 <Description plans={plans} planName={vpnPlan.Name} model={model} setModel={setModel} />
                 <VpnSubscriptionTable
                     currentPlan={c('Status').t`Selected`}
+                    update={c('Action').t`Selected`}
+                    selected={c('Action').t`Selected`}
                     planNameSelected={vpnPlan.Name}
                     plans={plans}
                     cycle={model.cycle}
@@ -448,6 +456,10 @@ const SubscriptionCustomization = ({ vpnCountries = {}, plans, model, setModel, 
             </section>
         )
     ].filter(Boolean);
+
+    if (loadingAddresses) {
+        return <Loader />;
+    }
 
     if (CLIENT_TYPE === CLIENT_TYPES.VPN) {
         return <div className="subscriptionCustomization-container">{sections.reverse()}</div>;
