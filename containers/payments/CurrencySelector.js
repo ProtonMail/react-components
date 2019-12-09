@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Select, Group, ButtonGroup, classnames } from 'react-components';
 import { CURRENCIES, DEFAULT_CURRENCY } from 'proton-shared/lib/constants';
+import { c } from 'ttag';
 
 const addSymbol = (currency) => {
     if (currency === 'EUR') {
@@ -40,6 +41,7 @@ const CurrencySelector = ({ currency = DEFAULT_CURRENCY, onSelect, mode = 'selec
     if (mode === 'select') {
         return (
             <Select
+                title={c('Title').t`Currency`}
                 value={currency}
                 options={options.map((option) => ({ ...option, text: addSymbol(option.text) }))}
                 onChange={handleChange}

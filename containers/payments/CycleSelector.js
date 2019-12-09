@@ -24,7 +24,9 @@ const CycleSelector = ({
         options.push({ text: c('Billing cycle option').t`Two-year`, value: TWO_YEARS });
     }
 
-    return <Select value={cycle} options={options} onChange={handleChange} {...rest} />;
+    return (
+        <Select title={c('Title').t`Billing cycle`} value={cycle} options={options} onChange={handleChange} {...rest} />
+    );
 };
 
 CycleSelector.propTypes = {

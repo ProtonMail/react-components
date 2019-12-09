@@ -68,7 +68,7 @@ const PlansSection = () => {
         return handleUnsubscribe();
     };
 
-    const handleModal = async (planID) => {
+    const handleModal = async (planID = '', expanded = false) => {
         if (!planID) {
             handleOpenModal();
             return;
@@ -87,7 +87,13 @@ const PlansSection = () => {
         const coupon = Coupon ? Coupon.Code : undefined; // Coupon can equals null
 
         createModal(
-            <NewSubscriptionModal planIDs={{ [planID]: 1 }} coupon={coupon} currency={currency} cycle={cycle} />
+            <NewSubscriptionModal
+                expanded={expanded}
+                planIDs={{ [planID]: 1 }}
+                coupon={coupon}
+                currency={currency}
+                cycle={cycle}
+            />
         );
     };
 

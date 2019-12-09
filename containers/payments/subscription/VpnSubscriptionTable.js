@@ -129,7 +129,7 @@ const VpnSubscriptionTable = ({
                 currentPlanIndex={INDEXES[planNameSelected] || 0}
                 mostPopularIndex={2}
                 plans={plans}
-                onSelect={(index) => onSelect(plans[index].planID)}
+                onSelect={(index, expanded) => onSelect(plans[index].planID, expanded)}
                 currentPlan={currentPlan}
                 {...rest}
             />

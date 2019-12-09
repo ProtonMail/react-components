@@ -112,7 +112,14 @@ Description.propTypes = {
     setModel: PropTypes.func.isRequired
 };
 
-const SubscriptionCustomization = ({ vpnCountries = {}, plans, model, setModel, expanded = false }) => {
+const SubscriptionCustomization = ({
+    vpnCountries = {},
+    plans,
+    model,
+    setModel,
+    expanded = false,
+    loading = false
+}) => {
     const { CLIENT_TYPE } = useConfig();
     const plansMap = toMap(plans, 'Name');
     const plusPlan = plansMap[PLANS.PLUS];
@@ -126,7 +133,7 @@ const SubscriptionCustomization = ({ vpnCountries = {}, plans, model, setModel, 
     const vpnAddon = plansMap[ADDON_NAMES.VPN];
     const hasVisionary = !!model.planIDs[visionaryPlan.ID];
     const [addresses, loadingAddresses] = useAddresses();
-    const hasMailActive = addresses.length > 0;
+    const hasAddresses = Array.isArray(addresses) && addresses.length > 0;
 
     const { mailPlan, vpnPlan } = Object.entries(model.planIDs).reduce(
         (acc, [planID, quantity]) => {
@@ -293,6 +300,7 @@ const SubscriptionCustomization = ({ vpnCountries = {}, plans, model, setModel, 
     const ADDONS = {
         [PLANS.PLUS]: [
             <SubscriptionAddonRow
+                loading={loading}
                 key="storage"
                 label={c('Label').t`Storage space`}
                 price={
@@ -309,6 +317,7 @@ const SubscriptionCustomization = ({ vpnCountries = {}, plans, model, setModel, 
                 }
             />,
             <SubscriptionAddonRow
+                loading={loading}
                 key="address"
                 label={c('Label').t`Email addresses`}
                 price={
@@ -324,6 +333,7 @@ const SubscriptionCustomization = ({ vpnCountries = {}, plans, model, setModel, 
                 }
             />,
             <SubscriptionAddonRow
+                loading={loading}
                 key="domain"
                 label={c('Label').t`Custom domains`}
                 price={
@@ -341,6 +351,7 @@ const SubscriptionCustomization = ({ vpnCountries = {}, plans, model, setModel, 
         ],
         [PLANS.PROFESSIONAL]: [
             <SubscriptionAddonRow
+                loading={loading}
                 key="member"
                 label={c('Label').t`Users`}
                 price={
@@ -356,6 +367,7 @@ const SubscriptionCustomization = ({ vpnCountries = {}, plans, model, setModel, 
                 }
             />,
             <SubscriptionAddonRow
+                loading={loading}
                 key="domain"
                 label={c('Label').t`Custom domains`}
                 price={
@@ -373,6 +385,7 @@ const SubscriptionCustomization = ({ vpnCountries = {}, plans, model, setModel, 
         ],
         [PLANS.VPNPLUS]: [
             <SubscriptionAddonRow
+                loading={loading}
                 key="vpn"
                 label={c('Label').t`VPN connections`}
                 price={
@@ -389,7 +402,7 @@ const SubscriptionCustomization = ({ vpnCountries = {}, plans, model, setModel, 
     };
 
     const sections = [
-        hasMailActive && (
+        hasAddresses && (
             <section className="subscriptionCustomization-section" key="mail-section">
                 <h3>{TITLE[mailPlan.Name]}</h3>
                 <Description plans={plans} planName={mailPlan.Name} model={model} setModel={setModel} />
@@ -469,6 +482,7 @@ const SubscriptionCustomization = ({ vpnCountries = {}, plans, model, setModel, 
 };
 
 SubscriptionCustomization.propTypes = {
+    loading: PropTypes.bool,
     vpnCountries: PropTypes.shape({
         free: PropTypes.array,
         basic: PropTypes.array,
