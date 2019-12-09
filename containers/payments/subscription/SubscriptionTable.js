@@ -69,7 +69,7 @@ const SubscriptionTable = ({
                                     {canCustomize ? (
                                         <LinkButton
                                             className="subscriptionTable-customize-button"
-                                            onClick={() => onSelect(index)}
+                                            onClick={() => onSelect(index, true)}
                                         >{c('Action').t`Customize`}</LinkButton>
                                     ) : null}
                                 </footer>

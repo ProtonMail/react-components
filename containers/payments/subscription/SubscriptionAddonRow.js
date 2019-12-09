@@ -14,7 +14,8 @@ const SubscriptionAddonRow = ({
     max = 999,
     quantity = 0,
     onChange,
-    step = 1
+    step = 1,
+    loading = false
 }) => {
     const idRef = useRef();
     const options = range(min, max).map((quantity) => ({
@@ -36,12 +37,13 @@ const SubscriptionAddonRow = ({
                     <Button
                         className="flex-item-noshrink w100"
                         onClick={() => onChange(quantity - 1)}
-                        disabled={quantity === min}
+                        disabled={loading || quantity === min}
                         icon="minus"
                     />
                 </div>
                 <div className="w50 pl0-5 pr0-5">
                     <Select
+                        disabled={loading}
                         className="w100"
                         id={idRef.current}
                         options={options}
@@ -53,7 +55,7 @@ const SubscriptionAddonRow = ({
                     <Button
                         className="flex-item-noshrink w100"
                         onClick={() => onChange(quantity + 1)}
-                        disabled={quantity === max}
+                        disabled={loading || quantity === max}
                         icon="plus"
                     />
                 </div>
@@ -64,6 +66,7 @@ const SubscriptionAddonRow = ({
 };
 
 SubscriptionAddonRow.propTypes = {
+    loading: PropTypes.bool,
     label: PropTypes.node.isRequired,
     price: PropTypes.node.isRequired,
     start: PropTypes.number,

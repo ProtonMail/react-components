@@ -190,7 +190,7 @@ const MailSubscriptionTable = ({
                 currentPlanIndex={INDEXES[planNameSelected] || 0}
                 mostPopularIndex={1}
                 plans={plans}
-                onSelect={(index) => onSelect(plans[index].planID)}
+                onSelect={(index, expanded) => onSelect(plans[index].planID, expanded)}
                 {...rest}
             />
             <p className="small mt1 mb0">* {c('Info concerning plan features').t`Customizable features`}</p>

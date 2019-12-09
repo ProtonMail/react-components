@@ -55,7 +55,16 @@ const SubscriptionCheckout = ({ plans, model, setModel, checkResult, onCheckout,
     const vpnAddon = plans.find(({ Name }) => Name === ADDON_NAMES.VPN);
     const [organization, loadingOrganization] = useOrganization();
     const loyal = isLoyal(organization);
-    const subTotal = getSubTotal({ plansMap: model.planIDs, cycle: model.cycle, plans }) / model.cycle;
+    const subTotal =
+        getSubTotal({
+            cycle: model.cycle,
+            plans,
+            plansMap: Object.entries(model.planIDs).reduce((acc, [planID, quantity]) => {
+                const { Name } = plansMap[planID];
+                acc[Name] = quantity;
+                return acc;
+            }, {})
+        }) / model.cycle;
     const total = checkResult.Amount + checkResult.CouponDiscount;
     const monthlyTotal = total / model.cycle;
     const discount = monthlyTotal - subTotal;
@@ -132,7 +141,11 @@ const SubscriptionCheckout = ({ plans, model, setModel, checkResult, onCheckout,
                     currency={model.currency}
                     onSelect={(newCurrency) => setModel({ ...model, currency: newCurrency })}
                 />
-                <CycleSelector cycle={model.cycle} onSelect={(newCycle) => setModel({ ...model, cycle: newCycle })} />
+                <CycleSelector
+                    loading={loading}
+                    cycle={model.cycle}
+                    onSelect={(newCycle) => setModel({ ...model, cycle: newCycle })}
+                />
             </div>
             <div className="rounded mb1">
                 <header className="small mt0 mb0 bg-global-border uppercase pl1 pr1 pt0-5 pb0-5">{c('Title')
