@@ -260,7 +260,7 @@ const SubscriptionCheckout = ({ plans, model, setModel, checkResult, onCheckout,
                 />
                 <div className="mt1">
                     <PrimaryButton loading={loading} onClick={onCheckout} className="w100">
-                        {checkResult.AmountDue ? c('Action').t`Checkout` : c('Action').t`Confirm`}
+                        {checkResult.AmountDue ? c('Action').t`Continue` : c('Action').t`Finish`}
                     </PrimaryButton>
                 </div>
             </div>
