@@ -78,9 +78,9 @@ const SubscriptionTable = ({
                     );
                 })}
             </div>
-            <div className="aligncenter pt0-5 pb0-5 nomobile">
+            <div className="aligncenter pt0-5 pb0-5 nomobile subscriptionTable-all-features-container">
                 <LinkButton onClick={toggleFeatures}>
-                    {showAllFeatures ? c('Action').t`Close feature comparison` : c('Action').t`Compare all features`}
+                    {showAllFeatures ? c('Action').t`Hide additional features` : c('Action').t`Show all features`}
                 </LinkButton>
             </div>
             {showAllFeatures ? (

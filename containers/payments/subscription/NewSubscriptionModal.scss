@@ -27,3 +27,8 @@
 .subscription-modal .subscriptionTable-footer {
     min-height: auto;
 }
+
+// Hide all features row in the subscription modal
+.subscription-modal .subscriptionTable-all-features-container {
+    display: none;
+}
