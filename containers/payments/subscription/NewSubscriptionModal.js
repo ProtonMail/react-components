@@ -106,6 +106,9 @@ const NewSubscriptionModal = ({
     };
 
     const handleCheckout = () => {
+        if (!checkResult.AmountDue) {
+            return handleSubscribe();
+        }
         setStep(STEPS.PAYMENT);
     };
 

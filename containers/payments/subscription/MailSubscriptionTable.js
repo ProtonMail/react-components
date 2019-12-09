@@ -25,7 +25,15 @@ const FREE_PLAN = {
     }
 };
 
-const MailSubscriptionTable = ({ planNameSelected, plans: apiPlans = [], cycle, currency, onSelect, currentPlan }) => {
+const MailSubscriptionTable = ({
+    planNameSelected,
+    plans: apiPlans = [],
+    cycle,
+    currency,
+    onSelect,
+    currentPlan,
+    ...rest
+}) => {
     const plansMap = toMap(apiPlans, 'Name');
     const plusPlan = plansMap[PLANS.PLUS];
     const professionalPlan = plansMap[PLANS.PROFESSIONAL];
@@ -183,6 +191,7 @@ const MailSubscriptionTable = ({ planNameSelected, plans: apiPlans = [], cycle, 
                 mostPopularIndex={1}
                 plans={plans}
                 onSelect={(index) => onSelect(plans[index].planID)}
+                {...rest}
             />
             <p className="small mt1 mb0">* {c('Info concerning plan features').t`Customizable features`}</p>
             <p className="small mt0 mb1">

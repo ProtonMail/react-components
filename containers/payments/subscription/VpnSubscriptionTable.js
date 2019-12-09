@@ -25,10 +25,18 @@ const FREE_PLAN = {
     }
 };
 
-const VpnSubscriptionTable = ({ planNameSelected, plans: apiPlans = [], cycle, currency, onSelect, currentPlan }) => {
+const VpnSubscriptionTable = ({
+    planNameSelected,
+    plans: apiPlans = [],
+    cycle,
+    currency,
+    onSelect,
+    currentPlan,
+    ...rest
+}) => {
     const plansMap = toMap(apiPlans, 'Name');
     const vpnBasicPlan = plansMap[PLANS.VPNBASIC];
-    const vpnPlusPlan = plansMap[PLANS.PROFESSIONAL];
+    const vpnPlusPlan = plansMap[PLANS.VPNPLUS];
     const visionaryPlan = plansMap[PLANS.VISIONARY];
     const [vpnCountries] = useVPNCountries();
     const plans = [
@@ -47,6 +55,18 @@ const VpnSubscriptionTable = ({ planNameSelected, plans: apiPlans = [], cycle, c
                 <del key="secure">{c('Feature').t`Secure Core and Tor VPN`}</del>,
                 <del key="advanced">{c('Feature').t`Advanced privacy features`}</del>,
                 <del key="access">{c('Feature').t`Access blocked content`}</del>
+            ],
+            allFeatures: [
+                c('Feature').t``,
+                c('Feature').t``,
+                c('Feature').t``,
+                c('Feature').t``,
+                c('Feature').t``,
+                c('Feature').t``,
+                c('Feature').t``,
+                c('Feature').t``,
+                c('Feature').t``,
+                c('Feature').t``
             ]
         },
         vpnBasicPlan && {
@@ -57,7 +77,7 @@ const VpnSubscriptionTable = ({ planNameSelected, plans: apiPlans = [], cycle, c
             imageSrc: plusPlanSvg,
             description: c('Description').t`Basic privacy features`,
             features: [
-                c('Feature').t`2 VPN connection`,
+                c('Feature').t`2 VPN connections`,
                 c('Feature').t`Servers in ${vpnCountries.basic.length} countries`,
                 c('Feature').t`High speed`,
                 c('Feature').t`No logs/No ads`,
@@ -65,7 +85,8 @@ const VpnSubscriptionTable = ({ planNameSelected, plans: apiPlans = [], cycle, c
                 <del key="secure">{c('Feature').t`Secure Core and Tor VPN`}</del>,
                 <del key="advanced">{c('Feature').t`Advanced privacy features`}</del>,
                 <del key="access">{c('Feature').t`Access blocked content`}</del>
-            ]
+            ],
+            allFeatures: [c('Feature').t``]
         },
         vpnPlusPlan && {
             name: vpnPlusPlan.Name,
@@ -75,7 +96,7 @@ const VpnSubscriptionTable = ({ planNameSelected, plans: apiPlans = [], cycle, c
             imageSrc: professionalPlanSvg,
             description: c('Description').t`Advanced security features`,
             features: [
-                c('Feature').t`5 VPN connection`,
+                c('Feature').t`5 VPN connections`,
                 c('Feature').t`Servers in ${vpnCountries.all.length} countries`,
                 c('Feature').t`Highest speed (10 Gbps)`,
                 c('Feature').t`No logs/No ads`,
@@ -83,7 +104,8 @@ const VpnSubscriptionTable = ({ planNameSelected, plans: apiPlans = [], cycle, c
                 c('Feature').t`Secure Core and Tor VPN`,
                 c('Feature').t`Advanced privacy features`,
                 c('Feature').t`Access blocked content`
-            ]
+            ],
+            allFeatures: [c('Feature').t``]
         },
         visionaryPlan && {
             name: visionaryPlan.Name,
@@ -96,7 +118,8 @@ const VpnSubscriptionTable = ({ planNameSelected, plans: apiPlans = [], cycle, c
                 c('Feature').t`All Plus plan features`,
                 c('Feature').t`10 simultaneous VPN connections`,
                 c('Feature').t`ProtonMail Visionary account`
-            ]
+            ],
+            allFeatures: [c('Feature').t``]
         }
     ];
 
@@ -108,6 +131,7 @@ const VpnSubscriptionTable = ({ planNameSelected, plans: apiPlans = [], cycle, c
                 plans={plans}
                 onSelect={(index) => onSelect(plans[index].planID)}
                 currentPlan={currentPlan}
+                {...rest}
             />
         </div>
     );

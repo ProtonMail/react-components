@@ -31,10 +31,10 @@ const SubscriptionAddonRow = ({
             <label htmlFor={idRef.current} className="w30">
                 {label}
             </label>
-            <div className="flex flex-nowrap w30">
+            <div className="flex flex-nowrap w50">
                 <div className="w25">
                     <Button
-                        className="w100"
+                        className="flex-item-noshrink w100"
                         onClick={() => onChange(quantity - 1)}
                         disabled={quantity === min}
                         icon="minus"
@@ -51,7 +51,7 @@ const SubscriptionAddonRow = ({
                 </div>
                 <div className="w25">
                     <Button
-                        className="w100"
+                        className="flex-item-noshrink w100"
                         onClick={() => onChange(quantity + 1)}
                         disabled={quantity === max}
                         icon="plus"
