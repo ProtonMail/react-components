@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { FormModal, usePlans, useApi, useLoading, useSubscription, useVPNCountries } from 'react-components';
+import { FormModal, usePlans, useApi, useLoading, useVPNCountries, useEventManager } from 'react-components';
 import { DEFAULT_CURRENCY, DEFAULT_CYCLE, CYCLE, CURRENCIES } from 'proton-shared/lib/constants';
 import { checkSubscription, subscribe } from 'proton-shared/lib/api/payments';
 
@@ -48,9 +48,9 @@ const NewSubscriptionModal = ({
     };
 
     const api = useApi();
+    const { call } = useEventManager();
     const [vpnCountries, loadingVpnCountries] = useVPNCountries();
     const [plans, loadingPlans] = usePlans();
-    const [subscription, loadingSubscription] = useSubscription();
     const [loading, withLoading] = useLoading();
     const [loadingCheck, withLoadingCheck] = useLoading();
     const [checkResult, setCheckResult] = useState({});
@@ -91,8 +91,26 @@ const NewSubscriptionModal = ({
     };
 
     const handleSubscribe = async () => {
-        setStep(STEPS.UPGRADE);
-        await withLoading(api(subscribe(subscription)));
+        try {
+            setStep(STEPS.UPGRADE);
+            await withLoading(
+                api(
+                    subscribe({
+                        Amount: checkResult.AmountDue,
+                        PlanIDs: model.planIDs,
+                        CouponCode: model.coupon,
+                        Currency: model.currency,
+                        Cycle: model.cycle
+                        // TODO add payments details
+                    })
+                )
+            );
+            await withLoading(call());
+            setStep(STEPS.THANKS);
+        } catch (error) {
+            setStep(checkResult.AmountDue ? STEPS.PAYMENT : STEPS.CUSTOMIZATION);
+            throw error;
+        }
     };
 
     const handleCheckout = () => {
@@ -113,12 +131,12 @@ const NewSubscriptionModal = ({
                     submit={submit}
                     step={step}
                     model={model}
-                    loading={loading || loadingPlans || loadingSubscription || loadingVpnCountries}
+                    loading={loading || loadingPlans || loadingVpnCountries}
                 />
             }
             className="pm-modal--full subscription-modal"
             title={TITLE[step]}
-            loading={loading || loadingPlans || loadingSubscription || loadingVpnCountries}
+            loading={loading || loadingPlans || loadingVpnCountries}
             {...rest}
         >
             {step === STEPS.CUSTOMIZATION && (
