@@ -34,7 +34,9 @@ const CheckoutRow = ({ title, amount = 0, currency, className = '' }) => {
     return (
         <div className={classnames(['flex flex-nowrap flex-spacebetween mb0-5', className])}>
             <div>{title}</div>
-            <Price currency={currency}>{amount}</Price>
+            <Price className={amount < 0 ? 'color-global-success' : ''} currency={currency}>
+                {amount}
+            </Price>
         </div>
     );
 };
@@ -46,7 +48,15 @@ CheckoutRow.propTypes = {
     currency: PropTypes.string.isRequired
 };
 
-const SubscriptionCheckout = ({ plans, model, setModel, checkResult, onCheckout, loading }) => {
+const SubscriptionCheckout = ({
+    submit = c('Action').t`Pay`,
+    plans,
+    model,
+    setModel,
+    checkResult,
+    onCheckout,
+    loading
+}) => {
     const plansMap = toMap(plans);
     const storageAddon = plans.find(({ Name }) => Name === ADDON_NAMES.SPACE);
     const addressAddon = plans.find(({ Name }) => Name === ADDON_NAMES.ADDRESS);
@@ -260,7 +270,7 @@ const SubscriptionCheckout = ({ plans, model, setModel, checkResult, onCheckout,
                 />
                 <div className="mt1">
                     <PrimaryButton loading={loading} onClick={onCheckout} className="w100">
-                        {checkResult.AmountDue ? c('Action').t`Continue` : c('Action').t`Finish`}
+                        {submit}
                     </PrimaryButton>
                 </div>
             </div>
@@ -282,6 +292,7 @@ const SubscriptionCheckout = ({ plans, model, setModel, checkResult, onCheckout,
 };
 
 SubscriptionCheckout.propTypes = {
+    submit: PropTypes.string,
     plans: PropTypes.array.isRequired,
     checkResult: PropTypes.object.isRequired,
     model: PropTypes.object.isRequired,

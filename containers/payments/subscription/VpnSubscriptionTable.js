@@ -1,5 +1,5 @@
 import React from 'react';
-import { SubscriptionTable, useVPNCountries } from 'react-components';
+import { SubscriptionTable, useVPNCountries, LinkButton, useModals } from 'react-components';
 import PropTypes from 'prop-types';
 import { PLAN_NAMES, PLANS, CYCLE } from 'proton-shared/lib/constants';
 import { toMap } from 'proton-shared/lib/helpers/object';
@@ -10,19 +10,12 @@ import professionalPlanSvg from 'design-system/assets/img/pv-images/plans/vpnplu
 import visionaryPlanSvg from 'design-system/assets/img/pv-images/plans/visionary-plan.svg';
 
 import SubscriptionPrices from './SubscriptionPrices';
+import SubscriptionFeaturesModal from './SubscriptionFeaturesModal';
 
 const INDEXES = {
     [PLANS.VPNBASIC]: 1,
     [PLANS.VPNPLUS]: 2,
     [PLANS.VISIONARY]: 3
-};
-
-const FREE_PLAN = {
-    Pricing: {
-        [CYCLE.MONTHLY]: 0,
-        [CYCLE.YEARLY]: 0,
-        [CYCLE.TWO_YEARS]: 0
-    }
 };
 
 const VpnSubscriptionTable = ({
@@ -34,6 +27,7 @@ const VpnSubscriptionTable = ({
     currentPlan,
     ...rest
 }) => {
+    const { createModal } = useModals();
     const plansMap = toMap(apiPlans, 'Name');
     const vpnBasicPlan = plansMap[PLANS.VPNBASIC];
     const vpnPlusPlan = plansMap[PLANS.VPNPLUS];
@@ -43,7 +37,7 @@ const VpnSubscriptionTable = ({
         {
             name: '',
             title: 'Free',
-            price: <SubscriptionPrices cycle={cycle} currency={currency} plan={FREE_PLAN} />,
+            price: <SubscriptionPrices cycle={cycle} currency={currency} />,
             imageSrc: freePlanSvg,
             description: c('Description').t`Privacy and security for everyone`,
             features: [
@@ -55,18 +49,6 @@ const VpnSubscriptionTable = ({
                 <del key="secure">{c('Feature').t`Secure Core and Tor VPN`}</del>,
                 <del key="advanced">{c('Feature').t`Advanced privacy features`}</del>,
                 <del key="access">{c('Feature').t`Access blocked content`}</del>
-            ],
-            allFeatures: [
-                c('Feature').t``,
-                c('Feature').t``,
-                c('Feature').t``,
-                c('Feature').t``,
-                c('Feature').t``,
-                c('Feature').t``,
-                c('Feature').t``,
-                c('Feature').t``,
-                c('Feature').t``,
-                c('Feature').t``
             ]
         },
         vpnBasicPlan && {
@@ -85,8 +67,7 @@ const VpnSubscriptionTable = ({
                 <del key="secure">{c('Feature').t`Secure Core and Tor VPN`}</del>,
                 <del key="advanced">{c('Feature').t`Advanced privacy features`}</del>,
                 <del key="access">{c('Feature').t`Access blocked content`}</del>
-            ],
-            allFeatures: [c('Feature').t``]
+            ]
         },
         vpnPlusPlan && {
             name: vpnPlusPlan.Name,
@@ -104,8 +85,7 @@ const VpnSubscriptionTable = ({
                 c('Feature').t`Secure Core and Tor VPN`,
                 c('Feature').t`Advanced privacy features`,
                 c('Feature').t`Access blocked content`
-            ],
-            allFeatures: [c('Feature').t``]
+            ]
         },
         visionaryPlan && {
             name: visionaryPlan.Name,
@@ -118,8 +98,7 @@ const VpnSubscriptionTable = ({
                 c('Feature').t`All Plus plan features`,
                 c('Feature').t`10 simultaneous VPN connections`,
                 c('Feature').t`ProtonMail Visionary account`
-            ],
-            allFeatures: [c('Feature').t``]
+            ]
         }
     ];
 
@@ -133,6 +112,14 @@ const VpnSubscriptionTable = ({
                 currentPlan={currentPlan}
                 {...rest}
             />
+            <div className="aligncenter">
+                <LinkButton
+                    className="pm-button--small"
+                    onClick={() => createModal(<SubscriptionFeaturesModal currency={currency} cycle={cycle} />)}
+                >
+                    {c('Action').t`Show all features`}
+                </LinkButton>
+            </div>
         </div>
     );
 };
