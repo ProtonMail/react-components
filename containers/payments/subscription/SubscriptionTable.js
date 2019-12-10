@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useToggle, Button, classnames, LinkButton } from 'react-components';
+import { Button, classnames, LinkButton } from 'react-components';
 import { c } from 'ttag';
 
 const SubscriptionTable = ({
@@ -13,8 +13,6 @@ const SubscriptionTable = ({
     update = c('Action').t`Update`,
     select = c('Action').t`Select`
 }) => {
-    const { state: showAllFeatures, toggle: toggleFeatures } = useToggle(false);
-
     return (
         <div className="mt2 subscriptionTable">
             <div className="flex-autogrid onmobile-flex-column">
@@ -78,43 +76,6 @@ const SubscriptionTable = ({
                     );
                 })}
             </div>
-            <div className="aligncenter pt0-5 pb0-5 nomobile subscriptionTable-all-features-container">
-                <LinkButton onClick={toggleFeatures}>
-                    {showAllFeatures ? c('Action').t`Hide additional features` : c('Action').t`Show all features`}
-                </LinkButton>
-            </div>
-            {showAllFeatures ? (
-                <div className="nomobile">
-                    <table className="w100 simple-table border-collapse mb0 bordered-container">
-                        <tbody>
-                            {plans[0].allFeatures
-                                .map((f, i) => {
-                                    return plans.map(({ allFeatures = [] }) => allFeatures[i]);
-                                })
-                                .map((features = [], index) => {
-                                    return (
-                                        <tr
-                                            className={classnames(['w25', index & 1 && 'bg-global-light'])}
-                                            key={`tr${index}`}
-                                        >
-                                            {features.map((feature, index) => (
-                                                <td
-                                                    className={classnames([
-                                                        'pl1 pr1 pt0-5 pb0-5 aligncenter',
-                                                        index && 'border-left'
-                                                    ])}
-                                                    key={`td${index}`}
-                                                >
-                                                    {feature}
-                                                </td>
-                                            ))}
-                                        </tr>
-                                    );
-                                })}
-                        </tbody>
-                    </table>
-                </div>
-            ) : null}
         </div>
     );
 };

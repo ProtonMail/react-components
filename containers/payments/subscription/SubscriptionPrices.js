@@ -4,7 +4,15 @@ import { Price } from 'react-components';
 import { CYCLE } from 'proton-shared/lib/constants';
 import { c } from 'ttag';
 
-const SubscriptionPrices = ({ cycle, currency, plan, suffix = c('Suffix').t`/month` }) => {
+const FREE_PLAN = {
+    Pricing: {
+        [CYCLE.MONTHLY]: 0,
+        [CYCLE.YEARLY]: 0,
+        [CYCLE.TWO_YEARS]: 0
+    }
+};
+
+const SubscriptionPrices = ({ cycle, currency, plan = FREE_PLAN, suffix = c('Suffix').t`/month` }) => {
     const billiedAmount = (
         <Price key="billed-amount" currency={currency}>
             {plan.Pricing[cycle]}
@@ -31,7 +39,7 @@ SubscriptionPrices.propTypes = {
     currency: PropTypes.oneOf(['EUR', 'CHF', 'USD']).isRequired,
     plan: PropTypes.shape({
         Pricing: PropTypes.object
-    }).isRequired
+    })
 };
 
 export default SubscriptionPrices;
