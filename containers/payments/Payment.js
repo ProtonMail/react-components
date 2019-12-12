@@ -50,7 +50,8 @@ const Payment = ({
     };
 
     useEffect(() => {
-        handleChangeMethod(options[0].value);
+        const { value } = options.find(({ disabled }) => !disabled);
+        handleChangeMethod(value);
     }, [methods.length]);
 
     if (type === 'donation' && amount < MIN_DONATION_AMOUNT) {
