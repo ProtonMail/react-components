@@ -48,6 +48,7 @@ const NewSubscriptionModal = ({
     currency = DEFAULT_CURRENCY,
     coupon,
     planIDs = {},
+    onClose,
     ...rest
 }) => {
     const TITLE = {
@@ -142,6 +143,15 @@ const NewSubscriptionModal = ({
         setStep(STEPS.PAYMENT);
     };
 
+    const handleClose = (e) => {
+        if (step === STEPS.PAYMENT) {
+            setStep(STEPS.CUSTOMIZATION);
+            return;
+        }
+
+        onClose(e);
+    };
+
     useEffect(() => {
         withLoadingCheck(check());
     }, [model.cycle, model.planIDs]);
@@ -160,6 +170,7 @@ const NewSubscriptionModal = ({
             className="pm-modal--full subscription-modal"
             title={TITLE[step]}
             loading={loading || loadingPlans || loadingVpnCountries}
+            onClose={handleClose}
             {...rest}
         >
             {step === STEPS.CUSTOMIZATION && (
