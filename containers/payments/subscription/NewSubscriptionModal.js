@@ -81,6 +81,11 @@ const NewSubscriptionModal = ({
                 : c('Action').t`Finish`
             : c('Action').t`Pay`;
 
+    /**
+     * Check current configuration to see if it's valid
+     * @param {Object} newModel
+     * @returns {Promise}
+     */
     const check = async (newModel = model) => {
         try {
             const result = await api(
@@ -103,6 +108,10 @@ const NewSubscriptionModal = ({
         }
     };
 
+    /**
+     * Subscribe to a new subscription
+     * @return {Promise}
+     */
     const handleSubscribe = async () => {
         try {
             setStep(STEPS.UPGRADE);
@@ -144,7 +153,8 @@ const NewSubscriptionModal = ({
                     submit={submit}
                     step={step}
                     model={model}
-                    loading={loading || loadingPlans || loadingVpnCountries}
+                    disabled={step === STEPS.PAYMENT ? !canPay : false}
+                    loading={loadingCheck}
                 />
             }
             className="pm-modal--full subscription-modal"
@@ -205,7 +215,7 @@ const NewSubscriptionModal = ({
                             onCheckout={handleCheckout}
                             model={model}
                             setModel={setModel}
-                            disabled={canPay}
+                            disabled={!canPay}
                         />
                     </div>
                 </div>

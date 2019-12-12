@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { c } from 'ttag';
 import { useApi, useLoading, useAuthentication } from 'react-components';
-import { BLACK_FRIDAY, PAYMENT_METHOD_TYPES } from 'proton-shared/lib/constants';
+import { BLACK_FRIDAY, PAYMENT_METHOD_TYPES, MIN_BITCOIN_AMOUNT } from 'proton-shared/lib/constants';
 import { isExpired } from 'proton-shared/lib/helpers/card';
 import { queryPaymentMethods } from 'proton-shared/lib/api/payments';
 
@@ -20,9 +20,9 @@ const usePaymentMethods = ({ amount, coupon, type }) => {
     const getMethod = (type, { Brand = '', Last4 = '', Payer = '' }) => {
         switch (type) {
             case PAYMENT_METHOD_TYPES.CARD:
-                return `[${Brand}] •••• ${Last4}`;
+                return `${Brand} - ${Last4}`;
             case PAYMENT_METHOD_TYPES.PAYPAL:
-                return `[PayPal] ${Payer}`;
+                return `PayPal - ${Payer}`;
             default:
                 return '';
         }
@@ -49,13 +49,9 @@ const usePaymentMethods = ({ amount, coupon, type }) => {
 
     if (methods.length) {
         options.unshift(
-            ...methods.map(({ ID: value, Details, Type }, index) => ({
+            ...methods.map(({ ID: value, Details, Type }) => ({
                 icon: getIcon(Type),
-                text: [
-                    getMethod(Type, Details),
-                    isExpired(Details) && `(${c('Info').t`Expired`})`,
-                    index === 0 && `(${c('Info').t`default`})`
-                ]
+                text: [getMethod(Type, Details), isExpired(Details) && `(${c('Info').t`Expired`})`]
                     .filter(Boolean)
                     .join(' '),
                 value,
@@ -72,13 +68,15 @@ const usePaymentMethods = ({ amount, coupon, type }) => {
         });
     }
 
-    if (!isSignup && coupon !== BLACK_FRIDAY.COUPON_CODE) {
+    if (!isSignup && coupon !== BLACK_FRIDAY.COUPON_CODE && amount > MIN_BITCOIN_AMOUNT) {
         options.push({
             icon: 'payments-type-bt',
             text: c('Payment method option').t`Bitcoin`,
             value: 'bitcoin'
         });
+    }
 
+    if (!isSignup && coupon !== BLACK_FRIDAY.COUPON_CODE) {
         options.push({
             icon: 'payments',
             text: c('Label').t`Cash`,

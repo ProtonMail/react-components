@@ -15,18 +15,16 @@ const Bitcoin = ({ amount, currency, type }) => {
     const { CLIENT_TYPE } = useConfig();
     const [loading, withLoading] = useLoading();
     const [error, setError] = useState(false);
-    const [amountBitcoin, setAmountBitcoin] = useState();
-    const [address, setAddress] = useState();
+    const [model, setModel] = useState({});
 
     const request = async () => {
         setError(false);
         try {
             const { AmountBitcoin, Address } = await api(createBitcoinPayment(amount, currency));
-
-            setAmountBitcoin(AmountBitcoin);
-            setAddress(type === 'donation' ? BTC_DONATION_ADDRESS : Address);
+            setModel({ amountBitcoin: AmountBitcoin, address: type === 'donation' ? BTC_DONATION_ADDRESS : Address });
         } catch (error) {
             setError(true);
+            throw error;
         }
     };
 
@@ -45,7 +43,7 @@ const Bitcoin = ({ amount, currency, type }) => {
         return <Loader />;
     }
 
-    if (error || !amountBitcoin || !address) {
+    if (error || !model.amountBitcoin || !model.address) {
         return (
             <>
                 <Alert type="error">{c('Error').t`Error connecting to the Bitcoin API.`}</Alert>
@@ -57,8 +55,13 @@ const Bitcoin = ({ amount, currency, type }) => {
     return (
         <>
             <figure role="group">
-                <BitcoinQRCode className="mb1 w50 center" amount={amountBitcoin} address={address} type={type} />
-                <BitcoinDetails amount={amountBitcoin} address={address} />
+                <BitcoinQRCode
+                    className="mb1 w50 center"
+                    amount={model.amountBitcoin}
+                    address={model.address}
+                    type={type}
+                />
+                <BitcoinDetails amount={model.amountBitcoin} address={model.address} />
             </figure>
             {type === 'invoice' ? (
                 <Alert>{c('Info')
