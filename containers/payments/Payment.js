@@ -1,12 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { Label, Row, Field, Alert, Price } from 'react-components';
-import { CYCLE, PAYMENT_METHOD_TYPES, MIN_DONATION_AMOUNT, MIN_CREDIT_AMOUNT } from 'proton-shared/lib/constants';
+import { classnames, Radio, Icon, Row, Alert, Price, LinkButton, Loader } from 'react-components';
+import { PAYMENT_METHOD_TYPES, MIN_DONATION_AMOUNT, MIN_CREDIT_AMOUNT } from 'proton-shared/lib/constants';
 
 import Method from './Method';
 import toDetails from './toDetails';
-import PaymentMethodsSelect from '../paymentMethods/PaymentMethodsSelect';
 import usePaymentMethods from '../paymentMethods/usePaymentMethods';
 
 const { CARD, PAYPAL, CASH, BITCOIN } = PAYMENT_METHOD_TYPES;
@@ -17,16 +16,25 @@ const Payment = ({
     amount,
     currency,
     coupon,
-    cycle,
     onParameters,
     method,
     onMethod,
     onValidCard,
     onPay,
-    fieldClassName,
     card
 }) => {
     const { methods, options, loading } = usePaymentMethods({ amount, coupon, type });
+    const lastCustomMethod = [...options]
+        .reverse()
+        .find(
+            ({ value }) =>
+                ![
+                    PAYMENT_METHOD_TYPES.CARD,
+                    PAYMENT_METHOD_TYPES.PAYPAL,
+                    PAYMENT_METHOD_TYPES.CASH,
+                    PAYMENT_METHOD_TYPES.BITCOIN
+                ].includes(value)
+        );
 
     const handleCard = ({ card, isValid }) => {
         onValidCard(isValid);
@@ -40,6 +48,10 @@ const Payment = ({
             onParameters({ PaymentMethodID: newMethod });
         }
     };
+
+    useEffect(() => {
+        handleChangeMethod(options[0].value);
+    }, [methods.length]);
 
     if (type === 'donation' && amount < MIN_DONATION_AMOUNT) {
         const price = (
@@ -68,22 +80,46 @@ const Payment = ({
         return <Alert type="error">{c('Error').jt`The minimum payment we accept is ${price}`}</Alert>;
     }
 
+    if (loading) {
+        return <Loader />;
+    }
+
     return (
         <>
             <Row>
-                <Label>{c('Label').t`Payment method`}</Label>
-                <Field className={fieldClassName}>
-                    <div className="mb1">
-                        <PaymentMethodsSelect
-                            loading={loading}
-                            cycle={cycle}
-                            method={method}
-                            methods={options}
-                            amount={amount}
-                            type={type}
-                            onChange={handleChangeMethod}
-                        />
+                <div className="pm-label">
+                    <label className="mb0-5 bl">{c('Label').t`Select a method`}</label>
+                    {options.map(({ text, value, disabled, icon }, index) => {
+                        return (
+                            <label
+                                htmlFor={value}
+                                key={value}
+                                className={classnames([
+                                    'pt0-5 pb0-5 flex flex-nowrap flex-items-center',
+                                    index === options.length - 1 && 'border-bottom',
+                                    lastCustomMethod && lastCustomMethod.value === value && 'border-bottom'
+                                ])}
+                            >
+                                <Radio
+                                    disabled={loading || disabled}
+                                    className="mr0-5"
+                                    id={value}
+                                    checked={value === method}
+                                    onChange={() => handleChangeMethod(value)}
+                                />
+                                <Icon className="mr0-5" name={icon} />
+                                <span>{text}</span>
+                            </label>
+                        );
+                    })}
+                    <div>
+                        <LinkButton>
+                            <Icon name="gift" className="mr0-5" />
+                            <span>{c('Link').t`Use gift code`}</span>
+                        </LinkButton>
                     </div>
+                </div>
+                <div>
                     <Method
                         loading={loading}
                         amount={amount}
@@ -96,7 +132,7 @@ const Payment = ({
                         methods={methods}
                     />
                     {children}
-                </Field>
+                </div>
             </Row>
         </>
     );
@@ -114,9 +150,7 @@ Payment.propTypes = {
     method: PropTypes.string,
     onMethod: PropTypes.func,
     onValidCard: PropTypes.func,
-    cycle: PropTypes.oneOf([CYCLE.MONTHLY, CYCLE.YEARLY, CYCLE.TWO_YEARS]),
-    onPay: PropTypes.func,
-    fieldClassName: PropTypes.string
+    onPay: PropTypes.func
 };
 
 export default Payment;

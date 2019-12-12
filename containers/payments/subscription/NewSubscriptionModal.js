@@ -1,12 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { FormModal, usePlans, useApi, useLoading, useVPNCountries, useEventManager } from 'react-components';
+import {
+    Alert,
+    FormModal,
+    Payment,
+    usePlans,
+    useApi,
+    useLoading,
+    useVPNCountries,
+    useEventManager,
+    usePayment,
+    useCard
+} from 'react-components';
 import { DEFAULT_CURRENCY, DEFAULT_CYCLE, CYCLE, CURRENCIES } from 'proton-shared/lib/constants';
 import { checkSubscription, subscribe } from 'proton-shared/lib/api/payments';
 
 import SubscriptionCustomization from './SubscriptionCustomization';
-import SubscriptionPayment from './SubscriptionPayment';
 import SubscriptionUpgrade from './SubscriptionUpgrade';
 import SubscriptionThanks from './SubscriptionThanks';
 import SubscriptionCheckout from './SubscriptionCheckout';
@@ -54,6 +64,9 @@ const NewSubscriptionModal = ({
     const [loading, withLoading] = useLoading();
     const [loadingCheck, withLoadingCheck] = useLoading();
     const [checkResult, setCheckResult] = useState({});
+    const card = useCard();
+    const { method, setMethod, parameters, setParameters, canPay, setCardValidity } = usePayment();
+    const { Code: couponCode } = checkResult.Coupon || {}; // Coupon can be null
     const [model, setModel] = useState({
         cycle,
         currency,
@@ -100,8 +113,8 @@ const NewSubscriptionModal = ({
                         PlanIDs: model.planIDs,
                         CouponCode: model.coupon,
                         Currency: model.currency,
-                        Cycle: model.cycle
-                        // TODO add payments details
+                        Cycle: model.cycle,
+                        ...parameters
                     })
                 )
             );
@@ -165,12 +178,37 @@ const NewSubscriptionModal = ({
                 </div>
             )}
             {step === STEPS.PAYMENT && (
-                <SubscriptionPayment
-                    loading={loading}
-                    model={model}
-                    setModel={setModel}
-                    onSubscribe={handleSubscribe}
-                />
+                <div className="flex flex-spacebetween onmobile-flex-column">
+                    <div className="w75 onmobile-w100 pr1 onmobile-pr0">
+                        <h3>{c('Title').t`Payment method`}</h3>
+                        <Alert>{c('Info').t`You can use any of your saved payment methods or add a new one.`}</Alert>
+                        <Payment
+                            type="subscription"
+                            method={method}
+                            amount={checkResult.AmountDue}
+                            currency={checkResult.Currency}
+                            coupon={couponCode}
+                            parameters={parameters}
+                            card={card}
+                            onParameters={setParameters}
+                            onMethod={setMethod}
+                            onValidCard={setCardValidity}
+                            onPay={handleSubscribe}
+                        />
+                    </div>
+                    <div className="w25 onmobile-w100">
+                        <SubscriptionCheckout
+                            submit={submit}
+                            plans={plans}
+                            checkResult={checkResult}
+                            loading={loadingCheck}
+                            onCheckout={handleCheckout}
+                            model={model}
+                            setModel={setModel}
+                            disabled={canPay}
+                        />
+                    </div>
+                </div>
             )}
             {step === STEPS.UPGRADE && <SubscriptionUpgrade />}
             {step === STEPS.THANKS && <SubscriptionThanks onClose={rest.onClose} />}
