@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import { Alert, Price, Button, Loader, useConfig, useApi, useLoading } from 'react-components';
 import { createBitcoinPayment } from 'proton-shared/lib/api/payments';
-import { MIN_BITCOIN_AMOUNT, BTC_DONATION_ADDRESS, CLIENT_TYPES } from 'proton-shared/lib/constants';
+import { MIN_BITCOIN_AMOUNT, BTC_DONATION_ADDRESS, CLIENT_TYPES, CURRENCIES } from 'proton-shared/lib/constants';
 
 import BitcoinQRCode from './BitcoinQRCode';
 import BitcoinDetails from './BitcoinDetails';
@@ -79,7 +79,7 @@ const Bitcoin = ({ amount, currency, type }) => {
 
 Bitcoin.propTypes = {
     amount: PropTypes.number.isRequired,
-    currency: PropTypes.oneOf(['EUR', 'CHF', 'USD']),
+    currency: PropTypes.oneOf(CURRENCIES),
     type: PropTypes.string
 };
 

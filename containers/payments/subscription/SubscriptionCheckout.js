@@ -50,7 +50,8 @@ CheckoutRow.propTypes = {
 
 const SubscriptionCheckout = ({
     submit = c('Action').t`Pay`,
-    plans,
+    disabled = false,
+    plans = [],
     model,
     setModel,
     checkResult,
@@ -269,7 +270,7 @@ const SubscriptionCheckout = ({
                     className="bold"
                 />
                 <div className="mt1">
-                    <PrimaryButton loading={loading} onClick={onCheckout} className="w100">
+                    <PrimaryButton loading={loading} disabled={disabled} onClick={onCheckout} className="w100">
                         {submit}
                     </PrimaryButton>
                 </div>
@@ -292,6 +293,7 @@ const SubscriptionCheckout = ({
 };
 
 SubscriptionCheckout.propTypes = {
+    disabled: PropTypes.bool,
     submit: PropTypes.string,
     plans: PropTypes.array.isRequired,
     checkResult: PropTypes.object.isRequired,

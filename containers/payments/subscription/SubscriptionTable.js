@@ -89,8 +89,7 @@ SubscriptionTable.propTypes = {
             price: PropTypes.node.isRequired,
             imageSrc: PropTypes.string.isRequired,
             description: PropTypes.node.isRequired,
-            features: PropTypes.arrayOf(PropTypes.node).isRequired,
-            allFeatures: PropTypes.arrayOf(PropTypes.node).isRequired
+            features: PropTypes.arrayOf(PropTypes.node).isRequired
         })
     ),
     onSelect: PropTypes.func.isRequired,

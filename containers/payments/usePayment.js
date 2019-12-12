@@ -16,6 +16,10 @@ const usePayment = () => {
     };
 
     const canPay = () => {
+        if (!method) {
+            return false;
+        }
+
         if ([BITCOIN, CASH].includes(method)) {
             return false;
         }

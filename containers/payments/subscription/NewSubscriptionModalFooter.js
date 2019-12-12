@@ -16,7 +16,7 @@ const STEPS = {
 const CheckmarkIcon = () => <img className="mr0-5" src={checkmarkSvg} alt="checkmark" />;
 const PercentageIcon = () => <img className="mr0-5" src={percentageSvg} alt="percentage" />;
 
-const NewSubscriptionModalFooter = ({ submit, step, model, loading }) => {
+const NewSubscriptionModalFooter = ({ submit, step, model, loading, disabled = false }) => {
     const [addresses, loadingAddresses] = useAddresses();
 
     if ([STEPS.UPGRADE, STEPS.THANKS].includes(step)) {
@@ -31,31 +31,31 @@ const NewSubscriptionModalFooter = ({ submit, step, model, loading }) => {
     const cancel = step === STEPS.CUSTOMIZATION ? c('Action').t`Cancel` : c('Action').t`Back`;
     const upsells = [
         model.cycle === CYCLE.MONTHLY && (
-            <div className="nomobile">
+            <div key="upsell-1" className="nomobile">
                 <PercentageIcon />
                 {c('Info').t`Save 20% by switching to annual billing`}
             </div>
         ),
         model.cycle === CYCLE.YEARLY && (
-            <div className="nomobile">
+            <div key="upsell-2" className="nomobile">
                 <CheckmarkIcon />
                 {c('Info').t`You are saving 20% with annual billing`}
             </div>
         ),
         model.cycle === CYCLE.TWO_YEARS && (
-            <div className="nomobile">
+            <div key="upsell-3" className="nomobile">
                 <CheckmarkIcon />
                 {c('Info').t`You are saving 33% with 2-year billing`}
             </div>
         ),
         hasAddresses && model.coupon !== COUPON_CODES.BUNDLE && (
-            <div className="nomobile">
+            <div key="upsell-4" className="nomobile">
                 <PercentageIcon />
                 {c('Info').t`Save an extra 20% by combining Mail and VPN`}
             </div>
         ),
         hasAddresses && model.coupon === COUPON_CODES.BUNDLE && (
-            <div className="nomobile">
+            <div key="upsell-5" className="nomobile">
                 <CheckmarkIcon />
                 {c('Info').t`You are saving an extra 20% with the bundle discount`}
             </div>
@@ -68,7 +68,7 @@ const NewSubscriptionModalFooter = ({ submit, step, model, loading }) => {
                 {cancel}
             </Button>
             {upsells}
-            <PrimaryButton disabled={loading} type="submit">
+            <PrimaryButton loading={loading} disabled={disabled} type="submit">
                 {submit}
             </PrimaryButton>
         </>
@@ -76,6 +76,7 @@ const NewSubscriptionModalFooter = ({ submit, step, model, loading }) => {
 };
 
 NewSubscriptionModalFooter.propTypes = {
+    disabled: PropTypes.bool,
     submit: PropTypes.string,
     loading: PropTypes.bool,
     step: PropTypes.number,

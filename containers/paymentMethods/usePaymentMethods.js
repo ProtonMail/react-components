@@ -28,16 +28,29 @@ const usePaymentMethods = ({ amount, coupon, type }) => {
         }
     };
 
+    const getIcon = (type) => {
+        switch (type) {
+            case PAYMENT_METHOD_TYPES.CARD:
+                return 'payments-type-card';
+            case PAYMENT_METHOD_TYPES.PAYPAL:
+                return 'payments-type-pp';
+            default:
+                return '';
+        }
+    };
+
     const options = [
         {
+            icon: 'payments-type-card',
             value: PAYMENT_METHOD_TYPES.CARD,
-            text: c('Payment method option').t`Pay with credit/debit card`
+            text: c('Payment method option').t`Credit/debit card`
         }
     ];
 
     if (methods.length) {
         options.unshift(
             ...methods.map(({ ID: value, Details, Type }, index) => ({
+                icon: getIcon(Type),
                 text: [
                     getMethod(Type, Details),
                     isExpired(Details) && `(${c('Info').t`Expired`})`,
@@ -53,19 +66,22 @@ const usePaymentMethods = ({ amount, coupon, type }) => {
 
     if (!alreadyHavePayPal && (isPaypalAmountValid || isInvoice)) {
         options.push({
-            text: c('Payment method option').t`Pay with PayPal`,
+            icon: 'payments-type-pp',
+            text: c('Payment method option').t`PayPal`,
             value: PAYMENT_METHOD_TYPES.PAYPAL
         });
     }
 
     if (!isSignup && coupon !== BLACK_FRIDAY.COUPON_CODE) {
         options.push({
-            text: c('Payment method option').t`Pay with Bitcoin`,
+            icon: 'payments-type-bt',
+            text: c('Payment method option').t`Bitcoin`,
             value: 'bitcoin'
         });
 
         options.push({
-            text: c('Label').t`Pay with cash`,
+            icon: 'payments',
+            text: c('Label').t`Cash`,
             value: 'cash'
         });
     }
