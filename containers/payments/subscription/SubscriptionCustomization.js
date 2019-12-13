@@ -173,6 +173,15 @@ const SubscriptionCustomization = ({
             .t`Each additional user comes automatically with 5 GB storage space and 5 email addresses.`
     };
 
+    const plusAddresses = (model.planIDs[addressAddon.ID] || 0) * addressAddon.MaxAddresses + plusPlan.MaxAddresses;
+    const plusDomains = (model.planIDs[domainAddon.ID] || 0) * domainAddon.MaxDomains + plusPlan.MaxDomains;
+    const professionalMembers =
+        (model.planIDs[memberAddon.ID] || 0) * memberAddon.MaxMembers + professionalPlan.MaxMembers;
+    const professionalAddresses =
+        (model.planIDs[memberAddon.ID] || 0) * memberAddon.MaxAddresses + professionalPlan.MaxAddresses;
+    const professionalDomains =
+        (model.planIDs[memberAddon.ID] || 0) * memberAddon.MaxDomains + professionalPlan.MaxDomains;
+
     const FEATURES = {
         [FREE]: [
             <SubscriptionFeatureRow key="user" icon="organization-users" feature={c('Feature').t`1 User`} />,
@@ -193,18 +202,15 @@ const SubscriptionCustomization = ({
             <SubscriptionFeatureRow
                 key="address"
                 icon="email-address"
-                feature={c('Feature').t`${(model.planIDs[addressAddon.ID] || 0) * addressAddon.MaxAddresses +
-                    plusPlan.MaxAddresses} email addresses`}
+                feature={c('Feature').t`${plusAddresses} email addresses`}
             />,
             <SubscriptionFeatureRow
                 key="domain"
                 icon="domains"
                 feature={c('Feature').ngettext(
-                    msgid`${(model.planIDs[domainAddon.ID] || 0) * domainAddon.MaxDomains +
-                        plusPlan.MaxDomains} custom domain`,
-                    `${(model.planIDs[domainAddon.ID] || 0) * domainAddon.MaxDomains +
-                        plusPlan.MaxDomains} custom domains`,
-                    (model.planIDs[domainAddon.ID] || 0) * domainAddon.MaxDomains + plusPlan.MaxDomains
+                    msgid`${plusDomains} custom domain`,
+                    `${plusDomains} custom domains`,
+                    plusDomains
                 )}
             />,
             <SubscriptionFeatureRow key="all" icon="add" feature={c('Feature').t`All plus features`} />
@@ -214,11 +220,9 @@ const SubscriptionCustomization = ({
                 key="member"
                 icon="organization-users"
                 feature={c('Feature').ngettext(
-                    msgid`${(model.planIDs[memberAddon.ID] || 0) * memberAddon.MaxMembers +
-                        professionalPlan.MaxMembers} user`,
-                    `${(model.planIDs[memberAddon.ID] || 0) * memberAddon.MaxMembers +
-                        professionalPlan.MaxMembers} users`,
-                    (model.planIDs[memberAddon.ID] || 0) * memberAddon.MaxMembers + professionalPlan.MaxMembers
+                    msgid`${professionalMembers} user`,
+                    `${professionalMembers} users`,
+                    professionalMembers
                 )}
             />,
             <SubscriptionFeatureRow
@@ -233,22 +237,18 @@ const SubscriptionCustomization = ({
                 key="address"
                 icon="email-address"
                 feature={c('Feature').ngettext(
-                    msgid`${(model.planIDs[memberAddon.ID] || 0) * memberAddon.MaxAddresses +
-                        professionalPlan.MaxAddresses} email address`,
-                    `${(model.planIDs[memberAddon.ID] || 0) * memberAddon.MaxAddresses +
-                        professionalPlan.MaxAddresses} email addresses`,
-                    (model.planIDs[memberAddon.ID] || 0) * memberAddon.MaxAddresses + professionalPlan.MaxAddresses
+                    msgid`${professionalAddresses} email address`,
+                    `${professionalAddresses} email addresses`,
+                    professionalAddresses
                 )}
             />,
             <SubscriptionFeatureRow
                 key="domain"
                 icon="domains"
                 feature={c('Feature').ngettext(
-                    msgid`${(model.planIDs[memberAddon.ID] || 0) * memberAddon.MaxDomains +
-                        professionalPlan.MaxDomains} custom domain`,
-                    `${(model.planIDs[memberAddon.ID] || 0) * memberAddon.MaxDomains +
-                        professionalPlan.MaxDomains} custom domains`,
-                    (model.planIDs[memberAddon.ID] || 0) * memberAddon.MaxDomains + professionalPlan.MaxDomains
+                    msgid`${professionalDomains} custom domain`,
+                    `${professionalDomains} custom domains`,
+                    professionalDomains
                 )}
             />,
             <SubscriptionFeatureRow key="all" icon="add" feature={c('Feature').t`All professional features`} />
