@@ -98,24 +98,21 @@ const SubscriptionCheckout = ({
     const bonusStorage = humanSize(LOYAL_BONUS_STORAGE, 'GB');
 
     const getTitle = (planName, quantity) => {
+        const addresses = quantity * addressAddon.MaxAddresses;
+        const storage = humanSize(quantity * storageAddon.MaxSpace, 'GB');
+        const domains = quantity * domainAddon.MaxDomains;
+        const members = quantity * memberAddon.MaxMembers;
+        const vpn = quantity * vpnAddon.MaxVPN;
         return {
-            [ADDON_NAMES.ADDRESS]: c('Addon').t`+ ${quantity * addressAddon.MaxAddresses} email addresses`,
-            [ADDON_NAMES.SPACE]: c('Addon').t`+ ${humanSize(quantity * storageAddon.MaxSpace, 'GB')} storage`,
+            [ADDON_NAMES.ADDRESS]: c('Addon').t`+ ${addresses} email addresses`,
+            [ADDON_NAMES.SPACE]: c('Addon').t`+ ${storage} storage`,
             [ADDON_NAMES.DOMAIN]: c('Addon').ngettext(
-                msgid`+ ${quantity * domainAddon.MaxDomains} custom domain`,
-                `+ ${quantity * domainAddon.MaxDomains} custom domains`,
-                quantity * domainAddon.MaxDomains
+                msgid`+ ${domains} custom domain`,
+                `+ ${domains} custom domains`,
+                domains
             ),
-            [ADDON_NAMES.MEMBER]: c('Addon').ngettext(
-                msgid`+ ${quantity * memberAddon.MaxMembers} user`,
-                `+ ${quantity * memberAddon.MaxMembers} users`,
-                quantity * memberAddon.MaxMembers
-            ),
-            [ADDON_NAMES.VPN]: c('Addon').ngettext(
-                msgid`+ ${quantity * vpnAddon.MaxMembers} connection`,
-                `+ ${quantity * vpnAddon.MaxMembers} connections`,
-                quantity * vpnAddon.MaxMembers
-            )
+            [ADDON_NAMES.MEMBER]: c('Addon').ngettext(msgid`+ ${members} user`, `+ ${members} users`, members),
+            [ADDON_NAMES.VPN]: c('Addon').ngettext(msgid`+ ${vpn} connection`, `+ ${vpn} connections`, vpn)
         }[planName];
     };
 
