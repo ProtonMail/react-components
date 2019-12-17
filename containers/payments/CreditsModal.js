@@ -20,7 +20,6 @@ import { DEFAULT_CURRENCY, DEFAULT_CREDITS_AMOUNT, CLIENT_TYPES, MIN_CREDIT_AMOU
 import PaymentSelector from './PaymentSelector';
 import Payment from './Payment';
 import usePayment from './usePayment';
-import useCard from './useCard';
 import { handlePaymentToken } from './paymentTokenHelper';
 
 const getCurrenciesI18N = () => ({
@@ -36,17 +35,14 @@ const CreditsModal = (props) => {
     const { CLIENT_TYPE } = useConfig();
     const { call } = useEventManager();
     const { createModal } = useModals();
-    const { method, setMethod, parameters, setParameters, canPay, setCardValidity } = usePayment();
     const { createNotification } = useNotifications();
     const [loading, withLoading] = useLoading();
     const [currency, setCurrency] = useState(DEFAULT_CURRENCY);
     const [amount, setAmount] = useState(DEFAULT_CREDITS_AMOUNT);
-    const card = useCard();
-
     const i18n = getCurrenciesI18N();
     const i18nCurrency = i18n[currency];
 
-    const handleSubmit = async (params = parameters) => {
+    const handleSubmit = async (params) => {
         const requestBody = await handlePaymentToken({
             params: { ...params, Amount: amount, Currency: currency },
             api,
@@ -58,10 +54,16 @@ const CreditsModal = (props) => {
         createNotification({ text: c('Success').t`Credits added` });
     };
 
+    const { card, setCard, errors, method, setMethod, parameters, canPay, paypal, paypalCredit } = usePayment({
+        amount,
+        currency,
+        onPay: handleSubmit
+    });
+
     return (
         <FormModal
             type="small"
-            onSubmit={() => withLoading(handleSubmit())}
+            onSubmit={() => withLoading(handleSubmit(parameters))}
             loading={loading}
             submit={canPay && amount >= MIN_CREDIT_AMOUNT && c('Action').t`Top up`}
             close={c('Action').t`Close`}
@@ -93,12 +95,12 @@ const CreditsModal = (props) => {
                 method={method}
                 amount={amount}
                 currency={currency}
-                parameters={parameters}
                 card={card}
-                onParameters={setParameters}
                 onMethod={setMethod}
-                onValidCard={setCardValidity}
-                onPay={handleSubmit}
+                onCard={setCard}
+                errors={errors}
+                paypal={paypal}
+                paypalCredit={paypalCredit}
             />
         </FormModal>
     );

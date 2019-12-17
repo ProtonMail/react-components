@@ -13,8 +13,8 @@
 }
 
 // Hide first subscription table in the subscription modal
-.subscription-modal .subscriptionCustomization-section:first-child .vpnSubscriptionTable-container,
-.subscription-modal .subscriptionCustomization-section:first-child .mailSubscriptionTable-container {
+.subscription-modal.is-free-user .subscriptionCustomization-section:first-child .vpnSubscriptionTable-container,
+.subscription-modal.is-free-user .subscriptionCustomization-section:first-child .mailSubscriptionTable-container {
     display: none;
 }
 

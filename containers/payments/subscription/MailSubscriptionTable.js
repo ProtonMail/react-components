@@ -1,7 +1,7 @@
 import React from 'react';
 import { SubscriptionTable, LinkButton, useModals } from 'react-components';
 import PropTypes from 'prop-types';
-import { PLAN_NAMES, PLANS, CYCLE } from 'proton-shared/lib/constants';
+import { PLAN_NAMES, PLANS, CYCLE, CURRENCIES } from 'proton-shared/lib/constants';
 import { toMap } from 'proton-shared/lib/helpers/object';
 import { c } from 'ttag';
 import freePlanSvg from 'design-system/assets/img/pm-images/free-plan.svg';
@@ -143,7 +143,7 @@ MailSubscriptionTable.propTypes = {
     plans: PropTypes.arrayOf(PropTypes.object),
     onSelect: PropTypes.func.isRequired,
     cycle: PropTypes.oneOf([CYCLE.MONTHLY, CYCLE.YEARLY, CYCLE.TWO_YEARS]).isRequired,
-    currency: PropTypes.oneOf(['EUR', 'CHF', 'USD']).isRequired
+    currency: PropTypes.oneOf(CURRENCIES).isRequired
 };
 
 export default MailSubscriptionTable;

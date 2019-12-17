@@ -78,7 +78,7 @@ const usePaymentMethods = ({ amount, coupon, type }) => {
 
     if (!isSignup && coupon !== BLACK_FRIDAY.COUPON_CODE) {
         options.push({
-            icon: 'payments',
+            icon: 'payments-type-cash',
             text: c('Label').t`Cash`,
             value: 'cash'
         });

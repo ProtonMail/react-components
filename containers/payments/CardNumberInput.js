@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { c } from 'ttag';
 import { Input, Icon } from 'react-components';
 import creditCardType from 'credit-card-type';
 import { isNumber } from 'proton-shared/lib/helpers/validators';
@@ -45,7 +44,7 @@ const CardNumberInput = ({ value, onChange, errors = [], ...rest }) => {
         <Input
             autoComplete="cc-number"
             name="cardnumber"
-            placeholder={c('Placeholder').t`Card number`}
+            placeholder="0000 0000 0000 0000"
             maxLength={23}
             errors={errors}
             onChange={handleChange}

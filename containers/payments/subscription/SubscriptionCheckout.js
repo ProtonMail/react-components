@@ -1,16 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { c, msgid } from 'ttag';
-import {
-    CurrencySelector,
-    CycleSelector,
-    PrimaryButton,
-    Icon,
-    Loader,
-    Price,
-    useOrganization,
-    classnames
-} from 'react-components';
+import { CurrencySelector, CycleSelector, Loader, Price, useOrganization, classnames } from 'react-components';
 import { isLoyal } from 'proton-shared/lib/helpers/organization';
 import { toMap } from 'proton-shared/lib/helpers/object';
 import { orderBy } from 'proton-shared/lib/helpers/array';
@@ -48,16 +39,7 @@ CheckoutRow.propTypes = {
     currency: PropTypes.string.isRequired
 };
 
-const SubscriptionCheckout = ({
-    submit = c('Action').t`Pay`,
-    disabled = false,
-    plans = [],
-    model,
-    setModel,
-    checkResult,
-    onCheckout,
-    loading
-}) => {
+const SubscriptionCheckout = ({ submit = c('Action').t`Pay`, plans = [], model, setModel, checkResult, loading }) => {
     const plansMap = toMap(plans);
     const storageAddon = plans.find(({ Name }) => Name === ADDON_NAMES.SPACE);
     const addressAddon = plans.find(({ Name }) => Name === ADDON_NAMES.ADDRESS);
@@ -144,15 +126,15 @@ const SubscriptionCheckout = ({
     return (
         <>
             <div className="flex flex-nowrap mb1">
-                <CurrencySelector
-                    className="mr1"
-                    currency={model.currency}
-                    onSelect={(newCurrency) => setModel({ ...model, currency: newCurrency })}
-                />
                 <CycleSelector
+                    className="mr1"
                     loading={loading}
                     cycle={model.cycle}
                     onSelect={(newCycle) => setModel({ ...model, cycle: newCycle })}
+                />
+                <CurrencySelector
+                    currency={model.currency}
+                    onSelect={(newCurrency) => setModel({ ...model, currency: newCurrency })}
                 />
             </div>
             <div className="rounded mb1">
@@ -266,24 +248,7 @@ const SubscriptionCheckout = ({
                     currency={model.currency}
                     className="bold"
                 />
-                <div className="mt1">
-                    <PrimaryButton loading={loading} disabled={disabled} onClick={onCheckout} className="w100">
-                        {submit}
-                    </PrimaryButton>
-                </div>
-            </div>
-            <div className="aligncenter">
-                <div className="flex flex-nowrap flex-items-center flex-justify-center">
-                    <Icon name="clock" className="mr0-5" />
-                    {c('Info').t`Guarantee`}
-                </div>
-                <div className="small mb1 mt0">{c('Info').t`30-days money back guaranteed`}</div>
-                <div className="flex flex-nowrap flex-items-center flex-justify-center">
-                    <Icon name="lock" className="mr0-5" />
-                    {c('Info').t`Secure`}
-                </div>
-                <div className="small mb1 mt0">{c('Info')
-                    .t`Payments are protected with TLS encryption and Swiss privacy laws`}</div>
+                <div className="mt1">{submit}</div>
             </div>
         </>
     );
@@ -291,7 +256,7 @@ const SubscriptionCheckout = ({
 
 SubscriptionCheckout.propTypes = {
     disabled: PropTypes.bool,
-    submit: PropTypes.string,
+    submit: PropTypes.node,
     plans: PropTypes.array.isRequired,
     checkResult: PropTypes.object.isRequired,
     model: PropTypes.object.isRequired,
