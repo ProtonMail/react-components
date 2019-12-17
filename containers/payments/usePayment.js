@@ -33,6 +33,11 @@ const usePayment = ({ amount, currency, onPay }) => {
     };
 
     const canPay = () => {
+        if (!amount) {
+            // Amount equals 0
+            return true;
+        }
+
         if (!method) {
             return false;
         }
