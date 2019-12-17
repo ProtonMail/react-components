@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { useAddresses, Button, PrimaryButton, Loader } from 'react-components';
+import { useAddresses, Button, Loader } from 'react-components';
 import { c } from 'ttag';
 import { CYCLE, COUPON_CODES } from 'proton-shared/lib/constants';
 import checkmarkSvg from 'design-system/assets/img/shared/checkmark-icon.svg';
@@ -16,7 +16,7 @@ const STEPS = {
 const CheckmarkIcon = () => <img className="mr0-5" src={checkmarkSvg} alt="checkmark" />;
 const PercentageIcon = () => <img className="mr0-5" src={percentageSvg} alt="percentage" />;
 
-const NewSubscriptionModalFooter = ({ submit, step, model, loading, disabled = false }) => {
+const NewSubscriptionModalFooter = ({ submit, step, model }) => {
     const [addresses, loadingAddresses] = useAddresses();
 
     if ([STEPS.UPGRADE, STEPS.THANKS].includes(step)) {
@@ -64,21 +64,15 @@ const NewSubscriptionModalFooter = ({ submit, step, model, loading, disabled = f
 
     return (
         <>
-            <Button disabled={loading} type="reset">
-                {cancel}
-            </Button>
+            <Button type="reset">{cancel}</Button>
             {upsells}
-            <PrimaryButton loading={loading} disabled={disabled} type="submit">
-                {submit}
-            </PrimaryButton>
+            {submit}
         </>
     );
 };
 
 NewSubscriptionModalFooter.propTypes = {
-    disabled: PropTypes.bool,
-    submit: PropTypes.string,
-    loading: PropTypes.bool,
+    submit: PropTypes.node.isRequired,
     step: PropTypes.number,
     model: PropTypes.object
 };

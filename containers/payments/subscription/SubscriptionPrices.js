@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Price } from 'react-components';
-import { CYCLE } from 'proton-shared/lib/constants';
+import { CYCLE, CURRENCIES } from 'proton-shared/lib/constants';
 import { c } from 'ttag';
 
 const FREE_PLAN = {
@@ -36,7 +36,7 @@ const SubscriptionPrices = ({ cycle, currency, plan = FREE_PLAN, suffix = c('Suf
 SubscriptionPrices.propTypes = {
     suffix: PropTypes.string,
     cycle: PropTypes.oneOf([CYCLE.MONTHLY, CYCLE.YEARLY, CYCLE.TWO_YEARS]).isRequired,
-    currency: PropTypes.oneOf(['EUR', 'CHF', 'USD']).isRequired,
+    currency: PropTypes.oneOf(CURRENCIES).isRequired,
     plan: PropTypes.shape({
         Pricing: PropTypes.object
     })

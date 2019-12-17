@@ -8,7 +8,6 @@ import { DEFAULT_CURRENCY, DEFAULT_DONATION_AMOUNT } from 'proton-shared/lib/con
 import PaymentSelector from './PaymentSelector';
 import Payment from './Payment';
 import usePayment from './usePayment';
-import useCard from './useCard';
 import { handlePaymentToken } from './paymentTokenHelper';
 
 const DonateModal = ({ ...rest }) => {
@@ -17,11 +16,9 @@ const DonateModal = ({ ...rest }) => {
     const { createNotification } = useNotifications();
     const [currency, setCurrency] = useState(DEFAULT_CURRENCY);
     const [amount, setAmount] = useState(DEFAULT_DONATION_AMOUNT);
-    const { method, setMethod, parameters, setParameters, canPay, setCardValidity } = usePayment();
     const { createModal } = useModals();
-    const card = useCard();
 
-    const handleSubmit = async (params = parameters) => {
+    const handleSubmit = async (params) => {
         const requestBody = await handlePaymentToken({
             params: { ...params, Amount: amount, Currency: currency },
             api,
@@ -35,9 +32,15 @@ const DonateModal = ({ ...rest }) => {
         });
     };
 
+    const { card, setCard, errors, method, setMethod, parameters, canPay, paypal, paypalCredit } = usePayment({
+        amount,
+        currency,
+        onPay: handleSubmit
+    });
+
     return (
         <FormModal
-            onSubmit={() => withLoading(handleSubmit())}
+            onSubmit={() => withLoading(handleSubmit(parameters))}
             loading={loading}
             title={c('Title').t`Make a donation`}
             submit={canPay && c('Action').t`Donate`}
@@ -60,12 +63,12 @@ const DonateModal = ({ ...rest }) => {
                 method={method}
                 amount={amount}
                 currency={currency}
-                parameters={parameters}
                 card={card}
-                onParameters={setParameters}
                 onMethod={setMethod}
-                onValidCard={setCardValidity}
-                onPay={handleSubmit}
+                onCard={setCard}
+                errors={errors}
+                paypal={paypal}
+                paypalCredit={paypalCredit}
             />
         </FormModal>
     );

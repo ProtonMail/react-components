@@ -1,27 +1,29 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { classnames, Radio, Icon, Row, Alert, Price, LinkButton, Loader } from 'react-components';
-import { PAYMENT_METHOD_TYPES, MIN_DONATION_AMOUNT, MIN_CREDIT_AMOUNT } from 'proton-shared/lib/constants';
+import { classnames, Radio, Icon, Row, Alert, Price, Loader } from 'react-components';
+import {
+    PAYMENT_METHOD_TYPES,
+    MIN_DONATION_AMOUNT,
+    MIN_CREDIT_AMOUNT,
+    DEFAULT_CURRENCY,
+    CURRENCIES
+} from 'proton-shared/lib/constants';
 
 import Method from './Method';
-import toDetails from './toDetails';
 import usePaymentMethods from '../paymentMethods/usePaymentMethods';
-
-const { CARD, PAYPAL, CASH, BITCOIN } = PAYMENT_METHOD_TYPES;
 
 const Payment = ({
     children,
     type,
-    amount,
-    currency,
-    coupon,
-    onParameters,
+    amount = 0,
+    currency = DEFAULT_CURRENCY,
+    coupon = '',
     method,
     onMethod,
-    onValidCard,
-    onPay,
-    card
+    card,
+    onCard,
+    errors
 }) => {
     const { methods, options, loading } = usePaymentMethods({ amount, coupon, type });
     const lastCustomMethod = [...options]
@@ -36,22 +38,9 @@ const Payment = ({
                 ].includes(value)
         );
 
-    const handleCard = ({ card, isValid }) => {
-        onValidCard(isValid);
-        isValid && onParameters({ Payment: { Type: CARD, Details: toDetails(card) } });
-    };
-
-    const handleChangeMethod = (newMethod) => {
-        onMethod(newMethod);
-
-        if (![CARD, PAYPAL, CASH, BITCOIN].includes(newMethod)) {
-            onParameters({ PaymentMethodID: newMethod });
-        }
-    };
-
     useEffect(() => {
         const { value } = options.find(({ disabled }) => !disabled);
-        handleChangeMethod(value);
+        onMethod(value);
     }, [methods.length]);
 
     if (type === 'donation' && amount < MIN_DONATION_AMOUNT) {
@@ -90,14 +79,13 @@ const Payment = ({
             <Row>
                 <div className="pm-label">
                     <label className="mb0-5 bl">{c('Label').t`Select a method`}</label>
-                    {options.map(({ text, value, disabled, icon }, index) => {
+                    {options.map(({ text, value, disabled, icon }) => {
                         return (
                             <label
                                 htmlFor={value}
                                 key={value}
                                 className={classnames([
                                     'pt0-5 pb0-5 flex flex-nowrap flex-items-center',
-                                    index === options.length - 1 && 'border-bottom',
                                     lastCustomMethod && lastCustomMethod.value === value && 'border-bottom'
                                 ])}
                             >
@@ -106,31 +94,25 @@ const Payment = ({
                                     className="mr0-5"
                                     id={value}
                                     checked={value === method}
-                                    onChange={() => handleChangeMethod(value)}
+                                    onChange={() => onMethod(value)}
                                 />
                                 <Icon className="mr0-5" name={icon} />
                                 <span>{text}</span>
                             </label>
                         );
                     })}
-                    <div>
-                        <LinkButton>
-                            <Icon name="gift" className="mr0-5" />
-                            <span>{c('Link').t`Use gift code`}</span>
-                        </LinkButton>
-                    </div>
                 </div>
                 <div>
                     <Method
                         loading={loading}
                         amount={amount}
                         currency={currency}
-                        onCard={handleCard}
-                        onPayPal={onPay}
+                        onCard={onCard}
                         card={card}
                         type={type}
                         method={method}
                         methods={methods}
+                        errors={errors}
                     />
                     {children}
                 </div>
@@ -144,14 +126,13 @@ Payment.propTypes = {
     type: PropTypes.oneOf(['signup', 'subscription', 'invoice', 'donation', 'credit']),
     amount: PropTypes.number.isRequired,
     coupon: PropTypes.string,
-    currency: PropTypes.oneOf(['EUR', 'CHF', 'USD']),
+    currency: PropTypes.oneOf(CURRENCIES).isRequired,
     parameters: PropTypes.object,
     card: PropTypes.object,
-    onParameters: PropTypes.func,
+    onCard: PropTypes.func,
     method: PropTypes.string,
     onMethod: PropTypes.func,
-    onValidCard: PropTypes.func,
-    onPay: PropTypes.func
+    errors: PropTypes.object
 };
 
 export default Payment;
