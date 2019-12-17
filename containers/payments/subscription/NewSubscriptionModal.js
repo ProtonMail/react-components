@@ -98,7 +98,7 @@ const NewSubscriptionModal = ({
             await withLoading(call());
             setStep(STEPS.THANKS);
         } catch (error) {
-            setStep(checkResult.AmountDue ? STEPS.PAYMENT : STEPS.CUSTOMIZATION);
+            setStep(STEPS.PAYMENT);
             throw error;
         }
     };
@@ -109,7 +109,7 @@ const NewSubscriptionModal = ({
         onPay: handleSubscribe
     });
 
-    const Submit = ({ className }) => {
+    const SubmitButton = ({ className }) => {
         if (step === STEPS.CUSTOMIZATION) {
             return (
                 <PrimaryButton className={className} loading={loadingCheck} type="submit">{c('Action')
@@ -137,7 +137,7 @@ const NewSubscriptionModal = ({
         );
     };
 
-    Submit.propTypes = {
+    SubmitButton.propTypes = {
         className: PropTypes.string
     };
 
@@ -169,10 +169,6 @@ const NewSubscriptionModal = ({
     };
 
     const handleCheckout = () => {
-        if (!checkResult.AmountDue) {
-            return handleSubscribe(parameters);
-        }
-
         if (step === STEPS.CUSTOMIZATION) {
             return setStep(STEPS.PAYMENT);
         }
@@ -200,7 +196,7 @@ const NewSubscriptionModal = ({
     return (
         <FormModal
             hasClose={step === STEPS.CUSTOMIZATION}
-            footer={<NewSubscriptionModalFooter submit={<Submit />} step={step} model={model} />}
+            footer={<NewSubscriptionModalFooter submit={<SubmitButton />} step={step} model={model} />}
             className={classnames(['pm-modal--full subscription-modal', user.isFree && 'is-free-user'])}
             title={TITLE[step]}
             loading={loading || loadingPlans || loadingVpnCountries}
@@ -222,7 +218,7 @@ const NewSubscriptionModal = ({
                     </div>
                     <div className="w25 onmobile-w100">
                         <SubscriptionCheckout
-                            submit={<Submit className="w100" />}
+                            submit={<SubmitButton className="w100" />}
                             plans={plans}
                             checkResult={checkResult}
                             loading={loadingCheck}
@@ -238,25 +234,32 @@ const NewSubscriptionModal = ({
                 <div className="flex flex-spacebetween onmobile-flex-column">
                     <div className="w75 onmobile-w100 pr1 onmobile-pr0">
                         <h3>{c('Title').t`Payment method`}</h3>
-                        <Alert>{c('Info').t`You can use any of your saved payment methods or add a new one.`}</Alert>
-                        <Payment
-                            type="subscription"
-                            paypal={paypal}
-                            paypalCredit={paypalCredit}
-                            method={method}
-                            amount={checkResult.AmountDue}
-                            currency={checkResult.Currency}
-                            coupon={couponCode}
-                            card={card}
-                            onMethod={setMethod}
-                            onCard={setCard}
-                            errors={errors}
-                        />
+                        {checkResult.AmountDue ? (
+                            <>
+                                <Alert>{c('Info')
+                                    .t`You can use any of your saved payment methods or add a new one.`}</Alert>
+                                <Payment
+                                    type="subscription"
+                                    paypal={paypal}
+                                    paypalCredit={paypalCredit}
+                                    method={method}
+                                    amount={checkResult.AmountDue}
+                                    currency={checkResult.Currency}
+                                    coupon={couponCode}
+                                    card={card}
+                                    onMethod={setMethod}
+                                    onCard={setCard}
+                                    errors={errors}
+                                />
+                            </>
+                        ) : (
+                            <Alert>{c('Info').t`No payment is required at this time.`}</Alert>
+                        )}
                     </div>
                     <div className="w25 onmobile-w100">
                         <SubscriptionCheckout
                             method={method}
-                            submit={<Submit className="w100" />}
+                            submit={<SubmitButton className="w100" />}
                             plans={plans}
                             checkResult={checkResult}
                             loading={loadingCheck}

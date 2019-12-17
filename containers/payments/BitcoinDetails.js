@@ -1,26 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { Row, Label, Field, Copy } from 'react-components';
+import { Copy } from 'react-components';
 
 const BitcoinDetails = ({ amount, address }) => {
     return (
         <figcaption>
-            <Row>
-                <Label>{c('Label').t`Amount BTC`}</Label>
-                <Field>
-                    <span className="mt0-5">{amount}</span>
-                </Field>
-            </Row>
-            <Row>
-                <Label>{c('Label').t`BTC address`}</Label>
-                <Field className="flex">
-                    <span className="mt0-5 mr1 ellipsis" title={address}>
+            <div className="p1 flex flex-nowrap border-bottom">
+                <label className="mr0-5">{c('Label').t`Amount BTC`}</label>
+                <strong>{amount}</strong>
+            </div>
+            <div className="p1 flex flex-nowrap">
+                <label className="mr0-5">{c('Label').t`BTC address`}</label>
+                <div className="flex">
+                    <strong className="mt0-5 mr1 ellipsis" title={address}>
                         {address}
-                    </span>
+                    </strong>
                     <Copy value={address} />
-                </Field>
-            </Row>
+                </div>
+            </div>
         </figcaption>
     );
 };

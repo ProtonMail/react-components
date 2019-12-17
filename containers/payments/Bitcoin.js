@@ -54,13 +54,15 @@ const Bitcoin = ({ amount, currency, type }) => {
 
     return (
         <>
-            <figure role="group">
-                <BitcoinQRCode
-                    className="mb1 w50 center"
-                    amount={model.amountBitcoin}
-                    address={model.address}
-                    type={type}
-                />
+            <figure role="group" className="bordered-container bg-global-light mb1">
+                <div className="p1 border-bottom">
+                    <BitcoinQRCode
+                        className="mb1 w50 center"
+                        amount={model.amountBitcoin}
+                        address={model.address}
+                        type={type}
+                    />
+                </div>
                 <BitcoinDetails amount={model.amountBitcoin} address={model.address} />
             </figure>
             {type === 'invoice' ? (
