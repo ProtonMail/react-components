@@ -95,7 +95,7 @@ const MonthDays = ({
 
     return (
         <ul
-            className="unstyled aligncenter minicalendar-days"
+            className="unstyled m0 aligncenter minicalendar-days"
             style={style}
             onClick={handleClick}
             onMouseDown={onSelectDateRange ? handleMouseDown : null}
