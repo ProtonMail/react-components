@@ -8,10 +8,6 @@
     display: none;
 }
 
-.subscription-modal .subscriptionTable [data-plan-name="visionary"] {
-    display: none;
-}
-
 // Hide first subscription table in the subscription modal
 .subscription-modal.is-free-user .subscriptionCustomization-section:first-child .vpnSubscriptionTable-container,
 .subscription-modal.is-free-user .subscriptionCustomization-section:first-child .mailSubscriptionTable-container {

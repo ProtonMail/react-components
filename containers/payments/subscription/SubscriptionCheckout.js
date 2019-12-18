@@ -190,66 +190,68 @@ const SubscriptionCheckout = ({ submit = c('Action').t`Pay`, plans = [], model, 
                     )}
                 </div>
             </div>
-            <div className="rounded p1 mb1 bg-global-light">
-                {model.coupon ? (
+            {checkResult.Amount ? (
+                <div className="rounded p1 mb1 bg-global-light">
+                    {model.coupon ? (
+                        <div className="border-bottom border-bottom--dashed mb0-5">
+                            <CheckoutRow title={c('Title').t`Sub-total`} amount={subTotal} currency={model.currency} />
+                            <CheckoutRow
+                                title={
+                                    <>
+                                        <span className="mr0-5">{c('Title').t`Coupon discount`}</span>
+                                        <DiscountBadge code={model.coupon} cycle={model.cycle} />
+                                    </>
+                                }
+                                amount={discount}
+                                currency={model.currency}
+                                className="small mt0 mb0"
+                            />
+                        </div>
+                    ) : null}
                     <div className="border-bottom border-bottom--dashed mb0-5">
-                        <CheckoutRow title={c('Title').t`Sub-total`} amount={subTotal} currency={model.currency} />
-                        <CheckoutRow
-                            title={
-                                <>
-                                    <span className="mr0-5">{c('Title').t`Coupon discount`}</span>
-                                    <DiscountBadge code={model.coupon} cycle={model.cycle} />
-                                </>
-                            }
-                            amount={discount}
-                            currency={model.currency}
-                            className="small mt0 mb0"
-                        />
+                        {[CYCLE.YEARLY, CYCLE.TWO_YEARS].includes(model.cycle) ? (
+                            <CheckoutRow
+                                title={c('Title').t`Total (monthly)`}
+                                amount={monthlyTotal}
+                                currency={model.currency}
+                                className="small mt0 mb0"
+                            />
+                        ) : null}
+                        <CheckoutRow title={c('Title').t`Total`} amount={total} currency={model.currency} />
+                        {checkResult.Proration ? (
+                            <CheckoutRow
+                                title={c('Title').t`Proration`}
+                                amount={checkResult.Proration}
+                                currency={model.currency}
+                                className="small mt0 mb0"
+                            />
+                        ) : null}
+                        {checkResult.Credit ? (
+                            <CheckoutRow
+                                title={c('Title').t`Credits`}
+                                amount={checkResult.Credit}
+                                currency={model.currency}
+                                className="small mt0 mb0"
+                            />
+                        ) : null}
+                        {checkResult.Gift ? (
+                            <CheckoutRow
+                                title={c('Title').t`Gift code`}
+                                amount={checkResult.Gift}
+                                currency={model.currency}
+                                className="small mt0 mb0"
+                            />
+                        ) : null}
                     </div>
-                ) : null}
-                <div className="border-bottom border-bottom--dashed mb0-5">
-                    {[CYCLE.YEARLY, CYCLE.TWO_YEARS].includes(model.cycle) ? (
-                        <CheckoutRow
-                            title={c('Title').t`Total (monthly)`}
-                            amount={monthlyTotal}
-                            currency={model.currency}
-                            className="small mt0 mb0"
-                        />
-                    ) : null}
-                    <CheckoutRow title={c('Title').t`Total`} amount={total} currency={model.currency} />
-                    {checkResult.Proration ? (
-                        <CheckoutRow
-                            title={c('Title').t`Proration`}
-                            amount={checkResult.Proration}
-                            currency={model.currency}
-                            className="small mt0 mb0"
-                        />
-                    ) : null}
-                    {checkResult.Credit ? (
-                        <CheckoutRow
-                            title={c('Title').t`Credits`}
-                            amount={checkResult.Credit}
-                            currency={model.currency}
-                            className="small mt0 mb0"
-                        />
-                    ) : null}
-                    {checkResult.Gift ? (
-                        <CheckoutRow
-                            title={c('Title').t`Gift code`}
-                            amount={checkResult.Gift}
-                            currency={model.currency}
-                            className="small mt0 mb0"
-                        />
-                    ) : null}
+                    <CheckoutRow
+                        title={c('Title').t`Amount due`}
+                        amount={checkResult.AmountDue}
+                        currency={model.currency}
+                        className="bold"
+                    />
+                    <div className="mt1">{submit}</div>
                 </div>
-                <CheckoutRow
-                    title={c('Title').t`Amount due`}
-                    amount={checkResult.AmountDue}
-                    currency={model.currency}
-                    className="bold"
-                />
-                <div className="mt1">{submit}</div>
-            </div>
+            ) : null}
         </>
     );
 };
