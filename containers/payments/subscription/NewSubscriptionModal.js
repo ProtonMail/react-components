@@ -13,10 +13,11 @@ import {
     useVPNCountries,
     useEventManager,
     usePayment,
-    useUser
+    useUser,
+    useNotifications
 } from 'react-components';
 import { DEFAULT_CURRENCY, DEFAULT_CYCLE, CYCLE, CURRENCIES, PAYMENT_METHOD_TYPES } from 'proton-shared/lib/constants';
-import { checkSubscription, subscribe } from 'proton-shared/lib/api/payments';
+import { checkSubscription, subscribe, deleteSubscription } from 'proton-shared/lib/api/payments';
 
 import SubscriptionCustomization from './SubscriptionCustomization';
 import SubscriptionUpgrade from './SubscriptionUpgrade';
@@ -45,6 +46,8 @@ const clearPlanIDs = (planIDs = {}) => {
     }, {});
 };
 
+const hasPlans = (planIDs = {}) => Object.keys(clearPlanIDs(planIDs)).length;
+
 const NewSubscriptionModal = ({
     expanded = false,
     step: initialStep = STEPS.CUSTOMIZATION,
@@ -65,6 +68,7 @@ const NewSubscriptionModal = ({
     const api = useApi();
     const [user] = useUser();
     const { call } = useEventManager();
+    const { createNotification } = useNotifications();
     const [vpnCountries, loadingVpnCountries] = useVPNCountries();
     const [plans, loadingPlans] = usePlans();
     const [loading, withLoading] = useLoading();
@@ -79,23 +83,43 @@ const NewSubscriptionModal = ({
     });
     const [step, setStep] = useState(initialStep);
 
+    const TOTAL_ZERO = {
+        Amount: 0,
+        AmountDue: 0,
+        CouponDiscount: 0,
+        Currency: model.currency,
+        Cycle: model.cycle,
+        Proration: 0,
+        Gift: 0,
+        Credit: 0
+    };
+
+    const handleUnsubscribe = async () => {
+        await api(deleteSubscription());
+        await call();
+        onClose();
+        createNotification({ text: c('Success').t`You have successfully unsubscribed` });
+    };
+
     const handleSubscribe = async (params) => {
+        if (!hasPlans(model.planIDs)) {
+            return handleUnsubscribe();
+        }
+
         try {
             setStep(STEPS.UPGRADE);
-            await withLoading(
-                api(
-                    subscribe({
-                        Amount: checkResult.AmountDue,
-                        PlanIDs: model.planIDs,
-                        CouponCode: model.coupon,
-                        GiftCode: model.gift,
-                        Currency: model.currency,
-                        Cycle: model.cycle,
-                        ...params
-                    })
-                )
+            await api(
+                subscribe({
+                    Amount: checkResult.AmountDue,
+                    PlanIDs: model.planIDs,
+                    CouponCode: model.coupon,
+                    GiftCode: model.gift,
+                    Currency: model.currency,
+                    Cycle: model.cycle,
+                    ...params
+                })
             );
-            await withLoading(call());
+            await call();
             setStep(STEPS.THANKS);
         } catch (error) {
             setStep(STEPS.PAYMENT);
@@ -106,7 +130,9 @@ const NewSubscriptionModal = ({
     const { card, setCard, errors, method, setMethod, parameters, canPay, paypal, paypalCredit } = usePayment({
         amount: checkResult.AmountDue,
         currency: checkResult.Currency,
-        onPay: handleSubscribe
+        onPay(params) {
+            return withLoading(handleSubscribe(params));
+        }
     });
 
     const SubmitButton = ({ className }) => {
@@ -131,6 +157,14 @@ const NewSubscriptionModal = ({
             );
         }
 
+        if (!checkResult.AmountDue) {
+            return (
+                <PrimaryButton className={className} loading={loadingCheck} disabled={!canPay} type="submit">{c(
+                    'Action'
+                ).t`Complete`}</PrimaryButton>
+            );
+        }
+
         return (
             <PrimaryButton className={className} loading={loadingCheck} disabled={!canPay} type="submit">{c('Action')
                 .t`Pay`}</PrimaryButton>
@@ -142,6 +176,11 @@ const NewSubscriptionModal = ({
     };
 
     const check = async (newModel = model) => {
+        if (!hasPlans(newModel.planIDs)) {
+            setCheckResult(TOTAL_ZERO);
+            return;
+        }
+
         try {
             const result = await api(
                 checkSubscription({
@@ -173,7 +212,7 @@ const NewSubscriptionModal = ({
             return setStep(STEPS.PAYMENT);
         }
 
-        handleSubscribe(parameters);
+        withLoading(handleSubscribe(parameters));
     };
 
     const handleClose = (e) => {
@@ -267,7 +306,9 @@ const NewSubscriptionModal = ({
                             model={model}
                             setModel={setModel}
                         />
-                        <PaymentGiftCode gift={model.gift} onApply={handleGift} loading={loadingCheck} />
+                        {checkResult.Amount ? (
+                            <PaymentGiftCode gift={model.gift} onApply={handleGift} loading={loadingCheck} />
+                        ) : null}
                     </div>
                 </div>
             )}
