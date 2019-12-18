@@ -20,8 +20,9 @@ const fromFormatted = (value, locale) => {
 
 const formatDuration = (label, minutes) => {
     const hours = (minutes / 60).toFixed(1);
+    const hoursInt = Math.ceil(hours);
     return hours >= 1
-        ? c('Time unit').ngettext(msgid`${hours} hour`, `${hours} hours`, Math.ceil(hours))
+        ? c('Time unit').ngettext(msgid`${hours} hour`, `${hours} hours`, hoursInt)
         : c('Time unit').ngettext(msgid`${minutes} minutes`, `${minutes} minutes`, minutes);
 };
 
