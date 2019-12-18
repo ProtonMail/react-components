@@ -12,7 +12,7 @@ const WeekNumbers = ({ days, numberOfWeeks, weekStartsOn }) => {
         return Array.from({ length: numberOfWeeks }, (a, i) => {
             // Have to calculate the iso week from monday.
             const mondayOffset = 1 - weekStartsOn;
-            const day = days[i * 7 + (mondayOffset < 0 ? +mondayOffset + 7 : mondayOffset)];
+            const day = days[i * 7 + (mondayOffset < 0 ? mondayOffset + 7 : mondayOffset)];
             const weekNumber = getISOWeek(day);
             return (
                 <span className="italic flex-item-fluid flex minicalendar-weeknumbers-number" key={+day}>
