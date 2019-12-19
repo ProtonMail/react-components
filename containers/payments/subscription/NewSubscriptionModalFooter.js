@@ -23,10 +23,6 @@ const ClockIcon = () => <img className="mr0-5" src={clockSvg} alt="percentage" /
 const NewSubscriptionModalFooter = ({ submit, step, model }) => {
     const [addresses, loadingAddresses] = useAddresses();
 
-    if ([STEPS.UPGRADE, STEPS.THANKS].includes(step)) {
-        return null;
-    }
-
     if (loadingAddresses) {
         return <Loader />;
     }

@@ -55,9 +55,22 @@ const Bitcoin = ({ amount, currency, type }) => {
     return (
         <>
             <figure role="group" className="bordered-container bg-global-light mb1">
+                {type === 'invoice' ? (
+                    <Alert>{c('Info')
+                        .t`Bitcoin transactions can take some time to be confirmed (up to 24 hours). Once confirmed, we will add credits to your account. After transaction confirmation, you can pay your invoice with the credits.`}</Alert>
+                ) : (
+                    <Alert
+                        learnMore={
+                            CLIENT_TYPE === VPN
+                                ? 'https://protonvpn.com/support/vpn-bitcoin-payments/'
+                                : 'https://protonmail.com/support/knowledge-base/paying-with-bitcoin'
+                        }
+                    >{c('Info')
+                        .t`After making your Bitcoin payment, please follow the instructions below to upgrade.`}</Alert>
+                )}
                 <div className="p1 border-bottom">
                     <BitcoinQRCode
-                        className="mb1 w50 center"
+                        className="mb1 flex flex-items-center flex-column"
                         amount={model.amountBitcoin}
                         address={model.address}
                         type={type}
@@ -65,19 +78,6 @@ const Bitcoin = ({ amount, currency, type }) => {
                 </div>
                 <BitcoinDetails amount={model.amountBitcoin} address={model.address} />
             </figure>
-            {type === 'invoice' ? (
-                <Alert>{c('Info')
-                    .t`Bitcoin transactions can take some time to be confirmed (up to 24 hours). Once confirmed, we will add credits to your account. After transaction confirmation, you can pay your invoice with the credits.`}</Alert>
-            ) : (
-                <Alert
-                    learnMore={
-                        CLIENT_TYPE === VPN
-                            ? 'https://protonvpn.com/support/vpn-bitcoin-payments/'
-                            : 'https://protonmail.com/support/knowledge-base/paying-with-bitcoin'
-                    }
-                >{c('Info')
-                    .t`After making your Bitcoin payment, please follow the instructions below to upgrade.`}</Alert>
-            )}
         </>
     );
 };
