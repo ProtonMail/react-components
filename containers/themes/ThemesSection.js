@@ -18,7 +18,7 @@ import { DEFAULT_THEME, PROTON_THEMES, CUSTOM_THEME } from 'proton-shared/lib/th
 
 import CustomThemeModal from './CustomThemeModal.js';
 
-const availableThemes = [DEFAULT_THEME, FEATURE_FLAGS.includes('dark-mode') && PROTON_THEMES.DARK, CUSTOM_THEME].filter(
+const availableThemes = [DEFAULT_THEME, FEATURE_FLAGS.includes('darkmode') && PROTON_THEMES.DARK, CUSTOM_THEME].filter(
     Boolean
 );
 
