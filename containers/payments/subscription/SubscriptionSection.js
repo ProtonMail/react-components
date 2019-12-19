@@ -20,6 +20,7 @@ import { identity } from 'proton-shared/lib/helpers/function';
 
 import { formatPlans, toPlanNames } from './helpers';
 import SubscriptionModal from './SubscriptionModal';
+import UpsellSubscription from './UpsellSubscription';
 
 const AddonRow = ({ label, used, max, format = identity }) => {
     return (
@@ -131,7 +132,7 @@ const SubscriptionSection = ({ permission }) => {
             {subTitle}
             <Alert>{c('Info')
                 .t`To manage your subscription, update your current plan or select another one from the plan's table.`}</Alert>
-            <div className="shadow-container">
+            <div className="shadow-container mb1">
                 <div className="border-bottom pt1 pl1 pr1 relative">
                     {hasPaidMail && mailPlanName !== 'visionary' ? (
                         <SmallButton
@@ -174,6 +175,7 @@ const SubscriptionSection = ({ permission }) => {
                     </div>
                 )}
             </div>
+            <UpsellSubscription />
         </>
     );
 };

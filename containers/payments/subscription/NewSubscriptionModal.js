@@ -61,8 +61,8 @@ const NewSubscriptionModal = ({
     const TITLE = {
         [STEPS.CUSTOMIZATION]: c('Title').t`Plan customization`,
         [STEPS.PAYMENT]: c('Title').t`Checkout`,
-        [STEPS.UPGRADE]: c('Title').t`Upgrading`,
-        [STEPS.THANKS]: c('Title').t`Thanks`
+        [STEPS.UPGRADE]: c('Title').t`Processing...`,
+        [STEPS.THANKS]: c('Title').t`CONGRATULATIONS!`
     };
 
     const api = useApi();
@@ -236,7 +236,11 @@ const NewSubscriptionModal = ({
         <FormModal
             hasClose={step === STEPS.CUSTOMIZATION}
             footer={<NewSubscriptionModalFooter submit={<SubmitButton />} step={step} model={model} />}
-            className={classnames(['pm-modal--full subscription-modal', user.isFree && 'is-free-user'])}
+            className={classnames([
+                'subscription-modal',
+                [STEPS.CUSTOMIZATION, STEPS.PAYMENT].includes(step) && 'pm-modal--full',
+                user.isFree && 'is-free-user'
+            ])}
             title={TITLE[step]}
             loading={loading || loadingPlans || loadingVpnCountries}
             onSubmit={handleCheckout}
