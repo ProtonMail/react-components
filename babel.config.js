@@ -1,8 +1,6 @@
+import baseConfig from 'proton-shared/configs/babel.config.base';
+
 module.exports = {
-    presets: ['@babel/preset-env', '@babel/preset-react', '@babel/preset-typescript'],
-    plugins: [
-        '@babel/plugin-proposal-object-rest-spread',
-        '@babel/plugin-transform-runtime',
-        'transform-require-context'
-    ]
+    presets: [...baseConfig.presets, '@babel/preset-react', '@babel/preset-typescript'],
+    plugins: [...baseConfig.plugins, 'transform-require-context']
 };
