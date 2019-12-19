@@ -10,7 +10,7 @@ const BitcoinDetails = ({ amount, address }) => {
                 <label className="mr0-5">{c('Label').t`Amount BTC`}</label>
                 <strong>{amount}</strong>
             </div>
-            <div className="p1 flex flex-nowrap">
+            <div className="p1 flex flex-nowrap flex-items-center">
                 <label className="mr0-5">{c('Label').t`BTC address`}</label>
                 <div className="flex">
                     <strong className="mt0-5 mr1 ellipsis" title={address}>
