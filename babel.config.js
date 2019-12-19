@@ -1,6 +1,4 @@
-import baseConfig from 'proton-shared/configs/babel.config.base';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const baseConfig = require('proton-shared/configs/babel.config.base');
 
-module.exports = {
-    presets: [...baseConfig.presets, '@babel/preset-react', '@babel/preset-typescript'],
-    plugins: [...baseConfig.plugins, 'transform-require-context']
-};
+module.exports = baseConfig;

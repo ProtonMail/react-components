@@ -1,4 +1,5 @@
-import baseConfig from 'proton-shared/configs/jest.config.base';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const baseConfig = require('proton-shared/configs/jest.config.base');
 
 module.exports = {
     ...baseConfig,
