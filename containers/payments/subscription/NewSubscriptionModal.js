@@ -61,8 +61,8 @@ const NewSubscriptionModal = ({
     const TITLE = {
         [STEPS.CUSTOMIZATION]: c('Title').t`Plan customization`,
         [STEPS.PAYMENT]: c('Title').t`Checkout`,
-        [STEPS.UPGRADE]: c('Title').t`Processing...`,
-        [STEPS.THANKS]: c('Title').t`CONGRATULATIONS!`
+        [STEPS.UPGRADE]: <div className="aligncenter">{c('Title').t`Processing...`}</div>,
+        [STEPS.THANKS]: <div className="aligncenter">{c('Title').t`Thank you!`}</div>
     };
 
     const api = useApi();
@@ -152,8 +152,9 @@ const NewSubscriptionModal = ({
 
         if ([PAYMENT_METHOD_TYPES.CASH, PAYMENT_METHOD_TYPES.BITCOIN].includes(method)) {
             return (
-                <PrimaryButton className={className} loading={loadingCheck} onClick={onClose}>{c('Action')
-                    .t`Done`}</PrimaryButton>
+                <PrimaryButton className={className} loading={loadingCheck} onClick={() => setStep(STEPS.THANKS)}>{c(
+                    'Action'
+                ).t`Done`}</PrimaryButton>
             );
         }
 
@@ -235,7 +236,11 @@ const NewSubscriptionModal = ({
     return (
         <FormModal
             hasClose={step === STEPS.CUSTOMIZATION}
-            footer={<NewSubscriptionModalFooter submit={<SubmitButton />} step={step} model={model} />}
+            footer={
+                [STEPS.UPGRADE, STEPS.THANKS].includes(step) ? null : (
+                    <NewSubscriptionModalFooter submit={<SubmitButton />} step={step} model={model} />
+                )
+            }
             className={classnames([
                 'subscription-modal',
                 [STEPS.CUSTOMIZATION, STEPS.PAYMENT].includes(step) && 'pm-modal--full',
@@ -317,7 +322,7 @@ const NewSubscriptionModal = ({
                 </div>
             )}
             {step === STEPS.UPGRADE && <SubscriptionUpgrade />}
-            {step === STEPS.THANKS && <SubscriptionThanks onClose={onClose} />}
+            {step === STEPS.THANKS && <SubscriptionThanks method={method} onClose={onClose} />}
         </FormModal>
     );
 };

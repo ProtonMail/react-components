@@ -6,6 +6,7 @@ import { PLANS, CYCLE, ADDON_NAMES, CLIENT_TYPES, PLAN_SERVICES, FREE, PLAN_TYPE
 import { toMap } from 'proton-shared/lib/helpers/object';
 import humanSize from 'proton-shared/lib/helpers/humanSize';
 import { hasBit } from 'proton-shared/lib/helpers/bitset';
+import { removeService } from 'proton-shared/lib/helpers/subscription';
 
 import SubscriptionPlan from './SubscriptionPlan';
 import SubscriptionAddonRow from './SubscriptionAddonRow';
@@ -23,26 +24,6 @@ const TITLE = {
     [VPNFREE]: 'ProtonVPN Free',
     [PLANS.VPNBASIC]: 'ProtonVPN Basic',
     [PLANS.VPNPLUS]: 'ProtonVPN Plus'
-};
-
-/**
- * Remove all plans concerned by a service
- * @param {Object} planIDs
- * @param {Array} plans
- * @param {Integer} service
- * @returns {Object} new planIDs
- */
-const removeService = (planIDs = {}, plans = [], service = PLAN_SERVICES.MAIL) => {
-    const plansMap = toMap(plans);
-    return Object.entries(planIDs).reduce((acc, [planID = '', quantity = 0]) => {
-        const { Services } = plansMap[planID];
-
-        if (!hasBit(Services, service)) {
-            acc[planID] = quantity;
-        }
-
-        return acc;
-    }, {});
 };
 
 const Description = ({ planName, setModel, model, plans }) => {
