@@ -19,15 +19,15 @@ import {
     useModals,
     usePlans
 } from 'react-components';
-import { getMonthlyBaseAmount, hasVisionary } from 'proton-shared/lib/helpers/subscription';
+import { getMonthlyBaseAmount, hasVisionary, getPlanIDs } from 'proton-shared/lib/helpers/subscription';
+import humanSize from 'proton-shared/lib/helpers/humanSize';
 
-import { formatPlans, toPlanNames } from './subscription/helpers';
+import { formatPlans } from './subscription/helpers';
 import DiscountBadge from './DiscountBadge';
 import GiftCodeModal from './GiftCodeModal';
 import CreditsModal from './CreditsModal';
 import PlanPrice from './subscription/PlanPrice';
-import SubscriptionModal from './subscription/SubscriptionModal';
-import humanSize from 'proton-shared/lib/helpers/humanSize';
+import NewSubscriptionModal from './subscription/NewSubscriptionModal';
 
 const { MONTHLY, YEARLY, TWO_YEARS } = CYCLE;
 
@@ -48,9 +48,8 @@ const BillingSection = ({ permission }) => {
     const handleOpenCreditsModal = () => createModal(<CreditsModal />);
     const handleOpenSubscriptionModal = () =>
         createModal(
-            <SubscriptionModal
-                subscription={subscription}
-                plansMap={toPlanNames(subscription.Plans)}
+            <NewSubscriptionModal
+                planIDs={getPlanIDs(subscription)}
                 coupon={subscription.CouponCode}
                 currency={subscription.Currency}
                 cycle={YEARLY}

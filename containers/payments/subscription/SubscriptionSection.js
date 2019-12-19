@@ -4,7 +4,7 @@ import { c } from 'ttag';
 import {
     Alert,
     SubTitle,
-    SmallButton,
+    LinkButton,
     Loader,
     MozillaInfoPanel,
     Progress,
@@ -17,10 +17,12 @@ import {
 import { PLAN_NAMES } from 'proton-shared/lib/constants';
 import humanSize from 'proton-shared/lib/helpers/humanSize';
 import { identity } from 'proton-shared/lib/helpers/function';
+import { getPlanIDs } from 'proton-shared/lib/helpers/subscription';
 
-import { formatPlans, toPlanNames } from './helpers';
-import SubscriptionModal from './SubscriptionModal';
+import { formatPlans } from './helpers';
 import UpsellSubscription from './UpsellSubscription';
+import NewSubscriptionModal from './NewSubscriptionModal';
+import UnsubscribeButton from './UnsubscribeButton';
 
 const AddonRow = ({ label, used, max, format = identity }) => {
     return (
@@ -46,7 +48,7 @@ AddonRow.propTypes = {
 };
 
 const SubscriptionSection = ({ permission }) => {
-    const [{ hasPaidMail, hasPaidVpn }] = useUser();
+    const [{ hasPaidMail, hasPaidVpn, isPaid }] = useUser();
     const [addresses = [], loadingAddresses] = useAddresses();
     const [subscription, loadingSubscription] = useSubscription();
     const { createModal } = useModals();
@@ -101,9 +103,8 @@ const SubscriptionSection = ({ permission }) => {
 
     const handleModal = () => {
         createModal(
-            <SubscriptionModal
-                subscription={subscription}
-                plansMap={toPlanNames(subscription.Plans)}
+            <NewSubscriptionModal
+                planIDs={getPlanIDs(subscription)}
                 coupon={CouponCode || undefined} // CouponCode can equal null
                 currency={Currency}
                 cycle={Cycle}
@@ -133,16 +134,7 @@ const SubscriptionSection = ({ permission }) => {
             <Alert>{c('Info')
                 .t`To manage your subscription, update your current plan or select another one from the plan's table.`}</Alert>
             <div className="shadow-container mb1">
-                <div className="border-bottom pt1 pl1 pr1 relative">
-                    {hasPaidMail && mailPlanName !== 'visionary' ? (
-                        <SmallButton
-                            className="pm-button--primary absolute"
-                            style={{ right: '2em', top: '1em' }}
-                            onClick={handleModal}
-                        >
-                            {c('Action').t`Update`}
-                        </SmallButton>
-                    ) : null}
+                <div className="border-bottom pt1 pl1 pr1">
                     <div className="flex-autogrid onmobile-flex-column w100 mb1">
                         <div className="flex-autogrid-item">ProtonMail plan</div>
                         <div className="flex-autogrid-item">
@@ -154,7 +146,9 @@ const SubscriptionSection = ({ permission }) => {
                                     : c('Info').t`Not activated`}
                             </strong>
                         </div>
-                        <div className="flex-autogrid-item" />
+                        <div className="flex-autogrid-item">
+                            <LinkButton onClick={handleModal}>{c('Action').t`Manage subscription`}</LinkButton>
+                        </div>
                     </div>
                     {mailAddons.map((props, index) => (
                         <AddonRow key={index} {...props} />
@@ -167,13 +161,21 @@ const SubscriptionSection = ({ permission }) => {
                             <div className="flex-autogrid-item">
                                 <strong>{hasPaidVpn ? PLAN_NAMES[vpnPlanName] : c('Plan').t`Free`}</strong>
                             </div>
-                            <div className="flex-autogrid-item" />
+                            <div className="flex-autogrid-item">
+                                <LinkButton onClick={handleModal}>{c('Action').t`Manage subscription`}</LinkButton>
+                            </div>
                         </div>
                         {vpnAddons.map((props, index) => (
                             <AddonRow key={index} {...props} />
                         ))}
                     </div>
                 )}
+                {isPaid ? (
+                    <div className="pl1 pr1 pb1">
+                        <UnsubscribeButton className="pm-button--link pm-button--redborder">{c('Action')
+                            .t`Cancel subscription`}</UnsubscribeButton>
+                    </div>
+                ) : null}
             </div>
             <UpsellSubscription />
         </>

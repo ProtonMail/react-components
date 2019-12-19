@@ -32,7 +32,6 @@ const PlansSection = () => {
     const { createNotification } = useNotifications();
     const { createModal } = useModals();
     const [user] = useUser();
-    const { isFree } = user;
     const [subscription = {}, loadingSubscription] = useSubscription();
     const [organization = {}, loadingOrganization] = useOrganization();
     const [plans = [], loadingPlans] = usePlans();
@@ -54,7 +53,7 @@ const PlansSection = () => {
     };
 
     const handleOpenModal = async () => {
-        if (isFree) {
+        if (user.isFree) {
             return createNotification({ type: 'error', text: c('Info').t`You already have a free account` });
         }
         await new Promise((resolve, reject) => {
@@ -105,6 +104,10 @@ const PlansSection = () => {
         setCurrency(subscription.Currency || Currency);
         setCycle(subscription.Cycle || Cycle);
     }, [loadingSubscription, loadingPlans]);
+
+    if (user.isPaid) {
+        return null;
+    }
 
     if (subscription.isManagedByMozilla) {
         return (
