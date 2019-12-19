@@ -3,19 +3,26 @@ import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import { getISOWeek } from 'date-fns';
 
-const WeekNumbers = ({ days, numberOfWeeks, weekStartsOn }) => {
+const getMonday = (days, start, end) => {
+    for (let i = start; i < end; ++i) {
+        const day = days[i];
+        if (day && day.getDay() === 1) {
+            return day;
+        }
+    }
+};
+
+const WeekNumbers = ({ days, numberOfWeeks }) => {
     const style = {
         '--minicalendar-weeknumbers-numberOfWeeks': numberOfWeeks + 1
     };
 
     const weekNumberLabels = useMemo(() => {
         return Array.from({ length: numberOfWeeks }, (a, i) => {
-            // Have to calculate the iso week from monday.
-            const mondayOffset = 1 - weekStartsOn;
-            const day = days[i * 7 + (mondayOffset < 0 ? mondayOffset + 7 : mondayOffset)];
-            const weekNumber = getISOWeek(day);
+            const monday = getMonday(days, i * 7, i * 7 + 7);
+            const weekNumber = getISOWeek(monday);
             return (
-                <span className="italic flex-item-fluid flex minicalendar-weeknumbers-number" key={+day}>
+                <span className="italic flex-item-fluid flex minicalendar-weeknumbers-number" key={+monday}>
                     <span className="mauto">{weekNumber}</span>
                 </span>
             );
