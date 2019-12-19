@@ -19,7 +19,8 @@ const WeekNumbers = ({ days, numberOfWeeks }) => {
 
     const weekNumberLabels = useMemo(() => {
         return Array.from({ length: numberOfWeeks }, (a, i) => {
-            const monday = getMonday(days, i * 7, i * 7 + 7);
+            const idx = i * 7;
+            const monday = getMonday(days, idx, idx + 7) || days[idx];
             const weekNumber = getISOWeek(monday);
             return (
                 <span className="italic flex-item-fluid flex minicalendar-weeknumbers-number" key={+monday}>
