@@ -24,6 +24,12 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
 
     if (!apiRef.current) {
         const handleError = (e) => {
+            const suppressNames = config.suppressNames || [];
+
+            if (config.suppressAll || suppressNames.includes(e.name)) {
+                return;
+            }
+
             if (e.name === 'InactiveSession') {
                 onLogout();
                 throw e;
