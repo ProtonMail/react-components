@@ -74,7 +74,8 @@ const NewSubscriptionModal = ({
     const [loading, withLoading] = useLoading();
     const [loadingCheck, withLoadingCheck] = useLoading();
     const [checkResult, setCheckResult] = useState({});
-    const { Code: couponCode } = checkResult.Coupon || {}; // Coupon can be null
+    const { Code: couponCode, Credit = 0 } = checkResult.Coupon || {}; // Coupon can be null
+    const creditsRemaining = (user.Credit + Credit) / 100;
     const [model, setModel] = useState({
         cycle,
         currency,
@@ -301,7 +302,13 @@ const NewSubscriptionModal = ({
                                 />
                             </>
                         ) : (
-                            <Alert>{c('Info').t`No payment is required at this time.`}</Alert>
+                            <>
+                                <Alert>{c('Info').t`No payment is required at this time.`}</Alert>
+                                {checkResult.Credit && creditsRemaining ? (
+                                    <Alert>{c('Info')
+                                        .t`Please note that upon clicking the Confirm button, your account will have ${creditsRemaining} credits remaining.`}</Alert>
+                                ) : null}
+                            </>
                         )}
                     </div>
                     <div className="w25 onmobile-w100">
