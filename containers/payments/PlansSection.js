@@ -105,10 +105,6 @@ const PlansSection = () => {
         setCycle(subscription.Cycle || Cycle);
     }, [loadingSubscription, loadingPlans]);
 
-    if (user.isPaid) {
-        return null;
-    }
-
     if (subscription.isManagedByMozilla) {
         return (
             <>
