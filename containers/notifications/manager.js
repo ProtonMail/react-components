@@ -40,9 +40,11 @@ export default (setNotifications) => {
             idx = 0;
         }
 
-        intervalIds[id] = expiration === -1 ? -1 : setTimeout(() => hideNotification(id), expiration);
-
-        return setNotifications((oldNotifications) => {
+        setNotifications((oldNotifications) => {
+            // Deduplicate notifications
+            if (oldNotifications.some(({ text }) => text === rest.text)) {
+                return oldNotifications;
+            }
             return [
                 ...oldNotifications,
                 {
@@ -54,6 +56,10 @@ export default (setNotifications) => {
                 }
             ];
         });
+
+        intervalIds[id] = expiration === -1 ? -1 : setTimeout(() => hideNotification(id), expiration);
+
+        return id;
     };
 
     const clearNotifications = () => {
