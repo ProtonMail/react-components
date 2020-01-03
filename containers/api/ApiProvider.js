@@ -48,7 +48,8 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
                 createNotification({
                     type: 'error',
                     text: message || c('Info').t`Application upgrade required`,
-                    expiration: -1
+                    expiration: -1,
+                    disableAutoClose: true
                 });
                 throw e;
             }
