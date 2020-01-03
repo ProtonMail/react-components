@@ -75,7 +75,14 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
                 */
                 const id = createNotification({
                     type: 'warning',
-                    text: <OfflineNotification onRetry={() => apiRef.current(getUser())} />,
+                    text: (
+                        <OfflineNotification
+                            onRetry={() => {
+                                // TODO: What route when not logged in?
+                                apiRef.current(getUser());
+                            }}
+                        />
+                    ),
                     expiration: -1,
                     disableAutoClose: true
                 });
@@ -134,17 +141,25 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
             if (appVersionBad.current) {
                 return Promise.reject(new Error(c('Error').t`Bad app version`));
             }
-            return callWithApiHandlers(rest).then((response) => {
-                const serverTime = getDateHeader(response.headers);
-                if (serverTime) {
-                    updateServerTime(serverTime);
-                }
-                if (offlineRef.current) {
-                    hideNotification(offlineRef.current.id);
-                    offlineRef.current = undefined;
-                }
-                return output === 'stream' ? response.body : response[output]();
-            });
+            return callWithApiHandlers(rest)
+                .then((response) => {
+                    const serverTime = getDateHeader(response.headers);
+                    if (serverTime) {
+                        updateServerTime(serverTime);
+                    }
+                    if (offlineRef.current) {
+                        hideNotification(offlineRef.current.id);
+                        offlineRef.current = undefined;
+                    }
+                    return output === 'stream' ? response.body : response[output]();
+                })
+                .catch((e) => {
+                    if (e.name !== 'OfflineError' && offlineRef.current) {
+                        hideNotification(offlineRef.current.id);
+                        offlineRef.current = undefined;
+                    }
+                    throw e;
+                });
         };
     }
 
