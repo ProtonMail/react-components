@@ -6,7 +6,7 @@ import { isValid } from 'proton-shared/lib/helpers/giftCode';
 
 const GiftCodeForm = ({ code, loading, disabled, onChange, onSubmit }) => {
     return (
-        <div className="flex flex-nowrap flex-items-center">
+        <div className="flex flex-nowrap flex-items-center flex-items-start">
             <div className="pr1 flex-item-fluid">
                 <GiftCodeInput value={code} onChange={({ target }) => onChange(target.value)} />
             </div>
