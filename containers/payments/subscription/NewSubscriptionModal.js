@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import {
     classnames,
+    LossLoyaltyModal,
     Alert,
     PrimaryButton,
     FormModal,
@@ -14,20 +15,22 @@ import {
     useEventManager,
     usePayment,
     useUser,
-    useNotifications
+    useNotifications,
+    useOrganization,
+    useModals
 } from 'react-components';
 import { DEFAULT_CURRENCY, DEFAULT_CYCLE, CYCLE, CURRENCIES, PAYMENT_METHOD_TYPES } from 'proton-shared/lib/constants';
 import { checkSubscription, subscribe, deleteSubscription } from 'proton-shared/lib/api/payments';
+import { isLoyal } from 'proton-shared/lib/helpers/organization';
 
 import SubscriptionCustomization from './SubscriptionCustomization';
 import SubscriptionUpgrade from './SubscriptionUpgrade';
 import SubscriptionThanks from './SubscriptionThanks';
 import SubscriptionCheckout from './SubscriptionCheckout';
 import NewSubscriptionModalFooter from './NewSubscriptionModalFooter';
-
-import './NewSubscriptionModal.scss';
-import PayPalButton from '../PayPalButton';
 import PaymentGiftCode from '../PaymentGiftCode';
+import PayPalButton from '../PayPalButton';
+import './NewSubscriptionModal.scss';
 
 const STEPS = {
     CUSTOMIZATION: 0,
@@ -68,9 +71,11 @@ const NewSubscriptionModal = ({
     const api = useApi();
     const [user] = useUser();
     const { call } = useEventManager();
+    const { createModal } = useModals();
     const { createNotification } = useNotifications();
     const [vpnCountries, loadingVpnCountries] = useVPNCountries();
     const [plans, loadingPlans] = usePlans();
+    const [organization, loadingOrganization] = useOrganization();
     const [loading, withLoading] = useLoading();
     const [loadingCheck, withLoadingCheck] = useLoading();
     const [checkResult, setCheckResult] = useState({});
@@ -96,6 +101,11 @@ const NewSubscriptionModal = ({
     };
 
     const handleUnsubscribe = async () => {
+        if (isLoyal(organization)) {
+            await new Promise((resolve, reject) => {
+                createModal(<LossLoyaltyModal user={user} onConfirm={resolve} onClose={reject} />);
+            });
+        }
         await api(deleteSubscription());
         await call();
         onClose();
@@ -248,7 +258,7 @@ const NewSubscriptionModal = ({
                 user.isFree && 'is-free-user'
             ])}
             title={TITLE[step]}
-            loading={loading || loadingPlans || loadingVpnCountries}
+            loading={loading || loadingPlans || loadingVpnCountries || loadingOrganization}
             onSubmit={handleCheckout}
             onClose={handleClose}
             {...rest}
