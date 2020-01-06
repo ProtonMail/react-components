@@ -102,7 +102,7 @@ const Payment = ({
                         );
                     })}
                 </div>
-                <div className="payment-right">
+                <div className="pm-field-container payment-right">
                     <Method
                         loading={loading}
                         amount={amount}
