@@ -37,7 +37,7 @@ const PayPalView = ({ type, amount, currency, paypal, paypalCredit }) => {
     );
 
     return (
-        <div className="p1 bordered-container bg-global-light mb1">
+        <div className="p1 bordered-container bg-global-highlight mb1">
             {paypal.loading ? (
                 <>
                     <Loader />

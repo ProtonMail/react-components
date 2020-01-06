@@ -140,7 +140,7 @@ const SubscriptionCheckout = ({ submit = c('Action').t`Pay`, plans = [], model, 
             <div className="rounded mb1">
                 <header className="small mt0 mb0 bg-global-border uppercase pl1 pr1 pt0-5 pb0-5">{c('Title')
                     .t`Plan summary`}</header>
-                <div className="bg-global-light p1">
+                <div className="bg-global-highlight p1">
                     <div className="">
                         {hasMailPlan ? (
                             printSummary(PLAN_SERVICES.MAIL)
@@ -191,7 +191,7 @@ const SubscriptionCheckout = ({ submit = c('Action').t`Pay`, plans = [], model, 
                 </div>
             </div>
             {checkResult.Amount ? (
-                <div className="rounded p1 mb1 bg-global-light">
+                <div className="rounded p1 mb1 bg-global-highlight">
                     {model.coupon ? (
                         <div className="border-bottom border-bottom--dashed mb0-5">
                             <CheckoutRow title={c('Title').t`Sub-total`} amount={subTotal} currency={model.currency} />

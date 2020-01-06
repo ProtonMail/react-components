@@ -97,7 +97,7 @@ const UpsellSubscription = () => {
         .filter(Boolean)
         .map(({ title = '', description = '', upgradeButton }, index) => {
             return (
-                <div className="p1 bordered-container bg-global-light mb1" key={index}>
+                <div className="p1 bordered-container bg-global-highlight mb1" key={index}>
                     <strong className="bl mb1">{title}</strong>
                     <div className="flex flex-nowrap flex-items-center">
                         <p className="flex-item-fluid mt0 mb0 pr2">{description}</p>

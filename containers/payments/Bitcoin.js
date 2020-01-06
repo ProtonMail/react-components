@@ -54,7 +54,7 @@ const Bitcoin = ({ amount, currency, type }) => {
 
     return (
         <>
-            <figure role="group" className="bordered-container bg-global-light mb1">
+            <figure role="group" className="bordered-container bg-global-highlight mb1">
                 {type === 'invoice' ? (
                     <Alert>{c('Info')
                         .t`Bitcoin transactions can take some time to be confirmed (up to 24 hours). Once confirmed, we will add credits to your account. After transaction confirmation, you can pay your invoice with the credits.`}</Alert>
