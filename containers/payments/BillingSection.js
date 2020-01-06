@@ -28,6 +28,7 @@ import GiftCodeModal from './GiftCodeModal';
 import CreditsModal from './CreditsModal';
 import PlanPrice from './subscription/PlanPrice';
 import NewSubscriptionModal from './subscription/NewSubscriptionModal';
+import CycleDiscountBadge from './CycleDiscountBadge';
 
 const { MONTHLY, YEARLY, TWO_YEARS } = CYCLE;
 
@@ -284,8 +285,14 @@ const BillingSection = ({ permission }) => {
                         <div className="flex-autogrid onmobile-flex-column w100 mb1">
                             <div className="flex-autogrid-item">{c('Label').t`Discount`}</div>
                             <div className="flex-autogrid-item">
-                                {CouponCode ? <code className="bold mr1">{CouponCode}</code> : null}
-                                <DiscountBadge code={CouponCode} cycle={Cycle} />
+                                {CouponCode ? (
+                                    <>
+                                        <code className="bold mr1">{CouponCode}</code>
+                                        <DiscountBadge code={CouponCode} />
+                                    </>
+                                ) : (
+                                    <CycleDiscountBadge cycle={Cycle} />
+                                )}
                             </div>
                             <div className="flex-autogrid-item bold alignright">
                                 <PlanPrice amount={discount} currency={Currency} cycle={MONTHLY} />
