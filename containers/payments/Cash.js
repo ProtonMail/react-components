@@ -11,7 +11,7 @@ const Cash = () => {
     const email = <b>{CLIENT_TYPE === VPN ? 'contact@protonvpn.com' : 'contact@protonmail.com'}</b>;
 
     return (
-        <div className="p1 bordered-container bg-global-light mb1">
+        <div className="p1 bordered-container bg-global-highlight mb1">
             <Alert>{c('Info for cash payment method')
                 .jt`Please contact us at ${email} for instructions on how pay us with cash.`}</Alert>
             <div className="aligncenter">
