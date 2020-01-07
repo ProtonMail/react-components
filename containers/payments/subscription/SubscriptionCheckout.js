@@ -24,7 +24,7 @@ import DiscountBadge from '../DiscountBadge';
 const CheckoutRow = ({ title, amount = 0, currency, className = '' }) => {
     return (
         <div className={classnames(['flex flex-nowrap flex-spacebetween mb0-5', className])}>
-            <div>{title}</div>
+            <div className="pr0-5">{title}</div>
             <Price className={amount < 0 ? 'color-global-success' : ''} currency={currency}>
                 {amount}
             </Price>
@@ -108,7 +108,7 @@ const SubscriptionCheckout = ({ submit = c('Action').t`Pay`, plans = [], model, 
                         className={Type === PLAN_TYPES.PLAN ? 'bold' : ''}
                         title={
                             <>
-                                <span className="mr0-5">
+                                <span className="mr0-5 pr0-5">
                                     {Type === PLAN_TYPES.PLAN ? Title : getTitle(Name, quantity)}
                                 </span>
                                 {[CYCLE.YEARLY, CYCLE.TWO_YEARS].includes(model.cycle) && (

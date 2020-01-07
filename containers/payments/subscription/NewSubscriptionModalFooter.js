@@ -15,10 +15,10 @@ const STEPS = {
     THANKS: 3
 };
 
-const TickIcon = () => <img className="mr0-5" src={tickSvg} alt="checkmark" />;
-const PercentageIcon = () => <img className="mr0-5" src={percentageSvg} alt="percentage" />;
-const ShieldIcon = () => <img className="mr0-5" src={shieldSvg} alt="percentage" />;
-const ClockIcon = () => <img className="mr0-5" src={clockSvg} alt="percentage" />;
+const TickIcon = () => <img className="mr0-5 flex-item-noshrink" src={tickSvg} alt="checkmark" />;
+const PercentageIcon = () => <img className="mr0-5 flex-item-noshrink" src={percentageSvg} alt="percentage" />;
+const ShieldIcon = () => <img className="mr0-5 flex-item-noshrink" src={shieldSvg} alt="percentage" />;
+const ClockIcon = () => <img className="mr0-5 flex-item-noshrink" src={clockSvg} alt="percentage" />;
 
 const NewSubscriptionModalFooter = ({ submit, step, model }) => {
     const [addresses, loadingAddresses] = useAddresses();
@@ -31,52 +31,58 @@ const NewSubscriptionModalFooter = ({ submit, step, model }) => {
     const cancel = step === STEPS.CUSTOMIZATION ? c('Action').t`Cancel` : c('Action').t`Back`;
     const upsells = [
         step === STEPS.CUSTOMIZATION && model.cycle === CYCLE.MONTHLY && (
-            <div key="upsell-1" className="nomobile">
+            <div key="upsell-1" className="nomobile flex flex-nowrap flex-items-center pl1 pr1">
                 <PercentageIcon />
-                {c('Info').t`Save 20% by switching to annual billing`}
+                <span className="flex-item-fluid">{c('Info').t`Save 20% by switching to annual billing`}</span>
             </div>
         ),
         step === STEPS.CUSTOMIZATION && model.cycle === CYCLE.YEARLY && (
-            <div key="upsell-2" className="nomobile">
+            <div key="upsell-2" className="nomobile flex flex-nowrap flex-items-center pl1 pr1">
                 <TickIcon />
-                {c('Info').t`You are saving 20% with annual billing`}
+                <span className="flex-item-fluid">{c('Info').t`You are saving 20% with annual billing`}</span>
             </div>
         ),
         step === STEPS.CUSTOMIZATION && model.cycle === CYCLE.TWO_YEARS && (
-            <div key="upsell-3" className="nomobile">
+            <div key="upsell-3" className="nomobile flex flex-nowrap flex-items-center pl1 pr1">
                 <TickIcon />
-                {c('Info').t`You are saving 33% with 2-year billing`}
+                <span className="flex-item-fluid">{c('Info').t`You are saving 33% with 2-year billing`}</span>
             </div>
         ),
         step === STEPS.CUSTOMIZATION && hasAddresses && model.coupon !== COUPON_CODES.BUNDLE && (
-            <div key="upsell-4" className="nomobile">
+            <div key="upsell-4" className="nomobile flex flex-nowrap flex-items-center pl1 pr1">
                 <PercentageIcon />
-                {c('Info').t`Save an extra 20% by combining Mail and VPN`}
+                <span className="flex-item-fluid">{c('Info').t`Save an extra 20% by combining Mail and VPN`}</span>
             </div>
         ),
         step === STEPS.CUSTOMIZATION && hasAddresses && model.coupon === COUPON_CODES.BUNDLE && (
-            <div key="upsell-5" className="nomobile">
+            <div key="upsell-5" className="nomobile flex flex-nowrap flex-items-center pl1 pr1">
                 <TickIcon />
-                {c('Info').t`You are saving an extra 20% with the bundle discount`}
+                <span className="flex-item-fluid">
+                    {c('Info').t`You are saving an extra 20% with the bundle discount`}
+                </span>
             </div>
         ),
         step === STEPS.PAYMENT && (
-            <div key="upsell-6" className="nomobile">
+            <div key="upsell-6" className="nomobile flex flex-nowrap flex-items-center pl1 pr1">
                 <ClockIcon />
-                {c('Info').t`30-days money back guaranteed`}
+                <span className="flex-item-fluid">{c('Info').t`30-days money back guaranteed`}</span>
             </div>
         ),
         step === STEPS.PAYMENT && (
-            <div key="upsell-7" className="nomobile">
+            <div key="upsell-7" className="nomobile flex flex-nowrap flex-items-center pl1 pr1">
                 <ShieldIcon />
-                {c('Info').t`Payments are protected with TLS encryption and Swiss privacy laws`}
+                <span className="flex-item-fluid">
+                    {c('Info').t`Payments are protected with TLS encryption and Swiss privacy laws`}
+                </span>
             </div>
         )
     ].filter(Boolean);
 
     return (
         <>
-            <Button type="reset">{cancel}</Button>
+            <Button type="reset" className="flex-item-noshrink">
+                {cancel}
+            </Button>
             {upsells}
             {submit}
         </>

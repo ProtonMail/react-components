@@ -19,7 +19,7 @@ const Price = ({ children: amount = 0, currency = '', className = '', divisor = 
 
     if (currency === 'USD') {
         return (
-            <span className={classnames(['price', className])} data-currency={currency}>
+            <span className={classnames(['price flex-item-noshrink', className])} data-currency={currency}>
                 {pr}
                 {p}
                 {c}
@@ -30,7 +30,7 @@ const Price = ({ children: amount = 0, currency = '', className = '', divisor = 
     }
 
     return (
-        <span className={classnames(['price', className])} data-currency={currency}>
+        <span className={classnames(['price flex-item-noshrink', className])} data-currency={currency}>
             {pr}
             {p}
             {v}
