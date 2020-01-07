@@ -249,7 +249,11 @@ const NewSubscriptionModal = ({
             hasClose={step === STEPS.CUSTOMIZATION}
             footer={
                 [STEPS.UPGRADE, STEPS.THANKS].includes(step) ? null : (
-                    <NewSubscriptionModalFooter submit={<SubmitButton />} step={step} model={model} />
+                    <NewSubscriptionModalFooter
+                        submit={<SubmitButton className="flex-item-noshrink" />}
+                        step={step}
+                        model={model}
+                    />
                 )
             }
             className={classnames([
@@ -275,7 +279,7 @@ const NewSubscriptionModal = ({
                             setModel={setModel}
                         />
                     </div>
-                    <div className="w25 onmobile-w100">
+                    <div className="w25 onmobile-w100 pt2 mt1-5 onmobile-mt0 onmobile-pt0">
                         <SubscriptionCheckout
                             submit={<SubmitButton className="w100" />}
                             plans={plans}
