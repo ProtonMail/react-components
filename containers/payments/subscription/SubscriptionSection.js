@@ -135,7 +135,7 @@ const SubscriptionSection = ({ permission }) => {
                 .t`To manage your subscription, update your current plan or select another one from the plan's table.`}</Alert>
             <div className="shadow-container mb1">
                 <div className="border-bottom pt1 pl1 pr1">
-                    <div className="flex-autogrid onmobile-flex-column w100 mb1">
+                    <div className="flex-autogrid flex-items-center onmobile-flex-column w100 mb1">
                         <div className="flex-autogrid-item">ProtonMail plan</div>
                         <div className="flex-autogrid-item">
                             <strong>
@@ -171,7 +171,7 @@ const SubscriptionSection = ({ permission }) => {
                     </div>
                 )}
                 {isPaid ? (
-                    <div className="pl1 pr1 pb1">
+                    <div className="pl1 pr1 pt0-5 pb0-5">
                         <UnsubscribeButton className="pm-button--link pm-button--redborder">{c('Action')
                             .t`Cancel subscription`}</UnsubscribeButton>
                     </div>

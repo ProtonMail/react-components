@@ -124,7 +124,7 @@ const BillingSection = ({ permission }) => {
                 {hasPaidMail ? (
                     <div className="border-bottom pt1 pl1 pr1">
                         {mailPlan ? (
-                            <div className="flex-autogrid onmobile-flex-column w100 mb1">
+                            <div className="flex-autogrid flex-items-center onmobile-flex-column w100 mb1">
                                 <div className="flex-autogrid-item">{c('Label').t`ProtonMail plan`}</div>
                                 <div className="flex-autogrid-item bold">{PLAN_NAMES[mailPlan.Name]}</div>
                                 <div className="flex-autogrid-item bold alignright">
