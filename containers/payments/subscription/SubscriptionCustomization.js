@@ -384,6 +384,7 @@ const SubscriptionCustomization = ({
                 <h3>{TITLE[mailPlan.Name]}</h3>
                 <Description plans={plans} planName={mailPlan.Name} model={model} setModel={setModel} />
                 <MailSubscriptionTable
+                    disabled={loading}
                     currentPlan={c('Status').t`Selected`}
                     update={c('Action').t`Selected`}
                     selected={c('Action').t`Selected`}
@@ -417,6 +418,7 @@ const SubscriptionCustomization = ({
                 <h3>{TITLE[vpnPlan.Name]}</h3>
                 <Description plans={plans} planName={vpnPlan.Name} model={model} setModel={setModel} />
                 <VpnSubscriptionTable
+                    disabled={loading}
                     currentPlan={c('Status').t`Selected`}
                     update={c('Action').t`Selected`}
                     selected={c('Action').t`Selected`}
