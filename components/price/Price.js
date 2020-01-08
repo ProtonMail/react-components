@@ -1,5 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import humanPrice from 'proton-shared/lib/helpers/humanPrice';
+
 import { classnames } from '../../helpers/component';
 
 const CURRENCIES = {
@@ -9,8 +11,7 @@ const CURRENCIES = {
 };
 
 const Price = ({ children: amount = 0, currency = '', className = '', divisor = 100, suffix = '', prefix = '' }) => {
-    const fixedValue = Number(amount / divisor).toFixed(2);
-    const value = fixedValue.replace('.00', '').replace('-', '');
+    const value = humanPrice(amount, divisor);
     const c = <span className="currency">{CURRENCIES[currency] || currency}</span>;
     const p = amount < 0 ? <span className="prefix">-</span> : null;
     const v = <span className="amount">{value}</span>;
