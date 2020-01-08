@@ -68,7 +68,7 @@ const usePaymentMethods = ({ amount, coupon, type }) => {
         });
     }
 
-    if (!isSignup && coupon !== BLACK_FRIDAY.COUPON_CODE && amount > MIN_BITCOIN_AMOUNT) {
+    if (!isSignup && coupon !== BLACK_FRIDAY.COUPON_CODE && amount >= MIN_BITCOIN_AMOUNT) {
         options.push({
             icon: 'payments-type-bt',
             text: c('Payment method option').t`Bitcoin`,
