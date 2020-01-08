@@ -17,11 +17,12 @@ import {
     useModals,
     useEventManager,
     useNotifications,
-    useConfig
+    useConfig,
+    useLoading
 } from 'react-components';
 
 import { checkSubscription, deleteSubscription } from 'proton-shared/lib/api/payments';
-import { DEFAULT_CURRENCY, DEFAULT_CYCLE, CLIENT_TYPES } from 'proton-shared/lib/constants';
+import { DEFAULT_CURRENCY, DEFAULT_CYCLE, CLIENT_TYPES, PLAN_SERVICES } from 'proton-shared/lib/constants';
 import { getPlans, isBundleEligible, getPlan } from 'proton-shared/lib/helpers/subscription';
 import { isLoyal } from 'proton-shared/lib/helpers/organization';
 
@@ -35,11 +36,13 @@ const PlansSection = () => {
     const { createNotification } = useNotifications();
     const { createModal } = useModals();
     const [user] = useUser();
+    const [loading, withLoading] = useLoading();
     const [subscription = {}, loadingSubscription] = useSubscription();
     const [organization = {}, loadingOrganization] = useOrganization();
     const [plans = [], loadingPlans] = usePlans();
     const api = useApi();
-    const { Name } = getPlan(subscription) || {};
+    const { Name } =
+        getPlan(subscription, CLIENT_TYPE === CLIENT_TYPES.MAIL ? PLAN_SERVICES.MAIL : PLAN_SERVICES.VPN) || {};
 
     const [currency, setCurrency] = useState(DEFAULT_CURRENCY);
     const [cycle, setCycle] = useState(DEFAULT_CYCLE);
@@ -77,13 +80,15 @@ const PlansSection = () => {
         }
 
         const couponCode = CouponCode ? CouponCode : undefined; // From current subscription; CouponCode can be null
-        const { Coupon } = await api(
-            checkSubscription({
-                PlanIDs: [planID],
-                Currency: currency,
-                Cycle: cycle,
-                CouponCode: couponCode
-            })
+        const { Coupon } = await withLoading(
+            api(
+                checkSubscription({
+                    PlanIDs: [planID],
+                    Currency: currency,
+                    Cycle: cycle,
+                    CouponCode: couponCode
+                })
+            )
         );
 
         const coupon = Coupon ? Coupon.Code : undefined; // Coupon can equals null
@@ -149,6 +154,7 @@ const PlansSection = () => {
                     cycle={cycle}
                     currency={currency}
                     onSelect={handleModal}
+                    disabled={loading}
                 />
             ) : (
                 <VpnSubscriptionTable
@@ -157,6 +163,7 @@ const PlansSection = () => {
                     cycle={cycle}
                     currency={currency}
                     onSelect={handleModal}
+                    disabled={loading}
                 />
             )}
         </>
