@@ -40,7 +40,7 @@ const Card = ({ card, errors, onChange, loading = false }) => {
             </Block>
             <div className="flex-autogrid">
                 <div className="flex-autogrid-item ">
-                    <Label className="mb0-5 bl">{c('Label').t`Expiry date`}</Label>
+                    <Label className="mb0-5 bl" htmlFor="exp">{c('Label').t`Expiry date`}</Label>
                     <ExpInput
                          id="exp"
                          month={card.month}
