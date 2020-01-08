@@ -146,30 +146,27 @@ const NewSubscriptionModal = ({
             return;
         }
 
-        try {
-            const result = await api(
-                checkSubscription({
-                    PlanIDs: clearPlanIDs(newModel.planIDs),
-                    CouponCode: newModel.coupon,
-                    Currency: newModel.currency,
-                    Cycle: newModel.cycle,
-                    GiftCode: newModel.gift
-                })
-            );
+        const result = await api(
+            checkSubscription({
+                PlanIDs: clearPlanIDs(newModel.planIDs),
+                CouponCode: newModel.coupon,
+                Currency: newModel.currency,
+                Cycle: newModel.cycle,
+                GiftCode: newModel.gift
+            })
+        );
 
-            const { Code = '' } = result.Coupon || {}; // Coupon can equal null
-            newModel.coupon = Code;
+        const { Code = '' } = result.Coupon || {}; // Coupon can equal null
+        const copyNewModel = { ...newModel };
 
-            if (!result.Gift) {
-                delete newModel.gift;
-            }
+        copyNewModel.coupon = Code;
 
-            setModel(newModel);
-            setCheckResult(result);
-        } catch (error) {
-            setModel(model);
-            throw error;
+        if (!result.Gift) {
+            delete copyNewModel.gift;
         }
+
+        setModel(copyNewModel);
+        setCheckResult(result);
     };
 
     const handleCheckout = () => {
