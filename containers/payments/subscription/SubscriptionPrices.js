@@ -27,7 +27,7 @@ const SubscriptionPrices = ({ cycle, currency, plan = FREE_PLAN, suffix = c('Suf
                 <div className="small mt0 mb0">{c('Details').jt`Billed as ${billiedAmount} per year`}</div>
             )}
             {cycle === CYCLE.TWO_YEARS && (
-                <div className="small mt0 mb0">{c('Details').jt`Billed as ${billiedAmount} every 2 year`}</div>
+                <div className="small mt0 mb0">{c('Details').jt`Billed as ${billiedAmount} every 2 years`}</div>
             )}
         </>
     );

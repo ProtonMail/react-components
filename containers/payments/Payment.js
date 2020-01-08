@@ -126,7 +126,7 @@ Payment.propTypes = {
     type: PropTypes.oneOf(['signup', 'subscription', 'invoice', 'donation', 'credit']),
     amount: PropTypes.number.isRequired,
     coupon: PropTypes.string,
-    currency: PropTypes.oneOf(CURRENCIES).isRequired,
+    currency: PropTypes.oneOf(CURRENCIES),
     parameters: PropTypes.object,
     card: PropTypes.object,
     onCard: PropTypes.func,

@@ -13,7 +13,7 @@ const usePayPal = ({ amount: Amount = 0, currency: Currency = '', type: Type, on
     const onCancel = () => abortRef.current && abortRef.current.abort();
 
     const onToken = async () => {
-        const result = api(
+        const result = await api(
             createToken({
                 Amount,
                 Currency,
