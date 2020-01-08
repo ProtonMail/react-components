@@ -94,8 +94,8 @@ Method.propTypes = {
     onCard: PropTypes.func.isRequired,
     errors: PropTypes.object.isRequired,
     currency: PropTypes.oneOf(CURRENCIES).isRequired,
-    paypal: PropTypes.object.isRequired,
-    paypalCredit: PropTypes.object.isRequired
+    paypal: PropTypes.object,
+    paypalCredit: PropTypes.object
 };
 
 export default Method;
