@@ -16,7 +16,7 @@ const getBankSvg = (type = '') => {
     if (!banksMap[key]) {
         return;
     }
-    return banksMap[key]();
+    return banksMap[key]().default;
 };
 
 const BANKS = {

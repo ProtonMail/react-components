@@ -5,7 +5,6 @@ import {
     classnames,
     LossLoyaltyModal,
     Alert,
-    PrimaryButton,
     FormModal,
     Payment,
     usePlans,
@@ -19,25 +18,20 @@ import {
     useOrganization,
     useModals
 } from 'react-components';
-import { DEFAULT_CURRENCY, DEFAULT_CYCLE, CYCLE, CURRENCIES, PAYMENT_METHOD_TYPES } from 'proton-shared/lib/constants';
+import { DEFAULT_CURRENCY, DEFAULT_CYCLE, CYCLE, CURRENCIES } from 'proton-shared/lib/constants';
 import { checkSubscription, subscribe, deleteSubscription } from 'proton-shared/lib/api/payments';
 import { isLoyal } from 'proton-shared/lib/helpers/organization';
 
+import { SUBSCRIPTION_STEPS } from './constants';
+import NewSubscriptionSubmitButton from './NewSubscriptionSubmitButton';
 import SubscriptionCustomization from './SubscriptionCustomization';
 import SubscriptionUpgrade from './SubscriptionUpgrade';
 import SubscriptionThanks from './SubscriptionThanks';
 import SubscriptionCheckout from './SubscriptionCheckout';
 import NewSubscriptionModalFooter from './NewSubscriptionModalFooter';
 import PaymentGiftCode from '../PaymentGiftCode';
-import PayPalButton from '../PayPalButton';
-import './NewSubscriptionModal.scss';
 
-const STEPS = {
-    CUSTOMIZATION: 0,
-    PAYMENT: 1,
-    UPGRADE: 2,
-    THANKS: 3
-};
+import './NewSubscriptionModal.scss';
 
 const clearPlanIDs = (planIDs = {}) => {
     return Object.entries(planIDs).reduce((acc, [planID, quantity]) => {
@@ -53,7 +47,7 @@ const hasPlans = (planIDs = {}) => Object.keys(clearPlanIDs(planIDs)).length;
 
 const NewSubscriptionModal = ({
     expanded = false,
-    step: initialStep = STEPS.CUSTOMIZATION,
+    step: initialStep = SUBSCRIPTION_STEPS.CUSTOMIZATION,
     cycle = DEFAULT_CYCLE,
     currency = DEFAULT_CURRENCY,
     coupon,
@@ -62,10 +56,10 @@ const NewSubscriptionModal = ({
     ...rest
 }) => {
     const TITLE = {
-        [STEPS.CUSTOMIZATION]: c('Title').t`Plan customization`,
-        [STEPS.PAYMENT]: c('Title').t`Checkout`,
-        [STEPS.UPGRADE]: <div className="aligncenter">{c('Title').t`Processing...`}</div>,
-        [STEPS.THANKS]: <div className="aligncenter">{c('Title').t`Thank you!`}</div>
+        [SUBSCRIPTION_STEPS.CUSTOMIZATION]: c('Title').t`Plan customization`,
+        [SUBSCRIPTION_STEPS.PAYMENT]: c('Title').t`Checkout`,
+        [SUBSCRIPTION_STEPS.UPGRADE]: <div className="aligncenter">{c('Title').t`Processing...`}</div>,
+        [SUBSCRIPTION_STEPS.THANKS]: <div className="aligncenter">{c('Title').t`Thank you!`}</div>
     };
 
     const api = useApi();
@@ -118,7 +112,7 @@ const NewSubscriptionModal = ({
         }
 
         try {
-            setStep(STEPS.UPGRADE);
+            setStep(SUBSCRIPTION_STEPS.UPGRADE);
             await api(
                 subscribe({
                     Amount: checkResult.AmountDue,
@@ -131,9 +125,9 @@ const NewSubscriptionModal = ({
                 })
             );
             await call();
-            setStep(STEPS.THANKS);
+            setStep(SUBSCRIPTION_STEPS.THANKS);
         } catch (error) {
-            setStep(STEPS.PAYMENT);
+            setStep(SUBSCRIPTION_STEPS.PAYMENT);
             throw error;
         }
     };
@@ -145,47 +139,6 @@ const NewSubscriptionModal = ({
             return withLoading(handleSubscribe(params));
         }
     });
-
-    const SubmitButton = ({ className }) => {
-        if (step === STEPS.CUSTOMIZATION) {
-            return (
-                <PrimaryButton className={className} loading={loadingCheck} type="submit">{c('Action')
-                    .t`Continue`}</PrimaryButton>
-            );
-        }
-
-        if (method === PAYMENT_METHOD_TYPES.PAYPAL) {
-            return (
-                <PayPalButton paypal={paypal} className={className} amount={checkResult.AmountDue}>{c('Action')
-                    .t`Pay`}</PayPalButton>
-            );
-        }
-
-        if ([PAYMENT_METHOD_TYPES.CASH, PAYMENT_METHOD_TYPES.BITCOIN].includes(method)) {
-            return (
-                <PrimaryButton className={className} loading={loadingCheck} onClick={() => setStep(STEPS.THANKS)}>{c(
-                    'Action'
-                ).t`Done`}</PrimaryButton>
-            );
-        }
-
-        if (!checkResult.AmountDue) {
-            return (
-                <PrimaryButton className={className} loading={loadingCheck} disabled={!canPay} type="submit">{c(
-                    'Action'
-                ).t`Complete`}</PrimaryButton>
-            );
-        }
-
-        return (
-            <PrimaryButton className={className} loading={loadingCheck} disabled={!canPay} type="submit">{c('Action')
-                .t`Pay`}</PrimaryButton>
-        );
-    };
-
-    SubmitButton.propTypes = {
-        className: PropTypes.string
-    };
 
     const check = async (newModel = model) => {
         if (!hasPlans(newModel.planIDs)) {
@@ -220,16 +173,16 @@ const NewSubscriptionModal = ({
     };
 
     const handleCheckout = () => {
-        if (step === STEPS.CUSTOMIZATION) {
-            return setStep(STEPS.PAYMENT);
+        if (step === SUBSCRIPTION_STEPS.CUSTOMIZATION) {
+            return setStep(SUBSCRIPTION_STEPS.PAYMENT);
         }
 
         withLoading(handleSubscribe(parameters));
     };
 
     const handleClose = (e) => {
-        if (step === STEPS.PAYMENT) {
-            setStep(STEPS.CUSTOMIZATION);
+        if (step === SUBSCRIPTION_STEPS.PAYMENT) {
+            setStep(SUBSCRIPTION_STEPS.CUSTOMIZATION);
             return;
         }
 
@@ -246,11 +199,22 @@ const NewSubscriptionModal = ({
 
     return (
         <FormModal
-            hasClose={step === STEPS.CUSTOMIZATION}
+            hasClose={step === SUBSCRIPTION_STEPS.CUSTOMIZATION}
             footer={
-                [STEPS.UPGRADE, STEPS.THANKS].includes(step) ? null : (
+                [SUBSCRIPTION_STEPS.UPGRADE, SUBSCRIPTION_STEPS.THANKS].includes(step) ? null : (
                     <NewSubscriptionModalFooter
-                        submit={<SubmitButton className="flex-item-noshrink" />}
+                        submit={
+                            <NewSubscriptionSubmitButton
+                                canPay={canPay}
+                                paypal={paypal}
+                                step={step}
+                                setStep={setStep}
+                                loading={loadingCheck}
+                                method={method}
+                                checkResult={checkResult}
+                                className="flex-item-noshrink"
+                            />
+                        }
                         step={step}
                         model={model}
                     />
@@ -258,7 +222,7 @@ const NewSubscriptionModal = ({
             }
             className={classnames([
                 'subscription-modal',
-                [STEPS.CUSTOMIZATION, STEPS.PAYMENT].includes(step) && 'pm-modal--full',
+                [SUBSCRIPTION_STEPS.CUSTOMIZATION, SUBSCRIPTION_STEPS.PAYMENT].includes(step) && 'pm-modal--full',
                 user.isFree && 'is-free-user'
             ])}
             title={TITLE[step]}
@@ -267,7 +231,7 @@ const NewSubscriptionModal = ({
             onClose={handleClose}
             {...rest}
         >
-            {step === STEPS.CUSTOMIZATION && (
+            {step === SUBSCRIPTION_STEPS.CUSTOMIZATION && (
                 <div className="flex flex-spacebetween onmobile-flex-column">
                     <div className="w75 onmobile-w100 pr1 onmobile-pr0">
                         <SubscriptionCustomization
@@ -281,7 +245,18 @@ const NewSubscriptionModal = ({
                     </div>
                     <div className="w25 onmobile-w100 pt2 mt1-5 onmobile-mt0 onmobile-pt0">
                         <SubscriptionCheckout
-                            submit={<SubmitButton className="w100" />}
+                            submit={
+                                <NewSubscriptionSubmitButton
+                                    canPay={canPay}
+                                    paypal={paypal}
+                                    step={step}
+                                    setStep={setStep}
+                                    loading={loadingCheck}
+                                    method={method}
+                                    checkResult={checkResult}
+                                    className="w100"
+                                />
+                            }
                             plans={plans}
                             checkResult={checkResult}
                             loading={loadingCheck}
@@ -293,7 +268,7 @@ const NewSubscriptionModal = ({
                     </div>
                 </div>
             )}
-            {step === STEPS.PAYMENT && (
+            {step === SUBSCRIPTION_STEPS.PAYMENT && (
                 <div className="flex flex-spacebetween onmobile-flex-column">
                     <div className="w75 onmobile-w100 pr1 onmobile-pr0">
                         <h3>{c('Title').t`Payment method`}</h3>
@@ -328,7 +303,18 @@ const NewSubscriptionModal = ({
                     <div className="w25 onmobile-w100">
                         <SubscriptionCheckout
                             method={method}
-                            submit={<SubmitButton className="w100" />}
+                            submit={
+                                <NewSubscriptionSubmitButton
+                                    canPay={canPay}
+                                    paypal={paypal}
+                                    step={step}
+                                    setStep={setStep}
+                                    loading={loadingCheck}
+                                    method={method}
+                                    checkResult={checkResult}
+                                    className="w100"
+                                />
+                            }
                             plans={plans}
                             checkResult={checkResult}
                             loading={loadingCheck}
@@ -342,15 +328,20 @@ const NewSubscriptionModal = ({
                     </div>
                 </div>
             )}
-            {step === STEPS.UPGRADE && <SubscriptionUpgrade />}
-            {step === STEPS.THANKS && <SubscriptionThanks method={method} onClose={onClose} />}
+            {step === SUBSCRIPTION_STEPS.UPGRADE && <SubscriptionUpgrade />}
+            {step === SUBSCRIPTION_STEPS.THANKS && <SubscriptionThanks method={method} onClose={onClose} />}
         </FormModal>
     );
 };
 
 NewSubscriptionModal.propTypes = {
     expanded: PropTypes.bool,
-    step: PropTypes.oneOf([STEPS.CUSTOMIZATION, STEPS.PAYMENT, STEPS.UPGRADE, STEPS.THANKS]),
+    step: PropTypes.oneOf([
+        SUBSCRIPTION_STEPS.CUSTOMIZATION,
+        SUBSCRIPTION_STEPS.PAYMENT,
+        SUBSCRIPTION_STEPS.UPGRADE,
+        SUBSCRIPTION_STEPS.THANKS
+    ]),
     cycle: PropTypes.oneOf([CYCLE.MONTHLY, CYCLE.TWO_YEARS, CYCLE.YEARLY]),
     currency: PropTypes.oneOf(CURRENCIES),
     coupon: PropTypes.string,
