@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import QRCodeJS from 'qrcodejs2';
 
-const QRCode = ({ url: text, ...rest }) => {
+const QRCode = ({ url: text, width = 128, height = 128, ...rest }) => {
     const divRef = useRef(null);
 
     useEffect(() => {
