@@ -11,7 +11,8 @@ const SubscriptionTable = ({
     currentPlan = c('Title for subscription plan').t`Current plan`,
     selected = c('Info').t`Current plan`,
     update = c('Action').t`Update`,
-    select = c('Action').t`Select`
+    select = c('Action').t`Select`,
+    disabled = false
 }) => {
     return (
         <div className="mt2 subscriptionTable">
@@ -58,6 +59,7 @@ const SubscriptionTable = ({
                                         selected
                                     ) : (
                                         <Button
+                                            disabled={disabled}
                                             className={classnames([index !== currentPlanIndex && 'pm-button--primary'])}
                                             onClick={() => onSelect(index)}
                                         >
@@ -66,6 +68,7 @@ const SubscriptionTable = ({
                                     )}
                                     {canCustomize ? (
                                         <LinkButton
+                                            disabled={disabled}
                                             className="subscriptionTable-customize-button"
                                             onClick={() => onSelect(index, true)}
                                         >{c('Action').t`Customize`}</LinkButton>
@@ -81,6 +84,7 @@ const SubscriptionTable = ({
 };
 
 SubscriptionTable.propTypes = {
+    disabled: PropTypes.bool,
     currentPlan: PropTypes.string,
     plans: PropTypes.arrayOf(
         PropTypes.shape({
