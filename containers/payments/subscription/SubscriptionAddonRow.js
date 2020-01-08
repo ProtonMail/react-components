@@ -17,7 +17,7 @@ const SubscriptionAddonRow = ({
     step = 1,
     loading = false
 }) => {
-    const idRef = useRef();
+    const [idRef] = useState(() => generateUID('subscription-addon-row'));
     const options = range(min, max).map((quantity) => ({
         text: format(start + quantity * step),
         value: quantity
