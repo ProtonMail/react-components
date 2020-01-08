@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Select, generateUID } from 'react-components';
 import { range } from 'proton-shared/lib/helpers/array';
@@ -22,10 +22,6 @@ const SubscriptionAddonRow = ({
         text: format(start + quantity * step),
         value: quantity
     }));
-
-    useEffect(() => {
-        idRef.current = generateUID('subscription-addon-row');
-    }, []);
 
     return (
         <div className="flex flex-nowrap flex-spacebetween flex-items-center mb1">
