@@ -32,6 +32,7 @@ const VpnSubscriptionTable = ({
     const vpnBasicPlan = plansMap[PLANS.VPNBASIC];
     const vpnPlusPlan = plansMap[PLANS.VPNPLUS];
     const visionaryPlan = plansMap[PLANS.VISIONARY];
+    const plusPlan = plansMap[PLANS.PLUS];
     const [vpnCountries] = useVPNCountries();
     const plans = [
         {
@@ -108,7 +109,9 @@ const VpnSubscriptionTable = ({
                 currentPlanIndex={INDEXES[planNameSelected] || 0}
                 mostPopularIndex={2}
                 plans={plans}
-                onSelect={(index, expanded) => onSelect(plans[index].planID, expanded)}
+                onSelect={(index, expanded) =>
+                    onSelect(expanded && !index ? plusPlan.ID : plans[index].planID, expanded)
+                }
                 currentPlan={currentPlan}
                 {...rest}
             />

@@ -32,6 +32,7 @@ const MailSubscriptionTable = ({
     const plusPlan = plansMap[PLANS.PLUS];
     const professionalPlan = plansMap[PLANS.PROFESSIONAL];
     const visionaryPlan = plansMap[PLANS.VISIONARY];
+    const vpnPlusPlan = plansMap[PLANS.VPNPLUS];
     const plans = [
         {
             name: '',
@@ -116,7 +117,9 @@ const MailSubscriptionTable = ({
                 currentPlanIndex={INDEXES[planNameSelected] || 0}
                 mostPopularIndex={1}
                 plans={plans}
-                onSelect={(index, expanded) => onSelect(plans[index].planID, expanded)}
+                onSelect={(index, expanded) =>
+                    onSelect(expanded && !index ? vpnPlusPlan.ID : plans[index].planID, expanded)
+                }
                 {...rest}
             />
             <p className="small mt1 mb0">* {c('Info concerning plan features').t`Customizable features`}</p>
