@@ -16,19 +16,22 @@ import {
     useUser,
     useModals,
     useEventManager,
-    useNotifications
+    useNotifications,
+    useConfig
 } from 'react-components';
 
 import { checkSubscription, deleteSubscription } from 'proton-shared/lib/api/payments';
-import { DEFAULT_CURRENCY, DEFAULT_CYCLE } from 'proton-shared/lib/constants';
+import { DEFAULT_CURRENCY, DEFAULT_CYCLE, CLIENT_TYPES } from 'proton-shared/lib/constants';
 import { getPlans, isBundleEligible, getPlan } from 'proton-shared/lib/helpers/subscription';
 import { isLoyal } from 'proton-shared/lib/helpers/organization';
 
 import NewSubscriptionModal from './subscription/NewSubscriptionModal';
 import MailSubscriptionTable from './subscription/MailSubscriptionTable';
+import VpnSubscriptionTable from './subscription/VpnSubscriptionTable';
 
 const PlansSection = () => {
     const { call } = useEventManager();
+    const { CLIENT_TYPE } = useConfig();
     const { createNotification } = useNotifications();
     const { createModal } = useModals();
     const [user] = useUser();
@@ -139,13 +142,23 @@ const PlansSection = () => {
                     <CurrencySelector currency={currency} onSelect={setCurrency} />
                 </div>
             </div>
-            <MailSubscriptionTable
-                plans={plans}
-                planNameSelected={Name}
-                cycle={cycle}
-                currency={currency}
-                onSelect={handleModal}
-            />
+            {CLIENT_TYPE === CLIENT_TYPES.MAIL ? (
+                <MailSubscriptionTable
+                    plans={plans}
+                    planNameSelected={Name}
+                    cycle={cycle}
+                    currency={currency}
+                    onSelect={handleModal}
+                />
+            ) : (
+                <VpnSubscriptionTable
+                    plans={plans}
+                    planNameSelected={Name}
+                    cycle={cycle}
+                    currency={currency}
+                    onSelect={handleModal}
+                />
+            )}
         </>
     );
 };
