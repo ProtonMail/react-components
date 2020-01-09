@@ -15,12 +15,19 @@ import {
     useLoading
 } from 'react-components';
 import { buyCredit } from 'proton-shared/lib/api/payments';
-import { DEFAULT_CURRENCY, DEFAULT_CREDITS_AMOUNT, CLIENT_TYPES, MIN_CREDIT_AMOUNT } from 'proton-shared/lib/constants';
+import {
+    DEFAULT_CURRENCY,
+    DEFAULT_CREDITS_AMOUNT,
+    CLIENT_TYPES,
+    MIN_CREDIT_AMOUNT,
+    PAYMENT_METHOD_TYPES
+} from 'proton-shared/lib/constants';
 
 import PaymentSelector from './PaymentSelector';
 import Payment from './Payment';
 import usePayment from './usePayment';
 import { handlePaymentToken } from './paymentTokenHelper';
+import PayPalButton from './PayPalButton';
 
 const getCurrenciesI18N = () => ({
     EUR: c('Monetary unit').t`Euro`,
@@ -59,13 +66,22 @@ const CreditsModal = (props) => {
         currency,
         onPay: handleSubmit
     });
+    const submit =
+        amount >= MIN_CREDIT_AMOUNT ? (
+            method === PAYMENT_METHOD_TYPES.PAYPAL ? (
+                <PayPalButton paypal={paypal} className="pm-button--primary" amount={amount}>{c('Action')
+                    .t`Continue`}</PayPalButton>
+            ) : canPay ? (
+                c('Action').t`Top up`
+            ) : null
+        ) : null;
 
     return (
         <FormModal
             type="small"
             onSubmit={() => withLoading(handleSubmit(parameters))}
             loading={loading}
-            submit={canPay && amount >= MIN_CREDIT_AMOUNT && c('Action').t`Top up`}
+            submit={submit}
             close={c('Action').t`Close`}
             title={c('Title').t`Add credits`}
             {...props}
