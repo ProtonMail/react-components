@@ -5,6 +5,7 @@ import {
     classnames,
     LossLoyaltyModal,
     Alert,
+    GenericError,
     FormModal,
     Payment,
     usePlans,
@@ -56,6 +57,7 @@ const NewSubscriptionModal = ({
     ...rest
 }) => {
     const TITLE = {
+        [SUBSCRIPTION_STEPS.NETWORK_ERROR]: c('Title').t`Network error`,
         [SUBSCRIPTION_STEPS.CUSTOMIZATION]: c('Title').t`Plan customization`,
         [SUBSCRIPTION_STEPS.PAYMENT]: c('Title').t`Checkout`,
         [SUBSCRIPTION_STEPS.UPGRADE]: <div className="aligncenter">{c('Title').t`Processing...`}</div>,
@@ -147,27 +149,33 @@ const NewSubscriptionModal = ({
             return;
         }
 
-        const result = await api(
-            checkSubscription({
-                PlanIDs: clearPlanIDs(newModel.planIDs),
-                CouponCode: newModel.coupon,
-                Currency: newModel.currency,
-                Cycle: newModel.cycle,
-                GiftCode: newModel.gift
-            })
-        );
+        try {
+            const result = await api(
+                checkSubscription({
+                    PlanIDs: clearPlanIDs(newModel.planIDs),
+                    CouponCode: newModel.coupon,
+                    Currency: newModel.currency,
+                    Cycle: newModel.cycle,
+                    GiftCode: newModel.gift
+                })
+            );
 
-        const { Code = '' } = result.Coupon || {}; // Coupon can equal null
-        const copyNewModel = { ...newModel };
+            const { Code = '' } = result.Coupon || {}; // Coupon can equal null
+            const copyNewModel = { ...newModel };
 
-        copyNewModel.coupon = Code;
+            copyNewModel.coupon = Code;
 
-        if (!result.Gift) {
-            delete copyNewModel.gift;
+            if (!result.Gift) {
+                delete copyNewModel.gift;
+            }
+
+            setModel(copyNewModel);
+            setCheckResult(result);
+        } catch (error) {
+            if (error.name === 'OfflineError') {
+                setStep(SUBSCRIPTION_STEPS.NETWORK_ERROR);
+            }
         }
-
-        setModel(copyNewModel);
-        setCheckResult(result);
     };
 
     const handleCheckout = () => {
@@ -230,6 +238,7 @@ const NewSubscriptionModal = ({
             onClose={handleClose}
             {...rest}
         >
+            {step === SUBSCRIPTION_STEPS.NETWORK_ERROR && <GenericError />}
             {step === SUBSCRIPTION_STEPS.CUSTOMIZATION && (
                 <div className="flex flex-spacebetween onmobile-flex-column">
                     <div className="w75 onmobile-w100 pr1 onmobile-pr0">

@@ -22,6 +22,10 @@ const NewSubscriptionModalFooter = ({ submit, step, model, onClose }) => {
         return <Loader />;
     }
 
+    if (step === SUBSCRIPTION_STEPS.NETWORK_ERROR) {
+        return <Button onClick={onClose}>{c('Action').t`Close`}</Button>;
+    }
+
     const hasAddresses = Array.isArray(addresses) && addresses.length > 0;
     const cancel = step === SUBSCRIPTION_STEPS.CUSTOMIZATION ? c('Action').t`Cancel` : c('Action').t`Back`;
     const upsells = [
