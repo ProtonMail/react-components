@@ -19,6 +19,8 @@ const Payment = ({
     amount = 0,
     currency = DEFAULT_CURRENCY,
     coupon = '',
+    paypal,
+    paypalCredit,
     method,
     onMethod,
     card,
@@ -105,6 +107,8 @@ const Payment = ({
                 <div className="pm-field-container payment-right">
                     <Method
                         loading={loading}
+                        paypal={paypal}
+                        paypalCredit={paypalCredit}
                         amount={amount}
                         currency={currency}
                         onCard={onCard}
@@ -132,7 +136,9 @@ Payment.propTypes = {
     onCard: PropTypes.func,
     method: PropTypes.string,
     onMethod: PropTypes.func,
-    errors: PropTypes.object
+    errors: PropTypes.object,
+    paypal: PropTypes.object,
+    paypalCredit: PropTypes.object
 };
 
 export default Payment;

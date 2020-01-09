@@ -35,7 +35,7 @@ const NewSubscriptionSubmitButton = ({ className, paypal, canPay, setStep, step,
     if (!checkResult.AmountDue) {
         return (
             <PrimaryButton className={className} loading={loading} disabled={!canPay} type="submit">{c('Action')
-                .t`Complete`}</PrimaryButton>
+                .t`Confirm`}</PrimaryButton>
         );
     }
 
