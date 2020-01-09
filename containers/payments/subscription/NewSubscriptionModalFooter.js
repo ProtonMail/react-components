@@ -15,7 +15,7 @@ const PercentageIcon = () => <img className="mr0-5 flex-item-noshrink" src={perc
 const ShieldIcon = () => <img className="mr0-5 flex-item-noshrink" src={shieldSvg} alt="percentage" />;
 const ClockIcon = () => <img className="mr0-5 flex-item-noshrink" src={clockSvg} alt="percentage" />;
 
-const NewSubscriptionModalFooter = ({ submit, step, model }) => {
+const NewSubscriptionModalFooter = ({ submit, step, model, onClose }) => {
     const [addresses, loadingAddresses] = useAddresses();
 
     if (loadingAddresses) {
@@ -75,7 +75,7 @@ const NewSubscriptionModalFooter = ({ submit, step, model }) => {
 
     return (
         <>
-            <Button type="reset" className="flex-item-noshrink">
+            <Button onClick={onClose} className="flex-item-noshrink">
                 {cancel}
             </Button>
             {upsells}
@@ -86,6 +86,7 @@ const NewSubscriptionModalFooter = ({ submit, step, model }) => {
 
 NewSubscriptionModalFooter.propTypes = {
     submit: PropTypes.node.isRequired,
+    onClose: PropTypes.func.isRequired,
     step: PropTypes.number,
     model: PropTypes.object
 };
