@@ -14,8 +14,8 @@
     display: none;
 }
 
-// Hide visionary plan for free user in the subscription modal
-.subscription-modal.is-free-user .subscriptionCustomization-section:last-child [data-plan-name="visionary"] {
+// Hide visionary plan for the second table in the subscription modal
+.subscription-modal .subscriptionCustomization-section:last-child [data-plan-name="visionary"] {
     display: none;
 }
 

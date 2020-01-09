@@ -100,7 +100,7 @@ const SubscriptionCheckout = ({ submit = c('Action').t`Pay`, plans = [], model, 
 
     const printSummary = (service = PLAN_SERVICES.MAIL) => {
         return collection
-            .filter(({ Services }) => hasBit(Services, service))
+            .filter(({ Services, quantity }) => hasBit(Services, service) && quantity)
             .map(({ ID, Title, Pricing, Type, Name, quantity }) => {
                 return (
                     <CheckoutRow
