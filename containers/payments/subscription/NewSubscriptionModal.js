@@ -196,6 +196,10 @@ const NewSubscriptionModal = ({
     };
 
     const handleGift = (gift = '') => {
+        if (!gift) {
+            const withoutGift = { gift, ...model };
+            return withLoadingCheck(check(withoutGift));
+        }
         withLoadingCheck(check({ ...model, gift }));
     };
 
@@ -216,7 +220,7 @@ const NewSubscriptionModal = ({
                                 paypal={paypal}
                                 step={step}
                                 setStep={setStep}
-                                loading={loadingCheck}
+                                loading={loadingCheck || loading}
                                 method={method}
                                 checkResult={checkResult}
                                 className="flex-item-noshrink"
