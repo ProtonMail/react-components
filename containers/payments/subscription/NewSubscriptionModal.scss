@@ -15,7 +15,7 @@
 }
 
 // Hide visionary plan for the second table in the subscription modal
-.subscription-modal .subscriptionCustomization-section:last-child [data-plan-name="visionary"] {
+.subscription-modal .subscriptionCustomization-section:nth-child(2) [data-plan-name="visionary"] {
     display: none;
 }
 

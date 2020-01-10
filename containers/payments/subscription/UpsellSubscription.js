@@ -1,6 +1,6 @@
 import React from 'react';
 import { useUser, useSubscription, useModals, usePlans, PrimaryButton, Loader } from 'react-components';
-import { hasMailPlus, hasVpnBasic, removeService } from 'proton-shared/lib/helpers/subscription';
+import { hasMailPlus, hasVpnBasic, switchPlan } from 'proton-shared/lib/helpers/subscription';
 import { DEFAULT_CURRENCY, DEFAULT_CYCLE, PLAN_SERVICES, PLANS } from 'proton-shared/lib/constants';
 import { toMap } from 'proton-shared/lib/helpers/object';
 import { c } from 'ttag';
@@ -39,10 +39,12 @@ const UpsellSubscription = () => {
                             <NewSubscriptionModal
                                 currency={Currency}
                                 cycle={Cycle}
-                                planIDs={{
-                                    ...removeService(planIDs, plans, PLAN_SERVICES.MAIL),
-                                    [plansMap[PLANS.PLUS].ID]: 1
-                                }}
+                                planIDs={switchPlan({
+                                    planIDs,
+                                    plans,
+                                    planID: plansMap[PLANS.PLUS].ID,
+                                    service: PLAN_SERVICES.MAIL
+                                })}
                             />
                         );
                     }}
@@ -61,10 +63,12 @@ const UpsellSubscription = () => {
                             <NewSubscriptionModal
                                 currency={Currency}
                                 cycle={Cycle}
-                                planIDs={{
-                                    ...removeService(planIDs, plans, PLAN_SERVICES.MAIL),
-                                    [plansMap[PLANS.PROFESSIONAL].ID]: 1
-                                }}
+                                planIDs={switchPlan({
+                                    planIDs,
+                                    plans,
+                                    planID: plansMap[PLANS.PROFESSIONAL].ID,
+                                    service: PLAN_SERVICES.MAIL
+                                })}
                             />
                         );
                     }}
@@ -83,10 +87,12 @@ const UpsellSubscription = () => {
                             <NewSubscriptionModal
                                 currency={Currency}
                                 cycle={Cycle}
-                                planIDs={{
-                                    ...removeService(planIDs, plans, PLAN_SERVICES.VPN),
-                                    [plansMap[PLANS.VPNPLUS].ID]: 1
-                                }}
+                                planIDs={switchPlan({
+                                    planIDs,
+                                    plans,
+                                    planID: plansMap[PLANS.VPNPLUS].ID,
+                                    service: PLAN_SERVICES.VPN
+                                })}
                             />
                         );
                     }}

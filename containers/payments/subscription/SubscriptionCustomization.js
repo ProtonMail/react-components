@@ -6,7 +6,7 @@ import { PLANS, CYCLE, ADDON_NAMES, CLIENT_TYPES, PLAN_SERVICES, FREE, PLAN_TYPE
 import { toMap } from 'proton-shared/lib/helpers/object';
 import humanSize from 'proton-shared/lib/helpers/humanSize';
 import { hasBit } from 'proton-shared/lib/helpers/bitset';
-import { removeService } from 'proton-shared/lib/helpers/subscription';
+import { switchPlan } from 'proton-shared/lib/helpers/subscription';
 
 import SubscriptionPlan from './SubscriptionPlan';
 import SubscriptionAddonRow from './SubscriptionAddonRow';
@@ -36,10 +36,12 @@ const Description = ({ planName, setModel, model, plans }) => {
             onClick={() =>
                 setModel({
                     ...model,
-                    planIDs: {
-                        ...removeService(model.planIDs, plans, PLAN_SERVICES.MAIL),
-                        [plusPlan.ID]: 1
-                    }
+                    planIDs: switchPlan({
+                        planIDs: model.planIDs,
+                        plans,
+                        planID: plusPlan.ID,
+                        service: PLAN_SERVICES.MAIL
+                    })
                 })
             }
         >{c('Action').t`Upgrade to ProtonMail Plus`}</a>
@@ -50,10 +52,12 @@ const Description = ({ planName, setModel, model, plans }) => {
             onClick={() =>
                 setModel({
                     ...model,
-                    planIDs: {
-                        ...removeService(model.planIDs, plans, PLAN_SERVICES.VPN),
-                        [vpnPlusPlan.ID]: 1
-                    }
+                    planIDs: switchPlan({
+                        planIDs: model.planIDs,
+                        plans,
+                        planID: vpnPlusPlan.ID,
+                        service: PLAN_SERVICES.VPN
+                    })
                 })
             }
         >{c('Link').t`upgrade to ProtonVPN Plus`}</a>
@@ -395,10 +399,7 @@ const SubscriptionCustomization = ({
                     onSelect={(planID) => {
                         setModel({
                             ...model,
-                            planIDs: {
-                                ...removeService(model.planIDs, plans, PLAN_SERVICES.MAIL),
-                                ...(planID ? { [planID]: 1 } : {})
-                            }
+                            planIDs: switchPlan({ planIDs: model.planIDs, plans, planID, service: PLAN_SERVICES.MAIL })
                         });
                     }}
                 />
@@ -429,10 +430,7 @@ const SubscriptionCustomization = ({
                     onSelect={(planID) => {
                         setModel({
                             ...model,
-                            planIDs: {
-                                ...removeService(model.planIDs, plans, PLAN_SERVICES.VPN),
-                                ...(planID ? { [planID]: 1 } : {})
-                            }
+                            planIDs: switchPlan({ planIDs: model.planIDs, plans, planID, service: PLAN_SERVICES.VPN })
                         });
                     }}
                 />
