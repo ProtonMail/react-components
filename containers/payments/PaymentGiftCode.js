@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useToggle, Icon, LinkButton } from 'react-components';
 import { isValid } from 'proton-shared/lib/helpers/giftCode';
@@ -7,8 +7,16 @@ import { c } from 'ttag';
 import GiftCodeForm from './subscription/GiftCodeForm';
 
 const PaymentGiftCode = ({ gift = '', onApply, loading }) => {
-    const { state, toggle } = useToggle();
+    const { state, toggle, set } = useToggle();
     const [code, setCode] = useState('');
+
+    useEffect(() => {
+        // When we remove the gift code
+        if (!gift) {
+            set(false);
+            setCode('');
+        }
+    }, [gift]);
 
     if (gift) {
         return (
