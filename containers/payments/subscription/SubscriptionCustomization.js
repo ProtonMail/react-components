@@ -374,8 +374,8 @@ const SubscriptionCustomization = ({
                         {(model.planIDs[vpnAddon.ID] || 0) * plansMap[ADDON_NAMES.VPN].Pricing[CYCLE.MONTHLY]}
                     </Price>
                 }
-                step={vpnAddon.MaxVpn}
-                start={vpnplusPlan.MaxVpn}
+                step={vpnAddon.MaxVPN}
+                start={vpnplusPlan.MaxVPN}
                 quantity={model.planIDs[vpnAddon.ID]}
                 onChange={(quantity) => setModel({ ...model, planIDs: { ...model.planIDs, [vpnAddon.ID]: quantity } })}
             />
