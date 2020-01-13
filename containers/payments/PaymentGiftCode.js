@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useToggle, Icon, LinkButton } from 'react-components';
+import { useToggle, Icon, LinkButton, Button } from 'react-components';
 import { isValid } from 'proton-shared/lib/helpers/giftCode';
 import { c } from 'ttag';
 
@@ -10,11 +10,15 @@ const PaymentGiftCode = ({ gift = '', onApply, loading }) => {
     const { state, toggle, set } = useToggle();
     const [code, setCode] = useState('');
 
+    const handleCancel = () => {
+        set(false);
+        setCode('');
+    };
+
     useEffect(() => {
         // When we remove the gift code
         if (!gift) {
-            set(false);
-            setCode('');
+            handleCancel();
         }
     }, [gift]);
 
@@ -39,7 +43,14 @@ const PaymentGiftCode = ({ gift = '', onApply, loading }) => {
             onApply(code);
         };
 
-        return <GiftCodeForm code={code} onChange={setCode} onSubmit={handleSubmit} loading={loading} />;
+        return (
+            <div className="flex flex-nowrap">
+                <div className="flex-item-fluid mr1">
+                    <GiftCodeForm code={code} onChange={setCode} onSubmit={handleSubmit} loading={loading} />
+                </div>
+                <Button onClick={handleCancel}>{c('Action').t`Cancel`}</Button>
+            </div>
+        );
     }
 
     return (
