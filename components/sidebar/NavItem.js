@@ -9,6 +9,7 @@ import { classnames } from '../../helpers/component';
 const NavItem = ({
     type = 'link',
     ariaHiddenList,
+    ariaCurrent,
     link,
     isActive,
     text,
@@ -38,7 +39,12 @@ const NavItem = ({
     if (type === 'link') {
         return (
             <li className={itemClassName}>
-                <NavLink className={classnames([linkClassName, className])} isActive={isActive} to={link}>
+                <NavLink
+                    className={classnames([linkClassName, className])}
+                    isActive={isActive}
+                    to={link}
+                    aria-current={ariaCurrent}
+                >
                     {content}
                 </NavLink>
                 {list.length ? (
@@ -78,6 +84,7 @@ const NavItem = ({
 };
 
 NavItem.propTypes = {
+    ariaCurrent: PropTypes.string,
     ariaHiddenList: PropTypes.bool,
     linkClassName: PropTypes.string,
     itemClassName: PropTypes.string,
