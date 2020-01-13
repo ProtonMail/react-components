@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { PrimaryButton } from 'react-components';
+import { PrimaryButton, classnames } from 'react-components';
 import { PAYMENT_METHOD_TYPES } from 'proton-shared/lib/constants';
 import { c } from 'ttag';
 
@@ -17,8 +17,11 @@ const NewSubscriptionSubmitButton = ({ className, paypal, canPay, setStep, step,
 
     if (method === PAYMENT_METHOD_TYPES.PAYPAL) {
         return (
-            <PayPalButton paypal={paypal} className={className} amount={checkResult.AmountDue}>{c('Action')
-                .t`Pay`}</PayPalButton>
+            <PayPalButton
+                paypal={paypal}
+                className={classnames(['pm-button--primary', className])}
+                amount={checkResult.AmountDue}
+            >{c('Action').t`Pay`}</PayPalButton>
         );
     }
 
