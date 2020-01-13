@@ -41,7 +41,7 @@ const SubscriptionAddonRow = ({
                     <Select
                         disabled={loading}
                         className="w100"
-                        id={idRef.current}
+                        id={idRef}
                         options={options}
                         onChange={({ target }) => onChange(+target.value)}
                         value={quantity}
