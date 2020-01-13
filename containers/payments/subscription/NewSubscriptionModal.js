@@ -197,7 +197,8 @@ const NewSubscriptionModal = ({
 
     const handleGift = (gift = '') => {
         if (!gift) {
-            const withoutGift = { gift, ...model };
+            const withoutGift = { ...model };
+            delete withoutGift.gift;
             return withLoadingCheck(check(withoutGift));
         }
         withLoadingCheck(check({ ...model, gift }));
