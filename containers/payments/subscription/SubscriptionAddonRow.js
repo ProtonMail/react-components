@@ -25,7 +25,7 @@ const SubscriptionAddonRow = ({
 
     return (
         <div className="flex flex-nowrap flex-spacebetween flex-items-center mb1">
-            <label htmlFor={idRef.current} className="w30">
+            <label htmlFor={idRef} className="w30">
                 {label}
             </label>
             <div className="flex flex-nowrap w50">
