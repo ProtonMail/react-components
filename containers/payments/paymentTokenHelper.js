@@ -92,9 +92,13 @@ export const process = ({ Token, api, ApprovalURL, ReturnHost, signal }) => {
 
             if (tab.closed) {
                 reset();
-                const error = new Error(c('Error').t`Tab closed`);
-                error.tryAgain = true;
-                return reject(error);
+                return pull({ Token, api, signal })
+                    .then(resolve)
+                    .catch(() => {
+                        const error = new Error(c('Error').t`Tab closed`);
+                        error.tryAgain = true;
+                        return reject(error);
+                    });
             }
 
             await wait(DELAY_LISTENING);
