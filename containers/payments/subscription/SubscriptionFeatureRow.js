@@ -4,11 +4,11 @@ import { Icon, Info } from 'react-components';
 
 const SubscriptionFeatureRow = ({ icon, feature, info }) => {
     return (
-        <div className="flex flex-nowrap flex-items-center">
-            <Icon name={icon} className="mr1" />
+        <span className="flex flex-nowrap">
+            <Icon name={icon} className="mt0-25 mr1 flex-item-noshrink" />
             {feature}
             {info ? <Info title={info} /> : null}
-        </div>
+        </span>
     );
 };
 

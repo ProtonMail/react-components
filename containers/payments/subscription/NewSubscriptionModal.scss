@@ -1,3 +1,5 @@
+@import '~design-system/_sass/reusable-components/design-system-config';
+
 // Hide images in subscription table
 .subscription-modal .subscriptionTable-image-container {
     display: none;
@@ -36,4 +38,16 @@
 
 .subscription-modal .pm-field-container.payment-right {
     width: 70%;
+}
+
+
+@include respond-to(1100) {
+   .cycle-currency-selectors.flex-nowrap {
+        flex-wrap: wrap;
+        .pm-field {
+            width: 100%;
+            margin-right: 0;
+            margin-bottom: .25em;
+        }
+   }
 }

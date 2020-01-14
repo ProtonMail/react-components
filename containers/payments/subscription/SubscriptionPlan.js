@@ -17,17 +17,21 @@ const SubscriptionPlan = ({
 
     return (
         <>
-            <div className="flex flex-nowrap onmobile-flex-column mb1">
-                <div className="bordered-container p1 mr1">
+            <div className="flex flex-wrap onmobile-flex-column">
+                <div className="bordered-container p1 mr1 mb1">
                     <div className="bold mb1">{c('Title').t`Plan summary`}</div>
                     <ul className="unstyled mb1">
                         {features.map((feature, index) => {
-                            return <li key={index}>{feature}</li>;
+                            return (
+                                <li className="mb0-25" key={index}>
+                                    {feature}
+                                </li>
+                            );
                         })}
                     </ul>
                 </div>
                 {canCustomize && state ? (
-                    <div className="bordered-container p1">
+                    <div className="bordered-container p1 mb1">
                         <div className="flex flex-nowrap flex-items-center flex-spacebetween mb1">
                             <div className="bold">{c('Title').t`Configure plan`}</div>
                             <Price className="big mt0 mb0" currency={currency} suffix={c('Suffix').t`/month`}>
