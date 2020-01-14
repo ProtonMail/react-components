@@ -256,7 +256,7 @@ const NewSubscriptionModal = ({
                             setModel={setModel}
                         />
                     </div>
-                    <div className="w25 onmobile-w100 pt2 mt1-5 onmobile-mt0 onmobile-pt0">
+                    <div className="w25 onmobile-w100">
                         <SubscriptionCheckout
                             submit={
                                 <NewSubscriptionSubmitButton

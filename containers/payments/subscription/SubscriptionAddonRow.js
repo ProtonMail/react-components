@@ -24,20 +24,22 @@ const SubscriptionAddonRow = ({
     }));
 
     return (
-        <div className="flex flex-nowrap flex-spacebetween flex-items-center mb1">
-            <label htmlFor={idRef} className="w30">
+        <div className="flex flex-nowrap flex-spacebetween flex-items-center ontablet-w100 mb1">
+            <label htmlFor={idRef} className="w140e onmobile-w25 pr1">
                 {label}
             </label>
-            <div className="flex flex-nowrap w50">
-                <div className="w25">
+            <div className="flex flex-nowrap w220e ontinymobile-wauto">
+                <div className="notinymobile">
                     <Button
                         className="flex-item-noshrink w100"
                         onClick={() => onChange(quantity - 1)}
                         disabled={loading || quantity === min}
                         icon="minus"
-                    />
+                    >
+                        <span className="sr-only">{c('Action').t`Decrease`}</span>
+                    </Button>
                 </div>
-                <div className="w50 pl0-5 pr0-5">
+                <div className="w140e ontinymobile-wauto pl0-5 pr0-5">
                     <Select
                         disabled={loading}
                         className="w100"
@@ -47,16 +49,18 @@ const SubscriptionAddonRow = ({
                         value={quantity}
                     />
                 </div>
-                <div className="w25">
+                <div className="notinymobile">
                     <Button
                         className="flex-item-noshrink w100"
                         onClick={() => onChange(quantity + 1)}
                         disabled={loading || quantity === max}
                         icon="plus"
-                    />
+                    >
+                        <span className="sr-only">{c('Action').t`Increase`}</span>
+                    </Button>
                 </div>
             </div>
-            <div className="w30 big mb0 mt0 alignright">{quantity ? price : c('Info').t`Included`}</div>
+            <div className="w120e ontablet-w25 big mb0 mt0 alignright">{quantity ? price : c('Info').t`Included`}</div>
         </div>
     );
 };

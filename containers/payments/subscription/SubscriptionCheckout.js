@@ -125,7 +125,7 @@ const SubscriptionCheckout = ({ submit = c('Action').t`Pay`, plans = [], model, 
 
     return (
         <>
-            <div className="flex flex-nowrap mb1">
+            <div className="flex flex-nowrap cycle-currency-selectors mb1">
                 <CycleSelector
                     className="mr1"
                     loading={loading}
