@@ -98,7 +98,7 @@ Modal.propTypes = {
     modalTitleID: PropTypes.string,
     onClose: PropTypes.func.isRequired,
     onSubmit: PropTypes.func,
-    title: PropTypes.string.isRequired,
+    title: PropTypes.node.isRequired,
     children: PropTypes.node.isRequired,
     loading: PropTypes.bool,
     submit: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
