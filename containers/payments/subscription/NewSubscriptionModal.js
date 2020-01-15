@@ -236,6 +236,7 @@ const NewSubscriptionModal = ({
                                 className="flex-item-noshrink"
                             />
                         }
+                        plans={plans}
                         step={step}
                         model={model}
                     />

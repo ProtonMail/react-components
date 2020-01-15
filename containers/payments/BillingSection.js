@@ -62,7 +62,7 @@ const BillingSection = ({ permission }) => {
             <>
                 <SubTitle>{c('Title').t`Billing details`}</SubTitle>
                 <Alert>{c('Info').t`There are no billing details available for your current subscription.`}</Alert>
-                <div className="shadow-container mb1 pt1 pl1 pr1">
+                <div className="shadow-container bg-global-highlight mb1 pt1 pl1 pr1">
                     <div className="flex-autogrid onmobile-flex-column w100 mb1">
                         <div className="flex-autogrid-item">{c('Label').t`Credits`}</div>
                         <div className="flex-autogrid-item">
