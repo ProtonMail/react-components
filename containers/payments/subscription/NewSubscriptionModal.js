@@ -33,6 +33,7 @@ import NewSubscriptionModalFooter from './NewSubscriptionModalFooter';
 import PaymentGiftCode from '../PaymentGiftCode';
 
 import './NewSubscriptionModal.scss';
+import { handlePaymentToken } from '../paymentTokenHelper';
 
 const clearPlanIDs = (planIDs = {}) => {
     return Object.entries(planIDs).reduce((acc, [planID, quantity]) => {
@@ -109,7 +110,7 @@ const NewSubscriptionModal = ({
         createNotification({ text: c('Success').t`You have successfully unsubscribed` });
     };
 
-    const handleSubscribe = async (params) => {
+    const handleSubscribe = async (params = {}) => {
         if (!hasPlans(model.planIDs)) {
             return handleUnsubscribe();
         }
@@ -118,13 +119,11 @@ const NewSubscriptionModal = ({
             setStep(SUBSCRIPTION_STEPS.UPGRADE);
             await api(
                 subscribe({
-                    Amount: checkResult.AmountDue,
                     PlanIDs: model.planIDs,
                     CouponCode: model.coupon,
                     GiftCode: model.gift,
-                    Currency: model.currency,
                     Cycle: model.cycle,
-                    ...params
+                    ...params // Contains Payment, Amount and Currency
                 })
             );
             await call();
@@ -178,12 +177,22 @@ const NewSubscriptionModal = ({
         }
     };
 
-    const handleCheckout = () => {
+    const handleCheckout = async () => {
         if (step === SUBSCRIPTION_STEPS.CUSTOMIZATION) {
             return setStep(SUBSCRIPTION_STEPS.PAYMENT);
         }
 
-        withLoading(handleSubscribe(parameters));
+        const params = await handlePaymentToken({
+            params: {
+                Amount: checkResult.AmountDue,
+                Currency: checkResult.Currency,
+                ...parameters
+            },
+            createModal,
+            api
+        });
+
+        return handleSubscribe(params);
     };
 
     const handleClose = (e) => {
@@ -239,7 +248,7 @@ const NewSubscriptionModal = ({
             ])}
             title={TITLE[step]}
             loading={loading || loadingPlans || loadingVpnCountries || loadingOrganization}
-            onSubmit={handleCheckout}
+            onSubmit={() => withLoading(handleCheckout())}
             onClose={handleClose}
             {...rest}
         >
@@ -264,7 +273,7 @@ const NewSubscriptionModal = ({
                                     paypal={paypal}
                                     step={step}
                                     setStep={setStep}
-                                    loading={loadingCheck}
+                                    loading={loadingCheck || loading}
                                     method={method}
                                     checkResult={checkResult}
                                     className="w100"
@@ -273,7 +282,7 @@ const NewSubscriptionModal = ({
                             plans={plans}
                             checkResult={checkResult}
                             loading={loadingCheck}
-                            onCheckout={handleCheckout}
+                            onCheckout={() => withLoading(handleCheckout())}
                             model={model}
                             setModel={setModel}
                         />
@@ -322,7 +331,7 @@ const NewSubscriptionModal = ({
                                     paypal={paypal}
                                     step={step}
                                     setStep={setStep}
-                                    loading={loadingCheck}
+                                    loading={loadingCheck || loading}
                                     method={method}
                                     checkResult={checkResult}
                                     className="w100"
@@ -331,7 +340,7 @@ const NewSubscriptionModal = ({
                             plans={plans}
                             checkResult={checkResult}
                             loading={loadingCheck}
-                            onCheckout={handleCheckout}
+                            onCheckout={() => withLoading(handleCheckout())}
                             model={model}
                             setModel={setModel}
                         />
