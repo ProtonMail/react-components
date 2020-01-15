@@ -28,8 +28,16 @@ const usePaymentMethods = ({ amount, coupon, type }) => {
         }
     };
 
-    const getIcon = (type) => {
-        switch (type) {
+    const getIcon = (type, { Brand = '' } = {}) => {
+        switch (Brand || type) {
+            case 'American Express':
+                return 'payments-type-amex';
+            case 'Visa':
+                return 'payments-type-visa';
+            case 'Discover':
+                return 'payments-type-discover';
+            case 'MasterCard':
+                return 'payments-type-mastercard';
             case PAYMENT_METHOD_TYPES.CARD:
                 return 'payments-type-card';
             case PAYMENT_METHOD_TYPES.PAYPAL:
@@ -50,7 +58,7 @@ const usePaymentMethods = ({ amount, coupon, type }) => {
     if (methods.length) {
         options.unshift(
             ...methods.map(({ ID: value, Details, Type }) => ({
-                icon: getIcon(Type),
+                icon: getIcon(Type, Details),
                 text: [getMethod(Type, Details), isExpired(Details) && `(${c('Info').t`Expired`})`]
                     .filter(Boolean)
                     .join(' '),

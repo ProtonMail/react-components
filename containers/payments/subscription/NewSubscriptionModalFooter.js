@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useAddresses, Button, Loader } from 'react-components';
 import { c } from 'ttag';
-import { CYCLE, COUPON_CODES } from 'proton-shared/lib/constants';
+import { CYCLE, COUPON_CODES, PLANS } from 'proton-shared/lib/constants';
 import shieldSvg from 'design-system/assets/img/shared/shield.svg';
 import percentageSvg from 'design-system/assets/img/shared/percentage.svg';
 import clockSvg from 'design-system/assets/img/shared/clock.svg';
@@ -15,8 +15,10 @@ const PercentageIcon = () => <img className="mr0-5 flex-item-noshrink" src={perc
 const ShieldIcon = () => <img className="mr0-5 flex-item-noshrink" src={shieldSvg} alt="percentage" />;
 const ClockIcon = () => <img className="mr0-5 flex-item-noshrink" src={clockSvg} alt="percentage" />;
 
-const NewSubscriptionModalFooter = ({ submit, step, model, onClose }) => {
+const NewSubscriptionModalFooter = ({ submit, step, model, plans, onClose }) => {
+    const { ID: visionaryID } = plans.find(({ Name }) => Name === PLANS.VISIONARY);
     const [addresses, loadingAddresses] = useAddresses();
+    const isVisionary = !!model.planIDs[visionaryID];
 
     if (loadingAddresses) {
         return <Loader />;
@@ -47,20 +49,25 @@ const NewSubscriptionModalFooter = ({ submit, step, model, onClose }) => {
                 <span className="flex-item-fluid">{c('Info').t`You are saving 33% with 2-year billing`}</span>
             </div>
         ),
-        step === SUBSCRIPTION_STEPS.CUSTOMIZATION && hasAddresses && model.coupon !== COUPON_CODES.BUNDLE && (
-            <div key="upsell-4" className="nomobile flex flex-nowrap flex-items-center pl1 pr1">
-                <PercentageIcon />
-                <span className="flex-item-fluid">{c('Info').t`Save an extra 20% by combining Mail and VPN`}</span>
-            </div>
-        ),
-        step === SUBSCRIPTION_STEPS.CUSTOMIZATION && hasAddresses && model.coupon === COUPON_CODES.BUNDLE && (
-            <div key="upsell-5" className="nomobile flex flex-nowrap flex-items-center pl1 pr1">
-                <TickIcon />
-                <span className="flex-item-fluid">
-                    {c('Info').t`You are saving an extra 20% with the bundle discount`}
-                </span>
-            </div>
-        ),
+        step === SUBSCRIPTION_STEPS.CUSTOMIZATION &&
+            hasAddresses &&
+            model.coupon !== COUPON_CODES.BUNDLE &&
+            !isVisionary && (
+                <div key="upsell-4" className="nomobile flex flex-nowrap flex-items-center pl1 pr1">
+                    <PercentageIcon />
+                    <span className="flex-item-fluid">{c('Info').t`Save an extra 20% by combining Mail and VPN`}</span>
+                </div>
+            ),
+        step === SUBSCRIPTION_STEPS.CUSTOMIZATION &&
+            hasAddresses &&
+            (model.coupon === COUPON_CODES.BUNDLE || isVisionary) && (
+                <div key="upsell-5" className="nomobile flex flex-nowrap flex-items-center pl1 pr1">
+                    <TickIcon />
+                    <span className="flex-item-fluid">
+                        {c('Info').t`You are saving an extra 20% with the bundle discount`}
+                    </span>
+                </div>
+            ),
         step === SUBSCRIPTION_STEPS.PAYMENT && (
             <div key="upsell-6" className="nomobile flex flex-nowrap flex-items-center pl1 pr1">
                 <ClockIcon />
@@ -89,6 +96,7 @@ const NewSubscriptionModalFooter = ({ submit, step, model, onClose }) => {
 };
 
 NewSubscriptionModalFooter.propTypes = {
+    plans: PropTypes.array.isRequired,
     submit: PropTypes.node.isRequired,
     onClose: PropTypes.func.isRequired,
     step: PropTypes.number,

@@ -60,9 +60,15 @@ const PaymentMethodDetails = ({ type, details = {} }) => {
         const bankIcon = getBankSvg('paypal');
         return (
             <Bordered className="bg-global-highlight p2">
-                <img width="70" src={bankIcon} alt="PayPal" className="mb1" />
-                <label className="color-global-grey mb0-5">{c('Label').t`Payer`}</label>
-                <code className="bl bigger mb0 mb1">PayPal {Payer}</code>
+                <div>
+                    <img width="70" src={bankIcon} alt="PayPal" className="mb1" />
+                </div>
+                <div className="flex flex-nowrap flex-items-center">
+                    <label className="color-global-grey mb0-5 mr1" htmlFor="paypal-payer">{c('Label').t`Payer`}</label>
+                    <code id="paypal-payer" className="bl bigger mb0 mb1">
+                        {Payer}
+                    </code>
+                </div>
             </Bordered>
         );
     }
