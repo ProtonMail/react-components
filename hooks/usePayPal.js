@@ -1,16 +1,15 @@
-import { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createToken } from 'proton-shared/lib/api/payments';
-import { useApi, useLoading } from 'react-components';
+import { useApi, useLoading, useModals } from 'react-components';
 
-import { toParams, process } from '../containers/payments/paymentTokenHelper';
+import PaymentVerificationModal from '../containers/payments/PaymentVerificationModal';
 
 const usePayPal = ({ amount: Amount = 0, currency: Currency = '', type: Type, onPay }) => {
     const api = useApi();
     const [model, setModel] = useState({});
-    const abortRef = useRef();
     const [loadingVerification, withLoadingVerification] = useLoading();
     const [loadingToken, withLoadingToken] = useLoading();
-    const onCancel = () => abortRef.current && abortRef.current.abort();
+    const { createModal } = useModals();
 
     const onToken = async () => {
         const result = await api(
@@ -24,10 +23,21 @@ const usePayPal = ({ amount: Amount = 0, currency: Currency = '', type: Type, on
     };
 
     const onVerification = async () => {
-        abortRef.current = new AbortController();
         const { Token, ApprovalURL, ReturnHost } = model;
-        await process({ Token, api, ApprovalURL, ReturnHost, signal: abortRef.current.signal });
-        onPay(toParams({ Amount, Currency }, Token, Type));
+        const result = await new Promise((resolve, reject) => {
+            createModal(
+                <PaymentVerificationModal
+                    params={{ Amount, Currency }}
+                    returnHost={ReturnHost}
+                    approvalURL={ApprovalURL}
+                    token={Token}
+                    onSubmit={resolve}
+                    onClose={reject}
+                    type={Type}
+                />
+            );
+        });
+        onPay(result);
     };
 
     useEffect(() => {
@@ -40,7 +50,6 @@ const usePayPal = ({ amount: Amount = 0, currency: Currency = '', type: Type, on
         isReady: !!model.Token,
         loadingToken,
         loadingVerification,
-        onCancel,
         onToken: () => withLoadingToken(onToken()),
         onVerification: () => withLoadingVerification(onVerification())
     };

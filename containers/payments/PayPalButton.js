@@ -30,7 +30,7 @@ const PayPalButton = ({ amount, children, className, paypal }) => {
     }
 
     if (paypal.loadingVerification) {
-        return <Button onClick={paypal.onCancel} className={className}>{c('Action').t`Cancel verification`}</Button>;
+        return <Button loading={true} className={className}>{c('Action').t`Loading verification`}</Button>;
     }
 
     const handleClick = async () => {
