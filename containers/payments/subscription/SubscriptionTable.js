@@ -32,7 +32,7 @@ const SubscriptionTable = ({
                                         </div>
                                     ) : null}
                                     {index === mostPopularIndex ? (
-                                        <div className="mb0-5 aligncenter color-global-success bold small mt0 uppercase">{c(
+                                        <div className="mb0-5 aligncenter color-global-success bold small mt0 uppercase subscriptionTable-mostPopular">{c(
                                             'Title for subscription plan'
                                         ).t`Most popular`}</div>
                                     ) : null}
@@ -42,7 +42,7 @@ const SubscriptionTable = ({
                                         <img src={imageSrc} alt={title} />
                                     </div>
                                 </header>
-                                <p className="subscriptionTable-description aligncenter mt0 mb1 italic">
+                                <p className="subscriptionTable-description aligncenter mt0 mb1 bold">
                                     {description}
                                 </p>
                                 <ul className="unstyled small mb2 flex-item-fluid-auto">

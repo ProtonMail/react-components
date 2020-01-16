@@ -19,25 +19,24 @@
     min-height: 22rem;
 }
 
-.subscriptionTable-description {
-    min-height: 7rem;
-}
-
+.subscriptionTable-description,
 .subscriptionTable-footer {
     min-height: 7rem;
 }
 
 .subscriptionTable-image-container {
-    height: 100px;
+    height: 10rem;
 }
 
-.subscriptionPrices-monthly .amount {
-    font-size: larger;
-}
-
-.subscriptionPrices-monthly .suffix,
-.subscriptionPrices-monthly .currency {
-    font-size: smaller;
+.subscriptionPrices-monthly {
+    .amount,
+    .currency  {
+        font-size: 3rem;
+    }
+    .suffix {
+        vertical-align: text-bottom;
+        line-height: 3;
+    }
 }
 
 .subscriptionTable-feature {
@@ -46,4 +45,11 @@
     padding-left: 20px;
     background-repeat: no-repeat;
     background-position: 5px 5px;
+}
+
+.subscriptionTable-mostPopular {
+    position: absolute;
+    top: .5rem;
+    left: 0;
+    right: 0;
 }

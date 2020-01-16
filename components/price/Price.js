@@ -15,7 +15,7 @@ const Price = ({ children: amount = 0, currency = '', className = '', divisor = 
     const c = <span className="currency">{CURRENCIES[currency] || currency}</span>;
     const p = amount < 0 ? <span className="prefix">-</span> : null;
     const v = <span className="amount">{value}</span>;
-    const s = suffix ? <span className="suffix">{suffix}</span> : null;
+    const s = suffix ? <span className="suffix ml0-25">{suffix}</span> : null;
     const pr = prefix ? <span className="prefix">{prefix}</span> : null;
 
     if (currency === 'USD') {
