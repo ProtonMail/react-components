@@ -8,7 +8,7 @@ const { VPN } = CLIENT_TYPES;
 
 const Cash = () => {
     const { CLIENT_TYPE } = useConfig();
-    const email = <b>{CLIENT_TYPE === VPN ? 'contact@protonvpn.com' : 'contact@protonmail.com'}</b>;
+    const email = <b key="email-contact">{CLIENT_TYPE === VPN ? 'contact@protonvpn.com' : 'contact@protonmail.com'}</b>;
 
     return (
         <div className="p1 bordered-container bg-global-highlight mb1">

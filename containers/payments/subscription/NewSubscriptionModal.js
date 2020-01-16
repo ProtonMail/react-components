@@ -19,7 +19,7 @@ import {
     useOrganization,
     useModals
 } from 'react-components';
-import { DEFAULT_CURRENCY, DEFAULT_CYCLE, CYCLE, CURRENCIES } from 'proton-shared/lib/constants';
+import { DEFAULT_CURRENCY, DEFAULT_CYCLE, CYCLE, CURRENCIES, PAYMENT_METHOD_TYPES } from 'proton-shared/lib/constants';
 import { checkSubscription, subscribe, deleteSubscription } from 'proton-shared/lib/api/payments';
 import { isLoyal } from 'proton-shared/lib/helpers/organization';
 
@@ -312,6 +312,10 @@ const NewSubscriptionModal = ({
                                     onCard={setCard}
                                     errors={errors}
                                 />
+                                {[PAYMENT_METHOD_TYPES.CASH, PAYMENT_METHOD_TYPES.BITCOIN].includes(method) ? (
+                                    <Alert type="warning">{c('Warning')
+                                        .t`Please note that by choosing this payment method, your account cannot be upgraded immediately. We will update your account once the payment is cleared.`}</Alert>
+                                ) : null}
                             </>
                         ) : (
                             <>

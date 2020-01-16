@@ -64,7 +64,7 @@ const PaymentMethodDetails = ({ type, details = {} }) => {
                     <img width="70" src={bankIcon} alt="PayPal" className="mb1" />
                 </div>
                 <div className="flex flex-nowrap flex-items-center">
-                    <label className="color-global-grey mb0-5 mr1" htmlFor="paypal-payer">{c('Label').t`Payer`}</label>
+                    <label className="color-global-grey mr1" htmlFor="paypal-payer">{c('Label').t`Payer`}</label>
                     <code id="paypal-payer" className="bl bigger mb0 mb1">
                         {Payer}
                     </code>
