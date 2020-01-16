@@ -6,17 +6,19 @@ import americanExpressSafekeySvg from 'design-system/assets/img/shared/bank-icon
 import discoverProtectBuySvg from 'design-system/assets/img/shared/bank-icons/discover-protectbuy.svg';
 import mastercardSecurecodeSvg from 'design-system/assets/img/shared/bank-icons/mastercard-securecode.svg';
 import verifiedByVisaSvg from 'design-system/assets/img/shared/bank-icons/verified-by-visa.svg';
+import paypalSvg from 'design-system/assets/img/shared/bank-icons/cc-paypal.svg';
 
 const IMAGES = {
     'american-express': americanExpressSafekeySvg,
     discover: discoverProtectBuySvg,
     mastercard: mastercardSecurecodeSvg,
-    visa: verifiedByVisaSvg
+    visa: verifiedByVisaSvg,
+    paypal: paypalSvg
 };
 
 const PaymentVerificationImage = ({ payment = {} }) => {
     const { Details = {} } = payment;
-    const [{ type = '', niceType = '' } = {}] = creditCardType(Details.Number) || [];
+    const [{ type = 'paypal', niceType = 'PayPal' } = {}] = creditCardType(Details.Number) || [];
 
     return <img src={IMAGES[type] || treeDSecureSvg} alt={niceType} />;
 };
