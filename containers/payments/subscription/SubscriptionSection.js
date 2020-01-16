@@ -126,7 +126,11 @@ const SubscriptionSection = ({ permission }) => {
         mailPlanName === 'visionary' && { label: c('Label').t`VPN connections`, max: MaxVPN }
     ].filter(Boolean);
 
-    const vpnAddons = [hasPaidVpn && { label: c('Label').t`VPN connections`, max: MaxVPN }].filter(Boolean);
+    const vpnAddons = [
+        hasPaidVpn
+            ? { label: c('Label').t`VPN connections`, max: MaxVPN }
+            : { label: c('Label').t`VPN connections`, max: 1 }
+    ];
 
     return (
         <>
