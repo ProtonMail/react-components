@@ -56,15 +56,19 @@ const DKIMSection = ({ domain }) => {
             <p className="mb1 bl">{c('Label')
                 .t`Please add the following TXT record. Note, DNS records can take several hours to update.`}</p>
             {domain.Keys.map(({ PublicKey, Algorithm, Selector, CreateTime, State }, index) => {
-                const value = `v=DKIM1;k=rsa;p=${PublicKey};`;
+                const value = `v=DKIM1;k=rsa;p=${State === DKIM_KEY_STATUS.RETIRED ? '' : `${PublicKey};`}`;
                 return (
                     <React.Fragment key={index}>
                         <div className="flex flex-spacebetween flex-items-center flex-nowrap">
                             <div className="flex flex-nowrap flex-items-center">
                                 <label className="bold mr0-5">{c('Label').t`Key:`}</label>
                                 <span className="mr1">{ALGO[Algorithm]}</span>
-                                <label className="bold mr0-5">{c('Label').t`Active since:`}</label>
-                                <Time>{CreateTime}</Time>
+                                {State === DKIM_KEY_STATUS.ACTIVE ? (
+                                    <>
+                                        <label className="bold mr0-5">{c('Label').t`Active since:`}</label>
+                                        <Time>{CreateTime}</Time>
+                                    </>
+                                ) : null}
                             </div>
                             {KEY_STATUS[State]}
                         </div>
