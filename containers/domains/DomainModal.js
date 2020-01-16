@@ -1,7 +1,16 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
 import PropTypes from 'prop-types';
-import { FormModal, useLoading, useApi, useStep, Breadcrumb, useNotifications } from 'react-components';
+import {
+    FormModal,
+    Group,
+    ButtonGroup,
+    useLoading,
+    useApi,
+    useStep,
+    useNotifications,
+    classnames
+} from 'react-components';
 import { withRouter } from 'react-router-dom';
 import { addDomain, getDomain } from 'proton-shared/lib/api/domains';
 import { VERIFY_STATE } from 'proton-shared/lib/constants';
@@ -161,7 +170,17 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
             {...rest}
             {...modalProps}
         >
-            {<Breadcrumb list={breadcrumbLabels} current={step} onClick={handleClick} />}
+            <Group className="mb1">
+                {breadcrumbLabels.map((label, index) => (
+                    <ButtonGroup
+                        key={index}
+                        className={classnames([index === step && 'is-active'])}
+                        onClick={() => handleClick(index)}
+                    >
+                        {label}
+                    </ButtonGroup>
+                ))}
+            </Group>
             {section}
         </FormModal>
     );
