@@ -40,16 +40,16 @@ const DNS_STATUS = {
     [DKIM_KEY_DNS_STATUS.INVALID]: <Badge className="" type="error">{c('Status').t`Invalid`}</Badge>
 };
 
-const DKIMSection = ({ domain }) => {
+const DKIMSection = ({ domain, setDomain }) => {
     const off = <code key="off">off</code>;
     const { createModal } = useModals();
-    const openGenerateKeyModal = () => createModal(<GenerateKeyModal domain={domain} />);
+    const openGenerateKeyModal = () => createModal(<GenerateKeyModal domain={domain} setDomain={setDomain} />);
 
     return (
         <>
             <Alert learnMore="https://protonmail.com/support/knowledge-base/anti-spoofing/">
                 {c('Info')
-                    .t`ProtonMail supports DKIM signing for custom domains! To use DKIM authentication, please add the following TXT record into your DNS for this domain. This can typically be done in the control panel of your domain name registrar.`}
+                    .t`ProtonMail supports DKIM signing for custom domains. To use DKIM authentication, please add the following TXT record into your DNS settings for this domain. This can typically be done in the control panel of your domain name registrar.`}
             </Alert>
             <p className="mb1 bl">{c('Label')
                 .t`Please add the following TXT record. Note, DNS records can take several hours to update.`}</p>
@@ -109,7 +109,8 @@ const DKIMSection = ({ domain }) => {
 };
 
 DKIMSection.propTypes = {
-    domain: PropTypes.object.isRequired
+    domain: PropTypes.object.isRequired,
+    setDomain: PropTypes.func.isRequired
 };
 
 export default DKIMSection;

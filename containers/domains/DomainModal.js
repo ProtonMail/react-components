@@ -201,7 +201,7 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
 
         if (step === STEPS.DKIM) {
             return {
-                section: <DKIMSection domain={domainModel} />,
+                section: <DKIMSection domain={domainModel} setDomain={setDomain} />,
                 onSubmit: next
             };
         }
@@ -229,7 +229,10 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
                 {breadcrumbLabels.map((label, index) => (
                     <ButtonGroup
                         key={index}
-                        className={classnames(['flex flex-nowrap flex-items-center pm-button--for-icon', index === step && 'is-active'])}
+                        className={classnames([
+                            'flex flex-nowrap flex-items-center pm-button--for-icon',
+                            index === step && 'is-active'
+                        ])}
                         disabled={
                             (index > STEPS.DOMAIN && !domainModel.ID) ||
                             (index > STEPS.VERIFY && domainModel.VerifyState !== VERIFY_STATE.VERIFY_STATE_GOOD)

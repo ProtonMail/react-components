@@ -1,20 +1,29 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { FormModal, Radio, Href, useApi, useLoading, useNotifications, useEventManager } from 'react-components';
-import { DKIM_RSA_1024, DKIM_RSA_2048 } from 'proton-shared/lib/constants';
+import { FormModal, Radio, Href, useApi, useLoading, useNotifications } from 'react-components';
+import { DKIM_RSA_1024, DKIM_RSA_2048, DKIM_KEY_STATUS } from 'proton-shared/lib/constants';
 import { generateKey } from 'proton-shared/lib/api/domains';
 import { c } from 'ttag';
 
-const GenerateKeyModal = ({ domain, ...rest }) => {
+const GenerateKeyModal = ({ domain, setDomain, ...rest }) => {
     const api = useApi();
     const { createNotification } = useNotifications();
     const [algorithm, setAlgorithm] = useState(DKIM_RSA_2048);
     const [loading, withLoading] = useLoading();
-    const { call } = useEventManager();
 
     const generate = async () => {
-        await api(generateKey(domain.ID, algorithm));
-        await call();
+        const { Key } = await api(generateKey(domain.ID, algorithm));
+        const Keys = domain.Keys.reduce(
+            (acc, key) => {
+                if (key.State === DKIM_KEY_STATUS.ACTIVE) {
+                    return acc;
+                }
+                acc.push(key);
+                return acc;
+            },
+            [Key]
+        );
+        setDomain({ ...domain, Keys });
         createNotification({ text: c('Success').t`Key generated` });
         rest.onClose();
     };
@@ -61,7 +70,8 @@ const GenerateKeyModal = ({ domain, ...rest }) => {
 };
 
 GenerateKeyModal.propTypes = {
-    domain: PropTypes.object.isRequired
+    domain: PropTypes.object.isRequired,
+    setDomain: PropTypes.func.isRequired
 };
 
 export default GenerateKeyModal;
