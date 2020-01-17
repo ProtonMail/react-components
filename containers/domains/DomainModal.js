@@ -229,7 +229,7 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
                 {breadcrumbLabels.map((label, index) => (
                     <ButtonGroup
                         key={index}
-                        className={classnames(['flex flex-nowrap', index === step && 'is-active'])}
+                        className={classnames(['flex flex-nowrap flex-items-center pm-button--for-icon', index === step && 'is-active'])}
                         disabled={
                             (index > STEPS.DOMAIN && !domainModel.ID) ||
                             (index > STEPS.VERIFY && domainModel.VerifyState !== VERIFY_STATE.VERIFY_STATE_GOOD)
@@ -237,7 +237,7 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
                         onClick={() => goTo(index)}
                     >
                         {breadcrumbIcons[index]}
-                        {label}
+                        <span>{label}</span>
                     </ButtonGroup>
                 ))}
             </Group>

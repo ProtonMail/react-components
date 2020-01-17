@@ -29,7 +29,7 @@ const GenerateKeyModal = ({ domain, ...rest }) => {
         >
             <p className="mb1">{c('Info').t`Please select the type of key you want to generate:`}</p>
             <Radio
-                className="ml1 flex flex-nowrap mb1"
+                className="ml1 flex flex-nowrap mb1 pm-radio--onTop"
                 checked={algorithm === DKIM_RSA_2048}
                 onChange={() => setAlgorithm(DKIM_RSA_2048)}
                 disabled={loading}
@@ -41,7 +41,7 @@ const GenerateKeyModal = ({ domain, ...rest }) => {
                 </div>
             </Radio>
             <Radio
-                className="ml1 flex flex-nowrap"
+                className="ml1 flex flex-nowrap pm-radio--onTop"
                 checked={algorithm === DKIM_RSA_1024}
                 onChange={() => setAlgorithm(DKIM_RSA_1024)}
                 disabled={loading}
