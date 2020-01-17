@@ -88,7 +88,7 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
     const breadcrumbIcons = [
         domainModel.State === DOMAIN_STATE.DOMAIN_STATE_DEFAULT ? null : (
             <RoundedIcon
-                className="inline-flex rounded50 flex-item-noshrink mr0-5"
+                className="mr0-5"
                 key="domain-icon"
                 type={domainModel.State === DOMAIN_STATE.DOMAIN_STATE_ACTIVE ? 'success' : 'error'}
                 name={domainModel.State === DOMAIN_STATE.DOMAIN_STATE_ACTIVE ? 'on' : 'off'}
@@ -96,23 +96,16 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
         ),
         domainModel.VerifyState === VERIFY_STATE.VERIFY_STATE_DEFAULT ? null : (
             <RoundedIcon
-                className="inline-flex rounded50 flex-item-noshrink mr0-5"
+                className="mr0-5"
                 key="verify-icon"
                 type={domainModel.VerifyState === VERIFY_STATE.VERIFY_STATE_GOOD ? 'success' : 'error'}
                 name={domainModel.VerifyState === VERIFY_STATE.VERIFY_STATE_GOOD ? 'on' : 'off'}
             />
         ),
-        domainAddresses.length ? (
-            <RoundedIcon
-                className="inline-flex rounded50 flex-item-noshrink mr0-5"
-                key="addresses-icon"
-                type="success"
-                name="on"
-            />
-        ) : null,
+        domainAddresses.length ? <RoundedIcon className="mr0-5" key="addresses-icon" type="success" name="on" /> : null,
         domainModel.MxState === MX_STATE.MX_STATE_DEFAULT ? null : (
             <RoundedIcon
-                className="inline-flex rounded50 flex-item-noshrink mr0-5"
+                className="mr0-5"
                 key="mx-icon"
                 type={domainModel.MxState === MX_STATE.MX_STATE_GOOD ? 'success' : 'error'}
                 name={domainModel.MxState === MX_STATE.MX_STATE_GOOD ? 'on' : 'off'}
@@ -120,7 +113,7 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
         ),
         domainModel.SpfState === SPF_STATE.SPF_STATE_DEFAULT ? null : (
             <RoundedIcon
-                className="inline-flex rounded50 flex-item-noshrink mr0-5"
+                className="mr0-5"
                 key="spf-icon"
                 type={domainModel.SpfState === SPF_STATE.SPF_STATE_GOOD ? 'success' : 'error'}
                 name={domainModel.SpfState === SPF_STATE.SPF_STATE_GOOD ? 'on' : 'off'}
@@ -128,7 +121,7 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
         ),
         dkimDefaultState ? null : (
             <RoundedIcon
-                className="inline-flex rounded50 flex-item-noshrink mr0-5"
+                className="mr0-5"
                 key="dkim-icon"
                 type={dkimGoodState ? 'success' : 'error'}
                 name={dkimGoodState ? 'on' : 'off'}
@@ -136,7 +129,7 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
         ),
         domainModel.DmarcState === DMARC_STATE.DMARC_STATE_DEFAULT ? null : (
             <RoundedIcon
-                className="inline-flex rounded50 flex-item-noshrink mr0-5"
+                className="mr0-5"
                 key="dmarc-icon"
                 type={domainModel.DmarcState === DMARC_STATE.DMARC_STATE_GOOD ? 'success' : 'error'}
                 name={domainModel.DmarcState === DMARC_STATE.DMARC_STATE_GOOD ? 'on' : 'off'}
