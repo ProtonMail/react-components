@@ -114,7 +114,7 @@ const PaymentVerificationModal = ({
                             <p className="aligncenter">{c('Info')
                                 .t`Your bank requires 3-D Secure verification for security purposes.`}</p>
                             <p className="aligncenter">
-                                <PaymentVerificationImage payment={payment} />
+                                <PaymentVerificationImage payment={payment} type={type} />
                             </p>
                             <Alert>
                                 {isAddCard
