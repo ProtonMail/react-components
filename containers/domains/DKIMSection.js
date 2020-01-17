@@ -2,7 +2,7 @@ import React from 'react';
 import { c } from 'ttag';
 import PropTypes from 'prop-types';
 import { Alert, Table, TableHeader, TableBody, TableRow, Copy, Badge, Button, Time, useModals } from 'react-components';
-import { DKIM_RSA_1024, DKIM_RSA_2048, DKIM_KEY_STATUS } from 'proton-shared/lib/constants';
+import { DKIM_RSA_1024, DKIM_RSA_2048, DKIM_KEY_STATUS, DKIM_KEY_DNS_STATUS } from 'proton-shared/lib/constants';
 import { orderBy } from 'proton-shared/lib/helpers/array';
 
 import GenerateKeyModal from './GenerateKeyModal';
@@ -33,14 +33,11 @@ const KEY_STATUS = {
             tooltip={c('Description').t`Key is no longer used for signing and is waiting to be deceased`}
             type="origin"
         >{c('Status').t`Retired`}</Badge>
-    ),
-    [DKIM_KEY_STATUS.DECEASED]: (
-        <Badge
-            className=""
-            tooltip={c('Description').t`Once new pending key is generated this key will be removed`}
-            type="origin"
-        >{c('Status').t`Deceased`}</Badge>
     )
+};
+
+const DNS_STATUS = {
+    [DKIM_KEY_DNS_STATUS.INVALID]: <Badge className="" type="error">{c('Status').t`Invalid`}</Badge>
 };
 
 const DKIMSection = ({ domain }) => {
@@ -59,10 +56,14 @@ const DKIMSection = ({ domain }) => {
             {orderBy(
                 domain.Keys.filter(({ State }) => State !== DKIM_KEY_STATUS.DECEASED),
                 'State'
-            ).map(({ PublicKey, Algorithm, Selector, CreateTime, State }, index) => {
+            ).map(({ PublicKey, Algorithm, Selector, CreateTime, State, DNSState }, index) => {
                 const value = `v=DKIM1;k=rsa;p=${State === DKIM_KEY_STATUS.RETIRED ? '' : `${PublicKey};`}`;
                 return (
                     <React.Fragment key={index}>
+                        {State === DKIM_KEY_STATUS.DKIM_KEY_DNS_STATUS ? (
+                            <Alert type="error">{c('Warning')
+                                .t`Please check this DNS entry. It's not set properly. Most common problems include wrong format, having multiple entries with the same selector or having a wrong public key.`}</Alert>
+                        ) : null}
                         <div className="flex flex-spacebetween flex-items-center flex-nowrap">
                             <div className="flex flex-nowrap flex-items-center">
                                 <label className="bold mr0-5">{c('Label').t`Key:`}</label>
@@ -74,7 +75,7 @@ const DKIMSection = ({ domain }) => {
                                     </>
                                 ) : null}
                             </div>
-                            {KEY_STATUS[State]}
+                            {DNSState === DKIM_KEY_DNS_STATUS.INVALID ? DNS_STATUS[DNSState] : KEY_STATUS[State]}
                         </div>
                         <Table>
                             <TableHeader
