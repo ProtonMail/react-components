@@ -63,18 +63,6 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
     const api = useApi();
     const { step, next, goTo } = useStep();
 
-    const handleClick = (index) => {
-        if (index > STEPS.DOMAIN && !domainModel.ID) {
-            return;
-        }
-
-        if (index > STEPS.VERIFY && domainModel.VerifyState !== VERIFY_STATE.VERIFY_STATE_GOOD) {
-            return;
-        }
-
-        goTo(index);
-    };
-
     const handleRedirect = (route) => {
         onClose();
         history.push(route);
@@ -249,7 +237,11 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
                     <ButtonGroup
                         key={index}
                         className={classnames(['flex flex-nowrap', index === step && 'is-active'])}
-                        onClick={() => handleClick(index)}
+                        disabled={
+                            (index > STEPS.DOMAIN && !domainModel.ID) ||
+                            (index > STEPS.VERIFY && domainModel.VerifyState !== VERIFY_STATE.VERIFY_STATE_GOOD)
+                        }
+                        onClick={() => goTo(index)}
                     >
                         {breadcrumbIcons[index]}
                         {label}
