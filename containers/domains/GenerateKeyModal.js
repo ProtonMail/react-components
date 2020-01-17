@@ -15,7 +15,7 @@ const GenerateKeyModal = ({ domain, setDomain, ...rest }) => {
         const { Key } = await api(generateKey(domain.ID, algorithm));
         const Keys = domain.Keys.reduce(
             (acc, key) => {
-                if (key.State === DKIM_KEY_STATUS.ACTIVE) {
+                if (key.State === DKIM_KEY_STATUS.PENDING) {
                     return acc;
                 }
                 acc.push(key);
