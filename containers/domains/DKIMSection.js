@@ -3,6 +3,7 @@ import { c } from 'ttag';
 import PropTypes from 'prop-types';
 import { Alert, Table, TableHeader, TableBody, TableRow, Copy, Badge, Button, Time, useModals } from 'react-components';
 import { DKIM_RSA_1024, DKIM_RSA_2048, DKIM_KEY_STATUS } from 'proton-shared/lib/constants';
+import { orderBy } from 'proton-shared/lib/helpers/array';
 
 import GenerateKeyModal from './GenerateKeyModal';
 
@@ -55,7 +56,10 @@ const DKIMSection = ({ domain }) => {
             </Alert>
             <p className="mb1 bl">{c('Label')
                 .t`Please add the following TXT record. Note, DNS records can take several hours to update.`}</p>
-            {domain.Keys.map(({ PublicKey, Algorithm, Selector, CreateTime, State }, index) => {
+            {orderBy(
+                domain.Keys.filter(({ State }) => State !== DKIM_KEY_STATUS.DECEASED),
+                'State'
+            ).map(({ PublicKey, Algorithm, Selector, CreateTime, State }, index) => {
                 const value = `v=DKIM1;k=rsa;p=${State === DKIM_KEY_STATUS.RETIRED ? '' : `${PublicKey};`}`;
                 return (
                     <React.Fragment key={index}>
