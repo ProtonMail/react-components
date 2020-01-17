@@ -5,6 +5,7 @@ import {
     FormModal,
     Group,
     ButtonGroup,
+    RoundedIcon,
     useLoading,
     useApi,
     useStep,
@@ -13,7 +14,15 @@ import {
 } from 'react-components';
 import { withRouter } from 'react-router-dom';
 import { addDomain, getDomain } from 'proton-shared/lib/api/domains';
-import { VERIFY_STATE } from 'proton-shared/lib/constants';
+import {
+    VERIFY_STATE,
+    DOMAIN_STATE,
+    SPF_STATE,
+    MX_STATE,
+    DMARC_STATE,
+    DKIM_KEY_STATUS,
+    DKIM_KEY_DNS_STATUS
+} from 'proton-shared/lib/constants';
 
 import DomainSection from './DomainSection';
 import VerifySection from './VerifySection';
@@ -23,7 +32,6 @@ import DKIMSection from './DKIMSection';
 import MXSection from './MXSection';
 import DMARCSection from './DMARCSection';
 
-const { VERIFY_STATE_DEFAULT, VERIFY_STATE_EXIST, VERIFY_STATE_GOOD } = VERIFY_STATE;
 const STEPS = {
     DOMAIN: 0,
     VERIFY: 1,
@@ -35,11 +43,11 @@ const STEPS = {
 };
 
 const verifyDomain = ({ VerifyState }) => {
-    if (VerifyState === VERIFY_STATE_DEFAULT) {
+    if (VerifyState === VERIFY_STATE.VERIFY_STATE_DEFAULT) {
         return c('Error').t`Verification did not succeed, please try again in an hour.`;
     }
 
-    if (VerifyState === VERIFY_STATE_EXIST) {
+    if (VerifyState === VERIFY_STATE.VERIFY_STATE_EXIST) {
         return c('Error')
             .t`Wrong verification code. Please make sure you copied the verification code correctly and try again. It can take up to 24 hours for changes to take effect.`;
     }
@@ -60,7 +68,7 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
             return;
         }
 
-        if (index > STEPS.VERIFY && domainModel.VerifyState !== VERIFY_STATE_GOOD) {
+        if (index > STEPS.VERIFY && domainModel.VerifyState !== VERIFY_STATE.VERIFY_STATE_GOOD) {
             return;
         }
 
@@ -82,6 +90,72 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
         'DMARC'
     ];
 
+    const activeKeys = domainModel.Keys.filter(({ State }) => State === DKIM_KEY_STATUS.ACTIVE);
+    const dkimDefaultState =
+        !activeKeys.length &&
+        domainModel.Keys.every(
+            ({ State, DNSState }) => State === DKIM_KEY_STATUS.PENDING && DNSState === DKIM_KEY_DNS_STATUS.NOT_SET
+        );
+    const dkimGoodState = activeKeys.length;
+    const breadcrumbIcons = [
+        domainModel.State === DOMAIN_STATE.DOMAIN_STATE_DEFAULT ? null : (
+            <RoundedIcon
+                className="inline-flex rounded50 flex-item-noshrink mr0-5"
+                key="domain-icon"
+                type={domainModel.State === DOMAIN_STATE.DOMAIN_STATE_ACTIVE ? 'success' : 'error'}
+                name={domainModel.State === DOMAIN_STATE.DOMAIN_STATE_ACTIVE ? 'on' : 'off'}
+            />
+        ),
+        domainModel.VerifyState === VERIFY_STATE.VERIFY_STATE_DEFAULT ? null : (
+            <RoundedIcon
+                className="inline-flex rounded50 flex-item-noshrink mr0-5"
+                key="verify-icon"
+                type={domainModel.VerifyState === VERIFY_STATE.VERIFY_STATE_GOOD ? 'success' : 'error'}
+                name={domainModel.VerifyState === VERIFY_STATE.VERIFY_STATE_GOOD ? 'on' : 'off'}
+            />
+        ),
+        domainAddresses.length ? (
+            <RoundedIcon
+                className="inline-flex rounded50 flex-item-noshrink mr0-5"
+                key="addresses-icon"
+                type="success"
+                name="on"
+            />
+        ) : null,
+        domainModel.MxState === MX_STATE.MX_STATE_DEFAULT ? null : (
+            <RoundedIcon
+                className="inline-flex rounded50 flex-item-noshrink mr0-5"
+                key="mx-icon"
+                type={domainModel.MxState === MX_STATE.MX_STATE_GOOD ? 'success' : 'error'}
+                name={domainModel.MxState === MX_STATE.MX_STATE_GOOD ? 'on' : 'off'}
+            />
+        ),
+        domainModel.SpfState === SPF_STATE.SPF_STATE_DEFAULT ? null : (
+            <RoundedIcon
+                className="inline-flex rounded50 flex-item-noshrink mr0-5"
+                key="spf-icon"
+                type={domainModel.SpfState === SPF_STATE.SPF_STATE_GOOD ? 'success' : 'error'}
+                name={domainModel.SpfState === SPF_STATE.SPF_STATE_GOOD ? 'on' : 'off'}
+            />
+        ),
+        dkimDefaultState ? null : (
+            <RoundedIcon
+                className="inline-flex rounded50 flex-item-noshrink mr0-5"
+                key="dkim-icon"
+                type={dkimGoodState ? 'success' : 'error'}
+                name={dkimGoodState ? 'on' : 'off'}
+            />
+        ),
+        domainModel.DmarcState === DMARC_STATE.DMARC_STATE_DEFAULT ? null : (
+            <RoundedIcon
+                className="inline-flex rounded50 flex-item-noshrink mr0-5"
+                key="dmarc-icon"
+                type={domainModel.DmarcState === DMARC_STATE.DMARC_STATE_GOOD ? 'success' : 'error'}
+                name={domainModel.DmarcState === DMARC_STATE.DMARC_STATE_GOOD ? 'on' : 'off'}
+            />
+        )
+    ];
+
     const { section, ...modalProps } = (() => {
         if (step === STEPS.DOMAIN) {
             const handleSubmit = async () => {
@@ -101,7 +175,7 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
 
         if (step === STEPS.VERIFY) {
             const handleSubmit = async () => {
-                if (domainModel.VerifyState === VERIFY_STATE_GOOD) {
+                if (domainModel.VerifyState === VERIFY_STATE.VERIFY_STATE_GOOD) {
                     return next();
                 }
 
@@ -174,9 +248,10 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
                 {breadcrumbLabels.map((label, index) => (
                     <ButtonGroup
                         key={index}
-                        className={classnames([index === step && 'is-active'])}
+                        className={classnames(['flex flex-nowrap', index === step && 'is-active'])}
                         onClick={() => handleClick(index)}
                     >
+                        {breadcrumbIcons[index]}
                         {label}
                     </ButtonGroup>
                 ))}
