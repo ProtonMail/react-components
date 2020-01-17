@@ -12,33 +12,35 @@ const ALGO = {
     [DKIM_RSA_2048]: 'RSA 2048'
 };
 
-const KEY_STATUS = {
-    [DKIM_KEY_STATUS.ACTIVE]: (
-        <Badge
-            className=""
-            tooltip={c('Description').t`Key is active and can be used for signing emails`}
-            type="success"
-        >{c('Status').t`Active`}</Badge>
-    ),
-    [DKIM_KEY_STATUS.PENDING]: (
-        <Badge
-            className=""
-            tooltip={c('Description').t`Key is waiting to be activated once DNS state becomes good`}
-            type="warning"
-        >{c('Status').t`Pending`}</Badge>
-    ),
-    [DKIM_KEY_STATUS.RETIRED]: (
-        <Badge
-            className=""
-            tooltip={c('Description').t`Key is no longer used for signing and is waiting to be deceased`}
-            type="origin"
-        >{c('Status').t`Retired`}</Badge>
-    )
-};
+const getKeyStatusBadge = (status) =>
+    ({
+        [DKIM_KEY_STATUS.ACTIVE]: (
+            <Badge
+                className=""
+                tooltip={c('Description').t`Key is active and can be used for signing emails`}
+                type="success"
+            >{c('Status').t`Active`}</Badge>
+        ),
+        [DKIM_KEY_STATUS.PENDING]: (
+            <Badge
+                className=""
+                tooltip={c('Description').t`Key is waiting to be activated once DNS state becomes good`}
+                type="warning"
+            >{c('Status').t`Pending`}</Badge>
+        ),
+        [DKIM_KEY_STATUS.RETIRED]: (
+            <Badge
+                className=""
+                tooltip={c('Description').t`Key is no longer used for signing and is waiting to be deceased`}
+                type="origin"
+            >{c('Status').t`Retired`}</Badge>
+        )
+    }[status]);
 
-const DNS_STATUS = {
-    [DKIM_KEY_DNS_STATUS.INVALID]: <Badge className="" type="error">{c('Status').t`Invalid`}</Badge>
-};
+const getDNSStatusBadge = (status) =>
+    ({
+        [DKIM_KEY_DNS_STATUS.INVALID]: <Badge className="" type="error">{c('Status').t`Invalid`}</Badge>
+    }[status]);
 
 const DKIMSection = ({ domain, setDomain }) => {
     const off = <code key="off">off</code>;
@@ -75,7 +77,9 @@ const DKIMSection = ({ domain, setDomain }) => {
                                     </>
                                 ) : null}
                             </div>
-                            {DNSState === DKIM_KEY_DNS_STATUS.INVALID ? DNS_STATUS[DNSState] : KEY_STATUS[State]}
+                            {DNSState === DKIM_KEY_DNS_STATUS.INVALID
+                                ? getDNSStatusBadge(DNSState)
+                                : getKeyStatusBadge(State)}
                         </div>
                         <Table>
                             <TableHeader
