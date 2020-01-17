@@ -17,22 +17,22 @@ const MailFeaturesTable = ({ cycle, currency }) => {
 
     return (
         <>
-            <table className="pm-simple-table pm-simple-table--alternate-bg-row w100">
+            <table className="pm-simple-table pm-simple-table--alternate-bg-row pm-simple-table--bordered w100">
                 <thead>
                     <tr>
-                        <th className="aligncenter">
-                            <div className="uppercase">Free</div>
-                            <SubscriptionPrices cycle={cycle} currency={currency} />
+                        <th scope="col" className="aligncenter aligntop pm-simple-table-row-th pt1">
+                            <span className="uppercase">Free</span>
+                            <div><SubscriptionPrices cycle={cycle} currency={currency} /></div>
                         </th>
-                        <th className="aligncenter">
+                        <th scope="col" className="aligncenter aligntop pm-simple-table-row-th pt1">
                             <div className="uppercase">Plus</div>
                             <SubscriptionPrices cycle={cycle} currency={currency} plan={plansMap[PLANS.PLUS]} />
                         </th>
-                        <th className="aligncenter">
+                        <th scope="col" className="aligncenter aligntop pm-simple-table-row-th pt1">
                             <div className="uppercase">Professional</div>
                             <SubscriptionPrices cycle={cycle} currency={currency} plan={plansMap[PLANS.PROFESSIONAL]} />
                         </th>
-                        <th className="aligncenter">
+                        <th scope="col" className="aligncenter aligntop pm-simple-table-row-th pt1">
                             <div className="uppercase">Visionary</div>
                             <SubscriptionPrices cycle={cycle} currency={currency} plan={plansMap[PLANS.VISIONARY]} />
                         </th>
