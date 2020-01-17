@@ -136,7 +136,7 @@ const SubscriptionSection = ({ permission }) => {
         <>
             {subTitle}
             <Alert>{c('Info')
-                .t`To manage your subscription, update your current plan or select another one from the plan's table.`}</Alert>
+                .t`To manage your subscription, including billing frequency and currency, or to switch to another plan, click on Manage subscription.`}</Alert>
             <div className="shadow-container mb1">
                 <div className="border-bottom pt1 pl1 pr1">
                     <div className="flex-autogrid flex-items-center onmobile-flex-column w100 mb1">
