@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
     FormModal,
@@ -38,6 +38,7 @@ const PaymentVerificationModal = ({
     payment = {},
     mode,
     type = PAYMENT_METHOD_TYPES.CARD,
+    step: initialStep = STEPS.REDIRECT,
     ...rest
 }) => {
     const isAddCard = mode === ADD_CARD_MODE;
@@ -51,7 +52,7 @@ const PaymentVerificationModal = ({
             : c('Title').t`Payment verification in progress`,
         [STEPS.FAIL]: isPayPal ? c('Title').t`PayPal verification failed` : c('Title').t`3-D Secure verification failed`
     };
-    const [step, setStep] = useState(() => (doNotWindowOpen() ? STEPS.DO_NOT_WINDOW_OPEN : STEPS.REDIRECT));
+    const [step, setStep] = useState(() => (doNotWindowOpen() ? STEPS.DO_NOT_WINDOW_OPEN : initialStep));
     const [error, setError] = useState({});
     const api = useApi();
     const { createNotification } = useNotifications();
@@ -89,6 +90,12 @@ const PaymentVerificationModal = ({
             }
         }
     };
+
+    useEffect(() => {
+        if (step === STEPS.REDIRECTING) {
+            handleSubmit();
+        }
+    }, []);
 
     return (
         <FormModal

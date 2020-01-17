@@ -34,6 +34,7 @@ const usePayPal = ({ amount: Amount = 0, currency: Currency = '', type: Type, on
                     onSubmit={resolve}
                     onClose={reject}
                     type={Type}
+                    step="redirecting"
                 />
             );
         });
