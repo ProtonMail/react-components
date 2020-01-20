@@ -190,11 +190,22 @@ export const handlePaymentToken = async ({ params, api, createModal, mode }) => 
                 mode={mode}
                 payment={Payment}
                 params={params}
-                returnHost={ReturnHost}
-                approvalURL={ApprovalURL}
                 token={Token}
                 onSubmit={resolve}
                 onClose={reject}
+                onProcess={() => {
+                    const abort = new AbortController();
+                    return {
+                        promise: process({
+                            Token,
+                            api,
+                            ReturnHost,
+                            ApprovalURL,
+                            signal: abort.signal
+                        }),
+                        abort
+                    };
+                }}
             />
         );
     });

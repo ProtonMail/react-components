@@ -3,6 +3,7 @@ import { createToken } from 'proton-shared/lib/api/payments';
 import { useApi, useLoading, useModals } from 'react-components';
 
 import PaymentVerificationModal from '../containers/payments/PaymentVerificationModal';
+import { process } from '../containers/payments/paymentTokenHelper';
 
 const usePayPal = ({ amount: Amount = 0, currency: Currency = '', type: Type, onPay }) => {
     const api = useApi();
@@ -25,16 +26,28 @@ const usePayPal = ({ amount: Amount = 0, currency: Currency = '', type: Type, on
     const onVerification = async () => {
         const { Token, ApprovalURL, ReturnHost } = model;
         const result = await new Promise((resolve, reject) => {
+            const onProcess = () => {
+                const abort = new AbortController();
+                return {
+                    promise: process({
+                        Token,
+                        api,
+                        ReturnHost,
+                        ApprovalURL,
+                        signal: abort.signal
+                    }),
+                    abort
+                };
+            };
             createModal(
                 <PaymentVerificationModal
                     params={{ Amount, Currency }}
-                    returnHost={ReturnHost}
-                    approvalURL={ApprovalURL}
                     token={Token}
                     onSubmit={resolve}
                     onClose={reject}
                     type={Type}
-                    step="redirecting"
+                    onProcess={onProcess}
+                    initialProcess={onProcess()}
                 />
             );
         });

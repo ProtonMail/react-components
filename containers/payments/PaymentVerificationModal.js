@@ -7,7 +7,6 @@ import {
     Button,
     ResetButton,
     useNotifications,
-    useApi,
     PrimaryButton,
     DoNotWindowOpenAlertError
 } from 'react-components';
@@ -16,7 +15,7 @@ import errorSvg from 'design-system/assets/img/pm-images/error.svg';
 import { ADD_CARD_MODE, PAYMENT_METHOD_TYPES } from 'proton-shared/lib/constants';
 import { doNotWindowOpen } from 'proton-shared/lib/helpers/browser';
 
-import { toParams, process } from './paymentTokenHelper';
+import { toParams } from './paymentTokenHelper';
 import PaymentVerificationImage from './PaymentVerificationImage';
 
 const STEPS = {
@@ -32,13 +31,12 @@ const PROCESSING_DELAY = 5000;
 const PaymentVerificationModal = ({
     params,
     token,
-    approvalURL,
-    returnHost,
     onSubmit,
     payment = {},
     mode,
     type = PAYMENT_METHOD_TYPES.CARD,
-    step: initialStep = STEPS.REDIRECT,
+    onProcess,
+    initialProcess,
     ...rest
 }) => {
     const isAddCard = mode === ADD_CARD_MODE;
@@ -52,36 +50,29 @@ const PaymentVerificationModal = ({
             : c('Title').t`Payment verification in progress`,
         [STEPS.FAIL]: isPayPal ? c('Title').t`PayPal verification failed` : c('Title').t`3-D Secure verification failed`
     };
-    const [step, setStep] = useState(() => (doNotWindowOpen() ? STEPS.DO_NOT_WINDOW_OPEN : initialStep));
+    const [step, setStep] = useState(() => (doNotWindowOpen() ? STEPS.DO_NOT_WINDOW_OPEN : STEPS.REDIRECT));
     const [error, setError] = useState({});
-    const api = useApi();
     const { createNotification } = useNotifications();
     const abortRef = useRef();
+    const timeoutRef = useRef();
 
     const handleCancel = () => {
         abortRef.current && abortRef.current.abort();
         rest.onClose();
     };
 
-    const handleSubmit = async () => {
-        let timeoutID;
+    const handleSubmit = async ({ abort, promise }) => {
         try {
             setStep(STEPS.REDIRECTING);
-            timeoutID = setTimeout(() => {
+            timeoutRef.current = setTimeout(() => {
                 setStep(STEPS.REDIRECTED);
             }, PROCESSING_DELAY);
-            abortRef.current = new AbortController();
-            await process({
-                Token: token,
-                api,
-                ReturnHost: returnHost,
-                ApprovalURL: approvalURL,
-                signal: abortRef.current.signal
-            });
+            abortRef.current = abort;
+            await promise;
             onSubmit(toParams(params, token, type));
             rest.onClose();
         } catch (error) {
-            clearTimeout(timeoutID);
+            clearTimeout(timeoutRef.current);
             setStep(STEPS.FAIL);
             // if not coming from API error
             if (error.message && !error.config) {
@@ -92,15 +83,15 @@ const PaymentVerificationModal = ({
     };
 
     useEffect(() => {
-        if (step === STEPS.REDIRECTING) {
-            handleSubmit();
+        if (initialProcess) {
+            handleSubmit(initialProcess);
         }
     }, []);
 
     return (
         <FormModal
             title={TITLES[step]}
-            onSubmit={handleSubmit}
+            onSubmit={() => handleSubmit(onProcess())}
             onClose={handleCancel}
             small={true}
             hasClose={false}
@@ -201,12 +192,12 @@ PaymentVerificationModal.propTypes = {
     onSubmit: PropTypes.func.isRequired,
     onClose: PropTypes.func.isRequired,
     token: PropTypes.string.isRequired,
-    approvalURL: PropTypes.string.isRequired,
-    returnHost: PropTypes.string.isRequired,
     params: PropTypes.object,
     payment: PropTypes.object,
     mode: PropTypes.string,
-    type: PropTypes.string
+    type: PropTypes.string,
+    onProcess: PropTypes.func.isRequired,
+    initialProcess: PropTypes.object
 };
 
 export default PaymentVerificationModal;
