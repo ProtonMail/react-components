@@ -142,7 +142,7 @@ const PlansSection = () => {
                     ) : null}
                     {Plans.length ? <div>{c('Info').t`You are currently subscribed to ${names}.`}</div> : null}
                 </Alert>
-                <div className="flex flex--noMinChildren flex-nowrap">
+                <div className="flex--noMinChildren flex-nowrap">
                     <CycleSelector cycle={cycle} onSelect={setCycle} className="mr1" />
                     <CurrencySelector currency={currency} onSelect={setCurrency} />
                 </div>
