@@ -41,7 +41,7 @@ const GiftCodeModal = ({ onClose, ...rest }) => {
 
     return (
         <FormModal
-            small
+            size="small"
             onClose={onClose}
             onSubmit={() => withLoading(handleSubmit())}
             loading={loading}

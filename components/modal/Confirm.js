@@ -22,7 +22,7 @@ const Confirm = ({
             title={title}
             close={cancel}
             submit={confirm}
-            small
+            size="small"
             {...rest}
         >
             {children}

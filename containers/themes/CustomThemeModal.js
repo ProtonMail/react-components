@@ -17,7 +17,7 @@ const CustomThemeModal = ({ onSave, theme: initialTheme = '', ...rest }) => {
             submit={<PrimaryButton type="submit">{c('Action').t`Save`}</PrimaryButton>}
             onSubmit={handleSubmit}
             title={c('Title').t`Custom Theme`}
-            small
+            size="small"
             {...rest}
         >
             <Alert type="warning">{c('Warning')

@@ -98,7 +98,7 @@ export { default as Toolbar } from './components/toolbar/Toolbar';
 export { default as ToolbarButton } from './components/toolbar/ToolbarButton';
 export { default as ToolbarLink } from './components/toolbar/ToolbarLink';
 export { default as Paragraph } from './components/paragraph/Paragraph';
-export { default as DialogModal } from './components/modal/Dialog';
+export { default as DialogModal, Props as DialogModalProps } from './components/modal/Dialog';
 export { default as ContentModal } from './components/modal/Content';
 export { default as InnerModal } from './components/modal/Inner';
 export { default as InputModal } from './components/modal/Input';

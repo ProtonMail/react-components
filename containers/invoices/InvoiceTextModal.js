@@ -31,7 +31,7 @@ const InvoiceTextModal = ({ onClose, ...rest }) => {
 
     return (
         <FormModal
-            small
+            size="small"
             onClose={onClose}
             onSubmit={handleSubmit}
             loading={loading}

@@ -1,8 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {
     FooterModal,
     DialogModal,
+    DialogModalProps,
     HeaderModal,
     ContentModal,
     InnerModal,
@@ -11,7 +11,24 @@ import {
 } from 'react-components';
 import { c } from 'ttag';
 
-/** @type any */
+interface Props extends DialogModalProps {
+    modalTitleID?: string;
+    footer?: React.ReactNode;
+    onClose: () => void;
+    onSubmit?: () => void;
+    title: React.ReactNode;
+    children: React.ReactNode;
+    loading?: boolean;
+    submit?: React.ReactNode;
+    close?: React.ReactNode;
+    noValidate?: boolean;
+    background?: boolean;
+    hasSubmit?: boolean;
+    hasClose?: boolean;
+    disableCloseOnLocation?: boolean;
+    disableCloseOnOnEscape?: boolean;
+}
+
 const Modal = ({
     onClose,
     onSubmit,
@@ -31,7 +48,7 @@ const Modal = ({
     // eslint-disable-next-line no-unused-vars,@typescript-eslint/no-unused-vars
     disableCloseOnOnEscape,
     ...rest
-}) => {
+}: Props) => {
     // Because we will forget
     if (!['isClosing', 'isBehind', 'onExit'].every((key) => rest.hasOwnProperty(key))) {
         console.warn(`You must pass props to <FormModal ...rest>,
@@ -91,25 +108,6 @@ function DemoModal({ onAdd, ...rest }) {
             </ContentModal>
         </DialogModal>
     );
-};
-
-Modal.propTypes = {
-    ...DialogModal.propTypes,
-    modalTitleID: PropTypes.string,
-    onClose: PropTypes.func.isRequired,
-    onSubmit: PropTypes.func,
-    title: PropTypes.node,
-    children: PropTypes.node.isRequired,
-    loading: PropTypes.bool,
-    submit: PropTypes.node,
-    close: PropTypes.node,
-    noValidate: PropTypes.bool,
-    small: PropTypes.bool,
-    background: PropTypes.bool,
-    hasSubmit: PropTypes.bool,
-    hasClose: PropTypes.bool,
-    disableCloseOnLocation: PropTypes.bool,
-    disableCloseOnOnEscape: PropTypes.bool
 };
 
 export default Modal;

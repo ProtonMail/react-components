@@ -20,7 +20,7 @@ const PayPalModal = ({ onChange, ...rest }) => {
     };
 
     return (
-        <FormModal title={c('Title').t`Add PayPal payment method`} small footer={null} {...rest}>
+        <FormModal title={c('Title').t`Add PayPal payment method`} size="small" footer={null} {...rest}>
             <div className="pb1">
                 {loading ? (
                     <Loader />

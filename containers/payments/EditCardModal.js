@@ -43,7 +43,7 @@ const EditCardModal = ({ card: existingCard, onClose, onChange, ...rest }) => {
 
     return (
         <FormModal
-            small
+            size="small"
             onSubmit={(event) => withLoading(handleSubmit(event))}
             onClose={onClose}
             title={title}
