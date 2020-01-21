@@ -48,7 +48,7 @@ const PaymentGiftCode = ({ gift = '', onApply, loading }) => {
                 <div className="flex-item-fluid mr1">
                     <GiftCodeForm code={code} onChange={setCode} onSubmit={handleSubmit} loading={loading} />
                 </div>
-                <Button onClick={handleCancel}>{c('Action').t`Cancel`}</Button>
+                <Button onClick={handleCancel} className="flex-self-start">{c('Action').t`Cancel`}</Button>
             </div>
         );
     }
