@@ -45,6 +45,13 @@
     padding-left: 20px;
     background-repeat: no-repeat;
     background-position: 5px 5px;
+    word-break: break-word;
+}
+@supports (-webkit-hyphens: auto) or (-ms-hyphens: auto) or (hyphens: auto) {
+    .subscriptionTable-feature {
+        word-break: normal;
+        @include vendor-prefix(hyphens, auto, webkit ms);
+    }
 }
 
 .subscriptionTable-mostPopular {
