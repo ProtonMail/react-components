@@ -226,10 +226,10 @@ const NewSubscriptionModal = ({
                         onClose={handleClose}
                         submit={
                             <NewSubscriptionSubmitButton
+                                onClose={handleClose}
                                 canPay={canPay}
                                 paypal={paypal}
                                 step={step}
-                                setStep={setStep}
                                 loading={loadingCheck || loading}
                                 method={method}
                                 checkResult={checkResult}
@@ -270,10 +270,10 @@ const NewSubscriptionModal = ({
                         <SubscriptionCheckout
                             submit={
                                 <NewSubscriptionSubmitButton
+                                    onClose={handleClose}
                                     canPay={canPay}
                                     paypal={paypal}
                                     step={step}
-                                    setStep={setStep}
                                     loading={loadingCheck || loading}
                                     method={method}
                                     checkResult={checkResult}
@@ -332,10 +332,10 @@ const NewSubscriptionModal = ({
                             method={method}
                             submit={
                                 <NewSubscriptionSubmitButton
+                                    onClose={handleClose}
                                     canPay={canPay}
                                     paypal={paypal}
                                     step={step}
-                                    setStep={setStep}
                                     loading={loadingCheck || loading}
                                     method={method}
                                     checkResult={checkResult}

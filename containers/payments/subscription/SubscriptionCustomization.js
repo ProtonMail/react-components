@@ -131,7 +131,9 @@ const SubscriptionCustomization = ({
             if (plan.Type === PLAN_TYPES.PLAN) {
                 if (hasBit(plan.Services, PLAN_SERVICES.MAIL)) {
                     acc.mailPlan = plan;
-                } else if (hasBit(plan.Services, PLAN_SERVICES.VPN)) {
+                }
+
+                if (hasBit(plan.Services, PLAN_SERVICES.VPN)) {
                     acc.vpnPlan = plan;
                 }
             }
@@ -414,41 +416,43 @@ const SubscriptionCustomization = ({
                 />
             </section>
         ),
-        !hasVisionary && (
-            <section className="subscriptionCustomization-section" key="vpn-section">
-                <h3>{TITLE[vpnPlan.Name]}</h3>
-                <Description plans={plans} planName={vpnPlan.Name} model={model} setModel={setModel} />
-                <VpnSubscriptionTable
-                    disabled={loading}
-                    currentPlan={c('Status').t`Selected`}
-                    update={c('Action').t`Selected`}
-                    selected={c('Action').t`Selected`}
-                    planNameSelected={vpnPlan.Name}
-                    plans={plans}
-                    cycle={model.cycle}
-                    currency={model.currency}
-                    onSelect={(planID) => {
-                        setModel({
-                            ...model,
-                            planIDs: switchPlan({ planIDs: model.planIDs, plans, planID, service: PLAN_SERVICES.VPN })
-                        });
-                    }}
-                />
-                <SubscriptionPlan
-                    expanded={expanded}
-                    canCustomize={CAN_CUSTOMIZE[vpnPlan.Name]}
-                    addons={ADDONS[vpnPlan.Name]}
-                    features={FEATURES[vpnPlan.Name]}
-                    currency={model.currency}
-                    plan={vpnPlan}
-                    description={DESCRIPTIONS[vpnPlan.Name]}
-                />
-            </section>
-        )
+        <section className="subscriptionCustomization-section" key="vpn-section">
+            <h3>{TITLE[vpnPlan.Name]}</h3>
+            <Description plans={plans} planName={vpnPlan.Name} model={model} setModel={setModel} />
+            <VpnSubscriptionTable
+                disabled={loading}
+                currentPlan={c('Status').t`Selected`}
+                update={c('Action').t`Selected`}
+                selected={c('Action').t`Selected`}
+                planNameSelected={vpnPlan.Name}
+                plans={plans}
+                cycle={model.cycle}
+                currency={model.currency}
+                onSelect={(planID) => {
+                    setModel({
+                        ...model,
+                        planIDs: switchPlan({ planIDs: model.planIDs, plans, planID, service: PLAN_SERVICES.VPN })
+                    });
+                }}
+            />
+            <SubscriptionPlan
+                expanded={expanded}
+                canCustomize={CAN_CUSTOMIZE[vpnPlan.Name]}
+                addons={ADDONS[vpnPlan.Name]}
+                features={FEATURES[vpnPlan.Name]}
+                currency={model.currency}
+                plan={vpnPlan}
+                description={DESCRIPTIONS[vpnPlan.Name]}
+            />
+        </section>
     ].filter(Boolean);
 
     if (loadingAddresses) {
         return <Loader />;
+    }
+
+    if (sections.length > 1 && hasVisionary) {
+        sections.pop();
     }
 
     if (CLIENT_TYPE === CLIENT_TYPES.VPN) {

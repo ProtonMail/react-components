@@ -7,7 +7,7 @@ import { c } from 'ttag';
 import { SUBSCRIPTION_STEPS } from './constants';
 import PayPalButton from '../PayPalButton';
 
-const NewSubscriptionSubmitButton = ({ className, paypal, canPay, setStep, step, loading, method, checkResult }) => {
+const NewSubscriptionSubmitButton = ({ className, paypal, canPay, step, loading, method, checkResult, onClose }) => {
     if (step === SUBSCRIPTION_STEPS.CUSTOMIZATION) {
         return (
             <PrimaryButton className={className} loading={loading} type="submit">{c('Action')
@@ -27,11 +27,8 @@ const NewSubscriptionSubmitButton = ({ className, paypal, canPay, setStep, step,
 
     if ([PAYMENT_METHOD_TYPES.CASH, PAYMENT_METHOD_TYPES.BITCOIN].includes(method)) {
         return (
-            <PrimaryButton
-                className={className}
-                loading={loading}
-                onClick={() => setStep(SUBSCRIPTION_STEPS.THANKS)}
-            >{c('Action').t`Done`}</PrimaryButton>
+            <PrimaryButton className={className} loading={loading} onClick={onClose}>{c('Action')
+                .t`Done`}</PrimaryButton>
         );
     }
 
@@ -56,7 +53,7 @@ NewSubscriptionSubmitButton.propTypes = {
     method: PropTypes.string,
     checkResult: PropTypes.object,
     step: PropTypes.number.isRequired,
-    setStep: PropTypes.func.isRequired
+    onClose: PropTypes.func.isRequired
 };
 
 export default NewSubscriptionSubmitButton;

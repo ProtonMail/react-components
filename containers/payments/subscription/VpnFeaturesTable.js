@@ -55,8 +55,8 @@ const VpnFeaturesTable = ({ cycle, currency }) => {
                     <tr>
                         <td>{c('Feature').t`Medium speed`}</td>
                         <td>{c('Feature').t`High speed`}</td>
-                        <td>{c('Feature').t`High speed`}</td>
-                        <td>{c('Feature').t`High speed`}</td>
+                        <td>{c('Feature').t`Highest speed`}</td>
+                        <td>{c('Feature').t`Highest speed`}</td>
                     </tr>
                     <tr>
                         <td>
