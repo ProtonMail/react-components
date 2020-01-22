@@ -15,7 +15,7 @@ const GenerateKeyModal = ({ domain, ...rest }) => {
     const generate = async () => {
         await api(generateKey(domain.ID, algorithm));
         await call();
-        createNotification({ text: c('Success').t`Key generated` });
+        createNotification({ text: c('Success').t`Key successfully generated` });
         rest.onClose();
     };
 
@@ -37,7 +37,7 @@ const GenerateKeyModal = ({ domain, ...rest }) => {
                 <div className="ml1 flex flex-column">
                     <strong>{c('Label').t`2048 RSA key`}</strong>
                     <p className="mt0 mb0">{c('Info')
-                        .t`This is the recommended key. It is longer and therefore more secure.`}</p>
+                        .t`We recommend using this key. It is longer and therefore more secure.`}</p>
                 </div>
             </Radio>
             <Radio
@@ -50,7 +50,7 @@ const GenerateKeyModal = ({ domain, ...rest }) => {
                     <strong>{c('Label').t`1024 RSA key`}</strong>
                     <p className="mt0 mb0">
                         <span className="mr0-5">{c('Info')
-                            .t`You should use this key if your registrar does not support long TXT records and therefore makes using 2048 impossible.`}</span>
+                            .t`You should use this key if your registrar does not support long TXT records and you’re unable to use 2048.`}</span>
                         <Href url="https://protonmail.com/support/knowledge-base/anti-spoofing/">{c('Link')
                             .t`Learn more`}</Href>
                     </p>

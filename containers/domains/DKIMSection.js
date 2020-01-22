@@ -1,7 +1,19 @@
 import React from 'react';
 import { c } from 'ttag';
 import PropTypes from 'prop-types';
-import { Alert, Table, TableHeader, TableBody, TableRow, Copy, Badge, Button, Time, useModals } from 'react-components';
+import {
+    Alert,
+    Table,
+    TableHeader,
+    TableBody,
+    TableRow,
+    Copy,
+    Badge,
+    Button,
+    Time,
+    useModals,
+    useNotifications
+} from 'react-components';
 import { DKIM_RSA_1024, DKIM_RSA_2048, DKIM_KEY_STATUS, DKIM_KEY_DNS_STATUS } from 'proton-shared/lib/constants';
 import { orderBy } from 'proton-shared/lib/helpers/array';
 
@@ -17,21 +29,21 @@ const getKeyStatusBadge = (status) =>
         [DKIM_KEY_STATUS.ACTIVE]: (
             <Badge
                 className=""
-                tooltip={c('Description').t`Key is active and can be used for signing emails`}
+                tooltip={c('Description').t`This is the key we currently use for signing your emails.`}
                 type="success"
             >{c('Status').t`Active`}</Badge>
         ),
         [DKIM_KEY_STATUS.PENDING]: (
             <Badge
                 className=""
-                tooltip={c('Description').t`Key is waiting to be activated once DNS state becomes good`}
+                tooltip={c('Description').t`We are waiting for you to insert this record correctly in your DNS.`}
                 type="warning"
             >{c('Status').t`Pending`}</Badge>
         ),
         [DKIM_KEY_STATUS.RETIRED]: (
             <Badge
                 className=""
-                tooltip={c('Description').t`Key is no longer used for signing and is waiting to be deceased`}
+                tooltip={c('Description').t`This key is no longer used for DKIM signing.`}
                 type="origin"
             >{c('Status').t`Retired`}</Badge>
         )
@@ -39,13 +51,20 @@ const getKeyStatusBadge = (status) =>
 
 const getDNSStatusBadge = (status) =>
     ({
-        [DKIM_KEY_DNS_STATUS.INVALID]: <Badge className="" type="error">{c('Status').t`Invalid`}</Badge>
+        [DKIM_KEY_DNS_STATUS.INVALID]: (
+            <Badge
+                tooltip={c('Description').t`There is a problem with this record. Please check your DNS.`}
+                type="error"
+            >{c('Status').t`Warning`}</Badge>
+        )
     }[status]);
 
 const DKIMSection = ({ domain }) => {
     const off = <code key="off">off</code>;
     const { createModal } = useModals();
+    const { createNotification } = useNotifications();
     const openGenerateKeyModal = () => createModal(<GenerateKeyModal domain={domain} />);
+    const handleCopy = () => createNotification({ text: c('Success').t`Key copied to clipboard!` });
 
     return (
         <>
@@ -77,9 +96,8 @@ const DKIMSection = ({ domain }) => {
                                     </>
                                 ) : null}
                             </div>
-                            {DNSState === DKIM_KEY_DNS_STATUS.INVALID
-                                ? getDNSStatusBadge(DNSState)
-                                : getKeyStatusBadge(State)}
+                            {getDNSStatusBadge(DNSState)}
+                            {getKeyStatusBadge(State)}
                         </div>
                         <Table>
                             <TableHeader
@@ -95,7 +113,11 @@ const DKIMSection = ({ domain }) => {
                                         <code key="txt">TXT</code>,
                                         <code key="domain-key">{`${Selector}._domainkey`}</code>,
                                         <div className="flex flex-nowrap flex-items-center" key="value">
-                                            <Copy className="flex-item-noshrink pm-button--small mr0-5" value={value} />{' '}
+                                            <Copy
+                                                onCopy={handleCopy}
+                                                className="flex-item-noshrink pm-button--small mr0-5"
+                                                value={value}
+                                            />{' '}
                                             <code>{value}</code>
                                         </div>
                                     ]}

@@ -10,6 +10,7 @@ import {
     useApi,
     useStep,
     useNotifications,
+    useDomains,
     classnames
 } from 'react-components';
 import { withRouter } from 'react-router-dom';
@@ -56,6 +57,7 @@ const verifyDomain = ({ VerifyState }) => {
 // Pull staticContext to avoid it being passed with rest
 // eslint-disable-next-line no-unused-vars
 const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, staticContext, ...rest }) => {
+    const [domains, loadingDomains] = useDomains();
     const [domainModel, setDomain] = useState(() => ({ ...domain }));
     const { createNotification } = useNotifications();
     const [loading, withLoading] = useLoading();
@@ -216,8 +218,11 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
     })();
 
     useEffect(() => {
-        setDomain({ ...domain });
-    }, [domain]);
+        if (!loadingDomains) {
+            const d = domains.find(({ ID }) => ID === domainModel.ID);
+            d && setDomain({ ...d });
+        }
+    }, [domains]);
 
     return (
         <FormModal
