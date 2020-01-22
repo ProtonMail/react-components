@@ -53,7 +53,7 @@ const SubscriptionAddonRow = ({
                     <Button
                         className="flex-item-noshrink w100"
                         onClick={() => onChange(quantity + 1)}
-                        disabled={loading || quantity === max}
+                        disabled={loading || quantity === max - 1}
                         icon="plus"
                     >
                         <span className="sr-only">{c('Action').t`Increase`}</span>
