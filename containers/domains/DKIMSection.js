@@ -96,8 +96,10 @@ const DKIMSection = ({ domain }) => {
                                     </>
                                 ) : null}
                             </div>
-                            {getDNSStatusBadge(DNSState)}
-                            {getKeyStatusBadge(State)}
+                            <div className="flex flex-nowrap">
+                                {getDNSStatusBadge(DNSState)}
+                                {getKeyStatusBadge(State)}
+                            </div>
                         </div>
                         <Table>
                             <TableHeader
