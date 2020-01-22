@@ -277,7 +277,7 @@ const SubscriptionCustomization = ({
             />,
             <SubscriptionFeatureRow key="speed" icon="speed-fast" feature={c('Feature').t`Highest speed`} />,
             <SubscriptionFeatureRow key="bandwidth" icon="p2p" feature={c('Feature').t`P2P/Bittorrent support`} />,
-            <SubscriptionFeatureRow key="access" icon="access" feature={c('Feature').t`Access blocked content`} />
+            <SubscriptionFeatureRow key="blocked-content" icon="blocked-content" feature={c('Feature').t`Access blocked content`} />
         ]
     };
 
