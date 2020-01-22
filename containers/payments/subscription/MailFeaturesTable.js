@@ -115,7 +115,7 @@ const MailFeaturesTable = ({ cycle, currency }) => {
                     </tr>
                     <tr>
                         <td>
-                            <del class="ellipsis bl">{c('Feature').t`Autoresponder`}</del>
+                            <del className="ellipsis bl">{c('Feature').t`Autoresponder`}</del>
                         </td>
                         <td className="ellipsis">{c('Feature').t`Autoresponder`}</td>
                         <td className="ellipsis">{c('Feature').t`Autoresponder`}</td>
