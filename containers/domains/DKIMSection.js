@@ -42,10 +42,10 @@ const getDNSStatusBadge = (status) =>
         [DKIM_KEY_DNS_STATUS.INVALID]: <Badge className="" type="error">{c('Status').t`Invalid`}</Badge>
     }[status]);
 
-const DKIMSection = ({ domain, setDomain }) => {
+const DKIMSection = ({ domain }) => {
     const off = <code key="off">off</code>;
     const { createModal } = useModals();
-    const openGenerateKeyModal = () => createModal(<GenerateKeyModal domain={domain} setDomain={setDomain} />);
+    const openGenerateKeyModal = () => createModal(<GenerateKeyModal domain={domain} />);
 
     return (
         <>
@@ -113,8 +113,7 @@ const DKIMSection = ({ domain, setDomain }) => {
 };
 
 DKIMSection.propTypes = {
-    domain: PropTypes.object.isRequired,
-    setDomain: PropTypes.func.isRequired
+    domain: PropTypes.object.isRequired
 };
 
 export default DKIMSection;

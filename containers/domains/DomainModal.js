@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { c } from 'ttag';
 import PropTypes from 'prop-types';
 import {
@@ -201,7 +201,7 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
 
         if (step === STEPS.DKIM) {
             return {
-                section: <DKIMSection domain={domainModel} setDomain={setDomain} />,
+                section: <DKIMSection domain={domainModel} />,
                 onSubmit: next
             };
         }
@@ -214,6 +214,10 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
             };
         }
     })();
+
+    useEffect(() => {
+        setDomain({ ...domain });
+    }, [domain]);
 
     return (
         <FormModal
