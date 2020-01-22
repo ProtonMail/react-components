@@ -17,23 +17,23 @@ const MailFeaturesTable = ({ cycle, currency }) => {
 
     return (
         <>
-            <table className="pm-simple-table pm-simple-table--alternate-bg-row pm-simple-table--bordered w100">
+            <table className="pm-simple-table cut pm-simple-table--alternate-bg-row pm-simple-table--bordered w100">
                 <thead>
                     <tr>
                         <th scope="col" className="aligncenter aligntop pm-simple-table-row-th pt1">
-                            <span className="uppercase">Free</span>
+                            <span className="uppercase ellipsis" title="Free">Free</span>
                             <div><SubscriptionPrices cycle={cycle} currency={currency} /></div>
                         </th>
                         <th scope="col" className="aligncenter aligntop pm-simple-table-row-th pt1">
-                            <div className="uppercase">Plus</div>
+                            <div className="uppercase ellipsis" title="Plus">Plus</div>
                             <SubscriptionPrices cycle={cycle} currency={currency} plan={plansMap[PLANS.PLUS]} />
                         </th>
                         <th scope="col" className="aligncenter aligntop pm-simple-table-row-th pt1">
-                            <div className="uppercase">Professional</div>
+                            <div className="uppercase ellipsis" title="Professional">Professional</div>
                             <SubscriptionPrices cycle={cycle} currency={currency} plan={plansMap[PLANS.PROFESSIONAL]} />
                         </th>
                         <th scope="col" className="aligncenter aligntop pm-simple-table-row-th pt1">
-                            <div className="uppercase">Visionary</div>
+                            <div className="uppercase ellipsis" title="Visionary">Visionary</div>
                             <SubscriptionPrices cycle={cycle} currency={currency} plan={plansMap[PLANS.VISIONARY]} />
                         </th>
                     </tr>
@@ -115,11 +115,11 @@ const MailFeaturesTable = ({ cycle, currency }) => {
                     </tr>
                     <tr>
                         <td>
-                            <del>{c('Feature').t`Autoresponder`}</del>
+                            <del class="ellipsis bl">{c('Feature').t`Autoresponder`}</del>
                         </td>
-                        <td>{c('Feature').t`Autoresponder`}</td>
-                        <td>{c('Feature').t`Autoresponder`}</td>
-                        <td>{c('Feature').t`Autoresponder`}</td>
+                        <td className="ellipsis">{c('Feature').t`Autoresponder`}</td>
+                        <td className="ellipsis">{c('Feature').t`Autoresponder`}</td>
+                        <td className="ellipsis">{c('Feature').t`Autoresponder`}</td>
                     </tr>
                     <tr>
                         <td>

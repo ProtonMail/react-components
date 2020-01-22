@@ -20,7 +20,7 @@ const SubscriptionPrices = ({ cycle, currency, plan = FREE_PLAN, suffix = c('Suf
     );
     return (
         <>
-            <Price currency={currency} className="subscriptionPrices-monthly" suffix={suffix}>
+            <Price currency={currency} className="subscriptionPrices-monthly inline-flex flex-justify-center" suffix={suffix}>
                 {plan.Pricing[cycle] / cycle}
             </Price>
             {cycle === CYCLE.YEARLY && (
