@@ -277,7 +277,11 @@ const SubscriptionCustomization = ({
             />,
             <SubscriptionFeatureRow key="speed" icon="speed-fast" feature={c('Feature').t`Highest speed`} />,
             <SubscriptionFeatureRow key="bandwidth" icon="p2p" feature={c('Feature').t`P2P/Bittorrent support`} />,
-            <SubscriptionFeatureRow key="blocked-content" icon="blocked-content" feature={c('Feature').t`Access blocked content`} />
+            <SubscriptionFeatureRow
+                key="blocked-content"
+                icon="blocked-content"
+                feature={c('Feature').t`Access blocked content`}
+            />
         ]
     };
 
@@ -452,12 +456,12 @@ const SubscriptionCustomization = ({
         return <Loader />;
     }
 
-    if (sections.length > 1 && hasVisionary) {
-        sections.pop();
+    if (CLIENT_TYPE === CLIENT_TYPES.VPN) {
+        sections.reverse();
     }
 
-    if (CLIENT_TYPE === CLIENT_TYPES.VPN) {
-        return <div className="subscriptionCustomization-container">{sections.reverse()}</div>;
+    if (sections.length > 1 && hasVisionary) {
+        sections.pop();
     }
 
     return <div className="subscriptionCustomization-container">{sections}</div>;

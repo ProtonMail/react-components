@@ -49,10 +49,11 @@ AddonRow.propTypes = {
 
 const SubscriptionSection = ({ permission }) => {
     const [{ hasPaidMail, hasPaidVpn, isPaid }] = useUser();
-    const [addresses = [], loadingAddresses] = useAddresses();
+    const [addresses, loadingAddresses] = useAddresses();
     const [subscription, loadingSubscription] = useSubscription();
     const { createModal } = useModals();
     const [organization, loadingOrganization] = useOrganization();
+    const hasAddresses = Array.isArray(addresses) && addresses.length > 0;
 
     const subTitle = <SubTitle>{c('Title').t`Subscription`}</SubTitle>;
 
@@ -145,13 +146,15 @@ const SubscriptionSection = ({ permission }) => {
                             <strong>
                                 {hasPaidMail
                                     ? PLAN_NAMES[mailPlanName]
-                                    : addresses.length
+                                    : hasAddresses
                                     ? c('Plan').t`Free`
                                     : c('Info').t`Not activated`}
                             </strong>
                         </div>
                         <div className="flex-autogrid-item">
-                            <LinkButton onClick={handleModal}>{c('Action').t`Manage subscription`}</LinkButton>
+                            {hasAddresses ? (
+                                <LinkButton onClick={handleModal}>{c('Action').t`Manage subscription`}</LinkButton>
+                            ) : null}
                         </div>
                     </div>
                     {mailAddons.map((props, index) => (

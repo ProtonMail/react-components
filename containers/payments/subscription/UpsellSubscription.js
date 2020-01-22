@@ -1,5 +1,5 @@
 import React from 'react';
-import { useUser, useSubscription, useModals, usePlans, PrimaryButton, Loader } from 'react-components';
+import { useUser, useSubscription, useModals, usePlans, PrimaryButton, Loader, useAddresses } from 'react-components';
 import { hasMailPlus, hasVpnBasic, switchPlan } from 'proton-shared/lib/helpers/subscription';
 import { DEFAULT_CURRENCY, DEFAULT_CYCLE, PLAN_SERVICES, PLANS } from 'proton-shared/lib/constants';
 import { toMap } from 'proton-shared/lib/helpers/object';
@@ -15,8 +15,10 @@ const UpsellSubscription = () => {
     const isFreeMail = !hasPaidMail;
     const isFreeVpn = !hasPaidVpn;
     const { createModal } = useModals();
+    const [addresses, loadingAddresses] = useAddresses();
+    const hasAddresses = Array.isArray(addresses) && addresses.length > 0;
 
-    if (loadingUser || loadingSubscription || loadingPlans) {
+    if (loadingUser || loadingSubscription || loadingPlans || loadingAddresses) {
         return <Loader />;
     }
 
@@ -27,54 +29,56 @@ const UpsellSubscription = () => {
     }, {});
 
     return [
-        isFreeMail && {
-            title: c('Title').t`Upgrade to ProtonMail Plus`,
-            description: c('Title')
-                .t`Upgrade to ProtonMail Plus to get more storage, more email addresses and more ways to customize your mailbox with folders, labels and filters. Upgrading to a paid plan also allows you to get early access to new products.`,
-            upgradeButton: (
-                <PrimaryButton
-                    className="pm-button--small flex-item-noshrink"
-                    onClick={() => {
-                        createModal(
-                            <NewSubscriptionModal
-                                currency={Currency}
-                                cycle={Cycle}
-                                planIDs={switchPlan({
-                                    planIDs,
-                                    plans,
-                                    planID: plansMap[PLANS.PLUS].ID,
-                                    service: PLAN_SERVICES.MAIL
-                                })}
-                            />
-                        );
-                    }}
-                >{c('Action').t`Upgrade`}</PrimaryButton>
-            )
-        },
-        hasMailPlus(subscription) && {
-            title: c('Title').t`Upgrade to ProtonMail Professional`,
-            description: c('Title')
-                .t`Ugrade to ProtonMail Professional to get multi-user support. This allows you to use ProtonMail host email for your organization and provide separate logins for each user. Professional also comes with priority support.`,
-            upgradeButton: (
-                <PrimaryButton
-                    className="pm-button--small flex-item-noshrink"
-                    onClick={() => {
-                        createModal(
-                            <NewSubscriptionModal
-                                currency={Currency}
-                                cycle={Cycle}
-                                planIDs={switchPlan({
-                                    planIDs,
-                                    plans,
-                                    planID: plansMap[PLANS.PROFESSIONAL].ID,
-                                    service: PLAN_SERVICES.MAIL
-                                })}
-                            />
-                        );
-                    }}
-                >{c('Action').t`Upgrade`}</PrimaryButton>
-            )
-        },
+        isFreeMail &&
+            hasAddresses && {
+                title: c('Title').t`Upgrade to ProtonMail Plus`,
+                description: c('Title')
+                    .t`Upgrade to ProtonMail Plus to get more storage, more email addresses and more ways to customize your mailbox with folders, labels and filters. Upgrading to a paid plan also allows you to get early access to new products.`,
+                upgradeButton: (
+                    <PrimaryButton
+                        className="pm-button--small flex-item-noshrink"
+                        onClick={() => {
+                            createModal(
+                                <NewSubscriptionModal
+                                    currency={Currency}
+                                    cycle={Cycle}
+                                    planIDs={switchPlan({
+                                        planIDs,
+                                        plans,
+                                        planID: plansMap[PLANS.PLUS].ID,
+                                        service: PLAN_SERVICES.MAIL
+                                    })}
+                                />
+                            );
+                        }}
+                    >{c('Action').t`Upgrade`}</PrimaryButton>
+                )
+            },
+        hasMailPlus(subscription) &&
+            hasAddresses && {
+                title: c('Title').t`Upgrade to ProtonMail Professional`,
+                description: c('Title')
+                    .t`Ugrade to ProtonMail Professional to get multi-user support. This allows you to use ProtonMail host email for your organization and provide separate logins for each user. Professional also comes with priority support.`,
+                upgradeButton: (
+                    <PrimaryButton
+                        className="pm-button--small flex-item-noshrink"
+                        onClick={() => {
+                            createModal(
+                                <NewSubscriptionModal
+                                    currency={Currency}
+                                    cycle={Cycle}
+                                    planIDs={switchPlan({
+                                        planIDs,
+                                        plans,
+                                        planID: plansMap[PLANS.PROFESSIONAL].ID,
+                                        service: PLAN_SERVICES.MAIL
+                                    })}
+                                />
+                            );
+                        }}
+                    >{c('Action').t`Upgrade`}</PrimaryButton>
+                )
+            },
         (isFreeVpn || hasVpnBasic(subscription)) && {
             title: c('Title').t`Upgrade to ProtonVPN Plus`,
             description: c('Title')
