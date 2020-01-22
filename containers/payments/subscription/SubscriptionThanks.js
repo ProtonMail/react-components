@@ -28,7 +28,7 @@ const SubscriptionThanks = ({ method = '', onClose }) => {
                     url={
                         CLIENT_TYPE === CLIENT_TYPES.MAIL
                             ? 'https://play.google.com/store/apps/details?id=ch.protonmail.android'
-                            : 'https://play.google.com/store/apps/details?id=com.protonvpn.android'
+                            : 'https://play.google.com/store/apps/details?id=ch.protonvpn.android'
                     }
                     className="mr2"
                 >
