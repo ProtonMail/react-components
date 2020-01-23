@@ -69,16 +69,16 @@ const DateInput = ({
         }
     };
 
-    const handleFocusInput = () => {
-        onFocus && onFocus();
+    const handleFocusInput = (event) => {
+        onFocus && onFocus(event);
         open();
 
         setShowTemporary(true);
         setTemporaryInput(currentInput);
     };
 
-    const handleBlurInput = () => {
-        onBlur && onBlur();
+    const handleBlurInput = (event) => {
+        onBlur && onBlur(event);
         parseAndTriggerChange();
         close();
 
@@ -87,7 +87,7 @@ const DateInput = ({
     };
 
     const handleKeyDown = (event) => {
-        onKeyDown && onKeyDown();
+        onKeyDown && onKeyDown(event);
         if (event.key === 'Enter') {
             parseAndTriggerChange();
             event.preventDefault();
