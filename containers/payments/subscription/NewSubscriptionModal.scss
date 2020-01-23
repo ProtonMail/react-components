@@ -40,6 +40,11 @@
     width: 70%;
 }
 
+@include respond-to(1500) {
+    .subscriptionTable-plan .suffix {
+        width: 100%;
+    }
+}
 
 @include respond-to(1100) {
    .cycle-currency-selectors.flex-nowrap {
