@@ -42,7 +42,7 @@ export const updateKey = (oldAllKeys: ReactivateKeys[], key: ReactivateKey, newK
 
         return {
             ...toReactivate,
-            inactiveKeys: oldInactiveKeys.map((oldKey) => {
+            keys: oldInactiveKeys.map((oldKey) => {
                 if (oldKey !== key) {
                     return oldKey;
                 }
