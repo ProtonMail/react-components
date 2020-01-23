@@ -125,7 +125,9 @@ const DKIMSection = ({ domain }) => {
                                                 className="flex-item-noshrink pm-button--small mr0-5"
                                                 value={value}
                                             />{' '}
-                                            <code title={value}>{value}</code>
+                                            <code className="ellipsis" title={value}>
+                                                {value}
+                                            </code>
                                         </div>
                                     ]}
                                 />
