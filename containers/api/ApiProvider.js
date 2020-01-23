@@ -48,7 +48,19 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
             const { message, code } = getError(e);
 
             if (appVersionBad.current) {
-                return;
+                throw e;
+            }
+
+            if (e.name === 'CancelUnlock') {
+                throw e;
+            }
+
+            // If the client knows it's offline and it's another offline error, just ignore it
+            if (offlineRef.current && e.name === 'OfflineError') {
+                throw e;
+            }
+            if (offlineRef.current && e.name !== 'OfflineError') {
+                hideOfflineNotification();
             }
 
             if (code === API_CUSTOM_ERROR_CODES.APP_VERSION_BAD) {
@@ -65,15 +77,6 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
 
             if (e.name === 'InactiveSession') {
                 onLogout();
-                throw e;
-            }
-
-            // If the client knows it's offline, just ignore any other error
-            if (offlineRef.current) {
-                throw e;
-            }
-
-            if (e.name === 'CancelUnlock') {
                 throw e;
             }
 
@@ -148,21 +151,14 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
             if (appVersionBad.current) {
                 return Promise.reject(new Error(c('Error').t`Bad app version`));
             }
-            return callWithApiHandlers(rest)
-                .then((response) => {
-                    const serverTime = getDateHeader(response.headers);
-                    if (serverTime) {
-                        updateServerTime(serverTime);
-                    }
-                    hideOfflineNotification();
-                    return output === 'stream' ? response.body : response[output]();
-                })
-                .catch((e) => {
-                    if (e.name !== 'OfflineError' && e.name !== 'TimeoutError') {
-                        hideOfflineNotification();
-                    }
-                    throw e;
-                });
+            return callWithApiHandlers(rest).then((response) => {
+                const serverTime = getDateHeader(response.headers);
+                if (serverTime) {
+                    updateServerTime(serverTime);
+                }
+                hideOfflineNotification();
+                return output === 'stream' ? response.body : response[output]();
+            });
         };
     }
 
