@@ -23,7 +23,7 @@ import {
 
 import { checkSubscription, deleteSubscription } from 'proton-shared/lib/api/payments';
 import { DEFAULT_CURRENCY, DEFAULT_CYCLE, CLIENT_TYPES, PLAN_SERVICES } from 'proton-shared/lib/constants';
-import { getPlans, isBundleEligible, getPlan } from 'proton-shared/lib/helpers/subscription';
+import { getPlans, isBundleEligible, getPlan, switchPlan, getPlanIDs } from 'proton-shared/lib/helpers/subscription';
 import { isLoyal } from 'proton-shared/lib/helpers/organization';
 
 import NewSubscriptionModal from './subscription/NewSubscriptionModal';
@@ -80,10 +80,16 @@ const PlansSection = () => {
         }
 
         const couponCode = CouponCode ? CouponCode : undefined; // From current subscription; CouponCode can be null
+        const plansIDs = switchPlan({
+            planIDs: getPlanIDs(subscription),
+            plans,
+            planID,
+            service: CLIENT_TYPE === CLIENT_TYPES.MAIL ? PLAN_SERVICES.MAIL : PLAN_SERVICES.VPN
+        });
         const { Coupon } = await withLoading(
             api(
                 checkSubscription({
-                    PlanIDs: [planID],
+                    PlanIDs: plansIDs,
                     Currency: currency,
                     Cycle: cycle,
                     CouponCode: couponCode
@@ -96,7 +102,7 @@ const PlansSection = () => {
         createModal(
             <NewSubscriptionModal
                 expanded={expanded}
-                planIDs={{ [planID]: 1 }}
+                planIDs={plansIDs}
                 coupon={coupon}
                 currency={currency}
                 cycle={cycle}

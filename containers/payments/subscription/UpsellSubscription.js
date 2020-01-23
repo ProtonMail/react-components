@@ -1,6 +1,6 @@
 import React from 'react';
 import { useUser, useSubscription, useModals, usePlans, PrimaryButton, Loader, useAddresses } from 'react-components';
-import { hasMailPlus, hasVpnBasic, switchPlan } from 'proton-shared/lib/helpers/subscription';
+import { hasMailPlus, hasVpnBasic, switchPlan, getPlanIDs } from 'proton-shared/lib/helpers/subscription';
 import { DEFAULT_CURRENCY, DEFAULT_CYCLE, PLAN_SERVICES, PLANS } from 'proton-shared/lib/constants';
 import { toMap } from 'proton-shared/lib/helpers/object';
 import { c } from 'ttag';
@@ -11,7 +11,7 @@ const UpsellSubscription = () => {
     const [{ hasPaidMail, hasPaidVpn }, loadingUser] = useUser();
     const [subscription, loadingSubscription] = useSubscription();
     const [plans, loadingPlans] = usePlans();
-    const { Currency = DEFAULT_CURRENCY, Cycle = DEFAULT_CYCLE, Plans = [] } = subscription || {};
+    const { Currency = DEFAULT_CURRENCY, Cycle = DEFAULT_CYCLE } = subscription || {};
     const isFreeMail = !hasPaidMail;
     const isFreeVpn = !hasPaidVpn;
     const { createModal } = useModals();
@@ -23,10 +23,7 @@ const UpsellSubscription = () => {
     }
 
     const plansMap = toMap(plans, 'Name');
-    const planIDs = Plans.reduce((acc, { ID, Quantity }) => {
-        acc[ID] = Quantity;
-        return acc;
-    }, {});
+    const planIDs = getPlanIDs(subscription);
 
     return [
         isFreeMail &&

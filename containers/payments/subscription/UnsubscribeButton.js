@@ -27,6 +27,7 @@ const UnsubscribeButton = ({ className, children }) => {
     const [loading, withLoading] = useLoading();
 
     const handleUnsubscribe = async () => {
+        createNotification({ type: 'info', text: c('State').t`Downgrading your account, please wait` });
         await api(deleteSubscription());
         await call();
         createNotification({ text: c('Success').t`You have successfully unsubscribed` });
