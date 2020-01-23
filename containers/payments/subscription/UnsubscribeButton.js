@@ -17,19 +17,27 @@ import { deleteSubscription } from 'proton-shared/lib/api/payments';
 
 import { isLoyal } from 'proton-shared/lib/helpers/organization';
 
+const DOWNGRADING_ID = 'downgrading-notification';
+
 const UnsubscribeButton = ({ className, children }) => {
     const [user] = useUser();
     const [organization] = useOrganization();
-    const { createNotification } = useNotifications();
+    const { createNotification, hideNotification } = useNotifications();
     const { createModal } = useModals();
     const api = useApi();
     const { call } = useEventManager();
     const [loading, withLoading] = useLoading();
 
     const handleUnsubscribe = async () => {
-        createNotification({ type: 'info', text: c('State').t`Downgrading your account, please wait` });
+        createNotification({
+            type: 'info',
+            text: c('State').t`Downgrading your account, please wait`,
+            id: DOWNGRADING_ID,
+            expiration: 99999
+        });
         await api(deleteSubscription());
         await call();
+        hideNotification(DOWNGRADING_ID);
         createNotification({ text: c('Success').t`You have successfully unsubscribed` });
     };
 
