@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import xhr from 'proton-shared/lib/fetch/fetch';
 import { getUser } from 'proton-shared/lib/api/user';
+import { ping } from 'proton-shared/lib/api/tests';
 import configureApi from 'proton-shared/lib/api';
 import withApiHandlers, {
     CancelUnlockError,
@@ -69,18 +70,16 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
             }
 
             if (e.name === 'OfflineError') {
-                /*
-                const text = navigator.onLine
-                    ? c('Error').t`Could not connect to server.`
-                    : c('Error').t`No internet connection found`;
-                */
                 const id = createNotification({
                     type: 'warning',
                     text: (
                         <OfflineNotification
                             onRetry={() => {
-                                // TODO: What route when not logged in?
-                                apiRef.current(getUser());
+                                hideNotification(id);
+                                offlineRef.current = undefined;
+                                // If there is a session, get user to validate it's still active after coming back online
+                                // otherwise if signed out, call ping
+                                apiRef.current(UID ? getUser() : ping());
                             }}
                         />
                     ),
