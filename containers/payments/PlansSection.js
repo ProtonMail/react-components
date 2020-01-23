@@ -149,8 +149,8 @@ const PlansSection = () => {
                     {Plans.length ? <div>{c('Info').t`You are currently subscribed to ${names}.`}</div> : null}
                 </Alert>
                 <div className="flex-noMinChildren flex-nowrap">
-                    <CycleSelector cycle={cycle} onSelect={setCycle} className="mr1" />
-                    <CurrencySelector currency={currency} onSelect={setCurrency} />
+                    <CycleSelector cycle={cycle} onSelect={setCycle} className="mr1 wauto" />
+                    <CurrencySelector currency={currency} onSelect={setCurrency} className="wauto" />
                 </div>
             </div>
             {CLIENT_TYPE === CLIENT_TYPES.MAIL ? (
