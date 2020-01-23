@@ -23,7 +23,6 @@ import KeysTable from './KeysTable';
 import useDisplayKeys from './shared/useDisplayKeys';
 import { KeyReactivation, OnProcessArguments as ReactivateProcessArguments } from './reactivateKeys/interface';
 import reactivateKeysProcess from './reactivateKeys/reactivateKeysProcess';
-import { noop } from 'proton-shared/lib/helpers/function';
 
 const UserKeysSections = () => {
     const { createModal } = useModals();
@@ -137,9 +136,6 @@ const UserKeysSections = () => {
                 onExportPrivateKey={handleExportPrivate}
                 onExportPublicKey={handleExportPublic}
                 onReactivateKey={handleReactivateKey}
-                onDeleteKey={noop}
-                onSetFlag={noop}
-                onSetPrimary={noop}
             />
         </>
     );

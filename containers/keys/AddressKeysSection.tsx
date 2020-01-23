@@ -1,20 +1,20 @@
-import React, { useState, useEffect, ChangeEvent } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { c } from 'ttag';
 import {
+    Alert,
     Block,
+    Loader,
+    PrimaryButton,
     Select,
     SubTitle,
-    PrimaryButton,
-    Alert,
-    useModals,
-    useApi,
-    useEventManager,
-    useUserKeys,
-    useUser,
     useAddresses,
     useAddressesKeys,
+    useApi,
     useAuthentication,
-    Loader
+    useEventManager,
+    useModals,
+    useUser,
+    useUserKeys
 } from '../../index';
 import { removeKeyAction, setFlagsKeyAction, setPrimaryKeyAction } from 'proton-shared/lib/keys/keysAction';
 import getKeysActionList from 'proton-shared/lib/keys/getKeysActionList';
@@ -170,6 +170,11 @@ const AddressKeysSection = () => {
             setLoadingKeyID('');
         }
     };
+
+    const handleSetObsolete = (ID: string) => handleSetFlag(ID, FlagAction.MARK_OBSOLETE);
+    const handleSetNotObsolete = (ID: string) => handleSetFlag(ID, FlagAction.MARK_NOT_OBSOLETE);
+    const handleSetCompromised = (ID: string) => handleSetFlag(ID, FlagAction.MARK_COMPROMISED);
+    const handleSetNotCompromised = (ID: string) => handleSetFlag(ID, FlagAction.MARK_NOT_COMPROMISED);
 
     const handleDeleteKey = (ID: string) => {
         const addressKey = getCachedKeyByID(addressKeys, ID);
@@ -398,8 +403,11 @@ const AddressKeysSection = () => {
                 onExportPublicKey={handleExportPublic}
                 onReactivateKey={handleReactivateKey}
                 onDeleteKey={handleDeleteKey}
-                onSetFlag={handleSetFlag}
                 onSetPrimary={handleSetPrimaryKey}
+                onSetCompromised={handleSetCompromised}
+                onSetNotCompromised={handleSetNotCompromised}
+                onSetObsolete={handleSetObsolete}
+                onSetNotObsolete={handleSetNotObsolete}
             />
         </>
     );

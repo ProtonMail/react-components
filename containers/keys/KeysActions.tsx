@@ -1,9 +1,9 @@
 import React from 'react';
 import { c } from 'ttag';
 import { DropdownActions } from '../../';
-import { KeyActions, FlagAction, KeyPermissions } from './shared/interface';
+import { KeyActions } from './shared/interface';
 
-interface Props extends KeyActions, KeyPermissions {
+interface Props extends Partial<KeyActions> {
     isLoading: boolean;
     ID: string;
 }
@@ -14,56 +14,50 @@ const KeysActions = ({
     onExportPublicKey,
     onExportPrivateKey,
     onSetPrimary,
-    onSetFlag,
     onDeleteKey,
-    canReactivate,
-    canExportPublicKey,
-    canExportPrivateKey,
-    canMakePrimary,
-    canMarkObsolete,
-    canMarkNotObsolete,
-    canMarkCompromised,
-    canMarkNotCompromised,
-    canDelete
+    onSetCompromised,
+    onSetNotCompromised,
+    onSetObsolete,
+    onSetNotObsolete
 }: Props) => {
     const list = [
-        canReactivate && {
+        onReactivateKey && {
             text: c('Keys actions').t`Reactivate`,
             onClick: () => onReactivateKey(ID)
         },
-        canExportPublicKey && {
+        onExportPublicKey && {
             text: c('Keys actions').t`Export`,
             onClick: () => onExportPublicKey(ID)
         },
-        canExportPrivateKey && {
+        onExportPrivateKey && {
             text: c('Keys actions').t`Export private key`,
             onClick: () => onExportPrivateKey(ID)
         },
-        canMakePrimary && {
+        onSetPrimary && {
             text: c('Keys actions').t`Make primary`,
             onClick: () => onSetPrimary(ID)
         },
-        canMarkObsolete && {
+        onSetObsolete && {
             text: c('Keys actions').t`Mark obsolete`,
             tooltip: c('Keys actions').t`Disables encryption with this key`,
-            onClick: () => onSetFlag(ID, FlagAction.MARK_OBSOLETE)
+            onClick: () => onSetObsolete(ID)
         },
-        canMarkNotObsolete && {
+        onSetNotObsolete && {
             text: c('Keys actions').t`Mark not obsolete`,
             tooltip: c('Keys actions').t`Enable encryption with this key`,
-            onClick: () => onSetFlag(ID, FlagAction.MARK_NOT_OBSOLETE)
+            onClick: () => onSetNotObsolete(ID)
         },
-        canMarkCompromised && {
+        onSetCompromised && {
             text: c('Keys actions').t`Mark compromised`,
             tooltip: c('Keys actions').t`Disables signature verification and encryption with this key`,
-            onClick: () => onSetFlag(ID, FlagAction.MARK_COMPROMISED)
+            onClick: () => onSetCompromised(ID)
         },
-        canMarkNotCompromised && {
+        onSetNotCompromised && {
             text: c('Keys actions').t`Mark not compromised`,
             tooltip: c('Keys actions').t`Enable signature verification and encryption with this key`,
-            onClick: () => onSetFlag(ID, FlagAction.MARK_NOT_COMPROMISED)
+            onClick: () => onSetNotCompromised(ID)
         },
-        canDelete && {
+        onDeleteKey && {
             text: c('Keys actions').t`Delete`,
             onClick: () => onDeleteKey(ID)
         }

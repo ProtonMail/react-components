@@ -51,11 +51,11 @@ export const getDisplayKey = ({
         canReactivate: !isSubUser && !isDecrypted,
         canExportPublicKey: true,
         canExportPrivateKey: isDecrypted,
-        canMakePrimary: canModify && !isAddressDisabled && isDecrypted && isEncryptingAndSigning,
-        canMarkObsolete: canModify && !isAddressDisabled && isDecrypted && !isObsolete && !isCompromised,
-        canMarkNotObsolete: canModify && isObsolete,
-        canMarkCompromised: canModify && !isCompromised,
-        canMarkNotCompromised: canModify && isCompromised,
+        canSetPrimary: canModify && !isAddressDisabled && isDecrypted && isEncryptingAndSigning,
+        canSetObsolete: canModify && !isAddressDisabled && isDecrypted && !isObsolete && !isCompromised,
+        canSetNotObsolete: canModify && isObsolete,
+        canSetCompromised: canModify && !isCompromised,
+        canSetNotCompromised: canModify && isCompromised,
         canDelete: canModify
     };
 

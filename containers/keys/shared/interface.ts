@@ -4,11 +4,11 @@ export interface KeyPermissions {
     canReactivate: boolean;
     canExportPublicKey: boolean;
     canExportPrivateKey: boolean;
-    canMakePrimary: boolean;
-    canMarkObsolete: boolean;
-    canMarkNotObsolete: boolean;
-    canMarkCompromised: boolean;
-    canMarkNotCompromised: boolean;
+    canSetPrimary: boolean;
+    canSetObsolete: boolean;
+    canSetNotObsolete: boolean;
+    canSetCompromised: boolean;
+    canSetNotCompromised: boolean;
     canDelete: boolean;
 }
 
@@ -18,7 +18,10 @@ export interface KeyActions {
     onExportPublicKey: (id: string) => void;
     onReactivateKey: (id: string) => void;
     onSetPrimary: (id: string) => void;
-    onSetFlag: (id: string, action: FlagAction) => void;
+    onSetCompromised: (id: string) => void;
+    onSetNotCompromised: (id: string) => void;
+    onSetObsolete: (id: string) => void;
+    onSetNotObsolete: (id: string) => void;
 }
 
 export interface KeyStatus {
