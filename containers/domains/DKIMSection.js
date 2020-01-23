@@ -2,6 +2,7 @@ import React from 'react';
 import { c } from 'ttag';
 import PropTypes from 'prop-types';
 import {
+    classnames,
     Alert,
     Table,
     TableHeader,
@@ -80,11 +81,12 @@ const DKIMSection = ({ domain }) => {
                 const value = `v=DKIM1;k=rsa;p=${State === DKIM_KEY_STATUS.RETIRED ? '' : `${PublicKey};`}`;
                 return (
                     <React.Fragment key={index}>
-                        {State === DKIM_KEY_STATUS.DKIM_KEY_DNS_STATUS ? (
-                            <Alert type="error">{c('Warning')
-                                .t`Please check this DNS entry. It's not set properly. Most common problems include wrong format, having multiple entries with the same selector or having a wrong public key.`}</Alert>
-                        ) : null}
-                        <div className="flex flex-spacebetween flex-items-center flex-nowrap">
+                        <div
+                            className={classnames([
+                                'flex flex-spacebetween flex-items-center flex-nowrap',
+                                State === DKIM_KEY_DNS_STATUS.INVALID && 'mb1'
+                            ])}
+                        >
                             <div className="flex flex-nowrap flex-items-center">
                                 <label className="bold mr0-5">{c('Label').t`Key:`}</label>
                                 <span className="mr1">{ALGO[Algorithm]}</span>
@@ -100,6 +102,10 @@ const DKIMSection = ({ domain }) => {
                                 {getKeyStatusBadge(State)}
                             </div>
                         </div>
+                        {State === DKIM_KEY_DNS_STATUS.INVALID ? (
+                            <Alert type="error">{c('Warning')
+                                .t`Please check this DNS entry. It's not set properly. Most common problems include wrong format, having multiple entries with the same selector or having a wrong public key.`}</Alert>
+                        ) : null}
                         <Table>
                             <TableHeader
                                 cells={[
@@ -119,7 +125,7 @@ const DKIMSection = ({ domain }) => {
                                                 className="flex-item-noshrink pm-button--small mr0-5"
                                                 value={value}
                                             />{' '}
-                                            <code>{value}</code>
+                                            <code title={value}>{value}</code>
                                         </div>
                                     ]}
                                 />
