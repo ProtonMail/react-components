@@ -6,7 +6,7 @@ import { useGetUserKeysRaw } from './useGetUserKeysRaw';
 
 export const KEY = 'USER_KEYS';
 
-export const useGetUserKeys = (): (() => Promise<CachedKey>) => {
+export const useGetUserKeys = (): (() => Promise<CachedKey[]>) => {
     const cache = useCache();
     const miss = useGetUserKeysRaw();
     return useCallback(async () => {

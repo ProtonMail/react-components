@@ -1,11 +1,12 @@
 import { useCallback } from 'react';
 import { decryptPrivateKey } from 'pmcrypto';
 import { noop } from 'proton-shared/lib/helpers/function';
+import { Key as tsKey, CachedKey } from 'proton-shared/lib/interfaces';
 import { decryptMemberToken } from 'proton-shared/lib/keys/memberToken';
 import useAuthentication from '../containers/authentication/useAuthentication';
 import { useGetUser } from './useUser';
 
-export const useGetUserKeysRaw = () => {
+export const useGetUserKeysRaw = (): (() => Promise<CachedKey[]>) => {
     const authentication = useAuthentication();
     const getUser = useGetUser();
 
@@ -18,10 +19,11 @@ export const useGetUserKeysRaw = () => {
             ? await decryptPrivateKey(OrganizationPrivateKey, mailboxPassword).catch(noop)
             : undefined;
 
-        const process = async (Key) => {
+        const process = async (Key: tsKey) => {
             try {
                 const { PrivateKey, Token } = Key;
-                const keyPassword = Token ? await decryptMemberToken(Token, organizationKey) : mailboxPassword;
+                const keyPassword =
+                    Token && organizationKey ? await decryptMemberToken(Token, organizationKey) : mailboxPassword;
                 const privateKey = await decryptPrivateKey(PrivateKey, keyPassword);
                 return {
                     Key,
