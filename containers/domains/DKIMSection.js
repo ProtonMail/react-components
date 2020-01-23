@@ -60,7 +60,6 @@ const getDNSStatusBadge = (status) =>
     }[status]);
 
 const DKIMSection = ({ domain }) => {
-    const off = <code key="off">off</code>;
     const { createModal } = useModals();
     const { createNotification } = useNotifications();
     const openGenerateKeyModal = () => createModal(<GenerateKeyModal domain={domain} />);
@@ -131,7 +130,7 @@ const DKIMSection = ({ domain }) => {
             })}
             <Button className="mb1" onClick={openGenerateKeyModal}>{c('Action').t`Generate a new key`}</Button>
             <Alert type="warning">{c('Info')
-                .jt`Keep this record in your DNS for as long as you want to use DKIM. You can change its Value to ${off} to disable DKIM.`}</Alert>
+                .t`Keep this record in your DNS for as long as you want to use DKIM.`}</Alert>
         </>
     );
 };
