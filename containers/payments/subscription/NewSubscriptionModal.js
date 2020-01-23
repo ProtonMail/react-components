@@ -226,7 +226,7 @@ const NewSubscriptionModal = ({
                         onClose={handleClose}
                         submit={
                             <NewSubscriptionSubmitButton
-                                onClose={handleClose}
+                                onClose={onClose}
                                 canPay={canPay}
                                 paypal={paypal}
                                 step={step}
@@ -270,7 +270,7 @@ const NewSubscriptionModal = ({
                         <SubscriptionCheckout
                             submit={
                                 <NewSubscriptionSubmitButton
-                                    onClose={handleClose}
+                                    onClose={onClose}
                                     canPay={canPay}
                                     paypal={paypal}
                                     step={step}
@@ -332,7 +332,7 @@ const NewSubscriptionModal = ({
                             method={method}
                             submit={
                                 <NewSubscriptionSubmitButton
-                                    onClose={handleClose}
+                                    onClose={onClose}
                                     canPay={canPay}
                                     paypal={paypal}
                                     step={step}
