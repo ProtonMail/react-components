@@ -1,23 +1,21 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { DropdownActions } from 'react-components';
+import { DropdownActions } from '../../';
+import { KeyActions, FlagAction, KeyPermissions } from './shared/interface';
 
-export const ACTIONS = {
-    PRIMARY: 1,
-    DELETE: 2,
-    EXPORT_PUBLIC_KEY: 3,
-    EXPORT_PRIVATE_KEY: 4,
-    REACTIVATE: 5,
-    MARK_OBSOLETE: 6,
-    MARK_NOT_OBSOLETE: 7,
-    MARK_COMPROMISED: 8,
-    MARK_NOT_COMPROMISED: 9
-};
-
+interface Props extends KeyActions, KeyPermissions {
+    isLoading: boolean;
+    ID: string;
+}
 const KeysActions = ({
-    onAction,
-    loading,
+    isLoading,
+    ID,
+    onReactivateKey,
+    onExportPublicKey,
+    onExportPrivateKey,
+    onSetPrimary,
+    onSetFlag,
+    onDeleteKey,
     canReactivate,
     canExportPublicKey,
     canExportPrivateKey,
@@ -27,65 +25,51 @@ const KeysActions = ({
     canMarkCompromised,
     canMarkNotCompromised,
     canDelete
-}) => {
+}: Props) => {
     const list = [
         canReactivate && {
             text: c('Keys actions').t`Reactivate`,
-            onClick: () => onAction(ACTIONS.REACTIVATE)
+            onClick: () => onReactivateKey(ID)
         },
         canExportPublicKey && {
             text: c('Keys actions').t`Export`,
-            onClick: () => onAction(ACTIONS.EXPORT_PUBLIC_KEY)
+            onClick: () => onExportPublicKey(ID)
         },
         canExportPrivateKey && {
             text: c('Keys actions').t`Export private key`,
-            onClick: () => onAction(ACTIONS.EXPORT_PRIVATE_KEY)
+            onClick: () => onExportPrivateKey(ID)
         },
         canMakePrimary && {
             text: c('Keys actions').t`Make primary`,
-            onClick: () => onAction(ACTIONS.PRIMARY)
+            onClick: () => onSetPrimary(ID)
         },
         canMarkObsolete && {
             text: c('Keys actions').t`Mark obsolete`,
             tooltip: c('Keys actions').t`Disables encryption with this key`,
-            onClick: () => onAction(ACTIONS.MARK_OBSOLETE)
+            onClick: () => onSetFlag(ID, FlagAction.MARK_OBSOLETE)
         },
         canMarkNotObsolete && {
             text: c('Keys actions').t`Mark not obsolete`,
             tooltip: c('Keys actions').t`Enable encryption with this key`,
-            onClick: () => onAction(ACTIONS.MARK_NOT_OBSOLETE)
+            onClick: () => onSetFlag(ID, FlagAction.MARK_NOT_OBSOLETE)
         },
         canMarkCompromised && {
             text: c('Keys actions').t`Mark compromised`,
             tooltip: c('Keys actions').t`Disables signature verification and encryption with this key`,
-            onClick: () => onAction(ACTIONS.MARK_COMPROMISED)
+            onClick: () => onSetFlag(ID, FlagAction.MARK_COMPROMISED)
         },
         canMarkNotCompromised && {
             text: c('Keys actions').t`Mark not compromised`,
             tooltip: c('Keys actions').t`Enable signature verification and encryption with this key`,
-            onClick: () => onAction(ACTIONS.MARK_NOT_COMPROMISED)
+            onClick: () => onSetFlag(ID, FlagAction.MARK_NOT_COMPROMISED)
         },
         canDelete && {
             text: c('Keys actions').t`Delete`,
-            onClick: () => onAction(ACTIONS.DELETE)
+            onClick: () => onDeleteKey(ID)
         }
     ].filter(Boolean);
 
-    return <DropdownActions className="pm-button--small" loading={loading} list={list} />;
-};
-
-KeysActions.propTypes = {
-    onAction: PropTypes.func.isRequired,
-    loading: PropTypes.bool,
-    canReactivate: PropTypes.bool,
-    canExportPublicKey: PropTypes.bool,
-    canExportPrivateKey: PropTypes.bool,
-    canMakePrimary: PropTypes.bool,
-    canMarkObsolete: PropTypes.bool,
-    canMarkNotObsolete: PropTypes.bool,
-    canMarkCompromised: PropTypes.bool,
-    canMarkNotCompromised: PropTypes.bool,
-    canDelete: PropTypes.bool
+    return <DropdownActions className="pm-button--small" loading={isLoading} list={list} />;
 };
 
 export default KeysActions;

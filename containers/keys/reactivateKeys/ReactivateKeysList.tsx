@@ -1,30 +1,22 @@
 import React, { useRef } from 'react';
 import { c } from 'ttag';
-import PropTypes from 'prop-types';
-import { Badge, Button, LoaderIcon, Table, TableRow, TableHeader, TableBody } from 'react-components';
+import { Badge, Button, LoaderIcon, Table, TableRow, TableHeader, TableBody } from '../../../index';
 
 import SelectKeyFiles from '../shared/SelectKeyFiles';
 
 import KeysStatus from '../KeysStatus';
+import { Status, ReactivateKeys, ReactivateKey } from './interface';
 
-export const STATUS = {
-    INACTIVE: 1,
-    UPLOADED: 2,
-    SUCCESS: 3,
-    LOADING: 4,
-    ERROR: 5
-};
-
-const getKeyStatusError = (error) => {
+const getKeyStatusError = (error: any) => {
     return {
-        tooltip: error.message,
+        tooltip: error?.message,
         title: c('Key state badge').t`Error`,
         type: 'error'
     };
 };
 
-const getStatus = (status, result) => {
-    if (status === STATUS.ERROR) {
+const getStatus = (status: Status, result: any) => {
+    if (status === Status.ERROR) {
         const { tooltip, type, title } = getKeyStatusError(result);
         return (
             <Badge type={type} tooltip={tooltip}>
@@ -32,31 +24,39 @@ const getStatus = (status, result) => {
             </Badge>
         );
     }
-    if (status === STATUS.INACTIVE || status === STATUS.UPLOADED) {
+    if (status === Status.INACTIVE || status === Status.UPLOADED) {
         return <KeysStatus isDecrypted={false} />;
     }
-    if (status === STATUS.SUCCESS) {
+    if (status === Status.SUCCESS) {
         return <KeysStatus isDecrypted={true} />;
     }
 };
 
-const ReactivateKeysList = ({ loading = false, allKeys, onUpload }) => {
-    const inactiveKeyRef = useRef();
-    const selectRef = useRef();
+interface Props {
+    loading?: boolean;
+    allKeys: ReactivateKeys[];
+    onUpload?: (key: ReactivateKey, files: any[]) => void;
+}
+const ReactivateKeysList = ({ loading = false, allKeys, onUpload }: Props) => {
+    const inactiveKeyRef = useRef<ReactivateKey>();
+    const selectRef = useRef<HTMLSelectElement>();
 
     const isUpload = !!onUpload;
 
-    const handleFiles = (files) => {
+    const handleFiles = (files: any) => {
+        if (!inactiveKeyRef.current || !onUpload) {
+            return;
+        }
         onUpload(inactiveKeyRef.current, files);
         inactiveKeyRef.current = undefined;
     };
 
     const list = allKeys
-        .map(({ User, Address, inactiveKeys }) => {
+        .map(({ User, Address, keys }) => {
             const email = Address ? Address.Email : User.Name;
 
-            return inactiveKeys.map((inactiveKey) => {
-                const { Key, fingerprint, uploadedPrivateKey, status, result } = inactiveKey;
+            return keys.map((inactiveKey) => {
+                const { ID, fingerprint, uploadedPrivateKey, status, result } = inactiveKey;
 
                 const keyStatus = loading && !result ? <LoaderIcon /> : getStatus(status, result);
 
@@ -66,7 +66,7 @@ const ReactivateKeysList = ({ loading = false, allKeys, onUpload }) => {
                     <Button
                         onClick={() => {
                             inactiveKeyRef.current = inactiveKey;
-                            selectRef.current.click();
+                            selectRef.current?.click();
                         }}
                     >
                         {c('Action').t`Upload`}
@@ -75,7 +75,7 @@ const ReactivateKeysList = ({ loading = false, allKeys, onUpload }) => {
 
                 return (
                     <TableRow
-                        key={Key.ID}
+                        key={ID}
                         cells={[
                             <span key={0} className="mw100 inbl ellipsis">
                                 {email}
@@ -116,13 +116,6 @@ const ReactivateKeysList = ({ loading = false, allKeys, onUpload }) => {
             </Table>
         </>
     );
-};
-
-ReactivateKeysList.propTypes = {
-    allKeys: PropTypes.array.isRequired,
-    onUpload: PropTypes.func,
-    loading: PropTypes.bool,
-    onError: PropTypes.func
 };
 
 export default ReactivateKeysList;

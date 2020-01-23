@@ -1,16 +1,19 @@
 import { c } from 'ttag';
-import PropTypes from 'prop-types';
 import React from 'react';
-import { Badge, LoaderIcon } from 'react-components';
+import { Badge, LoaderIcon } from '../../index';
 
-export const STATUS = {
-    QUEUED: 0,
-    DONE: 1,
-    FAILURE: 2,
-    LOADING: 3
-};
+export enum STATUS {
+    QUEUED,
+    DONE,
+    FAILURE,
+    LOADING
+}
 
-const Status = ({ type, tooltip }) => {
+interface Props {
+    type: STATUS;
+    tooltip?: string;
+}
+const Status = ({ type, tooltip }: Props) => {
     if (type === STATUS.QUEUED) {
         return <Badge type="default">{c('Info').t`Queued`}</Badge>;
     }
@@ -27,11 +30,6 @@ const Status = ({ type, tooltip }) => {
         return <LoaderIcon />;
     }
     return null;
-};
-
-Status.propTypes = {
-    type: PropTypes.number,
-    tooltip: PropTypes.string
 };
 
 export default Status;

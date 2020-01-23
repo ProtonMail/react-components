@@ -1,21 +1,18 @@
 import { c } from 'ttag';
 import React from 'react';
-import PropTypes from 'prop-types';
-import { LoaderIcon, Table, TableRow, TableHeader, TableBody, Badge } from 'react-components';
+import { LoaderIcon, Table, TableRow, TableHeader, TableBody, Badge } from '../../../index';
+import { ImportKey, Status } from './interface';
 
-export const STATUS = {
-    SUCCESS: 1,
-    LOADING: 2,
-    ERROR: 3
-};
-
-const ImportKeysList = ({ keys }) => {
+interface Props {
+    keys: ImportKey[];
+}
+const ImportKeysList = ({ keys }: Props) => {
     const list = keys.map(({ status, fingerprint, result }, i) => {
         const keyStatus = (() => {
-            if (status === STATUS.ERROR) {
+            if (status === Status.ERROR) {
                 return <Badge type="error" tooltip={result.message}>{c('Title').t`Error`}</Badge>;
             }
-            if (status === STATUS.SUCCESS) {
+            if (status === Status.SUCCESS) {
                 return <Badge type="success">{c('Title').t`Success`}</Badge>;
             }
             return <LoaderIcon />;
@@ -41,10 +38,6 @@ const ImportKeysList = ({ keys }) => {
             <TableBody>{list}</TableBody>
         </Table>
     );
-};
-
-ImportKeysList.propTypes = {
-    keys: PropTypes.array.isRequired
 };
 
 export default ImportKeysList;

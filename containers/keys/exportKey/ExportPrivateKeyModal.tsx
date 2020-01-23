@@ -1,19 +1,28 @@
-import React, { useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
+import { OpenPGPKey, encryptPrivateKey } from 'pmcrypto';
 import { KEY_FILE_EXTENSION } from 'proton-shared/lib/constants';
-import { encryptPrivateKey } from 'pmcrypto';
 import downloadFile from 'proton-shared/lib/helpers/downloadFile';
-import { useModals, UnlockModal, Alert, Row, Field, Label, PasswordInput, FormModal } from 'react-components';
-import PropTypes from 'prop-types';
+import { useModals, UnlockModal, Alert, Row, Field, Label, PasswordInput, FormModal } from '../../../';
 import { c } from 'ttag';
 
 import { generateUID } from '../../../helpers/component';
 
-const ExportPrivateKeyModal = ({ name, privateKey, onSuccess, onClose, ...rest }) => {
-    const { createModal } = useModals();
+const handleExport = async (name: string, privateKey: OpenPGPKey, password: string) => {
+    const fingerprint = privateKey.getFingerprint();
+    const filename = ['privatekey.', name, '-', fingerprint, KEY_FILE_EXTENSION].join('');
+    const armoredEncryptedKey = await encryptPrivateKey(privateKey, password);
+    const blob = new Blob([armoredEncryptedKey], { type: 'data:text/plain;charset=utf-8;' });
+    downloadFile(blob, filename);
+};
 
-    if (!privateKey.isDecrypted()) {
-        throw new Error('Key must be decrypted');
-    }
+interface Props {
+    name: string;
+    privateKey: OpenPGPKey;
+    onSuccess?: () => void;
+    onClose?: () => void;
+}
+const ExportPrivateKeyModal = ({ name, privateKey, onSuccess, onClose, ...rest }: Props) => {
+    const { createModal } = useModals();
 
     const [id] = useState(() => generateUID('exportKey'));
     const [password, setPassword] = useState('');
@@ -23,14 +32,9 @@ const ExportPrivateKeyModal = ({ name, privateKey, onSuccess, onClose, ...rest }
         await new Promise((resolve, reject) => {
             createModal(<UnlockModal onClose={() => reject()} onSuccess={resolve} />);
         });
-
-        const fingerprint = privateKey.getFingerprint();
-        const filename = ['privatekey.', name, '-', fingerprint, KEY_FILE_EXTENSION].join('');
-        const armoredEncryptedKey = await encryptPrivateKey(privateKey, password);
-        const blob = new Blob([armoredEncryptedKey], { type: 'data:text/plain;charset=utf-8;' });
-        downloadFile(blob, filename);
-        onSuccess && onSuccess();
-        onClose();
+        await handleExport(name, privateKey, password);
+        onSuccess?.();
+        onClose?.();
     };
 
     return (
@@ -53,7 +57,7 @@ const ExportPrivateKeyModal = ({ name, privateKey, onSuccess, onClose, ...rest }
                     <PasswordInput
                         id={id}
                         value={password}
-                        onChange={({ target: { value } }) => setPassword(value)}
+                        onChange={({ target: { value } }: ChangeEvent<HTMLInputElement>) => setPassword(value)}
                         placeholder={c('Placeholder').t`Password`}
                         autoFocus={true}
                         required
@@ -62,13 +66,6 @@ const ExportPrivateKeyModal = ({ name, privateKey, onSuccess, onClose, ...rest }
             </Row>
         </FormModal>
     );
-};
-
-ExportPrivateKeyModal.propTypes = {
-    onClose: PropTypes.func,
-    onSuccess: PropTypes.func,
-    privateKey: PropTypes.object.isRequired,
-    name: PropTypes.string.isRequired
 };
 
 export default ExportPrivateKeyModal;

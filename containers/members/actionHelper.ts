@@ -1,23 +1,29 @@
-import { encryptPrivateKey } from 'pmcrypto';
+import { encryptPrivateKey, OpenPGPKey } from 'pmcrypto';
+import { addKeyAction } from 'proton-shared/lib/keys/keysAction';
 import { generateMemberToken, encryptMemberToken } from 'proton-shared/lib/keys/memberToken';
 import { getKeyFlagsAddress } from 'proton-shared/lib/keys/keyFlags';
 import { createMemberKeyRoute, setupMemberKeyRoute } from 'proton-shared/lib/api/memberKeys';
 import getSignedKeyList from 'proton-shared/lib/keys/getSignedKeyList';
 import { srpVerify } from 'proton-shared/lib/srp';
-import { createKey } from 'proton-shared/lib/keys/keysManager';
 import { generateAddressKey, generateKeySaltAndPassphrase } from 'proton-shared/lib/keys/keys';
+import { EncryptionConfig, Address, KeyAction, Api } from 'proton-shared/lib/interfaces';
 
-/**
- * Setup the primary key for a member.
- * @param {Function} api
- * @param {Object} Member
- * @param {Object} Address
- * @param {string} password
- * @param {Object} organizationKey
- * @param {Object} encryptionConfig
- * @return {Promise<Array>} - The updated list of keys.
- */
-export const setupMemberKey = async ({ api, Member, Address, password, organizationKey, encryptionConfig }) => {
+interface SetupMemberKeyArguments {
+    api: Api;
+    Member: any;
+    Address: Address;
+    password: string;
+    organizationKey: OpenPGPKey;
+    encryptionConfig: EncryptionConfig;
+}
+export const setupMemberKey = async ({
+    api,
+    Member,
+    Address,
+    password,
+    organizationKey,
+    encryptionConfig
+}: SetupMemberKeyArguments) => {
     const { salt: keySalt, passphrase: memberMailboxPassword } = await generateKeySaltAndPassphrase(password);
 
     const { privateKey, privateKeyArmored } = await generateAddressKey({
@@ -30,14 +36,17 @@ export const setupMemberKey = async ({ api, Member, Address, password, organizat
     const privateKeyArmoredOrganization = await encryptPrivateKey(privateKey, memberKeyToken);
     const organizationToken = await encryptMemberToken(memberKeyToken, organizationKey);
 
-    const updatedKeys = createKey({
-        keyID: 'temp',
-        keys: [],
+    const updatedKeys = addKeyAction({
+        ID: 'temp',
         flags: getKeyFlagsAddress(Address, []),
-        privateKey
+        keys: [],
+        fingerprint: privateKey.getFingerprint()
     });
 
-    const newKey = updatedKeys.find(({ Key: { ID } }) => 'temp' === ID);
+    const newKey = updatedKeys.find(({ ID }) => 'temp' === ID);
+    if (!newKey) {
+        throw new Error('Temp key not found');
+    }
 
     const PrimaryKey = {
         UserKey: privateKeyArmored,
@@ -57,7 +66,7 @@ export const setupMemberKey = async ({ api, Member, Address, password, organizat
             AddressKeys: [
                 {
                     AddressID: Address.ID,
-                    SignedKeyList: await getSignedKeyList(updatedKeys),
+                    SignedKeyList: await getSignedKeyList(updatedKeys, privateKey),
                     ...PrimaryKey
                 }
             ],
@@ -66,47 +75,47 @@ export const setupMemberKey = async ({ api, Member, Address, password, organizat
         })
     });
 
-    // Mutably update the key with the latest value from the API (sets the real ID etc).
-    newKey.Key = Key;
+    newKey.ID = Key.ID;
 
     return updatedKeys;
 };
 
-/**
- * Create a member key.
- * @param {Function} api
- * @param {Object} Address
- * @param {Object} Member
- * @param {Array} keys
- * @param {Object} privateKey
- * @param {String} privateKeyArmored
- * @param {String} activationToken
- * @param {String} privateKeyArmoredOrganization
- * @param {String} organizationToken
- * @return {Promise<Array>} - The updated list of keys
- */
+interface CreateMemberAddressKeysArguments {
+    api: Api;
+    Address: Address;
+    Member: any;
+    keys: KeyAction[];
+    privateKey: OpenPGPKey;
+    signingKey: OpenPGPKey;
+    privateKeyArmored: string;
+    activationToken: string;
+    privateKeyArmoredOrganization: string;
+    organizationToken: string;
+}
 export const createMemberAddressKeys = async ({
     api,
     Address,
     Member,
     keys,
     privateKey,
+    signingKey,
     privateKeyArmored,
     activationToken,
     privateKeyArmoredOrganization,
     organizationToken
-}) => {
-    const newKeys = createKey({
+}: CreateMemberAddressKeysArguments) => {
+    const newKeys = addKeyAction({
         keys,
-        keyID: 'temp',
+        ID: 'temp',
         flags: getKeyFlagsAddress(Address, keys),
-        privateKey
+        fingerprint: privateKey.getFingerprint()
     });
 
-    const newKey = newKeys.find(({ Key: { ID } }) => 'temp' === ID);
-    const {
-        Key: { Primary }
-    } = newKey;
+    const newKey = newKeys.find(({ ID }) => 'temp' === ID);
+    if (!newKey) {
+        throw new Error('Temp key not found');
+    }
+    const { primary } = newKey;
 
     const { MemberKey } = await api(
         createMemberKeyRoute({
@@ -116,13 +125,12 @@ export const createMemberAddressKeys = async ({
             UserKey: privateKeyArmored,
             Token: organizationToken,
             MemberKey: privateKeyArmoredOrganization,
-            Primary,
-            SignedKeyList: await getSignedKeyList(newKeys)
+            Primary: primary,
+            SignedKeyList: await getSignedKeyList(newKeys, signingKey)
         })
     );
 
-    // Mutably update the key with the latest value from the API (sets the real ID etc).
-    newKey.Key = MemberKey;
+    newKey.ID = MemberKey.ID;
 
     return newKeys;
 };

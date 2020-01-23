@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { CachedKey } from 'proton-shared/lib/interfaces';
 import useCache from '../containers/cache/useCache';
 import { useGetAddresses } from './useAddresses';
 import useCachedModelResult from './useCachedModelResult';
@@ -22,7 +23,7 @@ export const useGetAddressesKeys = () => {
     }, [getAddresses, getAddressKeys]);
 };
 
-export const useAddressesKeys = () => {
+export const useAddressesKeys = (): [{ [key: string]: CachedKey[] }, boolean, any] => {
     const cache = useCache();
     const miss = useGetAddressesKeys();
     return useCachedModelResult(cache, KEY, miss);

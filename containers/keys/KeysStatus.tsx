@@ -1,10 +1,11 @@
-import PropTypes from 'prop-types';
 import React from 'react';
-import { Badge } from 'react-components';
+import { Badge } from '../../index';
 import { c } from 'ttag';
+import isTruthy from 'proton-shared/lib/helpers/isTruthy';
+import { KeyStatus } from './shared/interface';
 
-const KeysStatus = ({ isPrimary, isDecrypted, isCompromised, isObsolete, isAddressDisabled }) => {
-    return [
+const KeysStatus = ({ isPrimary, isDecrypted, isCompromised, isObsolete, isAddressDisabled }: Partial<KeyStatus>) => {
+    const list = [
         isPrimary && {
             tooltip: c('Tooltip').t`ProtonMail users will use this key by default for sending`,
             title: c('Key state badge').t`Primary`,
@@ -38,7 +39,7 @@ const KeysStatus = ({ isPrimary, isDecrypted, isCompromised, isObsolete, isAddre
             type: 'warning'
         }
     ]
-        .filter(Boolean)
+        .filter(isTruthy)
         .map(({ tooltip, title, type }) => {
             return (
                 <Badge key={title} tooltip={tooltip} type={type}>
@@ -46,14 +47,7 @@ const KeysStatus = ({ isPrimary, isDecrypted, isCompromised, isObsolete, isAddre
                 </Badge>
             );
         });
-};
-
-KeysStatus.propTypes = {
-    isPrimary: PropTypes.bool,
-    isDecrypted: PropTypes.bool,
-    isCompromised: PropTypes.bool,
-    isObsolete: PropTypes.bool,
-    isAddressDisabled: PropTypes.bool
+    return <>{list}</>;
 };
 
 export default KeysStatus;

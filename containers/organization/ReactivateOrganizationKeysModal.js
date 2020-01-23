@@ -19,8 +19,8 @@ import {
 } from 'react-components';
 import { encryptPrivateKey } from 'pmcrypto';
 
-import { decryptArmoredKey } from '../keys/reactivateKeys/ReactivateKeysModal';
 import { OrganizationModel } from 'proton-shared/lib/models';
+import { decryptPrivateKeyWithSalt } from 'proton-shared/lib/keys/keys';
 
 const ReactivateOrganizationKeysModal = ({ onClose, mode, ...rest }) => {
     const cache = useCache();
@@ -67,8 +67,8 @@ const ReactivateOrganizationKeysModal = ({ onClose, mode, ...rest }) => {
             setError('');
 
             const { PrivateKey, KeySalt } = await api(getOrganizationBackupKeys());
-            const decryptedPrivateKey = await decryptArmoredKey({
-                armoredPrivateKey: PrivateKey,
+            const decryptedPrivateKey = await decryptPrivateKeyWithSalt({
+                PrivateKey,
                 password: backupPassword,
                 keySalt: KeySalt
             });

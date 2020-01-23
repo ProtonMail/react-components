@@ -1,13 +1,15 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { Table, TableCell, TableRow, TableBody } from 'react-components';
+import { Copy, Table, TableCell, TableRow, TableBody } from '../../index';
 
 import KeysActions from './KeysActions';
 import KeysStatus from './KeysStatus';
-import { Copy } from '../../components/button';
+import { KeyDisplay, KeyActions } from './shared/interface';
 
-const KeysTable = ({ keys = [], onAction }) => {
+interface Props extends KeyActions {
+    keys: KeyDisplay[];
+}
+const KeysTable = ({ keys = [], ...actions }: Props) => {
     const headerCells = [
         { node: c('Title header for keys table').t`Fingerprint`, className: 'w50' },
         { node: c('Title header for keys table').t`Key type` },
@@ -27,7 +29,7 @@ const KeysTable = ({ keys = [], onAction }) => {
                 <tr>{headerCells}</tr>
             </thead>
             <TableBody colSpan={4}>
-                {keys.map(({ ID, fingerprint, algorithm, isLoading, status, permissions }, idx) => {
+                {keys.map(({ ID, fingerprint, algorithm, status, permissions }) => {
                     return (
                         <TableRow
                             key={ID}
@@ -42,9 +44,10 @@ const KeysTable = ({ keys = [], onAction }) => {
                                 <KeysStatus key={2} {...status} />,
                                 <KeysActions
                                     key={3}
-                                    loading={isLoading}
-                                    onAction={(action) => onAction(action, idx)}
+                                    isLoading={status.isLoading}
+                                    ID={ID}
                                     {...permissions}
+                                    {...actions}
                                 />
                             ]}
                         />
@@ -53,12 +56,6 @@ const KeysTable = ({ keys = [], onAction }) => {
             </TableBody>
         </Table>
     );
-};
-
-KeysTable.propTypes = {
-    keys: PropTypes.array,
-    onAction: PropTypes.func.isRequired,
-    loadingKeyID: PropTypes.bool
 };
 
 export default KeysTable;

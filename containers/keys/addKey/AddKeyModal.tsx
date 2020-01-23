@@ -1,65 +1,54 @@
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 import { c } from 'ttag';
-import { Alert, GenericError, FormModal, useEventManager, useAuthentication, useApi } from 'react-components';
+import { Alert, GenericError, FormModal } from '../../../index';
+import { algorithmInfo } from 'pmcrypto';
 import { getAlgorithmExists } from 'proton-shared/lib/keys/keysAlgorithm';
-import { DEFAULT_ENCRYPTION_CONFIG, ENCRYPTION_CONFIGS } from 'proton-shared/lib/constants';
-import { generateAddressKey } from 'proton-shared/lib/keys/keys';
+import { DEFAULT_ENCRYPTION_CONFIG, ENCRYPTION_CONFIGS, ENCRYPTION_TYPES } from 'proton-shared/lib/constants';
+import { EncryptionConfig } from 'proton-shared/lib/interfaces';
 
 import SelectEncryption from './SelectEncryption';
-import { createKeyHelper } from '../shared/actionHelper';
 
-const STEPS = {
-    SELECT_ENCRYPTION: 1,
-    WARNING: 2,
-    GENERATE_KEY: 3,
-    SUCCESS: 4,
-    FAILURE: 5
-};
+enum STEPS {
+    SELECT_ENCRYPTION = 1,
+    WARNING = 2,
+    GENERATE_KEY = 3,
+    SUCCESS = 4,
+    FAILURE = 5
+}
 
-const AddKeyModal = ({ onClose, Address, addressKeys, ...rest }) => {
-    const authentication = useAuthentication();
-    const api = useApi();
-    const { call } = useEventManager();
-
+interface Props {
+    onClose?: () => void;
+    existingAlgorithms: algorithmInfo[];
+    onAdd: (config: EncryptionConfig) => Promise<string>;
+}
+const AddKeyModal = ({ onClose, existingAlgorithms, onAdd, ...rest }: Props) => {
     const [step, setStep] = useState(STEPS.SELECT_ENCRYPTION);
-    const [encryptionType, setEncryptionType] = useState(DEFAULT_ENCRYPTION_CONFIG);
+    const [encryptionType, setEncryptionType] = useState<ENCRYPTION_TYPES>(DEFAULT_ENCRYPTION_CONFIG);
     const [newKeyFingerprint, setNewKeyFingerprint] = useState();
 
-    const process = async () => {
-        const { privateKey, privateKeyArmored } = await generateAddressKey({
-            email: Address.Email,
-            passphrase: authentication.getPassword(),
-            encryptionConfig: ENCRYPTION_CONFIGS[encryptionType]
-        });
-        await createKeyHelper({ api, privateKey, privateKeyArmored, Address, keys: addressKeys });
-        await call();
-
-        setNewKeyFingerprint(privateKey.getFingerprint());
-    };
-
-    useEffect(() => {
-        if (step !== STEPS.GENERATE_KEY) {
-            return;
-        }
-        process()
-            .then(() => {
-                setStep(STEPS.DONE);
+    const handleProcess = () => {
+        onAdd(ENCRYPTION_CONFIGS[encryptionType])
+            .then((fingerprint) => {
+                setNewKeyFingerprint(fingerprint);
+                setStep(STEPS.SUCCESS);
             })
             .catch(() => {
                 setStep(STEPS.FAILURE);
             });
-    }, [step]);
+    };
 
     const { children, ...stepProps } = (() => {
         if (step === STEPS.SELECT_ENCRYPTION) {
             return {
                 onSubmit: () => {
-                    const addressKeysAlgorithms = addressKeys.map(({ privateKey }) => privateKey.getAlgorithmInfo());
                     const encryptionConfig = ENCRYPTION_CONFIGS[encryptionType];
-                    const algorithmExists = getAlgorithmExists(addressKeysAlgorithms, encryptionConfig);
+                    const algorithmExists = getAlgorithmExists(existingAlgorithms, encryptionConfig);
 
-                    setStep(algorithmExists ? STEPS.WARNING : STEPS.GENERATE_KEY);
+                    const nextStep = algorithmExists ? STEPS.WARNING : STEPS.GENERATE_KEY;
+                    setStep(nextStep);
+                    if (nextStep === STEPS.GENERATE_KEY) {
+                        handleProcess();
+                    }
                 },
                 children: (
                     <>
@@ -75,7 +64,10 @@ const AddKeyModal = ({ onClose, Address, addressKeys, ...rest }) => {
 
         if (step === STEPS.WARNING) {
             return {
-                onSubmit: () => setStep(STEPS.GENERATE_KEY),
+                onSubmit: () => {
+                    setStep(STEPS.GENERATE_KEY);
+                    handleProcess();
+                },
                 submit: c('Action').t`Yes`,
                 children: (
                     <Alert type="warning">
@@ -99,7 +91,7 @@ const AddKeyModal = ({ onClose, Address, addressKeys, ...rest }) => {
             };
         }
 
-        if (step === STEPS.DONE) {
+        if (step === STEPS.SUCCESS) {
             const fp = <code key="0">{newKeyFingerprint}</code>;
             return {
                 submit: c('Action').t`Done`,
@@ -130,12 +122,6 @@ const AddKeyModal = ({ onClose, Address, addressKeys, ...rest }) => {
             {children}
         </FormModal>
     );
-};
-
-AddKeyModal.propTypes = {
-    onClose: PropTypes.func,
-    Address: PropTypes.object.isRequired,
-    addressKeys: PropTypes.array.isRequired
 };
 
 export default AddKeyModal;

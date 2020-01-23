@@ -1,10 +1,6 @@
 import { useCallback } from 'react';
-import {
-    decryptKeyWithFormat,
-    decryptPrivateKeyArmored,
-    getAddressKeyPassword,
-    splitKeys
-} from 'proton-shared/lib/keys/keys';
+import { decryptPrivateKey } from 'pmcrypto';
+import { getAddressKeyToken, splitKeys } from 'proton-shared/lib/keys/keys';
 import { noop } from 'proton-shared/lib/helpers/function';
 import useAuthentication from '../containers/authentication/useAuthentication';
 import useCache from '../containers/cache/useCache';
@@ -34,21 +30,48 @@ export const useGetAddressKeysRaw = () => {
                 return [];
             }
 
-            const keyPassword = authentication.getPassword();
+            const { Keys } = Address;
+            const mailboxPassword = authentication.getPassword();
 
             const organizationKey = OrganizationPrivateKey
-                ? await decryptPrivateKeyArmored(OrganizationPrivateKey, keyPassword).catch(noop)
+                ? await decryptPrivateKey(OrganizationPrivateKey, mailboxPassword).catch(noop)
                 : undefined;
 
             const { privateKeys, publicKeys } = splitKeys(userKeys);
-            return Promise.all(
-                Address.Keys.map(async (Key) => {
-                    return decryptKeyWithFormat(
+
+            const process = async (Key) => {
+                try {
+                    const { PrivateKey, Token, Signature } = Key;
+                    const keyPassword = Token
+                        ? await getAddressKeyToken({
+                              Token,
+                              Signature,
+                              organizationKey,
+                              privateKeys,
+                              publicKeys
+                          })
+                        : mailboxPassword;
+                    const privateKey = await decryptPrivateKey(PrivateKey, keyPassword);
+                    return {
                         Key,
-                        await getAddressKeyPassword(Key, { organizationKey, privateKeys, publicKeys, keyPassword })
-                    );
-                })
-            );
+                        privateKey,
+                        publicKey: privateKey.toPublic()
+                    };
+                } catch (e) {
+                    return {
+                        Key,
+                        error: e
+                    };
+                }
+            };
+
+            const [primaryKey, ...restKeys] = Keys;
+            const primaryKeyResult = await process(primaryKey);
+            // In case the primary key fails to decrypt, something is broken, so don't even try to decrypt the rest of the keys.
+            if (primaryKeyResult.error) {
+                return [primaryKeyResult, ...restKeys.map((Key) => ({ Key, error: primaryKeyResult.error }))];
+            }
+            return [primaryKeyResult, ...(await Promise.all(restKeys.map(process)))];
         },
         [getUser, getAddresses, getUserKeys]
     );

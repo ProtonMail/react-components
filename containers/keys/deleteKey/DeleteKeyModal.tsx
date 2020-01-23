@@ -1,40 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { Alert, GenericError, FormModal, useEventManager, useModals, useApi } from 'react-components';
-import { removeKey } from 'proton-shared/lib/keys/keysManager';
-import ExportPrivateKeyModal from '../exportKey/ExportPrivateKeyModal';
-import { removeKeyRoute } from 'proton-shared/lib/api/keys';
-import getSignedKeyList from 'proton-shared/lib/keys/getSignedKeyList';
+import { Alert, GenericError, FormModal } from '../../../';
 
-const STEPS = {
-    WARNING: 1,
-    EXPORT_KEY: 2,
-    DELETE_KEY: 3,
-    SUCCESS: 4,
-    FAILURE: 5
-};
+enum STEPS {
+    WARNING = 1,
+    EXPORT_KEY = 2,
+    DELETE_KEY = 3,
+    SUCCESS = 4,
+    FAILURE = 5
+}
 
-const DeleteKeyModal = ({ onClose, Address, addressKeys, KeyID, privateKey, ...rest }) => {
-    const api = useApi();
-    const { call } = useEventManager();
-    const { createModal } = useModals();
-
+interface Props {
+    onClose?: () => void;
+    fingerprint: string;
+    onDelete: () => Promise<void>;
+    onExport?: () => Promise<void>;
+}
+const DeleteKeyModal = ({ onClose, fingerprint, onDelete, onExport, ...rest }: Props) => {
     const [step, setStep] = useState(STEPS.WARNING);
-
-    const deleteKey = async () => {
-        const updatedKeys = removeKey({ keys: addressKeys, keyID: KeyID });
-        await api(removeKeyRoute({ ID: KeyID, SignedKeyList: await getSignedKeyList(updatedKeys) }));
-        await call();
-    };
 
     useEffect(() => {
         if (step !== STEPS.DELETE_KEY) {
             return;
         }
-        deleteKey()
+        onDelete()
             .then(() => {
-                setStep(STEPS.DONE);
+                setStep(STEPS.SUCCESS);
             })
             .catch(() => {
                 setStep(STEPS.FAILURE);
@@ -45,7 +36,7 @@ const DeleteKeyModal = ({ onClose, Address, addressKeys, KeyID, privateKey, ...r
         if (step === STEPS.WARNING) {
             return {
                 onSubmit: () => {
-                    setStep(privateKey.isDecrypted() ? STEPS.EXPORT_KEY : STEPS.DELETE_KEY);
+                    setStep(onExport ? STEPS.EXPORT_KEY : STEPS.DELETE_KEY);
                 },
                 children: (
                     <Alert>
@@ -59,20 +50,13 @@ const DeleteKeyModal = ({ onClose, Address, addressKeys, KeyID, privateKey, ...r
         if (step === STEPS.EXPORT_KEY) {
             return {
                 onSubmit: async () => {
-                    const { Email } = Address;
-                    await new Promise((resolve, reject) => {
-                        createModal(
-                            <ExportPrivateKeyModal
-                                onClose={reject}
-                                onSuccess={resolve}
-                                name={Email}
-                                privateKey={privateKey}
-                            />
-                        );
-                    });
+                    await onExport?.();
                     setStep(STEPS.DELETE_KEY);
                 },
-                close: c('Action').t`Cancel`,
+                onClose: () => {
+                    setStep(STEPS.DELETE_KEY);
+                },
+                close: c('Action').t`No`,
                 children: (
                     <Alert>
                         {c('alert')
@@ -90,8 +74,8 @@ const DeleteKeyModal = ({ onClose, Address, addressKeys, KeyID, privateKey, ...r
             };
         }
 
-        if (step === STEPS.DONE) {
-            const fp = <code key="0">{privateKey.getFingerprint()}</code>;
+        if (step === STEPS.SUCCESS) {
+            const fp = <code key="0">{fingerprint}</code>;
             return {
                 submit: c('Action').t`Done`,
                 children: <Alert>{c('Info').jt`Key with fingerprint ${fp} deleted`}</Alert>
@@ -120,14 +104,6 @@ const DeleteKeyModal = ({ onClose, Address, addressKeys, KeyID, privateKey, ...r
             {children}
         </FormModal>
     );
-};
-
-DeleteKeyModal.propTypes = {
-    onClose: PropTypes.func,
-    KeyID: PropTypes.string.isRequired,
-    privateKey: PropTypes.object.isRequired,
-    Address: PropTypes.object.isRequired,
-    addressKeys: PropTypes.array.isRequired
 };
 
 export default DeleteKeyModal;

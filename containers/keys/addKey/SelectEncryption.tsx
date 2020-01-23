@@ -1,12 +1,15 @@
 import React from 'react';
 import { c } from 'ttag';
-import PropTypes from 'prop-types';
-import { Alert, Radio, Row } from 'react-components';
+import { Alert, Radio, Row } from '../../../';
 import { ENCRYPTION_TYPES } from 'proton-shared/lib/constants';
 
 const { RSA2048, RSA4096, X25519 } = ENCRYPTION_TYPES;
 
-const SelectEncryption = ({ encryptionType, setEncryptionType }) => {
+interface Props {
+    encryptionType: string;
+    setEncryptionType: React.Dispatch<React.SetStateAction<ENCRYPTION_TYPES>>;
+}
+const SelectEncryption = ({ encryptionType, setEncryptionType }: Props) => {
     const highSecurity = <strong key="1">{c('encryption').t`High security`}</strong>;
     const highestSecurity = <strong key="2">{c('encryption').t`Highest security`}</strong>;
     const stateOfTheArt = <strong key="3">{c('encryption').t`State of the art`}</strong>;
@@ -46,11 +49,6 @@ const SelectEncryption = ({ encryptionType, setEncryptionType }) => {
             )}
         </>
     );
-};
-
-SelectEncryption.propTypes = {
-    encryptionType: PropTypes.string.isRequired,
-    setEncryptionType: PropTypes.func.isRequired
 };
 
 export default SelectEncryption;

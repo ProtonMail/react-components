@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import { Alert, Row, Label, Field, PasswordInput, FormModal } from 'react-components';
+import React, { ChangeEvent, useState } from 'react';
+import { Alert, Row, Label, Field, PasswordInput, FormModal } from '../../../';
 import { c } from 'ttag';
-import { decryptPrivateKey } from 'proton-shared/lib/keys/keys';
+import { decryptPrivateKey } from 'pmcrypto';
 
 import { generateUID } from '../../../helpers/component';
 
-const DecryptFileKeyModal = ({ privateKey, onSuccess, onClose, ...rest }) => {
+interface Props {
+    privateKey: any;
+    onSuccess: (privateKey: any) => void;
+    onClose?: () => void;
+}
+const DecryptFileKeyModal = ({ privateKey, onSuccess, onClose, ...rest }: Props) => {
     const id = generateUID('decryptKey');
     const fingerprint = privateKey.getFingerprint();
     const fingerprintCode = <code key="0">{fingerprint}</code>;
@@ -18,12 +22,12 @@ const DecryptFileKeyModal = ({ privateKey, onSuccess, onClose, ...rest }) => {
     const handleSubmit = async () => {
         try {
             setDecrypting(true);
-            setError();
+            setError('');
 
             await decryptPrivateKey(privateKey, password);
 
             onSuccess(privateKey);
-            onClose();
+            onClose?.();
         } catch (e) {
             setError(e.message);
             setDecrypting(false);
@@ -33,7 +37,7 @@ const DecryptFileKeyModal = ({ privateKey, onSuccess, onClose, ...rest }) => {
     return (
         <FormModal
             title={c('Title').t`Decrypt key`}
-            loading={!!decrypting}
+            loading={decrypting}
             submit={c('Action').t`Decrypt`}
             onSubmit={handleSubmit}
             onClose={onClose}
@@ -47,7 +51,7 @@ const DecryptFileKeyModal = ({ privateKey, onSuccess, onClose, ...rest }) => {
                         id={id}
                         value={password}
                         error={error}
-                        onChange={({ target: { value } }) => setPassword(value)}
+                        onChange={({ target: { value } }: ChangeEvent<HTMLInputElement>) => setPassword(value)}
                         autoFocus={true}
                         required
                     />
@@ -55,12 +59,6 @@ const DecryptFileKeyModal = ({ privateKey, onSuccess, onClose, ...rest }) => {
             </Row>
         </FormModal>
     );
-};
-
-DecryptFileKeyModal.propTypes = {
-    privateKey: PropTypes.object.isRequired,
-    onSuccess: PropTypes.func.isRequired,
-    onClose: PropTypes.func
 };
 
 export default DecryptFileKeyModal;
