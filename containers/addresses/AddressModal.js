@@ -22,7 +22,7 @@ import {
 
 import useAddressModal from './useAddressModal';
 import DomainsSelect from './DomainsSelect';
-import CreateMissingKeysAddressModal from './CreateMissingKeysAddressModal';
+import CreateMissingKeysAddressModal from './missingKeys/CreateMissingKeysAddressModal';
 
 const AddressModal = ({ onClose, member, organizationKey, ...rest }) => {
     const { createModal } = useModals();

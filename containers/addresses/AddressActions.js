@@ -15,7 +15,7 @@ import { deleteAddress, enableAddress, disableAddress } from 'proton-shared/lib/
 import { ADDRESS_STATUS } from 'proton-shared/lib/constants';
 
 import EditAddressModal from './EditAddressModal';
-import CreateMissingKeysAddressModal from './CreateMissingKeysAddressModal';
+import CreateMissingKeysAddressModal from './missingKeys/CreateMissingKeysAddressModal';
 import { getPermissions } from './helper';
 
 const AddressActions = ({ address, member, user, organizationKey }) => {
