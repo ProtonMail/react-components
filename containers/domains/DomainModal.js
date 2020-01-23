@@ -80,10 +80,11 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
         'DMARC'
     ];
 
-    const activeKeys = domainModel.Keys.filter(({ State }) => State === DKIM_KEY_STATUS.ACTIVE);
+    const { Keys = [] } = domainModel;
+    const activeKeys = Keys.filter(({ State }) => State === DKIM_KEY_STATUS.ACTIVE);
     const dkimDefaultState =
         !activeKeys.length &&
-        domainModel.Keys.every(
+        Keys.every(
             ({ State, DNSState }) => State === DKIM_KEY_STATUS.PENDING && DNSState === DKIM_KEY_DNS_STATUS.NOT_SET
         );
     const dkimGoodState = activeKeys.length;
