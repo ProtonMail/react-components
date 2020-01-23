@@ -87,8 +87,8 @@ const ProtonApp = ({ config, children }) => {
                 <Icons />
                 <RightToLeftProvider>
                     <Router>
-                        <NotificationsProvider>
-                            <React.Fragment key={UID}>
+                        <React.Fragment key={UID}>
+                            <NotificationsProvider>
                                 <ModalsProvider>
                                     <ApiProvider UID={UID} config={config} onLogout={handleLogout}>
                                         <AuthenticationProvider store={authenticationValue}>
@@ -96,8 +96,8 @@ const ProtonApp = ({ config, children }) => {
                                         </AuthenticationProvider>
                                     </ApiProvider>
                                 </ModalsProvider>
-                            </React.Fragment>
-                        </NotificationsProvider>
+                            </NotificationsProvider>
+                        </React.Fragment>
                     </Router>
                 </RightToLeftProvider>
             </CompatibilityCheck>
