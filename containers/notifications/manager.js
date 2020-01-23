@@ -47,10 +47,6 @@ export default (setNotifications) => {
         }
 
         setNotifications((oldNotifications) => {
-            // Deduplicate notifications
-            if (oldNotifications.some(({ text }) => text === rest.text)) {
-                return oldNotifications;
-            }
             return [
                 ...oldNotifications,
                 {
