@@ -17,7 +17,18 @@ const fromFormatted = (value, locale) => {
     return parse(value, 'PP', new Date(), { locale });
 };
 
-const DateInput = ({ value, onChange, onFocus, displayWeekNumbers, weekStartsOn, min, max, ...rest }) => {
+const DateInput = ({
+    value,
+    onChange,
+    onFocus,
+    onBlur,
+    onKeyDown,
+    displayWeekNumbers,
+    weekStartsOn,
+    min,
+    max,
+    ...rest
+}) => {
     const [uid] = useState(generateUID('dropdown'));
     const { anchorRef, isOpen, open, close } = usePopperAnchor();
 
@@ -67,6 +78,7 @@ const DateInput = ({ value, onChange, onFocus, displayWeekNumbers, weekStartsOn,
     };
 
     const handleBlurInput = () => {
+        onBlur && onBlur();
         parseAndTriggerChange();
         close();
 
@@ -75,6 +87,7 @@ const DateInput = ({ value, onChange, onFocus, displayWeekNumbers, weekStartsOn,
     };
 
     const handleKeyDown = (event) => {
+        onKeyDown && onKeyDown();
         if (event.key === 'Enter') {
             parseAndTriggerChange();
             event.preventDefault();
@@ -132,7 +145,10 @@ DateInput.propTypes = {
     value: PropTypes.instanceOf(Date).isRequired,
     min: PropTypes.instanceOf(Date),
     max: PropTypes.instanceOf(Date),
-    onChange: PropTypes.func.isRequired
+    onChange: PropTypes.func.isRequired,
+    onFocus: PropTypes.func,
+    onBlur: PropTypes.func,
+    onKeyDown: PropTypes.func
 };
 
 export default DateInput;
