@@ -35,10 +35,13 @@ const UnsubscribeButton = ({ className, children }) => {
             id: DOWNGRADING_ID,
             expiration: 99999
         });
-        await api(deleteSubscription());
-        await call();
-        hideNotification(DOWNGRADING_ID);
-        createNotification({ text: c('Success').t`You have successfully unsubscribed` });
+        try {
+            await api(deleteSubscription());
+            await call();
+            createNotification({ text: c('Success').t`You have successfully unsubscribed` });
+        } finally {
+            hideNotification(DOWNGRADING_ID);
+        }
     };
 
     const handleClick = async () => {
