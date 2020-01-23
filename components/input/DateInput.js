@@ -17,7 +17,7 @@ const fromFormatted = (value, locale) => {
     return parse(value, 'PP', new Date(), { locale });
 };
 
-const DateInput = ({ value, onChange, displayWeekNumbers, weekStartsOn, min, max, ...rest }) => {
+const DateInput = ({ value, onChange, onFocus, displayWeekNumbers, weekStartsOn, min, max, ...rest }) => {
     const [uid] = useState(generateUID('dropdown'));
     const { anchorRef, isOpen, open, close } = usePopperAnchor();
 
@@ -59,6 +59,7 @@ const DateInput = ({ value, onChange, displayWeekNumbers, weekStartsOn, min, max
     };
 
     const handleFocusInput = () => {
+        onFocus && onFocus();
         open();
 
         setShowTemporary(true);
