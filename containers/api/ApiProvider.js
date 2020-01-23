@@ -35,6 +35,14 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
     const offlineRef = useRef();
     const appVersionBad = useRef();
 
+    const hideOfflineNotification = () => {
+        if (!offlineRef.current) {
+            return;
+        }
+        hideNotification(offlineRef.current.id);
+        offlineRef.current = undefined;
+    };
+
     if (!apiRef.current) {
         const handleError = (e) => {
             const { message, code } = getError(e);
@@ -75,8 +83,7 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
                     text: (
                         <OfflineNotification
                             onRetry={() => {
-                                hideNotification(id);
-                                offlineRef.current = undefined;
+                                hideOfflineNotification();
                                 // If there is a session, get user to validate it's still active after coming back online
                                 // otherwise if signed out, call ping
                                 apiRef.current(UID ? getUser() : ping());
@@ -147,16 +154,12 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
                     if (serverTime) {
                         updateServerTime(serverTime);
                     }
-                    if (offlineRef.current) {
-                        hideNotification(offlineRef.current.id);
-                        offlineRef.current = undefined;
-                    }
+                    hideOfflineNotification();
                     return output === 'stream' ? response.body : response[output]();
                 })
                 .catch((e) => {
-                    if (e.name !== 'OfflineError' && offlineRef.current) {
-                        hideNotification(offlineRef.current.id);
-                        offlineRef.current = undefined;
+                    if (e.name !== 'OfflineError' && e.name !== 'TimeoutError') {
+                        hideOfflineNotification();
                     }
                     throw e;
                 });
