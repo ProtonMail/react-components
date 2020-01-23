@@ -85,7 +85,7 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
                             onRetry={() => {
                                 hideOfflineNotification();
                                 // If there is a session, get user to validate it's still active after coming back online
-                                // otherwise if signed out, call ping
+                                // otherwise if it's not logged in, call ping
                                 apiRef.current(UID ? getUser() : ping());
                             }}
                         />
