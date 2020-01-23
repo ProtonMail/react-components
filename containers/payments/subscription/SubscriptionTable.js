@@ -21,7 +21,7 @@ const SubscriptionTable = ({
                     return (
                         <div key={title} className="flex-autogrid-item flex" data-plan-name={name}>
                             <div
-                                className="bordered-container subscriptionTable-plan onmobile-mb2 pt2 pb2 pl0-5 pr0-5 flex flex-column relative w100"
+                                className="bordered-container subscriptionTable-plan onmobile-mb2 pt2 pb2 pl0-75 pr0-75 flex flex-column relative w100"
                                 data-current-plan={index === currentPlanIndex}
                                 data-most-popular={index === mostPopularIndex}
                             >

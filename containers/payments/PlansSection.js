@@ -140,8 +140,8 @@ const PlansSection = () => {
     return (
         <>
             <SubTitle>{c('Title').t`Plans`}</SubTitle>
-            <div className="flex flex-spacebetween onmobile-flex-column">
-                <Alert learnMore="https://protonmail.com/support/knowledge-base/paid-plans/">
+            <div className="flex flew-nowrap onmobile-flex-column">
+                <Alert className="flex-item-fluid" learnMore="https://protonmail.com/support/knowledge-base/paid-plans/">
                     {bundleEligible ? (
                         <div>{c('Info')
                             .t`Get 20% bundle discount when you purchase ProtonMail and ProtonVPN together.`}</div>
