@@ -70,17 +70,3 @@ export const getUploadedKeys = (keys: ReactivateKeys[]): ReactivateKeys[] => {
         })
         .filter(isTruthy);
 };
-
-/**
- * Remove the uploaded keys since
- * @param keys
- */
-export const getPasswordKeys = (keys: ReactivateKeys[]): ReactivateKeys[] => {
-    return keys.map((toReactivate) => {
-        const { keys } = toReactivate;
-        return {
-            ...toReactivate,
-            keys: keys.map((data) => ({ ...data, uploadedPrivateKey: undefined }))
-        };
-    });
-};
