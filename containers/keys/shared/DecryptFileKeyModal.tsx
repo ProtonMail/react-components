@@ -1,13 +1,13 @@
 import React, { ChangeEvent, useState } from 'react';
+import { decryptPrivateKey, OpenPGPKey } from 'pmcrypto';
 import { Alert, Row, Label, Field, PasswordInput, FormModal } from '../../../';
 import { c } from 'ttag';
-import { decryptPrivateKey } from 'pmcrypto';
 
 import { generateUID } from '../../../helpers/component';
 
 interface Props {
-    privateKey: any;
-    onSuccess: (privateKey: any) => void;
+    privateKey: OpenPGPKey;
+    onSuccess: (privateKey: OpenPGPKey) => void;
     onClose?: () => void;
 }
 const DecryptFileKeyModal = ({ privateKey, onSuccess, onClose, ...rest }: Props) => {
@@ -24,9 +24,9 @@ const DecryptFileKeyModal = ({ privateKey, onSuccess, onClose, ...rest }: Props)
             setDecrypting(true);
             setError('');
 
-            await decryptPrivateKey(privateKey, password);
+            const decryptedPrivateKey = await decryptPrivateKey(privateKey.armor(), password);
 
-            onSuccess(privateKey);
+            onSuccess(decryptedPrivateKey);
             onClose?.();
         } catch (e) {
             setError(e.message);

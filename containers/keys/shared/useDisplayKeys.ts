@@ -28,7 +28,7 @@ const useDisplayKeys = ({ keys, User, Address, loadingKeyID }: Props) => {
                 User,
                 Address,
                 Key,
-                // @ts-ignore
+                // @ts-ignore - openpgp typings are incorrect for getAlgorithmInfo, todo
                 algorithmInfo,
                 fingerprint,
                 isLoading: loadingKeyID === Key.ID,

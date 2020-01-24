@@ -6,6 +6,7 @@ import SelectKeyFiles from '../shared/SelectKeyFiles';
 
 import KeysStatus from '../KeysStatus';
 import { Status, ReactivateKeys, ReactivateKey } from './interface';
+import { OpenPGPKey } from 'pmcrypto';
 
 const getKeyStatusError = (error: any) => {
     return {
@@ -35,7 +36,7 @@ const getStatus = (status: Status, result: any) => {
 interface Props {
     loading?: boolean;
     allKeys: ReactivateKeys[];
-    onUpload?: (key: ReactivateKey, files: any[]) => void;
+    onUpload?: (key: ReactivateKey, files: OpenPGPKey[]) => void;
 }
 const ReactivateKeysList = ({ loading = false, allKeys, onUpload }: Props) => {
     const inactiveKeyRef = useRef<ReactivateKey>();
@@ -43,7 +44,7 @@ const ReactivateKeysList = ({ loading = false, allKeys, onUpload }: Props) => {
 
     const isUpload = !!onUpload;
 
-    const handleFiles = (files: any) => {
+    const handleFiles = (files: OpenPGPKey[]) => {
         if (!inactiveKeyRef.current || !onUpload) {
             return;
         }

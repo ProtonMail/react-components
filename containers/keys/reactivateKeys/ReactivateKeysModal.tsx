@@ -1,5 +1,6 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
 import { c } from 'ttag';
+import { OpenPGPKey } from 'pmcrypto';
 import {
     Alert,
     Field,
@@ -97,7 +98,7 @@ const ReactivateKeysModal = ({ allKeys: initialAllKeys, onProcess, onClose, ...r
         }
 
         if (step === STEPS.OR_UPLOAD) {
-            const handleUpload = (inactiveKey: ReactivateKey, keys: any[]) => {
+            const handleUpload = (inactiveKey: ReactivateKey, keys: OpenPGPKey[]) => {
                 const privateKeys = keys.filter((key) => key.isPrivate());
                 if (privateKeys.length === 0) {
                     return notifyError(c('Error').t`Invalid private key file`);
@@ -111,7 +112,18 @@ const ReactivateKeysModal = ({ allKeys: initialAllKeys, onProcess, onClose, ...r
                 const [uploadedPrivateKey] = matchingKeys;
 
                 if (uploadedPrivateKey.isDecrypted()) {
-                    return setAllKeys((oldKeys) => updateKey(oldKeys, inactiveKey, { uploadedPrivateKey }));
+                    // @ts-ignore - validate does not exist in the openpgp typings, todo
+                    uploadedPrivateKey
+                        .validate()
+                        .then(() => {
+                            return setAllKeys((oldKeys) => {
+                                return updateKey(oldKeys, inactiveKey, { uploadedPrivateKey });
+                            });
+                        })
+                        .catch((e: Error) => {
+                            notifyError(e.message);
+                        });
+                    return;
                 }
 
                 createModal(

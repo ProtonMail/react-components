@@ -1,12 +1,12 @@
 import React, { useState, useRef } from 'react';
 import { c } from 'ttag';
+import { OpenPGPKey } from 'pmcrypto';
 import { FormModal, useNotifications, useModals, Alert, GenericError } from '../../../index';
 
 import ImportKeysList from './ImportKeysList';
 import SelectKeyFiles from '../shared/SelectKeyFiles';
 import DecryptFileKeyModal from '../shared/DecryptFileKeyModal';
 import { ImportKey, OnProcessArguments, Status } from './interface';
-import { OpenPGPKey } from 'pmcrypto';
 
 enum STEPS {
     WARNING = 1,
@@ -60,7 +60,18 @@ const ImportKeyModal = ({ onClose, onProcess, ...rest }: Props) => {
         };
 
         if (first.privateKey.isDecrypted()) {
-            handleAddKey(first.privateKey, first.fingerprint);
+            // @ts-ignore - validate does not exist in the openpgp typings, todo
+            first.privateKey
+                .validate()
+                .then(() => {
+                    handleAddKey(first.privateKey, first.fingerprint);
+                })
+                .catch((e: Error) => {
+                    return createNotification({
+                        type: 'error',
+                        text: e.message
+                    });
+                });
             return;
         }
 
