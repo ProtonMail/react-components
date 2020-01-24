@@ -84,7 +84,7 @@ const DKIMSection = ({ domain }) => {
                         <div
                             className={classnames([
                                 'flex flex-spacebetween flex-items-center flex-nowrap',
-                                State === DKIM_KEY_DNS_STATUS.INVALID && 'mb1'
+                                DNSState === DKIM_KEY_DNS_STATUS.INVALID && 'mb1'
                             ])}
                         >
                             <div className="flex flex-nowrap flex-items-center">
@@ -102,7 +102,7 @@ const DKIMSection = ({ domain }) => {
                                 {getKeyStatusBadge(State)}
                             </div>
                         </div>
-                        {State === DKIM_KEY_DNS_STATUS.INVALID ? (
+                        {DNSState === DKIM_KEY_DNS_STATUS.INVALID ? (
                             <Alert type="error">{c('Warning')
                                 .t`Please check this DNS entry. It's not set properly. Most common problems include wrong format, having multiple entries with the same selector or having a wrong public key.`}</Alert>
                         ) : null}
