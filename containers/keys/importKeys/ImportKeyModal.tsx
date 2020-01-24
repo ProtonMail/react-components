@@ -60,8 +60,8 @@ const ImportKeyModal = ({ onClose, onProcess, ...rest }: Props) => {
         };
 
         if (first.privateKey.isDecrypted()) {
-            // @ts-ignore - validate does not exist in the openpgp typings, todo
             first.privateKey
+                // @ts-ignore - validate does not exist in the openpgp typings, todo
                 .validate()
                 .then(() => {
                     handleAddKey(first.privateKey, first.fingerprint);

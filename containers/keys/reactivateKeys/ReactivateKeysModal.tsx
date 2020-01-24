@@ -112,8 +112,8 @@ const ReactivateKeysModal = ({ allKeys: initialAllKeys, onProcess, onClose, ...r
                 const [uploadedPrivateKey] = matchingKeys;
 
                 if (uploadedPrivateKey.isDecrypted()) {
-                    // @ts-ignore - validate does not exist in the openpgp typings, todo
                     uploadedPrivateKey
+                        // @ts-ignore - validate does not exist in the openpgp typings, todo
                         .validate()
                         .then(() => {
                             return setAllKeys((oldKeys) => {
