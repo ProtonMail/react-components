@@ -5,6 +5,7 @@ import {
     Alert,
     SubTitle,
     LinkButton,
+    Href,
     Loader,
     MozillaInfoPanel,
     Progress,
@@ -144,15 +145,17 @@ const SubscriptionSection = ({ permission }) => {
                         <div className="flex-autogrid-item">ProtonMail plan</div>
                         <div className="flex-autogrid-item">
                             <strong>
-                                {hasPaidMail
-                                    ? PLAN_NAMES[mailPlanName]
-                                    : hasAddresses
-                                    ? c('Plan').t`Free`
-                                    : c('Info').t`Not activated`}
+                                {hasPaidMail ? (
+                                    PLAN_NAMES[mailPlanName]
+                                ) : hasAddresses ? (
+                                    c('Plan').t`Free`
+                                ) : (
+                                    <Href url="https://mail.protonmail.com/login">{c('Info').t`Not activated`}</Href>
+                                )}
                             </strong>
                         </div>
                         <div className="flex-autogrid-item">
-                            {hasAddresses ? (
+                            {hasAddresses || mailPlanName === 'visionary' ? (
                                 <LinkButton onClick={handleModal}>{c('Action').t`Manage subscription`}</LinkButton>
                             ) : null}
                         </div>
