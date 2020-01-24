@@ -9,8 +9,7 @@ const SubscriptionTable = ({
     currentPlanIndex = 0,
     mostPopularIndex = 0,
     currentPlan = c('Title for subscription plan').t`Current plan`,
-    selected = c('Info').t`Current plan`,
-    update = c('Action').t`Update`,
+    selected = c('Info').t`Selected`,
     select = c('Action').t`Select`,
     disabled = false
 }) => {
@@ -42,9 +41,7 @@ const SubscriptionTable = ({
                                         <img src={imageSrc} alt={title} />
                                     </div>
                                 </header>
-                                <p className="subscriptionTable-description aligncenter mt0 mb1 bold">
-                                    {description}
-                                </p>
+                                <p className="subscriptionTable-description aligncenter mt0 mb1 bold">{description}</p>
                                 <ul className="unstyled small mb2 flex-item-fluid-auto">
                                     {features.map((feature, index) => {
                                         return (
@@ -55,17 +52,13 @@ const SubscriptionTable = ({
                                     })}
                                 </ul>
                                 <footer className="subscriptionTable-footer aligncenter flex flex-column">
-                                    {index === currentPlanIndex && !canCustomize ? (
-                                        selected
-                                    ) : (
-                                        <Button
-                                            disabled={disabled}
-                                            className={classnames([index !== currentPlanIndex && 'pm-button--primary'])}
-                                            onClick={() => onSelect(index)}
-                                        >
-                                            {index === currentPlanIndex ? update : select}
-                                        </Button>
-                                    )}
+                                    <Button
+                                        disabled={disabled || index === currentPlanIndex}
+                                        className={classnames([index !== currentPlanIndex && 'pm-button--primary'])}
+                                        onClick={() => onSelect(index)}
+                                    >
+                                        {index === currentPlanIndex ? selected : select}
+                                    </Button>
                                     {canCustomize ? (
                                         <LinkButton
                                             disabled={disabled}
@@ -100,7 +93,6 @@ SubscriptionTable.propTypes = {
     currentPlanIndex: PropTypes.number,
     mostPopularIndex: PropTypes.number,
     selected: PropTypes.string,
-    update: PropTypes.string,
     select: PropTypes.string
 };
 

@@ -397,8 +397,7 @@ const SubscriptionCustomization = ({
                 <MailSubscriptionTable
                     disabled={loading}
                     currentPlan={c('Status').t`Selected`}
-                    update={c('Action').t`Selected`}
-                    selected={c('Action').t`Selected`}
+                    selected={c('Status').t`Selected`}
                     planNameSelected={mailPlan.Name}
                     plans={plans}
                     cycle={model.cycle}
@@ -427,8 +426,7 @@ const SubscriptionCustomization = ({
             <VpnSubscriptionTable
                 disabled={loading}
                 currentPlan={c('Status').t`Selected`}
-                update={c('Action').t`Selected`}
-                selected={c('Action').t`Selected`}
+                selected={c('Status').t`Selected`}
                 planNameSelected={vpnPlan.Name}
                 plans={plans}
                 cycle={model.cycle}
