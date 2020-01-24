@@ -167,7 +167,7 @@ const SubscriptionCustomization = ({
     const professionalAddresses =
         (model.planIDs[memberAddon.ID] || 0) * memberAddon.MaxAddresses + professionalPlan.MaxAddresses;
     const professionalDomains =
-        (model.planIDs[memberAddon.ID] || 0) * memberAddon.MaxDomains + professionalPlan.MaxDomains;
+        (model.planIDs[domainAddon.ID] || 0) * domainAddon.MaxDomains + professionalPlan.MaxDomains;
 
     const FEATURES = {
         [FREE]: [
