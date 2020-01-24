@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
 import { decryptPrivateKey } from 'pmcrypto';
 import { getAddressKeyToken, splitKeys } from 'proton-shared/lib/keys/keys';
-import { noop } from 'proton-shared/lib/helpers/function';
 import { CachedKey, Key as tsKey } from 'proton-shared/lib/interfaces';
 import useAuthentication from '../containers/authentication/useAuthentication';
 import useCache from '../containers/cache/useCache';
@@ -35,7 +34,7 @@ export const useGetAddressKeysRaw = (): ((id: string) => Promise<CachedKey[]>) =
             const mailboxPassword = authentication.getPassword();
 
             const organizationKey = OrganizationPrivateKey
-                ? await decryptPrivateKey(OrganizationPrivateKey, mailboxPassword).catch(noop)
+                ? await decryptPrivateKey(OrganizationPrivateKey, mailboxPassword).catch(() => undefined)
                 : undefined;
 
             const { privateKeys, publicKeys } = splitKeys(userKeys);

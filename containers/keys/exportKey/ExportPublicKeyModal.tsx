@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { getKeys, OpenPGPKey } from 'pmcrypto';
 import { c } from 'ttag';
 import { Alert, FormModal } from '../../../';
@@ -49,13 +48,6 @@ const ExportPublicKeyModal = ({ name, PrivateKey, publicKey, onClose, ...rest }:
             </Alert>
         </FormModal>
     );
-};
-
-ExportPublicKeyModal.propTypes = {
-    onClose: PropTypes.func,
-    publicKey: PropTypes.object.isRequired,
-    PrivateKey: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired
 };
 
 export default ExportPublicKeyModal;
