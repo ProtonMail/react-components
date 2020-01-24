@@ -3,11 +3,17 @@ import { c } from 'ttag';
 import PropTypes from 'prop-types';
 import { Label, FormModal, Row, Field, Alert, useNotifications, useApi, useLoading, useModals } from 'react-components';
 import { donate } from 'proton-shared/lib/api/payments';
-import { DEFAULT_CURRENCY, DEFAULT_DONATION_AMOUNT } from 'proton-shared/lib/constants';
+import {
+    DEFAULT_CURRENCY,
+    DEFAULT_DONATION_AMOUNT,
+    PAYMENT_METHOD_TYPES,
+    MIN_DONATION_AMOUNT
+} from 'proton-shared/lib/constants';
 
 import PaymentSelector from './PaymentSelector';
 import Payment from './Payment';
 import usePayment from './usePayment';
+import PayPalButton from './PayPalButton';
 import { handlePaymentToken } from './paymentTokenHelper';
 
 const DonateModal = ({ ...rest }) => {
@@ -38,12 +44,22 @@ const DonateModal = ({ ...rest }) => {
         onPay: handleSubmit
     });
 
+    const submit =
+        amount >= MIN_DONATION_AMOUNT ? (
+            method === PAYMENT_METHOD_TYPES.PAYPAL ? (
+                <PayPalButton paypal={paypal} className="pm-button--primary" amount={amount}>{c('Action')
+                    .t`Continue`}</PayPalButton>
+            ) : canPay ? (
+                c('Action').t`Donate`
+            ) : null
+        ) : null;
+
     return (
         <FormModal
             onSubmit={() => withLoading(handleSubmit(parameters))}
             loading={loading}
             title={c('Title').t`Make a donation`}
-            submit={canPay && c('Action').t`Donate`}
+            submit={submit}
             {...rest}
         >
             <Alert>{c('Info').t`Your payment details are protected with TLS encryption and Swiss privacy laws.`}</Alert>

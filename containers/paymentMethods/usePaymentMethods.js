@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { c } from 'ttag';
 import { useApi, useLoading, useAuthentication } from 'react-components';
-import { BLACK_FRIDAY, PAYMENT_METHOD_TYPES, MIN_BITCOIN_AMOUNT } from 'proton-shared/lib/constants';
+import { BLACK_FRIDAY, PAYMENT_METHOD_TYPES, MIN_BITCOIN_AMOUNT, MIN_PAYPAL_AMOUNT } from 'proton-shared/lib/constants';
 import { isExpired } from 'proton-shared/lib/helpers/card';
 import { queryPaymentMethods } from 'proton-shared/lib/api/payments';
 
@@ -12,7 +12,7 @@ const usePaymentMethods = ({ amount, coupon, type }) => {
     const [methods, setMethods] = useState([]);
     const [loading, withLoading] = useLoading();
 
-    const isPaypalAmountValid = amount >= 500;
+    const isPaypalAmountValid = amount >= MIN_PAYPAL_AMOUNT;
     const isInvoice = type === 'invoice';
     const isSignup = type === 'signup';
     const alreadyHavePayPal = methods.some(({ Type }) => Type === PAYMENT_METHOD_TYPES.PAYPAL);
