@@ -2,6 +2,8 @@ import { useCallback } from 'react';
 import { splitKeys } from 'proton-shared/lib/keys/keys';
 import { noop } from 'proton-shared/lib/helpers/function';
 import { decryptCalendarKeys, decryptPassphrase, getAddressesMembersMap } from 'proton-shared/lib/keys/calendarKeys';
+import { Address } from 'proton-shared/lib/interfaces';
+import { MemberPassphrase } from 'proton-shared/lib/interfaces/calendar';
 import useCache from '../containers/cache/useCache';
 import { useGetAddresses } from './useAddresses';
 import { useGetAddressKeys } from './useGetAddressKeys';
@@ -17,12 +19,15 @@ const useGetCalendarKeysRaw = () => {
 
     return useCallback(
         async (calendarID) => {
-            const [{ Keys, Passphrase = {}, Members }, Addresses] = await Promise.all([
+            const [{ Keys = [], Passphrase = {}, Members = [] }, Addresses = []] = await Promise.all([
                 getCalendarBootstrap(calendarID),
                 getAddresses()
             ]);
 
-            const getCalendarKeyPassphrase = async (MemberPassphrases = [], addressesMembersMap = {}) => {
+            const getCalendarKeyPassphrase = async (
+                MemberPassphrases: MemberPassphrase[] = [],
+                addressesMembersMap: { [key: string]: Address } = {}
+            ) => {
                 // Try to decrypt each passphrase with the address keys belonging to that member until it succeeds.
                 // eslint-disable-next-line no-restricted-syntax
                 for (const { Passphrase, Signature, MemberID } of MemberPassphrases) {
