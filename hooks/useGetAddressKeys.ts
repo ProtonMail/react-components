@@ -77,7 +77,7 @@ export const useGetAddressKeysRaw = (): ((id: string) => Promise<CachedKey[]>) =
     );
 };
 
-export const useGetAddressKeys = () => {
+export const useGetAddressKeys = (): ((id: string) => Promise<CachedKey[]>) => {
     const cache = useCache();
     const miss = useGetAddressKeysRaw();
 

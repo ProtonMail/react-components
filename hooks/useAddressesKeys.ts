@@ -8,7 +8,7 @@ import { useGetAddressKeys } from './useGetAddressKeys';
 export const CACHE_KEY = 'ADDRESS_KEYS';
 export const KEY = 'ADDRESSES_KEYS';
 
-export const useGetAddressesKeys = () => {
+export const useGetAddressesKeys = (): (() => Promise<{ [key: string]: CachedKey[] }>) => {
     const getAddresses = useGetAddresses();
     const getAddressKeys = useGetAddressKeys();
     return useCallback(async () => {
