@@ -326,11 +326,17 @@ export { default as AddFilterModal } from './containers/filters/AddFilterModal';
 export { default as AddEmailToListModal } from './containers/filters/AddEmailToListModal';
 export { default as StorageSpaceStatus } from './containers/sidebar/StorageSpaceStatus';
 
-export { default as OpenVPNConfigurationSection } from './containers/vpn/OpenVPNConfigurationSection/OpenVPNConfigurationSection';
+export {
+    default as OpenVPNConfigurationSection
+} from './containers/vpn/OpenVPNConfigurationSection/OpenVPNConfigurationSection';
 export { default as ProtonVPNClientsSection } from './containers/vpn/ProtonVPNClientsSection/ProtonVPNClientsSection';
 export { default as OpenVPNAccountSection } from './containers/vpn/OpenVPNAccountSection/OpenVPNAccountSection';
-export { default as ProtonVPNResourcesSection } from './containers/vpn/ProtonVPNResourcesSection/ProtonVPNResourcesSection';
-export { default as ProtonVPNCredentialsSection } from './containers/vpn/ProtonVPNCredentialsSection/ProtonVPNCredentialsSection';
+export {
+    default as ProtonVPNResourcesSection
+} from './containers/vpn/ProtonVPNResourcesSection/ProtonVPNResourcesSection';
+export {
+    default as ProtonVPNCredentialsSection
+} from './containers/vpn/ProtonVPNCredentialsSection/ProtonVPNCredentialsSection';
 
 export { useUser, useGetUser } from './hooks/useUser';
 export { default as useUserVPN } from './hooks/useUserVPN';
@@ -383,3 +389,4 @@ export { default as TopNavbar } from './containers/app/TopNavbar';
 export { default as LoaderPage } from './containers/app/LoaderPage';
 
 export * from './helpers/component';
+export { default as lazyLocales } from './helpers/lazyLocales';
