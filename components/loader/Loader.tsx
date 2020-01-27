@@ -15,7 +15,7 @@ interface Props {
 const Loader = ({ size = 'small', color = '' }: Props) => {
     return (
         <div className="center flex mb2 mt2">
-            <FullLoader size={SIZE[size]} color={color} />
+            <FullLoader size={SIZE[size]} color={color} className="mauto" />
         </div>
     );
 };
