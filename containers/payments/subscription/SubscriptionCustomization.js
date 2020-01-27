@@ -168,6 +168,7 @@ const SubscriptionCustomization = ({
         (model.planIDs[memberAddon.ID] || 0) * memberAddon.MaxAddresses + professionalPlan.MaxAddresses;
     const professionalDomains =
         (model.planIDs[domainAddon.ID] || 0) * domainAddon.MaxDomains + professionalPlan.MaxDomains;
+    const vpnPlusVpn = (model.planIDs[vpnAddon.ID] || 0) * vpnAddon.MaxVPN + vpnplusPlan.MaxVPN;
 
     const FEATURES = {
         [FREE]: [
@@ -269,7 +270,11 @@ const SubscriptionCustomization = ({
             <SubscriptionFeatureRow key="bandwidth" icon="p2p" feature={c('Feature').t`P2P/Bittorrent support`} />
         ],
         [PLANS.VPNPLUS]: [
-            <SubscriptionFeatureRow key="connection" icon="vpn-connx" feature={c('Feature').t`5 VPN connections`} />,
+            <SubscriptionFeatureRow
+                key="connection"
+                icon="vpn-connx"
+                feature={c('Feature').t`${vpnPlusVpn} VPN connections`}
+            />,
             <SubscriptionFeatureRow
                 key="country"
                 icon="servers-country"
