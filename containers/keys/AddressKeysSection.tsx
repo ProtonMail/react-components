@@ -183,9 +183,6 @@ const AddressKeysSection = () => {
             return;
         }
         const { privateKey } = addressKey;
-        if (!privateKey) {
-            return;
-        }
         const { privateKey: primaryPrivateKey } = getPrimaryKey(addressKeys) || {};
         if (!primaryPrivateKey) {
             return;
@@ -205,6 +202,9 @@ const AddressKeysSection = () => {
 
         const onExport = (): Promise<void> => {
             return new Promise((resolve, reject) => {
+                if (!privateKey) {
+                    return reject(new Error('Private key is not decrypted'));
+                }
                 createModal(
                     <ExportPrivateKeyModal
                         onClose={reject}
