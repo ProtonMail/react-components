@@ -109,13 +109,12 @@ const UserKeysSections = () => {
     };
 
     const primaryPrivateKey = getPrimaryKey(userKeysList);
-    const primaryDisplayPrivateKey = userKeysDisplay.find(({ ID }) => ID === primaryPrivateKey?.Key.ID);
-    const canExportPrimaryPrivateKey = primaryDisplayPrivateKey && primaryDisplayPrivateKey.status.isDecrypted;
+    const canExportPrimaryPrivateKey = !!primaryPrivateKey?.privateKey;
 
     return (
         <>
             {title}
-            {canExportPrimaryPrivateKey && primaryPrivateKey && primaryPrivateKey.privateKey && (
+            {canExportPrimaryPrivateKey && (
                 <Block>
                     <Button
                         onClick={() => {

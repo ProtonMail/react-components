@@ -350,8 +350,7 @@ const AddressKeysSection = () => {
     const canImport = canAdd;
 
     const primaryPrivateKey = getPrimaryKey(addressKeys);
-    const primaryDisplayPrivateKey = addressKeysDisplay.find(({ ID }) => ID === primaryPrivateKey?.Key.ID);
-    const canExportPrimaryPrivateKey = primaryDisplayPrivateKey && primaryDisplayPrivateKey.status.isDecrypted;
+    const canExportPrimaryPrivateKey = !!primaryPrivateKey?.privateKey;
     const canExportPrimaryPublicKey = !!primaryPrivateKey;
 
     return (
