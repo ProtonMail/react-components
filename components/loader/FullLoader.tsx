@@ -9,11 +9,11 @@ interface Props {
     className?: string;
 }
 const FullLoader = ({ size = 50, color, className }: Props) => {
-    const smaller = size < 50;
+    const isSmall = size < 50;
 
-    const diameter = smaller ? 10 : 100;
-    const radius = smaller ? 8 : 80;
-    const viewBox = smaller ? '0 0 20 20' : '0 0 200 200';
+    const diameter = isSmall ? 10 : 100;
+    const radius = isSmall ? 8 : 80;
+    const viewBox = isSmall ? '0 0 20 20' : '0 0 200 200';
 
     return (
         <>
@@ -32,8 +32,8 @@ const FullLoader = ({ size = 50, color, className }: Props) => {
                     r={radius}
                     className={classnames([
                         'loadingAnimation-circle',
-                        smaller ? 'loadingAnimation-orbit1--smaller' : 'loadingAnimation-orbit1',
-                        smaller && 'loadingAnimation-circle--smaller',
+                        isSmall ? 'loadingAnimation-orbit1--smaller' : 'loadingAnimation-orbit1',
+                        isSmall && 'loadingAnimation-circle--smaller',
                         color && `loadingAnimation-circle--${color}`
                     ])}
                 />
@@ -43,8 +43,8 @@ const FullLoader = ({ size = 50, color, className }: Props) => {
                     r={radius}
                     className={classnames([
                         'loadingAnimation-circle',
-                        smaller ? 'loadingAnimation-orbit2--smaller' : 'loadingAnimation-orbit2',
-                        smaller && 'loadingAnimation-circle--smaller',
+                        isSmall ? 'loadingAnimation-orbit2--smaller' : 'loadingAnimation-orbit2',
+                        isSmall && 'loadingAnimation-circle--smaller',
                         color && `loadingAnimation-circle--${color}`
                     ])}
                 />
