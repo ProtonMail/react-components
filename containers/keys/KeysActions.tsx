@@ -1,6 +1,7 @@
 import React from 'react';
 import { c } from 'ttag';
-import { DropdownActions } from '../../';
+import { DropdownActions } from '../../index';
+import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 import { KeyActions } from './shared/interface';
 
 interface Props extends Partial<KeyActions> {
@@ -61,7 +62,7 @@ const KeysActions = ({
             text: c('Keys actions').t`Delete`,
             onClick: () => onDeleteKey(ID)
         }
-    ].filter(Boolean);
+    ].filter(isTruthy);
 
     return <DropdownActions className="pm-button--small" loading={isLoading} list={list} />;
 };
