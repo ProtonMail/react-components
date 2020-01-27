@@ -35,7 +35,7 @@ const AddressesWithMembers = ({
     const { createModal } = useModals();
     const [members, loadingMembers] = useMembers();
     const [memberAddressesMap, loadingMemberAddresses] = useMemberAddresses(members);
-    const [memberIndex, setMemberIndex] = useState<number>(-1);
+    const [memberIndex, setMemberIndex] = useState(-1);
     const [organizationKey, loadingOrganizationKey] = useOrganizationKey(organization);
 
     useEffect(() => {

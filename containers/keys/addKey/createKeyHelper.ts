@@ -3,10 +3,10 @@ import { addKeyAction } from 'proton-shared/lib/keys/keysAction';
 import { getKeyFlagsAddress } from 'proton-shared/lib/keys/keyFlags';
 import getSignedKeyList from 'proton-shared/lib/keys/getSignedKeyList';
 import { createAddressKeyRoute } from 'proton-shared/lib/api/keys';
-import { Address, KeyAction } from 'proton-shared/lib/interfaces';
+import { Address, KeyAction, Api } from 'proton-shared/lib/interfaces';
 
 interface CreateKeyArguments {
-    api: any;
+    api: Api;
     fingerprint: string;
     signingKey: OpenPGPKey;
     privateKeyArmored: string;
@@ -21,7 +21,10 @@ export default async ({ api, fingerprint, privateKeyArmored, signingKey, keys, A
         fingerprint
     });
 
-    const createdKey = updatedKeys.find(({ ID }) => ID === 'temp') as KeyAction;
+    const createdKey = updatedKeys.find(({ ID }) => ID === 'temp');
+    if (!createdKey) {
+        throw new Error('Temp key not found');
+    }
     const { primary } = createdKey;
 
     const { Key } = await api(

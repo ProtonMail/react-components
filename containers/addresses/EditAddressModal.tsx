@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import { c } from 'ttag';
 import {
     FormModal,
@@ -17,7 +17,7 @@ import { Address } from 'proton-shared/lib/interfaces';
 
 const EMPTY_VALUES = [/^(<div><br><\/div>)+$/, /^(<div>\s*<\/div>)+$/];
 
-const formatSignature = (value: any) => (EMPTY_VALUES.some((regex) => regex.test(value)) ? '' : value);
+const formatSignature = (value: string) => (EMPTY_VALUES.some((regex) => regex.test(value)) ? '' : value);
 
 interface Props {
     onClose?: () => void;
@@ -33,9 +33,10 @@ const EditAddressModal = ({ onClose, address, ...rest }: Props) => {
     });
     const { createNotification } = useNotifications();
 
-    const handleDisplayName = ({ target }: any) => updateModel({ ...model, displayName: target.value });
+    const handleDisplayName = ({ target }: ChangeEvent<HTMLInputElement>) =>
+        updateModel({ ...model, displayName: target.value });
 
-    const handleSignature = (value: any) => updateModel({ ...model, signature: value });
+    const handleSignature = (value: string) => updateModel({ ...model, signature: value });
 
     const handleSubmit = async () => {
         await api(
