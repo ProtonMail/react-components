@@ -22,7 +22,7 @@ import { Address, UserModel, Member } from 'proton-shared/lib/interfaces';
 
 interface Props {
     address: Address;
-    member?: Member;
+    member?: Member; // undefined if self
     user: UserModel;
     organizationKey?: OrganizationKey;
 }

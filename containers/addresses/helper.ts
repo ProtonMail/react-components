@@ -36,7 +36,7 @@ export const getPermissions = ({
     const isSpecialAddress = Type === TYPE_ORIGINAL || Type === TYPE_PREMIUM;
     const isPrimaryAddress = Order === 1;
 
-    const isSelf = !!member?.Self;
+    const isSelf = !member || !!member.Self;
     const isReadable = member?.Private === READABLE;
 
     const canGenerateMember = organizationKey && isAdmin && isReadable;
