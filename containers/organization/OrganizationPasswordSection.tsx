@@ -69,7 +69,7 @@ const OrganizationSection = () => {
         }
 
         if (!organizationKey?.privateKey) {
-            return createNotification(c('Error').t`Organization key not decrypted.`);
+            return createNotification(c('Error').t`Organization key is not decrypted.`);
         }
 
         createModal(
@@ -83,7 +83,7 @@ const OrganizationSection = () => {
 
     const handleChangeOrganizationPassword = () => {
         if (!organizationKey?.privateKey) {
-            return createNotification(c('Error').t`Organization key not decrypted.`);
+            return createNotification(c('Error').t`Organization key is not decrypted.`);
         }
 
         createModal(
