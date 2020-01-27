@@ -7,7 +7,6 @@ const WIDTH = {
     medium: '80',
     big: '200'
 };
-
 const CLASSES_ORBIT1 = {
     small: 'loadingAnimation-circle--smaller loadingAnimation-orbit1--smaller',
     medium: 'loadingAnimation-orbit1',
@@ -19,13 +18,10 @@ const CLASSES_ORBIT2 = {
     big: 'loadingAnimation-orbit2'
 };
 
-
-
 interface Props {
     size?: 'small' | 'medium' | 'big';
     bgColor?: string;
 }
-
 
 const Loader = ({ size = 'small', bgColor = '' }: Props) => {
     const diameter = size !== 'small' ? '100' : '10';
