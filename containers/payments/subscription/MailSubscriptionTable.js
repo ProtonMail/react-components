@@ -40,7 +40,7 @@ const MailSubscriptionTable = ({
             canCustomize: true,
             price: <SubscriptionPrices cycle={cycle} currency={currency} />,
             imageSrc: freePlanSvg,
-            description: c('Description').t`Basic private and secure comminications`,
+            description: c('Description').t`Basic private and secure communications`,
             features: [
                 c('Feature').t`1 user`,
                 c('Feature').t`500 MB storage`,
