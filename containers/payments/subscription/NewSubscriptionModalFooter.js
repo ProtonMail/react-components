@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useAddresses, Button, Loader } from 'react-components';
 import { c } from 'ttag';
 import { CYCLE, COUPON_CODES, PLANS } from 'proton-shared/lib/constants';
+import { clearPlanIDs } from 'proton-shared/lib/helpers/subscription';
 import shieldSvg from 'design-system/assets/img/shared/shield.svg';
 import percentageSvg from 'design-system/assets/img/shared/percentage.svg';
 import clockSvg from 'design-system/assets/img/shared/clock.svg';
@@ -19,6 +20,7 @@ const NewSubscriptionModalFooter = ({ submit, step, model, plans, onClose }) => 
     const { ID: visionaryID } = plans.find(({ Name }) => Name === PLANS.VISIONARY);
     const [addresses, loadingAddresses] = useAddresses();
     const isVisionary = !!model.planIDs[visionaryID];
+    const hasPaidPlans = Object.keys(clearPlanIDs(model.planIDs)).length;
 
     if (loadingAddresses) {
         return <Loader />;
@@ -28,8 +30,20 @@ const NewSubscriptionModalFooter = ({ submit, step, model, plans, onClose }) => 
         return <Button onClick={onClose}>{c('Action').t`Close`}</Button>;
     }
 
-    const hasAddresses = Array.isArray(addresses) && addresses.length > 0;
     const cancel = step === SUBSCRIPTION_STEPS.CUSTOMIZATION ? c('Action').t`Cancel` : c('Action').t`Back`;
+
+    if (!hasPaidPlans) {
+        return (
+            <>
+                <Button onClick={onClose} className="flex-item-noshrink">
+                    {cancel}
+                </Button>
+                {submit}
+            </>
+        );
+    }
+
+    const hasAddresses = Array.isArray(addresses) && addresses.length > 0;
     const upsells = [
         step === SUBSCRIPTION_STEPS.CUSTOMIZATION && model.cycle === CYCLE.MONTHLY && (
             <div key="upsell-1" className="nomobile flex flex-nowrap flex-items-center pl1 pr1">
