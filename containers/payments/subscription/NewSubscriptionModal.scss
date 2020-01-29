@@ -1,5 +1,9 @@
 @import '~design-system/_sass/reusable-components/design-system-config';
 
+// Hide show all features link in the modal
+.subscription-modal .subscriptionTable-show-features-container {
+    display: none;
+}
 // Hide images in subscription table
 .subscription-modal .subscriptionTable-image-container {
     display: none;

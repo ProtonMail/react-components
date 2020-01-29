@@ -115,7 +115,7 @@ const VpnSubscriptionTable = ({
                 currentPlan={currentPlan}
                 {...rest}
             />
-            <div className="aligncenter pb1 onmobile-pb2">
+            <div className="aligncenter pb1 onmobile-pb2 subscriptionTable-show-features-container">
                 <LinkButton
                     className="pm-button--small"
                     onClick={() => createModal(<SubscriptionFeaturesModal currency={currency} cycle={cycle} />)}
