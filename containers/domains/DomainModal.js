@@ -15,15 +15,7 @@ import {
 } from 'react-components';
 import { withRouter } from 'react-router-dom';
 import { addDomain, getDomain } from 'proton-shared/lib/api/domains';
-import {
-    VERIFY_STATE,
-    DOMAIN_STATE,
-    SPF_STATE,
-    MX_STATE,
-    DMARC_STATE,
-    DKIM_KEY_STATUS,
-    DKIM_KEY_DNS_STATUS
-} from 'proton-shared/lib/constants';
+import { VERIFY_STATE, DOMAIN_STATE, SPF_STATE, MX_STATE, DMARC_STATE, DKIM_STATE } from 'proton-shared/lib/constants';
 
 import DomainSection from './DomainSection';
 import VerifySection from './VerifySection';
@@ -80,14 +72,6 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
         'DMARC'
     ];
 
-    const { Keys = [] } = domainModel;
-    const activeKeys = Keys.filter(({ State }) => State === DKIM_KEY_STATUS.ACTIVE);
-    const dkimDefaultState =
-        !activeKeys.length &&
-        Keys.every(
-            ({ State, DNSState }) => State === DKIM_KEY_STATUS.PENDING && DNSState === DKIM_KEY_DNS_STATUS.NOT_SET
-        );
-    const dkimGoodState = activeKeys.length;
     const breadcrumbIcons = [
         domainModel.State === DOMAIN_STATE.DOMAIN_STATE_DEFAULT ? null : (
             <RoundedIcon
@@ -122,14 +106,14 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
                 name={domainModel.SpfState === SPF_STATE.SPF_STATE_GOOD ? 'on' : 'off'}
             />
         ),
-        dkimDefaultState ? null : (
+        [DKIM_STATE.DKIM_STATE_CHECK, DKIM_STATE.DKIM_STATE_GOOD].includes(domainModel.DkimState) ? (
             <RoundedIcon
                 className="mr0-5"
                 key="dkim-icon"
-                type={dkimGoodState ? 'success' : 'error'}
-                name={dkimGoodState ? 'on' : 'off'}
+                type={domainModel.DkimState === DKIM_STATE.DKIM_STATE_GOOD ? 'success' : 'error'}
+                name={domainModel.DkimState === DKIM_STATE.DKIM_STATE_GOOD ? 'on' : 'off'}
             />
-        ),
+        ) : null,
         domainModel.DmarcState === DMARC_STATE.DMARC_STATE_DEFAULT ? null : (
             <RoundedIcon
                 className="mr0-5"
