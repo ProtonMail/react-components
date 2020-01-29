@@ -2,7 +2,21 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Alert, Price, Loader, useConfig, useAddresses } from 'react-components';
 import { c, msgid } from 'ttag';
-import { PLANS, CYCLE, ADDON_NAMES, CLIENT_TYPES, PLAN_SERVICES, FREE, PLAN_TYPES } from 'proton-shared/lib/constants';
+import {
+    PLANS,
+    CYCLE,
+    ADDON_NAMES,
+    CLIENT_TYPES,
+    PLAN_SERVICES,
+    FREE,
+    PLAN_TYPES,
+    MAX_VPN_ADDON,
+    MAX_ADDRESS_ADDON,
+    MAX_SPACE_ADDON,
+    MAX_MEMBER_ADDON,
+    MAX_DOMAIN_PRO_ADDON,
+    MAX_DOMAIN_PLUS_ADDON
+} from 'proton-shared/lib/constants';
 import { toMap } from 'proton-shared/lib/helpers/object';
 import humanSize from 'proton-shared/lib/helpers/humanSize';
 import { hasBit } from 'proton-shared/lib/helpers/bitset';
@@ -297,6 +311,7 @@ const SubscriptionCustomization = ({
     const ADDONS = {
         [PLANS.PLUS]: [
             <SubscriptionAddonRow
+                max={MAX_SPACE_ADDON}
                 loading={loading}
                 key="storage"
                 label={c('Label').t`Storage space`}
@@ -314,6 +329,7 @@ const SubscriptionCustomization = ({
                 }
             />,
             <SubscriptionAddonRow
+                max={MAX_ADDRESS_ADDON}
                 loading={loading}
                 key="address"
                 label={c('Label').t`Email addresses`}
@@ -330,6 +346,7 @@ const SubscriptionCustomization = ({
                 }
             />,
             <SubscriptionAddonRow
+                max={MAX_DOMAIN_PLUS_ADDON}
                 loading={loading}
                 key="domain"
                 label={c('Label').t`Custom domains`}
@@ -348,6 +365,7 @@ const SubscriptionCustomization = ({
         ],
         [PLANS.PROFESSIONAL]: [
             <SubscriptionAddonRow
+                max={MAX_MEMBER_ADDON}
                 loading={loading}
                 key="member"
                 label={c('Label').t`Users`}
@@ -364,6 +382,7 @@ const SubscriptionCustomization = ({
                 }
             />,
             <SubscriptionAddonRow
+                max={MAX_DOMAIN_PRO_ADDON}
                 loading={loading}
                 key="domain"
                 label={c('Label').t`Custom domains`}
@@ -382,6 +401,7 @@ const SubscriptionCustomization = ({
         ],
         [PLANS.VPNPLUS]: [
             <SubscriptionAddonRow
+                max={MAX_VPN_ADDON}
                 loading={loading}
                 key="vpn"
                 label={c('Label').t`VPN connections`}
