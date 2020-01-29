@@ -23,7 +23,14 @@ import {
 
 import { checkSubscription, deleteSubscription } from 'proton-shared/lib/api/payments';
 import { DEFAULT_CURRENCY, DEFAULT_CYCLE, CLIENT_TYPES, PLAN_SERVICES } from 'proton-shared/lib/constants';
-import { getPlans, isBundleEligible, getPlan, switchPlan, getPlanIDs } from 'proton-shared/lib/helpers/subscription';
+import {
+    getPlans,
+    isBundleEligible,
+    getPlan,
+    switchPlan,
+    getPlanIDs,
+    clearPlanIDs
+} from 'proton-shared/lib/helpers/subscription';
 import { isLoyal } from 'proton-shared/lib/helpers/organization';
 
 import NewSubscriptionModal from './subscription/NewSubscriptionModal';
@@ -90,7 +97,7 @@ const PlansSection = () => {
         const { Coupon } = await withLoading(
             api(
                 checkSubscription({
-                    PlanIDs: plansIDs,
+                    PlanIDs: clearPlanIDs(plansIDs),
                     Currency: currency,
                     Cycle: cycle,
                     CouponCode: couponCode

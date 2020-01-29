@@ -22,6 +22,7 @@ import {
 import { DEFAULT_CURRENCY, DEFAULT_CYCLE, CYCLE, CURRENCIES, PAYMENT_METHOD_TYPES } from 'proton-shared/lib/constants';
 import { checkSubscription, subscribe, deleteSubscription } from 'proton-shared/lib/api/payments';
 import { isLoyal } from 'proton-shared/lib/helpers/organization';
+import { clearPlanIDs } from 'proton-shared/lib/helpers/subscription';
 
 import { SUBSCRIPTION_STEPS } from './constants';
 import NewSubscriptionSubmitButton from './NewSubscriptionSubmitButton';
@@ -34,16 +35,6 @@ import PaymentGiftCode from '../PaymentGiftCode';
 
 import './NewSubscriptionModal.scss';
 import { handlePaymentToken } from '../paymentTokenHelper';
-
-const clearPlanIDs = (planIDs = {}) => {
-    return Object.entries(planIDs).reduce((acc, [planID, quantity]) => {
-        if (!quantity) {
-            return acc;
-        }
-        acc[planID] = quantity;
-        return acc;
-    }, {});
-};
 
 const hasPlans = (planIDs = {}) => Object.keys(clearPlanIDs(planIDs)).length;
 
@@ -119,7 +110,7 @@ const NewSubscriptionModal = ({
             setStep(SUBSCRIPTION_STEPS.UPGRADE);
             await api(
                 subscribe({
-                    PlanIDs: model.planIDs,
+                    PlanIDs: clearPlanIDs(model.planIDs),
                     CouponCode: model.coupon,
                     GiftCode: model.gift,
                     Cycle: model.cycle,
