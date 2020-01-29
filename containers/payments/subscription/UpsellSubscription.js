@@ -1,5 +1,14 @@
 import React from 'react';
-import { useUser, useSubscription, useModals, usePlans, PrimaryButton, Loader, useAddresses } from 'react-components';
+import {
+    useUser,
+    useSubscription,
+    useModals,
+    usePlans,
+    PrimaryButton,
+    Loader,
+    useAddresses,
+    useOrganization
+} from 'react-components';
 import { hasMailPlus, hasVpnBasic, switchPlan, getPlanIDs } from 'proton-shared/lib/helpers/subscription';
 import { DEFAULT_CURRENCY, DEFAULT_CYCLE, PLAN_SERVICES, PLANS } from 'proton-shared/lib/constants';
 import { toMap } from 'proton-shared/lib/helpers/object';
@@ -10,6 +19,7 @@ import NewSubscriptionModal from './NewSubscriptionModal';
 const UpsellSubscription = () => {
     const [{ hasPaidMail, hasPaidVpn }, loadingUser] = useUser();
     const [subscription, loadingSubscription] = useSubscription();
+    const [organization, loadingOrganization] = useOrganization();
     const [plans, loadingPlans] = usePlans();
     const { Currency = DEFAULT_CURRENCY, Cycle = DEFAULT_CYCLE } = subscription || {};
     const isFreeMail = !hasPaidMail;
@@ -18,7 +28,7 @@ const UpsellSubscription = () => {
     const [addresses, loadingAddresses] = useAddresses();
     const hasAddresses = Array.isArray(addresses) && addresses.length > 0;
 
-    if (loadingUser || loadingSubscription || loadingPlans || loadingAddresses) {
+    if (loadingUser || loadingSubscription || loadingPlans || loadingAddresses || loadingOrganization) {
         return <Loader />;
     }
 
@@ -43,7 +53,8 @@ const UpsellSubscription = () => {
                                         planIDs,
                                         plans,
                                         planID: plansMap[PLANS.PLUS].ID,
-                                        service: PLAN_SERVICES.MAIL
+                                        service: PLAN_SERVICES.MAIL,
+                                        organization
                                     })}
                                 />
                             );
@@ -68,7 +79,8 @@ const UpsellSubscription = () => {
                                         planIDs,
                                         plans,
                                         planID: plansMap[PLANS.PROFESSIONAL].ID,
-                                        service: PLAN_SERVICES.MAIL
+                                        service: PLAN_SERVICES.MAIL,
+                                        organization
                                     })}
                                 />
                             );
@@ -92,7 +104,8 @@ const UpsellSubscription = () => {
                                     planIDs,
                                     plans,
                                     planID: plansMap[PLANS.VPNPLUS].ID,
-                                    service: PLAN_SERVICES.VPN
+                                    service: PLAN_SERVICES.VPN,
+                                    organization
                                 })}
                             />
                         );

@@ -84,7 +84,8 @@ const PlansSection = () => {
             planIDs: getPlanIDs(subscription),
             plans,
             planID,
-            service: CLIENT_TYPE === CLIENT_TYPES.MAIL ? PLAN_SERVICES.MAIL : PLAN_SERVICES.VPN
+            service: CLIENT_TYPE === CLIENT_TYPES.MAIL ? PLAN_SERVICES.MAIL : PLAN_SERVICES.VPN,
+            organization
         });
         const { Coupon } = await withLoading(
             api(
@@ -141,7 +142,10 @@ const PlansSection = () => {
         <>
             <SubTitle>{c('Title').t`Plans`}</SubTitle>
             <div className="flex flew-nowrap onmobile-flex-column">
-                <Alert className="flex-item-fluid" learnMore="https://protonmail.com/support/knowledge-base/paid-plans/">
+                <Alert
+                    className="flex-item-fluid"
+                    learnMore="https://protonmail.com/support/knowledge-base/paid-plans/"
+                >
                     {bundleEligible ? (
                         <div>{c('Info')
                             .t`Get 20% bundle discount when you purchase ProtonMail and ProtonVPN together.`}</div>

@@ -258,6 +258,7 @@ const NewSubscriptionModal = ({
                 <div className="flex flex-spacebetween onmobile-flex-column">
                     <div className="w75 onmobile-w100 pr1 onmobile-pr0">
                         <SubscriptionCustomization
+                            organization={organization}
                             vpnCountries={vpnCountries}
                             loading={loadingCheck}
                             plans={plans}

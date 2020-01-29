@@ -26,7 +26,7 @@ const TITLE = {
     [PLANS.VPNPLUS]: 'ProtonVPN Plus'
 };
 
-const Description = ({ planName, setModel, model, plans }) => {
+const Description = ({ planName, setModel, model, plans, organization }) => {
     const plansMap = toMap(plans, 'Name');
     const plusPlan = plansMap[PLANS.PLUS];
     const vpnPlusPlan = plansMap[PLANS.VPNPLUS];
@@ -40,7 +40,8 @@ const Description = ({ planName, setModel, model, plans }) => {
                         planIDs: model.planIDs,
                         plans,
                         planID: plusPlan.ID,
-                        service: PLAN_SERVICES.MAIL
+                        service: PLAN_SERVICES.MAIL,
+                        organization
                     })
                 })
             }
@@ -56,7 +57,8 @@ const Description = ({ planName, setModel, model, plans }) => {
                         planIDs: model.planIDs,
                         plans,
                         planID: vpnPlusPlan.ID,
-                        service: PLAN_SERVICES.VPN
+                        service: PLAN_SERVICES.VPN,
+                        organization
                     })
                 })
             }
@@ -91,6 +93,7 @@ const Description = ({ planName, setModel, model, plans }) => {
 };
 
 Description.propTypes = {
+    organization: PropTypes.object,
     plans: PropTypes.array.isRequired,
     planName: PropTypes.string.isRequired,
     model: PropTypes.object.isRequired,
@@ -99,6 +102,7 @@ Description.propTypes = {
 
 const SubscriptionCustomization = ({
     vpnCountries = {},
+    organization,
     plans,
     model,
     setModel,
@@ -398,7 +402,13 @@ const SubscriptionCustomization = ({
         hasAddresses && (
             <section className="subscriptionCustomization-section" key="mail-section">
                 <h3>{TITLE[mailPlan.Name]}</h3>
-                <Description plans={plans} planName={mailPlan.Name} model={model} setModel={setModel} />
+                <Description
+                    plans={plans}
+                    planName={mailPlan.Name}
+                    model={model}
+                    setModel={setModel}
+                    organization={organization}
+                />
                 <MailSubscriptionTable
                     disabled={loading}
                     currentPlan={c('Status').t`Selected`}
@@ -410,7 +420,13 @@ const SubscriptionCustomization = ({
                     onSelect={(planID) => {
                         setModel({
                             ...model,
-                            planIDs: switchPlan({ planIDs: model.planIDs, plans, planID, service: PLAN_SERVICES.MAIL })
+                            planIDs: switchPlan({
+                                planIDs: model.planIDs,
+                                plans,
+                                planID,
+                                service: PLAN_SERVICES.MAIL,
+                                organization
+                            })
                         });
                     }}
                 />
@@ -427,7 +443,13 @@ const SubscriptionCustomization = ({
         ),
         <section className="subscriptionCustomization-section" key="vpn-section">
             <h3>{TITLE[vpnPlan.Name]}</h3>
-            <Description plans={plans} planName={vpnPlan.Name} model={model} setModel={setModel} />
+            <Description
+                plans={plans}
+                planName={vpnPlan.Name}
+                model={model}
+                setModel={setModel}
+                organization={organization}
+            />
             <VpnSubscriptionTable
                 disabled={loading}
                 currentPlan={c('Status').t`Selected`}
@@ -439,7 +461,13 @@ const SubscriptionCustomization = ({
                 onSelect={(planID) => {
                     setModel({
                         ...model,
-                        planIDs: switchPlan({ planIDs: model.planIDs, plans, planID, service: PLAN_SERVICES.VPN })
+                        planIDs: switchPlan({
+                            planIDs: model.planIDs,
+                            plans,
+                            planID,
+                            service: PLAN_SERVICES.VPN,
+                            organization
+                        })
                     });
                 }}
             />
@@ -471,6 +499,7 @@ const SubscriptionCustomization = ({
 };
 
 SubscriptionCustomization.propTypes = {
+    organization: PropTypes.object,
     loading: PropTypes.bool,
     vpnCountries: PropTypes.shape({
         free: PropTypes.array,
