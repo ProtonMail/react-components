@@ -56,3 +56,13 @@
         }
    }
 }
+
+
+@include respond-to($breakpoint-small) {
+
+    .subscription-modal .pm-label.payment-left,
+    .subscription-modal .pm-field-container.payment-right {
+        width: 100%;
+    }
+
+}
