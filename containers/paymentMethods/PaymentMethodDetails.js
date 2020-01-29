@@ -38,15 +38,15 @@ const PaymentMethodDetails = ({ type, details = {} }) => {
         return (
             <Bordered className="bg-global-highlight p2">
                 {bankIcon ? <img width="70" src={bankIcon} alt={Brand} className="mb1" /> : null}
-                <label className="color-global-grey bl mb0-5">{c('Label').t`Card number`}</label>
+                <label className="color-global-grey-dm bl mb0-5">{c('Label').t`Card number`}</label>
                 <code className="bl bigger mb0 mb1">•••• •••• •••• {Last4}</code>
                 <div className="flex flex-nowrap flex-spacebetween">
                     <div>
-                        <label className="color-global-grey bl mb0-5">{c('Label').t`Card holder`}</label>
+                        <label className="color-global-grey-dm bl mb0-5">{c('Label').t`Card holder`}</label>
                         <span className="big mt0 mb0">{Name}</span>
                     </div>
                     <div>
-                        <label className="color-global-grey bl mb0-5">{c('Label').t`Expires`}</label>
+                        <label className="color-global-grey-dm bl mb0-5">{c('Label').t`Expires`}</label>
                         <span className="big mt0 mb0">
                             {ExpMonth}/{ExpYear}
                         </span>
@@ -64,7 +64,7 @@ const PaymentMethodDetails = ({ type, details = {} }) => {
                     <img width="70" src={bankIcon} alt="PayPal" className="mb1" />
                 </div>
                 <div className="flex flex-nowrap flex-items-center">
-                    <label className="color-global-grey mr1" htmlFor="paypal-payer">{c('Label').t`Payer`}</label>
+                    <label className="color-global-grey-dm mr1" htmlFor="paypal-payer">{c('Label').t`Payer`}</label>
                     <code id="paypal-payer" className="bl bigger mb0 mb1">
                         {Payer}
                     </code>
