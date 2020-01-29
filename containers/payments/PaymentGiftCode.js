@@ -24,12 +24,17 @@ const PaymentGiftCode = ({ gift = '', onApply, loading }) => {
 
     if (gift) {
         return (
-            <div className="flex flex-nowrap flex-items-center flex-spacebetween">
-                <span>
-                    <Icon name="gift" className="mr0-5" />
-                    <code>{gift}</code>
-                </span>
-                <LinkButton icon="trash" onClick={() => onApply('')} />
+            <div className="aligncenter">
+                <div className="inline-flex flex-nowrap flex-items-center">
+                    <span className="mr1 flex flex-nowrap flex-items-center">
+                        <Icon name="gift" className="mr0-5 mb0-25" />
+                        <code>{gift}</code>
+                    </span>
+                    <LinkButton className="flex flex-items-center ml0-25" onClick={() => onApply('')} title={c('Action').t`Remove git code`}>
+                        <Icon name="trash" className="fill-primary" />
+                        <span className="sr-only">{c('Action').t`Remove gift code`}</span>
+                    </LinkButton>
+                </div>
             </div>
         );
     }
