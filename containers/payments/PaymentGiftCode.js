@@ -28,9 +28,13 @@ const PaymentGiftCode = ({ gift = '', onApply, loading }) => {
                 <div className="inline-flex flex-nowrap flex-items-center">
                     <span className="mr1 flex flex-nowrap flex-items-center">
                         <Icon name="gift" className="mr0-5 mb0-25" />
-                        <code>{gift}</code>
+                        <code>{gift.match(/.{1,4}/g).join('-')}</code>
                     </span>
-                    <LinkButton className="flex flex-items-center ml0-25" onClick={() => onApply('')} title={c('Action').t`Remove git code`}>
+                    <LinkButton
+                        className="flex flex-items-center ml0-25"
+                        onClick={() => onApply('')}
+                        title={c('Action').t`Remove git code`}
+                    >
                         <Icon name="trash" className="fill-primary" />
                         <span className="sr-only">{c('Action').t`Remove gift code`}</span>
                     </LinkButton>
@@ -54,7 +58,7 @@ const PaymentGiftCode = ({ gift = '', onApply, loading }) => {
                     <GiftCodeForm code={code} onChange={setCode} onSubmit={handleSubmit} loading={loading} />
                 </div>
                 <Button onClick={handleCancel} title={c('Action').t`Cancel`} className="flex-self-start" icon="off">
-                  <span className="sr-only">{c('Action').t`Cancel`}</span>
+                    <span className="sr-only">{c('Action').t`Cancel`}</span>
                 </Button>
             </div>
         );
