@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import { Alert, Price, Button, Loader, useConfig, useApi, useLoading } from 'react-components';
-import { createBitcoinPayment } from 'proton-shared/lib/api/payments';
-import { MIN_BITCOIN_AMOUNT, BTC_DONATION_ADDRESS, CLIENT_TYPES, CURRENCIES } from 'proton-shared/lib/constants';
+import { createBitcoinPayment, createBitcoinDonation } from 'proton-shared/lib/api/payments';
+import { MIN_BITCOIN_AMOUNT, CLIENT_TYPES, CURRENCIES } from 'proton-shared/lib/constants';
 
 import BitcoinQRCode from './BitcoinQRCode';
 import BitcoinDetails from './BitcoinDetails';
@@ -20,8 +20,10 @@ const Bitcoin = ({ amount, currency, type }) => {
     const request = async () => {
         setError(false);
         try {
-            const { AmountBitcoin, Address } = await api(createBitcoinPayment(amount, currency));
-            setModel({ amountBitcoin: AmountBitcoin, address: type === 'donation' ? BTC_DONATION_ADDRESS : Address });
+            const { AmountBitcoin, Address } = await api(
+                type === 'donation' ? createBitcoinDonation(amount, currency) : createBitcoinPayment(amount, currency)
+            );
+            setModel({ amountBitcoin: AmountBitcoin, address: Address });
         } catch (error) {
             setError(true);
             throw error;
@@ -29,14 +31,14 @@ const Bitcoin = ({ amount, currency, type }) => {
     };
 
     useEffect(() => {
-        if (amount > MIN_BITCOIN_AMOUNT) {
+        if (amount >= MIN_BITCOIN_AMOUNT) {
             withLoading(request());
         }
-    }, [amount]);
+    }, [amount, currency]);
 
     if (amount < MIN_BITCOIN_AMOUNT) {
         const i18n = (amount) => c('Info').jt`Amount below minimum. (${amount})`;
-        return <Alert type="warning">{i18n(<Price currency={currency}>{amount}</Price>)}</Alert>;
+        return <Alert type="warning">{i18n(<Price currency={currency}>{MIN_BITCOIN_AMOUNT}</Price>)}</Alert>;
     }
 
     if (loading) {
