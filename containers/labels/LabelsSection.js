@@ -1,25 +1,29 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { c } from 'ttag';
-import { Loader, SubTitle, Alert, Block, useLabels, useEventManager, useApiWithoutResult } from 'react-components';
+import {
+    Loader,
+    SubTitle,
+    Alert,
+    PrimaryButton,
+    useLabels,
+    useFolders,
+    useEventManager,
+    useModals,
+    useApi
+} from 'react-components';
 import { arrayMove } from 'react-sortable-hoc';
 import { orderLabels } from 'proton-shared/lib/api/labels';
 
 import LabelSortableList from './LabelSortableList';
-import ActionsLabelToolbar from './ActionsLabelToolbar';
+import FolderTreeViewList from './FolderTreeViewList';
+import EditLabelModal from './modals/Edit';
 
 function LabelsSection() {
-    const [list, loading] = useLabels();
+    const [labels, loadingLabels] = useLabels();
+    const [folders, loadingFolders] = useFolders();
     const { call } = useEventManager();
-    const orderRequest = useApiWithoutResult(orderLabels);
-
-    const [labels, setLabels] = useState(() => list || []);
-
-    useEffect(() => {
-        if (!Array.isArray(list)) {
-            return;
-        }
-        setLabels(list);
-    }, [list]);
+    const api = useApi();
+    const { createModal } = useModals();
 
     /**
      * Refresh the list + update API and call event, it can be slow.
@@ -28,19 +32,29 @@ function LabelsSection() {
      * @param  {Number} options.newIndex
      */
     const onSortEnd = async ({ oldIndex, newIndex }) => {
-        const newList = arrayMove(list, oldIndex, newIndex);
-        setLabels(newList);
-        await orderRequest.request({
-            LabelIDs: newList.map(({ ID }) => ID)
-        });
-        call();
+        const newLabels = arrayMove(labels, oldIndex, newIndex);
+        await api(
+            orderLabels({
+                LabelIDs: newLabels.map(({ ID }) => ID)
+            })
+        );
+        await call();
     };
 
     const getScrollContainer = () => document.querySelector('.main-area');
 
+    if (loadingLabels || loadingFolders) {
+        return (
+            <>
+                <SubTitle>{c('LabelSettings').t`Folders and labels`}</SubTitle>
+                <Loader />
+            </>
+        );
+    }
+
     return (
         <>
-            <SubTitle>{c('LabelSettings').t`Folders and labels`}</SubTitle>
+            <SubTitle>{c('LabelSettings').t`Folders`}</SubTitle>
             <Alert
                 type="info"
                 className="mt1 mb1"
@@ -49,16 +63,26 @@ function LabelsSection() {
                 {c('LabelSettings')
                     .t`Multiple labels can be applied to a single message, but a message can only be in a single folder.`}
             </Alert>
-            <Block>
-                <ActionsLabelToolbar />
-            </Block>
-
-            {loading ? (
-                <Loader />
-            ) : labels.length ? (
+            <div className="mb1">
+                <PrimaryButton onClick={() => createModal(<EditLabelModal type="folder" />)}>
+                    {c('Action').t`Add folder`}
+                </PrimaryButton>
+            </div>
+            {folders.length ? (
+                <FolderTreeViewList items={folders} />
+            ) : (
+                <Alert>{c('LabelSettings').t`No folders available`}</Alert>
+            )}
+            <SubTitle>{c('LabelSettings').t`Labels`}</SubTitle>
+            <div className="mb1">
+                <PrimaryButton onClick={() => createModal(<EditLabelModal type="label" />)}>
+                    {c('Action').t`Add label`}
+                </PrimaryButton>
+            </div>
+            {labels.length ? (
                 <LabelSortableList getContainer={getScrollContainer} items={labels} onSortEnd={onSortEnd} />
             ) : (
-                <Alert>{c('LabelSettings').t`No labels/folders available`}</Alert>
+                <Alert>{c('LabelSettings').t`No labels available`}</Alert>
             )}
         </>
     );

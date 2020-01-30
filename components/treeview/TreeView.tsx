@@ -17,6 +17,7 @@ export interface NodeTreeView {
     onDrag?: () => void;
     draggable?: boolean;
     className?: string;
+    title?: string;
 }
 
 const TreeView = ({
@@ -34,7 +35,8 @@ const TreeView = ({
     children,
     onToggle,
     onFocus,
-    className
+    className,
+    title
 }: NodeTreeView) => {
     const handleClick = (event: React.MouseEvent) => {
         event.stopPropagation();
@@ -49,6 +51,7 @@ const TreeView = ({
     return (
         <ul role={role}>
             <li
+                title={title}
                 draggable={!disabled && draggable}
                 onDragStart={onDragStart}
                 onDragOver={onDragOver}
@@ -58,7 +61,7 @@ const TreeView = ({
                 tabIndex={focussed ? 0 : -1}
                 onClick={handleClick}
                 onFocus={onFocus}
-                aria-expended={toggled}
+                aria-expanded={toggled}
                 className={className}
             >
                 {icon}

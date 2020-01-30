@@ -1,21 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { Loader, Label, Field, Select, Row, useFormattedLabels, ErrorZone } from 'react-components';
+import { Loader, Label, Field, Select, Row, useLabels, useFolders, ErrorZone } from 'react-components';
 import { noop } from 'proton-shared/lib/helpers/function';
+import { toMap } from 'proton-shared/lib/helpers/object';
 
 import LabelActions from './LabelActions';
 import AutoReplyAction from './AutoReplyAction';
 
 function ActionsEditor({ filter, onChange = noop, errors = {} }) {
     const { Actions } = filter.Simple;
-    const [labelModel = [], loading] = useFormattedLabels();
-
-    const labels = labelModel.getLabels();
-    const folders = labelModel.getFolders().map(({ Name }) => ({
-        text: c('Filter Actions').t`Move to ${Name}`,
-        value: Name
-    }));
+    const [labels, loadingLabels] = useLabels();
+    const [folders, loadingFolders] = useFolders();
+    const labelsMap = toMap(labels, 'Path');
 
     const MOVE_TO = [
         {
@@ -38,7 +35,12 @@ function ActionsEditor({ filter, onChange = noop, errors = {} }) {
             text: c('Filter Actions').t`Move to trash`,
             value: 'trash'
         }
-    ].concat(folders);
+    ].concat(
+        (folders || []).map(({ Name }) => ({
+            text: c('Filter Actions').t`Move to ${Name}`,
+            value: Name
+        }))
+    );
 
     const MARK_AS = [
         {
@@ -83,8 +85,7 @@ function ActionsEditor({ filter, onChange = noop, errors = {} }) {
         }
 
         if (mode === 'moveTo') {
-            const MAP = labelModel.getLabelsMap();
-            const key = Actions.FileInto.find((path) => !MAP[path]);
+            const key = Actions.FileInto.find((path) => !labelsMap[path]);
             if (key) {
                 return key;
             }
@@ -92,9 +93,8 @@ function ActionsEditor({ filter, onChange = noop, errors = {} }) {
     };
 
     const getSelectedLabels = () => {
-        const MAP = labelModel.getLabelsMap();
         const { Labels = [], FileInto } = Actions;
-        const toLabel = (path) => MAP[path];
+        const toLabel = (path) => labelsMap[path];
         const list = FileInto.filter(toLabel);
         return [...new Set(Labels.concat(list))].map(toLabel);
     };
@@ -113,7 +113,7 @@ function ActionsEditor({ filter, onChange = noop, errors = {} }) {
                 <Label htmlFor="actions">{c('New Label form').t`Actions`}</Label>
                 <Field>
                     <div className="mb1">
-                        {loading ? (
+                        {loadingLabels || loadingFolders ? (
                             <Loader />
                         ) : (
                             <LabelActions
@@ -124,7 +124,7 @@ function ActionsEditor({ filter, onChange = noop, errors = {} }) {
                         )}
                     </div>
                     <div className="mb1">
-                        {loading ? (
+                        {loadingLabels || loadingFolders ? (
                             <Loader />
                         ) : (
                             <Select
