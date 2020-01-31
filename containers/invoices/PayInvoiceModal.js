@@ -43,7 +43,7 @@ const PayInvoiceModal = ({ invoice, fetchInvoices, ...rest }) => {
 
     return (
         <FormModal
-            small
+            size="small"
             onSubmit={() => withLoading(handleSubmit())}
             loading={loading}
             close={c('Action').t`Close`}

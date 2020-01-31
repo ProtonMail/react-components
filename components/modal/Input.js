@@ -48,7 +48,7 @@ const InputModal = ({
             close={cancel}
             submit={submit}
             title={title}
-            small
+            size="small"
             {...rest}
         >
             <Row>

@@ -18,7 +18,7 @@ const AskAuthModal = ({ onClose, onSubmit, error, hideTotp, ...rest }) => {
             close={c('Label').t`Cancel`}
             submit={c('Label').t`Submit`}
             error={error}
-            small
+            size="small"
             {...rest}
         >
             <PasswordTotpInputs

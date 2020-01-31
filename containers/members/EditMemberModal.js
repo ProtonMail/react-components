@@ -54,7 +54,7 @@ const EditMemberModal = ({ onClose, member, ...rest }) => {
             loading={loading}
             save={c('Action').t`Save`}
             title={c('Title').t`Edit user`}
-            small
+            size="small"
             {...rest}
         >
             <Row>

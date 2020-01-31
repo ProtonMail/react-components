@@ -34,7 +34,7 @@ const UnlockModal = ({ onClose, onSuccess, ...rest }) => {
             close={c('Label').t`Cancel`}
             submit={c('Label').t`Submit`}
             loading={loading}
-            small
+            size="small"
             {...rest}
         >
             <Row>
