@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Icon, TreeView } from 'react-components';
 
 import ActionsLabel from './ActionsLabel';
+import ToggleNotify from './ToggleNotify';
 
 const ROOT = '0';
 
@@ -89,9 +90,10 @@ const FolderTreeViewList = ({ items = [] }) => {
                             <div className="flex flex-nowrap flex-spacebetween pl1 pr1 pt0-5 pb0-5 border-bottom">
                                 <div>
                                     <Icon name="text-justify" className="mr1" />
-                                    <Icon name="folder" className={`ml${level} mr0-5`} />
+                                    <Icon name="folder" className="mr0-5" />
                                     <span>{item.Name}</span>
                                 </div>
+                                <ToggleNotify label={item} />
                                 <ActionsLabel label={item} />
                             </div>
                             {grabbed && grabbed !== item.ID ? (
