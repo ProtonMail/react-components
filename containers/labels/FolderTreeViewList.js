@@ -87,14 +87,14 @@ const FolderTreeViewList = ({ items = [] }) => {
                                     onDrop={() => clearGrabbed()}
                                 />
                             ) : null}
-                            <div className="flex flex-nowrap flex-spacebetween pl1 pr1 pt0-5 pb0-5 border-bottom">
-                                <div>
-                                    <Icon name="text-justify" className="mr1" />
-                                    <Icon name="folder" className="mr0-5" />
+                            <div className="flex flex-nowrap flex-items-center flex-spacebetween w100 pt0-5 pb0-5 border-bottom treeview-item">
+                                <div className="treeview-item-name flex flex-nowrap flex-items-center flex-item-fluid">
+                                    <Icon name="text-justify" className="mr1 flex-item-noshrink" />
+                                    <Icon name="folder" className="mr0-5 flex-item-noshrink" />
                                     <span>{item.Name}</span>
                                 </div>
-                                <ToggleNotify label={item} />
-                                <ActionsLabel label={item} />
+                                <div className="treeview-toggle w140e"><ToggleNotify label={item} /></div>
+                                <div className="treeview-actions w140e flex flex-column flex-items-end"><div className="mtauto mbauto"><ActionsLabel label={item} /></div></div>
                             </div>
                             {grabbed && grabbed !== item.ID ? (
                                 <DropArea
