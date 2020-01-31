@@ -112,23 +112,13 @@ const FolderTreeViewList = ({ items = [] }) => {
         });
     };
 
-    const treeview = {
-        toggled: true,
-        disabled: true,
-        children: buildTreeView(rootFolders)
-    };
-
     useEffect(() => {
         return () => {
             clearTimeout(timeoutRef.current);
         };
     }, []);
 
-    return (
-        <div className="folderTreeViewList-container">
-            <TreeView {...treeview} />
-        </div>
-    );
+    return <div className="folderTreeViewList-container">{buildTreeView(rootFolders)}</div>;
 };
 
 FolderTreeViewList.propTypes = {
