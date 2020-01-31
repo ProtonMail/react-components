@@ -17,12 +17,13 @@ import {
     useUser,
     useNotifications,
     useOrganization,
+    useSubscription,
     useModals
 } from 'react-components';
 import { DEFAULT_CURRENCY, DEFAULT_CYCLE, CYCLE, CURRENCIES, PAYMENT_METHOD_TYPES } from 'proton-shared/lib/constants';
 import { checkSubscription, subscribe, deleteSubscription } from 'proton-shared/lib/api/payments';
 import { isLoyal } from 'proton-shared/lib/helpers/organization';
-import { clearPlanIDs } from 'proton-shared/lib/helpers/subscription';
+import { clearPlanIDs, getPlanIDs } from 'proton-shared/lib/helpers/subscription';
 
 import { SUBSCRIPTION_STEPS } from './constants';
 import NewSubscriptionSubmitButton from './NewSubscriptionSubmitButton';
@@ -58,6 +59,7 @@ const NewSubscriptionModal = ({
 
     const api = useApi();
     const [user] = useUser();
+    const [subscription, loadingSubscription] = useSubscription();
     const { call } = useEventManager();
     const { createModal } = useModals();
     const { createNotification } = useNotifications();
@@ -165,6 +167,10 @@ const NewSubscriptionModal = ({
             if (error.name === 'OfflineError') {
                 setStep(SUBSCRIPTION_STEPS.NETWORK_ERROR);
             }
+            setModel({
+                ...model,
+                planIDs: getPlanIDs(subscription)
+            });
         }
     };
 
@@ -239,7 +245,7 @@ const NewSubscriptionModal = ({
                 user.isFree && 'is-free-user'
             ])}
             title={TITLE[step]}
-            loading={loading || loadingPlans || loadingVpnCountries || loadingOrganization}
+            loading={loading || loadingPlans || loadingVpnCountries || loadingOrganization || loadingSubscription}
             onSubmit={() => withLoading(handleCheckout())}
             onClose={handleClose}
             {...rest}
