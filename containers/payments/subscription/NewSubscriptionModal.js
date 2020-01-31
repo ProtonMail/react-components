@@ -167,10 +167,12 @@ const NewSubscriptionModal = ({
             if (error.name === 'OfflineError') {
                 setStep(SUBSCRIPTION_STEPS.NETWORK_ERROR);
             }
-            return check({
-                ...model,
-                planIDs: getPlanIDs(subscription)
-            });
+            if (step === SUBSCRIPTION_STEPS.CUSTOMIZATION) {
+                return check({
+                    ...model,
+                    planIDs: getPlanIDs(subscription)
+                });
+            }
         }
     };
 
