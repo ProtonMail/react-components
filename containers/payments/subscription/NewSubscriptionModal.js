@@ -167,7 +167,7 @@ const NewSubscriptionModal = ({
             if (error.name === 'OfflineError') {
                 setStep(SUBSCRIPTION_STEPS.NETWORK_ERROR);
             }
-            setModel({
+            return check({
                 ...model,
                 planIDs: getPlanIDs(subscription)
             });
