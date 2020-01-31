@@ -4,11 +4,11 @@ export interface NodeTreeView {
     role?: string;
     disabled?: boolean;
     loading?: boolean;
-    icon?: React.ReactNode;
-    name: React.ReactNode;
+    content?: React.ReactNode;
     toggled?: boolean;
     focussed?: boolean;
     children?: React.ReactNode;
+    onDragEnd?: () => void;
     onToggle?: () => void;
     onFocus?: () => void;
     onDragStart?: () => void;
@@ -22,13 +22,13 @@ export interface NodeTreeView {
 const TreeView = ({
     draggable = false,
     role = 'tree',
+    onDragEnd,
     onDragStart,
     onDragOver,
     onDrop,
     onDrag,
     disabled,
-    icon,
-    name,
+    content,
     toggled = false,
     focussed = false,
     children,
@@ -50,11 +50,6 @@ const TreeView = ({
         <ul role={role} className="treeview-container unstyled mt0 mb0">
             <li
                 title={title}
-                draggable={!disabled && draggable}
-                onDragStart={onDragStart}
-                onDragOver={onDragOver}
-                onDrop={onDrop}
-                onDrag={onDrag}
                 role={children ? 'treeitem' : 'none'}
                 tabIndex={focussed ? 0 : -1}
                 onClick={handleClick}
@@ -62,8 +57,17 @@ const TreeView = ({
                 aria-expanded={toggled}
                 className="treeview-item"
             >
-                {icon}
-                {name}
+                <div
+                    className="treeview-content"
+                    draggable={!disabled && draggable}
+                    onDragStart={onDragStart}
+                    onDragEnd={onDragEnd}
+                    onDragOver={onDragOver}
+                    onDrop={onDrop}
+                    onDrag={onDrag}
+                >
+                    {content}
+                </div>
                 {toggled ? children : null}
             </li>
         </ul>
