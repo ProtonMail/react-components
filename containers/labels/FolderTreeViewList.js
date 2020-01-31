@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Icon, TreeView } from 'react-components';
 
+import './FolderTreeViewList.scss';
+
 const ROOT = '0';
 
 const buildTreeView = (items = [], parents = {}) => {
@@ -9,9 +11,9 @@ const buildTreeView = (items = [], parents = {}) => {
         return (
             <TreeView
                 key={item.ID}
-                icon={<Icon name="folder" color={item.Color} />}
+                icon={<Icon name="folder" className="mr1" />}
                 name={item.Name}
-                toggled={!!item.Expanded}
+                toggled={true}
                 title={item.Path}
             >
                 {buildTreeView(parents[item.ID], parents)}
@@ -40,7 +42,11 @@ const FolderTreeViewList = ({ items = [] }) => {
         children: buildTreeView(rootFolders, parents)
     };
 
-    return <TreeView {...treeview} />;
+    return (
+        <div className="folderTreeViewList-container">
+            <TreeView {...treeview} />
+        </div>
+    );
 };
 
 FolderTreeViewList.propTypes = {

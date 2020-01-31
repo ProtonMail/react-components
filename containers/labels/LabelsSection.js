@@ -60,8 +60,7 @@ function LabelsSection() {
                 className="mt1 mb1"
                 learnMore="https://protonmail.com/support/knowledge-base/creating-folders/"
             >
-                {c('LabelSettings')
-                    .t`Multiple labels can be applied to a single message, but a message can only be in a single folder.`}
+                {c('LabelSettings').t`A message can only be in filed in a single Folder at a time. .`}
             </Alert>
             <div className="mb1">
                 <PrimaryButton onClick={() => createModal(<EditLabelModal type="folder" />)}>
@@ -74,6 +73,14 @@ function LabelsSection() {
                 <Alert>{c('LabelSettings').t`No folders available`}</Alert>
             )}
             <SubTitle>{c('LabelSettings').t`Labels`}</SubTitle>
+            <Alert
+                type="info"
+                className="mt1 mb1"
+                learnMore="https://protonmail.com/support/knowledge-base/creating-folders/"
+            >
+                {c('LabelSettings')
+                    .t`Multiple labels can be applied to a single message, but a message can only be in a single folder.`}
+            </Alert>
             <div className="mb1">
                 <PrimaryButton onClick={() => createModal(<EditLabelModal type="label" />)}>
                     {c('Action').t`Add label`}
