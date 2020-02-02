@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Portal from '../portal/Portal';
 import { classnames } from '../../helpers/component';
+import useFocusTrap from '../../hooks/useFocusTrap';
 
 const CLASSES = {
     MODAL: 'pm-modal',
@@ -30,9 +31,15 @@ const Dialog = ({
         }
     };
 
+    const { onKeyDown, ref } = useFocusTrap();
+
     return (
         <Portal>
-            <div className={classnames(['pm-modalContainer', isBehind && 'pm-modalContainer--inBackground'])}>
+            <div
+                className={classnames(['pm-modalContainer', isBehind && 'pm-modalContainer--inBackground'])}
+                ref={ref}
+                onKeyDown={onKeyDown}
+            >
                 <dialog
                     aria-labelledby={modalTitleID}
                     aria-modal="true"
