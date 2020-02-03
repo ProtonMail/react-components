@@ -1,12 +1,12 @@
 import React from 'react';
 import { c } from 'ttag';
-import PropTypes from 'prop-types';
 import {
     SubTitle,
     Row,
     Field,
     Label,
     Select,
+    lazyLocales as locales,
     useApi,
     useConfig,
     useLoading,
@@ -19,7 +19,7 @@ import { updateLocale } from 'proton-shared/lib/api/settings';
 import loadLocale from 'proton-shared/lib/i18n/loadLocale';
 import { getBrowserLocale, getClosestMatches } from 'proton-shared/lib/i18n/helper';
 
-const LanguageSection = ({ locales = {} }) => {
+const LanguageSection = () => {
     const api = useApi();
     const { call } = useEventManager();
     const { LOCALES = {} } = useConfig();
@@ -68,10 +68,6 @@ const LanguageSection = ({ locales = {} }) => {
             </Row>
         </>
     );
-};
-
-LanguageSection.propTypes = {
-    locales: PropTypes.object.isRequired
 };
 
 export default LanguageSection;

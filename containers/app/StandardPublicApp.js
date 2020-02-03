@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { LoaderPage, GenericError, ModalsChildren } from 'react-components';
+import { LoaderPage, GenericError, ModalsChildren, lazyLocales as locales } from 'react-components';
 import PropTypes from 'prop-types';
 import { loadOpenPGP } from 'proton-shared/lib/openpgp';
 import { getBrowserLocale, getClosestMatches } from 'proton-shared/lib/i18n/helper';
 import loadLocale from 'proton-shared/lib/i18n/loadLocale';
 
-const StandardPublicApp = ({ locales = {}, openpgpConfig, children }) => {
+const StandardPublicApp = ({ openpgpConfig, children }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
 
@@ -46,7 +46,6 @@ const StandardPublicApp = ({ locales = {}, openpgpConfig, children }) => {
 };
 
 StandardPublicApp.propTypes = {
-    locales: PropTypes.object,
     openpgpConfig: PropTypes.object,
     children: PropTypes.node
 };
