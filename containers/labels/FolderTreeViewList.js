@@ -104,7 +104,7 @@ const FolderTreeViewList = ({ items = [] }) => {
                                     onDrop={() => clearGrabbed()}
                                 />
                             ) : null}
-                            <div className="flex flex-nowrap flex-items-center flex-spacebetween w100 pt0-5 pb0-5 border-bottom treeview-item">
+                            <div className="flex flex-nowrap flex-items-center flex-spacebetween w100 pt0-5 pb0-5 treeview-item">
                                 <div className="treeview-item-name flex flex-nowrap flex-items-center flex-item-fluid">
                                     <Icon name="text-justify" className="mr1 flex-item-noshrink" />
                                     <Icon name="folder" className="mr0-5 flex-item-noshrink" />
