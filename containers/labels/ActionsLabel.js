@@ -51,11 +51,13 @@ function ActionsLabel({ label, onChange }) {
         createNotification({
             text: c('Success notification').t`${label.Name} removed`
         });
-        onChange('remove', label);
+        onChange && onChange('remove', label);
     };
 
     const handleEdit = () => {
-        createModal(<EditLabelModal label={label} mode="edition" onEdit={(label) => onChange('update', label)} />);
+        createModal(
+            <EditLabelModal label={label} mode="edition" onEdit={(label) => onChange && onChange('update', label)} />
+        );
     };
 
     const list = [
@@ -76,7 +78,7 @@ function ActionsLabel({ label, onChange }) {
 
 ActionsLabel.propTypes = {
     label: PropTypes.object.isRequired,
-    onChange: PropTypes.func.isRequired
+    onChange: PropTypes.func
 };
 
 export default ActionsLabel;

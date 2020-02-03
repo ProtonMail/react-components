@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Icon, TreeView } from 'react-components';
+import { orderBy } from 'proton-shared/lib/helpers/array';
+import { c } from 'ttag';
 
 import ActionsLabel from './ActionsLabel';
 import ToggleNotify from './ToggleNotify';
@@ -14,6 +16,19 @@ const getParents = (items = []) => {
         acc[ParentID].push(item);
         return acc;
     }, {});
+};
+
+const Header = () => {
+    return (
+        <div className="flex flex-nowrap w100">
+            <span className="bold uppercase flex-item-fluid">
+                <Icon name="arrow-cross" className="mr1" />
+                {c('Header').t`Name`}
+            </span>
+            <span className="bold uppercase w140e">{c('Header').t`Notification`}</span>
+            <span className="bold uppercase w140e">{c('Header').t`Action`}</span>
+        </div>
+    );
 };
 
 const DropArea = ({ onDragOver, onDrop }) => {
@@ -42,6 +57,8 @@ DropArea.propTypes = {
     onDrop: PropTypes.func
 };
 
+const orderFolders = (folders = []) => orderBy(folders, 'Order');
+
 const FolderTreeViewList = ({ items = [] }) => {
     const [grabbed, setGrabbed] = useState();
     const overRef = useRef();
@@ -54,7 +71,7 @@ const FolderTreeViewList = ({ items = [] }) => {
     };
 
     const buildTreeView = (items = [], level = 0) => {
-        return items.map((item) => {
+        return orderFolders(items).map((item) => {
             return (
                 <TreeView
                     onDragStart={() => {
@@ -72,7 +89,7 @@ const FolderTreeViewList = ({ items = [] }) => {
                             return;
                         }
                     }}
-                    draggable={true}
+                    // draggable={true}
                     key={item.ID}
                     toggled={true}
                     title={item.Path}
@@ -93,8 +110,14 @@ const FolderTreeViewList = ({ items = [] }) => {
                                     <Icon name="folder" className="mr0-5 flex-item-noshrink" />
                                     <span>{item.Name}</span>
                                 </div>
-                                <div className="treeview-toggle w140e"><ToggleNotify label={item} /></div>
-                                <div className="treeview-actions w140e flex flex-column flex-items-end"><div className="mtauto mbauto"><ActionsLabel label={item} /></div></div>
+                                <div className="treeview-toggle w140e">
+                                    <ToggleNotify label={item} />
+                                </div>
+                                <div className="treeview-actions w140e flex flex-column flex-items-end">
+                                    <div className="mtauto mbauto">
+                                        <ActionsLabel label={item} />
+                                    </div>
+                                </div>
                             </div>
                             {grabbed && grabbed !== item.ID ? (
                                 <DropArea
@@ -120,7 +143,12 @@ const FolderTreeViewList = ({ items = [] }) => {
         };
     }, []);
 
-    return <div className="folderTreeViewList-container">{buildTreeView(rootFolders)}</div>;
+    return (
+        <>
+            <Header />
+            {buildTreeView(rootFolders)}
+        </>
+    );
 };
 
 FolderTreeViewList.propTypes = {
