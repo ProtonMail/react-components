@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Icon, TreeView } from 'react-components';
+import { classnames, Icon, TreeView } from 'react-components';
 import { orderBy } from 'proton-shared/lib/helpers/array';
 import { c } from 'ttag';
 
@@ -8,6 +8,9 @@ import ActionsLabel from './ActionsLabel';
 import ToggleNotify from './ToggleNotify';
 
 const ROOT = '0';
+const IN = 'in';
+const AFTER = 'after';
+const BEFORE = 'before';
 
 const getParents = (items = []) => {
     return items.reduce((acc, item) => {
@@ -31,36 +34,11 @@ const Header = () => {
     );
 };
 
-const DropArea = ({ onDragOver, onDrop }) => {
-    const [hover, setHover] = useState(false);
-    return (
-        <div
-            onDrop={(event) => {
-                setHover(false);
-                onDrop && onDrop(event);
-            }}
-            onDragOver={(event) => {
-                setHover(true);
-                onDragOver && onDragOver(event);
-            }}
-            onDragLeave={() => setHover(false)}
-            style={{
-                backgroundColor: hover ? 'coral' : 'lightyellow',
-                height: '1em'
-            }}
-        />
-    );
-};
-
-DropArea.propTypes = {
-    onDragOver: PropTypes.func,
-    onDrop: PropTypes.func
-};
-
 const orderFolders = (folders = []) => orderBy(folders, 'Order');
 
 const FolderTreeViewList = ({ items = [] }) => {
     const [grabbed, setGrabbed] = useState();
+    const [position, setPosition] = useState();
     const overRef = useRef();
     const timeoutRef = useRef();
     const parents = getParents(items);
@@ -72,6 +50,7 @@ const FolderTreeViewList = ({ items = [] }) => {
 
     const buildTreeView = (items = [], level = 0) => {
         return orderFolders(items).map((item) => {
+            const isOverred = item.ID === overRef.current;
             return (
                 <TreeView
                     onDragStart={() => {
@@ -82,53 +61,53 @@ const FolderTreeViewList = ({ items = [] }) => {
                     }}
                     onDragOver={(event) => {
                         event.preventDefault();
+                        const { currentTarget, clientY } = event;
+                        const { height, y } = currentTarget.getBoundingClientRect();
                         overRef.current = item.ID;
+                        const quarter = height / 4;
+                        const pointer = clientY - y;
+
+                        if (pointer < quarter) {
+                            setPosition(BEFORE);
+                        } else if (pointer > quarter * 3) {
+                            setPosition(AFTER);
+                        } else {
+                            setPosition(IN);
+                        }
                     }}
                     onDrop={() => {
                         if (grabbed === overRef.current) {
                             return;
                         }
+                        // console.log({ grabbed, position, dest: overRef.current });
                     }}
-                    // draggable={true}
+                    draggable={true}
                     key={item.ID}
                     toggled={true}
                     title={item.Path}
                     content={
-                        <>
-                            {grabbed && grabbed !== item.ID ? (
-                                <DropArea
-                                    onDragOver={(event) => {
-                                        event.preventDefault();
-                                        overRef.current = `before:${item.ID}`;
-                                    }}
-                                    onDrop={() => clearGrabbed()}
-                                />
-                            ) : null}
-                            <div className="flex flex-nowrap flex-items-center flex-spacebetween w100 pt0-5 pb0-5 treeview-item">
-                                <div className="treeview-item-name flex flex-nowrap flex-items-center flex-item-fluid">
-                                    <Icon name="text-justify" className="mr1 flex-item-noshrink" />
-                                    <Icon name="folder" className="mr0-5 flex-item-noshrink" />
-                                    <span>{item.Name}</span>
-                                </div>
-                                <div className="treeview-toggle w140e">
-                                    <ToggleNotify label={item} />
-                                </div>
-                                <div className="treeview-actions w140e flex flex-column flex-items-end">
-                                    <div className="mtauto mbauto">
-                                        <ActionsLabel label={item} />
-                                    </div>
+                        <div
+                            className={classnames([
+                                'flex flex-nowrap flex-items-center flex-spacebetween w100 pt0-5 pb0-5 treeview-item',
+                                isOverred && position === BEFORE && 'border-top',
+                                isOverred && position === AFTER && 'border-bottom',
+                                isOverred && position === IN && 'bg-global-highlight'
+                            ])}
+                        >
+                            <div className="treeview-item-name flex flex-nowrap flex-items-center flex-item-fluid">
+                                <Icon name="text-justify" className="mr1 flex-item-noshrink" />
+                                <Icon name="folder" className="mr0-5 flex-item-noshrink" />
+                                <span>{item.Name}</span>
+                            </div>
+                            <div className="treeview-toggle w140e">
+                                <ToggleNotify label={item} />
+                            </div>
+                            <div className="treeview-actions w140e flex flex-column flex-items-end">
+                                <div className="mtauto mbauto">
+                                    <ActionsLabel label={item} />
                                 </div>
                             </div>
-                            {grabbed && grabbed !== item.ID ? (
-                                <DropArea
-                                    onDragOver={(event) => {
-                                        event.preventDefault();
-                                        overRef.current = `after:${item.ID}`;
-                                    }}
-                                    onDrop={() => clearGrabbed()}
-                                />
-                            ) : null}
-                        </>
+                        </div>
                     }
                 >
                     {buildTreeView(parents[item.ID], level + 1)}
