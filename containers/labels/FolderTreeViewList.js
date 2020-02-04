@@ -61,11 +61,13 @@ const FolderTreeViewList = ({ items = [] }) => {
                     }}
                     onDragOver={(event) => {
                         event.preventDefault();
+
                         const { currentTarget, clientY } = event;
                         const { height, y } = currentTarget.getBoundingClientRect();
-                        overRef.current = item.ID;
                         const quarter = height / 4;
                         const pointer = clientY - y;
+
+                        overRef.current = item.ID;
 
                         if (pointer < quarter) {
                             setPosition(BEFORE);
@@ -84,6 +86,7 @@ const FolderTreeViewList = ({ items = [] }) => {
                     draggable={true}
                     key={item.ID}
                     toggled={true}
+                    focussed={false}
                     title={item.Path}
                     content={
                         <div
