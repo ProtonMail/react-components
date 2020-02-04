@@ -58,7 +58,7 @@ const StorageSpaceStatus = ({ upgradeButton }) => {
             >
                 <div className="dropDown-content">
                     <div className="absolute top-right mt0-5r mr0-5r">
-                        <button className="flex flex-items-center" title={c('Action').t`Close`}>
+                        <button type="button" className="flex flex-items-center" title={c('Action').t`Close`}>
                             <Icon name="close" />
                             <span className="sr-only">{c('Action').t`Close`}</span>
                         </button>
