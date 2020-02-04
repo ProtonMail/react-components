@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import { FormModal, useEventManager, useLoading, useApi, useNotifications } from 'react-components';
-import { LABEL_EXCLUSIVE, LABEL_COLORS } from 'proton-shared/lib/constants';
+import { LABEL_EXCLUSIVE, LABEL_COLORS, ROOT_FOLDER, LABEL_TYPE } from 'proton-shared/lib/constants';
 import { randomIntFromInterval } from 'proton-shared/lib/helpers/function';
-import { createLabel, updateLabel } from 'proton-shared/lib/api/labels';
+import { create as createLabel, updateLabel } from 'proton-shared/lib/api/labels';
 import { noop } from 'proton-shared/lib/helpers/function';
 
 import NewLabelForm from '../NewLabelForm';
 
-function EditLabelModal({ label, mode = 'create', onEdit = noop, onAdd = noop, ...props }) {
+function EditLabelModal({ label, mode = 'create', onEdit = noop, onAdd = noop, type = 'label', ...props }) {
     const { call } = useEventManager();
     const { createNotification } = useNotifications();
     const api = useApi();
@@ -34,7 +34,8 @@ function EditLabelModal({ label, mode = 'create', onEdit = noop, onAdd = noop, .
         label || {
             Name: '',
             Color: LABEL_COLORS[randomIntFromInterval(0, LABEL_COLORS.length - 1)],
-            Exclusive: +(props.type === 'folder')
+            Type: type === 'folder' ? LABEL_TYPE.MESSAGE_FOLDER : LABEL_TYPE.MESSAGE_LABEL,
+            ParentID: type === 'folder' ? ROOT_FOLDER : undefined
         }
     );
 
@@ -76,9 +77,21 @@ function EditLabelModal({ label, mode = 'create', onEdit = noop, onAdd = noop, .
         });
     };
 
+    const handleChangeParentID = (ParentID) => {
+        setModel({
+            ...model,
+            ParentID
+        });
+    };
+
     return (
-        <FormModal onSubmit={handleSubmit} loading={loading} title={I18N[mode](label, props.type)} {...props}>
-            <NewLabelForm label={model} onChangeName={handleChangeName} onChangeColor={handleChangeColor} />
+        <FormModal onSubmit={handleSubmit} loading={loading} title={I18N[mode](label, type)} {...props}>
+            <NewLabelForm
+                label={model}
+                onChangeName={handleChangeName}
+                onChangeColor={handleChangeColor}
+                onChangeParentID={handleChangeParentID}
+            />
         </FormModal>
     );
 }

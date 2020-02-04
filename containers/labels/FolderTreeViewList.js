@@ -1,25 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { classnames, Icon, TreeView } from 'react-components';
-import { orderBy } from 'proton-shared/lib/helpers/array';
+import { classnames, Icon, TreeView, useApi, useLoading, useEventManager } from 'react-components';
+import { order, getParents } from 'proton-shared/lib/helpers/folder';
+import { orderFolders, updateLabel } from 'proton-shared/lib/api/labels';
+import { ROOT_FOLDER } from 'proton-shared/lib/constants';
 import { c } from 'ttag';
 
 import ActionsLabel from './ActionsLabel';
 import ToggleNotify from './ToggleNotify';
 
-const ROOT = '0';
 const IN = 'in';
 const AFTER = 'after';
 const BEFORE = 'before';
-
-const getParents = (items = []) => {
-    return items.reduce((acc, item) => {
-        const { ParentID = ROOT } = item;
-        acc[ParentID] = acc[ParentID] || [];
-        acc[ParentID].push(item);
-        return acc;
-    }, {});
-};
 
 const Header = () => {
     return (
@@ -34,30 +26,72 @@ const Header = () => {
     );
 };
 
-const orderFolders = (folders = []) => orderBy(folders, 'Order');
-
 const FolderTreeViewList = ({ items = [] }) => {
+    const api = useApi();
+    const { call } = useEventManager();
+    const [loading, withLoading] = useLoading();
     const [grabbed, setGrabbed] = useState();
     const [position, setPosition] = useState();
-    const overRef = useRef();
+    const overRef = useRef({});
     const timeoutRef = useRef();
     const parents = getParents(items);
-    const rootFolders = items.filter(({ ParentID = ROOT }) => ParentID === ROOT);
+    const rootFolders = items.filter(({ ParentID = ROOT_FOLDER }) => ParentID === ROOT_FOLDER);
 
-    const clearGrabbed = () => {
-        timeoutRef.current = setTimeout(() => setGrabbed(null), 200);
+    const clear = () => {
+        // Delay clear to execute onDrop first
+        timeoutRef.current = setTimeout(() => {
+            setGrabbed(null);
+            setPosition(null);
+            overRef.current = {};
+        }, 200);
     };
 
     const buildTreeView = (items = [], level = 0) => {
-        return orderFolders(items).map((item) => {
-            const isOverred = item.ID === overRef.current;
+        return order(items).map((item) => {
+            const isOverred = item.ID === overRef.current.ID;
+            const handleDrop = async () => {
+                if (grabbed.ID === overRef.current.ID) {
+                    await api(
+                        orderFolders({
+                            LabelIDs: [],
+                            ParentID: overRef.current.ParentID
+                        })
+                    );
+                    return call();
+                }
+
+                if (position === IN) {
+                    await api(updateLabel(grabbed.ID, { ...grabbed, ParentID: overRef.current.ID }));
+                    return call();
+                }
+
+                const { ParentID = ROOT_FOLDER } = overRef.current;
+                const LabelIDs = order(parents[overRef.current.ID])
+                    .filter(({ ID }) => ID !== grabbed.ID)
+                    .reduce((acc, folder) => {
+                        const isOverred = folder.ID === overRef.current.ID;
+                        if (isOverred && position === BEFORE) {
+                            acc.push(grabbed);
+                        }
+                        acc.push(folder);
+                        if (isOverred && position === AFTER) {
+                            acc.push(grabbed);
+                        }
+                        return acc;
+                    }, [])
+                    .map(({ ID }) => ID);
+
+                await api(updateLabel(grabbed.ID, { ...grabbed, ParentID }));
+                await api(orderFolders({ LabelIDs, ParentID }));
+                return call();
+            };
             return (
                 <TreeView
                     onDragStart={() => {
-                        setGrabbed(item.ID);
+                        setGrabbed(item);
                     }}
                     onDragEnd={() => {
-                        clearGrabbed();
+                        clear();
                     }}
                     onDragOver={(event) => {
                         event.preventDefault();
@@ -67,7 +101,7 @@ const FolderTreeViewList = ({ items = [] }) => {
                         const quarter = height / 4;
                         const pointer = clientY - y;
 
-                        overRef.current = item.ID;
+                        overRef.current = item;
 
                         if (pointer < quarter) {
                             setPosition(BEFORE);
@@ -77,13 +111,9 @@ const FolderTreeViewList = ({ items = [] }) => {
                             setPosition(IN);
                         }
                     }}
-                    onDrop={() => {
-                        if (grabbed === overRef.current) {
-                            return;
-                        }
-                        // console.log({ grabbed, position, dest: overRef.current });
-                    }}
+                    onDrop={() => withLoading(handleDrop())}
                     draggable={true}
+                    disabled={loading}
                     key={item.ID}
                     toggled={true}
                     focussed={false}
