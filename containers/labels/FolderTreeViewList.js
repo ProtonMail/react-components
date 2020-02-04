@@ -66,7 +66,7 @@ const FolderTreeViewList = ({ items = [] }) => {
                 }
 
                 const { ParentID = ROOT_FOLDER } = overRef.current;
-                const LabelIDs = order(parents[overRef.current.ID])
+                const LabelIDs = order(parents[ParentID])
                     .filter(({ ID }) => ID !== grabbed.ID)
                     .reduce((acc, folder) => {
                         const isOverred = folder.ID === overRef.current.ID;
