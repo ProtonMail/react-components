@@ -16,19 +16,17 @@ function LabelItem({ label, onEditLabel = noop, onRemoveLabel = noop, ...rest })
     return (
         <OrderableTableRow
             cells={[
-                <div key="0" className="flex flex-spacebetween">
-                    <div className="flex flex-nowrap">
-                        <Icon
-                            name="label"
-                            style={{ fill: Color }}
-                            className="icon-16p flex-item-noshrink mr1 mtauto mbauto"
-                        />
-                        <span className="ellipsis" data-test-id="folders/labels:item-name">
-                            {Name}
-                        </span>
-                    </div>
-                    <ActionsLabel label={label} onChange={handleChange} />
-                </div>
+                <div key="0" className="flex flex-nowrap">
+                    <Icon
+                        name="label"
+                        style={{ fill: Color }}
+                        className="icon-16p flex-item-noshrink mr1 mtauto mbauto"
+                    />
+                    <span className="ellipsis" data-test-id="folders/labels:item-name">
+                        {Name}
+                    </span>
+                </div>,
+                <ActionsLabel key="2" label={label} onChange={handleChange} />
             ]}
             {...rest}
         />
