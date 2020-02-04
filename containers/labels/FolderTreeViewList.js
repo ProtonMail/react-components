@@ -15,7 +15,7 @@ const BEFORE = 'before';
 
 const Header = () => {
     return (
-        <div className="flex flex-nowrap w100">
+        <div className="flex flex-nowrap w100 border-bottom pb0-5">
             <span className="bold uppercase flex-item-fluid">
                 <Icon name="arrow-cross" className="mr1" />
                 {c('Header').t`Name`}

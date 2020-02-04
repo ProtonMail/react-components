@@ -56,7 +56,6 @@ function NewLabelForm({ label, onChangeColor, onChangeName, onChangeParentID }) 
 
 NewLabelForm.propTypes = {
     label: PropTypes.object,
-    type: PropTypes.string.isRequired,
     onChangeName: PropTypes.func.isRequired,
     onChangeColor: PropTypes.func.isRequired,
     onChangeParentID: PropTypes.func
