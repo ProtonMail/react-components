@@ -49,6 +49,7 @@ const FolderTreeViewList = ({ items = [] }) => {
     const buildTreeView = (items = [], level = 0) => {
         return order(items).map((item) => {
             const isOverred = item.ID === overRef.current.ID;
+            const hasSubFolders = Array.isArray(parents[item.ID]) && parents[item.ID].length;
             const handleDrop = async () => {
                 if (grabbed.ID === overRef.current.ID) {
                     await api(
@@ -129,7 +130,10 @@ const FolderTreeViewList = ({ items = [] }) => {
                         >
                             <div className="treeview-item-name flex flex-nowrap flex-items-center flex-item-fluid">
                                 <Icon name="text-justify" className="mr1 flex-item-noshrink" />
-                                <Icon name="folder" className="mr0-5 flex-item-noshrink" />
+                                <Icon
+                                    name={hasSubFolders ? 'parent-folder' : 'folder'}
+                                    className="mr0-5 flex-item-noshrink"
+                                />
                                 <span>{item.Name}</span>
                             </div>
                             <div className="treeview-toggle w140e">
