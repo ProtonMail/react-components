@@ -1,10 +1,10 @@
 import React from 'react';
 import { c } from 'ttag';
+import { getLightOrDark } from 'proton-shared/lib/themes/helpers';
 import loadingSvgLight from 'design-system/assets/img/shared/loading-atom.svg';
 import loadingSvgDark from 'design-system/assets/img/shared/loading-atom-dark.svg';
 import loadingSmallerSvgLight from 'design-system/assets/img/shared/loading-atom-smaller.svg';
 import loadingSmallerSvgDark from 'design-system/assets/img/shared/loading-atom-smaller-dark.svg';
-import { getLightOrDark } from '../../../proton-shared/lib/themes/helpers';
 
 const MEDIUM_WIDTH = '80';
 const MEDIUM_HEIGHT = '80';
