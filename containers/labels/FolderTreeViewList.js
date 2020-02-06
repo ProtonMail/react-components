@@ -1,6 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { classnames, Icon, TreeView, useApi, useLoading, useEventManager } from 'react-components';
+import {
+    classnames,
+    Icon,
+    TreeViewContainer,
+    TreeViewItem,
+    useApi,
+    useLoading,
+    useEventManager
+} from 'react-components';
 import { order, getParents } from 'proton-shared/lib/helpers/folder';
 import { orderFolders, updateLabel } from 'proton-shared/lib/api/labels';
 import { ROOT_FOLDER } from 'proton-shared/lib/constants';
@@ -47,103 +55,107 @@ const FolderTreeViewList = ({ items = [] }) => {
     };
 
     const buildTreeView = (items = [], level = 0) => {
-        return order(items).map((item) => {
-            const isOverred = item.ID === overRef.current.ID;
-            const hasSubFolders = Array.isArray(parents[item.ID]) && parents[item.ID].length;
-            const handleDrop = async () => {
-                if (position === INSIDE) {
-                    if (grabbed.ID === overRef.current.ID) {
-                        return;
-                    }
-                    await api(updateLabel(grabbed.ID, { ...grabbed, ParentID: overRef.current.ID }));
-                    return call();
-                }
-
-                const { ParentID = ROOT_FOLDER } = overRef.current;
-                const LabelIDs = order(parents[ParentID])
-                    .filter(({ ID }) => ID !== grabbed.ID)
-                    .reduce((acc, folder) => {
-                        const isOverred = folder.ID === overRef.current.ID;
-                        if (isOverred && position === BEFORE) {
-                            acc.push(grabbed);
+        return (
+            <TreeViewContainer>
+                {order(items).map((item) => {
+                    const isOverred = item.ID === overRef.current.ID;
+                    const hasSubFolders = Array.isArray(parents[item.ID]) && parents[item.ID].length;
+                    const handleDrop = async () => {
+                        if (position === INSIDE) {
+                            if (grabbed.ID === overRef.current.ID) {
+                                return;
+                            }
+                            await api(updateLabel(grabbed.ID, { ...grabbed, ParentID: overRef.current.ID }));
+                            return call();
                         }
-                        acc.push(folder);
-                        if (isOverred && position === AFTER) {
-                            acc.push(grabbed);
-                        }
-                        return acc;
-                    }, [])
-                    .map(({ ID }) => ID);
 
-                await api(updateLabel(grabbed.ID, { ...grabbed, ParentID }));
-                await api(orderFolders({ LabelIDs, ParentID }));
-                return call();
-            };
-            return (
-                <TreeView
-                    onDragStart={() => {
-                        setGrabbed(item);
-                    }}
-                    onDragEnd={() => {
-                        clear();
-                    }}
-                    onDragOver={(event) => {
-                        event.preventDefault();
+                        const { ParentID = ROOT_FOLDER } = overRef.current;
+                        const LabelIDs = order(parents[ParentID])
+                            .filter(({ ID }) => ID !== grabbed.ID)
+                            .reduce((acc, folder) => {
+                                const isOverred = folder.ID === overRef.current.ID;
+                                if (isOverred && position === BEFORE) {
+                                    acc.push(grabbed);
+                                }
+                                acc.push(folder);
+                                if (isOverred && position === AFTER) {
+                                    acc.push(grabbed);
+                                }
+                                return acc;
+                            }, [])
+                            .map(({ ID }) => ID);
 
-                        const { currentTarget, clientY } = event;
-                        const { height, y } = currentTarget.getBoundingClientRect();
-                        const quarter = height / 4;
-                        const pointer = clientY - y;
+                        await api(updateLabel(grabbed.ID, { ...grabbed, ParentID }));
+                        await api(orderFolders({ LabelIDs, ParentID }));
+                        return call();
+                    };
+                    return (
+                        <TreeViewItem
+                            onDragStart={() => {
+                                setGrabbed(item);
+                            }}
+                            onDragEnd={() => {
+                                clear();
+                            }}
+                            onDragOver={(event) => {
+                                event.preventDefault();
 
-                        overRef.current = item;
+                                const { currentTarget, clientY } = event;
+                                const { height, y } = currentTarget.getBoundingClientRect();
+                                const quarter = height / 4;
+                                const pointer = clientY - y;
 
-                        if (pointer < quarter) {
-                            setPosition(BEFORE);
-                        } else if (pointer > quarter * 3) {
-                            setPosition(AFTER);
-                        } else {
-                            setPosition(INSIDE);
-                        }
-                    }}
-                    onDrop={() => withLoading(handleDrop())}
-                    draggable={true}
-                    disabled={loading}
-                    key={item.ID}
-                    toggled={true}
-                    focussed={false}
-                    title={item.Path}
-                    content={
-                        <div
-                            className={classnames([
-                                'flex flex-nowrap flex-items-center flex-spacebetween w100 pt0-5 pb0-5 treeview-item',
-                                isOverred && position === BEFORE && 'border-top',
-                                isOverred && position === AFTER && 'border-bottom',
-                                isOverred && position === INSIDE && 'bg-global-highlight'
-                            ])}
-                        >
-                            <div className="treeview-item-name flex flex-nowrap flex-items-center flex-item-fluid">
-                                <Icon name="text-justify" className="mr1 flex-item-noshrink" />
-                                <Icon
-                                    name={hasSubFolders ? 'parent-folder' : 'folder'}
-                                    className="mr0-5 flex-item-noshrink"
-                                />
-                                <span>{item.Name}</span>
-                            </div>
-                            <div className="treeview-toggle w140e">
-                                <ToggleNotify label={item} />
-                            </div>
-                            <div className="treeview-actions w140e flex flex-column flex-items-end">
-                                <div className="mtauto mbauto">
-                                    <ActionsLabel label={item} />
+                                overRef.current = item;
+
+                                if (pointer < quarter) {
+                                    setPosition(BEFORE);
+                                } else if (pointer > quarter * 3) {
+                                    setPosition(AFTER);
+                                } else {
+                                    setPosition(INSIDE);
+                                }
+                            }}
+                            onDrop={() => withLoading(handleDrop())}
+                            draggable={true}
+                            disabled={loading}
+                            key={item.ID}
+                            toggled={true}
+                            focussed={false}
+                            title={item.Path}
+                            content={
+                                <div
+                                    className={classnames([
+                                        'flex flex-nowrap flex-items-center flex-spacebetween w100 pt0-5 pb0-5 treeview-item',
+                                        isOverred && position === BEFORE && 'border-top',
+                                        isOverred && position === AFTER && 'border-bottom',
+                                        isOverred && position === INSIDE && 'bg-global-highlight'
+                                    ])}
+                                >
+                                    <div className="treeview-item-name flex flex-nowrap flex-items-center flex-item-fluid">
+                                        <Icon name="text-justify" className="mr1 flex-item-noshrink" />
+                                        <Icon
+                                            name={hasSubFolders ? 'parent-folder' : 'folder'}
+                                            className="mr0-5 flex-item-noshrink"
+                                        />
+                                        <span>{item.Name}</span>
+                                    </div>
+                                    <div className="treeview-toggle w140e">
+                                        <ToggleNotify label={item} />
+                                    </div>
+                                    <div className="treeview-actions w140e flex flex-column flex-items-end">
+                                        <div className="mtauto mbauto">
+                                            <ActionsLabel label={item} />
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    }
-                >
-                    {buildTreeView(parents[item.ID], level + 1)}
-                </TreeView>
-            );
-        });
+                            }
+                        >
+                            {buildTreeView(parents[item.ID], level + 1)}
+                        </TreeViewItem>
+                    );
+                })}
+            </TreeViewContainer>
+        );
     };
 
     useEffect(() => {
