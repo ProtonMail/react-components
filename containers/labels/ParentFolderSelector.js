@@ -1,16 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useFolders, Loader, Select } from 'react-components';
-import { buildTreeview } from 'proton-shared/lib/helpers/folder';
-import { range } from 'proton-shared/lib/helpers/array';
+import { buildTreeview, formatFolderName } from 'proton-shared/lib/helpers/folder';
 import { ROOT_FOLDER } from 'proton-shared/lib/constants';
 import { c } from 'ttag';
 
-const printDash = (time = 0) =>
-    range(0, time)
-        .map(() => ' ∙ ')
-        .join('');
-const formatOption = ({ Name, ID }, level = 0) => ({ value: ID, text: `${printDash(level)}${Name}` });
+const formatOption = ({ Name, ID }, level = 0) => ({ value: ID, text: formatFolderName(level, Name, ' ∙ ') });
 
 const reducer = (acc = [], folder, level = 0) => {
     acc.push(formatOption(folder, level));
