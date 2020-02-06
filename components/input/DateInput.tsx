@@ -138,7 +138,7 @@ const DateInput = ({
     };
 
     const placeholderInLocale = useMemo(() => {
-        return format(actualDefaultDate, 'PP');
+        return toFormatted(actualDefaultDate, dateLocale);
     }, [dateLocale, defaultDate]);
 
     return (
