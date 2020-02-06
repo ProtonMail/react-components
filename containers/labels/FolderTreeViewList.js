@@ -51,17 +51,10 @@ const FolderTreeViewList = ({ items = [] }) => {
             const isOverred = item.ID === overRef.current.ID;
             const hasSubFolders = Array.isArray(parents[item.ID]) && parents[item.ID].length;
             const handleDrop = async () => {
-                if (grabbed.ID === overRef.current.ID) {
-                    await api(
-                        orderFolders({
-                            LabelIDs: [],
-                            ParentID: overRef.current.ParentID
-                        })
-                    );
-                    return call();
-                }
-
                 if (position === IN) {
+                    if (grabbed.ID === overRef.current.ID) {
+                        return;
+                    }
                     await api(updateLabel(grabbed.ID, { ...grabbed, ParentID: overRef.current.ID }));
                     return call();
                 }
