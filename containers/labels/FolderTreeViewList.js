@@ -125,10 +125,11 @@ const FolderTreeViewList = ({ items = [] }) => {
                             content={
                                 <div
                                     className={classnames([
-                                        'flex flex-nowrap flex-items-center flex-spacebetween w100 pt0-5 pb0-5 treeview-item',
-                                        isOverred && position === BEFORE && 'border-top',
-                                        isOverred && position === AFTER && 'border-bottom',
-                                        isOverred && position === INSIDE && 'bg-global-highlight'
+                                        'flex flex-nowrap flex-items-center flex-spacebetween w100 pt0-5 pb0-5 treeview-item relative',
+                                        isOverred && position === BEFORE && 'treeview-item--moveTop',
+                                        isOverred && position === AFTER && 'treeview-item--moveBottom',
+                                        isOverred && position === INSIDE && 'treeview-item--moveInside',
+                                        grabbed && grabbed.ID === item.ID && 'treeview-item--selfGrabbed'
                                     ])}
                                 >
                                     <div className="treeview-item-name flex flex-nowrap flex-items-center flex-item-fluid">
