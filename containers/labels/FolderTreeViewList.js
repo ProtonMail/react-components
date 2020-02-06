@@ -9,7 +9,7 @@ import { c } from 'ttag';
 import ActionsLabel from './ActionsLabel';
 import ToggleNotify from './ToggleNotify';
 
-const IN = 'in';
+const INSIDE = 'inside';
 const AFTER = 'after';
 const BEFORE = 'before';
 
@@ -51,7 +51,7 @@ const FolderTreeViewList = ({ items = [] }) => {
             const isOverred = item.ID === overRef.current.ID;
             const hasSubFolders = Array.isArray(parents[item.ID]) && parents[item.ID].length;
             const handleDrop = async () => {
-                if (position === IN) {
+                if (position === INSIDE) {
                     if (grabbed.ID === overRef.current.ID) {
                         return;
                     }
@@ -102,7 +102,7 @@ const FolderTreeViewList = ({ items = [] }) => {
                         } else if (pointer > quarter * 3) {
                             setPosition(AFTER);
                         } else {
-                            setPosition(IN);
+                            setPosition(INSIDE);
                         }
                     }}
                     onDrop={() => withLoading(handleDrop())}
@@ -118,7 +118,7 @@ const FolderTreeViewList = ({ items = [] }) => {
                                 'flex flex-nowrap flex-items-center flex-spacebetween w100 pt0-5 pb0-5 treeview-item',
                                 isOverred && position === BEFORE && 'border-top',
                                 isOverred && position === AFTER && 'border-bottom',
-                                isOverred && position === IN && 'bg-global-highlight'
+                                isOverred && position === INSIDE && 'bg-global-highlight'
                             ])}
                         >
                             <div className="treeview-item-name flex flex-nowrap flex-items-center flex-item-fluid">
