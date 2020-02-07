@@ -1,44 +1,38 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { c } from 'ttag';
 import PropTypes from 'prop-types';
 import { SearchInput, Icon, classnames } from 'react-components';
 
-const Searchbox = ({ className = '', advanced, placeholder = '', value = '', onSearch, onChange }) => {
-    const [search, updateSearch] = useState(value);
-
+const Searchbox = ({ delay, className = '', advanced, placeholder = '', value = '', onSearch, onChange }) => {
     const handleSubmit = (event) => {
         event.preventDefault();
-        onSearch && onSearch(search);
+        onSearch && onSearch(value);
     };
 
-    const handleChange = (newSearch) => {
-        updateSearch(newSearch);
-        onChange && onChange(newSearch);
-    };
-
-    const handleClear = () => {
-        updateSearch('');
-        onChange && onChange('');
+    const handleReset = (event) => {
+        event.preventDefault();
+        onChange('');
         onSearch && onSearch('');
     };
-
-    useEffect(() => {
-        // needed in case the search is cleared
-        updateSearch(value);
-    }, [value === '']);
 
     return (
         <form
             role="search"
             name="searchbox"
-            className={classnames(['searchbox-container relative flex-item-centered-vert', className])}
+            className={classnames([
+                'searchbox-container relative flex-item-centered-vert',
+                className,
+                value !== '' && advanced && 'searchbox-container--reset-advanced'
+            ])}
             onSubmit={handleSubmit}
+            onReset={handleReset}
         >
             <label htmlFor="global_search">
                 <span className="sr-only">{placeholder}</span>
                 <SearchInput
-                    value={search}
-                    onChange={handleChange}
+                    delay={delay}
+                    value={value}
+                    onChange={onChange}
                     id="global_search"
                     placeholder={placeholder}
                     className="searchbox-field"
@@ -48,25 +42,24 @@ const Searchbox = ({ className = '', advanced, placeholder = '', value = '', onS
                 <Icon name="search" className="fill-white mauto searchbox-search-button-icon" />
                 <span className="sr-only">{c('Action').t`Search`}</span>
             </button>
-            {// Clear button is hidden when using advanced mode because the buttons use the same spots
-            // If there is the need of having both, a positioning solution will have to be found
-            !advanced && search !== '' && (
-                <button type="button" className="searchbox-advanced-search-button flex" onClick={handleClear}>
+            {value.length ? (
+                <button type="reset" className="searchbox-advanced-search-button flex">
                     <Icon name="close" className="fill-white mauto searchbox-search-button-icon" />
                     <span className="sr-only">{c('Action').t`Clear`}</span>
                 </button>
-            )}
+            ) : null}
             {advanced}
         </form>
     );
 };
 
 Searchbox.propTypes = {
+    delay: PropTypes.number,
     className: PropTypes.string,
     placeholder: PropTypes.string,
     value: PropTypes.string,
     onSearch: PropTypes.func,
-    onChange: PropTypes.func,
+    onChange: PropTypes.func.isRequired,
     advanced: PropTypes.node
 };
 

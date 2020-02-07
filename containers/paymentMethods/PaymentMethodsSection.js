@@ -5,13 +5,13 @@ import {
     PrimaryButton,
     Alert,
     Block,
+    Loader,
     MozillaInfoPanel,
-    useApiResult,
     useModals,
     useSubscription,
-    useConfig
+    useConfig,
+    usePaymentMethods
 } from 'react-components';
-import { queryPaymentMethods } from 'proton-shared/lib/api/payments';
 import { CLIENT_TYPES, PAYMENT_METHOD_TYPES } from 'proton-shared/lib/constants';
 
 import EditCardModal from '../payments/EditCardModal';
@@ -22,10 +22,18 @@ const { VPN } = CLIENT_TYPES;
 
 const PaymentMethodsSection = () => {
     const { CLIENT_TYPE } = useConfig();
-    const [{ isManagedByMozilla } = {}] = useSubscription();
+    const [paymentMethods = [], loadingPaymentMethods] = usePaymentMethods();
+    const [{ isManagedByMozilla } = {}, loadingSubscription] = useSubscription();
     const { createModal } = useModals();
-    const { result = {}, loading, request } = useApiResult(queryPaymentMethods, []);
-    const { PaymentMethods: paymentMethods = [] } = result;
+
+    if (loadingPaymentMethods || loadingSubscription) {
+        return (
+            <>
+                <SubTitle>{c('Title').t`Payment methods`}</SubTitle>
+                <Loader />
+            </>
+        );
+    }
 
     if (isManagedByMozilla) {
         return (
@@ -37,11 +45,11 @@ const PaymentMethodsSection = () => {
     }
 
     const handleCard = () => {
-        createModal(<EditCardModal onChange={request} />);
+        createModal(<EditCardModal />);
     };
 
     const handlePayPal = () => {
-        createModal(<PayPalModal onChange={request} />);
+        createModal(<PayPalModal />);
     };
 
     const hasPayPal = paymentMethods.some((method) => method.Type === PAYMENT_METHOD_TYPES.PAYPAL);
@@ -62,7 +70,7 @@ const PaymentMethodsSection = () => {
                     .t`Add credit / debit card`}</PrimaryButton>
                 {hasPayPal ? null : <PrimaryButton onClick={handlePayPal}>{c('Action').t`Add PayPal`}</PrimaryButton>}
             </Block>
-            <PaymentMethodsTable loading={loading} methods={paymentMethods} fetchMethods={request} />
+            <PaymentMethodsTable loading={loadingPaymentMethods || loadingSubscription} methods={paymentMethods} />
         </>
     );
 };

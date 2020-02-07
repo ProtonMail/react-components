@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useMailSettings, useOrganization } from 'react-components';
-import { getThemeIdentifier, getTheme, toStyle } from 'proton-shared/lib/themes/helpers';
+import { getThemeIdentifier, getTheme, toStyle, isDarkTheme } from 'proton-shared/lib/themes/helpers';
 import { PROTON_THEMES, DEFAULT_THEME } from 'proton-shared/lib/themes/themes';
+import { DARK_MODE_CLASS } from 'proton-shared/lib/constants';
 
 const protonThemeIdentifiers = Object.values(PROTON_THEMES).map(({ identifier }) => identifier);
 
@@ -20,6 +21,17 @@ const ThemeInjector = () => {
         }
         setStyle(toStyle([userTheme, orgTheme]));
     }, [userTheme, orgTheme]);
+
+    useEffect(() => {
+        if (isDarkTheme(userTheme)) {
+            document.body.classList.add(DARK_MODE_CLASS);
+        } else {
+            document.body.classList.remove(DARK_MODE_CLASS);
+        }
+        return () => {
+            document.body.classList.remove(DARK_MODE_CLASS);
+        };
+    }, [userTheme]);
 
     return <style>{style}</style>;
 };

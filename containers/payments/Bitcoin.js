@@ -37,7 +37,7 @@ const Bitcoin = ({ amount, currency, type }) => {
     }, [amount, currency]);
 
     if (amount < MIN_BITCOIN_AMOUNT) {
-        const i18n = (amount) => c('Info').jt`Amount below minimum. (${amount})`;
+        const i18n = (amount) => c('Info').jt`Amount below minimum (${amount}).`;
         return <Alert type="warning">{i18n(<Price currency={currency}>{MIN_BITCOIN_AMOUNT}</Price>)}</Alert>;
     }
 
@@ -75,7 +75,6 @@ const Bitcoin = ({ amount, currency, type }) => {
                         className="mb1 flex flex-items-center flex-column"
                         amount={model.amountBitcoin}
                         address={model.address}
-                        type={type}
                     />
                 </div>
                 <BitcoinDetails amount={model.amountBitcoin} address={model.address} />
