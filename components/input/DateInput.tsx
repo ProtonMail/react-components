@@ -28,6 +28,7 @@ interface Props {
     displayWeekNumbers?: boolean;
     weekStartsOn?: number;
     value?: Date;
+    placeholder?: string;
     defaultDate?: Date;
     placeholder?: string;
     min?: Date;
