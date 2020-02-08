@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { classnames, Radio, Icon, Row, Alert, Price, Loader } from 'react-components';
+import { classnames, Radio, Icon, Row, Alert, Price, Loader, useMethods } from 'react-components';
 import {
     PAYMENT_METHOD_TYPES,
     MIN_DONATION_AMOUNT,
@@ -11,7 +11,6 @@ import {
 } from 'proton-shared/lib/constants';
 
 import Method from './Method';
-import usePaymentMethods from '../paymentMethods/usePaymentMethods';
 
 const Payment = ({
     children,
@@ -27,7 +26,7 @@ const Payment = ({
     onCard,
     errors
 }) => {
-    const { methods, options, loading } = usePaymentMethods({ amount, coupon, type });
+    const { methods, options, loading } = useMethods({ amount, coupon, type });
     const lastCustomMethod = [...options]
         .reverse()
         .find(
