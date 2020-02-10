@@ -36,18 +36,18 @@ const PaymentMethodDetails = ({ type, details = {} }) => {
     if (type === PAYMENT_METHOD_TYPES.CARD) {
         const bankIcon = getBankSvg(BANKS[Brand]);
         return (
-            <Bordered className="bg-global-highlight p2">
+            <Bordered className="bg-global-highlight inline-flex flex-column pl2 pr2 pb2">
                 {bankIcon ? <img width="70" src={bankIcon} alt={Brand} className="mb1" /> : null}
-                <label className="color-global-grey-dm bl mb0-5">{c('Label').t`Card number`}</label>
-                <code className="bl bigger mb0 mb1">•••• •••• •••• {Last4}</code>
+                <span className="color-global-grey-dm bl mb1 opacity-40">{c('Label').t`Card number`}</span>
+                <code className="bl size-40 strong mb0-5">•••• •••• •••• {Last4}</code>
                 <div className="flex flex-nowrap flex-spacebetween">
                     <div>
-                        <label className="color-global-grey-dm bl mb0-5">{c('Label').t`Card holder`}</label>
-                        <span className="big mt0 mb0">{Name}</span>
+                        <span className="color-global-grey-dm bl mb0-5 opacity-40">{c('Label').t`Card holder`}</span>
+                        <span className="bigger mt0 mb0">{Name}</span>
                     </div>
-                    <div>
-                        <label className="color-global-grey-dm bl mb0-5">{c('Label').t`Expires`}</label>
-                        <span className="big mt0 mb0">
+                    <div className="alignright">
+                        <span className="color-global-grey-dm bl mb0-5 opacity-40">{c('Label').t`Expires`}</span>
+                        <span className="bigger mt0 mb0">
                             {ExpMonth}/{ExpYear}
                         </span>
                     </div>
