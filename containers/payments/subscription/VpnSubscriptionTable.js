@@ -46,10 +46,10 @@ const VpnSubscriptionTable = ({
                 c('Feature').t`Servers in ${vpnCountries.free.length} countries`,
                 c('Feature').t`Medium speed`,
                 c('Feature').t`No logs/No ads`,
-                <del key="filesharing">{c('Feature').t`Filesharing/bitorrent support`}</del>,
-                <del key="secure">{c('Feature').t`Secure Core and Tor VPN`}</del>,
-                <del key="advanced">{c('Feature').t`Advanced privacy features`}</del>,
-                <del key="access">{c('Feature').t`Access blocked content`}</del>
+                <del className="opacity-50" key="filesharing">{c('Feature').t`Filesharing/bitorrent support`}</del>,
+                <del className="opacity-50" key="secure">{c('Feature').t`Secure Core and Tor VPN`}</del>,
+                <del className="opacity-50" key="advanced">{c('Feature').t`Advanced privacy features`}</del>,
+                <del className="opacity-50" key="access">{c('Feature').t`Access blocked content`}</del>
             ]
         },
         vpnBasicPlan && {
@@ -64,10 +64,10 @@ const VpnSubscriptionTable = ({
                 c('Feature').t`Servers in ${vpnCountries.basic.length} countries`,
                 c('Feature').t`High speed`,
                 c('Feature').t`No logs/No ads`,
-                <del key="filesharing">{c('Feature').t`Filesharing/bitorrent support`}</del>,
-                <del key="secure">{c('Feature').t`Secure Core and Tor VPN`}</del>,
-                <del key="advanced">{c('Feature').t`Advanced privacy features`}</del>,
-                <del key="access">{c('Feature').t`Access blocked content`}</del>
+                <del className="opacity-50" key="filesharing">{c('Feature').t`Filesharing/bitorrent support`}</del>,
+                <del className="opacity-50" key="secure">{c('Feature').t`Secure Core and Tor VPN`}</del>,
+                <del className="opacity-50" key="advanced">{c('Feature').t`Advanced privacy features`}</del>,
+                <del className="opacity-50" key="access">{c('Feature').t`Access blocked content`}</del>
             ]
         },
         vpnPlusPlan && {

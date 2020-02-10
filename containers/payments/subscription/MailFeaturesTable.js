@@ -21,20 +21,44 @@ const MailFeaturesTable = ({ cycle, currency }) => {
                 <thead>
                     <tr>
                         <th scope="col" className="aligncenter aligntop pm-simple-table-row-th pt1">
-                            <span className="uppercase ellipsis" title="Free">Free</span>
-                            <div><SubscriptionPrices cycle={cycle} currency={currency} /></div>
+                            <strong className="uppercase ellipsis" title="Free">
+                                Free
+                            </strong>
+                            <div>
+                                <SubscriptionPrices cycle={cycle} currency={currency} />
+                            </div>
                         </th>
                         <th scope="col" className="aligncenter aligntop pm-simple-table-row-th pt1">
-                            <div className="uppercase ellipsis" title="Plus">Plus</div>
-                            <SubscriptionPrices cycle={cycle} currency={currency} plan={plansMap[PLANS.PLUS]} />
+                            <strong className="uppercase ellipsis" title="Plus">
+                                Plus
+                            </strong>
+                            <div>
+                                <SubscriptionPrices cycle={cycle} currency={currency} plan={plansMap[PLANS.PLUS]} />
+                            </div>
                         </th>
                         <th scope="col" className="aligncenter aligntop pm-simple-table-row-th pt1">
-                            <div className="uppercase ellipsis" title="Professional">Professional</div>
-                            <SubscriptionPrices cycle={cycle} currency={currency} plan={plansMap[PLANS.PROFESSIONAL]} />
+                            <strong className="uppercase ellipsis" title="Professional">
+                                Professional
+                            </strong>
+                            <div>
+                                <SubscriptionPrices
+                                    cycle={cycle}
+                                    currency={currency}
+                                    plan={plansMap[PLANS.PROFESSIONAL]}
+                                />
+                            </div>
                         </th>
                         <th scope="col" className="aligncenter aligntop pm-simple-table-row-th pt1">
-                            <div className="uppercase ellipsis" title="Visionary">Visionary</div>
-                            <SubscriptionPrices cycle={cycle} currency={currency} plan={plansMap[PLANS.VISIONARY]} />
+                            <strong className="uppercase ellipsis" title="Visionary">
+                                Visionary
+                            </strong>
+                            <div>
+                                <SubscriptionPrices
+                                    cycle={cycle}
+                                    currency={currency}
+                                    plan={plansMap[PLANS.VISIONARY]}
+                                />
+                            </div>
                         </th>
                     </tr>
                 </thead>
@@ -83,7 +107,7 @@ const MailFeaturesTable = ({ cycle, currency }) => {
                     </tr>
                     <tr>
                         <td>
-                            <del>{c('Feature').t`Encrypted contacts`}</del>
+                            <del className="opacity-50">{c('Feature').t`Encrypted contacts`}</del>
                         </td>
                         <td>{c('Feature').t`Encrypted contacts`}</td>
                         <td>{c('Feature').t`Encrypted contacts`}</td>
@@ -91,7 +115,7 @@ const MailFeaturesTable = ({ cycle, currency }) => {
                     </tr>
                     <tr>
                         <td>
-                            <del>{c('Feature').t`Address verification`}</del>
+                            <del className="opacity-50">{c('Feature').t`Address verification`}</del>
                         </td>
                         <td>{c('Feature').t`Address verification`}</td>
                         <td>{c('Feature').t`Address verification`}</td>
@@ -99,7 +123,7 @@ const MailFeaturesTable = ({ cycle, currency }) => {
                     </tr>
                     <tr>
                         <td>
-                            <del>{c('Feature').t`Custom filters`}</del>
+                            <del className="opacity-50">{c('Feature').t`Custom filters`}</del>
                         </td>
                         <td>{c('Feature').t`Custom filters`}</td>
                         <td>{c('Feature').t`Custom filters`}</td>
@@ -107,7 +131,7 @@ const MailFeaturesTable = ({ cycle, currency }) => {
                     </tr>
                     <tr>
                         <td>
-                            <del>{c('Feature').t`IMAP/SMTP support`}</del>
+                            <del className="opacity-50">{c('Feature').t`IMAP/SMTP support`}</del>
                         </td>
                         <td>{c('Feature').t`IMAP/SMTP support`}</td>
                         <td>{c('Feature').t`IMAP/SMTP support`}</td>
@@ -123,7 +147,7 @@ const MailFeaturesTable = ({ cycle, currency }) => {
                     </tr>
                     <tr>
                         <td>
-                            <del>{c('Feature').t`@pm.me short domain`}</del>
+                            <del className="opacity-50">{c('Feature').t`@pm.me short domain`}</del>
                         </td>
                         <td>{c('Feature').t`@pm.me short domain`}</td>
                         <td>{c('Feature').t`@pm.me short domain`}</td>
@@ -131,33 +155,33 @@ const MailFeaturesTable = ({ cycle, currency }) => {
                     </tr>
                     <tr>
                         <td>
-                            <del>{c('Feature').t`Catch all email`}</del>
+                            <del className="opacity-50">{c('Feature').t`Catch all email`}</del>
                         </td>
                         <td>
-                            <del>{c('Feature').t`Catch all email`}</del>
+                            <del className="opacity-50">{c('Feature').t`Catch all email`}</del>
                         </td>
                         <td>{c('Feature').t`Catch all email`}</td>
                         <td>{c('Feature').t`Catch all email`}</td>
                     </tr>
                     <tr>
                         <td>
-                            <del>{c('Feature').t`Multi user support`}</del>
+                            <del className="opacity-50">{c('Feature').t`Multi user support`}</del>
                         </td>
                         <td>
-                            <del>{c('Feature').t`Multi user support`}</del>
+                            <del className="opacity-50">{c('Feature').t`Multi user support`}</del>
                         </td>
                         <td>{c('Feature').t`Multi user support`}</td>
                         <td>{c('Feature').t`Multi user support`}</td>
                     </tr>
                     <tr>
                         <td>
-                            <del>{c('Feature').t`ProtonVPN included`}</del>
+                            <del className="opacity-50">{c('Feature').t`ProtonVPN included`}</del>
                         </td>
                         <td>
-                            <del>{c('Feature').t`ProtonVPN included`}</del>
+                            <del className="opacity-50">{c('Feature').t`ProtonVPN included`}</del>
                         </td>
                         <td>
-                            <del>{c('Feature').t`ProtonVPN included`}</del>
+                            <del className="opacity-50">{c('Feature').t`ProtonVPN included`}</del>
                         </td>
                         <td>{c('Feature').t`ProtonVPN included`}</td>
                     </tr>
