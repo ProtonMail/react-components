@@ -28,14 +28,28 @@
     height: 10rem;
 }
 
-.subscriptionPrices-monthly {
+.subscriptionPrices-monthly,
+.subscriptionPlan-customize {
     .amount,
     .currency  {
         font-size: 3rem;
         line-height: 1;
     }
-    .suffix {
-        vertical-align: text-bottom;
+
+}
+.subscriptionPlan-customize {
+    .prefix {
+        margin-left: auto;
+    }
+    .price {
+        font-size: 1.4rem;
+        line-height: 1;
+    }
+    .amount,
+    .currency,
+    .prefix,
+    .subscriptionPlan-customize-included  {
+        font-size: 2.2rem;
     }
 }
 

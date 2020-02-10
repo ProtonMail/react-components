@@ -60,7 +60,13 @@ const SubscriptionAddonRow = ({
                     </Button>
                 </div>
             </div>
-            <div className="w120e ontablet-w25 big mb0 mt0 alignright">{quantity ? price : c('Info').t`Included`}</div>
+            <div className="w120e ontablet-w25 big mb0 mt0 alignright">
+                {quantity ? (
+                    price
+                ) : (
+                    <span className="subscriptionPlan-customize-included">{c('Info').t`Included`}</span>
+                )}
+            </div>
         </div>
     );
 };

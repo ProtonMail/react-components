@@ -31,7 +31,7 @@ const SubscriptionPlan = ({
                     </ul>
                 </div>
                 {canCustomize && state ? (
-                    <div className="bordered-container p1 mb1">
+                    <div className="bordered-container p1 mb1 subscriptionPlan-customize">
                         <div className="flex flex-nowrap flex-items-center flex-spacebetween mb1">
                             <div className="bold">{c('Title').t`Configure plan`}</div>
                             <Price className="big mt0 mb0" currency={currency} suffix={c('Suffix').t`/month`}>
