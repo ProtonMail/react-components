@@ -68,6 +68,7 @@ const MailSubscriptionTable = ({
                 c('Feature').t`5 GB storage *`,
                 c('Feature').t`5 addresses *`,
                 c('Feature').t`Supports 1 domain *`,
+                c('Feature').t`Unlimited messages per day **`,
                 c('Feature').t`Advanced mail features: folders, labels, filters, auto-reply, IMAP/SMTP and more`,
                 <del key="business">{c('Feature')
                     .t`Business mail features: Catch all email, multi user management and more`}</del>,
@@ -95,6 +96,7 @@ const MailSubscriptionTable = ({
                 c('Feature').t`5 GB storage per user *`,
                 c('Feature').t`5 addresses per user *`,
                 c('Feature').t`Supports 2 domains *`,
+                c('Feature').t`Unlimited messages per day **`,
                 c('Feature').t`Advanced mail features: folders, labels, filters, auto-reply, IMAP/SMTP and more`,
                 c('Feature').t`Business mail features: Catch all email, multi user management and more`,
                 c('Feature').t`Priority support`,
@@ -114,6 +116,7 @@ const MailSubscriptionTable = ({
                 c('Feature').t`20 GB storage`,
                 c('Feature').t`50 addresses`,
                 c('Feature').t`Supports 10 domains`,
+                c('Feature').t`Unlimited messages per day **`,
                 c('Feature').t`Advanced mail features: folders, labels, filters, auto-reply, IMAP/SMTP and more`,
                 c('Feature').t`Business mail features: Catch all email, multi user management and more`,
                 c('Feature').t`Priority support`,
