@@ -321,6 +321,7 @@ export { default as useRightToLeft } from './containers/rightToLeft/useRightToLe
 export { default as RightToLeftProvider } from './containers/rightToLeft/Provider';
 
 export { default as LabelsSection } from './containers/labels/LabelsSection';
+export { default as FoldersSection } from './containers/labels/FoldersSection';
 export { default as LabelsModal } from './containers/labels/modals/Edit';
 export { default as SpamFiltersSection } from './containers/filters/SpamFiltersSection';
 export { default as FiltersSection } from './containers/filters/FiltersSection';

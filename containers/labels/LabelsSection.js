@@ -6,7 +6,6 @@ import {
     Alert,
     PrimaryButton,
     useLabels,
-    useFolders,
     useEventManager,
     useModals,
     useApi
@@ -15,12 +14,10 @@ import { arrayMove } from 'react-sortable-hoc';
 import { orderLabels } from 'proton-shared/lib/api/labels';
 
 import LabelSortableList from './LabelSortableList';
-import FolderTreeViewList from './FolderTreeViewList';
 import EditLabelModal from './modals/Edit';
 
 function LabelsSection() {
     const [labels, loadingLabels] = useLabels();
-    const [folders, loadingFolders] = useFolders();
     const { call } = useEventManager();
     const api = useApi();
     const { createModal } = useModals();
@@ -43,10 +40,10 @@ function LabelsSection() {
 
     const getScrollContainer = () => document.querySelector('.main-area');
 
-    if (loadingLabels || loadingFolders) {
+    if (loadingLabels) {
         return (
             <>
-                <SubTitle>{c('LabelSettings').t`Folders and labels`}</SubTitle>
+                <SubTitle>{c('LabelSettings').t`Labels`}</SubTitle>
                 <Loader />
             </>
         );
@@ -54,24 +51,6 @@ function LabelsSection() {
 
     return (
         <>
-            <SubTitle>{c('LabelSettings').t`Folders`}</SubTitle>
-            <Alert
-                type="info"
-                className="mt1 mb1"
-                learnMore="https://protonmail.com/support/knowledge-base/creating-folders/"
-            >
-                {c('LabelSettings').t`A message can only be in filed in a single Folder at a time.`}
-            </Alert>
-            <div className="mb1">
-                <PrimaryButton onClick={() => createModal(<EditLabelModal type="folder" />)}>
-                    {c('Action').t`Add folder`}
-                </PrimaryButton>
-            </div>
-            {folders.length ? (
-                <FolderTreeViewList items={folders} />
-            ) : (
-                <Alert>{c('LabelSettings').t`No folders available`}</Alert>
-            )}
             <SubTitle>{c('LabelSettings').t`Labels`}</SubTitle>
             <Alert
                 type="info"
