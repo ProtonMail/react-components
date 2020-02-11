@@ -20,7 +20,6 @@ import ToggleNotify from './ToggleNotify';
 const INSIDE = 'inside';
 const AFTER = 'after';
 const BEFORE = 'before';
-const DRAGGED_ICON_CLASS = 'dragged-icon';
 
 const Header = () => {
     return (
@@ -136,7 +135,7 @@ const FolderTreeViewList = ({ items = [] }) => {
                                     <div className="treeview-item-name flex flex-nowrap flex-items-center flex-item-fluid">
                                         <Icon
                                             name="text-justify"
-                                            className={`mr1 flex-item-noshrink ${DRAGGED_ICON_CLASS}`}
+                                            className="mr1 flex-item-noshrink cursor-row-resize"
                                         />
                                         <Icon
                                             name={hasSubFolders ? 'parent-folder' : 'folder'}
