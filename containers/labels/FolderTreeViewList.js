@@ -20,6 +20,7 @@ import ToggleNotify from './ToggleNotify';
 const INSIDE = 'inside';
 const AFTER = 'after';
 const BEFORE = 'before';
+const DRAGGED_ICON_CLASS = 'dragged-icon';
 
 const Header = () => {
     return (
@@ -29,7 +30,7 @@ const Header = () => {
                 {c('Header').t`Name`}
             </span>
             <span className="bold uppercase w140e">{c('Header').t`Notification`}</span>
-            <span className="bold uppercase w140e">{c('Header').t`Action`}</span>
+            <span className="bold uppercase w140e alignright">{c('Header').t`Actions`}</span>
         </div>
     );
 };
@@ -133,7 +134,10 @@ const FolderTreeViewList = ({ items = [] }) => {
                                     ])}
                                 >
                                     <div className="treeview-item-name flex flex-nowrap flex-items-center flex-item-fluid">
-                                        <Icon name="text-justify" className="mr1 flex-item-noshrink" />
+                                        <Icon
+                                            name="text-justify"
+                                            className={`mr1 flex-item-noshrink ${DRAGGED_ICON_CLASS}`}
+                                        />
                                         <Icon
                                             name={hasSubFolders ? 'parent-folder' : 'folder'}
                                             className="mr0-5 flex-item-noshrink"
