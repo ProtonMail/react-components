@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import { FormModal, useEventManager, useLoading, useApi, useNotifications } from 'react-components';
-import { LABEL_EXCLUSIVE, LABEL_COLORS, ROOT_FOLDER, LABEL_TYPE } from 'proton-shared/lib/constants';
+import { LABEL_COLORS, ROOT_FOLDER, LABEL_TYPE } from 'proton-shared/lib/constants';
 import { randomIntFromInterval } from 'proton-shared/lib/helpers/function';
 import { create as createLabel, updateLabel } from 'proton-shared/lib/api/labels';
 import { noop } from 'proton-shared/lib/helpers/function';
@@ -16,14 +16,14 @@ function EditLabelModal({ label, mode = 'create', onEdit = noop, onAdd = noop, t
     const [loading, withLoading] = useLoading();
 
     const I18N = {
-        edition({ Exclusive } = {}) {
-            if (Exclusive === LABEL_EXCLUSIVE.LABEL) {
+        edition({ Type } = {}) {
+            if (Type === LABEL_TYPE.MESSAGE_LABEL) {
                 return c('Label/folder modal').t`Edit label`;
             }
             return c('Label/folder modal').t`Edit folder`;
         },
-        create(label, type) {
-            if (type === 'label') {
+        create({ Type } = {}) {
+            if (Type === LABEL_TYPE.MESSAGE_LABEL) {
                 return c('Label/folder modal').t`Create a new label`;
             }
             return c('Label/folder modal').t`Create a new folder`;
@@ -85,7 +85,7 @@ function EditLabelModal({ label, mode = 'create', onEdit = noop, onAdd = noop, t
     };
 
     return (
-        <FormModal onSubmit={handleSubmit} loading={loading} title={I18N[mode](label, type)} {...props}>
+        <FormModal onSubmit={handleSubmit} loading={loading} title={I18N[mode](label)} {...props}>
             <NewLabelForm
                 label={model}
                 onChangeName={handleChangeName}
