@@ -122,7 +122,7 @@ const SubscriptionSection = ({ permission }) => {
             used: UsedSpace,
             max: MaxSpace,
             humanSize,
-            format: (v) => humanSize(v, 'GB')
+            format: (v) => humanSize(v)
         },
         hasPaidMail && { label: c('Label').t`Custom domains`, used: UsedDomains, max: MaxDomains },
         mailPlanName === 'visionary' && { label: c('Label').t`VPN connections`, max: MaxVPN }
