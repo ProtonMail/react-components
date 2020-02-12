@@ -13,7 +13,7 @@ const BitcoinDetails = ({ amount, address }) => {
                         <span className="mr1" title={amount}>
                             {amount}
                         </span>
-                        <Copy className="pm-button--small flex-item-noshrink" value={`${amount}`} />
+                        <Copy className="pm-button--for-icon flex-item-noshrink" value={`${amount}`} />
                     </div>
                 </>
             ) : null}
@@ -22,7 +22,7 @@ const BitcoinDetails = ({ amount, address }) => {
                 <span className="mr1 ellipsis" title={address}>
                     {address}
                 </span>
-                <Copy className="pm-button--small flex-item-noshrink" value={address} />
+                <Copy className="pm-button--for-icon flex-item-noshrink" value={address} />
             </div>
         </figcaption>
     );
