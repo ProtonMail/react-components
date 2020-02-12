@@ -168,6 +168,9 @@ const NewSubscriptionModal = ({
                 setStep(SUBSCRIPTION_STEPS.NETWORK_ERROR);
             }
             if (step === SUBSCRIPTION_STEPS.CUSTOMIZATION) {
+                if (newModel.gift && newModel.gift !== model.gift) {
+                    return check({ ...model });
+                }
                 return check({
                     ...model,
                     planIDs: getPlanIDs(subscription)
