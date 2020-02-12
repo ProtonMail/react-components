@@ -5,10 +5,20 @@ import { PrimaryButton, GiftCodeInput } from 'react-components';
 import { isValid } from 'proton-shared/lib/helpers/giftCode';
 
 const GiftCodeForm = ({ code, loading, disabled, onChange, onSubmit }) => {
+    const handleEnter = (event) => {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            onSubmit();
+        }
+    };
     return (
         <div className="flex flex-nowrap flex-items-center flex-items-start">
             <div className="pr1 flex-item-fluid">
-                <GiftCodeInput value={code} onChange={({ target }) => onChange(target.value)} />
+                <GiftCodeInput
+                    value={code}
+                    onChange={({ target }) => onChange(target.value)}
+                    onKeyPress={handleEnter}
+                />
             </div>
             <PrimaryButton
                 title={c('Title').t`Apply gift code`}
