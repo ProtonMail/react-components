@@ -128,7 +128,7 @@ const NewSubscriptionModal = ({
     };
 
     const { card, setCard, errors, method, setMethod, parameters, canPay, paypal, paypalCredit } = usePayment({
-        amount: checkResult.AmountDue,
+        amount: step === SUBSCRIPTION_STEPS.PAYMENT ? checkResult.AmountDue : 0, // Define amount only in the payment step to generate payment tokens
         currency: checkResult.Currency,
         onPay(params) {
             return withLoading(handleSubscribe(params));
