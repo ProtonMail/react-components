@@ -6,7 +6,7 @@ import { isValid } from 'proton-shared/lib/helpers/giftCode';
 
 const GiftCodeForm = ({ code, loading, disabled, onChange, onSubmit }) => {
     const handleEnter = (event) => {
-        if (event.keyCode === 13) {
+        if (event.key === 'Enter') {
             event.preventDefault();
             onSubmit();
         }
