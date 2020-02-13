@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, classnames, LinkButton } from 'react-components';
+import { Button, classnames, LinkButton, Icon } from 'react-components';
 import { c } from 'ttag';
 
 const SubscriptionTable = ({
@@ -43,10 +43,11 @@ const SubscriptionTable = ({
                                 </header>
                                 <p className="subscriptionTable-description aligncenter mt0 mb1 bold">{description}</p>
                                 <ul className="unstyled small mb2 flex-item-fluid-auto">
-                                    {features.map((feature, index) => {
+                                    {features.map(({ icon, content }, index) => {
                                         return (
                                             <li className="subscriptionTable-feature" key={index}>
-                                                {feature}
+                                                <Icon name={icon} />
+                                                {content}
                                             </li>
                                         );
                                     })}
@@ -86,7 +87,12 @@ SubscriptionTable.propTypes = {
             price: PropTypes.node.isRequired,
             imageSrc: PropTypes.string.isRequired,
             description: PropTypes.node.isRequired,
-            features: PropTypes.arrayOf(PropTypes.node).isRequired
+            features: PropTypes.arrayOf(
+                PropTypes.shape({
+                    icon: PropTypes.string.isRequired,
+                    content: PropTypes.node.isRequired
+                })
+            ).isRequired
         })
     ),
     onSelect: PropTypes.func.isRequired,

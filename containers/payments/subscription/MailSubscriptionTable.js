@@ -42,17 +42,33 @@ const MailSubscriptionTable = ({
             imageSrc: freePlanSvg,
             description: c('Description').t`Basic private and secure communications`,
             features: [
-                c('Feature').t`1 user`,
-                c('Feature').t`500 MB storage`,
-                c('Feature').t`1 address`,
-                c('Feature').t`No domain support`,
-                c('Feature').t`150 messages/day`,
-                <del key="advanced">{c('Feature')
-                    .t`Advanced mail features: folders, labels, filters, auto-reply, IMAP/SMTP and more`}</del>,
-                <del key="business">{c('Feature')
-                    .t`Business mail features: Catch all email, multi user management and more`}</del>,
-                <del key="support">{c('Feature').t`Priority support`}</del>,
-                c('Feature').t`ProtonVPN (optional) *`
+                { icon: 'arrow-right', content: c('Feature').t`1 user` },
+                { icon: 'arrow-right', content: c('Feature').t`500 MB storage` },
+                { icon: 'arrow-right', content: c('Feature').t`1 address` },
+                { icon: 'arrow-right', content: c('Feature').t`No domain support` },
+                { icon: 'arrow-right', content: c('Feature').t`150 messages/day` },
+                {
+                    icon: 'close',
+                    content: (
+                        <del key="advanced">{c('Feature')
+                            .t`Advanced mail features: folders, labels, filters, auto-reply, IMAP/SMTP and more`}</del>
+                    )
+                },
+                {
+                    icon: 'close',
+                    content: (
+                        <del key="business">{c('Feature')
+                            .t`Business mail features: Catch all email, multi user management and more`}</del>
+                    )
+                },
+                {
+                    icon: 'close',
+                    content: <del key="support">{c('Feature').t`Priority support`}</del>
+                },
+                {
+                    icon: 'plus',
+                    content: c('Feature').t`ProtonVPN (optional) *`
+                }
             ]
         },
         plusPlan && {
@@ -64,16 +80,25 @@ const MailSubscriptionTable = ({
             imageSrc: plusPlanSvg,
             description: c('Description').t`Full-featured individual mailbox`,
             features: [
-                c('Feature').t`1 user`,
-                c('Feature').t`5 GB storage *`,
-                c('Feature').t`5 addresses *`,
-                c('Feature').t`Supports 1 domain *`,
-                c('Feature').t`Unlimited messages per day **`,
-                c('Feature').t`Advanced mail features: folders, labels, filters, auto-reply, IMAP/SMTP and more`,
-                <del key="business">{c('Feature')
-                    .t`Business mail features: Catch all email, multi user management and more`}</del>,
-                <del key="support">{c('Feature').t`Priority support`}</del>,
-                c('Feature').t`ProtonVPN (optional) *`
+                { icon: 'arrow-right', content: c('Feature').t`1 user` },
+                { icon: 'arrow-right', content: c('Feature').t`5 GB storage *` },
+                { icon: 'arrow-right', content: c('Feature').t`5 addresses *` },
+                { icon: 'arrow-right', content: c('Feature').t`Supports 1 domain *` },
+                { icon: 'arrow-right', content: c('Feature').t`Unlimited messages per day **` },
+                {
+                    icon: 'arrow-right',
+                    content: c('Feature')
+                        .t`Advanced mail features: folders, labels, filters, auto-reply, IMAP/SMTP and more`
+                },
+                {
+                    icon: 'close',
+                    content: (
+                        <del key="business">{c('Feature')
+                            .t`Business mail features: Catch all email, multi user management and more`}</del>
+                    )
+                },
+                { icon: 'close', content: <del key="support">{c('Feature').t`Priority support`}</del> },
+                { icon: 'plus', content: c('Feature').t`ProtonVPN (optional) *` }
             ]
         },
         professionalPlan && {
@@ -92,15 +117,22 @@ const MailSubscriptionTable = ({
             imageSrc: professionalPlanSvg,
             description: c('Description').t`For large organizations and businesses`,
             features: [
-                c('Feature').t`1 - 5000 user *`,
-                c('Feature').t`5 GB storage per user *`,
-                c('Feature').t`5 addresses per user *`,
-                c('Feature').t`Supports 2 domains *`,
-                c('Feature').t`Unlimited messages per day **`,
-                c('Feature').t`Advanced mail features: folders, labels, filters, auto-reply, IMAP/SMTP and more`,
-                c('Feature').t`Business mail features: Catch all email, multi user management and more`,
-                c('Feature').t`Priority support`,
-                c('Feature').t`ProtonVPN (optional) *`
+                { icon: 'arrow-right', content: c('Feature').t`1 - 5000 user *` },
+                { icon: 'arrow-right', content: c('Feature').t`5 GB storage per user *` },
+                { icon: 'arrow-right', content: c('Feature').t`5 addresses per user *` },
+                { icon: 'arrow-right', content: c('Feature').t`Supports 2 domains *` },
+                { icon: 'arrow-right', content: c('Feature').t`Unlimited messages per day **` },
+                {
+                    icon: 'arrow-right',
+                    content: c('Feature')
+                        .t`Advanced mail features: folders, labels, filters, auto-reply, IMAP/SMTP and more`
+                },
+                {
+                    icon: 'arrow-right',
+                    content: c('Feature').t`Business mail features: Catch all email, multi user management and more`
+                },
+                { icon: 'arrow-right', content: c('Feature').t`Priority support` },
+                { icon: 'plus', content: c('Feature').t`ProtonVPN (optional) *` }
             ]
         },
         visionaryPlan && {
@@ -112,15 +144,22 @@ const MailSubscriptionTable = ({
             imageSrc: visionaryPlanSvg,
             description: c('Description').t`For families and small businesses`,
             features: [
-                c('Feature').t`6 users`,
-                c('Feature').t`20 GB storage`,
-                c('Feature').t`50 addresses`,
-                c('Feature').t`Supports 10 domains`,
-                c('Feature').t`Unlimited messages per day **`,
-                c('Feature').t`Advanced mail features: folders, labels, filters, auto-reply, IMAP/SMTP and more`,
-                c('Feature').t`Business mail features: Catch all email, multi user management and more`,
-                c('Feature').t`Priority support`,
-                c('Feature').t`ProtonVPN included`
+                { icon: 'arrow-right', content: c('Feature').t`6 users` },
+                { icon: 'arrow-right', content: c('Feature').t`20 GB storage` },
+                { icon: 'arrow-right', content: c('Feature').t`50 addresses` },
+                { icon: 'arrow-right', content: c('Feature').t`Supports 10 domains` },
+                { icon: 'arrow-right', content: c('Feature').t`Unlimited messages per day **` },
+                {
+                    icon: 'arrow-right',
+                    content: c('Feature')
+                        .t`Advanced mail features: folders, labels, filters, auto-reply, IMAP/SMTP and more`
+                },
+                {
+                    icon: 'arrow-right',
+                    content: c('Feature').t`Business mail features: Catch all email, multi user management and more`
+                },
+                { icon: 'arrow-right', content: c('Feature').t`Priority support` },
+                { icon: 'arrow-right', content: c('Feature').t`ProtonVPN included` }
             ]
         }
     ];
