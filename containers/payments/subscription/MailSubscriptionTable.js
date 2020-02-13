@@ -37,7 +37,7 @@ const MailSubscriptionTable = ({
         {
             name: '',
             title: 'Free',
-            canCustomize: true,
+            canCustomize: false,
             price: <SubscriptionPrices cycle={cycle} currency={currency} />,
             imageSrc: freePlanSvg,
             description: c('Description').t`Basic private and secure communications`,

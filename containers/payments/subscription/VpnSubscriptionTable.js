@@ -38,6 +38,7 @@ const VpnSubscriptionTable = ({
         {
             name: '',
             title: 'Free',
+            canCustomize: false,
             price: <SubscriptionPrices cycle={cycle} currency={currency} />,
             imageSrc: freePlanSvg,
             description: c('Description').t`Privacy and security for everyone`,
