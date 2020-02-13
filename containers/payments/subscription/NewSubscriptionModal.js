@@ -358,7 +358,11 @@ const NewSubscriptionModal = ({
                     </div>
                 </div>
             )}
-            {step === SUBSCRIPTION_STEPS.UPGRADE && <SubscriptionUpgrade />}
+            {step === SUBSCRIPTION_STEPS.UPGRADE && (
+                <div className="aligncenter">
+                    <SubscriptionUpgrade />
+                </div>
+            )}
             {step === SUBSCRIPTION_STEPS.THANKS && <SubscriptionThanks method={method} onClose={onClose} />}
         </FormModal>
     );
