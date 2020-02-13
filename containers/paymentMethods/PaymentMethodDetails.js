@@ -36,7 +36,7 @@ const PaymentMethodDetails = ({ type, details = {} }) => {
     if (type === PAYMENT_METHOD_TYPES.CARD) {
         const bankIcon = getBankSvg(BANKS[Brand]);
         return (
-            <Bordered className="bg-global-highlight inline-flex flex-column pl2 pr2 pb2">
+            <Bordered className="bg-global-highlight inline-flex flex-column w100 pl2 pr2 pb2">
                 {bankIcon ? <img width="70" src={bankIcon} alt={Brand} className="mb1" /> : null}
                 <span className="color-global-grey-dm bl mb1 opacity-40">{c('Label').t`Card number`}</span>
                 <code className="bl size-40 strong mb0-5">•••• •••• •••• {Last4}</code>
