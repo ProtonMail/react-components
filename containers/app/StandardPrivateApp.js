@@ -7,6 +7,7 @@ import { getClosestMatches, getBrowserLocale } from 'proton-shared/lib/i18n/help
 import createEventManager from 'proton-shared/lib/eventManager/eventManager';
 import { loadModels } from 'proton-shared/lib/models/helper';
 import { destroyOpenPGP, loadOpenPGP } from 'proton-shared/lib/openpgp';
+import { noop } from 'proton-shared/lib/helpers/function';
 
 import EventModelListener from '../eventManager/EventModelListener';
 import EventNotices from '../eventManager/EventNotices';
@@ -18,6 +19,8 @@ import loadEventID from './loadEventID';
 const StandardPrivateApp = ({
     locales = {},
     onLogout,
+    onInit = noop,
+    fallback,
     openpgpConfig,
     preloadModels = [],
     eventModels = [],
@@ -42,7 +45,7 @@ const StandardPrivateApp = ({
             }
         );
 
-        Promise.all([eventManagerPromise, modelsPromise, loadOpenPGP(openpgpConfig)])
+        Promise.all([onInit(), eventManagerPromise, modelsPromise, loadOpenPGP(openpgpConfig)])
             .then(() => {
                 setLoading(false);
             })
@@ -59,7 +62,7 @@ const StandardPrivateApp = ({
         return (
             <>
                 <ModalsChildren />
-                <LoaderPage />
+                {fallback || <LoaderPage />}
             </>
         );
     }
