@@ -45,8 +45,12 @@ const SubscriptionTable = ({
                                 <ul className="unstyled small mb2 flex-item-fluid-auto">
                                     {features.map(({ icon, content }, index) => {
                                         return (
-                                            <li className="subscriptionTable-feature" key={index}>
-                                                <Icon name={icon} />
+                                            <li className="subscriptionTable-feature flex flex-nowrap" key={index}>
+                                                <Icon
+                                                    name={icon}
+                                                    size="12"
+                                                    className="mt0-4 mr0-5 flex-item-noshrink on-rtl-mirror"
+                                                />
                                                 {content}
                                             </li>
                                         );
