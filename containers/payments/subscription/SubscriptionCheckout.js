@@ -194,7 +194,12 @@ const SubscriptionCheckout = ({ submit = c('Action').t`Pay`, plans = [], model, 
                 <div className="rounded p1 mb1 bg-global-highlight">
                     {model.coupon ? (
                         <div className="border-bottom border-bottom--dashed mb0-5">
-                            <CheckoutRow title={c('Title').t`Sub-total`} amount={subTotal} currency={model.currency} />
+                            <CheckoutRow
+                                className="bigger m0"
+                                title={c('Title').t`Sub-total`}
+                                amount={subTotal}
+                                currency={model.currency}
+                            />
                             <CheckoutRow
                                 title={
                                     <>
@@ -210,14 +215,23 @@ const SubscriptionCheckout = ({ submit = c('Action').t`Pay`, plans = [], model, 
                     ) : null}
                     <div className="border-bottom border-bottom--dashed mb0-5">
                         {[CYCLE.YEARLY, CYCLE.TWO_YEARS].includes(model.cycle) ? (
-                            <CheckoutRow
-                                title={c('Title').t`Total (monthly)`}
-                                amount={monthlyTotal}
-                                currency={model.currency}
-                                className="small mt0 mb0"
-                            />
+                            <div className="border-bottom border-bottom--dashed mb0-5">
+                                <CheckoutRow
+                                    title={c('Title').t`Total (monthly)`}
+                                    amount={monthlyTotal}
+                                    currency={model.currency}
+                                    className="bigger mt0 mb0"
+                                />
+                            </div>
                         ) : null}
-                        <CheckoutRow title={c('Title').t`Total`} amount={total} currency={model.currency} />
+                        <div className="border-bottom border-bottom--dashed mb0-5">
+                            <CheckoutRow
+                                className="bigger m0"
+                                title={c('Title').t`Total`}
+                                amount={total}
+                                currency={model.currency}
+                            />
+                        </div>
                         {checkResult.Proration ? (
                             <CheckoutRow
                                 title={c('Title').t`Proration`}
@@ -247,7 +261,7 @@ const SubscriptionCheckout = ({ submit = c('Action').t`Pay`, plans = [], model, 
                         title={c('Title').t`Amount due`}
                         amount={checkResult.AmountDue}
                         currency={model.currency}
-                        className="bold"
+                        className="bold bigger m0"
                     />
                     <div className="mt1">{submit}</div>
                 </div>
