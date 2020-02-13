@@ -8,20 +8,20 @@ const BitcoinDetails = ({ amount, address }) => {
         <figcaption>
             {amount ? (
                 <>
-                    <div>{c('Label').t`BTC amount`}</div>
-                    <div className="flex flex-nowrap flex-items-center mb1">
-                        <span className="mr1" title={amount}>
+                    <div className="flex flex-nowrap flex-items-center p1 border-bottom">
+                        <span className="flex-item-noshrink">{c('Label').t`BTC amount:`}</span>
+                        <strong className="ml0-25 mr1 ellipsis" title={amount}>
                             {amount}
-                        </span>
+                        </strong>
                         <Copy className="pm-button--for-icon flex-item-noshrink" value={`${amount}`} />
                     </div>
                 </>
             ) : null}
-            <div>{c('Label').t`BTC address`}</div>
-            <div className="flex flex-nowrap flex-items-center mb1">
-                <span className="mr1 ellipsis" title={address}>
+            <div className="flex mw100 flex-nowrap flex-items-center p1 border-bottom">
+                <span className="flex-item-noshrink">{c('Label').t`BTC address:`}</span>
+                <strong className="ml0-25 mr1 ellipsis" title={address}>
                     {address}
-                </span>
+                </strong>
                 <Copy className="pm-button--for-icon flex-item-noshrink" value={address} />
             </div>
         </figcaption>

@@ -104,20 +104,22 @@ const Payment = ({
                     })}
                 </div>
                 <div className="pm-field-container payment-right">
-                    <Method
-                        loading={loading}
-                        paypal={paypal}
-                        paypalCredit={paypalCredit}
-                        amount={amount}
-                        currency={currency}
-                        onCard={onCard}
-                        card={card}
-                        type={type}
-                        method={method}
-                        methods={methods}
-                        errors={errors}
-                    />
-                    {children}
+                    <div className="mw40e">
+                        <Method
+                            loading={loading}
+                            paypal={paypal}
+                            paypalCredit={paypalCredit}
+                            amount={amount}
+                            currency={currency}
+                            onCard={onCard}
+                            card={card}
+                            type={type}
+                            method={method}
+                            methods={methods}
+                            errors={errors}
+                        />
+                        {children}
+                    </div>
                 </div>
             </Row>
         </>
