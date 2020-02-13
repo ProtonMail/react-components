@@ -71,10 +71,21 @@ const { UID, login, logout, ...} = useAuthentication();
 Create notifications to be displayed in the app.
 
 ``` js
-const { createNotification, removeNotification } = useNotifications();
+const { createNotification, hideNotification } = useNotifications();
 
 const handleClick = () => {
     createNotification({ type: 'error', text: 'Failed to update' });
+}
+
+const handleClickPersistent = () => {
+    const id = createNotification({
+        expiration: -1, // does not expire
+        type: 'error',
+        text: 'Failed to update'
+    });
+    setTimeout(() => {
+        hideNotification(id);
+    }, 1000);
 }
 ```
 
