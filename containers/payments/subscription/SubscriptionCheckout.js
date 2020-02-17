@@ -1,12 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { c, msgid } from 'ttag';
-import { CurrencySelector, CycleSelector, Loader, Price, useOrganization, classnames } from 'react-components';
+import {
+    CurrencySelector,
+    CycleSelector,
+    Loader,
+    Price,
+    useOrganization,
+    useConfig,
+    classnames,
+    Info
+} from 'react-components';
 import { isLoyal } from 'proton-shared/lib/helpers/organization';
 import { toMap } from 'proton-shared/lib/helpers/object';
 import { orderBy } from 'proton-shared/lib/helpers/array';
 import { hasBit } from 'proton-shared/lib/helpers/bitset';
 import {
+    CLIENT_TYPES,
     PLAN_SERVICES,
     PLAN_TYPES,
     CYCLE,
@@ -46,6 +56,7 @@ const SubscriptionCheckout = ({ submit = c('Action').t`Pay`, plans = [], model, 
     const domainAddon = plans.find(({ Name }) => Name === ADDON_NAMES.DOMAIN);
     const memberAddon = plans.find(({ Name }) => Name === ADDON_NAMES.MEMBER);
     const vpnAddon = plans.find(({ Name }) => Name === ADDON_NAMES.VPN);
+    const { CLIENT_TYPE } = useConfig();
     const [organization, loadingOrganization] = useOrganization();
     const loyal = isLoyal(organization);
     const subTotal =
@@ -234,7 +245,18 @@ const SubscriptionCheckout = ({ submit = c('Action').t`Pay`, plans = [], model, 
                         </div>
                         {checkResult.Proration ? (
                             <CheckoutRow
-                                title={c('Title').t`Proration`}
+                                title={
+                                    <>
+                                        <span className="mr0-5">{c('Label').t`Proration`}</span>
+                                        <Info
+                                            url={
+                                                CLIENT_TYPE === CLIENT_TYPES.VPN
+                                                    ? 'https://protonvpn.com/support/vpn-credit-proration/'
+                                                    : 'https://protonmail.com/support/knowledge-base/credit-proration/'
+                                            }
+                                        />
+                                    </>
+                                }
                                 amount={checkResult.Proration}
                                 currency={model.currency}
                                 className="small mt0 mb0"
