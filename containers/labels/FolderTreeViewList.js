@@ -109,7 +109,7 @@ const FolderTreeViewList = ({ items = [] }) => {
 
                                 if (pointer < quarter) {
                                     setPosition(BEFORE);
-                                } else if (pointer > quarter * 3) {
+                                } else if (pointer > quarter * 3 && !parents[item.ID]) {
                                     setPosition(AFTER);
                                 } else {
                                     setPosition(INSIDE);
