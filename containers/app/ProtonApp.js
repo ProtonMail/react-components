@@ -29,6 +29,7 @@ const ProtonApp = ({ config, children }) => {
     const cacheRef = useRef();
     const [UID, setUID] = useState(() => authentication.getUID());
     const tempDataRef = useRef({});
+    const [newSession, setNewSession] = useState(false);
 
     if (!cacheRef.current) {
         cacheRef.current = createCache();
@@ -37,6 +38,7 @@ const ProtonApp = ({ config, children }) => {
     const handleLogin = useCallback(({ UID: newUID, EventID, keyPassword, User }) => {
         authentication.setUID(newUID);
         authentication.setPassword(keyPassword);
+        setNewSession(true);
 
         cacheRef.current.reset();
         const cache = createCache();
@@ -75,6 +77,7 @@ const ProtonApp = ({ config, children }) => {
         }
         return {
             UID,
+            newSession,
             ...authentication,
             login: handleLogin,
             logout: handleLogout
