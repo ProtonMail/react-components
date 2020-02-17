@@ -15,7 +15,7 @@ const removeAllClasses = () =>
     });
 
 const DensityInjector = () => {
-    const [{ Density }] = useUserSettings();
+    const [{ Density } = {}] = useUserSettings();
 
     useEffect(() => {
         removeAllClasses();
