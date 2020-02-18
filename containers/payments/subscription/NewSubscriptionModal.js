@@ -301,7 +301,7 @@ const NewSubscriptionModal = ({
                         {checkResult.AmountDue ? (
                             <>
                                 <Alert>{c('Info')
-                                    .t`You can use any of your saved payment methods or add a new one.`}</Alert>
+                                    .t`You can use any of your saved payment method or add a new one. Please note that depending on the total amount due, some payment options may not be available.`}</Alert>
                                 <Payment
                                     type="subscription"
                                     paypal={paypal}
