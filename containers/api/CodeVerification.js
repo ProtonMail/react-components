@@ -70,15 +70,16 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
             <form onSubmit={() => withLoadingCode(sendCode())}>
                 <label htmlFor="email" className="bl mb0-5">{c('Label').t`Verification email`}</label>
                 <div className="flex flex-nowrap">
-                    <EmailInput
-                        id="email"
-                        autoFocus={true}
-                        value={email}
-                        className="flex-item-fluid mr1"
-                        placeholder={c('Placeholder').t`Enter an email address`}
-                        onChange={handleChangeEmail}
-                        required
-                    />
+                    <div className="flex-item-fluid mr1">
+                        <EmailInput
+                            id="email"
+                            autoFocus={true}
+                            value={email}
+                            placeholder={c('Placeholder').t`Enter an email address`}
+                            onChange={handleChangeEmail}
+                            required
+                        />
+                    </div>
                     <PrimaryButton disabled={!email} loading={loadingCode} type="submit">{c('Action')
                         .t`Send`}</PrimaryButton>
                 </div>
@@ -92,17 +93,19 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
             <form onSubmit={() => withLoadingCode(sendCode())}>
                 <label htmlFor="phone" className="bl mb0-5">{c('Label').t`Verification phone`}</label>
                 <div className="flex flex-nowrap">
-                    <IntlTelInput
-                        id="phone"
-                        autoFocus={true}
-                        value={phone}
-                        containerClassName="w100 mr1 flex-item-fluid"
-                        inputClassName="w100"
-                        placeholder={c('Placeholder').t`Enter an email address`}
-                        onPhoneNumberChange={handleChangePhone}
-                        onPhoneNumberBlur={handleChangePhone}
-                        required
-                    />
+                    <div className="flex-item-fluid mr1">
+                        <IntlTelInput
+                            id="phone"
+                            autoFocus={true}
+                            value={phone}
+                            containerClassName="w100"
+                            inputClassName="w100"
+                            placeholder={c('Placeholder').t`Enter an email address`}
+                            onPhoneNumberChange={handleChangePhone}
+                            onPhoneNumberBlur={handleChangePhone}
+                            required
+                        />
+                    </div>
                     <PrimaryButton disabled={!phone} loading={loadingCode} type="submit">{c('Action')
                         .t`Send`}</PrimaryButton>
                 </div>
@@ -122,15 +125,16 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
                     ) : null}
                 </Alert>
                 <div className="flex flex-nowrap mb1">
-                    <Input
-                        id="code"
-                        value={code}
-                        maxLength="6"
-                        className="flex-item-fluid mr1"
-                        placeholder={c('Placeholder').t`123456`}
-                        onChange={({ target }) => setCode(target.value)}
-                        autoFocus={true}
-                    />
+                    <div className="flex-item-fluid mr1">
+                        <Input
+                            id="code"
+                            value={code}
+                            maxLength="6"
+                            placeholder={c('Placeholder').t`123456`}
+                            onChange={({ target }) => setCode(target.value)}
+                            autoFocus={true}
+                        />
+                    </div>
                     <PrimaryButton loading={loadingVerification} type="submit">{c('Action').t`Send`}</PrimaryButton>
                 </div>
                 <div className="mb0-5">

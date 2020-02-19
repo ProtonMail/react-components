@@ -12,6 +12,7 @@ const RequestNewCodeModal = ({ email, onEdit, onResend, ...rest }) => {
                     <ResetButton>{c('Action').t`Cancel`}</ResetButton>
                     <div>
                         <Button
+                            className="mr1"
                             onClick={() => {
                                 rest.onClose();
                                 onEdit();
@@ -26,6 +27,7 @@ const RequestNewCodeModal = ({ email, onEdit, onResend, ...rest }) => {
                     </div>
                 </>
             }
+            {...rest}
         >
             <Alert>{c('Info')
                 .jt`Click "Request new code" to have a new verification code sent to <${email}>. If this email address is incorrect, click "Edit" to correct it.`}</Alert>
