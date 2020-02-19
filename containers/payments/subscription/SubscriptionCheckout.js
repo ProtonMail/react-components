@@ -204,7 +204,7 @@ const SubscriptionCheckout = ({ submit = c('Action').t`Pay`, plans = [], model, 
             {checkResult.Amount ? (
                 <div className="rounded p1 mb1 bg-global-highlight">
                     {model.coupon ? (
-                        <div className="border-bottom border-bottom--dashed mb0-5">
+                        <div className="border-bottom border-bottom--dashed border-bottom--currentColor mb0-5">
                             <CheckoutRow
                                 className="bigger m0"
                                 title={c('Title').t`Sub-total`}
@@ -224,9 +224,9 @@ const SubscriptionCheckout = ({ submit = c('Action').t`Pay`, plans = [], model, 
                             />
                         </div>
                     ) : null}
-                    <div className="border-bottom border-bottom--dashed mb0-5">
+                    <div className="border-bottom border-bottom--dashed border-bottom--currentColor mb0-5">
                         {[CYCLE.YEARLY, CYCLE.TWO_YEARS].includes(model.cycle) ? (
-                            <div className="border-bottom border-bottom--dashed mb0-5">
+                            <div className="border-bottom border-bottom--dashed border-bottom--currentColor mb0-5">
                                 <CheckoutRow
                                     title={c('Title').t`Total (monthly)`}
                                     amount={monthlyTotal}
@@ -235,7 +235,7 @@ const SubscriptionCheckout = ({ submit = c('Action').t`Pay`, plans = [], model, 
                                 />
                             </div>
                         ) : null}
-                        <div className="border-bottom border-bottom--dashed mb0-5">
+                        <div className="border-bottom border-bottom--dashed border-bottom--currentColor mb0-5">
                             <CheckoutRow
                                 className="bigger m0"
                                 title={c('Title').t`Total`}
