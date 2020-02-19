@@ -8,6 +8,7 @@ import createEventManager from 'proton-shared/lib/eventManager/eventManager';
 import { loadModels } from 'proton-shared/lib/models/helper';
 import { destroyOpenPGP, loadOpenPGP } from 'proton-shared/lib/openpgp';
 import { noop } from 'proton-shared/lib/helpers/function';
+import { testHumanVerification } from 'proton-shared/lib/api/tests';
 
 import EventModelListener from '../eventManager/EventModelListener';
 import EventNotices from '../eventManager/EventNotices';
@@ -33,6 +34,12 @@ const StandardPrivateApp = ({
     const eventManagerRef = useRef();
     const api = useApi();
     const cache = useCache();
+
+    // TODO to remove
+    useEffect(() => {
+        api(testHumanVerification());
+    }, []);
+    // TODO end
 
     useEffect(() => {
         const eventManagerPromise = loadEventID(api, cache).then((eventID) => {
