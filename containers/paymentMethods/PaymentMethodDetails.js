@@ -39,7 +39,18 @@ const PaymentMethodDetails = ({ type, details = {} }) => {
             <Bordered className="bg-global-highlight inline-flex flex-column w100 pl2 pr2 pb2">
                 {bankIcon ? <img width="70" src={bankIcon} alt={Brand} className="mb1" /> : null}
                 <span className="color-global-grey-dm bl mb1 opacity-40">{c('Label').t`Card number`}</span>
-                <code className="bl size-40 strong mb0-5">•••• •••• •••• {Last4}</code>
+                <div className="ratio-container-5-1 aligncenter">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="inner-ratio-container fill-currentColor"
+                        viewBox="0 0 330 50"
+                        xmlSpace="preserve"
+                    >
+                        <text x="0px" y="40px" className="size-40 strong">
+                            •••• •••• •••• {Last4}
+                        </text>
+                    </svg>
+                </div>
                 <div className="flex flex-nowrap flex-spacebetween">
                     <div>
                         <span className="color-global-grey-dm bl mb0-5 opacity-40">{c('Label').t`Card holder`}</span>
@@ -63,9 +74,10 @@ const PaymentMethodDetails = ({ type, details = {} }) => {
                 <div>
                     <img width="70" src={bankIcon} alt="PayPal" className="mb1" />
                 </div>
-                <div className="flex flex-nowrap flex-items-center">
-                    <label className="color-global-grey-dm mr1" htmlFor="paypal-payer">{c('Label').t`Payer`}</label>
-                    <code id="paypal-payer" className="bl bigger mb0 mb1">
+                <div className="flex flex-wrap flex-items-center">
+                    <label className="color-global-grey-dm flex-item-noshrink mr1" htmlFor="paypal-payer">{c('Label')
+                        .t`Payer`}</label>
+                    <code id="paypal-payer" className="bl bigger mb0 mb1 ellipsis" title={Payer}>
                         {Payer}
                     </code>
                 </div>
