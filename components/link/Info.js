@@ -37,7 +37,7 @@ const Info = ({
         <>
             <button
                 tabIndex="-1"
-                className={buttonClass}
+                className={classnames(['inline-flex', buttonClass])}
                 onClick={handleClick}
                 ref={anchorRef}
                 onMouseEnter={open}
