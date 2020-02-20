@@ -7,6 +7,7 @@ import Captcha from './Captcha';
 import HumanVerificationLabel from './HumanVerificationLabel';
 import CodeVerification from './CodeVerification';
 import RequestInvite from './RequestInvite';
+import Donate from './Donate';
 
 const getLabel = (method) =>
     ({
@@ -81,7 +82,7 @@ const HumanVerificationModal = ({ token, methods = [], onSuccess, ...rest }) => 
                         {method === 'captcha' ? <Captcha token={token} onSubmit={handleSubmit} /> : null}
                         {method === 'email' ? <CodeVerification onSubmit={handleSubmit} method="email" /> : null}
                         {method === 'sms' ? <CodeVerification onSubmit={handleSubmit} method="sms" /> : null}
-                        {method === 'payment' ? 'TODO' : null}
+                        {method === 'payment' ? <Donate onSubmit={handleSubmit} /> : null}
                         {method === 'invite' ? <RequestInvite /> : null}
                     </div>
                 </Row>

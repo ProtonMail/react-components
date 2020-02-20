@@ -65,9 +65,17 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
     };
 
     if (step === STEPS.ENTER_DESTINATION && isEmail) {
-        const handleChangeEmail = ({ target }) => setEmail(target.value);
+        const handleChangeEmail = (event) => {
+            event.preventDefault();
+
+            if (event.key === 'Enter') {
+                return withLoadingCode(sendCode());
+            }
+
+            setEmail(event.target.value);
+        };
         return (
-            <form onSubmit={() => withLoadingCode(sendCode())}>
+            <>
                 <label htmlFor="email" className="bl mb0-5">{c('Label').t`Verification email`}</label>
                 <div className="flex flex-nowrap">
                     <div className="flex-item-fluid mr1">
@@ -80,17 +88,20 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
                             required
                         />
                     </div>
-                    <PrimaryButton disabled={!email} loading={loadingCode} type="submit">{c('Action')
-                        .t`Send`}</PrimaryButton>
+                    <PrimaryButton
+                        disabled={!email}
+                        loading={loadingCode}
+                        onClick={() => withLoadingCode(sendCode())}
+                    >{c('Action').t`Send`}</PrimaryButton>
                 </div>
-            </form>
+            </>
         );
     }
 
     if (step === STEPS.ENTER_DESTINATION && isSms) {
         const handleChangePhone = (status, value, countryData, number) => setPhone(number);
         return (
-            <form onSubmit={() => withLoadingCode(sendCode())}>
+            <>
                 <label htmlFor="phone" className="bl mb0-5">{c('Label').t`Verification phone`}</label>
                 <div className="flex flex-nowrap">
                     <div className="flex-item-fluid mr1">
@@ -100,23 +111,31 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
                             value={phone}
                             containerClassName="w100"
                             inputClassName="w100"
-                            placeholder={c('Placeholder').t`Enter an email address`}
                             onPhoneNumberChange={handleChangePhone}
-                            onPhoneNumberBlur={handleChangePhone}
                             required
                         />
                     </div>
-                    <PrimaryButton disabled={!phone} loading={loadingCode} type="submit">{c('Action')
-                        .t`Send`}</PrimaryButton>
+                    <PrimaryButton
+                        disabled={!phone}
+                        loading={loadingCode}
+                        onClick={() => withLoadingCode(sendCode())}
+                    >{c('Action').t`Send`}</PrimaryButton>
                 </div>
-            </form>
+            </>
         );
     }
 
     if (step === STEPS.VERIFY_CODE) {
         const destinationText = <strong key="destination">{isEmail ? email : phone}</strong>;
+        const handleChangeCode = (event) => {
+            event.preventDefault();
+            if (event.key === 'Enter') {
+                return withLoadingVerification(verifyCode());
+            }
+            setCode(event.target.value);
+        };
         return (
-            <form onSubmit={() => withLoadingVerification(verifyCode())}>
+            <>
                 <Alert>
                     <div>{c('Info').jt`Enter the verification code that was sent to ${destinationText}.`}</div>
                     {isEmail ? (
@@ -131,11 +150,14 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
                             value={code}
                             maxLength="6"
                             placeholder={c('Placeholder').t`123456`}
-                            onChange={({ target }) => setCode(target.value)}
+                            onChange={handleChangeCode}
                             autoFocus={true}
                         />
                     </div>
-                    <PrimaryButton loading={loadingVerification} type="submit">{c('Action').t`Send`}</PrimaryButton>
+                    <PrimaryButton
+                        loading={loadingVerification}
+                        onClick={() => withLoadingVerification(verifyCode())}
+                    >{c('Action').t`Send`}</PrimaryButton>
                 </div>
                 <div className="mb0-5">
                     <InlineLinkButton
@@ -157,7 +179,7 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
                             : c('Action').t`Change verification phone?`}
                     </InlineLinkButton>
                 </div>
-            </form>
+            </>
         );
     }
 
