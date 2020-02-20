@@ -314,7 +314,7 @@ const SubscriptionCustomization = ({
                 max={MAX_SPACE_ADDON}
                 loading={loading}
                 key="storage"
-                label={c('Label').t`Storage space`}
+                label={c('Label').t`Storage space:`}
                 price={
                     <Price currency={model.currency} prefix="+" suffix={c('Suffix').t`/month`}>
                         {(model.planIDs[storageAddon.ID] || 0) * storageAddon.Pricing[CYCLE.MONTHLY]}
@@ -332,7 +332,7 @@ const SubscriptionCustomization = ({
                 max={MAX_ADDRESS_ADDON}
                 loading={loading}
                 key="address"
-                label={c('Label').t`Email addresses`}
+                label={c('Label').t`Email addresses:`}
                 price={
                     <Price currency={model.currency} prefix="+" suffix={c('Suffix').t`/month`}>
                         {(model.planIDs[addressAddon.ID] || 0) * plansMap[ADDON_NAMES.ADDRESS].Pricing[CYCLE.MONTHLY]}
@@ -349,7 +349,7 @@ const SubscriptionCustomization = ({
                 max={MAX_DOMAIN_PLUS_ADDON}
                 loading={loading}
                 key="domain"
-                label={c('Label').t`Custom domains`}
+                label={c('Label').t`Custom domains:`}
                 price={
                     <Price currency={model.currency} prefix="+" suffix={c('Suffix').t`/month`}>
                         {(model.planIDs[domainAddon.ID] || 0) * plansMap[ADDON_NAMES.DOMAIN].Pricing[CYCLE.MONTHLY]}
@@ -368,7 +368,7 @@ const SubscriptionCustomization = ({
                 max={MAX_MEMBER_ADDON}
                 loading={loading}
                 key="member"
-                label={c('Label').t`Users`}
+                label={c('Label').t`Users:`}
                 price={
                     <Price currency={model.currency} prefix="+" suffix={c('Suffix').t`/month`}>
                         {(model.planIDs[memberAddon.ID] || 0) * plansMap[ADDON_NAMES.MEMBER].Pricing[CYCLE.MONTHLY]}
@@ -385,7 +385,7 @@ const SubscriptionCustomization = ({
                 max={MAX_DOMAIN_PRO_ADDON}
                 loading={loading}
                 key="domain"
-                label={c('Label').t`Custom domains`}
+                label={c('Label').t`Custom domains:`}
                 price={
                     <Price currency={model.currency} prefix="+" suffix={c('Suffix').t`/month`}>
                         {(model.planIDs[domainAddon.ID] || 0) * plansMap[ADDON_NAMES.DOMAIN].Pricing[CYCLE.MONTHLY]}
@@ -404,7 +404,7 @@ const SubscriptionCustomization = ({
                 max={MAX_VPN_ADDON}
                 loading={loading}
                 key="vpn"
-                label={c('Label').t`VPN connections`}
+                label={c('Label').t`VPN connections:`}
                 price={
                     <Price currency={model.currency} prefix="+" suffix={c('Suffix').t`/month`}>
                         {(model.planIDs[vpnAddon.ID] || 0) * plansMap[ADDON_NAMES.VPN].Pricing[CYCLE.MONTHLY]}
