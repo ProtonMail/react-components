@@ -9,7 +9,7 @@ export interface Props extends Omit<React.SVGProps<SVGSVGElement>, 'ref'> {
     size?: number;
     color?: string;
     rotate?: number;
-    noFill: boolean;
+    noFill?: boolean;
 }
 
 /**
