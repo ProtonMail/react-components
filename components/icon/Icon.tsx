@@ -9,44 +9,30 @@ export interface Props extends Omit<React.SVGProps<SVGSVGElement>, 'ref'> {
     size?: number;
     color?: string;
     rotate?: number;
-    noFill?: boolean;
 }
 
 /**
  * Component to print svg icon
  * <Icon name="label" alt="My label" />
- * @param {String} name of the svg icon present in the design-system
- * @param {String} className used on svg tag
- * @param {String} fill      To construct the fill-global className
- * @param {Number} size      To construct the icon size className icon-<size>p (default 16)
- * @param {String} viewBox
- * @param {String} alt       Used by screen reader
- * @param {Number} rotate    How many degrees the icon should be rotated
- * @return {React.Component}
+ * @param name of the svg icon present in the design-system
+ * @param className used on svg tag
+ * @param size      To construct the icon size className icon-<size>p (default 16)
+ * @param viewBox
+ * @param color
+ * @param alt       Used by screen reader
+ * @param rotate    How many degrees the icon should be rotated
  */
-const Icon = ({
-    name,
-    alt,
-    color,
-    className = '',
-    viewBox = '0 0 16 16',
-    size = 16,
-    rotate = 0,
-    noFill,
-    ...rest
-}: Props) => {
-    const fillClass = noFill || color || (className && className.includes('fill-')) ? undefined : 'fill-global-grey';
+const Icon = ({ name, alt, color, className = '', viewBox = '0 0 16 16', size = 16, rotate = 0, ...rest }: Props) => {
     const style = {
         ...(color && { fill: color }),
         ...(rotate && { transform: `rotate(${rotate}deg)` })
     };
-
     return (
         <>
             <svg
                 style={style}
                 viewBox={viewBox}
-                className={classnames([`icon-${size}p`, fillClass, className])}
+                className={classnames([`icon-${size}p`, className])}
                 role="img"
                 focusable="false"
                 {...rest}

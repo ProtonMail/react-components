@@ -4,7 +4,7 @@ import Button, { Props as ButtonProps } from './Button';
 import { classnames } from '../../helpers/component';
 
 const PrimaryButton = ({ className = '', icon, ...rest }: ButtonProps) => {
-    const buttonIcon = typeof icon === 'string' ? <Icon name={icon} className="fill-global-light" /> : icon;
+    const buttonIcon = typeof icon === 'string' ? <Icon name={icon} /> : icon;
 
     return <Button icon={buttonIcon} className={classnames(['pm-button--primary', className])} {...rest} />;
 };
