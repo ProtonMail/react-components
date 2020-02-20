@@ -6,10 +6,10 @@ export interface Props extends Omit<React.SVGProps<SVGSVGElement>, 'ref'> {
     alt?: string;
     viewBox?: string;
     className?: string;
-    fill?: string;
     size?: number;
     color?: string;
     rotate?: number;
+    noFill: boolean;
 }
 
 /**
@@ -30,12 +30,12 @@ const Icon = ({
     color,
     className = '',
     viewBox = '0 0 16 16',
-    fill = 'grey',
     size = 16,
     rotate = 0,
+    noFill,
     ...rest
 }: Props) => {
-    const fillClass = fill ? `fill-global-${fill} ` : '';
+    const fillClass = noFill || color || (className && className.includes('fill-')) ? undefined : 'fill-global-grey';
     const style = {
         ...(color && { fill: color }),
         ...(rotate && { transform: `rotate(${rotate}deg)` })
