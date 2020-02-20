@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import { Alert, DoNotWindowOpenAlertError, Price, Loader } from 'react-components';
 import { MIN_PAYPAL_AMOUNT, MAX_PAYPAL_AMOUNT } from 'proton-shared/lib/constants';
 import { doNotWindowOpen } from 'proton-shared/lib/helpers/browser';
-import paypalSvg from 'design-system/assets/img/shared/bank-icons/cc-paypal.svg';
+import { getLightOrDark } from 'proton-shared/lib/themes/helpers';
+import paypalSvgLight from 'design-system/assets/img/shared/bank-icons/cc-paypal.svg';
+import paypalSvgDark from 'design-system/assets/img/shared/bank-icons/cc-paypal-dark.svg';
 import { c } from 'ttag';
 
 import PayPalButton from './PayPalButton';
@@ -24,6 +26,8 @@ const PayPalView = ({ type, amount, currency, paypal, paypalCredit }) => {
     if (doNotWindowOpen()) {
         return <DoNotWindowOpenAlertError />;
     }
+
+    const paypalSvg = getLightOrDark(paypalSvgLight, paypalSvgDark);
 
     const clickHere = (
         <PayPalButton
