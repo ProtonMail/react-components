@@ -17,9 +17,32 @@ const getLabel = (method) =>
         invite: c('Human verification method').t`Manual verification`
     }[method]);
 
+const PREFERED_ORDER = {
+    email: 0,
+    sms: 1,
+    captcha: 2,
+    payment: 4,
+    invite: 5
+};
+
+const orderMethods = (methods = []) => {
+    const mapped = methods.map((item, index) => ({ index, item }));
+    mapped.sort((a, b) => {
+        if (PREFERED_ORDER[a.item] > PREFERED_ORDER[b.item]) {
+            return 1;
+        }
+        if (PREFERED_ORDER[a.item] < PREFERED_ORDER[b.item]) {
+            return -1;
+        }
+        return 0;
+    });
+    return mapped.map(({ index }) => methods[index]);
+};
+
 const HumanVerificationModal = ({ token, methods = [], onSuccess, ...rest }) => {
     const title = c('Title').t`Human verification`;
     const [method, setMethod] = useState();
+    const orderedMethods = orderMethods(methods);
 
     const handleSubmit = (token) => {
         onSuccess({ token, method });
@@ -27,36 +50,38 @@ const HumanVerificationModal = ({ token, methods = [], onSuccess, ...rest }) => 
     };
 
     useEffect(() => {
-        if (methods.length) {
-            setMethod(methods[0]);
+        if (orderedMethods.length) {
+            setMethod(orderedMethods[0]);
         }
     }, []);
 
     return (
         <FormModal hasClose={false} hasSubmit={false} title={title} {...rest}>
             <Alert type="warning">{c('Info').t`For security reasons, please verify that you are not a robot.`}</Alert>
-            {methods.length ? (
+            {orderedMethods.length ? (
                 <Row>
                     <Label>
-                        {methods.map((m) => {
-                            return (
-                                <HumanVerificationLabel
-                                    value={m}
-                                    key={m}
-                                    methods={methods}
-                                    method={method}
-                                    onChange={setMethod}
-                                >
-                                    {getLabel(m)}
-                                </HumanVerificationLabel>
-                            );
-                        })}
+                        {orderedMethods
+                            .filter((m) => ['captcha', 'sms', 'email', 'invite', 'payment'].includes(m))
+                            .map((m) => {
+                                return (
+                                    <HumanVerificationLabel
+                                        value={m}
+                                        key={m}
+                                        methods={orderedMethods}
+                                        method={method}
+                                        onChange={setMethod}
+                                    >
+                                        {getLabel(m)}
+                                    </HumanVerificationLabel>
+                                );
+                            })}
                     </Label>
                     <div className="w100">
                         {method === 'captcha' ? <Captcha token={token} onSubmit={handleSubmit} /> : null}
                         {method === 'email' ? <CodeVerification onSubmit={handleSubmit} method="email" /> : null}
                         {method === 'sms' ? <CodeVerification onSubmit={handleSubmit} method="sms" /> : null}
-                        {methods === 'payment' ? 'TODO' : null}
+                        {method === 'payment' ? 'TODO' : null}
                         {method === 'invite' ? <RequestInvite /> : null}
                     </div>
                 </Row>
