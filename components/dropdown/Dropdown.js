@@ -97,7 +97,7 @@ Dropdown.propTypes = {
     onClose: PropTypes.func,
     isOpen: PropTypes.bool,
     originalPlacement: PropTypes.string,
-    availablePlacements: PropTypes.arrayOf(PropTypes.string),
+    availablePlacements: PropTypes.arrayOf(PropTypes.oneOf(ALL_PLACEMENTS)),
     size: PropTypes.oneOf(['normal', 'narrow', 'wide', 'auto']),
     autoClose: PropTypes.bool,
     autoCloseOutside: PropTypes.bool
