@@ -342,7 +342,7 @@ const BillingSection = ({ permission }) => {
                 {CouponCode || [YEARLY, TWO_YEARS].includes(Cycle) ? (
                     <div className="border-bottom pt1 pl1 pr1">
                         <div className="flex-autogrid w100 mb1">
-                            <div className="flex-autogrid-item h4 mb0">{c('Label').t`Sub-total`}</div>
+                            <div className="flex-autogrid-item h4 mb0">{c('Label').t`Subtotal`}</div>
                             <div className="flex-autogrid-item h4 mb0 bold alignright">
                                 <PlanPrice amount={subTotal} currency={Currency} cycle={MONTHLY} />
                             </div>

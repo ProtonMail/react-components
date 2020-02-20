@@ -207,7 +207,7 @@ const SubscriptionCheckout = ({ submit = c('Action').t`Pay`, plans = [], model, 
                         <div className="border-bottom border-bottom--dashed border-bottom--currentColor mb0-5">
                             <CheckoutRow
                                 className="bigger m0"
-                                title={c('Title').t`Sub-total`}
+                                title={c('Title').t`Subtotal`}
                                 amount={subTotal}
                                 currency={model.currency}
                             />
