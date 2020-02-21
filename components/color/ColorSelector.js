@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Icon, Input } from 'react-components';
 import { LABEL_COLORS } from 'proton-shared/lib/constants';
 
-import './ColorSelector.scss';
+import 'design-system/_sass/react-styles/components/colorSelector.scss';
 import { classnames } from '../../helpers/component';
 
 const ColorSelector = ({ selected, onChange, className, colors = LABEL_COLORS }) => {

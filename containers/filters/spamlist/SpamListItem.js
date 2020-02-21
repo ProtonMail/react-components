@@ -8,7 +8,7 @@ import AddEmailFilterListButton from './AddEmailFilterListButton';
 import MoveEmailFilteredList from './MoveEmailFilteredList';
 import RemoveEmailFilteredList from './RemoveEmailFilteredList';
 
-import './SpamListItem.scss';
+import 'design-system/_sass/react-styles/components/SpamListItem.scss';
 
 function SpamListItem({ list, type, dest, onAction = noop, className, loading }) {
     const I18N = {
