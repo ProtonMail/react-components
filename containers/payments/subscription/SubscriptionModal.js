@@ -25,7 +25,7 @@ import { checkSubscription, subscribe } from 'proton-shared/lib/api/payments';
 import { toPrice } from 'proton-shared/lib/helpers/string';
 import { getPlans } from 'proton-shared/lib/helpers/subscription';
 
-import './SubscriptionModal.scss';
+import 'design-system/_sass/react-styles/components/SubscriptionModal.scss';
 import CustomMailSection from './CustomMailSection';
 import CustomVPNSection from './CustomVPNSection';
 import OrderSummary from './OrderSummary';

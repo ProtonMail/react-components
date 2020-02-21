@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { Table } from '../table';
 import OrderableContainer from '../orderable/OrderableContainer';
-import './OrderableTable.scss';
+import 'design-system/_sass/react-styles/components/OrderableTable.scss';
 import { classnames } from '../../helpers/component';
 
 const OrderableTable = ({ children = [], className = '', caption = undefined, ...props }) => (

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ReactIntlTelInput from 'react-intl-tel-input';
 import 'react-intl-tel-input/dist/main.css';
 import { classnames } from '../../helpers/component';
-import './IntlTelInput.scss';
+import 'design-system/_sass/react-styles/components/IntlTelInput.scss';
 
 const IntlTelInput = ({ containerClassName, inputClassName, ...rest }) => (
     <ReactIntlTelInput

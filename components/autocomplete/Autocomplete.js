@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { noop } from 'proton-shared/lib/helpers/function';
 import Awesomplete from 'awesomplete';
-import './Autocomplete.scss';
+import 'awesomplete/awesomplete.css';
+import 'design-system/_sass/react-styles/components/autocomplete.scss';
 import { classnames } from '../../helpers/component';
 
 /** @type any */

@@ -23,7 +23,7 @@ import SieveEditor from '../../containers/filters/editor/Sieve';
 import PreviewFilter from '../../containers/filters/editor/Preview';
 import NameEditor from '../../containers/filters/editor/Name';
 
-import './AddFilterModal.css';
+import 'design-system/_sass/react-styles/components/AddFilterModal.scss';
 
 function AddFilterModal({ filter, type, mode = 'create', onEdit = noop, ...props }) {
     const [filterModel] = useState(() => newFilter(filter, type));

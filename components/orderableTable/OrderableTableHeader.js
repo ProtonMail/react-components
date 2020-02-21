@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { TableHeader } from '../table';
-import './OrderableTableHeader.scss';
+import 'design-system/_sass/react-styles/components/OrderableTableHeader.scss';
 import { classnames } from '../../helpers/component';
 
 const OrderableTableHeader = ({ cells = [], className = '', children = null, ...rest }) => (

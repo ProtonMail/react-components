@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Alert, Row, Label, useFormattedLabels } from 'react-components';
 
 import PreviewActionValue from './PreviewActionValue';
-import './Preview.css';
+import 'design-system/_sass/react-styles/components/Preview.scss';
 import { classnames } from '../../../helpers/component';
 
 const formatActions = (actions, labelsModel) => {
