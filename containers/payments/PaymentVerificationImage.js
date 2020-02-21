@@ -16,20 +16,24 @@ import verifiedByVisaSvgDark from 'design-system/assets/img/shared/bank-icons/ve
 import paypalSvgLight from 'design-system/assets/img/shared/bank-icons/cc-paypal.svg';
 import paypalSvgDark from 'design-system/assets/img/shared/bank-icons/cc-paypal-dark.svg';
 
-const treeDSecureSvg = getLightOrDark(treeDSecureSvgLight, treeDSecureSvgDark);
-const americanExpressSafekeySvg = getLightOrDark(americanExpressSafekeySvgLight, americanExpressSafekeySvgDark);
-const discoverProtectBuySvg = getLightOrDark(discoverProtectBuySvgLight, discoverProtectBuySvgDark);
-const verifiedByVisaSvg = getLightOrDark(verifiedByVisaSvgLight, verifiedByVisaSvgDark);
-const paypalSvg = getLightOrDark(paypalSvgLight, paypalSvgDark);
+const getImage = (type) => {
+    const treeDSecureSvg = getLightOrDark(treeDSecureSvgLight, treeDSecureSvgDark);
+    const americanExpressSafekeySvg = getLightOrDark(americanExpressSafekeySvgLight, americanExpressSafekeySvgDark);
+    const discoverProtectBuySvg = getLightOrDark(discoverProtectBuySvgLight, discoverProtectBuySvgDark);
+    const verifiedByVisaSvg = getLightOrDark(verifiedByVisaSvgLight, verifiedByVisaSvgDark);
 
-const IMAGES = {
-    'american-express': americanExpressSafekeySvg,
-    discover: discoverProtectBuySvg,
-    mastercard: mastercardSecurecodeSvg,
-    visa: verifiedByVisaSvg
+    const images = {
+        'american-express': americanExpressSafekeySvg,
+        discover: discoverProtectBuySvg,
+        mastercard: mastercardSecurecodeSvg,
+        visa: verifiedByVisaSvg
+    };
+
+    return images[type] || treeDSecureSvg;
 };
 
 const PaymentVerificationImage = ({ payment = {}, type: paymentMethodType = PAYMENT_METHOD_TYPES.CARD }) => {
+    const paypalSvg = getLightOrDark(paypalSvgLight, paypalSvgDark);
     if ([PAYMENT_METHOD_TYPES.PAYPAL, PAYMENT_METHOD_TYPES.PAYPAL_CREDIT].includes(paymentMethodType)) {
         return <img src={paypalSvg} alt="PayPal" />;
     }
@@ -37,7 +41,7 @@ const PaymentVerificationImage = ({ payment = {}, type: paymentMethodType = PAYM
     const { Details = {} } = payment;
     const [{ type, niceType } = {}] = creditCardType(Details.Number) || [];
 
-    return <img src={IMAGES[type] || treeDSecureSvg} alt={niceType} />;
+    return <img src={getImage(type)} alt={niceType} />;
 };
 
 PaymentVerificationImage.propTypes = {
