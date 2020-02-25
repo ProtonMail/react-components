@@ -34,6 +34,7 @@ function ActionsEditor({ filter, onChange = noop, errors = {} }) {
 
     const MOVE_TO = [
         {
+            group: c('Option group').t`Action`,
             text: c('Filter Actions').t`Move to ...`,
             value: ''
         },
