@@ -9,7 +9,11 @@ import { toMap } from 'proton-shared/lib/helpers/object';
 import LabelActions from './LabelActions';
 import AutoReplyAction from './AutoReplyAction';
 
-const formatOption = ({ Path, Name }, level = 0) => ({ value: Path, text: formatFolderName(level, Name, ' ∙ ') });
+const formatOption = ({ Path, Name }, level = 0) => ({
+    value: Path,
+    text: formatFolderName(level, Name, ' ∙ '),
+    group: c('Option group').t`Custom folders`
+});
 
 const reducer = (acc = [], folder, level = 0) => {
     acc.push(formatOption(folder, level));
@@ -34,19 +38,23 @@ function ActionsEditor({ filter, onChange = noop, errors = {} }) {
             value: ''
         },
         {
-            text: c('Filter Actions').t`Move to archive`,
+            group: c('Option group').t`Default folders`,
+            text: c('Filter Actions').t`Archive`,
             value: 'archive'
         },
         {
-            text: c('Filter Actions').t`Move to inbox`,
+            group: c('Option group').t`Default folders`,
+            text: c('Filter Actions').t`Inbox`,
             value: 'inbox'
         },
         {
-            text: c('Filter Actions').t`Move to spam`,
+            group: c('Option group').t`Default folders`,
+            text: c('Filter Actions').t`Spam`,
             value: 'spam'
         },
         {
-            text: c('Filter Actions').t`Move to trash`,
+            group: c('Option group').t`Default folders`,
+            text: c('Filter Actions').t`Trash`,
             value: 'trash'
         }
     ].concat(treeview.reduce((acc, folder) => reducer(acc, folder), []));
