@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
+import { buildTreeview, formatFolderName } from 'proton-shared/lib/helpers/folder';
 import { Loader, Label, Field, Select, Row, useLabels, useFolders, ErrorZone } from 'react-components';
 import { noop } from 'proton-shared/lib/helpers/function';
 import { toMap } from 'proton-shared/lib/helpers/object';
@@ -8,11 +9,24 @@ import { toMap } from 'proton-shared/lib/helpers/object';
 import LabelActions from './LabelActions';
 import AutoReplyAction from './AutoReplyAction';
 
+const formatOption = ({ Path, Name }, level = 0) => ({ value: Path, text: formatFolderName(level, Name, ' ∙ ') });
+
+const reducer = (acc = [], folder, level = 0) => {
+    acc.push(formatOption(folder, level));
+
+    if (Array.isArray(folder.subfolders)) {
+        folder.subfolders.forEach((folder) => reducer(acc, folder, level + 1));
+    }
+
+    return acc;
+};
+
 function ActionsEditor({ filter, onChange = noop, errors = {} }) {
     const { Actions } = filter.Simple;
     const [labels, loadingLabels] = useLabels();
-    const [folders, loadingFolders] = useFolders();
+    const [folders = [], loadingFolders] = useFolders();
     const labelsMap = toMap(labels, 'Path');
+    const treeview = buildTreeview(folders);
 
     const MOVE_TO = [
         {
@@ -35,12 +49,7 @@ function ActionsEditor({ filter, onChange = noop, errors = {} }) {
             text: c('Filter Actions').t`Move to trash`,
             value: 'trash'
         }
-    ].concat(
-        (folders || []).map(({ Name }) => ({
-            text: c('Filter Actions').t`Move to ${Name}`,
-            value: Name
-        }))
-    );
+    ].concat(treeview.reduce((acc, folder) => reducer(acc, folder), []));
 
     const MARK_AS = [
         {
@@ -113,7 +122,7 @@ function ActionsEditor({ filter, onChange = noop, errors = {} }) {
                 <Label htmlFor="actions">{c('New Label form').t`Actions`}</Label>
                 <Field>
                     <div className="mb1">
-                        {loadingLabels || loadingFolders ? (
+                        {loadingLabels ? (
                             <Loader />
                         ) : (
                             <LabelActions
@@ -124,7 +133,7 @@ function ActionsEditor({ filter, onChange = noop, errors = {} }) {
                         )}
                     </div>
                     <div className="mb1">
-                        {loadingLabels || loadingFolders ? (
+                        {loadingFolders ? (
                             <Loader />
                         ) : (
                             <Select

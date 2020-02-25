@@ -17,7 +17,7 @@ const reducer = (acc = [], folder, level = 0) => {
     return acc;
 };
 
-const ParentFolderSelector = ({ id, value, onChange }) => {
+const ParentFolderSelector = ({ id, value, onChange, className }) => {
     const [folders, loading] = useFolders();
     const treeview = buildTreeview(folders);
     const options = treeview.reduce((acc, folder) => reducer(acc, folder), [
@@ -29,12 +29,19 @@ const ParentFolderSelector = ({ id, value, onChange }) => {
     }
 
     return (
-        <Select id={id} value={value} options={options} onChange={({ target }) => onChange && onChange(target.value)} />
+        <Select
+            id={id}
+            className={className}
+            value={value}
+            options={options}
+            onChange={({ target }) => onChange && onChange(target.value)}
+        />
     );
 };
 
 ParentFolderSelector.propTypes = {
     id: PropTypes.string,
+    className: PropTypes.string,
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     onChange: PropTypes.func
 };
