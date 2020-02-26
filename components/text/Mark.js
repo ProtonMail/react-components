@@ -6,7 +6,7 @@ const Mark = React.memo(({ children, value }) => {
         return children;
     }
 
-    const splitted = children.split(value);
+    const splitted = children.split(new RegExp(value, 'i'));
 
     if (splitted.length < 2) {
         // Not found
