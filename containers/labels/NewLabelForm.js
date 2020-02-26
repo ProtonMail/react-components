@@ -45,7 +45,12 @@ function NewLabelForm({ label, onChangeColor, onChangeName, onChangeParentID }) 
                     <Row>
                         <Label htmlFor="parentID">{c('Label').t`Folder location`}</Label>
                         <Field>
-                            <ParentFolderSelector id="parentID" value={label.ParentID} onChange={onChangeParentID} />
+                            <ParentFolderSelector
+                                id="parentID"
+                                value={label.ParentID}
+                                onChange={onChangeParentID}
+                                disableOptions={[label.ID]}
+                            />
                         </Field>
                     </Row>
                 </>
