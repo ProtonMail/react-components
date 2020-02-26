@@ -5,6 +5,9 @@ import { buildTreeview, formatFolderName } from 'proton-shared/lib/helpers/folde
 import { ROOT_FOLDER } from 'proton-shared/lib/constants';
 import { c } from 'ttag';
 
+// ROOT_FOLDER is transformed to a String when coming from target.value
+const formatValue = (value) => (value === `${ROOT_FOLDER}` ? ROOT_FOLDER : value);
+
 const ParentFolderSelector = ({ id, value, onChange, className, disableOptions = [] }) => {
     const [folders, loading] = useFolders();
 
@@ -39,7 +42,7 @@ const ParentFolderSelector = ({ id, value, onChange, className, disableOptions =
             className={className}
             value={value}
             options={options}
-            onChange={({ target }) => onChange && onChange(target.value)}
+            onChange={({ target }) => onChange && onChange(formatValue(target.value))}
         />
     );
 };
