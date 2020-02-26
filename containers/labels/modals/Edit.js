@@ -24,9 +24,9 @@ function EditLabelModal({ label, mode = 'create', onEdit = noop, onAdd = noop, t
         },
         create({ Type } = {}) {
             if (Type === LABEL_TYPE.MESSAGE_LABEL) {
-                return c('Label/folder modal').t`Create a new label`;
+                return c('Label/folder modal').t`Create label`;
             }
-            return c('Label/folder modal').t`Create a new folder`;
+            return c('Label/folder modal').t`Create folder`;
         }
     };
 
@@ -85,7 +85,13 @@ function EditLabelModal({ label, mode = 'create', onEdit = noop, onAdd = noop, t
     };
 
     return (
-        <FormModal onSubmit={handleSubmit} loading={loading} title={I18N[mode](label)} {...props}>
+        <FormModal
+            submit={c('Action').t`Save`}
+            onSubmit={handleSubmit}
+            loading={loading}
+            title={I18N[mode](label)}
+            {...props}
+        >
             <NewLabelForm
                 label={model}
                 onChangeName={handleChangeName}
