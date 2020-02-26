@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const Mark = ({ children, value }) => {
+const Mark = React.memo(({ children, value }) => {
     if (!value) {
         return children;
     }
@@ -20,7 +20,7 @@ const Mark = ({ children, value }) => {
         }
         return acc;
     }, []);
-};
+});
 
 Mark.propTypes = {
     children: PropTypes.string.isRequired,
