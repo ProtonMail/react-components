@@ -118,6 +118,7 @@ export { default as Progress } from './components/progress/Progress';
 export { default as CircularProgress } from './components/progress/CircularProgress';
 export { default as Legend } from './components/text/Legend';
 export { default as ErrorZone } from './components/text/ErrorZone';
+export { default as Mark } from './components/text/Mark';
 export { default as Preformatted } from './components/text/Preformatted';
 export { default as EditableText } from './components/editableText/EditableText';
 export { default as LanguageSection } from './containers/general/LanguageSection';
