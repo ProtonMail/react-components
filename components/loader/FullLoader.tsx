@@ -16,7 +16,7 @@ const FullLoader = ({ size = 50, color, className }: Props) => {
         <>
             <svg
                 className={classnames(['loadingAnimation', isSmall && 'is-xbold', isMedium && 'is-bold', className])}
-                style={{ color: `${color}` }}
+                style={color ? { color } : undefined}
                 viewBox="0 0 200 200"
                 width={size}
                 height={size}
