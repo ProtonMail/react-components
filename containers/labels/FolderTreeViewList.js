@@ -141,7 +141,9 @@ const FolderTreeViewList = ({ items = [] }) => {
                                             name={hasSubFolders ? 'parent-folder' : 'folder'}
                                             className="mr0-5 flex-item-noshrink"
                                         />
-                                        <span>{item.Name}</span>
+                                        <span className="ellipsis" title={item.Name}>
+                                            {item.Name}
+                                        </span>
                                     </div>
                                     <div className="treeview-toggle w140e">
                                         <ToggleNotify label={item} />
