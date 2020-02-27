@@ -23,6 +23,7 @@ import ServerConfigs from './ServerConfigs';
 import downloadFile from 'proton-shared/lib/helpers/downloadFile';
 import { getCountryByAbbr } from 'react-components/helpers/countries';
 import { SORT_DIRECTION } from 'proton-shared/lib/constants';
+import { Link } from 'react-router-dom';
 
 const PLATFORM = {
     MACOS: 'macOS',
@@ -86,7 +87,10 @@ const OpenVPNConfigurationSection = () => {
     const countryServers = groupWith(
         (a, b) => a.ExitCountry === b.ExitCountry,
         allServers.filter(({ Tier }) => Tier === 1)
-    ).map((groups) => minBy(({ Load }) => Number(Load), groups));
+    ).map((groups) => ({
+        ...minBy(({ Load }) => Number(Load), groups),
+        Servers: groups.reduce((acc, { Servers = [] }) => (acc.push(...Servers), acc), [])
+    }));
 
     const isUpgradeRequiredForSecureCore = () => !userVPN || !hasPaidVpn || isBasicVPN;
     const isUpgradeRequiredForCountries = () => !userVPN || !hasPaidVpn;
@@ -158,8 +162,9 @@ const OpenVPNConfigurationSection = () => {
                                 .t`Install a Secure Core configuration file to benefit from an additional protection against VPN endpoint compromise.`}
                         </Alert>
                         {isUpgradeRequiredForSecureCore() && (
-                            <Alert learnMore="https://account.protonvpn.com/dashboard">
-                                {c('Info').t`ProtonVPN Plus or Visionary required for Secure Core feature.`}
+                            <Alert>
+                                <div>{c('Info').t`ProtonVPN Plus or Visionary required for Secure Core feature.`}</div>
+                                <Link to="/dashboard">{c('Link').t`Learn more`}</Link>
                             </Alert>
                         )}
                         <ConfigsTable

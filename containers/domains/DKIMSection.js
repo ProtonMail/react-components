@@ -29,21 +29,21 @@ const getKeyStatusBadge = (status) =>
     ({
         [DKIM_KEY_STATUS.ACTIVE]: (
             <Badge
-                className=""
+                className="flex"
                 tooltip={c('Description').t`This is the key we currently use for signing your emails.`}
                 type="success"
             >{c('Status').t`Active`}</Badge>
         ),
         [DKIM_KEY_STATUS.PENDING]: (
             <Badge
-                className=""
+                className="flex"
                 tooltip={c('Description').t`We are waiting for you to insert this record correctly in your DNS.`}
                 type="warning"
             >{c('Status').t`Pending`}</Badge>
         ),
         [DKIM_KEY_STATUS.RETIRED]: (
             <Badge
-                className=""
+                className="flex"
                 tooltip={c('Description').t`This key is no longer used for DKIM signing.`}
                 type="origin"
             >{c('Status').t`Retired`}</Badge>
@@ -52,8 +52,16 @@ const getKeyStatusBadge = (status) =>
 
 const getDNSStatusBadge = (status) =>
     ({
+        [DKIM_KEY_DNS_STATUS.NOT_SET]: (
+            <Badge
+                className="flex mr1"
+                tooltip={c('Description').t`There is a problem with this record. Please check your DNS.`}
+                type="error"
+            >{c('Status').t`Warning`}</Badge>
+        ),
         [DKIM_KEY_DNS_STATUS.INVALID]: (
             <Badge
+                className="flex mr1"
                 tooltip={c('Description').t`There is a problem with this record. Please check your DNS.`}
                 type="error"
             >{c('Status').t`Warning`}</Badge>
@@ -97,8 +105,8 @@ const DKIMSection = ({ domain }) => {
                                     </>
                                 ) : null}
                             </div>
-                            <div className="flex flex-nowrap">
-                                {getDNSStatusBadge(DNSState)}
+                            <div className="flex flex-nowrap flex-items-center">
+                                {State === DKIM_KEY_STATUS.RETIRED ? null : getDNSStatusBadge(DNSState)}
                                 {getKeyStatusBadge(State)}
                             </div>
                         </div>
