@@ -16,7 +16,9 @@ const Mark = React.memo(({ children, value }) => {
     return splitted.reduce((acc, v, index) => {
         acc.push(v);
         if (index < splitted.length - 1) {
-            acc.push(<mark>{value}</mark>);
+            const currentLength = acc.join('').length;
+            const insert = children.substring(currentLength, currentLength + value.length);
+            acc.push(<mark>{insert}</mark>);
         }
         return acc;
     }, []);
