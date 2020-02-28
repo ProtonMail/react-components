@@ -167,6 +167,7 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
                                     onEdit={editDestination}
                                     onResend={() => withLoadingCode(sendCode())}
                                     email={email}
+                                    phone={phone}
                                 />
                             )
                         }

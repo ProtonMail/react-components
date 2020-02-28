@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Alert, FormModal, PrimaryButton, Button, ResetButton } from 'react-components';
 import { c } from 'ttag';
 
-const RequestNewCodeModal = ({ email, onEdit, onResend, ...rest }) => {
+const RequestNewCodeModal = ({ email, phone, onEdit, onResend, ...rest }) => {
     return (
         <FormModal
             title={c('Title').t`Request new verification code`}
@@ -29,8 +29,14 @@ const RequestNewCodeModal = ({ email, onEdit, onResend, ...rest }) => {
             }
             {...rest}
         >
-            <Alert>{c('Info')
-                .jt`Click "Request new code" to have a new verification code sent to <${email}>. If this email address is incorrect, click "Edit" to correct it.`}</Alert>
+            {email ? (
+                <Alert>{c('Info')
+                    .jt`Click "Request new code" to have a new verification code sent to <${email}>. If this email address is incorrect, click "Edit" to correct it.`}</Alert>
+            ) : null}
+            {phone ? (
+                <Alert>{c('Info')
+                    .jt`Click "Request new code" to have a new verification code sent to <${phone}>. If this phone number is incorrect, click "Edit" to correct it.`}</Alert>
+            ) : null}
         </FormModal>
     );
 };
@@ -38,6 +44,7 @@ const RequestNewCodeModal = ({ email, onEdit, onResend, ...rest }) => {
 RequestNewCodeModal.propTypes = {
     onClose: PropTypes.func.isRequired,
     email: PropTypes.string.isRequired,
+    phone: PropTypes.string.isRequired,
     onEdit: PropTypes.func.isRequired,
     onResend: PropTypes.func.isRequired
 };
