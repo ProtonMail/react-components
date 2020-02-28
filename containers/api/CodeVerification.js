@@ -10,10 +10,9 @@ import {
     useApi,
     useLoading,
     useModals,
-    useConfig,
     useNotifications
 } from 'react-components';
-import { queryVerificationCode, queryCheckVerificationCode } from 'proton-shared/lib/api/user';
+import { queryVerificationCode } from 'proton-shared/lib/api/user';
 import { c } from 'ttag';
 
 import RequestNewCodeModal from './RequestNewCodeModal';
@@ -31,7 +30,6 @@ const METHODS = {
 const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
     const isEmail = method === METHODS.EMAIL;
     const isSms = method === METHODS.SMS;
-    const { CLIENT_TYPE } = useConfig();
     const { createNotification } = useNotifications();
     const [email, setEmail] = useState(defaultEmail);
     const [phone, setPhone] = useState();
@@ -46,16 +44,11 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
         await api(queryVerificationCode(method, isEmail ? { Address: email } : { Phone: phone }));
         setCode('');
         setStep(STEPS.VERIFY_CODE);
-        createNotification();
+        createNotification({ text: c('Success').t`Code sent to ${isEmail ? email : phone}` });
     };
 
     const verifyCode = async () => {
-        const Token = `${isEmail ? email : phone}:${code}`;
-        const TokenType = method;
-        const verificationToken = { Token, TokenType };
-        await api(queryCheckVerificationCode(Token, TokenType, CLIENT_TYPE));
-        createNotification();
-        return onSubmit(verificationToken);
+        return onSubmit(`${isEmail ? email : phone}:${code}`);
     };
 
     const editDestination = () => {
