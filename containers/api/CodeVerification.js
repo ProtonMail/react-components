@@ -148,7 +148,7 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
                     <PrimaryButton
                         loading={loadingVerification}
                         onClick={() => withLoadingVerification(verifyCode())}
-                    >{c('Action').t`Send`}</PrimaryButton>
+                    >{c('Action').t`Verify`}</PrimaryButton>
                 </div>
                 <div className="mb0-5">
                     <InlineLinkButton
@@ -167,8 +167,8 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
                 <div>
                     <InlineLinkButton onClick={editDestination}>
                         {isEmail
-                            ? c('Action').t`Change verification email?`
-                            : c('Action').t`Change verification phone?`}
+                            ? c('Action').t`Change verification email`
+                            : c('Action').t`Change verification phone number`}
                     </InlineLinkButton>
                 </div>
             </>

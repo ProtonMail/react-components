@@ -13,17 +13,17 @@ const getLabel = (method) =>
     ({
         captcha: c('Human verification method').t`Captcha`,
         payment: c('Human verification method').t`Donation`,
-        sms: c('Human verification method').t`Verify with SMS`,
-        email: c('Human verification method').t`Verify with email`,
+        sms: c('Human verification method').t`SMS`,
+        email: c('Human verification method').t`Email`,
         invite: c('Human verification method').t`Manual verification`
     }[method]);
 
 const PREFERED_ORDER = {
-    email: 0,
-    sms: 1,
-    captcha: 2,
-    payment: 4,
-    invite: 5
+    captcha: 0,
+    email: 1,
+    sms: 2,
+    payment: 3,
+    invite: 4
 };
 
 const orderMethods = (methods = []) => {
