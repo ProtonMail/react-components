@@ -52,8 +52,6 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
     };
 
     const editDestination = () => {
-        setPhone('');
-        setEmail('');
         setStep(STEPS.ENTER_DESTINATION);
     };
 
