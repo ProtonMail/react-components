@@ -23,7 +23,7 @@ const RequestNewCodeModal = ({ email, onEdit, onResend, ...rest }) => {
                                 rest.onClose();
                                 onResend();
                             }}
-                        >{c('Action').t`Resend new code`}</PrimaryButton>
+                        >{c('Action').t`Request new code`}</PrimaryButton>
                     </div>
                 </>
             }
