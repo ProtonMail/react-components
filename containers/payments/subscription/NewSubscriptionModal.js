@@ -271,27 +271,29 @@ const NewSubscriptionModal = ({
                         />
                     </div>
                     <div className="w25 onmobile-w100">
-                        <SubscriptionCheckout
-                            submit={
-                                <NewSubscriptionSubmitButton
-                                    onClose={onClose}
-                                    canPay={canPay}
-                                    paypal={paypal}
-                                    step={step}
-                                    loading={loadingCheck || loading}
-                                    method={method}
-                                    checkResult={checkResult}
-                                    className="w100"
-                                />
-                            }
-                            plans={plans}
-                            checkResult={checkResult}
-                            loading={loadingCheck}
-                            onCheckout={() => withLoading(handleCheckout())}
-                            model={model}
-                            setModel={setModel}
-                        />
-                        <PaymentGiftCode gift={model.gift} onApply={handleGift} loading={loadingCheck} />
+                        <div className="subscriptionCheckout-container">
+                            <SubscriptionCheckout
+                                submit={
+                                    <NewSubscriptionSubmitButton
+                                        onClose={onClose}
+                                        canPay={canPay}
+                                        paypal={paypal}
+                                        step={step}
+                                        loading={loadingCheck || loading}
+                                        method={method}
+                                        checkResult={checkResult}
+                                        className="w100"
+                                    />
+                                }
+                                plans={plans}
+                                checkResult={checkResult}
+                                loading={loadingCheck}
+                                onCheckout={() => withLoading(handleCheckout())}
+                                model={model}
+                                setModel={setModel}
+                            />
+                            <PaymentGiftCode gift={model.gift} onApply={handleGift} loading={loadingCheck} />
+                        </div>
                     </div>
                 </div>
             )}
