@@ -13,6 +13,7 @@ import {
     useNotifications
 } from 'react-components';
 import { queryVerificationCode } from 'proton-shared/lib/api/user';
+import { isNumber } from 'proton-shared/lib/helpers/validators';
 import { c } from 'ttag';
 
 import RequestNewCodeModal from './RequestNewCodeModal';
@@ -34,6 +35,11 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
     const [email, setEmail] = useState(defaultEmail);
     const [phone, setPhone] = useState();
     const [code, setCode] = useState('');
+    const codeError = !code
+        ? c('Input error').t`This field is required`
+        : code.length < 6
+        ? c('Error').t`The code is not the right length`
+        : '';
     const [step, setStep] = useState(STEPS.ENTER_DESTINATION);
     const api = useApi();
     const [loadingCode, withLoadingCode] = useLoading();
@@ -68,7 +74,7 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
         return (
             <>
                 <label htmlFor="email" className="bl mb0-5">{c('Label').t`Verification email`}</label>
-                <div className="flex flex-nowrap">
+                <div className="flex flex-nowrap flex-items-start">
                     <div className="flex-item-fluid mr1">
                         <EmailInput
                             id="email"
@@ -94,7 +100,7 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
         return (
             <>
                 <label htmlFor="phone" className="bl mb0-5">{c('Label').t`Verification phone`}</label>
-                <div className="flex flex-nowrap">
+                <div className="flex flex-nowrap flex-items-start">
                     <div className="flex-item-fluid mr1">
                         <IntlTelInput
                             id="phone"
@@ -120,10 +126,16 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
         const destinationText = <strong key="destination">{isEmail ? email : phone}</strong>;
         const handleChangeCode = (event) => {
             event.preventDefault();
+
             if (event.key === 'Enter') {
                 return withLoadingVerification(verifyCode());
             }
-            setCode(event.target.value);
+
+            const newCode = event.target.value;
+
+            if (!newCode || isNumber(newCode)) {
+                setCode(newCode);
+            }
         };
         return (
             <>
@@ -143,6 +155,8 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
                             placeholder={c('Placeholder').t`123456`}
                             onChange={handleChangeCode}
                             autoFocus={true}
+                            required={true}
+                            error={codeError}
                         />
                     </div>
                     <PrimaryButton
