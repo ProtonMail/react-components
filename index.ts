@@ -348,6 +348,7 @@ export { default as useDomains } from './hooks/useDomains';
 export { default as usePremiumDomains } from './hooks/usePremiumDomains';
 export { useCalendars, useGetCalendars } from './hooks/useCalendars';
 export { default as useActiveBreakpoint } from './hooks/useActiveBreakpoint';
+export { default as useSvgGraphicsBbox } from './hooks/useSvgGraphicsBbox';
 export { default as useWindowSize } from './hooks/useWindowSize';
 export { default as useElementRect } from './hooks/useElementRect';
 export { default as useContacts } from './hooks/useContacts';
