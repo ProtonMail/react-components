@@ -241,6 +241,7 @@ const NewSubscriptionModal = ({
                         plans={plans}
                         step={step}
                         model={model}
+                        method={method}
                     />
                 )
             }

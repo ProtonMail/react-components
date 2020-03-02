@@ -2,8 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useAddresses, Button, Loader } from 'react-components';
 import { c } from 'ttag';
-import { CYCLE, COUPON_CODES, PLANS } from 'proton-shared/lib/constants';
+import { CYCLE, COUPON_CODES, PLANS, PAYMENT_METHOD_TYPES } from 'proton-shared/lib/constants';
 import { clearPlanIDs } from 'proton-shared/lib/helpers/subscription';
+import { toMap } from 'proton-shared/lib/helpers/object';
 import shieldSvg from 'design-system/assets/img/shared/shield.svg';
 import percentageSvg from 'design-system/assets/img/shared/percentage.svg';
 import clockSvg from 'design-system/assets/img/shared/clock.svg';
@@ -16,11 +17,16 @@ const PercentageIcon = () => <img className="mr0-5 flex-item-noshrink" src={perc
 const ShieldIcon = () => <img className="mr0-5 flex-item-noshrink" src={shieldSvg} alt="percentage" />;
 const ClockIcon = () => <img className="mr0-5 flex-item-noshrink" src={clockSvg} alt="percentage" />;
 
-const NewSubscriptionModalFooter = ({ submit, step, model, plans, onClose }) => {
-    const { ID: visionaryID } = plans.find(({ Name }) => Name === PLANS.VISIONARY);
+const NewSubscriptionModalFooter = ({ submit, step, model, plans, onClose, method }) => {
+    const plansMap = toMap(plans, 'Name');
     const [addresses, loadingAddresses] = useAddresses();
-    const isVisionary = !!model.planIDs[visionaryID];
+    const isVisionary = !!model.planIDs[plansMap[PLANS.VISIONARY].ID];
     const hasPaidPlans = Object.keys(clearPlanIDs(model.planIDs)).length;
+    const protectedPayment = [PAYMENT_METHOD_TYPES.CARD, PAYMENT_METHOD_TYPES.PAYPAL].includes(method);
+    const onlyVPN =
+        (model.planIDs[plansMap[PLANS.VPNBASIC].ID] || model.planIDs[plansMap[PLANS.VPNPLUS].ID]) &&
+        !model.planIDs[plansMap[PLANS.PLUS].ID] &&
+        !model.planIDs[plansMap[PLANS.PROFESSIONAL].ID];
 
     if (loadingAddresses) {
         return <Loader />;
@@ -82,13 +88,13 @@ const NewSubscriptionModalFooter = ({ submit, step, model, plans, onClose }) => 
                     </span>
                 </div>
             ),
-        step === SUBSCRIPTION_STEPS.PAYMENT && (
+        step === SUBSCRIPTION_STEPS.PAYMENT && onlyVPN && (
             <div key="upsell-6" className="nomobile flex flex-nowrap flex-items-center pl1 pr1">
                 <ClockIcon />
                 <span className="flex-item-fluid">{c('Info').t`30-days money back guaranteed`}</span>
             </div>
         ),
-        step === SUBSCRIPTION_STEPS.PAYMENT && (
+        step === SUBSCRIPTION_STEPS.PAYMENT && protectedPayment && (
             <div key="upsell-7" className="nomobile flex flex-nowrap flex-items-center pl1 pr1">
                 <ShieldIcon />
                 <span className="flex-item-fluid">
@@ -114,7 +120,8 @@ NewSubscriptionModalFooter.propTypes = {
     submit: PropTypes.node.isRequired,
     onClose: PropTypes.func.isRequired,
     step: PropTypes.number,
-    model: PropTypes.object
+    model: PropTypes.object,
+    method: PropTypes.string
 };
 
 export default NewSubscriptionModalFooter;
