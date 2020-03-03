@@ -190,13 +190,13 @@ const SubscriptionCustomization = ({
 
     const FEATURES = {
         [FREE]: [
-            <SubscriptionFeatureRow key="user" icon="organization-users" feature={c('Feature').t`1 User`} />,
+            <SubscriptionFeatureRow key="user" icon="organization-users" feature={c('Feature').t`1 user`} />,
             <SubscriptionFeatureRow key="storage" icon="user-storage" feature={c('Feature').t`500 MB storage`} />,
             <SubscriptionFeatureRow key="address" icon="email-address" feature={c('Feature').t`1 email address`} />,
             <SubscriptionFeatureRow key="all" icon="add" feature={c('Feature').t`150 messages per day`} />
         ],
         [PLANS.PLUS]: [
-            <SubscriptionFeatureRow key="user" icon="organization-users" feature={c('Feature').t`1 User`} />,
+            <SubscriptionFeatureRow key="user" icon="organization-users" feature={c('Feature').t`1 user`} />,
             <SubscriptionFeatureRow
                 key="storage"
                 icon="user-storage"
