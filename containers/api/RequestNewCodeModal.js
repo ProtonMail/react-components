@@ -4,6 +4,8 @@ import { Alert, FormModal, PrimaryButton, Button, ResetButton } from 'react-comp
 import { c } from 'ttag';
 
 const RequestNewCodeModal = ({ email, phone, onEdit, onResend, ...rest }) => {
+    const strongEmail = <strong key="email">{email}</strong>;
+    const strongPhone = <strong key="phone">{phone}</strong>;
     return (
         <FormModal
             title={c('Title').t`Request new verification code`}
@@ -31,11 +33,11 @@ const RequestNewCodeModal = ({ email, phone, onEdit, onResend, ...rest }) => {
         >
             {email ? (
                 <Alert>{c('Info')
-                    .jt`Click "Request new code" to have a new verification code sent to <${email}>. If this email address is incorrect, click "Edit" to correct it.`}</Alert>
+                    .jt`Click "Request new code" to have a new verification code sent to ${strongEmail}. If this email address is incorrect, click "Edit" to correct it.`}</Alert>
             ) : null}
             {phone ? (
                 <Alert>{c('Info')
-                    .jt`Click "Request new code" to have a new verification code sent to <${phone}>. If this phone number is incorrect, click "Edit" to correct it.`}</Alert>
+                    .jt`Click "Request new code" to have a new verification code sent to ${strongPhone}. If this phone number is incorrect, click "Edit" to correct it.`}</Alert>
             ) : null}
         </FormModal>
     );
