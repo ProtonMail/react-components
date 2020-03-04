@@ -22,7 +22,7 @@ const NewSubscriptionModalFooter = ({ submit, step, model, plans, onClose, metho
     const [addresses, loadingAddresses] = useAddresses();
     const isVisionary = !!model.planIDs[plansMap[PLANS.VISIONARY].ID];
     const hasPaidPlans = Object.keys(clearPlanIDs(model.planIDs)).length;
-    const protectedPayment = [PAYMENT_METHOD_TYPES.CARD, PAYMENT_METHOD_TYPES.PAYPAL].includes(method);
+    const protectedPayment = ![PAYMENT_METHOD_TYPES.CASH, PAYMENT_METHOD_TYPES.BITCOIN].includes(method);
     const onlyVPN =
         (model.planIDs[plansMap[PLANS.VPNBASIC].ID] || model.planIDs[plansMap[PLANS.VPNPLUS].ID]) &&
         !model.planIDs[plansMap[PLANS.PLUS].ID] &&
