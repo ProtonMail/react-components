@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { FormModal, Alert, Row, Label, useNotifications, useLoading } from 'react-components';
-import { API_CUSTOM_ERROR_CODES } from 'proton-shared/lib/errors';
+import { FormModal, Alert, Row, Label, useNotifications } from 'react-components';
 import { c } from 'ttag';
 
 import Captcha from './Captcha';
@@ -46,20 +45,11 @@ const HumanVerificationModal = ({ token, methods = [], onSuccess, ...rest }) => 
     const [method, setMethod] = useState();
     const orderedMethods = orderMethods(methods);
     const { createNotification } = useNotifications();
-    const [loading, withLoading] = useLoading();
 
     const handleSubmit = async (token) => {
-        try {
-            await onSuccess({ token, method });
-            createNotification({ text: c('Success').t`Verification successful` });
-            rest.onClose();
-        } catch (error) {
-            const { data: { Code } = { Code: 0 } } = error;
-
-            if (Code === API_CUSTOM_ERROR_CODES.TOKEN_INVALID) {
-                createNotification({ text: c('Error').t`Invalid verification code`, type: 'error' });
-            }
-        }
+        await onSuccess({ token, method });
+        createNotification({ text: c('Success').t`Verification successful` });
+        rest.onClose();
     };
 
     useEffect(() => {
@@ -91,30 +81,10 @@ const HumanVerificationModal = ({ token, methods = [], onSuccess, ...rest }) => 
                             })}
                     </Label>
                     <div className="w100">
-                        {method === 'captcha' ? (
-                            <Captcha
-                                token={token}
-                                loading={loading}
-                                onSubmit={(data) => withLoading(handleSubmit(data))}
-                            />
-                        ) : null}
-                        {method === 'email' ? (
-                            <CodeVerification
-                                loading={loading}
-                                onSubmit={(data) => withLoading(handleSubmit(data))}
-                                method="email"
-                            />
-                        ) : null}
-                        {method === 'sms' ? (
-                            <CodeVerification
-                                loading={loading}
-                                onSubmit={(data) => withLoading(handleSubmit(data))}
-                                method="sms"
-                            />
-                        ) : null}
-                        {method === 'payment' ? (
-                            <Donate loading={loading} onSubmit={(data) => withLoading(handleSubmit(data))} />
-                        ) : null}
+                        {method === 'captcha' ? <Captcha token={token} onSubmit={handleSubmit} /> : null}
+                        {method === 'email' ? <CodeVerification onSubmit={handleSubmit} method="email" /> : null}
+                        {method === 'sms' ? <CodeVerification onSubmit={handleSubmit} method="sms" /> : null}
+                        {method === 'payment' ? <Donate onSubmit={handleSubmit} /> : null}
                         {method === 'invite' ? <RequestInvite /> : null}
                     </div>
                 </Row>

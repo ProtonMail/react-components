@@ -14,9 +14,11 @@ import {
 } from 'react-components';
 import { queryVerificationCode } from 'proton-shared/lib/api/user';
 import { isNumber } from 'proton-shared/lib/helpers/validators';
+import { API_CUSTOM_ERROR_CODES } from 'proton-shared/lib/errors';
 import { c } from 'ttag';
 
 import RequestNewCodeModal from './RequestNewCodeModal';
+import InvalidVerificationCodeModal from './InvalidVerificationCodeModal';
 
 const STEPS = {
     ENTER_DESTINATION: 0,
@@ -53,12 +55,25 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
         createNotification({ text: c('Success').t`Code sent to ${isEmail ? email : phone}` });
     };
 
-    const verifyCode = async () => {
-        return onSubmit(`${isEmail ? email : phone}:${code}`);
-    };
-
     const editDestination = () => {
         setStep(STEPS.ENTER_DESTINATION);
+    };
+
+    const verifyCode = async () => {
+        try {
+            await onSubmit(`${isEmail ? email : phone}:${code}`);
+        } catch (error) {
+            const { data: { Code } = { Code: 0 } } = error;
+
+            if (Code === API_CUSTOM_ERROR_CODES.TOKEN_INVALID) {
+                createModal(
+                    <InvalidVerificationCodeModal
+                        onEdit={editDestination}
+                        onResend={() => withLoadingCode(sendCode())}
+                    />
+                );
+            }
+        }
     };
 
     if (step === STEPS.ENTER_DESTINATION && isEmail) {
