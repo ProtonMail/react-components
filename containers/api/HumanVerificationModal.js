@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { FormModal, Alert, Row, Label, useNotifications } from 'react-components';
+import { API_CUSTOM_ERROR_CODES } from 'proton-shared/lib/errors';
 import { c } from 'ttag';
 
 import Captcha from './Captcha';
@@ -40,16 +41,25 @@ const orderMethods = (methods = []) => {
     return mapped.map(({ index }) => methods[index]);
 };
 
-const HumanVerificationModal = ({ token, methods = [], onSuccess, ...rest }) => {
+const HumanVerificationModal = ({ token, methods = [], onSuccess, onVerify, ...rest }) => {
     const title = c('Title').t`Human verification`;
     const [method, setMethod] = useState();
     const orderedMethods = orderMethods(methods);
     const { createNotification } = useNotifications();
 
     const handleSubmit = async (token) => {
-        await onSuccess({ token, method });
-        createNotification({ text: c('Success').t`Verification successful` });
-        rest.onClose();
+        try {
+            await onVerify({ token, tokenType: method });
+            createNotification({ text: c('Success').t`Verification successful` });
+            rest.onClose();
+            onSuccess();
+        } catch (error) {
+            const { data: { Code } = { Code: 0 } } = error;
+
+            if (Code === API_CUSTOM_ERROR_CODES.TOKEN_INVALID) {
+                createNotification({ text: c('Error').t`Invalid verification code`, type: 'error' });
+            }
+        }
     };
 
     useEffect(() => {
@@ -96,7 +106,8 @@ const HumanVerificationModal = ({ token, methods = [], onSuccess, ...rest }) => 
 HumanVerificationModal.propTypes = {
     token: PropTypes.string,
     methods: PropTypes.oneOf(['captcha', 'sms', 'email', 'invite', 'payment']).isRequired,
-    onSuccess: PropTypes.func.isRequired
+    onSuccess: PropTypes.func.isRequired,
+    onVerify: PropTypes.func.isRequired
 };
 
 export default HumanVerificationModal;
