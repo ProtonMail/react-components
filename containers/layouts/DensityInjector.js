@@ -9,11 +9,6 @@ const CLASSES = {
     [COMFORTABLE]: 'is-comfortable'
 };
 
-const removeAllClasses = () =>
-    Object.entries(CLASSES).forEach(([, className]) => {
-        document.body.classList.remove(className);
-    });
-
 const DensityInjector = () => {
     const [{ Density } = {}] = useUserSettings();
 
@@ -21,7 +16,7 @@ const DensityInjector = () => {
         document.body.classList.add(CLASSES[Density]);
         return () => {
             document.body.classList.remove(CLASSES[Density]);
-        }
+        };
     }, [Density]);
 
     return null;
