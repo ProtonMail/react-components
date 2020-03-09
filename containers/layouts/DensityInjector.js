@@ -18,8 +18,10 @@ const DensityInjector = () => {
     const [{ Density } = {}] = useUserSettings();
 
     useEffect(() => {
-        removeAllClasses();
         document.body.classList.add(CLASSES[Density]);
+        return () => {
+            document.body.classList.remove(CLASSES[Density]);
+        }
     }, [Density]);
 
     return null;
