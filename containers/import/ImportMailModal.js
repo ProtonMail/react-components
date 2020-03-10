@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import { FormModal, Alert, EmailInput, Input, useApi, useLoading } from 'react-components';
-import { getAuthenticationMethod } from 'proton-shared/lib/api/importMail';
+import { getAuthenticationMethod } from 'proton-shared/lib/api/mailImport';
 
 const STEPS = {
     START: 'start',
