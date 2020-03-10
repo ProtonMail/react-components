@@ -49,17 +49,25 @@ const ImportMailModal = ({ ...rest }) => {
             {model.step === STEPS.START ? (
                 <>
                     <Alert>TODO</Alert>
-                    <label>{c('Label').t`Email address`}</label>
+                    <label htmlFor="emailAddress">{c('Label').t`Email address`}</label>
                     <EmailInput
+                        id="emailAddress"
                         value={model.email}
                         onChange={({ target }) => setModel({ ...model, email: target.value })}
                         placeholder={c('Placeholder').t`Enter your email address to import`}
                     />
-                    <label>{c('Label').t`Client ID`}</label>
+                    <label htmlFor="clientID">{c('Label').t`Client ID`}</label>
                     <Input
+                        id="clientID"
                         value={model.clientID}
                         onChange={({ target }) => setModel({ ...model, clientID: target.value })}
                         placeholder={c('Placeholder').t`Client ID`}
+                    />
+                    <label>{c('Label').t`Client secret`}</label>
+                    <Input
+                        value={model.clientSecret}
+                        onChange={({ target }) => setModel({ ...model, clientSecret: target.value })}
+                        placeholder={c('Placeholder').t`Client secret`}
                     />
                 </>
             ) : null}
