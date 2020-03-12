@@ -89,7 +89,7 @@ function EditLabelModal({ label, mode = 'create', onEdit = noop, onAdd = noop, t
             submit={c('Action').t`Save`}
             onSubmit={handleSubmit}
             loading={loading}
-            title={I18N[mode](label)}
+            title={I18N[mode](model)}
             {...props}
         >
             <NewLabelForm
