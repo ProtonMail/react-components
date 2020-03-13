@@ -59,6 +59,8 @@ const HumanVerificationModal = ({ token, methods = [], onSuccess, onVerify, ...r
             if (Code === API_CUSTOM_ERROR_CODES.TOKEN_INVALID) {
                 createNotification({ text: c('Error').t`Invalid verification code`, type: 'error' });
             }
+
+            throw error;
         }
     };
 
