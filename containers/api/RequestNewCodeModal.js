@@ -11,10 +11,10 @@ const RequestNewCodeModal = ({ email, phone, onEdit, onResend, ...rest }) => {
             title={c('Title').t`Request new verification code`}
             footer={
                 <>
-                    <ResetButton>{c('Action').t`Cancel`}</ResetButton>
-                    <div>
+                    <ResetButton className="ontinymobile-flex-self-start">{c('Action').t`Cancel`}</ResetButton>
+                    <div className="flex ontinymobile-flex-column ontinymobile-ml1">
                         <Button
-                            className="mr1"
+                            className="mr1 ontinymobile-mb1"
                             onClick={() => {
                                 rest.onClose();
                                 onEdit();
