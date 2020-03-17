@@ -199,9 +199,11 @@ const BugModal = ({ onClose, username: Username = '', location, addresses = [], 
             </Row>
             <Row>
                 <Label>{c('Label').t`System information`}</Label>
-                <Button onClick={toggleDetails}>
-                    {showDetails ? c('Action').t`Hide info` : c('Action').t`Show info`}
-                </Button>
+                <Field className="inline-flex">
+                    <Button onClick={toggleDetails}>
+                        {showDetails ? c('Action').t`Hide info` : c('Action').t`Show info`}
+                    </Button>
+                </Field>
             </Row>
             {showDetails ? (
                 <>
