@@ -124,7 +124,7 @@ const HumanVerificationModal = ({ token, methods = [], onSuccess, onVerify, ...r
     }, []);
 
     const submit =
-        amount >= MIN_DONATION_AMOUNT ? (
+        amount >= MIN_DONATION_AMOUNT && method === 'payment' ? (
             paymentMethod === PAYMENT_METHOD_TYPES.PAYPAL ? (
                 <PayPalButton paypal={paypal} className="pm-button--primary" amount={amount}>{c('Action')
                     .t`Continue`}</PayPalButton>
