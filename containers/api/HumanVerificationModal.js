@@ -1,18 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { FormModal, Alert, Row, Label, useNotifications } from 'react-components';
+import {
+    FormModal,
+    Alert,
+    Row,
+    Label,
+    PrimaryButton,
+    Payment,
+    usePayment,
+    useNotifications,
+    useApi,
+    PaymentSelector,
+    useLoading
+} from 'react-components';
 import { API_CUSTOM_ERROR_CODES } from 'proton-shared/lib/errors';
+import {
+    DEFAULT_CURRENCY,
+    DEFAULT_DONATION_AMOUNT,
+    MIN_DONATION_AMOUNT,
+    PAYMENT_METHOD_TYPES
+} from 'proton-shared/lib/constants';
+import { verifyPayment } from 'proton-shared/lib/api/payments';
 import { c } from 'ttag';
 
 import Captcha from './Captcha';
 import HumanVerificationLabel from './HumanVerificationLabel';
 import CodeVerification from './CodeVerification';
 import RequestInvite from './RequestInvite';
-import Donate from './Donate';
+import PayPalButton from '../payments/PayPalButton';
+import './HumanVerificationModal.scss';
 
 const getLabel = (method) =>
     ({
-        captcha: c('Human verification method').t`Captcha`,
+        captcha: c('Human verification method').t`CAPTCHA`,
         payment: c('Human verification method').t`Donation`,
         sms: c('Human verification method').t`SMS`,
         email: c('Human verification method').t`Email`,
@@ -46,6 +66,10 @@ const HumanVerificationModal = ({ token, methods = [], onSuccess, onVerify, ...r
     const [method, setMethod] = useState();
     const orderedMethods = orderMethods(methods);
     const { createNotification } = useNotifications();
+    const api = useApi();
+    const [loading, withLoading] = useLoading();
+    const [currency, setCurrency] = useState(DEFAULT_CURRENCY);
+    const [amount, setAmount] = useState(DEFAULT_DONATION_AMOUNT);
 
     const handleSubmit = async (token) => {
         try {
@@ -64,14 +88,69 @@ const HumanVerificationModal = ({ token, methods = [], onSuccess, onVerify, ...r
         }
     };
 
+    const handleSubmitPayment = async (parameters) => {
+        const data = await api(
+            verifyPayment({
+                ...parameters,
+                Currency: currency,
+                Amount: amount
+            })
+        );
+        handleSubmit(data);
+    };
+
+    const {
+        card,
+        setCard,
+        errors,
+        method: paymentMethod,
+        setMethod: setPaymentMethod,
+        parameters,
+        canPay,
+        paypal,
+        paypalCredit
+    } = usePayment({
+        amount,
+        currency,
+        onPay(params) {
+            return withLoading(handleSubmitPayment(params));
+        }
+    });
+
     useEffect(() => {
         if (orderedMethods.length) {
             setMethod(orderedMethods[0]);
         }
     }, []);
 
+    const submit =
+        amount >= MIN_DONATION_AMOUNT ? (
+            paymentMethod === PAYMENT_METHOD_TYPES.PAYPAL ? (
+                <PayPalButton paypal={paypal} className="pm-button--primary" amount={amount}>{c('Action')
+                    .t`Continue`}</PayPalButton>
+            ) : canPay ? (
+                <PrimaryButton type="submit">{c('Action').t`Donate`}</PrimaryButton>
+            ) : null
+        ) : null;
+
     return (
-        <FormModal hasClose={false} hasSubmit={false} title={title} {...rest}>
+        <FormModal
+            className="human-verification-modal"
+            hasClose={false}
+            title={title}
+            loading={loading}
+            onSubmit={() => {
+                if (method !== 'payment') {
+                    return;
+                }
+                if (paymentMethod === PAYMENT_METHOD_TYPES.PAYPAL) {
+                    return;
+                }
+                return withLoading(handleSubmitPayment(parameters));
+            }}
+            footer={submit}
+            {...rest}
+        >
             <Alert type="warning">{c('Info').t`For security reasons, please verify that you are not a robot.`}</Alert>
             {orderedMethods.length ? (
                 <Row>
@@ -96,10 +175,36 @@ const HumanVerificationModal = ({ token, methods = [], onSuccess, onVerify, ...r
                         {method === 'captcha' ? <Captcha token={token} onSubmit={handleSubmit} /> : null}
                         {method === 'email' ? <CodeVerification onSubmit={handleSubmit} method="email" /> : null}
                         {method === 'sms' ? <CodeVerification onSubmit={handleSubmit} method="sms" /> : null}
-                        {method === 'payment' ? <Donate onSubmit={handleSubmit} /> : null}
+                        {method === 'payment' ? (
+                            <>
+                                <Alert>{c('Info')
+                                    .t`Your payment details are protected with TLS encryption and Swiss privacy laws.`}</Alert>
+                                <label className="mb0-5 bl">{c('Label').t`Select an amount`}</label>
+                                <PaymentSelector
+                                    amount={amount}
+                                    onChangeAmount={setAmount}
+                                    currency={currency}
+                                    onChangeCurrency={setCurrency}
+                                />
+                            </>
+                        ) : null}
                         {method === 'invite' ? <RequestInvite /> : null}
                     </div>
                 </Row>
+            ) : null}
+            {method === 'payment' ? (
+                <Payment
+                    type="donation"
+                    method={paymentMethod}
+                    amount={amount}
+                    currency={currency}
+                    card={card}
+                    onMethod={setPaymentMethod}
+                    onCard={setCard}
+                    errors={errors}
+                    paypal={paypal}
+                    paypalCredit={paypalCredit}
+                />
             ) : null}
         </FormModal>
     );

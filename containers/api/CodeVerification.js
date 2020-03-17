@@ -161,7 +161,7 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
                             .t`If you don't find the email in your inbox, please check your spam folder.`}</div>
                     ) : null}
                 </Alert>
-                <div className="flex flex-nowrap mb1">
+                <div className="flex flex-nowrap flex-items-start mb1">
                     <div className="flex-item-fluid mr1">
                         <Input
                             id="code"
