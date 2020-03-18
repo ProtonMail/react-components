@@ -115,7 +115,7 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
         return (
             <>
                 <label htmlFor="phone" className="bl mb0-5">{c('Label').t`Verification phone`}</label>
-                <div className="flex flex-nowrap flex-items-start">
+                <div className="flex flex-nowrap flex-items-start min-h16e">
                     <div className="flex-item-fluid mr1">
                         <IntlTelInput
                             id="phone"
@@ -176,6 +176,7 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
                         />
                     </div>
                     <PrimaryButton
+                        disabled={codeError}
                         loading={loadingVerification}
                         onClick={() => withLoadingVerification(verifyCode())}
                     >{c('Action').t`Verify`}</PrimaryButton>

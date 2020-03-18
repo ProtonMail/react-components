@@ -64,7 +64,9 @@ const orderMethods = (methods = []) => {
 const HumanVerificationModal = ({ token, methods = [], onSuccess, onVerify, ...rest }) => {
     const title = c('Title').t`Human verification`;
     const [method, setMethod] = useState();
-    const orderedMethods = orderMethods(methods);
+    const orderedMethods = orderMethods(methods).filter((m) =>
+        ['captcha', 'sms', 'email', 'invite', 'payment'].includes(m)
+    );
     const { createNotification } = useNotifications();
     const api = useApi();
     const [loading, withLoading] = useLoading();
@@ -155,21 +157,19 @@ const HumanVerificationModal = ({ token, methods = [], onSuccess, onVerify, ...r
             {orderedMethods.length ? (
                 <Row>
                     <Label>
-                        {orderedMethods
-                            .filter((m) => ['captcha', 'sms', 'email', 'invite', 'payment'].includes(m))
-                            .map((m) => {
-                                return (
-                                    <HumanVerificationLabel
-                                        value={m}
-                                        key={m}
-                                        methods={orderedMethods}
-                                        method={method}
-                                        onChange={setMethod}
-                                    >
-                                        {getLabel(m)}
-                                    </HumanVerificationLabel>
-                                );
-                            })}
+                        {orderedMethods.map((m) => {
+                            return (
+                                <HumanVerificationLabel
+                                    value={m}
+                                    key={m}
+                                    methods={orderedMethods}
+                                    method={method}
+                                    onChange={setMethod}
+                                >
+                                    {getLabel(m)}
+                                </HumanVerificationLabel>
+                            );
+                        })}
                     </Label>
                     <div className="w100">
                         {method === 'captcha' ? <Captcha token={token} onSubmit={handleSubmit} /> : null}
@@ -212,7 +212,7 @@ const HumanVerificationModal = ({ token, methods = [], onSuccess, onVerify, ...r
 
 HumanVerificationModal.propTypes = {
     token: PropTypes.string,
-    methods: PropTypes.oneOf(['captcha', 'sms', 'email', 'invite', 'payment']).isRequired,
+    methods: PropTypes.arrayOf(PropTypes.oneOf(['captcha', 'sms', 'email', 'invite', 'payment'])).isRequired,
     onSuccess: PropTypes.func.isRequired,
     onVerify: PropTypes.func.isRequired
 };
