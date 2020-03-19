@@ -31,8 +31,8 @@ const NavItem = ({
                     className="flex-item-noshrink navigation__icon mr0-5 flex-item-centered-vert"
                 />
             )}
-            <span className="flex-item-fluid ellipsis mw100">{text}</span>
-            {aside && <span className="flex flex-items-center">{aside}</span>}
+            <span className="flex-item-fluid is-hidden-when-sidebar-is-collapsed ellipsis mw100">{text}</span>
+            {aside && <span className="flex flex-items-center is-hidden-when-sidebar-is-collapsed">{aside}</span>}
         </span>
     );
 

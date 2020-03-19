@@ -1,4 +1,5 @@
 import React from 'react';
+import { c } from 'ttag';
 import PropTypes from 'prop-types';
 import { Icon, useConfig, Tooltip, Link } from 'react-components';
 import { APPS } from 'proton-shared/lib/constants';
@@ -18,9 +19,26 @@ const AppsSidebar = ({ items = [] }) => {
         }
     ].filter(Boolean);
 
+    const handleClick = () => document.body.classList.add('sidebar-is-collapsed'); // Dear JS Devs, put here some magic please
+
     return (
-        <aside className="aside noprint nomobile" id="aside-bar">
-            <ul className="unstyled m0 aligncenter flex flex-column h100">
+        <aside
+            className="aside flex-column flex-nowrap noprint nomobile is-hidden-when-sidebar-is-collapsed"
+            id="aside-bar"
+        >
+            <div className="flex mb2">
+                <button
+                    type="button"
+                    className="collapse-button flex center"
+                    title={c('Action').t`Collapse menu`}
+                    onClick={handleClick}
+                >
+                    <Icon name="caret-double-left" className="mauto fill-white" />
+                    <span className="sr-only">{c('Action').t`Collapse menu`}</span>
+                </button>
+            </div>
+
+            <ul className="unstyled m0 aligncenter flex flex-column flex-item-fluid aside-listIcons">
                 {apps.map(({ appNames = [], icon, title, link }, index) => {
                     const isCurrent = appNames.includes(APP_NAME);
                     const key = `${index}`;
