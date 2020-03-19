@@ -49,7 +49,11 @@ const NavItem = ({
                     {content}
                 </NavLink>
                 {list.length ? (
-                    <NavMenu ariaHidden={ariaHiddenList} list={list} listClassName="nomobile navigation__sublist" />
+                    <NavMenu
+                        ariaHidden={ariaHiddenList}
+                        list={list}
+                        listClassName="nomobile navigation__sublist is-hidden-when-sidebar-is-collapsed"
+                    />
                 ) : null}
             </li>
         );
@@ -61,7 +65,11 @@ const NavItem = ({
                 <span className={classnames([linkClassName, className])}>
                     {content}
                     {list.length ? (
-                        <NavMenu ariaHidden={ariaHiddenList} list={list} listClassName="nomobile navigation__sublist" />
+                        <NavMenu
+                            ariaHidden={ariaHiddenList}
+                            list={list}
+                            listClassName="nomobile navigation__sublist is-hidden-when-sidebar-is-collapsed"
+                        />
                     ) : null}
                 </span>
             </li>
@@ -75,7 +83,11 @@ const NavItem = ({
                     {content}
                 </button>
                 {list.length ? (
-                    <NavMenu ariaHidden={ariaHiddenList} list={list} listClassName="nomobile navigation__sublist" />
+                    <NavMenu
+                        ariaHidden={ariaHiddenList}
+                        list={list}
+                        listClassName="nomobile navigation__sublist is-hidden-when-sidebar-is-collapsed"
+                    />
                 ) : null}
             </li>
         );
