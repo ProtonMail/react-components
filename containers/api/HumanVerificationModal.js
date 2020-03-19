@@ -194,7 +194,7 @@ const HumanVerificationModal = ({ token, methods = [], onSuccess, onVerify, ...r
             ) : null}
             {method === 'payment' ? (
                 <Payment
-                    type="donation"
+                    type="human-verification"
                     method={paymentMethod}
                     amount={amount}
                     currency={currency}
