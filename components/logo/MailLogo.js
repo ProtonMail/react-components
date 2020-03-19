@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { classnames } from '../../helpers/component';
 
-const MailLogo = ({ planName = '', className = 'logo' }) => {
+const MailLogo = ({ planName = '', className = 'logo center' }) => {
     const logoClasses = classnames([planName === '' && 'logo--withoutPlan', className]);
     return (
         <svg
