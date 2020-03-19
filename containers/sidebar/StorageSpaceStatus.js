@@ -42,6 +42,10 @@ const StorageSpaceStatus = ({ upgradeButton }) => {
                         <rect x="17" y="14" width="1.55" height="9.1" className="circle-chart__percent fill-white" />
                         <rect x="17" y="11" width="1.55" height="1.53" className="circle-chart__percent fill-white" />
                     </g>
+                    <path
+                        d="M18 9.155c-3.735 0-6.552 1.352-6.552 3.159v11.372c0 1.795 2.817 3.16 6.552 3.16 3.735 0 6.552-1.365 6.552-3.16V12.314c0-1.807-2.817-3.16-6.552-3.16zm0 1.263c3.197 0 5.241 1.125 5.241 1.896 0 .77-2.044 1.895-5.241 1.895-3.197 0-5.241-1.124-5.241-1.895 0-.771 2.044-1.896 5.241-1.896zm0 15.164c-3.197 0-5.241-1.125-5.241-1.896v-1.895A9.71 9.363 0 0018 23.054a9.71 9.363 0 005.241-1.263v1.895c0 .771-2.044 1.896-5.241 1.896zm0-3.791c-3.197 0-5.241-1.125-5.241-1.896V18A9.71 9.363 0 0018 19.264 9.71 9.363 0 0023.241 18v1.895c0 .771-2.044 1.896-5.241 1.896zM18 18c-3.197 0-5.241-1.125-5.241-1.895v-1.896A9.71 9.363 0 0018 15.473a9.71 9.363 0 005.241-1.264v1.896c0 .77-2.044 1.895-5.241 1.895z"
+                        className="circle-chart__icon fill-white"
+                    />
                 </CircularProgress>
                 <span className="smallest mt0 mb0-5 mlauto mrauto lh100 circle-chart-info opacity-40 bl">
                     {usedSpaceFormatted}

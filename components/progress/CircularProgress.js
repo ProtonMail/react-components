@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { classnames } from '../../helpers/component';
 
-const CircularProgress = ({ children, className, progress, rootRef, size = 32, ...rest }) => {
+const CircularProgress = ({ children, className, progress, rootRef, size = 40, ...rest }) => {
     return (
         <svg
             ref={rootRef}
