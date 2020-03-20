@@ -393,6 +393,7 @@ export { default as StandardPublicApp } from './containers/app/StandardPublicApp
 export { default as AppsSidebar } from './containers/app/AppsSidebar';
 export { default as TopNavbar } from './containers/app/TopNavbar';
 export { default as LoaderPage } from './containers/app/LoaderPage';
+export { default as ToggleMenu } from './containers/app/ToggleMenu';
 
 export { default as SidebarMenu } from './components/sidebar/SidebarMenu';
 export { default as SidebarItem } from './components/sidebar/SidebarItem';
