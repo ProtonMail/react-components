@@ -22,7 +22,7 @@ const PmMeButton = () => {
     const { createModal } = useModals();
     const api = useApi();
     const { call } = useEventManager();
-    const [members, loadingMembers] = useMembers();
+    const [members = [], loadingMembers] = useMembers();
     const [premiumDomains, loadingPremiumDomains] = usePremiumDomains();
     const [organization, loadingOrganization] = useOrganization();
     const [organizationKey, loadingOrganizationKey] = useOrganizationKey(organization);
@@ -30,7 +30,7 @@ const PmMeButton = () => {
         loadingMembers || loadingPremiumDomains || loadingOrganization || loadingOrganizationKey;
     const member = members.find(({ Self }) => Self);
 
-    if (loadingMembers || !member) {
+    if (!member) {
         return null;
     }
 
