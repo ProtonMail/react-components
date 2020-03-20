@@ -33,7 +33,7 @@ const TextArea = (props) => {
     });
 
     useEffect(() => {
-        if (updateTextArea) {
+        if (updateTextArea && textAreaRef.current) {
             updateTextArea(textAreaRef.current);
         }
     }, [updateTextArea]);
