@@ -6,7 +6,7 @@ import { create, request, isEnabled } from 'proton-shared/lib/helpers/desktopNot
 
 const testDefaultNotification = () => {
     return create(c('Info').t`You have a new email`, {
-        body: 'Quarterly operations update - Q1 2016 ',
+        body: 'Quarterly operations update',
         icon: '/assets/img/notification-badge.gif',
         onClick() {
             window.focus();
