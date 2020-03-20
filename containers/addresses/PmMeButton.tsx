@@ -29,13 +29,13 @@ const PmMeButton = () => {
     const isLoadingDependencies =
         loadingMembers || loadingPremiumDomains || loadingOrganization || loadingOrganizationKey;
     const member = members.find(({ Self }) => Self);
+    const [Domain = ''] = premiumDomains || [];
 
     if (!member) {
         return null;
     }
 
     const createPremiumAddress = async () => {
-        const [Domain = ''] = premiumDomains || [];
         const [{ DisplayName = '', Signature = '' } = {}] = member.addresses || [];
         await new Promise((resolve, reject) => {
             createModal(<UnlockModal onClose={() => reject()} onSuccess={resolve} />);
@@ -56,7 +56,7 @@ const PmMeButton = () => {
 
     return (
         <PrimaryButton
-            disabled={isLoadingDependencies}
+            disabled={isLoadingDependencies || !Domain}
             loading={loading}
             onClick={() => withLoading(createPremiumAddress())}
         >
