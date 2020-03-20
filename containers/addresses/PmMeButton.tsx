@@ -36,7 +36,7 @@ const PmMeButton = () => {
 
     const createPremiumAddress = async () => {
         const [Domain = ''] = premiumDomains || [];
-        const [{ DisplayName = '', Signature = '' } = {}] = member.addresses;
+        const [{ DisplayName = '', Signature = '' } = {}] = member.addresses || [];
         await new Promise((resolve, reject) => {
             createModal(<UnlockModal onClose={() => reject()} onSuccess={resolve} />);
         });
