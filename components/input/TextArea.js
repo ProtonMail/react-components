@@ -36,7 +36,7 @@ const TextArea = (props) => {
         if (updateTextArea) {
             updateTextArea(textAreaRef.current);
         }
-    }, [autoGrow, updateTextArea]);
+    }, [updateTextArea]);
 
     const [uid] = useState(generateUID('textarea'));
 
