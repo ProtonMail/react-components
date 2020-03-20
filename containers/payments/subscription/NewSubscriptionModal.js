@@ -39,6 +39,16 @@ import { handlePaymentToken } from '../paymentTokenHelper';
 
 const hasPlans = (planIDs = {}) => Object.keys(clearPlanIDs(planIDs)).length;
 
+const getCodes = ({ gift, coupon }) => {
+    const codes = [gift, coupon].filter(Boolean);
+
+    if (!codes.length) {
+        return;
+    }
+
+    return codes;
+};
+
 const NewSubscriptionModal = ({
     expanded = false,
     step: initialStep = SUBSCRIPTION_STEPS.CUSTOMIZATION,
@@ -121,8 +131,7 @@ const NewSubscriptionModal = ({
             await api(
                 subscribe({
                     PlanIDs: clearPlanIDs(model.planIDs),
-                    CouponCode: model.coupon,
-                    GiftCode: model.gift,
+                    Codes: getCodes(model),
                     Cycle: model.cycle,
                     ...params // Contains Payment, Amount and Currency
                 })
@@ -153,10 +162,9 @@ const NewSubscriptionModal = ({
             const result = await api(
                 checkSubscription({
                     PlanIDs: clearPlanIDs(newModel.planIDs),
-                    CouponCode: newModel.coupon,
                     Currency: newModel.currency,
                     Cycle: newModel.cycle,
-                    GiftCode: newModel.gift
+                    Codes: getCodes(newModel)
                 })
             );
 
