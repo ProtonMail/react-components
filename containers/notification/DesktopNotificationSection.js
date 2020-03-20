@@ -1,7 +1,8 @@
 import React from 'react';
 import { SubTitle, Row, Label, Info } from 'react-components';
-import DesktopNotificationPanel from './DesktopNotificationPanel';
+import PropTypes from 'prop-types';
 import { c } from 'ttag';
+import DesktopNotificationPanel from './DesktopNotificationPanel';
 
 const DesktopNotificationSection = ({ onTest }) => {
     return (
@@ -16,6 +17,10 @@ const DesktopNotificationSection = ({ onTest }) => {
             </Row>
         </>
     );
+};
+
+DesktopNotificationSection.propTypes = {
+    onTest: PropTypes.func
 };
 
 export default DesktopNotificationSection;
