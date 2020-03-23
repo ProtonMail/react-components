@@ -32,7 +32,7 @@ const NavItem = ({
                 />
             )}
             <span className="flex-item-fluid is-hidden-when-sidebar-is-collapsed ellipsis mw100">{text}</span>
-            {aside && <span className="flex flex-items-center is-hidden-when-sidebar-is-collapsed">{aside}</span>}
+            {aside && <span className="flex flex-items-center">{aside}</span>}
         </span>
     );
 
