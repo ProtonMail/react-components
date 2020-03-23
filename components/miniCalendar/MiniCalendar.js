@@ -60,7 +60,9 @@ const MiniCalendar = ({
         const newDate = addMonths(activeDate, direction);
 
         // Don't allow to go outside of bounds.
-        if (startOfMonth(newDate) < startOfMonth(min) || endOfMonth(newDate) > endOfMonth(max)) {
+        const isBeforeMin = min && startOfMonth(newDate) < startOfMonth(min);
+        const isAfterMax = max && endOfMonth(newDate) > endOfMonth(max);
+        if (isBeforeMin || isAfterMax) {
             return;
         }
 
