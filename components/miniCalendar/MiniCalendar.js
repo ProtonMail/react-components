@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { addMonths } from 'date-fns';
+import { addMonths, endOfMonth, startOfMonth } from 'date-fns';
 
 import { getDaysInMonth } from './helper';
 import { classnames } from '../../helpers/component';
@@ -57,7 +57,14 @@ const MiniCalendar = ({
     }, [activeDate, months]);
 
     const handleSwitchMonth = (direction) => {
-        setTemporaryDate(addMonths(activeDate, direction));
+        const newDate = addMonths(activeDate, direction);
+
+        // Don't allow to go outside of bounds.
+        if (startOfMonth(newDate) < startOfMonth(min) || endOfMonth(newDate) > endOfMonth(max)) {
+            return;
+        }
+
+        setTemporaryDate(newDate);
     };
 
     useEffect(() => {
