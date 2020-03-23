@@ -5,6 +5,7 @@ import { NavLink } from 'react-router-dom';
 import Icon from '../icon/Icon';
 import NavMenu from './NavMenu';
 import { classnames } from '../../helpers/component';
+import { useActiveBreakpoint } from 'react-components';
 
 const NavItem = ({
     type = 'link',
@@ -22,6 +23,8 @@ const NavItem = ({
     itemClassName = 'navigation__item',
     linkClassName = 'navigation__link'
 }) => {
+    const { isNarrow } = useActiveBreakpoint();
+
     const content = (
         <span className="flex flex-nowrap w100 flex-items-center">
             {icon && (
@@ -31,7 +34,14 @@ const NavItem = ({
                     className="flex-item-noshrink navigation__icon mr0-5 flex-item-centered-vert"
                 />
             )}
-            <span className="flex-item-fluid is-hidden-when-sidebar-is-collapsed ellipsis mw100">{text}</span>
+            <span
+                className={classnames([
+                    'flex-item-fluid ellipsis mw100',
+                    !isNarrow && 'is-hidden-when-sidebar-is-collapsed'
+                ])}
+            >
+                {text}
+            </span>
             {aside && <span className="flex flex-items-center">{aside}</span>}
         </span>
     );

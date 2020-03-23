@@ -23,7 +23,7 @@ const AppsSidebar = ({ items = [], isCollapsedMenu, setCollapseMenu }) => {
             className="aside flex-column flex-nowrap noprint nomobile is-hidden-when-sidebar-is-collapsed"
             id="aside-bar"
         >
-            <div className="flex mb2">
+            <div className="flex mb2 nomobile">
                 <ToggleMenu isCollapsedMenu={isCollapsedMenu} onToggleMenu={setCollapseMenu} />
             </div>
 
