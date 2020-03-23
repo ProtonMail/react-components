@@ -75,16 +75,23 @@ const Dropdown = ({
         size !== 'normal' && `dropDown--${size}`,
         className
     ]);
+
+    const varPosition = {
+        '--top': position.top,
+        '--left': position.left
+    };
+
     return (
         <Popper
             ref={popperRef}
-            position={position}
+            position={varPosition}
             isOpen={isOpen}
             role="dialog"
             className={contentClassName}
             onClick={handleClickContent}
             {...rest}
         >
+            <div className="dropDown-backdrop">X</div>
             {children}
         </Popper>
     );
