@@ -7,7 +7,8 @@ import {
     TreeViewItem,
     useApi,
     useLoading,
-    useEventManager
+    useEventManager,
+    useActiveBreakpoint
 } from 'react-components';
 import { order, getParents } from 'proton-shared/lib/helpers/folder';
 import { orderFolders, updateLabel } from 'proton-shared/lib/api/labels';
@@ -21,11 +22,11 @@ const INSIDE = 'inside';
 const AFTER = 'after';
 const BEFORE = 'before';
 
-const Header = () => {
+const Header = ({ isNarrow }) => {
     return (
         <div className="flex flex-nowrap w100 border-bottom pb0-5">
             <span className="bold uppercase flex-item-fluid">
-                <Icon name="arrow-cross" className="mr1" />
+                {isNarrow ? null : <Icon name="arrow-cross" className="mr1" />}
                 {c('Header').t`Name`}
             </span>
             <span className="bold uppercase w140e">{c('Header').t`Notification`}</span>
@@ -34,8 +35,13 @@ const Header = () => {
     );
 };
 
+Header.propTypes = {
+    isNarrow: PropTypes.bool
+};
+
 const FolderTreeViewList = ({ items = [] }) => {
     const api = useApi();
+    const { isNarrow } = useActiveBreakpoint();
     const { call } = useEventManager();
     const [loading, withLoading] = useLoading();
     const [grabbed, setGrabbed] = useState();
@@ -116,7 +122,7 @@ const FolderTreeViewList = ({ items = [] }) => {
                                 }
                             }}
                             onDrop={() => withLoading(handleDrop())}
-                            draggable={true}
+                            draggable={!isNarrow}
                             disabled={loading}
                             key={item.ID}
                             toggled={true}
@@ -133,10 +139,12 @@ const FolderTreeViewList = ({ items = [] }) => {
                                     ])}
                                 >
                                     <div className="treeview-item-name flex flex-nowrap flex-items-center flex-item-fluid">
-                                        <Icon
-                                            name="text-justify"
-                                            className="mr1 flex-item-noshrink cursor-row-resize"
-                                        />
+                                        {isNarrow ? null : (
+                                            <Icon
+                                                name="text-justify"
+                                                className="mr1 flex-item-noshrink cursor-row-resize"
+                                            />
+                                        )}
                                         <Icon
                                             name={hasSubFolders ? 'parent-folder' : 'folder'}
                                             className="mr0-5 flex-item-noshrink"
@@ -172,7 +180,7 @@ const FolderTreeViewList = ({ items = [] }) => {
 
     return (
         <>
-            <Header />
+            <Header isNarrow={isNarrow} />
             {buildTreeView(rootFolders)}
         </>
     );
