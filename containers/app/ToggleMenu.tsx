@@ -12,11 +12,11 @@ const ToggleMenu = ({ isCollapsedMenu, onToggleMenu }: Props) => {
     return (
         <button
             type="button"
-            className="collapse-button flex center"
+            className={classnames(['collapse-button flex center', isCollapsedMenu && 'collapse-button--expandButton'])}
             title={isCollapsedMenu ? c('Action').t`Expand menu` : c('Action').t`Collapse menu`}
             onClick={handleClick}
         >
-            <Icon name="caret-double-left" className={classnames(['mauto fill-white', isCollapsedMenu && 'mirror'])} />
+            <Icon name="caret-double-left" className="mauto fill-white" />
             <span className="sr-only">
                 {isCollapsedMenu ? c('Action').t`Expand menu` : c('Action').t`Collapse menu`}
             </span>
