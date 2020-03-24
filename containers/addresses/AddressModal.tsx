@@ -28,9 +28,10 @@ import { OrganizationKey } from '../../hooks/useGetOrganizationKeyRaw';
 interface Props {
     onClose?: () => void;
     member: Member;
+    domainName?: string;
     organizationKey?: OrganizationKey;
 }
-const AddressModal = ({ onClose, member, organizationKey, ...rest }: Props) => {
+const AddressModal = ({ onClose, member, domainName, organizationKey, ...rest }: Props) => {
     const { createModal } = useModals();
     const { call } = useEventManager();
     const [user, loadingUser] = useUser();
@@ -38,10 +39,10 @@ const AddressModal = ({ onClose, member, organizationKey, ...rest }: Props) => {
     const [premiumDomains, loadingPremiumDomains] = usePremiumDomains();
     const [premiumDomain = ''] = premiumDomains || [];
     const api = useApi();
-    const { model, update } = useAddressModal(member);
+    const { model, update } = useAddressModal(member, domainName);
     const { createNotification } = useNotifications();
     const [loading, withLoading] = useLoading();
-    const hasPremium = addresses.some(({ Type }) => Type === ADDRESS_TYPE.TYPE_PREMIUM);
+    const hasPremium = (addresses || []).some(({ Type }) => Type === ADDRESS_TYPE.TYPE_PREMIUM);
     const handleChange = (key: string) => ({ target }: any) => update(key, target.value);
 
     const handleSubmit = async () => {
@@ -112,7 +113,12 @@ const AddressModal = ({ onClose, member, organizationKey, ...rest }: Props) => {
                             />
                         </div>
                         <div className="flex-autogrid-item pb0">
-                            <DomainsSelect member={member} onChange={handleChange('domain')} />
+                            <DomainsSelect
+                                member={member}
+                                domain={domainName}
+                                disabled={!!domainName}
+                                onChange={handleChange('domain')}
+                            />
                         </div>
                     </div>
                 </Field>

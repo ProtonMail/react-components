@@ -5,7 +5,7 @@ import { useApi, useLoading, useUser, useDomains, Select, usePremiumDomains } fr
 
 import { fakeEvent } from '../../helpers/component';
 
-const DomainsSelect = ({ member, onChange, className }) => {
+const DomainsSelect = ({ member, onChange, domain: initDomain = '', disabled, className }) => {
     const api = useApi();
     const [user] = useUser();
     const [domains, loadingDomains] = useDomains();
@@ -13,7 +13,7 @@ const DomainsSelect = ({ member, onChange, className }) => {
     const [loading, withLoading] = useLoading();
 
     const [options, setOptions] = useState([]);
-    const [domain, setDomain] = useState('');
+    const [domain, setDomain] = useState(initDomain);
 
     const handleChange = (event) => {
         setDomain(event.target.value);
@@ -32,9 +32,11 @@ const DomainsSelect = ({ member, onChange, className }) => {
         const domainNames = [].concat(premium, available, formatDomains(domains));
 
         setOptions(domainNames.map((text) => ({ text, value: text })));
-        setDomain(domainNames[0]);
 
-        onChange(fakeEvent(domainNames[0]));
+        if (!initDomain) {
+            setDomain(domainNames[0]);
+            onChange(fakeEvent(domainNames[0]));
+        }
     };
 
     useEffect(() => {
@@ -44,7 +46,7 @@ const DomainsSelect = ({ member, onChange, className }) => {
     return (
         <Select
             className={className}
-            disabled={loadingDomains || loadingPremiumDomains || loading}
+            disabled={loadingDomains || loadingPremiumDomains || loading || disabled}
             value={domain}
             options={options}
             onChange={handleChange}
@@ -53,11 +55,10 @@ const DomainsSelect = ({ member, onChange, className }) => {
 };
 
 DomainsSelect.propTypes = {
+    disabled: PropTypes.bool,
     member: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
-    user: PropTypes.object,
-    domains: PropTypes.object,
-    fetchDomains: PropTypes.func,
+    domain: PropTypes.string,
     className: PropTypes.string
 };
 

@@ -179,7 +179,13 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
 
         if (step === STEPS.ADDRESSES) {
             return {
-                section: <AddressesSection onRedirect={handleRedirect} domainAddresses={domainAddresses} />,
+                section: (
+                    <AddressesSection
+                        onRedirect={handleRedirect}
+                        domainName={domainModel.DomainName}
+                        domainAddresses={domainAddresses}
+                    />
+                ),
                 onSubmit: next
             };
         }

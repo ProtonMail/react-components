@@ -1,16 +1,16 @@
 import { useState } from 'react';
 
-const toModel = ({ Self, addresses = [] }) => {
+const toModel = ({ Self, addresses = [] }, domain = '') => {
     const [{ DisplayName } = {}] = addresses;
     return {
         name: Self ? DisplayName || '' : '', // DisplayName can be null
         address: '',
-        domain: ''
+        domain
     };
 };
 
-const useAddressModal = (member) => {
-    const initialModel = toModel(member);
+const useAddressModal = (member, domainName) => {
+    const initialModel = toModel(member, domainName);
     const [model, updateModel] = useState(initialModel);
     const update = (key, value) => updateModel({ ...model, [key]: value });
 
