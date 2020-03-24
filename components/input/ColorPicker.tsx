@@ -1,17 +1,21 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { noop } from 'proton-shared/lib/helpers/function';
-import { Icon, Dropdown, DropdownButton, generateUID, usePopperAnchor, ColorSelector } from 'react-components';
+import { Icon, Dropdown, DropdownButton, generateUID, usePopperAnchor, ColorSelector } from '../../index';
 import tinycolor from 'tinycolor2';
 
-const ColorPicker = ({ color = 'blue', onChange = noop }) => {
-    const colorModel = tinycolor(color);
+interface Props {
+    color: string;
+    onChange: ({ hex }: { hex: string }) => void;
+}
+
+const ColorPicker = ({ color = 'blue', onChange = noop }: Props) => {
+    const colorModel = tinycolor(color) as any;
     const iconColor = colorModel.isValid() ? colorModel.toHexString() : '';
 
     const [uid] = useState(generateUID('dropdown'));
     const { anchorRef, isOpen, toggle, close } = usePopperAnchor();
 
-    const handleChange = (color) => () => onChange({ hex: color });
+    const handleChange = (color: string) => onChange({ hex: color });
 
     return (
         <>
@@ -27,15 +31,6 @@ const ColorPicker = ({ color = 'blue', onChange = noop }) => {
             </Dropdown>
         </>
     );
-};
-
-ColorPicker.propTypes = {
-    className: PropTypes.string,
-    color: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.shape({ r: PropTypes.number, g: PropTypes.number, b: PropTypes.number, a: PropTypes.number })
-    ]),
-    onChange: PropTypes.func
 };
 
 export default ColorPicker;
