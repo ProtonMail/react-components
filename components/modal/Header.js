@@ -14,7 +14,7 @@ const Header = ({
     onClose,
     ...rest
 }) => {
-    const closeText = closeTextModal ? closeTextModal : c('Action').t`Close modal`;
+    const closeText = closeTextModal === '' ? c('Action').t`Close modal` : closeTextModal;
     return (
         <header className={classnames(['pm-modalHeader', className])} {...rest}>
             {hasClose ? (
