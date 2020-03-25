@@ -12,7 +12,7 @@ const DropdownMenu = ({ children, className = '' }: Props) => {
             <ul className={classnames(['unstyled mt0 mb0', className])}>
                 {React.Children.toArray(children).map((child, i) => {
                     return React.isValidElement(child) ? (
-                        <li className="dropDown-item pl1 pr1" key={child.key || i}>
+                        <li className="dropDown-item" key={child.key || i}>
                             {child}
                         </li>
                     ) : null;
