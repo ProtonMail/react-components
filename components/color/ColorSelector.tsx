@@ -8,7 +8,7 @@ import { classnames } from '../../helpers/component';
 interface Props {
     selected: string;
     onChange: (color: string) => void;
-    className: string;
+    className?: string;
     colors?: string[];
 }
 

@@ -5,7 +5,7 @@ import tinycolor from 'tinycolor2';
 
 interface Props {
     color: string;
-    onChange: ({ hex }: { hex: string }) => void;
+    onChange: (color: string) => void;
 }
 
 const ColorPicker = ({ color = 'blue', onChange = noop }: Props) => {
@@ -15,7 +15,7 @@ const ColorPicker = ({ color = 'blue', onChange = noop }: Props) => {
     const [uid] = useState(generateUID('dropdown'));
     const { anchorRef, isOpen, toggle, close } = usePopperAnchor();
 
-    const handleChange = (color: string) => onChange({ hex: color });
+    const handleChange = (color: string) => onChange(color);
 
     return (
         <>
