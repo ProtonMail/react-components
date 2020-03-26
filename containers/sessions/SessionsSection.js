@@ -24,20 +24,91 @@ import { ELEMENTS_PER_PAGE } from 'proton-shared/lib/constants';
 
 import SessionAction from './SessionAction';
 
+/*
+    Here is the list of UIDs returned by the API, for reference:
+
+    // Old FE apps
+    'Web' => '>=3.16.4',
+    'VPN' => '>=2.0.0',
+    'WebVPN' => '>=4.0.0',
+    'Admin' => '>=0.5.1',
+
+    // Old Desktop
+    'ImportExport' => '>=0.1.6',
+    'Bridge' => '>=1.2.0',
+
+    // Old iOS
+    'iOS' => '>=1.11.11',
+
+    // Old Android
+    'Android' => '>=1.12.0',
+
+    // Web
+    'WebMail' => '>=0.0.0',
+    'WebMailSettings' => '>=0.0.0',
+    'WebContacts' => '>=0.0.0',
+    'WebVPNSettings' => '>=4.0.0',
+    'WebCalendar' => '>=0.0.0',
+    'WebDrive' => '>=0.0.0',
+    'WebWallet' => '>=0.0.0',
+    'WebAdmin' => '>=0.5.1',
+
+    // iOS
+    'iOSMail' => '>=1.11.11',
+    'iOSVPN' => '>=0.0.0',
+    'iOSCalendar' => '>=0.0.0',
+
+    // Android
+    'AndroidMail' => '>=1.12.0',
+    'AndroidVPN' => '>=1.3.7',
+    'AndroidCalendar' => '>=0.0.0',
+
+    // Windows
+    'WindowsVPN' => '>=0.0.0',
+    'WindowsImportExport' => '>=0.1.6',
+    'WindowsBridge' => '>=1.2.0',
+
+    // MacOS
+    'macOSVPN' => '>=0.0.0',
+    'macOSImportExport' => '>=0.1.6',
+    'macOSBridge' => '>=1.2.0',
+
+    // Linux
+    'LinuxImportExport' => '>=0.1.6',
+    'LinuxBridge' => '>=1.2.0',
+*/
+
 const getClientsI18N = () => ({
     Web: c('Badge').t`ProtonMail for web`,
-    WebSettings: c('Badge').t`ProtonMail settings for web`,
-    iOS: c('Badge').t`ProtonMail for iOS`,
-    Android: c('Badge').t`ProtonMail for Android`,
+    VPN: c('Badge').t`ProtonVPN for Windows`,
+    WebVPN: c('Badge').t`ProtonVPN for web`,
+    Admin: c('Badge').t`Admin`,
     ImportExport: c('Badge').t`ProtonMail import-export`,
     Bridge: c('Badge').t`ProtonMail Bridge`,
-    WebVPN: c('Badge').t`ProtonVPN for web`,
-    VPN: c('Badge').t`ProtonVPN for Windows`,
-    macOSVPN: c('Badge').t`ProtonVPN for macOS`,
+    iOS: c('Badge').t`ProtonMail for iOS`,
+    Android: c('Badge').t`ProtonMail for Android`,
+    WebMail: c('Badge').t`ProtonMail for web`,
+    WebMailSettings: c('Badge').t`ProtonMail settings for web`,
+    WebContacts: c('Badge').t`ProtonContacts for web`,
+    WebVPNSettings: c('Badge').t`ProtonVPN settings for web`,
+    WebCalendar: c('Badge').t`ProtonCalendar for web`,
+    WebDrive: c('Badge').t`ProtonDrive for web`,
+    WebWallet: c('Badge').t`ProtonWallet for web`,
+    WebAdmin: c('Badge').t`Admin`,
+    iOSMail: c('Badge').t`ProtonMail for iOS`,
     iOSVPN: c('Badge').t`ProtonVPN for iOS`,
+    iOSCalendar: c('Badge').t`ProtonCalendar for iOS`,
+    AndroidMail: c('Badge').t`ProtonMail for Android`,
     AndroidVPN: c('Badge').t`ProtonVPN for Android`,
-    Admin: c('Badge').t`Admin`,
-    WebVPNSettings: c('Badge').t`ProtonVPN settings for web`
+    AndroidCalendar: c('Badge').t`ProtonCalendar for Android`,
+    WindowsVPN: c('Badge').t`ProtonVPN for Windows`,
+    WindowsImportExport: c('Badge').t`ProtonMail import-export for Windows`,
+    WindowsBridge: c('Badge').t`ProtonMail Bridge for Windows`,
+    macOSVPN: c('Badge').t`ProtonVPN for macOS`,
+    macOSImportExport: c('Badge').t`ProtonMail import-export for macOS`,
+    macOSBridge: c('Badge').t`ProtonMail Bridge for macOS`,
+    LinuxImportExport: c('Badge').t`ProtonMail import-export for Linux`,
+    LinuxBridge: c('Badge').t`ProtonMail Bridge for Linux`
 });
 
 const SessionsSection = () => {
