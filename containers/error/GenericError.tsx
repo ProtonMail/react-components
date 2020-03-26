@@ -17,7 +17,7 @@ const GenericError = ({ className, children }: Props) => {
     return (
         <IllustrationPlaceholder
             className={className}
-            title={c('Error message').t`Oops, Something went wrong`}
+            title={c('Error message').t`Oops, something went wrong`}
             url={errorImg}
         >
             {children || (
