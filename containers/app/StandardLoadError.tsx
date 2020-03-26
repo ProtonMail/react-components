@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { c } from 'ttag';
 import GenericError from '../error/GenericError';
-import { PrimaryButton } from '../../index';
+import { InlineLinkButton } from '../../index';
 
 const StandardLoadError = () => {
     useEffect(() => {
@@ -21,13 +21,15 @@ const StandardLoadError = () => {
         };
     }, []);
 
+    const refresh = (
+        <InlineLinkButton className="primary-link" onClick={() => window.location.reload()}>{c('Action')
+            .t`refresh the page`}</InlineLinkButton>
+    );
+
     return (
         <GenericError>
             <span>{c('Error message').t`There was a problem connecting to Proton.`}</span>
-            <span>{c('Error message').t`Please refresh the page or check your connection.`}</span>
-            <PrimaryButton className="mt1" onClick={() => window.location.reload()}>
-                {c('Action').t`Refresh`}
-            </PrimaryButton>
+            <span>{c('Error message').jt`Please ${refresh} or check your connection.`}</span>
         </GenericError>
     );
 };
