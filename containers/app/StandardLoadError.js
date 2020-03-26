@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import GenericError from '../error/GenericError';
+import { c } from 'ttag';
 
 const StandardLoadError = () => {
     useEffect(() => {
@@ -19,7 +20,12 @@ const StandardLoadError = () => {
         };
     }, []);
 
-    return <GenericError />;
+    return (
+        <GenericError>
+            <span>{c('Error message').t`There was a problem connecting to Proton.`}</span>
+            <span>{c('Error message').t`Please refresh the page or check your connection.`}</span>
+        </GenericError>
+    );
 };
 
 export default StandardLoadError;
