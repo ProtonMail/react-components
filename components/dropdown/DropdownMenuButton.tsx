@@ -10,7 +10,7 @@ const DropdownMenuButton = ({ className = '', disabled, loading, children, ...re
         <button
             type="button"
             disabled={disabled || loading}
-            className={classnames(['w100 pr1 pl1 pt0-5 pb0-5', className])}
+            className={classnames(['dropDown-item-button w100 pr1 pl1 pt0-5 pb0-5', className])}
             {...rest}
         >
             {children}

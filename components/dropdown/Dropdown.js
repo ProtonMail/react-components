@@ -91,7 +91,6 @@ const Dropdown = ({
             onClick={handleClickContent}
             {...rest}
         >
-            <div className="dropDown-backdrop">X</div>
             {children}
         </Popper>
     );
