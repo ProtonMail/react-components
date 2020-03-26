@@ -24,60 +24,6 @@ import { ELEMENTS_PER_PAGE } from 'proton-shared/lib/constants';
 
 import SessionAction from './SessionAction';
 
-/*
-    Here is the list of UIDs returned by the API, for reference:
-
-    // Old FE apps
-    'Web' => '>=3.16.4',
-    'VPN' => '>=2.0.0',
-    'WebVPN' => '>=4.0.0',
-    'Admin' => '>=0.5.1',
-
-    // Old Desktop
-    'ImportExport' => '>=0.1.6',
-    'Bridge' => '>=1.2.0',
-
-    // Old iOS
-    'iOS' => '>=1.11.11',
-
-    // Old Android
-    'Android' => '>=1.12.0',
-
-    // Web
-    'WebMail' => '>=0.0.0',
-    'WebMailSettings' => '>=0.0.0',
-    'WebContacts' => '>=0.0.0',
-    'WebVPNSettings' => '>=4.0.0',
-    'WebCalendar' => '>=0.0.0',
-    'WebDrive' => '>=0.0.0',
-    'WebWallet' => '>=0.0.0',
-    'WebAdmin' => '>=0.5.1',
-
-    // iOS
-    'iOSMail' => '>=1.11.11',
-    'iOSVPN' => '>=0.0.0',
-    'iOSCalendar' => '>=0.0.0',
-
-    // Android
-    'AndroidMail' => '>=1.12.0',
-    'AndroidVPN' => '>=1.3.7',
-    'AndroidCalendar' => '>=0.0.0',
-
-    // Windows
-    'WindowsVPN' => '>=0.0.0',
-    'WindowsImportExport' => '>=0.1.6',
-    'WindowsBridge' => '>=1.2.0',
-
-    // MacOS
-    'macOSVPN' => '>=0.0.0',
-    'macOSImportExport' => '>=0.1.6',
-    'macOSBridge' => '>=1.2.0',
-
-    // Linux
-    'LinuxImportExport' => '>=0.1.6',
-    'LinuxBridge' => '>=1.2.0',
-*/
-
 const getClientsI18N = () => ({
     Web: c('Badge').t`ProtonMail for web`,
     VPN: c('Badge').t`ProtonVPN for Windows`,
