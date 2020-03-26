@@ -39,7 +39,7 @@ const getClientsI18N = () => ({
     WebVPNSettings: c('Badge').t`ProtonVPN settings for web`,
     WebCalendar: c('Badge').t`ProtonCalendar for web`,
     WebDrive: c('Badge').t`ProtonDrive for web`,
-    WebWallet: c('Badge').t`ProtonWallet for web`,
+    // WebWallet: c('Badge').t`ProtonWallet for web`,
     WebAdmin: c('Badge').t`Admin`,
     iOSMail: c('Badge').t`ProtonMail for iOS`,
     iOSVPN: c('Badge').t`ProtonVPN for iOS`,
