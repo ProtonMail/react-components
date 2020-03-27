@@ -13,7 +13,7 @@ import {
     useNotifications
 } from 'react-components';
 import { queryVerificationCode } from 'proton-shared/lib/api/user';
-import { isNumber } from 'proton-shared/lib/helpers/validators';
+import { isNumber, isEmail } from 'proton-shared/lib/helpers/validators';
 import { API_CUSTOM_ERROR_CODES } from 'proton-shared/lib/errors';
 import { c } from 'ttag';
 
@@ -31,8 +31,8 @@ const METHODS = {
 };
 
 const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
-    const isEmail = method === METHODS.EMAIL;
-    const isSms = method === METHODS.SMS;
+    const isEmailMethod = method === METHODS.EMAIL;
+    const isSmsMethod = method === METHODS.SMS;
     const { createNotification } = useNotifications();
     const [email, setEmail] = useState(defaultEmail);
     const [phone, setPhone] = useState();
@@ -49,10 +49,10 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
     const { createModal } = useModals();
 
     const sendCode = async () => {
-        await api(queryVerificationCode(method, isEmail ? { Address: email } : { Phone: phone }));
+        await api(queryVerificationCode(method, isEmailMethod ? { Address: email } : { Phone: phone }));
         setCode('');
         setStep(STEPS.VERIFY_CODE);
-        createNotification({ text: c('Success').t`Code sent to ${isEmail ? email : phone}` });
+        createNotification({ text: c('Success').t`Code sent to ${isEmailMethod ? email : phone}` });
     };
 
     const editDestination = () => {
@@ -61,7 +61,7 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
 
     const verifyCode = async () => {
         try {
-            await onSubmit(`${isEmail ? email : phone}:${code}`);
+            await onSubmit(`${isEmailMethod ? email : phone}:${code}`);
         } catch (error) {
             const { data: { Code } = { Code: 0 } } = error;
 
@@ -76,7 +76,7 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
         }
     };
 
-    if (step === STEPS.ENTER_DESTINATION && isEmail) {
+    if (step === STEPS.ENTER_DESTINATION && isEmailMethod) {
         const handleChangeEmail = (event) => {
             event.preventDefault();
 
@@ -101,7 +101,7 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
                         />
                     </div>
                     <PrimaryButton
-                        disabled={!email}
+                        disabled={!email || !isEmail(email)}
                         loading={loadingCode}
                         onClick={() => withLoadingCode(sendCode())}
                     >{c('Action').t`Send`}</PrimaryButton>
@@ -110,7 +110,7 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
         );
     }
 
-    if (step === STEPS.ENTER_DESTINATION && isSms) {
+    if (step === STEPS.ENTER_DESTINATION && isSmsMethod) {
         const handleChangePhone = (status, value, countryData, number) => setPhone(number);
         return (
             <>
@@ -139,7 +139,7 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
     }
 
     if (step === STEPS.VERIFY_CODE) {
-        const destinationText = <strong key="destination">{isEmail ? email : phone}</strong>;
+        const destinationText = <strong key="destination">{isEmailMethod ? email : phone}</strong>;
         const handleChangeCode = (event) => {
             event.preventDefault();
 
@@ -157,7 +157,7 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
             <>
                 <Alert>
                     <div>{c('Info').jt`Enter the verification code that was sent to ${destinationText}.`}</div>
-                    {isEmail ? (
+                    {isEmailMethod ? (
                         <div>{c('Info')
                             .t`If you don't find the email in your inbox, please check your spam folder.`}</div>
                     ) : null}
@@ -197,7 +197,7 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
                 </div>
                 <div>
                     <InlineLinkButton onClick={editDestination}>
-                        {isEmail
+                        {isEmailMethod
                             ? c('Action').t`Change verification email`
                             : c('Action').t`Change verification phone number`}
                     </InlineLinkButton>
