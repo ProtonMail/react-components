@@ -44,7 +44,7 @@ const Payment = ({
         onMethod(value);
     }, [methods.length]);
 
-    if (['donation', 'human-verifcation'].includes(type) && amount < MIN_DONATION_AMOUNT) {
+    if (['donation', 'human-verification'].includes(type) && amount < MIN_DONATION_AMOUNT) {
         const price = (
             <Price key="price" currency={currency}>
                 {MIN_DONATION_AMOUNT}

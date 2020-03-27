@@ -212,7 +212,7 @@ const HumanVerificationModal = ({ token, methods = [], onSuccess, onVerify, ...r
 
 HumanVerificationModal.propTypes = {
     token: PropTypes.string,
-    methods: PropTypes.arrayOf(PropTypes.oneOf(['captcha', 'sms', 'email', 'invite', 'payment'])).isRequired,
+    methods: PropTypes.arrayOf(PropTypes.oneOf(['captcha', 'sms', 'email', 'invite', 'payment', 'coupon'])).isRequired,
     onSuccess: PropTypes.func.isRequired,
     onVerify: PropTypes.func.isRequired
 };

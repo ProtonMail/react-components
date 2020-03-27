@@ -169,7 +169,7 @@ const PayPal = ({ amount: Amount, currency: Currency, onPay, type }) => {
                         .t`You must have a credit card or bank account linked with your PayPal account in order to add it as a payment method.`}</Alert>
                 </>
             ) : null}
-            {!loadingVerification && ['donation', 'human-verifcation'].includes(type) ? (
+            {!loadingVerification && ['donation', 'human-verification'].includes(type) ? (
                 <>
                     <Alert>
                         {c('Info')
