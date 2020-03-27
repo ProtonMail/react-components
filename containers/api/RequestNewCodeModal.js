@@ -44,7 +44,6 @@ const RequestNewCodeModal = ({ email, phone, onEdit, onResend, ...rest }) => {
 };
 
 RequestNewCodeModal.propTypes = {
-    onClose: PropTypes.func.isRequired,
     email: PropTypes.string.isRequired,
     phone: PropTypes.string.isRequired,
     onEdit: PropTypes.func.isRequired,

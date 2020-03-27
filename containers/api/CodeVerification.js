@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import {
     EmailInput,
@@ -33,6 +33,7 @@ const METHODS = {
 const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
     const isEmailMethod = method === METHODS.EMAIL;
     const isSmsMethod = method === METHODS.SMS;
+    const inputCodeRef = useRef();
     const { createNotification } = useNotifications();
     const [email, setEmail] = useState(defaultEmail);
     const [phone, setPhone] = useState();
@@ -53,6 +54,7 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
         setCode('');
         setStep(STEPS.VERIFY_CODE);
         createNotification({ text: c('Success').t`Code sent to ${isEmailMethod ? email : phone}` });
+        inputCodeRef.current.focus();
     };
 
     const editDestination = () => {
@@ -166,6 +168,7 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
                     <div className="flex-item-fluid mr1">
                         <Input
                             id="code"
+                            ref={inputCodeRef}
                             value={code}
                             maxLength="6"
                             placeholder={c('Placeholder').t`123456`}
