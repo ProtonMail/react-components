@@ -7,6 +7,7 @@ import {
     Label,
     PrimaryButton,
     Payment,
+    PaymentInfo,
     usePayment,
     useNotifications,
     useApi,
@@ -178,8 +179,7 @@ const HumanVerificationModal = ({ token, methods = [], onSuccess, onVerify, ...r
                         {method === 'sms' ? <CodeVerification onSubmit={handleSubmit} method="sms" /> : null}
                         {method === 'payment' ? (
                             <>
-                                <Alert>{c('Info')
-                                    .t`Your payment details are protected with TLS encryption and Swiss privacy laws.`}</Alert>
+                                <PaymentInfo method={method} />
                                 <label className="mb0-5 bl">{c('Label').t`Select an amount`}</label>
                                 <PaymentSelector
                                     amount={amount}
