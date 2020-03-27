@@ -18,7 +18,8 @@ import {
     DEFAULT_CURRENCY,
     DEFAULT_DONATION_AMOUNT,
     MIN_DONATION_AMOUNT,
-    PAYMENT_METHOD_TYPES
+    PAYMENT_METHOD_TYPES,
+    MAX_PAYPAL_AMOUNT
 } from 'proton-shared/lib/constants';
 import { verifyPayment } from 'proton-shared/lib/api/payments';
 import { c } from 'ttag';
@@ -185,6 +186,7 @@ const HumanVerificationModal = ({ token, methods = [], onSuccess, onVerify, ...r
                                     onChangeAmount={setAmount}
                                     currency={currency}
                                     onChangeCurrency={setCurrency}
+                                    maxAmount={MAX_PAYPAL_AMOUNT}
                                 />
                             </>
                         ) : null}
