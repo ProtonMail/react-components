@@ -12,6 +12,10 @@ const KEY = 'userScopes';
 
 const getUserScopes = (api: Api) => api(queryScopes()).then((result: any = {}) => result.Scope);
 
+export const USER_SCOPES = {
+    DRIVE: 68719476736
+};
+
 export const hasScope = (scope: string, mask: number) => {
     const scopeInt = JSBI.BigInt(scope);
     const maskInt = JSBI.BigInt(mask);

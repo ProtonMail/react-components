@@ -1,13 +1,22 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Icon, useConfig, Tooltip, Link } from 'react-components';
 import { APPS } from 'proton-shared/lib/constants';
+import { useUserScopes, hasScope, USER_SCOPES } from '../../hooks/useUserScopes';
 
-const { PROTONMAIL, PROTONCONTACTS, PROTONMAIL_SETTINGS, PROTONCALENDAR } = APPS;
+const { PROTONMAIL, PROTONCONTACTS, PROTONMAIL_SETTINGS, PROTONCALENDAR, PROTONDRIVE } = APPS;
 
 const AppsSidebar = ({ items = [] }) => {
     const { APP_NAME } = useConfig();
-    const apps = [
+    const [userScopes, loadingUserScopes] = useUserScopes();
+
+    const driveApp = {
+        appNames: [PROTONDRIVE],
+        icon: 'protondrive',
+        title: 'ProtonDrive',
+        link: '/drive'
+    };
+    const initialApps = [
         { appNames: [PROTONMAIL, PROTONMAIL_SETTINGS], icon: 'protonmail', title: 'ProtonMail', link: '/inbox' },
         { appNames: [PROTONCONTACTS], icon: 'protoncontacts', title: 'ProtonContacts', link: '/contacts' },
         {
@@ -17,6 +26,14 @@ const AppsSidebar = ({ items = [] }) => {
             link: '/calendar'
         }
     ].filter(Boolean);
+
+    const [apps, setApps] = useState(initialApps);
+
+    useEffect(() => {
+        if (!loadingUserScopes && hasScope(userScopes, USER_SCOPES.DRIVE)) {
+            setApps([...apps, driveApp].filter(Boolean));
+        }
+    }, [userScopes, loadingUserScopes]);
 
     return (
         <aside className="aside noprint nomobile" id="aside-bar">
