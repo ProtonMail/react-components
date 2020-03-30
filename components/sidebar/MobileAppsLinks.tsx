@@ -3,9 +3,9 @@ import React, { useState, useEffect } from 'react';
 import { APPS } from 'proton-shared/lib/constants';
 
 import { useUserScopes, hasScope, USER_SCOPES } from '../../hooks/useUserScopes';
-import useConfig from '../config/useConfig';
-import MobileNavServices from '../../components/sidebar/MobileNavServices';
-import MobileNavLink from '../../components/sidebar/MobileNavLink';
+import useConfig from '../../containers/config/useConfig';
+import MobileNavServices from './MobileNavServices';
+import MobileNavLink from './MobileNavLink';
 
 const { PROTONMAIL, PROTONCONTACTS, PROTONMAIL_SETTINGS, PROTONCALENDAR, PROTONDRIVE } = APPS;
 
