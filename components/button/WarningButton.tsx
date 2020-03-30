@@ -1,10 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Icon from '../icon/Icon';
-import Button from './Button';
+import Button, { Props as ButtonProps } from './Button';
 import { classnames } from '../../helpers/component';
 
-const WarningButton = ({ children, className = '', icon, ...rest }) => {
+const WarningButton = ({ children, className = '', icon, ...rest }: ButtonProps) => {
     const buttonIcon = typeof icon === 'string' ? <Icon name={icon} /> : icon;
 
     return (
@@ -12,12 +11,6 @@ const WarningButton = ({ children, className = '', icon, ...rest }) => {
             {children}
         </Button>
     );
-};
-
-WarningButton.propTypes = {
-    icon: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-    children: PropTypes.node,
-    className: PropTypes.string
 };
 
 export default WarningButton;
