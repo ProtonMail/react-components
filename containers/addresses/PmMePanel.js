@@ -6,18 +6,18 @@ import { Alert, Loader, useUser, useAddresses } from 'react-components';
 import PmMeButton from './PmMeButton';
 
 const PmMePanel = () => {
-    const [{ isAdmin, isPaidMail }] = useUser();
+    const [{ canPay, hasPaidMail }] = useUser();
     const [addresses, loading] = useAddresses();
 
     if (loading) {
         return <Loader />;
     }
 
-    if (isAdmin) {
+    if (canPay) {
         const hasPremium = addresses.some(({ Type }) => Type === ADDRESS_TYPE.TYPE_PREMIUM);
 
         if (!hasPremium) {
-            if (isPaidMail) {
+            if (hasPaidMail) {
                 return (
                     <>
                         <Alert learnMore="https://protonmail.com/support/knowledge-base/pm-me-addresses/">{c('Info')
@@ -36,7 +36,7 @@ const PmMePanel = () => {
             );
         }
 
-        if (isPaidMail) {
+        if (hasPaidMail) {
             return (
                 <>
                     <Alert learnMore="https://protonmail.com/support/knowledge-base/pm-me-addresses/">{c('Info')

@@ -5,7 +5,7 @@ import {
     UnlockModal,
     PrimaryButton,
     useApi,
-    useMembers,
+    useAddresses,
     useLoading,
     useEventManager,
     useOrganization,
@@ -22,21 +22,16 @@ const PmMeButton = () => {
     const { createModal } = useModals();
     const api = useApi();
     const { call } = useEventManager();
-    const [members = [], loadingMembers] = useMembers();
+    const [addresses, loadingAddresses] = useAddresses();
     const [premiumDomains, loadingPremiumDomains] = usePremiumDomains();
     const [organization, loadingOrganization] = useOrganization();
     const [organizationKey, loadingOrganizationKey] = useOrganizationKey(organization);
     const isLoadingDependencies =
-        loadingMembers || loadingPremiumDomains || loadingOrganization || loadingOrganizationKey;
-    const member = members.find(({ Self }) => Self);
+        loadingAddresses || loadingPremiumDomains || loadingOrganization || loadingOrganizationKey;
     const [Domain = ''] = premiumDomains || [];
 
-    if (!member) {
-        return null;
-    }
-
     const createPremiumAddress = async () => {
-        const [{ DisplayName = '', Signature = '' } = {}] = member.addresses || [];
+        const [{ DisplayName = '', Signature = '' } = {}] = addresses || [];
         await new Promise((resolve, reject) => {
             createModal(<UnlockModal onClose={() => reject()} onSuccess={resolve} />);
         });
@@ -49,9 +44,7 @@ const PmMeButton = () => {
         );
         await call();
         createNotification({ text: c('Success').t`Premium address created` });
-        createModal(
-            <CreateMissingKeysAddressModal organizationKey={organizationKey} member={member} addresses={[Address]} />
-        );
+        createModal(<CreateMissingKeysAddressModal organizationKey={organizationKey} addresses={[Address]} />);
     };
 
     return (
