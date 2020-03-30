@@ -1,12 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import { Icon, useConfig, Tooltip, Link } from 'react-components';
+import { ReactNodeArray } from 'prop-types';
 import { APPS } from 'proton-shared/lib/constants';
 import { useUserScopes, hasScope, USER_SCOPES } from '../../hooks/useUserScopes';
+import useConfig from '../config/useConfig';
+import Tooltip from '../../components/tooltip/Tooltip';
+import Link from '../../components/link/Link';
+import Icon from '../../components/icon/Icon';
 
 const { PROTONMAIL, PROTONCONTACTS, PROTONMAIL_SETTINGS, PROTONCALENDAR, PROTONDRIVE } = APPS;
 
-const AppsSidebar = ({ items = [] }) => {
+interface Props {
+    items: ReactNodeArray;
+}
+
+const AppsSidebar = ({ items = [] }: Props) => {
     const { APP_NAME } = useConfig();
     const [userScopes, loadingUserScopes] = useUserScopes();
 
@@ -65,10 +72,6 @@ const AppsSidebar = ({ items = [] }) => {
             </ul>
         </aside>
     );
-};
-
-AppsSidebar.propTypes = {
-    items: PropTypes.arrayOf(PropTypes.node)
 };
 
 export default AppsSidebar;
