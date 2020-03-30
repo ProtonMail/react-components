@@ -171,23 +171,19 @@ const TimeInput = ({ onChange, value, interval = 30, min, displayDuration = fals
                 onChange={({ target: { value } }: ChangeEvent<HTMLInputElement>) => setTemporaryInput(value)}
                 {...rest}
             />
-            <Dropdown
-                size={displayDuration ? 'normal' : 'narrow'}
-                id={uid}
-                isOpen={isOpen}
-                anchorRef={anchorRef}
-                onClose={close}
-                autoClose={false}
-            >
-                <div className="dropDown-content" onMouseDown={(e) => e.preventDefault()} ref={scrollRef}>
+            <Dropdown id={uid} isOpen={isOpen} anchorRef={anchorRef} onClose={close} autoClose={false}>
+                <div onMouseDown={(e) => e.preventDefault()} ref={scrollRef}>
                     <ul className="unstyled mt0 mb0" ref={listRef}>
                         {filteredOptions.map(({ label, value: otherValue }, i) => {
                             // Only highlight if the text includes the input (where 13:05 is centered but not highlighted)
                             const isSelected = i === matchingIndex && label.includes(temporaryInput);
                             return (
-                                <li key={i}>
+                                <li key={i} className="dropDown-item">
                                     <button
-                                        className={classnames(['w100 pt0-5 pb0-5 p1', isSelected && 'bold'])}
+                                        className={classnames([
+                                            'dropDown-item-button w100 pt0-5 pb0-5 p1 alignleft',
+                                            isSelected && 'dropDown-item--isSelected'
+                                        ])}
                                         onClick={() => {
                                             handleSelectDate(otherValue);
                                             close();

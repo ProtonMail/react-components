@@ -15,7 +15,7 @@ const Dropdown = ({
     availablePlacements = ALL_PLACEMENTS,
     onClose = noop,
     isOpen = false,
-    size = 'normal',
+    noMaxSize = false,
     autoClose = true,
     autoCloseOutside = true,
     ...rest
@@ -69,12 +69,7 @@ const Dropdown = ({
         };
     }, [autoCloseOutside]);
 
-    const contentClassName = classnames([
-        'dropDown',
-        `dropDown--${placement}`,
-        size !== 'normal' && `dropDown--${size}`,
-        className
-    ]);
+    const popperClassName = classnames(['dropDown', `dropDown--${placement}`, className]);
 
     const varPosition = {
         '--top': position.top,
@@ -87,11 +82,13 @@ const Dropdown = ({
             position={varPosition}
             isOpen={isOpen}
             role="dialog"
-            className={contentClassName}
+            className={popperClassName}
             onClick={handleClickContent}
             {...rest}
         >
-            {children}
+            <div className={classnames(['dropDown-content', noMaxSize && 'dropDown-content--noMaxSize'])}>
+                {children}
+            </div>
         </Popper>
     );
 };
@@ -102,9 +99,9 @@ Dropdown.propTypes = {
     className: PropTypes.string,
     onClose: PropTypes.func,
     isOpen: PropTypes.bool,
+    noMaxSize: PropTypes.bool,
     originalPlacement: PropTypes.string,
     availablePlacements: PropTypes.arrayOf(PropTypes.oneOf(ALL_PLACEMENTS)),
-    size: PropTypes.oneOf(['normal', 'narrow', 'wide', 'auto']),
     autoClose: PropTypes.bool,
     autoCloseOutside: PropTypes.bool
 };

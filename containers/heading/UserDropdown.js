@@ -60,11 +60,12 @@ const UserDropdown = ({ ...rest }) => {
                 id={uid}
                 className="userDropdown"
                 isOpen={isOpen}
+                noMaxSize={true}
                 anchorRef={anchorRef}
                 onClose={close}
                 originalPlacement="bottom-right"
             >
-                <ul className="dropDown-content unstyled mt0 mb0">
+                <ul className="unstyled mt0 mb0">
                     <li className="dropDown-item pt0-5 pb0-5 pl1 pr1 flex flex-column">
                         <strong title={DisplayName || Name} className="ellipsis mw100 capitalize">
                             {DisplayName || Name}
