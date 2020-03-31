@@ -11,7 +11,7 @@ interface Props {
 
 const Copy = ({ value, className = '', onCopy }: Props) => {
     const [copied, setCopied] = useState(false);
-    const timeoutRef = useRef<any>();
+    const timeoutRef = useRef<number>();
 
     const handleClick = () => {
         textToClipboard(value);
