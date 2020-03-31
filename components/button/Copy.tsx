@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { c } from 'ttag';
-import { Icon, Button, classnames, Tooltip } from 'react-components';
+import { Icon, Button, classnames, Tooltip } from '../../index';
 import { textToClipboard } from 'proton-shared/lib/helpers/browser';
 
 interface Props {
