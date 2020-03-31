@@ -19,7 +19,7 @@ const Copy = ({ value, className = '', onCopy }: Props) => {
 
         if (!copied) {
             setCopied(true);
-            timeoutRef.current = setTimeout(() => {
+            timeoutRef.current = window.setTimeout(() => {
                 setCopied(false);
             }, 2000);
         }
