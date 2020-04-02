@@ -41,10 +41,10 @@ const SupportDropdown = ({ className, content }) => {
                 onClick={toggle}
             />
             <Dropdown id={uid} isOpen={isOpen} anchorRef={anchorRef} onClose={close} originalPlacement="bottom">
-                <ul className="unstyled mt0-5 mb0-5">
-                    <li className="dropDown-item pl1 pr1">
+                <ul className="unstyled mt0 mb0">
+                    <li className="dropDown-item">
                         <a
-                            className="w100 flex flex-nowrap color-global-grey nodecoration pt0-5 pb0-5"
+                            className="dropDown-item-link w100 flex flex-nowrap pl1 pr1 pt0-5 pb0-5"
                             href={
                                 CLIENT_TYPE === VPN
                                     ? 'https://protonvpn.com/support/'
@@ -57,10 +57,10 @@ const SupportDropdown = ({ className, content }) => {
                             {c('Action').t`I have a question`}
                         </a>
                     </li>
-                    <li className="dropDown-item pl1 pr1">
+                    <li className="dropDown-item">
                         <button
                             type="button"
-                            className="w100 flex underline-hover pt0-5 pb0-5 alignleft"
+                            className="dropDown-item-button w100 flex flex-nowrap pl1 pr1 pt0-5 pb0-5 alignleft"
                             onClick={handleBugReportClick}
                         >
                             <Icon className="mt0-25 mr0-5" name="report-bug" />
