@@ -26,11 +26,9 @@ const SPF_TYPES = {
 
 const DKIM_TYPES = {
     [DKIM_STATE.DKIM_STATE_DEFAULT]: 'origin',
-    [DKIM_STATE.DKIM_STATE_ONE]: 'error',
-    [DKIM_STATE.DKIM_STATE_MULT]: 'error',
-    [DKIM_STATE.DKIM_STATE_CHECK]: 'error',
+    [DKIM_STATE.DKIM_STATE_ERROR]: 'error',
     [DKIM_STATE.DKIM_STATE_GOOD]: 'success',
-    [DKIM_STATE.DKIM_STATE_OFF]: 'origin'
+    [DKIM_STATE.DKIM_STATE_WARNING]: 'warning'
 };
 
 const DMARC_TYPES = {

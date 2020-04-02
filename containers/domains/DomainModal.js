@@ -6,6 +6,7 @@ import {
     Group,
     ButtonGroup,
     RoundedIcon,
+    Tooltip,
     useLoading,
     useApi,
     useStep,
@@ -46,6 +47,13 @@ const verifyDomain = ({ VerifyState }) => {
     }
 };
 
+/*
+    @todo remove mock
+*/
+const DOMAIN = {
+    DkimState: 0 // or 3 | 4 | 6
+};
+
 // Pull staticContext to avoid it being passed with rest
 // eslint-disable-next-line no-unused-vars
 const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, staticContext, ...rest }) => {
@@ -60,6 +68,40 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
     const handleRedirect = (route) => {
         onClose();
         history.push(route);
+    };
+
+    const renderDKIMIcon = () => {
+        // @todo remove mock
+        const { DkimState } = DOMAIN;
+        // const { DkimState } = domainModel;
+        const { DKIM_STATE_ERROR, DKIM_STATE_GOOD, DKIM_STATE_WARNING } = DKIM_STATE;
+
+        let title, type, name;
+
+        switch (DkimState) {
+            case DKIM_STATE_ERROR:
+                title = c('Tooltip')
+                    .t`We stopped DKIM signing due to problems with your DNS configuration. Please follow the instructions below to resume signing.`;
+                type = 'error';
+                name = 'off';
+                break;
+            case DKIM_STATE_GOOD:
+                title = c('Tooltip').t`Your DKIM signing is working.`;
+                type = 'success';
+                name = 'on';
+                break;
+            case DKIM_STATE_WARNING:
+                title = c('Tooltip')
+                    .t`We detected a problem with your DNS configuration. Please make sure your records match the instructions below. If the problem persists, we will have to switch DKIM signing off.`;
+                type = 'warning';
+                name = 'attention';
+                break;
+        }
+        return (
+            <Tooltip title={title}>
+                <RoundedIcon className="mr0-5" key="dkim-icon" type={type} name={name} />
+            </Tooltip>
+        );
     };
 
     const breadcrumbLabels = [
@@ -105,19 +147,17 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
                 name={domainModel.SpfState === SPF_STATE.SPF_STATE_GOOD ? 'on' : 'off'}
             />
         ),
-        [DKIM_STATE.DKIM_STATE_CHECK, DKIM_STATE.DKIM_STATE_GOOD].includes(domainModel.DkimState) ? (
-            <RoundedIcon
-                className="mr0-5"
-                key="dkim-icon"
-                title={
-                    domainModel.DkimState === DKIM_STATE.DKIM_STATE_GOOD
-                        ? c('Tooltip').t`Your DKIM signing is working.`
-                        : c('Tooltip').t`There is a problem with your DKIM setup. Please check below.`
-                }
-                type={domainModel.DkimState === DKIM_STATE.DKIM_STATE_GOOD ? 'success' : 'error'}
-                name={domainModel.DkimState === DKIM_STATE.DKIM_STATE_GOOD ? 'on' : 'off'}
-            />
-        ) : null,
+        /* @todo remove mock */
+        [DKIM_STATE.DKIM_STATE_ERROR, DKIM_STATE.DKIM_STATE_GOOD, DKIM_STATE.DKIM_STATE_WARNING].includes(
+            DOMAIN.DkimState
+        )
+            ? renderDKIMIcon()
+            : null,
+        /* [
+            DKIM_STATE.DKIM_STATE_ERROR,
+            DKIM_STATE.DKIM_STATE_GOOD,
+            DKIM_STATE.DKIM_STATE_WARNING,
+        ].includes(domainModel.DkimState) ? renderDKIMIcon() : null, */
         domainModel.DmarcState === DMARC_STATE.DMARC_STATE_DEFAULT ? null : (
             <RoundedIcon
                 className="mr0-5"
