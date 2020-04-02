@@ -175,7 +175,11 @@ const HumanVerificationModal = ({ token, methods = [], onSuccess, onVerify, ...r
                         })}
                     </Label>
                     <div className="w100">
-                        {method === 'captcha' ? <Captcha token={token} onSubmit={handleSubmit} /> : null}
+                        {method === 'captcha' ? (
+                            <div className="w33r">
+                                <Captcha token={token} onSubmit={handleSubmit} />
+                            </div>
+                        ) : null}
                         {method === 'email' ? <CodeVerification onSubmit={handleSubmit} method="email" /> : null}
                         {method === 'sms' ? <CodeVerification onSubmit={handleSubmit} method="sms" /> : null}
                         {method === 'payment' ? (
