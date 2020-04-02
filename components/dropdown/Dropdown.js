@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
+import { c } from 'ttag';
 import { classnames } from '../../helpers/component';
 import { usePopper, Popper } from '../popper';
 import useRightToLeft from '../../containers/rightToLeft/useRightToLeft';
@@ -86,6 +87,10 @@ const Dropdown = ({
             onClick={handleClickContent}
             {...rest}
         >
+            {/* Backdrop button, meant to override 'autoClose' option on mobile */}
+            <button type="button" className="dropDown-backdrop" title={c('Action').t`Close`} onClick={onClose}>
+                <span className="sr-only">{c('Action').t`Close`}</span>
+            </button>
             <div className={classnames(['dropDown-content', noMaxSize && 'dropDown-content--noMaxSize'])}>
                 {children}
             </div>
