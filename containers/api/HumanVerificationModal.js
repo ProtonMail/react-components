@@ -30,6 +30,7 @@ import HumanVerificationLabel from './HumanVerificationLabel';
 import CodeVerification from './CodeVerification';
 import RequestInvite from './RequestInvite';
 import PayPalButton from '../payments/PayPalButton';
+
 import './HumanVerificationModal.scss';
 
 const getLabel = (method) =>
@@ -139,7 +140,7 @@ const HumanVerificationModal = ({ token, methods = [], onSuccess, onVerify, ...r
 
     return (
         <FormModal
-            className="human-verification-modal"
+            className="human-verification-modal pm-modal--heightAuto"
             hasClose={false}
             title={title}
             loading={loading}
