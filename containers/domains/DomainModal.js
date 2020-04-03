@@ -139,7 +139,7 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
     ];
 
     const breadcrumbIcons = [
-        domainModel.State === DOMAIN_STATE.DOMAIN_STATE_DEFAULT ? null : (
+        !domainModel.State || domainModel.State === DOMAIN_STATE.DOMAIN_STATE_DEFAULT ? null : (
             <RoundedIcon
                 className="mr0-5"
                 key="domain-icon"
@@ -147,7 +147,7 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
                 name={domainModel.State === DOMAIN_STATE.DOMAIN_STATE_ACTIVE ? 'on' : 'off'}
             />
         ),
-        domainModel.VerifyState === VERIFY_STATE.VERIFY_STATE_DEFAULT ? null : (
+        !domainModel.VerifyState || domainModel.VerifyState === VERIFY_STATE.VERIFY_STATE_DEFAULT ? null : (
             <RoundedIcon
                 className="mr0-5"
                 key="verify-icon"
@@ -155,7 +155,7 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
                 name={domainModel.VerifyState === VERIFY_STATE.VERIFY_STATE_GOOD ? 'on' : 'off'}
             />
         ),
-        domainModel.MxState === MX_STATE.MX_STATE_DEFAULT ? null : (
+        !domainModel.MxState || domainModel.MxState === MX_STATE.MX_STATE_DEFAULT ? null : (
             <RoundedIcon
                 className="mr0-5"
                 key="mx-icon"
@@ -163,7 +163,7 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
                 name={domainModel.MxState === MX_STATE.MX_STATE_GOOD ? 'on' : 'off'}
             />
         ),
-        domainModel.SpfState === SPF_STATE.SPF_STATE_DEFAULT ? null : (
+        !domainModel.SpfState || domainModel.SpfState === SPF_STATE.SPF_STATE_DEFAULT ? null : (
             <RoundedIcon
                 className="mr0-5"
                 key="spf-icon"
@@ -176,7 +176,7 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
         )
             ? renderDKIMIcon()
             : null,
-        domainModel.DmarcState === DMARC_STATE.DMARC_STATE_DEFAULT ? null : (
+        !domainModel.DmarcState || domainModel.DmarcState === DMARC_STATE.DMARC_STATE_DEFAULT ? null : (
             <RoundedIcon
                 className="mr0-5"
                 key="dmarc-icon"
