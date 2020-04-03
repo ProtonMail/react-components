@@ -83,7 +83,7 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
 
     /* @todo remove mock */
     const [domainModel, setDomain] = useState(() => ({ ...domain }));
-    // const [domainModel, setDomain] = useState(() => ({ ...domain }));
+    const [mockDomain, setMockDomain] = useState(() => ({ ...domain, ...MOCK_DOMAIN_OVERRIDES }));
 
     const { createNotification } = useNotifications();
     const [loading, withLoading] = useLoading();
@@ -97,7 +97,7 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
     };
 
     const renderDKIMIcon = () => {
-        const { DkimState } = MOCK_DOMAIN_OVERRIDES ? MOCK_DOMAIN_OVERRIDES : domainModel;
+        const { DkimState } = mockDomain ? mockDomain : domainModel;
         const { DKIM_STATE_ERROR, DKIM_STATE_GOOD, DKIM_STATE_WARNING } = DKIM_STATE;
 
         let title, type, name, icon;
@@ -172,7 +172,7 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
             />
         ),
         [DKIM_STATE.DKIM_STATE_ERROR, DKIM_STATE.DKIM_STATE_GOOD, DKIM_STATE.DKIM_STATE_WARNING].includes(
-            MOCK_DOMAIN_OVERRIDES ? MOCK_DOMAIN_OVERRIDES.DkimState : domainModel.DkimState
+            mockDomain ? mockDomain.DkimState : domainModel.DkimState
         )
             ? renderDKIMIcon()
             : null,
@@ -251,7 +251,7 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
 
         if (step === STEPS.DKIM) {
             return {
-                section: <DKIMSection domain={MOCK_DOMAIN_OVERRIDES ? MOCK_DOMAIN_OVERRIDES : domainModel} />,
+                section: <DKIMSection domain={mockDomain ? mockDomain : domainModel} />,
                 onSubmit: next
             };
         }
@@ -284,7 +284,52 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
             onClose={onClose}
             close={c('Action').t`Close`}
             submit={c('Action').t`Next`}
-            title={domainModel.ID ? c('Title').t`Edit domain` : c('Title').t`Add domain`}
+            /* @todo remove this, for debug purpose only */
+            title={
+                domainModel.ID ? (
+                    <div className="flex flex-spacebetween">
+                        {c('Title').t`Edit domain`}
+                        <div
+                            style={{
+                                fontSize: '1.25rem',
+                                display: 'flex',
+                                alignItems: 'center'
+                            }}
+                        >
+                            <div className="mr1">DKIM State:</div>
+                            <Group>
+                                <ButtonGroup
+                                    className={mockDomain.DkimState === 0 ? 'is-active' : ''}
+                                    onClick={() => setMockDomain({ ...mockDomain, DkimState: 0 })}
+                                >
+                                    Default
+                                </ButtonGroup>
+                                <ButtonGroup
+                                    className={mockDomain.DkimState === 3 ? 'is-active' : ''}
+                                    onClick={() => setMockDomain({ ...mockDomain, DkimState: 3 })}
+                                >
+                                    Error
+                                </ButtonGroup>
+                                <ButtonGroup
+                                    className={mockDomain.DkimState === 4 ? 'is-active' : ''}
+                                    onClick={() => setMockDomain({ ...mockDomain, DkimState: 4 })}
+                                >
+                                    Good
+                                </ButtonGroup>
+                                <ButtonGroup
+                                    className={mockDomain.DkimState === 6 ? 'is-active' : ''}
+                                    onClick={() => setMockDomain({ ...mockDomain, DkimState: 6 })}
+                                >
+                                    Warning
+                                </ButtonGroup>
+                            </Group>
+                        </div>
+                    </div>
+                ) : (
+                    c('Title').t`Add domain`
+                )
+            }
+            // title={domainModel.ID ? c('Title').t`Edit domain` : c('Title').t`Add domain`}
             loading={loading}
             {...rest}
             {...modalProps}
