@@ -1,54 +1,27 @@
 import React from 'react';
 import { c } from 'ttag';
 import PropTypes from 'prop-types';
-import {
-    useMembers,
-    Alert,
-    Button,
-    PrimaryButton,
-    Block,
-    Table,
-    TableHeader,
-    TableBody,
-    TableRow
-} from 'react-components';
+import { Alert, PrimaryButton, Block } from 'react-components';
 
-const AddressesSection = ({ domainAddresses, onRedirect }) => {
-    const [members, loadingMembers] = useMembers();
-
-    const getMemberName = (memberID) => {
-        const { Name = '' } = members.find(({ ID }) => ID === memberID);
-        return Name;
-    };
-
+const AddressesSection = ({ onRedirect }) => {
     return (
         <>
             <Alert>{c('Info for domain modal')
-                .t`Please add addresses to send and receive email with this domain.`}</Alert>
+                .t`If you have a subscription plan with multi-user support, you can add users to your domain by clicking on the button below.`}</Alert>
             <Block>
-                <PrimaryButton className="mr1" onClick={() => onRedirect('/settings/addresses')}>{c('Action')
-                    .t`Add address`}</PrimaryButton>
-                <Button onClick={() => onRedirect('/settings/members')}>{c('Action').t`Add user`}</Button>
+                <PrimaryButton onClick={() => onRedirect('/settings/members')}>{c('Action').t`Add user`}</PrimaryButton>
             </Block>
-            {domainAddresses.length ? (
-                <Table>
-                    <TableHeader
-                        cells={[c('Header for domain modal').t`User`, c('Header for domain modal').t`Address`]}
-                    />
-                    <TableBody loading={loadingMembers} colSpan={2}>
-                        {members &&
-                            domainAddresses.map(({ ID, Email, MemberID }) => {
-                                return <TableRow key={ID} cells={[getMemberName(MemberID), Email]} />;
-                            })}
-                    </TableBody>
-                </Table>
-            ) : null}
+            <Alert>{c('Info for domain modal')
+                .t`Already have all the users you need? Click on the button below to add addresses to your users. More addresses can be purchased by customizing your plan from the subscription section.`}</Alert>
+            <Block>
+                <PrimaryButton onClick={() => onRedirect('/settings/addresses')}>{c('Action')
+                    .t`Add address`}</PrimaryButton>
+            </Block>
         </>
     );
 };
 
 AddressesSection.propTypes = {
-    domainAddresses: PropTypes.array.isRequired,
     onRedirect: PropTypes.func.isRequired
 };
 

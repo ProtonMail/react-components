@@ -28,11 +28,11 @@ import DMARCSection from './DMARCSection';
 const STEPS = {
     DOMAIN: 0,
     VERIFY: 1,
-    ADDRESSES: 2,
-    MX: 3,
-    SPF: 4,
-    DKIM: 5,
-    DMARC: 6
+    MX: 2,
+    SPF: 3,
+    DKIM: 4,
+    DMARC: 5,
+    ADDRESSES: 6
 };
 
 const verifyDomain = ({ VerifyState }) => {
@@ -65,11 +65,11 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
     const breadcrumbLabels = [
         c('Label in domain modal').t`Domain`,
         c('Label in domain modal').t`Verify`,
-        c('Label in domain modal').t`Addresses`,
         'MX',
         'SPF',
         'DKIM',
-        'DMARC'
+        'DMARC',
+        c('Label in domain modal').t`Addresses`
     ];
 
     const breadcrumbIcons = [
@@ -89,14 +89,6 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
                 name={domainModel.VerifyState === VERIFY_STATE.VERIFY_STATE_GOOD ? 'on' : 'off'}
             />
         ),
-        domainAddresses.length ? (
-            <RoundedIcon
-                className="mr0-5"
-                key="addresses-icon"
-                type={domainModel.State === DOMAIN_STATE.DOMAIN_STATE_ACTIVE ? 'success' : 'error'}
-                name={domainModel.State === DOMAIN_STATE.DOMAIN_STATE_ACTIVE ? 'on' : 'off'}
-            />
-        ) : null,
         domainModel.MxState === MX_STATE.MX_STATE_DEFAULT ? null : (
             <RoundedIcon
                 className="mr0-5"
@@ -133,7 +125,15 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
                 type={domainModel.DmarcState === DMARC_STATE.DMARC_STATE_GOOD ? 'success' : 'error'}
                 name={domainModel.DmarcState === DMARC_STATE.DMARC_STATE_GOOD ? 'on' : 'off'}
             />
-        )
+        ),
+        domainAddresses.length ? (
+            <RoundedIcon
+                className="mr0-5"
+                key="addresses-icon"
+                type={domainModel.State === DOMAIN_STATE.DOMAIN_STATE_ACTIVE ? 'success' : 'error'}
+                name={domainModel.State === DOMAIN_STATE.DOMAIN_STATE_ACTIVE ? 'on' : 'off'}
+            />
+        ) : null
     ];
 
     const { section, ...modalProps } = (() => {
@@ -177,13 +177,6 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
             };
         }
 
-        if (step === STEPS.ADDRESSES) {
-            return {
-                section: <AddressesSection onRedirect={handleRedirect} domainAddresses={domainAddresses} />,
-                onSubmit: next
-            };
-        }
-
         if (step === STEPS.MX) {
             return {
                 section: <MXSection />,
@@ -208,7 +201,14 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
         if (step === STEPS.DMARC) {
             return {
                 section: <DMARCSection />,
-                submit: c('Action').t`Ok`,
+                onSubmit: next
+            };
+        }
+
+        if (step === STEPS.ADDRESSES) {
+            return {
+                section: <AddressesSection onRedirect={handleRedirect} />,
+                submit: c('Action').t`Done`,
                 onSubmit: onClose
             };
         }
@@ -258,7 +258,6 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
 DomainModal.propTypes = {
     onClose: PropTypes.func,
     domain: PropTypes.object,
-    domainAddresses: PropTypes.array,
     history: PropTypes.object.isRequired,
     staticContext: PropTypes.object
 };

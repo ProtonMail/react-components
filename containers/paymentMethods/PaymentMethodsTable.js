@@ -3,6 +3,7 @@ import { c } from 'ttag';
 import { Table, TableHeader, TableBody, TableRow, Alert } from 'react-components';
 import PropTypes from 'prop-types';
 import { PAYMENT_METHOD_TYPES } from 'proton-shared/lib/constants';
+import { orderBy } from 'proton-shared/lib/helpers/array';
 
 import PaymentMethodActions from './PaymentMethodActions';
 import PaymentMethodState from './PaymentMethodState';
@@ -23,6 +24,8 @@ const PaymentMethodsTable = ({ methods, loading }) => {
         }
     };
 
+    const orderedMethods = orderBy(methods, 'Order');
+
     return (
         <Table className="pm-simple-table--has-actions">
             <TableHeader
@@ -33,14 +36,19 @@ const PaymentMethodsTable = ({ methods, loading }) => {
                 ]}
             />
             <TableBody loading={loading} colSpan={5}>
-                {methods.map((method, index) => {
+                {orderedMethods.map((method, index) => {
                     return (
                         <TableRow
                             key={method.ID}
                             cells={[
                                 getMethod(method),
                                 <PaymentMethodState key={method.ID} method={method} index={index} />,
-                                <PaymentMethodActions key={method.ID} index={index} methods={methods} method={method} />
+                                <PaymentMethodActions
+                                    key={method.ID}
+                                    index={index}
+                                    methods={orderedMethods}
+                                    method={method}
+                                />
                             ]}
                         />
                     );

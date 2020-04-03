@@ -34,7 +34,8 @@ export { default as Information } from './components/container/Information';
 export { default as ObserverSection } from './components/container/ObserverSection';
 export { default as ObserverSections } from './components/container/ObserverSections';
 export { default as Tooltip } from './components/tooltip/Tooltip';
-export { default as TreeView } from './components/treeview/TreeView';
+export { default as TreeViewContainer } from './components/treeview/TreeViewContainer';
+export { default as TreeViewItem } from './components/treeview/TreeViewItem';
 export { default as FloatingButton } from './components/button/FloatingButton';
 export { default as PrimaryButton } from './components/button/PrimaryButton';
 export { default as WarningButton } from './components/button/WarningButton';
@@ -117,6 +118,7 @@ export { default as Progress } from './components/progress/Progress';
 export { default as CircularProgress } from './components/progress/CircularProgress';
 export { default as Legend } from './components/text/Legend';
 export { default as ErrorZone } from './components/text/ErrorZone';
+export { default as Mark } from './components/text/Mark';
 export { default as Preformatted } from './components/text/Preformatted';
 export { default as EditableText } from './components/editableText/EditableText';
 export { default as LanguageSection } from './containers/general/LanguageSection';
@@ -199,6 +201,8 @@ export { default as BitcoinDetails } from './containers/payments/BitcoinDetails'
 export { default as PaymentVerificationModal } from './containers/payments/PaymentVerificationModal';
 export { default as Method } from './containers/payments/Method';
 export { default as PaymentSelector } from './containers/payments/PaymentSelector';
+export { default as AmountRow } from './containers/payments/AmountRow';
+export { default as PaymentInfo } from './containers/payments/PaymentInfo';
 export { default as EditCardModal } from './containers/payments/EditCardModal';
 export { default as usePayment } from './containers/payments/usePayment';
 export { default as getDefaultCard } from './containers/payments/getDefaultCard';
@@ -297,6 +301,9 @@ export { default as AutoReplySection } from './containers/autoReply/AutoReplySec
 export { default as IllustrationPlaceholder } from './containers/illustration/IllustrationPlaceholder';
 export { default as GenericError } from './containers/error/GenericError';
 export { default as useLocalState } from './hooks/useLocalState';
+export { default as InternalServerError } from './containers/error/InternalServerError';
+export { default as NotFoundError } from './containers/error/NotFoundError';
+export { default as AccessDeniedError } from './containers/error/AccessDeniedError';
 export { default as useStep } from './hooks/useStep';
 export { default as useApiWithoutResult } from './hooks/useApiWithoutResult';
 export { default as useEventManager } from './containers/eventManager/useEventManager';
@@ -325,6 +332,7 @@ export { default as useRightToLeft } from './containers/rightToLeft/useRightToLe
 export { default as RightToLeftProvider } from './containers/rightToLeft/Provider';
 
 export { default as LabelsSection } from './containers/labels/LabelsSection';
+export { default as FoldersSection } from './containers/labels/FoldersSection';
 export { default as LabelsModal } from './containers/labels/modals/Edit';
 export { default as SpamFiltersSection } from './containers/filters/SpamFiltersSection';
 export { default as FiltersSection } from './containers/filters/FiltersSection';
@@ -355,12 +363,11 @@ export { default as useSvgGraphicsBbox } from './hooks/useSvgGraphicsBbox';
 export { default as useWindowSize } from './hooks/useWindowSize';
 export { default as useElementRect } from './hooks/useElementRect';
 export { default as useContacts } from './hooks/useContacts';
-export { default as useContactGroups } from './hooks/useContactGroups';
 export { default as useContactEmails } from './hooks/useContactEmails';
 export { default as useMailSettings } from './hooks/useMailSettings';
 export { default as useCalendarUserSettings } from './hooks/useCalendarUserSettings';
 export { default as useMembers } from './hooks/useMembers';
-export { useLabels, useFormattedLabels } from './hooks/useLabels';
+export { useLabels, useFolders, useContactGroups } from './hooks/useCategories';
 export { default as useFilters } from './hooks/useFilters';
 export { default as usePaymentMethods } from './hooks/usePaymentMethods';
 export { default as useForceRefresh } from './containers/forceRefresh/useForceRefresh';
@@ -372,6 +379,7 @@ export { useUserKeys, useGetUserKeys } from './hooks/useUserKeys';
 export { useAddressesKeys, useGetAddressesKeys } from './hooks/useAddressesKeys';
 export { useGetAddressKeys } from './hooks/useGetAddressKeys';
 export { useGetPublicKeys } from './hooks/useGetPublicKeys';
+export { default as useGetEncryptionPreferences } from './hooks/useGetEncryptionPreferences';
 export {
     useCalendarBootstrap,
     useReadCalendarBootstrap,
@@ -386,12 +394,14 @@ export { default as useVPNCountries } from './hooks/useVPNCountries';
 export { default as useMessageCounts } from './hooks/useMessageCounts';
 export { default as useConversationCounts } from './hooks/useConversationCounts';
 export { default as useCombinedRefs } from './hooks/useCombinedRefs';
+export { useUserScopes } from './hooks/useUserScopes';
 
 export { default as ErrorBoundary } from './containers/app/ErrorBoundary';
 export { default as ProtonApp } from './containers/app/ProtonApp';
 export { default as StandardPrivateApp } from './containers/app/StandardPrivateApp';
 export { default as StandardPublicApp } from './containers/app/StandardPublicApp';
 export { default as AppsSidebar } from './containers/app/AppsSidebar';
+export { default as MobileAppsLinks } from './components/sidebar/MobileAppsLinks';
 export { default as TopNavbar } from './containers/app/TopNavbar';
 export { default as LoaderPage } from './containers/app/LoaderPage';
 export { default as ToggleMenu } from './containers/app/ToggleMenu';
