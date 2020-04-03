@@ -13,18 +13,18 @@ const DOMAIN = {
         Config: [
             {
                 Hostname: 'protonmail._domainkey',
-                CName: 'protonmail._domainkey.dk5dxbrdfvwighzjav6y5ntmrlem5wanj7lh6yt6qdeixkc4lib7q.cd.protonmail.blue',
+                CNAME: 'protonmail._domainkey.dk5dxbrdfvwighzjav6y5ntmrlem5wanj7lh6yt6qdeixkc4lib7q.cd.protonmail.blue',
                 Key: null
             },
             {
                 Hostname: 'protonmail2._domainkey',
-                CName:
+                CNAME:
                     'protonmail2._domainkey.dk5dxbrdfvwighzjav6y5ntmrlem5wanj7lh6yt6qdeixkc4lib7q.cd.protonmail.blue',
                 Key: null
             },
             {
                 Hostname: 'protonmail3._domainkey',
-                CName:
+                CNAME:
                     'protonmail3._domainkey.dk5dxbrdfvwighzjav6y5ntmrlem5wanj7lh6yt6qdeixkc4lib7q.cd.protonmail.blue',
                 Key: null
             }
@@ -91,10 +91,10 @@ const DKIMSection = (/* { domain } */) => {
                                     <Copy
                                         onCopy={handleCopy}
                                         className="flex-item-noshrink pm-button--small mr0-5"
-                                        value={row.CName}
+                                        value={row.CNAME}
                                     />{' '}
                                     <div className="ellipsis">
-                                        <code title={row.CName}>{row.CName}</code>
+                                        <code title={row.CNAME}>{row.CNAME}</code>
                                     </div>
                                 </div>
                             </TableCell>
