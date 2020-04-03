@@ -52,6 +52,8 @@ const verifyDomain = ({ VerifyState }) => {
 // eslint-disable-next-line no-unused-vars
 const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, staticContext, ...rest }) => {
     const [domains, loadingDomains] = useDomains();
+
+    /* @todo remove mock */
     const [domainModel, setDomain] = useState(() => ({ ...domain }));
 
     const { createNotification } = useNotifications();
@@ -222,7 +224,7 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
 
         if (step === STEPS.DKIM) {
             return {
-                section: <DKIMSection domain={domainModel} />,
+                section: <DKIMSection domain={MOCK_DOMAIN_OVERRIDES ? MOCK_DOMAIN_OVERRIDES : domainModel} />,
                 onSubmit: next
             };
         }
