@@ -224,7 +224,7 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
 
         if (step === STEPS.DKIM) {
             return {
-                section: <DKIMSection domain={MOCK_DOMAIN_OVERRIDES ? MOCK_DOMAIN_OVERRIDES : domainModel} />,
+                section: <DKIMSection domain={domainModel} />,
                 onSubmit: next
             };
         }
