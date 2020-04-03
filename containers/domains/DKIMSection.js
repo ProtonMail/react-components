@@ -4,44 +4,13 @@ import PropTypes from 'prop-types';
 import { Alert, Table, TableBody, TableCell, Copy, useNotifications } from 'react-components';
 import { DKIM_STATE } from 'proton-shared/lib/constants';
 
-/*
-    @todo remove mock
-*/
-const DOMAIN = {
-    DkimState: 0, // or 3 | 4 | 6
-    DKIM: {
-        Config: [
-            {
-                Hostname: 'protonmail._domainkey',
-                CNAME: 'protonmail._domainkey.dk5dxbrdfvwighzjav6y5ntmrlem5wanj7lh6yt6qdeixkc4lib7q.cd.protonmail.blue',
-                Key: null
-            },
-            {
-                Hostname: 'protonmail2._domainkey',
-                CNAME:
-                    'protonmail2._domainkey.dk5dxbrdfvwighzjav6y5ntmrlem5wanj7lh6yt6qdeixkc4lib7q.cd.protonmail.blue',
-                Key: null
-            },
-            {
-                Hostname: 'protonmail3._domainkey',
-                CNAME:
-                    'protonmail3._domainkey.dk5dxbrdfvwighzjav6y5ntmrlem5wanj7lh6yt6qdeixkc4lib7q.cd.protonmail.blue',
-                Key: null
-            }
-        ]
-    }
-};
-
-const DKIMSection = (/* { domain } */) => {
+const DKIMSection = ({ domain }) => {
     const { createNotification } = useNotifications();
     const handleCopy = () => createNotification({ text: c('Success').t`Value copied to clipboard!` });
-
-    // @todo remove mock
     const {
         DKIM: { Config },
         DkimState
-    } = DOMAIN;
-    // const { DKIM: { Config }, DkimState } = domain;
+    } = domain;
 
     return (
         <>

@@ -8,6 +8,7 @@ import {
     RoundedIcon,
     Tooltip,
     useLoading,
+    Icon,
     useApi,
     useStep,
     useNotifications,
@@ -50,15 +51,40 @@ const verifyDomain = ({ VerifyState }) => {
 /*
     @todo remove mock
 */
-const DOMAIN = {
-    DkimState: 0 // or 3 | 4 | 6
+const MOCK_DOMAIN_OVERRIDES = {
+    DkimState: 0, // or 3 | 4 | 6
+    DKIM: {
+        Config: [
+            {
+                Hostname: 'protonmail._domainkey',
+                CNAME: 'protonmail._domainkey.dk5dxbrdfvwighzjav6y5ntmrlem5wanj7lh6yt6qdeixkc4lib7q.cd.protonmail.blue',
+                Key: null
+            },
+            {
+                Hostname: 'protonmail2._domainkey',
+                CNAME:
+                    'protonmail2._domainkey.dk5dxbrdfvwighzjav6y5ntmrlem5wanj7lh6yt6qdeixkc4lib7q.cd.protonmail.blue',
+                Key: null
+            },
+            {
+                Hostname: 'protonmail3._domainkey',
+                CNAME:
+                    'protonmail3._domainkey.dk5dxbrdfvwighzjav6y5ntmrlem5wanj7lh6yt6qdeixkc4lib7q.cd.protonmail.blue',
+                Key: null
+            }
+        ]
+    }
 };
 
 // Pull staticContext to avoid it being passed with rest
 // eslint-disable-next-line no-unused-vars
 const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, staticContext, ...rest }) => {
     const [domains, loadingDomains] = useDomains();
+
+    /* @todo remove mock */
     const [domainModel, setDomain] = useState(() => ({ ...domain }));
+    // const [domainModel, setDomain] = useState(() => ({ ...domain }));
+
     const { createNotification } = useNotifications();
     const [loading, withLoading] = useLoading();
     const [domainName, updateDomainName] = useState(domainModel.DomainName);
@@ -71,12 +97,10 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
     };
 
     const renderDKIMIcon = () => {
-        // @todo remove mock
-        const { DkimState } = DOMAIN;
-        // const { DkimState } = domainModel;
+        const { DkimState } = MOCK_DOMAIN_OVERRIDES ? MOCK_DOMAIN_OVERRIDES : domainModel;
         const { DKIM_STATE_ERROR, DKIM_STATE_GOOD, DKIM_STATE_WARNING } = DKIM_STATE;
 
-        let title, type, name;
+        let title, type, name, icon;
 
         switch (DkimState) {
             case DKIM_STATE_ERROR:
@@ -94,12 +118,12 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
                 title = c('Tooltip')
                     .t`We detected a problem with your DNS configuration. Please make sure your records match the instructions below. If the problem persists, we will have to switch DKIM signing off.`;
                 type = 'warning';
-                name = 'attention';
+                icon = <Icon size={25} className="mr0-5" name="attention-plain" />;
                 break;
         }
         return (
             <Tooltip title={title}>
-                <RoundedIcon className="mr0-5" key="dkim-icon" type={type} name={name} />
+                {icon || <RoundedIcon className="mr0-5" key="dkim-icon" type={type} name={name} />}
             </Tooltip>
         );
     };
@@ -147,17 +171,11 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
                 name={domainModel.SpfState === SPF_STATE.SPF_STATE_GOOD ? 'on' : 'off'}
             />
         ),
-        /* @todo remove mock */
         [DKIM_STATE.DKIM_STATE_ERROR, DKIM_STATE.DKIM_STATE_GOOD, DKIM_STATE.DKIM_STATE_WARNING].includes(
-            DOMAIN.DkimState
+            MOCK_DOMAIN_OVERRIDES ? MOCK_DOMAIN_OVERRIDES.DkimState : domainModel.DkimState
         )
             ? renderDKIMIcon()
             : null,
-        /* [
-            DKIM_STATE.DKIM_STATE_ERROR,
-            DKIM_STATE.DKIM_STATE_GOOD,
-            DKIM_STATE.DKIM_STATE_WARNING,
-        ].includes(domainModel.DkimState) ? renderDKIMIcon() : null, */
         domainModel.DmarcState === DMARC_STATE.DMARC_STATE_DEFAULT ? null : (
             <RoundedIcon
                 className="mr0-5"
@@ -233,7 +251,7 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
 
         if (step === STEPS.DKIM) {
             return {
-                section: <DKIMSection domain={domainModel} />,
+                section: <DKIMSection domain={MOCK_DOMAIN_OVERRIDES ? MOCK_DOMAIN_OVERRIDES : domainModel} />,
                 onSubmit: next
             };
         }
