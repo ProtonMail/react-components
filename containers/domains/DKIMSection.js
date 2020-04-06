@@ -8,8 +8,7 @@ const DKIMSection = ({ domain }) => {
     const { createNotification } = useNotifications();
     const handleCopy = () => createNotification({ text: c('Success').t`Value copied to clipboard!` });
     const {
-        DKIM: { Config },
-        DkimState
+        DKIM: { Config, State }
     } = domain;
 
     return (
@@ -18,13 +17,13 @@ const DKIMSection = ({ domain }) => {
                 {c('Info')
                     .t`ProtonMail supports DKIM signing for custom domains. To use DKIM authentication, please add the following TXT record into your DNS settings for this domain. This can typically be done in the control panel of your domain name registrar.`}
             </Alert>
-            {DkimState === DKIM_STATE.DKIM_STATE_ERROR && (
+            {State === DKIM_STATE.DKIM_STATE_ERROR && (
                 <Alert type="error">
                     {c('Error')
                         .t`We stopped DKIM signing due to problems with your DNS configuration. Please follow the instructions below to resume signing.`}
                 </Alert>
             )}
-            {DkimState === DKIM_STATE.DKIM_STATE_WARNING && (
+            {State === DKIM_STATE.DKIM_STATE_WARNING && (
                 <Alert type="warning">
                     {c('Warning')
                         .t`We detected a problem with your DNS configuration. Please make sure your records match the instructions below. If the problem persists, we will have to switch DKIM signing off.`}

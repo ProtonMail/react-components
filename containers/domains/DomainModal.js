@@ -52,8 +52,8 @@ const verifyDomain = ({ VerifyState }) => {
     @todo remove mock
 */
 const MOCK_DOMAIN_OVERRIDES = {
-    DkimState: 0, // or 3 | 4 | 6
     DKIM: {
+        State: DKIM_STATE.DKIM_STATE_DEFAULT,
         Config: [
             {
                 Hostname: 'protonmail._domainkey',
@@ -82,8 +82,8 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
     const [domains, loadingDomains] = useDomains();
 
     /* @todo remove mock */
-    const [domainModel, setDomain] = useState(() => ({ ...domain }));
     const [mockDomain, setMockDomain] = useState(() => ({ ...domain, ...MOCK_DOMAIN_OVERRIDES }));
+    const [domainModel, setDomain] = useState(() => ({ ...domain }));
 
     const { createNotification } = useNotifications();
     const [loading, withLoading] = useLoading();
@@ -97,12 +97,14 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
     };
 
     const renderDKIMIcon = () => {
-        const { DkimState } = mockDomain ? mockDomain : domainModel;
+        const {
+            DKIM: { State }
+        } = mockDomain ? mockDomain : domainModel;
         const { DKIM_STATE_ERROR, DKIM_STATE_GOOD, DKIM_STATE_WARNING } = DKIM_STATE;
 
         let title, type, name, icon;
 
-        switch (DkimState) {
+        switch (State) {
             case DKIM_STATE_ERROR:
                 title = c('Tooltip')
                     .t`We stopped DKIM signing due to problems with your DNS configuration. Please follow the instructions below to resume signing.`;
@@ -172,7 +174,7 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
             />
         ),
         [DKIM_STATE.DKIM_STATE_ERROR, DKIM_STATE.DKIM_STATE_GOOD, DKIM_STATE.DKIM_STATE_WARNING].includes(
-            mockDomain ? mockDomain.DkimState : domainModel.DkimState
+            mockDomain ? mockDomain.DKIM.State : domainModel.DKIM.State
         )
             ? renderDKIMIcon()
             : null,
@@ -299,26 +301,58 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
                             <div className="mr1">DKIM State:</div>
                             <Group>
                                 <ButtonGroup
-                                    className={mockDomain.DkimState === 0 ? 'is-active' : ''}
-                                    onClick={() => setMockDomain({ ...mockDomain, DkimState: 0 })}
+                                    className={mockDomain.DKIM.State === 0 ? 'is-active' : ''}
+                                    onClick={() =>
+                                        setMockDomain({
+                                            ...mockDomain,
+                                            DKIM: {
+                                                ...mockDomain.DKIM,
+                                                State: DKIM_STATE.DKIM_STATE_DEFAULT
+                                            }
+                                        })
+                                    }
                                 >
                                     Default
                                 </ButtonGroup>
                                 <ButtonGroup
-                                    className={mockDomain.DkimState === 3 ? 'is-active' : ''}
-                                    onClick={() => setMockDomain({ ...mockDomain, DkimState: 3 })}
+                                    className={mockDomain.DKIM.State === 3 ? 'is-active' : ''}
+                                    onClick={() =>
+                                        setMockDomain({
+                                            ...mockDomain,
+                                            DKIM: {
+                                                ...mockDomain.DKIM,
+                                                State: DKIM_STATE.DKIM_STATE_ERROR
+                                            }
+                                        })
+                                    }
                                 >
                                     Error
                                 </ButtonGroup>
                                 <ButtonGroup
-                                    className={mockDomain.DkimState === 4 ? 'is-active' : ''}
-                                    onClick={() => setMockDomain({ ...mockDomain, DkimState: 4 })}
+                                    className={mockDomain.DKIM.State === 4 ? 'is-active' : ''}
+                                    onClick={() =>
+                                        setMockDomain({
+                                            ...mockDomain,
+                                            DKIM: {
+                                                ...mockDomain.DKIM,
+                                                State: DKIM_STATE.DKIM_STATE_GOOD
+                                            }
+                                        })
+                                    }
                                 >
                                     Good
                                 </ButtonGroup>
                                 <ButtonGroup
-                                    className={mockDomain.DkimState === 6 ? 'is-active' : ''}
-                                    onClick={() => setMockDomain({ ...mockDomain, DkimState: 6 })}
+                                    className={mockDomain.DKIM.State === 6 ? 'is-active' : ''}
+                                    onClick={() =>
+                                        setMockDomain({
+                                            ...mockDomain,
+                                            DKIM: {
+                                                ...mockDomain.DKIM,
+                                                State: DKIM_STATE.DKIM_STATE_WARNING
+                                            }
+                                        })
+                                    }
                                 >
                                     Warning
                                 </ButtonGroup>
