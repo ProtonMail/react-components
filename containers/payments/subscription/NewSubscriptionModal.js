@@ -168,12 +168,17 @@ const NewSubscriptionModal = ({
                 })
             );
 
+            const { Gift } = result;
             const { Code = '' } = result.Coupon || {}; // Coupon can equal null
             const copyNewModel = { ...newModel };
 
+            if (newModel.gift && !Code && !Gift) {
+                createNotification({ text: c('Error').t`Invalid code`, type: 'error' });
+            }
+
             copyNewModel.coupon = Code;
 
-            if (!result.Gift) {
+            if (!Gift) {
                 delete copyNewModel.gift;
             }
 
