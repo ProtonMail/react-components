@@ -20,6 +20,8 @@ import {
     PLAN_SERVICES,
     PLAN_TYPES,
     CYCLE,
+    COVID_PLUS_BONUS_STORAGE,
+    COVID_VISIONARY_BONUS_STORAGE,
     LOYAL_BONUS_STORAGE,
     LOYAL_BONUS_CONNECTION,
     PLANS,
@@ -90,6 +92,7 @@ const SubscriptionCheckout = ({ submit = c('Action').t`Pay`, plans = [], model, 
     }
 
     const loyalBonusStorage = humanSize(LOYAL_BONUS_STORAGE, 'GB');
+    const covidBonusStorage = humanSize(hasVisionary ? COVID_VISIONARY_BONUS_STORAGE : COVID_PLUS_BONUS_STORAGE, 'GB');
 
     const getTitle = (planName, quantity) => {
         const addresses = quantity * addressAddon.MaxAddresses;
@@ -172,7 +175,11 @@ const SubscriptionCheckout = ({ submit = c('Action').t`Pay`, plans = [], model, 
                             />
                         )}
                         {covid && (
-                            <CheckoutRow title={c('Info').t`+ bonus storage`} amount={0} currency={model.currency} />
+                            <CheckoutRow
+                                title={c('Info').t`+ ${covidBonusStorage} bonus storage`}
+                                amount={0}
+                                currency={model.currency}
+                            />
                         )}
                         {hasVisionary && loyal && (
                             <CheckoutRow
