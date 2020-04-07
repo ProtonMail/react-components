@@ -29,7 +29,15 @@ import { collectInfo, getClient } from '../../helpers/report';
 
 const { VPN } = CLIENT_TYPES;
 
-const BugModal = ({ onClose, username: Username = '', location, addresses = [], ...rest }) => {
+const BugModal = ({
+    onClose,
+    username: Username = '',
+    location,
+    addresses = [],
+    title: Title = '',
+    description: Description = '',
+    ...rest
+}) => {
     const api = useApi();
     const [loading, withLoading] = useLoading();
     const { CLIENT_ID, APP_VERSION, CLIENT_TYPE } = useConfig();
@@ -81,8 +89,8 @@ const BugModal = ({ onClose, username: Username = '', location, addresses = [], 
     );
     const [model, update] = useState({
         ...collectInfo(),
-        Title: '',
-        Description: ''
+        Title,
+        Description
     });
     const { state: showDetails, toggle: toggleDetails } = useToggle(false);
     const [images, setImages] = useState([]);
@@ -262,6 +270,8 @@ BugModal.propTypes = {
     onClose: PropTypes.func,
     username: PropTypes.string,
     addresses: PropTypes.array,
+    title: PropTypes.string,
+    description: PropTypes.string,
     location: PropTypes.object.isRequired
 };
 
