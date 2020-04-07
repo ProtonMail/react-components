@@ -168,11 +168,11 @@ const NewSubscriptionModal = ({
                 })
             );
 
-            const { Gift } = result;
+            const { Gift = 0 } = result;
             const { Code = '' } = result.Coupon || {}; // Coupon can equal null
             const copyNewModel = { ...newModel };
 
-            if (newModel.gift && !Code && !Gift) {
+            if (newModel.gift && newModel.gift !== Code && !Gift) {
                 createNotification({ text: c('Error').t`Invalid code`, type: 'error' });
             }
 
