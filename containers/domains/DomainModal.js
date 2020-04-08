@@ -143,7 +143,7 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
             />
         ),
         [DKIM_STATE.DKIM_STATE_ERROR, DKIM_STATE.DKIM_STATE_GOOD, DKIM_STATE.DKIM_STATE_WARNING].includes(
-            domainModel.DKIM.State
+            domainModel.DKIM?.State
         )
             ? renderDKIMIcon()
             : null,

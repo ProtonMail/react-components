@@ -1,7 +1,7 @@
 import React from 'react';
 import { c } from 'ttag';
 import PropTypes from 'prop-types';
-import { Alert, Table, TableBody, TableCell, Copy, useNotifications } from 'react-components';
+import { Alert, Table, TableHeader, TableBody, TableRow, TableCell, Copy, useNotifications } from 'react-components';
 import { DKIM_STATE } from 'proton-shared/lib/constants';
 
 const DKIMSection = ({ domain }) => {
@@ -34,8 +34,8 @@ const DKIMSection = ({ domain }) => {
                     .t`Please add all 3 of the following CNAME records. Note, DNS records can take several hours to update.`}
             </p>
             <Table>
-                <thead>
-                    <tr>
+                <TableHeader>
+                    <TableRow>
                         <TableCell type="header" className="w15">
                             {c('Header for domain modal').t`Type`}
                         </TableCell>
@@ -43,18 +43,18 @@ const DKIMSection = ({ domain }) => {
                         <TableCell type="header" className="w50">
                             {c('Header for domain modal').t`Value / Data`}
                         </TableCell>
-                    </tr>
-                </thead>
+                    </TableRow>
+                </TableHeader>
                 <TableBody>
                     {Config.map((row) => (
-                        <tr key={row.Hostname}>
-                            <TableCell key="cname">
+                        <TableRow key={row.Hostname}>
+                            <TableCell>
                                 <code>CNAME</code>
                             </TableCell>
-                            <TableCell key="hostname">
+                            <TableCell>
                                 <code>{row.Hostname}</code>
                             </TableCell>
-                            <TableCell key="value">
+                            <TableCell>
                                 <div className="flex flex-nowrap flex-items-center">
                                     <Copy
                                         onCopy={handleCopy}
@@ -66,7 +66,7 @@ const DKIMSection = ({ domain }) => {
                                     </div>
                                 </div>
                             </TableCell>
-                        </tr>
+                        </TableRow>
                     ))}
                 </TableBody>
             </Table>
