@@ -49,7 +49,7 @@ const DomainStatus = ({ domain, domainAddresses }) => {
         },
         { text: 'MX', type: MX_TYPES[domain.MxState] },
         { text: 'SPF', type: SPF_TYPES[domain.SpfState] },
-        { text: 'DKIM', type: DKIM_TYPES[domain.DkimState] },
+        { text: 'DKIM', type: DKIM_TYPES[domain.DKIM.State] },
         { text: 'DMARC', type: DMARC_TYPES[domain.DmarcState] }
     ];
 

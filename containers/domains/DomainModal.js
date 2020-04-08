@@ -48,41 +48,10 @@ const verifyDomain = ({ VerifyState }) => {
     }
 };
 
-/*
-    @todo remove mock
-*/
-const MOCK_DOMAIN_OVERRIDES = {
-    DKIM: {
-        State: DKIM_STATE.DKIM_STATE_DEFAULT,
-        Config: [
-            {
-                Hostname: 'protonmail._domainkey',
-                CNAME: 'protonmail._domainkey.dk5dxbrdfvwighzjav6y5ntmrlem5wanj7lh6yt6qdeixkc4lib7q.cd.protonmail.blue',
-                Key: null
-            },
-            {
-                Hostname: 'protonmail2._domainkey',
-                CNAME:
-                    'protonmail2._domainkey.dk5dxbrdfvwighzjav6y5ntmrlem5wanj7lh6yt6qdeixkc4lib7q.cd.protonmail.blue',
-                Key: null
-            },
-            {
-                Hostname: 'protonmail3._domainkey',
-                CNAME:
-                    'protonmail3._domainkey.dk5dxbrdfvwighzjav6y5ntmrlem5wanj7lh6yt6qdeixkc4lib7q.cd.protonmail.blue',
-                Key: null
-            }
-        ]
-    }
-};
-
 // Pull staticContext to avoid it being passed with rest
 // eslint-disable-next-line no-unused-vars
 const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, staticContext, ...rest }) => {
     const [domains, loadingDomains] = useDomains();
-
-    /* @todo remove mock */
-    const [mockDomain, setMockDomain] = useState(() => ({ ...domain, ...MOCK_DOMAIN_OVERRIDES }));
     const [domainModel, setDomain] = useState(() => ({ ...domain }));
 
     const { createNotification } = useNotifications();
@@ -99,7 +68,7 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
     const renderDKIMIcon = () => {
         const {
             DKIM: { State }
-        } = mockDomain ? mockDomain : domainModel;
+        } = domainModel;
         const { DKIM_STATE_ERROR, DKIM_STATE_GOOD, DKIM_STATE_WARNING } = DKIM_STATE;
 
         let title, type, name, icon;
@@ -174,7 +143,7 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
             />
         ),
         [DKIM_STATE.DKIM_STATE_ERROR, DKIM_STATE.DKIM_STATE_GOOD, DKIM_STATE.DKIM_STATE_WARNING].includes(
-            mockDomain ? mockDomain.DKIM.State : domainModel.DKIM.State
+            domainModel.DKIM.State
         )
             ? renderDKIMIcon()
             : null,
@@ -253,7 +222,7 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
 
         if (step === STEPS.DKIM) {
             return {
-                section: <DKIMSection domain={mockDomain ? mockDomain : domainModel} />,
+                section: <DKIMSection domain={domainModel} />,
                 onSubmit: next
             };
         }
@@ -286,84 +255,7 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], history, stat
             onClose={onClose}
             close={c('Action').t`Close`}
             submit={c('Action').t`Next`}
-            /* @todo remove this, for debug purpose only */
-            title={
-                domainModel.ID ? (
-                    <div className="flex flex-spacebetween">
-                        {c('Title').t`Edit domain`}
-                        <div
-                            style={{
-                                fontSize: '1.25rem',
-                                display: 'flex',
-                                alignItems: 'center'
-                            }}
-                        >
-                            <div className="mr1">DKIM State:</div>
-                            <Group>
-                                <ButtonGroup
-                                    className={mockDomain.DKIM.State === 0 ? 'is-active' : ''}
-                                    onClick={() =>
-                                        setMockDomain({
-                                            ...mockDomain,
-                                            DKIM: {
-                                                ...mockDomain.DKIM,
-                                                State: DKIM_STATE.DKIM_STATE_DEFAULT
-                                            }
-                                        })
-                                    }
-                                >
-                                    Default
-                                </ButtonGroup>
-                                <ButtonGroup
-                                    className={mockDomain.DKIM.State === 3 ? 'is-active' : ''}
-                                    onClick={() =>
-                                        setMockDomain({
-                                            ...mockDomain,
-                                            DKIM: {
-                                                ...mockDomain.DKIM,
-                                                State: DKIM_STATE.DKIM_STATE_ERROR
-                                            }
-                                        })
-                                    }
-                                >
-                                    Error
-                                </ButtonGroup>
-                                <ButtonGroup
-                                    className={mockDomain.DKIM.State === 4 ? 'is-active' : ''}
-                                    onClick={() =>
-                                        setMockDomain({
-                                            ...mockDomain,
-                                            DKIM: {
-                                                ...mockDomain.DKIM,
-                                                State: DKIM_STATE.DKIM_STATE_GOOD
-                                            }
-                                        })
-                                    }
-                                >
-                                    Good
-                                </ButtonGroup>
-                                <ButtonGroup
-                                    className={mockDomain.DKIM.State === 6 ? 'is-active' : ''}
-                                    onClick={() =>
-                                        setMockDomain({
-                                            ...mockDomain,
-                                            DKIM: {
-                                                ...mockDomain.DKIM,
-                                                State: DKIM_STATE.DKIM_STATE_WARNING
-                                            }
-                                        })
-                                    }
-                                >
-                                    Warning
-                                </ButtonGroup>
-                            </Group>
-                        </div>
-                    </div>
-                ) : (
-                    c('Title').t`Add domain`
-                )
-            }
-            // title={domainModel.ID ? c('Title').t`Edit domain` : c('Title').t`Add domain`}
+            title={domainModel.ID ? c('Title').t`Edit domain` : c('Title').t`Add domain`}
             loading={loading}
             {...rest}
             {...modalProps}
