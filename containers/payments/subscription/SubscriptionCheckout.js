@@ -11,7 +11,7 @@ import {
     classnames,
     Info
 } from 'react-components';
-import { isLoyal, hasCovid } from 'proton-shared/lib/helpers/organization';
+import { isLoyal } from 'proton-shared/lib/helpers/organization';
 import { toMap } from 'proton-shared/lib/helpers/object';
 import { orderBy } from 'proton-shared/lib/helpers/array';
 import { hasBit } from 'proton-shared/lib/helpers/bitset';
@@ -20,8 +20,6 @@ import {
     PLAN_SERVICES,
     PLAN_TYPES,
     CYCLE,
-    COVID_PLUS_BONUS_STORAGE,
-    COVID_VISIONARY_BONUS_STORAGE,
     LOYAL_BONUS_STORAGE,
     LOYAL_BONUS_CONNECTION,
     PLANS,
@@ -61,7 +59,6 @@ const SubscriptionCheckout = ({ submit = c('Action').t`Pay`, plans = [], model, 
     const { CLIENT_TYPE } = useConfig();
     const [organization, loadingOrganization] = useOrganization();
     const loyal = isLoyal(organization);
-    const covid = hasCovid(organization);
     const subTotal =
         getSubTotal({
             cycle: model.cycle,
@@ -92,7 +89,6 @@ const SubscriptionCheckout = ({ submit = c('Action').t`Pay`, plans = [], model, 
     }
 
     const loyalBonusStorage = humanSize(LOYAL_BONUS_STORAGE, 'GB');
-    const covidBonusStorage = humanSize(hasVisionary ? COVID_VISIONARY_BONUS_STORAGE : COVID_PLUS_BONUS_STORAGE, 'GB');
 
     const getTitle = (planName, quantity) => {
         const addresses = quantity * addressAddon.MaxAddresses;
@@ -170,13 +166,6 @@ const SubscriptionCheckout = ({ submit = c('Action').t`Pay`, plans = [], model, 
                         {loyal && (
                             <CheckoutRow
                                 title={c('Info').t`+ ${loyalBonusStorage} bonus storage`}
-                                amount={0}
-                                currency={model.currency}
-                            />
-                        )}
-                        {covid && (
-                            <CheckoutRow
-                                title={c('Info').t`+ ${covidBonusStorage} bonus storage`}
                                 amount={0}
                                 currency={model.currency}
                             />
