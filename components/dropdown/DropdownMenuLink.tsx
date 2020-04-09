@@ -4,6 +4,8 @@ import { classnames } from '../../helpers/component';
 interface Props extends React.HTMLAttributes<HTMLAnchorElement> {
     className?: string;
     children?: React.ReactNode;
+    href?: string;
+    target?: string;
 }
 
 const DropdownMenuLink = ({ className = '', children, ...rest }: Props) => {

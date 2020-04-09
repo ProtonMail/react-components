@@ -16,7 +16,7 @@ import {
     PrimaryButton,
     useConfig,
     useSubscription
-} from 'react-components';
+} from '../../';
 import { revoke } from 'proton-shared/lib/api/auth';
 import { APPS, CLIENT_TYPES, PLANS } from 'proton-shared/lib/constants';
 import { getPlanName } from 'proton-shared/lib/helpers/subscription';
@@ -32,13 +32,13 @@ const UserDropdown = ({ ...rest }) => {
     const api = useApi();
     const [user] = useUser();
     const { DisplayName, Email, Name } = user;
-    const [{ Name: organizationName } = {}] = useOrganization();
+    const [{ Name: organizationName } = { Name: '' }] = useOrganization();
     const [subscription] = useSubscription();
     const { logout } = useAuthentication();
     const { createModal } = useModals();
     const [uid] = useState(generateUID('dropdown'));
-    const { anchorRef, isOpen, toggle, close } = usePopperAnchor();
-    const planName = getPlanName(subscription);
+    const { anchorRef, isOpen, toggle, close } = usePopperAnchor<HTMLButtonElement>();
+    const planName = getPlanName(subscription) as PLANS;
 
     const handleBugReportClick = () => {
         createModal(<AuthenticatedBugModal />);
