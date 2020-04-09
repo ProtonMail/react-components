@@ -13,7 +13,7 @@ const ColorPicker = ({ color = 'blue', onChange = noop }: Props) => {
     const iconColor = colorModel.isValid() ? colorModel.toHexString() : '';
 
     const [uid] = useState(generateUID('dropdown'));
-    const { anchorRef, isOpen, toggle, close } = usePopperAnchor();
+    const { anchorRef, isOpen, toggle, close } = usePopperAnchor<HTMLButtonElement>();
 
     return (
         <>
