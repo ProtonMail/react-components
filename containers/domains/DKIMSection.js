@@ -15,7 +15,7 @@ const DKIMSection = ({ domain }) => {
         <>
             <Alert learnMore="https://protonmail.com/support/knowledge-base/anti-spoofing/">
                 {c('Info')
-                    .t`ProtonMail supports DKIM signing for custom domains. To use DKIM authentication, please add the following TXT record into your DNS settings for this domain. This can typically be done in the control panel of your domain name registrar.`}
+                    .t`ProtonMail supports DKIM signing for custom domains. To use DKIM authentication, please add the following CNAME record into your DNS settings for this domain. This can typically be done in the control panel of your domain name registrar.`}
             </Alert>
             {State === DKIM_STATE.DKIM_STATE_ERROR && (
                 <Alert type="error">
