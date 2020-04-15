@@ -31,9 +31,9 @@ const IntegerInput = ({ value, onChange, max, min, step, ...rest }: Props) => {
                 const isClear = validity.valid;
                 // Prevent broken input on certain browsers since it allows to enter other characters than integer numbers
                 if (newValue === '') {
-                    const newValue = isClear ? '' : value;
-                    target.value = '' + newValue;
-                    return onChange(newValue);
+                    const emptyOrOldValue = isClear ? '' : value;
+                    target.value = '' + emptyOrOldValue;
+                    return onChange(emptyOrOldValue);
                 }
                 const newIntValue = parseInt(newValue, 10);
                 if (isNaN(newIntValue) || (minStr && newIntValue < +minStr) || (maxStr && newIntValue > +maxStr)) {
