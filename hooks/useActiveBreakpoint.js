@@ -35,6 +35,7 @@ const useActiveBreakpoint = () => {
             isTablet,
             isMobile,
             isTinyMobile,
+            isWide: isDesktop || isTablet,
             isNarrow: isMobile || isTinyMobile
         };
     }, [breakpoint]);
