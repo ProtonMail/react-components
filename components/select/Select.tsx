@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { Ref, useState } from 'react';
 
 import { generateUID, classnames } from '../../helpers/component';
 import useInput from '../input/useInput';
@@ -7,7 +6,14 @@ import ErrorZone from '../text/ErrorZone';
 
 const DEFAULT_GROUP = 'GROUP';
 
-const buildOptions = (options = []) => {
+interface OptionProps
+    extends React.DetailedHTMLProps<React.OptionHTMLAttributes<HTMLOptionElement>, HTMLOptionElement> {
+    value: string | number;
+    text: string | number;
+    group?: string;
+}
+
+const buildOptions = (options: OptionProps[] = []) => {
     return options.map(({ text, ...rest }, index) => (
         <option key={index.toString()} {...rest}>
             {text}
@@ -15,7 +21,16 @@ const buildOptions = (options = []) => {
     ));
 };
 
-/** @type any */
+export interface Props
+    extends React.DetailedHTMLProps<React.SelectHTMLAttributes<HTMLSelectElement>, HTMLSelectElement> {
+    ref?: Ref<HTMLSelectElement>; // override ref so that LegacyRef isn't used
+    error?: string;
+    isSubmitted?: boolean;
+    size?: number;
+    options: OptionProps[];
+    loading?: boolean;
+}
+
 const Select = ({
     options,
     error,
@@ -25,8 +40,8 @@ const Select = ({
     loading = false,
     isSubmitted = false,
     ...rest
-}) => {
-    const { handlers, statusClasses, status } = useInput({ isSubmitted, ...rest });
+}: Props) => {
+    const { handlers, statusClasses, status } = useInput<HTMLSelectElement>(rest);
     const [uid] = useState(generateUID('select'));
     const hasError = error && (status.isDirty || isSubmitted);
     const hasGroup = options.some(({ group }) => group);
@@ -43,7 +58,7 @@ const Select = ({
             >
                 {hasGroup
                     ? Object.entries(
-                          options.reduce((acc, option) => {
+                          options.reduce<{ [key: string]: OptionProps[] }>((acc, option) => {
                               const { group = DEFAULT_GROUP } = option;
                               acc[group] = acc[group] || [];
                               acc[group].push(option);
@@ -61,26 +76,6 @@ const Select = ({
             <ErrorZone id={uid}>{hasError ? error : ''}</ErrorZone>
         </>
     );
-};
-
-Select.propTypes = {
-    error: PropTypes.string,
-    disabled: PropTypes.bool,
-    loading: PropTypes.bool,
-    isSubmitted: PropTypes.bool,
-    size: PropTypes.number,
-    onChange: PropTypes.func,
-    onBlur: PropTypes.func,
-    onFocus: PropTypes.func,
-    options: PropTypes.arrayOf(
-        PropTypes.shape({
-            value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-            text: PropTypes.string,
-            group: PropTypes.string
-        })
-    ),
-    multiple: PropTypes.bool,
-    className: PropTypes.string
 };
 
 export default Select;
