@@ -3,6 +3,7 @@ import {
     useMemo,
     ChangeEvent,
     FocusEvent,
+    KeyboardEvent,
     KeyboardEventHandler,
     ChangeEventHandler,
     FocusEventHandler
@@ -29,11 +30,11 @@ interface Arguments<T> {
     disabled?: boolean;
 }
 
-const useInput = <T,>(
+function useInput<T>(
     { onFocus, onBlur, onChange, onPressEnter, onKeyDown, disabled }: Arguments<T>,
     initialState = DEFAULT_STATE,
     prefix = 'field'
-) => {
+) {
     const [status, changeStatus] = useState(initialState);
 
     const { isFocused, isBlurred, isPristine, isDirty } = status;
@@ -104,7 +105,7 @@ const useInput = <T,>(
                     onChange(event);
                 }
             },
-            onKeyDown: (event: React.KeyboardEvent<T>) => {
+            onKeyDown: (event: KeyboardEvent<T>) => {
                 if (event.key === 'Enter' && onPressEnter) {
                     onPressEnter(event);
                 }
@@ -115,6 +116,6 @@ const useInput = <T,>(
             }
         }
     };
-};
+}
 
 export default useInput;

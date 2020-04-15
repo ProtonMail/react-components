@@ -31,51 +31,57 @@ export interface Props
     loading?: boolean;
 }
 
-const Select = ({
-    options,
-    error,
-    size = 1,
-    className = '',
-    multiple = false,
-    loading = false,
-    isSubmitted = false,
-    ...rest
-}: Props) => {
-    const { handlers, statusClasses, status } = useInput<HTMLSelectElement>(rest);
-    const [uid] = useState(generateUID('select'));
-    const hasError = error && (status.isDirty || isSubmitted);
-    const hasGroup = options.some(({ group }) => group);
+const Select = React.forwardRef<HTMLSelectElement, Props>(
+    (
+        {
+            options,
+            error,
+            size = 1,
+            className = '',
+            multiple = false,
+            loading = false,
+            isSubmitted = false,
+            ...rest
+        }: Props,
+        ref
+    ) => {
+        const { handlers, statusClasses, status } = useInput<HTMLSelectElement>(rest);
+        const [uid] = useState(generateUID('select'));
+        const hasError = error && (status.isDirty || isSubmitted);
+        const hasGroup = options.some(({ group }) => group);
 
-    return (
-        <>
-            <select
-                className={classnames(['pm-field w100', className, statusClasses])}
-                size={size}
-                multiple={multiple}
-                disabled={loading || rest.disabled}
-                {...rest}
-                {...handlers}
-            >
-                {hasGroup
-                    ? Object.entries(
-                          options.reduce<{ [key: string]: OptionProps[] }>((acc, option) => {
-                              const { group = DEFAULT_GROUP } = option;
-                              acc[group] = acc[group] || [];
-                              acc[group].push(option);
-                              return acc;
-                          }, {})
-                      ).map(([group, options], index) => {
-                          return (
-                              <optgroup key={index.toString()} label={group}>
-                                  {buildOptions(options)}
-                              </optgroup>
-                          );
-                      })
-                    : buildOptions(options)}
-            </select>
-            <ErrorZone id={uid}>{hasError ? error : ''}</ErrorZone>
-        </>
-    );
-};
+        return (
+            <>
+                <select
+                    className={classnames(['pm-field w100', className, statusClasses])}
+                    size={size}
+                    multiple={multiple}
+                    disabled={loading || rest.disabled}
+                    ref={ref}
+                    {...rest}
+                    {...handlers}
+                >
+                    {hasGroup
+                        ? Object.entries(
+                              options.reduce<{ [key: string]: OptionProps[] }>((acc, option) => {
+                                  const { group = DEFAULT_GROUP } = option;
+                                  acc[group] = acc[group] || [];
+                                  acc[group].push(option);
+                                  return acc;
+                              }, {})
+                          ).map(([group, options], index) => {
+                              return (
+                                  <optgroup key={index.toString()} label={group}>
+                                      {buildOptions(options)}
+                                  </optgroup>
+                              );
+                          })
+                        : buildOptions(options)}
+                </select>
+                <ErrorZone id={uid}>{hasError ? error : ''}</ErrorZone>
+            </>
+        );
+    }
+);
 
 export default Select;
