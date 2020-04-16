@@ -1,6 +1,5 @@
 import React from 'react';
 import Icon from './Icon';
-import { classnames } from '../../helpers/component';
 
 interface Props {
     name: string;
@@ -8,14 +7,7 @@ interface Props {
 }
 
 const MimeIcon = ({ name, className }: Props) => {
-    return (
-        <Icon
-            name={`#mime-${name}`}
-            className={classnames(['flex-item-noshrink', className])}
-            size={25}
-            viewBox="0 0 24 24"
-        />
-    );
+    return <Icon name={`#mime-${name}`} className={className} size={25} viewBox="0 0 24 24" />;
 };
 
 export default MimeIcon;
