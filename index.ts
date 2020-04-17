@@ -187,6 +187,7 @@ export { default as UpgradeModal } from './containers/payments/subscription/Upgr
 export { default as SubscriptionTable } from './containers/payments/subscription/SubscriptionTable';
 export { default as MailSubscriptionTable } from './containers/payments/subscription/MailSubscriptionTable';
 export { default as VpnSubscriptionTable } from './containers/payments/subscription/VpnSubscriptionTable';
+export { default as SubscriptionCheckout } from './containers/payments/subscription/SubscriptionCheckout';
 export { default as AmountButton } from './containers/payments/AmountButton';
 export { default as Bitcoin } from './containers/payments/Bitcoin';
 export { default as CurrencySelector } from './containers/payments/CurrencySelector';
