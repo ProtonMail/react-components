@@ -77,6 +77,7 @@ export { default as useInput } from './components/input/useInput';
 export { default as SearchInput } from './components/input/SearchInput';
 export { default as TextArea } from './components/input/TextArea';
 export { default as Input } from './components/input/Input';
+export { default as VerificationCodeInput } from './components/input/VerificationCodeInput';
 export { default as DateInput } from './components/input/DateInput';
 export { default as IntegerInput } from './components/input/IntegerInput';
 export { default as FileInput } from './components/input/FileInput';
@@ -322,6 +323,7 @@ export { default as useNotifications } from './containers/notifications/useNotif
 export { default as useIsMounted } from './hooks/useIsMounted';
 export { default as useInstance } from './hooks/useInstance';
 export { default as useConfig } from './containers/config/useConfig';
+export { default as HumanVerificationForm } from './containers/api/HumanVerificationForm';
 export { default as useApi } from './containers/api/useApi';
 export { default as useApiResult } from './hooks/useApiResult';
 export { default as useModals } from './containers/modals/useModals';

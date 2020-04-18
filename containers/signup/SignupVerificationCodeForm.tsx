@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FormEvent } from 'react';
 import { c } from 'ttag';
-import { Input, InlineLinkButton, Alert } from 'react-components';
+import { VerificationCodeInput, InlineLinkButton, Alert } from 'react-components';
 
 import { SignupModel, SignupErros } from './interfaces';
 import { PrimaryButton } from '../../components/button';
@@ -24,12 +24,9 @@ const SignupVerificationCodeForm = ({ model, onChange, onSubmit, onResend, error
                 <label htmlFor="verification-code">{c('Label')
                     .t`Enter the verification code that was sent to ${model.email}. If you don't find the email in your inbox, please check your spam folder`}</label>
                 <div className="mb1">
-                    <Input
+                    <VerificationCodeInput
                         id="verification-code"
                         className="mb1"
-                        inputmode="numeric"
-                        pattern="[0-9]*"
-                        placeholder="123456"
                         value={model.verificationCode}
                         error={errors.verificationCode}
                         onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
