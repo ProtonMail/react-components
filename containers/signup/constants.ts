@@ -25,7 +25,9 @@ export const DEFAULT_SIGNUP_MODEL = {
     verificationCode: '',
     currency: 'EUR',
     cycle: 12,
-    planIDs: {}
+    planIDs: {},
+    humanVerificationMethods: [],
+    humanVerificationToken: ''
 };
 
 export const DEFAULT_CHECK_RESULT = {

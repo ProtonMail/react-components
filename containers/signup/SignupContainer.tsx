@@ -2,7 +2,9 @@ import React, { useState, useEffect, useMemo, FormEvent } from 'react';
 import { Location, History } from 'history';
 import { useApi, useLoading, useConfig, usePlans } from 'react-components';
 import { queryAvailableDomains } from 'proton-shared/lib/api/domains';
+import { API_CUSTOM_ERROR_CODES } from 'proton-shared/lib/errors';
 import { checkSubscription } from 'proton-shared/lib/api/payments';
+import { srpVerify, srpAuth } from 'proton-shared/lib/srp';
 import {
     queryCheckUsernameAvailability,
     queryCreateUser,
@@ -38,6 +40,7 @@ const {
     RECOVERY_PHONE,
     VERIFICATION_CODE,
     PLANS,
+    PAYMENT,
     HUMAN_VERIFICATION
 } = SIGNUP_STEPS;
 
@@ -49,6 +52,7 @@ const SignupContainer = ({ onLogin, location, history }: Props) => {
     const [model, updateModel] = useState<SignupModel>(DEFAULT_SIGNUP_MODEL);
     const [checkResult, setCheckResult] = useState<SubscriptionCheckResult>(DEFAULT_CHECK_RESULT);
     const [usernameError, setUsernameError] = useState<string>('');
+    const hasFreePlan = !Object.keys(model.planIDs).length;
 
     const errors = useMemo<SignupErros>(() => {
         return {
@@ -150,8 +154,36 @@ const SignupContainer = ({ onLogin, location, history }: Props) => {
             return;
         }
 
-        if (model.step === PLANS) {
-            await api();
+        if (model.step === PLANS || model.step === HUMAN_VERIFICATION) {
+            if (hasFreePlan) {
+                if (model.username) {
+                    try {
+                        const { password, recoveryEmail, username } = model;
+                        await srpVerify({
+                            api,
+                            credentials: { password },
+                            config: queryCreateUser({
+                                Type: CLIENT_TYPE,
+                                Email: recoveryEmail,
+                                Username: username
+                            })
+                        });
+                    } catch (error) {
+                        updateModel({
+                            ...model,
+                            humanVerificationMethods: [],
+                            humanVerificationToken: '',
+                            step: HUMAN_VERIFICATION
+                        });
+                        return;
+                    }
+                } else if (model.email) {
+                    // TODO
+                }
+            } else {
+                goToStep(PAYMENT);
+                return;
+            }
             await onLogin();
             return;
         }
@@ -265,9 +297,7 @@ const SignupContainer = ({ onLogin, location, history }: Props) => {
             {model.step === HUMAN_VERIFICATION && (
                 <SignupHumanVerification
                     model={model}
-                    onChange={updateModel}
-                    onSubmit={(e) => withLoading(handleSubmit(e))}
-                    loading={loading}
+                    onSubmit={handleSubmit}
                 />
             )}
         </SignupLayout>
