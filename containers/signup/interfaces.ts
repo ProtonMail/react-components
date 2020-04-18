@@ -16,6 +16,8 @@ export interface SignupModel {
     currency: string;
     cycle: number;
     planIDs: PlanIDs;
+    humanVerificationMethods: string[];
+    humanVerificationToken: string;
 }
 
 export interface SignupErros {
