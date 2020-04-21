@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { FormModal, useNotifications } from 'react-components';
 import { API_CUSTOM_ERROR_CODES } from 'proton-shared/lib/errors';
 import { c } from 'ttag';
@@ -7,16 +6,23 @@ import { c } from 'ttag';
 import './HumanVerificationModal.scss';
 import HumanVerificationForm from './HumanVerificationForm';
 
-const HumanVerificationModal = ({ token, methods = [], onSuccess, onVerify, ...rest }) => {
+interface Props<T> {
+    token: string;
+    methods: string[];
+    onSuccess: (data: T) => void;
+    onVerify: (token: string, tokenType: string) => Promise<T>;
+    [key: string]: any;
+}
+const HumanVerificationModal = <T,>({ token, methods = [], onSuccess, onVerify, ...rest }: Props<T>) => {
     const title = c('Title').t`Human verification`;
     const { createNotification } = useNotifications();
 
-    const handleSubmit = async (token, tokenType) => {
+    const handleSubmit = async (token: string, tokenType: string) => {
         try {
-            await onVerify({ token, tokenType });
+            const result = await onVerify(token, tokenType);
             createNotification({ text: c('Success').t`Verification successful` });
             rest.onClose();
-            onSuccess();
+            onSuccess(result);
         } catch (error) {
             const { data: { Code } = { Code: 0 } } = error;
 
@@ -36,18 +42,9 @@ const HumanVerificationModal = ({ token, methods = [], onSuccess, onVerify, ...r
             footer={null}
             {...rest}
         >
-            <HumanVerificationForm
-                onSubmit={handleSubmit}
-                methods={methods}
-                token={token} />
+            <HumanVerificationForm onSubmit={handleSubmit} methods={methods} token={token} />
         </FormModal>
     );
-};
-
-HumanVerificationModal.propTypes = {
-    token: PropTypes.string,
-    methods: PropTypes.arrayOf(PropTypes.string),
-    onSuccess: PropTypes.func
 };
 
 export default HumanVerificationModal;
