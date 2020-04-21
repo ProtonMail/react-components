@@ -7,7 +7,7 @@ import CodeVerification from './CodeVerification';
 import RequestInvite from './RequestInvite';
 
 interface Props {
-    onSubmit: (token: string) => void;
+    onSubmit: (token: string, tokenType: string) => void;
     token: string;
     methods: string[];
 }
@@ -74,9 +74,9 @@ const HumanVerificationForm = ({ methods, token, onSubmit }: Props) => {
                     })}
                 </Group>
             ) : null}
-            {method === 'captcha' ? <Captcha token={token} onSubmit={onSubmit} /> : null}
-            {method === 'email' ? <CodeVerification onSubmit={onSubmit} method="email" /> : null}
-            {method === 'sms' ? <CodeVerification onSubmit={onSubmit} method="sms" /> : null}
+            {method === 'captcha' ? <Captcha token={token} onSubmit={(token) => onSubmit(token, method)} /> : null}
+            {method === 'email' ? <CodeVerification onSubmit={(token) => onSubmit(token, method)} method="email" /> : null}
+            {method === 'sms' ? <CodeVerification onSubmit={(token) => onSubmit(token, method)} method="sms" /> : null}
             {method === 'invite' ? <RequestInvite /> : null}
         </>
     );

@@ -14,6 +14,7 @@ export const SIGNUP_STEPS = {
 
 export const DEFAULT_SIGNUP_MODEL = {
     step: SIGNUP_STEPS.LOADING_CREATION,
+    amount: 0,
     username: '',
     password: '',
     confirmPassword: '',
