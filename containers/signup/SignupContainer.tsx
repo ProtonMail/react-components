@@ -6,7 +6,7 @@ import { setupAddress } from 'proton-shared/lib/api/addresses';
 import { setupKeys } from 'proton-shared/lib/api/keys';
 import { API_CUSTOM_ERROR_CODES } from 'proton-shared/lib/errors';
 import { TOKEN_TYPES } from 'proton-shared/lib/constants';
-import { subscribe, verifyPayment } from 'proton-shared/lib/api/payments';
+import { subscribe } from 'proton-shared/lib/api/payments';
 import { srpVerify, srpAuth } from 'proton-shared/lib/srp';
 import { auth, setCookies } from 'proton-shared/lib/api/auth';
 import { mergeHeaders } from 'proton-shared/lib/fetch/helpers';
@@ -245,7 +245,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                 });
                 updateModel({
                     ...model,
-                    paymentToken: Payment?.Details.Token,
+                    paymentToken: Payment ? Payment.Details.Token : '',
                     paymentTokenType: TOKEN_TYPES.PAYMENT
                 });
             }
@@ -341,7 +341,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
 
     const fetchDependencies = async () => {
         try {
-            const { Direct, VerifyMethods: verifyMethods } = await humanApi(queryDirectSignupStatus());
+            const { Direct, VerifyMethods: verifyMethods } = await humanApi(queryDirectSignupStatus(CLIENT_TYPE));
 
             if (!Direct) {
                 // We block the signup from API demand
