@@ -17,7 +17,7 @@ interface ExtraArguments {
  * Special human api handling for the signup since the human verification code needs to be triggered and included
  * in possibly multiple api requests.
  */
-const humanApi = <T, >(config: any, { api, createModal, model, updateModel }: ExtraArguments): Promise<T> => {
+const humanApi = <T,>(config: any, { api, createModal, model, updateModel }: ExtraArguments): Promise<T> => {
     return api<T>({
         ...config,
         headers: {
@@ -27,7 +27,10 @@ const humanApi = <T, >(config: any, { api, createModal, model, updateModel }: Ex
         noHandling: [API_CUSTOM_ERROR_CODES.HUMAN_VERIFICATION_REQUIRED],
         silence: [API_CUSTOM_ERROR_CODES.HUMAN_VERIFICATION_REQUIRED]
     }).catch((error: any) => {
-        if (error.data?.Code !== API_CUSTOM_ERROR_CODES.HUMAN_VERIFICATION_REQUIRED || config.noHandling?.includes(API_CUSTOM_ERROR_CODES.HUMAN_VERIFICATION_REQUIRED) {
+        if (
+            error.data?.Code !== API_CUSTOM_ERROR_CODES.HUMAN_VERIFICATION_REQUIRED ||
+            config.noHandling?.includes(API_CUSTOM_ERROR_CODES.HUMAN_VERIFICATION_REQUIRED)
+        ) {
             throw error;
         }
 
@@ -65,9 +68,8 @@ const humanApi = <T, >(config: any, { api, createModal, model, updateModel }: Ex
             });
         };
 
-        const {
-            Details: { HumanVerificationToken = '', HumanVerificationMethods: methods = [] } = {}
-        } = error.data || {};
+        const { Details: { HumanVerificationToken = '', HumanVerificationMethods: methods = [] } = {} } =
+            error.data || {};
 
         return handleVerification({ token: HumanVerificationToken, methods, onVerify });
     });

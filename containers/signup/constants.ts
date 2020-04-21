@@ -28,7 +28,11 @@ export const DEFAULT_SIGNUP_MODEL = {
     cycle: 12,
     planIDs: {},
     humanVerificationMethods: [],
-    humanVerificationToken: ''
+    humanVerificationToken: '',
+    verificationToken: '',
+    verificationTokenType: '',
+    paymentToken: '',
+    paymentTokenType: ''
 };
 
 export const DEFAULT_CHECK_RESULT = {
