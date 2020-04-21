@@ -16,14 +16,16 @@ const usePayment = ({ amount, currency, onPay }) => {
         amount,
         currency,
         type: PAYMENT_METHOD_TYPES.PAYPAL,
-        onPay
+        onPay,
+        isActive: isPayPalActive
     });
 
     const paypalCredit = usePayPal({
         amount,
         currency,
         type: PAYMENT_METHOD_TYPES.PAYPAL_CREDIT,
-        onPay
+        onPay,
+        isActive: isPayPalActive
     });
 
     const hasToken = () => {
