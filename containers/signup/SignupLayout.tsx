@@ -13,26 +13,12 @@ interface Props {
 }
 
 const {
-    LOADING_CREATION,
-    NO_SIGNUP,
-    ACCOUNT_CREATION_USERNAME,
-    ACCOUNT_CREATION_EMAIL,
-    RECOVERY_EMAIL,
-    RECOVERY_PHONE,
-    VERIFICATION_CODE
+    PLANS
 } = SIGNUP_STEPS;
 
 const SignupLayout = ({ children, aside, onBack, model }: Props) => {
-    const hasAside = [
-        LOADING_CREATION,
-        NO_SIGNUP,
-        ACCOUNT_CREATION_USERNAME,
-        ACCOUNT_CREATION_EMAIL,
-        RECOVERY_EMAIL,
-        RECOVERY_PHONE,
-        VERIFICATION_CODE
-    ].includes(model.step);
-    const style = hasAside ? { maxWidth: '500px' } : {};
+    const noAside = [PLANS].includes(model.step);
+    const style = noAside ? {} : { maxWidth: '500px' };
     return (
         <div className="flex flex-nowrap h100v">
             <main className="flex flex-justify-center flex-item-fluid bg-white color-global-grey p2">
@@ -51,9 +37,9 @@ const SignupLayout = ({ children, aside, onBack, model }: Props) => {
                     {children}
                 </div>
             </main>
-            {hasAside ? (
+            {noAside ? null : (
                 <aside className="flex-item-fluid bg-global-light color-global-grey nomobile notablet">{aside}</aside>
-            ) : null}
+            )}
         </div>
     );
 };

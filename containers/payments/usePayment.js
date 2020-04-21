@@ -10,19 +10,22 @@ const usePayment = ({ amount, currency, onPay }) => {
     const [card, setCard, errors, isValid] = useCard();
     const [method, setMethod] = useState('');
     const [parameters, setParameters] = useState({});
+    const isPayPalActive = method === PAYPAL;
 
     const paypal = usePayPal({
         amount,
         currency,
         type: PAYMENT_METHOD_TYPES.PAYPAL,
-        onPay
+        onPay,
+        isActive: isPayPalActive
     });
 
     const paypalCredit = usePayPal({
         amount,
         currency,
         type: PAYMENT_METHOD_TYPES.PAYPAL_CREDIT,
-        onPay
+        onPay,
+        isActive: isPayPalActive
     });
 
     const hasToken = () => {

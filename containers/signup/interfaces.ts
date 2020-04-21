@@ -18,6 +18,11 @@ export interface SignupModel {
     planIDs: PlanIDs;
     humanVerificationMethods: string[];
     humanVerificationToken: string;
+    amount: number;
+    verificationToken: string;
+    verificationTokenType: string;
+    paymentToken: string;
+    paymentTokenType: string;
 }
 
 export interface SignupErros {
@@ -31,9 +36,7 @@ export interface SignupErros {
 }
 
 export interface SignupPlanPricing {
-    1: number;
-    12: number;
-    24: number;
+    [cycle: number]: number;
 }
 
 export interface SignupPlan {

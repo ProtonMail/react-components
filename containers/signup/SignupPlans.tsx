@@ -16,8 +16,6 @@ interface Props {
 const { PAYMENT, CREATING_ACCOUNT } = SIGNUP_STEPS;
 
 const SignupPlans = ({ plans = [], model, onChange, loading, onSubmit }: Props) => {
-    const mailPlan = model.planIDs;
-
     return (
         <>
             <div className="mb1">
@@ -29,24 +27,27 @@ const SignupPlans = ({ plans = [], model, onChange, loading, onSubmit }: Props) 
             </div>
             <MailSubscriptionTable
                 disabled={loading}
-                currentPlan={c('Status').t`Selected`}
+                mode="button"
                 selected={c('Status').t`Selected`}
-                planNameSelected={mailPlan.Name}
                 plans={plans}
                 cycle={model.cycle}
                 currency={model.currency}
                 onSelect={(planID: string = '') => {
-                    if (planID) {
+                    const plan = plans.find(({ ID }: SignupPlan) => ID === planID);
+                    if (plan) {
                         onChange({
                             ...model,
-                            planIDs: { [planID]: 1 },
+                            planIDs: { [plan.ID]: 1 },
+                            amount: plan.Pricing[model.cycle],
                             step: PAYMENT
                         });
                         return;
                     }
+                    // Pick free plan
                     onChange({
                         ...model,
                         planIDs: {},
+                        amount: 0,
                         step: CREATING_ACCOUNT
                     });
                     onSubmit();
