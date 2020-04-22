@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, FormEvent } from 'react';
 import { Location, History } from 'history';
-import { useApi, useLoading, useConfig, usePlans, useModals, usePayment } from 'react-components';
+import { useApi, useLoading, useConfig, usePlans, useModals, usePayment, Loader } from 'react-components';
 import { queryAvailableDomains } from 'proton-shared/lib/api/domains';
 import { setupAddress } from 'proton-shared/lib/api/addresses';
 import { setupKeys } from 'proton-shared/lib/api/keys';
@@ -31,9 +31,11 @@ import SignupVerificationCodeForm from './SignupVerificationCodeForm';
 import SignupHumanVerification from './SignupHumanVerification';
 import SignupPlans from './SignupPlans';
 import SignupPayment from './SignupPayment';
+import SignupComplete from './SignupComplete';
+import SignupCreatingAccount from './SignupCreatingAccount';
 import { handlePaymentToken } from '../payments/paymentTokenHelper';
 import { SignupModel, SignupErros, SignupPlan, SubscriptionCheckResult } from './interfaces';
-import { DEFAULT_SIGNUP_MODEL, SIGNUP_STEPS } from './constants';
+import { DEFAULT_SIGNUP_MODEL, DEFAULT_CHECK_RESULT, SIGNUP_STEPS } from './constants';
 import humanApiHelper from './humanApi';
 
 interface Props {
@@ -43,6 +45,7 @@ interface Props {
 }
 
 const {
+    LOADING_SIGNUP,
     ACCOUNT_CREATION_USERNAME,
     ACCOUNT_CREATION_EMAIL,
     NO_SIGNUP,
@@ -51,7 +54,9 @@ const {
     VERIFICATION_CODE,
     PLANS,
     PAYMENT,
-    HUMAN_VERIFICATION
+    HUMAN_VERIFICATION,
+    CREATING_ACCOUNT,
+    COMPLETE
 } = SIGNUP_STEPS;
 
 const withAuthHeaders = (UID: string, AccessToken: string, config: any) =>
@@ -67,6 +72,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
     const { CLIENT_TYPE } = useConfig();
     const [plans, loadingPlans] = usePlans();
     const [loading, withLoading] = useLoading();
+    const [checkResult, setCheckResult] = useState<SubscriptionCheckResult>(DEFAULT_CHECK_RESULT);
     const [model, updateModel] = useState<SignupModel>({
         ...DEFAULT_SIGNUP_MODEL,
         ...(currency ? { currency } : {}),
@@ -89,7 +95,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
         paypal,
         paypalCredit
     } = usePayment({
-        amount: model.amount,
+        amount: checkResult.AmountDue,
         currency: model.currency,
         onPay(params) {
             return withLoading(handlePayPal(params));
@@ -235,7 +241,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                 const { Payment } = await handlePaymentToken({
                     params: {
                         ...paymentParameters,
-                        Amount: model.amount,
+                        Amount: checkResult.AmountDue,
                         Currency: model.currency
                     },
                     api,
@@ -345,8 +351,30 @@ const SignupContainer = ({ onLogin, history }: Props) => {
         }
     };
 
+    const handleSelectPlan = async (planID: string) => {
+        if (!planID) {
+            // Select free plan
+            updateModel({
+                ...model,
+                planIDs: {}
+            });
+            return handleSubmit();
+        }
+
+        const plan = plans.find(({ ID }: SignupPlan) => ID === planID);
+
+        if (plan) {
+            updateModel({
+                ...model,
+                planIDs: { [plan.ID]: 1 },
+                step: PAYMENT
+            });
+            return;
+        }
+    };
+
     const handleResend = async () => {
-        await api(queryVerificationCode('email', { Address: model.email }));
+        await humanApi(queryVerificationCode('email', { Address: model.email }));
     };
 
     const fetchDependencies = async () => {
@@ -363,21 +391,6 @@ const SignupContainer = ({ onLogin, history }: Props) => {
         } catch (error) {
             return goToStep(NO_SIGNUP);
         }
-    };
-
-    const checkPlans = async () => {
-        const checkResult = (await humanApi(
-            checkSubscription({
-                PlanIDs: model.planIDs,
-                Currency: model.currency,
-                Cycle: model.cycle
-                // CouponCode: model.couponCode
-            })
-        )) as SubscriptionCheckResult;
-        updateModel({
-            ...model,
-            checkResult
-        });
     };
 
     useEffect(() => {
@@ -403,28 +416,25 @@ const SignupContainer = ({ onLogin, history }: Props) => {
     }, [plans]);
 
     useEffect(() => {
-        // Each time cycle change, we need to change the total amount
         if (hasPaidPlan) {
-            const [[planID]] = Object.entries(model.planIDs);
-            const plan = plans.find(({ ID }: SignupPlan) => ID === planID);
-
-            if (plan) {
-                updateModel({
-                    ...model,
-                    amount: plan.Pricing[model.cycle]
-                });
-            }
+            withLoading(
+                humanApi(
+                    checkSubscription({
+                        PlanIDs: model.planIDs,
+                        Currency: model.currency,
+                        Cycle: model.cycle
+                        // CouponCode: model.couponCode
+                    }).then((result: SubscriptionCheckResult) => {
+                        setCheckResult(result);
+                    })
+                )
+            );
         }
-    }, [model.cycle]);
-
-    useEffect(() => {
-        if (model.amount) {
-            withLoading(checkPlans());
-        }
-    }, [model.amount]);
+    }, [model.cycle, model.planIDs]);
 
     return (
         <SignupLayout model={model} onBack={handleBack} aside={<SignupAside model={model} errors={errors} />}>
+            {model.step === LOADING_SIGNUP && <Loader />}
             {model.step === NO_SIGNUP && 'TODO'}
             {model.step === ACCOUNT_CREATION_USERNAME && (
                 <SignupAccountForm
@@ -477,7 +487,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                     plans={plans}
                     model={model}
                     onChange={updateModel}
-                    onSubmit={() => withLoading(handleSubmit())}
+                    onSelectPlan={(planID) => withLoading(handleSelectPlan(planID))}
                     loading={loading || loadingPlans}
                 />
             )}
@@ -485,6 +495,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                 <SignupPayment
                     paypal={paypal}
                     paypalCredit={paypalCredit}
+                    checkResult={checkResult}
                     model={model}
                     onChange={updateModel}
                     card={card}
@@ -500,6 +511,8 @@ const SignupContainer = ({ onLogin, history }: Props) => {
             {model.step === HUMAN_VERIFICATION && (
                 <SignupHumanVerification model={model} onChange={updateModel} onSubmit={handleSubmit} />
             )}
+            {model.step === CREATING_ACCOUNT && <SignupCreatingAccount model={model} />}
+            {model.step === COMPLETE && <SignupComplete model={model} />}
         </SignupLayout>
     );
 };
