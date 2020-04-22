@@ -250,13 +250,11 @@ const SubscriptionCheckout = ({ submit = c('Action').t`Pay`, plans = [], model, 
 };
 
 SubscriptionCheckout.propTypes = {
-    disabled: PropTypes.bool,
     submit: PropTypes.node,
     plans: PropTypes.array.isRequired,
     checkResult: PropTypes.object.isRequired,
     model: PropTypes.object.isRequired,
     setModel: PropTypes.func.isRequired,
-    onCheckout: PropTypes.func.isRequired,
     loading: PropTypes.bool
 };
 
