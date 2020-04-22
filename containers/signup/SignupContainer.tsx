@@ -6,12 +6,14 @@ import { setupAddress } from 'proton-shared/lib/api/addresses';
 import { setupKeys } from 'proton-shared/lib/api/keys';
 import { API_CUSTOM_ERROR_CODES } from 'proton-shared/lib/errors';
 import { TOKEN_TYPES } from 'proton-shared/lib/constants';
-import { subscribe } from 'proton-shared/lib/api/payments';
+import { subscribe, checkSubscription } from 'proton-shared/lib/api/payments';
 import { srpVerify, srpAuth } from 'proton-shared/lib/srp';
 import { auth, setCookies } from 'proton-shared/lib/api/auth';
 import { mergeHeaders } from 'proton-shared/lib/fetch/helpers';
 import { getRandomString } from 'proton-shared/lib/helpers/string';
 import { getAuthHeaders } from 'proton-shared/lib/api';
+import { isEmail } from 'proton-shared/lib/helpers/validators';
+import { c } from 'ttag';
 import {
     queryCheckUsernameAvailability,
     queryCreateUser,
@@ -20,9 +22,6 @@ import {
     queryVerificationCode,
     queryCheckVerificationCode
 } from 'proton-shared/lib/api/user';
-
-import { isEmail } from 'proton-shared/lib/helpers/validators';
-import { c } from 'ttag';
 
 import SignupLayout from './SignupLayout';
 import SignupAside from './SignupAside';
@@ -33,7 +32,7 @@ import SignupHumanVerification from './SignupHumanVerification';
 import SignupPlans from './SignupPlans';
 import SignupPayment from './SignupPayment';
 import { handlePaymentToken } from '../payments/paymentTokenHelper';
-import { SignupModel, SignupErros, SignupPlan } from './interfaces';
+import { SignupModel, SignupErros, SignupPlan, SubscriptionCheckResult } from './interfaces';
 import { DEFAULT_SIGNUP_MODEL, SIGNUP_STEPS } from './constants';
 import humanApiHelper from './humanApi';
 
@@ -330,6 +329,17 @@ const SignupContainer = ({ onLogin, history }: Props) => {
             }
 
             // Generate keys
+            // const emailAddress = model.username ? `${model.username}@${domain}` : model.email;
+            // const { passphrase, salt } = await generateKeySaltAndPassphrase(model.password);
+            // const newAddressesKeys = await getResetAddressesKeys({ addresses: [emailAddress], passphrase });
+            // const [primaryAddress] = newAddressesKeys;
+            // await api(
+            //     setupKeys({
+            //         KeySalt: salt,
+            //         PrimaryKey: primaryAddress.PrivateKey,
+            //         AddressKeys: newAddressesKeys
+            //     })
+            // );
             await api(setupKeys());
             return;
         }
@@ -341,18 +351,33 @@ const SignupContainer = ({ onLogin, history }: Props) => {
 
     const fetchDependencies = async () => {
         try {
-            const { Direct, VerifyMethods: verifyMethods } = await humanApi(queryDirectSignupStatus(CLIENT_TYPE));
+            const { Direct, VerifyMethods: verifyMethods } = await api(queryDirectSignupStatus(CLIENT_TYPE));
 
             if (!Direct) {
                 // We block the signup from API demand
                 throw new Error('No signup');
             }
 
-            const { Domains: domains } = await humanApi(queryAvailableDomains());
+            const { Domains: domains } = await api(queryAvailableDomains());
             updateModel({ ...model, step: ACCOUNT_CREATION_USERNAME, verifyMethods, domains });
         } catch (error) {
             return goToStep(NO_SIGNUP);
         }
+    };
+
+    const checkPlans = async () => {
+        const checkResult = (await humanApi(
+            checkSubscription({
+                PlanIDs: model.planIDs,
+                Currency: model.currency,
+                Cycle: model.cycle
+                // CouponCode: model.couponCode
+            })
+        )) as SubscriptionCheckResult;
+        updateModel({
+            ...model,
+            checkResult
+        });
     };
 
     useEffect(() => {
@@ -391,6 +416,12 @@ const SignupContainer = ({ onLogin, history }: Props) => {
             }
         }
     }, [model.cycle]);
+
+    useEffect(() => {
+        if (model.amount) {
+            withLoading(checkPlans());
+        }
+    }, [model.amount]);
 
     return (
         <SignupLayout model={model} onBack={handleBack} aside={<SignupAside model={model} errors={errors} />}>
@@ -455,12 +486,15 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                     paypal={paypal}
                     paypalCredit={paypalCredit}
                     model={model}
+                    onChange={updateModel}
                     card={card}
                     onCardChange={setCard}
                     method={method}
                     onMethodChange={setMethod}
                     errors={paymentErrors}
                     canPay={canPay}
+                    plans={plans}
+                    loading={loading}
                 />
             )}
             {model.step === HUMAN_VERIFICATION && (
