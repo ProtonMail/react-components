@@ -1,10 +1,20 @@
 import React, { ChangeEvent, FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { c } from 'ttag';
-import { Input, EmailInput, PasswordInput, PrimaryButton, Href, InlineLinkButton } from 'react-components';
+import { isEmail } from 'proton-shared/lib/helpers/validators';
+import {
+    Input,
+    EmailInput,
+    PasswordInput,
+    PrimaryButton,
+    Href,
+    InlineLinkButton,
+    Icon,
+    SimpleDropdown
+} from 'react-components';
 
 import { SignupModel, SignupErros } from './interfaces';
-import { SIGNUP_STEPS } from './constants';
+import { SIGNUP_STEPS, UNSECURE_DOMAINS } from './constants';
 
 interface Props {
     model: SignupModel;
@@ -19,7 +29,7 @@ const { ACCOUNT_CREATION_USERNAME, ACCOUNT_CREATION_EMAIL } = SIGNUP_STEPS;
 const SignupAccountForm = ({ model, onChange, onSubmit, errors, loading }: Props) => {
     const [availableDomain = ''] = model.domains;
     const termsConditionsLink = (
-        <Href to="https://protonmail.com/terms-and-conditions" key="terms">{c('Signup link')
+        <Href url="https://protonmail.com/terms-and-conditions" key="terms">{c('Signup link')
             .t`terms and conditions`}</Href>
     );
     const loginLink = <Link key="loginLink" to="/login">{c('Link').t`Log in!`}</Link>;
@@ -29,6 +39,8 @@ const SignupAccountForm = ({ model, onChange, onSubmit, errors, loading }: Props
         errors.password ||
         errors.confirmPassword
     );
+    const isUnsecure =
+        isEmail(model.email) && UNSECURE_DOMAINS.some((domain: string) => model.email.toLowerCase().endsWith(domain));
     return (
         <>
             <h1 className="h2">{c('Signup title, keep "Account" capitalized').t`Create your Proton Account`}</h1>
@@ -62,22 +74,40 @@ const SignupAccountForm = ({ model, onChange, onSubmit, errors, loading }: Props
                     <div className="flex flex-items-center onmobile-flex-column mb1">
                         <label className="mr1" htmlFor="login">{c('Signup label').t`Email`}</label>
                         <div className="flex-item-fluid">
-                            <div className="mb1">
-                                <EmailInput
-                                    id="login"
-                                    name="login"
-                                    autoFocus
-                                    autoComplete="off"
-                                    autoCapitalize="off"
-                                    autoCorrect="off"
-                                    value={model.email}
-                                    onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
-                                        onChange({ ...model, email: target.value })
-                                    }
-                                    error={errors.email}
-                                    placeholder={c('Placeholder').t`Email`}
-                                    required
-                                />
+                            <div className="mb1 flex flex-nowrap">
+                                <div className="flex-item-fluid">
+                                    <EmailInput
+                                        id="login"
+                                        name="login"
+                                        autoFocus
+                                        autoComplete="off"
+                                        autoCapitalize="off"
+                                        autoCorrect="off"
+                                        value={model.email}
+                                        onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
+                                            onChange({ ...model, email: target.value })
+                                        }
+                                        error={errors.email}
+                                        placeholder={c('Placeholder').t`Email`}
+                                        required
+                                    />
+                                </div>
+                                {isUnsecure ? (
+                                    <div className="ml1">
+                                        <SimpleDropdown
+                                            originalPlacement="right"
+                                            hasCaret={false}
+                                            content={<Icon name="warning" className="color-global-attention" />}
+                                        >
+                                            <div className="p1">
+                                                <div className="bold mb1">{c('Title')
+                                                    .t`This email may be insecure`}</div>
+                                                <div>{c('Info')
+                                                    .t`Google records your online activity and reads your personal data in order to provide access for advertisers and other third parties. For better privacy, create a secure email address.`}</div>
+                                            </div>
+                                        </SimpleDropdown>
+                                    </div>
+                                ) : null}
                             </div>
                             <InlineLinkButton
                                 onClick={() => onChange({ ...model, email: '', step: ACCOUNT_CREATION_USERNAME })}

@@ -2,11 +2,12 @@ import React from 'react';
 import { c } from 'ttag';
 import { Alert, Payment, SubscriptionCheckout } from 'react-components';
 
-import { SignupModel, SignupPlan, SignupPayPal } from './interfaces';
+import { SignupModel, SignupPlan, SignupPayPal, SubscriptionCheckResult } from './interfaces';
 import SignupCheckoutButton from './SignupCheckoutButton';
 
 interface Props {
     model: SignupModel;
+    checkResult: SubscriptionCheckResult;
     onChange: (model: SignupModel) => void;
     card: any;
     onCardChange: () => void;
@@ -22,6 +23,7 @@ interface Props {
 
 const SignupPayment = ({
     plans,
+    checkResult,
     model,
     onChange,
     card,
@@ -45,7 +47,7 @@ const SignupPayment = ({
                         paypal={paypal}
                         paypalCredit={paypalCredit}
                         method={method}
-                        amount={model.amount}
+                        amount={checkResult.AmountDue}
                         currency={model.currency}
                         card={card}
                         onMethod={onMethodChange}
@@ -62,12 +64,12 @@ const SignupPayment = ({
                                 canPay={canPay}
                                 paypal={paypal}
                                 method={method}
-                                checkResult={model.checkResult}
+                                checkResult={checkResult}
                                 className="w100"
                             />
                         }
                         plans={plans}
-                        checkResult={model.checkResult}
+                        checkResult={checkResult}
                         loading={loading}
                         model={model}
                         setModel={onChange}

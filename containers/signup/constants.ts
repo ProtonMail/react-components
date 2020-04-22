@@ -1,20 +1,22 @@
-export const SIGNUP_STEPS = {
-    LOADING_CREATION: 'loading-creation',
-    NO_SIGNUP: 'no-signup',
-    ACCOUNT_CREATION_USERNAME: 'account-creation-username',
-    ACCOUNT_CREATION_EMAIL: 'account-creation-email',
-    RECOVERY_EMAIL: 'recovery-email',
-    RECOVERY_PHONE: 'recovery-phone',
-    VERIFICATION_CODE: 'verification-code',
-    PLANS: 'plans',
-    PAYMENT: 'payment',
-    CREATING_ACCOUNT: 'creating-account',
-    HUMAN_VERIFICATION: 'human-verification'
-};
+export enum SIGNUP_STEPS {
+    LOADING_SIGNUP = 'loading-signup',
+    NO_SIGNUP = 'no-signup',
+    ACCOUNT_CREATION_USERNAME = 'account-creation-username',
+    ACCOUNT_CREATION_EMAIL = 'account-creation-email',
+    RECOVERY_EMAIL = 'recovery-email',
+    RECOVERY_PHONE = 'recovery-phone',
+    VERIFICATION_CODE = 'verification-code',
+    PLANS = 'plans',
+    PAYMENT = 'payment',
+    HUMAN_VERIFICATION = 'human-verification',
+    CREATING_ACCOUNT = 'creating-account',
+    COMPLETE = 'complete'
+}
+
+export const UNSECURE_DOMAINS = ['@gmail.com'];
 
 export const DEFAULT_SIGNUP_MODEL = {
-    step: SIGNUP_STEPS.LOADING_CREATION,
-    amount: 0,
+    step: SIGNUP_STEPS.LOADING_SIGNUP,
     username: '',
     password: '',
     confirmPassword: '',
