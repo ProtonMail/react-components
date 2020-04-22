@@ -2,21 +2,38 @@ import React from 'react';
 import { c } from 'ttag';
 import { Alert, Payment, SubscriptionCheckout } from 'react-components';
 
-import { SignupModel } from './interfaces';
+import { SignupModel, SignupPlan, SignupPayPal } from './interfaces';
+import SignupCheckoutButton from './SignupCheckoutButton';
 
 interface Props {
     model: SignupModel;
+    onChange: (model: SignupModel) => void;
     card: any;
     onCardChange: () => void;
-    paypal: any;
-    paypalCredit: any;
+    paypal: SignupPayPal;
+    paypalCredit: SignupPayPal;
     method: any;
     onMethodChange: (method: string) => void;
     errors: any;
     canPay: boolean;
+    loading: boolean;
+    plans: SignupPlan[];
 }
 
-const SignupPayment = ({ model, card, onCardChange, paypal, paypalCredit, method, onMethodChange, errors }: Props) => {
+const SignupPayment = ({
+    plans,
+    model,
+    onChange,
+    card,
+    onCardChange,
+    paypal,
+    paypalCredit,
+    canPay,
+    method,
+    onMethodChange,
+    errors,
+    loading
+}: Props) => {
     return (
         <>
             <Alert>{c('Info')
@@ -37,24 +54,24 @@ const SignupPayment = ({ model, card, onCardChange, paypal, paypalCredit, method
                     />
                 </div>
                 <div className="w25 onmobile-w100">
-                    {/* <SubscriptionCheckout
+                    <SubscriptionCheckout
                         method={method}
                         submit={
-                            <NewSubscriptionSubmitButton
+                            <SignupCheckoutButton
+                                loading={loading}
                                 canPay={canPay}
                                 paypal={paypal}
                                 method={method}
-                                checkResult={checkResult}
+                                checkResult={model.checkResult}
                                 className="w100"
                             />
                         }
                         plans={plans}
-                        checkResult={checkResult}
-                        loading={loadingCheck}
-                        onCheckout={() => withLoading(handleCheckout())}
+                        checkResult={model.checkResult}
+                        loading={loading}
                         model={model}
-                        setModel={setModel}
-                    /> */}
+                        setModel={onChange}
+                    />
                 </div>
             </div>
         </>

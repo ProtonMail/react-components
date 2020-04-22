@@ -2,6 +2,21 @@ export interface PlanIDs {
     [planID: string]: number;
 }
 
+export interface SubscriptionCheckResult {
+    Amount: number;
+    AmountDue: number;
+    Proration: number;
+    Credit: number;
+    Currency: string;
+    Cycle: number;
+    Gift: number;
+    CouponDiscount: number;
+    Coupon: null | {
+        Code: string;
+        Description: string;
+    };
+}
+
 export interface SignupModel {
     step: string;
     username: string;
@@ -23,6 +38,7 @@ export interface SignupModel {
     verificationTokenType: string;
     paymentToken: string;
     paymentTokenType: string;
+    checkResult?: SubscriptionCheckResult;
 }
 
 export interface SignupErros {
@@ -53,17 +69,10 @@ export interface SignupPlan {
     Pricing: SignupPlanPricing;
 }
 
-export interface SubscriptionCheckResult {
-    Amount: number;
-    AmountDue: number;
-    Proration: number;
-    Credit: number;
-    Currency: string;
-    Cycle: number;
-    Gift: number;
-    CouponDiscount: number;
-    Coupon: null | {
-        Code: string;
-        Description: string;
-    };
+export interface SignupPayPal {
+    isReady: boolean;
+    loadingToken: boolean;
+    loadingVerification: boolean;
+    onToken: () => void;
+    onVerification: () => void;
 }

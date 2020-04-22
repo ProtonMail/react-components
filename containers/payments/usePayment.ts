@@ -4,18 +4,44 @@ import { useCard, usePayPal } from 'react-components';
 
 import toDetails from './toDetails';
 
-const { CARD, BITCOIN, CASH, PAYPAL } = PAYMENT_METHOD_TYPES;
+const { CARD, BITCOIN, CASH, PAYPAL, PAYPAL_CREDIT } = PAYMENT_METHOD_TYPES;
 
-const usePayment = ({ amount, currency, onPay }) => {
+interface Props {
+    amount: number;
+    currency: string;
+    onPay: () => void;
+}
+
+interface PaymentParameters {
+    PaymentMethodID?: string;
+    Payment?: {
+        Type: string;
+        Details:
+            | {
+                  Token: string;
+              }
+            | {
+                  Name: string;
+                  Number: string;
+                  ExpMonth: string;
+                  ExpYear: string;
+                  CVC: string;
+                  ZIP: string;
+                  Country: string;
+              };
+    };
+}
+
+const usePayment = ({ amount, currency, onPay }: Props) => {
     const [card, setCard, errors, isValid] = useCard();
-    const [method, setMethod] = useState('');
-    const [parameters, setParameters] = useState({});
+    const [method, setMethod] = useState<string>('');
+    const [parameters, setParameters] = useState<PaymentParameters>({});
     const isPayPalActive = method === PAYPAL;
 
     const paypal = usePayPal({
         amount,
         currency,
-        type: PAYMENT_METHOD_TYPES.PAYPAL,
+        type: PAYPAL,
         onPay,
         isActive: isPayPalActive
     });
@@ -23,15 +49,15 @@ const usePayment = ({ amount, currency, onPay }) => {
     const paypalCredit = usePayPal({
         amount,
         currency,
-        type: PAYMENT_METHOD_TYPES.PAYPAL_CREDIT,
+        type: PAYPAL_CREDIT,
         onPay,
         isActive: isPayPalActive
     });
 
-    const hasToken = () => {
-        const { Payment = {} } = parameters;
-        const { Details = {} } = Payment;
-        const { Token } = Details;
+    const hasToken = (): boolean => {
+        const { Payment } = parameters;
+        const { Details } = Payment || {};
+        const { Token = '' } = Details || {};
         return !!Token;
     };
 
