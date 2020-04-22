@@ -6,7 +6,7 @@ import { OpenPGPKey } from 'pmcrypto';
 
 interface Props {
     publicKey: OpenPGPKey;
-    emailAddress: string;
+    emailAddress?: string;
     className?: string;
 }
 
