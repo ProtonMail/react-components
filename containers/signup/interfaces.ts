@@ -1,3 +1,5 @@
+import { SIGNUP_STEPS } from './constants';
+
 export interface PlanIDs {
     [planID: string]: number;
 }
@@ -18,7 +20,7 @@ export interface SubscriptionCheckResult {
 }
 
 export interface SignupModel {
-    step: string;
+    step: SIGNUP_STEPS;
     username: string;
     email: string;
     password: string;
@@ -33,12 +35,10 @@ export interface SignupModel {
     planIDs: PlanIDs;
     humanVerificationMethods: string[];
     humanVerificationToken: string;
-    amount: number;
     verificationToken: string;
     verificationTokenType: string;
     paymentToken: string;
     paymentTokenType: string;
-    checkResult?: SubscriptionCheckResult;
 }
 
 export interface SignupErros {
