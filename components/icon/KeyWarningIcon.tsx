@@ -17,11 +17,11 @@ const KeyWarningIcon = ({ publicKey, emailAddress, className }: Props) => {
     const icon = <Icon name="attention" className={classnames([className, 'color-global-attention'])} />;
     const warning = getEmailMismatchWarning(publicKey, emailAddress);
 
-    if (warning.length) {
-        return <Tooltip title={warning[0]}>{icon}</Tooltip>;
+    if (!warning.length) {
+        return null;
     }
 
-    return null;
+    return <Tooltip title={warning[0]}>{icon}</Tooltip>;
 };
 
 export default KeyWarningIcon;
