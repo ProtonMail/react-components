@@ -32,9 +32,7 @@ export const DEFAULT_SIGNUP_MODEL = {
     humanVerificationMethods: [],
     humanVerificationToken: '',
     verificationToken: '',
-    verificationTokenType: '',
-    paymentToken: '',
-    paymentTokenType: ''
+    paymentToken: ''
 };
 
 export const DEFAULT_CHECK_RESULT = {
