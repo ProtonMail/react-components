@@ -4,15 +4,19 @@ import { useApi, useLoading, useConfig, usePlans, useModals, usePayment, Loader 
 import { queryAvailableDomains } from 'proton-shared/lib/api/domains';
 import { setupAddress } from 'proton-shared/lib/api/addresses';
 import { setupKeys } from 'proton-shared/lib/api/keys';
+import { queryAddresses } from 'proton-shared/lib/api/addresses';
 import { API_CUSTOM_ERROR_CODES } from 'proton-shared/lib/errors';
-import { TOKEN_TYPES } from 'proton-shared/lib/constants';
+import { TOKEN_TYPES, DEFAULT_ENCRYPTION_CONFIG, ENCRYPTION_CONFIGS } from 'proton-shared/lib/constants';
 import { subscribe, checkSubscription } from 'proton-shared/lib/api/payments';
 import { srpVerify, srpAuth } from 'proton-shared/lib/srp';
 import { auth, setCookies } from 'proton-shared/lib/api/auth';
 import { mergeHeaders } from 'proton-shared/lib/fetch/helpers';
+import { generateKeySaltAndPassphrase } from 'proton-shared/lib/keys/keys';
+import { getResetAddressesKeys } from 'proton-shared/lib/keys/resetKeys';
 import { getRandomString } from 'proton-shared/lib/helpers/string';
 import { getAuthHeaders } from 'proton-shared/lib/api';
 import { isEmail } from 'proton-shared/lib/helpers/validators';
+import { Address } from 'proton-shared/lib/interfaces/Address';
 import { c } from 'ttag';
 import {
     queryCheckUsernameAvailability,
@@ -135,7 +139,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
         model.verificationCode
     ]);
 
-    const goToStep = (step: string) => updateModel({ ...model, step });
+    const goToStep = (step: SIGNUP_STEPS) => updateModel({ ...model, step });
     const handleBack = () => {
         let backStep;
         switch (model.step) {
@@ -233,10 +237,13 @@ const SignupContainer = ({ onLogin, history }: Props) => {
         }
 
         if (model.step === PLANS || model.step === HUMAN_VERIFICATION || model.step === PAYMENT) {
+            let address;
+
             if (hasPaidPlan && !model.paymentToken) {
                 goToStep(PAYMENT);
                 return;
             }
+
             if (hasPaidPlan) {
                 const { Payment } = await handlePaymentToken({
                     params: {
@@ -254,6 +261,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                     paymentTokenType: TOKEN_TYPES.PAYMENT
                 });
             }
+
             if (model.username) {
                 try {
                     await srpVerify({
@@ -288,7 +296,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                     throw error;
                 }
             } else if (model.email) {
-                await srpVerify({
+                const { Address }: { Address: Address } = await srpVerify({
                     api,
                     credentials: { password: model.password },
                     config: queryCreateUserExternal({
@@ -298,12 +306,15 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                         Email: model.email
                     })
                 });
+                address = Address;
             }
+
             const { UID, EventID, AccessToken, RefreshToken } = await srpAuth({
                 api,
                 credentials: { username: model.username, password: model.password },
                 config: auth({ Username: model.username })
             });
+
             if (hasPaidPlan) {
                 await api(
                     withAuthHeaders(
@@ -319,34 +330,47 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                     )
                 );
             }
+
             await api(setCookies({ UID, AccessToken, RefreshToken, State: getRandomString(24) }));
             await onLogin({ UID, EventID });
 
+            // Create address
             if (model.username) {
-                // Address create
                 const [domain = ''] = model.domains;
-                await api(
+                const { Address }: { Address: Address } = await api(
                     setupAddress({
                         Domain: domain,
                         DisplayName: model.username,
                         Signature: ''
                     })
                 );
+                address = Address;
+            } else if (model.email) {
+                const { Addresses = [] }: { Addresses: Address[] } = await api(queryAddresses());
+                address = Addresses[0];
             }
 
             // Generate keys
-            // const emailAddress = model.username ? `${model.username}@${domain}` : model.email;
-            // const { passphrase, salt } = await generateKeySaltAndPassphrase(model.password);
-            // const newAddressesKeys = await getResetAddressesKeys({ addresses: [emailAddress], passphrase });
-            // const [primaryAddress] = newAddressesKeys;
-            // await api(
-            //     setupKeys({
-            //         KeySalt: salt,
-            //         PrimaryKey: primaryAddress.PrivateKey,
-            //         AddressKeys: newAddressesKeys
-            //     })
-            // );
-            await api(setupKeys());
+            if (address) {
+                const { passphrase, salt } = await generateKeySaltAndPassphrase(model.password);
+                const newAddressesKeys = await getResetAddressesKeys({
+                    addresses: [address],
+                    passphrase,
+                    encryptionConfig: ENCRYPTION_CONFIGS[DEFAULT_ENCRYPTION_CONFIG]
+                });
+                const [primaryAddress] = newAddressesKeys;
+                await srpVerify({
+                    api,
+                    credentials: { password: model.password },
+                    config: {
+                        ...setupKeys({
+                            KeySalt: salt,
+                            PrimaryKey: primaryAddress.PrivateKey,
+                            AddressKeys: newAddressesKeys
+                        })
+                    }
+                });
+            }
             return;
         }
     };

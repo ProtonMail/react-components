@@ -59,7 +59,16 @@ const check = (card: Card, key: keyCard): string | undefined => {
     }
 };
 
-export const getErrors = (card: Card) => {
+export const getErrors = (
+    card: Card
+): {
+    fullname?: string;
+    month?: string;
+    year?: string;
+    number?: string;
+    cvc?: string;
+    zip?: string;
+} => {
     return ['fullname', 'number', 'month', 'year', 'cvc', 'zip', 'country'].reduce((acc, key) => {
         const error = check(card, key as keyCard);
         if (error) {
