@@ -440,19 +440,20 @@ const SignupContainer = ({ onLogin, history }: Props) => {
     }, [plans]);
 
     useEffect(() => {
+        const check = async () => {
+            const result = (await humanApi(
+                checkSubscription({
+                    PlanIDs: model.planIDs,
+                    Currency: model.currency,
+                    Cycle: model.cycle
+                    // CouponCode: model.couponCode
+                })
+            )) as SubscriptionCheckResult;
+            setCheckResult(result);
+        };
+
         if (hasPaidPlan) {
-            withLoading(
-                humanApi(
-                    checkSubscription({
-                        PlanIDs: model.planIDs,
-                        Currency: model.currency,
-                        Cycle: model.cycle
-                        // CouponCode: model.couponCode
-                    }).then((result: SubscriptionCheckResult) => {
-                        setCheckResult(result);
-                    })
-                )
-            );
+            withLoading(check());
         }
     }, [model.cycle, model.planIDs]);
 
