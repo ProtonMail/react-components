@@ -30,8 +30,8 @@ import AttachScreenshot from './AttachScreenshot';
 import { collectInfo, getClient } from '../../helpers/report';
 
 interface Props extends RouteComponentProps {
-    username: string;
-    addresses: { Email: string }[];
+    username?: string;
+    addresses?: { Email: string }[];
     onClose?: () => void;
 }
 
@@ -94,7 +94,7 @@ const BugModal = ({ onClose = noop, username: Username = '', location, addresses
         Title: '',
         Description: '',
         Email: '',
-        Username: ''
+        Username
     });
     const { state: showDetails, toggle: toggleDetails } = useToggle(false);
     const [images, setImages] = useState([]);
