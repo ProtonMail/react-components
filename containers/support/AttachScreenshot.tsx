@@ -3,7 +3,10 @@ import { c } from 'ttag';
 
 import { toBlob, resize } from 'proton-shared/lib/helpers/image';
 import { MAX_SIZE_SCREENSHOT } from 'proton-shared/lib/constants';
-import { useNotifications, Icon, Button, FileInput } from '../..';
+import useNotifications from '../notifications/useNotifications';
+import Icon from '../../components/icon/Icon';
+import FileInput from '../../components/input/FileInput';
+import { Button } from '../../components/button';
 
 interface Props {
     id: string;
