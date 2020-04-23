@@ -34,7 +34,7 @@ interface PaymentParameters {
 
 const usePayment = ({ amount, currency, onPay }: Props) => {
     const [card, setCard, errors, isValid] = useCard();
-    const [method, setMethod] = useState<string>('');
+    const [method, setMethod] = useState<PAYMENT_METHOD_TYPES | undefined>();
     const [parameters, setParameters] = useState<PaymentParameters>({});
     const isPayPalActive = method === PAYPAL;
 
