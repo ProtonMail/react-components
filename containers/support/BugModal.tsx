@@ -72,13 +72,14 @@ const BugModal = ({ onClose = noop, username: Username = '', location, addresses
     ];
 
     const isVpn = CLIENT_TYPE === VPN;
-    const showCategory = CLIENT_ID !== CLIENT_IDS.WebDrive;
 
     const titles = isVpn ? vpnTitles : mailTitles;
     const criticalEmail = isVpn ? 'contact@protonvpn.com' : 'security@protonmail.com';
     const clearCacheLink = isVpn
         ? 'https://protonvpn.com/support/clear-browser-cache-cookies/'
         : 'https://protonmail.com/support/knowledge-base/how-to-clean-cache-and-cookies/';
+    const Client = getClient(CLIENT_ID);
+    const showCategory = Client !== CLIENT_IDS.WebDrive;
     const { createNotification } = useNotifications();
     const [{ Email = '' } = {}] = addresses;
     const options = titles.reduce(
@@ -106,8 +107,6 @@ const BugModal = ({ onClose = noop, username: Username = '', location, addresses
             acc[name] = blob;
             return acc;
         }, {});
-
-        const Client = getClient(CLIENT_ID);
 
         const Title = [!isVpn && '[V4]', `[${Client}] Bug [${location.pathname}]`, model.Title]
             .filter(Boolean)
