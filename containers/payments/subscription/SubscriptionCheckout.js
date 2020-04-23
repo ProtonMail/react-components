@@ -178,59 +178,59 @@ const SubscriptionCheckout = ({ submit = c('Action').t`Pay`, plans = [], model, 
                     ) : null}
                     <div className="border-bottom border-bottom--dashed border-bottom--currentColor mb0-5">
                         {[CYCLE.YEARLY, CYCLE.TWO_YEARS].includes(model.cycle) ? (
-                            <div className="border-bottom border-bottom--dashed border-bottom--currentColor mb0-5">
-                                <CheckoutRow
-                                    title={c('Title').t`Total (monthly)`}
-                                    amount={monthlyTotal}
-                                    currency={model.currency}
-                                    className="bigger mt0 mb0"
-                                />
-                            </div>
-                        ) : null}
-                        <div className="border-bottom border-bottom--dashed border-bottom--currentColor mb0-5">
                             <CheckoutRow
-                                className="bigger m0"
-                                title={c('Title').t`Total`}
-                                amount={total}
+                                title={c('Title').t`Total (monthly)`}
+                                amount={monthlyTotal}
                                 currency={model.currency}
-                            />
-                        </div>
-                        {checkResult.Proration ? (
-                            <CheckoutRow
-                                title={
-                                    <>
-                                        <span className="mr0-5">{c('Label').t`Proration`}</span>
-                                        <Info
-                                            url={
-                                                CLIENT_TYPE === CLIENT_TYPES.VPN
-                                                    ? 'https://protonvpn.com/support/vpn-credit-proration/'
-                                                    : 'https://protonmail.com/support/knowledge-base/credit-proration/'
-                                            }
-                                        />
-                                    </>
-                                }
-                                amount={checkResult.Proration}
-                                currency={model.currency}
-                                className="small mt0 mb0"
+                                className="bigger mt0 mb0"
                             />
                         ) : null}
-                        {checkResult.Credit ? (
-                            <CheckoutRow
-                                title={c('Title').t`Credits`}
-                                amount={checkResult.Credit}
-                                currency={model.currency}
-                                className="small mt0 mb0"
-                            />
-                        ) : null}
-                        {checkResult.Gift ? (
-                            <CheckoutRow
-                                title={c('Title').t`Gift code`}
-                                amount={checkResult.Gift}
-                                currency={model.currency}
-                                className="small mt0 mb0"
-                            />
-                        ) : null}
+                        <CheckoutRow
+                            className="bigger m0"
+                            title={c('Title').t`Total`}
+                            amount={total}
+                            currency={model.currency}
+                        />
                     </div>
+                    {checkResult.Proration || checkResult.Credit || checkResult.Gift ? (
+                        <div className="border-bottom border-bottom--dashed border-bottom--currentColor mb0-5">
+                            {checkResult.Proration ? (
+                                <CheckoutRow
+                                    title={
+                                        <>
+                                            <span className="mr0-5">{c('Label').t`Proration`}</span>
+                                            <Info
+                                                url={
+                                                    CLIENT_TYPE === CLIENT_TYPES.VPN
+                                                        ? 'https://protonvpn.com/support/vpn-credit-proration/'
+                                                        : 'https://protonmail.com/support/knowledge-base/credit-proration/'
+                                                }
+                                            />
+                                        </>
+                                    }
+                                    amount={checkResult.Proration}
+                                    currency={model.currency}
+                                    className="small mt0 mb0"
+                                />
+                            ) : null}
+                            {checkResult.Credit ? (
+                                <CheckoutRow
+                                    title={c('Title').t`Credits`}
+                                    amount={checkResult.Credit}
+                                    currency={model.currency}
+                                    className="small mt0 mb0"
+                                />
+                            ) : null}
+                            {checkResult.Gift ? (
+                                <CheckoutRow
+                                    title={c('Title').t`Gift code`}
+                                    amount={checkResult.Gift}
+                                    currency={model.currency}
+                                    className="small mt0 mb0"
+                                />
+                            ) : null}
+                        </div>
+                    ) : null}
                     <CheckoutRow
                         title={c('Title').t`Amount due`}
                         amount={checkResult.AmountDue}
