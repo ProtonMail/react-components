@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { useUser, useAddresses } from '../..';
+import { useUser } from '../../hooks/useUser';
+import { useAddresses } from '../../hooks/useAddresses';
 import BugModal from './BugModal';
 
 const AuthenticatedBugModal = ({ ...rest }) => {

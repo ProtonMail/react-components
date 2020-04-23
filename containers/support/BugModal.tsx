@@ -6,28 +6,26 @@ import { reportBug } from 'proton-shared/lib/api/reports';
 import { CLIENT_TYPES, CLIENT_IDS } from 'proton-shared/lib/constants';
 import { noop } from 'proton-shared/lib/helpers/function';
 
-import {
-    FormModal,
-    Href,
-    Alert,
-    Row,
-    Field,
-    Input,
-    Button,
-    useToggle,
-    Info,
-    TextArea,
-    Select,
-    Label,
-    EmailInput,
-    useNotifications,
-    useConfig,
-    useLoading,
-    useApi
-} from '../..';
-
 import AttachScreenshot from './AttachScreenshot';
 import { collectInfo, getClient } from '../../helpers/report';
+import useApi from '../api/useApi';
+import useLoading from '../../hooks/useLoading';
+import useConfig from '../config/useConfig';
+import useNotifications from '../notifications/useNotifications';
+import useToggle from '../../components/toggle/useToggle';
+
+import Href from '../../components/link/Href';
+import Info from '../../components/link/Info';
+import EmailInput from '../../components/input/EmailInput';
+import Input from '../../components/input/Input';
+import TextArea from '../../components/input/TextArea';
+import Field from '../../components/container/Field';
+import Row from '../../components/container/Row';
+import Label from '../../components/label/Label';
+import Alert from '../../components/alert/Alert';
+import { Button } from '../../components/button';
+import FormModal from '../../components/modal/FormModal';
+import Select from '../../components/select/Select';
 
 interface Props extends RouteComponentProps {
     username?: string;
