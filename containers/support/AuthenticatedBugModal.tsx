@@ -1,12 +1,12 @@
 import React from 'react';
-import { useUser, useAddresses } from 'react-components';
 
+import { useUser, useAddresses } from '../..';
 import BugModal from './BugModal';
 
-const AuthenticatedBugModal = (props) => {
+const AuthenticatedBugModal = ({ ...rest }) => {
     const [{ Name = '' }] = useUser();
     const [addresses = []] = useAddresses();
-    return <BugModal username={Name} addresses={addresses} {...props} />;
+    return <BugModal username={Name} addresses={addresses} {...rest} />;
 };
 
 export default AuthenticatedBugModal;

@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import { withRouter } from 'react-router';
-import { reportBug } from 'proton-shared/lib/api/reports';
-import { CLIENT_TYPES } from 'proton-shared/lib/constants';
+import React, { useState, useEffect, ChangeEvent } from 'react';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { c } from 'ttag';
+
+import { reportBug } from 'proton-shared/lib/api/reports';
+import { CLIENT_TYPES, CLIENT_IDS } from 'proton-shared/lib/constants';
+import { noop } from 'proton-shared/lib/helpers/function';
+
 import {
     FormModal,
     Href,
@@ -22,14 +24,20 @@ import {
     useConfig,
     useLoading,
     useApi
-} from 'react-components';
+} from '../..';
 
 import AttachScreenshot from './AttachScreenshot';
 import { collectInfo, getClient } from '../../helpers/report';
 
+interface Props extends RouteComponentProps {
+    username: string;
+    addresses: { Email: string }[];
+    onClose?: () => void;
+}
+
 const { VPN } = CLIENT_TYPES;
 
-const BugModal = ({ onClose, username: Username = '', location, addresses = [], ...rest }) => {
+const BugModal = ({ onClose = noop, username: Username = '', location, addresses = [], ...rest }: Props) => {
     const api = useApi();
     const [loading, withLoading] = useLoading();
     const { CLIENT_ID, APP_VERSION, CLIENT_TYPE } = useConfig();
@@ -64,6 +72,7 @@ const BugModal = ({ onClose, username: Username = '', location, addresses = [], 
     ];
 
     const isVpn = CLIENT_TYPE === VPN;
+    const showCategory = CLIENT_ID !== CLIENT_IDS.WebDrive;
 
     const titles = isVpn ? vpnTitles : mailTitles;
     const criticalEmail = isVpn ? 'contact@protonvpn.com' : 'security@protonmail.com';
@@ -74,7 +83,7 @@ const BugModal = ({ onClose, username: Username = '', location, addresses = [], 
     const [{ Email = '' } = {}] = addresses;
     const options = titles.reduce(
         (acc, { text, value }) => {
-            acc.push({ text, value });
+            acc.push({ text, value, disabled: false });
             return acc;
         },
         [{ text: c('Action to select a title for the bug report modal').t`Select`, value: '', disabled: true }]
@@ -82,12 +91,15 @@ const BugModal = ({ onClose, username: Username = '', location, addresses = [], 
     const [model, update] = useState({
         ...collectInfo(),
         Title: '',
-        Description: ''
+        Description: '',
+        Email: '',
+        Username: ''
     });
     const { state: showDetails, toggle: toggleDetails } = useToggle(false);
     const [images, setImages] = useState([]);
     const link = <Href key="linkClearCache" url={clearCacheLink}>{c('Link').t`clearing your browser cache`}</Href>;
-    const handleChange = (key) => ({ target }) => update({ ...model, [key]: target.value });
+    const handleChange = (key: string) => ({ target }: ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
+        update({ ...model, [key]: target.value });
 
     const getParameters = () => {
         const imageBlobs = images.reduce((acc, { name, blob }) => {
@@ -164,18 +176,20 @@ const BugModal = ({ onClose, username: Username = '', location, addresses = [], 
                     />
                 </Field>
             </Row>
-            <Row>
-                <Label htmlFor="Title">{c('Label').t`Category`}</Label>
-                <Field>
-                    <Select
-                        id="Title"
-                        value={model.Title}
-                        options={options}
-                        onChange={handleChange('Title')}
-                        required
-                    />
-                </Field>
-            </Row>
+            {showCategory && (
+                <Row>
+                    <Label htmlFor="Title">{c('Label').t`Category`}</Label>
+                    <Field>
+                        <Select
+                            id="Title"
+                            value={model.Title}
+                            options={options}
+                            onChange={handleChange('Title')}
+                            required
+                        />
+                    </Field>
+                </Row>
+            )}
             <Row>
                 <Label htmlFor="Description">{c('Label').t`What happened?`}</Label>
                 <Field>
@@ -256,13 +270,6 @@ const BugModal = ({ onClose, username: Username = '', location, addresses = [], 
             <Alert>{c('Info').t`Contact us at ${criticalEmail} for critical security issues.`}</Alert>
         </FormModal>
     );
-};
-
-BugModal.propTypes = {
-    onClose: PropTypes.func,
-    username: PropTypes.string,
-    addresses: PropTypes.array,
-    location: PropTypes.object.isRequired
 };
 
 export default withRouter(BugModal);
