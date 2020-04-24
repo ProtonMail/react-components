@@ -17,14 +17,12 @@ const { PLANS, PAYMENT } = SIGNUP_STEPS;
 
 const SignupHeader = ({ onBack }: { onBack: () => void }) => {
     return (
-        <div className="flex flex-nowrap flex-items-center mb1">
+        <div className="flex flex-nowrap flex-justify-center flex-items-center mb2">
             <div className="flex-item-fluid">
                 <Button onClick={onBack}>{c('Action').t`Back`}</Button>
             </div>
-            <div className="flex-item-fluid">
-                <span className="h1">{c('Page title').t`Signup`}</span>
-            </div>
-            <div className="flex-item-fluid">
+            <div className="flex-item-fluid h3 bold mb0 aligncenter">{c('Page title').t`Signup`}</div>
+            <div className="flex-item-fluid alignright">
                 <SupportDropdown className="pm-button" content={c('Action').t`Need help`} />
             </div>
         </div>
