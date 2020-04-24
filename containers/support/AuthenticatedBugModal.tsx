@@ -4,7 +4,11 @@ import { useUser } from '../../hooks/useUser';
 import { useAddresses } from '../../hooks/useAddresses';
 import BugModal from './BugModal';
 
-const AuthenticatedBugModal = ({ ...props }) => {
+interface Props {
+    onClose?: () => void;
+}
+
+const AuthenticatedBugModal = (props: Props) => {
     const [{ Name = '' }] = useUser();
     const [addresses = []] = useAddresses();
     return <BugModal username={Name} addresses={addresses} {...props} />;
