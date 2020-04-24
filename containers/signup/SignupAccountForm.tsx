@@ -66,7 +66,7 @@ const SignupAccountForm = ({ model, onChange, onSubmit, errors, loading }: Props
                                     required
                                 />
                             </div>
-                            <span className="italic right-icon absolute">@{availableDomain}</span>
+                            <span className="pt0-5 italic right-icon absolute">@{availableDomain}</span>
                         </div>
                     </div>
                 ) : null}
