@@ -237,7 +237,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
         }
 
         if (model.step === PLANS || model.step === HUMAN_VERIFICATION || model.step === PAYMENT) {
-            let address;
+            const addresses = [];
 
             if (hasPaidPlan && !model.paymentToken) {
                 goToStep(PAYMENT);
@@ -296,7 +296,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                     throw error;
                 }
             } else if (model.email) {
-                const { Address }: { Address: Address } = await srpVerify({
+                await srpVerify({
                     api,
                     credentials: { password: model.password },
                     config: queryCreateUserExternal({
@@ -306,7 +306,6 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                         Email: model.email
                     })
                 });
-                address = Address;
             }
 
             const { UID, EventID, AccessToken, RefreshToken } = await srpAuth({
@@ -344,20 +343,21 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                         Signature: ''
                     })
                 );
-                address = Address;
+                addresses.push(Address);
             } else if (model.email) {
                 const { Addresses = [] }: { Addresses: Address[] } = await api(queryAddresses());
-                address = Addresses[0];
+                addresses.push(...Addresses);
             }
 
             // Generate keys
-            if (address) {
+            if (addresses.length) {
                 const { passphrase, salt } = await generateKeySaltAndPassphrase(model.password);
                 const newAddressesKeys = await getResetAddressesKeys({
-                    addresses: [address],
+                    addresses,
                     passphrase,
                     encryptionConfig: ENCRYPTION_CONFIGS[DEFAULT_ENCRYPTION_CONFIG]
                 });
+                // Assume the primary address is the first item in the list.
                 const [primaryAddress] = newAddressesKeys;
                 await srpVerify({
                     api,
