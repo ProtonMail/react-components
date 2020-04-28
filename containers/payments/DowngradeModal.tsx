@@ -23,7 +23,7 @@ const DowngradeModal = ({ user, ...rest }: Props) => {
     return (
         <ConfirmModal title={title} confirm={confirm} {...rest}>
             <Alert>{c('Info').t`Your account will be downgraded in a few minutes.`}</Alert>
-            <Alert type="warning">
+            <Alert type="error">
                 {hasBundle
                     ? c('Info')
                           .t`If you proceed with the downgrade, you will lose access to the paid features for ProtonMail and ProtonVPN.`
