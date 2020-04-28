@@ -22,21 +22,26 @@ const DowngradeModal = ({ user, ...rest }: Props) => {
 
     return (
         <ConfirmModal title={title} confirm={confirm} {...rest}>
-            <Alert>{c('Info').t`Your account will be downgraded in a few minutes.`}</Alert>
+            <Alert>{c('Info')
+                .t`Once you click "Downgrade", it may take a few minutes to downgrade your account to a Free plan. `}</Alert>
             <Alert type="error">
                 {hasBundle
                     ? c('Info')
-                          .t`If you proceed with the downgrade, you will lose access to the paid features for ProtonMail and ProtonVPN.`
-                    : c('Info').t`If you proceed with the downgrade, you will lose access to the paid features.`}
-            </Alert>
-            <Alert type="warning">
-                {hasBundle
-                    ? c('Info')
-                          .t`Additional ProtonMail addresses, custom domains, and users must be removed/disabled before performing this action. Any connections to premium ProtonVPN servers will be terminated.`
+                          .t`If you proceed with the downgrade, you will lose access to ProtonMail and ProtonVPN paid features.`
                     : hasMail
                     ? c('Info')
-                          .t`Additional ProtonMail addresses, custom domains, and users must be removed/disabled before performing this action.`
-                    : c('Info').t`Any connections to premium ProtonVPN servers will be terminated.`}
+                          .t`If you proceed with the downgrade, you will lose access to ProtonMail paid features, including additional storage and filters.`
+                    : c('Info').t`If you proceed with the downgrade, you will lose access to ProtonVPN paid features.`}
+            </Alert>
+            <Alert type="warning">
+                {[
+                    hasMail &&
+                        c('Info')
+                            .t`You must disable or remove any additional ProtonMail users, addresses, and custom domains before you can downgrade.`,
+                    hasVpn && c('Info').t`Downgrading will terminate any connections to paid ProtonVPN servers.`
+                ]
+                    .filter(Boolean)
+                    .join(' ')}
             </Alert>
         </ConfirmModal>
     );
