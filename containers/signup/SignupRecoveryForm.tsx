@@ -1,6 +1,6 @@
 import React, { ChangeEvent, FormEvent } from 'react';
 import { c } from 'ttag';
-import { Alert, EmailInput, LinkButton, PrimaryButton, IntlTelInput } from 'react-components';
+import { Alert, EmailInput, LinkButton, PrimaryButton, IntlTelInput, useModals, ConfirmModal } from 'react-components';
 
 import { SignupModel, SignupErros } from './interfaces';
 import { SIGNUP_STEPS } from './constants';
@@ -17,9 +17,21 @@ interface Props {
 const { RECOVERY_EMAIL, RECOVERY_PHONE, PLANS } = SIGNUP_STEPS;
 
 const SignupRecoveryForm = ({ model, onChange, onSubmit, errors, loading }: Props) => {
+    const { createModal } = useModals();
     const disableSubmit = model.step === RECOVERY_EMAIL ? !!errors.recoveryEmail : !!errors.recoveryPhone;
     const handleChangePhone = (status: any, value: any, countryData: any, number: string) => {
         onChange({ ...model, recoveryPhone: number });
+    };
+    const handleSkip = async () => {
+        await new Promise((resolve, reject) => {
+            createModal(
+                <ConfirmModal title={c('Title').t`Warning`} onConfirm={resolve} onClose={reject}>
+                    <Alert type="warning">{c('Info')
+                        .t`You did not set a recovery email so account recovery is impossible if you forget your password. Proceed without recovery email?`}</Alert>
+                </ConfirmModal>
+            );
+        });
+        onChange({ ...model, step: PLANS });
     };
     return (
         <>
@@ -72,11 +84,8 @@ const SignupRecoveryForm = ({ model, onChange, onSubmit, errors, loading }: Prop
                     </div>
                 ) : null}
                 <div className="alignright mb1">
-                    <LinkButton
-                        className="mr1 pm-button--large"
-                        disabled={loading}
-                        onClick={() => onChange({ ...model, step: PLANS })}
-                    >{c('Action').t`Skip`}</LinkButton>
+                    <LinkButton className="mr1 pm-button--large" disabled={loading} onClick={handleSkip}>{c('Action')
+                        .t`Skip`}</LinkButton>
                     <PrimaryButton
                         className="pm-button--large"
                         loading={loading}
