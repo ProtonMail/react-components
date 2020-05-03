@@ -146,10 +146,11 @@ export const process = ({ Token, api, ApprovalURL, ReturnHost, signal }) => {
  * @param {String} type original type used to generate the token (card, paypal, paypal-credit)
  * @returns {Object}
  */
-export const toParams = (params, Token, type) => {
+export const toParams = ({ Amount, Currency }, Token, type) => {
     return {
-        ...params,
         type,
+        Amount,
+        Currency,
         Payment: {
             Type: TOKEN,
             Details: {
