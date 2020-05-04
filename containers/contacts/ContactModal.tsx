@@ -1,13 +1,19 @@
 import React from 'react';
 
+import { FormModal } from 'react-components';
+
 interface Props {
     contactID?: string;
 }
 
-const ImportContactModal = ({ contactID }: Props) => {
+const ContactModal = ({ contactID, ...rest }: Props) => {
     const editModeOn = !!contactID;
 
-    return <div>{editModeOn ? `Editing contact ${contactID}` : 'Create new contact'}</div>;
+    return (
+        <FormModal title={editModeOn ? `Editing contact ${contactID}` : 'Create new contact'} {...rest}>
+            hello
+        </FormModal>
+    );
 };
 
-export default ImportContactModal;
+export default ContactModal;

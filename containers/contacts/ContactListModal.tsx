@@ -19,7 +19,7 @@ import useContactList from './useContactList';
 import ContactModal from './ContactModal';
 import ContactModalRow from './ContactModalRow';
 
-const ContactsModal = ({ ...rest }) => {
+const ContactListModal = ({ ...rest }) => {
     const [search, setSearch] = useState('');
     const { createModal } = useModals();
     const [user] = useUser();
@@ -70,7 +70,13 @@ const ContactsModal = ({ ...rest }) => {
     const handleSearch = (value: string) => setSearch(value);
 
     return (
-        <FormModal title={title} loading={loading} {...rest}>
+        <FormModal
+            title={title}
+            loading={loading}
+            onSubmit={() => createModal(<ContactModal />)}
+            submit={c('Action').t`Create new contact`}
+            {...rest}
+        >
             <div className="mb1">
                 <SearchInput value={search} onChange={handleSearch} />
             </div>
@@ -83,13 +89,13 @@ const ContactsModal = ({ ...rest }) => {
                                 contacts={formattedContacts}
                                 userSettings={userSettings}
                                 isDesktop={false}
-                                rowRenderer={({ index, style, key }) => (
+                                rowRenderer={({ index, style }) => (
                                     <ContactModalRow
                                         onClick={handleClick}
                                         onCheck={handleCheck}
                                         style={style}
-                                        key={key}
                                         user={user}
+                                        key={formattedContacts[index].ID}
                                         contact={formattedContacts[index]}
                                         contactGroupsMap={contactGroupsMap}
                                     />
@@ -107,4 +113,4 @@ const ContactsModal = ({ ...rest }) => {
     );
 };
 
-export default ContactsModal;
+export default ContactListModal;

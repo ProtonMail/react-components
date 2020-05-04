@@ -8,7 +8,6 @@ import ContactGroupIcon from './ContactGroupIcon';
 
 interface Props {
     style: CSSProperties;
-    key: string;
     onClick: (contactID: string) => void;
     onCheck: (e: ChangeEvent<HTMLInputElement>, contactID: string) => void;
     contact: ContactFormatted;
@@ -18,9 +17,9 @@ interface Props {
     };
 }
 
-const ContactModalRow = ({ style, key, onClick, onCheck, contact, user, contactGroupsMap }: Props) => {
+const ContactModalRow = ({ style, onClick, onCheck, contact, user, contactGroupsMap }: Props) => {
     return (
-        <div style={style} key={key} onClick={() => onClick(contact.ID)}>
+        <div style={style} onClick={() => onClick(contact.ID)}>
             <Checkbox
                 checked={contact.isChecked}
                 onChange={(e) => onCheck(e, contact.ID)}
@@ -38,8 +37,8 @@ const ContactModalRow = ({ style, key, onClick, onCheck, contact, user, contactG
                         const { Color, Name } = contactGroupsMap[labelID];
                         return (
                             <ContactGroupIcon
-                                scrollContainerClass="contacts-list"
                                 key={labelID}
+                                scrollContainerClass="contacts-list"
                                 name={Name}
                                 color={Color}
                             />
