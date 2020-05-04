@@ -1,7 +1,7 @@
 import React from 'react';
 
 const ImportContactModal = () => {
-    return ();
+    return <div>Import contact modal</div>;
 };
 
 export default ImportContactModal;

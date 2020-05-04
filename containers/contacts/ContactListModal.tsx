@@ -14,13 +14,13 @@ import { ContactGroup } from 'proton-shared/lib/interfaces/contacts/Contact';
 import { toMap } from 'proton-shared/lib/helpers/object';
 import { c } from 'ttag';
 
-import ContactsList from './ContactsList';
-import useContactsList from './useContactsList';
+import ContactList from './ContactList';
+import useContactList from './useContactList';
 import ContactModal from './ContactModal';
 import ContactModalRow from './ContactModalRow';
 
 const ContactsModal = ({ ...rest }) => {
-    const [search, setSearch] = useState<string>('');
+    const [search, setSearch] = useState('');
     const { createModal } = useModals();
     const [user] = useUser();
     const [userSettings, loadingUserSettings] = useUserSettings();
@@ -30,7 +30,7 @@ const ContactsModal = ({ ...rest }) => {
     const contactGroupsMap = toMap(contactGroups, 'ID') as { [contactGroupID: string]: ContactGroup };
     const loading = loadingContacts || loadingContactEmails || loadingContactGroups || loadingUserSettings;
     const title = c('Title').t`Contact list`;
-    const { formattedContacts, onCheck } = useContactsList({
+    const { formattedContacts, onCheck } = useContactList({
         search,
         contacts,
         contactEmails,
@@ -39,14 +39,22 @@ const ContactsModal = ({ ...rest }) => {
 
     const [lastChecked, setLastChecked] = useState<string>(''); // Store ID of the last contact ID checked
 
-    const handleCheck = (e: MouseEvent<HTMLInputElement>, contactID: string) => {
+    const handleCheck = (
+        e: {
+            target: EventTarget & { checked?: boolean };
+            nativeEvent: MouseEvent<HTMLInputElement>;
+        },
+        contactID: string
+    ) => {
         const { target, nativeEvent } = e;
         const contactIDs = contactID ? [contactID] : [];
 
         if (lastChecked && nativeEvent.shiftKey) {
-            const start = contacts.findIndex(({ ID }) => ID === contactID);
-            const end = contacts.findIndex(({ ID }) => ID === lastChecked);
-            contactIDs.push(...contacts.slice(Math.min(start, end), Math.max(start, end) + 1).map(({ ID }) => ID));
+            const start = contacts.findIndex(({ ID }: { ID: string }) => ID === contactID);
+            const end = contacts.findIndex(({ ID }: { ID: string }) => ID === lastChecked);
+            contactIDs.push(
+                ...contacts.slice(Math.min(start, end), Math.max(start, end) + 1).map(({ ID }: { ID: string }) => ID)
+            );
         }
 
         if (contactID) {
@@ -59,17 +67,19 @@ const ContactsModal = ({ ...rest }) => {
         createModal(<ContactModal contactID={contactID} />);
     };
 
+    const handleSearch = (value: string) => setSearch(value);
+
     return (
         <FormModal title={title} loading={loading} {...rest}>
             <div className="mb1">
-                <SearchInput value={search} onChange={setSearch} />
+                <SearchInput value={search} onChange={handleSearch} />
             </div>
             <SimpleTabs
                 tabs={[
                     {
                         title: c('Tab').t`Contacts`,
                         content: (
-                            <ContactsList
+                            <ContactList
                                 contacts={formattedContacts}
                                 userSettings={userSettings}
                                 isDesktop={false}

@@ -1,4 +1,4 @@
-import React, { CSSProperties, ChangeEvent, MouseEvent } from 'react';
+import React, { CSSProperties, ChangeEvent } from 'react';
 import { ContactGroup } from 'proton-shared/lib/interfaces/contacts/Contact';
 import { UserModel } from 'proton-shared/lib/interfaces';
 import { Checkbox } from 'react-components';
@@ -23,8 +23,8 @@ const ContactModalRow = ({ style, key, onClick, onCheck, contact, user, contactG
         <div style={style} key={key} onClick={() => onClick(contact.ID)}>
             <Checkbox
                 checked={contact.isChecked}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => onCheck(e, contact.ID)}
-                labelOnClick={(event: React.MouseEvent<HTMLLabelElement, MouseEvent>) => event.stopPropagation()}
+                onChange={(e) => onCheck(e, contact.ID)}
+                labelOnClick={(e) => e.stopPropagation()}
                 aria-describedby={contact.ID}
             />
             {contact.Name}

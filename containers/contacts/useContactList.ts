@@ -6,7 +6,7 @@ import { toMap } from 'proton-shared/lib/helpers/object';
 interface Props {
     search?: string;
     contactGroupID?: string;
-    contactGroups: ContactGroup[];
+    contactGroups?: ContactGroup[];
     contacts: Contact[];
     contactEmails: ContactEmail[];
 }
@@ -21,7 +21,7 @@ const useContactsList = ({ search, contactGroupID, contactGroups, contacts, cont
     const contactGroupsMap = useMemo(() => toMap(contactGroups), [contactGroups]);
 
     const { contactGroupName, totalContactsInGroup } = useMemo(() => {
-        if (!contactGroups.length || !contactGroupID) {
+        if (!contactGroups || !contactGroups.length || !contactGroupID) {
             return Object.create(null);
         }
         const contactGroup = contactGroups.find(({ ID }) => ID === contactGroupID);
