@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { generateUID, classnames } from '../../helpers/component';
 import { usePopper, Popper, usePopperAnchor } from '../popper';
 import useRightToLeft from '../../containers/rightToLeft/useRightToLeft';
+
+const LONG_TAP_TIMEOUT = 1000;
 
 interface Props {
     children: React.ReactNode;
@@ -29,14 +31,77 @@ const Tooltip = ({ children, title, originalPlacement = 'top', scrollContainerCl
         scrollContainerClass
     });
 
+    const longTapTimeoutRef = useRef(0);
+    const ignoreNonTouchEventsRef = useRef(false);
+    const ignoreNonTouchEventsTimeoutRef = useRef(0);
+
+    const handleCloseTooltip = () => {
+        clearTimeout(longTapTimeoutRef.current);
+        longTapTimeoutRef.current = 0;
+        clearTimeout(ignoreNonTouchEventsTimeoutRef.current);
+        // Clear non-touch events after a small timeout to avoid the focus event accidentally triggering it after touchend
+        // touchstart -> touchend -> focus
+        ignoreNonTouchEventsTimeoutRef.current = window.setTimeout(() => {
+            ignoreNonTouchEventsRef.current = false;
+        }, 100);
+        close();
+    };
+
+    const handleTouchStart = () => {
+        clearTimeout(ignoreNonTouchEventsTimeoutRef.current);
+        ignoreNonTouchEventsTimeoutRef.current = 0;
+        clearTimeout(longTapTimeoutRef.current);
+        // Initiate a long-tap timer to open the tooltip on touch devices
+        longTapTimeoutRef.current = window.setTimeout(() => {
+            open();
+            longTapTimeoutRef.current = 0;
+        }, LONG_TAP_TIMEOUT);
+        // Also set to ignore non-touch events
+        ignoreNonTouchEventsRef.current = true;
+    };
+
+    const handleTouchEnd = () => {
+        // Tooltip was opened from a long tap, no need to close
+        if (isOpen && !longTapTimeoutRef.current) {
+            return;
+        }
+        // Otherwise it's either not opened or it wasn't opened from the long tap, so we can set to close the tooltip
+        clearTimeout(longTapTimeoutRef.current);
+        longTapTimeoutRef.current = 0;
+        handleCloseTooltip();
+    };
+
+    const handleMouseEnter = () => {
+        if (ignoreNonTouchEventsRef.current) {
+            return;
+        }
+        open();
+    };
+
+    const handleMouseLeave = () => {
+        if (ignoreNonTouchEventsRef.current) {
+            return;
+        }
+        close();
+    };
+
+    const handleFocus = () => {
+        if (ignoreNonTouchEventsRef.current) {
+            return;
+        }
+        open();
+    };
+
     return (
         <>
             <span
                 ref={anchorRef}
-                onMouseEnter={open}
-                onMouseLeave={close}
-                onFocus={open}
-                onBlur={close}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+                onFocus={handleFocus}
+                onBlur={handleCloseTooltip}
+                onTouchStart={handleTouchStart}
+                onTouchEnd={handleTouchEnd}
                 aria-describedby={uid}
                 className={className}
             >
