@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { APPS } from 'proton-shared/lib/constants';
+import { APPS, FEATURE_FLAGS } from 'proton-shared/lib/constants';
+import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 
 import useConfig from '../../containers/config/useConfig';
 import MobileNavServices from './MobileNavServices';
@@ -15,8 +16,8 @@ const MobileAppsLinks = () => {
         { appNames: [PROTONMAIL, PROTONMAIL_SETTINGS], to: '/inbox', icon: 'protonmail' },
         { appNames: [PROTONCONTACTS], to: '/contacts', icon: 'protoncontacts' },
         { appNames: [PROTONCALENDAR], to: '/calendar', icon: 'protoncalendar' },
-        { appNames: [PROTONDRIVE], to: '/drive', icon: 'protondrive' }
-    ];
+        FEATURE_FLAGS.includes('drive') && { appNames: [PROTONDRIVE], to: '/drive', icon: 'protondrive' }
+    ].filter(isTruthy);
 
     return (
         <MobileNavServices>

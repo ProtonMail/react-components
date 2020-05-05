@@ -2,6 +2,8 @@ import React from 'react';
 import { ReactNodeArray } from 'prop-types';
 
 import { APPS } from 'proton-shared/lib/constants';
+import isTruthy from 'proton-shared/lib/helpers/isTruthy';
+import { FEATURE_FLAGS } from 'proton-shared/lib/constants';
 
 import useConfig from '../config/useConfig';
 import Tooltip from '../../components/tooltip/Tooltip';
@@ -26,13 +28,13 @@ const AppsSidebar = ({ items = [] }: Props) => {
             title: 'ProtonCalendar',
             link: '/calendar'
         },
-        {
+        FEATURE_FLAGS.includes('drive') && {
             appNames: [PROTONDRIVE],
             icon: 'protondrive',
             title: 'ProtonDrive',
             link: '/drive'
         }
-    ].filter(Boolean);
+    ].filter(isTruthy);
 
     return (
         <aside className="aside noprint nomobile" id="aside-bar">
