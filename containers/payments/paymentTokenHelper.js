@@ -5,6 +5,7 @@ import { wait } from 'proton-shared/lib/helpers/promise';
 import { c } from 'ttag';
 import { PaymentVerificationModal } from 'react-components';
 import { getHostname } from 'proton-shared/lib/helpers/url';
+import { omit } from 'proton-shared/lib/helpers/object';
 
 const {
     STATUS_PENDING,
@@ -146,11 +147,10 @@ export const process = ({ Token, api, ApprovalURL, ReturnHost, signal }) => {
  * @param {String} type original type used to generate the token (card, paypal, paypal-credit)
  * @returns {Object}
  */
-export const toParams = ({ Amount, Currency }, Token, type) => {
+export const toParams = (params, Token, type) => {
     return {
         type,
-        Amount,
-        Currency,
+        ...omit(params, 'PaymentMethodID'),
         Payment: {
             Type: TOKEN,
             Details: {
@@ -165,7 +165,7 @@ export const handlePaymentToken = async ({ params, api, createModal, mode }) => 
     const { Type } = Payment || {};
 
     if (Amount === 0) {
-        return { Amount, Currency };
+        return omit(params, ['PaymentMethodID', 'Payment']);
     }
 
     if ([CASH, BITCOIN, TOKEN].includes(Type)) {
