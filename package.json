@@ -7,8 +7,7 @@
   "scripts": {
     "test": "jest",
     "export": "./makeExport",
-    "i18n:validatejs": "proton-i18n validate lint-functions {helpers,containers,components,hooks}",
-    "i18n:validate": "proton-i18n extract reactComponents && proton-i18n validate",
+    "i18n:validate": "proton-i18n validate lint-functions {helpers,containers,components,hooks}",
     "lint": "eslint containers components --ext .js,.ts,.tsx --quiet --cache",
     "pretty": "prettier --write $(find . -path ./node_modules -prune -o -type f -name '*.js' -o -name '*.ts' -o -name '*.tsx')",
     "check-types": "tsc"
