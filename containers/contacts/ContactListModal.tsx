@@ -1,4 +1,4 @@
-import React, { useState, MouseEvent } from 'react';
+import React, { useState, ChangeEvent } from 'react';
 import {
     FormModal,
     SearchInput,
@@ -39,14 +39,14 @@ const ContactListModal = ({ ...rest }) => {
 
     const [lastChecked, setLastChecked] = useState<string>(''); // Store ID of the last contact ID checked
 
-    const handleCheck = (
-        e: {
-            target: EventTarget & { checked?: boolean };
-            nativeEvent: MouseEvent<HTMLInputElement>;
-        },
-        contactID: string
-    ) => {
-        const { target, nativeEvent } = e;
+    const handleCheck = (e: ChangeEvent<HTMLInputElement>, contactID: string) => {
+        const {
+            target,
+            nativeEvent
+        }: {
+            target: EventTarget & HTMLInputElement;
+            nativeEvent: Event & { shiftKey?: boolean };
+        } = e;
         const contactIDs = contactID ? [contactID] : [];
 
         if (lastChecked && nativeEvent.shiftKey) {
@@ -77,30 +77,32 @@ const ContactListModal = ({ ...rest }) => {
             submit={c('Action').t`Create new contact`}
             {...rest}
         >
-            <div className="mb1">
-                <SearchInput value={search} onChange={handleSearch} />
-            </div>
             <SimpleTabs
                 tabs={[
                     {
                         title: c('Tab').t`Contacts`,
                         content: (
-                            <ContactList
-                                contacts={formattedContacts}
-                                userSettings={userSettings}
-                                isDesktop={false}
-                                rowRenderer={({ index, style }) => (
-                                    <ContactModalRow
-                                        onClick={handleClick}
-                                        onCheck={handleCheck}
-                                        style={style}
-                                        user={user}
-                                        key={formattedContacts[index].ID}
-                                        contact={formattedContacts[index]}
-                                        contactGroupsMap={contactGroupsMap}
-                                    />
-                                )}
-                            />
+                            <>
+                                <div className="mb1">
+                                    <SearchInput value={search} onChange={handleSearch} />
+                                </div>
+                                <ContactList
+                                    contacts={formattedContacts}
+                                    userSettings={userSettings}
+                                    isDesktop={false}
+                                    rowRenderer={({ index, style }) => (
+                                        <ContactModalRow
+                                            onClick={handleClick}
+                                            onCheck={handleCheck}
+                                            style={style}
+                                            user={user}
+                                            key={formattedContacts[index].ID}
+                                            contact={formattedContacts[index]}
+                                            contactGroupsMap={contactGroupsMap}
+                                        />
+                                    )}
+                                />
+                            </>
                         )
                     },
                     {
