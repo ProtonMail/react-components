@@ -150,7 +150,7 @@ export const process = ({ Token, api, ApprovalURL, ReturnHost, signal }) => {
 export const toParams = (params, Token, type) => {
     return {
         type,
-        ...omit(params, 'PaymentMethodID'),
+        ...omit(params, ['PaymentMethodID']),
         Payment: {
             Type: TOKEN,
             Details: {
