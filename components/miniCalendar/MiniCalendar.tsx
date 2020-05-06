@@ -1,5 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import React, { useMemo, useState, useEffect, FormEvent } from 'react';
 import { addMonths, endOfMonth, startOfMonth } from 'date-fns';
 
 import { getDaysInMonth } from './helper';
@@ -8,6 +7,27 @@ import MonthDays from './MonthDays';
 import WeekDays from './WeekDays';
 import WeekNumbers from './WeekNumbers';
 import Icon from '../icon/Icon';
+import { DateTuple } from '.';
+import { Props as WeekDaysProps } from './WeekDays';
+
+export interface Props extends WeekDaysProps {
+    hasCursors?: boolean;
+    now?: Date;
+    date: Date;
+    dateRange?: DateTuple;
+    min?: Date;
+    max?: Date;
+    markers: Record<string, unknown>;
+    displayWeekNumbers?: boolean;
+    displayedOnDarkBackground?: boolean;
+    months?: Array<string>;
+    nextMonth: string;
+    prevMonth: string;
+    numberOfWeeks?: number;
+    onSelectDate: (a1: Date) => void;
+    onSelectDateRange: (a1: DateTuple) => void;
+    formatDay: (a1: Date) => string;
+}
 
 const MiniCalendar = ({
     hasCursors = true,
@@ -43,8 +63,8 @@ const MiniCalendar = ({
     numberOfWeeks = 6,
     displayWeekNumbers = false,
     displayedOnDarkBackground = false
-}) => {
-    const [temporaryDate, setTemporaryDate] = useState();
+}: Props) => {
+    const [temporaryDate, setTemporaryDate] = useState<Date | undefined>();
 
     const activeDate = temporaryDate || selectedDate;
 
@@ -56,7 +76,8 @@ const MiniCalendar = ({
         return `${months[activeDate.getMonth()]} ${activeDate.getFullYear()}`;
     }, [activeDate, months]);
 
-    const handleSwitchMonth = (direction) => {
+    //                                      🤔
+    const handleSwitchMonth = (direction: number) => {
         const newDate = addMonths(activeDate, direction);
 
         // Don't allow to go outside of bounds.
@@ -70,13 +91,13 @@ const MiniCalendar = ({
     };
 
     useEffect(() => {
-        setTemporaryDate();
+        setTemporaryDate(undefined);
     }, [selectedDate]);
 
     const classWeekNumber = displayWeekNumbers ? 'minicalendar-grid--displayWeekNumber' : '';
     const classDark = displayedOnDarkBackground ? 'minicalendar--onDarkBackground' : '';
 
-    const preventLeaveFocus = (e) => e.preventDefault();
+    const preventLeaveFocus = (e: FormEvent<HTMLElement>) => e.preventDefault();
 
     return (
         <div
@@ -114,9 +135,7 @@ const MiniCalendar = ({
                 ) : null}
             </div>
             <div className={classnames(['minicalendar-grid pl0-75 pr0-75 pb1', classWeekNumber])}>
-                {displayWeekNumbers ? (
-                    <WeekNumbers weekStartsOn={weekStartsOn} numberOfWeeks={numberOfWeeks} days={days} />
-                ) : null}
+                {displayWeekNumbers ? <WeekNumbers numberOfWeeks={numberOfWeeks} days={days} /> : null}
                 <div>
                     <WeekDays
                         numberOfDays={numberOfDays}
@@ -143,30 +162,6 @@ const MiniCalendar = ({
             </div>
         </div>
     );
-};
-
-MiniCalendar.propTypes = {
-    hasCursors: PropTypes.bool,
-    markers: PropTypes.object,
-    date: PropTypes.instanceOf(Date).isRequired,
-    min: PropTypes.instanceOf(Date),
-    max: PropTypes.instanceOf(Date),
-    dateRange: PropTypes.arrayOf(PropTypes.instanceOf(Date)),
-    dateFnLocale: PropTypes.object.isRequired,
-    nextMonth: PropTypes.string.isRequired,
-    prevMonth: PropTypes.string.isRequired,
-    onSelectDate: PropTypes.func.isRequired,
-    onSelectDateRange: PropTypes.func,
-    formatDay: PropTypes.func,
-    weekStartsOn: PropTypes.number,
-    numberOfDays: PropTypes.number,
-    numberOfWeeks: PropTypes.number,
-    weekdaysShort: PropTypes.array,
-    weekdaysLong: PropTypes.array,
-    months: PropTypes.array,
-    now: PropTypes.instanceOf(Date),
-    displayWeekNumbers: PropTypes.bool,
-    displayedOnDarkBackground: PropTypes.bool
 };
 
 export default MiniCalendar;

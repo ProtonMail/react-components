@@ -1,4 +1,5 @@
 import { addWeeks, subWeeks, eachDayOfInterval, endOfWeek, startOfMonth, startOfWeek, isSameDay } from 'date-fns';
+import { WeekStartsOn } from '.';
 
 /**
  * Get all days to display in the mini calendar for a given date.
@@ -7,7 +8,10 @@ import { addWeeks, subWeeks, eachDayOfInterval, endOfWeek, startOfMonth, startOf
  * @param {Number} weeks
  * @returns {Array<Date>}
  */
-export const getDaysInMonth = (currentDate, { weekStartsOn, weeks }) => {
+export const getDaysInMonth = (
+    currentDate: InstanceType<typeof Date>,
+    { weekStartsOn, weeks }: { weeks: number; weekStartsOn: WeekStartsOn }
+) => {
     const startOfMonthDate = startOfMonth(currentDate);
     const startOfWeekDate = startOfWeek(startOfMonthDate, { weekStartsOn });
     // in case of displaying 6 weeks for a month starting on weekStartsOn day,

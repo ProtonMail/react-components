@@ -1,8 +1,14 @@
 import React, { useMemo } from 'react';
-import PropTypes from 'prop-types';
 import Tooltip from '../tooltip/Tooltip';
 
-const WeekDays = ({ weekdaysShort, weekdaysLong, weekStartsOn, numberOfDays }) => {
+export interface Props {
+    weekStartsOn: number | undefined;
+    numberOfDays?: number;
+    weekdaysLong: Array<string>;
+    weekdaysShort: Array<string>;
+}
+
+const WeekDays = ({ weekdaysShort, weekdaysLong, weekStartsOn = 1, numberOfDays }: Props) => {
     const style = {
         '--minicalendar-weekdays-numberOfDaysInWeek': numberOfDays
     };
@@ -26,13 +32,6 @@ const WeekDays = ({ weekdaysShort, weekdaysLong, weekStartsOn, numberOfDays }) =
             {weekDaysLabels}
         </div>
     );
-};
-
-WeekDays.propTypes = {
-    numberOfDays: PropTypes.number.isRequired,
-    weekStartsOn: PropTypes.number.isRequired,
-    weekdaysShort: PropTypes.array.isRequired,
-    weekdaysLong: PropTypes.array.isRequired
 };
 
 export default WeekDays;
