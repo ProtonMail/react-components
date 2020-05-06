@@ -44,10 +44,10 @@ const SignupAccountForm = ({ model, onChange, onSubmit, errors, loading }: Props
     return (
         <>
             <h1 className="h2">{c('Signup title, keep "Account" capitalized').t`Create your Proton Account`}</h1>
-            <form name="accountForm" className="mb2" onSubmit={onSubmit} autoComplete="off">
+            <form name="accountForm" className="mb2 account-form" onSubmit={onSubmit} autoComplete="off">
                 {model.step === ACCOUNT_CREATION_USERNAME ? (
-                    <div className="flex flex-items-center onmobile-flex-column mb1">
-                        <label className="mr1" htmlFor="login">{c('Signup label').t`Username`}</label>
+                    <div className="flex onmobile-flex-column mb1">
+                        <label className="mr1 pm-label" htmlFor="login">{c('Signup label').t`Username`}</label>
                         <div className="flex flex-nowrap flex-items-center flex-item-fluid relative">
                             <div className="flex-item-fluid">
                                 <Input
@@ -63,6 +63,7 @@ const SignupAccountForm = ({ model, onChange, onSubmit, errors, loading }: Props
                                     }
                                     error={errors.username}
                                     placeholder={c('Placeholder').t`Username`}
+                                    className="pm-field--username"
                                     required
                                 />
                             </div>
@@ -71,8 +72,8 @@ const SignupAccountForm = ({ model, onChange, onSubmit, errors, loading }: Props
                     </div>
                 ) : null}
                 {model.step === ACCOUNT_CREATION_EMAIL ? (
-                    <div className="flex flex-items-center onmobile-flex-column mb1">
-                        <label className="mr1" htmlFor="login">{c('Signup label').t`Email`}</label>
+                    <div className="flex onmobile-flex-column mb1">
+                        <label className="mr1 pm-label" htmlFor="login">{c('Signup label').t`Email`}</label>
                         <div className="flex-item-fluid">
                             <div className="mb1 flex flex-nowrap">
                                 <div className="flex-item-fluid">
@@ -115,8 +116,8 @@ const SignupAccountForm = ({ model, onChange, onSubmit, errors, loading }: Props
                         </div>
                     </div>
                 ) : null}
-                <div className="flex flex-items-center onmobile-flex-column mb1">
-                    <label className="mr1" htmlFor="password">{c('Signup label').t`Password`}</label>
+                <div className="flex onmobile-flex-column mb1">
+                    <label className="mr1 pm-label" htmlFor="password">{c('Signup label').t`Password`}</label>
                     <div className="flex-item-fluid">
                         <PasswordInput
                             id="password"
@@ -134,8 +135,9 @@ const SignupAccountForm = ({ model, onChange, onSubmit, errors, loading }: Props
                         />
                     </div>
                 </div>
-                <div className="flex flex-items-center onmobile-flex-column mb1">
-                    <label className="mr1" htmlFor="password-repeat">{c('Signup label').t`Confirm password`}</label>
+                <div className="flex onmobile-flex-column mb1">
+                    <label className="mr1 pm-label" htmlFor="password-repeat">{c('Signup label')
+                        .t`Confirm password`}</label>
                     <div className="flex-item-fluid">
                         <PasswordInput
                             id="password-repeat"
@@ -162,7 +164,7 @@ const SignupAccountForm = ({ model, onChange, onSubmit, errors, loading }: Props
                     <div className="small mr1">{c('Signup info')
                         .jt`By clicking Create account, you agree to abide by ProtonMail's ${termsConditionsLink}.`}</div>
                     <PrimaryButton
-                        className="pm-button--large"
+                        className="pm-button--large flex-item-noshrink"
                         loading={loading}
                         disabled={disableSubmit}
                         type="submit"

@@ -15,14 +15,21 @@ interface Props {
 const SignupPlans = ({ plans = [], model, onChange, onSelectPlan, loading }: Props) => {
     return (
         <>
-            <h1 className="h2">{c('Title').t`Choose a plan`}</h1>
-            <div className="mb1">
-                <CycleSelector cycle={model.cycle} onSelect={(cycle: number) => onChange({ ...model, cycle })} />
-                <CurrencySelector
-                    currency={model.currency}
-                    onSelect={(currency: string) => onChange({ ...model, currency })}
-                />
+            <div className="flex flex-nowrap flex-items-center onmobile-flex-column">
+                <h1 className="h2 mb0 flex-item-fluid onmobile-mb1">{c('Title').t`Choose a plan`}</h1>
+                <div className="account-form-cycle-currency-selectors flex flex-nowrap">
+                    <CycleSelector
+                        className="mr1"
+                        cycle={model.cycle}
+                        onSelect={(cycle: number) => onChange({ ...model, cycle })}
+                    />
+                    <CurrencySelector
+                        currency={model.currency}
+                        onSelect={(currency: string) => onChange({ ...model, currency })}
+                    />
+                </div>
             </div>
+
             <MailSubscriptionTable
                 disabled={loading}
                 mode="button"

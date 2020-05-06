@@ -40,48 +40,56 @@ const SignupRecoveryForm = ({ model, onChange, onSubmit, errors, loading }: Prop
                 <Alert>{c('Info')
                     .t`Add a recovery email or phone number so that you can recover your account if you get locked out or forget your password.`}</Alert>
                 {model.step === RECOVERY_EMAIL ? (
-                    <div className="mb1">
-                        <label className="bl mb0-5" htmlFor="recovery-email">{c('Label').t`Email`}</label>
-                        <div className="mb1">
-                            <EmailInput
-                                id="recovery-email"
-                                name="recovery-email"
-                                autoFocus
-                                autoComplete="on"
-                                autoCapitalize="off"
-                                autoCorrect="off"
-                                value={model.recoveryEmail}
-                                onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
-                                    onChange({ ...model, recoveryEmail: target.value })
-                                }
-                                placeholder={c('Placeholder').t`user@domain.com`}
-                                required
-                            />
+                    <>
+                        <div className="flex onmobile-flex-column mb1">
+                            <label className="pm-label" htmlFor="recovery-email">{c('Label').t`Email`}</label>
+                            <div className="flex-item-fluid">
+                                <EmailInput
+                                    id="recovery-email"
+                                    name="recovery-email"
+                                    autoFocus
+                                    autoComplete="on"
+                                    autoCapitalize="off"
+                                    autoCorrect="off"
+                                    value={model.recoveryEmail}
+                                    onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
+                                        onChange({ ...model, recoveryEmail: target.value })
+                                    }
+                                    placeholder={c('Placeholder').t`user@domain.com`}
+                                    required
+                                />
+                            </div>
                         </div>
-                        <InlineLinkButton
-                            onClick={() => onChange({ ...model, recoveryEmail: '', step: RECOVERY_PHONE })}
-                        >{c('Action').t`Enter recovery phone instead.`}</InlineLinkButton>
-                    </div>
+                        <div>
+                            <InlineLinkButton
+                                onClick={() => onChange({ ...model, recoveryEmail: '', step: RECOVERY_PHONE })}
+                            >{c('Action').t`Enter recovery phone instead.`}</InlineLinkButton>
+                        </div>
+                    </>
                 ) : null}
                 {model.step === RECOVERY_PHONE ? (
-                    <div className="mb1">
-                        <label className="bl mb0-5" htmlFor="recovery-phone">{c('Label').t`Phone`}</label>
-                        <div className="mb1">
-                            <IntlTelInput
-                                id="recovery-phone"
-                                name="recovery-phone"
-                                containerClassName="w100"
-                                inputClassName="w100"
-                                autoFocus
-                                onPhoneNumberChange={handleChangePhone}
-                                onPhoneNumberBlur={handleChangePhone}
-                                required
-                            />
+                    <>
+                        <div className="flex onmobile-flex-column mb1">
+                            <label className="pm-label" htmlFor="recovery-phone">{c('Label').t`Phone`}</label>
+                            <div className="flex-item-fluid">
+                                <IntlTelInput
+                                    id="recovery-phone"
+                                    name="recovery-phone"
+                                    containerClassName="w100"
+                                    inputClassName="w100"
+                                    autoFocus
+                                    onPhoneNumberChange={handleChangePhone}
+                                    onPhoneNumberBlur={handleChangePhone}
+                                    required
+                                />
+                            </div>
                         </div>
-                        <InlineLinkButton
-                            onClick={() => onChange({ ...model, recoveryPhone: '', step: RECOVERY_EMAIL })}
-                        >{c('Action').t`Enter recovery email address instead.`}</InlineLinkButton>
-                    </div>
+                        <div>
+                            <InlineLinkButton
+                                onClick={() => onChange({ ...model, recoveryPhone: '', step: RECOVERY_EMAIL })}
+                            >{c('Action').t`Enter recovery email address instead.`}</InlineLinkButton>
+                        </div>
+                    </>
                 ) : null}
                 <div className="alignright mb1">
                     <LinkButton className="mr1 pm-button--large" disabled={loading} onClick={handleSkip}>{c('Action')
