@@ -1,5 +1,6 @@
 import React, { useMemo, useState, useEffect, FormEvent } from 'react';
 import { addMonths, endOfMonth, startOfMonth } from 'date-fns';
+import { noop } from 'proton-shared/lib/helpers/function';
 
 import { getDaysInMonth } from './helper';
 import { classnames } from '../../helpers/component';
@@ -7,26 +8,29 @@ import MonthDays from './MonthDays';
 import WeekDays from './WeekDays';
 import WeekNumbers from './WeekNumbers';
 import Icon from '../icon/Icon';
-import { DateTuple } from '.';
-import { Props as WeekDaysProps } from './WeekDays';
+import { DateTuple, WeekStartsOn } from '.';
 
-export interface Props extends WeekDaysProps {
+export interface Props {
     hasCursors?: boolean;
     now?: Date;
     date: Date;
     dateRange?: DateTuple;
     min?: Date;
     max?: Date;
-    markers: Record<string, unknown>;
+    markers?: Record<string, unknown>;
     displayWeekNumbers?: boolean;
     displayedOnDarkBackground?: boolean;
     months?: Array<string>;
-    nextMonth: string;
-    prevMonth: string;
+    nextMonth?: string;
+    prevMonth?: string;
     numberOfWeeks?: number;
-    onSelectDate: (a1: Date) => void;
-    onSelectDateRange: (a1: DateTuple) => void;
-    formatDay: (a1: Date) => string;
+    weekdaysLong?: Array<string>;
+    weekdaysShort?: Array<string>;
+    onSelectDate?: (a1: Date) => void;
+    onSelectDateRange?: (a1: DateTuple) => void;
+    formatDay?: (a1: Date) => string;
+    weekStartsOn?: WeekStartsOn;
+    numberOfDays?: number;
 }
 
 const MiniCalendar = ({
@@ -36,14 +40,14 @@ const MiniCalendar = ({
     min,
     max,
     dateRange,
-    onSelectDate,
-    onSelectDateRange,
+    onSelectDate = noop,
+    onSelectDateRange = noop,
+    formatDay = (date) => date.toString(),
     weekStartsOn = 1,
     weekdaysLong = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
     weekdaysShort = ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
     nextMonth = 'Next month',
     prevMonth = 'Prev month',
-    formatDay,
     markers = {},
     months = [
         'January',

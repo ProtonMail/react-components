@@ -1,8 +1,10 @@
 import React, { useMemo } from 'react';
+import { WeekStartsOn } from '.';
+
 import Tooltip from '../tooltip/Tooltip';
 
 export interface Props {
-    weekStartsOn: number | undefined;
+    weekStartsOn: WeekStartsOn;
     numberOfDays?: number;
     weekdaysLong: Array<string>;
     weekdaysShort: Array<string>;

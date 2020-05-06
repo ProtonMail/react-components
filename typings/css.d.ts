@@ -1,7 +1,5 @@
-import { Properties as BaseProperties } from 'csstype';
-
 declare module 'csstype' {
-    interface Properties extends BaseProperties {
+    interface Properties<T> {
         // allow css variables
         [index: string]: unknown;
     }
