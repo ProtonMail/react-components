@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { generateUID, classnames } from '../../helpers/component';
 import { usePopper, Popper, usePopperAnchor } from '../popper';
 import useRightToLeft from '../../containers/rightToLeft/useRightToLeft';
@@ -46,6 +46,15 @@ const Tooltip = ({ children, title, originalPlacement = 'top', scrollContainerCl
         }, 100);
         close();
     };
+
+    useEffect(() => {
+        // Edge case for elements that don't gain focus, they'll never receive a blur event to close the tooltip
+        // for example if long-tapping a span with text, this is to force close the tooltip on next touchstart
+        document.addEventListener('touchstart', close);
+        return () => {
+            document.removeEventListener('touchstart', close);
+        };
+    }, []);
 
     const handleTouchStart = () => {
         clearTimeout(ignoreNonTouchEventsTimeoutRef.current);
