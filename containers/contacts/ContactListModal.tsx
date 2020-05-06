@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState, ChangeEvent, useEffect } from 'react';
 import {
     FormModal,
     SearchInput,
@@ -6,31 +6,31 @@ import {
     useContacts,
     useContactEmails,
     useContactGroups,
-    useUser,
-    useUserSettings,
-    useModals
+    // useUser,
+    useUserSettings
+    // useModals
 } from 'react-components';
-import { ContactGroup } from 'proton-shared/lib/interfaces/contacts/Contact';
-import { toMap } from 'proton-shared/lib/helpers/object';
-import { c } from 'ttag';
+import { ContactFormatted /*, ContactGroup */ } from 'proton-shared/lib/interfaces/contacts/Contact';
+// import { toMap } from 'proton-shared/lib/helpers/object';
+import { c, msgid } from 'ttag';
 
 import ContactList from './ContactList';
+// import ContactModal from './ContactModal';
+import ContactListModalRow from './ContactListModalRow';
 import useContactList from './useContactList';
-import ContactModal from './ContactModal';
-import ContactModalRow from './ContactModalRow';
 
 const ContactListModal = ({ ...rest }) => {
     const [search, setSearch] = useState('');
-    const { createModal } = useModals();
-    const [user] = useUser();
+    const [checkedFormattedContacts, setCheckedFormattedContacts] = useState<ContactFormatted[]>([]);
+    // const { createModal } = useModals();
+    // const [user] = useUser();
     const [userSettings, loadingUserSettings] = useUserSettings();
     const [contacts, loadingContacts] = useContacts();
     const [contactEmails, loadingContactEmails] = useContactEmails();
     const [contactGroups, loadingContactGroups] = useContactGroups();
-    const contactGroupsMap = toMap(contactGroups, 'ID') as { [contactGroupID: string]: ContactGroup };
+    // const contactGroupsMap = toMap(contactGroups, 'ID') as { [contactGroupID: string]: ContactGroup };
     const loading = loadingContacts || loadingContactEmails || loadingContactGroups || loadingUserSettings;
-    const title = c('Title').t`Contact list`;
-    const { formattedContacts, onCheck } = useContactList({
+    const { formattedContacts, onCheck, checkedContacts } = useContactList({
         search,
         contacts,
         contactEmails,
@@ -63,18 +63,32 @@ const ContactListModal = ({ ...rest }) => {
         }
     };
 
-    const handleClick = (contactID: string) => {
-        createModal(<ContactModal contactID={contactID} />);
-    };
+    // const handleClick = (contactID: string) => {
+    // createModal(<ContactModal contactID={contactID} />);
+    // };
 
     const handleSearch = (value: string) => setSearch(value);
 
+    const handleSubmit = () => {
+        // console.log(checkedFormattedContacts);
+    };
+
+    useEffect(() => {
+        const x = formattedContacts.filter((c) => c.isChecked);
+        setCheckedFormattedContacts(x);
+    }, [checkedContacts]);
+
     return (
         <FormModal
-            title={title}
+            title={c('Title').t`Contact list`}
             loading={loading}
-            onSubmit={() => createModal(<ContactModal />)}
-            submit={c('Action').t`Create new contact`}
+            disabled={!checkedFormattedContacts.length}
+            onSubmit={handleSubmit}
+            submit={c('Action').ngettext(
+                msgid`Insert contact`,
+                `Insert ${checkedFormattedContacts.length} contacts`,
+                checkedFormattedContacts.length | 1
+            )}
             {...rest}
         >
             <SimpleTabs
@@ -84,21 +98,21 @@ const ContactListModal = ({ ...rest }) => {
                         content: (
                             <>
                                 <div className="mb1">
-                                    <SearchInput value={search} onChange={handleSearch} />
+                                    <SearchInput value={search} onChange={handleSearch} placeholder="Search Contacts" />
                                 </div>
                                 <ContactList
                                     contacts={formattedContacts}
                                     userSettings={userSettings}
                                     isDesktop={false}
                                     rowRenderer={({ index, style }) => (
-                                        <ContactModalRow
-                                            onClick={handleClick}
+                                        <ContactListModalRow
+                                            // onClick={handleClick}
                                             onCheck={handleCheck}
                                             style={style}
-                                            user={user}
+                                            // user={user}
                                             key={formattedContacts[index].ID}
                                             contact={formattedContacts[index]}
-                                            contactGroupsMap={contactGroupsMap}
+                                            // contactGroupsMap={contactGroupsMap}
                                         />
                                     )}
                                 />
@@ -107,7 +121,27 @@ const ContactListModal = ({ ...rest }) => {
                     },
                     {
                         title: c('Tab').t`Groups`,
-                        content: null
+                        content: (
+                            <>
+                                <div className="mb1">
+                                    <SearchInput
+                                        value={search}
+                                        onChange={handleSearch}
+                                        placeholder="Search Contact Groups"
+                                    />
+                                </div>
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        minHeight: 300
+                                    }}
+                                >
+                                    Group list goes here
+                                </div>
+                            </>
+                        )
                     }
                 ]}
             />

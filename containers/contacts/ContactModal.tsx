@@ -10,8 +10,8 @@ const ContactModal = ({ contactID, ...rest }: Props) => {
     const editModeOn = !!contactID;
 
     return (
-        <FormModal title={editModeOn ? `Editing contact ${contactID}` : 'Create new contact'} {...rest}>
-            hello
+        <FormModal title={editModeOn ? `Contact details` : 'Create contact'} {...rest}>
+            👋
         </FormModal>
     );
 };

@@ -313,6 +313,7 @@ export { default as InternalServerError } from './containers/error/InternalServe
 export { default as NotFoundError } from './containers/error/NotFoundError';
 export { default as AccessDeniedError } from './containers/error/AccessDeniedError';
 export { default as ContactListModal } from './containers/contacts/ContactListModal';
+export { default as ContactModal } from './containers/contacts/ContactModal';
 export { default as useStep } from './hooks/useStep';
 export { default as useOnline } from './hooks/useOnline';
 export { default as useApiWithoutResult } from './hooks/useApiWithoutResult';
