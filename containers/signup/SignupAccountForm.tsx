@@ -44,7 +44,7 @@ const SignupAccountForm = ({ model, onChange, onSubmit, errors, loading }: Props
     return (
         <>
             <h1 className="h2">{c('Signup title, keep "Account" capitalized').t`Create your Proton Account`}</h1>
-            <form name="accountForm" className="mb2 account-form" onSubmit={onSubmit} autoComplete="off">
+            <form name="accountForm" className="mb2 signup-form" onSubmit={onSubmit} autoComplete="off">
                 {model.step === ACCOUNT_CREATION_USERNAME ? (
                     <div className="flex onmobile-flex-column mb1">
                         <label className="mr1 pm-label" htmlFor="login">{c('Signup label').t`Username`}</label>
