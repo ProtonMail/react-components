@@ -36,7 +36,7 @@ const SignupRecoveryForm = ({ model, onChange, onSubmit, errors, loading }: Prop
     return (
         <>
             <h1 className="h2">{c('Title').t`Add recovery method (recommended)`}</h1>
-            <form name="recoveryForm" onSubmit={onSubmit}>
+            <form name="recoveryForm" className="signup-form" onSubmit={onSubmit}>
                 <Alert>{c('Info')
                     .t`Add a recovery email or phone number so that you can recover your account if you get locked out or forget your password.`}</Alert>
                 {model.step === RECOVERY_EMAIL ? (
