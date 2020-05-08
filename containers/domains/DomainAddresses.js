@@ -12,13 +12,18 @@ const DomainAddresses = ({ domainAddresses }) => {
     ));
 
     const n = list.length;
+    const addressesTxt = c('Info').ngettext(msgid`address`, `addresses`, n);
+    const contentDropDown = (
+        <>
+            {n}
+            <span className="nomobile"> </span>
+            <span className="nomobile">{addressesTxt}</span>
+        </>
+    ); // trick for responsive and mobile display
 
     return (
         <>
-            <SimpleDropdown
-                className="pm-button--link"
-                content={c('Info').ngettext(msgid`${n} address`, `${n} addresses`, n)}
-            >
+            <SimpleDropdown className="pm-button--link" content={contentDropDown}>
                 <DropdownMenu>{list}</DropdownMenu>
                 <div className="alignright p1">
                     <Link className="pm-button" to="/settings/addresses">{c('Link').t`Manage`}</Link>

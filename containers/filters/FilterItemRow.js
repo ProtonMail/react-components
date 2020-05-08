@@ -75,8 +75,10 @@ function FilterItemRow({ filter, ...rest }) {
     return (
         <OrderableTableRow
             cells={[
-                Name,
-                <div key="0" className="w10">
+                <div key="0" className="ellipsis mw100" title={Name}>
+                    {Name}
+                </div>,
+                <div key="1" className="w10">
                     <Toggle
                         id={`item-${ID}`}
                         loading={loading}
@@ -84,7 +86,7 @@ function FilterItemRow({ filter, ...rest }) {
                         onChange={(e) => withLoading(handleChangeStatus(e))}
                     />
                 </div>,
-                <DropdownActions key="1" className="pm-button--small" list={list} />
+                <DropdownActions key="2" className="pm-button--small" list={list} />
             ]}
             {...rest}
         ></OrderableTableRow>

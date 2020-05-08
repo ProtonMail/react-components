@@ -155,8 +155,18 @@ const MembersSection = () => {
                             <span className="mr0-5">{c('Title header for members table').t`Private`}</span>
                             <Info url="https://protonmail.com/support/knowledge-base/private-members/" />
                         </>,
-                        c('Title header for members table').t`Addresses`,
-                        c('Title header for members table').t`Features`,
+                        <>
+                            <span
+                                className="ellipsis inbl alignbottom mw100"
+                                title={c('Title header for members table').t`Addresses`}
+                            >{c('Title header for members table').t`Addresses`}</span>
+                        </>,
+                        <>
+                            <span
+                                className="ellipsis inbl alignbottom mw100"
+                                title={c('Title header for members table').t`Features`}
+                            >{c('Title header for members table').t`Features`}</span>
+                        </>,
                         c('Title header for members table').t`Actions`
                     ]}
                 />
