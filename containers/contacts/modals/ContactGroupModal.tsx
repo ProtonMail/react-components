@@ -16,21 +16,23 @@ import {
     useNotifications,
     useEventManager
 } from 'react-components';
-import { randomIntFromInterval } from 'proton-shared/lib/helpers/function';
+import { randomIntFromInterval, noop } from 'proton-shared/lib/helpers/function';
 import { diff, orderBy } from 'proton-shared/lib/helpers/array';
 import { LABEL_COLORS } from 'proton-shared/lib/constants';
 import { createContactGroup, updateLabel } from 'proton-shared/lib/api/labels';
 import { labelContactEmails, unLabelContactEmails } from 'proton-shared/lib/api/contacts';
+import { ContactEmail } from 'proton-shared/lib/interfaces/contacts/Contact';
 
 import ContactGroupTable from '../ContactGroupTable';
 
-const mapIDs = (contactEmails) => contactEmails.map(({ ID }) => ID);
+const mapIDs = (contactEmails: ContactEmail[]) => contactEmails.map(({ ID }) => ID);
 
 interface Props {
     contactGroupID: string;
+    onClose?: () => void;
 }
 
-const ContactGroupModal = ({ contactGroupID, ...rest }: Props) => {
+const ContactGroupModal = ({ contactGroupID, onClose = noop, ...rest }: Props) => {
     const [loading, setLoading] = useState(false);
     const { call } = useEventManager();
     const api = useApi();
@@ -40,12 +42,16 @@ const ContactGroupModal = ({ contactGroupID, ...rest }: Props) => {
 
     const contactGroup = contactGroupID && contactGroups.find(({ ID }) => ID === contactGroupID);
     const existingContactEmails =
-        contactGroupID && contactEmails.filter(({ LabelIDs = [] }) => LabelIDs.includes(contactGroupID));
+        contactGroupID &&
+        contactEmails.filter(({ LabelIDs = [] }: { LabelIDs: string[] }) => LabelIDs.includes(contactGroupID));
     const title = contactGroupID ? c('Title').t`Edit contact group` : c('Title').t`Create new group`;
 
     const [model, setModel] = useState({
-        name: contactGroupID ? contactGroup.Name : '',
-        color: contactGroupID ? contactGroup.Color : LABEL_COLORS[randomIntFromInterval(0, LABEL_COLORS.length - 1)],
+        name: contactGroupID && contactGroup ? contactGroup.Name : '',
+        color:
+            contactGroupID && contactGroup
+                ? contactGroup.Color
+                : LABEL_COLORS[randomIntFromInterval(0, LABEL_COLORS.length - 1)],
         contactEmails: contactGroupID ? existingContactEmails : []
     });
     const contactEmailIDs = model.contactEmails.map(({ ID }) => ID);
@@ -68,7 +74,7 @@ const ContactGroupModal = ({ contactGroupID, ...rest }: Props) => {
         }
     };
 
-    const handleDeleteEmail = (contactEmailID) => () => {
+    const handleDeleteEmail = (contactEmailID: string) => () => {
         const index = model.contactEmails.findIndex(({ ID }) => ID === contactEmailID);
 
         if (index > -1) {
@@ -97,7 +103,7 @@ const ContactGroupModal = ({ contactGroupID, ...rest }: Props) => {
                 ].filter(Boolean)
             );
             await call();
-            rest.onClose();
+            onClose();
             createNotification({
                 text: contactGroupID
                     ? c('Notification').t`Contact group updated`

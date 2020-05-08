@@ -12,7 +12,6 @@ import ContactImageModal from './modals/ContactImageModal';
 interface Props {
     property: ContactProperty;
     onChange: Function;
-    onAdd: Function;
     onRemove: Function;
     isOrderable?: boolean;
 }

@@ -14,7 +14,7 @@ import {
 } from 'react-components';
 import { generateUID } from 'react-components/helpers/component';
 import { addContacts } from 'proton-shared/lib/api/contacts';
-import { randomIntFromInterval } from 'proton-shared/lib/helpers/function';
+import { randomIntFromInterval, noop } from 'proton-shared/lib/helpers/function';
 import { hasCategories } from 'proton-shared/lib/contacts/properties';
 import { prepareContacts } from 'proton-shared/lib/contacts/encrypt';
 import { getEditableFields, getOtherInformationFields } from 'proton-shared/lib/helpers/contacts';
@@ -37,7 +37,7 @@ const editableFields = getEditableFields().map(({ value }) => value);
 const otherInformationFields = getOtherInformationFields().map(({ value }) => value);
 const UID_PREFIX = 'contact-property';
 
-const formatModel = (properties = []) => {
+const formatModel = (properties: ContactProperties = []) => {
     if (!properties.length) {
         return DEFAULT_MODEL.map((property) => ({ ...property, uid: generateUID(UID_PREFIX) })); // Add UID to localize the property easily;
     }
@@ -50,24 +50,32 @@ interface Props {
     contactID?: string;
     properties: ContactProperties;
     onAdd: Function;
+    onClose?: () => void;
     history?: History;
 }
 
-const ContactModal = ({ contactID, properties: initialProperties = [], onAdd, history, ...rest }: Props) => {
+const ContactModal = ({
+    contactID,
+    properties: initialProperties = [],
+    onAdd,
+    onClose = noop,
+    history,
+    ...rest
+}: Props) => {
     const api = useApi();
     const { createNotification } = useNotifications();
     const [loading, withLoading] = useLoading();
     const [user] = useUser();
     const { call } = useEventManager();
-    const [userKeysList, loadingUserKeys] = useUserKeys(user);
-    const [properties, setProperties] = useState(formatModel(initialProperties));
+    const [userKeysList, loadingUserKeys] = useUserKeys();
+    const [properties, setProperties] = useState<ContactProperties>(formatModel(initialProperties));
     const title = contactID ? c('Title').t`Edit contact details` : c('Title').t`Add new contact`;
 
-    const handleRemove = (propertyUID) => {
+    const handleRemove = (propertyUID: string) => {
         setProperties(properties.filter(({ uid }) => uid !== propertyUID));
     };
 
-    const handleAdd = (field) => () => {
+    const handleAdd = (field?: string) => () => {
         if (!field) {
             // Get random field from other info
             const index = randomIntFromInterval(0, otherInformationFields.length - 1);
@@ -93,7 +101,7 @@ const ContactModal = ({ contactID, properties: initialProperties = [], onAdd, hi
             })
         );
         if (Code !== SINGLE_SUCCESS) {
-            rest.onClose();
+            onClose();
             return createNotification({ text: c('Error').t`Contact could not be saved`, type: 'error' });
         }
         await call();
@@ -105,7 +113,7 @@ const ContactModal = ({ contactID, properties: initialProperties = [], onAdd, hi
                 history.push(`/contacts/${ID}`);
             }
         }
-        rest.onClose();
+        onClose();
         createNotification({ text: c('Success').t`Contact saved` });
     };
 
@@ -154,7 +162,7 @@ const ContactModal = ({ contactID, properties: initialProperties = [], onAdd, hi
                 onChange={handleChange}
                 onRemove={handleRemove}
                 onOrderChange={handleOrderChange}
-                onAdd={handleAdd('email')}
+                onAdd={() => handleAdd('email')}
             />
             {user.hasPaidMail ? (
                 <>
@@ -164,7 +172,7 @@ const ContactModal = ({ contactID, properties: initialProperties = [], onAdd, hi
                         onChange={handleChange}
                         onRemove={handleRemove}
                         onOrderChange={handleOrderChange}
-                        onAdd={handleAdd('tel')}
+                        onAdd={() => handleAdd('tel')}
                     />
                     <ContactModalProperties
                         properties={properties}
@@ -172,13 +180,13 @@ const ContactModal = ({ contactID, properties: initialProperties = [], onAdd, hi
                         onChange={handleChange}
                         onRemove={handleRemove}
                         onOrderChange={handleOrderChange}
-                        onAdd={handleAdd('adr')}
+                        onAdd={() => handleAdd('adr')}
                     />
                     <ContactModalProperties
                         properties={properties}
                         onChange={handleChange}
                         onRemove={handleRemove}
-                        onAdd={handleAdd()}
+                        onAdd={() => handleAdd()}
                     />
                 </>
             ) : (

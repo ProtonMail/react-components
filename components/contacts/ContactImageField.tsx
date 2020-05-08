@@ -5,7 +5,7 @@ import { Button } from 'react-components';
 
 interface Props {
     value: string;
-    onChange: Function;
+    onChange: () => void;
 }
 
 const ContactImageField = ({ value, onChange }: Props) => {

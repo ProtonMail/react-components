@@ -18,12 +18,12 @@ const ICONS = {
 };
 
 interface Props {
-    field: string;
+    field?: string;
     properties: ContactProperties;
-    onChange: Function;
-    onOrderChange: Function;
-    onAdd: Function;
-    onRemove: Function;
+    onChange?: Function;
+    onOrderChange?: Function;
+    onAdd?: () => void;
+    onRemove?: Function;
 }
 
 const ContactModalProperties = ({

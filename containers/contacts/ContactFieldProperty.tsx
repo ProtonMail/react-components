@@ -11,7 +11,7 @@ import ContactImageModal from './modals/ContactImageModal';
 interface Props {
     field: string;
     uid: string;
-    value: string | string[];
+    value: string | string[] | object;
     onChange: Function;
 }
 

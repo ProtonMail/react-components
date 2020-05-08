@@ -2,12 +2,18 @@ import React, { useRef, useEffect, useState } from 'react';
 
 import { Loader } from 'react-components';
 import { splitKeys } from 'proton-shared/lib/keys/keys';
-import { prepareContact } from 'proton-shared/lib/contacts/decrypt';
+import { prepareContact, CryptoProcessingError } from 'proton-shared/lib/contacts/decrypt';
 import { CachedKey } from 'proton-shared/lib/interfaces';
-import { ContactEmail, ContactGroup } from 'proton-shared/lib/interfaces/contacts/Contact';
+import { ContactEmail, ContactGroup, ContactProperties } from 'proton-shared/lib/interfaces/contacts/Contact';
 
 import useContact from './useContact';
 import ContactView from './ContactView';
+
+type ContactModel = {
+    ID: string;
+    properties: ContactProperties;
+    errors: CryptoProcessingError[];
+};
 
 interface Props {
     contactID: string;
@@ -18,7 +24,7 @@ interface Props {
 }
 
 const Contact = ({ contactID, contactEmails, contactGroupsMap, ownAddresses, userKeysList = [] }: Props) => {
-    const [model, setModel] = useState({ ID: contactID });
+    const [model, setModel] = useState<ContactModel>();
     const ref = useRef(contactID);
     const [contact, contactLoading] = useContact(contactID);
 
@@ -36,7 +42,7 @@ const Contact = ({ contactID, contactEmails, contactGroupsMap, ownAddresses, use
         }
     }, [contact, userKeysList]);
 
-    const { properties, errors, ID } = model;
+    const { properties, errors, ID } = model || {};
 
     if (contactLoading || !properties || ID !== contactID) {
         return <Loader />;

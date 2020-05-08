@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, ChangeEvent } from 'react';
 import { c } from 'ttag';
 
 import { FormModal, Row, Label, Field, FileInput, Input, useNotifications } from 'react-components';
@@ -18,21 +18,23 @@ const ContactImageModal = ({ url: initialUrl = '', onSubmit, onClose, ...rest }:
     const title = c('Title').t`Edit image`;
     const isBase64Str = url.startsWith('data:image');
 
-    const handleChange = ({ target }) => setUrl(target.value);
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => setUrl(e.target.value);
 
     const handleSubmit = () => {
         onSubmit(url);
         onClose();
     };
 
-    const handleUpload = ({ target }) => {
-        const file = target.files[0];
+    const handleUpload = (e: ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files ? e.target.files[0] : null;
         const reader = new FileReader();
+
+        if (!file) return;
 
         reader.onloadend = async () => {
             try {
                 const base64str = await resizeImage({
-                    original: reader.result,
+                    original: `${reader.result}`,
                     maxWidth: CONTACT_IMG_SIZE,
                     maxHeight: CONTACT_IMG_SIZE,
                     finalMimeType: 'image/jpeg',

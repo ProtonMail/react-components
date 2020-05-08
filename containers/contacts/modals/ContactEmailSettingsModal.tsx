@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { c } from 'ttag';
+import { OpenPGPKey } from 'pmcrypto';
 
 import {
     useApi,
@@ -37,6 +38,7 @@ import { MIME_TYPES, PGP_SCHEMES } from 'proton-shared/lib/constants';
 
 import ContactMIMETypeSelect from '../ContactMIMETypeSelect';
 import ContactPgpSettings from '../ContactPgpSettings';
+import { noop } from 'proton-shared/lib/helpers/function';
 
 const { PGP_INLINE } = PGP_SCHEMES;
 const { INCLUDE, IGNORE } = CATEGORIES;
@@ -46,9 +48,17 @@ interface Props {
     contactID: string;
     properties: ContactProperties;
     emailProperty: ContactProperty;
+    onClose?: () => void;
 }
 
-const ContactEmailSettingsModal = ({ userKeysList, contactID, properties, emailProperty, ...rest }: Props) => {
+const ContactEmailSettingsModal = ({
+    userKeysList,
+    contactID,
+    properties,
+    emailProperty,
+    onClose = noop,
+    ...rest
+}: Props) => {
     const api = useApi();
     const { call } = useEventManager();
     const [model, setModel] = useState<PublicKeyModel>({ publicKeys: { apiKeys: [], pinnedKeys: [] } });
@@ -116,7 +126,7 @@ const ContactEmailSettingsModal = ({ userKeysList, contactID, properties, emailP
         const labels = hasCategories(allProperties) ? INCLUDE : IGNORE;
         await api(addContacts({ Contacts, Overwrite: +!!contactID, Labels: labels }));
         await call();
-        rest.onClose();
+        onClose();
         createNotification({ text: c('Success').t`Preferences saved` });
     };
 
@@ -142,13 +152,13 @@ const ContactEmailSettingsModal = ({ userKeysList, contactID, properties, emailP
          */
         const noPinnedKeyCanSend =
             !!model.publicKeys.pinnedKeys.length &&
-            !model.publicKeys.pinnedKeys.some((publicKey) => {
+            !model.publicKeys.pinnedKeys.some((publicKey: OpenPGPKey) => {
                 const fingerprint = publicKey.getFingerprint();
                 const canSend =
                     !model.expiredFingerprints.has(fingerprint) && !model.revokedFingerprints.has(fingerprint);
                 return canSend;
             });
-        setModel((model) => ({
+        setModel((model: PublicKeyModel) => ({
             ...model,
             encrypt: !noPinnedKeyCanSend && !!model.publicKeys.pinnedKeys.length && model.encrypt,
             publicKeys: {
@@ -169,22 +179,17 @@ const ContactEmailSettingsModal = ({ userKeysList, contactID, properties, emailP
         }
         // PGP/Inline should force the email format to plaintext
         if (hasPGPInline) {
-            return setModel((model) => ({ ...model, mimeType: MIME_TYPES.PLAINTEXT }));
+            return setModel((model: PublicKeyModel) => ({ ...model, mimeType: MIME_TYPES.PLAINTEXT }));
         }
         // If PGP/Inline is not selected, go back to automatic
-        setModel((model) => ({ ...model, mimeType: undefined }));
+        setModel((model: PublicKeyModel) => ({ ...model, mimeType: undefined }));
     }, [isMimeTypeFixed, hasPGPInline]);
 
     return (
         // we cannot use the FormModal component because we need to introduce the class ellipsis inside the header
         <DialogModal modalTitleID="modalTitle" {...rest}>
             <header className="pm-modalHeader">
-                <button
-                    type="button"
-                    className="pm-modalClose"
-                    title={c('Action').t`Close modal`}
-                    onClick={rest.onClose}
-                >
+                <button type="button" className="pm-modalClose" title={c('Action').t`Close modal`} onClick={onClose}>
                     <Icon className="pm-modalClose-icon" name="close" />
                     <span className="sr-only">{c('Action').t`Close modal`}</span>
                 </button>
@@ -192,7 +197,7 @@ const ContactEmailSettingsModal = ({ userKeysList, contactID, properties, emailP
                     {c('Title').t`Email settings (${Email})`}
                 </h1>
             </header>
-            <ContentModal onSubmit={() => withLoading(handleSubmit())} onReset={rest.onClose} noValidate={false}>
+            <ContentModal onSubmit={() => withLoading(handleSubmit())} onReset={onClose} noValidate={false}>
                 <InnerModal>
                     {!isMimeTypeFixed ? (
                         <Alert>
@@ -214,7 +219,6 @@ const ContactEmailSettingsModal = ({ userKeysList, contactID, properties, emailP
                         <Label>
                             {c('Label').t`Email format`}
                             <Info
-                                className="ml0-5"
                                 title={c('Tooltip')
                                     .t`Automatic indicates that the format in the composer is used to send to this user. Plain text indicates that the message will always be converted to plain text on send.`}
                             />
@@ -223,7 +227,7 @@ const ContactEmailSettingsModal = ({ userKeysList, contactID, properties, emailP
                             <ContactMIMETypeSelect
                                 disabled={isLoading || isMimeTypeFixed}
                                 value={model.mimeType}
-                                onChange={(mimeType) => setModel({ ...model, mimeType })}
+                                onChange={(mimeType: MIME_TYPES) => setModel({ ...model, mimeType })}
                             />
                         </Field>
                     </Row>
