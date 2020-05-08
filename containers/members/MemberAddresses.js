@@ -6,7 +6,7 @@ import { SimpleDropdown, DropdownMenu } from 'react-components';
 
 const MemberAddresses = ({ member, addresses }) => {
     const list = addresses.map(({ ID, Email }) => (
-        <div key={ID} className="inbl w100 pt0-5 pb0-5 ellipsis">
+        <div key={ID} className="inbl w100 pt0-5 pb0-5 pl1 pr1 ellipsis">
             {Email}
         </div>
     ));
