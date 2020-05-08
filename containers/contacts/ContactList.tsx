@@ -1,7 +1,8 @@
 import React, { useRef, CSSProperties } from 'react';
-import { classnames } from 'react-components';
 import List from 'react-virtualized/dist/commonjs/List';
 import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
+
+import { classnames } from 'react-components';
 import { DENSITY } from 'proton-shared/lib/constants';
 import { UserSettings } from 'proton-shared/lib/interfaces/UserSettings';
 import { Contact } from 'proton-shared/lib/interfaces/contacts/Contact';

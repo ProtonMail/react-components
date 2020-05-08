@@ -1,10 +1,10 @@
 import React from 'react';
+
 import { Icon, Tooltip } from 'react-components';
 
 interface Props {
     name: string;
     color: string;
-    scrollContainerClass?: string;
 }
 
 const ContactGroupIcon = ({ name, color, ...rest }: Props) => {

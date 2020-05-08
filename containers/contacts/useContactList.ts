@@ -75,7 +75,7 @@ const useContactsList = ({ search, contactGroupID, contactGroups, contacts, cont
         });
     }, [filteredContacts, checkedContacts, contactEmailsMap]);
 
-    const onCheck = (contactIDs: string[] = [], checked: boolean = false) => {
+    const onCheck = (contactIDs: string[] = [], checked = false) => {
         const update = contactIDs.reduce((acc, contactID) => {
             acc[contactID] = checked;
             return acc;

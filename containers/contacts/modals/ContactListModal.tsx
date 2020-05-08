@@ -1,4 +1,6 @@
 import React, { useState, ChangeEvent, useEffect } from 'react';
+import { c, msgid } from 'ttag';
+
 import {
     FormModal,
     SearchInput,
@@ -6,29 +8,21 @@ import {
     useContacts,
     useContactEmails,
     useContactGroups,
-    // useUser,
     useUserSettings
-    // useModals
 } from 'react-components';
-import { ContactFormatted /*, ContactGroup */ } from 'proton-shared/lib/interfaces/contacts/Contact';
-// import { toMap } from 'proton-shared/lib/helpers/object';
-import { c, msgid } from 'ttag';
+import { ContactFormatted } from 'proton-shared/lib/interfaces/contacts/Contact';
 
-import ContactList from './ContactList';
-// import ContactModal from './ContactModal';
-import ContactListModalRow from './ContactListModalRow';
-import useContactList from './useContactList';
+import useContactList from '../useContactList';
+import ContactList from '../ContactList';
+import ContactListModalRow from '../../../components/contacts/ContactListModalRow';
 
 const ContactListModal = ({ ...rest }) => {
     const [search, setSearch] = useState('');
     const [checkedFormattedContacts, setCheckedFormattedContacts] = useState<ContactFormatted[]>([]);
-    // const { createModal } = useModals();
-    // const [user] = useUser();
     const [userSettings, loadingUserSettings] = useUserSettings();
     const [contacts, loadingContacts] = useContacts();
     const [contactEmails, loadingContactEmails] = useContactEmails();
     const [contactGroups, loadingContactGroups] = useContactGroups();
-    // const contactGroupsMap = toMap(contactGroups, 'ID') as { [contactGroupID: string]: ContactGroup };
     const loading = loadingContacts || loadingContactEmails || loadingContactGroups || loadingUserSettings;
     const { formattedContacts, onCheck, checkedContacts } = useContactList({
         search,
@@ -37,7 +31,7 @@ const ContactListModal = ({ ...rest }) => {
         contactGroups
     });
 
-    const [lastChecked, setLastChecked] = useState<string>(''); // Store ID of the last contact ID checked
+    const [lastChecked, setLastChecked] = useState<string>('');
 
     const handleCheck = (e: ChangeEvent<HTMLInputElement>, contactID: string) => {
         const {
@@ -62,10 +56,6 @@ const ContactListModal = ({ ...rest }) => {
             onCheck(contactIDs, target.checked);
         }
     };
-
-    // const handleClick = (contactID: string) => {
-    // createModal(<ContactModal contactID={contactID} />);
-    // };
 
     const handleSearch = (value: string) => setSearch(value);
 
@@ -106,13 +96,10 @@ const ContactListModal = ({ ...rest }) => {
                                     isDesktop={false}
                                     rowRenderer={({ index, style }) => (
                                         <ContactListModalRow
-                                            // onClick={handleClick}
                                             onCheck={handleCheck}
                                             style={style}
-                                            // user={user}
                                             key={formattedContacts[index].ID}
                                             contact={formattedContacts[index]}
-                                            // contactGroupsMap={contactGroupsMap}
                                         />
                                     )}
                                 />
