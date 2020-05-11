@@ -12,7 +12,7 @@ const DomainAddresses = ({ domainAddresses }) => {
     ));
 
     const n = list.length;
-    const addressesTxt = c('Info').ngettext(msgid`address`, `addresses`, n);
+    const addressesTxt = ` ${c('Info').ngettext(msgid`address`, `addresses`, n)}`;
     const contentDropDown = (
         <>
             {n}
