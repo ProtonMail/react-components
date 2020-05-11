@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { usePlans, useVPNCountries, Loader } from 'react-components';
+import { usePlans, useVPNCountries, Loader, Info } from 'react-components';
 import { toMap } from 'proton-shared/lib/helpers/object';
 import { PLANS } from 'proton-shared/lib/constants';
 import { c } from 'ttag';
@@ -60,41 +60,135 @@ const VpnFeaturesTable = ({ cycle, currency }) => {
                     </tr>
                     <tr>
                         <td>
-                            <del>{c('Feature').t`P2P filesharing/BitTorrent support`}</del>
+                            <del className="mr0-5">{c('Feature').t`P2P filesharing/BitTorrent support`}</del>
+                            <Info
+                                title={c('Info').t`Support for file sharing protocols such as BitTorrent.`}
+                                url="https://protonvpn.com/support/p2p-vpn-redirection/"
+                            />
                         </td>
-                        <td>{c('Feature').t`P2P filesharing/BitTorrent support`}</td>
-                        <td>{c('Feature').t`P2P filesharing/BitTorrent support`}</td>
-                        <td>{c('Feature').t`P2P filesharing/BitTorrent support`}</td>
+                        <td>
+                            <span className="mr0-5">{c('Feature').t`P2P filesharing/BitTorrent support`}</span>
+                            <Info
+                                title={c('Info').t`Support for file sharing protocols such as BitTorrent.`}
+                                url="https://protonvpn.com/support/p2p-vpn-redirection/"
+                            />
+                        </td>
+                        <td>
+                            <span className="mr0-5">{c('Feature').t`P2P filesharing/BitTorrent support`}</span>
+                            <Info
+                                title={c('Info').t`Support for file sharing protocols such as BitTorrent.`}
+                                url="https://protonvpn.com/support/p2p-vpn-redirection/"
+                            />
+                        </td>
+                        <td>
+                            <span className="mr0-5">{c('Feature').t`P2P filesharing/BitTorrent support`}</span>
+                            <Info
+                                title={c('Info').t`Support for file sharing protocols such as BitTorrent.`}
+                                url="https://protonvpn.com/support/p2p-vpn-redirection/"
+                            />
+                        </td>
                     </tr>
                     <tr>
                         <td>
-                            <del>{c('Feature').t`Secure Core VPN`}</del>
+                            <del className="mr0-5">{c('Feature').t`Secure Core VPN`}</del>
+                            <Info
+                                title={c('Info')
+                                    .t`Defends against threats to VPN privacy by passing your Internet traffic through multiple servers.`}
+                                url="https://protonvpn.com/support/secure-core-vpn/"
+                            />
                         </td>
                         <td>
-                            <del>{c('Feature').t`Secure Core VPN`}</del>
+                            <del className="mr0-5">{c('Feature').t`Secure Core VPN`}</del>
+                            <Info
+                                title={c('Info')
+                                    .t`Defends against threats to VPN privacy by passing your Internet traffic through multiple servers.`}
+                                url="https://protonvpn.com/support/secure-core-vpn/"
+                            />
                         </td>
-                        <td>{c('Feature').t`Secure Core VPN`}</td>
-                        <td>{c('Feature').t`Secure Core VPN`}</td>
+                        <td>
+                            <span className="mr0-5">{c('Feature').t`Secure Core VPN`}</span>
+                            <Info
+                                title={c('Info')
+                                    .t`Defends against threats to VPN privacy by passing your Internet traffic through multiple servers.`}
+                                url="https://protonvpn.com/support/secure-core-vpn/"
+                            />
+                        </td>
+                        <td>
+                            <span className="mr0-5">{c('Feature').t`Secure Core VPN`}</span>
+                            <Info
+                                title={c('Info')
+                                    .t`Defends against threats to VPN privacy by passing your Internet traffic through multiple servers.`}
+                                url="https://protonvpn.com/support/secure-core-vpn/"
+                            />
+                        </td>
                     </tr>
                     <tr>
                         <td>
-                            <del>{c('Feature').t`Tor over VPN`}</del>
+                            <del className="mr0-5">{c('Feature').t`Tor over VPN`}</del>
+                            <Info
+                                title={c('Info')
+                                    .t`Route your Internet traffic through the Tor network with a single click.`}
+                                url="https://protonvpn.com/support/tor-vpn/"
+                            />
                         </td>
                         <td>
-                            <del>{c('Feature').t`Tor over VPN`}</del>
+                            <del className="mr0-5">{c('Feature').t`Tor over VPN`}</del>
+                            <Info
+                                title={c('Info')
+                                    .t`Route your Internet traffic through the Tor network with a single click.`}
+                                url="https://protonvpn.com/support/tor-vpn/"
+                            />
                         </td>
-                        <td>{c('Feature').t`Tor over VPN`}</td>
-                        <td>{c('Feature').t`Tor over VPN`}</td>
+                        <td>
+                            <span className="mr0-5">{c('Feature').t`Tor over VPN`}</span>
+                            <Info
+                                title={c('Info')
+                                    .t`Route your Internet traffic through the Tor network with a single click.`}
+                                url="https://protonvpn.com/support/tor-vpn/"
+                            />
+                        </td>
+                        <td>
+                            <span className="mr0-5">{c('Feature').t`Tor over VPN`}</span>
+                            <Info
+                                title={c('Info')
+                                    .t`Route your Internet traffic through the Tor network with a single click.`}
+                                url="https://protonvpn.com/support/tor-vpn/"
+                            />
+                        </td>
                     </tr>
                     <tr>
                         <td>
-                            <del>{c('Feature').t`Access blocked content`}</del>
+                            <del className="mr0-5">{c('Feature').t`Access blocked content`}</del>
+                            <Info
+                                title={c('Info')
+                                    .t`Access geo-blocked content (Netflix, Amazon Prime Video, BBC iPlayer, Wikipedia, Facebook, Youtube, etc) no matter where you are.`}
+                                url="https://protonvpn.com/support/streaming-guide/"
+                            />
                         </td>
                         <td>
-                            <del>{c('Feature').t`Access blocked content`}</del>
+                            <del className="mr0-5">{c('Feature').t`Access blocked content`}</del>
+                            <Info
+                                title={c('Info')
+                                    .t`Access geo-blocked content (Netflix, Amazon Prime Video, BBC iPlayer, Wikipedia, Facebook, Youtube, etc) no matter where you are.`}
+                                url="https://protonvpn.com/support/streaming-guide/"
+                            />
                         </td>
-                        <td>{c('Feature').t`Access blocked content`}</td>
-                        <td>{c('Feature').t`Access blocked content`}</td>
+                        <td>
+                            <span className="mr0-5">{c('Feature').t`Access blocked content`}</span>
+                            <Info
+                                title={c('Info')
+                                    .t`Access geo-blocked content (Netflix, Amazon Prime Video, BBC iPlayer, Wikipedia, Facebook, Youtube, etc) no matter where you are.`}
+                                url="https://protonvpn.com/support/streaming-guide/"
+                            />
+                        </td>
+                        <td>
+                            <span className="mr0-5">{c('Feature').t`Access blocked content`}</span>
+                            <Info
+                                title={c('Info')
+                                    .t`Access geo-blocked content (Netflix, Amazon Prime Video, BBC iPlayer, Wikipedia, Facebook, Youtube, etc) no matter where you are.`}
+                                url="https://protonvpn.com/support/streaming-guide/"
+                            />
+                        </td>
                     </tr>
                     <tr>
                         <td>{c('Feature').t`ProtonMail (optional) *`}</td>
