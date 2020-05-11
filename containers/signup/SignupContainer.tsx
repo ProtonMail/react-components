@@ -27,8 +27,7 @@ import {
     queryCheckVerificationCode
 } from 'proton-shared/lib/api/user';
 
-import SignupLayout from './SignupLayout';
-import SignupAside from './SignupAside';
+import SignLayout from './SignLayout';
 import SignupAccountForm from './SignupAccountForm';
 import SignupRecoveryForm from './SignupRecoveryForm';
 import SignupVerificationCodeForm from './SignupVerificationCodeForm';
@@ -458,7 +457,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
     }, [model.cycle, model.planIDs]);
 
     return (
-        <SignupLayout model={model} onBack={handleBack} aside={<SignupAside model={model} errors={errors} />}>
+        <SignLayout model={model} onBack={handleBack} title={c('Title').t`Sign Up`}>
             {model.step === LOADING_SIGNUP && <Loader />}
             {model.step === NO_SIGNUP && 'TODO'}
             {model.step === ACCOUNT_CREATION_USERNAME && (
@@ -538,7 +537,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
             )}
             {model.step === CREATING_ACCOUNT && <SignupCreatingAccount model={model} />}
             {model.step === COMPLETE && <SignupComplete model={model} />}
-        </SignupLayout>
+        </SignLayout>
     );
 };
 
