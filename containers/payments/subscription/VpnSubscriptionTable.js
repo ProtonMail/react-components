@@ -51,18 +51,16 @@ const VpnSubscriptionTable = ({
                     icon: 'close',
                     content: (
                         <del className="opacity-50" key="filesharing">{c('Feature')
-                            .t`Filesharing/bitorrent support`}</del>
+                            .t`P2P filesharing/BitTorrent support`}</del>
                     )
                 },
                 {
                     icon: 'close',
-                    content: <del className="opacity-50" key="secure">{c('Feature').t`Secure Core and Tor VPN`}</del>
+                    content: <del className="opacity-50" key="secure">{c('Feature').t`Secure Core VPN`}</del>
                 },
                 {
                     icon: 'close',
-                    content: (
-                        <del className="opacity-50" key="advanced">{c('Feature').t`Advanced privacy features`}</del>
-                    )
+                    content: <del className="opacity-50" key="advanced">{c('Feature').t`Tor over VPN`}</del>
                 },
                 {
                     icon: 'close',
@@ -82,16 +80,14 @@ const VpnSubscriptionTable = ({
                 { icon: 'arrow-right', content: c('Feature').t`Servers in ${vpnCountries.basic.length} countries` },
                 { icon: 'arrow-right', content: c('Feature').t`High speed` },
                 { icon: 'arrow-right', content: c('Feature').t`No logs/No ads` },
-                { icon: 'arrow-right', content: c('Feature').t`Filesharing/bitorrent support` },
+                { icon: 'arrow-right', content: c('Feature').t`P2P filesharing/BitTorrent support` },
                 {
                     icon: 'close',
-                    content: <del className="opacity-50" key="secure">{c('Feature').t`Secure Core and Tor VPN`}</del>
+                    content: <del className="opacity-50" key="secure">{c('Feature').t`Secure Core VPN`}</del>
                 },
                 {
                     icon: 'close',
-                    content: (
-                        <del className="opacity-50" key="advanced">{c('Feature').t`Advanced privacy features`}</del>
-                    )
+                    content: <del className="opacity-50" key="advanced">{c('Feature').t`Tor over VPN`}</del>
                 },
                 {
                     icon: 'close',
@@ -111,9 +107,9 @@ const VpnSubscriptionTable = ({
                 { icon: 'arrow-right', content: c('Feature').t`Servers in ${vpnCountries.all.length} countries` },
                 { icon: 'arrow-right', content: c('Feature').t`Highest speed (10 Gbps)` },
                 { icon: 'arrow-right', content: c('Feature').t`No logs/No ads` },
-                { icon: 'arrow-right', content: c('Feature').t`Filesharing/bitorrent support` },
-                { icon: 'arrow-right', content: c('Feature').t`Secure Core and Tor VPN` },
-                { icon: 'arrow-right', content: c('Feature').t`Advanced privacy features` },
+                { icon: 'arrow-right', content: c('Feature').t`P2P filesharing/BitTorrent support` },
+                { icon: 'arrow-right', content: c('Feature').t`Secure Core VPN` },
+                { icon: 'arrow-right', content: c('Feature').t`Tor over VPN` },
                 { icon: 'arrow-right', content: c('Feature').t`Access blocked content` }
             ]
         },
@@ -126,7 +122,7 @@ const VpnSubscriptionTable = ({
             description: c('Description').t`The complete privacy suite`,
             features: [
                 { icon: 'arrow-right', content: c('Feature').t`All Plus plan features` },
-                { icon: 'arrow-right', content: c('Feature').t`10 simultaneous VPN connections` },
+                { icon: 'arrow-right', content: c('Feature').t`10 VPN connections` },
                 { icon: 'arrow-right', content: c('Feature').t`ProtonMail Visionary account` }
             ]
         }

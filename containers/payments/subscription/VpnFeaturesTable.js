@@ -55,36 +55,36 @@ const VpnFeaturesTable = ({ cycle, currency }) => {
                     <tr>
                         <td>{c('Feature').t`Medium speed`}</td>
                         <td>{c('Feature').t`High speed`}</td>
-                        <td>{c('Feature').t`Highest speed`}</td>
-                        <td>{c('Feature').t`Highest speed`}</td>
+                        <td>{c('Feature').t`Highest speed (10 Gbps)`}</td>
+                        <td>{c('Feature').t`Highest speed (10 Gbps)`}</td>
                     </tr>
                     <tr>
                         <td>
-                            <del>{c('Feature').t`Filesharing / P2P`}</del>
+                            <del>{c('Feature').t`P2P filesharing/BitTorrent support`}</del>
                         </td>
-                        <td>{c('Feature').t`Filesharing / P2P`}</td>
-                        <td>{c('Feature').t`Filesharing / P2P`}</td>
-                        <td>{c('Feature').t`Filesharing / P2P`}</td>
+                        <td>{c('Feature').t`P2P filesharing/BitTorrent support`}</td>
+                        <td>{c('Feature').t`P2P filesharing/BitTorrent support`}</td>
+                        <td>{c('Feature').t`P2P filesharing/BitTorrent support`}</td>
                     </tr>
                     <tr>
                         <td>
-                            <del>{c('Feature').t`Secure core and Tor VPN`}</del>
+                            <del>{c('Feature').t`Secure Core VPN`}</del>
                         </td>
                         <td>
-                            <del>{c('Feature').t`Secure core and Tor VPN`}</del>
+                            <del>{c('Feature').t`Secure Core VPN`}</del>
                         </td>
-                        <td>{c('Feature').t`Secure core and Tor VPN`}</td>
-                        <td>{c('Feature').t`Secure core and Tor VPN`}</td>
+                        <td>{c('Feature').t`Secure Core VPN`}</td>
+                        <td>{c('Feature').t`Secure Core VPN`}</td>
                     </tr>
                     <tr>
                         <td>
-                            <del>{c('Feature').t`Advanced privacy features`}</del>
+                            <del>{c('Feature').t`Tor over VPN`}</del>
                         </td>
                         <td>
-                            <del>{c('Feature').t`Advanced privacy features`}</del>
+                            <del>{c('Feature').t`Tor over VPN`}</del>
                         </td>
-                        <td>{c('Feature').t`Advanced privacy features`}</td>
-                        <td>{c('Feature').t`Advanced privacy features`}</td>
+                        <td>{c('Feature').t`Tor over VPN`}</td>
+                        <td>{c('Feature').t`Tor over VPN`}</td>
                     </tr>
                     <tr>
                         <td>
@@ -103,7 +103,7 @@ const VpnFeaturesTable = ({ cycle, currency }) => {
                         <td>{c('Feature').t`ProtonMail included`}</td>
                     </tr>
                     <tr>
-                        <td colSpan={4}>{c('Feature').t`No logs / no ads`}</td>
+                        <td colSpan={4}>{c('Feature').t`No logs/No ads`}</td>
                     </tr>
                     <tr>
                         <td colSpan={4}>{c('Feature').t`Perfect Forward Secrecy (PFS)`}</td>
@@ -122,9 +122,6 @@ const VpnFeaturesTable = ({ cycle, currency }) => {
                     </tr>
                     <tr>
                         <td colSpan={4}>{c('Feature').t`100% anonymous`}</td>
-                    </tr>
-                    <tr>
-                        <td colSpan={4}>{c('Feature').t`10 Gpbs servers`}</td>
                     </tr>
                     <tr>
                         <td colSpan={4}>{c('Feature').t`Split tunneling support`}</td>
