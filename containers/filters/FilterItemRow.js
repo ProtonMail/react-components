@@ -75,7 +75,7 @@ function FilterItemRow({ filter, ...rest }) {
     return (
         <OrderableTableRow
             cells={[
-                <div key="0" className="ellipsis mw100" title={Name}>
+                <div key="name" className="ellipsis mw100" title={Name}>
                     {Name}
                 </div>,
                 <div key="1" className="w10">
