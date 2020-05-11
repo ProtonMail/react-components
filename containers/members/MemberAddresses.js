@@ -11,11 +11,10 @@ const MemberAddresses = ({ member, addresses }) => {
         </div>
     ));
     const n = list.length;
-    const addressesTxt = c('Info').ngettext(msgid`address`, `addresses`, n);
+    const addressesTxt = ` ${c('Info').ngettext(msgid`address`, `addresses`, n)}`;
     const contentDropDown = (
         <>
             {n}
-            <span className="nomobile"> </span>
             <span className="nomobile">{addressesTxt}</span>
         </>
     ); // trick for responsive and mobile display

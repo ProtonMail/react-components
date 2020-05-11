@@ -16,7 +16,6 @@ const DomainAddresses = ({ domainAddresses }) => {
     const contentDropDown = (
         <>
             {n}
-            <span className="nomobile"> </span>
             <span className="nomobile">{addressesTxt}</span>
         </>
     ); // trick for responsive and mobile display
