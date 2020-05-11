@@ -36,6 +36,7 @@ import SignupPlans from './SignupPlans';
 import SignupPayment from './SignupPayment';
 import SignupComplete from './SignupComplete';
 import SignupCreatingAccount from './SignupCreatingAccount';
+import NoSignup from './NoSignup';
 import { handlePaymentToken } from '../payments/paymentTokenHelper';
 import { SignupModel, SignupErros, SignupPlan, SubscriptionCheckResult } from './interfaces';
 import { DEFAULT_SIGNUP_MODEL, DEFAULT_CHECK_RESULT, SIGNUP_STEPS } from './constants';
@@ -459,7 +460,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
     return (
         <SignLayout model={model} onBack={handleBack} title={c('Title').t`Sign Up`}>
             {model.step === LOADING_SIGNUP && <Loader />}
-            {model.step === NO_SIGNUP && 'TODO'}
+            {model.step === NO_SIGNUP && <NoSignup />}
             {model.step === ACCOUNT_CREATION_USERNAME && (
                 <SignupAccountForm
                     model={model}
