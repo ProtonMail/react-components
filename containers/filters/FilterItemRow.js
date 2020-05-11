@@ -86,7 +86,7 @@ function FilterItemRow({ filter, ...rest }) {
                         onChange={(e) => withLoading(handleChangeStatus(e))}
                     />
                 </div>,
-                <DropdownActions key="2" className="pm-button--small" list={list} />
+                <DropdownActions key="dropdown" className="pm-button--small" list={list} />
             ]}
             {...rest}
         ></OrderableTableRow>
