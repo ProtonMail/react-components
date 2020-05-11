@@ -78,7 +78,7 @@ function FilterItemRow({ filter, ...rest }) {
                 <div key="name" className="ellipsis mw100" title={Name}>
                     {Name}
                 </div>,
-                <div key="1" className="w10">
+                <div key="toggle" className="w10">
                     <Toggle
                         id={`item-${ID}`}
                         loading={loading}
