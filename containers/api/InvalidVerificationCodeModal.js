@@ -3,7 +3,13 @@ import PropTypes from 'prop-types';
 import { ConfirmModal, Button, PrimaryButton, Alert } from 'react-components';
 import { c } from 'ttag';
 
-const InvalidVerificationCodeModal = ({ onEdit, onResend, ...rest }) => {
+const InvalidVerificationCodeModal = ({
+    onEdit,
+    onResend,
+    edit = c('Action').t`Try other method`,
+    request = c('Action').t`Request new code`,
+    ...rest
+}) => {
     return (
         <ConfirmModal
             title={c('Title').t`Invalid verification code`}
@@ -15,13 +21,17 @@ const InvalidVerificationCodeModal = ({ onEdit, onResend, ...rest }) => {
                             rest.onClose();
                             onEdit();
                         }}
-                    >{c('Action').t`Try other method`}</Button>
+                    >
+                        {edit}
+                    </Button>
                     <PrimaryButton
                         onClick={() => {
                             rest.onClose();
                             onResend();
                         }}
-                    >{c('Action').t`Request new code`}</PrimaryButton>
+                    >
+                        {request}
+                    </PrimaryButton>
                 </>
             }
             {...rest}
@@ -36,7 +46,9 @@ const InvalidVerificationCodeModal = ({ onEdit, onResend, ...rest }) => {
 
 InvalidVerificationCodeModal.propTypes = {
     onEdit: PropTypes.func.isRequired,
-    onResend: PropTypes.func.isRequired
+    onResend: PropTypes.func.isRequired,
+    edit: PropTypes.string,
+    request: PropTypes.string
 };
 
 export default InvalidVerificationCodeModal;
