@@ -38,6 +38,7 @@ import SignupComplete from './SignupComplete';
 import SignupCreatingAccount from './SignupCreatingAccount';
 import NoSignup from './NoSignup';
 import { handlePaymentToken } from '../payments/paymentTokenHelper';
+import InvalidVerificationCodeModal from '../api/InvalidVerificationCodeModal';
 import { SignupModel, SignupErros, SignupPlan, SubscriptionCheckResult } from './interfaces';
 import { DEFAULT_SIGNUP_MODEL, DEFAULT_CHECK_RESULT, SIGNUP_STEPS } from './constants';
 import humanApiHelper from './humanApi';
@@ -175,6 +176,10 @@ const SignupContainer = ({ onLogin, history }: Props) => {
 
     const humanApi = <T,>(config: any): Promise<T> => humanApiHelper(config, { api, createModal, model, updateModel });
 
+    const handleResend = async () => {
+        await humanApi(queryVerificationCode('email', { Address: model.email }));
+    };
+
     const handleSubmit = async (data?: FormEvent<HTMLFormElement>) => {
         if (data) {
             data.preventDefault();
@@ -217,7 +222,30 @@ const SignupContainer = ({ onLogin, history }: Props) => {
         if (model.step === VERIFICATION_CODE) {
             const verificationToken = `${model.email}:${model.verificationCode}`;
             const verificationTokenType = TOKEN_TYPES.EMAIL;
-            await humanApi(queryCheckVerificationCode(verificationToken, verificationTokenType, CLIENT_TYPE));
+            try {
+                await humanApi(queryCheckVerificationCode(verificationToken, verificationTokenType, CLIENT_TYPE));
+            } catch (error) {
+                return createModal(
+                    <InvalidVerificationCodeModal
+                        edit={c('Action').t`Change email`}
+                        request={c('Action').t`Request new code`}
+                        onEdit={() => {
+                            updateModel({
+                                ...model,
+                                step: ACCOUNT_CREATION_EMAIL,
+                                verificationCode: ''
+                            });
+                        }}
+                        onResend={() => {
+                            withLoading(handleResend());
+                            updateModel({
+                                ...model,
+                                verificationCode: ''
+                            });
+                        }}
+                    />
+                );
+            }
             if (hasPaidPlan) {
                 updateModel({
                     ...model,
@@ -395,10 +423,6 @@ const SignupContainer = ({ onLogin, history }: Props) => {
             });
             return;
         }
-    };
-
-    const handleResend = async () => {
-        await humanApi(queryVerificationCode('email', { Address: model.email }));
     };
 
     const fetchDependencies = async () => {
