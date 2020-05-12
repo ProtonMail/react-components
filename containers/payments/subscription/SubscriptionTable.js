@@ -51,7 +51,7 @@ const SubscriptionTable = ({
                                                     size="12"
                                                     className="mt0-4 mr0-5 flex-item-noshrink on-rtl-mirror"
                                                 />
-                                                {content}
+                                                <span className="flex-item-fluid">{content}</span>
                                             </li>
                                         );
                                     })}

@@ -53,6 +53,7 @@ const VpnSubscriptionTable = ({
                         <>
                             <del className="opacity-50 mr0-5">{c('Feature').t`P2P filesharing/BitTorrent support`}</del>
                             <Info
+                                buttonClass="inline-flex color-currentColor flex-item-noshrink alignsub"
                                 title={c('Info').t`Support for file sharing protocols such as BitTorrent.`}
                                 url="https://protonvpn.com/support/p2p-vpn-redirection/"
                             />
@@ -65,6 +66,7 @@ const VpnSubscriptionTable = ({
                         <>
                             <del className="opacity-50 mr0-5">{c('Feature').t`Secure Core VPN`}</del>
                             <Info
+                                buttonClass="inline-flex color-currentColor flex-item-noshrink alignsub"
                                 title={c('Info')
                                     .t`Defends against threats to VPN privacy by passing your Internet traffic through multiple servers.`}
                                 url="https://protonvpn.com/support/secure-core-vpn/"
@@ -78,6 +80,7 @@ const VpnSubscriptionTable = ({
                         <>
                             <del className="opacity-50 mr0-5">{c('Feature').t`Tor over VPN`}</del>
                             <Info
+                                buttonClass="inline-flex color-currentColor flex-item-noshrink alignsub"
                                 title={c('Info')
                                     .t`Route your Internet traffic through the Tor network with a single click.`}
                                 url="https://protonvpn.com/support/tor-vpn/"
@@ -91,6 +94,7 @@ const VpnSubscriptionTable = ({
                         <>
                             <del className="opacity-50 mr0-5">{c('Feature').t`Access blocked content`}</del>
                             <Info
+                                buttonClass="inline-flex color-currentColor flex-item-noshrink alignsub"
                                 title={c('Info')
                                     .t`Access geo-blocked content (Netflix, Amazon Prime Video, BBC iPlayer, Wikipedia, Facebook, Youtube, etc) no matter where you are.`}
                                 url="https://protonvpn.com/support/streaming-guide/"
@@ -118,6 +122,7 @@ const VpnSubscriptionTable = ({
                         <>
                             <span className="mr0-5">{c('Feature').t`P2P filesharing/BitTorrent support`}</span>
                             <Info
+                                buttonClass="inline-flex color-currentColor flex-item-noshrink alignsub"
                                 title={c('Info').t`Support for file sharing protocols such as BitTorrent.`}
                                 url="https://protonvpn.com/support/p2p-vpn-redirection/"
                             />
@@ -130,6 +135,7 @@ const VpnSubscriptionTable = ({
                         <>
                             <del className="opacity-50 mr0-5">{c('Feature').t`Secure Core VPN`}</del>
                             <Info
+                                buttonClass="inline-flex color-currentColor flex-item-noshrink alignsub"
                                 title={c('Info')
                                     .t`Defends against threats to VPN privacy by passing your Internet traffic through multiple servers.`}
                                 url="https://protonvpn.com/support/secure-core-vpn/"
@@ -143,6 +149,7 @@ const VpnSubscriptionTable = ({
                         <>
                             <del className="opacity-50 mr0-5">{c('Feature').t`Tor over VPN`}</del>
                             <Info
+                                buttonClass="inline-flex color-currentColor flex-item-noshrink alignsub"
                                 title={c('Info')
                                     .t`Route your Internet traffic through the Tor network with a single click.`}
                                 url="https://protonvpn.com/support/tor-vpn/"
@@ -156,6 +163,7 @@ const VpnSubscriptionTable = ({
                         <>
                             <del className="opacity-50 mr0-5">{c('Feature').t`Access blocked content`}</del>
                             <Info
+                                buttonClass="inline-flex color-currentColor flex-item-noshrink alignsub"
                                 title={c('Info')
                                     .t`Access geo-blocked content (Netflix, Amazon Prime Video, BBC iPlayer, Wikipedia, Facebook, Youtube, etc) no matter where you are.`}
                                 url="https://protonvpn.com/support/streaming-guide/"
@@ -183,6 +191,7 @@ const VpnSubscriptionTable = ({
                         <>
                             <span className="mr0-5">{c('Feature').t`P2P filesharing/BitTorrent support`}</span>
                             <Info
+                                buttonClass="inline-flex color-currentColor flex-item-noshrink alignsub"
                                 title={c('Info').t`Support for file sharing protocols such as BitTorrent.`}
                                 url="https://protonvpn.com/support/p2p-vpn-redirection/"
                             />
@@ -195,6 +204,7 @@ const VpnSubscriptionTable = ({
                         <>
                             <span className="mr0-5">{c('Feature').t`Secure Core VPN`}</span>
                             <Info
+                                buttonClass="inline-flex color-currentColor flex-item-noshrink alignsub"
                                 title={c('Info')
                                     .t`Defends against threats to VPN privacy by passing your Internet traffic through multiple servers.`}
                                 url="https://protonvpn.com/support/secure-core-vpn/"
@@ -208,6 +218,7 @@ const VpnSubscriptionTable = ({
                         <>
                             <span className="mr0-5">{c('Feature').t`Tor over VPN`}</span>
                             <Info
+                                buttonClass="inline-flex color-currentColor flex-item-noshrink alignsub"
                                 title={c('Info')
                                     .t`Route your Internet traffic through the Tor network with a single click.`}
                                 url="https://protonvpn.com/support/tor-vpn/"
@@ -221,6 +232,7 @@ const VpnSubscriptionTable = ({
                         <>
                             <span className="mr0-5">{c('Feature').t`Access blocked content`}</span>
                             <Info
+                                buttonClass="inline-flex color-currentColor flex-item-noshrink alignsub"
                                 title={c('Info')
                                     .t`Access geo-blocked content (Netflix, Amazon Prime Video, BBC iPlayer, Wikipedia, Facebook, Youtube, etc) no matter where you are.`}
                                 url="https://protonvpn.com/support/streaming-guide/"
@@ -246,6 +258,7 @@ const VpnSubscriptionTable = ({
                         <>
                             <span className="mr0-5">{c('Feature').t`ProtonMail Visionary account`}</span>
                             <Info
+                                buttonClass="inline-flex color-currentColor flex-item-noshrink alignsub"
                                 title={c('Info')
                                     .t`Get access to all the paid features for both ProtonVPN and ProtonMail (the encrypted email service that millions use to protect their data) with one plan.`}
                                 url="https://protonmail.com"
