@@ -17,39 +17,34 @@ interface Props {
 const SignupVerificationCodeForm = ({ model, onChange, onSubmit, onResend, errors, loading }: Props) => {
     const disableSubmit = !!errors.verificationCode;
     return (
-        <>
-            <h1 className="h2">{c('Title').t`Human verification`}</h1>
+        <form name="humanForm" className="pl2 pr2 pb1" onSubmit={onSubmit}>
+            <div className="strong mb1">{c('Title').t`Human verification`}</div>
             <Alert>{c('Info').t`For security reasons, please verify that your are not a robot.`}</Alert>
-            <form name="humanForm" onSubmit={onSubmit}>
-                <label htmlFor="verification-code">{c('Label')
-                    .t`Enter the verification code that was sent to ${model.email}. If you don't find the email in your inbox, please check your spam folder`}</label>
-                <div className="mb1">
-                    <VerificationCodeInput
-                        id="verification-code"
-                        className="mb1"
-                        value={model.verificationCode}
-                        error={errors.verificationCode}
-                        onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
-                            onChange({ ...model, verificationCode: target.value })
-                        }
-                        autoFocus
-                        required
-                    />
-                </div>
-                <div className="mb1">
-                    <InlineLinkButton disabled={loading} onClick={onResend}>{c('Action')
-                        .t`Did not receive the code?`}</InlineLinkButton>
-                </div>
-                <div className="alignright">
-                    <PrimaryButton
-                        className="pm-button--large"
-                        type="submit"
-                        disabled={disableSubmit}
-                        loading={loading}
-                    >{c('Action').t`Verify`}</PrimaryButton>
-                </div>
-            </form>
-        </>
+            <label htmlFor="verification-code">{c('Label')
+                .t`Enter the verification code that was sent to ${model.email}. If you don't find the email in your inbox, please check your spam folder`}</label>
+            <div className="mb1">
+                <VerificationCodeInput
+                    id="verification-code"
+                    className="mb1"
+                    value={model.verificationCode}
+                    error={errors.verificationCode}
+                    onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
+                        onChange({ ...model, verificationCode: target.value })
+                    }
+                    autoFocus
+                    required
+                />
+            </div>
+            <div className="mb1">
+                <InlineLinkButton disabled={loading} onClick={onResend}>{c('Action')
+                    .t`Did not receive the code?`}</InlineLinkButton>
+            </div>
+            <div className="alignright">
+                <PrimaryButton className="pm-button--large" type="submit" disabled={disableSubmit} loading={loading}>{c(
+                    'Action'
+                ).t`Verify`}</PrimaryButton>
+            </div>
+        </form>
     );
 };
 
