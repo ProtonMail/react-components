@@ -17,7 +17,7 @@ const Info = ({
     title = undefined,
     originalPlacement = 'top',
     scrollContainerClass = 'main',
-    buttonClass = 'inline-flex color-currentColor',
+    buttonClass = 'inline-flex color-currentColor flex-item-noshrink',
     ...rest
 }: Props) => {
     const [uid] = useState(generateUID('tooltip'));
