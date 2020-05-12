@@ -56,7 +56,7 @@ const Info = ({
                 aria-describedby={uid}
                 type="button"
             >
-                <Icon className="icon-16p color-primary" name="info" {...rest} />
+                <Icon className="color-primary" name="info" {...rest} />
             </button>
             {title && isOpen ? (
                 <Popper
