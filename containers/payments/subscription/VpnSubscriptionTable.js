@@ -240,7 +240,19 @@ const VpnSubscriptionTable = ({
             features: [
                 { icon: 'arrow-right', content: c('Feature').t`All Plus plan features` },
                 { icon: 'arrow-right', content: c('Feature').t`10 VPN connections` },
-                { icon: 'arrow-right', content: c('Feature').t`ProtonMail Visionary account` }
+                {
+                    icon: 'arrow-right',
+                    content: (
+                        <>
+                            <span className="mr0-5">{c('Feature').t`ProtonMail Visionary account`}</span>
+                            <Info
+                                title={c('Info')
+                                    .t`Get access to all the paid features for both ProtonVPN and ProtonMail (the encrypted email service that millions use to protect their data) with one plan.`}
+                                url="https://protonmail.com"
+                            />
+                        </>
+                    )
+                }
             ]
         }
     ];
