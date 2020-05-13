@@ -17,7 +17,7 @@ export interface Props {
     dateRange?: DateTuple;
     min?: Date;
     max?: Date;
-    markers?: { [ts: string]: boolean };
+    markers?: { [ts: number]: boolean };
     displayWeekNumbers?: boolean;
     displayedOnDarkBackground?: boolean;
     months?: string[];
