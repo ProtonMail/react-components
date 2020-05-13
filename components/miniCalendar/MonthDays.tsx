@@ -4,12 +4,11 @@ import React, { useState, useRef } from 'react';
 import { classnames } from '../../helpers/component';
 import { DateTuple } from '.';
 
-const getEventValue = ({ target }: { target: { dataset?: { i: number } } } & React.FormEvent) => (days: Date[]) => {
-    const idx = target?.dataset?.i;
-    if (idx === undefined) {
-        return undefined;
+const getTargetDate = (target: any, days: Date[]) => {
+    const idx = parseInt(target?.dataset?.i || '', 10);
+    if (idx >= 0 && idx < days.length) {
+        return days[idx];
     }
-    return days[idx];
 };
 
 export interface Props {
@@ -52,8 +51,8 @@ const MonthDays = ({
         '--minicalendar-days-numberOfWeeks': numberOfWeeks
     };
 
-    const handleMouseDown = (event: Parameters<typeof getEventValue>[0]) => {
-        const targetDate = getEventValue(event)(days);
+    const handleMouseDown = ({ target }: React.MouseEvent<HTMLUListElement>) => {
+        const targetDate = getTargetDate(target, days);
         if (rangeStartRef.current || !targetDate || !onSelectDateRange) {
             return;
         }
@@ -80,8 +79,8 @@ const MonthDays = ({
         document.addEventListener('mouseup', handleMouseUp);
     };
 
-    const handleMouseOver = (event: Parameters<typeof getEventValue>[0]) => {
-        const overDate = getEventValue(event)(days);
+    const handleMouseOver = ({ target }: React.MouseEvent<HTMLUListElement>) => {
+        const overDate = getTargetDate(target, days);
         if (!rangeStartRef.current || !overDate || !onSelectDateRange) {
             return;
         }
@@ -94,8 +93,8 @@ const MonthDays = ({
         );
     };
 
-    const handleClick = (event: Parameters<typeof getEventValue>[0]) => {
-        const value = getEventValue(event)(days);
+    const handleClick = ({ target }: React.MouseEvent<HTMLUListElement>) => {
+        const value = getTargetDate(target, days);
         if (value) {
             onSelectDate(value);
         }
