@@ -1,5 +1,5 @@
 declare module 'csstype' {
-    interface Properties {
+    interface Properties<T> {
         // allow css variables
         [index: string]: unknown;
     }

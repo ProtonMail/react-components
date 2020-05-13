@@ -1,10 +1,6 @@
-import "./css";
-declare module '*.svg' {
-    const src: string;
-    export default src;
-}
+declare module '*.svg';
 
-declare module 'ical.js' {
-    const value: any;
-    export default value;
-}
+declare module '*.md';
+
+// TODO: Import from proton-shared
+declare module 'ical.js';
