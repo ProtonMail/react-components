@@ -50,6 +50,7 @@ const AppsDropdown = () => {
                                 to={link}
                                 className="dropDown-item-link w100 pr1 pl1 pt0-5 pb0-5 bl nodecoration flex flex-nowrap flex-items-center"
                                 external={!isCurrent}
+                                target="_blank"
                                 aria-current={isCurrent}
                             >
                                 <Icon name={icon} className="mr0-5" />
@@ -60,7 +61,12 @@ const AppsDropdown = () => {
                 })}
             </ul>
             <div className="pr1 pl1 pt0-5 pb0-5">
-                <Link to="/account" external={true} className="flex flex-nowrap flex-items-center nodecoration">
+                <Link
+                    to="/account"
+                    target="_blank"
+                    external={true}
+                    className="flex flex-nowrap flex-items-center nodecoration"
+                >
                     <Icon name="account" className="mr0-5" />
                     <span>Account</span>
                 </Link>
@@ -68,7 +74,7 @@ const AppsDropdown = () => {
                     <Progress value={spacePercentage} />
                     <div className="small m0">
                         <span className="opacity-50 mr0-5">{spaceHuman}</span>
-                        <Link to="">{c('Link').t`Add storage`}</Link>
+                        <Link to="/settings/dashboard" target="_blank" external={true}>{c('Link').t`Add storage`}</Link>
                     </div>
                 </div>
             </div>
