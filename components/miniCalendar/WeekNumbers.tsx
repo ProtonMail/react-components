@@ -7,7 +7,7 @@ export interface Props {
     numberOfWeeks: number;
 }
 
-const getMonday = (days: Array<Date>, start: number, end: number) => {
+const getMonday = (days: Date[], start: number, end: number) => {
     for (let i = start; i < end; ++i) {
         const day = days[i];
         if (day && day.getDay() === 1) {
