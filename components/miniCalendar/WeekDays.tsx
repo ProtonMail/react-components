@@ -6,8 +6,8 @@ import Tooltip from '../tooltip/Tooltip';
 export interface Props {
     weekStartsOn: WeekStartsOn;
     numberOfDays?: number;
-    weekdaysLong: Array<string>;
-    weekdaysShort: Array<string>;
+    weekdaysLong: string[];
+    weekdaysShort: string[];
 }
 
 const WeekDays = ({ weekdaysShort, weekdaysLong, weekStartsOn = 1, numberOfDays }: Props) => {

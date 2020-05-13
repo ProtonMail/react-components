@@ -3,13 +3,9 @@ import { WeekStartsOn } from '.';
 
 /**
  * Get all days to display in the mini calendar for a given date.
- * @param {Date} currentDate
- * @param {Number} weekStartsOn
- * @param {Number} weeks
- * @returns {Array<Date>}
  */
 export const getDaysInMonth = (
-    currentDate: InstanceType<typeof Date>,
+    currentDate: Date,
     { weekStartsOn, weeks }: { weeks: number; weekStartsOn: WeekStartsOn }
 ) => {
     const startOfMonthDate = startOfMonth(currentDate);

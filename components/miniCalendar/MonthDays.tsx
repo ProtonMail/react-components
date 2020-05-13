@@ -4,9 +4,7 @@ import React, { useState, useRef } from 'react';
 import { classnames } from '../../helpers/component';
 import { DateTuple } from '.';
 
-const getEventValue = ({ target }: { target: { dataset?: { i: number } } } & React.FormEvent) => (
-    days: Array<Date>
-) => {
+const getEventValue = ({ target }: { target: { dataset?: { i: number } } } & React.FormEvent) => (days: Date[]) => {
     const idx = target?.dataset?.i;
     if (idx === undefined) {
         return undefined;
@@ -15,8 +13,8 @@ const getEventValue = ({ target }: { target: { dataset?: { i: number } } } & Rea
 };
 
 export interface Props {
-    days: Array<Date>;
-    markers: Record<string, unknown>;
+    days: Date[];
+    markers: { [ts: string]: boolean };
     onSelectDate: (a1: Date) => void;
     onSelectDateRange: (a1: DateTuple) => void;
     now: Date;
@@ -45,7 +43,7 @@ const MonthDays = ({
     numberOfDays,
     numberOfWeeks
 }: Props) => {
-    const [temporaryDateRange, setTemporaryDateRange] = useState<DateTuple | undefined>(undefined);
+    const [temporaryDateRange, setTemporaryDateRange] = useState<[Date, Date | undefined] | undefined>(undefined);
     const rangeStartRef = useRef<Date | undefined>(undefined);
     const rangeEndRef = useRef<Date | undefined>(undefined);
 

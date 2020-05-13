@@ -3,7 +3,7 @@ import { c } from 'ttag';
 import { getISOWeek } from 'date-fns';
 
 export interface Props {
-    days: Array<Date>;
+    days: Date[];
     numberOfWeeks: number;
 }
 

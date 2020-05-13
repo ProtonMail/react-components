@@ -17,15 +17,15 @@ export interface Props {
     dateRange?: DateTuple;
     min?: Date;
     max?: Date;
-    markers?: Record<string, unknown>;
+    markers?: { [ts: string]: boolean };
     displayWeekNumbers?: boolean;
     displayedOnDarkBackground?: boolean;
-    months?: Array<string>;
+    months?: string[];
     nextMonth?: string;
     prevMonth?: string;
     numberOfWeeks?: number;
-    weekdaysLong?: Array<string>;
-    weekdaysShort?: Array<string>;
+    weekdaysLong?: string[];
+    weekdaysShort?: string[];
     onSelectDate?: (a1: Date) => void;
     onSelectDateRange?: (a1: DateTuple) => void;
     formatDay?: (a1: Date) => string;
@@ -80,8 +80,7 @@ const MiniCalendar = ({
         return `${months[activeDate.getMonth()]} ${activeDate.getFullYear()}`;
     }, [activeDate, months]);
 
-    //                                      🤔
-    const handleSwitchMonth = (direction: number) => {
+    const handleSwitchMonth = (direction: -1 | 1) => {
         const newDate = addMonths(activeDate, direction);
 
         // Don't allow to go outside of bounds.
