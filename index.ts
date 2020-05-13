@@ -414,6 +414,7 @@ export { default as ProtonApp } from './containers/app/ProtonApp';
 export { default as StandardPrivateApp } from './containers/app/StandardPrivateApp';
 export { default as StandardPublicApp } from './containers/app/StandardPublicApp';
 export { default as AppsSidebar } from './containers/app/AppsSidebar';
+export { default as AppsDropdown } from './containers/app/AppsDropdown';
 export { default as MobileAppsLinks } from './components/sidebar/MobileAppsLinks';
 export { default as TopNavbar } from './containers/app/TopNavbar';
 export { default as LoaderPage } from './containers/app/LoaderPage';
