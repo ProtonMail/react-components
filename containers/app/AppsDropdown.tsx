@@ -5,6 +5,8 @@ import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 import { FEATURE_FLAGS } from 'proton-shared/lib/constants';
 import humanSize from 'proton-shared/lib/helpers/humanSize';
 
+import './AppsDropdown.scss';
+
 import { useUser } from '../../hooks/useUser';
 import useConfig from '../config/useConfig';
 import Link from '../../components/link/Link';
@@ -39,16 +41,21 @@ const AppsDropdown = () => {
     ].filter(isTruthy);
 
     return (
-        <SimpleDropdown hasCaret={false} content={<Icon name="apps" />}>
-            <ul className="unstyled m0 border-bottom">
+        <SimpleDropdown
+            hasCaret={false}
+            content={<Icon name="more" className="appsDropdown-button-icon" />}
+            className="appsDropdown-button"
+            dropdownClassName="appsDropdown-container"
+        >
+            <ul className="appsDropdown-list unstyled m0 border-bottom scroll-if-needed">
                 {apps.map(({ appNames = [], icon, title, link }, index) => {
                     const isCurrent = appNames.includes(APP_NAME);
                     const key = `${index}`;
                     return (
-                        <li className="dropDown-item" key={key} title={title}>
+                        <li className="dropDown-item appsDropdown-item" key={key} title={title}>
                             <Link
                                 to={link}
-                                className="dropDown-item-link w100 pr1 pl1 pt0-5 pb0-5 bl nodecoration flex flex-nowrap flex-items-center"
+                                className="appsDropdown-link w100 p1 bl nodecoration flex flex-nowrap flex-items-center"
                                 external={!isCurrent}
                                 target="_blank"
                                 aria-current={isCurrent}

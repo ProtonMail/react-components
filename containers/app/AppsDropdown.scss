@@ -1,0 +1,45 @@
+@import "~design-system/_sass/reusable-components/design-system-config";
+
+.appsDropdown {
+    &-container.dropDown {
+        &::before {
+            background-color: $pm-secondary-grey;
+        }
+        @include respond-to($breakpoint-small, 'min') {
+            background-color: $pm-secondary-grey;
+        }
+        .dropDown-content {
+            &, &::after, &::before {
+                background-color: $pm-secondary-grey;
+            }
+        }
+    }
+    &-button {
+        border-radius: $global-border-radius;
+        padding: .375em;
+        &:hover,
+        &:focus,
+        &[aria-expanded="true"] {
+            background-color: rgba(white, .05);
+        }
+        & &-icon { // override icon-16p
+            width: 1em;
+            height: 1em;
+            font-size: 2em;
+        }
+    }
+    &-list {
+       max-height: 12em;
+    }
+    &-item.dropDown-item {
+        & + & {
+            border: none;
+        }
+    }
+    &-link {
+        &:hover,
+        &:focus {
+            background-color: rgba(white, .05);
+        }
+    }
+}
