@@ -43,7 +43,7 @@ const SignupRecoveryForm = ({ model, onChange, onSubmit, errors, loading }: Prop
                     <div className="flex onmobile-flex-column mb1">
                         <label className="pm-label" htmlFor="recovery-email">{c('Label').t`Recovery email`}</label>
                         <div className="flex-item-fluid">
-                            <div className="mb1">
+                            <div className="mb0-5">
                                 <EmailInput
                                     id="recovery-email"
                                     name="recovery-email"
@@ -72,7 +72,7 @@ const SignupRecoveryForm = ({ model, onChange, onSubmit, errors, loading }: Prop
                     <div className="flex onmobile-flex-column mb1">
                         <label className="pm-label" htmlFor="recovery-phone">{c('Label').t`Recovery phone`}</label>
                         <div className="flex-item-fluid">
-                            <div className="mb1">
+                            <div className="mb0-5">
                                 <IntlTelInput
                                     id="recovery-phone"
                                     name="recovery-phone"
@@ -87,14 +87,14 @@ const SignupRecoveryForm = ({ model, onChange, onSubmit, errors, loading }: Prop
                             <div>
                                 <InlineLinkButton
                                     onClick={() => onChange({ ...model, recoveryPhone: '', step: RECOVERY_EMAIL })}
-                                >{c('Action').t`Enter recovery email address instead`}</InlineLinkButton>
+                                >{c('Action').t`Add an email address instead`}</InlineLinkButton>
                             </div>
                         </div>
                     </div>
                 </>
             ) : null}
             <div className="alignright mb1">
-                <LinkButton className="mr1 pm-button--large" disabled={loading} onClick={handleSkip}>{c('Action')
+                <LinkButton className="mr1 pm-button--large mr2" disabled={loading} onClick={handleSkip}>{c('Action')
                     .t`Skip`}</LinkButton>
                 <PrimaryButton className="pm-button--large" loading={loading} disabled={disableSubmit} type="submit">{c(
                     'Action'

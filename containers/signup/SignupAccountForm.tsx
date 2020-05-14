@@ -41,7 +41,7 @@ const SignupAccountForm = ({ model, onChange, onSubmit, errors, loading }: Props
                     <div className="flex onmobile-flex-column mb1">
                         <label className="mr1 pm-label" htmlFor="login">{c('Signup label').t`Username`}</label>
                         <div className="flex-item-fluid">
-                            <div className="flex flex-nowrap flex-items-center flex-item-fluid relative mb1">
+                            <div className="flex flex-nowrap flex-items-center flex-item-fluid relative mb0-5">
                                 <div className="flex-item-fluid">
                                     <Input
                                         id="login"

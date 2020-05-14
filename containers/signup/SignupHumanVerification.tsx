@@ -20,8 +20,8 @@ const SignupHumanVerification = ({ model, onChange, onSubmit }: Props) => {
         onSubmit();
     };
     return (
-        <div className="p2">
-            <h1 className="h2">{c('Title').t`Verify account`}</h1>
+        <div className="pl2 pr2 mb1">
+            <div className="strong big mt0 mb1">{c('Title').t`Are you human?`}</div>
             <HumanVerificationForm
                 token={model.humanVerificationToken}
                 methods={model.humanVerificationMethods}
