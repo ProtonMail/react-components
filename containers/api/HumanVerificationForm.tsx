@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
-import { Alert, classnames, ButtonGroup, Group } from 'react-components';
+import { Alert, Tabs } from 'react-components';
+import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 
 import Captcha from './Captcha';
 import CodeVerification from './CodeVerification';
@@ -14,67 +15,40 @@ interface Props {
     methods: MethodType[];
 }
 
-const PREFERED_ORDER = {
-    captcha: 0,
-    email: 1,
-    sms: 2,
-    invite: 3,
-    payment: 4,
-};
-
-const orderMethods = (methods: MethodType[]): string[] => {
-    const mapped = methods.map((item: MethodType, index: number) => ({ index, item }));
-    mapped.sort((a, b) => {
-        if (PREFERED_ORDER[a.item] > PREFERED_ORDER[b.item]) {
-            return 1;
-        }
-        if (PREFERED_ORDER[a.item] < PREFERED_ORDER[b.item]) {
-            return -1;
-        }
-        return 0;
-    });
-    return mapped.map(({ index }) => methods[index]);
-};
-
-const getLabel = (method: MethodType): string =>
-    ({
-        captcha: c('Human verification method').t`CAPTCHA`,
-        payment: c('Human verification method').t`Donation`,
-        sms: c('Human verification method').t`SMS`,
-        email: c('Human verification method').t`Email`,
-        invite: c('Human verification method').t`Manual verification`
-    }[method]);
-
 const HumanVerificationForm = ({ methods, token, onSubmit }: Props) => {
-    const orderedMethods = orderMethods(methods).filter((m: string): m is MethodType =>
-        ['captcha', 'sms', 'email', 'invite'].includes(m)
-    );
+    const tabs = [
+        methods.includes('captcha') && {
+            method: 'captcha',
+            title: c('Human verification method').t`CAPTCHA`,
+            content: <Captcha token={token} onSubmit={(token) => onSubmit(token, 'captcha')} />
+        },
+        methods.includes('email') && {
+            method: 'email',
+            title: c('Human verification method').t`Email`,
+            content: <CodeVerification onSubmit={(token) => onSubmit(token, 'email')} method="email" />
+        },
+        methods.includes('sms') && {
+            method: 'sms',
+            title: c('Human verification method').t`SMS`,
+            content: <CodeVerification onSubmit={(token) => onSubmit(token, 'sms')} method="sms" />
+        },
+        methods.includes('invite') && {
+            method: 'invite',
+            title: c('Human verification method').t`Manual verification`,
+            content: <RequestInvite />
+        }
+    ].filter(isTruthy);
 
-    const [method, setMethod] = useState<MethodType>(orderedMethods[0]);
+    const [index, setIndex] = useState(0);
 
     return (
         <>
-            <Alert type="warning">{c('Info').t`For security reasons, please verify that you are not a robot.`}</Alert>
-            {orderedMethods.length ? (
-                <Group className="mb1">
-                    {orderedMethods.map((m) => {
-                        const isActive = method === m;
-                        return (
-                            <ButtonGroup
-                                key={m}
-                                onClick={() => setMethod(m)}
-                                className={classnames([isActive && 'is-active'])}
-                            >
-                                {getLabel(m)}
-                            </ButtonGroup>
-                        );
-                    })}
-                </Group>
+            <Alert type="warning">{c('Info').t`To fight spam and abuse, please verify you are human.`}</Alert>
+            {tabs[index] && ['email', 'sms'].includes(tabs[index].method) ? (
+                <Alert learnMore="https://protonmail.com/support/knowledge-base/human-verification/">{c('Info')
+                    .t`Your email or phone number will only be used for this one-time verification.`}</Alert>
             ) : null}
-            {method === 'captcha' ? <Captcha token={token} onSubmit={(token) => onSubmit(token, method)} /> : null}
-            {method === 'email' ? <CodeVerification onSubmit={(token) => onSubmit(token, method)} method="email" /> : null}
-            {method === 'sms' ? <CodeVerification onSubmit={(token) => onSubmit(token, method)} method="sms" /> : null}
-            {method === 'invite' ? <RequestInvite /> : null}
+            <Tabs tabs={tabs} selectedTab={index} updateSelectedTab={setIndex} />
         </>
     );
 };
