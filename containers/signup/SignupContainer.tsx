@@ -158,10 +158,10 @@ const SignupContainer = ({ onLogin, history, locales }: Props) => {
                 backStep = ACCOUNT_CREATION_EMAIL;
                 break;
             case PLANS:
-                if (model.username && model.recoveryEmail) {
-                    backStep = RECOVERY_EMAIL;
-                } else if (model.username && model.recoveryPhone) {
+                if (model.username && model.recoveryPhone) {
                     backStep = RECOVERY_PHONE;
+                } else if (model.username) {
+                    backStep = RECOVERY_EMAIL;
                 } else if (model.email) {
                     backStep = VERIFICATION_CODE;
                 }
