@@ -1,5 +1,4 @@
 export enum SIGNUP_STEPS {
-    LOADING_SIGNUP = 'loading-signup',
     NO_SIGNUP = 'no-signup',
     ACCOUNT_CREATION_USERNAME = 'account-creation-username',
     ACCOUNT_CREATION_EMAIL = 'account-creation-email',
@@ -103,7 +102,7 @@ export const UNSECURE_DOMAINS = [
 ];
 
 export const DEFAULT_SIGNUP_MODEL = {
-    step: SIGNUP_STEPS.LOADING_SIGNUP,
+    step: SIGNUP_STEPS.ACCOUNT_CREATION_USERNAME,
     username: '',
     password: '',
     confirmPassword: '',

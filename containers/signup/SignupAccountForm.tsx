@@ -1,8 +1,8 @@
 import React, { ChangeEvent, FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { c } from 'ttag';
-
 import { Input, EmailInput, PasswordInput, PrimaryButton, Href, InlineLinkButton } from 'react-components';
+import { USERNAME_PLACEHOLDER } from 'proton-shared/lib/constants';
 
 import { SignupModel, SignupErros } from './interfaces';
 import { SIGNUP_STEPS } from './constants';
@@ -24,7 +24,7 @@ const SignupAccountForm = ({ model, onChange, onSubmit, errors, loading }: Props
         <Href url="https://protonmail.com/terms-and-conditions" key="terms">{c('Signup link')
             .t`terms and conditions`}</Href>
     );
-    const loginLink = <Link key="loginLink" to="/login">{c('Link').t`Log in!`}</Link>;
+    const loginLink = <Link key="loginLink" to="/login">{c('Link').t`Sign in`}</Link>;
     const disableSubmit = !!(
         (model.step === ACCOUNT_CREATION_USERNAME && errors.username) ||
         (model.step === ACCOUNT_CREATION_EMAIL && errors.email) ||
@@ -35,7 +35,7 @@ const SignupAccountForm = ({ model, onChange, onSubmit, errors, loading }: Props
     return (
         <>
             <form name="accountForm" className="pl2 pr2 mb1 signup-form" onSubmit={onSubmit} autoComplete="off">
-                <div className="strong mb1">{c('Signup title, keep "Account" capitalized')
+                <div className="strong big mt0 mb1">{c('Signup title, keep "Account" capitalized')
                     .t`Create your Proton Account`}</div>
                 {model.step === ACCOUNT_CREATION_USERNAME ? (
                     <div className="flex onmobile-flex-column mb1">
@@ -55,7 +55,7 @@ const SignupAccountForm = ({ model, onChange, onSubmit, errors, loading }: Props
                                             onChange({ ...model, username: target.value })
                                         }
                                         error={errors.username}
-                                        placeholder="john.doe"
+                                        placeholder={USERNAME_PLACEHOLDER}
                                         className="pm-field--username"
                                         required
                                     />
@@ -64,7 +64,7 @@ const SignupAccountForm = ({ model, onChange, onSubmit, errors, loading }: Props
                             </div>
                             <InlineLinkButton
                                 onClick={() => onChange({ ...model, username: '', step: ACCOUNT_CREATION_EMAIL })}
-                            >{c('Action').t`Use an existing email address instead.`}</InlineLinkButton>
+                            >{c('Action').t`Use an existing email address instead`}</InlineLinkButton>
                         </div>
                     </div>
                 ) : null}
@@ -85,18 +85,17 @@ const SignupAccountForm = ({ model, onChange, onSubmit, errors, loading }: Props
                                         onChange({ ...model, email: target.value })
                                     }
                                     error={errors.email}
-                                    placeholder="john.doe@protonmail.com"
                                     required
                                 />
                             </div>
                             <UnsecureEmailInfo email={model.email} />
                             <InlineLinkButton
                                 onClick={() => onChange({ ...model, email: '', step: ACCOUNT_CREATION_USERNAME })}
-                            >{c('Action').t`Create a secure email address.`}</InlineLinkButton>
+                            >{c('Action').t`Create a secure email address`}</InlineLinkButton>
                         </div>
                     </div>
                 ) : null}
-                <div className="flex onmobile-flex-column mb1">
+                <div className="flex onmobile-flex-column mb0-5">
                     <label className="mr1 pm-label" htmlFor="password">{c('Signup label').t`Password`}</label>
                     <div className="flex-item-fluid">
                         <PasswordInput
@@ -133,7 +132,7 @@ const SignupAccountForm = ({ model, onChange, onSubmit, errors, loading }: Props
                         />
                     </div>
                 </div>
-                <div className="flex flex-nowrap flex-spacebetween flex-items-center">
+                <div className="flex flex-nowrap flex-spacebetween flex-items-center mb1">
                     <div className="small mr1">{c('Signup info')
                         .jt`By clicking Create account, you agree to abide by ProtonMail's ${termsConditionsLink}.`}</div>
                     <PrimaryButton
@@ -143,12 +142,10 @@ const SignupAccountForm = ({ model, onChange, onSubmit, errors, loading }: Props
                         type="submit"
                     >{c('Action').t`Create account`}</PrimaryButton>
                 </div>
+                <div className="alignright">
+                    <span>{c('Info').jt`Already have an account? ${loginLink}`}</span>
+                </div>
             </form>
-            <div className="border-top bg-global-highlight aligncenter p2">
-                <div className="bold big m0 mb0-5">{c('Info').jt`Already have an account? ${loginLink}`}</div>
-                <div className="opacity-50">{c('Info')
-                    .t`If you have used a Proton Service before, login with your Proton Account.`}</div>
-            </div>
         </>
     );
 };

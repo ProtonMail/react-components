@@ -37,7 +37,7 @@ const SignupPayment = ({
     loading
 }: Props) => {
     return (
-        <>
+        <div className="pl2 pr2 pb1">
             <Alert>{c('Info')
                 .t`You can use any of your saved payment method or add a new one. Please note that depending on the total amount due, some payment options may not be available.`}</Alert>
             <div className="flex flex-spacebetween onmobile-flex-column">
@@ -76,7 +76,7 @@ const SignupPayment = ({
                     />
                 </div>
             </div>
-        </>
+        </div>
     );
 };
 

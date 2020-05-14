@@ -14,7 +14,7 @@ interface Props {
 
 const SignupPlans = ({ plans = [], model, onChange, onSelectPlan, loading }: Props) => {
     return (
-        <>
+        <div className="pl2 pr2 pb1">
             <div className="flex flex-nowrap flex-items-center onmobile-flex-column">
                 <h1 className="h2 mb0 flex-item-fluid onmobile-mb1">{c('Title').t`Choose a plan`}</h1>
                 <div className="account-form-cycle-currency-selectors flex flex-nowrap">
@@ -39,7 +39,7 @@ const SignupPlans = ({ plans = [], model, onChange, onSelectPlan, loading }: Pro
                 currency={model.currency}
                 onSelect={onSelectPlan}
             />
-        </>
+        </div>
     );
 };
 
