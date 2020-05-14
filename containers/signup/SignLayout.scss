@@ -1,0 +1,8 @@
+.signLayout-container {
+    min-height: 540px;
+}
+
+// Hide icons (caret, support1) in <SupportDropdown>
+.signLayout-container .topnav-icon {
+    display: none;
+}

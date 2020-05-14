@@ -17,7 +17,7 @@ interface Props {
 const SignupVerificationCodeForm = ({ model, onChange, onSubmit, onResend, errors, loading }: Props) => {
     const disableSubmit = !!errors.verificationCode;
     return (
-        <form name="humanForm" className="pl2 pr2 pb1" onSubmit={onSubmit}>
+        <form name="humanForm" onSubmit={onSubmit}>
             <div className="strong mb1">{c('Title').t`Human verification`}</div>
             <Alert>{c('Info').t`For security reasons, please verify that your are not a robot.`}</Alert>
             <label htmlFor="verification-code">{c('Label')
