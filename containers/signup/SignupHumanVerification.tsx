@@ -18,15 +18,16 @@ const SignupHumanVerification = ({ model, onChange, onSubmit }: Props) => {
             verificationTokenType: tokenType
         });
         onSubmit();
-    }
+    };
     return (
-        <>
+        <div className="p2">
             <h1 className="h2">{c('Title').t`Verify account`}</h1>
             <HumanVerificationForm
                 token={model.humanVerificationToken}
                 methods={model.humanVerificationMethods}
-                onSubmit={handleSubmit} />
-        </>
+                onSubmit={handleSubmit}
+            />
+        </div>
     );
 };
 

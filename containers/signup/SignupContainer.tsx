@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, FormEvent } from 'react';
 import { Location, History } from 'history';
-import { useApi, useLoading, useConfig, usePlans, useModals, usePayment, Loader } from 'react-components';
+import { useApi, useLoading, useConfig, usePlans, useModals, usePayment, SupportDropdown } from 'react-components';
+import { Locales } from 'proton-shared/lib/interfaces/Locales';
 import { queryAvailableDomains } from 'proton-shared/lib/api/domains';
 import { setupAddress } from 'proton-shared/lib/api/addresses';
 import { setupKeys } from 'proton-shared/lib/api/keys';
@@ -28,6 +29,7 @@ import {
 } from 'proton-shared/lib/api/user';
 
 import SignLayout from './SignLayout';
+import SignupAside from './SignupAside';
 import SignupAccountForm from './SignupAccountForm';
 import SignupRecoveryForm from './SignupRecoveryForm';
 import SignupVerificationCodeForm from './SignupVerificationCodeForm';
@@ -47,10 +49,10 @@ interface Props {
     history: History;
     location: Location;
     onLogin: (data: { UID: string; EventID: string }) => void;
+    locales: Locales;
 }
 
 const {
-    LOADING_SIGNUP,
     ACCOUNT_CREATION_USERNAME,
     ACCOUNT_CREATION_EMAIL,
     NO_SIGNUP,
@@ -67,7 +69,7 @@ const {
 const withAuthHeaders = (UID: string, AccessToken: string, config: any) =>
     mergeHeaders(config, getAuthHeaders(UID, AccessToken));
 
-const SignupContainer = ({ onLogin, history }: Props) => {
+const SignupContainer = ({ onLogin, history, locales }: Props) => {
     const searchParams = new URLSearchParams(history.location.search);
     const currency = searchParams.get('currency');
     const cycle = Number(searchParams.get('billing'));
@@ -482,8 +484,17 @@ const SignupContainer = ({ onLogin, history }: Props) => {
     }, [model.cycle, model.planIDs]);
 
     return (
-        <SignLayout model={model} onBack={handleBack} title={c('Title').t`Sign Up`}>
-            {model.step === LOADING_SIGNUP && <Loader />}
+        <SignLayout
+            onBack={handleBack}
+            locales={locales}
+            larger={[PLANS, PAYMENT].includes(model.step)}
+            aside={
+                [ACCOUNT_CREATION_USERNAME, ACCOUNT_CREATION_EMAIL].includes(model.step) ? (
+                    <SignupAside model={model} />
+                ) : null
+            }
+            help={<SupportDropdown className="link" content={c('Action').t`Need help`} />}
+        >
             {model.step === NO_SIGNUP && <NoSignup />}
             {model.step === ACCOUNT_CREATION_USERNAME && (
                 <SignupAccountForm

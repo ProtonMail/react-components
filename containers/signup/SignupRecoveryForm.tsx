@@ -35,58 +35,61 @@ const SignupRecoveryForm = ({ model, onChange, onSubmit, errors, loading }: Prop
     };
     return (
         <form name="recoveryForm" className="pl2 pr2 pb1 signup-form" onSubmit={onSubmit}>
-            <div className="strong mb1">{c('Title').t`Add recovery method (recommended)`}</div>
-            <Alert>{c('Info')
-                .t`Add a recovery email or phone number so that you can recover your account if you get locked out or forget your password.`}</Alert>
+            <div className="strong big mt0 mb1">{c('Title').t`Add a recovery email (highly recommended)`}</div>
+            <p>{c('Info')
+                .t`Proton will send you a recovery link to this email address if you forget your password or get locked out of your account.`}</p>
             {model.step === RECOVERY_EMAIL ? (
                 <>
                     <div className="flex onmobile-flex-column mb1">
-                        <label className="pm-label" htmlFor="recovery-email">{c('Label').t`Email`}</label>
+                        <label className="pm-label" htmlFor="recovery-email">{c('Label').t`Recovery email`}</label>
                         <div className="flex-item-fluid">
-                            <EmailInput
-                                id="recovery-email"
-                                name="recovery-email"
-                                autoFocus
-                                autoComplete="on"
-                                autoCapitalize="off"
-                                autoCorrect="off"
-                                value={model.recoveryEmail}
-                                onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
-                                    onChange({ ...model, recoveryEmail: target.value })
-                                }
-                                placeholder={c('Placeholder').t`user@domain.com`}
-                                required
-                            />
+                            <div className="mb1">
+                                <EmailInput
+                                    id="recovery-email"
+                                    name="recovery-email"
+                                    autoFocus
+                                    autoComplete="on"
+                                    autoCapitalize="off"
+                                    autoCorrect="off"
+                                    value={model.recoveryEmail}
+                                    onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
+                                        onChange({ ...model, recoveryEmail: target.value })
+                                    }
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <InlineLinkButton
+                                    onClick={() => onChange({ ...model, recoveryEmail: '', step: RECOVERY_PHONE })}
+                                >{c('Action').t`Add a recovery phone number instead`}</InlineLinkButton>
+                            </div>
                         </div>
-                    </div>
-                    <div>
-                        <InlineLinkButton
-                            onClick={() => onChange({ ...model, recoveryEmail: '', step: RECOVERY_PHONE })}
-                        >{c('Action').t`Enter recovery phone instead.`}</InlineLinkButton>
                     </div>
                 </>
             ) : null}
             {model.step === RECOVERY_PHONE ? (
                 <>
                     <div className="flex onmobile-flex-column mb1">
-                        <label className="pm-label" htmlFor="recovery-phone">{c('Label').t`Phone`}</label>
+                        <label className="pm-label" htmlFor="recovery-phone">{c('Label').t`Recovery phone`}</label>
                         <div className="flex-item-fluid">
-                            <IntlTelInput
-                                id="recovery-phone"
-                                name="recovery-phone"
-                                containerClassName="w100"
-                                inputClassName="w100"
-                                autoFocus
-                                onPhoneNumberChange={handleChangePhone}
-                                onPhoneNumberBlur={handleChangePhone}
-                                required
-                            />
+                            <div className="mb1">
+                                <IntlTelInput
+                                    id="recovery-phone"
+                                    name="recovery-phone"
+                                    containerClassName="w100"
+                                    inputClassName="w100"
+                                    autoFocus
+                                    onPhoneNumberChange={handleChangePhone}
+                                    onPhoneNumberBlur={handleChangePhone}
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <InlineLinkButton
+                                    onClick={() => onChange({ ...model, recoveryPhone: '', step: RECOVERY_EMAIL })}
+                                >{c('Action').t`Enter recovery email address instead`}</InlineLinkButton>
+                            </div>
                         </div>
-                    </div>
-                    <div>
-                        <InlineLinkButton
-                            onClick={() => onChange({ ...model, recoveryPhone: '', step: RECOVERY_EMAIL })}
-                        >{c('Action').t`Enter recovery email address instead.`}</InlineLinkButton>
                     </div>
                 </>
             ) : null}
@@ -97,11 +100,6 @@ const SignupRecoveryForm = ({ model, onChange, onSubmit, errors, loading }: Prop
                     'Action'
                 ).t`Next`}</PrimaryButton>
             </div>
-            <Alert>
-                <div className="mb1">{c('Info')
-                    .t`Your email or number is not shared with third parties and is only used for recovery and account-related communications.`}</div>
-                <div>{c('Info').t`You will need to confirm later that this email or phone number belongs to you.`}</div>
-            </Alert>
         </form>
     );
 };
