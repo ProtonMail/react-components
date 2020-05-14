@@ -1,6 +1,5 @@
 import React, { ReactNode } from 'react';
-import { c } from 'ttag';
-import { classnames, Icon } from 'react-components';
+import { classnames } from 'react-components';
 import { Locales } from 'proton-shared/lib/interfaces/Locales';
 
 import './SignLayout.scss';
@@ -9,15 +8,15 @@ import LanguageSelect from './LanguageSelect';
 interface Props {
     children: ReactNode;
     aside?: ReactNode;
-    help?: ReactNode;
-    onBack?: () => void;
+    right?: ReactNode;
+    left?: ReactNode;
     locales: Locales;
     larger?: boolean;
 }
 
-const SignLayout = ({ children, aside, larger, help, onBack, locales }: Props) => {
+const SignLayout = ({ children, aside, larger, left, right, locales }: Props) => {
     return (
-        <div className="pt1 pb1 pl2 pr2 scroll-if-needed h100v">
+        <div className="pt1 pb1 pl2 pr2 scroll-if-needed h100v signLayout-container">
             <div className="flex-item-fluid flex-item-noshrink flex flex-column flex-nowrap">
                 <div className="flex flex-column flex-nowrap flex-item-noshrink">
                     <div
@@ -26,24 +25,18 @@ const SignLayout = ({ children, aside, larger, help, onBack, locales }: Props) =
                             larger ? '' : aside ? 'mw50e' : 'mw40e'
                         ])}
                     >
-                        <div>
-                            <div className="flex flex-items-center flex-nowrap p2">
-                                <span className="flex-item-fluid">
-                                    {onBack ? (
-                                        <button onClick={onBack} type="button" title={c('Action').t`Back`}>
-                                            <Icon name="arrow-left" />
-                                        </button>
-                                    ) : null}
-                                </span>
+                        <div className="p2">
+                            <div className="flex flex-items-center flex-nowrap mb2">
+                                <span className="flex-item-fluid">{left}</span>
                                 <div className="flex-item-fluid aligncenter">TODO:ProtonLogo</div>
                                 <span className="flex-item-fluid alignright" />
                             </div>
-                            {children}
-                            <div className="flex flex-items-center flex-nowrap p2">
+                            <div className="mb2 flex-item-fluid">{children}</div>
+                            <div className="flex flex-items-center flex-nowrap">
                                 <span className="flex-item-fluid">
                                     <LanguageSelect locales={locales} className="noborder" />
                                 </span>
-                                <span className="flex-item-fluid alignright">{help}</span>
+                                <span className="flex-item-fluid alignright">{right}</span>
                             </div>
                         </div>
                         {aside ? (

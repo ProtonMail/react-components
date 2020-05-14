@@ -1,6 +1,15 @@
 import React, { useState, useEffect, useMemo, FormEvent } from 'react';
-import { Location, History } from 'history';
-import { useApi, useLoading, useConfig, usePlans, useModals, usePayment, SupportDropdown } from 'react-components';
+import { History } from 'history';
+import {
+    useApi,
+    useLoading,
+    useConfig,
+    usePlans,
+    useModals,
+    usePayment,
+    SupportDropdown,
+    Icon
+} from 'react-components';
 import { Locales } from 'proton-shared/lib/interfaces/Locales';
 import { queryAvailableDomains } from 'proton-shared/lib/api/domains';
 import { setupAddress } from 'proton-shared/lib/api/addresses';
@@ -47,7 +56,6 @@ import humanApiHelper from './humanApi';
 
 interface Props {
     history: History;
-    location: Location;
     onLogin: (data: { UID: string; EventID: string }) => void;
     locales: Locales;
 }
@@ -485,19 +493,26 @@ const SignupContainer = ({ onLogin, history, locales }: Props) => {
 
     return (
         <SignLayout
-            onBack={handleBack}
             locales={locales}
             larger={[PLANS, PAYMENT].includes(model.step)}
+            left={
+                [ACCOUNT_CREATION_USERNAME, ACCOUNT_CREATION_EMAIL].includes(model.step) ? null : (
+                    <button type="button" onClick={handleBack} title={c('Action').t`Back`}>
+                        <Icon name="arrow-left" />
+                    </button>
+                )
+            }
+            right={<SupportDropdown className="link" content={c('Action').t`Need help?`} />}
             aside={
                 [ACCOUNT_CREATION_USERNAME, ACCOUNT_CREATION_EMAIL].includes(model.step) ? (
                     <SignupAside model={model} />
                 ) : null
             }
-            help={<SupportDropdown className="link" content={c('Action').t`Need help`} />}
         >
             {model.step === NO_SIGNUP && <NoSignup />}
             {model.step === ACCOUNT_CREATION_USERNAME && (
                 <SignupAccountForm
+                    history={history}
                     model={model}
                     errors={errors}
                     onChange={updateModel}
