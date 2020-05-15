@@ -1,4 +1,4 @@
-import React, { MutableRefObject, useEffect, useState } from 'react';
+import React, { MutableRefObject, useEffect, useState, ReactNode } from 'react';
 import { c } from 'ttag';
 
 import { useHandler } from '../../../hooks/useHandler';
@@ -28,7 +28,7 @@ import SquireToolbarFontSizeDropdown from './SquireToolbarFontSizeDropdown';
 import SquireToolbarFontColorsDropdown from './SquireToolbarFontColorsDropdown';
 import SquireToolbarAlignmentDropdown from './SquireToolbarAlignmentDropdown';
 import SquireToolbarMoreDropdown from './SquireToolbarMoreDropdown';
-import { EditorMetadata } from '../SquireEditor';
+import { SquireEditorMetadata } from '../SquireEditor';
 
 // import { MessageExtended } from '../../../models/message';
 // import { isPlainText as testIsPlainText } from '../../../helpers/message/messages';
@@ -37,8 +37,8 @@ import { EditorMetadata } from '../SquireEditor';
 // import { Breakpoints } from '../../../models/utils';
 
 interface Props {
-    metadata: EditorMetadata;
-    onChangeMetadata: (change: Partial<EditorMetadata>) => void;
+    metadata: SquireEditorMetadata;
+    onChangeMetadata: (change: Partial<SquireEditorMetadata>) => void;
 
     // isPlainText: boolean;
     isNarrow: boolean;
@@ -49,6 +49,7 @@ interface Props {
     // onChange: MessageChange;
     // onChangeFlag: (changes: Map<number, boolean>) => void;
     onAddImages: (files: File[]) => void;
+    moreDropdownExtension: ReactNode;
 }
 
 const SquireToolbar = ({
@@ -59,7 +60,8 @@ const SquireToolbar = ({
     editorReady,
     // onChange,
     // onChangeFlag,
-    onAddImages
+    onAddImages,
+    moreDropdownExtension
 }: Props) => {
     const [squireInfos, setSquireInfos] = useState<{ [test: string]: boolean }>({});
 
@@ -198,7 +200,9 @@ const SquireToolbar = ({
                     <SquireToolbarSeparator />
                 </>
             )}
-            <SquireToolbarMoreDropdown metadata={metadata} squireRef={squireRef} onChangeMetadata={onChangeMetadata} />
+            <SquireToolbarMoreDropdown metadata={metadata} squireRef={squireRef} onChangeMetadata={onChangeMetadata}>
+                {moreDropdownExtension}
+            </SquireToolbarMoreDropdown>
         </div>
     );
 };

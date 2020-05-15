@@ -10,18 +10,18 @@ import { classnames } from '../../../helpers/component';
 import SquireToolbarDropdown from './SquireToolbarDropdown';
 import { SquireType } from '../squireConfig';
 import { setTextDirection } from '../squireActions';
-import { EditorMetadata } from '../SquireEditor';
+import { SquireEditorMetadata } from '../SquireEditor';
 
 const getClassname = (status: boolean) => (status ? undefined : 'nonvisible');
 
 interface Props {
-    metadata: EditorMetadata;
-    onChangeMetadata: (change: Partial<EditorMetadata>) => void;
+    metadata: SquireEditorMetadata;
+    onChangeMetadata: (change: Partial<SquireEditorMetadata>) => void;
     squireRef: MutableRefObject<SquireType>;
-    extension?: ReactNode;
+    children?: ReactNode;
 }
 
-const SquireToolbarMoreDropdown = ({ metadata, squireRef, onChangeMetadata, extension }: Props) => {
+const SquireToolbarMoreDropdown = ({ metadata, squireRef, onChangeMetadata, children }: Props) => {
     // const [mailSettings] = useMailSettings() as [MailSettings, boolean, Error];
     // const [addresses] = useAddresses() as [Address[], boolean, Error];
 
@@ -99,7 +99,7 @@ const SquireToolbarMoreDropdown = ({ metadata, squireRef, onChangeMetadata, exte
                     <Icon name="on" className={classnames(['mt0-25', getClassname(isPlainText)])} />
                     <span className="ml0-5 mtauto mbauto flex-item-fluid">{c('Info').t`Plain text`}</span>
                 </DropdownMenuButton>
-                {extension}
+                {children}
             </DropdownMenu>
         </SquireToolbarDropdown>
     );

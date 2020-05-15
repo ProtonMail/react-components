@@ -15,7 +15,7 @@ const isHTMLEmpty = (html: string) => !html || html === '<div><br /></div>' || h
 
 interface Props {
     // message: MessageExtended;
-    value: string;
+    // value: string;
     onReady: () => void;
     onFocus: () => void;
     onInput: (value: string) => void;
@@ -29,9 +29,10 @@ interface Props {
  * There is issues when trying to synchronize input value to the current content of the editor
  * Uncontrolled components is prefered in this case
  */
-const SquireIframe = forwardRef(({ value, onReady, onFocus, onInput, onAddImages }: Props, ref: Ref<SquireType>) => {
+const SquireIframe = forwardRef(({ onReady, onFocus, onInput, onAddImages }: Props, ref: Ref<SquireType>) => {
     const [iframeReady, setIframeReady] = useState(false);
     const [squireReady, setSquireReady] = useState(false);
+    const [isEmpty, setIsEmpty] = useState(true);
 
     // Keep track of the containing CIDs to detect deletion
     // const [cids, setCIDs] = useState<string[]>([]);
@@ -87,7 +88,9 @@ const SquireIframe = forwardRef(({ value, onReady, onFocus, onInput, onAddImages
     });
     const handleInput = useHandler(() => {
         // checkImageDeletion();
-        onInput(getSquireRef(ref).getHTML());
+        const content = getSquireRef(ref).getHTML();
+        setIsEmpty(isHTMLEmpty(content));
+        onInput(content);
     });
     const handlePaste = useHandler(pasteFileHandler(onAddImages));
 
@@ -106,11 +109,9 @@ const SquireIframe = forwardRef(({ value, onReady, onFocus, onInput, onAddImages
         }
     }, [squireReady]);
 
-    const isContentEmpty = isHTMLEmpty(value);
-
     return (
         <div className="editor-squire-wrapper fill w100 scroll-if-needed flex-item-fluid rounded relative">
-            {isContentEmpty && (
+            {isEmpty && (
                 <div className="absolute ml1 no-pointer-events placeholder">{c('Placeholder')
                     .t`Write your message`}</div>
             )}
