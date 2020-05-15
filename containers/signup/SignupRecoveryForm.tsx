@@ -44,7 +44,6 @@ const SignupRecoveryForm = ({ model, onChange, onSubmit, errors, loading }: Prop
     };
     return (
         <form name="recoveryForm" className="signup-form" onSubmit={onSubmit}>
-            <div className="strong big mt0 mb1">{c('Title').t`Add a recovery email (highly recommended)`}</div>
             <p>{c('Info')
                 .t`Proton will send you a recovery link to this email address if you forget your password or get locked out of your account.`}</p>
             {model.step === RECOVERY_EMAIL ? (

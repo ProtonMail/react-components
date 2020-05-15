@@ -195,8 +195,6 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                 return c('Title').t`Account verification`;
             case HUMAN_VERIFICATION:
                 return c('Title').t`Are you human?`;
-            case PLANS:
-                return c('Title').t`Choose a plan`;
             case PAYMENT:
                 return c('Title').t`Choose a payment method`;
             default:
@@ -543,6 +541,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
             )}
             {model.step === ACCOUNT_CREATION_EMAIL && (
                 <SignupAccountForm
+                    history={history}
                     model={model}
                     errors={errors}
                     onChange={updateModel}
