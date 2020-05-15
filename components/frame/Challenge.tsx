@@ -1,21 +1,16 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
 import ChallengeFrame, { Props as ChallengeProps } from './ChallengeFrame';
-import { Alert, Loader } from '../../index';
+import { Alert, Href, Loader } from '../../index';
 
 const Challenge = ({ children, style, ...rest }: Omit<ChallengeProps, 'src'>) => {
     const [isLoading, setIsLoading] = useState(true);
     const [hasError, setHasError] = useState(false);
 
     const supportTeam = (
-        <a
-            target="_blank"
-            rel="noreferrer"
-            href="https://protonmail.com/support-form"
-            title="Contact the ProtonMail support team."
-        >
+        <Href url="https://protonmail.com/support-form" title="Contact the ProtonMail support team.">
             {c('Info').t`support team`}
-        </a>
+        </Href>
     );
 
     return (

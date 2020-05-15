@@ -46,6 +46,6 @@ export const handleEvent = (renderEl: HTMLElement | undefined, eventPayload: Eve
     }
 };
 
-export const getChallengeURL = (API_URL = 'https://protonmail.blue/api', type: number) => {
+export const getChallengeURL = (API_URL: string, type: number) => {
     return new URL(`${API_URL}/challenge/js?Type=${type}`, window.location.origin);
 };
