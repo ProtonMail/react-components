@@ -26,18 +26,18 @@ const SignLayout = ({ children, aside, larger, left, right, locales }: Props) =>
                         ])}
                     >
                         <div className="p2">
-                            <div className="flex flex-items-center flex-nowrap mb2">
+                            <header className="flex flex-items-center flex-nowrap mb2">
                                 <span className="flex-item-fluid">{left}</span>
-                                <div className="flex-item-fluid aligncenter">TODO:ProtonLogo</div>
+                                <span className="flex-item-fluid aligncenter">TODO:ProtonLogo</span>
                                 <span className="flex-item-fluid alignright" />
-                            </div>
+                            </header>
                             <div className="mb2 flex-item-fluid">{children}</div>
-                            <div className="flex flex-items-center flex-nowrap">
+                            <footer className="flex flex-items-center flex-nowrap">
                                 <span className="flex-item-fluid">
                                     <LanguageSelect locales={locales} className="noborder" />
                                 </span>
                                 <span className="flex-item-fluid alignright">{right}</span>
-                            </div>
+                            </footer>
                         </div>
                         {aside ? (
                             <aside className="nomobile bg-global-light p2 flex flex-items-center flex-justify-center small m0">
