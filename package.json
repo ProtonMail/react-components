@@ -92,8 +92,9 @@
     "react-hooks-testing-library": "^0.5.0",
     "react-router-dom": "^4.3.1",
     "react-test-renderer": "^16.8.6",
+    "squire-rte": "github:ProtonMail/Squire#hotfix",
     "ttag": "^1.7.0",
-    "typescript": "^3.6.3"
+    "typescript": "^3.9.2"
   },
   "peerDependencies": {
     "date-fns": "^2.0.0",
