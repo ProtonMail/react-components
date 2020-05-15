@@ -21,9 +21,17 @@ interface Props {
     contactGroupsMap: { [contactGroupID: string]: ContactGroup };
     userKeysList: CachedKey[];
     ownAddresses: string[];
+    showHeader?: boolean;
 }
 
-const Contact = ({ contactID, contactEmails, contactGroupsMap, ownAddresses, userKeysList = [] }: Props) => {
+const Contact = ({
+    contactID,
+    contactEmails,
+    contactGroupsMap,
+    showHeader,
+    ownAddresses,
+    userKeysList = []
+}: Props) => {
     const [model, setModel] = useState<ContactModel>();
     const ref = useRef(contactID);
     const [contact, contactLoading] = useContact(contactID);
@@ -57,6 +65,7 @@ const Contact = ({ contactID, contactEmails, contactGroupsMap, ownAddresses, use
             ownAddresses={ownAddresses}
             userKeysList={userKeysList}
             errors={errors}
+            showHeader={showHeader}
         />
     );
 };

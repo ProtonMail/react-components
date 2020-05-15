@@ -2,13 +2,11 @@ import React, { useRef, CSSProperties } from 'react';
 import List from 'react-virtualized/dist/commonjs/List';
 import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer';
 
-import { classnames } from 'react-components';
 import { DENSITY } from 'proton-shared/lib/constants';
 import { UserSettings } from 'proton-shared/lib/interfaces/UserSettings';
-import { Contact } from 'proton-shared/lib/interfaces/contacts/Contact';
 
 interface Props {
-    contacts: Contact[];
+    rowCount: number;
     isDesktop?: boolean;
     userSettings: UserSettings;
     contactRowHeightComfort?: number;
@@ -17,40 +15,31 @@ interface Props {
 }
 
 const ContactsList = ({
-    contacts,
-    contactRowHeightComfort = 64,
-    contactRowHeightCompact = 48,
+    rowCount,
+    contactRowHeightComfort = 54,
+    contactRowHeightCompact = 46,
     rowRenderer,
-    userSettings,
-    isDesktop = true
+    userSettings
 }: Props) => {
     const listRef = useRef(null);
     const containerRef = useRef(null);
     const isCompactView = userSettings.Density === DENSITY.COMPACT;
 
     return (
-        <div
-            ref={containerRef}
-            className={classnames([
-                isDesktop ? 'items-column-list' : 'items-column-list--mobile',
-                isCompactView && 'is-compact'
-            ])}
-        >
-            <div className="items-column-list-inner items-column-list-inner--noborder">
-                <AutoSizer>
-                    {({ height, width }: { height: number; width: number }) => (
-                        <List
-                            className="contacts-list no-outline"
-                            ref={listRef}
-                            rowRenderer={rowRenderer}
-                            rowCount={contacts.length}
-                            height={height}
-                            width={width - 1}
-                            rowHeight={isCompactView ? contactRowHeightCompact : contactRowHeightComfort}
-                        />
-                    )}
-                </AutoSizer>
-            </div>
+        <div ref={containerRef} style={{ height: 300 }}>
+            <AutoSizer>
+                {({ height, width }: { height: number; width: number }) => (
+                    <List
+                        className="contact-list no-outline"
+                        ref={listRef}
+                        rowRenderer={rowRenderer}
+                        rowCount={rowCount}
+                        height={height}
+                        width={width - 1}
+                        rowHeight={isCompactView ? contactRowHeightCompact : contactRowHeightComfort}
+                    />
+                )}
+            </AutoSizer>
         </div>
     );
 };

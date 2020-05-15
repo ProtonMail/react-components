@@ -20,10 +20,10 @@ const ICONS = {
 interface Props {
     field?: string;
     properties: ContactProperties;
-    onChange?: Function;
-    onOrderChange?: Function;
+    onChange: Function;
+    onOrderChange?: (field: string, orderedProperties: ContactProperties) => void;
     onAdd?: () => void;
-    onRemove?: Function;
+    onRemove: Function;
 }
 
 const ContactModalProperties = ({
@@ -55,7 +55,6 @@ const ContactModalProperties = ({
                     property={property}
                     onChange={onChange}
                     onRemove={onRemove}
-                    onAdd={onAdd}
                     isOrderable={!!onOrderChange}
                 />
             )),
@@ -65,7 +64,9 @@ const ContactModalProperties = ({
     const handleSortEnd = useCallback(
         ({ newIndex, oldIndex }) => {
             const orderedProperties = move(properties, oldIndex, newIndex);
-            onOrderChange(field, orderedProperties);
+            if (onOrderChange && field) {
+                onOrderChange(field, orderedProperties);
+            }
         },
         [properties, field]
     );
@@ -75,7 +76,7 @@ const ContactModalProperties = ({
             <h3 className="mb1 flex flex-nowrap flex-items-center flex-item-noshrink">
                 <Icon className="mr0-5 flex-item-noshrink" name={iconName} />
                 <span className="mr0-5">{title}</span>
-                {!['fn', 'email'].includes(field) && (
+                {field && !['fn', 'email'].includes(field) && (
                     <EncryptedIcon
                         scrollContainerClass="pm-modalContentInner"
                         className="flex flex-item-centered-vert flex-item-noshrink"

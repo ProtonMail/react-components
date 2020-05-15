@@ -22,7 +22,7 @@ interface Props {
     contactEmails: ContactEmail[];
     contactGroupsMap?: { [contactGroupID: string]: ContactGroup };
     ownAddresses: string[];
-    field: string;
+    field?: string;
     userKeysList: CachedKey[];
     leftBlockWidth?: string;
     rightBlockWidth?: string;

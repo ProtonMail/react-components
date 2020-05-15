@@ -49,7 +49,7 @@ const formatModel = (properties: ContactProperties = []) => {
 interface Props {
     contactID?: string;
     properties: ContactProperties;
-    onAdd: Function;
+    onAdd?: () => void;
     onClose?: () => void;
     history?: History;
 }
@@ -57,7 +57,7 @@ interface Props {
 const ContactModal = ({
     contactID,
     properties: initialProperties = [],
-    onAdd,
+    onAdd = noop,
     onClose = noop,
     history,
     ...rest
@@ -146,6 +146,7 @@ const ContactModal = ({
             onSubmit={() => withLoading(handleSubmit())}
             title={title}
             submit={c('Action').t`Save`}
+            onClose={onClose}
             {...rest}
         >
             <Alert>{c('Info')
@@ -162,7 +163,7 @@ const ContactModal = ({
                 onChange={handleChange}
                 onRemove={handleRemove}
                 onOrderChange={handleOrderChange}
-                onAdd={() => handleAdd('email')}
+                onAdd={handleAdd('email')}
             />
             {user.hasPaidMail ? (
                 <>
@@ -172,7 +173,7 @@ const ContactModal = ({
                         onChange={handleChange}
                         onRemove={handleRemove}
                         onOrderChange={handleOrderChange}
-                        onAdd={() => handleAdd('tel')}
+                        onAdd={handleAdd('tel')}
                     />
                     <ContactModalProperties
                         properties={properties}
@@ -180,13 +181,13 @@ const ContactModal = ({
                         onChange={handleChange}
                         onRemove={handleRemove}
                         onOrderChange={handleOrderChange}
-                        onAdd={() => handleAdd('adr')}
+                        onAdd={handleAdd('adr')}
                     />
                     <ContactModalProperties
                         properties={properties}
                         onChange={handleChange}
                         onRemove={handleRemove}
-                        onAdd={() => handleAdd()}
+                        onAdd={handleAdd()}
                     />
                 </>
             ) : (

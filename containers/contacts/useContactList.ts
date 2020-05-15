@@ -15,7 +15,7 @@ interface ContactEmailsMap {
     [contactID: string]: ContactEmail[];
 }
 
-const useContactsList = ({ search, contactGroupID, contactGroups, contacts, contactEmails }: Props) => {
+const useContactList = ({ search, contactGroupID, contactGroups, contacts, contactEmails }: Props) => {
     const [checkedContacts, setCheckedContacts] = useState(Object.create(null));
     const normalizedSearch = normalize(search);
     const contactGroupsMap = useMemo(() => toMap(contactGroups), [contactGroups]);
@@ -103,4 +103,4 @@ const useContactsList = ({ search, contactGroupID, contactGroups, contacts, cont
     };
 };
 
-export default useContactsList;
+export default useContactList;

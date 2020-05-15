@@ -14,38 +14,38 @@ import { toMap } from 'proton-shared/lib/helpers/object';
 
 import ContactProvider from '../ContactProvider';
 import Contact from '../Contact';
+import useContactList from '../useContactList';
 
 interface Props {
     contactID: string;
 }
 
-const ContactModal = ({ contactID, ...rest }: Props) => {
+const ContactDetailsModal = ({ contactID, ...rest }: Props) => {
     const [contactEmails, loadingContactEmails] = useContactEmails();
+    const [contacts, loadingContacts] = useContactEmails();
     const [contactGroups = [], loadingContactGroups] = useContactGroups();
     const [userKeysList, loadingUserKeys] = useUserKeys();
     const [addresses = [], loadingAddresses] = useAddresses();
+    const { contactEmailsMap } = useContactList({ contactEmails, contacts });
 
-    const contactEmailsMap = useMemo(() => {
-        if (!Array.isArray(contactEmails)) {
-            return {};
-        }
-        return contactEmails.reduce((acc, contactEmail) => {
-            const { ContactID } = contactEmail;
-            if (!acc[ContactID]) {
-                acc[ContactID] = [];
-            }
-            acc[ContactID].push(contactEmail);
-            return acc;
-        }, Object.create(null));
-    }, [contactEmails]);
+    const openContactModal = () => {
+        // createModal(<ContactModal properties={properties} contactID={contactID} />);
+    };
 
     const ownAddresses = useMemo(() => addresses.map(({ Email }) => Email), [addresses]);
     const contactGroupsMap = useMemo(() => toMap(contactGroups), [contactGroups]);
 
+    const isLoading =
+        loadingContactEmails || loadingContactGroups || loadingUserKeys || loadingAddresses || loadingContacts;
+
     return (
         <FormModal
             title={c(`Title`).t`Contact details`}
-            loading={loadingContactEmails || loadingContactGroups || loadingUserKeys || loadingAddresses}
+            loading={isLoading}
+            close={c('Action').t`Cancel`}
+            submit={c('Action').t`Edit`}
+            disabled
+            onSubmit={openContactModal}
             {...rest}
         >
             <ContactProvider>
@@ -59,6 +59,7 @@ const ContactModal = ({ contactID, ...rest }: Props) => {
                         contactGroupsMap={contactGroupsMap}
                         ownAddresses={ownAddresses}
                         userKeysList={userKeysList}
+                        showHeader={false}
                     />
                 </ErrorBoundary>
             </ContactProvider>
@@ -66,4 +67,4 @@ const ContactModal = ({ contactID, ...rest }: Props) => {
     );
 };
 
-export default ContactModal;
+export default ContactDetailsModal;

@@ -187,7 +187,7 @@ const ContactEmailSettingsModal = ({
 
     return (
         // we cannot use the FormModal component because we need to introduce the class ellipsis inside the header
-        <DialogModal modalTitleID="modalTitle" {...rest}>
+        <DialogModal modalTitleID="modalTitle" onClose={onClose} {...rest}>
             <header className="pm-modalHeader">
                 <button type="button" className="pm-modalClose" title={c('Action').t`Close modal`} onClick={onClose}>
                     <Icon className="pm-modalClose-icon" name="close" />

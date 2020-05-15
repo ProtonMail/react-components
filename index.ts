@@ -315,6 +315,7 @@ export { default as AccessDeniedError } from './containers/error/AccessDeniedErr
 export { default as ContactModal } from './containers/contacts/modals/ContactModal';
 export { default as ContactListModal } from './containers/contacts/modals/ContactListModal';
 export { default as ContactDetailsModal } from './containers/contacts/modals/ContactDetailsModal';
+export { default as ContactProvider } from './containers/contacts/ContactProvider';
 export { default as useStep } from './hooks/useStep';
 export { default as useOnline } from './hooks/useOnline';
 export { default as useApiWithoutResult } from './hooks/useApiWithoutResult';

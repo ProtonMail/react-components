@@ -8,11 +8,14 @@ import { CRYPTO_PROCESSING_TYPES } from 'proton-shared/lib/contacts/constants';
 const { SIGNATURE_NOT_VERIFIED, FAIL_TO_READ, FAIL_TO_DECRYPT } = CRYPTO_PROCESSING_TYPES;
 
 interface Props {
-    errors: CryptoProcessingError[];
+    errors?: CryptoProcessingError[];
 }
 
 const ContactViewErrors = ({ errors }: Props) => {
+    if (!errors) return null;
+
     const errorTypes = errors.map(({ type }) => type);
+
     if (errorTypes.includes(SIGNATURE_NOT_VERIFIED)) {
         return (
             <div className="bg-global-attention p1">
