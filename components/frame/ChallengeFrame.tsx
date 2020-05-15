@@ -55,7 +55,7 @@ const ChallengeFrame = ({
         };
         let errorTimeout = window.setTimeout(handleError, ERROR_TIMEOUT_MS);
 
-        const challengeUrlSrc = getChallengeURL(config?.API_URL, type).toString();
+        const challengeUrlSrc = getChallengeURL(config.API_URL, type).toString();
         const styleSrcs = [...document.querySelectorAll<HTMLLinkElement>('link[rel=stylesheet]')].map((x) => {
             return new URL(x.href, window.location.origin).toString();
         });
