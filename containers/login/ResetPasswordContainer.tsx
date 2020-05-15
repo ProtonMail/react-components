@@ -1,18 +1,16 @@
 import React from 'react';
 import { c } from 'ttag';
-import { Locales } from 'proton-shared/lib/interfaces/Locales';
 import { ResetPasswordForm } from 'react-components';
 
 import SignInLayout from './SignInLayout';
 
 interface Props {
     onLogin: () => void;
-    locales: Locales;
 }
 
-const ResetPasswordContainer = ({ onLogin, locales }: Props) => {
+const ResetPasswordContainer = ({ onLogin }: Props) => {
     return (
-        <SignInLayout title={c('Title').t`Reset password`} locales={locales}>
+        <SignInLayout title={c('Title').t`Reset password`}>
             <ResetPasswordForm onLogin={onLogin} />
         </SignInLayout>
     );

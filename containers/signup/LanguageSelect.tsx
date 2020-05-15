@@ -1,18 +1,16 @@
 import React, { useState, ChangeEvent } from 'react';
 import loadLocale from 'proton-shared/lib/i18n/loadLocale';
-import { getBrowserLocale, getClosestMatches } from 'proton-shared/lib/i18n/helper';
+import { getBrowserLocale, getClosestMatches, getClosestMatch } from 'proton-shared/lib/i18n/helper';
 import { Select, useForceRefresh, useConfig } from 'react-components';
-import { Locales } from 'proton-shared/lib/interfaces/Locales';
 
 interface Props {
-    locales: Locales;
     className?: string;
 }
 
-const LanguageSelect = ({ locales, className }: Props) => {
-    const [language] = useState(getBrowserLocale());
+const LanguageSelect = ({ className }: Props) => {
     const forceRefresh = useForceRefresh();
     const { LOCALES = {} } = useConfig();
+    const [language] = useState(getClosestMatch(getBrowserLocale(), LOCALES));
     const options = Object.keys(LOCALES).map((value) => ({
         text: LOCALES[value],
         value
@@ -23,9 +21,9 @@ const LanguageSelect = ({ locales, className }: Props) => {
             ...getClosestMatches({
                 locale: newLocale,
                 browserLocale: getBrowserLocale(),
-                locales
+                locales: LOCALES
             }),
-            locales
+            locales: LOCALES
         });
         forceRefresh();
     };
