@@ -1,16 +1,23 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
 import { c } from 'ttag';
-import { useApi, useNotifications, useLoading, ForgotUsernameForm, SignInLayout } from 'react-components';
+import { History } from 'history';
+import { useApi, useNotifications, useLoading, ForgotUsernameForm } from 'react-components';
 import { requestUsername } from 'proton-shared/lib/api/reset';
+import { Locales } from 'proton-shared/lib/interfaces/Locales';
 
-const ForgotUsernameContainer = ({ history }) => {
+import SignInLayout from './SignInLayout';
+
+interface Props {
+    history: History;
+    locales: Locales;
+}
+
+const ForgotUsernameContainer = ({ history, locales }: Props) => {
     const api = useApi();
     const [loading, withLoading] = useLoading();
     const { createNotification } = useNotifications();
 
-    const handleSubmit = async (email) => {
+    const handleSubmit = async (email: string) => {
         await api(requestUsername(email));
         createNotification({
             text: c('Success')
@@ -20,15 +27,10 @@ const ForgotUsernameContainer = ({ history }) => {
     };
 
     return (
-        <SignInLayout title={c('Title').t`Log in`}>
-            <h2>{c('Title').t`Forgot your username?`}</h2>
+        <SignInLayout title={c('Title').t`Forgot your username?`} locales={locales}>
             <ForgotUsernameForm onSubmit={(data) => withLoading(handleSubmit(data))} loading={loading} />
         </SignInLayout>
     );
 };
 
-ForgotUsernameContainer.propTypes = {
-    history: PropTypes.object.isRequired
-};
-
-export default withRouter(ForgotUsernameContainer);
+export default ForgotUsernameContainer;

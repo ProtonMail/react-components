@@ -2,7 +2,7 @@ import React, { ChangeEvent, FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { c } from 'ttag';
 import { History } from 'history';
-import { Input, EmailInput, PasswordInput, PrimaryButton, InlineLinkButton } from 'react-components';
+import { Input, EmailInput, PasswordInput, PrimaryButton, InlineLinkButton, Label } from 'react-components';
 import { USERNAME_PLACEHOLDER } from 'proton-shared/lib/constants';
 
 import { SignupModel, SignupErros } from './interfaces';
@@ -42,14 +42,12 @@ const SignupAccountForm = ({ history, model, onChange, onSubmit, errors, loading
 
     return (
         <form name="accountForm" className="signup-form" onSubmit={onSubmit} autoComplete="off">
-            <div className="strong big mt0 mb1">{c('Signup title, keep "Account" capitalized')
-                .t`Create your Proton Account`}</div>
             {service && SERVICES[service] ? (
                 <div className="mb1">{c('Info').t`to continue to ${SERVICES[service]}`}</div>
             ) : null}
             {model.step === ACCOUNT_CREATION_USERNAME ? (
                 <div className="flex onmobile-flex-column mb1">
-                    <label className="mr1 pm-label" htmlFor="login">{c('Signup label').t`Username`}</label>
+                    <Label htmlFor="login">{c('Signup label').t`Username`}</Label>
                     <div className="flex-item-fluid">
                         <div className="flex flex-nowrap flex-items-center flex-item-fluid relative mb0-5">
                             <div className="flex-item-fluid">
@@ -80,7 +78,7 @@ const SignupAccountForm = ({ history, model, onChange, onSubmit, errors, loading
             ) : null}
             {model.step === ACCOUNT_CREATION_EMAIL ? (
                 <div className="flex onmobile-flex-column mb1">
-                    <label className="mr1 pm-label" htmlFor="login">{c('Signup label').t`Email`}</label>
+                    <Label htmlFor="login">{c('Signup label').t`Email`}</Label>
                     <div className="flex-item-fluid">
                         <div className="mb1 flex-item-fluid">
                             <EmailInput
@@ -106,7 +104,7 @@ const SignupAccountForm = ({ history, model, onChange, onSubmit, errors, loading
                 </div>
             ) : null}
             <div className="flex onmobile-flex-column mb0-5">
-                <label className="mr1 pm-label" htmlFor="password">{c('Signup label').t`Password`}</label>
+                <Label htmlFor="password">{c('Signup label').t`Password`}</Label>
                 <div className="flex-item-fluid">
                     <PasswordInput
                         id="password"
@@ -124,8 +122,7 @@ const SignupAccountForm = ({ history, model, onChange, onSubmit, errors, loading
                 </div>
             </div>
             <div className="flex onmobile-flex-column mb2">
-                <label className="mr1 pm-label" htmlFor="password-repeat">{c('Signup label')
-                    .t`Confirm password`}</label>
+                <Label htmlFor="password-repeat">{c('Signup label').t`Confirm password`}</Label>
                 <div className="flex-item-fluid">
                     <PasswordInput
                         id="password-repeat"
@@ -142,7 +139,7 @@ const SignupAccountForm = ({ history, model, onChange, onSubmit, errors, loading
                     />
                 </div>
             </div>
-            <div className="alignright mb1">
+            <div className="alignright mb2">
                 <PrimaryButton
                     className="pm-button--large flex-item-noshrink"
                     loading={loading}

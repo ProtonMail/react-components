@@ -5,23 +5,25 @@ import { Input, Label } from 'react-components';
 
 const TOTPForm = ({ totp, setTotp }) => {
     return (
-        <>
+        <div className="flex onmobile-flex-column mb1">
             <Label htmlFor="twoFa">{c('Label').t`Two-factor code`}</Label>
-            <Input
-                type="text"
-                name="twoFa"
-                autoFocus
-                autoCapitalize="off"
-                autoCorrect="off"
-                id="twoFa"
-                required
-                value={totp}
-                className="w100 mb1"
-                placeholder={c('Placeholder').t`Two-factor code`}
-                onChange={({ target: { value } }) => setTotp(value)}
-                data-cy-login="TOTP"
-            />
-        </>
+            <div className="flex-item-fluid">
+                <Input
+                    type="text"
+                    name="twoFa"
+                    autoFocus
+                    autoCapitalize="off"
+                    autoCorrect="off"
+                    id="twoFa"
+                    required
+                    value={totp}
+                    className="w100 mb1"
+                    placeholder={c('Placeholder').t`Two-factor code`}
+                    onChange={({ target: { value } }) => setTotp(value)}
+                    data-cy-login="TOTP"
+                />
+            </div>
+        </div>
     );
 };
 
