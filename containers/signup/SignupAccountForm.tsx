@@ -72,7 +72,7 @@ const SignupAccountForm = ({ history, model, onChange, onSubmit, errors, loading
                         </div>
                         <InlineLinkButton
                             onClick={() => onChange({ ...model, username: '', step: ACCOUNT_CREATION_EMAIL })}
-                        >{c('Action').t`Use an existing email address instead`}</InlineLinkButton>
+                        >{c('Action').t`Use an existing email address to signup`}</InlineLinkButton>
                     </div>
                 </div>
             ) : null}
@@ -99,7 +99,7 @@ const SignupAccountForm = ({ history, model, onChange, onSubmit, errors, loading
                         <UnsecureEmailInfo email={model.email} />
                         <InlineLinkButton
                             onClick={() => onChange({ ...model, email: '', step: ACCOUNT_CREATION_USERNAME })}
-                        >{c('Action').t`Create a secure email address`}</InlineLinkButton>
+                        >{c('Action').t`Use an existing email instead`}</InlineLinkButton>
                     </div>
                 </div>
             ) : null}
