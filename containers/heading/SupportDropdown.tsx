@@ -60,36 +60,51 @@ const SupportDropdown = ({ className, content, location }: Props) => {
                                 {c('Link').t`Forgot username?`}
                             </DropdownMenuLink>
                             <DropdownMenuLink
-                                href="https://protonvpn.com/support/login-problems/"
+                                href={
+                                    CLIENT_TYPE === VPN
+                                        ? 'https://protonvpn.com/support/login-problems/'
+                                        : 'https://protonmail.com/support/login-problems/'
+                                }
                                 target="_blank"
                                 className="flex flex-nowrap alignleft"
                             >
                                 {c('Link').t`Common login problems`}
                             </DropdownMenuLink>
                             <DropdownMenuLink
-                                href="https://protonvpn.com/support/"
+                                href={
+                                    CLIENT_TYPE === VPN
+                                        ? 'https://protonvpn.com/support/'
+                                        : 'https://protonmail.com/support/'
+                                }
                                 target="_blank"
                                 className="flex flex-nowrap alignleft"
                             >
                                 {c('Link').t`Contact support`}
                             </DropdownMenuLink>
+                            <DropdownMenuButton className="flex flex-nowrap alignleft" onClick={handleBugReportClick}>
+                                {c('Action').t`Report bug`}
+                            </DropdownMenuButton>
                         </>
-                    ) : null}
-                    <DropdownMenuLink
-                        className="flex flex-nowrap alignleft"
-                        href={
-                            CLIENT_TYPE === VPN ? 'https://protonvpn.com/support/' : 'https://protonmail.com/support/'
-                        }
-                        // eslint-disable-next-line react/jsx-no-target-blank
-                        target="_blank"
-                    >
-                        <Icon className="mt0-25 mr0-5" name="what-is-this" />
-                        {c('Action').t`I have a question`}
-                    </DropdownMenuLink>
-                    <DropdownMenuButton className="flex flex-nowrap alignleft" onClick={handleBugReportClick}>
-                        <Icon className="mt0-25 mr0-5" name="report-bug" />
-                        {c('Action').t`Report bug`}
-                    </DropdownMenuButton>
+                    ) : (
+                        <>
+                            <DropdownMenuLink
+                                className="flex flex-nowrap alignleft"
+                                href={
+                                    CLIENT_TYPE === VPN
+                                        ? 'https://protonvpn.com/support/'
+                                        : 'https://protonmail.com/support/'
+                                }
+                                target="_blank"
+                            >
+                                <Icon className="mt0-25 mr0-5" name="what-is-this" />
+                                {c('Action').t`I have a question`}
+                            </DropdownMenuLink>
+                            <DropdownMenuButton className="flex flex-nowrap alignleft" onClick={handleBugReportClick}>
+                                <Icon className="mt0-25 mr0-5" name="report-bug" />
+                                {c('Action').t`Report bug`}
+                            </DropdownMenuButton>
+                        </>
+                    )}
                 </DropdownMenu>
             </Dropdown>
         </>
