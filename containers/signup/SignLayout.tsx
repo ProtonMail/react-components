@@ -1,6 +1,6 @@
 import React, { ReactNode, useEffect } from 'react';
-import { classnames } from 'react-components';
-import { Locales } from 'proton-shared/lib/interfaces/Locales';
+import { c } from 'ttag';
+import { classnames, Href, useConfig } from 'react-components';
 
 import './SignLayout.scss';
 import LanguageSelect from './LanguageSelect';
@@ -12,17 +12,20 @@ interface Props {
     right?: ReactNode;
     left?: ReactNode;
     center?: ReactNode;
-    locales: Locales;
     larger?: boolean;
 }
 
-const SignLayout = ({ children, title, aside, larger, left, center, right, locales }: Props) => {
+const SignLayout = ({ children, title, aside, larger, left, center, right }: Props) => {
+    const { CLIENT_VERSION } = useConfig();
+    const termsLink = <Href key="terms" to="https://protonmail.com/terms-and-conditions">{c('Link').t`Terms`}</Href>;
+    const privacyLink = <Href key="privacy" to="https://protonmail.com/privacy-policy">{c('Link').t`Privacy`}</Href>;
+
     useEffect(() => {
         document.title = `${title} - Proton`;
     }, []);
 
     return (
-        <div className="pt1 pb1 pl2 pr2 scroll-if-needed h100v signLayout-container">
+        <div className="pt1 pb1 pl2 pr2 scroll-if-needed h100v signLayout-container flex flex-column flex-spacebetween">
             <div className="flex-item-fluid flex-item-noshrink flex flex-column flex-nowrap">
                 <div className="flex flex-column flex-nowrap flex-item-noshrink">
                     <div
@@ -43,7 +46,7 @@ const SignLayout = ({ children, title, aside, larger, left, center, right, local
                             </div>
                             <footer className="flex flex-items-center flex-nowrap">
                                 <span className="flex-item-fluid">
-                                    <LanguageSelect locales={locales} className="noborder" />
+                                    <LanguageSelect className="noborder" />
                                 </span>
                                 <span className="flex-item-fluid alignright">{right}</span>
                             </footer>
@@ -56,6 +59,8 @@ const SignLayout = ({ children, title, aside, larger, left, center, right, local
                     </div>
                 </div>
             </div>
+            <footer className="opacity-50 aligncenter small m0 flex-item-noshrink">{c('Info')
+                .jt`Made globally - Hosted in Switzerland | ${termsLink} | ${privacyLink} | Version ${CLIENT_VERSION}`}</footer>
         </div>
     );
 };

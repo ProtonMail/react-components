@@ -1,10 +1,16 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ChangeEvent } from 'react';
 import { c } from 'ttag';
 import { Input, Label, PasswordInput, SupportDropdown } from 'react-components';
 import { EMAIL_PLACEHOLDER, PASSWORD_PLACEHOLDER } from 'proton-shared/lib/constants';
 
-const PasswordForm = ({ username, setUsername, password, setPassword }) => {
+interface Props {
+    username: string;
+    setUsername: (newUsername: string) => void;
+    password: string;
+    setPassword: (newPassword: string) => void;
+}
+
+const PasswordForm = ({ username, setUsername, password, setPassword }: Props) => {
     return (
         <>
             <div className="flex onmobile-flex-column mb1">
@@ -20,7 +26,7 @@ const PasswordForm = ({ username, setUsername, password, setPassword }) => {
                         required
                         value={username}
                         placeholder={EMAIL_PLACEHOLDER}
-                        onChange={({ target: { value } }) => setUsername(value)}
+                        onChange={({ target: { value } }: ChangeEvent<HTMLInputElement>) => setUsername(value)}
                         data-cy-login="username"
                     />
                 </div>
@@ -36,7 +42,7 @@ const PasswordForm = ({ username, setUsername, password, setPassword }) => {
                             required
                             value={password}
                             placeholder={PASSWORD_PLACEHOLDER}
-                            onChange={({ target: { value } }) => setPassword(value)}
+                            onChange={({ target: { value } }: ChangeEvent<HTMLInputElement>) => setPassword(value)}
                             data-cy-login="password"
                         />
                     </div>
@@ -45,13 +51,6 @@ const PasswordForm = ({ username, setUsername, password, setPassword }) => {
             </div>
         </>
     );
-};
-
-PasswordForm.propTypes = {
-    username: PropTypes.string,
-    password: PropTypes.string,
-    setUsername: PropTypes.func,
-    setPassword: PropTypes.func
 };
 
 export default PasswordForm;

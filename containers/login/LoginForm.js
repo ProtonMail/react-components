@@ -201,7 +201,7 @@ const LoginForm = ({ onLogin, ignoreUnlock = false }) => {
             );
         };
         return (
-            <form name="loginForm" onSubmit={handleSubmit}>
+            <form name="loginForm" className="signup-form" onSubmit={handleSubmit}>
                 <PasswordForm
                     username={username}
                     setUsername={loading ? noop : setUsername}
@@ -238,7 +238,7 @@ const LoginForm = ({ onLogin, ignoreUnlock = false }) => {
             );
         };
         return (
-            <form name="totpForm" onSubmit={handleSubmit}>
+            <form name="totpForm" className="signup-form" onSubmit={handleSubmit} autoComplete="off">
                 <TOTPForm totp={totp} setTotp={loading ? noop : setTotp} />
                 <div className="alignright mb1">
                     {cancelButton}
@@ -271,7 +271,7 @@ const LoginForm = ({ onLogin, ignoreUnlock = false }) => {
             );
         };
         return (
-            <form name="unlockForm" onSubmit={handleSubmit}>
+            <form name="unlockForm" className="signup-form" onSubmit={handleSubmit}>
                 <UnlockForm password={keyPassword} setPassword={loading ? noop : setKeyPassword} />
                 <div className="alignright mb1">
                     {cancelButton}

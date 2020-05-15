@@ -10,7 +10,6 @@ import {
     SupportDropdown,
     Icon
 } from 'react-components';
-import { Locales } from 'proton-shared/lib/interfaces/Locales';
 import { queryAvailableDomains } from 'proton-shared/lib/api/domains';
 import { setupAddress } from 'proton-shared/lib/api/addresses';
 import { setupKeys } from 'proton-shared/lib/api/keys';
@@ -57,7 +56,6 @@ import humanApiHelper from './humanApi';
 interface Props {
     history: History;
     onLogin: (data: { UID: string; EventID: string }) => void;
-    locales: Locales;
 }
 
 const {
@@ -77,7 +75,7 @@ const {
 const withAuthHeaders = (UID: string, AccessToken: string, config: any) =>
     mergeHeaders(config, getAuthHeaders(UID, AccessToken));
 
-const SignupContainer = ({ onLogin, history, locales }: Props) => {
+const SignupContainer = ({ onLogin, history }: Props) => {
     const searchParams = new URLSearchParams(history.location.search);
     const currency = searchParams.get('currency');
     const cycle = Number(searchParams.get('billing'));
@@ -516,7 +514,6 @@ const SignupContainer = ({ onLogin, history, locales }: Props) => {
     return (
         <SignLayout
             title={getTitle()}
-            locales={locales}
             larger={[PLANS, PAYMENT].includes(model.step)}
             left={
                 [ACCOUNT_CREATION_USERNAME, ACCOUNT_CREATION_EMAIL].includes(model.step) ? null : (
