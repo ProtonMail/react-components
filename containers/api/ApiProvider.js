@@ -80,6 +80,31 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
                 throw e;
             }
 
+            // If the client knows it's offline and it's another offline error, just ignore it
+            if (offlineRef.current && e.name === 'OfflineError') {
+                throw e;
+            }
+            if (offlineRef.current && e.name !== 'OfflineError') {
+                hideOfflineNotification();
+            }
+
+            if (code === API_CUSTOM_ERROR_CODES.APP_VERSION_BAD) {
+                appVersionBad.current = true;
+                // The only way to get out of this one is to refresh.
+                createNotification({
+                    type: 'error',
+                    text: message || c('Info').t`Application upgrade required`,
+                    expiration: -1,
+                    disableAutoClose: true
+                });
+                throw e;
+            }
+
+            if (e.name === 'InactiveSession') {
+                onLogout();
+                throw e;
+            }
+
             if (e.name === 'OfflineError') {
                 const id = createNotification({
                     type: 'warning',
