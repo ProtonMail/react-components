@@ -22,37 +22,19 @@ interface Props {
 }
 
 const SquireToolbarMoreDropdown = ({ metadata, squireRef, onChangeMetadata, children }: Props) => {
-    // const [mailSettings] = useMailSettings() as [MailSettings, boolean, Error];
-    // const [addresses] = useAddresses() as [Address[], boolean, Error];
-
     const isRTL = metadata.RightToLeft === RIGHT_TO_LEFT.ON;
     const isPlainText = metadata.isPlainText;
 
     const handleChangeDirection = (RightToLeft: RIGHT_TO_LEFT) => () => {
-        // onChange({ data: { RightToLeft } });
-
         onChangeMetadata({ RightToLeft });
-        // setTimeout prevent a race condition between change of the flag and the content
         setTimeout(() => setTextDirection(squireRef.current, RightToLeft));
     };
 
     const switchToPlainText = () => {
-        // const MIMEType = MIME_TYPES.PLAINTEXT;
-        // const plainText = exportPlainText(message);
-        // onChange(plainText);
-
         onChangeMetadata({ isPlainText: true });
-
-        // const embeddeds = createEmbeddedMap();
-        // onChange({ plainText, data: { MIMEType }, embeddeds });
     };
 
     const switchToHTML = () => {
-        // const MIMEType = MIME_TYPES.DEFAULT;
-        // const content = plainTextToHTML(message, mailSettings, addresses);
-        // const document = setDocumentContent(message.document, content);
-        // onChange({ document, data: { MIMEType } });
-
         onChangeMetadata({ isPlainText: false });
     };
 

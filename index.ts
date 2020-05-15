@@ -422,6 +422,6 @@ export { default as SidebarMenu } from './components/sidebar/SidebarMenu';
 export { default as SidebarItem } from './components/sidebar/SidebarItem';
 export { default as SidebarItemContent } from './components/sidebar/SidebarItemContent';
 
-export { default as SquireEditor, SquireEditorMetadata, SquireEditorRef } from './components/editor/SquireEditor';
+export { default as SquireEditor } from './components/editor/SquireEditor';
 
 export * from './helpers/component';

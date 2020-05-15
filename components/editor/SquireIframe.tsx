@@ -7,20 +7,11 @@ import { pasteFileHandler } from './squireActions';
 
 const isHTMLEmpty = (html: string) => !html || html === '<div><br /></div>' || html === '<div><br></div>';
 
-// import { findCIDsInContent } from '../../../helpers/embedded/embeddedFinder';
-// import { Attachment } from '../../../models/attachment';
-// import { MessageExtended } from '../../../models/message';
-// import { getDocumentContent } from '../../../helpers/message/messageContent';
-// import { isHTMLEmpty } from '../../../helpers/dom';
-
 interface Props {
-    // message: MessageExtended;
-    // value: string;
     onReady: () => void;
     onFocus: () => void;
     onInput: (value: string) => void;
     onAddImages: (files: File[]) => void;
-    // onRemoveAttachment: (attachment: Attachment) => () => void;
 }
 
 /**
@@ -32,10 +23,7 @@ interface Props {
 const SquireIframe = forwardRef(({ onReady, onFocus, onInput, onAddImages }: Props, ref: Ref<SquireType>) => {
     const [iframeReady, setIframeReady] = useState(false);
     const [squireReady, setSquireReady] = useState(false);
-    const [isEmpty, setIsEmpty] = useState(true);
-
-    // Keep track of the containing CIDs to detect deletion
-    // const [cids, setCIDs] = useState<string[]>([]);
+    const [isEmpty, setIsEmpty] = useState(false);
 
     const iframeRef = useRef<HTMLIFrameElement>(null);
 
@@ -55,31 +43,18 @@ const SquireIframe = forwardRef(({ onReady, onFocus, onInput, onAddImages }: Pro
     }, []);
 
     useEffect(() => {
-        if (iframeReady && !squireReady) {
-            const iframeDoc = iframeRef.current?.contentWindow?.document as Document;
-
-            const squire = initSquire(iframeDoc);
+        const init = async (iframeDoc: Document) => {
+            const squire = await initSquire(iframeDoc);
             setSquireRef(ref, squire);
             setSquireReady(true);
             onReady();
+        };
+
+        if (iframeReady && !squireReady) {
+            const iframeDoc = iframeRef.current?.contentWindow?.document as Document;
+            init(iframeDoc);
         }
     }, [iframeReady]);
-
-    // Angular/src/app/squire/services/removeInlineWatcher.js
-    // const checkImageDeletion = useHandler(
-    //     () => {
-    //         const newCIDs = findCIDsInContent(getSquireRef(ref).getHTML());
-    //         const removedCIDs = diff(cids, newCIDs);
-    //         removedCIDs.forEach((cid) => {
-    //             const info = message.embeddeds?.get(cid);
-    //             if (info) {
-    //                 onRemoveAttachment(info.attachment)();
-    //             }
-    //         });
-    //         setCIDs(newCIDs);
-    //     },
-    //     { debounce: 500 }
-    // );
 
     const handleFocus = useHandler(() => {
         onFocus();
@@ -87,7 +62,6 @@ const SquireIframe = forwardRef(({ onReady, onFocus, onInput, onAddImages }: Pro
         document.dispatchEvent(new CustomEvent('dropdownclose'));
     });
     const handleInput = useHandler(() => {
-        // checkImageDeletion();
         const content = getSquireRef(ref).getHTML();
         setIsEmpty(isHTMLEmpty(content));
         onInput(content);

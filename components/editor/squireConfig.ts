@@ -253,7 +253,7 @@ const wrapInsertHTML = (squire: any) => {
 
 export const initSquire = async (document: Document): Promise<any> => {
     insertCustomStyle(document);
-    const Squire: any = await import('squire-rte');
+    const { default: Squire } = await import('squire-rte');
     const squire = new Squire(document, SQUIRE_CONFIG);
     wrapInsertHTML(squire);
     return squire;

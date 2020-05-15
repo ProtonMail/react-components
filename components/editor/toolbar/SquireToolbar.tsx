@@ -30,24 +30,12 @@ import SquireToolbarAlignmentDropdown from './SquireToolbarAlignmentDropdown';
 import SquireToolbarMoreDropdown from './SquireToolbarMoreDropdown';
 import { SquireEditorMetadata } from '../SquireEditor';
 
-// import { MessageExtended } from '../../../models/message';
-// import { isPlainText as testIsPlainText } from '../../../helpers/message/messages';
-// import { useHandler } from '../../../hooks/useHandler';
-// import { MessageChange } from '../Composer';
-// import { Breakpoints } from '../../../models/utils';
-
 interface Props {
     metadata: SquireEditorMetadata;
     onChangeMetadata: (change: Partial<SquireEditorMetadata>) => void;
-
-    // isPlainText: boolean;
     isNarrow: boolean;
-    // message: MessageExtended;
-    // breakpoints: Breakpoints;
     squireRef: MutableRefObject<SquireType>;
     editorReady: boolean;
-    // onChange: MessageChange;
-    // onChangeFlag: (changes: Map<number, boolean>) => void;
     onAddImages: (files: File[]) => void;
     moreDropdownExtension: ReactNode;
 }
@@ -58,16 +46,12 @@ const SquireToolbar = ({
     isNarrow,
     squireRef,
     editorReady,
-    // onChange,
-    // onChangeFlag,
     onAddImages,
     moreDropdownExtension
 }: Props) => {
     const [squireInfos, setSquireInfos] = useState<{ [test: string]: boolean }>({});
 
     const { createModal } = useModals();
-
-    // const isPlainText = testIsPlainText(message.data);
 
     const handleCursor = useHandler(() => setSquireInfos(getPathInfo(squireRef.current)), { debounce: 500 });
 

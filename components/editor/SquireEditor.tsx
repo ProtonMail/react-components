@@ -21,13 +21,6 @@ import SquireIframe from './SquireIframe';
 import { SquireType } from './squireConfig';
 import { setTextDirectionWithoutFocus, insertImage } from './squireActions';
 
-// interface ExternalEditorActions {
-//     insertEmbedded: (embeddeds: EmbeddedMap) => void;
-//     removeEmbedded: (attachments: Attachment[]) => void;
-// }
-
-// export type EditorActionsRef = MutableRefObject<ExternalEditorActions | undefined>;
-
 export interface SquireEditorMetadata {
     isPlainText: boolean;
     RightToLeft: RIGHT_TO_LEFT;
@@ -41,123 +34,40 @@ export interface SquireEditorRef {
 }
 
 interface Props {
-    // message: MessageExtended;
-    // document?: Element;
-
-    // input values
-    // value: string;
     metadata: SquireEditorMetadata;
-
-    // change listener
     onChange: (value: string) => void;
     onChangeMetadata: (metadataChange: Partial<SquireEditorMetadata>) => void;
-
-    // responsive
     isNarrow?: boolean;
-
-    // ellipse system (for blockquote)
     showEllipseButton?: boolean;
     onEllipseClick?: MouseEventHandler;
-
-    // plaintext support utilities
-    // htmlToText?: (html: string) => string;
-    // textToHtml?: (text: string) => string;
-
     disabled: boolean;
-    // breakpoints: Breakpoints;
     onReady: () => void;
-    // onChange: MessageChange;
-    // onChangeContent: (content: string) => void;
-    // onChangeFlag: (changes: Map<number, boolean>) => void;
     onFocus: () => void;
     onAddImages: (files: File[]) => void;
-    // onAddEmbeddedImages: (files: File[]) => void;
-    // onRemoveAttachment: (attachment: Attachment) => () => void;
-    // contentFocusRef: MutableRefObject<() => void>;
-    // editorActionsRef: EditorActionsRef;
     toolbarMoreDropdownExtension: ReactNode;
 }
 
 const SquireEditor = forwardRef(
     (
         {
-            // message,
-            // value,
             metadata,
-
             onChange,
             onChangeMetadata,
-
             isNarrow = false,
-
             showEllipseButton = false,
             onEllipseClick = noop,
-
             disabled,
-            // breakpoints,
             onReady,
-            // onChange,
-            // onChangeContent,
-            // onChangeFlag,
             onFocus,
-            // onAddAttachments,
             onAddImages,
             toolbarMoreDropdownExtension
-        }: // onRemoveAttachment,
-        // contentFocusRef
-        // editorActionsRef
-        Props,
+        }: Props,
         ref: Ref<SquireEditorRef>
     ) => {
-        // const isPlainText = testIsPlainText(message.data);
-
         const [editorReady, setEditorReady] = useState(false);
-        // const [documentReady, setDocumentReady] = useState(false);
-        // const [blockquoteExpanded, setBlockquoteExpanded] = useState(true);
-        // const [blockquoteSaved, setBlockquoteSaved] = useState('');
 
         const squireRef = useRef<SquireType>(null) as MutableRefObject<SquireType>;
         const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-        // useEffect(() => {
-        //     if (message.document?.innerHTML) {
-        //         setDocumentReady(true);
-        //     }
-        // }, [message.document?.innerHTML]);
-
-        // Initialize Squire (or textarea) content at (and only) startup
-        // useEffect(() => {
-        //     if (isPlainText) {
-        //         setEditorReady(false);
-        //     }
-
-        //     if (documentReady) {
-        //         if (isPlainText) {
-        //             if (textareaRef.current) {
-        //                 const content = getContent(message);
-        //                 textareaRef.current.value = content;
-        //                 setTextAreaCursorStart(textareaRef.current);
-
-        //                 contentFocusRef.current = textareaRef.current?.focus.bind(squireRef.current);
-        //             }
-        //         } else {
-        //             if (editorReady) {
-        //                 const [content, blockquote] = locateBlockquote(message.document);
-        //                 setBlockquoteSaved(blockquote);
-        //                 setBlockquoteExpanded(blockquote === '');
-
-        //                 squireRef.current?.setHTML(content);
-        //                 setTextDirectionWithoutFocus(
-        //                     squireRef.current,
-        //                     message.data?.RightToLeft?.valueOf() || RIGHT_TO_LEFT.OFF
-        //                 );
-
-        //                 contentFocusRef.current = squireRef.current?.focus.bind(squireRef.current);
-        //             }
-        //         }
-        //         onReady();
-        //     }
-        // }, [editorReady, documentReady, isPlainText]);
 
         useEffect(() => {
             const mutableRef = ref as MutableRefObject<SquireEditorRef>;
@@ -175,6 +85,7 @@ const SquireEditor = forwardRef(
                     } else {
                         squireRef.current?.setHTML(value);
                         setTextDirectionWithoutFocus(squireRef.current, metadata.RightToLeft || RIGHT_TO_LEFT.OFF);
+                        squireRef.current?.fireEvent('input'); // For Squire to be aware of the change
                     }
                 },
                 get document() {
@@ -201,9 +112,6 @@ const SquireEditor = forwardRef(
             if (metadata.isPlainText) {
                 onReady();
                 setEditorReady(false);
-                // contentFocusRef.current = () => textareaRef.current?.focus();
-            } else {
-                // contentFocusRef.current = () => squireRef.current?.focus();
             }
         }, [editorReady, metadata.isPlainText]);
 
@@ -211,20 +119,6 @@ const SquireEditor = forwardRef(
             onReady();
             setEditorReady(true);
         };
-
-        // const handleInput = (content: string) => {
-        //     if (!blockquoteExpanded) {
-        //         onChangeContent(content + blockquoteSaved);
-        //     } else {
-        //         onChangeContent(content);
-        //     }
-        // };
-
-        // const handleShowBlockquote = () => {
-        //     setBlockquoteExpanded(true);
-        //     const content = squireRef.current.getHTML();
-        //     squireRef.current.setHTML(content + blockquoteSaved);
-        // };
 
         const handlePlainTextChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
             onChange(event.target.value);
@@ -260,7 +154,7 @@ const SquireEditor = forwardRef(
                             onAddImages={onAddImages}
                             // onRemoveAttachment={onRemoveAttachment}
                         />
-                        {!showEllipseButton && (
+                        {showEllipseButton && (
                             <div className="m0-5">
                                 <Button className="pm-button--small" onClick={onEllipseClick}>
                                     ...
