@@ -9,23 +9,25 @@ interface Props {
 
 const UnlockForm = ({ password, setPassword }: Props) => {
     return (
-        <>
-            <Label htmlFor="password">{c('Label').t`Mailbox password`}</Label>
-            <Input
-                type="password"
-                name="password"
-                autoFocus
-                autoCapitalize="off"
-                autoCorrect="off"
-                id="password"
-                required
-                className="w100 mb1"
-                value={password}
-                placeholder={c('Placeholder').t`Mailbox password`}
-                onChange={({ target: { value } }) => setPassword(value)}
-                data-cy-login="mailbox password"
-            />
-        </>
+        <div className="flex onmobile-flex-column mb1">
+            <Label htmlFor="password" className="mr1">{c('Label').t`Mailbox password`}</Label>
+            <div className="flex-item-fluid">
+                <Input
+                    type="password"
+                    name="password"
+                    autoFocus
+                    autoCapitalize="off"
+                    autoCorrect="off"
+                    id="password"
+                    required
+                    className="w100 mb1"
+                    value={password}
+                    placeholder={c('Placeholder').t`Mailbox password`}
+                    onChange={({ target: { value } }) => setPassword(value)}
+                    data-cy-login="mailbox password"
+                />
+            </div>
+        </div>
     );
 };
 

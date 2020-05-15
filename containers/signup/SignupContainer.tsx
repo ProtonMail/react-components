@@ -184,6 +184,28 @@ const SignupContainer = ({ onLogin, history, locales }: Props) => {
         }
     };
 
+    const getTitle = () => {
+        switch (model.step) {
+            case ACCOUNT_CREATION_USERNAME:
+            case ACCOUNT_CREATION_EMAIL:
+                return c('Title').t`Create your Proton Account`;
+            case RECOVERY_EMAIL:
+                return c('Title').t`Add a recovery email (highly recommended)`;
+            case RECOVERY_PHONE:
+                return c('Title').t`Add a recovery phone (highly recommended)`;
+            case VERIFICATION_CODE:
+                return c('Title').t`Account verification`;
+            case HUMAN_VERIFICATION:
+                return c('Title').t`Are you human?`;
+            case PLANS:
+                return c('Title').t`Choose a plan`;
+            case PAYMENT:
+                return c('Title').t`Choose a payment method`;
+            default:
+                return '';
+        }
+    };
+
     const humanApi = <T,>(config: any): Promise<T> => humanApiHelper(config, { api, createModal, model, updateModel });
 
     const handleResend = async () => {
@@ -493,6 +515,7 @@ const SignupContainer = ({ onLogin, history, locales }: Props) => {
 
     return (
         <SignLayout
+            title={getTitle()}
             locales={locales}
             larger={[PLANS, PAYMENT].includes(model.step)}
             left={
@@ -502,6 +525,7 @@ const SignupContainer = ({ onLogin, history, locales }: Props) => {
                     </button>
                 )
             }
+            center="TODO:ProtonLogo"
             right={<SupportDropdown className="link" content={c('Action').t`Need help?`} />}
             aside={
                 [ACCOUNT_CREATION_USERNAME, ACCOUNT_CREATION_EMAIL].includes(model.step) ? (
