@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect } from 'react';
 import { classnames } from 'react-components';
 import { Locales } from 'proton-shared/lib/interfaces/Locales';
 
@@ -7,14 +7,20 @@ import LanguageSelect from './LanguageSelect';
 
 interface Props {
     children: ReactNode;
+    title: string;
     aside?: ReactNode;
     right?: ReactNode;
     left?: ReactNode;
+    center?: ReactNode;
     locales: Locales;
     larger?: boolean;
 }
 
-const SignLayout = ({ children, aside, larger, left, right, locales }: Props) => {
+const SignLayout = ({ children, title, aside, larger, left, center, right, locales }: Props) => {
+    useEffect(() => {
+        document.title = `${title} - Proton`;
+    }, []);
+
     return (
         <div className="pt1 pb1 pl2 pr2 scroll-if-needed h100v signLayout-container">
             <div className="flex-item-fluid flex-item-noshrink flex flex-column flex-nowrap">
@@ -28,10 +34,13 @@ const SignLayout = ({ children, aside, larger, left, right, locales }: Props) =>
                         <div className="p2">
                             <header className="flex flex-items-center flex-nowrap mb2">
                                 <span className="flex-item-fluid">{left}</span>
-                                <span className="flex-item-fluid aligncenter">TODO:ProtonLogo</span>
+                                <span className="flex-item-fluid aligncenter">{center}</span>
                                 <span className="flex-item-fluid alignright" />
                             </header>
-                            <div className="mb2 flex-item-fluid">{children}</div>
+                            <div className="mb2 flex-item-fluid">
+                                {title ? <h1 className="h4 bold mb1 mt0">{title}</h1> : null}
+                                {children}
+                            </div>
                             <footer className="flex flex-items-center flex-nowrap">
                                 <span className="flex-item-fluid">
                                     <LanguageSelect locales={locales} className="noborder" />

@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
+import { Link } from 'react-router-dom';
 import { useApi, useLoading, LinkButton, PrimaryButton, useNotifications, useModals } from 'react-components';
 import { getKeySalts } from 'proton-shared/lib/api/keys';
 import { getUser } from 'proton-shared/lib/api/user';
@@ -31,7 +32,7 @@ const FORM = {
 };
 
 /** @type any */
-const LoginForm = ({ onLogin, ignoreUnlock = false, needHelp }) => {
+const LoginForm = ({ onLogin, ignoreUnlock = false }) => {
     const { createNotification } = useNotifications();
     const { createModal } = useModals();
     const cacheRef = useRef();
@@ -186,6 +187,7 @@ const LoginForm = ({ onLogin, ignoreUnlock = false, needHelp }) => {
     };
 
     if (form === FORM.LOGIN) {
+        const signupLink = <Link key="signupLink" to="/signup">{c('Link').t`Create an account`}</Link>;
         const handleSubmit = (event) => {
             event.preventDefault();
 
@@ -206,12 +208,12 @@ const LoginForm = ({ onLogin, ignoreUnlock = false, needHelp }) => {
                     password={password}
                     setPassword={loading ? noop : setPassword}
                 />
-                <div className="flex flex-spacebetween">
-                    {needHelp}
-                    <PrimaryButton type="submit" loading={loading} data-cy-login="submit">
-                        {c('Action').t`Log in`}
+                <div className="alignright mb2">
+                    <PrimaryButton type="submit" className="pm-button--large" loading={loading} data-cy-login="submit">
+                        {c('Action').t`Sign in`}
                     </PrimaryButton>
                 </div>
+                <div className="mb2 alignright">{c('Info').jt`New to Proton? ${signupLink}`}</div>
             </form>
         );
     }
@@ -238,10 +240,15 @@ const LoginForm = ({ onLogin, ignoreUnlock = false, needHelp }) => {
         return (
             <form name="totpForm" onSubmit={handleSubmit}>
                 <TOTPForm totp={totp} setTotp={loading ? noop : setTotp} />
-                <div className="flex flex-spacebetween">
+                <div className="alignright mb1">
                     {cancelButton}
-                    <PrimaryButton type="submit" loading={loading} data-cy-login="submit TOTP">
-                        {c('Action').t`Submit`}
+                    <PrimaryButton
+                        type="submit"
+                        className="pm-button--large"
+                        loading={loading}
+                        data-cy-login="submit TOTP"
+                    >
+                        {c('Action').t`Authenticate`}
                     </PrimaryButton>
                 </div>
             </form>
@@ -266,10 +273,15 @@ const LoginForm = ({ onLogin, ignoreUnlock = false, needHelp }) => {
         return (
             <form name="unlockForm" onSubmit={handleSubmit}>
                 <UnlockForm password={keyPassword} setPassword={loading ? noop : setKeyPassword} />
-                <div className="flex flex-spacebetween">
+                <div className="alignright mb1">
                     {cancelButton}
-                    <PrimaryButton type="submit" loading={loading} data-cy-login="submit mailbox password">
-                        {c('Action').t`Submit`}
+                    <PrimaryButton
+                        type="submit"
+                        className="pm-button--large"
+                        loading={loading}
+                        data-cy-login="submit mailbox password"
+                    >
+                        {c('Action').t`Unlock`}
                     </PrimaryButton>
                 </div>
             </form>
@@ -285,7 +297,6 @@ const LoginForm = ({ onLogin, ignoreUnlock = false, needHelp }) => {
 
 LoginForm.propTypes = {
     onLogin: PropTypes.func.isRequired,
-    needHelp: PropTypes.node,
     ignoreUnlock: PropTypes.bool
 };
 

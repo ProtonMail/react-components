@@ -1,6 +1,15 @@
 import React, { ChangeEvent, FormEvent } from 'react';
 import { c } from 'ttag';
-import { Alert, EmailInput, LinkButton, PrimaryButton, IntlTelInput, useModals, ConfirmModal } from 'react-components';
+import {
+    Alert,
+    EmailInput,
+    LinkButton,
+    PrimaryButton,
+    IntlTelInput,
+    useModals,
+    ConfirmModal,
+    Label
+} from 'react-components';
 
 import { SignupModel, SignupErros } from './interfaces';
 import { SIGNUP_STEPS } from './constants';
@@ -41,7 +50,7 @@ const SignupRecoveryForm = ({ model, onChange, onSubmit, errors, loading }: Prop
             {model.step === RECOVERY_EMAIL ? (
                 <>
                     <div className="flex onmobile-flex-column mb1">
-                        <label className="pm-label" htmlFor="recovery-email">{c('Label').t`Recovery email`}</label>
+                        <Label htmlFor="recovery-email">{c('Label').t`Recovery email`}</Label>
                         <div className="flex-item-fluid">
                             <div className="mb0-5">
                                 <EmailInput
@@ -70,7 +79,7 @@ const SignupRecoveryForm = ({ model, onChange, onSubmit, errors, loading }: Prop
             {model.step === RECOVERY_PHONE ? (
                 <>
                     <div className="flex onmobile-flex-column mb1">
-                        <label className="pm-label" htmlFor="recovery-phone">{c('Label').t`Recovery phone`}</label>
+                        <Label htmlFor="recovery-phone">{c('Label').t`Recovery phone`}</Label>
                         <div className="flex-item-fluid">
                             <div className="mb0-5">
                                 <IntlTelInput

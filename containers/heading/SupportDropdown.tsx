@@ -13,6 +13,7 @@ import {
     DropdownMenuButton,
     DropdownMenuLink
 } from '../../';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { c } from 'ttag';
 import { CLIENT_TYPES } from 'proton-shared/lib/constants';
 
@@ -20,18 +21,19 @@ import SupportDropdownButton from './SupportDropdownButton';
 
 const { VPN } = CLIENT_TYPES;
 
-interface Props {
+interface Props extends RouteComponentProps {
     className?: string;
     content?: string;
 }
 
-const SupportDropdown = ({ className, content }: Props) => {
+const SupportDropdown = ({ className, content, location }: Props) => {
     const { UID } = useAuthentication();
     const { CLIENT_TYPE } = useConfig();
     const { createModal } = useModals();
     const [uid] = useState(generateUID('dropdown'));
     const { anchorRef, isOpen, toggle, close } = usePopperAnchor<HTMLButtonElement>();
     const isAuthenticated = !!UID;
+    const isLogin = location.pathname === '/login';
 
     const handleBugReportClick = () => {
         createModal(isAuthenticated ? <AuthenticatedBugModal /> : <BugModal />);
@@ -49,6 +51,30 @@ const SupportDropdown = ({ className, content }: Props) => {
             />
             <Dropdown id={uid} isOpen={isOpen} anchorRef={anchorRef} onClose={close} originalPlacement="bottom">
                 <DropdownMenu>
+                    {isLogin ? (
+                        <>
+                            <DropdownMenuLink href="/reset-password" className="flex flex-nowrap alignleft">
+                                {c('Link').t`Reset password`}
+                            </DropdownMenuLink>
+                            <DropdownMenuLink href="/forgot-username" className="flex flex-nowrap alignleft">
+                                {c('Link').t`Forgot username?`}
+                            </DropdownMenuLink>
+                            <DropdownMenuLink
+                                href="https://protonvpn.com/support/login-problems/"
+                                target="_blank"
+                                className="flex flex-nowrap alignleft"
+                            >
+                                {c('Link').t`Common login problems`}
+                            </DropdownMenuLink>
+                            <DropdownMenuLink
+                                href="https://protonvpn.com/support/"
+                                target="_blank"
+                                className="flex flex-nowrap alignleft"
+                            >
+                                {c('Link').t`Contact support`}
+                            </DropdownMenuLink>
+                        </>
+                    ) : null}
                     <DropdownMenuLink
                         className="flex flex-nowrap alignleft"
                         href={
@@ -70,4 +96,4 @@ const SupportDropdown = ({ className, content }: Props) => {
     );
 };
 
-export default SupportDropdown;
+export default withRouter(SupportDropdown);
