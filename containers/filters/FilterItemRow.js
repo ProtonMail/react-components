@@ -89,6 +89,7 @@ function FilterItemRow({ filter, ...rest }) {
                 <DropdownActions key="dropdown" className="pm-button--small" list={list} />
             ]}
             {...rest}
+            className="onmobile-hideTd3"
         ></OrderableTableRow>
     );
 }
