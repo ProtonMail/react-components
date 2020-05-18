@@ -5,6 +5,7 @@ import {
     Row,
     Field,
     Label,
+    Select,
     TextArea,
     EmailInput,
     PasswordInput,
@@ -25,6 +26,7 @@ import { reportBug } from 'proton-shared/lib/api/reports';
 import { srpAuth } from 'proton-shared/lib/srp';
 import { collectInfo, getClient } from '../../helpers/report';
 import { wait } from 'proton-shared/lib/helpers/promise';
+import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 
 const DeleteAccountModal = ({ onClose, ...rest }) => {
     const { createNotification } = useNotifications();
@@ -35,6 +37,7 @@ const DeleteAccountModal = ({ onClose, ...rest }) => {
     const [{ TwoFactor } = {}] = useUserSettings();
     const [loading, setLoading] = useState(false);
     const [model, setModel] = useState({
+        reason: '',
         feedback: '',
         email: '',
         password: '',
@@ -44,6 +47,14 @@ const DeleteAccountModal = ({ onClose, ...rest }) => {
     const Client = getClient(CLIENT_ID);
 
     const handleChange = (key) => ({ target }) => setModel({ ...model, [key]: target.value });
+    const reasons = [
+        { label: c('Option').t`Select a reason`, value: '', disabled: true },
+        { label: c('Option').t`I use a different Proton account`, value: '1' },
+        isAdmin && { label: c('Option').t`It's too expensive`, value: '2' },
+        { label: c('Option').t`It's missing a key feature that I need`, value: '3' },
+        { label: c('Option').t`I found another service that I like better`, value: '4' },
+        { label: c('Option').t`My reason isn't listed`, value: '5' }
+    ].filter(isTruthy);
 
     const handleSubmit = async () => {
         try {
@@ -57,20 +68,18 @@ const DeleteAccountModal = ({ onClose, ...rest }) => {
                 config: unlockPasswordChanges()
             });
 
-            if (isAdmin) {
-                await api(
-                    reportBug({
-                        ...collectInfo(),
-                        Client,
-                        ClientVersion: APP_VERSION,
-                        ClientType: CLIENT_TYPE,
-                        Title: `[DELETION FEEDBACK] ${Name}`,
-                        Username: Name,
-                        Email: model.email,
-                        Description: model.feedback
-                    })
-                );
-            }
+            await api(
+                reportBug({
+                    ...collectInfo(),
+                    Client,
+                    ClientVersion: APP_VERSION,
+                    ClientType: CLIENT_TYPE,
+                    Title: `[DELETION FEEDBACK] ${Name}`,
+                    Username: Name,
+                    Email: model.email,
+                    Description: model.feedback
+                })
+            );
 
             await api(deleteUser());
 
@@ -98,21 +107,35 @@ const DeleteAccountModal = ({ onClose, ...rest }) => {
             loading={loading}
             {...rest}
         >
-            <Alert type="warning">
-                <div className="bold uppercase">{c('Info').t`Warning: This also deletes all connected services`}</div>
-                <div>{c('Info').t`Example: ProtonMail, ProtonContact, ProtonVPN, ProtonDrive, ProtonCalendar`}</div>
-            </Alert>
             <Alert type="warning" learnMore="https://protonmail.com/support/knowledge-base/combine-accounts/">
                 <div className="bold uppercase">{c('Info').t`Warning: deletion is permanent`}</div>
                 <div>{c('Info')
                     .t`If you wish to delete this account in order to combine it with another one, do NOT delete it.`}</div>
             </Alert>
+            <Alert type="warning">
+                <div className="bold uppercase">{c('Info').t`Warning: This also deletes all connected services`}</div>
+                <div>{c('Info').t`Example: ProtonMail, ProtonContact, ProtonVPN, ProtonDrive, ProtonCalendar`}</div>
+            </Alert>
             <Row>
-                <Label htmlFor="feedback">{c('Label').t`Feedback`}</Label>
+                <Label htmlFor="reason">{c('Label').t`What is the main reason you are deleting your account?`}</Label>
+                <Field>
+                    <Select
+                        id="reason"
+                        autoFocus
+                        options={reasons}
+                        value={model.reason}
+                        onChange={handleChange('reason')}
+                        disabled={loading}
+                        required
+                    />
+                </Field>
+            </Row>
+            <Row>
+                <Label htmlFor="feedback">{c('Label')
+                    .t`We are sorry to see you go. Please explain why you are leaving to help us to improve.`}</Label>
                 <Field>
                     <TextArea
                         id="feedback"
-                        autoFocus
                         required
                         value={model.feedback}
                         placeholder={c('Placeholder').t`Feedback`}
