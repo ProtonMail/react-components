@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import {
@@ -17,6 +17,7 @@ import {
     useNotifications,
     useUserSettings,
     useApi,
+    useLoading,
     useAuthentication,
     useConfig,
     ErrorButton
@@ -27,16 +28,19 @@ import { srpAuth } from 'proton-shared/lib/srp';
 import { collectInfo, getClient } from '../../helpers/report';
 import { wait } from 'proton-shared/lib/helpers/promise';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
+import Checkbox from '../../components/input/Checkbox';
 
 const DeleteAccountModal = ({ onClose, ...rest }) => {
     const { createNotification } = useNotifications();
     const eventManager = useEventManager();
     const api = useApi();
     const authentication = useAuthentication();
+    const checkRef = useRef();
     const [{ isAdmin, Name } = {}] = useUser();
     const [{ TwoFactor } = {}] = useUserSettings();
-    const [loading, setLoading] = useState(false);
+    const [loading, withLoading] = useLoading();
     const [model, setModel] = useState({
+        check: false,
         reason: '',
         feedback: '',
         email: '',
@@ -57,9 +61,12 @@ const DeleteAccountModal = ({ onClose, ...rest }) => {
     ].filter(isTruthy);
 
     const handleSubmit = async () => {
+        if (!model.check) {
+            createNotification({ text: c('Error').t`You must tick this field`, type: 'error' });
+            checkRef?.current?.focus();
+            return;
+        }
         try {
-            setLoading(true);
-
             eventManager.stop();
 
             await srpAuth({
@@ -92,14 +99,13 @@ const DeleteAccountModal = ({ onClose, ...rest }) => {
             authentication.logout();
         } catch (error) {
             eventManager.start();
-            setLoading(false);
             throw error;
         }
     };
 
     return (
         <FormModal
-            onSubmit={handleSubmit}
+            onSubmit={() => withLoading(handleSubmit())}
             onClose={onClose}
             close={c('Action').t`Cancel`}
             submit={<ErrorButton loading={loading} type="submit">{c('Action').t`Delete`}</ErrorButton>}
@@ -156,7 +162,8 @@ const DeleteAccountModal = ({ onClose, ...rest }) => {
                         placeholder={c('Placeholder').t`Email address`}
                     />
                     <br />
-                    {c('Info').t`Please provide an email address in case we need to contact you.`}
+                    <small className="m0">{c('Info')
+                        .t`Please provide an email address in case we need to contact you.`}</small>
                 </Field>
             </Row>
             <Row>
@@ -170,7 +177,7 @@ const DeleteAccountModal = ({ onClose, ...rest }) => {
                         placeholder={c('Placeholder').t`Password`}
                     />
                     <br />
-                    {c('Info').t`Enter your login password to confirm your identity.`}
+                    <small className="m0">{c('Info').t`Enter your login password to confirm your identity.`}</small>
                 </Field>
             </Row>
             {TwoFactor ? (
@@ -187,6 +194,16 @@ const DeleteAccountModal = ({ onClose, ...rest }) => {
                     </Field>
                 </Row>
             ) : null}
+            <Row>
+                <Checkbox
+                    ref={checkRef}
+                    required
+                    id="check"
+                    checked={model.check}
+                    disabled={loading}
+                    onChange={({ target }) => setModel({ ...model, check: target.checked })}
+                >{c('Label').t`Yes, I want to permanently delete this account and all its data.`}</Checkbox>
+            </Row>
         </FormModal>
     );
 };
