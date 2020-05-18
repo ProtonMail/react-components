@@ -20,7 +20,7 @@ const PaymentMethodsTable = ({ methods, loading }) => {
             case PAYMENT_METHOD_TYPES.PAYPAL:
                 return (
                     <>
-                        <span>PayPal</span>{' '}
+                        <span className="mr1">PayPal</span>
                         <span className="autotablet ellipsis mw100" title={method.Details.Payer}>
                             {method.Details.Payer}
                         </span>
