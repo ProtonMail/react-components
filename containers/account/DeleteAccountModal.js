@@ -84,18 +84,20 @@ const DeleteAccountModal = ({ onClose, ...rest }) => {
                 config: unlockPasswordChanges()
             });
 
-            await api(
-                reportBug({
-                    ...collectInfo(),
-                    Client,
-                    ClientVersion: APP_VERSION,
-                    ClientType: CLIENT_TYPE,
-                    Title: `[DELETION FEEDBACK] ${Name}`,
-                    Username: Name,
-                    Email: model.email,
-                    Description: model.feedback
-                })
-            );
+            if (isAdmin) {
+                await api(
+                    reportBug({
+                        ...collectInfo(),
+                        Client,
+                        ClientVersion: APP_VERSION,
+                        ClientType: CLIENT_TYPE,
+                        Title: `[DELETION FEEDBACK] ${Name}`,
+                        Username: Name,
+                        Email: model.email,
+                        Description: model.feedback
+                    })
+                );
+            }
 
             await api(
                 deleteUser({
