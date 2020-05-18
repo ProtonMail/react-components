@@ -55,9 +55,9 @@ const ContactViewProperty = ({
 }: Props) => {
     const [{ hasPaidMail }] = useUser();
     const { createModal } = useModals();
-    const types = getTypeLabels();
+    const types: { [key: string]: string } = getTypeLabels();
 
-    const { field, first } = property;
+    const { field } = property;
     const cleanType = clearType(getType(property.type));
     const type = types[cleanType] || cleanType;
     const value = property.value;
@@ -156,7 +156,7 @@ const ContactViewProperty = ({
     return (
         <Row>
             <div className={classnames(['flex flex-items-center', leftBlockWidth])}>
-                <ContactLabelProperty field={field} type={type} first={first} />
+                <ContactLabelProperty field={field} type={type} />
             </div>
             <div className={classnames(['flex flex-nowrap flex-items-center pl1', rightBlockWidth])}>
                 <span className={classnames(['mr0-5 flex-item-fluid', !['note'].includes(field) && 'ellipsis'])}>

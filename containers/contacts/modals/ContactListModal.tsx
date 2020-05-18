@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, useEffect } from 'react';
+import React, { useState, ChangeEvent, useEffect, createRef, RefObject } from 'react';
 import { c, msgid } from 'ttag';
 
 import {
@@ -12,28 +12,37 @@ import {
 } from 'react-components';
 import { ContactEmail } from 'proton-shared/lib/interfaces/contacts/Contact';
 import { normalize } from 'proton-shared/lib/helpers/string';
+import { toMap } from 'proton-shared/lib/helpers/object';
 
 import ContactList from '../ContactList';
 import ContactListModalRow from '../../../components/contacts/ContactListModalRow';
+import EmptyContacts from '../../../components/contacts/EmptyContacts';
+import EmptyResults from '../../../components/contacts/EmptyResults';
 
 import './ContactListModal.scss';
-import { toMap } from 'proton-shared/lib/helpers/object';
 
-// interface Recipient {
-//     Name?: string;
-//     Address?: string;
-//     ContactID?: string;
-//     Group?: string;
-// }
+const convertContactToRecipient = ({ Name, ContactID, Email }: ContactEmail) => ({
+    Name,
+    ContactID,
+    Address: Email
+});
+
+interface Recipient {
+    Name?: string;
+    Address?: string;
+    ContactID?: string;
+    Group?: string;
+}
 
 interface Props {
-    // onSubmit: (recipients: Recipient[]) => void;
     inputValue: any;
-    onSubmit: (test: string) => void;
+    onSubmit: (recipients: Recipient[]) => void;
     onClose?: () => void;
 }
 
 const ContactListModal = ({ onSubmit, onClose, inputValue, ...rest }: Props) => {
+    const searchInputRef: RefObject<HTMLInputElement> = createRef();
+
     const [contactEmails, loadingContactEmails] = useContactEmails();
     const [userSettings, loadingUserSettings] = useUserSettings();
     const [contactGroups = [], loadingContactGroups] = useContactGroups();
@@ -107,6 +116,11 @@ const ContactListModal = ({ onSubmit, onClose, inputValue, ...rest }: Props) => 
         }
     };
 
+    const handleClearSearch = () => {
+        setSearchValue('');
+        searchInputRef?.current?.focus();
+    };
+
     const searchFilter = (c: ContactEmail) => {
         const tokenizedQuery = normalize(searchValue).split(' ');
 
@@ -141,9 +155,7 @@ const ContactListModal = ({ onSubmit, onClose, inputValue, ...rest }: Props) => 
     const handleSearchValue = (value: string) => setSearchValue(value);
 
     const handleSubmit = () => {
-        // console.log('contact emails', checkedContactEmails);
-        // console.log('groups', checkedContactGroups);
-        onSubmit('test');
+        onSubmit(checkedContactEmails.map(convertContactToRecipient));
         onClose?.();
     };
 
@@ -153,55 +165,70 @@ const ContactListModal = ({ onSubmit, onClose, inputValue, ...rest }: Props) => 
             loading={loading}
             onSubmit={handleSubmit}
             submit={
-                <PrimaryButton loading={loading} type="submit" disabled={!checkedContactEmails.length}>
-                    {c('Action').ngettext(
-                        msgid`Insert contact`,
-                        `Insert ${checkedContactEmails.length} contacts`,
-                        checkedContactEmails.length | 1
-                    )}
-                </PrimaryButton>
+                contactEmails.length ? (
+                    <PrimaryButton loading={loading} type="submit" disabled={!checkedContactEmails.length}>
+                        {c('Action').ngettext(
+                            msgid`Insert contact`,
+                            `Insert ${checkedContactEmails.length} contacts`,
+                            checkedContactEmails.length | 1
+                        )}
+                    </PrimaryButton>
+                ) : null
             }
             onClose={onClose}
             {...rest}
         >
-            <div className="mb0-5">
-                <SearchInput
-                    value={searchValue}
-                    onChange={handleSearchValue}
-                    placeholder={c('Placeholder').t`Search name, email or group`}
-                />
-            </div>
-            <div className="flex flex-nowrap w100 contact-list-row p1">
-                <div>
-                    <Checkbox className="w100 h100" checked={isAllChecked} onChange={handleCheckAll} />
-                </div>
-                <div className="flex flex-item-fluid flex-self-vcenter">
-                    <div className="w33 ml1">
-                        <strong className="uppercase">Name</strong>
+            {!contactEmails.length ? (
+                <EmptyContacts onClose={onClose} />
+            ) : (
+                <>
+                    <div className="mb0-5">
+                        <SearchInput
+                            ref={searchInputRef}
+                            value={searchValue}
+                            onChange={handleSearchValue}
+                            placeholder={c('Placeholder').t`Search name, email or group`}
+                        />
                     </div>
-                    <div className="flex-item-fluid ml1">
-                        <strong className="uppercase">Email</strong>
-                    </div>
-                    <div className="w20 ml1">
-                        <strong className="uppercase">Group</strong>
-                    </div>
-                </div>
-            </div>
-            <ContactList
-                rowCount={filteredContactEmails.length}
-                userSettings={userSettings}
-                isDesktop={false}
-                rowRenderer={({ index, style }) => (
-                    <ContactListModalRow
-                        onCheck={handleCheck}
-                        style={style}
-                        key={filteredContactEmails[index].ID}
-                        contact={filteredContactEmails[index]}
-                        checked={!!checkedContactEmailMap[filteredContactEmails[index].ID]}
-                        contactGroupMap={contactGroupMap}
-                    />
-                )}
-            />
+                    {filteredContactEmails.length ? (
+                        <>
+                            <div className="flex flex-nowrap w100 contact-list-row p1">
+                                <div>
+                                    <Checkbox className="w100 h100" checked={isAllChecked} onChange={handleCheckAll} />
+                                </div>
+                                <div className="flex flex-item-fluid flex-self-vcenter">
+                                    <div className="w33 ml1">
+                                        <strong className="uppercase">Name</strong>
+                                    </div>
+                                    <div className="flex-item-fluid ml1">
+                                        <strong className="uppercase">Email</strong>
+                                    </div>
+                                    <div className="w20 ml1">
+                                        <strong className="uppercase">Group</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <ContactList
+                                rowCount={filteredContactEmails.length}
+                                userSettings={userSettings}
+                                isDesktop={false}
+                                rowRenderer={({ index, style }) => (
+                                    <ContactListModalRow
+                                        onCheck={handleCheck}
+                                        style={style}
+                                        key={filteredContactEmails[index].ID}
+                                        contact={filteredContactEmails[index]}
+                                        checked={!!checkedContactEmailMap[filteredContactEmails[index].ID]}
+                                        contactGroupMap={contactGroupMap}
+                                    />
+                                )}
+                            />
+                        </>
+                    ) : (
+                        <EmptyResults onClearSearch={handleClearSearch} query={searchValue} />
+                    )}
+                </>
+            )}
         </FormModal>
     );
 };

@@ -9,7 +9,7 @@ import {
     Field,
     Input,
     Select,
-    ColorSelector,
+    ColorPicker,
     PrimaryButton,
     useContactGroups,
     useContactEmails,
@@ -28,7 +28,7 @@ import ContactGroupTable from '../ContactGroupTable';
 const mapIDs = (contactEmails: ContactEmail[]) => contactEmails.map(({ ID }) => ID);
 
 interface Props {
-    contactGroupID: string;
+    contactGroupID?: string;
     onClose?: () => void;
 }
 
@@ -140,7 +140,7 @@ const ContactGroupModal = ({ contactGroupID, onClose = noop, ...rest }: Props) =
             <Row>
                 <Label htmlFor="contactGroupColor">{c('Label for contact group color').t`Color`}</Label>
                 <Field>
-                    <ColorSelector selected={model.color} onChange={handleChangeColor} />
+                    <ColorPicker color={model.color} onChange={handleChangeColor} />
                 </Field>
             </Row>
             {options.length ? (

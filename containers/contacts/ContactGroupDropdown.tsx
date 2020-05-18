@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, ReactNode } from 'react';
+import React, { useState, useEffect, useMemo, ReactNode, ChangeEvent } from 'react';
 import { c, msgid } from 'ttag';
 
 import {
@@ -60,20 +60,22 @@ const getModel = (contactGroups = [], contactEmails = []) => {
  * @param {Array} contactEmails
  * @returns {Array} result.contacts
  */
-const collectContacts = (contactEmails = [], contacts) => {
+const collectContacts = (contactEmails: ContactEmail[] = [], contacts) => {
     return contactEmails.reduce(
         (acc, { ContactID }) => {
             acc.duplicate[ContactID] = (acc.duplicate[ContactID] || 0) + 1;
 
             if (acc.duplicate[ContactID] === 2) {
-                const contact = contacts.find(({ ID }) => ID === ContactID);
-                acc.contacts.push(contact);
+                const contact = contacts.find(({ ID }: { ID: string }) => ID === ContactID);
+                if (contact) {
+                    acc.contacts.push(contact);
+                }
             }
 
             return acc;
         },
         {
-            contacts: [],
+            contacts: [] as ContactEmail[],
             duplicate: Object.create(null)
         }
     );
@@ -82,12 +84,12 @@ const collectContacts = (contactEmails = [], contacts) => {
 interface Props {
     children: ReactNode;
     className: string;
-    disabled: boolean;
+    disabled?: boolean;
     contactEmails: ContactEmail[];
     forToolbar?: boolean;
 }
 
-const ContactGroupDropdown = ({ children, className, contactEmails, disabled, forToolbar = false }: Props) => {
+const ContactGroupDropdown = ({ children, className, contactEmails, disabled = false, forToolbar = false }: Props) => {
     const [keyword, setKeyword] = useState('');
     const [loading, withLoading] = useLoading();
     const { anchorRef, isOpen, toggle, close } = usePopperAnchor();
@@ -104,7 +106,8 @@ const ContactGroupDropdown = ({ children, className, contactEmails, disabled, fo
         createModal(<ContactGroupModal />);
         close();
     };
-    const handleCheck = (contactGroupID) => ({ target }) => setModel({ ...model, [contactGroupID]: +target.checked });
+    const handleCheck = (contactGroupID: string) => ({ target }: ChangeEvent<HTMLInputElement>) =>
+        setModel({ ...model, [contactGroupID]: +target.checked });
 
     const handleApply = async () => {
         let selectedContactEmails = [...contactEmails];
