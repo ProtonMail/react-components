@@ -26,7 +26,7 @@ const Challenge = ({ children, style, ...rest }: Omit<ChallengeProps, 'src'>) =>
                 </>
             ) : (
                 <ChallengeFrame
-                    src="https://secure.protonmail.com/challenge/challenge.html"
+                    src="http://192.168.178.21:8080/challenge.html"
                     className={isLoading || hasError ? 'hidden' : 'w100'}
                     innerClassName="flex-item-fluid-auto"
                     bodyClassName="color-black bg-white"
