@@ -1,7 +1,6 @@
 import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { Link } from 'react-router-dom';
 import { useApi, useLoading, LinkButton, PrimaryButton, useNotifications, useModals } from 'react-components';
 import { getKeySalts } from 'proton-shared/lib/api/keys';
 import { getUser } from 'proton-shared/lib/api/user';
@@ -187,7 +186,6 @@ const LoginForm = ({ onLogin, ignoreUnlock = false }) => {
     };
 
     if (form === FORM.LOGIN) {
-        const signupLink = <Link key="signupLink" to="/signup">{c('Link').t`Create an account`}</Link>;
         const handleSubmit = (event) => {
             event.preventDefault();
 
@@ -213,7 +211,6 @@ const LoginForm = ({ onLogin, ignoreUnlock = false }) => {
                         {c('Action').t`Sign in`}
                     </PrimaryButton>
                 </div>
-                <div className="mb2 alignright">{c('Info').jt`New to Proton? ${signupLink}`}</div>
             </form>
         );
     }

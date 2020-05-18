@@ -1,5 +1,6 @@
 import React from 'react';
 import { c } from 'ttag';
+import { Link } from 'react-router-dom';
 
 import LoginForm from './LoginForm';
 import SignLayout from '../signup/SignLayout';
@@ -9,6 +10,7 @@ interface Props {
 }
 
 const LoginContainer = ({ onLogin }: Props) => {
+    const signupLink = <Link key="signupLink" to="/signup">{c('Link').t`Create an account`}</Link>;
     return (
         <SignLayout
             title={c('Title').t`Sign in`}
@@ -22,6 +24,7 @@ const LoginContainer = ({ onLogin }: Props) => {
             }
         >
             <LoginForm onLogin={onLogin} />
+            <div className="mb2 alignright">{c('Info').jt`New to Proton? ${signupLink}`}</div>
         </SignLayout>
     );
 };
