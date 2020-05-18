@@ -61,11 +61,17 @@ const DeleteAccountModal = ({ onClose, ...rest }) => {
     const handleChange = (key) => ({ target }) => setModel({ ...model, [key]: target.value });
     const reasons = [
         { label: c('Option').t`Select a reason`, value: '', disabled: true },
-        { label: c('Option').t`I use a different Proton account`, value: '1' },
-        isAdmin && { label: c('Option').t`It's too expensive`, value: '2' },
-        { label: c('Option').t`It's missing a key feature that I need`, value: '3' },
-        { label: c('Option').t`I found another service that I like better`, value: '4' },
-        { label: c('Option').t`My reason isn't listed`, value: '5' }
+        { label: c('Option').t`I use a different Proton account`, value: 'I use a different Proton account' },
+        isAdmin && { label: c('Option').t`It's too expensive`, value: `It's too expensive` },
+        {
+            label: c('Option').t`It's missing a key feature that I need`,
+            value: `It's missing a key feature that I need`
+        },
+        {
+            label: c('Option').t`I found another service that I like better`,
+            value: 'I found another service that I like better'
+        },
+        { label: c('Option').t`My reason isn't listed`, value: `My reason isn't listed` }
     ].filter(isTruthy);
 
     const handleSubmit = async () => {
@@ -91,7 +97,13 @@ const DeleteAccountModal = ({ onClose, ...rest }) => {
                 })
             );
 
-            await api(deleteUser());
+            await api(
+                deleteUser({
+                    Reason: model.reason,
+                    Feedback: model.feedback,
+                    Email: model.email
+                })
+            );
 
             createNotification({ text: c('Success').t`Account deleted. Logging out...` });
 
