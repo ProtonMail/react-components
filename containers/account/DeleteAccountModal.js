@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import {
@@ -35,7 +35,6 @@ const DeleteAccountModal = ({ onClose, ...rest }) => {
     const eventManager = useEventManager();
     const api = useApi();
     const authentication = useAuthentication();
-    const checkRef = useRef();
     const [{ isAdmin, Name } = {}] = useUser();
     const [{ TwoFactor } = {}] = useUserSettings();
     const [loading, withLoading] = useLoading();
@@ -49,6 +48,15 @@ const DeleteAccountModal = ({ onClose, ...rest }) => {
     });
     const { CLIENT_ID, APP_VERSION, CLIENT_TYPE } = useConfig();
     const Client = getClient(CLIENT_ID);
+    const isDisabled = useMemo(() => {
+        if (!model.check || !model.reason || !model.feedback || !model.email || !model.password) {
+            return true;
+        }
+        if (TwoFactor && !model.twoFa) {
+            return true;
+        }
+        return false;
+    }, [model.check, model.reason, model.feedback, model.email, model.password, model.twoFa]);
 
     const handleChange = (key) => ({ target }) => setModel({ ...model, [key]: target.value });
     const reasons = [
@@ -61,11 +69,6 @@ const DeleteAccountModal = ({ onClose, ...rest }) => {
     ].filter(isTruthy);
 
     const handleSubmit = async () => {
-        if (!model.check) {
-            createNotification({ text: c('Error').t`You must tick this field`, type: 'error' });
-            checkRef?.current?.focus();
-            return;
-        }
         try {
             eventManager.stop();
 
@@ -108,7 +111,9 @@ const DeleteAccountModal = ({ onClose, ...rest }) => {
             onSubmit={() => withLoading(handleSubmit())}
             onClose={onClose}
             close={c('Action').t`Cancel`}
-            submit={<ErrorButton loading={loading} type="submit">{c('Action').t`Delete`}</ErrorButton>}
+            submit={
+                <ErrorButton loading={loading} disabled={isDisabled} type="submit">{c('Action').t`Delete`}</ErrorButton>
+            }
             title={c('Title').t`Delete account`}
             loading={loading}
             {...rest}
@@ -153,31 +158,33 @@ const DeleteAccountModal = ({ onClose, ...rest }) => {
             <Row>
                 <Label htmlFor="email">{c('Label').t`Email address`}</Label>
                 <Field>
-                    <EmailInput
-                        id="email"
-                        required={true}
-                        disabled={loading}
-                        value={model.email}
-                        onChange={handleChange('email')}
-                        placeholder={c('Placeholder').t`Email address`}
-                    />
-                    <br />
-                    <small className="m0">{c('Info')
-                        .t`Please provide an email address in case we need to contact you.`}</small>
+                    <div className="mb0-5">
+                        <EmailInput
+                            id="email"
+                            required={true}
+                            disabled={loading}
+                            value={model.email}
+                            onChange={handleChange('email')}
+                            placeholder={c('Placeholder').t`Email address`}
+                        />
+                    </div>
+                    <div className="small m0">{c('Info')
+                        .t`Please provide an email address in case we need to contact you.`}</div>
                 </Field>
             </Row>
             <Row>
                 <Label htmlFor="password">{c('Label').t`Login password`}</Label>
                 <Field>
-                    <PasswordInput
-                        id="password"
-                        disabled={loading}
-                        value={model.password}
-                        onChange={handleChange('password')}
-                        placeholder={c('Placeholder').t`Password`}
-                    />
-                    <br />
-                    <small className="m0">{c('Info').t`Enter your login password to confirm your identity.`}</small>
+                    <div className="mb0-5">
+                        <PasswordInput
+                            id="password"
+                            disabled={loading}
+                            value={model.password}
+                            onChange={handleChange('password')}
+                            placeholder={c('Placeholder').t`Password`}
+                        />
+                    </div>
+                    <div className="small m0">{c('Info').t`Enter your login password to confirm your identity.`}</div>
                 </Field>
             </Row>
             {TwoFactor ? (
@@ -196,7 +203,6 @@ const DeleteAccountModal = ({ onClose, ...rest }) => {
             ) : null}
             <Row>
                 <Checkbox
-                    ref={checkRef}
                     required
                     id="check"
                     checked={model.check}
