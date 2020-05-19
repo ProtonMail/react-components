@@ -184,9 +184,15 @@ const SquireToolbar = ({
                     <SquireToolbarSeparator />
                 </>
             )}
-            <SquireToolbarMoreDropdown metadata={metadata} squireRef={squireRef} onChangeMetadata={onChangeMetadata}>
-                {moreDropdownExtension}
-            </SquireToolbarMoreDropdown>
+            {(metadata.supportRightToLeft || metadata.supportPlainText || moreDropdownExtension) && (
+                <SquireToolbarMoreDropdown
+                    metadata={metadata}
+                    squireRef={squireRef}
+                    onChangeMetadata={onChangeMetadata}
+                >
+                    {moreDropdownExtension}
+                </SquireToolbarMoreDropdown>
+            )}
         </div>
     );
 };

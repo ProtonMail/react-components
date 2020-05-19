@@ -22,12 +22,12 @@ interface Props {
 }
 
 const SquireToolbarMoreDropdown = ({ metadata, squireRef, onChangeMetadata, children }: Props) => {
-    const isRTL = metadata.RightToLeft === RIGHT_TO_LEFT.ON;
+    const isRTL = metadata.rightToLeft === RIGHT_TO_LEFT.ON;
     const isPlainText = metadata.isPlainText;
 
-    const handleChangeDirection = (RightToLeft: RIGHT_TO_LEFT) => () => {
-        onChangeMetadata({ RightToLeft });
-        setTimeout(() => setTextDirection(squireRef.current, RightToLeft));
+    const handleChangeDirection = (rightToLeft: RIGHT_TO_LEFT) => () => {
+        onChangeMetadata({ rightToLeft });
+        setTimeout(() => setTextDirection(squireRef.current, rightToLeft));
     };
 
     const switchToPlainText = () => {
@@ -51,36 +51,44 @@ const SquireToolbarMoreDropdown = ({ metadata, squireRef, onChangeMetadata, chil
     return (
         <SquireToolbarDropdown className="flex-item-noshrink mlauto" title={c('Action').t`More`}>
             <DropdownMenu className="editor-toolbar-more-menu flex-item-noshrink">
-                {!metadata.isPlainText && [
-                    // Fragment breaks the DropdownMenu flow, an array works
+                {metadata.supportRightToLeft &&
+                    !metadata.isPlainText && [
+                        // Fragment breaks the DropdownMenu flow, an array works
+                        <DropdownMenuButton
+                            key={1}
+                            className="alignleft flex flex-nowrap"
+                            onClick={handleChangeDirection(RIGHT_TO_LEFT.OFF)}
+                        >
+                            <Icon name="on" className={classnames(['mt0-25', getClassname(!isRTL)])} />
+                            <span className="ml0-5 mtauto mbauto flex-item-fluid">{c('Info').t`Left to Right`}</span>
+                        </DropdownMenuButton>,
+                        <DropdownMenuButton
+                            key={2}
+                            className="alignleft flex flex-nowrap"
+                            onClick={handleChangeDirection(RIGHT_TO_LEFT.ON)}
+                        >
+                            <Icon name="on" className={classnames(['mt0-25', getClassname(isRTL)])} />
+                            <span className="ml0-5 mtauto mbauto flex-item-fluid">{c('Info').t`Right to Left`}</span>
+                        </DropdownMenuButton>
+                    ]}
+                {metadata.supportPlainText && [
                     <DropdownMenuButton
-                        key={1}
-                        className="alignleft flex flex-nowrap"
-                        onClick={handleChangeDirection(RIGHT_TO_LEFT.OFF)}
+                        key={3}
+                        className="alignleft flex flex-nowrap noborder-bottom"
+                        onClick={handleChangePlainText(false)}
                     >
-                        <Icon name="on" className={classnames(['mt0-25', getClassname(!isRTL)])} />
-                        <span className="ml0-5 mtauto mbauto flex-item-fluid">{c('Info').t`Left to Right`}</span>
+                        <Icon name="on" className={classnames(['mt0-25', getClassname(!isPlainText)])} />
+                        <span className="ml0-5 mtauto mbauto flex-item-fluid">{c('Info').t`Normal`}</span>
                     </DropdownMenuButton>,
                     <DropdownMenuButton
-                        key={2}
+                        key={4}
                         className="alignleft flex flex-nowrap"
-                        onClick={handleChangeDirection(RIGHT_TO_LEFT.ON)}
+                        onClick={handleChangePlainText(true)}
                     >
-                        <Icon name="on" className={classnames(['mt0-25', getClassname(isRTL)])} />
-                        <span className="ml0-5 mtauto mbauto flex-item-fluid">{c('Info').t`Right to Left`}</span>
+                        <Icon name="on" className={classnames(['mt0-25', getClassname(isPlainText)])} />
+                        <span className="ml0-5 mtauto mbauto flex-item-fluid">{c('Info').t`Plain text`}</span>
                     </DropdownMenuButton>
                 ]}
-                <DropdownMenuButton
-                    className="alignleft flex flex-nowrap noborder-bottom"
-                    onClick={handleChangePlainText(false)}
-                >
-                    <Icon name="on" className={classnames(['mt0-25', getClassname(!isPlainText)])} />
-                    <span className="ml0-5 mtauto mbauto flex-item-fluid">{c('Info').t`Normal`}</span>
-                </DropdownMenuButton>
-                <DropdownMenuButton className="alignleft flex flex-nowrap" onClick={handleChangePlainText(true)}>
-                    <Icon name="on" className={classnames(['mt0-25', getClassname(isPlainText)])} />
-                    <span className="ml0-5 mtauto mbauto flex-item-fluid">{c('Info').t`Plain text`}</span>
-                </DropdownMenuButton>
                 {children}
             </DropdownMenu>
         </SquireToolbarDropdown>

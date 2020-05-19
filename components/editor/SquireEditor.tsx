@@ -22,9 +22,18 @@ import { SquireType } from './squireConfig';
 import { setTextDirectionWithoutFocus, insertImage } from './squireActions';
 
 export interface SquireEditorMetadata {
+    supportPlainText: boolean;
     isPlainText: boolean;
-    RightToLeft: RIGHT_TO_LEFT;
+    supportRightToLeft: boolean;
+    rightToLeft: RIGHT_TO_LEFT;
 }
+
+const defaultMetadata: SquireEditorMetadata = {
+    supportPlainText: false,
+    isPlainText: false,
+    supportRightToLeft: false,
+    rightToLeft: RIGHT_TO_LEFT.OFF
+};
 
 export interface SquireEditorRef {
     focus: () => void;
@@ -34,7 +43,7 @@ export interface SquireEditorRef {
 }
 
 interface Props {
-    metadata: SquireEditorMetadata;
+    metadata?: SquireEditorMetadata;
     onChange: (value: string) => void;
     onChangeMetadata: (metadataChange: Partial<SquireEditorMetadata>) => void;
     isNarrow?: boolean;
@@ -47,10 +56,17 @@ interface Props {
     toolbarMoreDropdownExtension: ReactNode;
 }
 
+/**
+ * This component is *Uncontrolled*
+ * https://reactjs.org/docs/uncontrolled-components.html
+ * There is issues when trying to synchronize input value to the current content of the editor
+ * Uncontrolled components is prefered in this case
+ * Look at the specific SquireEditorRef provided to set initial value
+ */
 const SquireEditor = forwardRef(
     (
         {
-            metadata,
+            metadata = defaultMetadata,
             onChange,
             onChangeMetadata,
             isNarrow = false,
@@ -84,7 +100,7 @@ const SquireEditor = forwardRef(
                         textareaRef.current && (textareaRef.current.value = value);
                     } else {
                         squireRef.current?.setHTML(value);
-                        setTextDirectionWithoutFocus(squireRef.current, metadata.RightToLeft || RIGHT_TO_LEFT.OFF);
+                        setTextDirectionWithoutFocus(squireRef.current, metadata.rightToLeft || RIGHT_TO_LEFT.OFF);
                         squireRef.current?.fireEvent('input'); // For Squire to be aware of the change
                     }
                 },
@@ -106,7 +122,7 @@ const SquireEditor = forwardRef(
                     insertImage(squireRef.current, url, attrs);
                 }
             };
-        }, []);
+        }, [metadata]);
 
         useEffect(() => {
             if (metadata.isPlainText) {
@@ -147,12 +163,10 @@ const SquireEditor = forwardRef(
                     <>
                         <SquireIframe
                             ref={squireRef}
-                            // value={value}
                             onFocus={onFocus}
                             onReady={handleReady}
                             onInput={onChange}
                             onAddImages={onAddImages}
-                            // onRemoveAttachment={onRemoveAttachment}
                         />
                         {showEllipseButton && (
                             <div className="m0-5">
