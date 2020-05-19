@@ -30,11 +30,11 @@ const SignLayout = ({ children, title, aside, larger, left, center, right }: Pro
                 <div className="flex flex-column flex-nowrap flex-item-noshrink">
                     <div
                         className={classnames([
-                            'center bg-white-dm color-global-grey-dm mt2 mb2 onmobile-mt1 onmobile-pb1 w100 mw100 bordered-container flex-item-noshrink flex flex-nowrap',
+                            'center bg-white-dm color-global-grey-dm mt2 mb2 onmobile-mt1 onmobile-pb1 w100 mw100 bordered-container flex-item-noshrink flex flex-nowrap signup-container',
                             larger ? '' : aside ? 'mw50e' : 'mw40e'
                         ])}
                     >
-                        <div className="p2">
+                        <div className="p2 flex-item-fluid">
                             <header className="flex flex-items-center flex-nowrap mb2">
                                 <span className="flex-item-fluid">{left}</span>
                                 <span className="flex-item-fluid aligncenter">{center}</span>
