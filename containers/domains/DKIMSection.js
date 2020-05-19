@@ -29,7 +29,7 @@ const DKIMSection = ({ domain }) => {
                         .t`We detected a problem with your DNS configuration. Please make sure your records match the instructions below. If the problem persists, we will have to switch DKIM signing off.`}
                 </Alert>
             )}
-            <p className="mb1 bl">
+            <p className="mb1">
                 {c('Label')
                     .t`Please add all 3 of the following CNAME records. Note, DNS records can take several hours to update.`}
             </p>
