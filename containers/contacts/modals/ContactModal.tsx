@@ -23,7 +23,7 @@ import { OVERWRITE, CATEGORIES } from 'proton-shared/lib/contacts/constants';
 import { ContactProperties } from 'proton-shared/lib/interfaces/contacts/Contact';
 
 import ContactModalProperties from '../ContactModalProperties';
-import UpsellFree from '../../../components/contacts/UpsellFree';
+import ContactUpsell from '../../../components/contacts/ContactUpsell';
 
 const DEFAULT_MODEL = [
     { field: 'fn', value: '' },
@@ -191,7 +191,7 @@ const ContactModal = ({
                     />
                 </>
             ) : (
-                <UpsellFree />
+                <ContactUpsell />
             )}
         </FormModal>
     );

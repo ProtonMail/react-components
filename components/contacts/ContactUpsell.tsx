@@ -5,7 +5,7 @@ import { PrimaryButton } from 'react-components';
 import { redirectTo } from 'proton-shared/lib/helpers/browser';
 import upgradeToPaidPlanSvg from 'design-system/assets/img/pm-images/upgrade.svg';
 
-const UpsellFree = () => {
+const ContactUpsell = () => {
     const title = c('Title').t`Upgrade to a paid plan`;
 
     return (
@@ -29,4 +29,4 @@ const UpsellFree = () => {
     );
 };
 
-export default UpsellFree;
+export default ContactUpsell;

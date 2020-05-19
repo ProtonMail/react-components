@@ -19,7 +19,7 @@ import { splitKeys } from 'proton-shared/lib/keys/keys';
 import { prepareContact, CryptoProcessingError } from 'proton-shared/lib/contacts/decrypt';
 import { ContactProperties } from 'proton-shared/lib/interfaces/contacts/Contact';
 
-import Contact from '../Contact';
+import Contact from '../ContactContainer';
 import useContactList from '../useContactList';
 import useContact from '../useContact';
 

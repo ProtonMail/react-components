@@ -11,7 +11,7 @@ import ContactModal from './modals/ContactModal';
 import ContactViewErrors from './ContactViewErrors';
 import ContactSummary from './ContactSummary';
 import ContactViewProperties from './ContactViewProperties';
-import UpsellFree from '../../components/contacts/UpsellFree';
+import ContactUpsell from '../../components/contacts/ContactUpsell';
 
 interface Props {
     contactID: string;
@@ -76,7 +76,7 @@ const ContactView = ({
                         <ContactViewProperties {...contactViewPropertiesProps} />
                     </>
                 ) : (
-                    <UpsellFree />
+                    <ContactUpsell />
                 )}
             </div>
         </div>
