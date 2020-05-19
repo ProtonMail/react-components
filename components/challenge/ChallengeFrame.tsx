@@ -211,7 +211,7 @@ const ChallengeFrame = ({
             ref={iframeRef}
             title={title}
             className={className}
-            sandbox="allow-scripts allow-same-origin"
+            sandbox="allow-scripts allow-same-origin allow-popups"
         />
     );
 };
