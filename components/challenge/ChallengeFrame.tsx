@@ -123,6 +123,10 @@ const ChallengeFrame = ({
                 );
             }
 
+            if (eventDataType === 'rect' && eventDataPayload?.height !== undefined && iframeRef.current) {
+                iframeRef.current.style.height = `${eventDataPayload.height}px`;
+            }
+
             if (eventDataType === 'onload') {
                 handleAssetLoaded();
             }
