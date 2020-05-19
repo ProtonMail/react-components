@@ -125,6 +125,7 @@ export { default as Challenge } from './components/challenge/Challenge';
 export { default as ChallengeFrame } from './components/challenge/ChallengeFrame';
 export { default as Price } from './components/price/Price';
 export { default as Progress } from './components/progress/Progress';
+export { default as Meter } from './components/progress/Meter';
 export { default as CircularProgress } from './components/progress/CircularProgress';
 export { default as Legend } from './components/text/Legend';
 export { default as ErrorZone } from './components/text/ErrorZone';
