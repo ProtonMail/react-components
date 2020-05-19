@@ -10,6 +10,7 @@ import {
     SupportDropdown,
     Icon
 } from 'react-components';
+import ProtonLogo from '../../components/logo/ProtonLogo';
 import { queryAvailableDomains } from 'proton-shared/lib/api/domains';
 import { setupAddress } from 'proton-shared/lib/api/addresses';
 import { setupKeys } from 'proton-shared/lib/api/keys';
@@ -520,7 +521,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                     </button>
                 )
             }
-            center="TODO:ProtonLogo"
+            center={<ProtonLogo />}
             right={<SupportDropdown className="link" content={c('Action').t`Need help?`} />}
             aside={
                 [ACCOUNT_CREATION_USERNAME, ACCOUNT_CREATION_EMAIL].includes(model.step) ? (

@@ -80,7 +80,7 @@ const SignupAccountForm = ({ history, model, onChange, onSubmit, errors, loading
                 <div className="flex onmobile-flex-column mb1">
                     <Label htmlFor="login">{c('Signup label').t`Email`}</Label>
                     <div className="flex-item-fluid">
-                        <div className="mb1 flex-item-fluid">
+                        <div className="mb0-5 flex-item-fluid">
                             <EmailInput
                                 id="login"
                                 name="login"
