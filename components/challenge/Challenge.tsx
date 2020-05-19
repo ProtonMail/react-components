@@ -3,7 +3,7 @@ import { c } from 'ttag';
 import ChallengeFrame, { Props as ChallengeProps } from './ChallengeFrame';
 import { Alert, Href, Loader } from '../../index';
 
-const Challenge = ({ children, style, ...rest }: Omit<ChallengeProps, 'src'>) => {
+const Challenge = ({ children, style, onLoaded, ...rest }: Omit<ChallengeProps, 'src'>) => {
     const [isLoading, setIsLoading] = useState(true);
     const [hasError, setHasError] = useState(false);
 
@@ -33,10 +33,12 @@ const Challenge = ({ children, style, ...rest }: Omit<ChallengeProps, 'src'>) =>
                     style={style}
                     onLoaded={() => {
                         setIsLoading(false);
+                        onLoaded?.();
                     }}
                     onError={() => {
                         setHasError(true);
                         setIsLoading(false);
+                        onLoaded?.();
                     }}
                     {...rest}
                 >
