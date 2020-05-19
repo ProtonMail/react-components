@@ -423,5 +423,6 @@ export { default as SidebarItem } from './components/sidebar/SidebarItem';
 export { default as SidebarItemContent } from './components/sidebar/SidebarItemContent';
 
 export { default as SquireEditor } from './components/editor/SquireEditor';
+export { default as SimpleSquireEditor } from './components/editor/SimpleSquireEditor';
 
 export * from './helpers/component';

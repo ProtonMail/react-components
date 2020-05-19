@@ -9,7 +9,6 @@ import React, {
     Ref,
     ReactNode
 } from 'react';
-import { c } from 'ttag';
 import { RIGHT_TO_LEFT } from 'proton-shared/lib/constants';
 import { noop } from 'proton-shared/lib/helpers/function';
 
@@ -20,6 +19,8 @@ import EditorToolbar from './toolbar/SquireToolbar';
 import SquireIframe from './SquireIframe';
 import { SquireType } from './squireConfig';
 import { setTextDirectionWithoutFocus, insertImage } from './squireActions';
+
+import './SquireEditor.scss';
 
 export interface SquireEditorMetadata {
     supportPlainText: boolean;
@@ -39,21 +40,23 @@ export interface SquireEditorRef {
     focus: () => void;
     value: string;
     document?: Element;
-    insertImage: (url: string, attrs: { [key: string]: string | undefined }) => void;
+    insertImage: (url: string, attrs?: { [key: string]: string | undefined }) => void;
 }
 
 interface Props {
+    className?: string;
+    placeholder?: string;
     metadata?: SquireEditorMetadata;
-    onChange: (value: string) => void;
-    onChangeMetadata: (metadataChange: Partial<SquireEditorMetadata>) => void;
+    onChange?: (value: string) => void;
+    onChangeMetadata?: (metadataChange: Partial<SquireEditorMetadata>) => void;
     isNarrow?: boolean;
     showEllipseButton?: boolean;
     onEllipseClick?: MouseEventHandler;
-    disabled: boolean;
-    onReady: () => void;
-    onFocus: () => void;
-    onAddImages: (files: File[]) => void;
-    toolbarMoreDropdownExtension: ReactNode;
+    disabled?: boolean;
+    onReady?: () => void;
+    onFocus?: () => void;
+    onAddImages?: (files: File[]) => void;
+    toolbarMoreDropdownExtension?: ReactNode;
 }
 
 /**
@@ -66,17 +69,19 @@ interface Props {
 const SquireEditor = forwardRef(
     (
         {
+            className,
+            placeholder,
             metadata = defaultMetadata,
-            onChange,
-            onChangeMetadata,
+            onChange = noop,
+            onChangeMetadata = noop,
             isNarrow = false,
             showEllipseButton = false,
             onEllipseClick = noop,
-            disabled,
-            onReady,
-            onFocus,
-            onAddImages,
-            toolbarMoreDropdownExtension
+            disabled = false,
+            onReady = noop,
+            onFocus = noop,
+            onAddImages = noop,
+            toolbarMoreDropdownExtension = null
         }: Props,
         ref: Ref<SquireEditorRef>
     ) => {
@@ -118,7 +123,7 @@ const SquireEditor = forwardRef(
                         squireRef.current?.focus();
                     }
                 },
-                insertImage: (url: string, attrs: { [key: string]: string | undefined }) => {
+                insertImage: (url: string, attrs: { [key: string]: string | undefined } = {}) => {
                     insertImage(squireRef.current, url, attrs);
                 }
             };
@@ -141,7 +146,13 @@ const SquireEditor = forwardRef(
         };
 
         return (
-            <div className={classnames(['editor w100 h100 rounded flex flex-column', disabled && 'editor--disabled'])}>
+            <div
+                className={classnames([
+                    className,
+                    'editor w100 h100 rounded flex flex-column',
+                    disabled && 'editor--disabled'
+                ])}
+            >
                 <EditorToolbar
                     metadata={metadata}
                     onChangeMetadata={onChangeMetadata}
@@ -157,12 +168,13 @@ const SquireEditor = forwardRef(
                         ref={textareaRef}
                         onFocus={onFocus}
                         onChange={handlePlainTextChange}
-                        placeholder={c('Placeholder').t`Write your message`}
+                        placeholder={placeholder}
                     />
                 ) : (
                     <>
                         <SquireIframe
                             ref={squireRef}
+                            placeholder={placeholder}
                             onFocus={onFocus}
                             onReady={handleReady}
                             onInput={onChange}
