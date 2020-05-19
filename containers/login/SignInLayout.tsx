@@ -70,6 +70,7 @@ import React, { ReactNode } from 'react';
 import { SupportDropdown } from 'react-components';
 
 import SignLayout from '../signup/SignLayout';
+import ProtonLogo from '../../components/logo/ProtonLogo';
 
 interface Props {
     children: ReactNode;
@@ -80,7 +81,7 @@ const SignInLayout = ({ children, title }: Props) => {
     return (
         <SignLayout
             title={title}
-            center="TODO:ProtonLogo"
+            center={<ProtonLogo />}
             right={<SupportDropdown className="pm-button--primaryborder-dark" />}
         >
             {children}

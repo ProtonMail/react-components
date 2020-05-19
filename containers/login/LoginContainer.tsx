@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 
 import LoginForm from './LoginForm';
 import SignLayout from '../signup/SignLayout';
+import ProtonLogo from '../../components/logo/ProtonLogo';
 
 interface Props {
     onLogin: () => void;
@@ -14,7 +15,7 @@ const LoginContainer = ({ onLogin }: Props) => {
     return (
         <SignLayout
             title={c('Title').t`Sign in`}
-            center="TODO:ProtonLogo"
+            center={<ProtonLogo />}
             aside={
                 <div className="aligncenter">
                     TODO:images
