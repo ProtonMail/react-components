@@ -7,7 +7,7 @@ const ERROR_TIMEOUT_MS = 10000;
 const CHALLENGE_TIMEOUT_MS = 7000;
 
 export interface ChallengeRef {
-    getChallenge: () => Promise<{ id: string; fingerprint: string } | undefined>;
+    getChallenge: () => Promise<{ [key: string]: string } | undefined>;
 }
 
 export interface Props
@@ -62,7 +62,7 @@ const ChallengeFrame = ({
         const scriptSrcs = [challengeUrlSrc];
         let challengeError = false;
 
-        let challengeResolve: (data: { fingerprint: string; id: string }) => void;
+        let challengeResolve: (data: { [key: string]: string }) => void;
 
         const assetsTotal = scriptSrcs.length + styleSrcs.length;
         let assetsLoaded = 0;
@@ -141,8 +141,7 @@ const ChallengeFrame = ({
                     return;
                 }
                 challengeResolve?.({
-                    id: messageData.id,
-                    fingerprint: messageData.fingerprint
+                    [messageData.id]: messageData.fingerprint
                 });
             }
         };
