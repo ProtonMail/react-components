@@ -32,7 +32,7 @@ const SignupAccountForm = ({ history, model, onChange, onSubmit, errors, loading
     const searchParams = new URLSearchParams(history.location.search);
     const service = searchParams.get('service') as null | SERVICES;
     const [availableDomain = ''] = model.domains;
-    const loginLink = <Link key="loginLink" to="/login">{c('Link').t`Sign in`}</Link>;
+    const loginLink = <Link key="loginLink" className="nodecoration" to="/login">{c('Link').t`Sign in`}</Link>;
     const disableSubmit = !!(
         (model.step === ACCOUNT_CREATION_USERNAME && errors.username) ||
         (model.step === ACCOUNT_CREATION_EMAIL && errors.email) ||
