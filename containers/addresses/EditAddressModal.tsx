@@ -79,15 +79,7 @@ const EditAddressModal = ({ onClose, address, ...rest }: Props) => {
                 </Field>
             </Row>
             <Row>
-                <Label>{c('Label').t`Signature`}</Label>
-                <Field className="pm-field-container--full">
-                    <SimpleSquireEditor
-                        ref={editorRef}
-                        isNarrow={true}
-                        onReady={handleReady}
-                        onChange={handleSignature}
-                    />
-                </Field>
+                <SimpleSquireEditor ref={editorRef} onReady={handleReady} onChange={handleSignature} />
             </Row>
         </FormModal>
     );

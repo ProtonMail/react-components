@@ -3,11 +3,14 @@ import React, { useRef, useState, useEffect, forwardRef, Ref } from 'react';
 import { useHandler } from '../../hooks/useHandler';
 import { SquireType, getSquireRef, setSquireRef, initSquire } from './squireConfig';
 import { pasteFileHandler } from './squireActions';
+import { SquireEditorMetadata } from './SquireEditor';
+import { noop } from 'proton-shared/lib/helpers/function';
 
 const isHTMLEmpty = (html: string) => !html || html === '<div><br /></div>' || html === '<div><br></div>';
 
 interface Props {
     placeholder?: string;
+    metadata: SquireEditorMetadata;
     onReady: () => void;
     onFocus: () => void;
     onInput: (value: string) => void;
@@ -21,7 +24,7 @@ interface Props {
  * Uncontrolled components is prefered in this case
  */
 const SquireIframe = forwardRef(
-    ({ placeholder, onReady, onFocus, onInput, onAddImages }: Props, ref: Ref<SquireType>) => {
+    ({ placeholder, metadata, onReady, onFocus, onInput, onAddImages }: Props, ref: Ref<SquireType>) => {
         const [iframeReady, setIframeReady] = useState(false);
         const [squireReady, setSquireReady] = useState(false);
         const [isEmpty, setIsEmpty] = useState(false);
@@ -67,7 +70,8 @@ const SquireIframe = forwardRef(
             setIsEmpty(isHTMLEmpty(content));
             onInput(content);
         });
-        const handlePaste = useHandler(pasteFileHandler(onAddImages));
+        const handlePasteEnhanced = useHandler(pasteFileHandler(onAddImages));
+        const handlePaste = metadata.supportImages ? handlePasteEnhanced : noop;
 
         useEffect(() => {
             if (squireReady) {

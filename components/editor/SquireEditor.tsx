@@ -23,6 +23,7 @@ import { setTextDirectionWithoutFocus, insertImage } from './squireActions';
 import './SquireEditor.scss';
 
 export interface SquireEditorMetadata {
+    supportImages: boolean;
     supportPlainText: boolean;
     isPlainText: boolean;
     supportRightToLeft: boolean;
@@ -30,6 +31,7 @@ export interface SquireEditorMetadata {
 }
 
 const defaultMetadata: SquireEditorMetadata = {
+    supportImages: true,
     supportPlainText: false,
     isPlainText: false,
     supportRightToLeft: false,
@@ -46,7 +48,7 @@ export interface SquireEditorRef {
 interface Props {
     className?: string;
     placeholder?: string;
-    metadata?: SquireEditorMetadata;
+    metadata?: Partial<SquireEditorMetadata>;
     onChange?: (value: string) => void;
     onChangeMetadata?: (metadataChange: Partial<SquireEditorMetadata>) => void;
     isNarrow?: boolean;
@@ -71,7 +73,7 @@ const SquireEditor = forwardRef(
         {
             className,
             placeholder,
-            metadata = defaultMetadata,
+            metadata: inputMetadata = defaultMetadata,
             onChange = noop,
             onChangeMetadata = noop,
             isNarrow = false,
@@ -89,6 +91,8 @@ const SquireEditor = forwardRef(
 
         const squireRef = useRef<SquireType>(null) as MutableRefObject<SquireType>;
         const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+        const metadata: SquireEditorMetadata = { ...defaultMetadata, ...inputMetadata };
 
         useEffect(() => {
             const mutableRef = ref as MutableRefObject<SquireEditorRef>;
@@ -175,6 +179,7 @@ const SquireEditor = forwardRef(
                         <SquireIframe
                             ref={squireRef}
                             placeholder={placeholder}
+                            metadata={metadata}
                             onFocus={onFocus}
                             onReady={handleReady}
                             onInput={onChange}

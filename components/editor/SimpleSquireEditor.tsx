@@ -5,6 +5,7 @@ import { toBase64 } from 'proton-shared/lib/helpers/file';
 
 interface Props {
     className?: string;
+    supportImages?: boolean;
     isNarrow?: boolean;
     onChange?: (value: string) => void;
     disabled?: boolean;
@@ -20,7 +21,10 @@ interface Props {
  * Look at the specific SquireEditorRef provided to set initial value
  */
 const SimpleSquireEditor = forwardRef(
-    ({ className, isNarrow, onChange, disabled, onReady, onFocus }: Props, ref: Ref<SquireEditorRef>) => {
+    (
+        { className, supportImages = true, isNarrow, onChange, disabled, onReady, onFocus }: Props,
+        ref: Ref<SquireEditorRef>
+    ) => {
         const handleAddImages = (files: File[]) => {
             files.forEach(async (file) => {
                 const base64str = await toBase64(file);
@@ -32,6 +36,7 @@ const SimpleSquireEditor = forwardRef(
             <SquireEditor
                 ref={ref}
                 className={classnames([className, 'simple-squire-editor'])}
+                metadata={{ supportImages }}
                 onChange={onChange}
                 isNarrow={isNarrow}
                 disabled={disabled}

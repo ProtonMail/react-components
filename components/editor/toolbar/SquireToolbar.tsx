@@ -167,13 +167,15 @@ const SquireToolbar = ({
                     >
                         <Icon name="link" className="mauto" />
                     </SquireToolbarButton>
-                    <SquireToolbarButton
-                        onClick={handleImage}
-                        className="flex-item-noshrink"
-                        title={c('Action').t`Insert image`}
-                    >
-                        <Icon name="file-image" className="mauto" />
-                    </SquireToolbarButton>
+                    {metadata.supportImages && (
+                        <SquireToolbarButton
+                            onClick={handleImage}
+                            className="flex-item-noshrink"
+                            title={c('Action').t`Insert image`}
+                        >
+                            <Icon name="file-image" className="mauto" />
+                        </SquireToolbarButton>
+                    )}
                     <SquireToolbarButton
                         onClick={handleClearFormatting}
                         className="flex-item-noshrink"

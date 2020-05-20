@@ -59,7 +59,12 @@ const AutoReplyModal = ({ onClose, autoresponder, ...rest }: Props) => {
                     [AutoReplyDuration.PERMANENT]: <AutoReplyFormPermanent model={model} updateModel={updateModel} />
                 }[model.duration as AutoReplyDuration]
             }
-            <SimpleSquireEditor ref={editorRef} onReady={handleEditorReady} onChange={updateModel('message')} />
+            <SimpleSquireEditor
+                ref={editorRef}
+                supportImages={false}
+                onReady={handleEditorReady}
+                onChange={updateModel('message')}
+            />
         </FormModal>
     );
 };
