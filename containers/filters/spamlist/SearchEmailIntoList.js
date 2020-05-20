@@ -9,7 +9,7 @@ function SearchEmailIntoList({ onChange = noop }) {
         <SearchInput
             delay={300}
             onChange={onChange}
-            placeholder={c('FilterSettings').t`Search Whitelist and Blacklist`}
+            placeholder={c('FilterSettings').t`Search in Whitelist and Blacklist`}
         />
     );
 }
