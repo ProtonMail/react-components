@@ -46,7 +46,7 @@ const SignLayout = ({ children, title, aside, larger, left, center, right }: Pro
                             </div>
                             <footer className="flex flex-items-center flex-nowrap">
                                 <span className="flex-item-fluid">
-                                    <LanguageSelect className="noborder" />
+                                    <LanguageSelect className="pm-field pm-field--linkSelect" />
                                 </span>
                                 <span className="flex-item-fluid alignright">{right}</span>
                             </footer>
