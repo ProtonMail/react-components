@@ -3,9 +3,11 @@ import { WHITELIST_LOCATION, BLACKLIST_LOCATION } from 'proton-shared/lib/consta
 
 const getFilterSearch = (input = '') => {
     const defaultFilter = (i) => i;
+
     if (!input) {
         return defaultFilter;
     }
+
     return ({ Email = '', Domain = '' }) =>
         Email.toLowerCase().includes(input.toLowerCase()) || Domain.toLowerCase().includes(input.toLowerCase());
 };

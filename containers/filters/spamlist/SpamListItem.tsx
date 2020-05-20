@@ -44,7 +44,7 @@ function SpamListItem({ list, type, onCreate, onEdit, onMove, onRemove, classNam
                 <ul className="unstyled scroll-if-needed SpamListItem-list m0 mt1">
                     {list.map((item) => {
                         return (
-                            <li className="flex flex-nowrap flex-spacebetween mb0-5" key={item.ID}>
+                            <li className="flex flex-nowrap flex-items-center flex-spacebetween mb0-5" key={item.ID}>
                                 <span className="ellipsis">{item.Email}</span>
                                 <DropdownActions
                                     className="pm-button--small mlauto"
