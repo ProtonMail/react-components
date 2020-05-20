@@ -56,7 +56,10 @@ function SpamListItem({ list, type, onCreate, onEdit, onMove, onRemove, classNam
                                             }
                                         },
                                         {
-                                            text: c('Action').t`Move`,
+                                            text:
+                                                type === WHITELIST_LOCATION
+                                                    ? c('Action').t`Move to blacklist`
+                                                    : c('Action').t`Move to whitelist`,
                                             onClick() {
                                                 onMove(item);
                                             }
