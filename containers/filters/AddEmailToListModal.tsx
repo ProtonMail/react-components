@@ -12,10 +12,10 @@ import AddDomainToList from './spamlist/AddDomainToList';
 const EMAIL_MODE = 'email';
 const DOMAIN_MODE = 'domain';
 
-type WHITE_BLACK_LOCATION = WHITELIST_LOCATION | BLACKLIST_LOCATION;
+type WHITE_OR_BLACK_LOCATION = typeof WHITELIST_LOCATION | typeof BLACKLIST_LOCATION;
 
 interface Props {
-    type: WHITE_BLACK_LOCATION;
+    type: WHITE_OR_BLACK_LOCATION;
     incomingDefault?: IncomingDefault;
     onClose: () => void;
     onAdd: (incomingDefault: IncomingDefault) => void;

@@ -6,15 +6,15 @@ import { WHITELIST_LOCATION, BLACKLIST_LOCATION } from 'proton-shared/lib/consta
 
 import './SpamListItem.scss';
 
-type WHITE_BLACK_LOCATION = WHITELIST_LOCATION | BLACKLIST_LOCATION;
+type WHITE_OR_BLACK_LOCATION = typeof WHITELIST_LOCATION | typeof BLACKLIST_LOCATION;
 
 interface Props {
     list: IncomingDefault[];
-    type: WHITE_BLACK_LOCATION;
+    type: WHITE_OR_BLACK_LOCATION;
     loading: boolean;
     className?: string;
-    onCreate: (type: WHITE_BLACK_LOCATION) => void;
-    onEdit: (type: WHITE_BLACK_LOCATION, incomingDefault: IncomingDefault) => void;
+    onCreate: (type: WHITE_OR_BLACK_LOCATION) => void;
+    onEdit: (type: WHITE_OR_BLACK_LOCATION, incomingDefault: IncomingDefault) => void;
     onMove: (incomingDefault: IncomingDefault) => void;
     onRemove: (incomingDefault: IncomingDefault) => void;
 }
@@ -23,7 +23,7 @@ function SpamListItem({ list, type, onCreate, onEdit, onMove, onRemove, classNam
     const I18N = {
         [WHITELIST_LOCATION]: c('Title').t`Whitelist`,
         [BLACKLIST_LOCATION]: c('Title').t`Blacklist`,
-        empty(mode: WHITE_BLACK_LOCATION) {
+        empty(mode: WHITE_OR_BLACK_LOCATION) {
             const type = this[mode];
             return c('Info').t`No emails in the ${type}, click Add to add addresses to the ${type}`;
         }
@@ -34,7 +34,7 @@ function SpamListItem({ list, type, onCreate, onEdit, onMove, onRemove, classNam
             <header className="flex flex-spacebetween flex-items-center">
                 <h3 className="mb0">{I18N[type]}</h3>
                 <div>
-                    <PrimaryButton type={type} onClick={() => onCreate(type)}>{c('Action').t`Add`}</PrimaryButton>
+                    <PrimaryButton onClick={() => onCreate(type)}>{c('Action').t`Add`}</PrimaryButton>
                 </div>
             </header>
 
