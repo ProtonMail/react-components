@@ -4,10 +4,11 @@ import { Input, Label, Row, Field } from 'react-components';
 import { DOMAIN_PLACEHOLDER } from 'proton-shared/lib/constants';
 
 interface Props {
+    domain: string;
     onChange: (newDomain: string) => void;
 }
 
-const AddDomainToList = ({ onChange }: Props) => {
+const AddDomainToList = ({ domain, onChange }: Props) => {
     const handleChange = ({ target }: ChangeEvent<HTMLInputElement>) => onChange(target.value);
     return (
         <Row>
@@ -15,6 +16,7 @@ const AddDomainToList = ({ onChange }: Props) => {
             <Field>
                 <Input
                     id="domain"
+                    value={domain}
                     onChange={handleChange}
                     placeholder={DOMAIN_PLACEHOLDER}
                     required={true}
