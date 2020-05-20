@@ -7,7 +7,8 @@ import {
     useApiWithoutResult,
     useApi,
     useNotifications,
-    useModals
+    useModals,
+    SearchInput
 } from 'react-components';
 import {
     getIncomingDefaults,
@@ -18,7 +19,6 @@ import { MAILBOX_IDENTIFIERS, WHITELIST_LOCATION, BLACKLIST_LOCATION } from 'pro
 
 import useSpamList from '../../hooks/useSpamList';
 import SpamListItem from './spamlist/SpamListItem';
-import SearchEmailIntoList from './spamlist/SearchEmailIntoList';
 import AddEmailToListModal from './AddEmailToListModal';
 
 const getWhiteList = () => getIncomingDefaults({ Location: WHITELIST_LOCATION });
@@ -104,7 +104,10 @@ function SpamFiltersSection() {
                     .t`Sender specific spam rules can be applied here. Whitelist addresses always go to Inbox while Blacklist addresses always go to Spam. Marking a message as spam adds the address to the Blacklist. Marking a message as not spam adds it to the Whitelist.`}
             </Alert>
             <div className="mb1">
-                <SearchEmailIntoList onChange={handleSearchChange} />
+                <SearchInput
+                    onChange={handleSearchChange}
+                    placeholder={c('FilterSettings').t`Search in Whitelist and Blacklist`}
+                />
             </div>
 
             <div className="flex onmobile-flex-column">
