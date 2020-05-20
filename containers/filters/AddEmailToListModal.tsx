@@ -42,19 +42,13 @@ function AddEmailToListModal({ type, incomingDefault, onAdd = noop, onClose, ...
     const [domain, setDomain] = useState(Domain || '');
 
     const handleSubmit = async () => {
-        const { IncomingDefault: data } = (await ID)
-            ? api(
-                  updateIncomingDefault(ID, {
-                      Location: type,
-                      ...(mode === EMAIL_MODE ? { Email: email } : { Domain: domain })
-                  })
-              )
-            : api(
-                  addIncomingDefault({
-                      Location: type,
-                      ...(mode === EMAIL_MODE ? { Email: email } : { Domain: domain })
-                  })
-              );
+        const parameters = {
+            Location: type,
+            ...(mode === EMAIL_MODE ? { Email: email } : { Domain: domain })
+        };
+        const { IncomingDefault: data } = ID
+            ? await api(updateIncomingDefault(ID, parameters))
+            : await api(addIncomingDefault(parameters));
         const value = mode === EMAIL_MODE ? email : domain;
         createNotification({
             text: ID ? c('Spam notification').t`${value} updated` : c('Spam notification').t`${value} added`
