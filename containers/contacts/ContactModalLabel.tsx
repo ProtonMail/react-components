@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 
 import { Select, Label } from 'react-components';
 import { getOtherInformationFields, getAllTypes } from 'proton-shared/lib/helpers/contacts';
 
 import ContactLabelProperty from './ContactLabelProperty';
+import { ContactProperty } from 'proton-shared/lib/interfaces/contacts';
 
 interface Props {
     field: string;
@@ -17,8 +18,10 @@ const ContactModalLabel = ({ field, uid, type = '', onChange }: Props) => {
 
     const otherInformationFields = getOtherInformationFields();
 
-    const handleChangeType = ({ target }) => onChange({ value: target.value, key: 'type', uid });
-    const handleChangeField = ({ target }) => onChange({ value: target.value, key: 'field', uid });
+    const handleChangeType = ({ target }: ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
+        onChange({ value: target.value, key: 'type', uid });
+    const handleChangeField = ({ target }: ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
+        onChange({ value: target.value, key: 'field', uid });
 
     if (otherInformationFields.map(({ value: f }) => f).includes(field)) {
         return (
@@ -28,7 +31,7 @@ const ContactModalLabel = ({ field, uid, type = '', onChange }: Props) => {
         );
     }
 
-    if (field === 'fn' || !types[field].map(({ value: type }) => type).includes(type)) {
+    if (field === 'fn' || !types[field].map(({ value: type }: ContactProperty) => type).includes(type)) {
         return <ContactLabelProperty field={field} type={type} />;
     }
 

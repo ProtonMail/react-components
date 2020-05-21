@@ -1,7 +1,6 @@
 import React from 'react';
-import { c } from 'ttag';
 
-import { useModals, PrimaryButton, Button, useUser } from 'react-components';
+import { useModals, classnames, ContactDeleteModal } from 'react-components';
 import { ContactProperties, ContactEmail, ContactGroup } from 'proton-shared/lib/interfaces/contacts/Contact';
 import { CachedKey } from 'proton-shared/lib/interfaces';
 import { CryptoProcessingError } from 'proton-shared/lib/contacts/decrypt';
@@ -11,7 +10,6 @@ import ContactModal from './modals/ContactModal';
 import ContactViewErrors from './ContactViewErrors';
 import ContactSummary from './ContactSummary';
 import ContactViewProperties from './ContactViewProperties';
-import ContactUpsell from '../../components/contacts/ContactUpsell';
 
 interface Props {
     contactID: string;
@@ -21,7 +19,8 @@ interface Props {
     properties: ContactProperties;
     userKeysList: CachedKey[];
     errors?: CryptoProcessingError[];
-    showHeader?: boolean;
+    isModal: boolean;
+    onDelete: () => void;
 }
 
 const ContactView = ({
@@ -32,13 +31,17 @@ const ContactView = ({
     ownAddresses,
     userKeysList,
     errors,
-    showHeader = true
+    isModal,
+    onDelete
 }: Props) => {
     const { createModal } = useModals();
-    const [user] = useUser();
 
-    const openContactModal = () => {
-        createModal(<ContactModal properties={properties} contactID={contactID} />);
+    const handleDelete = () => {
+        createModal(<ContactDeleteModal contactIDs={[contactID]} onDelete={onDelete} />);
+    };
+
+    const handleEdit = (field?: string) => {
+        createModal(<ContactModal properties={properties} contactID={contactID} newField={field} />);
     };
 
     const handleExport = () => singleExport(properties);
@@ -49,35 +52,27 @@ const ContactView = ({
         contactEmails,
         ownAddresses,
         properties,
-        contactGroupsMap
+        contactGroupsMap,
+        leftBlockWidth: 'w100 mw100p',
+        rightBlockWidth: 'w100'
     };
 
     return (
-        <div className="view-column-detail flex-item-fluid scroll-if-needed">
-            {showHeader ? (
-                <div className="flex flex-spacebetween flex-items-center border-bottom">
-                    <div className="p1">
-                        <h2 className="m0">{c('Title').t`Contact details`}</h2>
-                    </div>
-                    <div className="p1">
-                        <PrimaryButton onClick={openContactModal} className="mr1">{c('Action').t`Edit`}</PrimaryButton>
-                        <Button onClick={handleExport}>{c('Action').t`Export`}</Button>
-                    </div>
-                </div>
-            ) : null}
+        <div className={classnames([!isModal && 'view-column-detail flex-item-fluid'])}>
             <ContactViewErrors errors={errors} />
-            <ContactSummary properties={properties} />
+            <ContactSummary
+                handleExport={handleExport}
+                handleEdit={handleEdit}
+                handleDelete={handleDelete}
+                properties={properties}
+                leftBlockWidth="w100 mw100p"
+            />
             <div className="pl1 pr1">
+                <ContactViewProperties field="fn" {...contactViewPropertiesProps} />
                 <ContactViewProperties field="email" {...contactViewPropertiesProps} />
-                {user.hasPaidMail ? (
-                    <>
-                        <ContactViewProperties field="tel" {...contactViewPropertiesProps} />
-                        <ContactViewProperties field="adr" {...contactViewPropertiesProps} />
-                        <ContactViewProperties {...contactViewPropertiesProps} />
-                    </>
-                ) : (
-                    <ContactUpsell />
-                )}
+                <ContactViewProperties field="tel" {...contactViewPropertiesProps} />
+                <ContactViewProperties field="adr" {...contactViewPropertiesProps} />
+                <ContactViewProperties {...contactViewPropertiesProps} />
             </div>
         </div>
     );

@@ -18,7 +18,7 @@ const ContactModalRow = ({ style, onCheck, contact, checked, contactGroupMap }: 
         <div style={style} className="flex">
             <div
                 className={classnames([
-                    'flex flex-nowrap w100 h100 mtauto mbauto contact-list-row pl1 pr1',
+                    'flex flex-nowrap flex-item-fluid h100 mtauto mbauto contact-list-row pl1 pr1',
                     checked && 'contact-list-row--selected'
                 ])}
             >

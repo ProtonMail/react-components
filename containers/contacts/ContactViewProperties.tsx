@@ -9,7 +9,16 @@ import { ContactEmail, ContactProperties, ContactGroup } from 'proton-shared/lib
 import ContactViewProperty from './ContactViewProperty';
 import EncryptedIcon from '../../components/contacts/EncryptedIcon';
 
+const TITLES = {
+    fn: c('Title').t`Display name`,
+    email: c('Title').t`Email addresses`,
+    tel: c('Title').t`Phone numbers`,
+    adr: c('Title').t`Addresses`,
+    other: c('Title').t`Other information`
+};
+
 const ICONS = {
+    fn: 'contact',
     email: 'email',
     tel: 'phone',
     adr: 'address',
@@ -39,12 +48,6 @@ const ContactViewProperties = ({
     leftBlockWidth = 'w30',
     rightBlockWidth = 'w70'
 }: Props) => {
-    const TITLES = {
-        email: c('Title').t`Email addresses`,
-        tel: c('Title').t`Phone numbers`,
-        adr: c('Title').t`Addresses`,
-        other: c('Title').t`Other information`
-    };
     const title = field ? TITLES[field] : TITLES.other;
     const iconName = field ? ICONS[field] : ICONS.other;
     const toExclude = ['photo', 'org'];
@@ -61,7 +64,7 @@ const ContactViewProperties = ({
             <h3 className="mb1 flex flex-nowrap flex-items-center">
                 <Icon name={iconName} className="mr0-5" />
                 <span className="mr0-5">{title}</span>
-                {field === 'email' ? null : <EncryptedIcon className="flex" />}
+                {field && ['email', 'fn'].includes(field) ? null : <EncryptedIcon className="flex" />}
             </h3>
             {properties.map((property, index) => {
                 const contactEmail = contactEmails && contactEmails[index];

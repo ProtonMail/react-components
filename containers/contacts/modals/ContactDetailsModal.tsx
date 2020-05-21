@@ -19,7 +19,7 @@ import { splitKeys } from 'proton-shared/lib/keys/keys';
 import { prepareContact, CryptoProcessingError } from 'proton-shared/lib/contacts/decrypt';
 import { ContactProperties } from 'proton-shared/lib/interfaces/contacts/Contact';
 
-import Contact from '../ContactContainer';
+import ContactContainer from '../ContactContainer';
 import useContactList from '../useContactList';
 import useContact from '../useContact';
 
@@ -91,13 +91,14 @@ const ContactDetailsModal = ({ contactID, onClose = noop, ...rest }: Props) => {
                 key={contactID}
                 component={<GenericError className="pt2 view-column-detail flex-item-fluid" />}
             >
-                <Contact
+                <ContactContainer
                     contactID={contactID}
                     contactEmails={contactEmailsMap[contactID]}
                     contactGroupsMap={contactGroupsMap}
                     ownAddresses={ownAddresses}
                     userKeysList={userKeysList}
-                    showHeader={false}
+                    onDelete={() => onClose()}
+                    isModal
                 />
             </ErrorBoundary>
         </FormModal>

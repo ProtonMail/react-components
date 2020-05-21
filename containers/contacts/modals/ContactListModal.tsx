@@ -192,7 +192,7 @@ const ContactListModal = ({ onSubmit, onClose, inputValue, ...rest }: Props) => 
                     </div>
                     {filteredContactEmails.length ? (
                         <>
-                            <div className="flex flex-nowrap w100 contact-list-row p1">
+                            <div className="flex flex-nowrap flex-item-fluid contact-list-row p1">
                                 <div>
                                     <Checkbox className="w100 h100" checked={isAllChecked} onChange={handleCheckAll} />
                                 </div>

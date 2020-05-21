@@ -25,7 +25,7 @@ const ContactModalRow = ({ property, onChange, onRemove, isOrderable = false }: 
     const canEdit = ['photo', 'logo'].includes(field) && !!value;
 
     const handleChangeImage = () => {
-        const handleSubmit = (value) => onChange({ uid, value });
+        const handleSubmit = (value: string) => onChange({ uid, value });
         createModal(<ContactImageModal url={property.value} onSubmit={handleSubmit} />);
     };
 

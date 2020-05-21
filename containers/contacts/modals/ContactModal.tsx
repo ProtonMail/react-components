@@ -1,17 +1,8 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { c } from 'ttag';
 import { History } from 'history';
 
-import {
-    FormModal,
-    Alert,
-    useUser,
-    useApi,
-    useUserKeys,
-    useEventManager,
-    useNotifications,
-    useLoading
-} from 'react-components';
+import { FormModal, Alert, useApi, useUserKeys, useEventManager, useNotifications, useLoading } from 'react-components';
 import { generateUID } from 'react-components/helpers/component';
 import { addContacts } from 'proton-shared/lib/api/contacts';
 import { randomIntFromInterval, noop } from 'proton-shared/lib/helpers/function';
@@ -20,10 +11,9 @@ import { prepareContacts } from 'proton-shared/lib/contacts/encrypt';
 import { getEditableFields, getOtherInformationFields } from 'proton-shared/lib/helpers/contacts';
 import { API_CODES } from 'proton-shared/lib/constants';
 import { OVERWRITE, CATEGORIES } from 'proton-shared/lib/contacts/constants';
-import { ContactProperties } from 'proton-shared/lib/interfaces/contacts/Contact';
+import { ContactProperties, ContactProperty } from 'proton-shared/lib/interfaces/contacts/Contact';
 
 import ContactModalProperties from '../ContactModalProperties';
-import ContactUpsell from '../../../components/contacts/ContactUpsell';
 
 const DEFAULT_MODEL = [
     { field: 'fn', value: '' },
@@ -37,7 +27,7 @@ const editableFields = getEditableFields().map(({ value }) => value);
 const otherInformationFields = getOtherInformationFields().map(({ value }) => value);
 const UID_PREFIX = 'contact-property';
 
-const formatModel = (properties: ContactProperties = []) => {
+const formatModel = (properties: ContactProperties = []): ContactProperties => {
     if (!properties.length) {
         return DEFAULT_MODEL.map((property) => ({ ...property, uid: generateUID(UID_PREFIX) })); // Add UID to localize the property easily;
     }
@@ -52,6 +42,7 @@ interface Props {
     onAdd?: () => void;
     onClose?: () => void;
     history?: History;
+    newField?: string;
 }
 
 const ContactModal = ({
@@ -60,19 +51,19 @@ const ContactModal = ({
     onAdd = noop,
     onClose = noop,
     history,
+    newField,
     ...rest
 }: Props) => {
     const api = useApi();
     const { createNotification } = useNotifications();
     const [loading, withLoading] = useLoading();
-    const [user] = useUser();
     const { call } = useEventManager();
     const [userKeysList, loadingUserKeys] = useUserKeys();
     const [properties, setProperties] = useState<ContactProperties>(formatModel(initialProperties));
     const title = contactID ? c('Title').t`Edit contact details` : c('Title').t`Add new contact`;
 
     const handleRemove = (propertyUID: string) => {
-        setProperties(properties.filter(({ uid }) => uid !== propertyUID));
+        setProperties(properties.filter(({ uid }: ContactProperty) => uid !== propertyUID));
     };
 
     const handleAdd = (field?: string) => () => {
@@ -92,7 +83,7 @@ const ContactModal = ({
         const Contacts = await prepareContacts([properties.concat(notEditableProperties)], userKeysList[0]);
         const labels = hasCategories(notEditableProperties) ? INCLUDE : IGNORE;
         const {
-            Responses: [{ Response: { Code, Contact: { ID } = {} } = {} }]
+            Responses: [{ Response: { Code = null, Contact: { ID = null } = {} } = {} }]
         } = await api(
             addContacts({
                 Contacts,
@@ -117,8 +108,16 @@ const ContactModal = ({
         createNotification({ text: c('Success').t`Contact saved` });
     };
 
-    const handleChange = ({ uid: propertyUID, value, key = 'value' }) => {
-        const newProperties = properties.map((property) => {
+    const handleChange = ({
+        uid: propertyUID,
+        value,
+        key = 'value'
+    }: {
+        uid: string;
+        value: string & string[];
+        key: string;
+    }) => {
+        const newProperties = properties.map((property: ContactProperty) => {
             if (property.uid === propertyUID) {
                 return {
                     ...property,
@@ -132,13 +131,19 @@ const ContactModal = ({
 
     const handleOrderChange = useCallback(
         (field, orderedProperties) => {
-            const newProperties = properties.filter((property) => property.field !== field);
+            const newProperties = properties.filter((property: ContactProperty) => property.field !== field);
             newProperties.unshift(...orderedProperties);
 
             setProperties(newProperties);
         },
         [properties]
     );
+
+    useEffect(() => {
+        if (newField) {
+            handleAdd(newField)();
+        }
+    }, [newField]);
 
     return (
         <FormModal
@@ -165,34 +170,28 @@ const ContactModal = ({
                 onOrderChange={handleOrderChange}
                 onAdd={handleAdd('email')}
             />
-            {user.hasPaidMail ? (
-                <>
-                    <ContactModalProperties
-                        properties={properties}
-                        field="tel"
-                        onChange={handleChange}
-                        onRemove={handleRemove}
-                        onOrderChange={handleOrderChange}
-                        onAdd={handleAdd('tel')}
-                    />
-                    <ContactModalProperties
-                        properties={properties}
-                        field="adr"
-                        onChange={handleChange}
-                        onRemove={handleRemove}
-                        onOrderChange={handleOrderChange}
-                        onAdd={handleAdd('adr')}
-                    />
-                    <ContactModalProperties
-                        properties={properties}
-                        onChange={handleChange}
-                        onRemove={handleRemove}
-                        onAdd={handleAdd()}
-                    />
-                </>
-            ) : (
-                <ContactUpsell />
-            )}
+            <ContactModalProperties
+                properties={properties}
+                field="tel"
+                onChange={handleChange}
+                onRemove={handleRemove}
+                onOrderChange={handleOrderChange}
+                onAdd={handleAdd('tel')}
+            />
+            <ContactModalProperties
+                properties={properties}
+                field="adr"
+                onChange={handleChange}
+                onRemove={handleRemove}
+                onOrderChange={handleOrderChange}
+                onAdd={handleAdd('adr')}
+            />
+            <ContactModalProperties
+                properties={properties}
+                onChange={handleChange}
+                onRemove={handleRemove}
+                onAdd={handleAdd()}
+            />
         </FormModal>
     );
 };

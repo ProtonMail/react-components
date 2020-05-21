@@ -21,16 +21,18 @@ interface Props {
     contactGroupsMap: { [contactGroupID: string]: ContactGroup };
     userKeysList: CachedKey[];
     ownAddresses: string[];
-    showHeader?: boolean;
+    isModal?: boolean;
+    onDelete: () => void;
 }
 
 const Contact = ({
     contactID,
     contactEmails,
     contactGroupsMap,
-    showHeader,
     ownAddresses,
-    userKeysList = []
+    userKeysList = [],
+    isModal = false,
+    onDelete
 }: Props) => {
     const [model, setModel] = useState<ContactModel>();
     const ref = useRef(contactID);
@@ -65,7 +67,8 @@ const Contact = ({
             ownAddresses={ownAddresses}
             userKeysList={userKeysList}
             errors={errors}
-            showHeader={showHeader}
+            isModal={isModal}
+            onDelete={onDelete}
         />
     );
 };

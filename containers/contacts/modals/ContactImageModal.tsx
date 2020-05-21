@@ -7,8 +7,8 @@ import { CONTACT_IMG_SIZE } from 'proton-shared/lib/contacts/constants';
 
 interface Props {
     url?: string;
-    onClose: Function;
-    onSubmit: Function;
+    onClose?: () => void;
+    onSubmit: (image: string) => void;
 }
 
 const ContactImageModal = ({ url: initialUrl = '', onSubmit, onClose, ...rest }: Props) => {
@@ -22,7 +22,7 @@ const ContactImageModal = ({ url: initialUrl = '', onSubmit, onClose, ...rest }:
 
     const handleSubmit = () => {
         onSubmit(url);
-        onClose();
+        onClose?.();
     };
 
     const handleUpload = (e: ChangeEvent<HTMLInputElement>) => {
@@ -42,7 +42,7 @@ const ContactImageModal = ({ url: initialUrl = '', onSubmit, onClose, ...rest }:
                     bigResize: true
                 });
                 onSubmit(base64str);
-                onClose();
+                onClose?.();
             } catch (error) {
                 createNotification({ text: c('Error').t`Image upload failed`, type: 'error' });
                 throw error;

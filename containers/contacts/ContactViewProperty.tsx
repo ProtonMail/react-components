@@ -4,15 +4,15 @@ import { c } from 'ttag';
 
 import {
     Row,
-    Group,
-    ButtonGroup,
+    Button,
     Icon,
     Copy,
     useModals,
     useUser,
     classnames,
     Tooltip,
-    RemoteImage
+    RemoteImage,
+    ContactUpgradeModal
 } from 'react-components';
 import { dateLocale } from 'proton-shared/lib/i18n';
 import { clearType, getType, formatAdr } from 'proton-shared/lib/contacts/property';
@@ -122,32 +122,41 @@ const ContactViewProperty = ({
                 };
 
                 return (
-                    <Group>
+                    <>
+                        {!isOwnAddress && (
+                            <Button onClick={handleSettings} className="ml0-5 pm-button--for-icon">
+                                <Tooltip title={c('Title').t`Email settings`}>
+                                    <Icon name="settings-singular" />
+                                </Tooltip>
+                            </Button>
+                        )}
                         {hasPaidMail ? (
                             <ContactGroupDropdown
-                                className="pm-button pm-button--for-icon pm-group-button"
+                                className="ml0-5 pm-button pm-button--for-icon"
                                 contactEmails={[contactEmail]}
                             >
                                 <Tooltip title={c('Title').t`Contact group`}>
                                     <Icon name="contacts-groups" />
                                 </Tooltip>
                             </ContactGroupDropdown>
-                        ) : null}
-                        {!isOwnAddress && (
-                            <ButtonGroup onClick={handleSettings} className="pm-button--for-icon">
-                                <Tooltip title={c('Title').t`Email settings`}>
-                                    <Icon name="settings-singular" />
+                        ) : (
+                            <Button
+                                onClick={() => createModal(<ContactUpgradeModal />)}
+                                className="ml0-5 pm-button--for-icon"
+                            >
+                                <Tooltip title={c('Title').t`Contact group`}>
+                                    <Icon name="contacts-groups" />
                                 </Tooltip>
-                            </ButtonGroup>
+                            </Button>
                         )}
-                        <Copy className="pm-button--for-icon pm-group-button" value={value} />
-                    </Group>
+                        <Copy className="ml0-5 pm-button--for-icon" value={value} />
+                    </>
                 );
             }
             case 'tel':
-                return <Copy className="pm-button--for-icon" value={value} />;
+                return <Copy className="ml0-5 pm-button--for-icon" value={value} />;
             case 'adr':
-                return <Copy className="pm-button--for-icon" value={formatAdr(value)} />;
+                return <Copy className="ml0-5 pm-button--for-icon" value={formatAdr(value)} />;
             default:
                 return null;
         }

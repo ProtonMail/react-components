@@ -317,10 +317,11 @@ export { default as ContactModal } from './containers/contacts/modals/ContactMod
 export { default as ContactGroupModal } from './containers/contacts/modals/ContactGroupModal';
 export { default as ContactListModal } from './containers/contacts/modals/ContactListModal';
 export { default as ContactDetailsModal } from './containers/contacts/modals/ContactDetailsModal';
-export { default as ContactUpsell } from './components/contacts/ContactUpsell';
 export { default as ContactViewErrors } from './containers/contacts/ContactViewErrors';
 export { default as ContactGroupDropdown } from './containers/contacts/ContactGroupDropdown';
 export { default as ContactGroupIcon } from './components/contacts/ContactGroupIcon';
+export { default as ContactUpgradeModal } from './components/contacts/ContactUpgradeModal';
+export { default as ContactDeleteModal } from './containers/contacts/modals/ContactDeleteModal';
 export { default as ContactProvider } from './containers/contacts/ContactProvider';
 export { default as useStep } from './hooks/useStep';
 export { default as useOnline } from './hooks/useOnline';

@@ -14,9 +14,16 @@ interface Props {
     name: string;
 }
 
+type ImageModel = {
+    src: string;
+    width?: number;
+    height?: number;
+    isSmall?: boolean;
+};
+
 const ContactImageSummary = ({ photo, name }: Props) => {
     const [showAnyway, setShowAnyway] = useState(!isURL(photo));
-    const [image, setImage] = useState({ src: photo });
+    const [image, setImage] = useState<ImageModel>({ src: photo });
     const [{ ShowImages }, loadingMailSettings] = useMailSettings();
     const [loadingResize, withLoadingResize] = useLoading(true);
     const loading = loadingMailSettings || loadingResize;
@@ -48,7 +55,7 @@ const ContactImageSummary = ({ photo, name }: Props) => {
 
     if (!photo) {
         return (
-            <div className="rounded50 bordered bg-white-dm ratio-container-square mb0">
+            <div className="bordered bg-white-dm ratio-container-square mb0">
                 <span className="inner-ratio-container flex">
                     <span className="mauto color-global-border h1">{getInitial(name)}</span>
                 </span>
@@ -72,7 +79,7 @@ const ContactImageSummary = ({ photo, name }: Props) => {
         if (!image.isSmall) {
             // fit the image in the rounded container as background image
             return (
-                <div className="rounded50 ratio-container-square" style={style}>
+                <div className="ratio-container-square" style={style}>
                     <span className="inner-ratio-container" />
                 </div>
             );
@@ -81,10 +88,13 @@ const ContactImageSummary = ({ photo, name }: Props) => {
         // For a small image, we have to create a smaller rounded container inside the bigger standard one,
         // and fit the image as background inside it. As container width we must pick the smallest dimension
         return (
-            <div className="rounded50 ratio-container-square mb0">
+            <div className="ratio-container-square mb0">
                 <span className="inner-ratio-container flex">
-                    <div className="mbauto mtauto center" style={{ width: `${Math.min(image.width, image.height)}px` }}>
-                        <div className="rounded50 ratio-container-square" style={style}>
+                    <div
+                        className="mbauto mtauto center"
+                        style={{ width: `${Math.min(image.width || 0, image.height || 0)}px` }}
+                    >
+                        <div className="ratio-container-square" style={style}>
                             <span className="inner-ratio-container" />
                         </div>
                     </div>
@@ -94,7 +104,7 @@ const ContactImageSummary = ({ photo, name }: Props) => {
     }
 
     return (
-        <div className="rounded50 bordered bg-white-dm ratio-container-square mb0">
+        <div className="bordered bg-white-dm ratio-container-square mb0">
             <span className="inner-ratio-container flex">
                 <span className="mauto color-global-border">
                     <Button onClick={handleClick}>{c('Action').t`Load photo`}</Button>
