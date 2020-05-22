@@ -330,7 +330,8 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                                 TokenType: model.paymentTokenType,
                                 Type: CLIENT_TYPE,
                                 Email: model.recoveryEmail,
-                                Username: model.username
+                                Username: model.username,
+                                Payload: model.payload
                             }),
                             silence: [API_CUSTOM_ERROR_CODES.HUMAN_VERIFICATION_REQUIRED],
                             noHandling: [API_CUSTOM_ERROR_CODES.HUMAN_VERIFICATION_REQUIRED]
@@ -360,7 +361,8 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                         Token: model.paymentToken,
                         TokenType: model.paymentTokenType,
                         Type: CLIENT_TYPE,
-                        Email: model.email
+                        Email: model.email,
+                        Payload: model.payload
                     })
                 });
             }
