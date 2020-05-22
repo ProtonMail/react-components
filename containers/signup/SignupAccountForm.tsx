@@ -1,8 +1,8 @@
-import React, { ChangeEvent, FormEvent } from 'react';
+import React, { useRef, ChangeEvent, FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { c } from 'ttag';
 import { History } from 'history';
-import { Input, EmailInput, PasswordInput, PrimaryButton, InlineLinkButton, Label } from 'react-components';
+import { Input, EmailInput, PasswordInput, PrimaryButton, InlineLinkButton, Label, Challenge } from 'react-components';
 import { USERNAME_PLACEHOLDER } from 'proton-shared/lib/constants';
 
 import { SignupModel, SignupErros } from './interfaces';
@@ -29,6 +29,7 @@ enum SERVICES {
 }
 
 const SignupAccountForm = ({ history, model, onChange, onSubmit, errors, loading }: Props) => {
+    const challengeRefLogin = useRef();
     const searchParams = new URLSearchParams(history.location.search);
     const service = searchParams.get('service') as null | SERVICES;
     const [availableDomain = ''] = model.domains;
@@ -40,8 +41,14 @@ const SignupAccountForm = ({ history, model, onChange, onSubmit, errors, loading
         errors.confirmPassword
     );
 
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+        const payload = await challengeRefLogin.current?.getChallenge();
+        payload && onChange({ ...model, payload });
+        onSubmit(e);
+    };
+
     return (
-        <form name="accountForm" className="signup-form" onSubmit={onSubmit} autoComplete="off">
+        <form name="accountForm" className="signup-form" onSubmit={handleSubmit} autoComplete="off">
             {service && SERVICES[service] ? (
                 <div className="mb1">{c('Info').t`to continue to ${SERVICES[service]}`}</div>
             ) : null}
@@ -49,30 +56,33 @@ const SignupAccountForm = ({ history, model, onChange, onSubmit, errors, loading
                 <div className="flex onmobile-flex-column mb1">
                     <Label htmlFor="login">{c('Signup label').t`Username`}</Label>
                     <div className="flex-item-fluid">
-                        <div className="flex flex-nowrap flex-items-center flex-item-fluid relative mb0-5">
-                            <div className="flex-item-fluid">
-                                <Input
-                                    id="login"
-                                    name="login"
-                                    autoFocus
-                                    autoComplete="off"
-                                    autoCapitalize="off"
-                                    autoCorrect="off"
-                                    value={model.username}
-                                    onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
-                                        onChange({ ...model, username: target.value })
-                                    }
-                                    error={errors.username}
-                                    placeholder={USERNAME_PLACEHOLDER}
-                                    className="pm-field--username"
-                                    required
-                                />
+                        <Challenge challengeRef={challengeRefLogin} type="0">
+                            <div className="flex flex-nowrap flex-items-center flex-item-fluid relative mb0-5">
+                                <div className="flex-item-fluid">
+                                    <Input
+                                        id="login"
+                                        name="login"
+                                        autoFocus
+                                        autoComplete="off"
+                                        autoCapitalize="off"
+                                        autoCorrect="off"
+                                        value={model.username}
+                                        onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
+                                            onChange({ ...model, username: target.value })
+                                        }
+                                        error={errors.username}
+                                        placeholder={USERNAME_PLACEHOLDER}
+                                        className="pm-field--username"
+                                        required
+                                    />
+                                </div>
+                                <span className="pt0-5 italic right-icon absolute">@{availableDomain}</span>
                             </div>
-                            <span className="pt0-5 italic right-icon absolute">@{availableDomain}</span>
-                        </div>
-                        <InlineLinkButton
-                            onClick={() => onChange({ ...model, username: '', step: ACCOUNT_CREATION_EMAIL })}
-                        >{c('Action').t`Use an existing email address to signup`}</InlineLinkButton>
+                            <InlineLinkButton
+                                id="existing-email-button"
+                                onClick={() => onChange({ ...model, username: '', step: ACCOUNT_CREATION_EMAIL })}
+                            >{c('Action').t`Use an existing email address to signup`}</InlineLinkButton>
+                        </Challenge>
                     </div>
                 </div>
             ) : null}
@@ -80,26 +90,29 @@ const SignupAccountForm = ({ history, model, onChange, onSubmit, errors, loading
                 <div className="flex onmobile-flex-column mb1">
                     <Label htmlFor="login">{c('Signup label').t`Email`}</Label>
                     <div className="flex-item-fluid">
-                        <div className="mb0-5 flex-item-fluid">
-                            <EmailInput
-                                id="login"
-                                name="login"
-                                autoFocus
-                                autoComplete="off"
-                                autoCapitalize="off"
-                                autoCorrect="off"
-                                value={model.email}
-                                onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
-                                    onChange({ ...model, email: target.value })
-                                }
-                                error={errors.email}
-                                required
-                            />
-                        </div>
-                        <UnsecureEmailInfo email={model.email} />
-                        <InlineLinkButton
-                            onClick={() => onChange({ ...model, email: '', step: ACCOUNT_CREATION_USERNAME })}
-                        >{c('Action').t`Use an existing email instead`}</InlineLinkButton>
+                        <Challenge challengeRef={challengeRefLogin} type="0">
+                            <div className="mb0-5 flex-item-fluid">
+                                <EmailInput
+                                    id="login"
+                                    name="login"
+                                    autoFocus
+                                    autoComplete="off"
+                                    autoCapitalize="off"
+                                    autoCorrect="off"
+                                    value={model.email}
+                                    onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
+                                        onChange({ ...model, email: target.value })
+                                    }
+                                    error={errors.email}
+                                    required
+                                />
+                            </div>
+                            <UnsecureEmailInfo email={model.email} />
+                            <InlineLinkButton
+                                id="proton-email-button"
+                                onClick={() => onChange({ ...model, email: '', step: ACCOUNT_CREATION_USERNAME })}
+                            >{c('Action').t`Use an existing email instead`}</InlineLinkButton>
+                        </Challenge>
                     </div>
                 </div>
             ) : null}
