@@ -20,6 +20,10 @@ export interface SubscriptionCheckResult {
     };
 }
 
+interface Payload {
+    [id: string]: string;
+}
+
 export interface SignupModel {
     step: SIGNUP_STEPS;
     username: string;
@@ -40,6 +44,7 @@ export interface SignupModel {
     verificationTokenType?: TOKEN_TYPES;
     paymentToken?: string;
     paymentTokenType?: TOKEN_TYPES;
+    payload?: Payload;
 }
 
 export interface SignupErros {
