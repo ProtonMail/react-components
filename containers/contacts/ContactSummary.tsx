@@ -72,19 +72,19 @@ const ContactSummary = ({ properties, handleEdit, handleDelete, handleExport, le
                     <div>
                         <Button onClick={handleExport} className="ml0-5 pm-button--for-icon">
                             <Tooltip title={c('Action').t`Export`}>
-                                <Icon name="export" className="fill-pm-grey" />
+                                <Icon name="export" />
                             </Tooltip>
                         </Button>
 
                         <Button onClick={() => handleEdit()} className="ml0-5 pm-button--for-icon">
-                            <Tooltip title={c('Action').t`Edit`}>
-                                <Icon name="pen" className="fill-pm-blue" />
+                            <Tooltip title={c('Action').t`Edit`} className="color-primary">
+                                <Icon name="pen" />
                             </Tooltip>
                         </Button>
 
                         <Button onClick={handleDelete} className="ml0-5 pm-button--for-icon">
-                            <Tooltip title={c('Action').t`Delete`}>
-                                <Icon name="trash" className="fill-pm-warning" />
+                            <Tooltip title={c('Action').t`Delete`} className="color-global-warning">
+                                <Icon name="trash" />
                             </Tooltip>
                         </Button>
                     </div>
