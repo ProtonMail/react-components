@@ -2,7 +2,16 @@ import React, { useRef, ChangeEvent, FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { c } from 'ttag';
 import { History } from 'history';
-import { Input, EmailInput, PasswordInput, PrimaryButton, InlineLinkButton, Label, Challenge } from 'react-components';
+import {
+    Input,
+    EmailInput,
+    PasswordInput,
+    PrimaryButton,
+    InlineLinkButton,
+    Label,
+    Challenge,
+    useLoading
+} from 'react-components';
 import { USERNAME_PLACEHOLDER } from 'proton-shared/lib/constants';
 
 import { SignupModel, SignupErros } from './interfaces';
@@ -31,6 +40,7 @@ enum SERVICES {
 const SignupAccountForm = ({ history, model, onChange, onSubmit, errors, loading }: Props) => {
     const challengeRefLogin = useRef();
     const searchParams = new URLSearchParams(history.location.search);
+    const [loadingChallenge, withLoadingChallenge] = useLoading();
     const service = searchParams.get('service') as null | SERVICES;
     const [availableDomain = ''] = model.domains;
     const loginLink = <Link key="loginLink" className="nodecoration" to="/login">{c('Link').t`Sign in`}</Link>;
@@ -42,13 +52,26 @@ const SignupAccountForm = ({ history, model, onChange, onSubmit, errors, loading
     );
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
         const payload = await challengeRefLogin.current?.getChallenge();
-        payload && onChange({ ...model, payload });
+        payload &&
+            onChange({
+                ...model,
+                payload: {
+                    ...model.payload,
+                    payload
+                }
+            });
         onSubmit(e);
     };
 
     return (
-        <form name="accountForm" className="signup-form" onSubmit={handleSubmit} autoComplete="off">
+        <form
+            name="accountForm"
+            className="signup-form"
+            onSubmit={(e) => withLoadingChallenge(handleSubmit(e))}
+            autoComplete="off"
+        >
             {service && SERVICES[service] ? (
                 <div className="mb1">{c('Info').t`to continue to ${SERVICES[service]}`}</div>
             ) : null}
@@ -155,7 +178,7 @@ const SignupAccountForm = ({ history, model, onChange, onSubmit, errors, loading
             <div className="alignright mb2">
                 <PrimaryButton
                     className="pm-button--large flex-item-noshrink"
-                    loading={loading}
+                    loading={loading || loadingChallenge}
                     disabled={disableSubmit}
                     type="submit"
                 >{c('Action').t`Create account`}</PrimaryButton>
