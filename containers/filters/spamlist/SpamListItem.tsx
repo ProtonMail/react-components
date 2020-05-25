@@ -25,7 +25,8 @@ function SpamListItem({ list, type, onCreate, onEdit, onMove, onRemove, classNam
         [BLACKLIST_LOCATION]: c('Title').t`Blacklist`,
         empty(mode: WHITE_OR_BLACK_LOCATION) {
             const type = this[mode];
-            return c('Info').t`No emails in the ${type}, click Add to add addresses to the ${type}`;
+            return c('Info')
+                .t`No emails or domains in the ${type}, click Add to add addresses or domains to the ${type}`;
         }
     };
 
@@ -45,7 +46,7 @@ function SpamListItem({ list, type, onCreate, onEdit, onMove, onRemove, classNam
                     {list.map((item) => {
                         return (
                             <li className="flex flex-nowrap flex-items-center flex-spacebetween mb0-5" key={item.ID}>
-                                <span className="ellipsis">{item.Email}</span>
+                                <span className="ellipsis">{item.Email || item.Domain}</span>
                                 <DropdownActions
                                     className="pm-button--small mlauto"
                                     list={[
