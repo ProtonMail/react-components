@@ -16,7 +16,7 @@ const Meter = ({ value = 50, low = 0, min = 0, max = 100, id, className }: Props
     return (
         <meter
             aria-describedby={id}
-            className={classnames(['setting-meterbar inbl w100', value > 80 && 'setting-meterbar--high', className])}
+            className={classnames([className, value > 80 && 'is-high'])}
             high={high}
             low={low}
             value={value}
