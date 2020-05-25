@@ -53,13 +53,14 @@ const AppsDropdown = () => {
                     const isCurrent = appNames.includes(APP_NAME);
                     const key = `${index}`;
                     return (
-                        <li className="dropDown-item appsDropdown-item" key={key} title={title}>
+                        <li className="dropDown-item appsDropdown-item" key={key}>
                             <Link
                                 to={link}
                                 className="appsDropdown-link p1 pt0-75 pb0-75 flex flex-nowrap flex-items-center"
                                 external={!isCurrent}
                                 target="_blank"
                                 aria-current={isCurrent}
+                                title={title}
                             >
                                 <Icon name={icon} className="mr0-5" />
                                 <span>{title}</span>
@@ -67,24 +68,25 @@ const AppsDropdown = () => {
                         </li>
                     );
                 })}
+                <li className="dropDown-item appsDropdown-item">
+                    <Link
+                        to="/account"
+                        target="_blank"
+                        external={true}
+                        className="appsDropdown-link bl p1 pt0-75 pb0-75"
+                        title={c('Apps dropdown').t`Your account`}
+                    >
+                        <span className="flex flex-nowrap flex-items-center">
+                            <Icon name="account" className="mr0-5" />
+                            <span>{c('Apps dropdown').t`Account`}</span>
+                        </span>
+                        <div className="ml1-5">
+                            <Meter className="meterbar is-thin mt0-25" value={spacePercentage} />
+                            <div className="smaller m0 opacity-50">{spaceHuman}</div>
+                        </div>
+                    </Link>
+                </li>
             </ul>
-            <div className="appsDropdown-account-item pr1 pl1 pt0-5 pb0-5">
-                <Link
-                    to="/account"
-                    target="_blank"
-                    external={true}
-                    className="inline-flex flex-nowrap flex-items-center nodecoration"
-                >
-                    <Icon name="account" className="mr0-5" />
-                    <span>Account</span>
-                </Link>
-                <Meter className="spacebar" value={spacePercentage} />
-                <div className="small m0">
-                    <span className="opacity-50 mr0-5">{spaceHuman}</span>
-                    <Link className="nodecoration" to="/settings/dashboard" target="_blank" external={true}>{c('Link')
-                        .t`Add storage`}</Link>
-                </div>
-            </div>
         </SimpleDropdown>
     );
 };
