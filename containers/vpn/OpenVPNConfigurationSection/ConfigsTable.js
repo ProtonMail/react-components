@@ -11,6 +11,7 @@ import {
     Icon
 } from 'react-components';
 import { c } from 'ttag';
+
 import LoadIndicator from './LoadIndicator';
 import Country from './Country';
 import { getVPNServerConfig } from 'proton-shared/lib/api/vpn';
@@ -76,10 +77,11 @@ const ConfigsTable = ({ loading, servers = [], platform, protocol, category, isU
         <Table className="pm-simple-table--has-actions">
             <thead>
                 <tr>
-                    <TableCell className="w50 onmobile-wauto" type="header">
+                    <TableCell className="w30 onmobile-wauto" type="header">
                         {category === CATEGORY.SERVER ? c('TableHeader').t`Name` : c('TableHeader').t`Country`}
                     </TableCell>
-                    <TableCell className="w30 onmobile-wauto" type="header">{c('TableHeader').t`Status`}</TableCell>
+                    <TableCell className="w20 onmobile-wauto" type="header">{c('TableHeader').t`Status`}</TableCell>
+                    <TableCell className="w30 onmobile-wauto" type="header">{c('TableHeader').t`Hostname`}</TableCell>
                     <TableCell className="w20 onmobile-wauto" type="header">{c('TableHeader').t`Action`}</TableCell>
                 </tr>
             </thead>
@@ -96,6 +98,7 @@ const ConfigsTable = ({ loading, servers = [], platform, protocol, category, isU
                                 {isP2PEnabled(server.Features) && <P2P />}
                                 {isTorEnabled(server.Features) && <Tor />}
                             </div>,
+                            <span key="hostname">{server.Domain}</span>,
                             isUpgradeRequired(server) ? (
                                 <Tooltip key="download" title={c('Info').t`Plan upgrade required`}>
                                     <SmallButton disabled>{c('Action').t`Download`}</SmallButton>
