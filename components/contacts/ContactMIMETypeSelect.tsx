@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import { c } from 'ttag';
 
 import { Select } from 'react-components';
@@ -12,10 +12,10 @@ interface Props {
 
 const ContactMIMETypeSelect = ({ value, onChange, disabled }: Props) => {
     const options = [
-        { text: c('MIME type').t`Automatic`, value: undefined },
+        { text: c('MIME type').t`Automatic`, value: '' },
         { text: c('MIME type').t`Plain text`, value: MIME_TYPES.PLAINTEXT }
     ];
-    const handleChange = ({ target }) => onChange(target.value);
+    const handleChange = ({ target }: ChangeEvent<HTMLSelectElement>) => onChange(target.value);
     return <Select value={value} options={options} disabled={disabled} onChange={handleChange} />;
 };
 

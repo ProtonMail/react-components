@@ -6,8 +6,9 @@ import { getKeyEncryptStatus } from 'proton-shared/lib/keys/publicKeys';
 import { MailSettings } from 'proton-shared/lib/interfaces';
 import { PublicKeyModel } from 'proton-shared/lib/interfaces/Key';
 
-import ContactSchemeSelect from './ContactSchemeSelect';
-import ContactKeysTable from './ContactKeysTable';
+import ContactSchemeSelect from '../../components/contacts/ContactSchemeSelect';
+import ContactKeysTable from '../../components/contacts/ContactKeysTable';
+import { PGP_SCHEMES } from 'proton-shared/lib/constants';
 
 interface Props {
     model: PublicKeyModel;
@@ -39,7 +40,7 @@ const ContactPgpSettings = ({ model, setModel, mailSettings }: Props) => {
      * Add / update keys to model
      * @param {Array<PublicKey>} files
      */
-    const handleUploadKeys = async (files) => {
+    const handleUploadKeys = async (files: File[]) => {
         if (!files.length) {
             return createNotification({
                 type: 'error',
@@ -194,7 +195,7 @@ const ContactPgpSettings = ({ model, setModel, mailSettings }: Props) => {
                         <ContactSchemeSelect
                             value={model.scheme}
                             mailSettings={mailSettings}
-                            onChange={(scheme) => setModel({ ...model, scheme })}
+                            onChange={(scheme: PGP_SCHEMES) => setModel({ ...model, scheme })}
                         />
                     </Field>
                 </Row>

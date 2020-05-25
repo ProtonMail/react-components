@@ -25,10 +25,10 @@ import {
     ContactGroup
 } from 'proton-shared/lib/interfaces/contacts/Contact';
 
-import ContactGroupIcon from '../../components/contacts/ContactGroupIcon';
-import ContactGroupDropdown from './ContactGroupDropdown';
+import ContactGroupIcon from './ContactGroupIcon';
+import ContactGroupDropdown from '../../containers/contacts/ContactGroupDropdown';
 import ContactLabelProperty from './ContactLabelProperty';
-import ContactEmailSettingsModal from './modals/ContactEmailSettingsModal';
+import ContactEmailSettingsModal from '../../containers/contacts/modals/ContactEmailSettingsModal';
 
 interface Props {
     property: ContactProperty;
@@ -109,7 +109,7 @@ const ContactViewProperty = ({
                 if (!contactEmail) {
                     return null;
                 }
-                const isOwnAddress = ownAddresses.includes(value);
+                const isOwnAddress = [...ownAddresses].includes(value);
                 const handleSettings = () => {
                     createModal(
                         <ContactEmailSettingsModal

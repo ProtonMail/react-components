@@ -8,8 +8,8 @@ import { singleExport } from 'proton-shared/lib/contacts/export';
 
 import ContactModal from './modals/ContactModal';
 import ContactViewErrors from './ContactViewErrors';
-import ContactSummary from './ContactSummary';
-import ContactViewProperties from './ContactViewProperties';
+import ContactSummary from '../../components/contacts/ContactSummary';
+import ContactViewProperties from '../../components/contacts/ContactViewProperties';
 
 interface Props {
     contactID: string;

@@ -7,7 +7,7 @@ import { ContactProperty } from 'proton-shared/lib/interfaces/contacts';
 
 import ContactFieldProperty from './ContactFieldProperty';
 import ContactModalLabel from './ContactModalLabel';
-import ContactImageModal from './modals/ContactImageModal';
+import ContactImageModal from '../../containers/contacts/modals/ContactImageModal';
 
 interface Props {
     property: ContactProperty;

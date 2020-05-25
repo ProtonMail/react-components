@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, ChangeEvent } from 'react';
 import { c } from 'ttag';
 
 import { classnames, Input } from 'react-components';
@@ -25,7 +25,7 @@ const initialAddress = (address: string | string[]) => {
 const ContactAdrField = ({ value, onChange }: Props) => {
     const [address, setAddress] = useState(initialAddress(value));
 
-    const handleChange = (index) => ({ target }) => {
+    const handleChange = (index: number) => ({ target }: ChangeEvent<HTMLInputElement>) => {
         const newAddress = [...address];
         newAddress[index] = target.value;
         setAddress(newAddress);

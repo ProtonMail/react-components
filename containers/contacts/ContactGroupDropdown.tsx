@@ -25,8 +25,8 @@ import { labelContactEmails, unLabelContactEmails } from 'proton-shared/lib/api/
 import { ContactEmail } from 'proton-shared/lib/interfaces/contacts/Contact';
 
 import ContactGroupModal from './modals/ContactGroupModal';
-import SelectEmailsModal from './SelectEmailsModal';
-import ContactGroupDropdownButton from './ContactGroupDropdownButton';
+import SelectEmailsModal from './modals/SelectEmailsModal';
+import ContactGroupDropdownButton from '../../components/contacts/ContactGroupDropdownButton';
 
 import './ContactGroupDropdown.scss';
 

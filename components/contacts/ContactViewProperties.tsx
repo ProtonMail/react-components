@@ -7,7 +7,7 @@ import { CachedKey } from 'proton-shared/lib/interfaces';
 import { ContactEmail, ContactProperties, ContactGroup } from 'proton-shared/lib/interfaces/contacts';
 
 import ContactViewProperty from './ContactViewProperty';
-import EncryptedIcon from '../../components/contacts/EncryptedIcon';
+import EncryptedIcon from './EncryptedIcon';
 
 const TITLES = {
     fn: c('Title').t`Display name`,

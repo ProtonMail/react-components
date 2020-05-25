@@ -36,7 +36,7 @@ import { PublicKeyModel } from 'proton-shared/lib/interfaces/Key';
 import { VCARD_KEY_FIELDS, CATEGORIES } from 'proton-shared/lib/contacts/constants';
 import { MIME_TYPES, PGP_SCHEMES } from 'proton-shared/lib/constants';
 
-import ContactMIMETypeSelect from '../ContactMIMETypeSelect';
+import ContactMIMETypeSelect from '../../../components/contacts/ContactMIMETypeSelect';
 import ContactPgpSettings from '../ContactPgpSettings';
 import { noop } from 'proton-shared/lib/helpers/function';
 

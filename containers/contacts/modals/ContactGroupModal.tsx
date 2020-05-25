@@ -23,7 +23,7 @@ import { createContactGroup, updateLabel } from 'proton-shared/lib/api/labels';
 import { labelContactEmails, unLabelContactEmails } from 'proton-shared/lib/api/contacts';
 import { ContactEmail } from 'proton-shared/lib/interfaces/contacts/Contact';
 
-import ContactGroupTable from '../ContactGroupTable';
+import ContactGroupTable from '../../../components/contacts/ContactGroupTable';
 
 const mapIDs = (contactEmails: ContactEmail[]) => contactEmails.map(({ ID }) => ID);
 
@@ -125,7 +125,14 @@ const ContactGroupModal = ({ contactGroupID, onClose = noop, ...rest }: Props) =
     }, [model.contactEmails.length]);
 
     return (
-        <FormModal onSubmit={handleSubmit} loading={loading} submit={c('Action').t`Save`} title={title} {...rest}>
+        <FormModal
+            onSubmit={handleSubmit}
+            loading={loading}
+            submit={c('Action').t`Save`}
+            title={title}
+            onClose={onClose}
+            {...rest}
+        >
             <Row>
                 <Label htmlFor="contactGroupName">{c('Label for contact group name').t`Name`}</Label>
                 <Field>
