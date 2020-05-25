@@ -12,7 +12,7 @@ import useConfig from '../config/useConfig';
 import Link from '../../components/link/Link';
 import Icon from '../../components/icon/Icon';
 import SimpleDropdown from '../../components/dropdown/SimpleDropdown';
-import Progress from '../../components/progress/Progress';
+import Meter from '../../components/progress/Meter';
 
 const { PROTONMAIL, PROTONCONTACTS, PROTONMAIL_SETTINGS, PROTONCALENDAR, PROTONDRIVE } = APPS;
 
@@ -46,8 +46,9 @@ const AppsDropdown = () => {
             content={<Icon name="more" className="appsDropdown-button-icon" />}
             className="appsDropdown-button"
             dropdownClassName="appsDropdown-container"
+            originalPlacement="bottom-right"
         >
-            <ul className="appsDropdown-list unstyled m0 border-bottom scroll-if-needed">
+            <ul className="appsDropdown-list unstyled m0 scroll-if-needed">
                 {apps.map(({ appNames = [], icon, title, link }, index) => {
                     const isCurrent = appNames.includes(APP_NAME);
                     const key = `${index}`;
@@ -55,7 +56,7 @@ const AppsDropdown = () => {
                         <li className="dropDown-item appsDropdown-item" key={key} title={title}>
                             <Link
                                 to={link}
-                                className="appsDropdown-link w100 p1 bl nodecoration flex flex-nowrap flex-items-center"
+                                className="appsDropdown-link p1 pt0-75 pb0-75 flex flex-nowrap flex-items-center"
                                 external={!isCurrent}
                                 target="_blank"
                                 aria-current={isCurrent}
@@ -67,22 +68,21 @@ const AppsDropdown = () => {
                     );
                 })}
             </ul>
-            <div className="pr1 pl1 pt0-5 pb0-5">
+            <div className="appsDropdown-account-item pr1 pl1 pt0-5 pb0-5">
                 <Link
                     to="/account"
                     target="_blank"
                     external={true}
-                    className="flex flex-nowrap flex-items-center nodecoration"
+                    className="inline-flex flex-nowrap flex-items-center nodecoration"
                 >
                     <Icon name="account" className="mr0-5" />
                     <span>Account</span>
                 </Link>
-                <div>
-                    <Progress value={spacePercentage} />
-                    <div className="small m0">
-                        <span className="opacity-50 mr0-5">{spaceHuman}</span>
-                        <Link to="/settings/dashboard" target="_blank" external={true}>{c('Link').t`Add storage`}</Link>
-                    </div>
+                <Meter className="spacebar" value={spacePercentage} />
+                <div className="small m0">
+                    <span className="opacity-50 mr0-5">{spaceHuman}</span>
+                    <Link className="nodecoration" to="/settings/dashboard" target="_blank" external={true}>{c('Link')
+                        .t`Add storage`}</Link>
                 </div>
             </div>
         </SimpleDropdown>
