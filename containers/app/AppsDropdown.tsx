@@ -43,10 +43,11 @@ const AppsDropdown = () => {
     return (
         <SimpleDropdown
             hasCaret={false}
-            content={<Icon name="more" className="appsDropdown-button-icon" />}
+            content={<Icon name="more" className="appsDropdown-button-icon flex-item-noshrink" />}
             className="appsDropdown-button"
             dropdownClassName="appsDropdown-container"
             originalPlacement="bottom-right"
+            title={c('Apps dropdown').t`Proton applications`}
         >
             <ul className="appsDropdown-list unstyled m0 scroll-if-needed">
                 {apps.map(({ appNames = [], icon, title, link }, index) => {
