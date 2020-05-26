@@ -38,7 +38,7 @@ const formatModel = (properties: ContactProperties = []): ContactProperties => {
 
 interface Props {
     contactID?: string;
-    properties: ContactProperties;
+    properties?: ContactProperties;
     onAdd?: () => void;
     onClose?: () => void;
     history?: History;

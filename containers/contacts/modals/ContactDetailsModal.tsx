@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useMemo } from 'react';
 import { c } from 'ttag';
 
 import {
@@ -14,25 +14,16 @@ import {
 } from 'react-components';
 import { toMap } from 'proton-shared/lib/helpers/object';
 import { noop } from 'proton-shared/lib/helpers/function';
-import { splitKeys } from 'proton-shared/lib/keys/keys';
-
-import { prepareContact, CryptoProcessingError } from 'proton-shared/lib/contacts/decrypt';
-import { ContactProperties } from 'proton-shared/lib/interfaces/contacts/Contact';
 
 import ContactContainer from '../ContactContainer';
 import useContactList from '../useContactList';
 import useContact from '../useContact';
+import useContactProperties from '../useContactProperties';
 
 interface Props {
     contactID: string;
     onClose?: () => void;
 }
-
-type ContactModel = {
-    ID: string;
-    properties: ContactProperties;
-    errors: CryptoProcessingError[];
-};
 
 const ContactDetailsModal = ({ contactID, onClose = noop, ...rest }: Props) => {
     const { createModal } = useModals();
@@ -42,28 +33,9 @@ const ContactDetailsModal = ({ contactID, onClose = noop, ...rest }: Props) => {
     const [userKeysList, loadingUserKeys] = useUserKeys();
     const [addresses = [], loadingAddresses] = useAddresses();
     const { contactEmailsMap } = useContactList({ contactEmails, contacts });
-    const ref = useRef(contactID);
+    const [contact, contactLoading] = useContact(contactID);
 
-    /* @todo move that to a useContactProperties hook to be reused in Contact.tsx */
-    const [model, setModel] = useState<ContactModel>();
-
-    const [contact] = useContact(contactID);
-
-    useEffect(() => {
-        if (contact && userKeysList.length) {
-            ref.current = contact.ID;
-            const { publicKeys, privateKeys } = splitKeys(userKeysList);
-
-            prepareContact(contact, { publicKeys, privateKeys }).then(({ properties, errors }) => {
-                if (ref.current !== contact.ID) {
-                    return;
-                }
-                setModel({ ID: contact.ID, properties, errors });
-            });
-        }
-    }, [contact, userKeysList]);
-
-    const { properties = [] } = model || {};
+    const { properties } = useContactProperties({ contact, userKeysList });
 
     const openContactModal = () => {
         createModal(<ContactModal properties={properties} contactID={contactID} />);
@@ -74,7 +46,12 @@ const ContactDetailsModal = ({ contactID, onClose = noop, ...rest }: Props) => {
     const contactGroupsMap = useMemo(() => toMap(contactGroups), [contactGroups]);
 
     const isLoading =
-        loadingContactEmails || loadingContactGroups || loadingUserKeys || loadingAddresses || loadingContacts;
+        contactLoading ||
+        loadingContactEmails ||
+        loadingContactGroups ||
+        loadingUserKeys ||
+        loadingAddresses ||
+        loadingContacts;
 
     return (
         <FormModal

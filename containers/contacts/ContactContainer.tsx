@@ -1,19 +1,12 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React from 'react';
 
 import { Loader } from 'react-components';
-import { splitKeys } from 'proton-shared/lib/keys/keys';
-import { prepareContact, CryptoProcessingError } from 'proton-shared/lib/contacts/decrypt';
 import { CachedKey } from 'proton-shared/lib/interfaces';
-import { ContactEmail, ContactGroup, ContactProperties } from 'proton-shared/lib/interfaces/contacts/Contact';
+import { ContactEmail, ContactGroup } from 'proton-shared/lib/interfaces/contacts/Contact';
 
 import useContact from './useContact';
 import ContactView from './ContactView';
-
-type ContactModel = {
-    ID: string;
-    properties: ContactProperties;
-    errors: CryptoProcessingError[];
-};
+import useContactProperties from './useContactProperties';
 
 interface Props {
     contactID: string;
@@ -34,25 +27,8 @@ const Contact = ({
     isModal = false,
     onDelete
 }: Props) => {
-    const [model, setModel] = useState<ContactModel>();
-    const ref = useRef(contactID);
     const [contact, contactLoading] = useContact(contactID);
-
-    useEffect(() => {
-        if (contact && userKeysList.length) {
-            ref.current = contact.ID;
-            const { publicKeys, privateKeys } = splitKeys(userKeysList);
-
-            prepareContact(contact, { publicKeys, privateKeys }).then(({ properties, errors }) => {
-                if (ref.current !== contact.ID) {
-                    return;
-                }
-                setModel({ ID: contact.ID, properties, errors });
-            });
-        }
-    }, [contact, userKeysList]);
-
-    const { properties, errors, ID } = model || {};
+    const { properties, errors, ID } = useContactProperties({ contact, userKeysList });
 
     if (contactLoading || !properties || ID !== contactID) {
         return <Loader />;
