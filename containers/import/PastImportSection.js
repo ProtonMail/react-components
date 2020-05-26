@@ -5,7 +5,7 @@ import { c } from 'ttag';
 const PastImportsSection = () => {
     return (
         <>
-            <SubTitle>{c('Title').t`Past imports`}</SubTitle>
+            <SubTitle>{c('Title').t`Import history`}</SubTitle>
             <Alert>{c('Info').t`No past imports found`}</Alert>
         </>
     );

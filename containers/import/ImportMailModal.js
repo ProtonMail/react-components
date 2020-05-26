@@ -1,76 +1,184 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { FormModal, Alert, EmailInput, Input, useApi, useLoading } from 'react-components';
-import { getAuthenticationMethod } from 'proton-shared/lib/api/mailImport';
+import {
+    FormModal,
+    EmailInput,
+    PasswordInput,
+    Label,
+    Row,
+    Field,
+    PrimaryButton,
+    Input,
+    useApi,
+    useLoading
+} from 'react-components';
+import { getAuthenticationMethod, createMailImport } from 'proton-shared/lib/api/mailImport';
 
 const STEPS = {
     START: 'start',
-    PROCESS: 'process',
-    READY: 'ready',
-    SUCCESS: 'success'
+    PREPARE: 'prepare',
+    STARTED: 'started'
 };
-
-// const AUTHENTICATION_METHOD = {
-//     OAUTH2: 'XOAUTH2',
-//     PLAIN: 'PLAIN'
-// };
 
 const ImportMailModal = ({ ...rest }) => {
     const [loading, withLoading] = useLoading();
-    const [model, setModel] = useState({ step: STEPS.START });
+    const [model, setModel] = useState({ step: STEPS.START, needDetails: false, email: '', password: '', port: '' });
     const api = useApi();
-    const TITLES = {
-        [STEPS.START]: c('Title').t`Start a new import`,
-        [STEPS.PROCESS]: c('Title').t`Start import process`,
-        [STEPS.READY]: c('Title').t`Ready to start import`,
-        [STEPS.SUCCESS]: c('Title').t`Success`
-    };
-    const handleSubmit = async () => {
+    const title = useMemo(() => {
         if (model.step === STEPS.START) {
-            try {
-                const { Authentication } = await api(getAuthenticationMethod({ Email: model.email }));
+            return c('Title').t`Start a new import`;
+        }
+        if (model.step === STEPS.PREPARE) {
+            return c('Title').t`Start import process`;
+        }
+        if (model.step === STEPS.STARTED) {
+            return c('Title').t`Import started`;
+        }
+        return '';
+    }, [model.step]);
+
+    const submit = useMemo(() => {
+        if (model.step === STEPS.START) {
+            return <PrimaryButton type="submit" loading={loading}>{c('Action').t`Next`}</PrimaryButton>;
+        }
+        if (model.step === STEPS.PREPARE) {
+            return 'TODO';
+        }
+        if (model.step === STEPS.STARTED) {
+            return 'TODO';
+        }
+        return null;
+    }, [model.step, loading]);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        if (model.step === STEPS.START && model.needDetails) {
+            await api(
+                createMailImport({
+                    Email: model.email,
+                    ImapHost: model.imap,
+                    ImapPort: model.port,
+                    Sasl: 'PLAIN',
+                    Code: model.password
+                })
+            );
+            setModel({
+                ...model,
+                step: STEPS.PREPARE
+            });
+            return;
+        }
+
+        if (model.step === STEPS.START) {
+            const { Authentication } = await api(getAuthenticationMethod({ Email: model.email }));
+            const { ImapHost, ImapPort } = Authentication;
+
+            if (Authentication.ImapHost) {
+                await api(
+                    createMailImport({
+                        Email: model.email,
+                        ImapHost,
+                        ImapPort,
+                        Sasl: 'PLAIN',
+                        Code: model.password
+                    })
+                );
                 setModel({
                     ...model,
-                    authenticationMethod: Authentication.Sasl,
-                    step: STEPS.PROCESS
+                    step: STEPS.PREPARE
                 });
-                return;
-            } catch (error) {
-                // if (Code === ) {
-
-                // }
-                return;
+            } else {
+                setModel({
+                    ...model,
+                    imap: '',
+                    port: ImapPort,
+                    needDetails: true
+                });
             }
+            return;
+        }
+
+        if (model.step === STEPS.PREPARE) {
+            setModel({
+                ...model,
+                step: STEPS.STARTED
+            });
+            return;
+        }
+
+        if (model.step === STEPS.STARTED) {
+            rest.onClose();
+            return;
         }
     };
+
     return (
-        <FormModal title={TITLES[model.step]} loading={loading} onSubmit={() => withLoading(handleSubmit())} {...rest}>
+        <FormModal
+            title={title}
+            loading={loading}
+            onSubmit={(e) => withLoading(handleSubmit(e))}
+            submit={submit}
+            {...rest}
+        >
             {model.step === STEPS.START ? (
                 <>
-                    <Alert>TODO</Alert>
-                    <label htmlFor="emailAddress">{c('Label').t`Email address`}</label>
-                    <EmailInput
-                        id="emailAddress"
-                        value={model.email}
-                        onChange={({ target }) => setModel({ ...model, email: target.value })}
-                        placeholder={c('Placeholder').t`Enter your email address to import`}
-                    />
-                    <label htmlFor="clientID">{c('Label').t`Client ID`}</label>
-                    <Input
-                        id="clientID"
-                        value={model.clientID}
-                        onChange={({ target }) => setModel({ ...model, clientID: target.value })}
-                        placeholder={c('Placeholder').t`Client ID`}
-                    />
-                    <label>{c('Label').t`Client secret`}</label>
-                    <Input
-                        value={model.clientSecret}
-                        onChange={({ target }) => setModel({ ...model, clientSecret: target.value })}
-                        placeholder={c('Placeholder').t`Client secret`}
-                    />
+                    <Row>
+                        <Label htmlFor="emailAddress">{c('Label').t`Email`}</Label>
+                        <Field>
+                            <EmailInput
+                                id="emailAddress"
+                                value={model.email}
+                                onChange={({ target }) => setModel({ ...model, email: target.value })}
+                                autoFocus
+                                required
+                            />
+                        </Field>
+                    </Row>
+                    <Row>
+                        <Label htmlFor="password">{c('Label').t`Password`}</Label>
+                        <Field>
+                            <PasswordInput
+                                id="password"
+                                value={model.password}
+                                onChange={({ target }) => setModel({ ...model, password: target.value })}
+                                required
+                            />
+                        </Field>
+                    </Row>
+                    {model.needDetails ? (
+                        <>
+                            <Row>
+                                <Label htmlFor="imap">{c('Label').t`IMAP server`}</Label>
+                                <Field>
+                                    <Input
+                                        id="imap"
+                                        placeholder="imap.domain.com"
+                                        value={model.imap}
+                                        onChange={({ target }) => setModel({ ...model, imap: target.value })}
+                                        required
+                                    />
+                                </Field>
+                            </Row>
+                            <Row>
+                                <Label htmlFor="port">{c('Label').t`Port`}</Label>
+                                <Field>
+                                    <Input
+                                        id="port"
+                                        placeholder="993"
+                                        value={model.port}
+                                        onChange={({ target }) => setModel({ ...model, port: target.value })}
+                                        required
+                                    />
+                                </Field>
+                            </Row>
+                        </>
+                    ) : null}
                 </>
             ) : null}
+            {model.step === STEPS.PREPARE ? <></> : null}
+            {model.step === STEPS.STARTED ? <></> : null}
         </FormModal>
     );
 };

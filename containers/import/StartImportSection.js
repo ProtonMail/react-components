@@ -9,9 +9,9 @@ const StartImportSection = () => {
     const handleClick = () => createModal(<ImportMailModal />);
     return (
         <>
-            <SubTitle>{c('Title').t`Start a new import`}</SubTitle>
+            <SubTitle>{c('Title').t`New import`}</SubTitle>
             <Alert>TODO</Alert>
-            <PrimaryButton onClick={handleClick}>{c('Action').t`Start new import`}</PrimaryButton>
+            <PrimaryButton onClick={handleClick}>{c('Action').t`Start import`}</PrimaryButton>
         </>
     );
 };
