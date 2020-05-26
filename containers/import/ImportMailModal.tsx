@@ -1,6 +1,7 @@
 import React, { useState, useMemo, ChangeEvent, FormEvent } from 'react';
 import { c } from 'ttag';
 import {
+    Alert,
     FormModal,
     EmailInput,
     PasswordInput,
@@ -12,7 +13,8 @@ import {
     Icon,
     Input,
     useApi,
-    useLoading
+    useLoading,
+    useUser
 } from 'react-components';
 import { getAuthenticationMethod, createMailImport } from 'proton-shared/lib/api/mailImport';
 
@@ -28,11 +30,17 @@ const DEFAULT_MODEL = {
     email: '',
     password: '',
     port: '',
-    imap: ''
+    imap: '',
+    errorCode: 0
+};
+
+const ERROR = {
+    AUTH_IMAP: 2000
 };
 
 const ImportMailModal = ({ ...rest }) => {
     const [loading, withLoading] = useLoading();
+    const [user] = useUser();
     const [model, setModel] = useState(DEFAULT_MODEL);
     const api = useApi();
     const title = useMemo(() => {
@@ -65,15 +73,28 @@ const ImportMailModal = ({ ...rest }) => {
         e.preventDefault();
 
         if (model.step === STEPS.START && model.needDetails) {
-            await api(
-                createMailImport({
-                    Email: model.email,
-                    ImapHost: model.imap,
-                    ImapPort: model.port,
-                    Sasl: 'PLAIN',
-                    Code: model.password
-                })
-            );
+            try {
+                await api(
+                    createMailImport({
+                        Email: model.email,
+                        ImapHost: model.imap,
+                        ImapPort: model.port,
+                        Sasl: 'PLAIN',
+                        Code: model.password
+                    })
+                );
+            } catch (error) {
+                const { data: { Code } = { Code: 0 } } = error;
+
+                if (Code === ERROR.AUTH_IMAP) {
+                    setModel({
+                        ...model,
+                        errorCode: Code
+                    });
+                    return;
+                }
+            }
+
             setModel({
                 ...model,
                 step: STEPS.PREPARE
@@ -86,15 +107,28 @@ const ImportMailModal = ({ ...rest }) => {
             const { ImapHost, ImapPort } = Authentication;
 
             if (Authentication.ImapHost) {
-                await api(
-                    createMailImport({
-                        Email: model.email,
-                        ImapHost,
-                        ImapPort,
-                        Sasl: 'PLAIN',
-                        Code: model.password
-                    })
-                );
+                try {
+                    await api(
+                        createMailImport({
+                            Email: model.email,
+                            ImapHost,
+                            ImapPort,
+                            Sasl: 'PLAIN',
+                            Code: model.password
+                        })
+                    );
+                } catch (error) {
+                    const { data: { Code } = { Code: 0 } } = error;
+
+                    if (Code === ERROR.AUTH_IMAP) {
+                        setModel({
+                            ...model,
+                            errorCode: Code
+                        });
+                        return;
+                    }
+                }
+
                 setModel({
                     ...model,
                     step: STEPS.PREPARE
@@ -136,6 +170,17 @@ const ImportMailModal = ({ ...rest }) => {
         >
             {model.step === STEPS.START ? (
                 <>
+                    {model.errorCode === ERROR.AUTH_IMAP ? (
+                        <Alert type="error">
+                            <div>{c('Error')
+                                .t`Server error. We cannot connect to your mail service provider. Please check if:`}</div>
+                            <ul>
+                                <li>{c('Error').t`IMAP is enabled`}</li>
+                                <li>{c('Error').t`Password and mail address is correct`}</li>
+                                <li>{c('Error').t` If it's a Gmail or Yahoo, please use an app password`}</li>
+                            </ul>
+                        </Alert>
+                    ) : null}
                     <Row>
                         <Label htmlFor="emailAddress">{c('Label').t`Email`}</Label>
                         <Field>
@@ -145,7 +190,7 @@ const ImportMailModal = ({ ...rest }) => {
                                 onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
                                     setModel({ ...model, email: target.value })
                                 }
-                                autoFocus
+                                autoFocus={true}
                                 required
                             />
                         </Field>
@@ -209,14 +254,14 @@ const ImportMailModal = ({ ...rest }) => {
                         <Loader />
                     </div>
                     <hr />
-                    <div className="flex">
+                    <div className="flex mb1">
                         <div className="flex-item-fluid">
                             <span className="mr1">{c('Label').t`From`}</span>
                             <strong>{model.email}</strong>
                         </div>
                         <div className="flex-item-fluid">
                             <span className="mr1">{c('Label').t`To`}</span>
-                            <strong>{model.email}</strong>
+                            <strong>{user.Email}</strong>
                         </div>
                     </div>
                 </>
