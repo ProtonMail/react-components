@@ -105,7 +105,7 @@ const useCachedModelResult = (cache, key, miss) => {
             if (changedKey !== key) {
                 return;
             }
-            checkForChange();
+            setTimeout(checkForChange);
         };
         checkForChange();
         return cache.subscribe(cacheListener);
