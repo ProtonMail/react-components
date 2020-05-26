@@ -8,13 +8,14 @@ import { ContactProperty } from 'proton-shared/lib/interfaces/contacts';
 
 interface Props {
     field: string;
-    uid: string;
+    uid?: string;
     type?: string;
     onChange: Function;
 }
 
 const ContactModalLabel = ({ field, uid, type = '', onChange }: Props) => {
     const types = getAllTypes();
+    const fieldType = types[field];
 
     const otherInformationFields = getOtherInformationFields();
 
@@ -31,13 +32,13 @@ const ContactModalLabel = ({ field, uid, type = '', onChange }: Props) => {
         );
     }
 
-    if (field === 'fn' || !types[field].map(({ value: type }: ContactProperty) => type).includes(type)) {
+    if (field === 'fn' || !fieldType.map(({ value: type }: ContactProperty) => type).includes(type)) {
         return <ContactLabelProperty field={field} type={type} />;
     }
 
     return (
         <Label className="pt0 mr1">
-            <Select value={type} options={types[field]} onChange={handleChangeType} />
+            <Select value={type} options={fieldType} onChange={handleChangeType} />
         </Label>
     );
 };

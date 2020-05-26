@@ -2,10 +2,10 @@ import React, { useState, ChangeEvent } from 'react';
 import { c } from 'ttag';
 
 import { FormModal, Alert, Row, Label, Field, Checkbox, useContactEmails } from 'react-components';
-import { ContactEmail } from 'proton-shared/lib/interfaces/contacts';
+import { Contact, ContactEmail } from 'proton-shared/lib/interfaces/contacts';
 
 interface Props {
-    contacts: ContactEmail[];
+    contacts: Contact[];
     onSubmit: Function;
     onClose: () => void;
 }
@@ -31,13 +31,13 @@ const SelectEmailsModal = ({ contacts, onSubmit, onClose, ...rest }: Props) => {
 
     const handleSubmit = () => {
         const toSubmit = model.reduce((acc, contact) => {
-            contact.contactEmails.forEach(({ isChecked, ...contactEmail }: ContactEmail & { isChecked: boolean }) => {
+            contact.contactEmails.forEach(({ isChecked, ...contactEmail }: ContactEmail & { isChecked?: boolean }) => {
                 if (isChecked) {
                     acc.push(contactEmail);
                 }
             });
             return acc;
-        }, [] as Array<ContactEmail & { isChecked: boolean }>);
+        }, [] as Array<ContactEmail & { isChecked?: boolean }>);
         onSubmit(toSubmit);
         onClose?.();
     };
@@ -67,7 +67,7 @@ const SelectEmailsModal = ({ contacts, onSubmit, onClose, ...rest }: Props) => {
                                         ID: contactEmailID,
                                         Email,
                                         isChecked
-                                    }: ContactEmail & { isChecked: boolean }) => {
+                                    }: ContactEmail & { isChecked?: boolean }) => {
                                         return (
                                             <label key={contactEmailID} className="mb1" htmlFor={contactEmailID}>
                                                 <Checkbox

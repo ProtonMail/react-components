@@ -10,23 +10,24 @@ import ContactImageModal from '../../containers/contacts/modals/ContactImageModa
 
 interface Props {
     field: string;
-    uid: string;
-    value: string | string[] | object;
+    uid?: string;
+    value: string | string[]; // | object;
     onChange: Function;
 }
 
 const ContactFieldProperty = ({ field, value, uid, onChange, ...rest }: Props) => {
     const { createModal } = useModals();
     const labels = getAllFieldLabels();
+    const label = labels[field];
 
     const handleChange = ({ target }: ChangeEvent<HTMLInputElement>) => onChange({ value: target.value, uid });
 
     if (field === 'email') {
-        return <EmailInput value={value} placeholder={labels.email} onChange={handleChange} {...rest} />;
+        return <EmailInput value={value} placeholder={labels.email} onChange={handleChange} autoFocus {...rest} />;
     }
 
     if (field === 'tel') {
-        return <TelInput value={value} placeholder={labels.tel} onChange={handleChange} {...rest} />;
+        return <TelInput value={value} placeholder={labels.tel} onChange={handleChange} autoFocus {...rest} />;
     }
 
     if (field === 'adr') {
@@ -35,30 +36,30 @@ const ContactFieldProperty = ({ field, value, uid, onChange, ...rest }: Props) =
     }
 
     if (field === 'note') {
-        return <TextArea value={value} placeholder={labels.note} onChange={handleChange} {...rest} />;
+        return <TextArea value={value} placeholder={labels.note} onChange={handleChange} autoFocus {...rest} />;
     }
 
     if (field === 'bday' || field === 'anniversary') {
-        const date = value === '' ? new Date() : parseISO(value);
+        const date = value === '' ? new Date() : parseISO(`${value}`);
         if (isValid(date)) {
-            const handleSelectDate = (newDate) => {
-                if (!isValid(newDate)) {
+            const handleSelectDate = (value?: Date) => {
+                if (!isValid(value)) {
                     return;
                 }
-                onChange({ value: newDate.toISOString(), uid });
+                onChange({ value: value?.toISOString(), uid });
             };
-            return <DateInput placeholder={labels[field]} value={date} onChange={handleSelectDate} {...rest} />;
+            return <DateInput placeholder={label} value={date} autoFocus onChange={handleSelectDate} {...rest} />;
         }
     }
 
     if (field === 'photo' || field === 'logo') {
         const handleChangeImage = () => {
-            const handleSubmit = (value) => onChange({ uid, value });
+            const handleSubmit = (value: string) => onChange({ uid, value });
             createModal(<ContactImageModal url={value} onSubmit={handleSubmit} />);
         };
         return <ContactImageField value={value} onChange={handleChangeImage} {...rest} />;
     }
-    return <Input value={value} placeholder={labels[field]} onChange={handleChange} {...rest} />;
+    return <Input value={value} placeholder={label} onChange={handleChange} autoFocus {...rest} />;
 };
 
 export default ContactFieldProperty;

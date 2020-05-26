@@ -22,7 +22,7 @@ import {
 } from 'react-components';
 import { normalize } from 'proton-shared/lib/helpers/string';
 import { labelContactEmails, unLabelContactEmails } from 'proton-shared/lib/api/contacts';
-import { ContactEmail } from 'proton-shared/lib/interfaces/contacts/Contact';
+import { ContactEmail, ContactGroup, Contact } from 'proton-shared/lib/interfaces/contacts/Contact';
 
 import ContactGroupModal from './modals/ContactGroupModal';
 import SelectEmailsModal from './modals/SelectEmailsModal';
@@ -40,7 +40,7 @@ const INDETERMINATE = 2;
  * @param {Array} contactEmails
  * @returns {Object}
  */
-const getModel = (contactGroups = [], contactEmails = []) => {
+const getModel = (contactGroups: ContactGroup[] = [], contactEmails: ContactEmail[] = []) => {
     if (!contactEmails.length || !contactGroups.length) {
         return Object.create(null);
     }
@@ -60,7 +60,7 @@ const getModel = (contactGroups = [], contactEmails = []) => {
  * @param {Array} contactEmails
  * @returns {Array} result.contacts
  */
-const collectContacts = (contactEmails: ContactEmail[] = [], contacts) => {
+const collectContacts = (contactEmails: ContactEmail[] = [], contacts: Contact[]) => {
     return contactEmails.reduce(
         (acc, { ContactID }) => {
             acc.duplicate[ContactID] = (acc.duplicate[ContactID] || 0) + 1;
@@ -75,7 +75,7 @@ const collectContacts = (contactEmails: ContactEmail[] = [], contacts) => {
             return acc;
         },
         {
-            contacts: [] as ContactEmail[],
+            contacts: [] as Contact[],
             duplicate: Object.create(null)
         }
     );

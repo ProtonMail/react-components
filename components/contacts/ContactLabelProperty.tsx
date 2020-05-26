@@ -8,8 +8,8 @@ interface Props {
 }
 
 const ContactLabelProperty = ({ field, type, ...rest }: Props) => {
-    const labels = getAllFieldLabels();
-    const label = labels[type] || type || labels[field];
+    const labels: { [key: string]: string } = getAllFieldLabels();
+    const label: string = labels[type] || type || labels[field];
 
     return (
         <label className="capitalize" {...rest}>

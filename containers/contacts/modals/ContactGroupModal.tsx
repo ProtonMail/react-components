@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import { c } from 'ttag';
 
 import {
@@ -52,20 +52,25 @@ const ContactGroupModal = ({ contactGroupID, onClose = noop, ...rest }: Props) =
             contactGroupID && contactGroup
                 ? contactGroup.Color
                 : LABEL_COLORS[randomIntFromInterval(0, LABEL_COLORS.length - 1)],
-        contactEmails: contactGroupID ? existingContactEmails : []
+        contactEmails: contactGroupID ? existingContactEmails : [],
+        contactEmailID: ''
     });
-    const contactEmailIDs = model.contactEmails.map(({ ID }) => ID);
+    const contactEmailIDs = model.contactEmails.map(({ ID }: ContactEmail) => ID);
     const options = orderBy(contactEmails, 'Email')
-        .filter(({ ID }) => !contactEmailIDs.includes(ID))
-        .map(({ ID, Email, Name }) => ({ text: Email === Name ? `<${Email}>` : `${Name} <${Email}>`, value: ID }));
+        .filter(({ ID }: ContactEmail) => !contactEmailIDs.includes(ID))
+        .map(({ ID, Email, Name }: ContactEmail) => ({
+            text: Email === Name ? `<${Email}>` : `${Name} <${Email}>`,
+            value: ID
+        }));
 
-    const handleChangeName = ({ target }) => setModel({ ...model, name: target.value });
-    const handleChangeColor = (color) => setModel({ ...model, color });
-    const handleChangeEmail = ({ target }) => setModel({ ...model, contactEmailID: target.value });
+    const handleChangeName = ({ target }: ChangeEvent<HTMLInputElement>) => setModel({ ...model, name: target.value });
+    const handleChangeColor = (color: string) => setModel({ ...model, color });
+    const handleChangeEmail = ({ target }: ChangeEvent<HTMLSelectElement>) =>
+        setModel({ ...model, contactEmailID: target.value });
 
     const handleAddEmail = () => {
-        const contactEmail = contactEmails.find(({ ID }) => ID === model.contactEmailID);
-        const alreadyExist = model.contactEmails.find(({ ID }) => ID === model.contactEmailID);
+        const contactEmail = contactEmails.find(({ ID }: ContactEmail) => ID === model.contactEmailID);
+        const alreadyExist = model.contactEmails.find(({ ID }: ContactEmail) => ID === model.contactEmailID);
 
         if (contactEmail && !alreadyExist) {
             const copy = [...model.contactEmails];
@@ -75,7 +80,7 @@ const ContactGroupModal = ({ contactGroupID, onClose = noop, ...rest }: Props) =
     };
 
     const handleDeleteEmail = (contactEmailID: string) => () => {
-        const index = model.contactEmails.findIndex(({ ID }) => ID === contactEmailID);
+        const index = model.contactEmails.findIndex(({ ID }: ContactEmail) => ID === contactEmailID);
 
         if (index > -1) {
             const copy = [...model.contactEmails];
@@ -88,7 +93,7 @@ const ContactGroupModal = ({ contactGroupID, onClose = noop, ...rest }: Props) =
         try {
             setLoading(true);
             const contactGroupParams = { Name: model.name, Color: model.color };
-            const { Label = {} } = await api(
+            const { Label } = await api(
                 contactGroupID
                     ? updateLabel(contactGroupID, contactGroupParams)
                     : createContactGroup(contactGroupParams)
