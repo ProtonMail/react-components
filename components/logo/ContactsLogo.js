@@ -6,7 +6,7 @@ const ContactsLogo = ({ planName = '', className = 'logo' }) => {
         <svg
             xmlns="http://www.w3.org/2000/svg"
             xmlnsXlink="http://www.w3.org/1999/xlink"
-            viewBox={`0 0 92.5 ${planName === '' ? '15.1' : '22'}`}
+            viewBox={`0 0 123.1 ${planName === '' ? '15.1' : '22'}`}
             className={className}
             aria-labelledby="logo__title plan"
         >
