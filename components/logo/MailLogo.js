@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const MailLogo = ({ planName = '', className = 'logo' }) => {
+const MailLogo = ({ className = 'logo' }) => {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
             xmlnsXlink="http://www.w3.org/1999/xlink"
-            viewBox={`0 0 92.5 ${planName === '' ? '15.1' : '22'}`}
+            viewBox="0 0 92.5 15.1"
             className={className}
-            aria-labelledby="logo__title plan"
+            aria-labelledby="logo__title"
         >
             <g>
                 <path d="M19.5,3.7h-3v11.1h1.9v-3.9h1.1c1.1,0.1,2.2-0.2,3.1-0.9s1.3-1.7,1.3-2.8C23.9,5,22.3,3.7,19.5,3.7z M18.4,5.3h1.1c1.6,0,2.4,0.6,2.4,2C22,7.9,21.7,8.5,21.3,9c-0.5,0.3-1.2,0.5-1.8,0.4h-1.1V5.3z" />
@@ -28,24 +28,11 @@ const MailLogo = ({ planName = '', className = 'logo' }) => {
                 <path d="M5.3,12.7c-0.4-0.1-0.9-0.2-1.2-0.4c-0.5-0.4-4.1-3-4.1-3v5.1C0,14.7,0.3,15,0.7,15l0,0H10c0.3,0,0.7-0.2,0.7-0.6l0,0V9.3c0,0-3.6,2.6-4.1,2.9C6.2,12.5,5.8,12.7,5.3,12.7z" />
             </g>
             <title id="logo__title">ProtonMail</title>
-            {planName ? (
-                <text
-                    textAnchor="start"
-                    className={`plan fill-${planName} uppercase bold`}
-                    x="16"
-                    y="22"
-                    id="plan"
-                    focusable={false}
-                >
-                    {planName}
-                </text>
-            ) : null}
         </svg>
     );
 };
 
 MailLogo.propTypes = {
-    planName: PropTypes.string,
     className: PropTypes.string
 };
 

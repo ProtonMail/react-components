@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const DriveLogo = ({ planName = '', className = 'logo' }) => {
+const DriveLogo = ({ className = 'logo' }) => {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
             xmlnsXlink="http://www.w3.org/1999/xlink"
-            viewBox={`0 0 99.6 ${planName === '' ? '15.1' : '22'}`}
+            viewBox="0 0 99.6 15.1"
             className={className}
-            aria-labelledby="logo__title plan"
+            aria-labelledby="logo__title"
         >
             <g>
                 <path d="M20.4,3.6h-3v11.2h1.9v-4h1.1c1.1,0.1,2.2-0.2,3.1-0.9c0.9-0.6,1.4-1.7,1.3-2.7C24.8,4.9,23.3,3.6,20.4,3.6z M19.3,5.2h1.1c1.6,0,2.4,0.6,2.4,2c0.1,0.6-0.2,1.2-0.6,1.7c-0.6,0.2-1.2,0.4-1.8,0.3h-1.1V5.2z" />
@@ -28,24 +28,11 @@ const DriveLogo = ({ planName = '', className = 'logo' }) => {
                 <path d="M9.6,4.5H9.5C8.8,2.7,6.7,1.7,4.9,2.4c-1,0.4-1.8,1.2-2.1,2.2C1.1,4.8-0.1,6.2,0,7.8c0.1,1.5,1.4,2.7,3,2.7h2.1V9.2H3.5l2.8-2.8l2.8,2.8H7.5v1.4H5.1V12H3.5l2.8,2.8L9.1,12H7.5v-1.4h2.2l0,0c1.7-0.1,3-1.5,2.9-3.2C12.5,5.8,11.2,4.5,9.6,4.5L9.6,4.5z" />
             </g>
             <title id="logo__title">ProtonDrive</title>
-            {planName ? (
-                <text
-                    textAnchor="start"
-                    className={`plan fill-${planName} uppercase bold`}
-                    x="16"
-                    y="22"
-                    id="plan"
-                    focusable={false}
-                >
-                    {planName}
-                </text>
-            ) : null}
         </svg>
     );
 };
 
 DriveLogo.propTypes = {
-    planName: PropTypes.string,
     className: PropTypes.string
 };
 

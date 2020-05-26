@@ -28,38 +28,40 @@ const MainLogo = ({ url = '/inbox', external = false, className = '' }) => {
     const classNames = classnames(['logo-link flex flex-item-fluid flex-item-nogrow nodecoration', className]);
     const planName = hasLifetime(subscription)
         ? 'Lifetime'
+        : APP_NAME === PROTONCALENDAR
+        ? 'beta'
         : getPlanName(subscription, CLIENT_TYPE === CLIENT_TYPES.VPN ? VPN : MAIL);
 
     const logo = (() => {
         // we do not have the proper logos for all the products yet. Use mail logo in the meantime
         if ([PROTONMAIL, PROTONMAIL_SETTINGS].includes(APP_NAME)) {
-            return <MailLogo planName={planName} />;
+            return <MailLogo />;
         }
         if (APP_NAME === PROTONCALENDAR) {
-            return <CalendarLogo planName="beta" />;
+            return <CalendarLogo />;
         }
         if (APP_NAME === PROTONCONTACTS) {
-            return <ContactsLogo planName={planName} />;
+            return <ContactsLogo />;
         }
         if (APP_NAME === PROTONVPN_SETTINGS) {
-            return <VpnLogo planName={planName} />;
+            return <VpnLogo />;
         }
         if (APP_NAME === PROTONDRIVE) {
-            return <DriveLogo planName={planName} />;
+            return <DriveLogo />;
         }
         return null;
     })();
 
     if (external) {
         return (
-            <Href url={url} target="_self" rel="noreferrer help" className={classNames}>
+            <Href url={url} target="_self" rel="noreferrer help" className={classNames} data-plan={planName}>
                 {logo}
             </Href>
         );
     }
 
     return (
-        <Link to={url} className={classNames}>
+        <Link to={url} className={classNames} data-plan={planName}>
             {logo}
         </Link>
     );

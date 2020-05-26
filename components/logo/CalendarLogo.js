@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const CalendarLogo = ({ planName = '', className = 'logo' }) => {
+const CalendarLogo = ({ className = 'logo' }) => {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
             xmlnsXlink="http://www.w3.org/1999/xlink"
-            viewBox={`0 0 126.1 ${planName === '' ? '15.1' : '22'}`}
+            viewBox="0 0 126.1 15.1"
             className={className}
-            aria-labelledby="logo__title plan"
+            aria-labelledby="logo__title"
         >
             <g>
                 <path d="M20,3.7h-3v11.1h1.9v-4H20c1.1,0.1,2.2-0.2,3.1-0.9c0.9-0.7,1.3-1.7,1.3-2.8C24.4,4.9,22.8,3.7,20,3.7z M18.9,5.2H20c1.6,0,2.4,0.6,2.4,2c0.1,0.6-0.2,1.2-0.6,1.6c-0.5,0.3-1.2,0.5-1.8,0.4h-1.1V5.2z" />
@@ -32,24 +32,11 @@ const CalendarLogo = ({ planName = '', className = 'logo' }) => {
                 <path d="M7.8,12.2c1.2,0,1.9-0.9,1.9-2.6S9,7.1,7.8,7.1S5.9,7.9,5.9,9.6S6.6,12.2,7.8,12.2z M7.9,7.9c0.4,0,0.7,0.4,0.7,1.7s-0.2,1.7-0.7,1.7c-0.4,0-0.7-0.4-0.7-1.7S7.4,7.9,7.9,7.9z" />
             </g>
             <title id="logo__title">ProtonCalendar</title>
-            {planName ? (
-                <text
-                    textAnchor="start"
-                    className={`plan fill-${planName} uppercase bold`}
-                    x="16"
-                    y="22"
-                    id="plan"
-                    focusable={false}
-                >
-                    {planName}
-                </text>
-            ) : null}
         </svg>
     );
 };
 
 CalendarLogo.propTypes = {
-    planName: PropTypes.string,
     className: PropTypes.string
 };
 

@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const ContactsLogo = ({ planName = '', className = 'logo' }) => {
+const ContactsLogo = ({ className = 'logo' }) => {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
             xmlnsXlink="http://www.w3.org/1999/xlink"
-            viewBox={`0 0 123.1 ${planName === '' ? '15.1' : '22'}`}
+            viewBox="0 0 123.1 15.1"
             className={className}
-            aria-labelledby="logo__title plan"
+            aria-labelledby="logo__title"
         >
             <g>
                 <path d="M19.2,3.7h-3v11.1h1.9v-4h1.1c1.1,0.1,2.2-0.2,3.1-0.9c0.9-0.7,1.3-1.7,1.3-2.8C23.6,4.9,22,3.7,19.2,3.7z M18.1,5.2h1.1c1.6,0,2.4,0.6,2.4,2c0.1,0.6-0.2,1.2-0.6,1.6c-0.5,0.3-1.2,0.5-1.8,0.4h-1.1V5.2z" />
@@ -30,24 +30,11 @@ const ContactsLogo = ({ planName = '', className = 'logo' }) => {
                 <path d="M9.4,2.9H1.1C0.5,2.9,0,3.4,0,4v9.8c0,0.6,0.5,1.1,1.1,1.1h8.3c0.6,0,1.1-0.5,1.1-1.1V4C10.5,3.4,10,2.9,9.4,2.9z M6.4,6.5L6.4,6.5c0.5,0,0.9,0.4,0.9,0.9c0,0,0,0,0,0.1c0,0.5-0.4,1-0.9,1s-1-0.4-1-1S5.9,6.4,6.4,6.5L6.4,6.5L6.4,6.5z M2.3,14.2H1.1c-0.2,0-0.4-0.2-0.4-0.4l0,0V4c0-0.2,0.1-0.3,0.3-0.4l0,0l0,0h1.1L2.3,14.2z M8.5,11.1c0,0.1-0.1,0.2-0.2,0.2H4.5c-0.1,0-0.2-0.1-0.2-0.2v-0.3C4.3,9.9,5,9.1,6,9.1h0.8c0.9,0,1.7,0.8,1.7,1.7V11.1z" />
             </g>
             <title id="logo__title">ProtonContacts</title>
-            {planName ? (
-                <text
-                    textAnchor="start"
-                    className={`plan fill-${planName} uppercase bold`}
-                    x="16"
-                    y="22"
-                    id="plan"
-                    focusable={false}
-                >
-                    {planName}
-                </text>
-            ) : null}
         </svg>
     );
 };
 
 ContactsLogo.propTypes = {
-    planName: PropTypes.string,
     className: PropTypes.string
 };
 

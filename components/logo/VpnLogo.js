@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const VpnLogo = ({ planName = '', className = 'logo' }) => {
+const VpnLogo = ({ className = 'logo' }) => {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
             xmlnsXlink="http://www.w3.org/1999/xlink"
-            viewBox={`0 0 89.6 ${planName === '' ? '15.1' : '22'}`}
+            viewBox="0 0 89.6 15.1"
             className={className}
-            aria-labelledby="logo__title plan"
+            aria-labelledby="logo__title"
         >
             <g>
                 <path d="M19.7,3.7h-3v11.1h1.9v-3.9h1.1c1.1,0.1,2.2-0.2,3.1-0.9s1.3-1.7,1.3-2.8C24.1,5,22.5,3.7,19.7,3.7z M18.6,5.3h1.1c1.6,0,2.4,0.6,2.4,2c0.1,0.6-0.2,1.2-0.6,1.6c-0.5,0.3-1.2,0.5-1.8,0.4h-1.1V5.3z" />
@@ -25,24 +25,11 @@ const VpnLogo = ({ planName = '', className = 'logo' }) => {
                 <path d="M12.5,2.9c0-0.8-0.7-1.5-1.5-1.5S9.5,2.1,9.5,2.9l0,0l0,0L2.8,5.1C2.3,4.4,1.4,4.2,0.7,4.7s-0.9,1.4-0.4,2.1l0,0C0.6,7.2,1,7.5,1.6,7.5c0.1,0,0.3-0.1,0.4-0.1l4.4,5.5c-0.3,0.8,0,1.7,0.8,2l0,0c0.8,0.3,1.7,0,2-0.8c0.3-0.6,0.1-1.3-0.4-1.7l2.3-8C11.9,4.4,12.5,3.7,12.5,2.9L12.5,2.9z M7.8,11.9c-0.2,0-0.5,0.1-0.7,0.2L2.8,6.7C3,6.5,3,6.3,3,6.1L9.8,4C9.9,4.1,10,4.1,10,4.2L7.8,11.9L7.8,11.9L7.8,11.9z" />
             </g>
             <title id="logo__title">ProtonVPN</title>
-            {planName ? (
-                <text
-                    textAnchor="start"
-                    className={`plan fill-${planName} uppercase bold`}
-                    x="16"
-                    y="22"
-                    id="plan"
-                    focusable={false}
-                >
-                    {planName}
-                </text>
-            ) : null}
         </svg>
     );
 };
 
 VpnLogo.propTypes = {
-    planName: PropTypes.string,
     className: PropTypes.string
 };
 
