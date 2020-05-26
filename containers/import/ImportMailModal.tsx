@@ -1,5 +1,4 @@
-import React, { useState, useMemo } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useMemo, ChangeEvent, FormEvent } from 'react';
 import { c } from 'ttag';
 import {
     FormModal,
@@ -10,6 +9,7 @@ import {
     Field,
     PrimaryButton,
     Loader,
+    Icon,
     Input,
     useApi,
     useLoading
@@ -22,9 +22,18 @@ const STEPS = {
     STARTED: 'started'
 };
 
+const DEFAULT_MODEL = {
+    step: STEPS.START,
+    needDetails: false,
+    email: '',
+    password: '',
+    port: '',
+    imap: ''
+};
+
 const ImportMailModal = ({ ...rest }) => {
     const [loading, withLoading] = useLoading();
-    const [model, setModel] = useState({ step: STEPS.START, needDetails: false, email: '', password: '', port: '' });
+    const [model, setModel] = useState(DEFAULT_MODEL);
     const api = useApi();
     const title = useMemo(() => {
         if (model.step === STEPS.START) {
@@ -44,15 +53,15 @@ const ImportMailModal = ({ ...rest }) => {
             return <PrimaryButton type="submit" loading={loading}>{c('Action').t`Next`}</PrimaryButton>;
         }
         if (model.step === STEPS.PREPARE) {
-            return 'TODO';
+            return <PrimaryButton type="submit">{c('Action').t`Start import`}</PrimaryButton>;
         }
         if (model.step === STEPS.STARTED) {
-            return 'TODO';
+            return <PrimaryButton type="submit">{c('Action').t`Close`}</PrimaryButton>;
         }
         return null;
     }, [model.step, loading]);
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         if (model.step === STEPS.START && model.needDetails) {
@@ -102,6 +111,8 @@ const ImportMailModal = ({ ...rest }) => {
         }
 
         if (model.step === STEPS.PREPARE) {
+            // TODO start import process
+            // await api();
             setModel({
                 ...model,
                 step: STEPS.STARTED
@@ -119,8 +130,8 @@ const ImportMailModal = ({ ...rest }) => {
         <FormModal
             title={title}
             loading={loading}
-            onSubmit={(e) => withLoading(handleSubmit(e))}
             submit={submit}
+            onSubmit={(e: FormEvent<HTMLFormElement>) => withLoading(handleSubmit(e))}
             {...rest}
         >
             {model.step === STEPS.START ? (
@@ -131,7 +142,9 @@ const ImportMailModal = ({ ...rest }) => {
                             <EmailInput
                                 id="emailAddress"
                                 value={model.email}
-                                onChange={({ target }) => setModel({ ...model, email: target.value })}
+                                onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
+                                    setModel({ ...model, email: target.value })
+                                }
                                 autoFocus
                                 required
                             />
@@ -143,7 +156,9 @@ const ImportMailModal = ({ ...rest }) => {
                             <PasswordInput
                                 id="password"
                                 value={model.password}
-                                onChange={({ target }) => setModel({ ...model, password: target.value })}
+                                onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
+                                    setModel({ ...model, password: target.value })
+                                }
                                 required
                             />
                         </Field>
@@ -157,7 +172,9 @@ const ImportMailModal = ({ ...rest }) => {
                                         id="imap"
                                         placeholder="imap.domain.com"
                                         value={model.imap}
-                                        onChange={({ target }) => setModel({ ...model, imap: target.value })}
+                                        onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
+                                            setModel({ ...model, imap: target.value })
+                                        }
                                         required
                                     />
                                 </Field>
@@ -169,7 +186,9 @@ const ImportMailModal = ({ ...rest }) => {
                                         id="port"
                                         placeholder="993"
                                         value={model.port}
-                                        onChange={({ target }) => setModel({ ...model, port: target.value })}
+                                        onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
+                                            setModel({ ...model, port: target.value })
+                                        }
                                         required
                                     />
                                 </Field>
@@ -202,13 +221,16 @@ const ImportMailModal = ({ ...rest }) => {
                     </div>
                 </>
             ) : null}
-            {model.step === STEPS.STARTED ? <></> : null}
+            {model.step === STEPS.STARTED ? (
+                <>
+                    <div className="mb1 aligncenter">
+                        <div className="mb1">{c('Info').t`Import in progress...`}</div>
+                        <Icon name="import" className="fill-pm-blue" size={100} />
+                    </div>
+                </>
+            ) : null}
         </FormModal>
     );
-};
-
-ImportMailModal.propTypes = {
-    onClose: PropTypes.func.isRequired
 };
 
 export default ImportMailModal;

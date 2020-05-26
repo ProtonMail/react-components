@@ -9,7 +9,7 @@ const PastImportsSection = () => {
     const [loading, withLoading] = useLoading();
 
     const fetch = async () => {
-        const { Imports = [] } = await api(queryMailImportCurrent());
+        const { Imports = [] } = await api(queryMailImportCurrent()); // TODO use proper route when it's ready
         setImports(Imports);
     };
 
