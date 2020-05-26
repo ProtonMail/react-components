@@ -8,6 +8,7 @@ import { getPlanName, hasLifetime } from 'proton-shared/lib/helpers/subscription
 
 import CalendarLogo from './CalendarLogo';
 import ContactsLogo from './ContactsLogo';
+import DriveLogo from './DriveLogo';
 import MailLogo from './MailLogo';
 import VpnLogo from './VpnLogo';
 import { classnames } from '../../helpers/component';
@@ -31,7 +32,7 @@ const MainLogo = ({ url = '/inbox', external = false, className = '' }) => {
 
     const logo = (() => {
         // we do not have the proper logos for all the products yet. Use mail logo in the meantime
-        if ([PROTONMAIL, PROTONMAIL_SETTINGS, PROTONDRIVE].includes(APP_NAME)) {
+        if ([PROTONMAIL, PROTONMAIL_SETTINGS].includes(APP_NAME)) {
             return <MailLogo planName={planName} />;
         }
         if (APP_NAME === PROTONCALENDAR) {
@@ -42,6 +43,9 @@ const MainLogo = ({ url = '/inbox', external = false, className = '' }) => {
         }
         if (APP_NAME === PROTONVPN_SETTINGS) {
             return <VpnLogo planName={planName} />;
+        }
+        if (APP_NAME === PROTONDRIVE) {
+            return <DriveLogo planName={planName} />;
         }
         return null;
     })();
