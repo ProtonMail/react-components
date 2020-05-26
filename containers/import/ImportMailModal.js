@@ -9,6 +9,7 @@ import {
     Row,
     Field,
     PrimaryButton,
+    Loader,
     Input,
     useApi,
     useLoading
@@ -177,7 +178,30 @@ const ImportMailModal = ({ ...rest }) => {
                     ) : null}
                 </>
             ) : null}
-            {model.step === STEPS.PREPARE ? <></> : null}
+            {model.step === STEPS.PREPARE ? (
+                <>
+                    <div className="mb1">
+                        <span className="mr1">{c('Label').t`Email:`}</span>
+                        <strong>{model.email}</strong>
+                    </div>
+                    <hr />
+                    <div className="mb1 aligncenter">
+                        <div className="mb1">{c('Info').t`Calculating import data size...`}</div>
+                        <Loader />
+                    </div>
+                    <hr />
+                    <div className="flex">
+                        <div className="flex-item-fluid">
+                            <span className="mr1">{c('Label').t`From`}</span>
+                            <strong>{model.email}</strong>
+                        </div>
+                        <div className="flex-item-fluid">
+                            <span className="mr1">{c('Label').t`To`}</span>
+                            <strong>{model.email}</strong>
+                        </div>
+                    </div>
+                </>
+            ) : null}
             {model.step === STEPS.STARTED ? <></> : null}
         </FormModal>
     );
