@@ -66,6 +66,36 @@ export const getPromiseValue = (cache, key, miss) => {
 };
 
 /**
+ * Generic hook to be able to force a refresh on the component.
+ * It will prevent errors if you try to force resfresh on an unmounted component.
+ * @return [
+ *  ref: a reference which will change at each forced refresh,
+ *  refresh: a function to use to trigger a forced refresh
+ * ]
+ */
+export const useForceRefresh = () => {
+    // Artificial state to change to force refresh
+    const [forceRefresh, setForceRefresh] = useState();
+
+    // Component mounting flag
+    const isMounted = useRef(true);
+
+    // Detect component unmounting
+    useEffect(() => () => (isMounted.current = false), []);
+
+    return [
+        // Force refresh ref
+        forceRefresh,
+        // Force refresh function
+        () => {
+            if (isMounted.current) {
+                setForceRefresh({});
+            }
+        }
+    ];
+};
+
+/**
  * Caches a model globally in the cache. Can be updated from the event manager.
  * @param {Map} cache
  * @param {String} key
@@ -73,7 +103,8 @@ export const getPromiseValue = (cache, key, miss) => {
  * @return {[value, loading, error]}
  */
 const useCachedModelResult = (cache, key, miss) => {
-    const [forceRefresh, setForceRefresh] = useState();
+    const [forceRefreshRef, forceRefresh] = useForceRefresh();
+
     const latestValue = useRef();
 
     const result = useMemo(() => {
@@ -83,7 +114,7 @@ const useCachedModelResult = (cache, key, miss) => {
             return getState(update(cache, key, miss(key)), latestValue.current);
         }
         return getState(oldRecord, latestValue.current);
-    }, [cache, key, miss, forceRefresh]);
+    }, [cache, key, miss, forceRefreshRef]);
 
     useEffect(() => {
         // https://reactjs.org/docs/hooks-faq.html#how-to-read-an-often-changing-value-from-usecallback
@@ -94,11 +125,11 @@ const useCachedModelResult = (cache, key, miss) => {
         const checkForChange = () => {
             const oldRecord = cache.get(key);
             if (!oldRecord) {
-                return setForceRefresh({});
+                return forceRefresh();
             }
             const newValue = getState(oldRecord, latestValue.current);
             if (newValue.some((value, i) => value !== latestValue.current[i])) {
-                setForceRefresh({});
+                forceRefresh();
             }
         };
         const cacheListener = (changedKey) => {
