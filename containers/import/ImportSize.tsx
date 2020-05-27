@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useApi, Loader } from 'react-components';
 import humanSize from 'proton-shared/lib/helpers/humanSize';
 import { getMailImport } from 'proton-shared/lib/api/mailImport';
@@ -9,32 +9,38 @@ interface Props {
     ID: string;
 }
 
+const getTotal = (mailboSize: MailboxSize) => Object.entries(mailboSize).reduce((acc, [, size]) => acc + size, 0);
+
 const ImportSize = ({ ID }: Props) => {
     const api = useApi();
-    const [mailboSize, setMailboxSize] = useState<undefined | MailboxSize>();
+    const [total, setTotal] = useState(0);
+    const intervalIDRef = useRef<NodeJS.Timeout>();
 
     const fetch = async () => {
-        const { MailboxSize } = await api(getMailImport(ID)); // TODO if UserSpaceLeft > MailboxSize stop fetching
-        setMailboxSize(MailboxSize);
+        const { MailboxSize, UserSpaceLeft } = await api(getMailImport(ID)); // TODO if UserSpaceLeft > MailboxSize stop fetching
+
+        if (MailboxSize) {
+            const totalSize = getTotal(MailboxSize);
+            setTotal(totalSize);
+            UserSpaceLeft > totalSize && intervalIDRef.current && clearInterval(intervalIDRef.current);
+        }
     };
 
     useEffect(() => {
         fetch();
 
-        const intervalID = setInterval(() => {
+        intervalIDRef.current = setInterval(() => {
             fetch();
         }, 10 * 1000);
 
         return () => {
-            clearInterval(intervalID);
+            intervalIDRef.current && clearInterval(intervalIDRef.current);
         };
     }, []);
 
-    if (!mailboSize) {
+    if (!total) {
         return <Loader />;
     }
-
-    const total = Object.entries(mailboSize).reduce((acc, [, size]) => acc + size, 0);
 
     return <>`${humanSize(total)} data for import size`</>;
 };

@@ -123,7 +123,7 @@ const CurrentImportsSection = () => {
                                                     withLoadingActions(handleResume(ID));
                                                 }
                                             },
-                                            Status === ImportMailStatus.CANCELED && {
+                                            Status === ImportMailStatus.PAUSED && {
                                                 text: c('Action').t`Resume`,
                                                 onClick() {
                                                     withLoadingActions(handleCancel(ID));

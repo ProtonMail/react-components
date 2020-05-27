@@ -321,6 +321,9 @@ const ImportMailModal = ({ ...rest }) => {
                         <div className="flex-item-fluid">
                             <span className="mr1">{c('Label').t`To`}</span>
                             <strong>{address.Email}</strong>
+                            <ul>
+                                <li>TODO</li>
+                            </ul>
                         </div>
                     </div>
                 </>
