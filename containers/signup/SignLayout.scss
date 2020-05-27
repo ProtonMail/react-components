@@ -3,6 +3,10 @@
  */
 @import "~design-system/_sass/reusable-components/design-system-config";
 
+.signup-container {
+    transition: max-width .15s easing(easeIn);
+}
+
 /* label size */
 .signup-form {
 	--label-width: 10em;
