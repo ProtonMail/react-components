@@ -1,26 +1,5 @@
-stages:
-    - setup
-    - test
-    - test-slow
-
 include:
-  - project: 'web/core/proton-config'
+  - project: 'deploy-app/fe-scripts'
     ref: master
-    file: '/_templates-ci/config.gitlab-ci.yml'
+    file: '/jobs/lib.gitlab-ci.yaml'
 
-  - project: 'web/core/proton-config'
-    ref: master
-    file: '/_templates-ci/setup.gitlab-ci.yml'
-
-  - project: 'web/core/proton-config'
-    ref: master
-    file: '/_templates-ci/test.gitlab-ci.yml'
-
-
-lint-translations:
-    stage: test
-    except:
-        - schedules
-        - tags
-    script:
-        - npm run i18n:validate
