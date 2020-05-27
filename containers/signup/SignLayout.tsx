@@ -36,7 +36,7 @@ const SignLayout = ({ children, title, aside, larger, left, center, right }: Pro
 
     return (
         <div className="pt1 pb1 pl2 pr2 scroll-if-needed h100v signLayout-container flex flex-column flex-spacebetween">
-            <div className="flex-item-fluid flex-item-noshrink flex flex-column flex-nowrap">
+            <div className="flex-item-fluid-auto flex-item-noshrink flex flex-column flex-nowrap">
                 <div className="flex flex-column flex-nowrap flex-item-noshrink">
                     <div
                         className={classnames([
@@ -69,7 +69,7 @@ const SignLayout = ({ children, title, aside, larger, left, center, right }: Pro
                     </div>
                 </div>
             </div>
-            <footer className="aligncenter small m0 flex-item-noshrink">
+            <footer className="aligncenter small m0 pt0-5 pb0-5 flex-item-noshrink">
                 <span className="opacity-50">{c('Info').t`Made globally - Hosted in Switzerland`}</span>
                 <span className="opacity-50 pl0-75 pr0-75" aria-hidden="true">
                     |
