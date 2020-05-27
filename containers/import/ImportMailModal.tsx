@@ -243,9 +243,9 @@ const ImportMailModal = ({ ...rest }) => {
                 <>
                     {model.errorCode === ERROR.AUTH_IMAP ? (
                         <Alert type="error">
-                            <div>{c('Error')
+                            <div className="mb1">{c('Error')
                                 .t`Server error. We cannot connect to your mail service provider. Please check if:`}</div>
-                            <ul className="mb0">
+                            <ul className="m0">
                                 <li>{c('Error').t`IMAP is enabled`}</li>
                                 <li>{c('Error').t`Password and mail address is correct`}</li>
                                 <li>{c('Error').t` If it's a Gmail or Yahoo, please use an app password`}</li>
@@ -333,9 +333,11 @@ const ImportMailModal = ({ ...rest }) => {
                     <hr />
                     <div className="flex mb1">
                         <div className="flex-item-fluid">
-                            <span className="mr1">{c('Label').t`From`}</span>
-                            <strong>{model.email}</strong>
-                            <ul>
+                            <div className="mb1">
+                                <span className="mr1">{c('Label').t`From`}</span>
+                                <strong>{model.email}</strong>
+                            </div>
+                            <ul className="unstyled m0">
                                 {model.folders.map(({ Name, DestinationLabelID }, index) => {
                                     return (
                                         <li key={index}>
@@ -350,9 +352,11 @@ const ImportMailModal = ({ ...rest }) => {
                             </ul>
                         </div>
                         <div className="flex-item-fluid">
-                            <span className="mr1">{c('Label').t`To`}</span>
-                            <strong>{address.Email}</strong>
-                            <ul>
+                            <div className="mb1">
+                                <span className="mr1">{c('Label').t`To`}</span>
+                                <strong>{address.Email}</strong>
+                            </div>
+                            <ul className="unstyled m0">
                                 {model.folders.map(({ Name, DestinationLabelID }, index) => {
                                     return (
                                         <React.Fragment key={index}>
