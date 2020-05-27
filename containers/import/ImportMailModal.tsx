@@ -9,14 +9,20 @@ import {
     Row,
     Field,
     PrimaryButton,
-    Loader,
     Icon,
     Input,
     useApi,
     useLoading,
-    useUser
+    useAddresses
 } from 'react-components';
-import { getAuthenticationMethod, createMailImport } from 'proton-shared/lib/api/mailImport';
+import {
+    getAuthenticationMethod,
+    createMailImport,
+    createJobImport,
+    getMailImportFolders
+} from 'proton-shared/lib/api/mailImport';
+
+import ImportSize from './ImportSize';
 
 const STEPS = {
     START: 'start',
@@ -27,20 +33,34 @@ const STEPS = {
 const DEFAULT_MODEL = {
     step: STEPS.START,
     needDetails: false,
+    importID: '',
     email: '',
     password: '',
     port: '',
     imap: '',
-    errorCode: 0
+    errorCode: 0,
+    folders: []
 };
 
 const ERROR = {
     AUTH_IMAP: 2000
 };
 
+const GLOBAL_ICONS = {
+    0: 'inbox',
+    1: 'drafts',
+    2: 'sent',
+    3: 'trash',
+    4: 'spam',
+    6: 'archive',
+    7: 'sent',
+    8: 'drafts'
+};
+
 const ImportMailModal = ({ ...rest }) => {
     const [loading, withLoading] = useLoading();
-    const [user] = useUser();
+    const [addresses] = useAddresses();
+    const [address] = addresses || [];
     const [model, setModel] = useState(DEFAULT_MODEL);
     const api = useApi();
     const title = useMemo(() => {
@@ -51,7 +71,7 @@ const ImportMailModal = ({ ...rest }) => {
             return c('Title').t`Start import process`;
         }
         if (model.step === STEPS.STARTED) {
-            return c('Title').t`Import started`;
+            return c('Title').t`Import in progress`;
         }
         return '';
     }, [model.step]);
@@ -74,7 +94,7 @@ const ImportMailModal = ({ ...rest }) => {
 
         if (model.step === STEPS.START && model.needDetails) {
             try {
-                await api(
+                const { Import } = await api(
                     createMailImport({
                         Email: model.email,
                         ImapHost: model.imap,
@@ -83,6 +103,13 @@ const ImportMailModal = ({ ...rest }) => {
                         Code: model.password
                     })
                 );
+                const { Folders = [] } = await api(getMailImportFolders(Import.ID));
+                setModel({
+                    ...model,
+                    folders: Folders,
+                    importID: Import.ID,
+                    step: STEPS.PREPARE
+                });
             } catch (error) {
                 const { data: { Code } = { Code: 0 } } = error;
 
@@ -95,10 +122,6 @@ const ImportMailModal = ({ ...rest }) => {
                 }
             }
 
-            setModel({
-                ...model,
-                step: STEPS.PREPARE
-            });
             return;
         }
 
@@ -108,7 +131,7 @@ const ImportMailModal = ({ ...rest }) => {
 
             if (Authentication.ImapHost) {
                 try {
-                    await api(
+                    const { Import } = await api(
                         createMailImport({
                             Email: model.email,
                             ImapHost,
@@ -117,6 +140,13 @@ const ImportMailModal = ({ ...rest }) => {
                             Code: model.password
                         })
                     );
+                    const { Folders = [] } = await api(getMailImportFolders(Import.ID));
+                    setModel({
+                        ...model,
+                        folders: Folders,
+                        importID: Import.ID,
+                        step: STEPS.PREPARE
+                    });
                 } catch (error) {
                     const { data: { Code } = { Code: 0 } } = error;
 
@@ -128,11 +158,6 @@ const ImportMailModal = ({ ...rest }) => {
                         return;
                     }
                 }
-
-                setModel({
-                    ...model,
-                    step: STEPS.PREPARE
-                });
             } else {
                 setModel({
                     ...model,
@@ -145,8 +170,23 @@ const ImportMailModal = ({ ...rest }) => {
         }
 
         if (model.step === STEPS.PREPARE) {
-            // TODO start import process
-            // await api();
+            await api(
+                createJobImport(model.importID, {
+                    AddressID: address.ID,
+                    Folders: model.folders.map(({ Name, DestinationLabelID }) => {
+                        if (DestinationLabelID) {
+                            return {
+                                SourceFolder: Name,
+                                DestinationLabelID
+                            };
+                        }
+                        return {
+                            SourceFolder: Name,
+                            DestinationLabelName: Name
+                        };
+                    })
+                })
+            );
             setModel({
                 ...model,
                 step: STEPS.STARTED
@@ -249,19 +289,38 @@ const ImportMailModal = ({ ...rest }) => {
                         <strong>{model.email}</strong>
                     </div>
                     <hr />
-                    <div className="mb1 aligncenter">
-                        <div className="mb1">{c('Info').t`Calculating import data size...`}</div>
-                        <Loader />
+                    <div className="mb1">
+                        <div className="mb0-5">
+                            <ImportSize ID={model.importID} />
+                        </div>
+                        <div className="mb0-5">{c('Info').t`${model.folders.reduce(
+                            (acc, { Total }) => acc + Total,
+                            0
+                        )} messages have been found`}</div>
+                        <div>{c('Info').t`${model.folders.length} folders have been found`}</div>
                     </div>
                     <hr />
                     <div className="flex mb1">
                         <div className="flex-item-fluid">
                             <span className="mr1">{c('Label').t`From`}</span>
                             <strong>{model.email}</strong>
+                            <ul>
+                                {model.folders.map(({ Name, DestinationLabelID }, index) => {
+                                    return (
+                                        <li key={index}>
+                                            <Icon
+                                                name={GLOBAL_ICONS[DestinationLabelID] || 'folder'}
+                                                className="mr0-5"
+                                            />
+                                            <span>{Name}</span>
+                                        </li>
+                                    );
+                                })}
+                            </ul>
                         </div>
                         <div className="flex-item-fluid">
                             <span className="mr1">{c('Label').t`To`}</span>
-                            <strong>{user.Email}</strong>
+                            <strong>{address.Email}</strong>
                         </div>
                     </div>
                 </>
