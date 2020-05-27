@@ -33,6 +33,20 @@
 
 
 // Hide icons (caret, support1) in <SupportDropdown>
-.signLayout-container .support-dropdown-button svg {
-    display: none;
+.signLayout-container {
+    .support-dropdown-button {
+        .navigation-title {
+            margin-right: 0;
+        }
+        svg {
+            display: none;
+        }
+    }
+}
+
+.signup-footer-link {
+    &:focus,
+    &:hover {
+        color: rgba($white, .5);
+    }
 }
