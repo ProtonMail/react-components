@@ -1,8 +1,8 @@
 import React from 'react';
-import { Group, ButtonGroup } from 'react-components';
+import { Group, ButtonGroup, RoundedIcon, useFilters } from 'react-components';
 import { c } from 'ttag';
 
-import { ModalModel, Step } from './interfaces';
+import { ModalModel, Step, Filter } from './interfaces';
 
 interface Props {
     model: ModalModel;
@@ -10,13 +10,18 @@ interface Props {
 }
 
 const HeaderFilterModal = ({ model, onChange }: Props) => {
+    const [filters = []] = useFilters();
+    const hasValidName = model.name && !filters.find(({ Name }: Filter) => Name === model.name);
     return (
         <header className="mb1">
             <Group>
                 <ButtonGroup
                     onClick={() => onChange({ ...model, step: Step.NAME })}
                     className={model.step === Step.NAME ? 'is-active' : ''}
-                >{c('Step in filter modal').t`Name`}</ButtonGroup>
+                >
+                    {hasValidName ? <RoundedIcon className="mr0-5" type="success" name="on" /> : null}
+                    {c('Step in filter modal').t`Name`}
+                </ButtonGroup>
                 <ButtonGroup
                     onClick={() => onChange({ ...model, step: Step.CONDITIONS })}
                     className={model.step === Step.CONDITIONS ? 'is-active' : ''}
