@@ -17,8 +17,18 @@ interface Props {
 
 const SignLayout = ({ children, title, aside, larger, left, center, right }: Props) => {
     const { CLIENT_VERSION } = useConfig();
-    const termsLink = <Href key="terms" to="https://protonmail.com/terms-and-conditions">{c('Link').t`Terms`}</Href>;
-    const privacyLink = <Href key="privacy" to="https://protonmail.com/privacy-policy">{c('Link').t`Privacy`}</Href>;
+    const termsLink = (
+        <Href
+            key="terms"
+            className="signup-footer-link nodecoration"
+            to="https://protonmail.com/terms-and-conditions"
+        >{c('Link').t`Terms`}</Href>
+    );
+    const privacyLink = (
+        <Href key="privacy" className="signup-footer-link nodecoration" to="https://protonmail.com/privacy-policy">{c(
+            'Link'
+        ).t`Privacy policy`}</Href>
+    );
 
     useEffect(() => {
         document.title = `${title} - Proton`;
@@ -59,8 +69,21 @@ const SignLayout = ({ children, title, aside, larger, left, center, right }: Pro
                     </div>
                 </div>
             </div>
-            <footer className="opacity-50 aligncenter small m0 flex-item-noshrink">{c('Info')
-                .jt`Made globally - Hosted in Switzerland | ${termsLink} | ${privacyLink} | Version ${CLIENT_VERSION}`}</footer>
+            <footer className="aligncenter small m0 flex-item-noshrink">
+                <span className="opacity-50">{c('Info').t`Made globally - Hosted in Switzerland`}</span>
+                <span className="opacity-50 pl0-75 pr0-75" aria-hidden="true">
+                    |
+                </span>
+                <span className="">{termsLink}</span>
+                <span className="opacity-50 pl0-75 pr0-75" aria-hidden="true">
+                    |
+                </span>
+                <span className="">{privacyLink}</span>
+                <span className="opacity-50 pl0-75 pr0-75" aria-hidden="true">
+                    |
+                </span>
+                <span className="opacity-50">{c('Info').jt`Version ${CLIENT_VERSION}`}</span>
+            </footer>
         </div>
     );
 };

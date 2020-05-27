@@ -136,7 +136,7 @@ const SignupRecoveryForm = ({ model, onChange, onSubmit, errors, loading }: Prop
             ) : null}
             <div className="alignright mb1">
                 <LinkButton
-                    className="mr1 pm-button--large mr2"
+                    className="mr2 pm-button--large nodecoration"
                     disabled={loading || loadingChallenge}
                     onClick={handleSkip}
                 >{c('Action').t`Skip`}</LinkButton>
