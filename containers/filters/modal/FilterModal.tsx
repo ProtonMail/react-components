@@ -1,5 +1,5 @@
 import React, { useState, FormEvent, ChangeEvent } from 'react';
-import { FormModal, Alert, Row, Label, Field, Input } from 'react-components';
+import { FormModal, Alert, Row, Label, Field, Input, useLoading, useApi } from 'react-components';
 import { c } from 'ttag';
 
 import { ModalModel, Filter, Step } from './interfaces';
@@ -12,21 +12,25 @@ interface Props {
 }
 
 const FilterModal = ({ filter, ...rest }: Props) => {
+    const api = useApi();
+    const [loading, withLoading] = useLoading();
     const [model, setModel] = useState<ModalModel>({
         step: Step.NAME,
         name: filter?.Name || ''
     });
-    const title = '';
+    const title = filter?.ID ? c('Title').t`Edit filter` : c('Title').t`Add new filter`;
 
-    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        await api(); // TODO
     };
 
     return (
         <FormModal
             title={title}
-            onSubmit={(event: FormEvent<HTMLFormElement>) => handleSubmit(event)}
-            footer={<FooterFilterModal model={model} onChange={setModel} onClose={rest.onClose} />}
+            loading={loading}
+            onSubmit={(event: FormEvent<HTMLFormElement>) => withLoading(handleSubmit(event))}
+            footer={<FooterFilterModal model={model} onChange={setModel} onClose={rest.onClose} loading={loading} />}
             {...rest}
         >
             <HeaderFilterModal model={model} onChange={setModel} />

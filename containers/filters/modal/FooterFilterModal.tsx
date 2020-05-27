@@ -8,6 +8,7 @@ interface Props {
     model: ModalModel;
     onClose: () => void;
     onChange: (newModel: ModalModel) => void;
+    loading: boolean;
 }
 
 const NEXT_STEP = {
@@ -17,20 +18,20 @@ const NEXT_STEP = {
     [Step.PREVIEW]: Step.PREVIEW
 };
 
-const FooterFilterModal = ({ model, onClose, onChange }: Props) => {
+const FooterFilterModal = ({ model, onClose, onChange, loading }: Props) => {
     const handleNext = () => {
         onChange({ ...model, step: NEXT_STEP[model.step] });
     };
     return (
-        <footer className="flex flex-nowrap flex-spacebetween">
-            <Button onClick={onClose}>{c('Action').t`Cancel`}</Button>
+        <>
+            <Button disabled={loading} onClick={onClose}>{c('Action').t`Cancel`}</Button>
             <div>
                 {[Step.NAME, Step.CONDITIONS, Step.ACTIONS].includes(model.step) ? (
-                    <Button onClick={handleNext} className="mr1">{c('Action').t`Next`}</Button>
+                    <Button disabled={loading} onClick={handleNext} className="mr1">{c('Action').t`Next`}</Button>
                 ) : null}
-                <PrimaryButton type="submit">{c('Action').t`Save`}</PrimaryButton>
+                <PrimaryButton disabled={loading} type="submit">{c('Action').t`Save`}</PrimaryButton>
             </div>
-        </footer>
+        </>
     );
 };
 
