@@ -8,10 +8,13 @@ import {
     Label,
     Row,
     Field,
+    ConfirmModal,
     PrimaryButton,
+    Button,
     Icon,
     Input,
     useApi,
+    useModals,
     useLoading,
     useAddresses
 } from 'react-components';
@@ -59,6 +62,7 @@ const GLOBAL_ICONS = {
 
 const ImportMailModal = ({ ...rest }) => {
     const [loading, withLoading] = useLoading();
+    const { createModal } = useModals();
     const [addresses] = useAddresses();
     const [address] = addresses || [];
     const [model, setModel] = useState(DEFAULT_MODEL);
@@ -85,6 +89,27 @@ const ImportMailModal = ({ ...rest }) => {
         }
         if (model.step === STEPS.STARTED) {
             return <PrimaryButton type="submit">{c('Action').t`Close`}</PrimaryButton>;
+        }
+        return null;
+    }, [model.step, loading]);
+
+    const handleCancel = async () => {
+        await new Promise((resolve, reject) => {
+            createModal(
+                <ConfirmModal onConfirm={resolve} onClose={reject}>
+                    <Alert type="warning">{c('Warning').t`Are you sure you want to cancel mails import?`}</Alert>
+                </ConfirmModal>
+            );
+        });
+        rest.onClose();
+    };
+
+    const cancel = useMemo(() => {
+        if (model.step === STEPS.START) {
+            return <Button loading={loading} onClick={() => handleCancel()}>{c('Action').t`Cancel`}</Button>;
+        }
+        if (model.step === STEPS.PREPARE) {
+            return <Button loading={loading} onClick={() => handleCancel()}>{c('Action').t`Cancel`}</Button>;
         }
         return null;
     }, [model.step, loading]);
@@ -210,6 +235,7 @@ const ImportMailModal = ({ ...rest }) => {
             title={title}
             loading={loading}
             submit={submit}
+            cancel={cancel}
             onSubmit={(e: FormEvent<HTMLFormElement>) => withLoading(handleSubmit(e))}
             {...rest}
         >
@@ -327,7 +353,25 @@ const ImportMailModal = ({ ...rest }) => {
                             <span className="mr1">{c('Label').t`To`}</span>
                             <strong>{address.Email}</strong>
                             <ul>
-                                <li>TODO</li>
+                                {model.folders.map(({ Name, DestinationLabelID }, index) => {
+                                    return (
+                                        <React.Fragment key={index}>
+                                            {index === 0 && (
+                                                <li>
+                                                    <Icon name="folder" className="mr0-5" />
+                                                    <span>{address.Email}</span>
+                                                </li>
+                                            )}
+                                            <li className="pl1">
+                                                <Icon
+                                                    name={GLOBAL_ICONS[DestinationLabelID] || 'folder'}
+                                                    className="mr0-5"
+                                                />
+                                                <span>{Name}</span>
+                                            </li>
+                                        </React.Fragment>
+                                    );
+                                })}
                             </ul>
                         </div>
                     </div>
