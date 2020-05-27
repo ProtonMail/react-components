@@ -2,13 +2,13 @@ import React from 'react';
 import { c } from 'ttag';
 import { Button, PrimaryButton, useModals } from 'react-components';
 
-import AddFilterModal from './AddFilterModal';
+import FilterModal from './modal/FilterModal';
 
 function ActionsFilterToolbar() {
     const { createModal } = useModals();
 
     const handleClickAdd = (type) => () => {
-        createModal(<AddFilterModal type={type} />);
+        createModal(<FilterModal type={type} />);
     };
 
     return (
