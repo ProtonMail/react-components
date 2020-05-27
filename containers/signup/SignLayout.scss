@@ -11,11 +11,6 @@
 	--label-width: #{$pm-label-width};
 }
 
-/* @protonmail.com field */
-.pm-field--username {
-	padding-right: 9em;
-}
-
 /* display for currency/plans */
 .account-form-cycle-currency-selectors {
 	width: calc( (100% - 3em)/4 ); // 4 plans
