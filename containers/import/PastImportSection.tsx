@@ -52,6 +52,14 @@ const PastImportsSection = () => {
 
     useEffect(() => {
         withLoading(fetch());
+
+        const intervalID = setInterval(() => {
+            fetch();
+        }, 10 * 1000);
+
+        return () => {
+            clearTimeout(intervalID);
+        };
     }, []);
 
     if (loading) {

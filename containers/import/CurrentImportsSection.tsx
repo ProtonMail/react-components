@@ -9,7 +9,6 @@ import {
     Time,
     Loader,
     DropdownActions,
-    Button,
     useApi,
     useLoading,
     useNotifications
@@ -37,7 +36,7 @@ const CurrentImportsSection = () => {
 
         const intervalID = setInterval(() => {
             fetch();
-        }, 30 * 1000);
+        }, 10 * 1000);
 
         return () => {
             clearTimeout(intervalID);
@@ -77,10 +76,6 @@ const CurrentImportsSection = () => {
     return (
         <>
             <SubTitle>{c('Title').t`Current imports`}</SubTitle>
-            <div className="mb1">
-                <Button loading={loadingActions} onClick={() => withLoadingActions(fetch())}>{c('Action')
-                    .t`Refresh`}</Button>
-            </div>
             <Table>
                 <TableHeader
                     cells={[

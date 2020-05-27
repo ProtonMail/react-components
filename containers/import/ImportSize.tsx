@@ -17,7 +17,8 @@ const ImportSize = ({ ID }: Props) => {
     const intervalIDRef = useRef<NodeJS.Timeout>();
 
     const fetch = async () => {
-        const { MailboxSize, UserSpaceLeft } = await api(getMailImport(ID)); // TODO if UserSpaceLeft > MailboxSize stop fetching
+        const { Import = {} } = await api(getMailImport(ID)); // TODO if UserSpaceLeft > MailboxSize stop fetching
+        const { MailboxSize, UserSpaceLeft } = Import;
 
         if (MailboxSize) {
             const totalSize = getTotal(MailboxSize);

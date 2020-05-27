@@ -92,13 +92,18 @@ const ImportMailModal = ({ ...rest }) => {
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
+        setModel({
+            ...model,
+            errorCode: 0
+        });
+
         if (model.step === STEPS.START && model.needDetails) {
             try {
                 const { Import } = await api(
                     createMailImport({
                         Email: model.email,
                         ImapHost: model.imap,
-                        ImapPort: model.port,
+                        ImapPort: parseInt(model.port),
                         Sasl: 'PLAIN',
                         Code: model.password
                     })
@@ -174,7 +179,7 @@ const ImportMailModal = ({ ...rest }) => {
                 createJobImport(model.importID, {
                     AddressID: address.ID,
                     Folders: model.folders.map(({ Name, DestinationLabelID }) => {
-                        if (DestinationLabelID) {
+                        if (Number.isInteger(DestinationLabelID)) {
                             return {
                                 SourceFolder: Name,
                                 DestinationLabelID
@@ -214,7 +219,7 @@ const ImportMailModal = ({ ...rest }) => {
                         <Alert type="error">
                             <div>{c('Error')
                                 .t`Server error. We cannot connect to your mail service provider. Please check if:`}</div>
-                            <ul>
+                            <ul className="mb0">
                                 <li>{c('Error').t`IMAP is enabled`}</li>
                                 <li>{c('Error').t`Password and mail address is correct`}</li>
                                 <li>{c('Error').t` If it's a Gmail or Yahoo, please use an app password`}</li>
