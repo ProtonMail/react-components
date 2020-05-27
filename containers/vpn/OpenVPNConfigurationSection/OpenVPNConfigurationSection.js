@@ -49,16 +49,15 @@ const OpenVPNConfigurationSection = () => {
     const { loading, result = {} } = useApiResult(queryVPNLogicalServerInfo, []);
     const { result: vpnResult = {}, loading: vpnLoading } = useUserVPN();
     const [{ hasPaidVpn }] = useUser();
-
-    const userVPN = vpnResult.VPN;
-    const isBasicVPN = userVPN && userVPN.PlanName === 'vpnbasic';
+    const { VPN: userVPN = {} } = vpnResult;
+    const isBasicVPN = userVPN.PlanName === 'vpnbasic';
 
     const downloadAllConfigs = async () => {
         const buffer = await request({
             Category: category,
             Platform: platform,
             Protocol: protocol,
-            Tier: userVPN.PlanName === 'trial' ? 0 : userVPN && userVPN.MaxTier
+            Tier: userVPN.PlanName === 'trial' ? 0 : userVPN.MaxTier
         });
         const blob = new Blob([buffer], { type: 'application/zip' });
         downloadFile(blob, 'ProtonVPN_server_configs.zip');
@@ -95,10 +94,12 @@ const OpenVPNConfigurationSection = () => {
     }));
     const freeServers = allServers.filter(({ Tier }) => Tier === 0).map((server) => ({ ...server, open: true }));
 
-    const isUpgradeRequiredForSecureCore = () => !userVPN || !hasPaidVpn || isBasicVPN;
-    const isUpgradeRequiredForCountries = () => !userVPN || !hasPaidVpn;
+    const isUpgradeRequiredForSecureCore = () => !Object.keys(userVPN).length || !hasPaidVpn || isBasicVPN;
+    const isUpgradeRequiredForCountries = () => !Object.keys(userVPN).length || !hasPaidVpn;
     const isUpgradeRequiredForDownloadAll =
-        !userVPN || (!hasPaidVpn && category !== CATEGORY.SERVER) || (isBasicVPN && category === CATEGORY.SECURE_CORE);
+        !Object.keys(userVPN).length ||
+        (!hasPaidVpn && category !== CATEGORY.SERVER) ||
+        (isBasicVPN && category === CATEGORY.SECURE_CORE);
 
     useEffect(() => {
         if (!hasPaidVpn || userVPN.PlanName === 'trial') {
