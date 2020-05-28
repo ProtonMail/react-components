@@ -2,13 +2,15 @@ import React from 'react';
 import { Button, PrimaryButton } from 'react-components';
 import { c } from 'ttag';
 
-import { ModalModel, Step } from './interfaces';
+import { ModalModel, Step, Filter } from './interfaces';
+import { hasValidName } from './helpers';
 
 interface Props {
     model: ModalModel;
     onClose: () => void;
     onChange: (newModel: ModalModel) => void;
     loading: boolean;
+    filters: Filter[];
 }
 
 const NEXT_STEP = {
@@ -25,7 +27,8 @@ const BACK_STEP = {
     [Step.PREVIEW]: Step.ACTIONS
 };
 
-const FooterFilterModal = ({ model, onClose, onChange, loading }: Props) => {
+const FooterFilterModal = ({ model, filters, onClose, onChange, loading }: Props) => {
+    const validName = hasValidName(model, filters);
     const handleNext = () => {
         onChange({ ...model, step: NEXT_STEP[model.step] });
     };
@@ -40,9 +43,16 @@ const FooterFilterModal = ({ model, onClose, onChange, loading }: Props) => {
                 <Button disabled={loading} onClick={handleBack}>{c('Action').t`Back`}</Button>
             )}
             <div>
-                {[Step.NAME, Step.CONDITIONS, Step.ACTIONS].includes(model.step) ? (
+                {model.step === Step.NAME && (
+                    <Button disabled={loading || !validName} onClick={handleNext} className="mr1">{c('Action')
+                        .t`Next`}</Button>
+                )}
+                {model.step === Step.CONDITIONS && (
                     <Button disabled={loading} onClick={handleNext} className="mr1">{c('Action').t`Next`}</Button>
-                ) : null}
+                )}
+                {model.step === Step.ACTIONS && (
+                    <Button disabled={loading} onClick={handleNext} className="mr1">{c('Action').t`Next`}</Button>
+                )}
                 <PrimaryButton disabled={loading} type="submit">{c('Action').t`Save`}</PrimaryButton>
             </div>
         </>

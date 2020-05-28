@@ -1,5 +1,5 @@
 import React, { useState, FormEvent, ChangeEvent } from 'react';
-import { FormModal, Alert, Row, Label, Field, Input, useLoading, useApi } from 'react-components';
+import { FormModal, Alert, Row, Label, Field, Input, useLoading, useApi, useFilters } from 'react-components';
 import { c } from 'ttag';
 
 import { ModalModel, Filter, Step } from './interfaces';
@@ -13,6 +13,7 @@ interface Props {
 
 const FilterModal = ({ filter, ...rest }: Props) => {
     const api = useApi();
+    const [filters = []] = useFilters();
     const [loading, withLoading] = useLoading();
     const [model, setModel] = useState<ModalModel>({
         step: Step.NAME,
@@ -32,10 +33,18 @@ const FilterModal = ({ filter, ...rest }: Props) => {
             title={title}
             loading={loading}
             onSubmit={(event: FormEvent<HTMLFormElement>) => withLoading(handleSubmit(event))}
-            footer={<FooterFilterModal model={model} onChange={setModel} onClose={rest.onClose} loading={loading} />}
+            footer={
+                <FooterFilterModal
+                    model={model}
+                    filters={filters}
+                    onChange={setModel}
+                    onClose={rest.onClose}
+                    loading={loading}
+                />
+            }
             {...rest}
         >
-            <HeaderFilterModal model={model} onChange={setModel} />
+            <HeaderFilterModal model={model} filters={filters} onChange={setModel} />
             {model.step === Step.NAME ? (
                 <>
                     <Alert>{c('Info')
