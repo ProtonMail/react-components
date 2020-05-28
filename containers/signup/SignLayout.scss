@@ -22,6 +22,8 @@
         @include respond-to($breakpoint-small) {
 
             border-radius: 0;
+            max-width: none;
+            width: 100%;
 
             .payment-left,
             .payment-right {
