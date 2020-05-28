@@ -2,6 +2,7 @@ import React, { ChangeEvent } from 'react';
 import { c } from 'ttag';
 import { Input, Label, Row, Field } from 'react-components';
 import { DOMAIN_PLACEHOLDER } from 'proton-shared/lib/constants';
+import { isDomain } from 'proton-shared/lib/helpers/validators';
 
 interface Props {
     domain: string;
@@ -10,6 +11,11 @@ interface Props {
 
 const AddDomainToList = ({ domain, onChange }: Props) => {
     const handleChange = ({ target }: ChangeEvent<HTMLInputElement>) => onChange(target.value);
+    const error = domain
+        ? isDomain(domain)
+            ? ''
+            : c('Error').t`Invalid domain`
+        : c('Error').t`This field is required`;
     return (
         <Row>
             <Label htmlFor="domain">{c('Label').t`Domain`}</Label>
@@ -19,6 +25,7 @@ const AddDomainToList = ({ domain, onChange }: Props) => {
                     value={domain}
                     onChange={handleChange}
                     placeholder={DOMAIN_PLACEHOLDER}
+                    error={error}
                     required={true}
                     autoFocus={true}
                 />
