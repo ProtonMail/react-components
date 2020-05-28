@@ -54,10 +54,10 @@ const OpenVPNConfigurationSection = () => {
 
     const downloadAllConfigs = async () => {
         const buffer = await request({
-            Category: category,
+            Category: category === CATEGORY.FREE ? CATEGORY.SERVER : category,
             Platform: platform,
             Protocol: protocol,
-            Tier: userVPN.PlanName === 'trial' ? 0 : userVPN.MaxTier
+            Tier: userVPN.PlanName === 'trial' || category === CATEGORY.FREE ? 0 : userVPN.MaxTier
         });
         const blob = new Blob([buffer], { type: 'application/zip' });
         downloadFile(blob, 'ProtonVPN_server_configs.zip');
