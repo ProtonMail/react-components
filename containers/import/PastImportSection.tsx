@@ -80,11 +80,6 @@ const PastImportsSection = () => {
         );
     }
 
-    const handleDownload = async (ID: string) => {
-        // TODO
-        await api(ID);
-    };
-
     const handleDelete = async (ID: string) => {
         // TODO
         await api(ID);
@@ -112,12 +107,6 @@ const PastImportsSection = () => {
                                         loading={loadingActions}
                                         className="pm-button--small"
                                         list={[
-                                            {
-                                                text: c('Action').t`Download`,
-                                                onClick() {
-                                                    handleDownload(ID);
-                                                }
-                                            },
                                             {
                                                 text: c('Action').t`Delete`,
                                                 onClick() {
