@@ -9,12 +9,20 @@ import { ContactProperties } from 'proton-shared/lib/interfaces/contacts';
 import ContactModalRow from '../../components/contacts/ContactModalRow';
 import EncryptedIcon from '../../components/contacts/EncryptedIcon';
 
-const ICONS = {
+const ICONS: { [key: string]: string } = {
     fn: 'contact',
     email: 'email',
     tel: 'phone',
     adr: 'address',
     other: 'info'
+};
+
+const TITLES: { [key: string]: string } = {
+    fn: c('Title').t`Display name`,
+    email: c('Title').t`Email addresses`,
+    tel: c('Title').t`Phone numbers`,
+    adr: c('Title').t`Addresses`,
+    other: c('Title').t`Other information`
 };
 
 interface Props {
@@ -34,14 +42,6 @@ const ContactModalProperties = ({
     onAdd,
     onRemove
 }: Props) => {
-    const TITLES = {
-        fn: c('Title').t`Display name`,
-        email: c('Title').t`Email addresses`,
-        tel: c('Title').t`Phone numbers`,
-        adr: c('Title').t`Addresses`,
-        other: c('Title').t`Other information`
-    };
-
     const title = field ? TITLES[field] : TITLES.other;
     const iconName = field ? ICONS[field] : ICONS.other;
     const fields = field ? [field] : OTHER_INFORMATION_FIELDS;
@@ -87,7 +87,7 @@ const ContactModalProperties = ({
                 <OrderableContainer helperClass="row--orderable" onSortEnd={handleSortEnd} useDragHandle>
                     <div>
                         {rows.map((row, index) => (
-                            <OrderableElement key={row.key} index={index}>
+                            <OrderableElement key={row.key || `row${index}`} index={index}>
                                 {row}
                             </OrderableElement>
                         ))}

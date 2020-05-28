@@ -10,6 +10,8 @@ interface Props {
     onClose: () => void;
 }
 
+type CheckableContact = ContactEmail & { isChecked?: boolean };
+
 /**
  * Modal to select contact emails and add them to a contact group
  * @param {Array} props.contacts contacts selected
@@ -31,13 +33,13 @@ const SelectEmailsModal = ({ contacts, onSubmit, onClose, ...rest }: Props) => {
 
     const handleSubmit = () => {
         const toSubmit = model.reduce((acc, contact) => {
-            contact.contactEmails.forEach(({ isChecked, ...contactEmail }: ContactEmail & { isChecked?: boolean }) => {
+            contact.contactEmails.forEach(({ isChecked, ...contactEmail }: CheckableContact) => {
                 if (isChecked) {
                     acc.push(contactEmail);
                 }
             });
             return acc;
-        }, [] as Array<ContactEmail & { isChecked?: boolean }>);
+        }, [] as Array<CheckableContact>);
         onSubmit(toSubmit);
         onClose?.();
     };
@@ -62,25 +64,19 @@ const SelectEmailsModal = ({ contacts, onSubmit, onClose, ...rest }: Props) => {
                         <Row key={contactID} className="border-bottom">
                             <Label className="bold pt0">{Name}</Label>
                             <Field className="flex flex-column w100">
-                                {contactEmails.map(
-                                    ({
-                                        ID: contactEmailID,
-                                        Email,
-                                        isChecked
-                                    }: ContactEmail & { isChecked?: boolean }) => {
-                                        return (
-                                            <label key={contactEmailID} className="mb1" htmlFor={contactEmailID}>
-                                                <Checkbox
-                                                    id={contactEmailID}
-                                                    checked={isChecked}
-                                                    className="mr0-5"
-                                                    onChange={handleCheck(contactID, contactEmailID)}
-                                                />
-                                                <span>{Email}</span>
-                                            </label>
-                                        );
-                                    }
-                                )}
+                                {contactEmails.map(({ ID: contactEmailID, Email, isChecked }: CheckableContact) => {
+                                    return (
+                                        <label key={contactEmailID} className="mb1" htmlFor={contactEmailID}>
+                                            <Checkbox
+                                                id={contactEmailID}
+                                                checked={isChecked}
+                                                className="mr0-5"
+                                                onChange={handleCheck(contactID, contactEmailID)}
+                                            />
+                                            <span>{Email}</span>
+                                        </label>
+                                    );
+                                })}
                             </Field>
                         </Row>
                     );

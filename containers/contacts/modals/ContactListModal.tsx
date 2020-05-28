@@ -15,6 +15,7 @@ import {
 import { ContactEmail } from 'proton-shared/lib/interfaces/contacts/Contact';
 import { normalize } from 'proton-shared/lib/helpers/string';
 import { toMap } from 'proton-shared/lib/helpers/object';
+import { Recipient } from 'proton-shared/lib/interfaces/Address';
 
 import ContactList from '../ContactList';
 import ContactListModalRow from '../../../components/contacts/ContactListModalRow';
@@ -28,13 +29,6 @@ const convertContactToRecipient = ({ Name, ContactID, Email }: ContactEmail) => 
     ContactID,
     Address: Email
 });
-
-interface Recipient {
-    Name?: string;
-    Address?: string;
-    ContactID?: string;
-    Group?: string;
-}
 
 interface Props {
     inputValue: any;
