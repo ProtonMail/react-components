@@ -35,7 +35,7 @@ const SignLayout = ({ children, title, aside, larger, left, center, right }: Pro
     }, []);
 
     return (
-        <div className="pt1 pb1 pl2 pr2 onmobile-p1 scroll-if-needed h100v signLayout-container flex flex-nowrap flex-column flex-spacebetween">
+        <div className="pt1 pb1 pl2 pr2 onmobile-p0 scroll-if-needed h100v signLayout-container flex flex-nowrap flex-column flex-spacebetween">
             <div className="flex-item-fluid-auto flex-item-noshrink flex flex-column flex-nowrap">
                 <div className="flex flex-column flex-nowrap flex-item-noshrink">
                     <div
@@ -44,7 +44,7 @@ const SignLayout = ({ children, title, aside, larger, left, center, right }: Pro
                             larger ? '' : aside ? 'mw50e' : 'mw40e'
                         ])}
                     >
-                        <div className="p2 flex-item-fluid">
+                        <main className="p2 onmobile-p1 flex-item-fluid">
                             <header className="flex flex-items-center flex-nowrap mb2">
                                 <span className="flex-item-fluid flex">{left}</span>
                                 <span className="aligncenter flex w70p">{center}</span>
@@ -60,7 +60,7 @@ const SignLayout = ({ children, title, aside, larger, left, center, right }: Pro
                                 </span>
                                 <span className="flex-item-fluid alignright">{right}</span>
                             </footer>
-                        </div>
+                        </main>
                         {aside ? (
                             <aside className="nomobile bg-global-light p2 flex flex-items-center flex-justify-center small m0">
                                 {aside}
