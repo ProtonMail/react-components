@@ -20,7 +20,7 @@ const FilterModal = ({ filter, ...rest }: Props) => {
         conditions: [],
         actions: []
     });
-    const title = filter?.ID ? c('Title').t`Edit filter` : c('Title').t`Add new filter`;
+    const title = filter?.ID ? c('Title').t`Edit filter` : c('Title').t`Add filter`;
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();

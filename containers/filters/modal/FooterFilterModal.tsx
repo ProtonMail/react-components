@@ -18,13 +18,27 @@ const NEXT_STEP = {
     [Step.PREVIEW]: Step.PREVIEW
 };
 
+const BACK_STEP = {
+    [Step.NAME]: Step.NAME,
+    [Step.CONDITIONS]: Step.NAME,
+    [Step.ACTIONS]: Step.CONDITIONS,
+    [Step.PREVIEW]: Step.ACTIONS
+};
+
 const FooterFilterModal = ({ model, onClose, onChange, loading }: Props) => {
     const handleNext = () => {
         onChange({ ...model, step: NEXT_STEP[model.step] });
     };
+    const handleBack = () => {
+        onChange({ ...model, step: BACK_STEP[model.step] });
+    };
     return (
         <>
-            <Button disabled={loading} onClick={onClose}>{c('Action').t`Cancel`}</Button>
+            {model.step === Step.NAME ? (
+                <Button disabled={loading} onClick={onClose}>{c('Action').t`Cancel`}</Button>
+            ) : (
+                <Button disabled={loading} onClick={handleBack}>{c('Action').t`Back`}</Button>
+            )}
             <div>
                 {[Step.NAME, Step.CONDITIONS, Step.ACTIONS].includes(model.step) ? (
                     <Button disabled={loading} onClick={handleNext} className="mr1">{c('Action').t`Next`}</Button>
