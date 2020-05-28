@@ -5,9 +5,19 @@ export enum Step {
     PREVIEW
 }
 
+export interface Action {
+    type: string;
+}
+
+export interface Condition {
+    type: string;
+}
+
 export interface ModalModel {
     step: Step;
     name: string;
+    actions: Action[];
+    conditions: Condition[];
 }
 
 export interface Filter {

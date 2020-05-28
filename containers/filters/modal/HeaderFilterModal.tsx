@@ -32,14 +32,17 @@ const HeaderFilterModal = ({ model, onChange }: Props) => {
                     {c('Step in filter modal').t`Name`}
                 </ButtonGroup>
                 <ButtonGroup
+                    disabled={!hasValidName}
                     onClick={() => onChange({ ...model, step: Step.CONDITIONS })}
                     className={model.step === Step.CONDITIONS ? 'is-active' : ''}
                 >{c('Step in filter modal').t`Conditions`}</ButtonGroup>
                 <ButtonGroup
+                    disabled={!hasValidName || !model.conditions.length}
                     onClick={() => onChange({ ...model, step: Step.ACTIONS })}
                     className={model.step === Step.ACTIONS ? 'is-active' : ''}
                 >{c('Step in filter modal').t`Actions`}</ButtonGroup>
                 <ButtonGroup
+                    disabled={!hasValidName || !model.actions.length || !model.conditions.length}
                     onClick={() => onChange({ ...model, step: Step.PREVIEW })}
                     className={model.step === Step.PREVIEW ? 'is-active' : ''}
                 >{c('Step in filter modal').t`Preview`}</ButtonGroup>

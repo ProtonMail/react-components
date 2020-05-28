@@ -16,7 +16,9 @@ const FilterModal = ({ filter, ...rest }: Props) => {
     const [loading, withLoading] = useLoading();
     const [model, setModel] = useState<ModalModel>({
         step: Step.NAME,
-        name: filter?.Name || ''
+        name: filter?.Name || '',
+        conditions: [],
+        actions: []
     });
     const title = filter?.ID ? c('Title').t`Edit filter` : c('Title').t`Add new filter`;
 
