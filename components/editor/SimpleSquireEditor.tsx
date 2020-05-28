@@ -1,7 +1,9 @@
 import React, { forwardRef, Ref, MutableRefObject } from 'react';
+import { toBase64 } from 'proton-shared/lib/helpers/file';
+
 import SquireEditor, { SquireEditorRef } from './SquireEditor';
 import { classnames } from '../../helpers/component';
-import { toBase64 } from 'proton-shared/lib/helpers/file';
+import useActiveBreakpoint from '../../hooks/useActiveBreakpoint';
 
 interface Props {
     className?: string;
@@ -22,9 +24,11 @@ interface Props {
  */
 const SimpleSquireEditor = forwardRef(
     (
-        { className, supportImages = true, isNarrow, onChange, disabled, onReady, onFocus }: Props,
+        { className, supportImages = true, isNarrow: forcedIsNarrow, onChange, disabled, onReady, onFocus }: Props,
         ref: Ref<SquireEditorRef>
     ) => {
+        const { isNarrow } = useActiveBreakpoint();
+
         const handleAddImages = (files: File[]) => {
             files.forEach(async (file) => {
                 const base64str = await toBase64(file);
@@ -38,7 +42,7 @@ const SimpleSquireEditor = forwardRef(
                 className={classnames([className, 'simple-squire-editor'])}
                 metadata={{ supportImages }}
                 onChange={onChange}
-                isNarrow={isNarrow}
+                isNarrow={isNarrow || forcedIsNarrow}
                 disabled={disabled}
                 onReady={onReady}
                 onFocus={onFocus}

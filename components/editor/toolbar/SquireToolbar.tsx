@@ -197,7 +197,7 @@ const SquireToolbar = ({
                     <SquireToolbarSeparator />
                 </>
             )}
-            {(metadata.supportRightToLeft || metadata.supportPlainText || moreDropdownExtension) && (
+            {(metadata.supportRightToLeft || metadata.supportPlainText || moreDropdownExtension || isNarrow) && (
                 <SquireToolbarMoreDropdown
                     metadata={metadata}
                     squireRef={squireRef}
