@@ -35,7 +35,7 @@ const SignLayout = ({ children, title, aside, larger, left, center, right }: Pro
     }, []);
 
     return (
-        <div className="pt1 pb1 pl2 pr2 scroll-if-needed h100v signLayout-container flex flex-column flex-spacebetween">
+        <div className="pt1 pb1 pl2 pr2 scroll-if-needed h100v signLayout-container flex flex-nowrap flex-column flex-spacebetween">
             <div className="flex-item-fluid-auto flex-item-noshrink flex flex-column flex-nowrap">
                 <div className="flex flex-column flex-nowrap flex-item-noshrink">
                     <div
