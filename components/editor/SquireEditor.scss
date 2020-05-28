@@ -78,17 +78,8 @@
     border-radius: 3px;
 }
 
-/**
- * Definitely a hacky workaround
- * But react-components doesn't allow (yet) to add classes on the li element of a DropdownMenu
- */
-.editor-toolbar-more-menu {
-    li:nth-child(2) {
-        border-top: none;
-    }
-    li:nth-child(4) {
-        border-top: none;
-    }
+.editor-toolbar-more-menu .dropDown-item.dropDown-item--no-separator {
+    border-top: none;
 }
 
 .editor-toolbar-button {

@@ -1,29 +1,18 @@
-import React, { MutableRefObject } from 'react';
+import React from 'react';
 import { c } from 'ttag';
 
-import { SquireType } from '../squireConfig';
 import SquireToolbarDropdown from './SquireToolbarDropdown';
 import Icon from '../../icon/Icon';
 import DropdownMenu from '../../dropdown/DropdownMenu';
 import DropdownMenuButton from '../../dropdown/DropdownMenuButton';
-
-enum ALIGNMENT {
-    Left = 'left',
-    Center = 'center',
-    Justify = 'justify',
-    Right = 'right'
-}
+import { ALIGNMENT } from './SquireToolbar';
 
 interface Props {
-    squireRef: MutableRefObject<SquireType>;
-    pathInfos: { [pathInfo: string]: boolean };
+    handleAlignment: (alignment: ALIGNMENT) => () => void;
+    squireInfos: { [pathInfo: string]: boolean };
 }
 
-const SquireToolbarAlignmentDropdown = ({ squireRef, pathInfos }: Props) => {
-    const handleClick = (alignment: ALIGNMENT) => () => {
-        squireRef.current.setTextAlignment(alignment);
-    };
-
+const SquireToolbarAlignmentDropdown = ({ handleAlignment, squireInfos }: Props) => {
     return (
         <SquireToolbarDropdown
             content={<Icon name="text-align-left" />}
@@ -33,32 +22,32 @@ const SquireToolbarAlignmentDropdown = ({ squireRef, pathInfos }: Props) => {
             <DropdownMenu>
                 <DropdownMenuButton
                     className="alignleft flex flex-nowrap"
-                    aria-pressed={pathInfos.alignLeft}
-                    onClick={handleClick(ALIGNMENT.Left)}
+                    aria-pressed={squireInfos.alignLeft}
+                    onClick={handleAlignment(ALIGNMENT.Left)}
                 >
                     <Icon name="text-align-left" className="mt0-25" />
                     <span className="ml0-5 mtauto mbauto flex-item-fluid">{c('Info').t`Align left`}</span>
                 </DropdownMenuButton>
                 <DropdownMenuButton
                     className="alignleft flex flex-nowrap"
-                    aria-pressed={pathInfos.alignCenter}
-                    onClick={handleClick(ALIGNMENT.Center)}
+                    aria-pressed={squireInfos.alignCenter}
+                    onClick={handleAlignment(ALIGNMENT.Center)}
                 >
                     <Icon name="text-center" className="mt0-25" />
                     <span className="ml0-5 mtauto mbauto flex-item-fluid">{c('Info').t`Center`}</span>
                 </DropdownMenuButton>
                 <DropdownMenuButton
                     className="alignleft flex flex-nowrap"
-                    aria-pressed={pathInfos.alignRight}
-                    onClick={handleClick(ALIGNMENT.Right)}
+                    aria-pressed={squireInfos.alignRight}
+                    onClick={handleAlignment(ALIGNMENT.Right)}
                 >
                     <Icon name="text-align-right" className="mt0-25" />
                     <span className="ml0-5 mtauto mbauto flex-item-fluid">{c('Info').t`Align right`}</span>
                 </DropdownMenuButton>
                 <DropdownMenuButton
                     className="alignleft flex flex-nowrap"
-                    aria-pressed={pathInfos.alignJustify}
-                    onClick={handleClick(ALIGNMENT.Justify)}
+                    aria-pressed={squireInfos.alignJustify}
+                    onClick={handleAlignment(ALIGNMENT.Justify)}
                 >
                     <Icon name="text-justify" className="mt0-25" />
                     <span className="ml0-5 mtauto mbauto flex-item-fluid">{c('Info').t`Justify`}</span>
