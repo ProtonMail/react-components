@@ -11,9 +11,10 @@ interface Props {
     contact: ContactEmail;
     checked: boolean;
     contactGroupMap?: { [key: string]: ContactGroup };
+    isNarrow: boolean;
 }
 
-const ContactModalRow = ({ style, onCheck, contact, checked, contactGroupMap }: Props) => {
+const ContactModalRow = ({ style, onCheck, contact, checked, contactGroupMap, isNarrow }: Props) => {
     return (
         <div style={style} className="flex">
             <div
@@ -30,14 +31,16 @@ const ContactModalRow = ({ style, onCheck, contact, checked, contactGroupMap }: 
                     id={contact.ID}
                     backgroundColor="white"
                 >
-                    <div className="flex flex-item-fluid flex-items-center h100">
-                        <div className="w33 ml1 ellipsis">{contact.Name}</div>
+                    <div className={classnames(['flex-item-fluid flex-items-center h100', !isNarrow && 'flex'])}>
+                        <div className={classnames(['ml1 ellipsis', !isNarrow && 'w33'])}>{contact.Name}</div>
                         <div className="flex-item-fluid ml1 ellipsis">{contact.Email}</div>
-                        <div className="w20 ml1 ellipsis">
-                            {contact.LabelIDs.length ? (
-                                <ContactGroupLabels contact={contact} contactGroupMap={contactGroupMap} />
-                            ) : null}
-                        </div>
+                        {!isNarrow && (
+                            <div className="w20 ml1 ellipsis">
+                                {contact.LabelIDs.length ? (
+                                    <ContactGroupLabels contact={contact} contactGroupMap={contactGroupMap} />
+                                ) : null}
+                            </div>
+                        )}
                     </div>
                 </Checkbox>
             </div>

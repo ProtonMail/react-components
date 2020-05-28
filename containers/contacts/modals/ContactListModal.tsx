@@ -2,10 +2,12 @@ import React, { useState, ChangeEvent, useEffect, createRef, RefObject } from 'r
 import { c, msgid } from 'ttag';
 
 import {
+    classnames,
     Checkbox,
     FormModal,
     SearchInput,
     PrimaryButton,
+    useActiveBreakpoint,
     useContactEmails,
     useContactGroups,
     useUserSettings
@@ -41,8 +43,9 @@ interface Props {
 }
 
 const ContactListModal = ({ onSubmit, onClose, inputValue, ...rest }: Props) => {
-    const searchInputRef: RefObject<HTMLInputElement> = createRef();
+    const { isNarrow } = useActiveBreakpoint();
 
+    const searchInputRef: RefObject<HTMLInputElement> = createRef();
     const [contactEmails, loadingContactEmails] = useContactEmails();
     const [userSettings, loadingUserSettings] = useUserSettings();
     const [contactGroups = [], loadingContactGroups] = useContactGroups();
@@ -132,7 +135,7 @@ const ContactListModal = ({ onSubmit, onClose, inputValue, ...rest }: Props) => 
         return (
             tokenizedQuery.some((token) => normalize(c.Name).includes(token)) ||
             tokenizedQuery.some((token) => normalize(c.Email).includes(token)) ||
-            tokenizedQuery.some((token) => groupNameTokens.includes(token))
+            tokenizedQuery.some((token) => groupNameTokens.some((g) => g.includes(token)))
         );
     };
 
@@ -192,26 +195,32 @@ const ContactListModal = ({ onSubmit, onClose, inputValue, ...rest }: Props) => 
                     </div>
                     {filteredContactEmails.length ? (
                         <>
-                            <div className="flex flex-nowrap flex-item-fluid contact-list-row p1">
-                                <div>
-                                    <Checkbox className="w100 h100" checked={isAllChecked} onChange={handleCheckAll} />
+                            {!isNarrow && (
+                                <div className="flex flex-nowrap flex-item-fluid contact-list-row p1">
+                                    <div>
+                                        <Checkbox
+                                            className="w100 h100"
+                                            checked={isAllChecked}
+                                            onChange={handleCheckAll}
+                                        />
+                                    </div>
+                                    <div className="flex flex-item-fluid flex-self-vcenter">
+                                        <div className="w33 ml1">
+                                            <strong className="uppercase">{c('Label').t`Name`}</strong>
+                                        </div>
+                                        <div className="flex-item-fluid ml1">
+                                            <strong className="uppercase">{c('Label').t`Email`}</strong>
+                                        </div>
+                                        <div className="w20 ml1">
+                                            <strong className="uppercase">{c('Label').t`Group`}</strong>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="flex flex-item-fluid flex-self-vcenter">
-                                    <div className="w33 ml1">
-                                        <strong className="uppercase">Name</strong>
-                                    </div>
-                                    <div className="flex-item-fluid ml1">
-                                        <strong className="uppercase">Email</strong>
-                                    </div>
-                                    <div className="w20 ml1">
-                                        <strong className="uppercase">Group</strong>
-                                    </div>
-                                </div>
-                            </div>
+                            )}
                             <ContactList
                                 rowCount={filteredContactEmails.length}
                                 userSettings={userSettings}
-                                isDesktop={false}
+                                className={classnames([isNarrow && 'mt1'])}
                                 rowRenderer={({ index, style }) => (
                                     <ContactListModalRow
                                         onCheck={handleCheck}
@@ -220,6 +229,7 @@ const ContactListModal = ({ onSubmit, onClose, inputValue, ...rest }: Props) => 
                                         contact={filteredContactEmails[index]}
                                         checked={!!checkedContactEmailMap[filteredContactEmails[index].ID]}
                                         contactGroupMap={contactGroupMap}
+                                        isNarrow={isNarrow}
                                     />
                                 )}
                             />

@@ -7,11 +7,11 @@ import { UserSettings } from 'proton-shared/lib/interfaces/UserSettings';
 
 interface Props {
     rowCount: number;
-    isDesktop?: boolean;
     userSettings: UserSettings;
     contactRowHeightComfort?: number;
     contactRowHeightCompact?: number;
     rowRenderer: ({ index, style, key }: { index: number; style: CSSProperties; key: string }) => React.ReactNode;
+    className?: string;
 }
 
 const ContactsList = ({
@@ -19,6 +19,7 @@ const ContactsList = ({
     contactRowHeightComfort = 54,
     contactRowHeightCompact = 46,
     rowRenderer,
+    className = '',
     userSettings
 }: Props) => {
     const listRef = useRef(null);
@@ -26,7 +27,7 @@ const ContactsList = ({
     const isCompactView = userSettings.Density === DENSITY.COMPACT;
 
     return (
-        <div ref={containerRef} style={{ height: 300 }}>
+        <div ref={containerRef} className={className} style={{ height: 300 }}>
             <AutoSizer>
                 {({ height, width }: { height: number; width: number }) => (
                     <List
