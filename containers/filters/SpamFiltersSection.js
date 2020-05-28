@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { c } from 'ttag';
-import { Alert, SubTitle, useApiResult, useApiWithoutResult } from 'react-components';
+import { Alert, SubTitle, useApi } from 'react-components';
 import { getIncomingDefaults } from 'proton-shared/lib/api/incomingDefaults';
 import { MAILBOX_IDENTIFIERS } from 'proton-shared/lib/constants';
 
@@ -11,27 +11,11 @@ import SearchEmailIntoList from './spamlist/SearchEmailIntoList';
 const BLACKLIST_TYPE = +MAILBOX_IDENTIFIERS.spam;
 const WHITELIST_TYPE = +MAILBOX_IDENTIFIERS.inbox;
 
-const getWhiteList = () => getIncomingDefaults({ Location: WHITELIST_TYPE });
-const getBlackList = () => getIncomingDefaults({ Location: BLACKLIST_TYPE });
-
 function SpamFiltersSection() {
-    const reqSearch = useApiWithoutResult(getIncomingDefaults);
-    const { blackList, whiteList, refreshWhiteList, refreshBlackList, move, remove, search, create } = useSpamList();
-
-    const { result: white = {}, loading: loadingWhite } = useApiResult(getWhiteList, []);
-    const { result: black = {}, loading: loadingBlack } = useApiResult(getBlackList, []);
+    const api = useApi();
+    const { blackList, whiteList, move, remove, search, create } = useSpamList();
 
     const [loader, setLoader] = useState({});
-
-    useEffect(() => {
-        refreshWhiteList(white.IncomingDefaults || []);
-        setLoader({ ...loader, white: loadingWhite });
-    }, [white.IncomingDefaults]);
-
-    useEffect(() => {
-        refreshBlackList(black.IncomingDefaults || []);
-        setLoader({ ...loader, black: loadingBlack });
-    }, [black.IncomingDefaults]);
 
     const handleAction = (action) => (type, data) => {
         action === 'create' && create(type, data);
@@ -43,8 +27,14 @@ function SpamFiltersSection() {
         search(Keyword);
         setLoader({ white: true, black: true });
         try {
-            const { IncomingDefaults = [] } = await reqSearch.request({ Keyword, PageSize: 100 });
-            search(Keyword, IncomingDefaults);
+            const [
+                { IncomingDefaults: WhiteIncomingDefaults = [] },
+                { IncomingDefaults: BlackIncomingDefaults = [] }
+            ] = await Promise.all([
+                api(getIncomingDefaults({ Location: WHITELIST_TYPE, Keyword, PageSize: 100 })),
+                api(getIncomingDefaults({ Location: BLACKLIST_TYPE, Keyword, PageSize: 100 }))
+            ]);
+            search(Keyword, WhiteIncomingDefaults.concat(BlackIncomingDefaults));
             setLoader({ white: false, black: false });
         } catch (e) {
             setLoader({ white: false, black: false });
