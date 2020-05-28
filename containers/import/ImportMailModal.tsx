@@ -357,25 +357,34 @@ const ImportMailModal = ({ ...rest }) => {
                                 <strong>{address.Email}</strong>
                             </div>
                             <ul className="unstyled m0">
-                                {model.folders.map(({ Name, DestinationLabelID }, index) => {
-                                    return (
-                                        <React.Fragment key={index}>
-                                            {index === 0 && (
-                                                <li>
-                                                    <Icon name="folder" className="mr0-5" />
-                                                    <span>{address.Email}</span>
-                                                </li>
-                                            )}
-                                            <li className="pl1">
-                                                <Icon
-                                                    name={GLOBAL_ICONS[DestinationLabelID] || 'folder'}
-                                                    className="mr0-5"
-                                                />
+                                {model.folders
+                                    .filter(({ DestinationLabelID }) => DestinationLabelID)
+                                    .map(({ DestinationLabelID, Name }) => {
+                                        return (
+                                            <li key={DestinationLabelID}>
+                                                <Icon name={GLOBAL_ICONS[DestinationLabelID]} className="mr0-5" />
                                                 <span>{Name}</span>
                                             </li>
-                                        </React.Fragment>
-                                    );
-                                })}
+                                        );
+                                    })}
+                                {model.folders
+                                    .filter(({ DestinationLabelID }) => !DestinationLabelID)
+                                    .map(({ Name }, index) => {
+                                        return (
+                                            <React.Fragment key={index}>
+                                                {index === 0 && (
+                                                    <li>
+                                                        <Icon name="folder" className="mr0-5" />
+                                                        <span>{address.Email}</span>
+                                                    </li>
+                                                )}
+                                                <li className="pl1">
+                                                    <Icon name="folder" className="mr0-5" />
+                                                    <span>{Name}</span>
+                                                </li>
+                                            </React.Fragment>
+                                        );
+                                    })}
                             </ul>
                         </div>
                     </div>

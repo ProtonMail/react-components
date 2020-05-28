@@ -37,6 +37,8 @@ export interface ImportMailReport {
     Email: string;
     Status: ImportMailReportStatus;
     CreateTime: number;
+    EndTime: number;
+    Report: string;
 }
 
 export interface MailboxSize {

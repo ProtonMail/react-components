@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
     SubTitle,
     Alert,
+    ConfirmModal,
     Loader,
     Badge,
     Table,
@@ -11,12 +12,14 @@ import {
     DropdownActions,
     useApi,
     useLoading,
+    useModals,
     useNotifications
 } from 'react-components';
 import { c } from 'ttag';
-import { queryMailImportReport } from 'proton-shared/lib/api/mailImport';
+import { queryMailImportReport, deleteMailImportReport } from 'proton-shared/lib/api/mailImport';
 
 import { ImportMailReport, ImportMailReportStatus } from './interfaces';
+import { noop } from 'proton-shared/lib/helpers/function';
 
 interface Props {
     status: ImportMailReportStatus;
@@ -39,6 +42,7 @@ const ImportStatus = ({ status }: Props) => {
 };
 
 const PastImportsSection = () => {
+    const { createModal } = useModals();
     const api = useApi();
     const [imports, setImports] = useState<ImportMailReport[]>([]);
     const [loading, withLoading] = useLoading();
@@ -80,11 +84,26 @@ const PastImportsSection = () => {
         );
     }
 
-    const handleDelete = async (ID: string) => {
-        // TODO
-        await api(ID);
+    const handleDelete = async (ID: string, email: string) => {
+        await new Promise((resolve, reject) => {
+            createModal(
+                <ConfirmModal onConfirm={resolve} onClose={reject} title={c('Title').t`Delete mail import report`}>
+                    <Alert type="warning">{c('Warning')
+                        .t`Are you sure you want to delete ${email} mail import report?`}</Alert>
+                </ConfirmModal>
+            );
+        });
+        await api(deleteMailImportReport(ID));
         await fetch();
         createNotification({ text: c('Success').t`Import deleted` });
+    };
+
+    const handleShowDetails = (report: string) => {
+        createModal(
+            <ConfirmModal title="REPORT" onConfirm={noop} onClose={noop} small={false}>
+                <pre>{report}</pre>
+            </ConfirmModal>
+        );
     };
 
     return (
@@ -95,7 +114,7 @@ const PastImportsSection = () => {
                     cells={[c('Title header').t`Import`, c('Title header').t`Status`, c('Title header').t`Actions`]}
                 />
                 <TableBody>
-                    {imports.map(({ Status, Email, ID }, index) => {
+                    {imports.map(({ Status, Email, ID, Report }, index) => {
                         return (
                             <TableRow
                                 key={index}
@@ -108,9 +127,15 @@ const PastImportsSection = () => {
                                         className="pm-button--small"
                                         list={[
                                             {
+                                                text: c('Action').t`Show details`,
+                                                onClick() {
+                                                    handleShowDetails(Report);
+                                                }
+                                            },
+                                            {
                                                 text: c('Action').t`Delete`,
                                                 onClick() {
-                                                    withLoadingActions(handleDelete(ID));
+                                                    withLoadingActions(handleDelete(ID, Email));
                                                 }
                                             }
                                         ]}
