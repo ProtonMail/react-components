@@ -25,7 +25,7 @@ const { PROTONMAIL, PROTONCONTACTS, PROTONDRIVE, PROTONCALENDAR, PROTONVPN_SETTI
 const MainLogo = ({ url = '/inbox', external = false, className = '' }) => {
     const { APP_NAME, CLIENT_TYPE } = useConfig();
     const [subscription] = useSubscription();
-    const classNames = classnames(['logo-link flex flex-item-fluid flex-item-nogrow nodecoration', className]);
+    const classNames = classnames(['logo-link flex nodecoration', className]);
     const planName = hasLifetime(subscription)
         ? 'Lifetime'
         : APP_NAME === PROTONCALENDAR
@@ -54,15 +54,22 @@ const MainLogo = ({ url = '/inbox', external = false, className = '' }) => {
 
     if (external) {
         return (
-            <Href url={url} target="_self" rel="noreferrer help" className={classNames} data-plan={planName}>
+            <Href
+                url={url}
+                target="_self"
+                rel="noreferrer help"
+                className={classnames([classNames, planName && `color-${planName}`, 'nodecoration'])}
+            >
                 {logo}
+                {planName && <span className="plan uppercase bold">{planName}</span>}
             </Href>
         );
     }
 
     return (
-        <Link to={url} className={classNames} data-plan={planName}>
+        <Link to={url} className={classnames([classNames, planName && `color-${planName}`, 'nodecoration'])}>
             {logo}
+            {planName && <span className="plan uppercase bold">{planName}</span>}
         </Link>
     );
 };
