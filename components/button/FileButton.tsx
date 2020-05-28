@@ -2,6 +2,8 @@ import React, { ChangeEvent, ReactNode } from 'react';
 import { classnames } from '../../helpers/component';
 import Icon from '../icon/Icon';
 
+import './FileButton.scss';
+
 interface Props {
     className?: string;
     icon?: string;
