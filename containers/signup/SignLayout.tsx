@@ -35,20 +35,20 @@ const SignLayout = ({ children, title, aside, larger, left, center, right }: Pro
     }, []);
 
     return (
-        <div className="pt1 pb1 pl2 pr2 scroll-if-needed h100v signLayout-container flex flex-nowrap flex-column flex-spacebetween">
+        <div className="pt1 pb1 pl2 pr2 onmobile-p1 scroll-if-needed h100v signLayout-container flex flex-nowrap flex-column flex-spacebetween">
             <div className="flex-item-fluid-auto flex-item-noshrink flex flex-column flex-nowrap">
                 <div className="flex flex-column flex-nowrap flex-item-noshrink">
                     <div
                         className={classnames([
-                            'center bg-white-dm color-global-grey-dm mt2 mb2 onmobile-mt1 onmobile-pb1 w100 mw100 bordered-container flex-item-noshrink flex flex-nowrap signup-container',
+                            'center bg-white-dm color-global-grey-dm mt2 mb2 onmobile-mt0 onmobile-mb0  onmobile-pb1 w100 mw100 bordered-container flex-item-noshrink flex flex-nowrap signup-container',
                             larger ? '' : aside ? 'mw50e' : 'mw40e'
                         ])}
                     >
                         <div className="p2 flex-item-fluid">
                             <header className="flex flex-items-center flex-nowrap mb2">
-                                <span className="flex-item-fluid">{left}</span>
-                                <span className="flex-item-fluid aligncenter">{center}</span>
-                                <span className="flex-item-fluid alignright" />
+                                <span className="flex-item-fluid flex">{left}</span>
+                                <span className="aligncenter flex w70p">{center}</span>
+                                <span className="flex-item-fluid flex alignright" />
                             </header>
                             <div className="mb2 flex-item-fluid">
                                 {title ? <h1 className="h4 bold mb1 mt0">{title}</h1> : null}
@@ -70,19 +70,19 @@ const SignLayout = ({ children, title, aside, larger, left, center, right }: Pro
                 </div>
             </div>
             <footer className="aligncenter small m0 pt0-5 pb0-5 flex-item-noshrink">
-                <span className="opacity-50">{c('Info').t`Made globally - Hosted in Switzerland`}</span>
-                <span className="opacity-50 pl0-75 pr0-75" aria-hidden="true">
+                <span className="opacity-50 automobile">{c('Info').t`Made globally - Hosted in Switzerland`}</span>
+                <span className="opacity-50 pl0-75 pr0-75 nomobile" aria-hidden="true">
                     |
                 </span>
-                <span className="">{termsLink}</span>
-                <span className="opacity-50 pl0-75 pr0-75" aria-hidden="true">
+                <span className="automobile">{termsLink}</span>
+                <span className="opacity-50 pl0-75 pr0-75 nomobile" aria-hidden="true">
                     |
                 </span>
-                <span className="">{privacyLink}</span>
-                <span className="opacity-50 pl0-75 pr0-75" aria-hidden="true">
+                <span className="automobile">{privacyLink}</span>
+                <span className="opacity-50 pl0-75 pr0-75 nomobile" aria-hidden="true">
                     |
                 </span>
-                <span className="opacity-50">{c('Info').jt`Version ${CLIENT_VERSION}`}</span>
+                <span className="opacity-50 automobile">{c('Info').jt`Version ${CLIENT_VERSION}`}</span>
             </footer>
         </div>
     );
