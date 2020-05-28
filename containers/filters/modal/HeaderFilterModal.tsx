@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Group, ButtonGroup, RoundedIcon, useFilters } from 'react-components';
 import { c } from 'ttag';
 
@@ -9,9 +9,18 @@ interface Props {
     onChange: (newModel: ModalModel) => void;
 }
 
+const normalizeFilterName = (name = '') => name.trim().toLowerCase();
+
 const HeaderFilterModal = ({ model, onChange }: Props) => {
     const [filters = []] = useFilters();
-    const hasValidName = model.name && !filters.find(({ Name }: Filter) => Name === model.name);
+    const filtersMap = useMemo(() => {
+        return filters.reduce((acc: { [filterName: string]: Filter }, filter: Filter) => {
+            acc[normalizeFilterName(filter.Name)] = filter;
+            return acc;
+        }, {});
+    }, [filters]);
+    const hasValidName = model.name && !filtersMap[normalizeFilterName(model.name)];
+
     return (
         <header className="mb1">
             <Group>
