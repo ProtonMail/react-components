@@ -3,19 +3,16 @@ import { c } from 'ttag';
 import { Button, PrimaryButton, useModals } from 'react-components';
 
 import FilterModal from './modal/FilterModal';
+import AdvancedFilterModal from './modal/advanced/AdvancedFilterModal';
 
 function ActionsFilterToolbar() {
     const { createModal } = useModals();
 
-    const handleClickAdd = (type) => () => {
-        createModal(<FilterModal type={type} />);
-    };
-
     return (
         <>
-            <PrimaryButton onClick={handleClickAdd()} className="onmobile-mb0-5 mr1">{c('Action')
+            <PrimaryButton onClick={() => createModal(<FilterModal />)} className="onmobile-mb0-5 mr1">{c('Action')
                 .t`Add Filter`}</PrimaryButton>
-            <Button onClick={handleClickAdd('complex')} className="onmobile-mb0-5">
+            <Button onClick={() => createModal(<AdvancedFilterModal />)} className="onmobile-mb0-5">
                 {c('Action').t`Add sieve filter`}
             </Button>
         </>

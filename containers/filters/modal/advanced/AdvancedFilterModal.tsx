@@ -1,29 +1,32 @@
-import React, { useState, useMemo, FormEvent } from 'react';
-import { FormModal, useLoading, useApi, useFilters } from 'react-components';
+import React, { useState, FormEvent, useMemo } from 'react';
 import { c } from 'ttag';
+import { FormModal, useLoading, useApi, useFilters, useMailSettings } from 'react-components';
 import { normalize } from 'proton-shared/lib/helpers/string';
 
-import { ModalModel, Filter, Step, Errors } from './interfaces';
-import FilterNameForm from './FilterNameForm';
-import HeaderFilterModal from './HeaderFilterModal';
-import FooterFilterModal from './FooterFilterModal';
+import FilterNameForm from '../FilterNameForm';
+import { Filter } from '../interfaces';
+import { Step, ModalModel, Errors } from './interfaces';
+import HeaderAdvancedFilterModal from './HeaderAdvancedFilterModal';
+import FooterAdvancedFilterModal from './FooterAdvancedFilterModal';
+import SieveForm from './SieveForm';
 
 interface Props {
-    filter?: Filter;
+    filter: Filter;
     onClose: () => void;
 }
 
-const FilterModal = ({ filter, ...rest }: Props) => {
-    const api = useApi();
-    const [filters = []] = useFilters();
+const AdvancedFilterModal = ({ filter, ...rest }: Props) => {
     const [loading, withLoading] = useLoading();
+    const [filters = []] = useFilters();
+    const [mailSettings] = useMailSettings();
+    const api = useApi();
+    const title = filter?.ID ? c('Title').t`Edit filter` : c('Title').t`Add filter`;
     const [model, setModel] = useState<ModalModel>({
         step: Step.NAME,
-        name: filter?.Name || '',
-        conditions: [],
-        actions: []
+        sieve: filter?.Sieve || '',
+        name: filter?.Name || ''
     });
-    const title = filter?.ID ? c('Title').t`Edit filter` : c('Title').t`Add filter`;
+
     const errors = useMemo<Errors>(() => {
         return {
             name: !model.name
@@ -31,10 +34,9 @@ const FilterModal = ({ filter, ...rest }: Props) => {
                 : filters.find(({ Name }: Filter) => normalize(Name) === normalize(model.name))
                 ? c('Error').t`Filter with this name already exist`
                 : '',
-            actions: model.actions.length ? '' : c('Error').t`Require at least one action`,
-            conditions: model.conditions.length ? '' : c('Error').t`Require at least one condition`
+            sieve: model.sieve ? '' : c('Error').t`This field is required`
         };
-    }, [model.name, model.actions, model.conditions]);
+    }, [model.name, model.sieve]);
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -47,7 +49,7 @@ const FilterModal = ({ filter, ...rest }: Props) => {
             loading={loading}
             onSubmit={(event: FormEvent<HTMLFormElement>) => withLoading(handleSubmit(event))}
             footer={
-                <FooterFilterModal
+                <FooterAdvancedFilterModal
                     model={model}
                     errors={errors}
                     onChange={setModel}
@@ -57,13 +59,13 @@ const FilterModal = ({ filter, ...rest }: Props) => {
             }
             {...rest}
         >
-            <HeaderFilterModal model={model} errors={errors} onChange={setModel} />
+            <HeaderAdvancedFilterModal model={model} errors={errors} onChange={setModel} />
             {model.step === Step.NAME ? <FilterNameForm model={model} onChange={setModel} errors={errors} /> : null}
-            {model.step === Step.CONDITIONS ? <>TODO</> : null}
-            {model.step === Step.ACTIONS ? <>TODO</> : null}
-            {model.step === Step.PREVIEW ? <>TODO</> : null}
+            {model.step === Step.SIEVE ? (
+                <SieveForm model={model} onChange={setModel} errors={errors} mailSettings={mailSettings} />
+            ) : null}
         </FormModal>
     );
 };
 
-export default FilterModal;
+export default AdvancedFilterModal;
