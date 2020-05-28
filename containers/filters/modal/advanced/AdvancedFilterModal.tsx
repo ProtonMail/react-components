@@ -1,7 +1,9 @@
-import React, { useState, FormEvent, useMemo } from 'react';
+import React, { useState, FormEvent, useMemo, useEffect } from 'react';
 import { c } from 'ttag';
-import { FormModal, useLoading, useApi, useFilters, useMailSettings } from 'react-components';
+import { FormModal, useLoading, useApi, useFilters, useMailSettings, useDebounceInput } from 'react-components';
+import { FILTER_VERSION } from 'proton-shared/lib/constants';
 import { normalize } from 'proton-shared/lib/helpers/string';
+import { checkSieveFilter } from 'proton-shared/lib/api/filters';
 
 import FilterNameForm from '../FilterNameForm';
 import { Filter } from '../interfaces';
@@ -24,8 +26,10 @@ const AdvancedFilterModal = ({ filter, ...rest }: Props) => {
     const [model, setModel] = useState<ModalModel>({
         step: Step.NAME,
         sieve: filter?.Sieve || '',
-        name: filter?.Name || ''
+        name: filter?.Name || '',
+        issues: []
     });
+    const sieve = useDebounceInput(model.sieve);
 
     const errors = useMemo<Errors>(() => {
         return {
@@ -34,14 +38,34 @@ const AdvancedFilterModal = ({ filter, ...rest }: Props) => {
                 : filters.find(({ Name }: Filter) => normalize(Name) === normalize(model.name))
                 ? c('Error').t`Filter with this name already exist`
                 : '',
-            sieve: model.sieve ? '' : c('Error').t`This field is required`
+            sieve: model.sieve
+                ? model.issues.length
+                    ? c('Error').t`Invalid sieve code`
+                    : ''
+                : c('Error').t`This field is required`
         };
-    }, [model.name, model.sieve]);
+    }, [model.name, model.sieve, model.issues]);
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         await api(); // TODO
     };
+
+    const checkSieve = async () => {
+        const { Issues = [] } = await api(checkSieveFilter({ Version: FILTER_VERSION, Sieve: sieve }));
+        setModel({
+            ...model,
+            issues: Issues.length ? Issues : []
+        });
+    };
+
+    useEffect(() => {
+        if (sieve) {
+            withLoading(checkSieve());
+        } else {
+            setModel({ ...model, issues: [] });
+        }
+    }, [sieve]);
 
     return (
         <FormModal

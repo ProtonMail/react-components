@@ -3,10 +3,16 @@ export enum Step {
     SIEVE
 }
 
+export interface SieveIssue {
+    message: string;
+    severity: string;
+}
+
 export interface ModalModel {
     step: Step;
     name: string;
     sieve: string;
+    issues: SieveIssue[];
 }
 
 export interface Errors {

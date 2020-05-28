@@ -22,6 +22,7 @@ const SieveForm = ({ model, mailSettings, onChange }: Props) => {
                 .t`Custom filters work on all new emails, including incoming emails as well as sent emails. To find out how to write Sieve filters.`}</Alert>
             <SieveEditor
                 value={model.sieve}
+                issues={model.issues}
                 theme={theme}
                 onChange={(editor, data, sieve) => onChange({ ...model, sieve })}
             />

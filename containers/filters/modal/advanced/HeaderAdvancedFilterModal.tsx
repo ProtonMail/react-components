@@ -32,7 +32,7 @@ const HeaderAdvancedFilterModal = ({ model, errors, onChange }: Props) => {
                         onClick={() => onChange({ ...model, step: Step.SIEVE })}
                         className="breadcrumb-button"
                     >
-                        {c('Step in filter modal').t`Conditions`}
+                        {c('Step in filter modal').t`Sieve editor`}
                     </button>
                 </li>
             </ul>
