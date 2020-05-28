@@ -350,7 +350,6 @@ export { default as SpamFiltersSection } from './containers/filters/SpamFiltersS
 export { default as FiltersSection } from './containers/filters/FiltersSection';
 export { default as AddFilterModal } from './containers/filters/AddFilterModal';
 export { default as AddEmailToListModal } from './containers/filters/AddEmailToListModal';
-export { default as StorageSpaceStatus } from './containers/sidebar/StorageSpaceStatus';
 export { default as AppVersion } from './components/version/AppVersion';
 export { default as ChangelogModal } from './components/version/ChangelogModal';
 
@@ -414,7 +413,6 @@ export { default as ErrorBoundary } from './containers/app/ErrorBoundary';
 export { default as ProtonApp } from './containers/app/ProtonApp';
 export { default as StandardPrivateApp } from './containers/app/StandardPrivateApp';
 export { default as StandardPublicApp } from './containers/app/StandardPublicApp';
-export { default as AppsSidebar } from './containers/app/AppsSidebar';
 export { default as AppsDropdown } from './containers/app/AppsDropdown';
 export { default as MobileAppsLinks } from './components/sidebar/MobileAppsLinks';
 export { default as TopNavbar } from './containers/app/TopNavbar';
