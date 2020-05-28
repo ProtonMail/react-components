@@ -1,8 +1,9 @@
-import React, { useState, FormEvent, ChangeEvent } from 'react';
+import React, { useState, useMemo, FormEvent, ChangeEvent } from 'react';
 import { FormModal, Alert, Row, Label, Field, Input, useLoading, useApi, useFilters } from 'react-components';
 import { c } from 'ttag';
+import { normalize } from 'proton-shared/lib/helpers/string';
 
-import { ModalModel, Filter, Step } from './interfaces';
+import { ModalModel, Filter, Step, Errors } from './interfaces';
 import HeaderFilterModal from './HeaderFilterModal';
 import FooterFilterModal from './FooterFilterModal';
 
@@ -22,6 +23,17 @@ const FilterModal = ({ filter, ...rest }: Props) => {
         actions: []
     });
     const title = filter?.ID ? c('Title').t`Edit filter` : c('Title').t`Add filter`;
+    const errors = useMemo<Errors>(() => {
+        return {
+            name: !model.name
+                ? c('Error').t`This field is required`
+                : filters.find(({ Name }: Filter) => normalize(Name) === normalize(model.name))
+                ? c('Error').t`Filter with this name already exist`
+                : '',
+            actions: model.actions.length ? '' : c('Error').t`Require at least one action`,
+            conditions: model.conditions.length ? '' : c('Error').t`Require at least one condition`
+        };
+    }, [model.name, model.actions, model.conditions]);
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -36,7 +48,7 @@ const FilterModal = ({ filter, ...rest }: Props) => {
             footer={
                 <FooterFilterModal
                     model={model}
-                    filters={filters}
+                    errors={errors}
                     onChange={setModel}
                     onClose={rest.onClose}
                     loading={loading}
@@ -44,7 +56,7 @@ const FilterModal = ({ filter, ...rest }: Props) => {
             }
             {...rest}
         >
-            <HeaderFilterModal model={model} filters={filters} onChange={setModel} />
+            <HeaderFilterModal model={model} errors={errors} onChange={setModel} />
             {model.step === Step.NAME ? (
                 <>
                     <Alert>{c('Info')
@@ -56,6 +68,7 @@ const FilterModal = ({ filter, ...rest }: Props) => {
                                 id="name"
                                 placeholder={c('Placeholder').t`Name`}
                                 value={model.name}
+                                error={errors.name}
                                 onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
                                     setModel({ ...model, name: target.value })
                                 }

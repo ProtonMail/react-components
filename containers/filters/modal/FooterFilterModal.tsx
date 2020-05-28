@@ -2,15 +2,14 @@ import React from 'react';
 import { Button, PrimaryButton } from 'react-components';
 import { c } from 'ttag';
 
-import { ModalModel, Step, Filter } from './interfaces';
-import { hasValidName } from './helpers';
+import { ModalModel, Step, Errors } from './interfaces';
 
 interface Props {
     model: ModalModel;
     onClose: () => void;
     onChange: (newModel: ModalModel) => void;
     loading: boolean;
-    filters: Filter[];
+    errors: Errors;
 }
 
 const NEXT_STEP = {
@@ -27,8 +26,7 @@ const BACK_STEP = {
     [Step.PREVIEW]: Step.ACTIONS
 };
 
-const FooterFilterModal = ({ model, filters, onClose, onChange, loading }: Props) => {
-    const validName = hasValidName(model, filters);
+const FooterFilterModal = ({ model, errors, onClose, onChange, loading }: Props) => {
     const handleNext = () => {
         onChange({ ...model, step: NEXT_STEP[model.step] });
     };
@@ -44,16 +42,27 @@ const FooterFilterModal = ({ model, filters, onClose, onChange, loading }: Props
             )}
             <div>
                 {model.step === Step.NAME && (
-                    <Button disabled={loading || !validName} onClick={handleNext} className="mr1">{c('Action')
+                    <Button disabled={loading || !!errors.name} onClick={handleNext} className="mr1">{c('Action')
                         .t`Next`}</Button>
                 )}
                 {model.step === Step.CONDITIONS && (
-                    <Button disabled={loading} onClick={handleNext} className="mr1">{c('Action').t`Next`}</Button>
+                    <Button
+                        disabled={loading || !!errors.name || !!errors.conditions}
+                        onClick={handleNext}
+                        className="mr1"
+                    >{c('Action').t`Next`}</Button>
                 )}
                 {model.step === Step.ACTIONS && (
-                    <Button disabled={loading} onClick={handleNext} className="mr1">{c('Action').t`Next`}</Button>
+                    <Button
+                        disabled={loading || !!errors.name || !!errors.conditions || !!errors.actions}
+                        onClick={handleNext}
+                        className="mr1"
+                    >{c('Action').t`Next`}</Button>
                 )}
-                <PrimaryButton disabled={loading} type="submit">{c('Action').t`Save`}</PrimaryButton>
+                <PrimaryButton
+                    disabled={loading || !!errors.name || !!errors.conditions || !!errors.actions}
+                    type="submit"
+                >{c('Action').t`Save`}</PrimaryButton>
             </div>
         </>
     );

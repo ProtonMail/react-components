@@ -28,3 +28,9 @@ export interface Filter {
     Sieve: string;
     Version: number;
 }
+
+export interface Errors {
+    name: string;
+    actions: string;
+    conditions: string;
+}
