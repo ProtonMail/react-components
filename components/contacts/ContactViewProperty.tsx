@@ -167,7 +167,7 @@ const ContactViewProperty = ({
             <div className={classnames(['flex flex-items-center', leftBlockWidth])}>
                 <ContactLabelProperty field={field} type={type} />
             </div>
-            <div className={classnames(['flex flex-nowrap flex-items-center pl1', rightBlockWidth])}>
+            <div className={classnames(['flex flex-nowrap flex-items-center pl1 onmobile-pl0', rightBlockWidth])}>
                 <span className={classnames(['mr0-5 flex-item-fluid', !['note'].includes(field) && 'ellipsis'])}>
                     {getContent()}
                 </span>

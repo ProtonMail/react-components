@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import { c } from 'ttag';
+import { OpenPGPKey } from 'pmcrypto';
 
 import { Alert, Row, Label, Field, Info, Toggle, SelectKeyFiles, useNotifications } from 'react-components';
 import { getKeyEncryptStatus } from 'proton-shared/lib/keys/publicKeys';
@@ -40,7 +41,7 @@ const ContactPgpSettings = ({ model, setModel, mailSettings }: Props) => {
      * Add / update keys to model
      * @param {Array<PublicKey>} files
      */
-    const handleUploadKeys = async (files: File[]) => {
+    const handleUploadKeys = async (files: OpenPGPKey[]) => {
         if (!files.length) {
             return createNotification({
                 type: 'error',
@@ -130,7 +131,7 @@ const ContactPgpSettings = ({ model, setModel, mailSettings }: Props) => {
                             id="encrypt-toggle"
                             checked={model.encrypt}
                             disabled={!model.publicKeys.pinnedKeys.length || noPinnedKeyCanSend}
-                            onChange={({ target }) =>
+                            onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
                                 setModel({
                                     ...model,
                                     encrypt: target.checked,
@@ -156,7 +157,7 @@ const ContactPgpSettings = ({ model, setModel, mailSettings }: Props) => {
                             id="sign-toggle"
                             checked={model.sign}
                             disabled={model.encrypt}
-                            onChange={({ target }) =>
+                            onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
                                 setModel({
                                     ...model,
                                     sign: target.checked,

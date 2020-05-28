@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { useModals, classnames, ContactDeleteModal } from 'react-components';
+import { useModals, classnames, ContactDeleteModal, useActiveBreakpoint } from 'react-components';
 import { ContactProperties, ContactEmail, ContactGroup } from 'proton-shared/lib/interfaces/contacts/Contact';
 import { CachedKey } from 'proton-shared/lib/interfaces';
 import { CryptoProcessingError } from 'proton-shared/lib/contacts/decrypt';
@@ -35,6 +35,7 @@ const ContactView = ({
     onDelete
 }: Props) => {
     const { createModal } = useModals();
+    const { isNarrow } = useActiveBreakpoint();
 
     const handleDelete = () => {
         createModal(<ContactDeleteModal contactIDs={[contactID]} onDelete={onDelete} />);
@@ -65,7 +66,7 @@ const ContactView = ({
                 handleEdit={handleEdit}
                 handleDelete={handleDelete}
                 properties={properties}
-                leftBlockWidth="w100 mw100p"
+                leftBlockWidth={isNarrow ? 'mauto mw100p' : 'w100 mw100p'}
             />
             <div className="pl1 pr1">
                 <ContactViewProperties field="fn" {...contactViewPropertiesProps} />

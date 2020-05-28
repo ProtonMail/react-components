@@ -77,10 +77,10 @@ const ContactEmailSettingsModal = ({
      * @returns {Promise}
      */
     const prepare = async (api) => {
-        const apiKeysConfig = await getPublicKeysEmailHelper(api, Email);
-        const pinnedKeysConfig = await getKeyInfoFromProperties(properties, emailGroup);
+        const apiKeysConfig = await getPublicKeysEmailHelper(api, Email as string);
+        const pinnedKeysConfig = await getKeyInfoFromProperties(properties, emailGroup || '');
         const publicKeyModel = await getPublicKeyModel({
-            emailAddress: Email,
+            emailAddress: Email as string,
             apiKeysConfig,
             pinnedKeysConfig,
             mailSettings
@@ -110,21 +110,26 @@ const ContactEmailSettingsModal = ({
         const otherProperties = properties.filter(({ field, group }) => {
             return !['email', ...VCARD_KEY_FIELDS].includes(field) || (group && group !== emailGroup);
         });
-        const emailProperties = [
-            emailProperty,
-            model.mimeType && { field: 'x-pm-mimetype', value: model.mimeType, group: emailGroup },
-            model.isPGPExternalWithoutWKDKeys &&
-                model.encrypt !== undefined && { field: 'x-pm-encrypt', value: '' + model.encrypt, group: emailGroup },
-            model.isPGPExternalWithoutWKDKeys &&
-                model.sign !== undefined && { field: 'x-pm-sign', value: '' + model.sign, group: emailGroup },
-            model.isPGPExternalWithoutWKDKeys &&
-                model.scheme && { field: 'x-pm-scheme', value: model.scheme, group: emailGroup },
-            ...getKeysProperties(emailGroup) // [{ field: 'key' }, ]
-        ].filter(Boolean);
+
+        const emailProperties = [emailProperty, ...getKeysProperties(emailGroup || '')];
+
+        if (model.mimeType) {
+            emailProperties.push({ field: 'x-pm-mimetype', value: model.mimeType, group: emailGroup });
+        }
+        if (model.isPGPExternalWithoutWKDKeys && model.encrypt !== undefined) {
+            emailProperties.push({ field: 'x-pm-encrypt', value: '' + model.encrypt, group: emailGroup });
+        }
+        if (model.isPGPExternalWithoutWKDKeys && model.sign !== undefined) {
+            emailProperties.push({ field: 'x-pm-sign', value: '' + model.sign, group: emailGroup });
+        }
+        if (model.isPGPExternalWithoutWKDKeys && model.scheme) {
+            emailProperties.push({ field: 'x-pm-scheme', value: model.scheme, group: emailGroup });
+        }
+
         const allProperties = reOrderByPref(otherProperties.concat(emailProperties));
         const Contacts = await prepareContacts([allProperties], userKeysList[0]);
         const labels = hasCategories(allProperties) ? INCLUDE : IGNORE;
-        await api(addContacts({ Contacts, Overwrite: +!!contactID, Labels: labels }));
+        await api(addContacts({ Contacts, Overwrite: contactID ? 1 : 0, Labels: labels }));
         await call();
         onClose();
         createNotification({ text: c('Success').t`Preferences saved` });
@@ -197,7 +202,7 @@ const ContactEmailSettingsModal = ({
                     {c('Title').t`Email settings (${Email})`}
                 </h1>
             </header>
-            <ContentModal onSubmit={() => withLoading(handleSubmit())} onReset={onClose} noValidate={false}>
+            <ContentModal onSubmit={() => withLoading(handleSubmit())} onReset={onClose}>
                 <InnerModal>
                     {!isMimeTypeFixed ? (
                         <Alert>

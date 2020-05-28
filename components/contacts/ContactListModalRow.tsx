@@ -31,9 +31,9 @@ const ContactModalRow = ({ style, onCheck, contact, checked, contactGroupMap }: 
                     backgroundColor="white"
                 >
                     <div className="flex flex-item-fluid flex-items-center h100">
-                        <div className="w33 ml1">{contact.Name}</div>
-                        <div className="flex-item-fluid ml1">{contact.Email}</div>
-                        <div className="w20 ml1">
+                        <div className="w33 ml1 ellipsis">{contact.Name}</div>
+                        <div className="flex-item-fluid ml1 ellipsis">{contact.Email}</div>
+                        <div className="w20 ml1 ellipsis">
                             {contact.LabelIDs.length ? (
                                 <ContactGroupLabels contact={contact} contactGroupMap={contactGroupMap} />
                             ) : null}

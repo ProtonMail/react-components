@@ -1,7 +1,7 @@
 import React from 'react';
 import { c } from 'ttag';
 
-import { Icon, classnames, LinkButton, Button, Tooltip } from 'react-components';
+import { Icon, classnames, LinkButton, Button, Tooltip, useActiveBreakpoint } from 'react-components';
 import { getPreferredValue } from 'proton-shared/lib/contacts/properties';
 import { formatAdr } from 'proton-shared/lib/contacts/property';
 import { ContactProperties } from 'proton-shared/lib/interfaces/contacts';
@@ -18,11 +18,13 @@ interface Props {
 }
 
 const ContactSummary = ({ properties, handleEdit, handleDelete, handleExport, leftBlockWidth = 'w30' }: Props) => {
-    const photo = getPreferredValue(properties, 'photo');
-    const name = getPreferredValue(properties, 'fn');
+    const { isNarrow } = useActiveBreakpoint();
+
+    const photo = getPreferredValue(properties, 'photo') as string;
+    const name = getPreferredValue(properties, 'fn') as string;
     const email = getPreferredValue(properties, 'email');
     const tel = getPreferredValue(properties, 'tel');
-    const adr = getPreferredValue(properties, 'adr');
+    const adr = getPreferredValue(properties, 'adr') as string[];
     // const org = getPreferredValue(properties, 'org');
 
     const summary = [
@@ -62,12 +64,12 @@ const ContactSummary = ({ properties, handleEdit, handleDelete, handleExport, le
     ].filter(Boolean);
 
     return (
-        <div className="contactsummary-container flex flex-nowrap p1 mb1 border-bottom">
+        <div className={classnames(['contactsummary-container p1 mb1', !isNarrow && 'flex flex-nowrap'])}>
             <div className={classnames(['aligncenter contactsummary-photo-container', leftBlockWidth])}>
                 <ContactImageSummary photo={photo} name={name} />
             </div>
             <div className="pl1 flex-item-fluid">
-                <div className="flex flex-spacebetween">
+                <div className={isNarrow ? 'aligncenter' : 'flex flex-spacebetween'}>
                     <h2 className="mb0 ellipsis">{name}</h2>
                     <div>
                         <Button onClick={handleExport} className="ml0-5 pm-button--for-icon">
@@ -92,9 +94,15 @@ const ContactSummary = ({ properties, handleEdit, handleDelete, handleExport, le
                 <ul className="unstyled mt0-5">
                     {summary.map(({ icon, component }) => {
                         return (
-                            <li key={icon} className="contactsummary-list-item flex flex-nowrap flex-items-center">
+                            <li
+                                key={icon}
+                                className={classnames([
+                                    'contactsummary-list-item flex flex-nowrap',
+                                    !isNarrow && 'flex-items-center'
+                                ])}
+                            >
                                 <Icon name={icon} className="mr0-5" />
-                                <span className="ellipsis">{component}</span>
+                                <span className={classnames([!isNarrow && 'ellipsis'])}>{component}</span>
                             </li>
                         );
                     })}

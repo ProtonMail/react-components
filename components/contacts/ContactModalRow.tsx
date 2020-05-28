@@ -66,7 +66,7 @@ const ContactModalRow = ({ property, onChange, onRemove, isOrderable = false }: 
                     <ContactModalLabel field={field} type={type} uid={property.uid} onChange={onChange} />
                 </span>
                 <span className="w50 mb1">
-                    <div className="mr1">
+                    <div className="mr1 onmobile-mr0">
                         <ContactFieldProperty
                             field={field}
                             value={property.value}
