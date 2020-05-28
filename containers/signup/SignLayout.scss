@@ -3,8 +3,35 @@
  */
 @import "~design-system/_sass/reusable-components/design-system-config";
 
-.signup-container {
-    transition: max-width .15s easing(easeIn);
+
+.signLayout-container {
+    .signup-container {
+        transition: max-width .15s easing(easeIn);
+
+        .payment-left {
+            width: 15em;
+        }
+        .payment-right {
+            width: 46rem;
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 1em;
+            padding-right: 1em;
+        }
+
+        @include respond-to($breakpoint-small) {
+
+            border-radius: 0;
+
+            .payment-left,
+            .payment-right {
+                width: 100%;
+                padding-left: 0;
+                padding-right: 0;
+            }
+        }
+
+    }
 }
 
 /* label size */
