@@ -22,8 +22,14 @@ const TabSwitcher = ({ tabs = [], preselectedTab = 0, extendOutwards }: Props) =
     const { ref: containerRef, scale, translate } = useIndicator(tabs, selectedTab);
 
     return (
-        <div className="tabs-container tabSwitcher" style={{ margin: `0 -${extendOutwards}` }}>
-            <nav className="tab-switcher-container" style={{ paddingLeft: extendOutwards }}>
+        <div
+            className="tabs-container tabSwitcher"
+            {...(extendOutwards && {style: { margin: `0 -${extendOutwards}` }})}
+        >
+            <nav
+                className="tab-switcher-container"
+                {...(extendOutwards && {style: { paddingLeft: extendOutwards }})}
+            >
                 <ul className="tabs-list" role="tablist" ref={containerRef}>
                     {tabs.map(({ title, ref }, index) => {
                         const key = toKey(index, 'key_');
@@ -55,7 +61,7 @@ const TabSwitcher = ({ tabs = [], preselectedTab = 0, extendOutwards }: Props) =
                 className="tabs-tabcontent pt1"
                 role="tabpanel"
                 aria-labelledby={label}
-                style={{ margin: `0 ${extendOutwards}` }}
+                {...(extendOutwards && {style: { margin: `0 ${extendOutwards}` }})}
             >
                 {content}
             </div>
