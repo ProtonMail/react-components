@@ -67,6 +67,7 @@ const SignInLayout = ({ children, title = '' }: Props) => {
         </div>
 =======
 import React, { ReactNode } from 'react';
+import { c } from 'ttag';
 import { SupportDropdown } from 'react-components';
 
 import SignLayout from '../signup/SignLayout';
@@ -82,7 +83,7 @@ const SignInLayout = ({ children, title }: Props) => {
         <SignLayout
             title={title}
             center={<ProtonLogo />}
-            right={<SupportDropdown className="pm-button--primaryborder-dark" />}
+            right={<SupportDropdown className="link" content={c('Action').t`Need help?`} />}
         >
             {children}
         </SignLayout>
