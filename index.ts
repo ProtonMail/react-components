@@ -34,8 +34,7 @@ export { default as Block } from './components/container/Block';
 export { default as RemoteImage } from './components/image/RemoteImage';
 export { default as QRCode } from './components/image/QRCode';
 export { default as Row } from './components/container/Row';
-export { default as Tabs } from './components/container/Tabs';
-export { default as SimpleTabs } from './components/container/SimpleTabs';
+export { default as Tabs, default as SimpleTabs } from './components/tabs/TabSwitcher';
 export { default as Field } from './components/container/Field';
 export { default as Information } from './components/container/Information';
 export { default as Tooltip } from './components/tooltip/Tooltip';
@@ -149,7 +148,6 @@ export { default as OrderableTable } from './components/orderableTable/Orderable
 export { default as OrderableTableHeader } from './components/orderableTable/OrderableTableHeader';
 export { default as OrderableTableBody } from './components/orderableTable/OrderableTableBody';
 export { default as OrderableTableRow } from './components/orderableTable/OrderableTableRow';
-export { default as TabSwitcher } from './components/tabs/TabSwitcher';
 export { default as LabelModal } from './containers/labels/modals/Edit';
 export { default as SignInLayout } from './containers/login/SignInLayout';
 export { default as PublicHeader } from './containers/login/PublicHeader';
