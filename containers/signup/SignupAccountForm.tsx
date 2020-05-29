@@ -177,7 +177,7 @@ const SignupAccountForm = ({ history, model, onChange, onSubmit, errors, loading
             </div>
             <div className="alignright mb2">
                 <PrimaryButton
-                    className="pm-button--large flex-item-noshrink"
+                    className="pm-button--large flex-item-noshrink onmobile-w100"
                     loading={loading || loadingChallenge}
                     disabled={disableSubmit}
                     type="submit"
