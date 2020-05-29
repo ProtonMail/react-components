@@ -22,7 +22,7 @@ const AdvancedFilterModal = ({ filter, ...rest }: Props) => {
     const [filters = []] = useFilters();
     const [mailSettings] = useMailSettings();
     const api = useApi();
-    const title = filter?.ID ? c('Title').t`Edit filter` : c('Title').t`Add filter`;
+    const title = filter?.ID ? c('Title').t`Edit sieve filter` : c('Title').t`Add sieve filter`;
     const [model, setModel] = useState<ModalModel>({
         step: Step.NAME,
         sieve: filter?.Sieve || '',

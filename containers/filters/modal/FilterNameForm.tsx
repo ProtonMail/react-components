@@ -1,19 +1,16 @@
 import React, { ChangeEvent } from 'react';
 import { Alert, Label, Row, Field, Input } from 'react-components';
 import { c } from 'ttag';
-
-interface Model {
-    name: string;
-}
+import { ModalModel } from './interfaces';
 
 interface Errors {
     name: string;
 }
 
 interface Props {
-    model: Model;
+    model: ModalModel;
     errors: Errors;
-    onChange: (newModel: Model) => void;
+    onChange: (newModel: ModalModel) => void;
 }
 
 const FilterNameForm = ({ model, errors, onChange }: Props) => {

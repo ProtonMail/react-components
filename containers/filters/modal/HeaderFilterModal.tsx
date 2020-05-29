@@ -11,8 +11,8 @@ interface Props {
 
 const HeaderFilterModal = ({ model, errors, onChange }: Props) => {
     return (
-        <header className="mb1">
-            <ul className="breadcrumb-container unstyled inline-flex pl0-5 pr0-5">
+        <header>
+            <ul className="breadcrumb-container unstyled inline-flex pl0-5 pr0-5 mt0">
                 <li className="breadcrumb-item">
                     <button
                         type="button"

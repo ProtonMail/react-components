@@ -1,5 +1,5 @@
 import React, { useState, useMemo, FormEvent } from 'react';
-import { FormModal, useLoading, useApi, useFilters } from 'react-components';
+import { FormModal, useLoading, /* useApi, */ useFilters } from 'react-components';
 import { c } from 'ttag';
 import { normalize } from 'proton-shared/lib/helpers/string';
 
@@ -7,6 +7,7 @@ import { ModalModel, Filter, Step, Errors } from './interfaces';
 import FilterNameForm from './FilterNameForm';
 import HeaderFilterModal from './HeaderFilterModal';
 import FooterFilterModal from './FooterFilterModal';
+import FilterConditionsForm from './FilterConditionsForm';
 
 interface Props {
     filter?: Filter;
@@ -14,7 +15,7 @@ interface Props {
 }
 
 const FilterModal = ({ filter, ...rest }: Props) => {
-    const api = useApi();
+    // const api = useApi();
     const [filters = []] = useFilters();
     const [loading, withLoading] = useLoading();
     const [model, setModel] = useState<ModalModel>({
@@ -38,7 +39,23 @@ const FilterModal = ({ filter, ...rest }: Props) => {
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        await api(); // TODO
+        // @todo submit once everything is ok
+        // await api();
+    };
+
+    const renderStep = () => {
+        switch (model.step) {
+            case Step.NAME:
+                return <FilterNameForm model={model} onChange={setModel} errors={errors} />;
+            case Step.CONDITIONS:
+                return <FilterConditionsForm />;
+            case Step.ACTIONS:
+                return <>TODO</>;
+            case Step.PREVIEW:
+                return <>TODO</>;
+            default:
+                return null;
+        }
     };
 
     return (
@@ -58,10 +75,7 @@ const FilterModal = ({ filter, ...rest }: Props) => {
             {...rest}
         >
             <HeaderFilterModal model={model} errors={errors} onChange={setModel} />
-            {model.step === Step.NAME ? <FilterNameForm model={model} onChange={setModel} errors={errors} /> : null}
-            {model.step === Step.CONDITIONS ? <>TODO</> : null}
-            {model.step === Step.ACTIONS ? <>TODO</> : null}
-            {model.step === Step.PREVIEW ? <>TODO</> : null}
+            {renderStep()}
         </FormModal>
     );
 };
