@@ -115,13 +115,13 @@ const CurrentImportsSection = () => {
                                             Status !== ImportMailStatus.CANCELED && {
                                                 text: c('Action').t`Cancel`,
                                                 onClick() {
-                                                    withLoadingActions(handleResume(ID));
+                                                    withLoadingActions(handleCancel(ID));
                                                 }
                                             },
                                             Status === ImportMailStatus.PAUSED && {
                                                 text: c('Action').t`Resume`,
                                                 onClick() {
-                                                    withLoadingActions(handleCancel(ID));
+                                                    withLoadingActions(handleResume(ID));
                                                 }
                                             }
                                         ].filter(isTruthy)}

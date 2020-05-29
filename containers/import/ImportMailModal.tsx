@@ -344,16 +344,18 @@ const ImportMailModal = ({ ...rest }) => {
                             <ul className="unstyled m0">
                                 {model.oldFolders.map(({ Name, DestinationLabelID }, index) => {
                                     return (
-                                        <li key={index}>
+                                        <li key={index} className="flex flex-nowrap flex-items-center">
                                             <Icon
                                                 name={
                                                     typeof DestinationLabelID === 'undefined'
                                                         ? 'folder'
                                                         : GLOBAL_ICONS[DestinationLabelID]
                                                 }
-                                                className="mr0-5"
+                                                className="mr0-5 flex-item-noshrink"
                                             />
-                                            <span>{Name}</span>
+                                            <span title={Name} className="ellipsis">
+                                                {Name}
+                                            </span>
                                         </li>
                                     );
                                 })}
@@ -369,16 +371,18 @@ const ImportMailModal = ({ ...rest }) => {
                                     .filter(({ DestinationLabelID }) => typeof DestinationLabelID !== 'undefined')
                                     .map(({ DestinationLabelID, Name }) => {
                                         return (
-                                            <li key={DestinationLabelID}>
+                                            <li key={DestinationLabelID} className="flex flex-nowrap flex-items-center">
                                                 <Icon
                                                     name={
                                                         typeof DestinationLabelID === 'undefined'
                                                             ? 'folder'
                                                             : GLOBAL_ICONS[DestinationLabelID]
                                                     }
-                                                    className="mr0-5"
+                                                    className="mr0-5 flex-item-noshrink"
                                                 />
-                                                <span>{Name}</span>
+                                                <span title={title} className="ellipsis">
+                                                    {Name}
+                                                </span>
                                             </li>
                                         );
                                     })}
@@ -388,13 +392,15 @@ const ImportMailModal = ({ ...rest }) => {
                                         return (
                                             <React.Fragment key={index}>
                                                 {index === 0 && (
-                                                    <li>
-                                                        <Icon name="folder" className="mr0-5" />
-                                                        <span>{address.Email}</span>
+                                                    <li className="flex flex-nowrap flex-items-center">
+                                                        <Icon name="folder" className="mr0-5 flex-item-noshrink" />
+                                                        <span title={title} className="ellipsis">
+                                                            {address.Email}
+                                                        </span>
                                                     </li>
                                                 )}
-                                                <li className="pl1">
-                                                    <Icon name="folder" className="mr0-5" />
+                                                <li className="pl1 flex flex-nowrap flex-items-center">
+                                                    <Icon name="folder" className="mr0-5 flex-item-noshrink" />
                                                     <input
                                                         type="text"
                                                         value={name}
