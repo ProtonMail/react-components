@@ -13,7 +13,7 @@ const Progress = ({ value = 50, max = 100, id, className }: Props) => {
     return (
         <progress
             aria-describedby={id}
-            className={classnames(['progress-contact w100', className])}
+            className={classnames(['progressbar w100', className])}
             value={value}
             max={max}
         />
