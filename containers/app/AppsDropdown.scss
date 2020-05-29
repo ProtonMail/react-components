@@ -49,6 +49,10 @@
 			min-width: 14em;
 			max-height: 20em;
 		}
+
+		.meterbar {
+			--bgcolor-spacebar: black;
+		}
 	}
 
 	&-item.dropDown-item {

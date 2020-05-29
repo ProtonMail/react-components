@@ -1,27 +1,27 @@
 import React from 'react';
 
-import { classnames } from '../../helpers/component';
-
 interface Props {
-    value?: number;
-    low?: number;
     min?: number;
+    low?: number;
+    high?: number;
     max?: number;
+    optimum?: number;
+    value?: number;
     id?: string;
     className?: string;
 }
 
-const Meter = ({ value = 50, low = 0, min = 0, max = 100, id, className }: Props) => {
-    const high = value > 80 ? 80 : 50;
+const Meter = ({ min = 0, low = 50, high = 80, max = 100, optimum = 0, value = 50, id, className }: Props) => {
     return (
         <meter
             aria-describedby={id}
-            className={classnames([className, value > 80 && 'is-high'])}
-            high={high}
-            low={low}
-            value={value}
+            className={className}
             min={min}
+            low={low}
+            high={high}
             max={max}
+            optimum={optimum}
+            value={value}
         />
     );
 };
