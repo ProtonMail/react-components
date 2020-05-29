@@ -21,7 +21,7 @@ const TabSwitcher = ({ tabs = [], preselectedTab = 0, extendOutwards }: Props) =
     const { content } = tabs[selectedTab];
     const { ref: containerRef, scale, translate } = useIndicator(tabs, selectedTab);
 
-    return (//                                              I reaally want 'em styled components
+    return (
         <div className="tabs-container tabSwitcher" style={{ margin: `0 -${extendOutwards}` }}>
             <nav className="tab-switcher-container" style={{ paddingLeft: extendOutwards }}>
                 <ul className="tabs-list" role="tablist" ref={containerRef}>
