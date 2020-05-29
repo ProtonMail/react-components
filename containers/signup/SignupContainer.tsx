@@ -520,6 +520,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                 [ACCOUNT_CREATION_USERNAME, ACCOUNT_CREATION_EMAIL].includes(model.step) ? null : (
                     <button type="button" onClick={handleBack} title={c('Action').t`Back`}>
                         <Icon name="arrow-left" />
+                        <span className="sr-only">{c('Action').t`Back`}</span>
                     </button>
                 )
             }
