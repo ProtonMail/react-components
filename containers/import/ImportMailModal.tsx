@@ -16,7 +16,8 @@ import {
     useApi,
     useModals,
     useLoading,
-    useAddresses
+    useAddresses,
+    generateUID
 } from 'react-components';
 import {
     getAuthenticationMethod,
@@ -26,15 +27,10 @@ import {
 } from 'proton-shared/lib/api/mailImport';
 
 import ImportSize from './ImportSize';
-
-const STEPS = {
-    START: 'start',
-    PREPARE: 'prepare',
-    STARTED: 'started'
-};
+import { MailImportFolderModel, Step, ModalModel, MailImportFolder, DestinationLabelID } from './interfaces';
 
 const DEFAULT_MODEL = {
-    step: STEPS.START,
+    step: Step.START,
     needDetails: false,
     importID: '',
     email: '',
@@ -42,7 +38,8 @@ const DEFAULT_MODEL = {
     port: '',
     imap: '',
     errorCode: 0,
-    folders: []
+    newFolders: [],
+    oldFolders: []
 };
 
 const ERROR = {
@@ -50,45 +47,49 @@ const ERROR = {
 };
 
 const GLOBAL_ICONS = {
-    0: 'inbox',
-    1: 'drafts',
-    2: 'sent',
-    3: 'trash',
-    4: 'spam',
-    6: 'archive',
-    7: 'sent',
-    8: 'drafts',
-    10: 'star'
+    [DestinationLabelID.INBOX]: 'inbox',
+    [DestinationLabelID.ALL_DRAFTS]: 'drafts',
+    [DestinationLabelID.ALL_SENT]: 'sent',
+    [DestinationLabelID.TRASH]: 'trash',
+    [DestinationLabelID.SPAM]: 'spam',
+    [DestinationLabelID.ARCHIVE]: 'archive',
+    [DestinationLabelID.SENT]: 'sent',
+    [DestinationLabelID.DRAFTS]: 'drafts',
+    [DestinationLabelID.STARRED]: 'star',
+    [DestinationLabelID.ALL_MAIL]: 'all-emails'
 };
+
+const prepareFolders = (folders: MailImportFolder[]): MailImportFolderModel[] =>
+    folders.map((folder) => ({ ...folder, id: generateUID('folder'), name: folder.Name }));
 
 const ImportMailModal = ({ ...rest }) => {
     const [loading, withLoading] = useLoading();
     const { createModal } = useModals();
     const [addresses] = useAddresses();
     const [address] = addresses || [];
-    const [model, setModel] = useState(DEFAULT_MODEL);
+    const [model, setModel] = useState<ModalModel>(DEFAULT_MODEL);
     const api = useApi();
     const title = useMemo(() => {
-        if (model.step === STEPS.START) {
+        if (model.step === Step.START) {
             return c('Title').t`Start a new import`;
         }
-        if (model.step === STEPS.PREPARE) {
+        if (model.step === Step.PREPARE) {
             return c('Title').t`Start import process`;
         }
-        if (model.step === STEPS.STARTED) {
+        if (model.step === Step.STARTED) {
             return c('Title').t`Import in progress`;
         }
         return '';
     }, [model.step]);
 
     const submit = useMemo(() => {
-        if (model.step === STEPS.START) {
+        if (model.step === Step.START) {
             return <PrimaryButton type="submit" loading={loading}>{c('Action').t`Next`}</PrimaryButton>;
         }
-        if (model.step === STEPS.PREPARE) {
+        if (model.step === Step.PREPARE) {
             return <PrimaryButton type="submit">{c('Action').t`Start import`}</PrimaryButton>;
         }
-        if (model.step === STEPS.STARTED) {
+        if (model.step === Step.STARTED) {
             return <PrimaryButton type="submit">{c('Action').t`Close`}</PrimaryButton>;
         }
         return null;
@@ -106,10 +107,10 @@ const ImportMailModal = ({ ...rest }) => {
     };
 
     const cancel = useMemo(() => {
-        if (model.step === STEPS.START) {
+        if (model.step === Step.START) {
             return <Button loading={loading} onClick={() => handleCancel()}>{c('Action').t`Cancel`}</Button>;
         }
-        if (model.step === STEPS.PREPARE) {
+        if (model.step === Step.PREPARE) {
             return <Button loading={loading} onClick={() => handleCancel()}>{c('Action').t`Cancel`}</Button>;
         }
         return null;
@@ -123,7 +124,7 @@ const ImportMailModal = ({ ...rest }) => {
             errorCode: 0
         });
 
-        if (model.step === STEPS.START && model.needDetails) {
+        if (model.step === Step.START && model.needDetails) {
             try {
                 const { Import } = await api(
                     createMailImport({
@@ -137,9 +138,10 @@ const ImportMailModal = ({ ...rest }) => {
                 const { Folders = [] } = await api(getMailImportFolders(Import.ID));
                 setModel({
                     ...model,
-                    folders: Folders,
+                    newFolders: prepareFolders(Folders),
+                    oldFolders: Folders,
                     importID: Import.ID,
-                    step: STEPS.PREPARE
+                    step: Step.PREPARE
                 });
             } catch (error) {
                 const { data: { Code } = { Code: 0 } } = error;
@@ -156,7 +158,7 @@ const ImportMailModal = ({ ...rest }) => {
             return;
         }
 
-        if (model.step === STEPS.START) {
+        if (model.step === Step.START) {
             const { Authentication } = await api(getAuthenticationMethod({ Email: model.email }));
             const { ImapHost, ImapPort } = Authentication;
 
@@ -174,9 +176,10 @@ const ImportMailModal = ({ ...rest }) => {
                     const { Folders = [] } = await api(getMailImportFolders(Import.ID));
                     setModel({
                         ...model,
-                        folders: Folders,
+                        newFolders: prepareFolders(Folders),
+                        oldFolders: Folders,
                         importID: Import.ID,
-                        step: STEPS.PREPARE
+                        step: Step.PREPARE
                     });
                 } catch (error) {
                     const { data: { Code } = { Code: 0 } } = error;
@@ -200,12 +203,12 @@ const ImportMailModal = ({ ...rest }) => {
             return;
         }
 
-        if (model.step === STEPS.PREPARE) {
+        if (model.step === Step.PREPARE) {
             await api(
                 createJobImport(model.importID, {
                     AddressID: address.ID,
-                    Folders: model.folders.map(({ Name, DestinationLabelID }) => {
-                        if (Number.isInteger(DestinationLabelID)) {
+                    Folders: model.newFolders.map(({ name, Name, DestinationLabelID }) => {
+                        if (typeof DestinationLabelID !== 'undefined') {
                             return {
                                 SourceFolder: Name,
                                 DestinationLabelID
@@ -213,19 +216,19 @@ const ImportMailModal = ({ ...rest }) => {
                         }
                         return {
                             SourceFolder: Name,
-                            DestinationLabelName: Name
+                            DestinationLabelName: name
                         };
                     })
                 })
             );
             setModel({
                 ...model,
-                step: STEPS.STARTED
+                step: Step.STARTED
             });
             return;
         }
 
-        if (model.step === STEPS.STARTED) {
+        if (model.step === Step.STARTED) {
             rest.onClose();
             return;
         }
@@ -240,7 +243,7 @@ const ImportMailModal = ({ ...rest }) => {
             onSubmit={(e: FormEvent<HTMLFormElement>) => withLoading(handleSubmit(e))}
             {...rest}
         >
-            {model.step === STEPS.START ? (
+            {model.step === Step.START ? (
                 <>
                     {model.errorCode === ERROR.AUTH_IMAP ? (
                         <Alert type="error">
@@ -314,7 +317,7 @@ const ImportMailModal = ({ ...rest }) => {
                     ) : null}
                 </>
             ) : null}
-            {model.step === STEPS.PREPARE ? (
+            {model.step === Step.PREPARE ? (
                 <>
                     <div className="mb1">
                         <span className="mr1">{c('Label').t`Email:`}</span>
@@ -325,11 +328,11 @@ const ImportMailModal = ({ ...rest }) => {
                         <div className="mb0-5">
                             <ImportSize ID={model.importID} />
                         </div>
-                        <div className="mb0-5">{c('Info').t`${model.folders.reduce(
+                        <div className="mb0-5">{c('Info').t`${model.oldFolders.reduce(
                             (acc, { Total }) => acc + Total,
                             0
                         )} messages have been found`}</div>
-                        <div>{c('Info').t`${model.folders.length} folders have been found`}</div>
+                        <div>{c('Info').t`${model.oldFolders.length} folders have been found`}</div>
                     </div>
                     <hr />
                     <div className="flex mb1">
@@ -339,11 +342,15 @@ const ImportMailModal = ({ ...rest }) => {
                                 <strong>{model.email}</strong>
                             </div>
                             <ul className="unstyled m0">
-                                {model.folders.map(({ Name, DestinationLabelID }, index) => {
+                                {model.oldFolders.map(({ Name, DestinationLabelID }, index) => {
                                     return (
                                         <li key={index}>
                                             <Icon
-                                                name={GLOBAL_ICONS[DestinationLabelID] || 'folder'}
+                                                name={
+                                                    typeof DestinationLabelID === 'undefined'
+                                                        ? 'folder'
+                                                        : GLOBAL_ICONS[DestinationLabelID]
+                                                }
                                                 className="mr0-5"
                                             />
                                             <span>{Name}</span>
@@ -358,19 +365,26 @@ const ImportMailModal = ({ ...rest }) => {
                                 <strong>{address.Email}</strong>
                             </div>
                             <ul className="unstyled m0">
-                                {model.folders
+                                {model.newFolders
                                     .filter(({ DestinationLabelID }) => typeof DestinationLabelID !== 'undefined')
                                     .map(({ DestinationLabelID, Name }) => {
                                         return (
                                             <li key={DestinationLabelID}>
-                                                <Icon name={GLOBAL_ICONS[DestinationLabelID]} className="mr0-5" />
+                                                <Icon
+                                                    name={
+                                                        typeof DestinationLabelID === 'undefined'
+                                                            ? 'folder'
+                                                            : GLOBAL_ICONS[DestinationLabelID]
+                                                    }
+                                                    className="mr0-5"
+                                                />
                                                 <span>{Name}</span>
                                             </li>
                                         );
                                     })}
-                                {model.folders
+                                {model.newFolders
                                     .filter(({ DestinationLabelID }) => typeof DestinationLabelID === 'undefined')
-                                    .map(({ Name }, index) => {
+                                    .map(({ id, name }, index) => {
                                         return (
                                             <React.Fragment key={index}>
                                                 {index === 0 && (
@@ -381,7 +395,18 @@ const ImportMailModal = ({ ...rest }) => {
                                                 )}
                                                 <li className="pl1">
                                                     <Icon name="folder" className="mr0-5" />
-                                                    <span>{Name}</span>
+                                                    <input
+                                                        type="text"
+                                                        value={name}
+                                                        onChange={({ target }) => {
+                                                            const newFolders = [...model.newFolders];
+                                                            const i = model.newFolders.findIndex(
+                                                                (folder) => folder.id === id
+                                                            );
+                                                            newFolders[i].name = target.value;
+                                                            setModel({ ...model, newFolders });
+                                                        }}
+                                                    />
                                                 </li>
                                             </React.Fragment>
                                         );
@@ -391,7 +416,7 @@ const ImportMailModal = ({ ...rest }) => {
                     </div>
                 </>
             ) : null}
-            {model.step === STEPS.STARTED ? (
+            {model.step === Step.STARTED ? (
                 <>
                     <div className="mb1 aligncenter">
                         <div className="mb1">{c('Info').t`Import in progress...`}</div>
