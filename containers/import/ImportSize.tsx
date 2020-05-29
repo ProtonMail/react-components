@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { c } from 'ttag';
 import { useApi, Loader } from 'react-components';
 import humanSize from 'proton-shared/lib/helpers/humanSize';
 import { getMailImport } from 'proton-shared/lib/api/mailImport';
@@ -43,7 +44,7 @@ const ImportSize = ({ ID }: Props) => {
         return <Loader />;
     }
 
-    return <>`${humanSize(total)} data for import size`</>;
+    return <>{c('Info').t`${humanSize(total)} data for import size`}</>;
 };
 
 export default ImportSize;
