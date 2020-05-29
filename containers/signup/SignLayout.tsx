@@ -36,8 +36,8 @@ const SignLayout = ({ children, title, aside, larger, left, center, right }: Pro
 
     return (
         <div className="pt1 pb1 pl2 pr2 onmobile-p0 scroll-if-needed h100v signLayout-container flex flex-nowrap flex-column flex-spacebetween">
-            <div className="flex-item-fluid-auto flex-item-noshrink flex flex-column flex-nowrap">
-                <div className="flex flex-column flex-nowrap flex-item-noshrink">
+            <div className="flex-item-fluid-auto signLayout flex-item-noshrink flex flex-column flex-nowrap">
+                <div className="flex flex-column flex-nowrap flex-item-noshrink onmobile-flex-item-fluid-auto">
                     <div
                         className={classnames([
                             'center bg-white-dm color-global-grey-dm mt2 mb2 onmobile-mt0 onmobile-mb0  onmobile-pb1 w100 mw100 bordered-container flex-item-noshrink flex flex-nowrap signup-container',
