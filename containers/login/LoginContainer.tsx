@@ -12,7 +12,9 @@ interface Props {
 }
 
 const LoginContainer = ({ onLogin }: Props) => {
-    const signupLink = <Link key="signupLink" to="/signup">{c('Link').t`Create an account`}</Link>;
+    const signupLink = (
+        <Link key="signupLink" className="nodecoration" to="/signup">{c('Link').t`Create an account`}</Link>
+    );
     return (
         <SignLayout title={c('Title').t`Sign in`} center={<ProtonLogo />} aside={<OneAccountIllustration />}>
             <LoginForm onLogin={onLogin} />
