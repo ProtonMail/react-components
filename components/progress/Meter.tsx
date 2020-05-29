@@ -14,14 +14,14 @@ interface Props {
 const Meter = ({ min = 0, low = 50, high = 80, max = 100, optimum = 0, value = 50, id, className }: Props) => {
     return (
         <meter
-            aria-describedby={id}
-            className={className}
             min={min}
             low={low}
             high={high}
             max={max}
             optimum={optimum}
             value={value}
+            aria-describedby={id}
+            className={className}
         />
     );
 };
