@@ -34,11 +34,9 @@ const SquireIframe = forwardRef(
         useEffect(() => {
             const handleLoad = () => setIframeReady(true);
 
-            const iframeDoc =
-                (iframeRef.current?.contentDocument || iframeRef.current?.contentWindow) &&
-                iframeRef.current?.contentWindow?.document;
+            const iframeDoc = iframeRef.current?.contentDocument && iframeRef.current?.contentWindow?.document;
 
-            if (iframeDoc && iframeDoc.readyState === 'complete') {
+            if (iframeDoc?.readyState === 'complete') {
                 handleLoad();
             }
 
