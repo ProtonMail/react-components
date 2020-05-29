@@ -57,7 +57,8 @@ const GLOBAL_ICONS = {
     4: 'spam',
     6: 'archive',
     7: 'sent',
-    8: 'drafts'
+    8: 'drafts',
+    10: 'star'
 };
 
 const ImportMailModal = ({ ...rest }) => {
