@@ -14,7 +14,7 @@ const DraftTypeSelect = ({ draftType, onChange, loading }) => {
 
     const handleChange = ({ target }) => onChange(target.value);
 
-    return <Select value={draftType} options={options} disabled={loading} onChange={handleChange} />;
+    return <Select value={draftType} options={options} disabled={loading} onChange={handleChange} data-cy-appearance="composer-mode" />;
 };
 
 DraftTypeSelect.propTypes = {

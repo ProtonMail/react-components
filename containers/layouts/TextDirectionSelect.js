@@ -16,7 +16,7 @@ const TextDirectionSelect = ({ rightToLeft, onChange, loading }) => {
         onChange(target.value);
     };
 
-    return <Select value={rightToLeft} options={options} disabled={loading} onChange={handleChange} />;
+    return <Select value={rightToLeft} options={options} disabled={loading} onChange={handleChange} data-cy-appearance="composer-text-direction" />;
 };
 
 TextDirectionSelect.propTypes = {

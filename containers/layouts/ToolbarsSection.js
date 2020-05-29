@@ -45,6 +45,7 @@ const ToolbarsSection = () => {
                             disabled={loading}
                             onChange={hanldeChange}
                             value={READ_UNREAD}
+                            cypressTag={{"data-cy-appearance-toolbar":"read-unread"}}
                         >
                             <Group className="ml1 no-pointer-events">
                                 <ButtonGroup icon="read" title={c('Action').t`Read`} />
@@ -58,6 +59,7 @@ const ToolbarsSection = () => {
                             disabled={loading}
                             onChange={hanldeChange}
                             value={UNREAD_READ}
+                            cypressTag={{"data-cy-appearance-toolbar":"unread-read"}}
                         >
                             <Group className="ml1 no-pointer-events">
                                 <ButtonGroup icon="unread" title={c('Action').t`Unread`} />

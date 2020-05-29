@@ -18,10 +18,11 @@ const label = (key) => {
     );
 };
 
+
 /**
  * @type any
  */
-const Toggle = ({ id = 'toggle', className = '', checked = false, loading, onChange, disabled, ...rest }) => {
+const Toggle = ({ id = 'toggle', className = '', checked = false, loading, onChange, disabled, cypressTag, ...rest }) => {
     const handleChange = (event) => {
         if (!disabled && onChange) {
             onChange(event);
@@ -40,7 +41,8 @@ const Toggle = ({ id = 'toggle', className = '', checked = false, loading, onCha
                 aria-busy={loading}
                 {...rest}
             />
-            <label htmlFor={id} className={classnames(['pm-toggle-label', className])}>
+
+            <label htmlFor={id} className={classnames(['pm-toggle-label', className])} {...cypressTag}>
                 {label('off')}
                 {label('on')}
             </label>

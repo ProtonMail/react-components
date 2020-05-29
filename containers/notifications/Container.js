@@ -18,7 +18,7 @@ const NotificationsContainer = ({ notifications, removeNotification, hideNotific
         );
     });
 
-    return <div className="notifications-container flex flex-column flex-items-center">{list}</div>;
+    return <div className="notifications-container flex flex-column flex-items-center" data-cy="notifications-container">{list}</div>;
 };
 
 NotificationsContainer.propTypes = {

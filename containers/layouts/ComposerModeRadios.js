@@ -19,7 +19,8 @@ const ComposerModeRadios = ({ composerMode, onChange, loading, id, ...rest }) =>
         onChange() {
             onChange(POPUP);
         },
-        children: <img alt="Popup" src={composerPopUpSvg} />
+        children: <img alt="Popup" src={composerPopUpSvg} 
+        data-cy-appearance-composer="popup" />
     };
     const radioCardMaximized = {
         value: MAXIMIZED,
@@ -31,7 +32,8 @@ const ComposerModeRadios = ({ composerMode, onChange, loading, id, ...rest }) =>
         onChange() {
             onChange(MAXIMIZED);
         },
-        children: <img alt="Maximized" src={composerMaximizedSvg} />
+        children: <img alt="Maximized" src={composerMaximizedSvg} 
+        data-cy-appearance-composer="maximized" />
     };
 
     return <RadioCards list={[radioCardPopup, radioCardMaximized]} id={id} {...rest} />;
