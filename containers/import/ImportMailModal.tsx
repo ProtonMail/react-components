@@ -359,7 +359,7 @@ const ImportMailModal = ({ ...rest }) => {
                             </div>
                             <ul className="unstyled m0">
                                 {model.folders
-                                    .filter(({ DestinationLabelID }) => DestinationLabelID)
+                                    .filter(({ DestinationLabelID }) => typeof DestinationLabelID !== 'undefined')
                                     .map(({ DestinationLabelID, Name }) => {
                                         return (
                                             <li key={DestinationLabelID}>
@@ -369,7 +369,7 @@ const ImportMailModal = ({ ...rest }) => {
                                         );
                                     })}
                                 {model.folders
-                                    .filter(({ DestinationLabelID }) => !DestinationLabelID)
+                                    .filter(({ DestinationLabelID }) => typeof DestinationLabelID === 'undefined')
                                     .map(({ Name }, index) => {
                                         return (
                                             <React.Fragment key={index}>
