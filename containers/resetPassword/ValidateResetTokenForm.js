@@ -30,7 +30,7 @@ const ValidateResetTokenForm = ({ onSubmit, loading, token, setToken }) => {
             <Alert type="warning">{c('Info')
                 .t`IMPORTANT: Do not close or navigate away from this page. You will need to enter the reset code into the field below once you receive it.`}</Alert>
             <div className="alignright mb1">
-                <PrimaryButton className="pm-button--large" loading={loading} type="submit">{c('Action')
+                <PrimaryButton className="pm-button--large onmobile-w100" loading={loading} type="submit">{c('Action')
                     .t`Reset password`}</PrimaryButton>
             </div>
         </form>

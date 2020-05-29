@@ -75,7 +75,7 @@ const RequestResetTokenForm = ({ username, setUsername, onSubmit, loading }) => 
             </div>
             <div className="flex flex-nowrap flex-justify-end flex-items-center mb1">
                 <PrimaryButton
-                    className="pm-button--large flex-item-noshrink"
+                    className="pm-button--large flex-item-noshrink onmobile-w100"
                     loading={loading || loadingConfirm}
                     type="submit"
                 >

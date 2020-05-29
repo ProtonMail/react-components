@@ -85,5 +85,11 @@
     }
 }
 
+@include respond-to($breakpoint-small) {
+    .signup-container {
+        height: 100%;
+    }
+}
+
 
 @import "../payments/subscription/SubscriptionTable.scss";
