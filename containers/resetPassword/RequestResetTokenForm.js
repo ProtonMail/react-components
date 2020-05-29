@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import {
     Input,
+    Label,
     EmailInput,
     Alert,
     PrimaryButton,
@@ -36,7 +37,7 @@ const RequestResetTokenForm = ({ username, setUsername, onSubmit, loading }) => 
     };
 
     return (
-        <form onSubmit={(e) => withLoadingConfirm(handleSubmit(e))}>
+        <form className="signup-form" onSubmit={(e) => withLoadingConfirm(handleSubmit(e))}>
             <Alert
                 learnMore={
                     CLIENT_TYPE === VPN
@@ -44,30 +45,34 @@ const RequestResetTokenForm = ({ username, setUsername, onSubmit, loading }) => 
                         : 'https://protonmail.com/support/knowledge-base/set-forgot-password-options/'
                 }
             >{c('Info').t`We will send a reset code to your recovery email to reset your password.`}</Alert>
-            <div className="mb1">
-                <Input
-                    name="username"
-                    autoFocus
-                    autoCapitalize="off"
-                    autoCorrect="off"
-                    id="username"
-                    placeholder={c('Placeholder').t`Username`}
-                    value={username}
-                    onChange={({ target: { value } }) => setUsername(value)}
-                    required
-                />
+            <div className="flex onmobile-flex-column mb1">
+                <Label htmlFor="login">{c('Label').t`Username`}</Label>
+                <div className="flex-item-fluid">
+                    <Input
+                        name="username"
+                        autoFocus
+                        autoCapitalize="off"
+                        autoCorrect="off"
+                        id="username"
+                        value={username}
+                        onChange={({ target: { value } }) => setUsername(value)}
+                        required
+                    />
+                </div>
             </div>
-            <div className="mb1">
-                <EmailInput
-                    name="email"
-                    autoCapitalize="off"
-                    autoCorrect="off"
-                    id="email"
-                    placeholder={c('Placeholder').t`Recovery email`}
-                    value={email}
-                    onChange={({ target: { value } }) => setEmail(value)}
-                    required
-                />
+            <div className="flex onmobile-flex-column mb2">
+                <Label htmlFor="login">{c('Label').t`Recovery email`}</Label>
+                <div className="flex-item-fluid">
+                    <EmailInput
+                        name="email"
+                        autoCapitalize="off"
+                        autoCorrect="off"
+                        id="email"
+                        value={email}
+                        onChange={({ target: { value } }) => setEmail(value)}
+                        required
+                    />
+                </div>
             </div>
             <div className="flex flex-nowrap flex-spacebetween mb1">
                 <Link to="/login">{c('Link').t`Back to login`}</Link>
