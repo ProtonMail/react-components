@@ -74,10 +74,15 @@ const RequestResetTokenForm = ({ username, setUsername, onSubmit, loading }) => 
                     />
                 </div>
             </div>
-            <div className="flex flex-nowrap flex-spacebetween mb1">
+            <div className="flex flex-nowrap flex-spacebetween flex-items-center mb1">
                 <Link to="/login">{c('Link').t`Back to login`}</Link>
-                <PrimaryButton loading={loading || loadingConfirm} type="submit">{c('Action')
-                    .t`Get a new password`}</PrimaryButton>
+                <PrimaryButton
+                    className="pm-button--large flex-item-noshrink"
+                    loading={loading || loadingConfirm}
+                    type="submit"
+                >
+                    {c('Action').t`Get a new password`}
+                </PrimaryButton>
             </div>
         </form>
     );
