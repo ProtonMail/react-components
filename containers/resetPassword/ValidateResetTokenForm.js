@@ -15,7 +15,7 @@ const ValidateResetTokenForm = ({ onSubmit, loading, token, setToken }) => {
             <Alert>{c('Info')
                 .t`We've sent a reset code to your recovery email, valid for one hour or until you request a new code. Enter it below to continue.`}</Alert>
             <div className="flex onmobile-flex-column mb2">
-                <Label htmlFor="login">{c('Label').t`Reset code`}</Label>
+                <Label htmlFor="resetToken">{c('Label').t`Reset code`}</Label>
                 <div className="flex-item-fluid">
                     <Input
                         value={token}

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import {
@@ -61,7 +60,7 @@ const RequestResetTokenForm = ({ username, setUsername, onSubmit, loading }) => 
                 </div>
             </div>
             <div className="flex onmobile-flex-column mb2">
-                <Label htmlFor="login">{c('Label').t`Recovery email`}</Label>
+                <Label htmlFor="email">{c('Label').t`Recovery email`}</Label>
                 <div className="flex-item-fluid">
                     <EmailInput
                         name="email"
@@ -74,8 +73,7 @@ const RequestResetTokenForm = ({ username, setUsername, onSubmit, loading }) => 
                     />
                 </div>
             </div>
-            <div className="flex flex-nowrap flex-spacebetween flex-items-center mb1">
-                <Link to="/login">{c('Link').t`Back to login`}</Link>
+            <div className="flex flex-nowrap flex-justify-end flex-items-center mb1">
                 <PrimaryButton
                     className="pm-button--large flex-item-noshrink"
                     loading={loading || loadingConfirm}

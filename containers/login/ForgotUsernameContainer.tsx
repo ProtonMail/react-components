@@ -1,10 +1,11 @@
 import React from 'react';
 import { c } from 'ttag';
 import { History } from 'history';
-import { useApi, useNotifications, useLoading, ForgotUsernameForm } from 'react-components';
+import { useApi, useNotifications, useLoading, ForgotUsernameForm, Icon, SupportDropdown } from 'react-components';
 import { requestUsername } from 'proton-shared/lib/api/reset';
 
-import SignInLayout from './SignInLayout';
+import SignLayout from '../signup/SignLayout';
+import ProtonLogo from '../../components/logo/ProtonLogo';
 
 interface Props {
     history: History;
@@ -24,10 +25,24 @@ const ForgotUsernameContainer = ({ history }: Props) => {
         history.push('/login');
     };
 
+    const handleBack = () => {
+        history.goBack();
+    };
+
     return (
-        <SignInLayout title={c('Title').t`Forgot your username?`}>
+        <SignLayout
+            title={c('Title').t`Forgot your username?`}
+            left={
+                <button type="button" onClick={handleBack} title={c('Action').t`Back`}>
+                    <Icon name="arrow-left" />
+                    <span className="sr-only">{c('Action').t`Back`}</span>
+                </button>
+            }
+            center={<ProtonLogo />}
+            right={<SupportDropdown className="link" content={c('Action').t`Need help?`} />}
+        >
             <ForgotUsernameForm onSubmit={(data) => withLoading(handleSubmit(data))} loading={loading} />
-        </SignInLayout>
+        </SignLayout>
     );
 };
 
