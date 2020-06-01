@@ -1,25 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { c } from 'ttag';
 
-import { Radio, LinkButton, useActiveBreakpoint } from 'react-components';
+import { classnames, Radio, LinkButton } from 'react-components';
 
-import { Condition, FilterStatement, FilterType, Comparator } from './interfaces';
+import { Condition, FilterStatement, ConditionType, ConditionComparator, FilterModalModel } from './interfaces';
 import FilterConditionsFormRow from './FilterConditionsFormRow';
-import { classnames } from '../../../helpers/component';
 
-const initialCondition = {
-    type: FilterType.SELECT,
-    comparator: Comparator.CONTAINS
+const conditionTemplate = {
+    type: ConditionType.SELECT,
+    comparator: ConditionComparator.CONTAINS,
+    isOpen: true
 };
 
-const FilterConditionsForm = () => {
-    const { isNarrow } = useActiveBreakpoint();
-    const [statement, setStatement] = useState<FilterStatement>(FilterStatement.ALL);
-    const [conditions, setConditions] = useState<Condition[]>([{ ...initialCondition }]);
+interface Props {
+    isNarrow: boolean;
+    model: FilterModalModel;
+    onChange: (newModel: FilterModalModel) => void;
+}
 
-    const onAddCondtion = () => {
+const FilterConditionsForm = ({ isNarrow, model, onChange }: Props) => {
+    const [statement, setStatement] = useState<FilterStatement>(FilterStatement.ALL);
+    const [conditions, setConditions] = useState<Condition[]>(
+        model.conditions.length ? model.conditions : [conditionTemplate]
+    );
+
+    const onAddCondition = () => {
         setConditions((conditions: Condition[]) => {
-            return [...conditions, { ...initialCondition }];
+            return [...conditions, { ...conditionTemplate }];
         });
     };
 
@@ -30,24 +37,21 @@ const FilterConditionsForm = () => {
         });
     };
 
-    const onChangeType = (index: number, type: FilterType) => {
+    const onUpdateCondition = (index: number, condition: Condition) => {
         setConditions((conditions: Condition[]) => {
-            conditions[index].type = type;
+            conditions[index] = condition;
             return [...conditions];
         });
     };
 
-    const onChangeComparator = (index: number, comparator: Comparator) => {
-        setConditions((conditions: Condition[]) => {
-            conditions[index].comparator = comparator;
-            return [...conditions];
-        });
-    };
+    useEffect(() => {
+        onChange({ ...model, conditions });
+    }, [conditions]);
 
     return (
         <>
             <div className="flex flex-nowrap mb0 onmobile-flex-column border-bottom">
-                <div className={classnames(['w20', isNarrow && 'mb1'])}>{c('Label').t`Statement`}</div>
+                <div className={classnames(['w25', isNarrow && 'mb1'])}>{c('Label').t`Statement`}</div>
                 <div className={classnames([!isNarrow && 'ml1'])}>
                     <Radio
                         id="statement-all"
@@ -74,16 +78,16 @@ const FilterConditionsForm = () => {
             {conditions.map((condition, i) => (
                 <FilterConditionsFormRow
                     key={`Condition_${i}`}
+                    isNarrow={isNarrow}
                     condition={condition}
                     conditionIndex={i}
                     handleDelete={onDeleteCondition}
-                    handleChangeType={onChangeType}
-                    handleChangeComparator={onChangeComparator}
+                    handleUpdateCondition={onUpdateCondition}
                     statement={statement}
                     displayDelete={conditions.length > 1}
                 />
             ))}
-            <LinkButton onClick={onAddCondtion} className="mt1 mb0-5">
+            <LinkButton onClick={onAddCondition} className="mt1 mb0-5">
                 <strong>{c('Action').t`Add condition`}</strong>
             </LinkButton>
         </>

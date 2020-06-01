@@ -2,12 +2,12 @@ import React from 'react';
 import { Button, PrimaryButton } from 'react-components';
 import { c } from 'ttag';
 
-import { ModalModel, Step, Errors } from './interfaces';
+import { FilterModalModel, Step, Errors } from './interfaces';
 
 interface Props {
-    model: ModalModel;
+    model: FilterModalModel;
     onClose: () => void;
-    onChange: (newModel: ModalModel) => void;
+    onChange: (newModel: FilterModalModel) => void;
     loading: boolean;
     errors: Errors;
 }

@@ -7,7 +7,7 @@ import { checkSieveFilter } from 'proton-shared/lib/api/filters';
 
 import FilterNameForm from '../FilterNameForm';
 import { Filter } from '../interfaces';
-import { Step, ModalModel, Errors } from './interfaces';
+import { Step, FilterModalModel, Errors } from './interfaces';
 import HeaderAdvancedFilterModal from './HeaderAdvancedFilterModal';
 import FooterAdvancedFilterModal from './FooterAdvancedFilterModal';
 import SieveForm from './SieveForm';
@@ -23,7 +23,7 @@ const AdvancedFilterModal = ({ filter, ...rest }: Props) => {
     const [mailSettings] = useMailSettings();
     const api = useApi();
     const title = filter?.ID ? c('Title').t`Edit sieve filter` : c('Title').t`Add sieve filter`;
-    const [model, setModel] = useState<ModalModel>({
+    const [model, setModel] = useState<FilterModalModel>({
         step: Step.NAME,
         sieve: filter?.Sieve || '',
         name: filter?.Name || '',

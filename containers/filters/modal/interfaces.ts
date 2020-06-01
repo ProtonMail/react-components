@@ -10,7 +10,7 @@ export enum FilterStatement {
     ANY = 'any'
 }
 
-export enum FilterType {
+export enum ConditionType {
     SELECT = 'select',
     SUBJECT = 'subject',
     SENDER = 'sender',
@@ -18,7 +18,7 @@ export enum FilterType {
     ATTACHMENTS = 'attachments'
 }
 
-export enum Comparator {
+export enum ConditionComparator {
     CONTAINS = 'contains',
     IS = 'is',
     STARTS = 'starts',
@@ -36,11 +36,15 @@ export interface Action {
 }
 
 export interface Condition {
-    type: FilterType;
-    comparator: Comparator;
+    type: ConditionType;
+    comparator: ConditionComparator;
+    error?: string;
+    values?: string[];
+    withAttachment?: boolean;
+    isOpen: boolean;
 }
 
-export interface ModalModel {
+export interface FilterModalModel {
     step: Step;
     name: string;
     actions: Action[];

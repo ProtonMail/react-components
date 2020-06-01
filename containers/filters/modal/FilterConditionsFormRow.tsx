@@ -1,37 +1,38 @@
-import React, { useState, ChangeEvent } from 'react';
-import { c } from 'ttag';
+import React, { useState, ChangeEvent, useEffect } from 'react';
+import { c, t, jt } from 'ttag';
 
-import { classnames, Input, Select, Radio, Tooltip, Icon, Button, useActiveBreakpoint } from 'react-components';
+import { classnames, Input, Select, Radio, Tooltip, Icon, Button } from 'react-components';
 import { getI18n as getI18nFilter } from 'proton-shared/lib/filters/factory';
 
-import { Condition, FilterStatement, FilterType, Comparator } from './interfaces';
+import { Condition, FilterStatement, ConditionType, ConditionComparator } from './interfaces';
+
+const { SELECT, SUBJECT, SENDER, RECIPIENT } = ConditionType;
 
 interface Props {
+    isNarrow: boolean;
     conditionIndex: number;
     statement: FilterStatement;
     condition: Condition;
     handleDelete: (index: number) => void;
-    handleChangeType: (index: number, type: FilterType) => void;
-    handleChangeComparator: (index: number, type: Comparator) => void;
+    handleUpdateCondition: (index: number, condition: Condition) => void;
     displayDelete: boolean;
 }
 
 const FilterConditionsRow = ({
+    isNarrow,
     conditionIndex,
     statement,
     condition,
     handleDelete,
-    handleChangeType,
-    handleChangeComparator,
+    handleUpdateCondition,
     displayDelete
 }: Props) => {
-    const { isNarrow } = useActiveBreakpoint();
     const { TYPES, COMPARATORS } = getI18nFilter();
     const typeOptions = TYPES.map(({ label: text, value }) => ({ text, value }));
-    const comparatorOptions = COMPARATORS.map(({ label: text, value }) => ({ text, value }));
-    const [isOpen, setIsOpen] = useState(true);
-    const [withAttachment, setWithAttachment] = useState(true);
-    const [tokens, setTokens] = useState<string[]>([]);
+    const ConditionComparatorOptions = COMPARATORS.map(({ label: text, value }) => ({ text, value }));
+    const [isOpen, setIsOpen] = useState(condition.isOpen);
+    const [withAttachment, setWithAttachment] = useState(condition.withAttachment || true);
+    const [tokens, setTokens] = useState<string[]>(condition.values || []);
     const [inputValue, setInputValue] = useState('');
 
     const { type, comparator } = condition;
@@ -53,13 +54,47 @@ const FilterConditionsRow = ({
         });
     };
 
+    useEffect(() => {
+        if (condition.type === SELECT) {
+            condition.error = c('Error').t`Empty condition`;
+        } else if (
+            [SUBJECT, SENDER, RECIPIENT].includes(condition.type) &&
+            (!condition.values || !condition.values.length)
+        ) {
+            condition.error = c('Error').t`Condition incomplete`;
+        } else {
+            condition.error = '';
+        }
+    }, [condition]);
+
+    useEffect(() => {
+        handleUpdateCondition(conditionIndex, {
+            ...condition,
+            values: tokens
+        });
+    }, [tokens]);
+
+    useEffect(() => {
+        handleUpdateCondition(conditionIndex, {
+            ...condition,
+            isOpen
+        });
+    }, [isOpen]);
+
+    useEffect(() => {
+        handleUpdateCondition(conditionIndex, {
+            ...condition,
+            withAttachment
+        });
+    }, [withAttachment]);
+
     const onChangeInputValue = (e: ChangeEvent<HTMLInputElement>) => {
         setInputValue(e.target.value);
     };
 
     const renderAttachmentsCondition = () => {
         return (
-            <div className="mt1 flex ">
+            <div className="mt1 flex">
                 <Radio
                     id={`condition-${conditionIndex}-with-attachment`}
                     className="flex flex-nowrap pm-radio--onTop mr1"
@@ -81,7 +116,7 @@ const FilterConditionsRow = ({
     };
 
     const renderToken = (token: string, i: number) => (
-        <>
+        <React.Fragment key={`Condition_${conditionIndex}_Token_${i}`}>
             {i > 0 && <span className="ml0-5 mr0-5">{c('Label').t`or`}</span>}
             <span
                 key={`condition-${conditionIndex}-token-${i}`}
@@ -98,69 +133,108 @@ const FilterConditionsRow = ({
                     <span className="sr-only">{c('Action').t`Remove this label`}</span>
                 </button>
             </span>
-        </>
+        </React.Fragment>
     );
 
     const renderGenericCondition = () => {
         return (
             <div className="mt1 flex-item-fluid">
                 {tokens.length ? <div className="mb1">{tokens.map(renderToken)}</div> : null}
-                <form onSubmit={onAddNewToken} className="flex flex-nowrap">
+                <div className="flex flex-nowrap">
                     <span className="flex-item-fluid pr1">
                         <Input
                             onChange={onChangeInputValue}
                             type="text"
                             value={inputValue}
                             placeholder={c('Placeholder').t`Type text or keyword`}
+                            onKeyDown={(e) => e.key === 'Enter' && onAddNewToken()}
                         />
                     </span>
-                    <Button disabled={!inputValue} type="submit" className="pm-button-blue">{c('Action')
-                        .t`Insert`}</Button>
-                </form>
+                    <Button disabled={!inputValue.trim()} onClick={onAddNewToken} className="pm-button-blue">{c(
+                        'Action'
+                    ).t`Insert`}</Button>
+                </div>
             </div>
         );
+    };
+
+    const renderClosed = () => {
+        if (condition?.error) {
+            return <em className="ml0-5 pt0-5 color-global-warning">{condition?.error}</em>;
+        }
+
+        let label;
+
+        if (type === ConditionType.ATTACHMENTS) {
+            const attachment = <strong>{withAttachment ? t`with attachments` : t`without attachments`}</strong>;
+            label = c('Label').jt`The email was sent ${attachment}`;
+        } else {
+            const typeLabel = TYPES.find((t) => t.value === type)?.label;
+            const comparatorLabel = COMPARATORS.find((t) => t.value === comparator)?.label;
+            const values = condition?.values?.map((v, i) => {
+                const value = <strong>{v}</strong>;
+                return i > 0 ? jt` or ${value}` : value;
+            });
+            label = c('Label').jt`${typeLabel} ${comparatorLabel} ${values}`;
+        }
+
+        return <span className="ml0-5 pt0-5">{label}</span>;
     };
 
     return (
         <div className="border-bottom">
             <div className="flex flex-nowrap onmobile-flex-column align-items-center pt1 pb1">
                 <div
-                    className={classnames(['w20 cursor-pointer', isNarrow && 'mb1'])}
+                    className={classnames(['w25 cursor-pointer pt0-5', isNarrow && 'mb1'])}
                     onClick={() => setIsOpen((isOpen) => !isOpen)}
-                    onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && setIsOpen((isOpen) => !isOpen)}
+                    onKeyDown={(e) => e.key === 'Enter' && setIsOpen((isOpen) => !isOpen)}
                     role="button"
                     tabIndex={0}
                 >
                     <Icon name="caret" className={classnames([isOpen && 'rotateX-180'])} />
-                    <span className="ml0-5">{label}</span>
+                    <span className={classnames(['ml0-5', condition.error && 'color-global-warning'])}>{label}</span>
                 </div>
                 <div className="flex flex-column flex-item-fluid">
-                    <div className="flex">
-                        <span className="w50 pr1">
-                            <Select
-                                options={typeOptions}
-                                value={type}
-                                onChange={(e: ChangeEvent<HTMLSelectElement>) => {
-                                    handleChangeType(conditionIndex, e.target.value as FilterType);
-                                }}
-                            />
-                        </span>
-                        {type && [FilterType.SUBJECT, FilterType.SENDER, FilterType.RECIPIENT].includes(type) && (
-                            <span className="w50">
+                    {isOpen ? (
+                        <div className="ml0-5 flex">
+                            <span className="w50 pr1">
                                 <Select
-                                    options={comparatorOptions}
-                                    value={comparator}
+                                    options={typeOptions}
+                                    value={type}
                                     onChange={(e: ChangeEvent<HTMLSelectElement>) => {
-                                        handleChangeComparator(conditionIndex, e.target.value as Comparator);
+                                        handleUpdateCondition(conditionIndex, {
+                                            ...condition,
+                                            type: e.target.value as ConditionType
+                                        });
                                     }}
                                 />
                             </span>
-                        )}
-                    </div>
-
-                    {isOpen && type && type !== FilterType.SELECT && (
-                        <div className="flex">
-                            {type === FilterType.ATTACHMENTS ? renderAttachmentsCondition() : renderGenericCondition()}
+                            {type &&
+                                [ConditionType.SUBJECT, ConditionType.SENDER, ConditionType.RECIPIENT].includes(
+                                    type
+                                ) && (
+                                    <span className="w50">
+                                        <Select
+                                            options={ConditionComparatorOptions}
+                                            value={comparator}
+                                            onChange={(e: ChangeEvent<HTMLSelectElement>) => {
+                                                handleUpdateCondition(conditionIndex, {
+                                                    ...condition,
+                                                    comparator: e.target.value as ConditionComparator
+                                                });
+                                            }}
+                                        />
+                                    </span>
+                                )}
+                        </div>
+                    ) : (
+                        renderClosed()
+                    )}
+                    {isOpen && type && type !== ConditionType.SELECT && (
+                        <div className="ml0-5 flex">
+                            {type === ConditionType.ATTACHMENTS
+                                ? renderAttachmentsCondition()
+                                : renderGenericCondition()}
                         </div>
                     )}
                 </div>
@@ -171,7 +245,7 @@ const FilterConditionsRow = ({
                                 e.stopPropagation();
                                 handleDelete(conditionIndex);
                             }}
-                            className="ml1 pm-button--for-icon"
+                            className={classnames(['pm-button--for-icon', isNarrow ? 'mt1' : 'ml1'])}
                         >
                             <Tooltip title={c('Action').t`Delete`} className="color-global-warning">
                                 <Icon name="trash" />

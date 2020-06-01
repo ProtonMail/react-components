@@ -1,11 +1,11 @@
 import React from 'react';
 import { c } from 'ttag';
 
-import { ModalModel, Step, Errors } from './interfaces';
+import { FilterModalModel, Step, Errors } from './interfaces';
 
 interface Props {
-    model: ModalModel;
-    onChange: (newModel: ModalModel) => void;
+    model: FilterModalModel;
+    onChange: (newModel: FilterModalModel) => void;
     errors: Errors;
 }
 

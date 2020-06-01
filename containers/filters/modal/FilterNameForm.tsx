@@ -1,25 +1,28 @@
 import React, { ChangeEvent } from 'react';
-import { Alert, Label, Row, Field, Input } from 'react-components';
+import { Alert, classnames, Field, Input } from 'react-components';
 import { c } from 'ttag';
-import { ModalModel } from './interfaces';
+import { FilterModalModel } from './interfaces';
 
 interface Errors {
     name: string;
 }
 
 interface Props {
-    model: ModalModel;
+    isNarrow: boolean;
+    model: FilterModalModel;
     errors: Errors;
-    onChange: (newModel: ModalModel) => void;
+    onChange: (newModel: FilterModalModel) => void;
 }
 
-const FilterNameForm = ({ model, errors, onChange }: Props) => {
+const FilterNameForm = ({ isNarrow, model, errors, onChange }: Props) => {
     return (
         <>
             <Alert>{c('Info')
                 .t`Filters work on all emails, including incoming as well as sent emails. Each filter must contain at least a name, a condition and an action to be saved.`}</Alert>
-            <Row>
-                <Label htmlFor="name">{c('Label').t`Filter name`}</Label>
+            <div className="flex flex-nowrap onmobile-flex-column align-items-center pt1 pb1">
+                <label htmlFor="name" className={classnames(['w25 pt0-5', isNarrow && 'mb1'])}>
+                    {c('Label').t`Filter name`}
+                </label>
                 <Field>
                     <Input
                         id="name"
@@ -33,7 +36,7 @@ const FilterNameForm = ({ model, errors, onChange }: Props) => {
                         required
                     />
                 </Field>
-            </Row>
+            </div>
         </>
     );
 };

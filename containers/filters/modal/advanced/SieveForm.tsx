@@ -4,12 +4,12 @@ import { c } from 'ttag';
 import { isDarkTheme } from 'proton-shared/lib/themes/helpers';
 import { MailSettings } from 'proton-shared/lib/interfaces';
 
-import { ModalModel, Errors } from './interfaces';
+import { FilterModalModel, Errors } from './interfaces';
 import SieveEditor from './SieveEditor';
 
 interface Props {
-    model: ModalModel;
-    onChange: (newModel: ModalModel) => void;
+    model: FilterModalModel;
+    onChange: (newModel: FilterModalModel) => void;
     errors: Errors;
     mailSettings: MailSettings;
 }

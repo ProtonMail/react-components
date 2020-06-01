@@ -8,7 +8,7 @@ export interface SieveIssue {
     severity: string;
 }
 
-export interface ModalModel {
+export interface FilterModalModel {
     step: Step;
     name: string;
     sieve: string;
