@@ -82,7 +82,7 @@ const AppsDropdown = () => {
                             <span>{c('Apps dropdown').t`Account`}</span>
                         </span>
                         <div className="ml1-5">
-                            <Meter className="meterbar is-thin mt0-25" value={spacePercentage} />
+                            <Meter className="meterbar is-thin bl mt0-25" value={spacePercentage} />
                             <div className="smaller m0 opacity-50">{spaceHuman}</div>
                         </div>
                     </Link>
