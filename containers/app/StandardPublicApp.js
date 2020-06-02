@@ -23,7 +23,7 @@ const StandardPublicApp = ({ locales = {}, openpgpConfig, children }) => {
             ]);
         })()
             .then(() => setLoading(false))
-            .catch(() => setError(true));
+            .catch((e) => (console.error(e), setError(true)));
     }, []);
 
     if (error) {
