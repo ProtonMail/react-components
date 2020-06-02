@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useIndicator } from './useIndicator';
+import { classnames } from '../../helpers/component';
 
 const toKey = (index: number, prefix = '') => `${prefix}${index}`;
 
@@ -11,10 +12,10 @@ interface Tab {
 interface Props {
     tabs: Tab[];
     preselectedTab?: number;
-    extendOutwards?: string;
+    fullWidth?: boolean;
 }
 
-const TabSwitcher = ({ tabs = [], preselectedTab = 0, extendOutwards }: Props) => {
+const Tabs = ({ tabs = [], preselectedTab = 0, fullWidth }: Props) => {
     const [selectedTab, updateSelectedTab] = useState(preselectedTab);
     const key = toKey(selectedTab, 'key_');
     const label = toKey(selectedTab, 'label_');
@@ -23,12 +24,10 @@ const TabSwitcher = ({ tabs = [], preselectedTab = 0, extendOutwards }: Props) =
 
     return (
         <div
-            className="tabs-container tabSwitcher"
-            {...(extendOutwards && {style: { margin: `0 -${extendOutwards}` }})}
+            className={classnames(["tabs", fullWidth && 'tabs--extended'])}
         >
             <nav
-                className="tab-switcher-container"
-                {...(extendOutwards && {style: { paddingLeft: extendOutwards }})}
+                className="tabs-container"
             >
                 <ul className="tabs-list" role="tablist" ref={containerRef}>
                     {tabs.map(({ title, ref }, index) => {
@@ -51,17 +50,16 @@ const TabSwitcher = ({ tabs = [], preselectedTab = 0, extendOutwards }: Props) =
                         );
                     })}
                     <div
-                        className="tab-switcher-indicator"
+                        className="tabs-indicator"
                         style={{ transform: `translateX(${translate}px) scaleX(${scale})` }}
                     />
                 </ul>
             </nav>
             <div
                 id={key}
-                className="tabs-tabcontent pt1"
+                className="tabs-tabcontent pt1 pb1"
                 role="tabpanel"
                 aria-labelledby={label}
-                {...(extendOutwards && {style: { margin: `0 ${extendOutwards}` }})}
             >
                 {content}
             </div>
@@ -69,4 +67,4 @@ const TabSwitcher = ({ tabs = [], preselectedTab = 0, extendOutwards }: Props) =
     );
 };
 
-export default TabSwitcher;
+export default Tabs;
