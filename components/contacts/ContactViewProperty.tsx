@@ -60,7 +60,7 @@ const ContactViewProperty = ({
     const { field } = property;
     const cleanType = clearType(getType(property.type));
     const type = types[cleanType] || cleanType;
-    const value = property.value;
+    const value = property.value as string;
 
     const getContent = () => {
         if (field === 'email') {
@@ -98,7 +98,7 @@ const ContactViewProperty = ({
             return <RemoteImage src={value} />;
         }
         if (field === 'adr') {
-            return formatAdr(value);
+            return formatAdr(value as string[]);
         }
         return value;
     };
@@ -156,7 +156,7 @@ const ContactViewProperty = ({
             case 'tel':
                 return <Copy className="ml0-5 pm-button--for-icon" value={value} />;
             case 'adr':
-                return <Copy className="ml0-5 pm-button--for-icon" value={formatAdr(value)} />;
+                return <Copy className="ml0-5 pm-button--for-icon" value={formatAdr(value as string[])} />;
             default:
                 return null;
         }

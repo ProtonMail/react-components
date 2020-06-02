@@ -9,7 +9,7 @@ import { ContactEmail, ContactProperties, ContactGroup } from 'proton-shared/lib
 import ContactViewProperty from './ContactViewProperty';
 import EncryptedIcon from './EncryptedIcon';
 
-const TITLES = {
+const TITLES: { [key: string]: string } = {
     fn: c('Title').t`Display name`,
     email: c('Title').t`Email addresses`,
     tel: c('Title').t`Phone numbers`,
@@ -17,7 +17,7 @@ const TITLES = {
     other: c('Title').t`Other information`
 };
 
-const ICONS = {
+const ICONS: { [key: string]: string } = {
     fn: 'contact',
     email: 'email',
     tel: 'phone',

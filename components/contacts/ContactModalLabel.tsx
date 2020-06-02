@@ -4,7 +4,6 @@ import { Select, Label } from 'react-components';
 import { getOtherInformationFields, getAllTypes } from 'proton-shared/lib/helpers/contacts';
 
 import ContactLabelProperty from './ContactLabelProperty';
-import { ContactProperty } from 'proton-shared/lib/interfaces/contacts';
 
 interface Props {
     field: string;
@@ -14,7 +13,7 @@ interface Props {
 }
 
 const ContactModalLabel = ({ field, uid, type = '', onChange }: Props) => {
-    const types = getAllTypes();
+    const types: { [key: string]: { text: string; value: string }[] } = getAllTypes();
     const fieldType = types[field];
 
     const otherInformationFields = getOtherInformationFields();
@@ -32,7 +31,7 @@ const ContactModalLabel = ({ field, uid, type = '', onChange }: Props) => {
         );
     }
 
-    if (field === 'fn' || !fieldType.map(({ value: type }: ContactProperty) => type).includes(type)) {
+    if (field === 'fn' || !fieldType.map(({ value: type }) => type).includes(type)) {
         return <ContactLabelProperty field={field} type={type} />;
     }
 

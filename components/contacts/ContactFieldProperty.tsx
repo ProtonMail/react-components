@@ -11,19 +11,27 @@ import ContactImageModal from '../../containers/contacts/modals/ContactImageModa
 interface Props {
     field: string;
     uid?: string;
-    value: string | string[]; // | object;
+    value: string | string[];
     onChange: Function;
 }
 
 const ContactFieldProperty = ({ field, value, uid, onChange, ...rest }: Props) => {
     const { createModal } = useModals();
-    const labels = getAllFieldLabels();
+    const labels: { [key: string]: string } = getAllFieldLabels();
     const label = labels[field];
 
     const handleChange = ({ target }: ChangeEvent<HTMLInputElement>) => onChange({ value: target.value, uid });
 
     if (field === 'email') {
-        return <EmailInput value={value} placeholder={labels.email} onChange={handleChange} autoFocus {...rest} />;
+        return (
+            <EmailInput
+                value={value as string}
+                placeholder={labels.email}
+                onChange={handleChange}
+                autoFocus
+                {...rest}
+            />
+        );
     }
 
     if (field === 'tel') {
@@ -31,7 +39,7 @@ const ContactFieldProperty = ({ field, value, uid, onChange, ...rest }: Props) =
     }
 
     if (field === 'adr') {
-        const handleChangeAdr = (adr) => onChange({ value: adr, uid });
+        const handleChangeAdr = (adr: string[]) => onChange({ value: adr, uid });
         return <ContactAdrField value={value} onChange={handleChangeAdr} />;
     }
 
@@ -55,9 +63,9 @@ const ContactFieldProperty = ({ field, value, uid, onChange, ...rest }: Props) =
     if (field === 'photo' || field === 'logo') {
         const handleChangeImage = () => {
             const handleSubmit = (value: string) => onChange({ uid, value });
-            createModal(<ContactImageModal url={value} onSubmit={handleSubmit} />);
+            createModal(<ContactImageModal url={value as string} onSubmit={handleSubmit} />);
         };
-        return <ContactImageField value={value} onChange={handleChangeImage} {...rest} />;
+        return <ContactImageField value={value as string} onChange={handleChangeImage} {...rest} />;
     }
     return <Input value={value} placeholder={label} onChange={handleChange} autoFocus {...rest} />;
 };

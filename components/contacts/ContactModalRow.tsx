@@ -26,7 +26,7 @@ const ContactModalRow = ({ property, onChange, onRemove, isOrderable = false }: 
 
     const handleChangeImage = () => {
         const handleSubmit = (value: string) => onChange({ uid, value });
-        createModal(<ContactImageModal url={property.value} onSubmit={handleSubmit} />);
+        createModal(<ContactImageModal url={property.value as string} onSubmit={handleSubmit} />);
     };
 
     const list = [
