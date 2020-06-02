@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import { algorithmInfo } from 'pmcrypto';
 import { isValid, format } from 'date-fns';
 import { c } from 'ttag';
@@ -23,7 +23,7 @@ import { PublicKeyModel } from 'proton-shared/lib/interfaces/Key';
 
 interface Props {
     model: PublicKeyModel;
-    setModel: Function;
+    setModel: Dispatch<SetStateAction<PublicKeyModel>>;
 }
 
 const ContactKeysTable = ({ model, setModel }: Props) => {

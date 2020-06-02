@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent, Dispatch, SetStateAction } from 'react';
 import { c } from 'ttag';
 import { OpenPGPKey } from 'pmcrypto';
 
@@ -13,7 +13,7 @@ import { PGP_SCHEMES } from 'proton-shared/lib/constants';
 
 interface Props {
     model: PublicKeyModel;
-    setModel: Function;
+    setModel: Dispatch<SetStateAction<PublicKeyModel>>;
     mailSettings: MailSettings;
 }
 
