@@ -216,7 +216,7 @@ const LoginForm = ({ onLogin, ignoreUnlock = false }) => {
     }
 
     const cancelButton = (
-        <LinkButton type="reset" disabled={loading} onClick={handleCancel}>
+        <LinkButton type="reset" className="mr1" disabled={loading} onClick={handleCancel}>
             {c('Action').t`Cancel`}
         </LinkButton>
     );
