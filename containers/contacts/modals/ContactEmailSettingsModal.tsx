@@ -30,7 +30,7 @@ import { extractScheme } from 'proton-shared/lib/api/helpers/mailSettings';
 import { sortPinnedKeys, sortApiKeys, getPublicKeyModel } from 'proton-shared/lib/keys/publicKeys';
 import { uniqueBy } from 'proton-shared/lib/helpers/array';
 import { getKeyInfoFromProperties, toKeyProperty } from 'proton-shared/lib/contacts/keyProperties';
-import { CachedKey } from 'proton-shared/lib/interfaces';
+import { CachedKey, Api } from 'proton-shared/lib/interfaces';
 import { ContactProperties, ContactProperty } from 'proton-shared/lib/interfaces/contacts/Contact';
 import { PublicKeyModel } from 'proton-shared/lib/interfaces/Key';
 import { VCARD_KEY_FIELDS, CATEGORIES } from 'proton-shared/lib/contacts/constants';
@@ -76,7 +76,7 @@ const ContactEmailSettingsModal = ({
      * Initialize the key model for the modal
      * @returns {Promise}
      */
-    const prepare = async (api) => {
+    const prepare = async (api: Api) => {
         const apiKeysConfig = await getPublicKeysEmailHelper(api, Email as string);
         const pinnedKeysConfig = await getKeyInfoFromProperties(properties, emailGroup || '');
         const publicKeyModel = await getPublicKeyModel({

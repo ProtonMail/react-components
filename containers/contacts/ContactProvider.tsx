@@ -23,7 +23,7 @@ const ContactProvider = ({ children }: Props) => {
     });
 
     useLayoutEffect(() => {
-        return subscribe(({ Contacts }) => {
+        return subscribe(({ Contacts }: any) => {
             if (!Array.isArray(Contacts)) {
                 return;
             }
