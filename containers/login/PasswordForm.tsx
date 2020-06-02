@@ -1,6 +1,6 @@
 import React, { ChangeEvent } from 'react';
 import { c } from 'ttag';
-import { Input, Label, PasswordInput, SupportDropdown } from 'react-components';
+import { Input, Label, PasswordInput } from 'react-components';
 import { EMAIL_PLACEHOLDER, PASSWORD_PLACEHOLDER } from 'proton-shared/lib/constants';
 
 interface Props {
@@ -14,7 +14,7 @@ const PasswordForm = ({ username, setUsername, password, setPassword }: Props) =
     return (
         <>
             <div className="flex onmobile-flex-column mb1">
-                <Label htmlFor="login">{c('Label').t`Email / Username`}</Label>
+                <Label htmlFor="login">{c('Label').t`Email or Username`}</Label>
                 <div className="flex-item-fluid">
                     <Input
                         type="text"
@@ -46,7 +46,6 @@ const PasswordForm = ({ username, setUsername, password, setPassword }: Props) =
                             data-cy-login="password"
                         />
                     </div>
-                    <SupportDropdown content={c('Action').t`Need help?`} className="link" />
                 </div>
             </div>
         </>
