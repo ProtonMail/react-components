@@ -224,6 +224,7 @@ const ContactEmailSettingsModal = ({
                         <Label>
                             {c('Label').t`Email format`}
                             <Info
+                                className="ml0-5"
                                 title={c('Tooltip')
                                     .t`Automatic indicates that the format in the composer is used to send to this user. Plain text indicates that the message will always be converted to plain text on send.`}
                             />
