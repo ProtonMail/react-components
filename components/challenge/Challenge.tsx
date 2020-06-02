@@ -26,7 +26,7 @@ const Challenge = ({ children, style, onLoaded, ...rest }: Omit<ChallengeProps, 
                 </>
             ) : (
                 <ChallengeFrame
-                    src="https://suspicious-swanson-dbc169.netlify.app/challenge.html" // TODO replace by https://secure.protonmail.com/challenge/challenge.html
+                    src="https://secure.protonmail.com/challenge/challenge.html"
                     className={isLoading || hasError ? 'hidden' : 'w100'}
                     innerClassName="flex-item-fluid-auto"
                     bodyClassName="color-black bg-white"
