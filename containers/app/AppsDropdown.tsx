@@ -57,13 +57,13 @@ const AppsDropdown = () => {
                         <li className="dropDown-item appsDropdown-item" key={key}>
                             <Link
                                 to={link}
-                                className="appsDropdown-link p1 pt0-75 pb0-75 flex flex-nowrap flex-items-center"
+                                className="appsDropdown-link big m0 p1 pt0-75 pb0-75 flex flex-nowrap flex-items-center"
                                 external={!isCurrent}
                                 target="_blank"
                                 aria-current={isCurrent}
                                 title={title}
                             >
-                                <Icon name={icon} className="mr0-5" />
+                                <Icon name={icon} size={20} className="mr0-5" />
                                 <span>{title}</span>
                             </Link>
                         </li>
@@ -74,11 +74,11 @@ const AppsDropdown = () => {
                         to="/account"
                         target="_blank"
                         external={true}
-                        className="appsDropdown-link bl p1 pt0-75 pb0-75"
+                        className="appsDropdown-link big m0 bl p1 pt0-75 pb0-25"
                         title={c('Apps dropdown').t`Your account`}
                     >
                         <span className="flex flex-nowrap flex-items-center">
-                            <Icon name="account" className="mr0-5" />
+                            <Icon name="account" size={20} className="mr0-5" />
                             <span>{c('Apps dropdown').t`Account`}</span>
                         </span>
                         <div className="ml1-5">
