@@ -13,7 +13,7 @@ import {
     DropdownMenuButton,
     DropdownMenuLink
 } from '../../';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
 import { c } from 'ttag';
 import { CLIENT_TYPES } from 'proton-shared/lib/constants';
 
@@ -53,12 +53,18 @@ const SupportDropdown = ({ className, content, location }: Props) => {
                 <DropdownMenu>
                     {isLogin ? (
                         <>
-                            <DropdownMenuLink href="/reset-password" className="flex flex-nowrap alignleft">
+                            <Link
+                                to="/reset-password"
+                                className="dropDown-item-link w100 pr1 pl1 pt0-5 pb0-5 bl nodecoration flex flex-nowrap alignleft"
+                            >
                                 {c('Link').t`Reset password`}
-                            </DropdownMenuLink>
-                            <DropdownMenuLink href="/forgot-username" className="flex flex-nowrap alignleft">
+                            </Link>
+                            <Link
+                                to="/forgot-username"
+                                className="dropDown-item-link w100 pr1 pl1 pt0-5 pb0-5 bl nodecoration flex flex-nowrap alignleft"
+                            >
                                 {c('Link').t`Forgot username?`}
-                            </DropdownMenuLink>
+                            </Link>
                             <DropdownMenuLink
                                 href={
                                     CLIENT_TYPE === VPN
