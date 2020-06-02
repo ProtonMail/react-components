@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { LoaderPage, GenericError, ModalsChildren } from 'react-components';
 import PropTypes from 'prop-types';
 import { loadOpenPGP } from 'proton-shared/lib/openpgp';
-import { getBrowserLocale, getClosestMatches } from 'proton-shared/lib/i18n/helper';
+import { getBrowserLocale, hasLocale, getClosestMatches } from 'proton-shared/lib/i18n/helper';
 import loadLocale from 'proton-shared/lib/i18n/loadLocale';
 
 const StandardPublicApp = ({ locales = {}, openpgpConfig, children }) => {
@@ -15,10 +15,11 @@ const StandardPublicApp = ({ locales = {}, openpgpConfig, children }) => {
         (async () => {
             await Promise.all([
                 loadOpenPGP(openpgpConfig),
-                loadLocale({
-                    ...getClosestMatches({ locale: browserLocale, browserLocale, locales }),
-                    locales
-                })
+                hasLocale(locales, browserLocale) &&
+                    loadLocale({
+                        ...getClosestMatches({ locale: browserLocale, browserLocale, locales }),
+                        locales
+                    })
             ]);
         })()
             .then(() => setLoading(false))
