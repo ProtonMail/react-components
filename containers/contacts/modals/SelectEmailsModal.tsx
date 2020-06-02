@@ -6,7 +6,7 @@ import { Contact, ContactEmail } from 'proton-shared/lib/interfaces/contacts';
 
 interface Props {
     contacts: Contact[];
-    onSubmit: Function;
+    onSubmit: (value?: ContactEmail[] | PromiseLike<ContactEmail[]> | undefined) => void;
     onClose: () => void;
 }
 

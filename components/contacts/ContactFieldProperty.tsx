@@ -3,6 +3,7 @@ import { parseISO, isValid } from 'date-fns';
 
 import { useModals, Input, TextArea, EmailInput, DateInput, TelInput } from 'react-components';
 import { getAllFieldLabels } from 'proton-shared/lib/helpers/contacts';
+import { ContactPropertyChange } from 'proton-shared/lib/interfaces/contacts/Contact';
 
 import ContactImageField from './ContactImageField';
 import ContactAdrField from './ContactAdrField';
@@ -12,7 +13,7 @@ interface Props {
     field: string;
     uid?: string;
     value: string | string[];
-    onChange: Function;
+    onChange: (payload: ContactPropertyChange) => void;
 }
 
 const ContactFieldProperty = ({ field, value, uid, onChange, ...rest }: Props) => {
@@ -54,7 +55,7 @@ const ContactFieldProperty = ({ field, value, uid, onChange, ...rest }: Props) =
                 if (!isValid(value)) {
                     return;
                 }
-                onChange({ value: value?.toISOString(), uid });
+                onChange({ value: value?.toISOString() || '', uid });
             };
             return <DateInput placeholder={label} value={date} autoFocus onChange={handleSelectDate} {...rest} />;
         }

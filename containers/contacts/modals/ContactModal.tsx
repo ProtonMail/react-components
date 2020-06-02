@@ -11,7 +11,11 @@ import { prepareContacts } from 'proton-shared/lib/contacts/encrypt';
 import { getEditableFields, getOtherInformationFields } from 'proton-shared/lib/helpers/contacts';
 import { API_CODES } from 'proton-shared/lib/constants';
 import { OVERWRITE, CATEGORIES } from 'proton-shared/lib/contacts/constants';
-import { ContactProperties, ContactProperty } from 'proton-shared/lib/interfaces/contacts/Contact';
+import {
+    ContactProperties,
+    ContactProperty,
+    ContactPropertyChange
+} from 'proton-shared/lib/interfaces/contacts/Contact';
 
 import ContactModalProperties from '../ContactModalProperties';
 
@@ -108,15 +112,7 @@ const ContactModal = ({
         createNotification({ text: c('Success').t`Contact saved` });
     };
 
-    const handleChange = ({
-        uid: propertyUID,
-        value,
-        key = 'value'
-    }: {
-        uid: string;
-        value: string & string[];
-        key: string;
-    }) => {
+    const handleChange = ({ uid: propertyUID, value, key = 'value' }: ContactPropertyChange) => {
         const newProperties = properties.map((property: ContactProperty) => {
             if (property.uid === propertyUID) {
                 return {

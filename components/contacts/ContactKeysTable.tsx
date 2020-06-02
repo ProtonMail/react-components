@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { algorithmInfo } from 'pmcrypto';
 import { isValid, format } from 'date-fns';
 import { c } from 'ttag';
 
@@ -46,7 +47,7 @@ const ContactKeysTable = ({ model, setModel }: Props) => {
                     const creationTime = publicKey.getCreationTime();
                     const expirationTime = await publicKey.getExpirationTime('encrypt');
                     const algoInfo = publicKey.getAlgorithmInfo();
-                    const algo = describe(algoInfo);
+                    const algo = describe(algoInfo as algorithmInfo);
                     const isTrusted = model.trustedFingerprints.has(fingerprint);
                     const isExpired = model.expiredFingerprints.has(fingerprint);
                     const isRevoked = model.revokedFingerprints.has(fingerprint);
@@ -137,7 +138,7 @@ const ContactKeysTable = ({ model, setModel }: Props) => {
                                     const blob = new Blob([publicKey.armor()], {
                                         type: 'data:text/plain;charset=utf-8;'
                                     });
-                                    const filename = `publickey - ${model.email} - 0x${fingerprint
+                                    const filename = `publickey - ${model.emailAddress} - 0x${fingerprint
                                         .slice(0, 8)
                                         .toUpperCase()}.asc`;
 

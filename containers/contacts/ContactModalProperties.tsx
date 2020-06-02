@@ -4,7 +4,7 @@ import { c } from 'ttag';
 import { Icon, PrimaryButton, OrderableContainer, OrderableElement } from 'react-components';
 import { move } from 'proton-shared/lib/helpers/array';
 import { OTHER_INFORMATION_FIELDS } from 'proton-shared/lib/contacts/constants';
-import { ContactProperties } from 'proton-shared/lib/interfaces/contacts';
+import { ContactPropertyChange, ContactProperties } from 'proton-shared/lib/interfaces/contacts';
 
 import ContactModalRow from '../../components/contacts/ContactModalRow';
 import EncryptedIcon from '../../components/contacts/EncryptedIcon';
@@ -28,10 +28,10 @@ const TITLES: { [key: string]: string } = {
 interface Props {
     field?: string;
     properties: ContactProperties;
-    onChange: Function;
+    onChange: (payload: ContactPropertyChange) => void;
     onOrderChange?: (field: string, orderedProperties: ContactProperties) => void;
     onAdd?: () => void;
-    onRemove: Function;
+    onRemove: (value: string) => void;
 }
 
 const ContactModalProperties = ({

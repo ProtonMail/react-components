@@ -3,7 +3,7 @@ import { c } from 'ttag';
 
 import { OrderableHandle, Icon, DropdownActions, useModals } from 'react-components';
 import { clearType, getType } from 'proton-shared/lib/contacts/property';
-import { ContactProperty } from 'proton-shared/lib/interfaces/contacts';
+import { ContactProperty, ContactPropertyChange } from 'proton-shared/lib/interfaces/contacts';
 
 import ContactFieldProperty from './ContactFieldProperty';
 import ContactModalLabel from './ContactModalLabel';
@@ -11,8 +11,8 @@ import ContactImageModal from '../../containers/contacts/modals/ContactImageModa
 
 interface Props {
     property: ContactProperty;
-    onChange: Function;
-    onRemove: Function;
+    onChange: (payload: ContactPropertyChange) => void;
+    onRemove: (value: string) => void;
     isOrderable?: boolean;
 }
 
@@ -29,24 +29,32 @@ const ContactModalRow = ({ property, onChange, onRemove, isOrderable = false }: 
         createModal(<ContactImageModal url={property.value as string} onSubmit={handleSubmit} />);
     };
 
-    const list = [
-        canEdit && {
+    const list = [];
+
+    if (canEdit) {
+        list.push({
             text: c('Action').t`Edit`,
             onClick: handleChangeImage
-        },
-        canClear && {
+        });
+    }
+    if (canClear) {
+        list.push({
             text: c('Action').t`Clear`,
-            onClick() {
+            onClick: () => {
                 onChange({ uid, value: '' });
             }
-        },
-        canDelete && {
+        });
+    }
+    if (canDelete) {
+        list.push({
             text: c('Action').t`Delete`,
-            onClick() {
-                onRemove(property.uid);
+            onClick: () => {
+                if (property.uid) {
+                    onRemove(property.uid);
+                }
             }
-        }
-    ].filter(Boolean);
+        });
+    }
 
     return (
         <div className="flex flex-nowrap flex-item-noshrink">

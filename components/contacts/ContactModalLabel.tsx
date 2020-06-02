@@ -2,6 +2,7 @@ import React, { ChangeEvent } from 'react';
 
 import { Select, Label } from 'react-components';
 import { getOtherInformationFields, getAllTypes } from 'proton-shared/lib/helpers/contacts';
+import { ContactPropertyChange } from 'proton-shared/lib/interfaces/contacts/Contact';
 
 import ContactLabelProperty from './ContactLabelProperty';
 
@@ -9,7 +10,7 @@ interface Props {
     field: string;
     uid?: string;
     type?: string;
-    onChange: Function;
+    onChange: (payload: ContactPropertyChange) => void;
 }
 
 const ContactModalLabel = ({ field, uid, type = '', onChange }: Props) => {

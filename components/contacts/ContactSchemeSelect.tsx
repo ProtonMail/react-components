@@ -11,7 +11,7 @@ const { PGP_MIME, PGP_INLINE } = PGP_SCHEMES;
 interface Props {
     value: string;
     mailSettings: MailSettings;
-    onChange: Function;
+    onChange: (value: PGP_SCHEMES | string) => void;
 }
 
 const ContactSchemeSelect = ({ value, mailSettings, onChange }: Props) => {

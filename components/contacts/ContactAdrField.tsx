@@ -14,7 +14,7 @@ import {
 
 interface Props {
     value: string | string[];
-    onChange: Function;
+    onChange: (address: string[]) => void;
 }
 
 const initialAddress = (address: string | string[]) => {

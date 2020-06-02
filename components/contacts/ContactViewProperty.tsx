@@ -156,7 +156,7 @@ const ContactViewProperty = ({
             case 'tel':
                 return <Copy className="ml0-5 pm-button--for-icon" value={value} />;
             case 'adr':
-                return <Copy className="ml0-5 pm-button--for-icon" value={formatAdr(property.value as string[])} />;
+                return <Copy className="ml0-5 pm-button--for-icon" value={formatAdr(property?.value as string[])} />;
             default:
                 return null;
         }

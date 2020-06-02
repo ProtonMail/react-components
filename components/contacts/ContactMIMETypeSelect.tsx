@@ -6,7 +6,7 @@ import { MIME_TYPES } from 'proton-shared/lib/constants';
 
 interface Props {
     value: string;
-    onChange: Function;
+    onChange: (mimeType: MIME_TYPES | string) => void;
     disabled: boolean;
 }
 

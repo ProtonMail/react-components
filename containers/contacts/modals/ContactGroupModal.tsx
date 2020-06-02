@@ -56,7 +56,7 @@ const ContactGroupModal = ({ contactGroupID, onClose = noop, ...rest }: Props) =
         contactEmailID: ''
     });
     const contactEmailIDs = model.contactEmails.map(({ ID }: ContactEmail) => ID);
-    const options = orderBy(contactEmails, 'Email')
+    const options = orderBy(contactEmails as ContactEmail[], 'Email')
         .filter(({ ID }: ContactEmail) => !contactEmailIDs.includes(ID))
         .map(({ ID, Email, Name }: ContactEmail) => ({
             text: Email === Name ? `<${Email}>` : `${Name} <${Email}>`,

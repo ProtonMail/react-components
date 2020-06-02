@@ -233,7 +233,7 @@ const ContactEmailSettingsModal = ({
                             <ContactMIMETypeSelect
                                 disabled={isLoading || isMimeTypeFixed}
                                 value={model.mimeType}
-                                onChange={(mimeType: MIME_TYPES) => setModel({ ...model, mimeType })}
+                                onChange={(mimeType: MIME_TYPES | string) => setModel({ ...model, mimeType })}
                             />
                         </Field>
                     </Row>

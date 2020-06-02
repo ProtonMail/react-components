@@ -196,7 +196,7 @@ const ContactPgpSettings = ({ model, setModel, mailSettings }: Props) => {
                         <ContactSchemeSelect
                             value={model.scheme}
                             mailSettings={mailSettings}
-                            onChange={(scheme: PGP_SCHEMES) => setModel({ ...model, scheme })}
+                            onChange={(scheme: PGP_SCHEMES | string) => setModel({ ...model, scheme })}
                         />
                     </Field>
                 </Row>

@@ -6,7 +6,7 @@ import { ContactEmail } from 'proton-shared/lib/interfaces/contacts';
 
 interface Props {
     contactEmails: ContactEmail[];
-    onDelete: Function;
+    onDelete: (ID: string) => void;
 }
 
 const ContactGroupTable = ({ contactEmails, onDelete }: Props) => {
@@ -23,7 +23,7 @@ const ContactGroupTable = ({ contactEmails, onDelete }: Props) => {
                         <div className="ellipsis mw100" key={ID} title={Email}>
                             {Email}
                         </div>,
-                        <SmallButton key={ID} onClick={onDelete(ID)}>{c('Action').t`Delete`}</SmallButton>
+                        <SmallButton key={ID} onClick={() => onDelete(ID)}>{c('Action').t`Delete`}</SmallButton>
                     ];
                     return <TableRow key={ID} cells={cells} />;
                 })}
