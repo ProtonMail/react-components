@@ -35,9 +35,7 @@ const AddonRow = ({ label, used, max, format = identity }) => {
                 </strong>
             </div>
             <div className="flex-autogrid-item">
-                {Number.isInteger((used * 100) / max) ? (
-                    <Meter value={(used * 100) / max} className="meterbar" />
-                ) : null}
+                {Number.isInteger((used * 100) / max) ? <Meter value={(used * 100) / max} /> : null}
             </div>
         </div>
     );
