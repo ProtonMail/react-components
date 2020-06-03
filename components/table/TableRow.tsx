@@ -3,7 +3,7 @@ import TableCell from './TableCell';
 
 interface Props extends React.HTMLAttributes<HTMLTableRowElement> {
     cells: React.ReactNode[];
-    children: React.ReactNode;
+    children?: React.ReactNode;
 }
 
 const TableRow = ({ cells = [], children, ...rest }: Props) => {
