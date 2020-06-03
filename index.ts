@@ -318,7 +318,10 @@ export { default as ContactGroupModal } from './containers/contacts/modals/Conta
 export { default as ContactListModal } from './containers/contacts/modals/ContactListModal';
 export { default as ContactDetailsModal } from './containers/contacts/modals/ContactDetailsModal';
 export { default as ContactViewErrors } from './containers/contacts/ContactViewErrors';
+export { default as ContactPgpSettings } from './containers/contacts/ContactPgpSettings';
 export { default as ContactGroupDropdown } from './containers/contacts/ContactGroupDropdown';
+export { default as ContactGroupDropdownButton } from './components/contacts/ContactGroupDropdownButton';
+export { default as ContactGroupTable } from './components/contacts/ContactGroupTable';
 export { default as ContactGroupIcon } from './components/contacts/ContactGroupIcon';
 export { default as ContactUpgradeModal } from './components/contacts/ContactUpgradeModal';
 export { default as ContactDeleteModal } from './containers/contacts/modals/ContactDeleteModal';
