@@ -23,20 +23,19 @@ const Tabs = ({ tabs = [], preselectedTab = 0, fullWidth }: Props) => {
     const { ref: containerRef, scale, translate } = useIndicator(tabs, selectedTab);
 
     return (
-        <div
-            className={classnames(["tabs", fullWidth && 'tabs--extended'])}
-        >
-            <nav
-                className="tabs-container"
-            >
+        <div className={classnames(['tabs', fullWidth && 'tabs--extended'])}>
+            <nav className="tabs-container">
                 <ul className="tabs-list" role="tablist" ref={containerRef}>
                     {tabs.map(({ title, ref }, index) => {
                         const key = toKey(index, 'key_');
                         const label = toKey(index, 'label_');
                         return (
                             <li key={key} ref={ref} className="tabs-list-item" role="presentation">
-                                <a
-                                    onClick={() => updateSelectedTab(index)}
+                                <button
+                                    onClick={(event) => {
+                                        event.preventDefault();
+                                        updateSelectedTab(index);
+                                    }}
                                     className="tabs-list-link"
                                     id={label}
                                     role="tab"
@@ -45,22 +44,17 @@ const Tabs = ({ tabs = [], preselectedTab = 0, fullWidth }: Props) => {
                                     aria-selected={selectedTab === index}
                                 >
                                     {title}
-                                </a>
+                                </button>
                             </li>
                         );
                     })}
-                    <div
+                    <li
                         className="tabs-indicator"
                         style={{ transform: `translateX(${translate}px) scaleX(${scale})` }}
                     />
                 </ul>
             </nav>
-            <div
-                id={key}
-                className="tabs-tabcontent pt1 pb1"
-                role="tabpanel"
-                aria-labelledby={label}
-            >
+            <div id={key} className="tabs-tabcontent pt1 pb1" role="tabpanel" aria-labelledby={label}>
                 {content}
             </div>
         </div>
