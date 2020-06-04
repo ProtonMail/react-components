@@ -25,7 +25,12 @@ const Tabs = ({ tabs = [], preselectedTab = 0, fullWidth }: Props) => {
     return (
         <div className={classnames(['tabs', fullWidth && 'tabs--extended'])}>
             <nav className="tabs-container">
-                <ul className="tabs-list" role="tablist" ref={containerRef}>
+                <ul
+                    className="tabs-list"
+                    role="tablist"
+                    ref={containerRef}
+                    style={{ '--translate': translate, '--scale': scale }}
+                >
                     {tabs.map(({ title, ref }, index) => {
                         const key = toKey(index, 'key_');
                         const label = toKey(index, 'label_');
@@ -50,7 +55,7 @@ const Tabs = ({ tabs = [], preselectedTab = 0, fullWidth }: Props) => {
                     })}
                     <li
                         className="tabs-indicator"
-                        style={{ transform: `translateX(${translate}px) scaleX(${scale})` }}
+                        aria-hidden
                     />
                 </ul>
             </nav>
