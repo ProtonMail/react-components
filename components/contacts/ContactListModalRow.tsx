@@ -34,7 +34,7 @@ const ContactModalRow = ({ style, onCheck, contact, checked, contactGroupMap, is
                         <div className={classnames(['pl1 flex', !isNarrow && 'w33'])}>
                             <span className="inbl ellipsis mw100 pr1">{contact.Name}</span>
                         </div>
-                        <div className="flex-item-fluid flex">
+                        <div className="flex-item-fluid flex onmobile-pl1">
                             <span className="inbl ellipsis mw100 pr1">{contact.Email}</span>
                         </div>
                         {!isNarrow && (
