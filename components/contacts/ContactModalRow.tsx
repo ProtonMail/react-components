@@ -47,7 +47,7 @@ const ContactModalRow = ({ property, onChange, onRemove, isOrderable = false }: 
     }
     if (canDelete) {
         list.push({
-            text: c('Action').t`Delete`,
+            text: <Icon name="trash" className="color-global-warning mauto" alt={c('Action').t`Delete`} />,
             onClick: () => {
                 if (property.uid) {
                     onRemove(property.uid);
@@ -70,26 +70,30 @@ const ContactModalRow = ({ property, onChange, onRemove, isOrderable = false }: 
                 </div>
             )}
             <div className="flex flex-nowrap flex-items-center onmobile-flex-column w95">
-                <span className="w30 flex flex-nowrap mb1">
+                <span className="w30 contact-modal-select flex flex-nowrap flex-items-center mb1 onmobile-mb0-5 onmobile-flex-self-start">
                     <ContactModalLabel field={field} type={type} uid={property.uid} onChange={onChange} />
                 </span>
-                <span className="w50 mb1">
-                    <div className="mr1 onmobile-mr0">
-                        <ContactFieldProperty
-                            field={field}
-                            value={property.value}
-                            uid={property.uid}
-                            onChange={onChange}
-                        />
-                    </div>
-                </span>
-                <span className="w20 mb1">
-                    {list.length > 0 && (
-                        <div className="flex flex-item-noshrink flex-items-start">
-                            <DropdownActions list={list} />
+                <div className="flex flex-nowrap flex-items-center flex-item-noshrink">
+                    <span className="flex-item-fluid mb1">
+                        <div className="pr1 w100 onmobile-pr0-5">
+                            <ContactFieldProperty
+                                field={field}
+                                value={property.value}
+                                uid={property.uid}
+                                onChange={onChange}
+                            />
                         </div>
-                    )}
-                </span>
+                    </span>
+                    <span className="mb1">
+                        <div className="min-w3e">
+                            {list.length > 0 && (
+                                <div className="flex flex-item-noshrink flex-items-start">
+                                    <DropdownActions className="pm-button--for-icon" list={list} />
+                                </div>
+                            )}
+                        </div>
+                    </span>
+                </div>
             </div>
         </div>
     );

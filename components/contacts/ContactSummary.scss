@@ -8,3 +8,8 @@
     height: 2.5rem;
 }
 
+@include respond-to($breakpoint-small) {
+    .contact-modal-select {
+        max-width: calc(100% - 3em);
+    }
+}

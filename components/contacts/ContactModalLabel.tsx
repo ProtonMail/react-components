@@ -26,7 +26,7 @@ const ContactModalLabel = ({ field, uid, type = '', onChange }: Props) => {
 
     if (otherInformationFields.map(({ value: f }) => f).includes(field)) {
         return (
-            <Label className="pt0 mr1">
+            <Label className="pt0 mr1 onmobile-w100">
                 <Select value={field} options={otherInformationFields} onChange={handleChangeField} />
             </Label>
         );
@@ -37,7 +37,7 @@ const ContactModalLabel = ({ field, uid, type = '', onChange }: Props) => {
     }
 
     return (
-        <Label className="pt0 mr1">
+        <Label className="pt0 mr1 onmobile-w100">
             <Select value={type} options={fieldType} onChange={handleChangeType} />
         </Label>
     );

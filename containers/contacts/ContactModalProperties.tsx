@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo } from 'react';
 import { c } from 'ttag';
 
-import { Icon, PrimaryButton, OrderableContainer, OrderableElement } from 'react-components';
+import { Icon, Button, OrderableContainer, OrderableElement } from 'react-components';
 import { move } from 'proton-shared/lib/helpers/array';
 import { OTHER_INFORMATION_FIELDS } from 'proton-shared/lib/contacts/constants';
 import { ContactPropertyChange, ContactProperties } from 'proton-shared/lib/interfaces/contacts';
@@ -102,7 +102,7 @@ const ContactModalProperties = ({
                         <Icon name="text-justify nonvisible" />
                     </div>
                     <div className="flex flex-nowrap w95">
-                        <PrimaryButton className="mb1" onClick={onAdd}>{c('Action').t`Add`}</PrimaryButton>
+                        <Button className="pm-button--primaryborder mb1" onClick={onAdd}>{c('Action').t`Add`}</Button>
                     </div>
                 </div>
             )}
