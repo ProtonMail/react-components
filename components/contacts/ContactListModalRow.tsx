@@ -29,7 +29,6 @@ const ContactModalRow = ({ style, onCheck, contact, checked, contactGroupMap, is
                     onChange={(e) => onCheck(e, contact.ID)}
                     aria-describedby={contact.ID}
                     id={contact.ID}
-                    backgroundColor="white"
                 >
                     <div className={classnames(['flex-item-fluid flex-items-center mw100 h100', !isNarrow && 'flex'])}>
                         <div className={classnames(['pl1 flex', !isNarrow && 'w33'])}>
