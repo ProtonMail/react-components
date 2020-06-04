@@ -28,6 +28,7 @@ interface Props {
 const { RECOVERY_EMAIL, RECOVERY_PHONE, PLANS } = SIGNUP_STEPS;
 
 const SignupRecoveryForm = ({ model, onChange, onSubmit, errors, loading }: Props) => {
+    const formRef = useRef();
     const { createModal } = useModals();
     const challengeRefRecovery = useRef();
     const [loadingChallenge, withLoadingChallenge] = useLoading();
@@ -74,7 +75,12 @@ const SignupRecoveryForm = ({ model, onChange, onSubmit, errors, loading }: Prop
     };
 
     return (
-        <form name="recoveryForm" className="signup-form" onSubmit={(e) => withLoadingChallenge(handleSubmit(e))}>
+        <form
+            name="recoveryForm"
+            className="signup-form"
+            onSubmit={(e) => withLoadingChallenge(handleSubmit(e))}
+            ref={formRef}
+        >
             <p>{c('Info')
                 .t`Proton will send you a recovery link to this email address if you forget your password or get locked out of your account.`}</p>
             {model.step === RECOVERY_EMAIL ? (
@@ -94,6 +100,9 @@ const SignupRecoveryForm = ({ model, onChange, onSubmit, errors, loading }: Prop
                                         value={model.recoveryEmail}
                                         onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
                                             onChange({ ...model, recoveryEmail: target.value })
+                                        }
+                                        onKeyDown={({ keyCode }: React.KeyboardEvent<HTMLInputElement>) =>
+                                            keyCode === 13 && formRef.current?.submit()
                                         }
                                         required
                                     />
