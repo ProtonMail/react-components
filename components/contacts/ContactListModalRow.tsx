@@ -39,7 +39,7 @@ const ContactModalRow = ({ style, onCheck, contact, checked, contactGroupMap, is
                             <span className="inbl ellipsis mw100 pr1">{contact.Email}</span>
                         </div>
                         {!isNarrow && (
-                            <div className="w20">
+                            <div className="w25">
                                 {contact.LabelIDs.length ? (
                                     <ContactGroupLabels contact={contact} contactGroupMap={contactGroupMap} />
                                 ) : null}

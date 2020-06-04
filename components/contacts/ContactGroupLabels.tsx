@@ -7,20 +7,24 @@ interface Props {
 }
 
 const ContactGroupLabels = ({ contact, contactGroupMap = {} }: Props) => (
-    <div className="inline-flex flew-row flex-items-center pm-badgeLabel-container stop-propagation">
+    <div
+        className="inline-flex mw100 flew-row flex-nowrap flex-items-center pm-badgeLabel-container stop-propagation pm-badgeLabel-container--collapsed"
+        role="list"
+    >
         {contact.LabelIDs.map((ID: string) => {
             const contactGroup: ContactGroup = contactGroupMap[ID];
 
             return contactGroup ? (
                 <span
-                    className="badgeLabel flex flex-row flex-items-center ml0-25"
+                    className="badgeLabel flex flex-row flex-items-center"
                     style={{
-                        backgroundColor: contactGroup.Color,
-                        borderColor: contactGroup.Color
+                        color: contactGroup.Color
                     }}
                     key={ID}
                 >
-                    {contactGroup.Name}
+                    <span className="pm-badgeLabel-link ellipsis mw100 color-white nodecoration">
+                        {contactGroup.Name}
+                    </span>
                 </span>
             ) : null;
         })}
