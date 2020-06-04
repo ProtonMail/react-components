@@ -65,48 +65,44 @@ const ContactSummary = ({ properties, handleEdit, handleDelete, handleExport, le
 
     return (
         <div className={classnames(['contactsummary-container p1 mb1', !isNarrow && 'flex flex-nowrap'])}>
-            <div className={classnames(['aligncenter contactsummary-photo-container', leftBlockWidth])}>
+            <div className={classnames(['aligncenter contactsummary-photo-container pt0-5', leftBlockWidth])}>
                 <ContactImageSummary photo={photo} name={name} />
             </div>
             <div className="pl1 flex-item-fluid">
-                <div className={isNarrow ? 'aligncenter' : 'flex flex-spacebetween'}>
-                    <h2 className="mb0 ellipsis">{name}</h2>
-                    <div>
-                        <Button onClick={handleExport} className="ml0-5 pm-button--for-icon">
-                            <Tooltip title={c('Action').t`Export`}>
-                                <Icon name="export" />
-                            </Tooltip>
-                        </Button>
-
-                        <Button onClick={() => handleEdit()} className="ml0-5 pm-button--for-icon">
-                            <Tooltip title={c('Action').t`Edit`} className="color-primary">
-                                <Icon name="pen" />
-                            </Tooltip>
-                        </Button>
-
-                        <Button onClick={handleDelete} className="ml0-5 pm-button--for-icon">
-                            <Tooltip title={c('Action').t`Delete`} className="color-global-warning">
-                                <Icon name="trash" />
-                            </Tooltip>
-                        </Button>
-                    </div>
+                <h2 className="onmobile-aligncenter mb0 ellipsis" title={name}>
+                    {name}
+                </h2>
+                <div className="onmobile-aligncenter">
+                    <ul className="unstyled mt0-5 inbl">
+                        {summary.map(({ icon, component }) => {
+                            return (
+                                <li key={icon} className="contactsummary-list-item flex flex-nowrap flex-items-center">
+                                    <Icon name={icon} className="mr0-5 flex-item-noshrink" />
+                                    <span className="ellipsis">{component}</span>
+                                </li>
+                            );
+                        })}
+                    </ul>
                 </div>
-                <ul className="unstyled mt0-5">
-                    {summary.map(({ icon, component }) => {
-                        return (
-                            <li
-                                key={icon}
-                                className={classnames([
-                                    'contactsummary-list-item flex flex-nowrap',
-                                    !isNarrow && 'flex-items-center'
-                                ])}
-                            >
-                                <Icon name={icon} className="mr0-5" />
-                                <span className={classnames([!isNarrow && 'ellipsis'])}>{component}</span>
-                            </li>
-                        );
-                    })}
-                </ul>
+            </div>
+            <div className="flex-item-noshrink pt0-5 onmobile-aligncenter">
+                <Button onClick={handleExport} className="ml0-5 pm-button--for-icon">
+                    <Tooltip title={c('Action').t`Export`}>
+                        <Icon name="export" />
+                    </Tooltip>
+                </Button>
+
+                <Button onClick={() => handleEdit()} className="ml0-5 pm-button--for-icon">
+                    <Tooltip title={c('Action').t`Edit`} className="color-primary">
+                        <Icon name="pen" />
+                    </Tooltip>
+                </Button>
+
+                <Button onClick={handleDelete} className="ml0-5 pm-button--for-icon">
+                    <Tooltip title={c('Action').t`Delete`} className="color-global-warning">
+                        <Icon name="trash" />
+                    </Tooltip>
+                </Button>
             </div>
         </div>
     );

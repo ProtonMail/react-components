@@ -171,7 +171,7 @@ const ContactViewProperty = ({
                 <span className={classnames(['mr0-5 flex-item-fluid', !['note'].includes(field) && 'ellipsis'])}>
                     {getContent()}
                 </span>
-                <span className="flex-item-noshrink">{getActions()}</span>
+                <span className="flex-item-noshrink flex">{getActions()}</span>
             </div>
         </Row>
     );
