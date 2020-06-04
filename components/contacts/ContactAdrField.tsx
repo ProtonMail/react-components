@@ -2,15 +2,9 @@ import React, { useState, ChangeEvent } from 'react';
 import { c } from 'ttag';
 
 import { classnames, Input } from 'react-components';
-import {
-    POST_BOX,
-    EXTENDED,
-    STREET,
-    LOCALITY,
-    REGION,
-    POSTAL_CODE,
-    COUNTRY
-} from 'proton-shared/lib/contacts/constants';
+import { ADDRESS_COMPONENTS } from 'proton-shared/lib/contacts/constants';
+
+const { POST_BOX, EXTENDED, STREET, LOCALITY, REGION, POSTAL_CODE, COUNTRY } = ADDRESS_COMPONENTS;
 
 interface Props {
     value: string | string[];
