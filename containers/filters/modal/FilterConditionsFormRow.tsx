@@ -181,13 +181,15 @@ const FilterConditionsRow = ({
         return <span className="ml0-5 pt0-5">{label}</span>;
     };
 
+    const toggleSection = () => setIsOpen((isOpen) => !isOpen);
+
     return (
         <div className="border-bottom">
             <div className="flex flex-nowrap onmobile-flex-column align-items-center pt1 pb1">
                 <div
                     className={classnames(['w25 cursor-pointer pt0-5', isNarrow && 'mb1'])}
-                    onClick={() => setIsOpen((isOpen) => !isOpen)}
-                    onKeyDown={(e) => e.key === 'Enter' && setIsOpen((isOpen) => !isOpen)}
+                    onClick={toggleSection}
+                    onKeyDown={(e) => e.key === 'Enter' && toggleSection()}
                     role="button"
                     tabIndex={0}
                 >

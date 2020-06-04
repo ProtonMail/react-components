@@ -31,23 +31,38 @@ export enum ConditionComparator {
     DOES_NOT_MATCH = '!matches'
 }
 
-export interface Action {
-    type: string;
+export interface Actions {
+    labelAs: {
+        labels: string[];
+        isOpen: boolean;
+    };
+    moveTo: {
+        folder?: string;
+        isOpen: boolean;
+    };
+    markAs: {
+        read: boolean;
+        starred: boolean;
+        isOpen: boolean;
+    };
+    autoReply: boolean;
+    stopProcessing: boolean;
+    error?: string;
 }
 
 export interface Condition {
     type: ConditionType;
     comparator: ConditionComparator;
-    error?: string;
     values?: string[];
     withAttachment?: boolean;
+    error?: string;
     isOpen: boolean;
 }
 
 export interface FilterModalModel {
     step: Step;
     name: string;
-    actions: Action[];
+    actions: Actions;
     conditions: Condition[];
 }
 

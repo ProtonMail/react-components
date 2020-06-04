@@ -12,7 +12,7 @@ import {
 } from 'react-components';
 import { normalize } from 'proton-shared/lib/helpers/string';
 
-import { FilterModalModel, Filter, Step, Errors, Condition, Action } from './interfaces';
+import { FilterModalModel, Filter, Step, Errors, Condition, Actions } from './interfaces';
 import HeaderFilterModal from './HeaderFilterModal';
 import FooterFilterModal from './FooterFilterModal';
 import FilterNameForm from './FilterNameForm';
@@ -44,8 +44,10 @@ const checkConditionsErrors = (conditions: Condition[]) => {
     return '';
 };
 
-const checkActionsErrors = (actions: Action[]) => {
-    if (actions.length) {
+const checkActionsErrors = (actions: Actions) => {
+    const { labelAs, markAs, moveTo, autoReply, stopProcessing } = actions;
+
+    if (!labelAs.labels.length && !moveTo.folder && !markAs.read && !markAs.starred && !autoReply && !stopProcessing) {
         return c('Error').t`Require at least one action`;
     }
     return '';
@@ -63,7 +65,22 @@ const FilterModal = ({ filter, ...rest }: Props) => {
         step: Step.NAME,
         name: filter?.Name || '',
         conditions: [],
-        actions: []
+        actions: {
+            labelAs: {
+                labels: [],
+                isOpen: true
+            },
+            moveTo: {
+                isOpen: true
+            },
+            markAs: {
+                read: false,
+                starred: false,
+                isOpen: true
+            },
+            autoReply: false,
+            stopProcessing: false
+        }
     });
     const title = filter?.ID ? c('Title').t`Edit filter` : c('Title').t`Add filter`;
 
