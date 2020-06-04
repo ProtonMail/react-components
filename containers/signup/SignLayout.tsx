@@ -21,11 +21,11 @@ const SignLayout = ({ children, title, aside, larger, left, center, right }: Pro
         <Href
             key="terms"
             className="signup-footer-link nodecoration"
-            to="https://protonmail.com/terms-and-conditions"
+            href="https://protonmail.com/terms-and-conditions"
         >{c('Link').t`Terms`}</Href>
     );
     const privacyLink = (
-        <Href key="privacy" className="signup-footer-link nodecoration" to="https://protonmail.com/privacy-policy">{c(
+        <Href key="privacy" className="signup-footer-link nodecoration" href="https://protonmail.com/privacy-policy">{c(
             'Link'
         ).t`Privacy policy`}</Href>
     );
