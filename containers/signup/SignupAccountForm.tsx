@@ -39,6 +39,7 @@ enum SERVICES {
 
 const SignupAccountForm = ({ history, model, onChange, onSubmit, errors, loading }: Props) => {
     const challengeRefLogin = useRef();
+    const formRef = useRef();
     const searchParams = new URLSearchParams(history.location.search);
     const [loadingChallenge, withLoadingChallenge] = useLoading();
     const service = searchParams.get('service') as null | SERVICES;
@@ -71,6 +72,7 @@ const SignupAccountForm = ({ history, model, onChange, onSubmit, errors, loading
             className="signup-form"
             onSubmit={(e) => withLoadingChallenge(handleSubmit(e))}
             autoComplete="off"
+            ref={formRef}
         >
             {service && SERVICES[service] ? (
                 <div className="mb1">{c('Info').t`to continue to ${SERVICES[service]}`}</div>
@@ -92,6 +94,9 @@ const SignupAccountForm = ({ history, model, onChange, onSubmit, errors, loading
                                         value={model.username}
                                         onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
                                             onChange({ ...model, username: target.value })
+                                        }
+                                        onKeyDown={({ keyCode }: React.KeyboardEvent<HTMLInputElement>) =>
+                                            keyCode === 13 && formRef.current?.submit()
                                         }
                                         error={errors.username}
                                         placeholder={USERNAME_PLACEHOLDER}
@@ -125,6 +130,9 @@ const SignupAccountForm = ({ history, model, onChange, onSubmit, errors, loading
                                     value={model.email}
                                     onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
                                         onChange({ ...model, email: target.value })
+                                    }
+                                    onKeyDown={({ keyCode }: React.KeyboardEvent<HTMLInputElement>) =>
+                                        keyCode === 13 && formRef.current?.submit()
                                     }
                                     error={errors.email}
                                     required
