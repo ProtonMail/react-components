@@ -45,6 +45,7 @@ import { SignupModel, SignupErros, SignupPlan, SubscriptionCheckResult } from '.
 import { DEFAULT_SIGNUP_MODEL, DEFAULT_CHECK_RESULT, SIGNUP_STEPS } from './constants';
 import humanApiHelper from './humanApi';
 import BackButton from './BackButton';
+import RequestNewCodeModal from '../api/RequestNewCodeModal';
 
 interface Props {
     history: History;
@@ -579,7 +580,20 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                         e.preventDefault();
                         withLoading(handleSubmit());
                     }}
-                    onResend={() => withLoading(handleResend())}
+                    onResend={() => {
+                        createModal(
+                            <RequestNewCodeModal
+                                onEdit={() =>
+                                    updateModel({ ...model, verificationCode: '', step: ACCOUNT_CREATION_EMAIL })
+                                }
+                                onResend={() => {
+                                    withLoading(handleResend());
+                                    updateModel({ ...model, verificationCode: '' });
+                                }}
+                                email={model.email}
+                            />
+                        );
+                    }}
                     loading={loading}
                 />
             )}
