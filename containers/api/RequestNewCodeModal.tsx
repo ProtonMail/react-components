@@ -1,9 +1,16 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Alert, FormModal, PrimaryButton, Button, ResetButton } from 'react-components';
 import { c } from 'ttag';
 
-const RequestNewCodeModal = ({ email, phone, onEdit, onResend, ...rest }) => {
+interface Props {
+    email?: string;
+    phone?: string;
+    onEdit: () => void;
+    onResend: () => void;
+    [key: string]: any;
+}
+
+const RequestNewCodeModal = ({ email, phone, onEdit, onResend, ...rest }: Props) => {
     const strongEmail = <strong key="email">{email}</strong>;
     const strongPhone = <strong key="phone">{phone}</strong>;
     return (
@@ -41,13 +48,6 @@ const RequestNewCodeModal = ({ email, phone, onEdit, onResend, ...rest }) => {
             ) : null}
         </FormModal>
     );
-};
-
-RequestNewCodeModal.propTypes = {
-    email: PropTypes.string.isRequired,
-    phone: PropTypes.string.isRequired,
-    onEdit: PropTypes.func.isRequired,
-    onResend: PropTypes.func.isRequired
 };
 
 export default RequestNewCodeModal;
