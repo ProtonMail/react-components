@@ -1,15 +1,6 @@
 import React, { useState, useEffect, useMemo, FormEvent } from 'react';
 import { History } from 'history';
-import {
-    useApi,
-    useLoading,
-    useConfig,
-    usePlans,
-    useModals,
-    usePayment,
-    SupportDropdown,
-    Icon
-} from 'react-components';
+import { useApi, useLoading, useConfig, usePlans, useModals, usePayment, SupportDropdown } from 'react-components';
 import ProtonLogo from '../../components/logo/ProtonLogo';
 import { queryAvailableDomains } from 'proton-shared/lib/api/domains';
 import { setupAddress } from 'proton-shared/lib/api/addresses';
@@ -53,6 +44,7 @@ import InvalidVerificationCodeModal from '../api/InvalidVerificationCodeModal';
 import { SignupModel, SignupErros, SignupPlan, SubscriptionCheckResult } from './interfaces';
 import { DEFAULT_SIGNUP_MODEL, DEFAULT_CHECK_RESULT, SIGNUP_STEPS } from './constants';
 import humanApiHelper from './humanApi';
+import BackButton from './BackButton';
 
 interface Props {
     history: History;
@@ -96,7 +88,9 @@ const SignupContainer = ({ onLogin, history }: Props) => {
     const [usernameError, setUsernameError] = useState<string>('');
     const hasPaidPlan = Object.keys(model.planIDs).length;
 
-    const handlePayPal = () => {};
+    const handlePayPal = () => {
+        // TODO
+    };
 
     const {
         card,
@@ -518,10 +512,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
             larger={[PLANS, PAYMENT].includes(model.step)}
             left={
                 [ACCOUNT_CREATION_USERNAME, ACCOUNT_CREATION_EMAIL].includes(model.step) ? null : (
-                    <button type="button" onClick={handleBack} title={c('Action').t`Back`}>
-                        <Icon name="arrow-left" />
-                        <span className="sr-only">{c('Action').t`Back`}</span>
-                    </button>
+                    <BackButton onClick={handleBack} />
                 )
             }
             center={<ProtonLogo />}
