@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
     EmailInput,
@@ -77,6 +77,10 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
             }
         }
     };
+
+    useEffect(() => {
+        setStep(STEPS.ENTER_DESTINATION);
+    }, [method]);
 
     if (step === STEPS.ENTER_DESTINATION && isEmailMethod) {
         const handleChangeEmail = (event) => {
