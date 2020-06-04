@@ -100,6 +100,7 @@ const SignupRecoveryForm = ({ model, onChange, onSubmit, errors, loading }: Prop
                                 </div>
                                 <div>
                                     <InlineLinkButton
+                                        id="recovery-phone-button"
                                         onClick={() => onChange({ ...model, recoveryEmail: '', step: RECOVERY_PHONE })}
                                     >{c('Action').t`Add a recovery phone number instead`}</InlineLinkButton>
                                 </div>
