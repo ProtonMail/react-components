@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, FormEvent } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { History } from 'history';
 import { useApi, useLoading, useConfig, usePlans, useModals, usePayment, SupportDropdown } from 'react-components';
 import ProtonLogo from '../../components/logo/ProtonLogo';
@@ -86,7 +86,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
         // NOTE preSelectedPlan is used in a useEffect
     });
     const [usernameError, setUsernameError] = useState<string>('');
-    const hasPaidPlan = Object.keys(model.planIDs).length;
+    const hasPaidPlan = ({ planIDs = {} } = {}) => !!Object.keys(planIDs).length;
 
     const handlePayPal = () => {
         // TODO
@@ -203,14 +203,12 @@ const SignupContainer = ({ onLogin, history }: Props) => {
         await humanApi(queryVerificationCode('email', { Address: model.email }));
     };
 
-    const handleSubmit = async (data?: FormEvent<HTMLFormElement>) => {
-        if (data) {
-            data.preventDefault();
-        }
+    const handleSubmit = async (currentModel = model) => {
+        const isBuyingPaidPlan = hasPaidPlan(currentModel);
 
-        if (model.step === ACCOUNT_CREATION_USERNAME) {
+        if (currentModel.step === ACCOUNT_CREATION_USERNAME) {
             try {
-                await humanApi(queryCheckUsernameAvailability(model.username));
+                await humanApi(queryCheckUsernameAvailability(currentModel.username));
                 goToStep(RECOVERY_EMAIL);
             } catch (error) {
                 setUsernameError(error.data ? error.data.Error : c('Error').t`Can't check username, try again later`);
@@ -218,14 +216,14 @@ const SignupContainer = ({ onLogin, history }: Props) => {
             return;
         }
 
-        if (model.step === ACCOUNT_CREATION_EMAIL) {
-            await humanApi(queryVerificationCode('email', { Address: model.email }));
+        if (currentModel.step === ACCOUNT_CREATION_EMAIL) {
+            await humanApi(queryVerificationCode('email', { Address: currentModel.email }));
             goToStep(VERIFICATION_CODE);
             return;
         }
 
-        if (model.step === RECOVERY_EMAIL) {
-            if (hasPaidPlan) {
+        if (currentModel.step === RECOVERY_EMAIL) {
+            if (isBuyingPaidPlan) {
                 goToStep(PAYMENT);
                 return;
             }
@@ -233,8 +231,8 @@ const SignupContainer = ({ onLogin, history }: Props) => {
             return;
         }
 
-        if (model.step === RECOVERY_PHONE) {
-            if (hasPaidPlan) {
+        if (currentModel.step === RECOVERY_PHONE) {
+            if (isBuyingPaidPlan) {
                 goToStep(PAYMENT);
                 return;
             }
@@ -242,8 +240,8 @@ const SignupContainer = ({ onLogin, history }: Props) => {
             return;
         }
 
-        if (model.step === VERIFICATION_CODE) {
-            const verificationToken = `${model.email}:${model.verificationCode}`;
+        if (currentModel.step === VERIFICATION_CODE) {
+            const verificationToken = `${currentModel.email}:${currentModel.verificationCode}`;
             const verificationTokenType = TOKEN_TYPES.EMAIL;
             try {
                 await humanApi(queryCheckVerificationCode(verificationToken, verificationTokenType, CLIENT_TYPE));
@@ -254,7 +252,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                         request={c('Action').t`Request new code`}
                         onEdit={() => {
                             updateModel({
-                                ...model,
+                                ...currentModel,
                                 step: ACCOUNT_CREATION_EMAIL,
                                 verificationCode: ''
                             });
@@ -262,16 +260,16 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                         onResend={() => {
                             withLoading(handleResend());
                             updateModel({
-                                ...model,
+                                ...currentModel,
                                 verificationCode: ''
                             });
                         }}
                     />
                 );
             }
-            if (hasPaidPlan) {
+            if (isBuyingPaidPlan) {
                 updateModel({
-                    ...model,
+                    ...currentModel,
                     step: PAYMENT,
                     verificationToken,
                     verificationTokenType
@@ -279,7 +277,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                 return;
             }
             updateModel({
-                ...model,
+                ...currentModel,
                 step: PLANS,
                 verificationToken,
                 verificationTokenType
@@ -287,45 +285,45 @@ const SignupContainer = ({ onLogin, history }: Props) => {
             return;
         }
 
-        if (model.step === PLANS || model.step === HUMAN_VERIFICATION || model.step === PAYMENT) {
+        if (currentModel.step === PLANS || currentModel.step === HUMAN_VERIFICATION || currentModel.step === PAYMENT) {
             const addresses = [];
 
-            if (hasPaidPlan && !model.paymentToken) {
+            if (isBuyingPaidPlan && !currentModel.paymentToken) {
                 goToStep(PAYMENT);
                 return;
             }
 
-            if (hasPaidPlan) {
+            if (isBuyingPaidPlan) {
                 const { Payment } = await handlePaymentToken({
                     params: {
                         ...paymentParameters,
                         Amount: checkResult.AmountDue,
-                        Currency: model.currency
+                        Currency: currentModel.currency
                     },
                     api,
                     createModal,
                     mode: ''
                 });
                 updateModel({
-                    ...model,
+                    ...currentModel,
                     paymentToken: Payment ? Payment.Details.Token : '',
                     paymentTokenType: TOKEN_TYPES.PAYMENT
                 });
             }
 
-            if (model.username) {
+            if (currentModel.username) {
                 try {
                     await srpVerify({
                         api: humanApi,
-                        credentials: { password: model.password },
+                        credentials: { password: currentModel.password },
                         config: {
                             ...queryCreateUser({
-                                Token: model.paymentToken,
-                                TokenType: model.paymentTokenType,
+                                Token: currentModel.paymentToken,
+                                TokenType: currentModel.paymentTokenType,
                                 Type: CLIENT_TYPE,
-                                Email: model.recoveryEmail,
-                                Username: model.username,
-                                Payload: model.payload
+                                Email: currentModel.recoveryEmail,
+                                Username: currentModel.username,
+                                Payload: currentModel.payload
                             }),
                             silence: [API_CUSTOM_ERROR_CODES.HUMAN_VERIFICATION_REQUIRED],
                             noHandling: [API_CUSTOM_ERROR_CODES.HUMAN_VERIFICATION_REQUIRED]
@@ -337,7 +335,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
 
                     if (Code === API_CUSTOM_ERROR_CODES.HUMAN_VERIFICATION_REQUIRED) {
                         updateModel({
-                            ...model,
+                            ...currentModel,
                             humanVerificationMethods: HumanVerificationMethods,
                             humanVerificationToken: HumanVerificationToken,
                             step: HUMAN_VERIFICATION
@@ -347,36 +345,36 @@ const SignupContainer = ({ onLogin, history }: Props) => {
 
                     throw error;
                 }
-            } else if (model.email) {
+            } else if (currentModel.email) {
                 await srpVerify({
                     api,
-                    credentials: { password: model.password },
+                    credentials: { password: currentModel.password },
                     config: queryCreateUserExternal({
-                        Token: model.paymentToken,
-                        TokenType: model.paymentTokenType,
+                        Token: currentModel.paymentToken,
+                        TokenType: currentModel.paymentTokenType,
                         Type: CLIENT_TYPE,
-                        Email: model.email,
-                        Payload: model.payload
+                        Email: currentModel.email,
+                        Payload: currentModel.payload
                     })
                 });
             }
 
             const { UID, EventID, AccessToken, RefreshToken } = await srpAuth({
                 api,
-                credentials: { username: model.username, password: model.password },
-                config: auth({ Username: model.username })
+                credentials: { username: currentModel.username, password: currentModel.password },
+                config: auth({ Username: currentModel.username })
             });
 
-            if (hasPaidPlan) {
+            if (isBuyingPaidPlan) {
                 await api(
                     withAuthHeaders(
                         UID,
                         AccessToken,
                         subscribe({
-                            PlanIDs: model.planIDs,
+                            PlanIDs: currentModel.planIDs,
                             Amount: 0, // Paid before subscription
-                            Currency: model.currency,
-                            Cycle: model.cycle
+                            Currency: currentModel.currency,
+                            Cycle: currentModel.cycle
                             // TODO add coupon code
                         })
                     )
@@ -387,24 +385,24 @@ const SignupContainer = ({ onLogin, history }: Props) => {
             await onLogin({ UID, EventID });
 
             // Create address
-            if (model.username) {
-                const [domain = ''] = model.domains;
+            if (currentModel.username) {
+                const [domain = ''] = currentModel.domains;
                 const { Address }: { Address: Address } = await api(
                     setupAddress({
                         Domain: domain,
-                        DisplayName: model.username,
+                        DisplayName: currentModel.username,
                         Signature: ''
                     })
                 );
                 addresses.push(Address);
-            } else if (model.email) {
+            } else if (currentModel.email) {
                 const { Addresses = [] }: { Addresses: Address[] } = await api(queryAddresses());
                 addresses.push(...Addresses);
             }
 
             // Generate keys
             if (addresses.length) {
-                const { passphrase, salt } = await generateKeySaltAndPassphrase(model.password);
+                const { passphrase, salt } = await generateKeySaltAndPassphrase(currentModel.password);
                 const newAddressesKeys = await getResetAddressesKeys({
                     addresses,
                     passphrase,
@@ -414,7 +412,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                 const [primaryAddress] = newAddressesKeys;
                 await srpVerify({
                     api,
-                    credentials: { password: model.password },
+                    credentials: { password: currentModel.password },
                     config: {
                         ...setupKeys({
                             KeySalt: salt,
@@ -431,11 +429,9 @@ const SignupContainer = ({ onLogin, history }: Props) => {
     const handleSelectPlan = async (planID: string) => {
         if (!planID) {
             // Select free plan
-            updateModel({
-                ...model,
-                planIDs: {}
-            });
-            return handleSubmit();
+            const newModel = { ...model, planIDs: {} };
+            updateModel(newModel);
+            return handleSubmit(newModel);
         }
 
         const plan = plans.find(({ ID }: SignupPlan) => ID === planID);
@@ -501,7 +497,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
             setCheckResult(result);
         };
 
-        if (hasPaidPlan) {
+        if (hasPaidPlan(model)) {
             withLoading(check());
         }
     }, [model.cycle, model.planIDs]);
@@ -530,7 +526,10 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                     model={model}
                     errors={errors}
                     onChange={updateModel}
-                    onSubmit={(e) => withLoading(handleSubmit(e))}
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        withLoading(handleSubmit());
+                    }}
                     loading={loading}
                 />
             )}
@@ -540,7 +539,10 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                     model={model}
                     errors={errors}
                     onChange={updateModel}
-                    onSubmit={(e) => withLoading(handleSubmit(e))}
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        withLoading(handleSubmit());
+                    }}
                     loading={loading}
                 />
             )}
@@ -549,7 +551,10 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                     model={model}
                     errors={errors}
                     onChange={updateModel}
-                    onSubmit={(e) => withLoading(handleSubmit(e))}
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        withLoading(handleSubmit());
+                    }}
                     loading={loading}
                 />
             )}
@@ -558,7 +563,10 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                     model={model}
                     errors={errors}
                     onChange={updateModel}
-                    onSubmit={(e) => withLoading(handleSubmit(e))}
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        withLoading(handleSubmit());
+                    }}
                     loading={loading}
                 />
             )}
@@ -567,7 +575,10 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                     model={model}
                     errors={errors}
                     onChange={updateModel}
-                    onSubmit={(e) => withLoading(handleSubmit(e))}
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        withLoading(handleSubmit());
+                    }}
                     onResend={() => withLoading(handleResend())}
                     loading={loading}
                 />
