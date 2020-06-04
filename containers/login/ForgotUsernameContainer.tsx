@@ -26,7 +26,7 @@ const ForgotUsernameContainer = ({ history }: Props) => {
     };
 
     const handleBack = () => {
-        history.goBack();
+        history.push('/login');
     };
 
     return (
