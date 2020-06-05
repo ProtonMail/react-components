@@ -86,15 +86,15 @@ const ContactSummary = ({ properties, handleEdit, handleDelete, handleExport, le
                 </div>
             </div>
             <div className="flex-item-noshrink pt0-5 onmobile-aligncenter">
-                <Button onClick={handleExport} className="ml0-5 pm-button--for-icon">
-                    <Tooltip title={c('Action').t`Export`}>
-                        <Icon name="export" />
-                    </Tooltip>
-                </Button>
-
                 <Button onClick={() => handleEdit()} className="ml0-5 pm-button--for-icon">
                     <Tooltip title={c('Action').t`Edit`} className="color-primary">
                         <Icon name="pen" />
+                    </Tooltip>
+                </Button>
+
+                <Button onClick={handleExport} className="ml0-5 pm-button--for-icon">
+                    <Tooltip title={c('Action').t`Export`}>
+                        <Icon name="export" />
                     </Tooltip>
                 </Button>
 
