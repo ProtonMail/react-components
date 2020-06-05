@@ -16,12 +16,13 @@ interface Props {
 
 const SignupVerificationCodeForm = ({ model, onChange, onSubmit, onResend, errors, loading }: Props) => {
     const disableSubmit = !!errors.verificationCode;
+    const destinationBold = <strong key="destination">{model.email}</strong>;
     return (
         <form name="humanForm" onSubmit={onSubmit}>
             <div className="strong mb1">{c('Title').t`Human verification`}</div>
             <Alert>{c('Info').t`For security reasons, please verify that your are not a robot.`}</Alert>
             <label htmlFor="verification-code">{c('Label')
-                .t`Enter the verification code that was sent to ${model.email}. If you don't find the email in your inbox, please check your spam folder`}</label>
+                .jt`Enter the verification code that was sent to ${destinationBold}. If you don't find the email in your inbox, please check your spam folder`}</label>
             <div className="mb1">
                 <VerificationCodeInput
                     id="verification-code"
