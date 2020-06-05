@@ -21,17 +21,19 @@ interface Props {
 const clean = normalize();
 
 const lint = (text = '') => {
-    if (text.trim() === '') {
-        const [line = ''] = text.split('\n');
-        return [
-            {
-                message: 'A sieve script cannot be empty',
-                severity: 'error',
-                from: codemirror.Pos(0, 0),
-                to: codemirror.Pos(0, line.length)
-            }
-        ];
-    }
+    /* Remove empty line error: https://jira.protontech.ch/browse/MAILWEB-315 */
+
+    // if (text.trim() === '') {
+    //     const [line = ''] = text.split('\n');
+    //     return [
+    //         {
+    //             message: 'A sieve script cannot be empty',
+    //             severity: 'error',
+    //             from: codemirror.Pos(0, 0),
+    //             to: codemirror.Pos(0, line.length)
+    //         }
+    //     ];
+    // }
 
     const lint = codemirror._uglyGlobal;
     return lint ? lint(clean(text)) : [];
