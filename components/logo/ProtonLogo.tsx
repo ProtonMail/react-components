@@ -1,7 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
-const ProtonLogo = ({ className = 'fill-currentColor' }) => {
+interface Props {
+    className?: string;
+}
+const ProtonLogo = ({ className = 'fill-currentColor' }: Props) => {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -18,10 +20,6 @@ const ProtonLogo = ({ className = 'fill-currentColor' }) => {
             <title id="protonLogo__title">Proton</title>
         </svg>
     );
-};
-
-ProtonLogo.propTypes = {
-    className: PropTypes.string
 };
 
 export default ProtonLogo;
