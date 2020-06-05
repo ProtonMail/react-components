@@ -1,15 +1,31 @@
 import React, { Ref } from 'react';
 import { c } from 'ttag';
-import { Icon, DropdownCaret, classnames } from '../../';
+
+import { classnames, Icon, DropdownCaret } from '../../';
 
 interface Props extends React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
-    content?: string;
+    children?: React.ReactNode;
     className?: string;
     isOpen?: boolean;
+    noCaret?: boolean;
     buttonRef?: Ref<HTMLButtonElement>;
 }
 
-const SupportDropdownButton = ({ content = c('Header').t`Support`, className, isOpen, buttonRef, ...rest }: Props) => {
+const defaultChildren = (
+    <>
+        <Icon name="support1" className="flex-item-noshrink mr0-5 flex-item-centered-vert" />
+        <span>{c('Action').t`Support`}</span>
+    </>
+);
+
+const SupportDropdownButton = ({
+    children = defaultChildren,
+    className,
+    isOpen,
+    noCaret = false,
+    buttonRef,
+    ...rest
+}: Props) => {
     return (
         <button
             type="button"
@@ -18,9 +34,8 @@ const SupportDropdownButton = ({ content = c('Header').t`Support`, className, is
             ref={buttonRef}
             {...rest}
         >
-            <Icon name="support1" className="flex-item-noshrink topnav-icon mr0-5 flex-item-centered-vert" />
-            <span className="navigation-title topnav-linkText mr0-5">{content}</span>
-            <DropdownCaret isOpen={isOpen} className="expand-caret topnav-icon mtauto mbauto" />
+            {children}
+            {noCaret ? null : <DropdownCaret isOpen={isOpen} className="ml0-5 expand-caret mtauto mbauto" />}
         </button>
     );
 };

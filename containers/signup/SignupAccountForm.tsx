@@ -78,7 +78,7 @@ const SignupAccountForm = ({ history, model, onChange, onSubmit, errors, loading
                 <div className="mb1">{c('Info').t`to continue to ${SERVICES[service]}`}</div>
             ) : null}
             {model.step === ACCOUNT_CREATION_USERNAME ? (
-                <div className="flex onmobile-flex-column mb1">
+                <div className="flex onmobile-flex-column signup-label-field-container mb1">
                     <Label htmlFor="login">{c('Signup label').t`Username`}</Label>
                     <div className="flex-item-fluid">
                         <Challenge challengeRef={challengeRefLogin} type="0">
@@ -115,7 +115,7 @@ const SignupAccountForm = ({ history, model, onChange, onSubmit, errors, loading
                 </div>
             ) : null}
             {model.step === ACCOUNT_CREATION_EMAIL ? (
-                <div className="flex onmobile-flex-column mb1">
+                <div className="flex onmobile-flex-column signup-label-field-container mb1">
                     <Label htmlFor="login">{c('Signup label').t`Email`}</Label>
                     <div className="flex-item-fluid">
                         <Challenge challengeRef={challengeRefLogin} type="0">
@@ -147,7 +147,7 @@ const SignupAccountForm = ({ history, model, onChange, onSubmit, errors, loading
                     </div>
                 </div>
             ) : null}
-            <div className="flex onmobile-flex-column mb0-5">
+            <div className="flex onmobile-flex-column signup-label-field-container mb0-5">
                 <Label htmlFor="password">{c('Signup label').t`Password`}</Label>
                 <div className="flex-item-fluid">
                     <PasswordInput
@@ -165,7 +165,7 @@ const SignupAccountForm = ({ history, model, onChange, onSubmit, errors, loading
                     />
                 </div>
             </div>
-            <div className="flex onmobile-flex-column mb2">
+            <div className="flex onmobile-flex-column signup-label-field-container mb2">
                 <Label htmlFor="password-repeat">{c('Signup label').t`Confirm password`}</Label>
                 <div className="flex-item-fluid">
                     <PasswordInput
