@@ -22,7 +22,10 @@ const ResetPasswordContainer = ({ onLogin, history }: Props) => {
             title={c('Title').t`Reset password`}
             left={<BackButton onClick={handleBack} />}
             center={<ProtonLogo />}
-            right={<SupportDropdown className="link" content={c('Action').t`Need help?`} />}
+            right={
+                <SupportDropdown noCaret={true} className="link" content={c('Action').t`Need help?`}>{c('Action')
+                    .t`Need help?`}</SupportDropdown>
+            }
         >
             <ResetPasswordForm onLogin={onLogin} />
         </SignLayout>
