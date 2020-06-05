@@ -1,6 +1,14 @@
 import React, { useState, FormEvent, useMemo, useEffect } from 'react';
 import { c } from 'ttag';
-import { FormModal, useLoading, useApi, useFilters, useMailSettings, useDebounceInput } from 'react-components';
+import {
+    FormModal,
+    useLoading,
+    useApi,
+    useFilters,
+    useActiveBreakpoint,
+    useMailSettings,
+    useDebounceInput
+} from 'react-components';
 import { FILTER_VERSION } from 'proton-shared/lib/constants';
 import { normalize } from 'proton-shared/lib/helpers/string';
 import { checkSieveFilter } from 'proton-shared/lib/api/filters';
@@ -18,6 +26,7 @@ interface Props {
 }
 
 const AdvancedFilterModal = ({ filter, ...rest }: Props) => {
+    const { isNarrow } = useActiveBreakpoint();
     const [loading, withLoading] = useLoading();
     const [filters = []] = useFilters();
     const [mailSettings] = useMailSettings();
@@ -48,7 +57,8 @@ const AdvancedFilterModal = ({ filter, ...rest }: Props) => {
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        await api(); // TODO
+        // @todo submit once everything is ok
+        // await api();
     };
 
     const checkSieve = async () => {
@@ -84,7 +94,9 @@ const AdvancedFilterModal = ({ filter, ...rest }: Props) => {
             {...rest}
         >
             <HeaderAdvancedFilterModal model={model} errors={errors} onChange={setModel} />
-            {model.step === Step.NAME ? <FilterNameForm model={model} onChange={setModel} errors={errors} /> : null}
+            {model.step === Step.NAME ? (
+                <FilterNameForm model={model} onChange={setModel} isNarrow={isNarrow} errors={errors} />
+            ) : null}
             {model.step === Step.SIEVE ? (
                 <SieveForm model={model} onChange={setModel} errors={errors} mailSettings={mailSettings} />
             ) : null}

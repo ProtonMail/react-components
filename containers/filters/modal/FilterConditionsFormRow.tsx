@@ -243,10 +243,7 @@ const FilterConditionsRow = ({
                 {displayDelete && (
                     <div>
                         <Button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                handleDelete(conditionIndex);
-                            }}
+                            onClick={() => handleDelete(conditionIndex)}
                             className={classnames(['pm-button--for-icon', isNarrow ? 'mt1' : 'ml1'])}
                         >
                             <Tooltip title={c('Action').t`Delete`} className="color-global-warning">

@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { c } from 'ttag';
 
-import { classnames, Toggle } from 'react-components';
+import { classnames, Toggle, SimpleSquireEditor } from 'react-components';
 
+import { SquireEditorRef } from '../../../components/editor/SquireEditor';
 import { Actions } from './interfaces';
 
 interface Props {
@@ -12,7 +13,21 @@ interface Props {
 }
 
 const FilterActionsFormAutoReplyRow = ({ isNarrow, actions, handleUpdateActions }: Props) => {
+    const editorRef = useRef<SquireEditorRef>(null);
     const { autoReply } = actions;
+    const [editorVisible, setEditorVisible] = useState(false);
+    const [editorValue, setEditorValue] = useState(autoReply);
+
+    const handleReady = () => {
+        if (editorRef.current) {
+            editorRef.current.value = editorValue;
+            editorRef.current.focus();
+        }
+    };
+
+    useEffect(() => {
+        handleUpdateActions({ autoReply: editorVisible ? editorValue : '' });
+    }, [editorVisible]);
 
     return (
         <div className="flex flex-nowrap onmobile-flex-column align-items-center pt1 pb1">
@@ -22,23 +37,21 @@ const FilterActionsFormAutoReplyRow = ({ isNarrow, actions, handleUpdateActions 
             <div className="ml0-5 flex flex-column flex-item-fluid">
                 <Toggle
                     id="autoReply"
-                    checked={autoReply}
+                    checked={editorVisible}
                     onChange={() => {
-                        handleUpdateActions({ autoReply: !autoReply });
+                        setEditorVisible((editorVisible) => !editorVisible);
                     }}
                 />
-                {autoReply && (
-                    <div
-                        className="mt1 w100"
-                        style={{
-                            height: 300,
-                            background: 'pink',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center'
-                        }}
-                    >
-                        Coucou le Squire Editor
+                {editorVisible && (
+                    <div className="w100 mt1">
+                        <SimpleSquireEditor
+                            ref={editorRef}
+                            onReady={handleReady}
+                            onChange={(value: string) => {
+                                setEditorValue(value);
+                                handleUpdateActions({ autoReply: value });
+                            }}
+                        />
                     </div>
                 )}
             </div>

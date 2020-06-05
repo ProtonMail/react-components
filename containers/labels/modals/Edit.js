@@ -9,7 +9,7 @@ import { noop } from 'proton-shared/lib/helpers/function';
 
 import NewLabelForm from '../NewLabelForm';
 
-function EditLabelModal({ label, mode = 'create', onEdit = noop, onAdd = noop, type = 'label', ...props }) {
+function EditLabelModal({ label = null, mode = 'create', onEdit = noop, onAdd = noop, type = 'label', ...props }) {
     const { call } = useEventManager();
     const { createNotification } = useNotifications();
     const api = useApi();

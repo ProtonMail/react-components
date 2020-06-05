@@ -9,7 +9,6 @@ import FilterActionsFormLabelsRow from './FilterActionsFormLabelsRow';
 import FilterActionsFormFoldersRow from './FilterActionsFormFolderRow';
 import FilterActionsFormMarkAsRow from './FilterActionsFormMarkAsRow';
 import FilterActionsFormAutoReplyRow from './FilterActionsFormAutoReplyRow';
-import FilterActionsFormProcessingRow from './FilterActionsFormProcessingRow';
 
 interface Props {
     labels: Label[];
@@ -50,12 +49,6 @@ const FilterActionsForm = ({ isNarrow, labels, folders, model, onChange }: Props
             <FilterActionsFormMarkAsRow actions={actions} handleUpdateActions={onUpdateActions} isNarrow={isNarrow} />
 
             <FilterActionsFormAutoReplyRow
-                actions={actions}
-                handleUpdateActions={onUpdateActions}
-                isNarrow={isNarrow}
-            />
-
-            <FilterActionsFormProcessingRow
                 actions={actions}
                 handleUpdateActions={onUpdateActions}
                 isNarrow={isNarrow}

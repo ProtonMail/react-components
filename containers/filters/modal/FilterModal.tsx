@@ -45,9 +45,9 @@ const checkConditionsErrors = (conditions: Condition[]) => {
 };
 
 const checkActionsErrors = (actions: Actions) => {
-    const { labelAs, markAs, moveTo, autoReply, stopProcessing } = actions;
+    const { labelAs, markAs, moveTo, autoReply } = actions;
 
-    if (!labelAs.labels.length && !moveTo.folder && !markAs.read && !markAs.starred && !autoReply && !stopProcessing) {
+    if (!labelAs.labels.length && !moveTo.folder && !markAs.read && !markAs.starred && !autoReply) {
         return c('Error').t`Require at least one action`;
     }
     return '';
@@ -78,8 +78,7 @@ const FilterModal = ({ filter, ...rest }: Props) => {
                 starred: false,
                 isOpen: true
             },
-            autoReply: false,
-            stopProcessing: false
+            autoReply: ''
         }
     });
     const title = filter?.ID ? c('Title').t`Edit filter` : c('Title').t`Add filter`;

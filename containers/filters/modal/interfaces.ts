@@ -45,8 +45,7 @@ export interface Actions {
         starred: boolean;
         isOpen: boolean;
     };
-    autoReply: boolean;
-    stopProcessing: boolean;
+    autoReply: string;
     error?: string;
 }
 

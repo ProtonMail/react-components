@@ -1,7 +1,7 @@
 import React from 'react';
 import { c } from 'ttag';
 
-import { classnames, Icon } from 'react-components';
+import { Checkbox, Button, Tooltip, classnames, Icon } from 'react-components';
 
 import { Actions } from './interfaces';
 
@@ -11,17 +11,31 @@ interface Props {
     handleUpdateActions: (onUpdateActions: Partial<Actions>) => void;
 }
 
+type ChangePayload = {
+    read: boolean;
+    starred: boolean;
+    isOpen: boolean;
+};
+
 const FilterActionsFormMarkAsRow = ({ isNarrow, actions, handleUpdateActions }: Props) => {
     const { markAs } = actions;
     const { isOpen } = markAs;
 
-    const toggleSection = () => {
+    const handleChangeModel = (payload: Partial<ChangePayload>) => {
         handleUpdateActions({
             markAs: {
                 ...actions.markAs,
-                isOpen: !isOpen
+                ...payload
             }
         });
+    };
+
+    const toggleSection = () => {
+        handleChangeModel({ isOpen: !isOpen });
+    };
+
+    const handleClear = () => {
+        handleChangeModel({ starred: false, read: false });
     };
 
     const renderClosed = () => {
@@ -29,8 +43,22 @@ const FilterActionsFormMarkAsRow = ({ isNarrow, actions, handleUpdateActions }: 
             return <em className="ml0-5 pt0-5 color-global-altgrey">{c('Info').t`No action selected`}</em>;
         }
 
-        // @todo show selected
-        return <span className="ml0-5 pt0-5">{`whatever`}</span>;
+        return (
+            <div className="ml0-5 pt0-5">
+                {markAs?.read && (
+                    <span className="inline-flex flex-items-center mr2">
+                        <Icon name="read" className="mr0-5" />
+                        {c('Label').t`Read`}
+                    </span>
+                )}
+                {markAs?.starred && (
+                    <span className="inline-flex flex-items-center">
+                        <Icon name="star" className="mr0-5" />
+                        {c('Label').t`Starred`}
+                    </span>
+                )}
+            </div>
+        );
     };
 
     return (
@@ -49,21 +77,41 @@ const FilterActionsFormMarkAsRow = ({ isNarrow, actions, handleUpdateActions }: 
             </div>
             <div className="ml0-5 flex flex-column flex-item-fluid">
                 {isOpen ? (
-                    <div
-                        className="w100"
-                        style={{
-                            height: 100,
-                            background: 'pink',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center'
-                        }}
-                    >
-                        Coucou
+                    <div className="w100 pt0-5 pb0-5">
+                        <Checkbox
+                            checked={markAs.read}
+                            onChange={(e) => {
+                                handleChangeModel({ read: e.target.checked });
+                            }}
+                            labelOnClick={(e) => e.stopPropagation()}
+                        >
+                            <span className="ml0-5">{c('Label').t`Read`}</span>
+                        </Checkbox>
+                        <Checkbox
+                            className="ml2"
+                            checked={markAs.starred}
+                            onChange={(e) => {
+                                handleChangeModel({ starred: e.target.checked });
+                            }}
+                            labelOnClick={(e) => e.stopPropagation()}
+                        >
+                            <span className="ml0-5">{c('Label').t`Starred`}</span>
+                        </Checkbox>
                     </div>
                 ) : (
                     renderClosed()
                 )}
+            </div>
+            <div>
+                <Button
+                    disabled={!markAs?.read && !markAs?.starred}
+                    onClick={handleClear}
+                    className={classnames(['pm-button--for-icon', isNarrow ? 'mt1' : 'ml1'])}
+                >
+                    <Tooltip title={c('Action').t`Reset`} className="color-global-altgrey">
+                        <Icon name="remove-text-formatting" />
+                    </Tooltip>
+                </Button>
             </div>
         </div>
     );
