@@ -242,10 +242,10 @@ const SignupContainer = ({ onLogin, history }: Props) => {
         }
 
         if (currentModel.step === VERIFICATION_CODE) {
-            const verificationToken = `${currentModel.email}:${currentModel.verificationCode}`;
-            const verificationTokenType = TOKEN_TYPES.EMAIL;
+            const emailToken = `${currentModel.email}:${currentModel.verificationCode}`;
+            const tokenType = TOKEN_TYPES.EMAIL;
             try {
-                await humanApi(queryCheckVerificationCode(verificationToken, verificationTokenType, CLIENT_TYPE));
+                await humanApi(queryCheckVerificationCode(emailToken, tokenType, CLIENT_TYPE));
             } catch (error) {
                 return createModal(
                     <InvalidVerificationCodeModal
@@ -272,16 +272,14 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                 updateModel({
                     ...currentModel,
                     step: PAYMENT,
-                    verificationToken,
-                    verificationTokenType
+                    emailToken
                 });
                 return;
             }
             updateModel({
                 ...currentModel,
                 step: PLANS,
-                verificationToken,
-                verificationTokenType
+                emailToken
             });
             return;
         }
@@ -289,7 +287,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
         if (currentModel.step === PLANS || currentModel.step === HUMAN_VERIFICATION || currentModel.step === PAYMENT) {
             const addresses = [];
 
-            if (isBuyingPaidPlan && !currentModel.paymentToken) {
+            if (isBuyingPaidPlan && !currentModel.hasPaymentToken) {
                 goToStep(PAYMENT);
                 return;
             }
@@ -307,8 +305,9 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                 });
                 updateModel({
                     ...currentModel,
-                    paymentToken: Payment ? Payment.Details.Token : '',
-                    paymentTokenType: TOKEN_TYPES.PAYMENT
+                    verificationToken: Payment ? Payment.Details.Token : '',
+                    verificationTokenType: TOKEN_TYPES.PAYMENT,
+                    hasPaymentToken: true
                 });
             }
 
@@ -319,8 +318,6 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                         credentials: { password: currentModel.password },
                         config: {
                             ...queryCreateUser({
-                                Token: currentModel.paymentToken,
-                                TokenType: currentModel.paymentTokenType,
                                 Type: CLIENT_TYPE,
                                 Email: currentModel.recoveryEmail,
                                 Username: currentModel.username,
@@ -348,11 +345,11 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                 }
             } else if (currentModel.email) {
                 await srpVerify({
-                    api,
+                    api: humanApi,
                     credentials: { password: currentModel.password },
                     config: queryCreateUserExternal({
-                        Token: currentModel.paymentToken,
-                        TokenType: currentModel.paymentTokenType,
+                        Token: currentModel.emailToken,
+                        TokenType: TOKEN_TYPES.EMAIL,
                         Type: CLIENT_TYPE,
                         Email: currentModel.email,
                         Payload: currentModel.payload
