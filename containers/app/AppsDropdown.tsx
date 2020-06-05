@@ -5,8 +5,6 @@ import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 import { FEATURE_FLAGS } from 'proton-shared/lib/constants';
 import humanSize from 'proton-shared/lib/helpers/humanSize';
 
-import './AppsDropdown.scss';
-
 import { useUser } from '../../hooks/useUser';
 import useConfig from '../config/useConfig';
 import Link from '../../components/link/Link';
