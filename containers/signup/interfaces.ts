@@ -42,9 +42,9 @@ export interface SignupModel {
     humanVerificationToken: string;
     verificationToken?: string;
     verificationTokenType?: TOKEN_TYPES;
-    paymentToken?: string;
-    paymentTokenType?: TOKEN_TYPES;
+    emailToken?: string;
     payload?: Payload;
+    hasPaymentToken: boolean;
 }
 
 export interface SignupErros {
