@@ -23,7 +23,11 @@ export const useIndicator = (tabs: { ref: RefObject<HTMLLIElement> }[], currentT
 
     // on each route change, recalculate indicator offset and scale
     React.useEffect(() => {
-        const tabProperties = tabs.map(({ ref }) => ({ ref, width: getWidth(ref), margin: ref.current ? getComputedMargin(ref.current) : 0 }));
+        const tabProperties = tabs.map(({ ref }) => ({
+            ref,
+            width: getWidth(ref),
+            margin: ref.current ? getComputedMargin(ref.current) : 0
+        }));
         const totalTabWidth = tabProperties.reduce((acc, { width, margin }) => acc + width + margin, 0);
 
         if (totalTabWidth > getWidth(tabsRef)) {
