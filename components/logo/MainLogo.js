@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { APPS, PLAN_SERVICES, CLIENT_TYPES } from 'proton-shared/lib/constants';
 import { getPlanName, hasLifetime } from 'proton-shared/lib/helpers/subscription';
 
+import AccountLogo from './AccountLogo';
 import CalendarLogo from './CalendarLogo';
 import ContactsLogo from './ContactsLogo';
 import DriveLogo from './DriveLogo';
@@ -14,7 +15,15 @@ import VpnLogo from './VpnLogo';
 import { classnames } from '../../helpers/component';
 
 const { MAIL, VPN } = PLAN_SERVICES;
-const { PROTONMAIL, PROTONCONTACTS, PROTONDRIVE, PROTONCALENDAR, PROTONVPN_SETTINGS, PROTONMAIL_SETTINGS } = APPS;
+const {
+    PROTONACCOUNT,
+    PROTONCALENDAR,
+    PROTONCONTACTS,
+    PROTONDRIVE,
+    PROTONMAIL,
+    PROTONMAIL_SETTINGS,
+    PROTONVPN_SETTINGS
+} = APPS;
 
 /**
  * MainLogo component
@@ -48,6 +57,9 @@ const MainLogo = ({ url = '/inbox', external = false, className = '' }) => {
         }
         if (APP_NAME === PROTONDRIVE) {
             return <DriveLogo />;
+        }
+        if (APP_NAME === PROTONACCOUNT) {
+            return <AccountLogo />;
         }
         return null;
     })();
