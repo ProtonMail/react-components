@@ -14,7 +14,10 @@ import Meter from '../../components/progress/Meter';
 
 const { PROTONMAIL, PROTONCONTACTS, PROTONMAIL_SETTINGS, PROTONCALENDAR, PROTONDRIVE } = APPS;
 
-const AppsDropdown = () => {
+interface Props {
+    hasStorage?: boolean;
+}
+const AppsDropdown = ({ hasStorage = true }: Props) => {
     const [user] = useUser();
     const { APP_NAME } = useConfig();
     const { UsedSpace, MaxSpace } = user;
@@ -66,24 +69,26 @@ const AppsDropdown = () => {
                         </li>
                     );
                 })}
-                <li className="dropDown-item appsDropdown-item">
-                    <Link
-                        to="/account"
-                        target="_blank"
-                        external={true}
-                        className="appsDropdown-link big m0 bl p1 pt0-75 pb0-25"
-                        title={c('Apps dropdown').t`Your account`}
-                    >
-                        <span className="flex flex-nowrap flex-items-center">
-                            <Icon name="account" size={20} className="mr0-5" />
-                            <span>{c('Apps dropdown').t`Account`}</span>
-                        </span>
-                        <div className="ml1-5">
-                            <Meter className="is-thin bl mt0-25" value={spacePercentage} />
-                            <div className="smaller m0 opacity-50">{spaceHuman}</div>
-                        </div>
-                    </Link>
-                </li>
+                {hasStorage && (
+                    <li className="dropDown-item appsDropdown-item">
+                        <Link
+                            to="/account"
+                            target="_blank"
+                            external={true}
+                            className="appsDropdown-link big m0 bl p1 pt0-75 pb0-25"
+                            title={c('Apps dropdown').t`Your account`}
+                        >
+                            <span className="flex flex-nowrap flex-items-center">
+                                <Icon name="account" size={20} className="mr0-5" />
+                                <span>{c('Apps dropdown').t`Account`}</span>
+                            </span>
+                            <div className="ml1-5">
+                                <Meter className="is-thin bl mt0-25" value={spacePercentage} />
+                                <div className="smaller m0 opacity-50">{spaceHuman}</div>
+                            </div>
+                        </Link>
+                    </li>
+                )}
             </ul>
         </SimpleDropdown>
     );
