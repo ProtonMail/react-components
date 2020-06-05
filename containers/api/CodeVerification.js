@@ -200,7 +200,7 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
                                 />
                             )
                         }
-                    >{c('Action').t`Didn't get the code?`}</InlineLinkButton>
+                    >{c('Action').t`Did not receive the code?`}</InlineLinkButton>
                 </div>
                 <div>
                     <InlineLinkButton onClick={editDestination}>
