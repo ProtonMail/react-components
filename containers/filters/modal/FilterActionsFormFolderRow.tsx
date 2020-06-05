@@ -95,9 +95,7 @@ const FilterActionsFormFolderRow = ({ folders, isNarrow, actions, handleUpdateAc
     };
 
     const handleClear = () => {
-        handleChangeModel({
-            folder: undefined
-        });
+        handleChangeModel({ folder: undefined });
     };
 
     const renderClosed = () => {

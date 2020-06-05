@@ -39,9 +39,7 @@ const FilterActionsFormLabelsRow = ({ actions, isNarrow, handleUpdateActions, la
     };
 
     const handleClear = () => {
-        handleChangeModel({
-            labels: []
-        });
+        handleChangeModel({ labels: [] });
     };
 
     const renderClosed = () => {
@@ -56,7 +54,7 @@ const FilterActionsFormLabelsRow = ({ actions, isNarrow, handleUpdateActions, la
 
                     return (
                         <span
-                            className="ml0-5 mr0-5 mb0-5 badgeLabel flex flex-row flex-items-center"
+                            className="ml0-5 mr0-5 mb0-5 badgeLabel flex flex-row flex-items-center ellipsis"
                             role="listitem"
                             style={{
                                 color: label?.Color

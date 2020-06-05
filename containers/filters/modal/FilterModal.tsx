@@ -18,6 +18,7 @@ import FooterFilterModal from './FooterFilterModal';
 import FilterNameForm from './FilterNameForm';
 import FilterActionsForm from './FilterActionsForm';
 import FilterConditionsForm from './FilterConditionsForm';
+import FilterPreview from './FilterPreview';
 
 interface Props {
     filter?: Filter;
@@ -116,7 +117,9 @@ const FilterModal = ({ filter, ...rest }: Props) => {
                     />
                 );
             case Step.PREVIEW:
-                return <>TODO</>;
+                return (
+                    <FilterPreview labels={labels || []} folders={folders || []} isNarrow={isNarrow} model={model} />
+                );
             default:
                 return null;
         }

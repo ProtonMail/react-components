@@ -15,13 +15,13 @@ interface Props {
 const FilterActionsFormAutoReplyRow = ({ isNarrow, actions, handleUpdateActions }: Props) => {
     const editorRef = useRef<SquireEditorRef>(null);
     const { autoReply } = actions;
-    const [editorVisible, setEditorVisible] = useState(false);
+    const [editorVisible, setEditorVisible] = useState(!!autoReply);
     const [editorValue, setEditorValue] = useState(autoReply);
 
     const handleReady = () => {
         if (editorRef.current) {
-            editorRef.current.value = editorValue;
             editorRef.current.focus();
+            editorRef.current.value = editorValue;
         }
     };
 

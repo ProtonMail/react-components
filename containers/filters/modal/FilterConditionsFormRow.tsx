@@ -6,6 +6,8 @@ import { getI18n as getI18nFilter } from 'proton-shared/lib/filters/factory';
 
 import { Condition, FilterStatement, ConditionType, ConditionComparator } from './interfaces';
 
+import './FilterConditionsFormRow.scss';
+
 const { SELECT, SUBJECT, SENDER, RECIPIENT } = ConditionType;
 
 interface Props {
@@ -120,7 +122,7 @@ const FilterConditionsRow = ({
             {i > 0 && <span className="ml0-5 mr0-5">{c('Label').t`or`}</span>}
             <span
                 key={`condition-${conditionIndex}-token-${i}`}
-                className="badgeLabel-grey flex flex-row flex-items-center bg-global-altgrey"
+                className="inline-flex flex-row flex-items-center mb0-5 condition-token"
                 role="listitem"
             >
                 <span className="ellipsis nodecoration">{token}</span>
@@ -129,7 +131,7 @@ const FilterConditionsRow = ({
                     className="flex pm-badgeLabel-button flex-item-noshrink ml0-5"
                     onClick={() => onRemoveToken(i)}
                 >
-                    <Icon name="off" size={11} color="white" />
+                    <Icon name="off" size={11} />
                     <span className="sr-only">{c('Action').t`Remove this label`}</span>
                 </button>
             </span>
@@ -139,7 +141,7 @@ const FilterConditionsRow = ({
     const renderGenericCondition = () => {
         return (
             <div className="mt1 flex-item-fluid">
-                {tokens.length ? <div className="mb1">{tokens.map(renderToken)}</div> : null}
+                {tokens.length ? <div className="mb0-5">{tokens.map(renderToken)}</div> : null}
                 <div className="flex flex-nowrap">
                     <span className="flex-item-fluid pr1">
                         <Input
@@ -172,13 +174,13 @@ const FilterConditionsRow = ({
             const typeLabel = TYPES.find((t) => t.value === type)?.label;
             const comparatorLabel = COMPARATORS.find((t) => t.value === comparator)?.label;
             const values = condition?.values?.map((v, i) => {
-                const value = <strong>{v}</strong>;
+                const value = <strong key={`${v}${i}`}>{v}</strong>;
                 return i > 0 ? jt` or ${value}` : value;
             });
             label = c('Label').jt`${typeLabel} ${comparatorLabel} ${values}`;
         }
 
-        return <span className="ml0-5 pt0-5">{label}</span>;
+        return <span className="mw100 ml0-5 pt0-5 ellipsis">{label}</span>;
     };
 
     const toggleSection = () => setIsOpen((isOpen) => !isOpen);

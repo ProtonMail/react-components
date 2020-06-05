@@ -1,0 +1,10 @@
+@import '~design-system/_sass/reusable-components/_design-system-config.scss';
+
+.condition-token {
+    border-radius: $global-border-radius;
+    border: 1px solid $pm-global-border;
+    padding: 0.2rem 0.4rem 0.1rem 0.6rem;
+    align-items: center;
+    font-size: 1.25rem;
+    color: $pm-global-altgrey;
+}
