@@ -119,7 +119,8 @@ export const DEFAULT_SIGNUP_MODEL = {
     humanVerificationToken: '',
     verificationToken: '',
     paymentToken: '',
-    payload: {}
+    payload: {},
+    hasPaymentToken: false
 };
 
 export const DEFAULT_CHECK_RESULT = {
