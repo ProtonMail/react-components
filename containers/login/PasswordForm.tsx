@@ -13,7 +13,7 @@ interface Props {
 const PasswordForm = ({ username, setUsername, password, setPassword }: Props) => {
     return (
         <>
-            <div className="flex onmobile-flex-column mb1">
+            <div className="flex onmobile-flex-column signup-label-field-container mb1">
                 <Label htmlFor="login">{c('Label').t`Email or Username`}</Label>
                 <div className="flex-item-fluid">
                     <Input
@@ -31,7 +31,7 @@ const PasswordForm = ({ username, setUsername, password, setPassword }: Props) =
                     />
                 </div>
             </div>
-            <div className="flex onmobile-flex-column mb2">
+            <div className="flex onmobile-flex-column signup-label-field-container mb2">
                 <Label htmlFor="password">{c('Label').t`Password`}</Label>
                 <div className="flex-item-fluid">
                     <div className="mb0-5">

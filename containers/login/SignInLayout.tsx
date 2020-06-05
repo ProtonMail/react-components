@@ -15,7 +15,10 @@ const SignInLayout = ({ children, title }: Props) => {
         <SignLayout
             title={title}
             center={<ProtonLogo />}
-            right={<SupportDropdown className="link" content={c('Action').t`Need help?`} />}
+            right={
+                <SupportDropdown noCaret={true} className="link" content={c('Action').t`Need help?`}>{c('Action')
+                    .t`Need help?`}</SupportDropdown>
+            }
         >
             {children}
         </SignLayout>

@@ -510,7 +510,10 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                 )
             }
             center={<ProtonLogo />}
-            right={<SupportDropdown className="link" content={c('Action').t`Need help?`} />}
+            right={
+                <SupportDropdown noCaret={true} className="link" content={c('Action').t`Need help?`}>{c('Action')
+                    .t`Need help?`}</SupportDropdown>
+            }
             aside={
                 [ACCOUNT_CREATION_USERNAME, ACCOUNT_CREATION_EMAIL].includes(model.step) ? (
                     <SignupAside model={model} />

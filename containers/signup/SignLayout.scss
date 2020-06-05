@@ -5,6 +5,14 @@
 
 
 .signLayout-container {
+
+    .signup-label-field-container {
+        flex-direction: column;
+        > * {
+            flex-basis: auto;
+        }
+    }
+
     .signup-container {
         transition: max-width .15s easing(easeIn);
 
@@ -65,14 +73,14 @@
 
 // Hide icons (caret, support1) in <SupportDropdown>
 .signLayout-container {
-    .support-dropdown-button {
-        .navigation-title {
-            margin-right: 0;
-        }
-        svg {
-            display: none;
-        }
-    }
+    // .support-dropdown-button {
+    //     .navigation-title {
+    //         margin-right: 0;
+    //     }
+    //     svg {
+    //         display: none;
+    //     }
+    // }
     .subscriptionTable-customize-button {
         display: none;
     }

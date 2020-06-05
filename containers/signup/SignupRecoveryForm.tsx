@@ -85,7 +85,7 @@ const SignupRecoveryForm = ({ model, onChange, onSubmit, errors, loading }: Prop
                 .t`Proton will send you a recovery link to this email address if you forget your password or get locked out of your account.`}</p>
             {model.step === RECOVERY_EMAIL ? (
                 <>
-                    <div className="flex onmobile-flex-column mb1">
+                    <div className="flex onmobile-flex-column signup-label-field-container mb1">
                         <Label htmlFor="recovery-email">{c('Label').t`Recovery email`}</Label>
                         <div className="flex-item-fluid">
                             <Challenge challengeRef={challengeRefRecovery} type="1">
@@ -120,7 +120,7 @@ const SignupRecoveryForm = ({ model, onChange, onSubmit, errors, loading }: Prop
             ) : null}
             {model.step === RECOVERY_PHONE ? (
                 <>
-                    <div className="flex onmobile-flex-column mb1">
+                    <div className="flex onmobile-flex-column signup-label-field-container mb1">
                         <Label htmlFor="recovery-phone">{c('Label').t`Recovery phone`}</Label>
                         <div className="flex-item-fluid">
                             <div className="mb0-5">

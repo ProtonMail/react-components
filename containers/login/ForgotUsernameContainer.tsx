@@ -35,7 +35,10 @@ const ForgotUsernameContainer = ({ history }: Props) => {
             title={c('Title').t`Forgot your username?`}
             left={<BackButton onClick={handleBack} />}
             center={<ProtonLogo />}
-            right={<SupportDropdown className="link" content={c('Action').t`Need help?`} />}
+            right={
+                <SupportDropdown noCaret={true} className="link" content={c('Action').t`Need help?`}>{c('Action')
+                    .t`Need help?`}</SupportDropdown>
+            }
         >
             <ForgotUsernameForm onSubmit={(data) => withLoading(handleSubmit(data))} loading={loading} />
         </SignLayout>

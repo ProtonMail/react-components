@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, ReactNode } from 'react';
 import {
     Icon,
     Dropdown,
@@ -23,10 +23,11 @@ const { VPN } = CLIENT_TYPES;
 
 interface Props extends RouteComponentProps {
     className?: string;
-    content?: string;
+    noCaret?: boolean;
+    children?: React.ReactNode;
 }
 
-const SupportDropdown = ({ className, content, location }: Props) => {
+const SupportDropdown = ({ className, children, location, noCaret = false }: Props) => {
     const { UID } = useAuthentication();
     const { CLIENT_TYPE } = useConfig();
     const { createModal } = useModals();
@@ -43,12 +44,14 @@ const SupportDropdown = ({ className, content, location }: Props) => {
         <>
             <SupportDropdownButton
                 className={className}
-                content={content}
                 aria-describedby={uid}
                 buttonRef={anchorRef}
                 isOpen={isOpen}
+                noCaret={noCaret}
                 onClick={toggle}
-            />
+            >
+                {children}
+            </SupportDropdownButton>
             <Dropdown id={uid} isOpen={isOpen} anchorRef={anchorRef} onClose={close} originalPlacement="bottom">
                 <DropdownMenu>
                     {isLogin ? (

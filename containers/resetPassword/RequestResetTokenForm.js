@@ -44,7 +44,7 @@ const RequestResetTokenForm = ({ username, setUsername, onSubmit, loading }) => 
                         : 'https://protonmail.com/support/knowledge-base/set-forgot-password-options/'
                 }
             >{c('Info').t`We will send a reset code to your recovery email to reset your password.`}</Alert>
-            <div className="flex onmobile-flex-column mb1">
+            <div className="flex onmobile-flex-column signup-label-field-container mb1">
                 <Label htmlFor="login">{c('Label').t`Username`}</Label>
                 <div className="flex-item-fluid">
                     <Input
@@ -59,7 +59,7 @@ const RequestResetTokenForm = ({ username, setUsername, onSubmit, loading }) => 
                     />
                 </div>
             </div>
-            <div className="flex onmobile-flex-column mb2">
+            <div className="flex onmobile-flex-column signup-label-field-container mb2">
                 <Label htmlFor="email">{c('Label').t`Recovery email`}</Label>
                 <div className="flex-item-fluid">
                     <EmailInput
