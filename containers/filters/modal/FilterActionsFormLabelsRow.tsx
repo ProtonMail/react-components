@@ -54,6 +54,7 @@ const FilterActionsFormLabelsRow = ({ actions, isNarrow, handleUpdateActions, la
 
                     return (
                         <span
+                            key={labelID}
                             className="ml0-5 mr0-5 mb0-5 badgeLabel flex flex-row flex-items-center ellipsis"
                             role="listitem"
                             style={{

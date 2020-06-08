@@ -1,11 +1,11 @@
-import React from 'react';
-import { c } from 'ttag';
+import React, { useMemo } from 'react';
+import { c, jt, t } from 'ttag';
 
 import { classnames, Icon } from 'react-components';
 
-// import { getI18n as getI18nFilter } from 'proton-shared/lib/filters/factory';
+import { getI18n as getI18nFilter } from 'proton-shared/lib/filters/factory';
 
-import { FilterModalModel } from './interfaces';
+import { FilterModalModel, ConditionType } from './interfaces';
 
 interface Props {
     isNarrow: boolean;
@@ -14,24 +14,62 @@ interface Props {
     isOpen: boolean;
 }
 
-const FilterPreviewConditions = ({ isOpen, isNarrow, toggleOpen /* model */ }: Props) => {
-    // const { conditions } = model;
+const FilterPreviewConditions = ({ isOpen, isNarrow, toggleOpen, model }: Props) => {
+    const { conditions } = model;
 
-    // const { TYPES, COMPARATORS } = getI18nFilter();
+    const { TYPES, COMPARATORS } = getI18nFilter();
 
-    const renderConditions = () => {
-        //     const typeLabel = TYPES.find((t) => t.value === type)?.label;
-        //     const comparatorLabel = COMPARATORS.find((t) => t.value === comparator)?.label;
-        //     const values = condition?.values?.map((v, i) => {
-        //         const value = <strong key={`${v}${i}`}>{v}</strong>;
-        //         return i > 0 ? jt` or ${value}` : value;
-        //     });
-        //     label = c('Label').jt`${typeLabel} ${comparatorLabel} ${values}`;
+    const conditionsRenderer = useMemo(() => {
+        const conditionsRows = conditions?.map((cond) => {
+            if (cond.type === ConditionType.ATTACHMENTS) {
+                const label = cond.withAttachment ? t`with attachments` : t`without attachments`;
+                const attachment = isOpen ? (
+                    <span className="inline-flex flex-row flex-items-center condition-token mb0-5" role="listitem">
+                        <span className="ellipsis nodecoration">{label}</span>
+                    </span>
+                ) : (
+                    <strong>{label}</strong>
+                );
+                return c('Label').jt`the email was sent ${attachment}`;
+            }
 
-        // return <span className="mw100 ml0-5 pt0-5 ellipsis">{label}</span>;
+            const typeLabel = TYPES.find((t) => t.value === cond.type)?.label;
+            const comparatorLabel = COMPARATORS.find((t) => t.value === cond.comparator)?.label;
 
-        return <div className="pl0-5 pt0-5">{isOpen ? <span>Open</span> : <span>Closed</span>}</div>;
-    };
+            const values = cond?.values?.map((v, i) => {
+                const value = isOpen ? (
+                    <span
+                        key={`${v}${i}`}
+                        className="inline-flex flex-row flex-items-center condition-token mb0-5"
+                        role="listitem"
+                    >
+                        <span className="ellipsis nodecoration">{v}</span>
+                    </span>
+                ) : (
+                    <strong key={`${v}${i}`}>{v}</strong>
+                );
+                return i > 0 ? jt` or ${value}` : value;
+            });
+            return c('Label ').jt`${typeLabel?.toLowerCase()} ${comparatorLabel} ${values}`;
+        });
+
+        return conditionsRows.map((cond, i) =>
+            isOpen ? (
+                <div key={`preview-condition-${i}`}>
+                    {i === 0 ? c('Label').t`If` : c('Label').t`And`}
+
+                    {` `}
+                    {cond}
+                </div>
+            ) : (
+                <span key={`preview-condition-${i}`}>
+                    {i === 0 ? c('Label').t`If` : ` ${c('Label').t`and`}`}
+                    {` `}
+                    {cond}
+                </span>
+            )
+        );
+    }, [isOpen]);
 
     return (
         <div className="border-bottom">
@@ -46,7 +84,9 @@ const FilterPreviewConditions = ({ isOpen, isNarrow, toggleOpen /* model */ }: P
                     <Icon name="caret" className={classnames([isOpen && 'rotateX-180'])} />
                     <span className="ml0-5">{c('Label').t`Conditions`}</span>
                 </div>
-                <div className="flex flex-column flex-item-fluid">{renderConditions()}</div>
+                <div className="flex flex-column flex-item-fluid">
+                    <div className={classnames(['pl0-5 pt0-5', !isOpen && 'mw100 ellipsis'])}>{conditionsRenderer}</div>
+                </div>
             </div>
         </div>
     );
