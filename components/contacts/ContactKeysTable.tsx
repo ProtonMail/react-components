@@ -32,14 +32,14 @@ type LocaKeyModel = {
     algo: string;
     creationTime: Date;
     expirationTime: any;
-    isPrimary: boolean;
+    isPrimary?: boolean;
     isWKD: boolean;
     isExpired: boolean;
     isRevoked: boolean;
     isTrusted: boolean;
     isVerificationOnly: boolean;
     isUploaded: boolean;
-    canBePrimary: boolean;
+    canBePrimary?: boolean;
     canBeTrusted: boolean;
     canBeUntrusted: boolean;
 };
@@ -60,55 +60,47 @@ const ContactKeysTable = ({ model, setModel }: Props) => {
         const uniqueKeys = uniqueBy(allKeys, (publicKey) => publicKey.getFingerprint());
         const parsedKeys = await Promise.all(
             uniqueKeys.map(async (publicKey, index) => {
-                try {
-                    const fingerprint = publicKey.getFingerprint();
-                    const creationTime = publicKey.getCreationTime();
-                    const expirationTime = await publicKey.getExpirationTime('encrypt');
-                    const algoInfo = publicKey.getAlgorithmInfo();
-                    const algo = describe(algoInfo as algorithmInfo);
-                    const isTrusted = model.trustedFingerprints.has(fingerprint);
-                    const isExpired = model.expiredFingerprints.has(fingerprint);
-                    const isRevoked = model.revokedFingerprints.has(fingerprint);
-                    const isVerificationOnly = model.verifyOnlyFingerprints.has(fingerprint);
-                    const isPrimary =
-                        !index &&
-                        !isExpired &&
-                        !isRevoked &&
-                        !isVerificationOnly &&
-                        (totalApiKeys ? true : model.encrypt);
-                    const isWKD = model.isPGPExternal && index < totalApiKeys;
-                    const isUploaded = index >= totalApiKeys;
-                    const canBePrimary =
-                        !!index &&
-                        !isExpired &&
-                        !isRevoked &&
-                        !isVerificationOnly &&
-                        (index < totalApiKeys ? isTrusted : !totalApiKeys && model.encrypt);
-                    const canBeTrusted = !isTrusted && !isUploaded;
-                    const canBeUntrusted = isTrusted && !isUploaded;
-                    return {
-                        publicKey,
-                        fingerprint,
-                        algo,
-                        creationTime,
-                        expirationTime,
-                        isPrimary,
-                        isWKD,
-                        isExpired,
-                        isRevoked,
-                        isTrusted,
-                        isVerificationOnly,
-                        isUploaded,
-                        canBePrimary,
-                        canBeTrusted,
-                        canBeUntrusted
-                    };
-                } catch (error) {
-                    return false;
-                }
+                const fingerprint = publicKey.getFingerprint();
+                const creationTime = publicKey.getCreationTime();
+                const expirationTime = await publicKey.getExpirationTime('encrypt');
+                const algoInfo = publicKey.getAlgorithmInfo();
+                const algo = describe(algoInfo as algorithmInfo);
+                const isTrusted = model.trustedFingerprints.has(fingerprint);
+                const isExpired = model.expiredFingerprints.has(fingerprint);
+                const isRevoked = model.revokedFingerprints.has(fingerprint);
+                const isVerificationOnly = model.verifyOnlyFingerprints.has(fingerprint);
+                const isPrimary =
+                    !index && !isExpired && !isRevoked && !isVerificationOnly && (totalApiKeys ? true : model.encrypt);
+                const isWKD = model.isPGPExternal && index < totalApiKeys;
+                const isUploaded = index >= totalApiKeys;
+                const canBePrimary =
+                    !!index &&
+                    !isExpired &&
+                    !isRevoked &&
+                    !isVerificationOnly &&
+                    (index < totalApiKeys ? isTrusted : !totalApiKeys && model.encrypt);
+                const canBeTrusted = !isTrusted && !isUploaded;
+                const canBeUntrusted = isTrusted && !isUploaded;
+                return {
+                    publicKey,
+                    fingerprint,
+                    algo,
+                    creationTime,
+                    expirationTime,
+                    isPrimary,
+                    isWKD,
+                    isExpired,
+                    isRevoked,
+                    isTrusted,
+                    isVerificationOnly,
+                    isUploaded,
+                    canBePrimary,
+                    canBeTrusted,
+                    canBeUntrusted
+                };
             })
         );
-        setKeys(parsedKeys.filter(Boolean));
+        setKeys(parsedKeys);
     };
 
     useEffect(() => {
