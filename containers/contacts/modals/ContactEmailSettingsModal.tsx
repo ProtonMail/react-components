@@ -172,16 +172,20 @@ const ContactEmailSettingsModal = ({
          * * move expired keys to the bottom of the list
          */
         const noPinnedKeyCanSend =
-            !!model?.publicKeys.pinnedKeys.length &&
-            !model?.publicKeys.pinnedKeys.some((publicKey) => getIsValidForSending(publicKey.getFingerprint(), model));
+            !!model?.publicKeys?.pinnedKeys.length &&
+            !model?.publicKeys?.pinnedKeys.some((publicKey) => getIsValidForSending(publicKey.getFingerprint(), model));
 
         setModel((model: ContactPublicKeyModel) => ({
             ...model,
-            encrypt: !noPinnedKeyCanSend && !!model.publicKeys.pinnedKeys.length && model.encrypt,
+            encrypt: !noPinnedKeyCanSend && !!model?.publicKeys?.pinnedKeys.length && model.encrypt,
             publicKeys: {
-                apiKeys: sortApiKeys(model.publicKeys.apiKeys, model.trustedFingerprints, model.verifyOnlyFingerprints),
+                apiKeys: sortApiKeys(
+                    model?.publicKeys?.apiKeys,
+                    model.trustedFingerprints,
+                    model.verifyOnlyFingerprints
+                ),
                 pinnedKeys: sortPinnedKeys(
-                    model.publicKeys.pinnedKeys,
+                    model?.publicKeys?.pinnedKeys,
                     model.expiredFingerprints,
                     model.revokedFingerprints
                 )
