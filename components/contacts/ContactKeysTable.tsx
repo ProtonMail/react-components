@@ -19,11 +19,11 @@ import { dateLocale } from 'proton-shared/lib/i18n';
 import downloadFile from 'proton-shared/lib/helpers/downloadFile';
 import { describe } from 'proton-shared/lib/keys/keysAlgorithm';
 
-import { PublicKeyModel } from 'proton-shared/lib/interfaces/Key';
+import { ContactPublicKeyModel } from 'proton-shared/lib/interfaces/Key';
 
 interface Props {
-    model: PublicKeyModel;
-    setModel: Dispatch<SetStateAction<PublicKeyModel>>;
+    model: ContactPublicKeyModel;
+    setModel: Dispatch<SetStateAction<ContactPublicKeyModel>>;
 }
 
 const ContactKeysTable = ({ model, setModel }: Props) => {

@@ -3,7 +3,7 @@ import React, { RefObject, ReactNode } from 'react';
 import { DropdownCaret, classnames } from 'react-components';
 
 interface Props {
-    buttonRef: RefObject<HTMLButtonElement>;
+    buttonRef: RefObject<any>;
     children: ReactNode;
     isOpen: boolean;
     caretClassName?: string;

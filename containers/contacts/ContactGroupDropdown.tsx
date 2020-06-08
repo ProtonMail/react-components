@@ -205,38 +205,50 @@ const ContactGroupDropdown = ({ children, className, contactEmails, disabled = f
                     />
                 </div>
                 <div className="scroll-if-needed scroll-smooth-touch mt1 contactGroupDropdown-list-container">
-                    <ul className="unstyled mt0 mb0">
-                        {filteredContactGroups.map(({ ID, Name, Color }) => {
-                            const checkboxId = `${uid}${ID}`;
-                            return (
-                                <li
-                                    key={ID}
-                                    className="dropDown-item w100 flex flex-nowrap flex-items-center pt0-5 pb0-5 pl1 pr1"
-                                >
-                                    <Checkbox
-                                        className="flex-item-noshrink"
-                                        id={checkboxId}
-                                        checked={model[ID] === CHECKED}
-                                        indeterminate={model[ID] === INDETERMINATE}
-                                        onChange={handleCheck(ID)}
-                                    />
-                                    <label htmlFor={checkboxId} className="flex flex-item-fluid flex-nowrap">
-                                        <Icon
-                                            name="contacts-groups"
-                                            className="mr0-5 flex-item-noshrink"
-                                            color={Color}
+                    {filteredContactGroups.length ? (
+                        <ul className="unstyled mt0 mb0">
+                            {filteredContactGroups.map(({ ID, Name, Color }) => {
+                                const checkboxId = `${uid}${ID}`;
+                                return (
+                                    <li
+                                        key={ID}
+                                        className="dropDown-item w100 flex flex-nowrap flex-items-center pt0-5 pb0-5 pl1 pr1"
+                                    >
+                                        <Checkbox
+                                            className="flex-item-noshrink"
+                                            id={checkboxId}
+                                            checked={model[ID] === CHECKED}
+                                            indeterminate={model[ID] === INDETERMINATE}
+                                            onChange={handleCheck(ID)}
                                         />
-                                        <span className="flex-item-fluid ellipsis" title={Name}>
-                                            <Mark value={keyword}>{Name}</Mark>
-                                        </span>
-                                    </label>
-                                </li>
-                            );
-                        })}
-                    </ul>
+                                        <label htmlFor={checkboxId} className="flex flex-item-fluid flex-nowrap">
+                                            <Icon
+                                                name="contacts-groups"
+                                                className="mr0-5 flex-item-noshrink"
+                                                color={Color}
+                                            />
+                                            <span className="flex-item-fluid ellipsis" title={Name}>
+                                                <Mark value={keyword}>{Name}</Mark>
+                                            </span>
+                                        </label>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    ) : keyword ? (
+                        <div className="w100 flex flex-nowrap flex-items-center pt0-5 pb0-5 pl1 pr1">
+                            <Icon name="attention" className="mr0-5" />
+                            {c('Info').t`No group found`}
+                        </div>
+                    ) : null}
                 </div>
                 <div className="m1">
-                    <PrimaryButton className="w100" loading={loading} onClick={() => withLoading(handleApply())}>
+                    <PrimaryButton
+                        className="w100"
+                        loading={loading}
+                        disabled={!filteredContactGroups.length}
+                        onClick={() => withLoading(handleApply())}
+                    >
                         {c('Action').t`Apply`}
                     </PrimaryButton>
                 </div>

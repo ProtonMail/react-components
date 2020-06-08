@@ -3,39 +3,31 @@ import { c } from 'ttag';
 import { OpenPGPKey } from 'pmcrypto';
 
 import { Alert, Row, Label, Field, Info, Toggle, SelectKeyFiles, useNotifications } from 'react-components';
-import { getKeyEncryptStatus } from 'proton-shared/lib/keys/publicKeys';
+import { getIsValidForSending, getKeyEncryptStatus } from 'proton-shared/lib/keys/publicKeys';
 import { MailSettings } from 'proton-shared/lib/interfaces';
-import { PublicKeyModel } from 'proton-shared/lib/interfaces/Key';
+import { ContactPublicKeyModel } from 'proton-shared/lib/interfaces/Key';
 
 import ContactSchemeSelect from '../../components/contacts/ContactSchemeSelect';
 import ContactKeysTable from '../../components/contacts/ContactKeysTable';
-import { PGP_SCHEMES } from 'proton-shared/lib/constants';
+import { CONTACT_PGP_SCHEMES, MIME_TYPES_MORE } from 'proton-shared/lib/constants';
 
 interface Props {
-    model: PublicKeyModel;
-    setModel: Dispatch<SetStateAction<PublicKeyModel>>;
+    model: ContactPublicKeyModel;
+    setModel: Dispatch<SetStateAction<ContactPublicKeyModel>>;
     mailSettings: MailSettings;
 }
 
 const ContactPgpSettings = ({ model, setModel, mailSettings }: Props) => {
     const { createNotification } = useNotifications();
-    const trustedApiKeys = model.publicKeys.apiKeys.filter((key) =>
-        model.trustedFingerprints.has(key.getFingerprint())
-    );
+
     const hasApiKeys = !!model.publicKeys.apiKeys.length;
     const hasPinnedKeys = !!model.publicKeys.pinnedKeys.length;
-    const hasTrustedApiKeys = !!trustedApiKeys.length;
 
+    const isPrimaryPinned = hasApiKeys && model.trustedFingerprints.has(model.publicKeys.apiKeys[0].getFingerprint());
     const noPinnedKeyCanSend =
         hasPinnedKeys &&
-        !model.publicKeys.pinnedKeys.some((publicKey) => {
-            const fingerprint = publicKey.getFingerprint();
-            const canSend = !model.expiredFingerprints.has(fingerprint) && !model.revokedFingerprints.has(fingerprint);
-            return canSend;
-        });
-    const noTrustedApiKeyCanSend =
-        hasTrustedApiKeys && !trustedApiKeys.some((key) => !model.verifyOnlyFingerprints.has(key.getFingerprint()));
-    const askForPinning = hasPinnedKeys && hasApiKeys && noTrustedApiKeyCanSend;
+        !model.publicKeys.pinnedKeys.some((publicKey) => getIsValidForSending(publicKey.getFingerprint(), model));
+    const askForPinning = hasPinnedKeys && hasApiKeys && (noPinnedKeyCanSend || !isPrimaryPinned);
 
     /**
      * Add / update keys to model
@@ -97,7 +89,7 @@ const ContactPgpSettings = ({ model, setModel, mailSettings }: Props) => {
                 </Alert>
             )}
             {!!model.publicKeys.pinnedKeys.length && askForPinning && (
-                <Alert type="warning">{c('Info')
+                <Alert type="error">{c('Info')
                     .t`Address Verification with Trusted Keys is enabled for this address. To be able to send to this address, first trust public keys that can be used for sending.`}</Alert>
             )}
             {model.pgpAddressDisabled && (
@@ -161,9 +153,28 @@ const ContactPgpSettings = ({ model, setModel, mailSettings }: Props) => {
                                 setModel({
                                     ...model,
                                     sign: target.checked,
-                                    mimeType: ''
+                                    mimeType: MIME_TYPES_MORE.AUTOMATIC
                                 })
                             }
+                        />
+                    </Field>
+                </Row>
+            )}
+            {!model.isPGPInternal && (
+                <Row>
+                    <Label>
+                        {c('Label').t`Cryptographic scheme`}
+                        <Info
+                            className="ml0-5"
+                            title={c('Tooltip')
+                                .t`Select the PGP scheme to be used when signing or encrypting to a user. Note that PGP/Inline forces plain text messages`}
+                        />
+                    </Label>
+                    <Field>
+                        <ContactSchemeSelect
+                            value={model.scheme}
+                            mailSettings={mailSettings}
+                            onChange={(scheme: CONTACT_PGP_SCHEMES) => setModel({ ...model, scheme })}
                         />
                     </Field>
                 </Row>
@@ -182,25 +193,6 @@ const ContactPgpSettings = ({ model, setModel, mailSettings }: Props) => {
                 </Field>
             </Row>
             {(hasApiKeys || hasPinnedKeys) && <ContactKeysTable model={model} setModel={setModel} />}
-            {!hasApiKeys && (
-                <Row>
-                    <Label>
-                        {c('Label').t`Cryptographic scheme`}
-                        <Info
-                            className="ml0-5"
-                            title={c('Tooltip')
-                                .t`Select the PGP scheme to be used when signing or encrypting to a user. Note that PGP/Inline forces plain text messages`}
-                        />
-                    </Label>
-                    <Field>
-                        <ContactSchemeSelect
-                            value={model.scheme}
-                            mailSettings={mailSettings}
-                            onChange={(scheme: PGP_SCHEMES | string) => setModel({ ...model, scheme })}
-                        />
-                    </Field>
-                </Row>
-            )}
         </>
     );
 };
