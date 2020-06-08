@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Dispatch, SetStateAction } from 'react';
-import { algorithmInfo } from 'pmcrypto';
+import { algorithmInfo, OpenPGPKey } from 'pmcrypto';
 import { isValid, format } from 'date-fns';
 import { c } from 'ttag';
 
@@ -26,8 +26,26 @@ interface Props {
     setModel: Dispatch<SetStateAction<ContactPublicKeyModel>>;
 }
 
+type LocaKeyModel = {
+    publicKey: OpenPGPKey;
+    fingerprint: string;
+    algo: string;
+    creationTime: Date;
+    expirationTime: any;
+    isPrimary: boolean;
+    isWKD: boolean;
+    isExpired: boolean;
+    isRevoked: boolean;
+    isTrusted: boolean;
+    isVerificationOnly: boolean;
+    isUploaded: boolean;
+    canBePrimary: boolean;
+    canBeTrusted: boolean;
+    canBeUntrusted: boolean;
+};
+
 const ContactKeysTable = ({ model, setModel }: Props) => {
-    const [keys, setKeys] = useState([]);
+    const [keys, setKeys] = useState<LocaKeyModel[]>([]);
     const { isNarrow, isTinyMobile } = useActiveBreakpoint();
 
     const totalApiKeys = model.publicKeys.apiKeys.length;
@@ -134,7 +152,7 @@ const ContactKeysTable = ({ model, setModel }: Props) => {
                         const list = [
                             {
                                 text: c('Action').t`Download`,
-                                async onClick() {
+                                onClick: () => {
                                     const blob = new Blob([publicKey.armor()], {
                                         type: 'data:text/plain;charset=utf-8;'
                                     });
@@ -144,10 +162,12 @@ const ContactKeysTable = ({ model, setModel }: Props) => {
 
                                     downloadFile(blob, filename);
                                 }
-                            },
-                            canBePrimary && {
+                            }
+                        ];
+                        if (canBePrimary) {
+                            list.push({
                                 text: c('Action').t`Use for sending`,
-                                onClick() {
+                                onClick: () => {
                                     const apiKeyIndex = model.publicKeys.apiKeys.findIndex(
                                         (key) => key.getFingerprint() === fingerprint
                                     );
@@ -167,10 +187,12 @@ const ContactKeysTable = ({ model, setModel }: Props) => {
                                         publicKeys: { apiKeys: reOrderedApiKeys, pinnedKeys: reOrderedPinnedKeys }
                                     });
                                 }
-                            },
-                            canBeTrusted && {
+                            });
+                        }
+                        if (canBeTrusted) {
+                            list.push({
                                 text: c('Action').t`Trust`,
-                                onClick() {
+                                onClick: () => {
                                     const trustedFingerprints = new Set(model.trustedFingerprints);
                                     trustedFingerprints.add(fingerprint);
                                     const trustedKey = model.publicKeys.apiKeys.find(
@@ -186,10 +208,13 @@ const ContactKeysTable = ({ model, setModel }: Props) => {
                                             trustedFingerprints
                                         });
                                 }
-                            },
-                            canBeUntrusted && {
+                            });
+                        }
+
+                        if (canBeUntrusted) {
+                            list.push({
                                 text: c('Action').t`Untrust`,
-                                onClick() {
+                                onClick: () => {
                                     const trustedFingerprints = new Set(model.trustedFingerprints);
                                     trustedFingerprints.delete(fingerprint);
                                     const pinnedKeys = model.publicKeys.pinnedKeys.filter(
@@ -204,10 +229,12 @@ const ContactKeysTable = ({ model, setModel }: Props) => {
                                         trustedFingerprints
                                     });
                                 }
-                            },
-                            isUploaded && {
+                            });
+                        }
+                        if (isUploaded) {
+                            list.push({
                                 text: c('Action').t`Remove`,
-                                onClick() {
+                                onClick: () => {
                                     const trustedFingerprints = new Set(model.trustedFingerprints);
                                     const expiredFingerprints = new Set(model.expiredFingerprints);
                                     const revokedFingerprints = new Set(model.revokedFingerprints);
@@ -227,8 +254,9 @@ const ContactKeysTable = ({ model, setModel }: Props) => {
                                         }
                                     });
                                 }
-                            }
-                        ].filter(Boolean);
+                            });
+                        }
+
                         const cells = [
                             <div key={fingerprint} title={fingerprint} className="flex flex-nowrap">
                                 <KeyWarningIcon
