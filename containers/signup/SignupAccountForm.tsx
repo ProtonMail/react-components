@@ -142,7 +142,7 @@ const SignupAccountForm = ({ history, model, onChange, onSubmit, errors, loading
                             <InlineLinkButton
                                 id="proton-email-button"
                                 onClick={() => onChange({ ...model, email: '', step: ACCOUNT_CREATION_USERNAME })}
-                            >{c('Action').t`Use an existing email instead`}</InlineLinkButton>
+                            >{c('Action').t`Create a secure ProtonMail address instead`}</InlineLinkButton>
                         </Challenge>
                     </div>
                 </div>
