@@ -32,8 +32,12 @@ const ForgotUsernameForm = ({ onSubmit, loading }) => {
                 </div>
             </div>
             <div className="flex flex-nowrap flex-justify-end mb1">
-                <PrimaryButton className="pm-button--large onmobile-w100" loading={loading} type="submit">{c('Action')
-                    .t`Email me my username(s)`}</PrimaryButton>
+                <PrimaryButton
+                    className="pm-button--large onmobile-w100"
+                    disabled={!email}
+                    loading={loading}
+                    type="submit"
+                >{c('Action').t`Email me my username(s)`}</PrimaryButton>
             </div>
         </form>
     );
