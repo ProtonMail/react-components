@@ -427,3 +427,5 @@ export { default as SquireEditor } from './components/editor/SquireEditor';
 export { default as SimpleSquireEditor } from './components/editor/SimpleSquireEditor';
 
 export * from './helpers/component';
+
+export * from './components/layout';
