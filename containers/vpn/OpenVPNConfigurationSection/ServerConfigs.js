@@ -46,12 +46,14 @@ const ServerConfigs = ({ servers, category, ...rest }) => {
                     <Details key={server.Country} open={server.open}>
                         <Summary>
                             <div className="ml0-5 flex flex-nowrap flex-items-center">
-                                <div className={classnames([category === CATEGORY.SERVER ? 'w33' : 'w50'])}>
+                                <div className={classnames([category === CATEGORY.SERVER ? 'w33' : ''])}>
                                     <Country server={group[0]} />
                                 </div>
-                                <div className={classnames([category === CATEGORY.SERVER ? 'w33' : 'w50'])}>
-                                    <ServerNumber group={group} />
-                                </div>
+                                {category === CATEGORY.SERVER ? (
+                                    <div className="w33">
+                                        <ServerNumber group={group} />
+                                    </div>
+                                ) : null}
                                 {category === CATEGORY.SERVER ? (
                                     <div className="w33">
                                         <CityNumber group={group} />
