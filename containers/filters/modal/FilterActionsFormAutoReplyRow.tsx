@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { c } from 'ttag';
 
 import { classnames, Toggle, Tooltip, SimpleSquireEditor, useUser } from 'react-components';
+import { noop } from 'proton-shared/lib/helpers/function';
 
 import { SquireEditorRef } from '../../../components/editor/SquireEditor';
 import { Actions } from './interfaces';
@@ -65,7 +66,7 @@ const FilterActionsFormAutoReplyRow = ({ isNarrow, actions, handleUpdateActions 
                         <span className="ml0-5 mr0-5">{c('Label').t`Send auto-reply`}</span>
                     </div>
                     <Tooltip title={c('Tooltip').t`This feature is only available for paid users`}>
-                        <Toggle disabled checked={false} />
+                        <Toggle disabled checked={false} onChange={noop} />
                     </Tooltip>
                 </>
             )}

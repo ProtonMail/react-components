@@ -24,11 +24,15 @@ const FilterPreviewConditions = ({ isOpen, isNarrow, toggleOpen, model }: Props)
             if (cond.type === ConditionType.ATTACHMENTS) {
                 const label = cond.withAttachment ? t`with attachments` : t`without attachments`;
                 const attachment = isOpen ? (
-                    <span className="inline-flex flex-row flex-items-center condition-token mb0-5" role="listitem">
+                    <span
+                        key={label}
+                        className="inline-flex flex-row flex-items-center condition-token mb0-5"
+                        role="listitem"
+                    >
                         <span className="ellipsis nodecoration">{label}</span>
                     </span>
                 ) : (
-                    <strong>{label}</strong>
+                    <strong key={label}>{label}</strong>
                 );
                 return c('Label').jt`the email was sent ${attachment}`;
             }

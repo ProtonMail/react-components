@@ -168,7 +168,9 @@ const FilterConditionsRow = ({
         let label;
 
         if (type === ConditionType.ATTACHMENTS) {
-            const attachment = <strong>{withAttachment ? t`with attachments` : t`without attachments`}</strong>;
+            const attachment = (
+                <strong key="attachments">{withAttachment ? t`with attachments` : t`without attachments`}</strong>
+            );
             label = c('Label').jt`The email was sent ${attachment}`;
         } else {
             const typeLabel = TYPES.find((t) => t.value === type)?.label;

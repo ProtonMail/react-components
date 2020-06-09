@@ -34,11 +34,10 @@ const FilterPreviewActions = ({ isOpen, isNarrow, toggleOpen, labels, folders, m
 
         if (actions.labelAs.labels.length) {
             const labelsElements = actions.labelAs.labels.map((l, i) => (
-                <>
+                <React.Fragment key={l}>
                     {i > 0 && c('Label').t` and `}
                     {isOpen ? (
                         <span
-                            key={l}
                             className="ml0-5 mr0-5 mb0-5 badgeLabel flex flex-row flex-items-center ellipsis"
                             role="listitem"
                             style={{
@@ -52,7 +51,7 @@ const FilterPreviewActions = ({ isOpen, isNarrow, toggleOpen, labels, folders, m
                     ) : (
                         <strong>{labelsMap[l].Name}</strong>
                     )}
-                </>
+                </React.Fragment>
             ));
 
             actionsRows.push(
