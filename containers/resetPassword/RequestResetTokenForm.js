@@ -77,6 +77,7 @@ const RequestResetTokenForm = ({ username, setUsername, onSubmit, loading }) => 
                 <PrimaryButton
                     className="pm-button--large flex-item-noshrink onmobile-w100"
                     loading={loading || loadingConfirm}
+                    disabled={!username || !email}
                     type="submit"
                 >
                     {c('Action').t`Get a new password`}

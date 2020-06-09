@@ -44,7 +44,8 @@ const DangerVerificationForm = ({ onSubmit }) => {
                     .t`If you remember your old password later, you can recover your existing messages.`}</Alert>
             )}
             <div className="alignright mb1">
-                <PrimaryButton type="submit">{c('Action').t`Reset my password`}</PrimaryButton>
+                <PrimaryButton disabled={value !== WORD} type="submit">{c('Action')
+                    .t`Reset my password`}</PrimaryButton>
             </div>
         </form>
     );

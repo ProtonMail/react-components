@@ -41,7 +41,9 @@ const NewPasswordForm = ({ onSubmit, loading }) => {
             <Alert type="warning">{c('Info')
                 .t`Do NOT forget this password. If you forget it, you will not be able to login or decrypt your messages.`}</Alert>
             <div className="alignright mb1">
-                <PrimaryButton loading={loading} type="submit">{c('Action').t`Submit`}</PrimaryButton>
+                <PrimaryButton disabled={!password || password !== confirmPassword} loading={loading} type="submit">{c(
+                    'Action'
+                ).t`Submit`}</PrimaryButton>
             </div>
         </form>
     );
