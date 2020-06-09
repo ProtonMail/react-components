@@ -241,6 +241,7 @@ const LoginForm = ({ onLogin, ignoreUnlock = false }) => {
                     {cancelButton}
                     <PrimaryButton
                         type="submit"
+                        disabled={!totp}
                         className="pm-button--large"
                         loading={loading}
                         data-cy-login="submit TOTP"
@@ -275,6 +276,7 @@ const LoginForm = ({ onLogin, ignoreUnlock = false }) => {
                     <PrimaryButton
                         type="submit"
                         className="pm-button--large"
+                        disabled={!keyPassword}
                         loading={loading}
                         data-cy-login="submit mailbox password"
                     >
