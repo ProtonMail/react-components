@@ -5,6 +5,7 @@ import { groupWith, compare } from 'proton-shared/lib/helpers/array';
 import { Details, Summary, useUser, useUserVPN } from 'react-components';
 import ConfigsTable, { CATEGORY } from './ConfigsTable';
 import Country from './Country';
+import ServerNumber from './ServerNumber';
 
 const getServerNum = (server) => Number(server.Name.replace('-TOR', '').split('#')[1]);
 const getServerRegion = (server) => server.Name.split('#')[0];
@@ -43,8 +44,13 @@ const ServerConfigs = ({ servers, ...rest }) => {
                 return (
                     <Details key={server.Country} open={server.open}>
                         <Summary>
-                            <div className="ml0-5">
-                                <Country server={group[0]} />
+                            <div className="ml0-5 flex flex-nowrap flex-items-center">
+                                <div className="w50">
+                                    <Country server={group[0]} />
+                                </div>
+                                <div className="w50">
+                                    <ServerNumber group={group} />
+                                </div>
                             </div>
                         </Summary>
                         <div className="p1">
