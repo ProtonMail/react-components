@@ -72,7 +72,7 @@ const AppsDropdown = () => {
                         target="_self"
                         external={true}
                         className="appsDropdown-link big m0 bl p1 pt0-75 pb0-25"
-                        title={c('Apps dropdown').t`Your account`}
+                        title={c('Apps dropdown').t`Add storage space`}
                     >
                         <span className="flex flex-nowrap flex-items-center">
                             <Icon name="user-storage" size={20} className="mr0-5" />
