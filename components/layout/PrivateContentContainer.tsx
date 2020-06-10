@@ -1,6 +1,5 @@
 import React, { Ref } from 'react';
 import { classnames } from '../../helpers/component';
-import { TopBanners } from '../../index';
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
     className?: string;
@@ -14,7 +13,6 @@ const PrivateContentContainer = React.forwardRef(
                 ref={ref}
                 {...rest}
             >
-                <TopBanners />
                 {children}
             </div>
         );
