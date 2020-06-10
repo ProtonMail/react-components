@@ -1,9 +1,9 @@
 import React, { Ref } from 'react';
+import { classnames, TopBanners } from '../../index';
 import PrivateContentContainer from './PrivateContentContainer';
 import PrivateContent from './PrivateContent';
 import PrivateMainContainer from './PrivateMainContainer';
-import { PrivateMainAreaContainer } from './index';
-import { classnames, TopBanners } from '../../index';
+import PrivateMainAreaContainer from './PrivateMainAreaContainer';
 
 interface Props {
     containerRef?: Ref<HTMLDivElement>;
@@ -11,12 +11,20 @@ interface Props {
     sidebar: React.ReactNode;
     children: React.ReactNode;
     isBlurred?: boolean;
+    hasTopBanners?: boolean;
 }
 
-const PrivateAppContainer = ({ header, sidebar, children, isBlurred = false, containerRef }: Props) => {
+const PrivateAppContainer = ({
+    header,
+    sidebar,
+    children,
+    hasTopBanners = true,
+    isBlurred = false,
+    containerRef
+}: Props) => {
     return (
         <PrivateContentContainer className={classnames([isBlurred && 'filter-blur'])} ref={containerRef}>
-            <TopBanners />
+            {hasTopBanners ? <TopBanners /> : null}
             <PrivateContent>
                 {header}
                 <PrivateMainContainer>
