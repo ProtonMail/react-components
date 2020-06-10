@@ -69,7 +69,7 @@ const AppsDropdown = () => {
                 <li className="dropDown-item appsDropdown-item">
                     <Link
                         to="/settings/subscription"
-                        target="_blank"
+                        target="_self"
                         external={true}
                         className="appsDropdown-link big m0 bl p1 pt0-75 pb0-25"
                         title={c('Apps dropdown').t`Your account`}
