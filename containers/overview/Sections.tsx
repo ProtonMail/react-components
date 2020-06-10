@@ -7,12 +7,12 @@ import { SubSectionConfigWithPermissions } from '../../components/layout';
 
 interface Props {
     link: string;
-    subsections: SubSectionConfigWithPermissions[];
     text: string;
-    permissions: PERMISSIONS[];
-    pagePermissions: PERMISSIONS[];
+    subsections?: SubSectionConfigWithPermissions[];
+    permissions?: PERMISSIONS[];
+    pagePermissions?: PERMISSIONS[];
 }
-const Sections = ({ link, subsections = [], text, permissions = [], pagePermissions }: Props) => {
+const Sections = ({ link, subsections = [], text, permissions = [], pagePermissions = [] }: Props) => {
     return (
         <ul className="unstyled mt0-5">
             {subsections.length ? (

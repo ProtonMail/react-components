@@ -16,7 +16,7 @@ export interface SubSectionConfig {
 export interface SectionConfig {
     node?: React.ReactNode;
     text: string;
-    link?: string;
+    link: string;
     icon: string;
     subsections?: SubSectionConfig[];
     // Props to nav item
