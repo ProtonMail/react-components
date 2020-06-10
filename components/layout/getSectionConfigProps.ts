@@ -1,8 +1,8 @@
 import { SectionConfig } from './interface';
 
 const getSectionConfigProps = (list: SectionConfig[], pathname: string, activeSection: string) => {
-    return list.map(({ text, link, icon, subsections = [], ...rest }) => ({
-        text,
+    return list.map(({ text, node = text, link, icon, subsections = [], ...rest }) => ({
+        text: node,
         link,
         icon,
         ...rest,
