@@ -1,5 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { SettingsTitle, ErrorBoundary, PrivateMainArea, SubSettingsSection, SubSectionConfig } from '../../index';
+import {
+    SettingsTitle,
+    ErrorBoundary,
+    PrivateMainArea,
+    SubSettingsSection,
+    SubSectionConfig,
+    useAppTitle
+} from '../../index';
 import { SettingsPropsShared } from './interface';
 import useActiveSection from './useActiveSection';
 
@@ -14,9 +21,7 @@ const PrivateMainSettingsArea = ({ setActiveSection, location, title, children, 
     const mainAreaRef = useRef<HTMLDivElement>(null);
     const [scrollTop, setScrollTop] = useState<number>(0);
 
-    useEffect(() => {
-        document.title = `${title} - ${appName}`;
-    }, [title]);
+    useAppTitle(title, appName);
 
     useEffect(() => {
         if (mainAreaRef.current) {

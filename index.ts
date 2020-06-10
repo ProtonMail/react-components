@@ -380,6 +380,7 @@ export { useLabels, useFolders, useContactGroups } from './hooks/useCategories';
 export { default as useFilters } from './hooks/useFilters';
 export { default as usePaymentMethods } from './hooks/usePaymentMethods';
 export { default as useForceRefresh } from './containers/forceRefresh/useForceRefresh';
+export { default as useAppTitle } from './hooks/useAppTitle';
 export { default as useOrganization } from './hooks/useOrganization';
 export { default as useSubscription } from './hooks/useSubscription';
 export { default as useUserSettings } from './hooks/userSettingsModel';
