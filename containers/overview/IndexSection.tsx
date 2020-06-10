@@ -3,9 +3,9 @@ import { usePermissions } from '../../index';
 import { classnames } from '../../helpers/component';
 
 import Sections from './Sections';
-import { SettingsPageConfigWithPermissions } from '../../components/layout';
+import { SectionConfig } from '../../components/layout';
 
-const IndexSection = ({ pages }: { pages: SettingsPageConfigWithPermissions[] }) => {
+const IndexSection = ({ pages }: { pages: SectionConfig[] }) => {
     const permissions = usePermissions();
     return (
         <div className="settings-grid-container">

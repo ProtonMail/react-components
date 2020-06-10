@@ -3,12 +3,12 @@ import { hasPermission } from 'proton-shared/lib/helpers/permissions';
 import { PERMISSIONS } from 'proton-shared/lib/constants';
 
 import LinkItem from './LinkItem';
-import { SubSectionConfigWithPermissions } from '../../components/layout';
+import { SubSectionConfig } from '../../components/layout';
 
 interface Props {
     link: string;
     text: string;
-    subsections?: SubSectionConfigWithPermissions[];
+    subsections?: SubSectionConfig[];
     permissions?: PERMISSIONS[];
     pagePermissions?: PERMISSIONS[];
 }

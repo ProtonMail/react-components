@@ -11,6 +11,7 @@ export interface SubSectionConfig {
     text: string;
     id: string;
     hide?: boolean;
+    permissions?: PERMISSIONS[];
 }
 
 export interface SectionConfig {
@@ -19,15 +20,7 @@ export interface SectionConfig {
     link: string;
     icon: string;
     subsections?: SubSectionConfig[];
+    permissions?: PERMISSIONS[];
     // Props to nav item
     [key: string]: any;
-}
-
-export interface SubSectionConfigWithPermissions extends SubSectionConfig {
-    permissions?: PERMISSIONS[];
-}
-
-export interface SettingsPageConfigWithPermissions extends SectionConfig {
-    permissions?: PERMISSIONS[];
-    subsections?: SubSectionConfigWithPermissions[];
 }

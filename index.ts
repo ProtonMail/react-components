@@ -38,8 +38,6 @@ export { default as Tabs } from './components/container/Tabs';
 export { default as SimpleTabs } from './components/container/SimpleTabs';
 export { default as Field } from './components/container/Field';
 export { default as Information } from './components/container/Information';
-export { default as ObserverSection } from './components/container/ObserverSection';
-export { default as ObserverSections } from './components/container/ObserverSections';
 export { default as Tooltip } from './components/tooltip/Tooltip';
 export { default as TreeViewContainer } from './components/treeview/TreeViewContainer';
 export { default as TreeViewItem } from './components/treeview/TreeViewItem';

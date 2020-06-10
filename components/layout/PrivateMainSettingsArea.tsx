@@ -1,14 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { SettingsTitle, ErrorBoundary, PrivateMainArea, ObserverSections } from '../../index';
+import { SettingsTitle, ErrorBoundary, PrivateMainArea, SubSettingsSection, SubSectionConfig } from '../../index';
 import { SettingsPropsShared } from './interface';
+import useActiveSection from './useActiveSection';
 
 interface Props extends SettingsPropsShared {
     title: string;
     appName: string;
     children: React.ReactNode;
+    subsections: SubSectionConfig[];
 }
 
-const SettingsPage = ({ setActiveSection, location, title, children, appName }: Props) => {
+const PrivateMainSettingsArea = ({ setActiveSection, location, title, children, appName, subsections }: Props) => {
     const mainAreaRef = useRef<HTMLDivElement>(null);
     const [scrollTop, setScrollTop] = useState<number>(0);
 
@@ -43,16 +45,37 @@ const SettingsPage = ({ setActiveSection, location, title, children, appName }: 
         return () => clearTimeout(handle);
     }, [location.hash]);
 
+    const observer = useActiveSection(setActiveSection);
+
+    const wrappedSections = React.Children.toArray(children)
+        .filter(React.isValidElement)
+        .map((child, index) => {
+            const subsectionConfig = subsections[index];
+            if (!subsectionConfig) {
+                return child;
+            }
+            const { id, text } = subsectionConfig;
+            return (
+                <SubSettingsSection
+                    key={id}
+                    className="container-section-sticky-section"
+                    title={text}
+                    id={id}
+                    observer={observer}
+                >
+                    {child}
+                </SubSettingsSection>
+            );
+        });
+
     return (
         <PrivateMainArea ref={mainAreaRef} onScroll={handleScroll}>
             <SettingsTitle onTop={!scrollTop}>{title}</SettingsTitle>
             <div className="container-section-sticky">
-                <ErrorBoundary>
-                    <ObserverSections setActiveSection={setActiveSection}>{children}</ObserverSections>
-                </ErrorBoundary>
+                <ErrorBoundary>{wrappedSections}</ErrorBoundary>
             </div>
         </PrivateMainArea>
     );
 };
 
-export default SettingsPage;
+export default PrivateMainSettingsArea;
