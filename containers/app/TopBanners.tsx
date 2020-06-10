@@ -66,11 +66,10 @@ const TopBanners = () => {
             ) : null}
             {onlineStatus ? null : (
                 <TopBanner className="bg-global-warning">{c('Info')
-                    .t`Your device lost its internet connection.`}</TopBanner>
+                    .t`Internet connection lost. Please check your device's connectivity.`}</TopBanner>
             )}
             {onlineStatus && backOnline ? (
-                <TopBanner className="bg-global-success">{c('Info')
-                    .t`Your device is now connected to the internet.`}</TopBanner>
+                <TopBanner className="bg-global-success">{c('Info').t`Internet connection restored.`}</TopBanner>
             ) : null}
         </>
     );
