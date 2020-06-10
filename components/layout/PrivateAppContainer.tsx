@@ -1,9 +1,5 @@
 import React, { Ref } from 'react';
 import { classnames, TopBanners } from '../../index';
-import PrivateContentContainer from './PrivateContentContainer';
-import PrivateContent from './PrivateContent';
-import PrivateMainContainer from './PrivateMainContainer';
-import PrivateMainAreaContainer from './PrivateMainAreaContainer';
 
 interface Props {
     containerRef?: Ref<HTMLDivElement>;
@@ -23,16 +19,22 @@ const PrivateAppContainer = ({
     containerRef
 }: Props) => {
     return (
-        <PrivateContentContainer className={classnames([isBlurred && 'filter-blur'])} ref={containerRef}>
+        <div
+            className={classnames([
+                'content-container flex flex-column flex-nowrap no-scroll',
+                isBlurred && 'filter-blur'
+            ])}
+            ref={containerRef}
+        >
             {hasTopBanners ? <TopBanners /> : null}
-            <PrivateContent>
+            <div className="content flex-item-fluid flex flex-column flex-nowrap reset4print">
                 {header}
-                <PrivateMainContainer>
+                <div className="flex flex-item-fluid flex-nowrap">
                     {sidebar}
-                    <PrivateMainAreaContainer>{children}</PrivateMainAreaContainer>
-                </PrivateMainContainer>
-            </PrivateContent>
-        </PrivateContentContainer>
+                    <div className="main flex flex-column flex-nowrap flex-item-fluid">{children}</div>
+                </div>
+            </div>
+        </div>
     );
 };
 
