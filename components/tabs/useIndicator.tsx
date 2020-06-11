@@ -1,13 +1,15 @@
-import React, { RefObject, createRef } from 'react';
+import React, { useRef } from 'react';
+import { Tab } from './interface';
 
-const getWidth = (ref?: RefObject<HTMLLIElement | HTMLUListElement>) => {
-    if (!ref || !ref.current) return 0;
-    return ref.current.getClientRects()[0].width;
+const getWidth = (el: HTMLLIElement | HTMLUListElement) => {
+    return el.getClientRects()[0].width;
 };
 
-const getComputedMargin = (element: HTMLLIElement) => {
-    const value = window.getComputedStyle(element)?.marginRight;
-    if (value.includes('px')) return Number(value.slice(0, -2));
+const getComputedMargin = (el: HTMLLIElement) => {
+    const value = window.getComputedStyle(el)?.marginRight;
+    if (value.includes('px')) {
+        return Number(value.slice(0, -2));
+    }
     return 0;
 };
 
@@ -16,21 +18,26 @@ const INITIAL_STATE = {
     translate: '0px'
 };
 
-export const useIndicator = (tabs: { ref: RefObject<HTMLLIElement> }[], currentTabIndex: number) => {
-    const tabsRef = createRef<HTMLUListElement>();
+export const useIndicator = (tabs: Tab[], currentTabIndex: number) => {
+    const tabsRef = useRef<HTMLUListElement>(null);
 
     const [{ scale, translate }, setIndicatorParams] = React.useState(INITIAL_STATE);
 
     // on each route change, recalculate indicator offset and scale
     React.useEffect(() => {
-        const tabProperties = tabs.map(({ ref }) => ({
-            ref,
-            width: getWidth(ref),
-            margin: ref.current ? getComputedMargin(ref.current) : 0
+        const tabsEl = tabsRef.current;
+        if (!tabsEl) {
+            setIndicatorParams(INITIAL_STATE);
+            return;
+        }
+        const tabsListItems = tabsEl.querySelectorAll<HTMLLIElement>('.tabs-list-item');
+        const tabProperties = [...tabsListItems].map((el) => ({
+            width: el ? getWidth(el) : 0,
+            margin: el ? getComputedMargin(el) : 0
         }));
         const totalTabWidth = tabProperties.reduce((acc, { width, margin }) => acc + width + margin, 0);
 
-        if (totalTabWidth > getWidth(tabsRef)) {
+        if (totalTabWidth > getWidth(tabsEl)) {
             setIndicatorParams(INITIAL_STATE);
             return;
         }
@@ -49,7 +56,7 @@ export const useIndicator = (tabs: { ref: RefObject<HTMLLIElement> }[], currentT
         );
         // indicator scale is proportion to whole container width
         setIndicatorParams({
-            scale: width / getWidth(tabsRef),
+            scale: width / getWidth(tabsEl),
             translate: `${offset}px`
         });
     }, [tabs, currentTabIndex]);

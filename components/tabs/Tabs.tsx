@@ -1,14 +1,10 @@
 import React, { useState } from 'react';
 import { useIndicator } from './useIndicator';
 import { classnames } from '../../helpers/component';
+import { Tab } from './interface';
 
 const toKey = (index: number, prefix = '') => `${prefix}${index}`;
 
-interface Tab {
-    title: string;
-    content?: React.ReactNode;
-    ref: React.RefObject<HTMLLIElement>;
-}
 interface Props {
     tabs: Tab[];
     preselectedTab?: number;
@@ -20,6 +16,7 @@ const Tabs = ({ tabs = [], preselectedTab = 0, fullWidth }: Props) => {
     const key = toKey(selectedTab, 'key_');
     const label = toKey(selectedTab, 'label_');
     const { content } = tabs[selectedTab];
+
     const { ref: containerRef, scale, translate } = useIndicator(tabs, selectedTab);
 
     return (
@@ -31,11 +28,11 @@ const Tabs = ({ tabs = [], preselectedTab = 0, fullWidth }: Props) => {
                     ref={containerRef}
                     style={{ '--translate': translate, '--scale': scale }}
                 >
-                    {tabs.map(({ title, ref }, index) => {
+                    {tabs.map(({ title }, index) => {
                         const key = toKey(index, 'key_');
                         const label = toKey(index, 'label_');
                         return (
-                            <li key={key} ref={ref} className="tabs-list-item" role="presentation">
+                            <li key={key} className="tabs-list-item" role="presentation">
                                 <button
                                     onClick={(event) => {
                                         event.preventDefault();
@@ -53,10 +50,7 @@ const Tabs = ({ tabs = [], preselectedTab = 0, fullWidth }: Props) => {
                             </li>
                         );
                     })}
-                    <li
-                        className="tabs-indicator"
-                        aria-hidden
-                    />
+                    <li className="tabs-indicator" aria-hidden />
                 </ul>
             </nav>
             <div id={key} className="tabs-tabcontent pt1 pb1" role="tabpanel" aria-labelledby={label}>
