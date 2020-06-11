@@ -10,7 +10,7 @@ interface Props {
 
 const TOTPForm = ({ totp, setTotp }: Props) => {
     return (
-        <div className="flex onmobile-flex-column mb1">
+        <div className="flex onmobile-flex-column signup-label-field-container mb0-5">
             <Label htmlFor="twoFa">{c('Label').t`Two-factor code`}</Label>
             <div className="flex-item-fluid">
                 <Input
