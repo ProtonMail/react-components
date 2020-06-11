@@ -32,7 +32,7 @@ const ForgotUsernameContainer = ({ history }: Props) => {
 
     return (
         <SignLayout
-            title={c('Title').t`Forgot your username?`}
+            title={c('Title').t`Find email or username`}
             left={<BackButton onClick={handleBack} />}
             center={<ProtonLogo />}
             right={

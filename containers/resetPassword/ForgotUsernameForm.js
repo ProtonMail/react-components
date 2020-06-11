@@ -15,7 +15,7 @@ const ForgotUsernameForm = ({ onSubmit, loading }) => {
             }}
         >
             <Alert>{c('Info')
-                .t`Enter your recovery email address, and we'll send you your username(s). (This is usually the email address you provided during signup.)`}</Alert>
+                .t`Enter your recovery email address or recovery phone number and we will send you your username or email address.`}</Alert>
             <div className="flex onmobile-flex-column signup-label-field-container mb2">
                 <Label htmlFor="email">{c('Label').t`Recovery email`}</Label>
                 <div className="flex-item-fluid">
@@ -37,7 +37,7 @@ const ForgotUsernameForm = ({ onSubmit, loading }) => {
                     disabled={!email}
                     loading={loading}
                     type="submit"
-                >{c('Action').t`Email me my username(s)`}</PrimaryButton>
+                >{c('Action').t`Send my username`}</PrimaryButton>
             </div>
         </form>
     );
