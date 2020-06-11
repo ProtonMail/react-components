@@ -9,7 +9,7 @@ interface Props {
 
 const UnlockForm = ({ password, setPassword }: Props) => {
     return (
-        <div className="flex onmobile-flex-column mb1">
+        <div className="flex onmobile-flex-column signup-label-field-container mb1">
             <Label htmlFor="password" className="mr1">{c('Label').t`Mailbox password`}</Label>
             <div className="flex-item-fluid">
                 <Input

@@ -1,6 +1,7 @@
 import React, { ChangeEvent } from 'react';
 import { c } from 'ttag';
-import { Input, Label } from 'react-components';
+
+import { Input, Label } from '../..';
 
 interface Props {
     totp: string;
@@ -9,7 +10,7 @@ interface Props {
 
 const TOTPForm = ({ totp, setTotp }: Props) => {
     return (
-        <div className="flex onmobile-flex-column mb1">
+        <div className="flex onmobile-flex-column signup-label-field-container mb0-5">
             <Label htmlFor="twoFa">{c('Label').t`Two-factor code`}</Label>
             <div className="flex-item-fluid">
                 <Input
@@ -21,8 +22,8 @@ const TOTPForm = ({ totp, setTotp }: Props) => {
                     id="twoFa"
                     required
                     value={totp}
-                    className="w100 mb1"
-                    placeholder={c('Placeholder').t`Two-factor code`}
+                    className="w100"
+                    placeholder="123456"
                     onChange={({ target: { value } }: ChangeEvent<HTMLInputElement>) => setTotp(value)}
                     data-cy-login="TOTP"
                 />
