@@ -1,7 +1,8 @@
 import React, { ChangeEvent } from 'react';
 import { c } from 'ttag';
-import { Input, Label, PasswordInput } from 'react-components';
 import { EMAIL_PLACEHOLDER, PASSWORD_PLACEHOLDER } from 'proton-shared/lib/constants';
+
+import { Input, Label, PasswordInput } from '../../index';
 
 interface Props {
     username: string;

@@ -5,6 +5,7 @@ import { getVerificationHeaders } from 'proton-shared/lib/api';
 import HumanVerificationModal from '../api/HumanVerificationModal';
 import { Api } from 'proton-shared/lib/interfaces';
 import { SignupModel } from './interfaces';
+import { TOKEN_TYPES } from 'proton-shared/lib/constants';
 
 interface ExtraArguments {
     api: Api;
@@ -34,7 +35,7 @@ const humanApi = <T,>(config: any, { api, createModal, model, updateModel }: Ext
             throw error;
         }
 
-        const onVerify = (token: string, tokenType: string): Promise<T> => {
+        const onVerify = (token: string, tokenType: TOKEN_TYPES): Promise<T> => {
             return api<T>({
                 ...config,
                 headers: {

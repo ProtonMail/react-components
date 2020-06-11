@@ -9,9 +9,10 @@ interface Props {
     tabs: Tab[];
     preselectedTab?: number;
     fullWidth?: boolean;
+    onTab?: (tab: number) => void;
 }
 
-const Tabs = ({ tabs = [], preselectedTab = 0, fullWidth }: Props) => {
+const Tabs = ({ tabs = [], preselectedTab = 0, fullWidth, onTab }: Props) => {
     const [selectedTab, updateSelectedTab] = useState(preselectedTab);
     const key = toKey(selectedTab, 'key_');
     const label = toKey(selectedTab, 'label_');
@@ -36,6 +37,7 @@ const Tabs = ({ tabs = [], preselectedTab = 0, fullWidth }: Props) => {
                                 <button
                                     onClick={(event) => {
                                         event.preventDefault();
+                                        onTab?.(index);
                                         updateSelectedTab(index);
                                     }}
                                     className="tabs-list-link"

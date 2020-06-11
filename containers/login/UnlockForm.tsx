@@ -1,6 +1,7 @@
 import React, { ChangeEvent } from 'react';
 import { c } from 'ttag';
-import { Input, Label } from 'react-components';
+
+import { Input, Label } from '../..';
 
 interface Props {
     password: string;
