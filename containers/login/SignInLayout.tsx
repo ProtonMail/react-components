@@ -68,8 +68,8 @@ const SignInLayout = ({ children, title = '' }: Props) => {
 =======
 import React, { ReactNode } from 'react';
 import { c } from 'ttag';
-import { SupportDropdown } from 'react-components';
 
+import { SupportDropdown } from '../../index';
 import SignLayout from '../signup/SignLayout';
 import ProtonLogo from '../../components/logo/ProtonLogo';
 
@@ -84,8 +84,9 @@ const SignInLayout = ({ children, title }: Props) => {
             title={title}
             center={<ProtonLogo />}
             right={
-                <SupportDropdown noCaret={true} className="link" content={c('Action').t`Need help?`}>{c('Action')
-                    .t`Need help?`}</SupportDropdown>
+                <SupportDropdown noCaret={true} className="link">
+                    {c('Action').t`Need help?`}
+                </SupportDropdown>
             }
         >
             {children}

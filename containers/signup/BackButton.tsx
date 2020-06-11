@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon } from 'react-components';
+import { Icon } from '../../index';
 import { c } from 'ttag';
 
 interface Props {

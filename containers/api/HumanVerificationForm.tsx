@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
-import { LearnMore, Tabs } from 'react-components';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 
+import { LearnMore, Tabs } from '../../index';
 import Captcha from './Captcha';
 import CodeVerification from './CodeVerification';
 import RequestInvite from './RequestInvite';
 
-type MethodType = 'captcha' | 'payment' | 'sms' | 'email' | 'invite';
+export type MethodType = 'captcha' | 'payment' | 'sms' | 'email' | 'invite';
 
 interface Props {
     onSubmit: (token: string, tokenType: string) => void;
@@ -52,7 +52,7 @@ const HumanVerificationForm = ({ methods, token, onSubmit }: Props) => {
             ) : (
                 <p>{c('Info').t`To fight spam and abuse, please verify you are human.`}</p>
             )}
-            <Tabs tabs={tabs} selectedTab={index} updateSelectedTab={setIndex} />
+            <Tabs tabs={tabs} preselectedTab={index} onTab={setIndex} />
         </>
     );
 };

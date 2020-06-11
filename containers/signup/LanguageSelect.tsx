@@ -1,7 +1,7 @@
 import React, { useState, ChangeEvent } from 'react';
 import loadLocale from 'proton-shared/lib/i18n/loadLocale';
 import { getBrowserLocale, getClosestMatches, getClosestMatch } from 'proton-shared/lib/i18n/helper';
-import { Select, useForceRefresh, useConfig } from 'react-components';
+import { Select, useForceRefresh, useConfig } from '../../index';
 
 interface Props {
     className?: string;

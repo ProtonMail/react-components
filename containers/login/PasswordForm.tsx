@@ -1,6 +1,7 @@
 import React from 'react';
-import { EMAIL_PLACEHOLDER, PASSWORD_PLACEHOLDER } from 'proton-shared/lib/constants';
 import { c } from 'ttag';
+import { EMAIL_PLACEHOLDER, PASSWORD_PLACEHOLDER } from 'proton-shared/lib/constants';
+
 import { Input, Label, PasswordInput } from '../../index';
 
 interface Props {
