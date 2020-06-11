@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Tab } from './index';
 
 const getWidth = (el: HTMLLIElement | HTMLUListElement) => {
@@ -21,10 +21,10 @@ const INITIAL_STATE = {
 export const useIndicator = (tabs: Tab[], currentTabIndex: number) => {
     const tabsRef = useRef<HTMLUListElement>(null);
 
-    const [{ scale, translate }, setIndicatorParams] = React.useState(INITIAL_STATE);
+    const [{ scale, translate }, setIndicatorParams] = useState(INITIAL_STATE);
 
     // on each route change, recalculate indicator offset and scale
-    React.useEffect(() => {
+    useEffect(() => {
         const tabsEl = tabsRef.current;
         if (!tabsEl) {
             setIndicatorParams(INITIAL_STATE);
@@ -32,8 +32,8 @@ export const useIndicator = (tabs: Tab[], currentTabIndex: number) => {
         }
         const tabsListItems = tabsEl.querySelectorAll<HTMLLIElement>('.tabs-list-item');
         const tabProperties = [...tabsListItems].map((el) => ({
-            width: el ? getWidth(el) : 0,
-            margin: el ? getComputedMargin(el) : 0
+            width: getWidth(el),
+            margin: getComputedMargin(el)
         }));
         const totalTabWidth = tabProperties.reduce((acc, { width, margin }) => acc + width + margin, 0);
 
@@ -60,6 +60,7 @@ export const useIndicator = (tabs: Tab[], currentTabIndex: number) => {
             translate: `${offset}px`
         });
     }, [tabs, currentTabIndex]);
+
     return {
         scale,
         translate,
