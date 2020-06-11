@@ -57,6 +57,12 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
         inputCodeRef.current.focus();
     };
 
+    const alreadyHaveCode = () => {
+        setCode('');
+        setStep(STEPS.VERIFY_CODE);
+        inputCodeRef.current.focus();
+    };
+
     const editDestination = () => {
         setStep(STEPS.ENTER_DESTINATION);
     };
@@ -94,18 +100,20 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
         };
         return (
             <>
-                <label htmlFor="email" className="bl mb0-5">{c('Label').t`Verification email`}</label>
-                <div className="flex flex-nowrap flex-items-start">
-                    <div className="flex-item-fluid mr1">
-                        <EmailInput
-                            id="email"
-                            autoFocus={true}
-                            value={email}
-                            placeholder={c('Placeholder').t`Enter an email address`}
-                            onChange={handleChangeEmail}
-                            required
-                        />
-                    </div>
+                <label htmlFor="email" className="bl mb0-5">{c('Label').t`Email address`}</label>
+                <div className="mb1">
+                    <EmailInput
+                        id="email"
+                        autoFocus={true}
+                        value={email}
+                        placeholder={c('Placeholder').t`Enter an email address`}
+                        onChange={handleChangeEmail}
+                        required
+                    />
+                </div>
+                <div className="alignright">
+                    <InlineLinkButton onClick={alreadyHaveCode} className="mr1">{c('Action')
+                        .t`I already have a code`}</InlineLinkButton>
                     <PrimaryButton
                         disabled={!email || !isEmail(email)}
                         loading={loadingCode}
@@ -120,20 +128,22 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
         const handleChangePhone = (status, value, countryData, number) => setPhone(number);
         return (
             <>
-                <label htmlFor="phone" className="bl mb0-5">{c('Label').t`Verification phone`}</label>
-                <div className="flex flex-nowrap flex-items-start min-h16e">
-                    <div className="flex-item-fluid mr1">
-                        <IntlTelInput
-                            id="phone"
-                            autoFocus={true}
-                            value={phone}
-                            containerClassName="w100"
-                            inputClassName="w100"
-                            dropdownContainer="body"
-                            onPhoneNumberChange={handleChangePhone}
-                            required
-                        />
-                    </div>
+                <label htmlFor="phone" className="bl mb0-5">{c('Label').t`Phone number`}</label>
+                <div className="mb1">
+                    <IntlTelInput
+                        id="phone"
+                        autoFocus={true}
+                        value={phone}
+                        containerClassName="w100"
+                        inputClassName="w100"
+                        dropdownContainer="body"
+                        onPhoneNumberChange={handleChangePhone}
+                        required
+                    />
+                </div>
+                <div className="alignright">
+                    <InlineLinkButton onClick={alreadyHaveCode} className="mr1">{c('Action')
+                        .t`I already have a code`}</InlineLinkButton>
                     <PrimaryButton
                         disabled={!phone}
                         loading={loadingCode}
@@ -161,34 +171,34 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
         };
         return (
             <>
-                <Alert>
-                    <div>{c('Info').jt`Enter the verification code that was sent to ${destinationText}.`}</div>
-                    {isEmailMethod ? (
-                        <div>{c('Info')
-                            .t`If you don't find the email in your inbox, please check your spam folder.`}</div>
-                    ) : null}
-                </Alert>
-                <div className="flex flex-nowrap flex-items-start mb1">
-                    <div className="flex-item-fluid mr1">
-                        <Input
-                            id="code"
-                            ref={inputCodeRef}
-                            value={code}
-                            maxLength="6"
-                            placeholder={c('Placeholder').t`123456`}
-                            onChange={handleChangeCode}
-                            autoFocus={true}
-                            required={true}
-                            error={codeError}
-                        />
-                    </div>
-                    <PrimaryButton
-                        disabled={codeError}
-                        loading={loadingVerification}
-                        onClick={() => withLoadingVerification(verifyCode())}
-                    >{c('Action').t`Verify`}</PrimaryButton>
-                </div>
+                {(isEmailMethod ? (
+                    email
+                ) : (
+                    phone
+                )) ? (
+                    <Alert>
+                        <div>{c('Info').jt`Enter the verification code that was sent to ${destinationText}.`}</div>
+                        {isEmailMethod ? (
+                            <div>{c('Info')
+                                .t`If you don't find the email in your inbox, please check your spam folder.`}</div>
+                        ) : null}
+                    </Alert>
+                ) : null}
+                <label htmlFor="code" className="bl mb0-5">{c('Label').t`Verification code`}</label>
                 <div className="mb0-5">
+                    <Input
+                        id="code"
+                        ref={inputCodeRef}
+                        value={code}
+                        maxLength="6"
+                        placeholder="123456"
+                        onChange={handleChangeCode}
+                        autoFocus={true}
+                        required={true}
+                        error={codeError}
+                    />
+                </div>
+                <div className="mb1">
                     <InlineLinkButton
                         onClick={() =>
                             createModal(
@@ -202,12 +212,14 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
                         }
                     >{c('Action').t`Did not receive the code?`}</InlineLinkButton>
                 </div>
-                <div>
-                    <InlineLinkButton onClick={editDestination}>
-                        {isEmailMethod
-                            ? c('Action').t`Change verification email`
-                            : c('Action').t`Change verification phone number`}
-                    </InlineLinkButton>
+                <div className="alignright">
+                    <InlineLinkButton onClick={editDestination} className="mr1">{c('Action')
+                        .t`Change verification`}</InlineLinkButton>
+                    <PrimaryButton
+                        disabled={codeError}
+                        loading={loadingVerification}
+                        onClick={() => withLoadingVerification(verifyCode())}
+                    >{c('Action').t`Verify`}</PrimaryButton>
                 </div>
             </>
         );

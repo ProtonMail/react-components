@@ -20,7 +20,7 @@ const UnlockForm = ({ password, setPassword }: Props) => {
                     autoCorrect="off"
                     id="password"
                     required
-                    className="w100 mb1"
+                    className="w100"
                     value={password}
                     placeholder={c('Placeholder').t`Mailbox password`}
                     onChange={({ target: { value } }) => setPassword(value)}
