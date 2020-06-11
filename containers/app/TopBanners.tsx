@@ -40,9 +40,11 @@ const TopBanners = () => {
         }
 
         if (onlineStatus) {
-            setTimeout(() => {
+            const timeout = window.setTimeout(() => {
                 setBackOnline(false);
             }, 2000);
+            return () => window.clearTimeout(timeout);
+
         }
     }, [onlineStatus]);
 
