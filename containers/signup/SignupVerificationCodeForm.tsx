@@ -1,7 +1,7 @@
 import React, { ChangeEvent, FormEvent } from 'react';
 import { c } from 'ttag';
-import { VerificationCodeInput, InlineLinkButton, Alert } from 'react-components';
 
+import { VerificationCodeInput, InlineLinkButton, Alert } from '../../index';
 import { SignupModel, SignupErros } from './interfaces';
 import { PrimaryButton } from '../../components/button';
 

@@ -1,14 +1,14 @@
 import React from 'react';
-import { FormModal, useNotifications } from 'react-components';
 import { API_CUSTOM_ERROR_CODES } from 'proton-shared/lib/errors';
 import { c } from 'ttag';
 
+import { FormModal, useNotifications } from '../../index';
 import './HumanVerificationModal.scss';
-import HumanVerificationForm from './HumanVerificationForm';
+import HumanVerificationForm, { MethodType } from './HumanVerificationForm';
 
 interface Props<T> {
     token: string;
-    methods: string[];
+    methods: MethodType[];
     onSuccess: (data: T) => void;
     onVerify: (token: string, tokenType: string) => Promise<T>;
     [key: string]: any;

@@ -20,6 +20,7 @@ const VALIDATE_RESET_TOKEN_STEP = 1;
 const DANGER_VERIFICATION_STEP = 2;
 const NEW_PASSWORD_STEP = 3;
 
+/** @type any **/
 const ResetPasswordForm = ({ onLogin }) => {
     const api = useApi();
     const [step, setStep] = useState(REQUEST_RESET_TOKEN_STEP);

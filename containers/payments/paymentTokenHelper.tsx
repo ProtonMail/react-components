@@ -4,8 +4,8 @@ import { getTokenStatus, createToken } from 'proton-shared/lib/api/payments';
 import { Api } from 'proton-shared/lib/interfaces';
 import { wait } from 'proton-shared/lib/helpers/promise';
 import { c } from 'ttag';
-import { PaymentVerificationModal } from 'react-components';
 import { getHostname } from 'proton-shared/lib/helpers/url';
+import { PaymentVerificationModal } from '../../index';
 
 const {
     STATUS_PENDING,
