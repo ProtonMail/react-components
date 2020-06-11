@@ -49,7 +49,9 @@ const HumanVerificationForm = ({ methods, token, onSubmit }: Props) => {
                         .t`Your email or phone number will only be used for this one-time verification.`}</span>
                     <LearnMore url="https://protonmail.com/support/knowledge-base/human-verification/" />
                 </p>
-            ) : null}
+            ) : (
+                <p>{c('Info').t`To fight spam and abuse, please verify you are human.`}</p>
+            )}
             <Tabs tabs={tabs} selectedTab={index} updateSelectedTab={setIndex} />
         </>
     );
