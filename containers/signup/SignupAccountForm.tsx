@@ -104,12 +104,12 @@ const SignupAccountForm = ({ history, model, onChange, onSubmit, errors, loading
                                         required
                                     />
                                 </div>
-                                <span className="pt0-5 italic right-icon absolute">@{availableDomain}</span>
+                                <span className="pt0-5 right-icon absolute">@{availableDomain}</span>
                             </div>
                             <InlineLinkButton
                                 id="existing-email-button"
                                 onClick={() => onChange({ ...model, username: '', step: ACCOUNT_CREATION_EMAIL })}
-                            >{c('Action').t`Use an existing email address to signup`}</InlineLinkButton>
+                            >{c('Action').t`Use your current email address instead`}</InlineLinkButton>
                         </Challenge>
                     </div>
                 </div>
@@ -147,40 +147,42 @@ const SignupAccountForm = ({ history, model, onChange, onSubmit, errors, loading
                     </div>
                 </div>
             ) : null}
-            <div className="flex onmobile-flex-column signup-label-field-container mb0-5">
-                <Label htmlFor="password">{c('Signup label').t`Password`}</Label>
-                <div className="flex-item-fluid">
-                    <PasswordInput
-                        id="password"
-                        name="password"
-                        autoComplete="off"
-                        autoCapitalize="off"
-                        autoCorrect="off"
-                        value={model.password}
-                        onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
-                            onChange({ ...model, password: target.value })
-                        }
-                        error={errors.password}
-                        required
-                    />
+            <div className="flex flex-nowrap mb2">
+                <div className="flex flex-item-fluid onmobile-flex-column signup-label-field-container mr0-5">
+                    <Label htmlFor="password">{c('Signup label').t`Password`}</Label>
+                    <div className="flex-item-fluid">
+                        <PasswordInput
+                            id="password"
+                            name="password"
+                            autoComplete="off"
+                            autoCapitalize="off"
+                            autoCorrect="off"
+                            value={model.password}
+                            onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
+                                onChange({ ...model, password: target.value })
+                            }
+                            error={errors.password}
+                            required
+                        />
+                    </div>
                 </div>
-            </div>
-            <div className="flex onmobile-flex-column signup-label-field-container mb2">
-                <Label htmlFor="password-repeat">{c('Signup label').t`Confirm password`}</Label>
-                <div className="flex-item-fluid">
-                    <PasswordInput
-                        id="password-repeat"
-                        name="password-repeat"
-                        autoComplete="off"
-                        autoCapitalize="off"
-                        autoCorrect="off"
-                        value={model.confirmPassword}
-                        onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
-                            onChange({ ...model, confirmPassword: target.value })
-                        }
-                        error={errors.confirmPassword}
-                        required
-                    />
+                <div className="flex flex-item-fluid onmobile-flex-column signup-label-field-container ml0-5">
+                    <Label htmlFor="password-repeat">{c('Signup label').t`Confirm`}</Label>
+                    <div className="flex-item-fluid">
+                        <PasswordInput
+                            id="password-repeat"
+                            name="password-repeat"
+                            autoComplete="off"
+                            autoCapitalize="off"
+                            autoCorrect="off"
+                            value={model.confirmPassword}
+                            onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
+                                onChange({ ...model, confirmPassword: target.value })
+                            }
+                            error={errors.confirmPassword}
+                            required
+                        />
+                    </div>
                 </div>
             </div>
             <div className="alignright mb2">

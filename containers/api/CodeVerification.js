@@ -110,7 +110,7 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
                         disabled={!email || !isEmail(email)}
                         loading={loadingCode}
                         onClick={() => withLoadingCode(sendCode())}
-                    >{c('Action').t`Send`}</PrimaryButton>
+                    >{c('Action').t`Send code`}</PrimaryButton>
                 </div>
             </>
         );
@@ -138,7 +138,7 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
                         disabled={!phone}
                         loading={loadingCode}
                         onClick={() => withLoadingCode(sendCode())}
-                    >{c('Action').t`Send`}</PrimaryButton>
+                    >{c('Action').t`Send code`}</PrimaryButton>
                 </div>
             </>
         );

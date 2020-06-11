@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
-import { Alert, Tabs } from 'react-components';
+import { LearnMore, Tabs } from 'react-components';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 
 import Captcha from './Captcha';
@@ -43,10 +43,12 @@ const HumanVerificationForm = ({ methods, token, onSubmit }: Props) => {
 
     return (
         <>
-            <Alert type="warning">{c('Info').t`To fight spam and abuse, please verify you are human.`}</Alert>
             {tabs[index] && ['email', 'sms'].includes(tabs[index].method) ? (
-                <Alert learnMore="https://protonmail.com/support/knowledge-base/human-verification/">{c('Info')
-                    .t`Your email or phone number will only be used for this one-time verification.`}</Alert>
+                <p>
+                    <span className="mr0-5">{c('Info')
+                        .t`Your email or phone number will only be used for this one-time verification.`}</span>
+                    <LearnMore url="https://protonmail.com/support/knowledge-base/human-verification/" />
+                </p>
             ) : null}
             <Tabs tabs={tabs} selectedTab={index} updateSelectedTab={setIndex} />
         </>
