@@ -81,10 +81,10 @@ const SignupRecoveryForm = ({ model, onChange, onSubmit, errors, loading }: Prop
             onSubmit={(e) => withLoadingChallenge(handleSubmit(e))}
             ref={formRef}
         >
-            <p>{c('Info')
-                .t`Proton will send you a recovery link to this email address if you forget your password or get locked out of your account.`}</p>
             {model.step === RECOVERY_EMAIL ? (
                 <>
+                    <p>{c('Info')
+                        .t`We will send you a recovery link to this email address if you forget your password or get locked out of your account.`}</p>
                     <div className="flex onmobile-flex-column signup-label-field-container mb1">
                         <Label htmlFor="recovery-email">{c('Label').t`Recovery email`}</Label>
                         <div className="flex-item-fluid">
@@ -120,6 +120,8 @@ const SignupRecoveryForm = ({ model, onChange, onSubmit, errors, loading }: Prop
             ) : null}
             {model.step === RECOVERY_PHONE ? (
                 <>
+                    <p>{c('Info')
+                        .t`We will send a code to this phone number if you forget your password or get locked out of your account.`}</p>
                     <div className="flex onmobile-flex-column signup-label-field-container mb1">
                         <Label htmlFor="recovery-phone">{c('Label').t`Recovery phone`}</Label>
                         <div className="flex-item-fluid">
