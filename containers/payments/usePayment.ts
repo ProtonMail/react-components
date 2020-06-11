@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { PAYMENT_METHOD_TYPES } from 'proton-shared/lib/constants';
-import { useCard, usePayPal } from 'react-components';
 
+import { useCard, usePayPal } from '../../index';
 import toDetails from './toDetails';
 
 const { CARD, BITCOIN, CASH, PAYPAL, PAYPAL_CREDIT } = PAYMENT_METHOD_TYPES;
@@ -33,7 +33,7 @@ interface PaymentParameters {
 }
 
 const usePayment = ({ amount, currency, onPay }: Props) => {
-    const [card, setCard, errors, isValid] = useCard();
+    const { card, setCard, errors, isValid } = useCard();
     const [method, setMethod] = useState<PAYMENT_METHOD_TYPES | undefined>();
     const [parameters, setParameters] = useState<PaymentParameters>({});
     const isPayPalActive = method === PAYPAL;

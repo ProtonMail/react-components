@@ -1,8 +1,8 @@
 import React from 'react';
 import { c } from 'ttag';
 import { History } from 'history';
-import { ResetPasswordForm, SupportDropdown } from 'react-components';
 
+import { ResetPasswordForm, SupportDropdown } from '../../index';
 import SignLayout from '../signup/SignLayout';
 import ProtonLogo from '../../components/logo/ProtonLogo';
 import BackButton from '../signup/BackButton';
@@ -23,8 +23,9 @@ const ResetPasswordContainer = ({ onLogin, history }: Props) => {
             left={<BackButton onClick={handleBack} />}
             center={<ProtonLogo />}
             right={
-                <SupportDropdown noCaret={true} className="link" content={c('Action').t`Need help?`}>{c('Action')
-                    .t`Need help?`}</SupportDropdown>
+                <SupportDropdown noCaret={true} className="link">
+                    {c('Action').t`Need help?`}
+                </SupportDropdown>
             }
         >
             <ResetPasswordForm onLogin={onLogin} />

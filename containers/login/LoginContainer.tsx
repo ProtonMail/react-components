@@ -33,8 +33,10 @@ import SignLayout from '../signup/SignLayout';
 import BackButton from '../signup/BackButton';
 import ProtonLogo from '../../components/logo/ProtonLogo';
 import OneAccountIllustration from '../illustration/OneAccountIllustration';
+import { User as tsUser } from 'proton-shared/lib/interfaces';
 
-const withAuthHeaders = (UID, AccessToken, config) => mergeHeaders(config, getAuthHeaders(UID, AccessToken));
+const withAuthHeaders = (UID: string, AccessToken: string, config: any) =>
+    mergeHeaders(config, getAuthHeaders(UID, AccessToken));
 
 enum FORM {
     LOGIN,
@@ -43,16 +45,22 @@ enum FORM {
     UNLOCK
 }
 
+interface OnLoginArgs {
+    UID: string;
+    User: tsUser;
+    keyPassword?: string;
+    EventID: string;
+}
+
 interface Props {
-    onLogin: () => void;
+    onLogin: (args: OnLoginArgs) => void;
     ignoreUnlock?: boolean;
 }
 
-/** @type any */
 const LoginForm = ({ onLogin, ignoreUnlock = false }: Props) => {
     const { createNotification } = useNotifications();
     const { createModal } = useModals();
-    const cacheRef = useRef();
+    const cacheRef = useRef<any>();
     const api = useApi();
 
     const [loading, withLoading] = useLoading();
@@ -70,11 +78,11 @@ const LoginForm = ({ onLogin, ignoreUnlock = false }: Props) => {
      * @param {String} [keyPassword]
      * @return {Promise}
      */
-    const finalizeLogin = async (keyPassword) => {
+    const finalizeLogin = async (keyPassword?: string) => {
         const {
             authVersion,
             authResult: { UID, EventID, AccessToken, RefreshToken },
-            userSaltResult: [{ User }] = [{}] // Default for case 1)
+            userSaltResult: [{ User }] = [{ User: undefined }] // Default for case 1)
         } = cacheRef.current;
 
         cacheRef.current = undefined;
@@ -97,12 +105,12 @@ const LoginForm = ({ onLogin, ignoreUnlock = false }: Props) => {
      * Attempt to decrypt the primary private key with the password.
      * @return {Promise}
      */
-    const handleUnlock = async (password) => {
+    const handleUnlock = async (password: string) => {
         const {
             userSaltResult: [{ User }, { KeySalts }]
         } = cacheRef.current;
 
-        const { keyPassword } = await handleUnlockKey(User, KeySalts, password).catch(() => ({}));
+        const { keyPassword } = await handleUnlockKey(User, KeySalts, password).catch(() => ({ keyPassword: '' }));
         if (!keyPassword) {
             const error = new Error(c('Error').t`Wrong mailbox password`);
             error.name = 'PasswordError';
@@ -112,7 +120,7 @@ const LoginForm = ({ onLogin, ignoreUnlock = false }: Props) => {
         return finalizeLogin(keyPassword);
     };
 
-    const next = async (previousForm) => {
+    const next = async (previousForm: FORM) => {
         const {
             authResult,
             authResult: { UID, AccessToken }
@@ -169,6 +177,8 @@ const LoginForm = ({ onLogin, ignoreUnlock = false }: Props) => {
             if (e.status === HTTP_ERROR_CODES.UNPROCESSABLE_ENTITY) {
                 const error = new Error('Retry TOTP error');
                 error.name = 'RetryTOTPError';
+                // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+                // @ts-ignore
                 error.data = e.data;
                 throw error;
             }
@@ -232,9 +242,9 @@ const LoginForm = ({ onLogin, ignoreUnlock = false }: Props) => {
                         setPassword={loading ? noop : setPassword}
                     />
                     <div className="mb1">
-                        <SupportDropdown noCaret={true} className="link" content={c('Action').t`Need help?`}>{c(
-                            'Action'
-                        ).t`Need help?`}</SupportDropdown>
+                        <SupportDropdown noCaret={true} className="link">
+                            {c('Action').t`Need help?`}
+                        </SupportDropdown>
                     </div>
                     <div className="alignright mb2">
                         <PrimaryButton
@@ -271,8 +281,9 @@ const LoginForm = ({ onLogin, ignoreUnlock = false }: Props) => {
                 left={<BackButton onClick={handleCancel} />}
                 center={<ProtonLogo />}
                 right={
-                    <SupportDropdown noCaret={true} className="link" content={c('Action').t`Need help?`}>{c('Action')
-                        .t`Need help?`}</SupportDropdown>
+                    <SupportDropdown noCaret={true} className="link">
+                        {c('Action').t`Need help?`}
+                    </SupportDropdown>
                 }
             >
                 <form name="totpForm" className="signup-form" onSubmit={handleSubmit} autoComplete="off">
@@ -328,8 +339,9 @@ const LoginForm = ({ onLogin, ignoreUnlock = false }: Props) => {
                 left={<BackButton onClick={handleCancel} />}
                 center={<ProtonLogo />}
                 right={
-                    <SupportDropdown noCaret={true} className="link" content={c('Action').t`Need help?`}>{c('Action')
-                        .t`Need help?`}</SupportDropdown>
+                    <SupportDropdown noCaret={true} className="link">
+                        {c('Action').t`Need help?`}
+                    </SupportDropdown>
                 }
             >
                 <form name="unlockForm" className="signup-form" onSubmit={handleSubmit}>
@@ -351,7 +363,7 @@ const LoginForm = ({ onLogin, ignoreUnlock = false }: Props) => {
     }
 
     if (form === FORM.U2F) {
-        return 'U2F not implemented';
+        throw new Error('U2F not implemented');
     }
 
     throw new Error('Unsupported form');
