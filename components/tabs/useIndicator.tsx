@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Tab } from './interface';
+import { Tab } from './index';
 
 const getWidth = (el: HTMLLIElement | HTMLUListElement) => {
     return el.getClientRects()[0].width;

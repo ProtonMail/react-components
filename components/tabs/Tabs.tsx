@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useIndicator } from './useIndicator';
 import { classnames } from '../../helpers/component';
-import { Tab } from './interface';
+import { Tab } from './index';
 
 const toKey = (index: number, prefix = '') => `${prefix}${index}`;
 
