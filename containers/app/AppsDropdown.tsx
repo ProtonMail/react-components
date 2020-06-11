@@ -58,7 +58,6 @@ const AppsDropdown = () => {
                                 className="appsDropdown-link big m0 p1 pt0-75 pb0-75 flex flex-nowrap flex-items-center"
                                 external={!isCurrent}
                                 target="_blank"
-                                // aria-current={isCurrent}
                                 title={c('Apps dropdown').t`Go to ${title}`}
                             >
                                 <Icon name={icon} size={20} className="mr0-5" />
