@@ -1,9 +1,10 @@
 import React, { ReactNode, useEffect } from 'react';
 import { c } from 'ttag';
-import { classnames, Href, useConfig } from 'react-components';
+
+import { classnames, Href, useConfig } from '../../index';
+import LanguageSelect from './LanguageSelect';
 
 import './SignLayout.scss';
-import LanguageSelect from './LanguageSelect';
 
 interface Props {
     children: ReactNode;

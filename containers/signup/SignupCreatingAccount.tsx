@@ -1,7 +1,7 @@
 import React from 'react';
-import { Loader } from 'react-components';
 import { c } from 'ttag';
 
+import { Loader } from '../../index';
 import { SignupModel } from './interfaces';
 
 interface Props {

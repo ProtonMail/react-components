@@ -11,11 +11,12 @@ import {
     Challenge,
     Label,
     useLoading
-} from 'react-components';
+} from '../../index';
 
 import { SignupModel, SignupErros } from './interfaces';
 import { SIGNUP_STEPS } from './constants';
 import InlineLinkButton from '../../components/button/InlineLinkButton';
+import { ChallengeRef } from '../../components/challenge/ChallengeFrame';
 
 interface Props {
     model: SignupModel;
@@ -28,9 +29,9 @@ interface Props {
 const { RECOVERY_EMAIL, RECOVERY_PHONE, PLANS } = SIGNUP_STEPS;
 
 const SignupRecoveryForm = ({ model, onChange, onSubmit, errors, loading }: Props) => {
-    const formRef = useRef();
+    const formRef = useRef<HTMLFormElement>(null);
     const { createModal } = useModals();
-    const challengeRefRecovery = useRef();
+    const challengeRefRecovery = useRef<ChallengeRef>();
     const [loadingChallenge, withLoadingChallenge] = useLoading();
     const disableSubmit = model.step === RECOVERY_EMAIL ? !!errors.recoveryEmail : !!errors.recoveryPhone;
 
@@ -54,7 +55,7 @@ const SignupRecoveryForm = ({ model, onChange, onSubmit, errors, loading }: Prop
             payload: payload
                 ? {
                       ...model.payload,
-                      payload
+                      ...payload
                   }
                 : model.payload
         });
@@ -68,7 +69,7 @@ const SignupRecoveryForm = ({ model, onChange, onSubmit, errors, loading }: Prop
                 ...model,
                 payload: {
                     ...model.payload,
-                    payload
+                    ...payload
                 }
             });
         onSubmit(e);
@@ -88,7 +89,7 @@ const SignupRecoveryForm = ({ model, onChange, onSubmit, errors, loading }: Prop
                     <div className="flex onmobile-flex-column signup-label-field-container mb1">
                         <Label htmlFor="recovery-email">{c('Label').t`Recovery email`}</Label>
                         <div className="flex-item-fluid">
-                            <Challenge challengeRef={challengeRefRecovery} type="1">
+                            <Challenge challengeRef={challengeRefRecovery} type={1}>
                                 <div className="mb0-5">
                                     <EmailInput
                                         id="recovery-email"

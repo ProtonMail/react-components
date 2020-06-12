@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { createToken } from 'proton-shared/lib/api/payments';
-import { useApi, useLoading, useModals, useDebounceInput } from 'react-components';
 import { PAYMENT_METHOD_TYPES } from 'proton-shared/lib/constants';
 
+import { useApi, useLoading, useModals, useDebounceInput } from '../index';
 import PaymentVerificationModal from '../containers/payments/PaymentVerificationModal';
 import { process } from '../containers/payments/paymentTokenHelper';
 
@@ -35,7 +35,7 @@ const usePayPal = ({ isActive, amount = 0, currency: Currency = '', type: Type, 
     const debouncedAmount = useDebounceInput(amount);
 
     const onToken = async () => {
-        const result = await api(
+        const result = await api<Model>(
             createToken({
                 Amount: debouncedAmount,
                 Currency,

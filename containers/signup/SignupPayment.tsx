@@ -1,7 +1,8 @@
 import React from 'react';
 import { c } from 'ttag';
-import { Alert, Payment, SubscriptionCheckout } from 'react-components';
+import { PAYMENT_METHOD_TYPES } from 'proton-shared/lib/constants';
 
+import { Alert, Payment, SubscriptionCheckout } from '../../index';
 import { SignupModel, SignupPlan, SignupPayPal, SubscriptionCheckResult } from './interfaces';
 import SignupCheckoutButton from './SignupCheckoutButton';
 
@@ -10,11 +11,11 @@ interface Props {
     checkResult: SubscriptionCheckResult;
     onChange: (model: SignupModel) => void;
     card: any;
-    onCardChange: () => void;
+    onCardChange: (key: string, value: string) => void;
     paypal: SignupPayPal;
     paypalCredit: SignupPayPal;
     method: any;
-    onMethodChange: (method: string) => void;
+    onMethodChange: (method: PAYMENT_METHOD_TYPES) => void;
     errors: any;
     canPay: boolean;
     loading: boolean;

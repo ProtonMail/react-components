@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { History } from 'history';
-import { useApi, useLoading, useConfig, usePlans, useModals, usePayment, SupportDropdown } from 'react-components';
 import ProtonLogo from '../../components/logo/ProtonLogo';
 import { queryAvailableDomains } from 'proton-shared/lib/api/domains';
 import { setupAddress } from 'proton-shared/lib/api/addresses';
@@ -27,6 +26,7 @@ import {
     queryVerificationCode,
     queryCheckVerificationCode
 } from 'proton-shared/lib/api/user';
+import { useApi, useLoading, useConfig, usePlans, useModals, usePayment, SupportDropdown } from '../../index';
 
 import SignLayout from './SignLayout';
 import SignupAside from './SignupAside';
@@ -89,7 +89,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
     const [usernameError, setUsernameError] = useState<string>('');
     const hasPaidPlan = ({ planIDs = {} } = {}) => !!Object.keys(planIDs).length;
 
-    const handlePayPal = () => {
+    const handlePayPal = async () => {
         // TODO
     };
 
@@ -106,8 +106,8 @@ const SignupContainer = ({ onLogin, history }: Props) => {
     } = usePayment({
         amount: checkResult.AmountDue,
         currency: model.currency,
-        onPay(params) {
-            return withLoading(handlePayPal(params));
+        onPay() {
+            return withLoading(handlePayPal());
         }
     });
 
@@ -305,7 +305,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                 });
                 updateModel({
                     ...currentModel,
-                    verificationToken: Payment ? Payment.Details.Token : '',
+                    verificationToken: Payment && 'Token' in Payment?.Details ? Payment.Details.Token : '',
                     verificationTokenType: TOKEN_TYPES.PAYMENT,
                     hasPaymentToken: true
                 });
@@ -344,6 +344,9 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                     throw error;
                 }
             } else if (currentModel.email) {
+                if (!currentModel.emailToken) {
+                    throw new Error('Missing email token');
+                }
                 await srpVerify({
                     api: humanApi,
                     credentials: { password: currentModel.password },
@@ -510,10 +513,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                 )
             }
             center={<ProtonLogo />}
-            right={
-                <SupportDropdown noCaret={true} className="link" content={c('Action').t`Need help?`}>{c('Action')
-                    .t`Need help?`}</SupportDropdown>
-            }
+            right={<SupportDropdown noCaret={true} className="link">{c('Action').t`Need help?`}</SupportDropdown>}
             aside={
                 [ACCOUNT_CREATION_USERNAME, ACCOUNT_CREATION_EMAIL].includes(model.step) ? (
                     <SignupAside model={model} />
