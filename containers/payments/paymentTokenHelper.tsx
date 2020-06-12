@@ -6,6 +6,7 @@ import { wait } from 'proton-shared/lib/helpers/promise';
 import { c } from 'ttag';
 import { getHostname } from 'proton-shared/lib/helpers/url';
 import { PaymentVerificationModal } from '../../index';
+import { PaymentParameters } from './usePayment';
 
 const {
     STATUS_PENDING,
@@ -164,14 +165,7 @@ export const toParams = (params: Params, Token: string, type?: string) => {
     };
 };
 
-interface Params {
-    Payment?: {
-        Type: PAYMENT_METHOD_TYPES;
-        Details: {
-            Token: string;
-        };
-    };
-    PaymentMethodID?: string;
+interface Params extends PaymentParameters {
     Amount: number;
     Currency: string;
 }

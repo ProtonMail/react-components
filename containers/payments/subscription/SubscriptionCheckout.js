@@ -30,6 +30,7 @@ CheckoutRow.propTypes = {
     currency: PropTypes.string.isRequired
 };
 
+/** @type any */
 const SubscriptionCheckout = ({ submit = c('Action').t`Pay`, plans = [], model, setModel, checkResult, loading }) => {
     const plansMap = toMap(plans);
     const storageAddon = plans.find(({ Name }) => Name === ADDON_NAMES.SPACE);

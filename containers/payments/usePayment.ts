@@ -12,23 +12,25 @@ interface Props {
     onPay: () => void;
 }
 
-interface PaymentParameters {
+interface TokenPaymentDetails {
+    Token: string;
+}
+
+interface CardPaymentDetails {
+    Name: string;
+    Number: string;
+    ExpMonth: string;
+    ExpYear: string;
+    CVC: string;
+    ZIP: string;
+    Country: string;
+}
+
+export interface PaymentParameters {
     PaymentMethodID?: string;
     Payment?: {
-        Type: string;
-        Details:
-            | {
-                  Token: string;
-              }
-            | {
-                  Name: string;
-                  Number: string;
-                  ExpMonth: string;
-                  ExpYear: string;
-                  CVC: string;
-                  ZIP: string;
-                  Country: string;
-              };
+        Type: PAYMENT_METHOD_TYPES;
+        Details: TokenPaymentDetails | CardPaymentDetails;
     };
 }
 
@@ -57,7 +59,7 @@ const usePayment = ({ amount, currency, onPay }: Props) => {
     const hasToken = (): boolean => {
         const { Payment } = parameters;
         const { Details } = Payment || {};
-        const { Token = '' } = Details || {};
+        const { Token = '' } = (Details as any) || {};
         return !!Token;
     };
 

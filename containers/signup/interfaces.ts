@@ -1,5 +1,5 @@
 import { SIGNUP_STEPS } from './constants';
-import { TOKEN_TYPES } from 'proton-shared/lib/constants';
+import { MethodType } from '../api/HumanVerificationForm';
 
 export interface PlanIDs {
     [planID: string]: number;
@@ -38,10 +38,10 @@ export interface SignupModel {
     currency: string;
     cycle: number;
     planIDs: PlanIDs;
-    humanVerificationMethods: string[];
+    humanVerificationMethods: MethodType[];
     humanVerificationToken: string;
     verificationToken?: string;
-    verificationTokenType?: TOKEN_TYPES;
+    verificationTokenType?: MethodType;
     emailToken?: string;
     payload?: Payload;
     hasPaymentToken: boolean;

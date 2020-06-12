@@ -1,8 +1,8 @@
 import React from 'react';
-import { HumanVerificationForm } from 'react-components';
-import { TOKEN_TYPES } from 'proton-shared/lib/constants';
 
+import { HumanVerificationForm } from '../../index';
 import { SignupModel } from './interfaces';
+import { MethodType } from '../api/HumanVerificationForm';
 
 interface Props {
     model: SignupModel;
@@ -11,7 +11,7 @@ interface Props {
 }
 
 const SignupHumanVerification = ({ model, onChange, onSubmit }: Props) => {
-    const handleSubmit = (token: string, tokenType: TOKEN_TYPES) => {
+    const handleSubmit = (token: string, tokenType: MethodType) => {
         onChange({
             ...model,
             verificationToken: token,
