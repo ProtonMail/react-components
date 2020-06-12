@@ -5,6 +5,8 @@ import {
     ButtonGroup,
     Group,
     Href,
+    Icon,
+    Info,
     useApiResult,
     useApiWithoutResult,
     Button,
@@ -273,14 +275,57 @@ const OpenVPNConfigurationSection = () => {
                         />
                     </>
                 )}
-                {isUpgradeRequiredForDownloadAll ? (
-                    <Tooltip title={c('Info').t`Plan upgrade required`}>
-                        <Button loading={vpnLoading} disabled>{c('Action').t`Download all configurations`}</Button>
-                    </Tooltip>
-                ) : (
-                    <Button loading={vpnLoading} onClick={() => downloadAllConfigs()}>{c('Action')
-                        .t`Download all configurations`}</Button>
-                )}
+                <div className="mb2">
+                    {isUpgradeRequiredForDownloadAll ? (
+                        <Tooltip title={c('Info').t`Plan upgrade required`}>
+                            <Button loading={vpnLoading} disabled>{c('Action').t`Download all configurations`}</Button>
+                        </Tooltip>
+                    ) : (
+                        <Button loading={vpnLoading} onClick={() => downloadAllConfigs()}>{c('Action')
+                            .t`Download all configurations`}</Button>
+                    )}
+                </div>
+                {userVPN.PlanName === 'trial' || !hasPaidVpn ? (
+                    <div className="bordered-container p2 aligncenter">
+                        <h3 className="color-pv-green mt0 mb1">{c('Title')
+                            .t`Get ProtonVPN Plus to access all servers`}</h3>
+                        <ul className="unstyled inline-flex mt0 mb2 onmobile-flex-column">
+                            <li className="flex flex-nowrap flex-items-center mr1">
+                                <Icon name="on" className="color-global-success mr0-5" />
+                                <span className="bold">{c('Feature').t`Access to all countries`}</span>
+                            </li>
+                            <li className="flex flex-nowrap flex-items-center mr1">
+                                <Icon name="on" className="color-global-success mr0-5" />
+                                <span className="bold">{c('Feature').t`Secure Core servers`}</span>
+                            </li>
+                            <li className="flex flex-nowrap flex-items-center mr1">
+                                <Icon name="on" className="color-global-success mr0-5" />
+                                <span className="bold">{c('Feature').t`Fatest VPN servers`}</span>
+                            </li>
+                            <li className="flex flex-nowrap flex-items-center mr1">
+                                <Icon name="on" className="color-global-success mr0-5" />
+                                <span className="bold">{c('Feature').t`Torrenting support (P2P)`}</span>
+                            </li>
+                            <li className="flex flex-nowrap flex-items-center mr1">
+                                <Icon name="on" className="color-global-success mr0-5" />
+                                <span className="bold">{c('Feature').t`Connection for up to 5 devices`}</span>
+                            </li>
+                            <li className="flex flex-nowrap flex-items-center ">
+                                <Icon name="on" className="color-global-success mr0-5" />
+                                <span className="bold mr0-5">{c('Feature').t`Secure streaming support`}</span>
+                                <Info
+                                    url="https://protonvpn.com/support/streaming-guide/"
+                                    title={c('VPN info')
+                                        .t`Netflix, Amazon Prime Video, BBC iPlayer, ESPN+, Disney+, HBO Now, and more.`}
+                                />
+                            </li>
+                        </ul>
+                        <div>
+                            <Link className="pm-button pm-button--primary" to="/dashboard">{c('Action')
+                                .t`Get ProtonVPN Plus`}</Link>
+                        </div>
+                    </div>
+                ) : null}
             </Block>
         </>
     );
