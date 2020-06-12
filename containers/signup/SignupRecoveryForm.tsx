@@ -89,7 +89,11 @@ const SignupRecoveryForm = ({ model, onChange, onSubmit, errors, loading }: Prop
                     <div className="flex onmobile-flex-column signup-label-field-container mb1">
                         <Label htmlFor="recovery-email">{c('Label').t`Recovery email`}</Label>
                         <div className="flex-item-fluid">
-                            <Challenge challengeRef={challengeRefRecovery} type={1}>
+                            <Challenge
+                                bodyClassName="signLayout-container"
+                                challengeRef={challengeRefRecovery}
+                                type={1}
+                            >
                                 <div className="mb0-5">
                                     <EmailInput
                                         id="recovery-email"

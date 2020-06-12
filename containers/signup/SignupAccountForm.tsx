@@ -83,7 +83,7 @@ const SignupAccountForm = ({ history, model, onChange, onSubmit, errors, loading
                 <div className="flex onmobile-flex-column signup-label-field-container mb1">
                     <Label htmlFor="login">{c('Signup label').t`Username`}</Label>
                     <div className="flex-item-fluid">
-                        <Challenge challengeRef={challengeRefLogin} type={0}>
+                        <Challenge bodyClassName="signLayout-container" challengeRef={challengeRefLogin} type={0}>
                             <div className="flex flex-nowrap flex-items-center flex-item-fluid relative mb0-5">
                                 <div className="flex-item-fluid">
                                     <Input
@@ -106,7 +106,7 @@ const SignupAccountForm = ({ history, model, onChange, onSubmit, errors, loading
                                         required
                                     />
                                 </div>
-                                <span className="pt0-5 right-icon absolute">@{availableDomain}</span>
+                                <span className="pt0-75 right-icon absolute">@{availableDomain}</span>
                             </div>
                             <InlineLinkButton
                                 id="existing-email-button"
@@ -120,7 +120,7 @@ const SignupAccountForm = ({ history, model, onChange, onSubmit, errors, loading
                 <div className="flex onmobile-flex-column signup-label-field-container mb1">
                     <Label htmlFor="login">{c('Signup label').t`Email`}</Label>
                     <div className="flex-item-fluid">
-                        <Challenge challengeRef={challengeRefLogin} type={0}>
+                        <Challenge bodyClassName="signLayout-container" challengeRef={challengeRefLogin} type={0}>
                             <div className="mb0-5 flex-item-fluid">
                                 <EmailInput
                                     id="login"
