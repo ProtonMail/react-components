@@ -1,7 +1,7 @@
 import React from 'react';
-import { Href } from 'react-components';
 import { c } from 'ttag';
 
+import { Href } from '../../index';
 import { SignupModel } from './interfaces';
 
 interface Props {
@@ -18,7 +18,7 @@ const SignupComplete = ({ model }: Props) => {
                 .t`Keep your password safe and secure, as it is the key to unlocking all your emails, documents and any other private data on Proton.`}</p>
             <p>{c('Info')
                 .t`Make sure you do not forget or lose your password. It is the key to unlocking all your emails, documents, and other private data on Proton. If you need to reset your password, you will lose access to this data.`}</p>
-            <Href target="_self" className="pm-button pm-button--primary pm-button--large" to="TODO">{c('Link')
+            <Href target="_self" className="pm-button pm-button--primary pm-button--large" url="TODO">{c('Link')
                 .t`Finish`}</Href>
         </div>
     );

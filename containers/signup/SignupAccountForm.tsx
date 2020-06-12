@@ -11,12 +11,13 @@ import {
     Label,
     Challenge,
     useLoading
-} from 'react-components';
+} from '../../index';
 import { USERNAME_PLACEHOLDER } from 'proton-shared/lib/constants';
 
 import { SignupModel, SignupErros } from './interfaces';
 import { SIGNUP_STEPS } from './constants';
 import UnsecureEmailInfo from './UnsecureEmailInfo';
+import { ChallengeRef } from '../../components/challenge/ChallengeFrame';
 
 interface Props {
     history: History;
@@ -36,13 +37,14 @@ enum SERVICES {
     drive = 'ProtonDrive',
     vpn = 'ProtonVPN'
 }
+type SERVICES_KEYS = keyof typeof SERVICES;
 
 const SignupAccountForm = ({ history, model, onChange, onSubmit, errors, loading }: Props) => {
-    const challengeRefLogin = useRef();
-    const formRef = useRef();
+    const challengeRefLogin = useRef<ChallengeRef>();
+    const formRef = useRef<HTMLFormElement>(null);
     const searchParams = new URLSearchParams(history.location.search);
     const [loadingChallenge, withLoadingChallenge] = useLoading();
-    const service = searchParams.get('service') as null | SERVICES;
+    const service = searchParams.get('service') as null | SERVICES_KEYS;
     const [availableDomain = ''] = model.domains;
     const loginLink = <Link key="loginLink" className="nodecoration" to="/login">{c('Link').t`Sign in`}</Link>;
     const disableSubmit = !!(
@@ -60,7 +62,7 @@ const SignupAccountForm = ({ history, model, onChange, onSubmit, errors, loading
                 ...model,
                 payload: {
                     ...model.payload,
-                    payload
+                    ...payload
                 }
             });
         onSubmit(e);
@@ -81,7 +83,7 @@ const SignupAccountForm = ({ history, model, onChange, onSubmit, errors, loading
                 <div className="flex onmobile-flex-column signup-label-field-container mb1">
                     <Label htmlFor="login">{c('Signup label').t`Username`}</Label>
                     <div className="flex-item-fluid">
-                        <Challenge challengeRef={challengeRefLogin} type="0">
+                        <Challenge challengeRef={challengeRefLogin} type={0}>
                             <div className="flex flex-nowrap flex-items-center flex-item-fluid relative mb0-5">
                                 <div className="flex-item-fluid">
                                     <Input
@@ -118,7 +120,7 @@ const SignupAccountForm = ({ history, model, onChange, onSubmit, errors, loading
                 <div className="flex onmobile-flex-column signup-label-field-container mb1">
                     <Label htmlFor="login">{c('Signup label').t`Email`}</Label>
                     <div className="flex-item-fluid">
-                        <Challenge challengeRef={challengeRefLogin} type="0">
+                        <Challenge challengeRef={challengeRefLogin} type={0}>
                             <div className="mb0-5 flex-item-fluid">
                                 <EmailInput
                                     id="login"

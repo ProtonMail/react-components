@@ -10,7 +10,7 @@ import RequestInvite from './RequestInvite';
 export type MethodType = 'captcha' | 'payment' | 'sms' | 'email' | 'invite';
 
 interface Props {
-    onSubmit: (token: string, tokenType: string) => void;
+    onSubmit: (token: string, tokenType: MethodType) => void;
     token: string;
     methods: MethodType[];
 }

@@ -1,6 +1,7 @@
 import React from 'react';
-import { Alert, Link } from 'react-components';
 import { c } from 'ttag';
+
+import { Alert, Link } from '../../';
 
 const NoSignup = () => {
     return (
