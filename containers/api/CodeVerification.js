@@ -53,7 +53,8 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
         await api(queryVerificationCode(method, isEmailMethod ? { Address: email } : { Phone: phone }));
         setCode('');
         setStep(STEPS.VERIFY_CODE);
-        createNotification({ text: c('Success').t`Code sent to ${isEmailMethod ? email : phone}` });
+        const methodTo = isEmailMethod ? email : phone;
+        createNotification({ text: c('Success').t`Code sent to ${methodTo}` });
         inputCodeRef.current.focus();
     };
 
