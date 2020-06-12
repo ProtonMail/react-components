@@ -23,6 +23,11 @@ $default-height-fields: 4.1rem;
     .pm-field {
         padding: em(10) em(16); // design want 42px height (actually 42 to avoid .5px)
     }
+    .pm-field-icon-container:focus-within,
+    .pm-field:focus {
+        box-shadow: none;
+        border-color: $pm-blue;
+    }
     .right-icon,
     select.pm-field {
         height: $default-height-fields;
