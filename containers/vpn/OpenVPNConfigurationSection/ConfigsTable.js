@@ -136,8 +136,10 @@ const ConfigsTable = ({ loading, servers = [], platform, protocol, category, isU
                                             : c('Info').t`Basic, Plus or Visionary subscription required`
                                     }
                                 >
-                                    <Link className="pm-button--primary pm-button--small" to="/dashboard">{c('Action')
-                                        .t`Upgrade`}</Link>
+                                    <Link
+                                        className="pm-button--primary pm-button--small"
+                                        to="/dashboard?plan=vpnplus"
+                                    >{c('Action').t`Upgrade`}</Link>
                                 </Tooltip>
                             ) : (
                                 <DropdownActions
