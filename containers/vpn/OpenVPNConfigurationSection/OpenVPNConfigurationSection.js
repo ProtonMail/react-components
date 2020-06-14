@@ -321,7 +321,7 @@ const OpenVPNConfigurationSection = () => {
                             </li>
                         </ul>
                         <div>
-                            <Link className="pm-button pm-button--primary" to="/dashboard">{c('Action')
+                            <Link className="pm-button pm-button--primary" to="/dashboard?plan=vpnplus">{c('Action')
                                 .t`Get ProtonVPN Plus`}</Link>
                         </div>
                     </div>
