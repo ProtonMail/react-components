@@ -44,7 +44,6 @@ export interface SignupModel {
     verificationTokenType?: MethodType;
     emailToken?: string;
     payload?: Payload;
-    hasPaymentToken: boolean;
 }
 
 export interface SignupErros {
