@@ -36,8 +36,6 @@ import SignupVerificationCodeForm from './SignupVerificationCodeForm';
 import SignupHumanVerification from './SignupHumanVerification';
 import SignupPlans from './SignupPlans';
 import SignupPayment from './SignupPayment';
-import SignupComplete from './SignupComplete';
-import SignupCreatingAccount from './SignupCreatingAccount';
 import NoSignup from './NoSignup';
 import { handlePaymentToken } from '../payments/paymentTokenHelper';
 import InvalidVerificationCodeModal from '../api/InvalidVerificationCodeModal';
@@ -46,6 +44,7 @@ import { DEFAULT_SIGNUP_MODEL, DEFAULT_CHECK_RESULT, SIGNUP_STEPS } from './cons
 import humanApiHelper from './humanApi';
 import BackButton from './BackButton';
 import RequestNewCodeModal from '../api/RequestNewCodeModal';
+import SignupCreatingAccount from './SignupCreatingAccount';
 
 interface Props {
     history: History;
@@ -62,8 +61,7 @@ const {
     PLANS,
     PAYMENT,
     HUMAN_VERIFICATION,
-    CREATING_ACCOUNT,
-    COMPLETE
+    CREATING_ACCOUNT
 } = SIGNUP_STEPS;
 
 const withAuthHeaders = (UID: string, AccessToken: string, config: any) =>
@@ -169,6 +167,8 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                 }
                 break;
             case HUMAN_VERIFICATION:
+                backStep = PLANS;
+                break;
             case PAYMENT:
                 backStep = PLANS;
                 setCard('cvc', '');
@@ -199,7 +199,8 @@ const SignupContainer = ({ onLogin, history }: Props) => {
         }
     };
 
-    const humanApi = <T,>(config: any): Promise<T> => humanApiHelper(config, { api, createModal, model, updateModel });
+    const humanApi = <T,>(config: any, currentModel = model): Promise<T> =>
+        humanApiHelper(config, { api, createModal, model: currentModel, updateModel });
 
     const handleResend = async () => {
         await humanApi(queryVerificationCode('email', { Address: model.email }));
@@ -210,7 +211,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
 
         if (currentModel.step === ACCOUNT_CREATION_USERNAME) {
             try {
-                await humanApi(queryCheckUsernameAvailability(currentModel.username));
+                await humanApi(queryCheckUsernameAvailability(currentModel.username), currentModel);
                 goToStep(RECOVERY_EMAIL);
             } catch (error) {
                 setUsernameError(error.data ? error.data.Error : c('Error').t`Can't check username, try again later`);
@@ -219,7 +220,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
         }
 
         if (currentModel.step === ACCOUNT_CREATION_EMAIL) {
-            await humanApi(queryVerificationCode('email', { Address: currentModel.email }));
+            await humanApi(queryVerificationCode('email', { Address: currentModel.email }), currentModel);
             goToStep(VERIFICATION_CODE);
             return;
         }
@@ -246,7 +247,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
             const emailToken = `${currentModel.email}:${currentModel.verificationCode}`;
             const tokenType = TOKEN_TYPES.EMAIL;
             try {
-                await humanApi(queryCheckVerificationCode(emailToken, tokenType, CLIENT_TYPE));
+                await humanApi(queryCheckVerificationCode(emailToken, tokenType, CLIENT_TYPE), currentModel);
             } catch (error) {
                 return createModal(
                     <InvalidVerificationCodeModal
@@ -288,12 +289,12 @@ const SignupContainer = ({ onLogin, history }: Props) => {
         if (currentModel.step === PLANS || currentModel.step === HUMAN_VERIFICATION || currentModel.step === PAYMENT) {
             const addresses = [];
 
-            if (isBuyingPaidPlan && !currentModel.hasPaymentToken) {
+            if (isBuyingPaidPlan && !canPay) {
                 goToStep(PAYMENT);
                 return;
             }
 
-            if (isBuyingPaidPlan) {
+            if (isBuyingPaidPlan && canPay) {
                 const { Payment } = await handlePaymentToken({
                     params: {
                         ...paymentParameters,
@@ -304,18 +305,15 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                     createModal,
                     mode: ''
                 });
-                updateModel({
-                    ...currentModel,
-                    verificationToken: Payment && 'Token' in Payment?.Details ? Payment.Details.Token : '',
-                    verificationTokenType: TOKEN_TYPES.PAYMENT,
-                    hasPaymentToken: true
-                });
+                currentModel.verificationToken = Payment && 'Token' in Payment?.Details ? Payment.Details.Token : '';
+                currentModel.verificationTokenType = TOKEN_TYPES.PAYMENT;
+                updateModel(currentModel);
             }
 
             if (currentModel.username) {
                 try {
                     await srpVerify({
-                        api: humanApi,
+                        api: (config) => humanApi(config, currentModel),
                         credentials: { password: currentModel.password },
                         config: {
                             ...queryCreateUser({
@@ -349,7 +347,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                     throw new Error('Missing email token');
                 }
                 await srpVerify({
-                    api: humanApi,
+                    api: (config) => humanApi(config, currentModel),
                     credentials: { password: currentModel.password },
                     config: queryCreateUserExternal({
                         Token: currentModel.emailToken,
@@ -622,13 +620,16 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                     canPay={canPay}
                     plans={plans}
                     loading={loading}
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        withLoading(handleSubmit());
+                    }}
                 />
             )}
             {model.step === HUMAN_VERIFICATION && (
                 <SignupHumanVerification model={model} onChange={updateModel} onSubmit={handleSubmit} />
             )}
             {model.step === CREATING_ACCOUNT && <SignupCreatingAccount model={model} />}
-            {model.step === COMPLETE && <SignupComplete model={model} />}
         </SignLayout>
     );
 };

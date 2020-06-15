@@ -7,17 +7,18 @@ import { MethodType } from '../api/HumanVerificationForm';
 interface Props {
     model: SignupModel;
     onChange: (model: SignupModel) => void;
-    onSubmit: () => void;
+    onSubmit: (model: SignupModel) => void;
 }
 
 const SignupHumanVerification = ({ model, onChange, onSubmit }: Props) => {
     const handleSubmit = (token: string, tokenType: MethodType) => {
-        onChange({
+        const newModel = {
             ...model,
             verificationToken: token,
             verificationTokenType: tokenType
-        });
-        onSubmit();
+        };
+        onChange(newModel);
+        onSubmit(newModel);
     };
     return (
         <HumanVerificationForm
