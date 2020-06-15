@@ -288,141 +288,158 @@ const SignupContainer = ({ onLogin, history }: Props) => {
 
         if (currentModel.step === PLANS || currentModel.step === HUMAN_VERIFICATION || currentModel.step === PAYMENT) {
             const addresses = [];
+            const oldStep = currentModel.step;
 
             if (isBuyingPaidPlan && !canPay) {
                 goToStep(PAYMENT);
                 return;
             }
 
-            if (isBuyingPaidPlan && canPay) {
-                const { Payment } = await handlePaymentToken({
-                    params: {
-                        ...paymentParameters,
-                        Amount: checkResult.AmountDue,
-                        Currency: currentModel.currency
-                    },
-                    api,
-                    createModal,
-                    mode: ''
-                });
-                currentModel.payment = Payment;
-                currentModel.verificationToken = Payment && 'Token' in Payment?.Details ? Payment.Details.Token : '';
-                currentModel.verificationTokenType = TOKEN_TYPES.PAYMENT;
-                updateModel(currentModel);
-            }
+            currentModel.step = CREATING_ACCOUNT;
 
-            if (currentModel.username) {
-                try {
+            updateModel(currentModel);
+
+            try {
+                if (isBuyingPaidPlan && canPay) {
+                    const { Payment } = await handlePaymentToken({
+                        params: {
+                            ...paymentParameters,
+                            Amount: checkResult.AmountDue,
+                            Currency: currentModel.currency
+                        },
+                        api,
+                        createModal,
+                        mode: ''
+                    });
+                    currentModel.payment = Payment;
+                    currentModel.verificationToken =
+                        Payment && 'Token' in Payment?.Details ? Payment.Details.Token : '';
+                    currentModel.verificationTokenType = TOKEN_TYPES.PAYMENT;
+                    updateModel(currentModel);
+                }
+
+                if (currentModel.username) {
+                    try {
+                        await srpVerify({
+                            api: (config) => humanApi(config, currentModel),
+                            credentials: { password: currentModel.password },
+                            config: {
+                                ...queryCreateUser({
+                                    Type: CLIENT_TYPE,
+                                    Email: currentModel.recoveryEmail,
+                                    Username: currentModel.username,
+                                    Payload: currentModel.payload
+                                }),
+                                silence: [API_CUSTOM_ERROR_CODES.HUMAN_VERIFICATION_REQUIRED],
+                                noHandling: [API_CUSTOM_ERROR_CODES.HUMAN_VERIFICATION_REQUIRED]
+                            }
+                        });
+                    } catch (error) {
+                        const { data: { Code, Details } = { Code: 0, Details: {} } } = error;
+                        const { HumanVerificationMethods = [], HumanVerificationToken = '' } = Details;
+
+                        if (Code === API_CUSTOM_ERROR_CODES.HUMAN_VERIFICATION_REQUIRED) {
+                            updateModel({
+                                ...currentModel,
+                                humanVerificationMethods: HumanVerificationMethods,
+                                humanVerificationToken: HumanVerificationToken,
+                                step: HUMAN_VERIFICATION
+                            });
+                            return;
+                        }
+
+                        throw error;
+                    }
+                } else if (currentModel.email) {
+                    if (!currentModel.emailToken) {
+                        throw new Error('Missing email token');
+                    }
                     await srpVerify({
                         api: (config) => humanApi(config, currentModel),
                         credentials: { password: currentModel.password },
-                        config: {
-                            ...queryCreateUser({
-                                Type: CLIENT_TYPE,
-                                Email: currentModel.recoveryEmail,
-                                Username: currentModel.username,
-                                Payload: currentModel.payload
-                            }),
-                            silence: [API_CUSTOM_ERROR_CODES.HUMAN_VERIFICATION_REQUIRED],
-                            noHandling: [API_CUSTOM_ERROR_CODES.HUMAN_VERIFICATION_REQUIRED]
-                        }
+                        config: queryCreateUserExternal({
+                            Token: currentModel.emailToken,
+                            TokenType: TOKEN_TYPES.EMAIL,
+                            Type: CLIENT_TYPE,
+                            Email: currentModel.email,
+                            Payload: currentModel.payload
+                        })
                     });
-                } catch (error) {
-                    const { data: { Code, Details } = { Code: 0, Details: {} } } = error;
-                    const { HumanVerificationMethods = [], HumanVerificationToken = '' } = Details;
-
-                    if (Code === API_CUSTOM_ERROR_CODES.HUMAN_VERIFICATION_REQUIRED) {
-                        updateModel({
-                            ...currentModel,
-                            humanVerificationMethods: HumanVerificationMethods,
-                            humanVerificationToken: HumanVerificationToken,
-                            step: HUMAN_VERIFICATION
-                        });
-                        return;
-                    }
-
-                    throw error;
                 }
-            } else if (currentModel.email) {
-                if (!currentModel.emailToken) {
-                    throw new Error('Missing email token');
-                }
-                await srpVerify({
-                    api: (config) => humanApi(config, currentModel),
-                    credentials: { password: currentModel.password },
-                    config: queryCreateUserExternal({
-                        Token: currentModel.emailToken,
-                        TokenType: TOKEN_TYPES.EMAIL,
-                        Type: CLIENT_TYPE,
-                        Email: currentModel.email,
-                        Payload: currentModel.payload
-                    })
-                });
-            }
 
-            const { UID, EventID, AccessToken, RefreshToken } = await srpAuth({
-                api,
-                credentials: { username: currentModel.username, password: currentModel.password },
-                config: auth({ Username: currentModel.username })
-            });
-
-            if (isBuyingPaidPlan) {
-                await api(
-                    withAuthHeaders(
-                        UID,
-                        AccessToken,
-                        subscribe({
-                            PlanIDs: currentModel.planIDs,
-                            Amount: checkResult.AmountDue,
-                            Currency: currentModel.currency,
-                            Cycle: currentModel.cycle,
-                            Payment: currentModel.payment
-                            // TODO add coupon code
-                        })
-                    )
-                );
-            }
-
-            await api(setCookies({ UID, AccessToken, RefreshToken, State: getRandomString(24) }));
-            await onLogin({ UID, EventID });
-
-            // Create address
-            if (currentModel.username) {
-                const [domain = ''] = currentModel.domains;
-                const { Address }: { Address: Address } = await api(
-                    setupAddress({
-                        Domain: domain,
-                        DisplayName: currentModel.username,
-                        Signature: ''
-                    })
-                );
-                addresses.push(Address);
-            } else if (currentModel.email) {
-                const { Addresses = [] }: { Addresses: Address[] } = await api(queryAddresses());
-                addresses.push(...Addresses);
-            }
-
-            // Generate keys
-            if (addresses.length) {
-                const { passphrase, salt } = await generateKeySaltAndPassphrase(currentModel.password);
-                const newAddressesKeys = await getResetAddressesKeys({
-                    addresses,
-                    passphrase,
-                    encryptionConfig: ENCRYPTION_CONFIGS[DEFAULT_ENCRYPTION_CONFIG]
-                });
-                // Assume the primary address is the first item in the list.
-                const [primaryAddress] = newAddressesKeys;
-                await srpVerify({
+                const { UID, EventID, AccessToken, RefreshToken } = await srpAuth({
                     api,
-                    credentials: { password: currentModel.password },
-                    config: {
-                        ...setupKeys({
-                            KeySalt: salt,
-                            PrimaryKey: primaryAddress.PrivateKey,
-                            AddressKeys: newAddressesKeys
-                        })
-                    }
+                    credentials: { username: currentModel.username, password: currentModel.password },
+                    config: auth({ Username: currentModel.username })
                 });
+
+                if (isBuyingPaidPlan) {
+                    await api(
+                        withAuthHeaders(
+                            UID,
+                            AccessToken,
+                            subscribe({
+                                PlanIDs: currentModel.planIDs,
+                                Amount: checkResult.AmountDue,
+                                Currency: currentModel.currency,
+                                Cycle: currentModel.cycle,
+                                Payment: currentModel.payment
+                                // TODO add coupon code
+                            })
+                        )
+                    );
+                }
+
+                await api(setCookies({ UID, AccessToken, RefreshToken, State: getRandomString(24) }));
+                await onLogin({ UID, EventID });
+
+                // Create address
+                if (currentModel.username) {
+                    const [domain = ''] = currentModel.domains;
+                    const { Address }: { Address: Address } = await api(
+                        withAuthHeaders(
+                            UID,
+                            AccessToken,
+                            setupAddress({
+                                Domain: domain,
+                                DisplayName: currentModel.username,
+                                Signature: ''
+                            })
+                        )
+                    );
+                    addresses.push(Address);
+                } else if (currentModel.email) {
+                    const { Addresses = [] }: { Addresses: Address[] } = await api(queryAddresses());
+                    addresses.push(...Addresses);
+                }
+
+                // Generate keys
+                if (addresses.length) {
+                    const { passphrase, salt } = await generateKeySaltAndPassphrase(currentModel.password);
+                    const newAddressesKeys = await getResetAddressesKeys({
+                        addresses,
+                        passphrase,
+                        encryptionConfig: ENCRYPTION_CONFIGS[DEFAULT_ENCRYPTION_CONFIG]
+                    });
+                    // Assume the primary address is the first item in the list.
+                    const [primaryAddress] = newAddressesKeys;
+                    await srpVerify({
+                        api,
+                        credentials: { password: currentModel.password },
+                        config: withAuthHeaders(
+                            UID,
+                            AccessToken,
+                            setupKeys({
+                                KeySalt: salt,
+                                PrimaryKey: primaryAddress.PrivateKey,
+                                AddressKeys: newAddressesKeys
+                            })
+                        )
+                    });
+                }
+            } catch (error) {
+                updateModel({ ...currentModel, step: oldStep });
+                throw error;
             }
             return;
         }
@@ -509,7 +526,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
             title={getTitle()}
             larger={[PLANS, PAYMENT].includes(model.step)}
             left={
-                [ACCOUNT_CREATION_USERNAME, ACCOUNT_CREATION_EMAIL].includes(model.step) ? null : (
+                [ACCOUNT_CREATION_USERNAME, ACCOUNT_CREATION_EMAIL, CREATING_ACCOUNT].includes(model.step) ? null : (
                     <BackButton onClick={handleBack} />
                 )
             }
