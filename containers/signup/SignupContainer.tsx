@@ -305,6 +305,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                     createModal,
                     mode: ''
                 });
+                currentModel.payment = Payment;
                 currentModel.verificationToken = Payment && 'Token' in Payment?.Details ? Payment.Details.Token : '';
                 currentModel.verificationTokenType = TOKEN_TYPES.PAYMENT;
                 updateModel(currentModel);
@@ -372,9 +373,10 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                         AccessToken,
                         subscribe({
                             PlanIDs: currentModel.planIDs,
-                            Amount: 0, // Paid before subscription
+                            Amount: checkResult.AmountDue,
                             Currency: currentModel.currency,
-                            Cycle: currentModel.cycle
+                            Cycle: currentModel.cycle,
+                            Payment: currentModel.payment
                             // TODO add coupon code
                         })
                     )
