@@ -171,6 +171,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
             case HUMAN_VERIFICATION:
             case PAYMENT:
                 backStep = PLANS;
+                setCard('cvc', '');
                 break;
         }
         if (backStep) {
