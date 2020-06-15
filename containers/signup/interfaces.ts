@@ -1,5 +1,6 @@
 import { SIGNUP_STEPS } from './constants';
 import { MethodType } from '../api/HumanVerificationForm';
+import { Payment } from '../payments/usePayment';
 
 export interface PlanIDs {
     [planID: string]: number;
@@ -44,6 +45,7 @@ export interface SignupModel {
     verificationTokenType?: MethodType;
     emailToken?: string;
     payload?: Payload;
+    payment?: Payment;
 }
 
 export interface SignupErros {
