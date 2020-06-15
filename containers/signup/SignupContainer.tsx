@@ -6,6 +6,7 @@ import { setupAddress } from 'proton-shared/lib/api/addresses';
 import { setupKeys } from 'proton-shared/lib/api/keys';
 import { queryAddresses } from 'proton-shared/lib/api/addresses';
 import { API_CUSTOM_ERROR_CODES } from 'proton-shared/lib/errors';
+import { omit } from 'proton-shared/lib/helpers/object';
 import {
     TOKEN_TYPES,
     DEFAULT_ENCRYPTION_CONFIG,
@@ -177,11 +178,8 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                 }
                 break;
             case HUMAN_VERIFICATION:
-                backStep = PLANS;
-                break;
             case PAYMENT:
                 backStep = PLANS;
-                setCard('cvc', '');
                 break;
         }
         if (backStep) {
@@ -300,7 +298,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
             const addresses = [];
             const oldStep = currentModel.step;
 
-            if (isBuyingPaidPlan && !currentModel.payment) {
+            if (isBuyingPaidPlan && method === PAYMENT_METHOD_TYPES.CARD && !canPay) {
                 goToStep(PAYMENT);
                 return;
             }
@@ -530,6 +528,13 @@ const SignupContainer = ({ onLogin, history }: Props) => {
             withLoading(check());
         }
     }, [model.cycle, model.planIDs]);
+
+    useEffect(() => {
+        if (model.step === PLANS) {
+            setCard('cvc', '');
+            updateModel(omit(model, ['payment', 'verificationToken', 'verificationTokenType']));
+        }
+    }, [model.step]);
 
     return (
         <SignLayout
