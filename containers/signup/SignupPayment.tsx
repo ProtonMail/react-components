@@ -20,6 +20,7 @@ interface Props {
     canPay: boolean;
     loading: boolean;
     plans: SignupPlan[];
+    onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
 }
 
 const SignupPayment = ({
@@ -35,10 +36,11 @@ const SignupPayment = ({
     method,
     onMethodChange,
     errors,
-    loading
+    loading,
+    onSubmit
 }: Props) => {
     return (
-        <>
+        <form name="payment-form" onSubmit={onSubmit}>
             <Alert>{c('Info')
                 .t`You can use any of your saved payment method or add a new one. Please note that depending on the total amount due, some payment options may not be available.`}</Alert>
             <div className="flex flex-spacebetween onmobile-flex-column">
@@ -77,7 +79,7 @@ const SignupPayment = ({
                     />
                 </div>
             </div>
-        </>
+        </form>
     );
 };
 
