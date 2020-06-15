@@ -9,7 +9,7 @@ const { CARD, BITCOIN, CASH, PAYPAL, PAYPAL_CREDIT } = PAYMENT_METHOD_TYPES;
 interface Props {
     amount: number;
     currency: string;
-    onPay: () => void;
+    onPay: (data: PaymentParameters) => void;
 }
 
 interface TokenPaymentDetails {

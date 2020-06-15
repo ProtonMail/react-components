@@ -6,7 +6,12 @@ import { setupAddress } from 'proton-shared/lib/api/addresses';
 import { setupKeys } from 'proton-shared/lib/api/keys';
 import { queryAddresses } from 'proton-shared/lib/api/addresses';
 import { API_CUSTOM_ERROR_CODES } from 'proton-shared/lib/errors';
-import { TOKEN_TYPES, DEFAULT_ENCRYPTION_CONFIG, ENCRYPTION_CONFIGS } from 'proton-shared/lib/constants';
+import {
+    TOKEN_TYPES,
+    DEFAULT_ENCRYPTION_CONFIG,
+    ENCRYPTION_CONFIGS,
+    PAYMENT_METHOD_TYPES
+} from 'proton-shared/lib/constants';
 import { subscribe, checkSubscription } from 'proton-shared/lib/api/payments';
 import { srpVerify, srpAuth } from 'proton-shared/lib/srp';
 import { auth, setCookies } from 'proton-shared/lib/api/auth';
@@ -45,6 +50,7 @@ import humanApiHelper from './humanApi';
 import BackButton from './BackButton';
 import RequestNewCodeModal from '../api/RequestNewCodeModal';
 import SignupCreatingAccount from './SignupCreatingAccount';
+import { PaymentParameters } from '../payments/usePayment';
 
 interface Props {
     history: History;
@@ -87,10 +93,6 @@ const SignupContainer = ({ onLogin, history }: Props) => {
     const [usernameError, setUsernameError] = useState<string>('');
     const hasPaidPlan = ({ planIDs = {} } = {}) => !!Object.keys(planIDs).length;
 
-    const handlePayPal = async () => {
-        // TODO
-    };
-
     const {
         card,
         setCard,
@@ -104,8 +106,16 @@ const SignupContainer = ({ onLogin, history }: Props) => {
     } = usePayment({
         amount: checkResult.AmountDue,
         currency: model.currency,
-        onPay() {
-            return withLoading(handlePayPal());
+        onPay({ Payment }: PaymentParameters) {
+            withLoading(
+                // eslint-disable-next-line @typescript-eslint/no-use-before-define
+                handleSubmit({
+                    ...model,
+                    payment: Payment,
+                    verificationToken: Payment && 'Token' in Payment?.Details ? Payment.Details.Token : '',
+                    verificationTokenType: TOKEN_TYPES.PAYMENT
+                })
+            );
         }
     });
 
@@ -290,7 +300,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
             const addresses = [];
             const oldStep = currentModel.step;
 
-            if (isBuyingPaidPlan && !canPay) {
+            if (isBuyingPaidPlan && !currentModel.payment) {
                 goToStep(PAYMENT);
                 return;
             }
@@ -300,7 +310,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
             updateModel(currentModel);
 
             try {
-                if (isBuyingPaidPlan && canPay) {
+                if (isBuyingPaidPlan && method === PAYMENT_METHOD_TYPES.CARD) {
                     const { Payment } = await handlePaymentToken({
                         params: {
                             ...paymentParameters,
