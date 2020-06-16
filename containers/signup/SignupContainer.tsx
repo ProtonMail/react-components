@@ -343,6 +343,14 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                         mode: ''
                     });
                     currentModel.payment = Payment;
+
+                    if (currentModel.username) {
+                        // Use payment token to proove humanity for internal paid account
+                        currentModel.verificationToken =
+                            Payment && 'Token' in Payment?.Details ? Payment.Details.Token : '';
+                        currentModel.verificationTokenType = TOKEN_TYPES.PAYMENT;
+                    }
+
                     updateModel(currentModel);
                 }
 
