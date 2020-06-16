@@ -21,7 +21,7 @@ import { ChallengeRef } from '../../components/challenge/ChallengeFrame';
 interface Props {
     model: SignupModel;
     onChange: (model: SignupModel) => void;
-    onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+    onSubmit: (model: SignupModel) => void;
     errors: SignupErros;
     loading: boolean;
 }
@@ -64,15 +64,15 @@ const SignupRecoveryForm = ({ model, onChange, onSubmit, errors, loading }: Prop
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const payload = await challengeRefRecovery.current?.getChallenge();
-        payload &&
-            onChange({
-                ...model,
-                payload: {
-                    ...model.payload,
-                    ...payload
-                }
-            });
-        onSubmit(e);
+        onSubmit({
+            ...model,
+            payload: payload
+                ? {
+                      ...model.payload,
+                      ...payload
+                  }
+                : model.payload
+        });
     };
 
     return (

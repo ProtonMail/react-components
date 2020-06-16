@@ -23,7 +23,7 @@ interface Props {
     history: History;
     model: SignupModel;
     onChange: (model: SignupModel) => void;
-    onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+    onSubmit: (model: SignupModel) => void;
     errors: SignupErros;
     loading: boolean;
 }
@@ -57,15 +57,15 @@ const SignupAccountForm = ({ history, model, onChange, onSubmit, errors, loading
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const payload = await challengeRefLogin.current?.getChallenge();
-        payload &&
-            onChange({
-                ...model,
-                payload: {
-                    ...model.payload,
-                    ...payload
-                }
-            });
-        onSubmit(e);
+        onSubmit({
+            ...model,
+            payload: payload
+                ? {
+                      ...model.payload,
+                      ...payload
+                  }
+                : model.payload
+        });
     };
 
     return (
