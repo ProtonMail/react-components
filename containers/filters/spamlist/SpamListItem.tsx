@@ -46,9 +46,9 @@ function SpamListItem({ list, type, onCreate, onEdit, onMove, onRemove, classNam
                     {list.map((item) => {
                         return (
                             <li className="flex flex-nowrap flex-items-center flex-spacebetween mb0-5" key={item.ID}>
-                                <span className="ellipsis">{item.Email || item.Domain}</span>
+                                <span className="flex-item-fluid ellipsis mr0-5">{item.Email || item.Domain}</span>
                                 <DropdownActions
-                                    className="pm-button--small mlauto"
+                                    className="pm-button--small"
                                     list={[
                                         {
                                             text: c('Action').t`Edit`,
