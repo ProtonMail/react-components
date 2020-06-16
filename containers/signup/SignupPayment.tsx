@@ -42,7 +42,7 @@ const SignupPayment = ({
     return (
         <form name="payment-form" onSubmit={onSubmit}>
             <Alert>{c('Info')
-                .t`You can use any of your saved payment method or add a new one. Please note that depending on the total amount due, some payment options may not be available.`}</Alert>
+                .t`Please note that depending on the total amount due, some payment options may not be available.`}</Alert>
             <div className="flex flex-spacebetween onmobile-flex-column">
                 <div className="w75 onmobile-w100 pr1 onmobile-pr0">
                     <Payment
