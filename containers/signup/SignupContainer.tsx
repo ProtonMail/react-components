@@ -392,8 +392,11 @@ const SignupContainer = ({ onLogin, history }: Props) => {
 
                 const { UID, EventID, AccessToken, RefreshToken } = await srpAuth({
                     api,
-                    credentials: { username: currentModel.username, password: currentModel.password },
-                    config: auth({ Username: currentModel.username })
+                    credentials: {
+                        username: currentModel.username || currentModel.email,
+                        password: currentModel.password
+                    },
+                    config: auth({ Username: currentModel.username || currentModel.email })
                 });
 
                 if (isBuyingPaidPlan) {
