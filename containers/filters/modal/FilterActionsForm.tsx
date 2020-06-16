@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 import { Folder } from 'proton-shared/lib/interfaces/Folder';
 import { Label } from 'proton-shared/lib/interfaces/Label';
@@ -19,37 +19,38 @@ interface Props {
 }
 
 const FilterActionsForm = ({ isNarrow, labels, folders, model, onChange, isEdit }: Props) => {
-    const [actions, setActions] = useState<Actions>(model.actions);
-
     const onUpdateActions = (payload: Partial<Actions>) => {
-        setActions((actions: Actions) => ({
-            ...actions,
-            ...payload
-        }));
+        onChange({
+            ...model,
+            actions: {
+                ...model.actions,
+                ...payload
+            }
+        });
     };
-
-    useEffect(() => {
-        onChange({ ...model, actions });
-    }, [actions]);
 
     return (
         <>
             <FilterActionsFormLabelsRow
-                actions={actions}
+                actions={model.actions}
                 handleUpdateActions={onUpdateActions}
                 labels={labels}
                 isNarrow={isNarrow}
             />
             <FilterActionsFormFoldersRow
-                actions={actions}
+                actions={model.actions}
                 handleUpdateActions={onUpdateActions}
                 folders={folders}
                 isNarrow={isNarrow}
             />
-            <FilterActionsFormMarkAsRow actions={actions} handleUpdateActions={onUpdateActions} isNarrow={isNarrow} />
+            <FilterActionsFormMarkAsRow
+                actions={model.actions}
+                handleUpdateActions={onUpdateActions}
+                isNarrow={isNarrow}
+            />
 
             <FilterActionsFormAutoReplyRow
-                actions={actions}
+                actions={model.actions}
                 handleUpdateActions={onUpdateActions}
                 isNarrow={isNarrow}
                 isEdit={isEdit}
