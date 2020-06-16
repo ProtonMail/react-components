@@ -74,8 +74,8 @@ const ContactView = ({
             <div className="pl1 pr1">
                 <ContactViewProperties field="fn" {...contactViewPropertiesProps} />
                 <ContactViewProperties field="email" {...contactViewPropertiesProps} isPreview={isPreview} />
-                <ContactViewProperties field="tel" {...contactViewPropertiesProps} />
-                <ContactViewProperties field="adr" {...contactViewPropertiesProps} />
+                <ContactViewProperties field="tel" {...contactViewPropertiesProps} isPreview={isPreview} />
+                <ContactViewProperties field="adr" {...contactViewPropertiesProps} isPreview={isPreview} />
                 <ContactViewProperties {...contactViewPropertiesProps} />
             </div>
         </div>
