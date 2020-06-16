@@ -2,12 +2,12 @@ import React from 'react';
 import { Button, PrimaryButton } from 'react-components';
 import { c } from 'ttag';
 
-import { FilterModalModel, Step, Errors } from './interfaces';
+import { SimpleFilterModalModel, Step, Errors } from 'proton-shared/lib/filters/interfaces';
 
 interface Props {
-    model: FilterModalModel;
+    model: SimpleFilterModalModel;
     onClose: () => void;
-    onChange: (newModel: FilterModalModel) => void;
+    onChange: (newModel: SimpleFilterModalModel) => void;
     loading: boolean;
     errors: Errors;
 }

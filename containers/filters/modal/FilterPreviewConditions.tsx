@@ -3,13 +3,12 @@ import { c, jt, t } from 'ttag';
 
 import { classnames, Icon } from 'react-components';
 
-import { getI18n as getI18nFilter } from 'proton-shared/lib/filters/factory';
-
-import { FilterModalModel, ConditionType } from './interfaces';
+import { TYPES, COMPARATORS } from 'proton-shared/lib/filters/constants';
+import { SimpleFilterModalModel, ConditionType, ConditionComparator } from 'proton-shared/lib/filters/interfaces';
 
 interface Props {
     isNarrow: boolean;
-    model: FilterModalModel;
+    model: SimpleFilterModalModel;
     toggleOpen: () => void;
     isOpen: boolean;
 }
@@ -17,12 +16,11 @@ interface Props {
 const FilterPreviewConditions = ({ isOpen, isNarrow, toggleOpen, model }: Props) => {
     const { conditions } = model;
 
-    const { TYPES, COMPARATORS } = getI18nFilter();
-
     const conditionsRenderer = useMemo(() => {
         const conditionsRows = conditions?.map((cond) => {
             if (cond.type === ConditionType.ATTACHMENTS) {
-                const label = cond.withAttachment ? t`with attachments` : t`without attachments`;
+                const label =
+                    cond.comparator === ConditionComparator.CONTAINS ? t`with attachments` : t`without attachments`;
                 const attachment = isOpen ? (
                     <span
                         key={label}

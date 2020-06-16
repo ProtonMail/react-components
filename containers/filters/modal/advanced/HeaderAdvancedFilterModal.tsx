@@ -1,12 +1,12 @@
 import React from 'react';
 import { c } from 'ttag';
 
-import { FilterModalModel, Step, Errors } from './interfaces';
+import { AdvancedSimpleFilterModalModel, StepSieve, ErrorsSieve } from 'proton-shared/lib/filters/interfaces';
 
 interface Props {
-    model: FilterModalModel;
-    onChange: (newModel: FilterModalModel) => void;
-    errors: Errors;
+    model: AdvancedSimpleFilterModalModel;
+    onChange: (newModel: AdvancedSimpleFilterModalModel) => void;
+    errors: ErrorsSieve;
 }
 
 const HeaderAdvancedFilterModal = ({ model, errors, onChange }: Props) => {
@@ -16,23 +16,23 @@ const HeaderAdvancedFilterModal = ({ model, errors, onChange }: Props) => {
                 <li className="breadcrumb-item">
                     <button
                         type="button"
-                        disabled={model.step === Step.NAME}
-                        aria-current={model.step === Step.NAME ? 'step' : false}
-                        onClick={() => onChange({ ...model, step: Step.NAME })}
+                        disabled={model.step === StepSieve.NAME}
+                        aria-current={model.step === StepSieve.NAME ? 'step' : false}
+                        onClick={() => onChange({ ...model, step: StepSieve.NAME })}
                         className="breadcrumb-button"
                     >
-                        {c('Step in filter modal').t`Name`}
+                        {c('StepSieve in filter modal').t`Name`}
                     </button>
                 </li>
                 <li className="breadcrumb-item">
                     <button
                         type="button"
-                        disabled={model.step === Step.SIEVE || !!errors.name}
-                        aria-current={model.step === Step.SIEVE ? 'step' : false}
-                        onClick={() => onChange({ ...model, step: Step.SIEVE })}
+                        disabled={model.step === StepSieve.SIEVE || !!errors.name}
+                        aria-current={model.step === StepSieve.SIEVE ? 'step' : false}
+                        onClick={() => onChange({ ...model, step: StepSieve.SIEVE })}
                         className="breadcrumb-button"
                     >
-                        {c('Step in filter modal').t`Sieve editor`}
+                        {c('StepSieve in filter modal').t`Sieve editor`}
                     </button>
                 </li>
             </ul>

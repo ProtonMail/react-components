@@ -3,10 +3,9 @@ import { c } from 'ttag';
 
 import { Checkbox, Button, Tooltip, classnames, Icon, useModals } from 'react-components';
 import { Label } from 'proton-shared/lib/interfaces/Label';
+import { Actions } from 'proton-shared/lib/filters/interfaces';
 
 import EditLabelModal from '../../labels/modals/Edit';
-
-import { Actions } from './interfaces';
 
 interface Props {
     labels: Label[];
@@ -49,12 +48,12 @@ const FilterActionsFormLabelsRow = ({ actions, isNarrow, handleUpdateActions, la
 
         return (
             <div className="pm-badgeLabel-container">
-                {labelAs?.labels.map((labelID: string) => {
-                    const label = labels?.find((l) => l.ID === labelID);
+                {labelAs?.labels.map((labelName: string) => {
+                    const label = labels?.find((l) => l.Name === labelName);
 
                     return (
                         <span
-                            key={labelID}
+                            key={labelName}
                             className="ml0-5 mr0-5 mb0-5 badgeLabel flex flex-row flex-items-center ellipsis"
                             role="listitem"
                             style={{
@@ -89,17 +88,17 @@ const FilterActionsFormLabelsRow = ({ actions, isNarrow, handleUpdateActions, la
                         <div className="w100">
                             {labels.length ? (
                                 labels.map((label: Label) => (
-                                    <div className="mb0-5 inbl pm-badgeLabel-container ellipsis" key={label.ID}>
+                                    <div className="mb0-5 inbl pm-badgeLabel-container ellipsis" key={label.Name}>
                                         <Checkbox
                                             className="mr1 flex-nowrap"
-                                            checked={labelAs.labels.includes(label.ID)}
+                                            checked={labelAs.labels.includes(label.Name)}
                                             onChange={() => {
-                                                const index = labelAs.labels.indexOf(label.ID);
+                                                const index = labelAs.labels.indexOf(label.Name);
                                                 if (index >= 0) {
                                                     labelAs.labels.splice(index, 1);
                                                     handleChangeModel({ labels: [...labelAs.labels] });
                                                 } else {
-                                                    handleChangeModel({ labels: [...labelAs.labels, label.ID] });
+                                                    handleChangeModel({ labels: [...labelAs.labels, label.Name] });
                                                 }
                                             }}
                                             labelOnClick={(e) => e.stopPropagation()}

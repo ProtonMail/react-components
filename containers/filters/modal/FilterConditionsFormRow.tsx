@@ -2,9 +2,9 @@ import React, { useState, ChangeEvent, useEffect } from 'react';
 import { c, t, jt } from 'ttag';
 
 import { classnames, Input, Select, Radio, Tooltip, Icon, Button } from 'react-components';
-import { getI18n as getI18nFilter } from 'proton-shared/lib/filters/factory';
+import { TYPES, COMPARATORS } from 'proton-shared/lib/filters/constants';
 
-import { Condition, FilterStatement, ConditionType, ConditionComparator } from './interfaces';
+import { Condition, FilterStatement, ConditionType, ConditionComparator } from 'proton-shared/lib/filters/interfaces';
 
 import './FilterConditionsFormRow.scss';
 
@@ -29,11 +29,9 @@ const FilterConditionsRow = ({
     handleUpdateCondition,
     displayDelete
 }: Props) => {
-    const { TYPES, COMPARATORS } = getI18nFilter();
     const typeOptions = TYPES.map(({ label: text, value }) => ({ text, value }));
     const ConditionComparatorOptions = COMPARATORS.map(({ label: text, value }) => ({ text, value }));
     const [isOpen, setIsOpen] = useState(condition.isOpen);
-    const [withAttachment, setWithAttachment] = useState(condition.withAttachment || true);
     const [tokens, setTokens] = useState<string[]>(condition.values || []);
     const [inputValue, setInputValue] = useState('');
 
@@ -41,8 +39,6 @@ const FilterConditionsRow = ({
 
     const statementLabel = statement === FilterStatement.ALL ? c('Label').t`AND` : c('Label').t`OR`;
     const label = conditionIndex === 0 ? c('Label').t`IF` : statementLabel;
-
-    const toggleAttachment = () => setWithAttachment((state) => !state);
 
     const onAddNewToken = () => {
         setTokens((tokens) => [...tokens, inputValue.trim()]);
@@ -83,18 +79,19 @@ const FilterConditionsRow = ({
         });
     }, [isOpen]);
 
-    useEffect(() => {
-        handleUpdateCondition(conditionIndex, {
-            ...condition,
-            withAttachment
-        });
-    }, [withAttachment]);
-
     const onChangeInputValue = (e: ChangeEvent<HTMLInputElement>) => {
         setInputValue(e.target.value);
     };
 
     const renderAttachmentsCondition = () => {
+        const withAttachment = condition?.comparator === ConditionComparator.CONTAINS;
+        const toggleAttachment = () => {
+            handleUpdateCondition(conditionIndex, {
+                ...condition,
+                comparator: withAttachment ? ConditionComparator.DOES_NOT_CONTAIN : ConditionComparator.CONTAINS
+            });
+        };
+
         return (
             <div className="mt1 flex">
                 <Radio
@@ -169,7 +166,11 @@ const FilterConditionsRow = ({
 
         if (type === ConditionType.ATTACHMENTS) {
             const attachment = (
-                <strong key="attachments">{withAttachment ? t`with attachments` : t`without attachments`}</strong>
+                <strong key="attachments">
+                    {condition?.comparator === ConditionComparator.CONTAINS
+                        ? t`with attachments`
+                        : t`without attachments`}
+                </strong>
             );
             label = c('Label').jt`The email was sent ${attachment}`;
         } else {

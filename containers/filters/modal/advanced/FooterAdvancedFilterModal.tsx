@@ -1,25 +1,25 @@
 import React from 'react';
-import { Button, PrimaryButton } from 'react-components';
 import { c } from 'ttag';
 
-import { FilterModalModel, Step, Errors } from './interfaces';
+import { Button, PrimaryButton } from 'react-components';
+import { AdvancedSimpleFilterModalModel, StepSieve, ErrorsSieve } from 'proton-shared/lib/filters/interfaces';
 
 interface Props {
-    model: FilterModalModel;
+    model: AdvancedSimpleFilterModalModel;
     onClose: () => void;
-    onChange: (newModel: FilterModalModel) => void;
+    onChange: (newModel: AdvancedSimpleFilterModalModel) => void;
     loading: boolean;
-    errors: Errors;
+    errors: ErrorsSieve;
 }
 
 const NEXT_STEP = {
-    [Step.NAME]: Step.SIEVE,
-    [Step.SIEVE]: Step.SIEVE
+    [StepSieve.NAME]: StepSieve.SIEVE,
+    [StepSieve.SIEVE]: StepSieve.SIEVE
 };
 
 const BACK_STEP = {
-    [Step.NAME]: Step.NAME,
-    [Step.SIEVE]: Step.NAME
+    [StepSieve.NAME]: StepSieve.NAME,
+    [StepSieve.SIEVE]: StepSieve.NAME
 };
 
 const FooterAdvancedFilterModal = ({ model, errors, onClose, onChange, loading }: Props) => {
@@ -31,13 +31,13 @@ const FooterAdvancedFilterModal = ({ model, errors, onClose, onChange, loading }
     };
     return (
         <>
-            {model.step === Step.NAME ? (
+            {model.step === StepSieve.NAME ? (
                 <Button disabled={loading} onClick={onClose}>{c('Action').t`Cancel`}</Button>
             ) : (
                 <Button disabled={loading} onClick={handleBack}>{c('Action').t`Back`}</Button>
             )}
             <div>
-                {model.step === Step.NAME && (
+                {model.step === StepSieve.NAME && (
                     <Button disabled={loading || !!errors.name} onClick={handleNext} className="mr1">{c('Action')
                         .t`Next`}</Button>
                 )}

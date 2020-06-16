@@ -2,15 +2,15 @@ import React, { useMemo } from 'react';
 import { Alert } from 'react-components';
 import { c } from 'ttag';
 import { isDarkTheme } from 'proton-shared/lib/themes/helpers';
+import { AdvancedSimpleFilterModalModel, ErrorsSieve } from 'proton-shared/lib/filters/interfaces';
 import { MailSettings } from 'proton-shared/lib/interfaces';
 
-import { FilterModalModel, Errors } from './interfaces';
 import SieveEditor from './SieveEditor';
 
 interface Props {
-    model: FilterModalModel;
-    onChange: (newModel: FilterModalModel) => void;
-    errors: Errors;
+    model: AdvancedSimpleFilterModalModel;
+    onChange: (newModel: AdvancedSimpleFilterModalModel) => void;
+    errors: ErrorsSieve;
     mailSettings: MailSettings;
 }
 

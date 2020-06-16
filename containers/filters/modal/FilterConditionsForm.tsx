@@ -3,7 +3,13 @@ import { c } from 'ttag';
 
 import { classnames, Radio, LinkButton } from 'react-components';
 
-import { Condition, FilterStatement, ConditionType, ConditionComparator, FilterModalModel } from './interfaces';
+import {
+    Condition,
+    FilterStatement,
+    ConditionType,
+    ConditionComparator,
+    SimpleFilterModalModel
+} from 'proton-shared/lib/filters/interfaces';
 import FilterConditionsFormRow from './FilterConditionsFormRow';
 
 const conditionTemplate = {
@@ -14,12 +20,11 @@ const conditionTemplate = {
 
 interface Props {
     isNarrow: boolean;
-    model: FilterModalModel;
-    onChange: (newModel: FilterModalModel) => void;
+    model: SimpleFilterModalModel;
+    onChange: (newModel: SimpleFilterModalModel) => void;
 }
 
 const FilterConditionsForm = ({ isNarrow, model, onChange }: Props) => {
-    const [statement, setStatement] = useState<FilterStatement>(FilterStatement.ALL);
     const [conditions, setConditions] = useState<Condition[]>(
         model.conditions.length ? model.conditions : [conditionTemplate]
     );
@@ -56,8 +61,13 @@ const FilterConditionsForm = ({ isNarrow, model, onChange }: Props) => {
                     <Radio
                         id="statement-all"
                         className="flex flex-nowrap mb1 pm-radio--onTop"
-                        checked={statement === FilterStatement.ALL}
-                        onChange={() => setStatement(FilterStatement.ALL)}
+                        checked={model.statement === FilterStatement.ALL}
+                        onChange={() =>
+                            onChange({
+                                ...model,
+                                statement: FilterStatement.ALL
+                            })
+                        }
                     >
                         {c('Label').t`ALL`}
                         <em className="ml0-5 color-global-altgrey">{c('Info')
@@ -66,8 +76,13 @@ const FilterConditionsForm = ({ isNarrow, model, onChange }: Props) => {
                     <Radio
                         id="statement-any"
                         className="flex flex-nowrap mb1 pm-radio--onTop"
-                        checked={statement === FilterStatement.ANY}
-                        onChange={() => setStatement(FilterStatement.ANY)}
+                        checked={model.statement === FilterStatement.ANY}
+                        onChange={() =>
+                            onChange({
+                                ...model,
+                                statement: FilterStatement.ANY
+                            })
+                        }
                     >
                         {c('Label').t`ANY`}
                         <em className="ml0-5 color-global-altgrey">{c('Info')
@@ -83,7 +98,7 @@ const FilterConditionsForm = ({ isNarrow, model, onChange }: Props) => {
                     conditionIndex={i}
                     handleDelete={onDeleteCondition}
                     handleUpdateCondition={onUpdateCondition}
-                    statement={statement}
+                    statement={model.statement}
                     displayDelete={conditions.length > 1}
                 />
             ))}

@@ -3,27 +3,31 @@ import { c } from 'ttag';
 
 import { classnames, Toggle, Tooltip, SimpleSquireEditor, useUser } from 'react-components';
 import { noop } from 'proton-shared/lib/helpers/function';
+import { Actions } from 'proton-shared/lib/filters/interfaces';
 
 import { SquireEditorRef } from '../../../components/editor/SquireEditor';
-import { Actions } from './interfaces';
 
 interface Props {
     isNarrow: boolean;
     actions: Actions;
     handleUpdateActions: (onUpdateActions: Partial<Actions>) => void;
+    isEdit: boolean;
 }
 
-const FilterActionsFormAutoReplyRow = ({ isNarrow, actions, handleUpdateActions }: Props) => {
+const FilterActionsFormAutoReplyRow = ({ isEdit, isNarrow, actions, handleUpdateActions }: Props) => {
     const [user] = useUser();
     const editorRef = useRef<SquireEditorRef>(null);
     const { autoReply } = actions;
     const [editorVisible, setEditorVisible] = useState(!!autoReply);
-    const [editorValue, setEditorValue] = useState(autoReply);
+    const [editorValue, setEditorValue] = useState(autoReply || '');
 
     const handleReady = () => {
         if (editorRef.current) {
-            editorRef.current.focus();
             editorRef.current.value = editorValue;
+
+            if (!isEdit) {
+                editorRef.current.focus();
+            }
         }
     };
 

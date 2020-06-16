@@ -3,10 +3,37 @@ import { c } from 'ttag';
 import { Button, Select, Tooltip, classnames, Icon, useModals } from 'react-components';
 import { buildTreeview, formatFolderName } from 'proton-shared/lib/helpers/folder';
 import { Folder } from 'proton-shared/lib/interfaces/Folder';
+import { Actions } from 'proton-shared/lib/filters/interfaces';
 
 import EditLabelModal from '../../labels/modals/Edit';
 
-import { Actions } from './interfaces';
+export const DEFAULT_FOLDERS = [
+    {
+        group: c('Option group').t`Action`,
+        text: c('Filter Actions').t`Move to ...`,
+        value: ''
+    },
+    {
+        group: c('Option group').t`Default folders`,
+        text: c('Filter Actions').t`Archive`,
+        value: 'archive'
+    },
+    {
+        group: c('Option group').t`Default folders`,
+        text: c('Filter Actions').t`Inbox`,
+        value: 'inbox'
+    },
+    {
+        group: c('Option group').t`Default folders`,
+        text: c('Filter Actions').t`Spam`,
+        value: 'spam'
+    },
+    {
+        group: c('Option group').t`Default folders`,
+        text: c('Filter Actions').t`Trash`,
+        value: 'trash'
+    }
+];
 
 interface Props {
     folders: Folder[];
@@ -50,33 +77,9 @@ const FilterActionsFormFolderRow = ({ folders, isNarrow, actions, handleUpdateAc
     const { createModal } = useModals();
     const treeview = buildTreeview(folders);
 
-    const options = [
-        {
-            group: c('Option group').t`Action`,
-            text: c('Filter Actions').t`Move to ...`,
-            value: ''
-        },
-        {
-            group: c('Option group').t`Default folders`,
-            text: c('Filter Actions').t`Archive`,
-            value: 'archive'
-        },
-        {
-            group: c('Option group').t`Default folders`,
-            text: c('Filter Actions').t`Inbox`,
-            value: 'inbox'
-        },
-        {
-            group: c('Option group').t`Default folders`,
-            text: c('Filter Actions').t`Spam`,
-            value: 'spam'
-        },
-        {
-            group: c('Option group').t`Default folders`,
-            text: c('Filter Actions').t`Trash`,
-            value: 'trash'
-        }
-    ].concat(treeview.reduce((acc: SelectOption[], folder: FolderWithSubFolders) => reducer(acc, folder), []));
+    const options = [...DEFAULT_FOLDERS].concat(
+        treeview.reduce((acc: SelectOption[], folder: FolderWithSubFolders) => reducer(acc, folder), [])
+    );
 
     const { moveTo } = actions;
     const { isOpen } = moveTo;

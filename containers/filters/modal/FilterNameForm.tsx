@@ -1,7 +1,7 @@
 import React, { ChangeEvent } from 'react';
 import { Alert, classnames, Field, Input } from 'react-components';
 import { c } from 'ttag';
-import { FilterModalModel } from './interfaces';
+import { SimpleFilterModalModel, AdvancedSimpleFilterModalModel } from 'proton-shared/lib/filters/interfaces';
 
 interface Errors {
     name: string;
@@ -9,9 +9,9 @@ interface Errors {
 
 interface Props {
     isNarrow: boolean;
-    model: FilterModalModel;
+    model: SimpleFilterModalModel | AdvancedSimpleFilterModalModel;
     errors: Errors;
-    onChange: (newModel: FilterModalModel) => void;
+    onChange: (newModel: SimpleFilterModalModel | AdvancedSimpleFilterModalModel) => void;
 }
 
 const FilterNameForm = ({ isNarrow, model, errors, onChange }: Props) => {

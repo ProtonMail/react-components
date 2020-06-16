@@ -3,7 +3,7 @@ import { c } from 'ttag';
 
 import { Checkbox, Button, Tooltip, classnames, Icon } from 'react-components';
 
-import { Actions } from './interfaces';
+import { Actions } from 'proton-shared/lib/filters/interfaces';
 
 interface Props {
     isNarrow: boolean;

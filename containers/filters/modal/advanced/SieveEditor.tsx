@@ -2,14 +2,13 @@ import React, { useEffect, useRef } from 'react';
 import codemirror from 'codemirror';
 import { Controlled as CodeMirror } from 'react-codemirror2';
 import { normalize } from 'proton-shared/lib/filters/sieve';
+import { SieveIssue } from 'proton-shared/lib/filters/interfaces';
 import 'codemirror/addon/display/autorefresh';
 import 'codemirror/addon/lint/lint';
 import 'codemirror/mode/sieve/sieve';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/addon/lint/lint.css';
 import 'codemirror/theme/base16-dark.css';
-
-import { SieveIssue } from './interfaces';
 
 interface Props {
     value: string;
@@ -21,20 +20,6 @@ interface Props {
 const clean = normalize();
 
 const lint = (text = '') => {
-    /* Remove empty line error: https://jira.protontech.ch/browse/MAILWEB-315 */
-
-    // if (text.trim() === '') {
-    //     const [line = ''] = text.split('\n');
-    //     return [
-    //         {
-    //             message: 'A sieve script cannot be empty',
-    //             severity: 'error',
-    //             from: codemirror.Pos(0, 0),
-    //             to: codemirror.Pos(0, line.length)
-    //         }
-    //     ];
-    // }
-
     const lint = codemirror._uglyGlobal;
     return lint ? lint(clean(text)) : [];
 };

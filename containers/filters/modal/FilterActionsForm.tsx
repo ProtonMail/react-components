@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import { Folder } from 'proton-shared/lib/interfaces/Folder';
 import { Label } from 'proton-shared/lib/interfaces/Label';
-
-import { Actions, FilterModalModel } from './interfaces';
+import { Actions, SimpleFilterModalModel } from 'proton-shared/lib/filters/interfaces';
 
 import FilterActionsFormLabelsRow from './FilterActionsFormLabelsRow';
 import FilterActionsFormFoldersRow from './FilterActionsFormFolderRow';
@@ -14,11 +13,12 @@ interface Props {
     labels: Label[];
     folders: Folder[];
     isNarrow: boolean;
-    model: FilterModalModel;
-    onChange: (newModel: FilterModalModel) => void;
+    model: SimpleFilterModalModel;
+    onChange: (newModel: SimpleFilterModalModel) => void;
+    isEdit: boolean;
 }
 
-const FilterActionsForm = ({ isNarrow, labels, folders, model, onChange }: Props) => {
+const FilterActionsForm = ({ isNarrow, labels, folders, model, onChange, isEdit }: Props) => {
     const [actions, setActions] = useState<Actions>(model.actions);
 
     const onUpdateActions = (payload: Partial<Actions>) => {
@@ -52,6 +52,7 @@ const FilterActionsForm = ({ isNarrow, labels, folders, model, onChange }: Props
                 actions={actions}
                 handleUpdateActions={onUpdateActions}
                 isNarrow={isNarrow}
+                isEdit={isEdit}
             />
         </>
     );

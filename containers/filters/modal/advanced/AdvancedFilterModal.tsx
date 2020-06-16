@@ -7,44 +7,57 @@ import {
     useFilters,
     useActiveBreakpoint,
     useMailSettings,
-    useDebounceInput
+    useDebounceInput,
+    useNotifications,
+    useEventManager,
+    useApiWithoutResult
 } from 'react-components';
-import { FILTER_VERSION } from 'proton-shared/lib/constants';
+import { FILTER_VERSION } from 'proton-shared/lib/filters/constants';
+import { Filter, StepSieve, AdvancedSimpleFilterModalModel, ErrorsSieve } from 'proton-shared/lib/filters/interfaces';
 import { normalize } from 'proton-shared/lib/helpers/string';
-import { checkSieveFilter } from 'proton-shared/lib/api/filters';
+import { checkSieveFilter, addTreeFilter, updateFilter } from 'proton-shared/lib/api/filters';
+import { convertModel } from 'proton-shared/lib/filters/utils';
+import { templates as sieveTemplates } from 'proton-shared/lib/filters//sieve';
 
 import FilterNameForm from '../FilterNameForm';
-import { Filter } from '../interfaces';
-import { Step, FilterModalModel, Errors } from './interfaces';
 import HeaderAdvancedFilterModal from './HeaderAdvancedFilterModal';
 import FooterAdvancedFilterModal from './FooterAdvancedFilterModal';
 import SieveForm from './SieveForm';
+import { noop } from 'proton-shared/lib/helpers/function';
 
 interface Props {
     filter: Filter;
     onClose: () => void;
 }
 
-const AdvancedFilterModal = ({ filter, ...rest }: Props) => {
+const AdvancedFilterModal = ({ filter, onClose = noop, ...rest }: Props) => {
+    const api = useApi();
     const { isNarrow } = useActiveBreakpoint();
     const [loading, withLoading] = useLoading();
     const [filters = []] = useFilters();
     const [mailSettings] = useMailSettings();
-    const api = useApi();
-    const title = filter?.ID ? c('Title').t`Edit sieve filter` : c('Title').t`Add sieve filter`;
-    const [model, setModel] = useState<FilterModalModel>({
-        step: Step.NAME,
-        sieve: filter?.Sieve || '',
+    const { createNotification } = useNotifications();
+    const { call } = useEventManager();
+
+    const isEdit = !!filter?.ID;
+    const title = isEdit ? c('Title').t`Edit sieve filter` : c('Title').t`Add sieve filter`;
+
+    const sieveTemplate = sieveTemplates[filter?.Version || FILTER_VERSION];
+
+    const [model, setModel] = useState<AdvancedSimpleFilterModalModel>({
+        id: filter?.ID,
+        step: StepSieve.NAME,
+        sieve: filter?.Sieve || sieveTemplate || '',
         name: filter?.Name || '',
         issues: []
     });
     const sieve = useDebounceInput(model.sieve);
 
-    const errors = useMemo<Errors>(() => {
+    const errors = useMemo<ErrorsSieve>(() => {
         return {
             name: !model.name
                 ? c('Error').t`This field is required`
-                : filters.find(({ Name }: Filter) => normalize(Name) === normalize(model.name))
+                : !isEdit && filters.find(({ Name }: Filter) => normalize(Name) === normalize(model.name))
                 ? c('Error').t`Filter with this name already exist`
                 : '',
             sieve: model.sieve
@@ -55,10 +68,41 @@ const AdvancedFilterModal = ({ filter, ...rest }: Props) => {
         };
     }, [model.name, model.sieve, model.issues]);
 
+    const reqCreate = useApiWithoutResult(addTreeFilter);
+    const reqUpdate = useApiWithoutResult(updateFilter);
+
+    const createFilter = async (filter: Filter) => {
+        try {
+            const { Filter } = await reqCreate.request(filter);
+            createNotification({
+                text: c('Notification').t`${Filter.Name} created`
+            });
+        } finally {
+            // Some failed request will add the filter but in disabled mode
+            // So we have to refresh the list in both cases
+            call();
+            onClose();
+        }
+    };
+
+    const editFilter = async (filter: Filter) => {
+        const { Filter } = await reqUpdate.request(filter.ID, filter);
+        call();
+        createNotification({
+            text: c('Filter notification').t`Filter ${Filter.Name} updated`
+        });
+        onClose();
+    };
+
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        // @todo submit once everything is ok
-        // await api();
+
+        if (isEdit) {
+            await editFilter(convertModel(model, true));
+            return;
+        }
+
+        await createFilter(convertModel(model, true));
     };
 
     const checkSieve = async () => {
@@ -81,23 +125,29 @@ const AdvancedFilterModal = ({ filter, ...rest }: Props) => {
         <FormModal
             title={title}
             loading={loading}
+            onClose={onClose}
             onSubmit={(event: FormEvent<HTMLFormElement>) => withLoading(handleSubmit(event))}
             footer={
                 <FooterAdvancedFilterModal
                     model={model}
                     errors={errors}
                     onChange={setModel}
-                    onClose={rest.onClose}
+                    onClose={onClose}
                     loading={loading}
                 />
             }
             {...rest}
         >
             <HeaderAdvancedFilterModal model={model} errors={errors} onChange={setModel} />
-            {model.step === Step.NAME ? (
-                <FilterNameForm model={model} onChange={setModel} isNarrow={isNarrow} errors={errors} />
+            {model.step === StepSieve.NAME ? (
+                <FilterNameForm
+                    model={model}
+                    onChange={(newModel) => setModel(newModel as AdvancedSimpleFilterModalModel)}
+                    isNarrow={isNarrow}
+                    errors={errors}
+                />
             ) : null}
-            {model.step === Step.SIEVE ? (
+            {model.step === StepSieve.SIEVE ? (
                 <SieveForm model={model} onChange={setModel} errors={errors} mailSettings={mailSettings} />
             ) : null}
         </FormModal>

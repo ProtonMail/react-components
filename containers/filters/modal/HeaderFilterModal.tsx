@@ -1,11 +1,11 @@
 import React from 'react';
 import { c } from 'ttag';
 
-import { FilterModalModel, Step, Errors } from './interfaces';
+import { SimpleFilterModalModel, Step, Errors } from 'proton-shared/lib/filters/interfaces';
 
 interface Props {
-    model: FilterModalModel;
-    onChange: (newModel: FilterModalModel) => void;
+    model: SimpleFilterModalModel;
+    onChange: (newModel: SimpleFilterModalModel) => void;
     errors: Errors;
 }
 

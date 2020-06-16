@@ -5,15 +5,16 @@ import { classnames, Icon } from 'react-components';
 
 import { Folder } from 'proton-shared/lib/interfaces/Folder';
 import { Label } from 'proton-shared/lib/interfaces/Label';
-
-import { FilterModalModel } from './interfaces';
+import { SimpleFilterModalModel } from 'proton-shared/lib/filters/interfaces';
 import { toMap } from 'proton-shared/lib/helpers/object';
+
+import { DEFAULT_FOLDERS } from './FilterActionsFormFolderRow';
 
 interface Props {
     labels: Label[];
     folders: Folder[];
     isNarrow: boolean;
-    model: FilterModalModel;
+    model: SimpleFilterModalModel;
     toggleOpen: () => void;
     isOpen: boolean;
 }
@@ -27,7 +28,7 @@ const LABELS_ACTION = {
 
 const FilterPreviewActions = ({ isOpen, isNarrow, toggleOpen, labels, folders, model }: Props) => {
     const { actions } = model;
-    const labelsMap = toMap(labels);
+    const labelsMap = toMap(labels, 'Name');
 
     const actionsRenderer = useMemo(() => {
         const actionsRows = [];
@@ -44,12 +45,10 @@ const FilterPreviewActions = ({ isOpen, isNarrow, toggleOpen, labels, folders, m
                                 color: labelsMap[l].Color
                             }}
                         >
-                            <span className="pm-badgeLabel-link color-white ellipsis nodecoration">
-                                {labelsMap[l].Name}
-                            </span>
+                            <span className="pm-badgeLabel-link color-white ellipsis nodecoration">{l}</span>
                         </span>
                     ) : (
-                        <strong>{labelsMap[l].Name}</strong>
+                        <strong>{l}</strong>
                     )}
                 </React.Fragment>
             ));
@@ -64,14 +63,17 @@ const FilterPreviewActions = ({ isOpen, isNarrow, toggleOpen, labels, folders, m
         }
 
         if (actions.moveTo.folder) {
-            const selectedFolder = folders.find((f) => f.Path === actions.moveTo.folder);
+            const isDefault = ['archive', 'inbox', 'spam', 'trash'].includes(actions.moveTo.folder);
+            const selectedFolder = isDefault
+                ? DEFAULT_FOLDERS.find((f) => f.value === actions.moveTo.folder)?.text
+                : folders.find((f) => f.Path === actions.moveTo.folder)?.Name;
 
             const folderElement = isOpen ? (
                 <span className="inline-flex flex-row flex-items-center condition-token mb0-5" role="listitem">
-                    <span className="ellipsis nodecoration">{selectedFolder?.Name}</span>
+                    <span className="ellipsis nodecoration">{selectedFolder}</span>
                 </span>
             ) : (
-                <strong>{selectedFolder?.Name}</strong>
+                <strong>{selectedFolder}</strong>
             );
 
             actionsRows.push(

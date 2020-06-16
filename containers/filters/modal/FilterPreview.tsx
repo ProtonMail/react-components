@@ -5,8 +5,8 @@ import { classnames } from 'react-components';
 
 import { Folder } from 'proton-shared/lib/interfaces/Folder';
 import { Label } from 'proton-shared/lib/interfaces/Label';
+import { SimpleFilterModalModel } from 'proton-shared/lib/filters/interfaces';
 
-import { FilterModalModel } from './interfaces';
 import FilterPreviewActions from './FilterPreviewActions';
 import FilterPreviewConditions from './FilterPreviewConditions';
 
@@ -14,7 +14,7 @@ interface Props {
     labels: Label[];
     folders: Folder[];
     isNarrow: boolean;
-    model: FilterModalModel;
+    model: SimpleFilterModalModel;
 }
 
 const FilterPreview = ({ isNarrow, labels, folders, model }: Props) => {
