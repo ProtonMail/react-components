@@ -300,7 +300,7 @@ const OpenVPNConfigurationSection = () => {
                             </li>
                             <li className="flex flex-nowrap flex-items-center mr1">
                                 <Icon name="on" className="color-global-success mr0-5" />
-                                <span className="bold">{c('Feature').t`Fatest VPN servers`}</span>
+                                <span className="bold">{c('Feature').t`Fastest VPN servers`}</span>
                             </li>
                             <li className="flex flex-nowrap flex-items-center mr1">
                                 <Icon name="on" className="color-global-success mr0-5" />
