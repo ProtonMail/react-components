@@ -48,7 +48,7 @@ const OpenVPNConfigurationSection = () => {
     const [category, setCategory] = useState(CATEGORY.SECURE_CORE);
     const { request } = useApiWithoutResult(getVPNServerConfig);
     const { loading, result = {} } = useApiResult(queryVPNLogicalServerInfo, []);
-    const { result: vpnResult = {}, loading: vpnLoading } = useUserVPN();
+    const { result: vpnResult = {}, loading: vpnLoading, fetch: fetchUserVPN } = useUserVPN();
     const [{ hasPaidVpn }] = useUser();
     const { VPN: userVPN = {} } = vpnResult;
     const isBasicVPN = userVPN.PlanName === 'vpnbasic';
@@ -108,6 +108,10 @@ const OpenVPNConfigurationSection = () => {
             setCategory(CATEGORY.FREE);
         }
     }, [vpnLoading]);
+
+    useEffect(() => {
+        fetchUserVPN();
+    }, [hasPaidVpn]);
 
     return (
         <>
