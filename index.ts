@@ -317,6 +317,7 @@ export { default as ContactModal } from './containers/contacts/modals/ContactMod
 export { default as ContactGroupModal } from './containers/contacts/modals/ContactGroupModal';
 export { default as ContactListModal } from './containers/contacts/modals/ContactListModal';
 export { default as ContactDetailsModal } from './containers/contacts/modals/ContactDetailsModal';
+export { default as ContactView } from './containers/contacts/ContactView';
 export { default as ContactViewErrors } from './containers/contacts/ContactViewErrors';
 export { default as ContactPgpSettings } from './containers/contacts/ContactPgpSettings';
 export { default as ContactGroupDropdown } from './containers/contacts/ContactGroupDropdown';

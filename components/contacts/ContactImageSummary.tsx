@@ -73,7 +73,8 @@ const ContactImageSummary = ({ photo, name }: Props) => {
         const style = {
             backgroundImage: `url(${image.src})`,
             backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat'
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover'
         };
 
         if (!image.isSmall) {

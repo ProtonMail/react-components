@@ -40,6 +40,7 @@ interface Props {
     userKeysList: CachedKey[];
     leftBlockWidth?: string;
     rightBlockWidth?: string;
+    isPreview: boolean;
 }
 
 const ContactViewProperty = ({
@@ -51,7 +52,8 @@ const ContactViewProperty = ({
     ownAddresses,
     userKeysList,
     leftBlockWidth = 'w30',
-    rightBlockWidth = 'w70'
+    rightBlockWidth = 'w70',
+    isPreview
 }: Props) => {
     const [{ hasPaidMail }] = useUser();
     const { createModal } = useModals();
@@ -123,14 +125,14 @@ const ContactViewProperty = ({
 
                 return (
                     <>
-                        {!isOwnAddress && (
+                        {!isPreview && !isOwnAddress && (
                             <Button onClick={handleSettings} className="ml0-5 pm-button--for-icon">
                                 <Tooltip title={c('Title').t`Email settings`}>
                                     <Icon name="settings-singular" />
                                 </Tooltip>
                             </Button>
                         )}
-                        {hasPaidMail ? (
+                        {!isPreview && hasPaidMail ? (
                             <ContactGroupDropdown
                                 className="ml0-5 pm-button pm-button--for-icon"
                                 contactEmails={[contactEmail]}
@@ -140,14 +142,16 @@ const ContactViewProperty = ({
                                 </Tooltip>
                             </ContactGroupDropdown>
                         ) : (
-                            <Button
-                                onClick={() => createModal(<ContactUpgradeModal />)}
-                                className="ml0-5 pm-button--for-icon"
-                            >
-                                <Tooltip title={c('Title').t`Contact group`}>
-                                    <Icon name="contacts-groups" />
-                                </Tooltip>
-                            </Button>
+                            !isPreview && (
+                                <Button
+                                    onClick={() => createModal(<ContactUpgradeModal />)}
+                                    className="ml0-5 pm-button--for-icon"
+                                >
+                                    <Tooltip title={c('Title').t`Contact group`}>
+                                        <Icon name="contacts-groups" />
+                                    </Tooltip>
+                                </Button>
+                            )
                         )}
                         <Copy className="ml0-5 pm-button--for-icon" value={value} />
                     </>

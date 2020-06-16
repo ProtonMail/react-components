@@ -35,6 +35,7 @@ interface Props {
     userKeysList: CachedKey[];
     leftBlockWidth?: string;
     rightBlockWidth?: string;
+    isPreview?: boolean;
 }
 
 const ContactViewProperties = ({
@@ -46,7 +47,8 @@ const ContactViewProperties = ({
     field,
     userKeysList,
     leftBlockWidth = 'w30',
-    rightBlockWidth = 'w70'
+    rightBlockWidth = 'w70',
+    isPreview = false
 }: Props) => {
     const title = field ? TITLES[field] : TITLES.other;
     const iconName = field ? ICONS[field] : ICONS.other;
@@ -85,6 +87,7 @@ const ContactViewProperties = ({
                         userKeysList={userKeysList}
                         leftBlockWidth={leftBlockWidth}
                         rightBlockWidth={rightBlockWidth}
+                        isPreview={isPreview}
                     />
                 );
             })}

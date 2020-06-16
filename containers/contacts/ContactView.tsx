@@ -21,6 +21,7 @@ interface Props {
     errors?: CryptoProcessingError[];
     isModal: boolean;
     onDelete: () => void;
+    isPreview?: boolean;
 }
 
 const ContactView = ({
@@ -32,7 +33,8 @@ const ContactView = ({
     userKeysList,
     errors,
     isModal,
-    onDelete
+    onDelete,
+    isPreview = false
 }: Props) => {
     const { createModal } = useModals();
     const { isNarrow } = useActiveBreakpoint();
@@ -67,10 +69,11 @@ const ContactView = ({
                 handleDelete={handleDelete}
                 properties={properties}
                 leftBlockWidth={isNarrow ? 'mauto mw100p' : 'w100 mw100p'}
+                isPreview={isPreview}
             />
             <div className="pl1 pr1">
                 <ContactViewProperties field="fn" {...contactViewPropertiesProps} />
-                <ContactViewProperties field="email" {...contactViewPropertiesProps} />
+                <ContactViewProperties field="email" {...contactViewPropertiesProps} isPreview={isPreview} />
                 <ContactViewProperties field="tel" {...contactViewPropertiesProps} />
                 <ContactViewProperties field="adr" {...contactViewPropertiesProps} />
                 <ContactViewProperties {...contactViewPropertiesProps} />
