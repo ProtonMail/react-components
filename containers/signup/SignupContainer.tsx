@@ -549,6 +549,11 @@ const SignupContainer = ({ onLogin, history }: Props) => {
             setCard('cvc', '');
             updateModel(omit(model, ['payment']));
         }
+
+        if (model.step === ACCOUNT_CREATION_EMAIL) {
+            // Reset verification parameters if we try to change the email
+            updateModel(omit(model, ['verificationToken', 'verificationTokenType']));
+        }
     }, [model.step]);
 
     return (
