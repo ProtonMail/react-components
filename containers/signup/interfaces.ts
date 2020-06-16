@@ -43,7 +43,6 @@ export interface SignupModel {
     humanVerificationToken: string;
     verificationToken?: string;
     verificationTokenType?: MethodType;
-    emailToken?: string;
     payload?: Payload;
     payment?: Payment;
 }

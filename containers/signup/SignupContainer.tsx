@@ -220,7 +220,10 @@ const SignupContainer = ({ onLogin, history }: Props) => {
         if (currentModel.step === ACCOUNT_CREATION_USERNAME) {
             try {
                 await humanApi(queryCheckUsernameAvailability(currentModel.username), currentModel);
-                goToStep(RECOVERY_EMAIL);
+                updateModel({
+                    ...currentModel,
+                    step: RECOVERY_EMAIL
+                });
             } catch (error) {
                 setUsernameError(error.data ? error.data.Error : c('Error').t`Can't check username, try again later`);
             }
@@ -229,25 +232,40 @@ const SignupContainer = ({ onLogin, history }: Props) => {
 
         if (currentModel.step === ACCOUNT_CREATION_EMAIL) {
             await humanApi(queryVerificationCode('email', { Address: currentModel.email }), currentModel);
-            goToStep(VERIFICATION_CODE);
+            updateModel({
+                ...currentModel,
+                step: VERIFICATION_CODE
+            });
             return;
         }
 
         if (currentModel.step === RECOVERY_EMAIL) {
             if (isBuyingPaidPlan) {
-                goToStep(PAYMENT);
+                updateModel({
+                    ...currentModel,
+                    step: PAYMENT
+                });
                 return;
             }
-            goToStep(PLANS);
+            updateModel({
+                ...currentModel,
+                step: PLANS
+            });
             return;
         }
 
         if (currentModel.step === RECOVERY_PHONE) {
             if (isBuyingPaidPlan) {
-                goToStep(PAYMENT);
+                updateModel({
+                    ...currentModel,
+                    step: PAYMENT
+                });
                 return;
             }
-            goToStep(PLANS);
+            updateModel({
+                ...currentModel,
+                step: PLANS
+            });
             return;
         }
 
@@ -282,14 +300,16 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                 updateModel({
                     ...currentModel,
                     step: PAYMENT,
-                    emailToken
+                    verificationToken: emailToken,
+                    verificationTokenType: tokenType
                 });
                 return;
             }
             updateModel({
                 ...currentModel,
                 step: PLANS,
-                emailToken
+                verificationToken: emailToken,
+                verificationTokenType: tokenType
             });
             return;
         }
@@ -299,7 +319,10 @@ const SignupContainer = ({ onLogin, history }: Props) => {
             const oldStep = currentModel.step;
 
             if (isBuyingPaidPlan && method === PAYMENT_METHOD_TYPES.CARD && !canPay) {
-                goToStep(PAYMENT);
+                updateModel({
+                    ...currentModel,
+                    step: PAYMENT
+                });
                 return;
             }
 
@@ -320,9 +343,6 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                         mode: ''
                     });
                     currentModel.payment = Payment;
-                    currentModel.verificationToken =
-                        Payment && 'Token' in Payment?.Details ? Payment.Details.Token : '';
-                    currentModel.verificationTokenType = TOKEN_TYPES.PAYMENT;
                     updateModel(currentModel);
                 }
 
@@ -359,15 +379,10 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                         throw error;
                     }
                 } else if (currentModel.email) {
-                    if (!currentModel.emailToken) {
-                        throw new Error('Missing email token');
-                    }
                     await srpVerify({
                         api: (config) => humanApi(config, currentModel),
                         credentials: { password: currentModel.password },
                         config: queryCreateUserExternal({
-                            Token: currentModel.emailToken,
-                            TokenType: TOKEN_TYPES.EMAIL,
                             Type: CLIENT_TYPE,
                             Email: currentModel.email,
                             Payload: currentModel.payload
@@ -532,7 +547,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
     useEffect(() => {
         if (model.step === PLANS) {
             setCard('cvc', '');
-            updateModel(omit(model, ['payment', 'verificationToken', 'verificationTokenType']));
+            updateModel(omit(model, ['payment']));
         }
     }, [model.step]);
 
@@ -560,10 +575,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                     model={model}
                     errors={errors}
                     onChange={updateModel}
-                    onSubmit={(e) => {
-                        e.preventDefault();
-                        withLoading(handleSubmit());
-                    }}
+                    onSubmit={(newModel) => withLoading(handleSubmit(newModel))}
                     loading={loading}
                 />
             )}
@@ -573,10 +585,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                     model={model}
                     errors={errors}
                     onChange={updateModel}
-                    onSubmit={(e) => {
-                        e.preventDefault();
-                        withLoading(handleSubmit());
-                    }}
+                    onSubmit={(newModel) => withLoading(handleSubmit(newModel))}
                     loading={loading}
                 />
             )}
@@ -585,10 +594,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                     model={model}
                     errors={errors}
                     onChange={updateModel}
-                    onSubmit={(e) => {
-                        e.preventDefault();
-                        withLoading(handleSubmit());
-                    }}
+                    onSubmit={(newModel) => withLoading(handleSubmit(newModel))}
                     loading={loading}
                 />
             )}
@@ -597,10 +603,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                     model={model}
                     errors={errors}
                     onChange={updateModel}
-                    onSubmit={(e) => {
-                        e.preventDefault();
-                        withLoading(handleSubmit());
-                    }}
+                    onSubmit={(newModel) => withLoading(handleSubmit(newModel))}
                     loading={loading}
                 />
             )}
