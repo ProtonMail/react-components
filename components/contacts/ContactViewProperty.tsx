@@ -106,6 +106,9 @@ const ContactViewProperty = ({
     };
 
     const getActions = () => {
+        if (isPreview) {
+            return null;
+        }
         switch (field) {
             case 'email': {
                 if (!contactEmail) {
@@ -125,14 +128,14 @@ const ContactViewProperty = ({
 
                 return (
                     <>
-                        {!isPreview && !isOwnAddress && (
+                        {!isOwnAddress && (
                             <Button onClick={handleSettings} className="ml0-5 pm-button--for-icon">
                                 <Tooltip title={c('Title').t`Email settings`}>
                                     <Icon name="settings-singular" />
                                 </Tooltip>
                             </Button>
                         )}
-                        {!isPreview && hasPaidMail ? (
+                        {hasPaidMail ? (
                             <ContactGroupDropdown
                                 className="ml0-5 pm-button pm-button--for-icon"
                                 contactEmails={[contactEmail]}
@@ -142,16 +145,14 @@ const ContactViewProperty = ({
                                 </Tooltip>
                             </ContactGroupDropdown>
                         ) : (
-                            !isPreview && (
-                                <Button
-                                    onClick={() => createModal(<ContactUpgradeModal />)}
-                                    className="ml0-5 pm-button--for-icon"
-                                >
-                                    <Tooltip title={c('Title').t`Contact group`}>
-                                        <Icon name="contacts-groups" />
-                                    </Tooltip>
-                                </Button>
-                            )
+                            <Button
+                                onClick={() => createModal(<ContactUpgradeModal />)}
+                                className="ml0-5 pm-button--for-icon"
+                            >
+                                <Tooltip title={c('Title').t`Contact group`}>
+                                    <Icon name="contacts-groups" />
+                                </Tooltip>
+                            </Button>
                         )}
                         <Copy className="ml0-5 pm-button--for-icon" value={value} />
                     </>
