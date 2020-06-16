@@ -40,11 +40,11 @@ const FilterActionsFormMarkAsRow = ({ isNarrow, actions, handleUpdateActions }: 
 
     const renderClosed = () => {
         if (!markAs?.read && !markAs?.starred) {
-            return <em className="ml0-5 pt0-5 color-global-altgrey">{c('Info').t`No action selected`}</em>;
+            return <em className="pt0-5 color-global-altgrey">{c('Info').t`No action selected`}</em>;
         }
 
         return (
-            <div className="ml0-5 pt0-5">
+            <div className="pt0-5">
                 {markAs?.read && (
                     <span className="inline-flex flex-items-center mr2">
                         <Icon name="read" className="mr0-5" />
@@ -63,19 +63,13 @@ const FilterActionsFormMarkAsRow = ({ isNarrow, actions, handleUpdateActions }: 
 
     return (
         <div className="border-bottom flex flex-nowrap onmobile-flex-column align-items-center pt1 pb1">
-            <div
-                className={classnames(['w25 cursor-pointer pt0-5', isNarrow && 'mb1'])}
-                onClick={toggleSection}
-                onKeyDown={(e) => e.key === 'Enter' && toggleSection()}
-                role="button"
-                tabIndex={0}
-            >
+            <button type="button" className={classnames(['w25 alignleft', isNarrow && 'mb1'])} onClick={toggleSection}>
                 <Icon name="caret" className={classnames([isOpen && 'rotateX-180'])} />
                 <span className={classnames(['ml0-5', actions.error && 'color-global-warning'])}>
                     {c('Label').t`Mark as`}
                 </span>
-            </div>
-            <div className="ml0-5 flex flex-column flex-item-fluid">
+            </button>
+            <div className="ml1 flex flex-column flex-item-fluid">
                 {isOpen ? (
                     <div className="w100 pt0-5 pb0-5">
                         <Checkbox

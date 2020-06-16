@@ -103,7 +103,7 @@ const FilterActionsFormFolderRow = ({ folders, isNarrow, actions, handleUpdateAc
 
     const renderClosed = () => {
         if (!moveTo?.folder) {
-            return <em className="ml0-5 pt0-5 color-global-altgrey">{c('Info').t`No folder selected`}</em>;
+            return <em className="pt0-5 color-global-altgrey">{c('Info').t`No folder selected`}</em>;
         }
 
         let selectedFolder;
@@ -135,23 +135,17 @@ const FilterActionsFormFolderRow = ({ folders, isNarrow, actions, handleUpdateAc
             ));
         }
 
-        return <div className="ml0-5 pt0-5 flex flex-items-center">{selectedFolder}</div>;
+        return <div className="pt0-5 flex flex-items-center">{selectedFolder}</div>;
     };
 
     return (
         <div className="border-bottom flex flex-nowrap onmobile-flex-column align-items-center pt1 pb1">
-            <div
-                className={classnames(['w25 cursor-pointer pt0-5', isNarrow && 'mb1'])}
-                onClick={toggleSection}
-                onKeyDown={(e) => e.key === 'Enter' && toggleSection()}
-                role="button"
-                tabIndex={0}
-            >
+            <button type="button" className={classnames(['w25 alignleft', isNarrow && 'mb1'])} onClick={toggleSection}>
                 <Icon name="caret" className={classnames([isOpen && 'rotateX-180'])} />
                 <span className={classnames(['ml0-5', actions.error && 'color-global-warning'])}>{c('Label')
                     .t`Move to`}</span>
-            </div>
-            <div className="ml0-5 flex flex-column flex-item-fluid">
+            </button>
+            <div className="ml1 flex flex-column flex-item-fluid">
                 {isOpen ? (
                     <div className="w100">
                         <Select

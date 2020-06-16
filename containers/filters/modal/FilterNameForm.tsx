@@ -23,7 +23,7 @@ const FilterNameForm = ({ isNarrow, model, errors, onChange }: Props) => {
                 <label htmlFor="name" className={classnames(['w25 pt0-5', isNarrow && 'mb1'])}>
                     {c('Label').t`Filter name`}
                 </label>
-                <Field>
+                <Field className="ml1">
                     <Input
                         id="name"
                         placeholder={c('Placeholder').t`Name`}

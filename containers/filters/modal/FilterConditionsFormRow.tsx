@@ -159,7 +159,7 @@ const FilterConditionsRow = ({
 
     const renderClosed = () => {
         if (condition?.error) {
-            return <em className="ml0-5 pt0-5 color-global-warning">{condition?.error}</em>;
+            return <em className="pt0-5 color-global-warning">{condition?.error}</em>;
         }
 
         let label;
@@ -183,7 +183,7 @@ const FilterConditionsRow = ({
             label = c('Label').jt`${typeLabel} ${comparatorLabel} ${values}`;
         }
 
-        return <span className="mw100 ml0-5 pt0-5 ellipsis">{label}</span>;
+        return <span className="mw100 pt0-5 ellipsis">{label}</span>;
     };
 
     const toggleSection = () => setIsOpen((isOpen) => !isOpen);
@@ -191,19 +191,17 @@ const FilterConditionsRow = ({
     return (
         <div className="border-bottom">
             <div className="flex flex-nowrap onmobile-flex-column align-items-center pt1 pb1">
-                <div
-                    className={classnames(['w25 cursor-pointer pt0-5', isNarrow && 'mb1'])}
+                <button
+                    type="button"
+                    className={classnames(['w25 alignleft', isNarrow && 'mb1'])}
                     onClick={toggleSection}
-                    onKeyDown={(e) => e.key === 'Enter' && toggleSection()}
-                    role="button"
-                    tabIndex={0}
                 >
                     <Icon name="caret" className={classnames([isOpen && 'rotateX-180'])} />
                     <span className={classnames(['ml0-5', condition.error && 'color-global-warning'])}>{label}</span>
-                </div>
-                <div className="flex flex-column flex-item-fluid">
+                </button>
+                <div className="ml1 flex flex-column flex-item-fluid">
                     {isOpen ? (
-                        <div className="ml0-5 flex">
+                        <div className="flex">
                             <span className="w50 pr1">
                                 <Select
                                     options={typeOptions}
@@ -238,7 +236,7 @@ const FilterConditionsRow = ({
                         renderClosed()
                     )}
                     {isOpen && type && type !== ConditionType.SELECT && (
-                        <div className="ml0-5 flex">
+                        <div className="flex">
                             {type === ConditionType.ATTACHMENTS
                                 ? renderAttachmentsCondition()
                                 : renderGenericCondition()}

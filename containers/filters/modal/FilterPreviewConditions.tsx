@@ -76,18 +76,12 @@ const FilterPreviewConditions = ({ isOpen, isNarrow, toggleOpen, model }: Props)
     return (
         <div className="border-bottom">
             <div className="flex flex-nowrap onmobile-flex-column align-items-center pt1 pb1">
-                <div
-                    className={classnames(['w25 cursor-pointer pt0-5', isNarrow && 'mb1'])}
-                    onClick={toggleOpen}
-                    onKeyDown={(e) => e.key === 'Enter' && toggleOpen()}
-                    role="button"
-                    tabIndex={0}
-                >
+                <button type="button" className={classnames(['w25 alignleft', isNarrow && 'mb1'])} onClick={toggleOpen}>
                     <Icon name="caret" className={classnames([isOpen && 'rotateX-180'])} />
                     <span className="ml0-5">{c('Label').t`Conditions`}</span>
-                </div>
-                <div className="flex flex-column flex-item-fluid">
-                    <div className={classnames(['pl0-5 pt0-5', !isOpen && 'mw100 ellipsis'])}>{conditionsRenderer}</div>
+                </button>
+                <div className="ml1 flex flex-column flex-item-fluid">
+                    <div className={classnames(['pt0-5', !isOpen && 'mw100 ellipsis'])}>{conditionsRenderer}</div>
                 </div>
             </div>
         </div>

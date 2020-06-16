@@ -43,7 +43,7 @@ const FilterActionsFormLabelsRow = ({ actions, isNarrow, handleUpdateActions, la
 
     const renderClosed = () => {
         if (!labelAs?.labels.length) {
-            return <em className="ml0-5 color-global-altgrey">{c('Info').t`No label selected`}</em>;
+            return <em className="color-global-altgrey">{c('Info').t`No label selected`}</em>;
         }
 
         return (
@@ -70,19 +70,13 @@ const FilterActionsFormLabelsRow = ({ actions, isNarrow, handleUpdateActions, la
 
     return (
         <div className="border-bottom flex flex-nowrap onmobile-flex-column align-items-center pt1 pb1">
-            <div
-                className={classnames(['w25 cursor-pointer pt0-5', isNarrow && 'mb1'])}
-                onClick={toggleSection}
-                onKeyDown={(e) => e.key === 'Enter' && toggleSection()}
-                role="button"
-                tabIndex={0}
-            >
+            <button type="button" className={classnames(['w25 alignleft', isNarrow && 'mb1'])} onClick={toggleSection}>
                 <Icon name="caret" className={classnames([isOpen && 'rotateX-180'])} />
                 <span className={classnames(['ml0-5', actions.error && 'color-global-warning'])}>
                     {c('Label').t`Label as`}
                 </span>
-            </div>
-            <div className="ml0-5 flex-item-fluid">
+            </button>
+            <div className="ml1 flex-item-fluid">
                 {isOpen ? (
                     <>
                         <div className="w100">

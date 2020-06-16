@@ -40,9 +40,9 @@ const FilterActionsFormAutoReplyRow = ({ isEdit, isNarrow, actions, handleUpdate
             {user.hasPaidMail ? (
                 <>
                     <label htmlFor="autoReply" className={classnames(['w25 pt0-5', isNarrow && 'mb1'])}>
-                        <span className="ml0-5 mr0-5">{c('Label').t`Send auto-reply`}</span>
+                        <span className="ml0-5">{c('Label').t`Send auto-reply`}</span>
                     </label>
-                    <div className="ml0-5 flex flex-column flex-item-fluid">
+                    <div className="ml1 flex flex-column flex-item-fluid">
                         <Toggle
                             id="autoReply"
                             checked={editorVisible}
@@ -66,7 +66,7 @@ const FilterActionsFormAutoReplyRow = ({ isEdit, isNarrow, actions, handleUpdate
                 </>
             ) : (
                 <>
-                    <div className={classnames(['w25 pt0-5', isNarrow && 'mb1'])}>
+                    <div className={classnames(['w25 mr1 pt0-5', isNarrow && 'mb1'])}>
                         <span className="ml0-5 mr0-5">{c('Label').t`Send auto-reply`}</span>
                     </div>
                     <Tooltip title={c('Tooltip').t`This feature is only available for paid users`}>

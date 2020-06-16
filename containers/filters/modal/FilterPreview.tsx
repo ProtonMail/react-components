@@ -28,7 +28,7 @@ const FilterPreview = ({ isNarrow, labels, folders, model }: Props) => {
                     <div className={classnames(['w25 pt0-5', isNarrow && 'mb1'])}>
                         <span className="ml0-5 mr0-5">{c('Label').t`Filter Name`}</span>
                     </div>
-                    <div className="ml0-5 pt0-5 flex flex-column flex-item-fluid">{model.name}</div>
+                    <div className="ml1 pt0-5 flex flex-column flex-item-fluid">{model.name}</div>
                 </div>
             </div>
             <FilterPreviewConditions
