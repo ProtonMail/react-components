@@ -63,25 +63,14 @@ const Dropdown = ({
     };
 
     const contentRef = useRef<HTMLDivElement>(null);
-    const [rect, setRect] = useState<DOMRect>();
+    const [contentRect, setContentRect] = useState<DOMRect>();
 
     useEffect(() => {
-        if (!contentRef.current) {
-            setRect(undefined);
+        if (!contentRef.current || !isOpen) {
+            setContentRect(undefined);
             return;
         }
-        if (!isOpen) {
-            return;
-        }
-        setRect(contentRef.current.getBoundingClientRect());
     }, [isOpen, contentRef.current]);
-
-    const rectSizes = rect
-        ? {
-              '--width': '' + rect.width,
-              '--height': '' + rect.height
-          }
-        : null;
 
     useEffect(() => {
         if (!isOpen) {
@@ -127,18 +116,28 @@ const Dropdown = ({
         className
     ]);
 
+    if (isClosed) {
+        return null;
+    }
+
     const varPosition = {
         '--top': position.top,
         '--left': position.left
     } as any;
 
-    if (isClosed) {
-        return null;
-    }
+    const varSize = contentRect
+        ? {
+              '--width': '' + contentRect.width,
+              '--height': '' + contentRect.height
+          }
+        : {};
 
     const handleAnimationEnd = ({ animationName }: React.AnimationEvent) => {
         if (animationName.includes('dropdownOut') && isClosing) {
             setIsClosed();
+        }
+        if (animationName.includes('dropdownIn') && isOpen && contentRef.current && !contentRect) {
+            setContentRect(contentRef.current.getBoundingClientRect());
         }
     };
 
@@ -146,7 +145,7 @@ const Dropdown = ({
         <Portal>
             <div
                 ref={setPopperEl}
-                style={{ ...varPosition, ...rectSizes }}
+                style={{ ...varPosition, ...varSize }}
                 role="dialog"
                 className={popperClassName}
                 onClick={handleClickContent}
