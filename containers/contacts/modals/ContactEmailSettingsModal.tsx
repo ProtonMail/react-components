@@ -84,7 +84,7 @@ const ContactEmailSettingsModal = ({
         const publicKeyModel = await getContactPublicKeyModel({
             emailAddress,
             apiKeysConfig,
-            pinnedKeysConfig
+            pinnedKeysConfig: { ...pinnedKeysConfig, isContact: true }
         });
         setModel(publicKeyModel);
     };
