@@ -1,33 +1,30 @@
 import React, { useState, useEffect, useMemo, ReactNode, ChangeEvent } from 'react';
 import { c, msgid } from 'ttag';
 
-import {
-    Dropdown,
-    SmallButton,
-    PrimaryButton,
-    Icon,
-    Mark,
-    SearchInput,
-    Checkbox,
-    useContactGroups,
-    useModals,
-    useApi,
-    Tooltip,
-    useNotifications,
-    useEventManager,
-    useContacts,
-    usePopperAnchor,
-    generateUID,
-    useLoading
-} from 'react-components';
 import { normalize } from 'proton-shared/lib/helpers/string';
 import { labelContactEmails, unLabelContactEmails } from 'proton-shared/lib/api/contacts';
 import { ContactEmail, ContactGroup, Contact } from 'proton-shared/lib/interfaces/contacts/Contact';
 
+import ContactGroupDropdownButton from '../../components/contacts/ContactGroupDropdownButton';
+import useLoading from '../../hooks/useLoading';
+import { usePopperAnchor } from '../../components/popper';
+import useNotifications from '../notifications/useNotifications';
+import useEventManager from '../eventManager/useEventManager';
+import useApi from '../api/useApi';
+import useModals from '../modals/useModals';
+import useContacts from '../../hooks/useContacts';
+import { generateUID } from '../../helpers/component';
+import { useContactGroups } from '../../hooks/useCategories';
+import Dropdown from '../../components/dropdown/Dropdown';
+import Tooltip from '../../components/tooltip/Tooltip';
+import Icon from '../../components/icon/Icon';
+import SearchInput from '../../components/input/SearchInput';
+import { SmallButton, PrimaryButton } from '../../components/button';
+import Mark from '../../components/text/Mark';
+import Checkbox from '../../components/input/Checkbox';
+
 import ContactGroupModal from './modals/ContactGroupModal';
 import SelectEmailsModal from './modals/SelectEmailsModal';
-import ContactGroupDropdownButton from '../../components/contacts/ContactGroupDropdownButton';
-
 import './ContactGroupDropdown.scss';
 
 const UNCHECKED = 0;

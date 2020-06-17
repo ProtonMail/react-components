@@ -1,6 +1,8 @@
 import React from 'react';
 import { c } from 'ttag';
-import { Tooltip, Icon } from 'react-components';
+
+import Tooltip from '../tooltip/Tooltip';
+import Icon from '../icon/Icon';
 
 const EncryptedIcon = ({ ...rest }) => {
     return (

@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { Icon, Tooltip } from 'react-components';
+import Tooltip from '../tooltip/Tooltip';
+import Icon from '../icon/Icon';
 
 interface Props {
     name: string;

@@ -2,7 +2,6 @@ import React, { ChangeEvent, Dispatch, SetStateAction } from 'react';
 import { c } from 'ttag';
 import { OpenPGPKey } from 'pmcrypto';
 
-import { Alert, Row, Label, Field, Info, Toggle, SelectKeyFiles, useNotifications } from 'react-components';
 import { getIsValidForSending, getKeyEncryptStatus } from 'proton-shared/lib/keys/publicKeys';
 import { MailSettings } from 'proton-shared/lib/interfaces';
 import { ContactPublicKeyModel } from 'proton-shared/lib/interfaces/Key';
@@ -10,6 +9,14 @@ import { ContactPublicKeyModel } from 'proton-shared/lib/interfaces/Key';
 import ContactSchemeSelect from '../../components/contacts/ContactSchemeSelect';
 import ContactKeysTable from '../../components/contacts/ContactKeysTable';
 import { CONTACT_PGP_SCHEMES, MIME_TYPES_MORE } from 'proton-shared/lib/constants';
+import useNotifications from '../notifications/useNotifications';
+import Alert from '../../components/alert/Alert';
+import Row from '../../components/container/Row';
+import Label from '../../components/label/Label';
+import Info from '../../components/link/Info';
+import Field from '../../components/container/Field';
+import SelectKeyFiles from '../keys/shared/SelectKeyFiles';
+import Toggle from '../../components/toggle/Toggle';
 
 interface Props {
     model: ContactPublicKeyModel;

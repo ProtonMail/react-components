@@ -1,13 +1,13 @@
 import React from 'react';
 import { c } from 'ttag';
 
-import { Icon } from 'react-components';
 import { OTHER_INFORMATION_FIELDS } from 'proton-shared/lib/contacts/constants';
 import { CachedKey } from 'proton-shared/lib/interfaces';
 import { ContactEmail, ContactProperties, ContactGroup } from 'proton-shared/lib/interfaces/contacts';
 
 import ContactViewProperty from './ContactViewProperty';
 import EncryptedIcon from './EncryptedIcon';
+import Icon from '../icon/Icon';
 
 const TITLES: { [key: string]: string } = {
     fn: c('Title').t`Display name`,

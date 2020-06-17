@@ -1,17 +1,6 @@
 import React, { useState, ChangeEvent, useEffect, createRef, RefObject } from 'react';
 import { c, msgid } from 'ttag';
 
-import {
-    classnames,
-    Checkbox,
-    FormModal,
-    SearchInput,
-    PrimaryButton,
-    useActiveBreakpoint,
-    useContactEmails,
-    useContactGroups,
-    useUserSettings
-} from 'react-components';
 import { ContactEmail } from 'proton-shared/lib/interfaces/contacts/Contact';
 import { normalize } from 'proton-shared/lib/helpers/string';
 import { toMap } from 'proton-shared/lib/helpers/object';
@@ -21,6 +10,16 @@ import ContactList from '../ContactList';
 import ContactListModalRow from '../../../components/contacts/ContactListModalRow';
 import EmptyContacts from '../../../components/contacts/EmptyContacts';
 import EmptyResults from '../../../components/contacts/EmptyResults';
+import FormModal from '../../../components/modal/FormModal';
+
+import useActiveBreakpoint from '../../../hooks/useActiveBreakpoint';
+import useContactEmails from '../../../hooks/useContactEmails';
+import useUserSettings from '../../../hooks/userSettingsModel';
+import { useContactGroups } from '../../../hooks/useCategories';
+import { PrimaryButton } from '../../../components/button';
+import { classnames } from '../../../helpers/component';
+import SearchInput from '../../../components/input/SearchInput';
+import Checkbox from '../../../components/input/Checkbox';
 
 import './ContactListModal.scss';
 

@@ -1,8 +1,11 @@
 import React from 'react';
 import { c } from 'ttag';
-import { ConfirmModal, Alert } from 'react-components';
+
 import { redirectTo } from 'proton-shared/lib/helpers/browser';
 import { noop } from 'proton-shared/lib/helpers/function';
+
+import ConfirmModal from '../modal/Confirm';
+import Alert from '../alert/Alert';
 
 interface Props {
     onConfirm?: () => void;

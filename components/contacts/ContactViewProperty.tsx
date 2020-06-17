@@ -2,18 +2,6 @@ import React from 'react';
 import { parseISO, isValid, format } from 'date-fns';
 import { c } from 'ttag';
 
-import {
-    Row,
-    Button,
-    Icon,
-    Copy,
-    useModals,
-    useUser,
-    classnames,
-    Tooltip,
-    RemoteImage,
-    ContactUpgradeModal
-} from 'react-components';
 import { dateLocale } from 'proton-shared/lib/i18n';
 import { clearType, getType, formatAdr } from 'proton-shared/lib/contacts/property';
 import { getTypeLabels } from 'proton-shared/lib/helpers/contacts';
@@ -25,10 +13,20 @@ import {
     ContactGroup
 } from 'proton-shared/lib/interfaces/contacts/Contact';
 
-import ContactGroupIcon from './ContactGroupIcon';
 import ContactGroupDropdown from '../../containers/contacts/ContactGroupDropdown';
 import ContactLabelProperty from './ContactLabelProperty';
 import ContactEmailSettingsModal from '../../containers/contacts/modals/ContactEmailSettingsModal';
+import { useUser } from '../../hooks/useUser';
+import RemoteImage from '../image/RemoteImage';
+import Tooltip from '../tooltip/Tooltip';
+import useModals from '../../containers/modals/useModals';
+import { Button, Copy } from '../button';
+import { classnames } from '../../helpers/component';
+import Row from '../container/Row';
+import Icon from '../icon/Icon';
+
+import ContactGroupIcon from './ContactGroupIcon';
+import ContactUpgradeModal from './ContactUpgradeModal';
 
 interface Props {
     property: ContactProperty;

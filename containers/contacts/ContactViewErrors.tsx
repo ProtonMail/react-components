@@ -1,9 +1,10 @@
 import React from 'react';
 import { c } from 'ttag';
 
-import { Icon, Href } from 'react-components';
 import { CryptoProcessingError } from 'proton-shared/lib/contacts/decrypt';
 import { CRYPTO_PROCESSING_TYPES } from 'proton-shared/lib/contacts/constants';
+import Icon from '../../components/icon/Icon';
+import Href from '../../components/link/Href';
 
 const { SIGNATURE_NOT_VERIFIED, FAIL_TO_READ, FAIL_TO_DECRYPT } = CRYPTO_PROCESSING_TYPES;
 

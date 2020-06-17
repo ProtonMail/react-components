@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { c } from 'ttag';
 
-import { useMailSettings, useLoading, Loader, Button } from 'react-components';
 import { getInitial } from 'proton-shared/lib/helpers/string';
 import { isURL } from 'proton-shared/lib/helpers/validators';
 import { resizeImage, toImage } from 'proton-shared/lib/helpers/image';
 import { noop } from 'proton-shared/lib/helpers/function';
 import { SHOW_IMAGES } from 'proton-shared/lib/constants';
 import { CONTACT_IMG_SIZE } from 'proton-shared/lib/contacts/constants';
+
+import useLoading from '../../hooks/useLoading';
+import useMailSettings from '../../hooks/useMailSettings';
+import Loader from '../loader/Loader';
+import { Button } from '../button';
 
 interface Props {
     photo: string;

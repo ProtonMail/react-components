@@ -1,10 +1,11 @@
 import React, { ChangeEvent } from 'react';
 
-import { Select, Label } from 'react-components';
 import { getOtherInformationFields, getAllTypes } from 'proton-shared/lib/helpers/contacts';
 import { ContactPropertyChange } from 'proton-shared/lib/interfaces/contacts/Contact';
 
 import ContactLabelProperty from './ContactLabelProperty';
+import Label from '../label/Label';
+import Select from '../select/Select';
 
 interface Props {
     field: string;

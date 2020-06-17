@@ -1,21 +1,6 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
 import { c } from 'ttag';
 
-import {
-    FormModal,
-    useApi,
-    Row,
-    Label,
-    Field,
-    Input,
-    Select,
-    ColorPicker,
-    PrimaryButton,
-    useContactGroups,
-    useContactEmails,
-    useNotifications,
-    useEventManager
-} from 'react-components';
 import { randomIntFromInterval, noop } from 'proton-shared/lib/helpers/function';
 import { diff, orderBy } from 'proton-shared/lib/helpers/array';
 import { LABEL_COLORS } from 'proton-shared/lib/constants';
@@ -24,6 +9,19 @@ import { labelContactEmails, unLabelContactEmails } from 'proton-shared/lib/api/
 import { ContactEmail } from 'proton-shared/lib/interfaces/contacts/Contact';
 
 import ContactGroupTable from '../../../components/contacts/ContactGroupTable';
+import useEventManager from '../../eventManager/useEventManager';
+import useApi from '../../api/useApi';
+import useNotifications from '../../notifications/useNotifications';
+import { useContactGroups } from '../../../hooks/useCategories';
+import Label from '../../../components/label/Label';
+import useContactEmails from '../../../hooks/useContactEmails';
+import Field from '../../../components/container/Field';
+import ColorPicker from '../../../components/input/ColorPicker';
+import Row from '../../../components/container/Row';
+import Select from '../../../components/select/Select';
+import Input from '../../../components/input/Input';
+import FormModal from '../../../components/modal/FormModal';
+import { PrimaryButton } from '../../../components/button';
 
 const mapIDs = (contactEmails: ContactEmail[]) => contactEmails.map(({ ID }) => ID);
 

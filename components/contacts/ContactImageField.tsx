@@ -1,7 +1,7 @@
 import React from 'react';
 import { c } from 'ttag';
 
-import { Button } from 'react-components';
+import { Button } from '../button';
 
 interface Props {
     value: string;

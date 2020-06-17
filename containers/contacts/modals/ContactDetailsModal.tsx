@@ -1,17 +1,6 @@
 import React, { useMemo } from 'react';
 import { c } from 'ttag';
 
-import {
-    FormModal,
-    ErrorBoundary,
-    GenericError,
-    useContactEmails,
-    useUserKeys,
-    useContactGroups,
-    useAddresses,
-    useModals,
-    ContactModal
-} from 'react-components';
 import { toMap } from 'proton-shared/lib/helpers/object';
 import { noop } from 'proton-shared/lib/helpers/function';
 
@@ -19,6 +8,16 @@ import ContactContainer from '../ContactContainer';
 import useContactList from '../useContactList';
 import useContact from '../useContact';
 import useContactProperties from '../useContactProperties';
+import useModals from '../../modals/useModals';
+import useContactEmails from '../../../hooks/useContactEmails';
+import { useContactGroups } from '../../../hooks/useCategories';
+import { useAddresses } from '../../../hooks/useAddresses';
+import { useUserKeys } from '../../../hooks/useUserKeys';
+import ErrorBoundary from '../../app/ErrorBoundary';
+import GenericError from '../../error/GenericError';
+import FormModal from '../../../components/modal/FormModal';
+
+import ContactModal from './ContactModal';
 
 interface Props {
     contactID: string;

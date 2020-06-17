@@ -1,26 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { c } from 'ttag';
 
-import {
-    useApi,
-    useMailSettings,
-    useEventManager,
-    useNotifications,
-    useLoading,
-    Alert,
-    Row,
-    Label,
-    Field,
-    Info,
-    LinkButton,
-    ContentModal,
-    InnerModal,
-    DialogModal,
-    ResetButton,
-    FooterModal,
-    PrimaryButton,
-    Icon
-} from 'react-components';
 import { prepareContacts } from 'proton-shared/lib/contacts/encrypt';
 import { hasCategories, reOrderByPref } from 'proton-shared/lib/contacts/properties';
 import { addContacts } from 'proton-shared/lib/api/contacts';
@@ -43,6 +23,22 @@ import { noop } from 'proton-shared/lib/helpers/function';
 
 import ContactMIMETypeSelect from '../../../components/contacts/ContactMIMETypeSelect';
 import ContactPgpSettings from '../ContactPgpSettings';
+import useApi from '../../api/useApi';
+import useEventManager from '../../eventManager/useEventManager';
+import useLoading from '../../../hooks/useLoading';
+import useMailSettings from '../../../hooks/useMailSettings';
+import useNotifications from '../../notifications/useNotifications';
+import Icon from '../../../components/icon/Icon';
+import Alert from '../../../components/alert/Alert';
+import { ResetButton, PrimaryButton, LinkButton } from '../../../components/button';
+import Label from '../../../components/label/Label';
+import Field from '../../../components/container/Field';
+import Row from '../../../components/container/Row';
+import Info from '../../../components/link/Info';
+import DialogModal from '../../../components/modal/Dialog';
+import ContentModal from '../../../components/modal/Content';
+import InnerModal from '../../../components/modal/Inner';
+import FooterModal from '../../../components/modal/Footer';
 
 const { PGP_INLINE } = PGP_SCHEMES;
 const { INCLUDE, IGNORE } = CATEGORIES;

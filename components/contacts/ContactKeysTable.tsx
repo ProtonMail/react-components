@@ -3,23 +3,18 @@ import { algorithmInfo, OpenPGPKey } from 'pmcrypto';
 import { isValid, format } from 'date-fns';
 import { c } from 'ttag';
 
-import {
-    Table,
-    TableBody,
-    TableRow,
-    Badge,
-    DropdownActions,
-    useActiveBreakpoint,
-    classnames,
-    KeyWarningIcon
-} from 'react-components';
-
 import { move, uniqueBy } from 'proton-shared/lib/helpers/array';
 import { dateLocale } from 'proton-shared/lib/i18n';
 import downloadFile from 'proton-shared/lib/helpers/downloadFile';
 import { describe } from 'proton-shared/lib/keys/keysAlgorithm';
-
 import { ContactPublicKeyModel } from 'proton-shared/lib/interfaces/Key';
+
+import useActiveBreakpoint from '../../hooks/useActiveBreakpoint';
+import { Table, TableBody, TableRow } from '../table';
+import { classnames } from '../../helpers/component';
+import Badge from '../badge/Badge';
+import DropdownActions from '../dropdown/DropdownActions';
+import KeyWarningIcon from '../icon/KeyWarningIcon';
 
 interface Props {
     model: ContactPublicKeyModel;

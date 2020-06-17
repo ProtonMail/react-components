@@ -1,11 +1,17 @@
 import React from 'react';
 import { c, msgid } from 'ttag';
 
-import { useApi, useNotifications, useEventManager, useLoading, Alert, ErrorButton, FormModal } from 'react-components';
-
 import { clearContacts, deleteContacts } from 'proton-shared/lib/api/contacts';
 import { allSucceded } from 'proton-shared/lib/api/helpers/response';
 import { noop } from 'proton-shared/lib/helpers/function';
+
+import useApi from '../../api/useApi';
+import useNotifications from '../../notifications/useNotifications';
+import useLoading from '../../../hooks/useLoading';
+import useEventManager from '../../eventManager/useEventManager';
+import ErrorButton from '../../../components/button/ErrorButton';
+import Alert from '../../../components/alert/Alert';
+import FormModal from '../../../components/modal/FormModal';
 
 interface Props {
     contactIDs: string[];

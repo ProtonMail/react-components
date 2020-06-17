@@ -1,8 +1,15 @@
 import React, { useState, ChangeEvent } from 'react';
 import { c } from 'ttag';
 
-import { FormModal, Alert, Row, Label, Field, Checkbox, useContactEmails } from 'react-components';
 import { Contact, ContactEmail } from 'proton-shared/lib/interfaces/contacts';
+
+import useContactEmails from '../../../hooks/useContactEmails';
+import FormModal from '../../../components/modal/FormModal';
+import Alert from '../../../components/alert/Alert';
+import Row from '../../../components/container/Row';
+import Label from '../../../components/label/Label';
+import Field from '../../../components/container/Field';
+import Checkbox from '../../../components/input/Checkbox';
 
 interface Props {
     contacts: Contact[];

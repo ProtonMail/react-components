@@ -2,7 +2,6 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { c } from 'ttag';
 import { History } from 'history';
 
-import { FormModal, Alert, useApi, useUserKeys, useEventManager, useNotifications, useLoading } from 'react-components';
 import { generateUID } from 'react-components/helpers/component';
 import { addContacts } from 'proton-shared/lib/api/contacts';
 import { randomIntFromInterval, noop } from 'proton-shared/lib/helpers/function';
@@ -18,6 +17,13 @@ import {
 } from 'proton-shared/lib/interfaces/contacts/Contact';
 
 import ContactModalProperties from '../ContactModalProperties';
+import useApi from '../../api/useApi';
+import useLoading from '../../../hooks/useLoading';
+import { useUserKeys } from '../../../hooks/useUserKeys';
+import useNotifications from '../../notifications/useNotifications';
+import useEventManager from '../../eventManager/useEventManager';
+import Alert from '../../../components/alert/Alert';
+import FormModal from '../../../components/modal/FormModal';
 
 const DEFAULT_MODEL = [
     { field: 'fn', value: '' },

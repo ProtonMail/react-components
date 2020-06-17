@@ -1,8 +1,9 @@
 import React from 'react';
 import { c } from 'ttag';
 
-import { SmallButton, TableHeader, TableBody, TableRow, Table } from 'react-components';
 import { ContactEmail } from 'proton-shared/lib/interfaces/contacts';
+import { Table, TableHeader, TableBody, TableRow } from '../table';
+import { SmallButton } from '../button';
 
 interface Props {
     contactEmails: ContactEmail[];

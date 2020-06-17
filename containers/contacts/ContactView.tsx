@@ -1,15 +1,19 @@
 import React from 'react';
 
-import { useModals, classnames, ContactDeleteModal, useActiveBreakpoint } from 'react-components';
 import { ContactProperties, ContactEmail, ContactGroup } from 'proton-shared/lib/interfaces/contacts/Contact';
 import { CachedKey } from 'proton-shared/lib/interfaces';
 import { CryptoProcessingError } from 'proton-shared/lib/contacts/decrypt';
 import { singleExport } from 'proton-shared/lib/contacts/export';
 
-import ContactModal from './modals/ContactModal';
-import ContactViewErrors from './ContactViewErrors';
 import ContactSummary from '../../components/contacts/ContactSummary';
 import ContactViewProperties from '../../components/contacts/ContactViewProperties';
+import useModals from '../modals/useModals';
+import useActiveBreakpoint from '../../hooks/useActiveBreakpoint';
+import { classnames } from '../../helpers/component';
+
+import ContactViewErrors from './ContactViewErrors';
+import ContactModal from './modals/ContactModal';
+import ContactDeleteModal from './modals/ContactDeleteModal';
 
 interface Props {
     contactID: string;

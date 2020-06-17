@@ -1,13 +1,19 @@
 import React, { ChangeEvent } from 'react';
 import { parseISO, isValid } from 'date-fns';
 
-import { useModals, Input, TextArea, EmailInput, DateInput, TelInput } from 'react-components';
 import { getAllFieldLabels } from 'proton-shared/lib/helpers/contacts';
 import { ContactPropertyChange } from 'proton-shared/lib/interfaces/contacts/Contact';
 
+import ContactImageModal from '../../containers/contacts/modals/ContactImageModal';
+import useModals from '../../containers/modals/useModals';
+import EmailInput from '../input/EmailInput';
+import TelInput from '../input/TelInput';
+import TextArea from '../input/TextArea';
+import DateInput from '../input/DateInput';
+import Input from '../input/Input';
+
 import ContactImageField from './ContactImageField';
 import ContactAdrField from './ContactAdrField';
-import ContactImageModal from '../../containers/contacts/modals/ContactImageModal';
 
 interface Props {
     field: string;
@@ -21,7 +27,8 @@ const ContactFieldProperty = ({ field, value, uid, onChange, ...rest }: Props) =
     const labels: { [key: string]: string } = getAllFieldLabels();
     const label = labels[field];
 
-    const handleChange = ({ target }: ChangeEvent<HTMLInputElement>) => onChange({ value: target.value, uid });
+    const handleChange = ({ target }: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+        onChange({ value: target.value, uid });
 
     if (field === 'email') {
         return (

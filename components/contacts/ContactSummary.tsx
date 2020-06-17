@@ -1,13 +1,17 @@
 import React from 'react';
 import { c } from 'ttag';
 
-import { Icon, classnames, LinkButton, Button, Tooltip, useActiveBreakpoint } from 'react-components';
 import { getPreferredValue } from 'proton-shared/lib/contacts/properties';
 import { formatAdr } from 'proton-shared/lib/contacts/property';
 import { ContactProperties } from 'proton-shared/lib/interfaces/contacts';
 
 import ContactImageSummary from './ContactImageSummary';
 import './ContactSummary.scss';
+import Tooltip from '../tooltip/Tooltip';
+import { Button, LinkButton } from '../button';
+import Icon from '../icon/Icon';
+import { classnames } from '../../helpers/component';
+import useActiveBreakpoint from '../../hooks/useActiveBreakpoint';
 
 interface Props {
     properties: ContactProperties;

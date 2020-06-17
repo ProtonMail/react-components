@@ -1,9 +1,16 @@
 import React, { useState, ChangeEvent } from 'react';
 import { c } from 'ttag';
 
-import { FormModal, Row, Label, Field, FileInput, Input, useNotifications } from 'react-components';
 import { resizeImage } from 'proton-shared/lib/helpers/image';
 import { CONTACT_IMG_SIZE } from 'proton-shared/lib/contacts/constants';
+
+import useNotifications from '../../notifications/useNotifications';
+import Row from '../../../components/container/Row';
+import Label from '../../../components/label/Label';
+import Field from '../../../components/container/Field';
+import Input from '../../../components/input/Input';
+import FileInput from '../../../components/input/FileInput';
+import FormModal from '../../../components/modal/FormModal';
 
 interface Props {
     url?: string;

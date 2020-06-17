@@ -1,12 +1,12 @@
 import React from 'react';
 
-import { Loader } from 'react-components';
 import { CachedKey } from 'proton-shared/lib/interfaces';
 import { ContactEmail, ContactGroup } from 'proton-shared/lib/interfaces/contacts/Contact';
 
 import useContact from './useContact';
 import ContactView from './ContactView';
 import useContactProperties from './useContactProperties';
+import Loader from '../../components/loader/Loader';
 
 interface Props {
     contactID: string;
