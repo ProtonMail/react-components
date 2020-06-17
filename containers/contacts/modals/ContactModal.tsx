@@ -2,7 +2,6 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { c } from 'ttag';
 import { History } from 'history';
 
-import { generateUID } from 'react-components/helpers/component';
 import { addContacts } from 'proton-shared/lib/api/contacts';
 import { randomIntFromInterval, noop } from 'proton-shared/lib/helpers/function';
 import { hasCategories } from 'proton-shared/lib/contacts/properties';
@@ -24,6 +23,7 @@ import useNotifications from '../../notifications/useNotifications';
 import useEventManager from '../../eventManager/useEventManager';
 import Alert from '../../../components/alert/Alert';
 import FormModal from '../../../components/modal/FormModal';
+import { generateUID } from '../../../helpers/component';
 
 const DEFAULT_MODEL = [
     { field: 'fn', value: '' },
