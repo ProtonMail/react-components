@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { c } from 'ttag';
 import { noop } from 'proton-shared/lib/helpers/function';
 import { classnames } from '../../helpers/component';
@@ -61,6 +61,27 @@ const Dropdown = ({
             onClose();
         }
     };
+
+    const contentRef = useRef<HTMLDivElement>(null);
+    const [rect, setRect] = useState<DOMRect>();
+
+    useEffect(() => {
+        if (!contentRef.current) {
+            setRect(undefined);
+            return;
+        }
+        if (!isOpen) {
+            return;
+        }
+        setRect(contentRef.current.getBoundingClientRect());
+    }, [isOpen, contentRef.current]);
+
+    const rectSizes = rect
+        ? {
+              '--width': '' + rect.width,
+              '--height': '' + rect.height
+          }
+        : null;
 
     useEffect(() => {
         if (!isOpen) {
@@ -125,7 +146,7 @@ const Dropdown = ({
         <Portal>
             <div
                 ref={setPopperEl}
-                style={varPosition}
+                style={{ ...varPosition, ...rectSizes }}
                 role="dialog"
                 className={popperClassName}
                 onClick={handleClickContent}
@@ -137,6 +158,7 @@ const Dropdown = ({
                     <span className="sr-only">{c('Action').t`Close`}</span>
                 </button>
                 <div
+                    ref={contentRef}
                     className={classnames(['dropDown-content', noMaxSize && 'dropDown-content--noMaxSize'])}
                     {...contentProps}
                 >
