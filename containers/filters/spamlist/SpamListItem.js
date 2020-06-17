@@ -36,7 +36,9 @@ function SpamListItem({ list, type, dest, onAction = noop, className, loading })
                     {list.map((mail) => {
                         return (
                             <li className="flex mb0-5 pl1" key={mail.ID}>
-                                <span className="flex-item-fluid ellipsis mr0-5">{mail.Email}</span>
+                                <span className="flex-item-fluid ellipsis mr0-5" title={mail.Email}>
+                                    {mail.Email}
+                                </span>
                                 <Group>
                                     <MoveEmailFilteredList
                                         dest={dest}
