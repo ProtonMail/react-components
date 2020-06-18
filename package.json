@@ -40,6 +40,7 @@
     "@types/react-dom": "^16.9.8",
     "@types/react-router": "^5.1.7",
     "@types/react-router-dom": "^5.1.5",
+    "@types/react-virtualized": "^9.21.10",
     "awesomplete": "^1.1.4",
     "card-validator": "^6.1.0",
     "codemirror": "^5.46.0",
@@ -54,6 +55,7 @@
     "quill": "^1.3.6",
     "react-codemirror2": "^6.0.0",
     "react-intl-tel-input": "^7.0.1",
+    "react-virtualized": "^9.21.2",
     "react-quill": "^1.3.3",
     "react-sortable-hoc": "^1.9.1",
     "squire-rte": "github:ProtonMail/Squire#hotfix",
@@ -92,7 +94,6 @@
     "react-dom": "^16.8.3",
     "react-router-dom": "^4.3.1",
     "react-test-renderer": "^16.8.6",
-    "react-virtualized": "^9.21.2",
     "ttag": "^1.7.0",
     "typescript": "^3.9.2"
   },
