@@ -66,13 +66,6 @@ const Dropdown = ({
     const [contentRect, setContentRect] = useState<DOMRect>();
 
     useEffect(() => {
-        if (!contentRef.current || !isOpen) {
-            setContentRect(undefined);
-            return;
-        }
-    }, [isOpen, contentRef.current]);
-
-    useEffect(() => {
         if (!isOpen) {
             return;
         }
@@ -135,6 +128,7 @@ const Dropdown = ({
     const handleAnimationEnd = ({ animationName }: React.AnimationEvent) => {
         if (animationName.includes('dropdownOut') && isClosing) {
             setIsClosed();
+            setContentRect(undefined);
         }
         if (animationName.includes('dropdownIn') && isOpen && contentRef.current && !contentRect) {
             setContentRect(contentRef.current.getBoundingClientRect());
