@@ -104,7 +104,7 @@ const Payment = ({
                     })}
                 </div>
                 <div className="pm-field-container payment-right">
-                    <div className="mw37e">
+                    <div className="mw37e onmobile-mw100">
                         <Method
                             loading={loading}
                             paypal={paypal}
