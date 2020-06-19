@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { c } from 'ttag';
 
 import { getInitial } from 'proton-shared/lib/helpers/string';
-import { isURL } from 'proton-shared/lib/helpers/validators';
+
 import { resizeImage, toImage } from 'proton-shared/lib/helpers/image';
 import { noop } from 'proton-shared/lib/helpers/function';
 import { SHOW_IMAGES } from 'proton-shared/lib/constants';
@@ -26,15 +26,19 @@ type ImageModel = {
 };
 
 const ContactImageSummary = ({ photo, name }: Props) => {
-    const [showAnyway, setShowAnyway] = useState(!isURL(photo));
+    const isBase64 = photo.match(/^data:image\/jpeg;base64/gi);
+    const [showAnyway, setShowAnyway] = useState(false);
     const [image, setImage] = useState<ImageModel>({ src: photo });
     const [{ ShowImages }, loadingMailSettings] = useMailSettings();
     const [loadingResize, withLoadingResize] = useLoading(true);
     const loading = loadingMailSettings || loadingResize;
-    const showPhoto = ShowImages & SHOW_IMAGES.REMOTE || showAnyway;
+    const shouldShow =
+        showAnyway ||
+        ShowImages === SHOW_IMAGES.ALL ||
+        (isBase64 ? ShowImages === SHOW_IMAGES.EMBEDDED : ShowImages === SHOW_IMAGES.REMOTE);
 
     useEffect(() => {
-        if (!photo || !showPhoto) {
+        if (!photo || !shouldShow) {
             return;
         }
         const resize = async () => {
@@ -55,7 +59,7 @@ const ContactImageSummary = ({ photo, name }: Props) => {
         // if resize fails (e.g. toImage will throw if the requested resource hasn't specified a CORS policy),
         // fallback to the original src
         withLoadingResize(resize().catch(noop));
-    }, [photo, showPhoto]);
+    }, [photo, shouldShow, showAnyway]);
 
     if (!photo) {
         return (
@@ -69,7 +73,7 @@ const ContactImageSummary = ({ photo, name }: Props) => {
 
     const handleClick = () => setShowAnyway(true);
 
-    if (showPhoto) {
+    if (shouldShow) {
         if (loading) {
             return <Loader />;
         }
