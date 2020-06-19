@@ -28,11 +28,11 @@ const useScrollShadows = () => {
     }, []);
 
     const shadowTop = useMemo(() => {
-        return <div className={classnames(['pm-modalContentInnerTopShadow', isScrollTop ? 'nonvisible' : ''])} />;
+        return <div className={classnames(['scrollShadowTop', isScrollTop ? 'nonvisible' : ''])} />;
     }, [isScrollTop]);
 
     const shadowBottom = useMemo(() => {
-        return <div className={classnames(['pm-modalContentInnerBottomShadow', isScrollBottom ? 'nonvisible' : ''])} />;
+        return <div className={classnames(['scrollShadowBottom', isScrollBottom ? 'nonvisible' : ''])} />;
     }, [isScrollBottom]);
 
     return {
