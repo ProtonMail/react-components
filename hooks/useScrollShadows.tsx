@@ -1,4 +1,4 @@
-import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { classnames } from '../helpers/component';
 
 const getIsScrollTop = (el: HTMLElement) => el.scrollTop === 0;
@@ -9,20 +9,23 @@ const useScrollShadows = () => {
     const [isScrollTop, setIsScrollTop] = useState(true);
     const [isScrollBottom, setIsScrollBottom] = useState(true);
 
-    const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
-        const el = e.currentTarget;
-        setIsScrollBottom(getIsScrollBottom(el));
-        setIsScrollTop(getIsScrollTop(el));
-    }, []);
-
     useLayoutEffect(() => {
         const el = scrollRef.current;
         if (!el) {
             return;
         }
-        setIsScrollBottom(getIsScrollBottom(el));
-        setIsScrollTop(getIsScrollTop(el));
-    });
+        let handle: number;
+        const cb = () => {
+            setIsScrollBottom(getIsScrollBottom(el));
+            setIsScrollTop(getIsScrollTop(el));
+            // Scroll is not enough since content can change inside. E.g. new children or a textarea getting resized.
+            handle = requestAnimationFrame(cb);
+        };
+        handle = window.requestAnimationFrame(cb);
+        return () => {
+            window.cancelAnimationFrame(handle);
+        };
+    }, []);
 
     const shadowTop = useMemo(() => {
         return <div className={classnames(['pm-modalContentInnerTopShadow', isScrollTop ? 'nonvisible' : ''])} />;
@@ -33,7 +36,6 @@ const useScrollShadows = () => {
     }, [isScrollBottom]);
 
     return {
-        handleScroll,
         shadowTop,
         shadowBottom,
         scrollRef

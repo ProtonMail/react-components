@@ -7,11 +7,11 @@ interface Props {
     className?: string;
 }
 const Inner = ({ children, className = '' }: Props) => {
-    const { handleScroll, shadowTop, shadowBottom, scrollRef } = useScrollShadows();
+    const { shadowTop, shadowBottom, scrollRef } = useScrollShadows();
     return (
         <>
             {shadowTop}
-            <div onScroll={handleScroll} ref={scrollRef} className={classnames(['pm-modalContentInner', className])}>
+            <div ref={scrollRef} className={classnames(['pm-modalContentInner', className])}>
                 {children}
             </div>
             {shadowBottom}
