@@ -19,7 +19,7 @@ const useScrollShadows = () => {
             setIsScrollBottom(getIsScrollBottom(el));
             setIsScrollTop(getIsScrollTop(el));
             // Scroll is not enough since content can change inside. E.g. new children or a textarea getting resized.
-            handle = requestAnimationFrame(cb);
+            handle = window.requestAnimationFrame(cb);
         };
         handle = window.requestAnimationFrame(cb);
         return () => {
