@@ -70,7 +70,7 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
 
     const verifyCode = async () => {
         try {
-            await onSubmit(`${isEmailMethod ? email : phone}:${code}`);
+            await onSubmit(`${isEmailMethod ? email : phone}:${code}`.replace(/\s/g, ''));
         } catch (error) {
             const { data: { Code } = { Code: 0 } } = error;
 
