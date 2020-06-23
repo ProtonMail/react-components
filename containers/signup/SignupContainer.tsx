@@ -131,7 +131,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
             password: model.password ? '' : c('Signup error').t`This field is required`,
             confirmPassword: model.confirmPassword
                 ? model.password !== model.confirmPassword
-                    ? c('Signup error').t`Password do not match`
+                    ? c('Signup error').t`Passwords do not match`
                     : ''
                 : c('Signup error').t`This field is required`,
             recoveryEmail: model.recoveryEmail
