@@ -400,7 +400,6 @@ export { default as useAppTitle } from './hooks/useAppTitle';
 export { default as useOrganization } from './hooks/useOrganization';
 export { default as useSubscription } from './hooks/useSubscription';
 export { default as useUserSettings } from './hooks/userSettingsModel';
-export { default as useScrollShadows } from './hooks/useScrollShadows';
 export { default as useMemberAddresses } from './hooks/useMemberAddresses';
 export { useUserKeys, useGetUserKeys } from './hooks/useUserKeys';
 export { useAddressesKeys, useGetAddressesKeys } from './hooks/useAddressesKeys';
