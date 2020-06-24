@@ -4,6 +4,7 @@ import { c } from 'ttag';
 import { getInitial } from 'proton-shared/lib/helpers/string';
 
 import { resizeImage, toImage } from 'proton-shared/lib/helpers/image';
+import { isBase64Image } from 'proton-shared/lib/helpers/validators';
 import { noop } from 'proton-shared/lib/helpers/function';
 import { SHOW_IMAGES } from 'proton-shared/lib/constants';
 import { CONTACT_IMG_SIZE } from 'proton-shared/lib/contacts/constants';
@@ -26,7 +27,7 @@ type ImageModel = {
 };
 
 const ContactImageSummary = ({ photo, name }: Props) => {
-    const isBase64 = photo.match(/^data:image\/jpeg;base64/gi);
+    const isBase64 = isBase64Image(photo);
     const [showAnyway, setShowAnyway] = useState(false);
     const [image, setImage] = useState<ImageModel>({ src: photo });
     const [{ ShowImages }, loadingMailSettings] = useMailSettings();
