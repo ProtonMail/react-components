@@ -13,6 +13,7 @@ import { noop } from 'proton-shared/lib/helpers/function';
 import { mergeHeaders } from 'proton-shared/lib/fetch/helpers';
 import { getAuthHeaders } from 'proton-shared/lib/api';
 import { HTTP_ERROR_CODES, API_CUSTOM_ERROR_CODES } from 'proton-shared/lib/errors';
+import { InfoResponse, AuthVersion, AuthResponse } from 'proton-shared/lib/authentication/interface';
 
 import {
     useApi,
@@ -33,7 +34,7 @@ import SignLayout from '../signup/SignLayout';
 import BackButton from '../signup/BackButton';
 import ProtonLogo from '../../components/logo/ProtonLogo';
 import OneAccountIllustration from '../illustration/OneAccountIllustration';
-import { User as tsUser } from 'proton-shared/lib/interfaces';
+import { User as tsUser, KeySalt as tsKeySalt } from 'proton-shared/lib/interfaces';
 
 const withAuthHeaders = (UID: string, AccessToken: string, config: any) =>
     mergeHeaders(config, getAuthHeaders(UID, AccessToken));
@@ -47,7 +48,7 @@ enum FORM {
 
 interface OnLoginArgs {
     UID: string;
-    User: tsUser;
+    User?: tsUser;
     keyPassword?: string;
     EventID: string;
 }
@@ -57,10 +58,16 @@ interface Props {
     ignoreUnlock?: boolean;
 }
 
+interface AuthCacheResult {
+    authVersion?: AuthVersion;
+    authResult?: AuthResponse;
+    userSaltResult?: [tsUser, tsKeySalt[]];
+}
+
 const LoginForm = ({ onLogin, ignoreUnlock = false }: Props) => {
     const { createNotification } = useNotifications();
     const { createModal } = useModals();
-    const cacheRef = useRef<any>();
+    const cacheRef = useRef<AuthCacheResult>();
     const api = useApi();
 
     const [loading, withLoading] = useLoading();
@@ -75,17 +82,20 @@ const LoginForm = ({ onLogin, ignoreUnlock = false }: Props) => {
      * Finalize login can be called without a key password in these cases:
      * 1) The admin panel
      * 2) Users who have no keys but are in 2-password mode
-     * @param {String} [keyPassword]
-     * @return {Promise}
      */
     const finalizeLogin = async (keyPassword?: string) => {
-        const {
-            authVersion,
-            authResult: { UID, EventID, AccessToken, RefreshToken },
-            userSaltResult: [{ User }] = [{ User: undefined }] // Default for case 1)
-        } = cacheRef.current;
-
+        const cache = cacheRef.current;
+        if (!cache) {
+            throw new Error('Missing cache');
+        }
         cacheRef.current = undefined;
+        const { authVersion, authResult, userSaltResult = [] } = cache;
+        if (authResult === undefined || authVersion === undefined) {
+            throw new Error('Missing auth result');
+        }
+
+        const [User] = userSaltResult;
+        const { UID, EventID, AccessToken, RefreshToken } = authResult;
 
         if (authVersion < AUTH_VERSION) {
             await srpVerify({
@@ -103,12 +113,17 @@ const LoginForm = ({ onLogin, ignoreUnlock = false }: Props) => {
     /**
      * Step 3. Handle unlock.
      * Attempt to decrypt the primary private key with the password.
-     * @return {Promise}
      */
     const handleUnlock = async (password: string) => {
-        const {
-            userSaltResult: [{ User }, { KeySalts }]
-        } = cacheRef.current;
+        const cache = cacheRef.current;
+        if (!cache) {
+            throw new Error('Missing cache');
+        }
+        const { userSaltResult } = cache;
+        if (userSaltResult === undefined) {
+            throw new Error('Missing user salt result');
+        }
+        const [User, KeySalts] = userSaltResult;
 
         const { keyPassword } = await handleUnlockKey(User, KeySalts, password).catch(() => ({ keyPassword: '' }));
         if (!keyPassword) {
@@ -121,10 +136,16 @@ const LoginForm = ({ onLogin, ignoreUnlock = false }: Props) => {
     };
 
     const next = async (previousForm: FORM) => {
-        const {
-            authResult,
-            authResult: { UID, AccessToken }
-        } = cacheRef.current;
+        const cache = cacheRef.current;
+        if (!cache) {
+            throw new Error('Missing cache');
+        }
+        const { authResult } = cache;
+        if (authResult === undefined) {
+            throw new Error('Missing auth result');
+        }
+
+        const { UID, AccessToken } = authResult;
 
         const { hasTotp, hasU2F, hasUnlock } = getAuthTypes(authResult);
 
@@ -145,12 +166,15 @@ const LoginForm = ({ onLogin, ignoreUnlock = false }: Props) => {
          * Handle the case for users who are in 2-password mode but have no keys setup.
          * Typically happens for VPN users.
          */
-        const [{ User }] =
-            cacheRef.current.userSaltResult ||
-            (await Promise.all([
-                api(withAuthHeaders(UID, AccessToken, getUser())),
-                api(withAuthHeaders(UID, AccessToken, getKeySalts()))
-            ]).then((result) => (cacheRef.current.userSaltResult = result)));
+        if (!cache.userSaltResult) {
+            cache.userSaltResult = await Promise.all([
+                api<{ User: tsUser }>(withAuthHeaders(UID, AccessToken, getUser())).then(({ User }) => User),
+                api<{ KeySalts: tsKeySalt[] }>(withAuthHeaders(UID, AccessToken, getKeySalts())).then(
+                    ({ KeySalts }) => KeySalts
+                )
+            ]);
+        }
+        const [User] = cache.userSaltResult;
 
         if (User.Keys.length === 0) {
             return finalizeLogin();
@@ -166,12 +190,17 @@ const LoginForm = ({ onLogin, ignoreUnlock = false }: Props) => {
     /**
      * Step 2. Handle TOTP.
      * Unless there is another auth type active, the flow will continue until it's logged in.
-     * @return {Promise}
      */
     const handleTotp = async () => {
-        const {
-            authResult: { UID, AccessToken }
-        } = cacheRef.current;
+        const cache = cacheRef.current;
+        if (!cache) {
+            throw new Error('Missing cache');
+        }
+        const { authResult } = cache;
+        if (authResult === undefined) {
+            throw new Error('Missing auth result');
+        }
+        const { UID, AccessToken } = authResult;
 
         await api(withAuthHeaders(UID, AccessToken, auth2FA({ totp }))).catch((e) => {
             if (e.status === HTTP_ERROR_CODES.UNPROCESSABLE_ENTITY) {
@@ -191,14 +220,13 @@ const LoginForm = ({ onLogin, ignoreUnlock = false }: Props) => {
     /**
      * Step 1. Handle the initial auth.
      * Unless there is an auth type active, the flow will continue until it's logged in.
-     * @return {Promise}
      */
     const handleLogin = async () => {
-        const infoResult = await api(getInfo(username));
+        const infoResult = await api<InfoResponse>(getInfo(username));
         const { authVersion, result: authResult } = await loginWithFallback({
             api,
             credentials: { username, password },
-            initalAuthInfo: infoResult
+            initialAuthInfo: infoResult
         });
 
         cacheRef.current = { authVersion, authResult };
