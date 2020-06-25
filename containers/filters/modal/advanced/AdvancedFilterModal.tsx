@@ -2,6 +2,7 @@ import React, { useState, FormEvent, useMemo, useEffect } from 'react';
 import { c } from 'ttag';
 import {
     FormModal,
+    useModals,
     useLoading,
     useApi,
     useFilters,
@@ -10,8 +11,10 @@ import {
     useDebounceInput,
     useNotifications,
     useEventManager,
-    useApiWithoutResult
-} from 'react-components';
+    useApiWithoutResult,
+    ConfirmModal,
+    Alert
+} from '../../../../index';
 import { FILTER_VERSION } from 'proton-shared/lib/filters/constants';
 import { Filter, StepSieve, AdvancedSimpleFilterModalModel, ErrorsSieve } from 'proton-shared/lib/filters/interfaces';
 import { normalize } from 'proton-shared/lib/helpers/string';
@@ -38,6 +41,7 @@ const AdvancedFilterModal = ({ filter, onClose = noop, ...rest }: Props) => {
     const [mailSettings] = useMailSettings();
     const { createNotification } = useNotifications();
     const { call } = useEventManager();
+    const { createModal } = useModals();
 
     const isEdit = !!filter?.ID;
     const title = isEdit ? c('Title').t`Edit sieve filter` : c('Title').t`Add sieve filter`;
@@ -105,6 +109,14 @@ const AdvancedFilterModal = ({ filter, onClose = noop, ...rest }: Props) => {
         await createFilter(convertModel(model, true));
     };
 
+    const handleClose = () => {
+        createModal(
+            <ConfirmModal onConfirm={onClose} title={c('Title').t`Are you sure you want to close?`}>
+                <Alert type="error">{c('Info').t`All your changes will be lost.`}</Alert>
+            </ConfirmModal>
+        );
+    };
+
     const checkSieve = async () => {
         const { Issues = [] } = await api(checkSieveFilter({ Version: FILTER_VERSION, Sieve: sieve }));
         setModel({
@@ -125,14 +137,14 @@ const AdvancedFilterModal = ({ filter, onClose = noop, ...rest }: Props) => {
         <FormModal
             title={title}
             loading={loading}
-            onClose={onClose}
+            onClose={handleClose}
             onSubmit={(event: FormEvent<HTMLFormElement>) => withLoading(handleSubmit(event))}
             footer={
                 <FooterAdvancedFilterModal
                     model={model}
                     errors={errors}
                     onChange={setModel}
-                    onClose={onClose}
+                    onClose={handleClose}
                     loading={loading}
                 />
             }

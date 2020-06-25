@@ -10,8 +10,11 @@ import {
     useNotifications,
     useFilters,
     useEventManager,
-    useApiWithoutResult
-} from 'react-components';
+    useApiWithoutResult,
+    ConfirmModal,
+    Alert,
+    useModals
+} from '../../../index';
 import { normalize } from 'proton-shared/lib/helpers/string';
 import {
     SimpleFilterModalModel,
@@ -82,6 +85,7 @@ const FilterModal = ({ filter, onClose = noop, ...rest }: Props) => {
     const { createNotification } = useNotifications();
     const { call } = useEventManager();
     const [loading, withLoading] = useLoading();
+    const { createModal } = useModals();
 
     const initFilter = (filter?: Filter) => {
         const computedFilter = filter ? computeFromTree(filter) : {};
@@ -199,6 +203,14 @@ const FilterModal = ({ filter, onClose = noop, ...rest }: Props) => {
         await createFilter(convertModel(model));
     };
 
+    const handleClose = () => {
+        createModal(
+            <ConfirmModal onConfirm={onClose} title={c('Title').t`Are you sure you want to close?`}>
+                <Alert type="error">{c('Info').t`All your changes will be lost.`}</Alert>
+            </ConfirmModal>
+        );
+    };
+
     const renderStep = () => {
         switch (model.step) {
             case Step.NAME:
@@ -239,7 +251,7 @@ const FilterModal = ({ filter, onClose = noop, ...rest }: Props) => {
     return (
         <FormModal
             title={title}
-            onClose={onClose}
+            onClose={handleClose}
             loading={loading || loadingLabels || loadingFolders}
             onSubmit={(event: FormEvent<HTMLFormElement>) => withLoading(handleSubmit(event))}
             footer={
@@ -247,7 +259,7 @@ const FilterModal = ({ filter, onClose = noop, ...rest }: Props) => {
                     model={model}
                     errors={errors}
                     onChange={(newModel) => setModel(newModel as SimpleFilterModalModel)}
-                    onClose={onClose}
+                    onClose={handleClose}
                     loading={loading}
                 />
             }
