@@ -1,254 +1,48 @@
-import React, { useRef, useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { c } from 'ttag';
-import { getKeySalts } from 'proton-shared/lib/api/keys';
-import { getUser } from 'proton-shared/lib/api/user';
-import { auth2FA, getInfo, setCookies } from 'proton-shared/lib/api/auth';
-import { upgradePassword } from 'proton-shared/lib/api/settings';
-import loginWithFallback from 'proton-shared/lib/authentication/loginWithFallback';
-import { getRandomString } from 'proton-shared/lib/helpers/string';
-import { AUTH_VERSION } from 'pm-srp';
-import { srpVerify } from 'proton-shared/lib/srp';
 import { noop } from 'proton-shared/lib/helpers/function';
-import { mergeHeaders } from 'proton-shared/lib/fetch/helpers';
-import { getAuthHeaders } from 'proton-shared/lib/api';
-import { HTTP_ERROR_CODES, API_CUSTOM_ERROR_CODES } from 'proton-shared/lib/errors';
-import { InfoResponse, AuthVersion, AuthResponse } from 'proton-shared/lib/authentication/interface';
+import { API_CUSTOM_ERROR_CODES } from 'proton-shared/lib/errors';
 
-import {
-    useApi,
-    useLoading,
-    InlineLinkButton,
-    PrimaryButton,
-    SupportDropdown,
-    useNotifications,
-    useModals
-} from '../..';
+import { useLoading, InlineLinkButton, PrimaryButton, SupportDropdown, useNotifications, useModals } from '../..';
 import PasswordForm from './PasswordForm';
 import TOTPForm from './TOTPForm';
 import RecoveryForm from './RecoveryForm';
 import UnlockForm from './UnlockForm';
-import { getAuthTypes, getErrorText, handleUnlockKey } from './helper';
+import { getErrorText } from './helper';
 import AbuseModal from './AbuseModal';
 import SignLayout from '../signup/SignLayout';
 import BackButton from '../signup/BackButton';
 import ProtonLogo from '../../components/logo/ProtonLogo';
 import OneAccountIllustration from '../illustration/OneAccountIllustration';
-import { User as tsUser, KeySalt as tsKeySalt } from 'proton-shared/lib/interfaces';
+import useLogin, { Props as UseLoginProps, FORM } from './useLogin';
 
-const withAuthHeaders = (UID: string, AccessToken: string, config: any) =>
-    mergeHeaders(config, getAuthHeaders(UID, AccessToken));
-
-enum FORM {
-    LOGIN,
-    TOTP,
-    U2F,
-    UNLOCK
-}
-
-interface OnLoginArgs {
-    UID: string;
-    User?: tsUser;
-    keyPassword?: string;
-    EventID: string;
-}
-
-interface Props {
-    onLogin: (args: OnLoginArgs) => void;
-    ignoreUnlock?: boolean;
-}
-
-interface AuthCacheResult {
-    authVersion?: AuthVersion;
-    authResult?: AuthResponse;
-    userSaltResult?: [tsUser, tsKeySalt[]];
-}
-
-const LoginForm = ({ onLogin, ignoreUnlock = false }: Props) => {
+const LoginForm = ({ onLogin, ignoreUnlock = false }: UseLoginProps) => {
     const { createNotification } = useNotifications();
     const { createModal } = useModals();
-    const cacheRef = useRef<AuthCacheResult>();
-    const api = useApi();
+    const {
+        state,
+        handleLogin,
+        handleTotp,
+        handleUnlock,
+        handleCancel,
+        setUsername,
+        setPassword,
+        setKeyPassword,
+        setTotp,
+        setIsTotpRecovery
+    } = useLogin({ onLogin, ignoreUnlock });
 
     const [loading, withLoading] = useLoading();
-    const [form, setForm] = useState(FORM.LOGIN);
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-    const [totp, setTotp] = useState('');
-    const [recovery, setRecovery] = useState(false);
-    const [keyPassword, setKeyPassword] = useState('');
 
-    /**
-     * Finalize login can be called without a key password in these cases:
-     * 1) The admin panel
-     * 2) Users who have no keys but are in 2-password mode
-     */
-    const finalizeLogin = async (keyPassword?: string) => {
-        const cache = cacheRef.current;
-        if (!cache) {
-            throw new Error('Missing cache');
-        }
-        cacheRef.current = undefined;
-        const { authVersion, authResult, userSaltResult = [] } = cache;
-        if (authResult === undefined || authVersion === undefined) {
-            throw new Error('Missing auth result');
-        }
+    const { form, username, password, isTotpRecovery, totp, keyPassword } = state;
 
-        const [User] = userSaltResult;
-        const { UID, EventID, AccessToken, RefreshToken } = authResult;
-
-        if (authVersion < AUTH_VERSION) {
-            await srpVerify({
-                api,
-                credentials: { password },
-                config: withAuthHeaders(UID, AccessToken, upgradePassword())
-            });
-        }
-
-        await api(setCookies({ UID, AccessToken, RefreshToken, State: getRandomString(24) }));
-
-        onLogin({ UID, User, keyPassword, EventID });
-    };
-
-    /**
-     * Step 3. Handle unlock.
-     * Attempt to decrypt the primary private key with the password.
-     */
-    const handleUnlock = async (password: string) => {
-        const cache = cacheRef.current;
-        if (!cache) {
-            throw new Error('Missing cache');
-        }
-        const { userSaltResult } = cache;
-        if (userSaltResult === undefined) {
-            throw new Error('Missing user salt result');
-        }
-        const [User, KeySalts] = userSaltResult;
-
-        const { keyPassword } = await handleUnlockKey(User, KeySalts, password).catch(() => ({ keyPassword: '' }));
-        if (!keyPassword) {
-            const error = new Error(c('Error').t`Wrong mailbox password`);
-            error.name = 'PasswordError';
-            throw error;
-        }
-
-        return finalizeLogin(keyPassword);
-    };
-
-    const next = async (previousForm: FORM) => {
-        const cache = cacheRef.current;
-        if (!cache) {
-            throw new Error('Missing cache');
-        }
-        const { authResult } = cache;
-        if (authResult === undefined) {
-            throw new Error('Missing auth result');
-        }
-
-        const { UID, AccessToken } = authResult;
-
-        const { hasTotp, hasU2F, hasUnlock } = getAuthTypes(authResult);
-
-        if (previousForm === FORM.LOGIN && hasTotp) {
-            return setForm(FORM.TOTP);
-        }
-
-        if ((previousForm === FORM.LOGIN || previousForm === FORM.TOTP) && hasU2F) {
-            return setForm(FORM.U2F);
-        }
-
-        // Special case for the admin panel, return early since it can not get key salts.
-        if (ignoreUnlock) {
-            return finalizeLogin();
-        }
-
-        /**
-         * Handle the case for users who are in 2-password mode but have no keys setup.
-         * Typically happens for VPN users.
-         */
-        if (!cache.userSaltResult) {
-            cache.userSaltResult = await Promise.all([
-                api<{ User: tsUser }>(withAuthHeaders(UID, AccessToken, getUser())).then(({ User }) => User),
-                api<{ KeySalts: tsKeySalt[] }>(withAuthHeaders(UID, AccessToken, getKeySalts())).then(
-                    ({ KeySalts }) => KeySalts
-                )
-            ]);
-        }
-        const [User] = cache.userSaltResult;
-
-        if (User.Keys.length === 0) {
-            return finalizeLogin();
-        }
-
-        if (hasUnlock) {
-            return setForm(FORM.UNLOCK);
-        }
-
-        return handleUnlock(password);
-    };
-
-    /**
-     * Step 2. Handle TOTP.
-     * Unless there is another auth type active, the flow will continue until it's logged in.
-     */
-    const handleTotp = async () => {
-        const cache = cacheRef.current;
-        if (!cache) {
-            throw new Error('Missing cache');
-        }
-        const { authResult } = cache;
-        if (authResult === undefined) {
-            throw new Error('Missing auth result');
-        }
-        const { UID, AccessToken } = authResult;
-
-        await api(withAuthHeaders(UID, AccessToken, auth2FA({ totp }))).catch((e) => {
-            if (e.status === HTTP_ERROR_CODES.UNPROCESSABLE_ENTITY) {
-                const error = new Error('Retry TOTP error');
-                error.name = 'RetryTOTPError';
-                // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-                // @ts-ignore
-                error.data = e.data;
-                throw error;
-            }
-            throw e;
-        });
-
-        return next(FORM.TOTP);
-    };
-
-    /**
-     * Step 1. Handle the initial auth.
-     * Unless there is an auth type active, the flow will continue until it's logged in.
-     */
-    const handleLogin = async () => {
-        const infoResult = await api<InfoResponse>(getInfo(username));
-        const { authVersion, result: authResult } = await loginWithFallback({
-            api,
-            credentials: { username, password },
-            initialAuthInfo: infoResult
-        });
-
-        cacheRef.current = { authVersion, authResult };
-
-        return next(FORM.LOGIN);
-    };
-
-    const handleCancel = () => {
-        cacheRef.current = undefined;
-        setForm(FORM.LOGIN);
-        setPassword('');
-        setTotp('');
-        setKeyPassword('');
-    };
-
-    if (form === FORM.LOGIN) {
+    if (state.form === FORM.LOGIN) {
         const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
             event.preventDefault();
 
             withLoading(
                 handleLogin().catch((e) => {
-                    cacheRef.current = undefined;
                     if (e.data && e.data.Code === API_CUSTOM_ERROR_CODES.AUTH_ACCOUNT_DISABLED) {
                         createModal(<AbuseModal />);
                     }
@@ -315,7 +109,7 @@ const LoginForm = ({ onLogin, ignoreUnlock = false }: Props) => {
                 }
             >
                 <form name="totpForm" className="signup-form" onSubmit={handleSubmit} autoComplete="off">
-                    {recovery ? (
+                    {isTotpRecovery ? (
                         <RecoveryForm code={totp} setCode={loading ? noop : setTotp} />
                     ) : (
                         <TOTPForm totp={totp} setTotp={loading ? noop : setTotp} />
@@ -324,10 +118,10 @@ const LoginForm = ({ onLogin, ignoreUnlock = false }: Props) => {
                         <InlineLinkButton
                             onClick={() => {
                                 setTotp('');
-                                setRecovery(!recovery);
+                                setIsTotpRecovery(!isTotpRecovery);
                             }}
                         >
-                            {recovery ? c('Action').t`Use two-factor code` : c('Action').t`Use recovery code`}
+                            {isTotpRecovery ? c('Action').t`Use two-factor code` : c('Action').t`Use recovery code`}
                         </InlineLinkButton>
                     </div>
                     <div className="alignright mb1">
