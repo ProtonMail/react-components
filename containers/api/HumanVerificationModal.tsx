@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { API_CUSTOM_ERROR_CODES } from 'proton-shared/lib/errors';
 import { c } from 'ttag';
 
@@ -16,6 +16,7 @@ interface Props<T> {
 const HumanVerificationModal = <T,>({ token, methods = [], onSuccess, onVerify, ...rest }: Props<T>) => {
     const title = c('Title').t`Human verification`;
     const { createNotification } = useNotifications();
+    const [resetCaptchaKey, setResetCaptchaKey] = useState(0);
 
     const handleSubmit = async (token: string, tokenType: string) => {
         try {
@@ -30,7 +31,9 @@ const HumanVerificationModal = <T,>({ token, methods = [], onSuccess, onVerify, 
                 createNotification({ text: c('Error').t`Invalid verification code`, type: 'error' });
             }
 
-            throw error;
+            if (tokenType === 'captcha') {
+                setResetCaptchaKey((o) => ++o);
+            }
         }
     };
 
@@ -42,7 +45,12 @@ const HumanVerificationModal = <T,>({ token, methods = [], onSuccess, onVerify, 
             footer={null}
             {...rest}
         >
-            <HumanVerificationForm onSubmit={handleSubmit} methods={methods} token={token} />
+            <HumanVerificationForm
+                captchaKey={resetCaptchaKey}
+                onSubmit={handleSubmit}
+                methods={methods}
+                token={token}
+            />
         </FormModal>
     );
 };
