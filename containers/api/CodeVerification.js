@@ -13,7 +13,8 @@ import {
     useNotifications
 } from 'react-components';
 import { queryVerificationCode } from 'proton-shared/lib/api/user';
-import { isNumber, isEmail } from 'proton-shared/lib/helpers/validators';
+import { isNumber } from 'proton-shared/lib/helpers/validators';
+import { validateEmailAddress } from 'proton-shared/lib/helpers/string';
 import { API_CUSTOM_ERROR_CODES } from 'proton-shared/lib/errors';
 import { c } from 'ttag';
 
@@ -116,7 +117,7 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
                     <InlineLinkButton onClick={alreadyHaveCode} className="mr1">{c('Action')
                         .t`I already have a code`}</InlineLinkButton>
                     <PrimaryButton
-                        disabled={!email || !isEmail(email)}
+                        disabled={!email || !validateEmailAddress(email)}
                         loading={loadingCode}
                         onClick={() => withLoadingCode(sendCode())}
                     >{c('Action').t`Send code`}</PrimaryButton>
