@@ -1,5 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import { queryVerificationCode } from 'proton-shared/lib/api/user';
+import { isNumber } from 'proton-shared/lib/helpers/validators';
+import { validateEmailAddress } from 'proton-shared/lib/helpers/string';
+import { API_CUSTOM_ERROR_CODES } from 'proton-shared/lib/errors';
+import { c } from 'ttag';
 import {
     EmailInput,
     Input,
@@ -11,12 +15,7 @@ import {
     useLoading,
     useModals,
     useNotifications
-} from 'react-components';
-import { queryVerificationCode } from 'proton-shared/lib/api/user';
-import { isNumber } from 'proton-shared/lib/helpers/validators';
-import { validateEmailAddress } from 'proton-shared/lib/helpers/string';
-import { API_CUSTOM_ERROR_CODES } from 'proton-shared/lib/errors';
-import { c } from 'ttag';
+} from '../../index';
 
 import RequestNewCodeModal from './RequestNewCodeModal';
 import InvalidVerificationCodeModal from './InvalidVerificationCodeModal';
@@ -29,15 +28,20 @@ const STEPS = {
 const METHODS = {
     EMAIL: 'email',
     SMS: 'sms'
-};
+} as const;
 
-const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
+interface Props {
+    email?: string;
+    method: 'email' | 'sms';
+    onSubmit: (token: string) => void;
+}
+const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }: Props) => {
     const isEmailMethod = method === METHODS.EMAIL;
     const isSmsMethod = method === METHODS.SMS;
-    const inputCodeRef = useRef();
+    const inputCodeRef = useRef<HTMLInputElement>(null);
     const { createNotification } = useNotifications();
     const [email, setEmail] = useState(defaultEmail);
-    const [phone, setPhone] = useState();
+    const [phone, setPhone] = useState('');
     const [code, setCode] = useState('');
     const codeError = !code
         ? c('Input error').t`This field is required`
@@ -56,13 +60,13 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
         setStep(STEPS.VERIFY_CODE);
         const methodTo = isEmailMethod ? email : phone;
         createNotification({ text: c('Success').t`Code sent to ${methodTo}` });
-        inputCodeRef.current.focus();
+        inputCodeRef.current?.focus();
     };
 
     const alreadyHaveCode = () => {
         setCode('');
         setStep(STEPS.VERIFY_CODE);
-        inputCodeRef.current.focus();
+        inputCodeRef.current?.focus();
     };
 
     const editDestination = () => {
@@ -91,13 +95,7 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
     }, [method]);
 
     if (step === STEPS.ENTER_DESTINATION && isEmailMethod) {
-        const handleChangeEmail = (event) => {
-            event.preventDefault();
-
-            if (event.key === 'Enter') {
-                return withLoadingCode(sendCode());
-            }
-
+        const handleChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
             setEmail(event.target.value);
         };
         return (
@@ -110,6 +108,12 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
                         value={email}
                         placeholder={c('Placeholder').t`Enter an email address`}
                         onChange={handleChangeEmail}
+                        onKeyDown={(event) => {
+                            if (event.key === 'Enter') {
+                                event.preventDefault();
+                                withLoadingCode(sendCode());
+                            }
+                        }}
                         required
                     />
                 </div>
@@ -127,7 +131,7 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
     }
 
     if (step === STEPS.ENTER_DESTINATION && isSmsMethod) {
-        const handleChangePhone = (status, value, countryData, number) => setPhone(number);
+        const handleChangePhone = (status: any, value: any, countryData: any, number: string) => setPhone(number);
         return (
             <>
                 <label htmlFor="phone" className="bl mb0-5">{c('Label').t`Phone number`}</label>
@@ -158,13 +162,7 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
 
     if (step === STEPS.VERIFY_CODE) {
         const destinationText = <strong key="destination">{isEmailMethod ? email : phone}</strong>;
-        const handleChangeCode = (event) => {
-            event.preventDefault();
-
-            if (event.key === 'Enter') {
-                return withLoadingVerification(verifyCode());
-            }
-
+        const handleChangeCode = (event: React.ChangeEvent<HTMLInputElement>) => {
             const newCode = event.target.value;
 
             if (!newCode || isNumber(newCode)) {
@@ -192,9 +190,16 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
                         id="code"
                         ref={inputCodeRef}
                         value={code}
-                        maxLength="6"
+                        maxLength={6}
                         placeholder="123456"
                         onChange={handleChangeCode}
+                        onKeyDown={(event) => {
+                            event.preventDefault();
+
+                            if (event.key === 'Enter') {
+                                return withLoadingVerification(verifyCode());
+                            }
+                        }}
                         autoFocus={true}
                         required={true}
                         error={codeError}
@@ -218,7 +223,7 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
                     <InlineLinkButton onClick={editDestination} className="mr1">{c('Action')
                         .t`Change verification`}</InlineLinkButton>
                     <PrimaryButton
-                        disabled={codeError}
+                        disabled={!!codeError}
                         loading={loadingVerification}
                         onClick={() => withLoadingVerification(verifyCode())}
                     >{c('Action').t`Verify`}</PrimaryButton>
@@ -228,12 +233,6 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }) => {
     }
 
     return null;
-};
-
-CodeVerification.propTypes = {
-    email: PropTypes.string,
-    method: PropTypes.oneOf([METHODS.SMS, METHODS.EMAIL]).isRequired,
-    onSubmit: PropTypes.func.isRequired
 };
 
 export default CodeVerification;
