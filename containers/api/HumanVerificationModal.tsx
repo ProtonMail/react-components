@@ -34,10 +34,13 @@ const HumanVerificationModal = <T,>({ token, methods = [], onSuccess, onVerify, 
                 createNotification({ text: c('Error').t`Invalid verification code`, type: 'error' });
             }
 
-            // Captcha is just given one attempt
-            if (tokenType === 'captcha') {
+            // Captcha is just given one attempt, and if the resubmitted request did not give invalid token,
+            // it probably means the verification succeeded, but the original request failed. So then we error out.
+            if (tokenType === 'captcha' || Code !== API_CUSTOM_ERROR_CODES.TOKEN_INVALID) {
                 rest.onClose();
             }
+
+            throw error;
         }
     };
 
