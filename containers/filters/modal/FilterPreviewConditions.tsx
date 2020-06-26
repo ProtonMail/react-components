@@ -1,10 +1,15 @@
 import React, { useMemo } from 'react';
 import { c, jt, t } from 'ttag';
 
-import { classnames, Icon } from 'react-components';
+import { classnames, Icon } from '../../..';
 
 import { TYPES, COMPARATORS } from 'proton-shared/lib/filters/constants';
-import { SimpleFilterModalModel, ConditionType, ConditionComparator } from 'proton-shared/lib/filters/interfaces';
+import {
+    FilterStatement,
+    SimpleFilterModalModel,
+    ConditionType,
+    ConditionComparator
+} from 'proton-shared/lib/filters/interfaces';
 
 interface Props {
     isNarrow: boolean;
@@ -27,7 +32,9 @@ const FilterPreviewConditions = ({ isOpen, isNarrow, toggleOpen, model }: Props)
                         className="inline-flex flex-row flex-items-center condition-token mb0-5"
                         role="listitem"
                     >
-                        <span className="ellipsis nodecoration">{label}</span>
+                        <span className="ellipsis nodecoration" title={label}>
+                            {label}
+                        </span>
                     </span>
                 ) : (
                     <strong key={label}>{label}</strong>
@@ -45,7 +52,9 @@ const FilterPreviewConditions = ({ isOpen, isNarrow, toggleOpen, model }: Props)
                         className="inline-flex flex-row flex-items-center condition-token mb0-5"
                         role="listitem"
                     >
-                        <span className="ellipsis nodecoration">{v}</span>
+                        <span className="ellipsis nodecoration" title={v}>
+                            {v}
+                        </span>
                     </span>
                 ) : (
                     <strong key={`${v}${i}`}>{v}</strong>
@@ -55,17 +64,19 @@ const FilterPreviewConditions = ({ isOpen, isNarrow, toggleOpen, model }: Props)
             return c('Label ').jt`${typeLabel?.toLowerCase()} ${comparatorLabel} ${values}`;
         });
 
+        const ifLabel = c('Label').t`If`;
+        const operator = model.statement === FilterStatement.ALL ? c('Label').t`And` : c('Label').t`Or`;
+
         return conditionsRows.map((cond, i) =>
             isOpen ? (
                 <div key={`preview-condition-${i}`}>
-                    {i === 0 ? c('Label').t`If` : c('Label').t`And`}
-
+                    {i === 0 ? ifLabel : operator}
                     {` `}
                     {cond}
                 </div>
             ) : (
                 <span key={`preview-condition-${i}`}>
-                    {i === 0 ? c('Label').t`If` : ` ${c('Label').t`and`}`}
+                    {i === 0 ? ifLabel : operator.toLowerCase()}
                     {` `}
                     {cond}
                 </span>
@@ -80,7 +91,7 @@ const FilterPreviewConditions = ({ isOpen, isNarrow, toggleOpen, model }: Props)
                     <Icon name="caret" className={classnames([isOpen && 'rotateX-180'])} />
                     <span className="ml0-5">{c('Label').t`Conditions`}</span>
                 </button>
-                <div className="ml1 flex flex-column flex-item-fluid">
+                <div className={classnames(['flex flex-column flex-item-fluid', !isNarrow && 'ml1'])}>
                     <div className={classnames(['pt0-5', !isOpen && 'mw100 ellipsis'])}>{conditionsRenderer}</div>
                 </div>
             </div>

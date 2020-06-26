@@ -1,7 +1,7 @@
 import React, { useState, ChangeEvent, useEffect } from 'react';
 import { c, t, jt } from 'ttag';
 
-import { classnames, Input, Select, Radio, Tooltip, Icon, Button } from 'react-components';
+import { classnames, Input, Select, Radio, Tooltip, Icon, Button } from '../../..';
 import { TYPES, COMPARATORS } from 'proton-shared/lib/filters/constants';
 
 import { Condition, FilterStatement, ConditionType, ConditionComparator } from 'proton-shared/lib/filters/interfaces';
@@ -100,7 +100,7 @@ const FilterConditionsRow = ({
                     checked={withAttachment}
                     onChange={toggleAttachment}
                 >
-                    {c('Label').t`With attachments`}
+                    {c('Label').t`With attachment`}
                 </Radio>
                 <Radio
                     id={`condition-${conditionIndex}-without-attachment`}
@@ -108,7 +108,7 @@ const FilterConditionsRow = ({
                     checked={!withAttachment}
                     onChange={toggleAttachment}
                 >
-                    {c('Label').t`Without attachments`}
+                    {c('Label').t`Without attachment`}
                 </Radio>
             </div>
         );
@@ -122,7 +122,9 @@ const FilterConditionsRow = ({
                 className="inline-flex flex-row flex-items-center mb0-5 condition-token"
                 role="listitem"
             >
-                <span className="ellipsis nodecoration">{token}</span>
+                <span className="ellipsis nodecoration" title={token}>
+                    {token}
+                </span>
                 <button
                     type="button"
                     className="flex pm-badgeLabel-button flex-item-noshrink ml0-5"
@@ -146,7 +148,12 @@ const FilterConditionsRow = ({
                             type="text"
                             value={inputValue}
                             placeholder={c('Placeholder').t`Type text or keyword`}
-                            onKeyDown={(e) => e.key === 'Enter' && onAddNewToken()}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    e.preventDefault();
+                                    onAddNewToken();
+                                }
+                            }}
                         />
                     </span>
                     <Button disabled={!inputValue.trim()} onClick={onAddNewToken} className="pm-button-blue">{c(
@@ -163,16 +170,14 @@ const FilterConditionsRow = ({
         }
 
         let label;
+        let title;
 
         if (type === ConditionType.ATTACHMENTS) {
-            const attachment = (
-                <strong key="attachments">
-                    {condition?.comparator === ConditionComparator.CONTAINS
-                        ? t`with attachments`
-                        : t`without attachments`}
-                </strong>
-            );
-            label = c('Label').jt`The email was sent ${attachment}`;
+            const attachment =
+                condition?.comparator === ConditionComparator.CONTAINS ? t`with attachment` : t`without attachment`;
+            const attachmentStrong = <strong key="attachments">{attachment}</strong>;
+            label = c('Label').jt`The email was sent ${attachmentStrong}`;
+            title = c('Label').t`The email was sent ${attachment}`;
         } else {
             const typeLabel = TYPES.find((t) => t.value === type)?.label;
             const comparatorLabel = COMPARATORS.find((t) => t.value === comparator)?.label;
@@ -180,10 +185,18 @@ const FilterConditionsRow = ({
                 const value = <strong key={`${v}${i}`}>{v}</strong>;
                 return i > 0 ? jt` or ${value}` : value;
             });
+            const titleValues = condition?.values?.map((v, i) => {
+                return i > 0 ? t` or ${v}` : v;
+            });
+            title = c('Label').t`${typeLabel} ${comparatorLabel} ${titleValues}`;
             label = c('Label').jt`${typeLabel} ${comparatorLabel} ${values}`;
         }
 
-        return <span className="mw100 pt0-5 ellipsis">{label}</span>;
+        return (
+            <span className="mw100 pt0-5 ellipsis" title={title}>
+                {label}
+            </span>
+        );
     };
 
     const toggleSection = () => setIsOpen((isOpen) => !isOpen);
@@ -199,7 +212,7 @@ const FilterConditionsRow = ({
                     <Icon name="caret" className={classnames([isOpen && 'rotateX-180'])} />
                     <span className={classnames(['ml0-5', condition.error && 'color-global-warning'])}>{label}</span>
                 </button>
-                <div className="ml1 flex flex-column flex-item-fluid">
+                <div className={classnames(['flex flex-column flex-item-fluid', !isNarrow && 'ml1'])}>
                     {isOpen ? (
                         <div className="flex">
                             <span className="w50 pr1">

@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { c } from 'ttag';
 
-import { classnames, Toggle, Tooltip, SimpleSquireEditor, useUser } from 'react-components';
+import { classnames, Toggle, Tooltip, SimpleSquireEditor, useUser } from '../../..';
 import { noop } from 'proton-shared/lib/helpers/function';
 import { Actions } from 'proton-shared/lib/filters/interfaces';
 
@@ -40,9 +40,9 @@ const FilterActionsFormAutoReplyRow = ({ isEdit, isNarrow, actions, handleUpdate
             {user.hasPaidMail ? (
                 <>
                     <label htmlFor="autoReply" className={classnames(['w25 pt0-5', isNarrow && 'mb1'])}>
-                        <span className="ml0-5">{c('Label').t`Send auto-reply`}</span>
+                        <span className={classnames([!isNarrow && 'ml1'])}>{c('Label').t`Send auto-reply`}</span>
                     </label>
-                    <div className="ml1 flex flex-column flex-item-fluid">
+                    <div className={classnames(['flex flex-column flex-item-fluid', !isNarrow && 'ml1'])}>
                         <Toggle
                             id="autoReply"
                             checked={editorVisible}

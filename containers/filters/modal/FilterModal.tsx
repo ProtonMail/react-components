@@ -6,6 +6,7 @@ import {
     useLoading,
     useLabels,
     useFolders,
+    useMailSettings,
     useActiveBreakpoint,
     useNotifications,
     useFilters,
@@ -14,7 +15,7 @@ import {
     ConfirmModal,
     Alert,
     useModals
-} from '../../../index';
+} from '../../..';
 import { normalize } from 'proton-shared/lib/helpers/string';
 import {
     SimpleFilterModalModel,
@@ -28,6 +29,7 @@ import {
     FilterActions,
     FilterCondition
 } from 'proton-shared/lib/filters/interfaces';
+import { isDarkTheme } from 'proton-shared/lib/themes/helpers';
 import { noop } from 'proton-shared/lib/helpers/function';
 import { addTreeFilter, updateFilter } from 'proton-shared/lib/api/filters';
 import { convertModel } from 'proton-shared/lib/filters/utils';
@@ -86,6 +88,8 @@ const FilterModal = ({ filter, onClose = noop, ...rest }: Props) => {
     const { call } = useEventManager();
     const [loading, withLoading] = useLoading();
     const { createModal } = useModals();
+    const [mailSettings] = useMailSettings();
+    const isDark = useMemo(() => isDarkTheme(mailSettings.Theme), [mailSettings.Theme]);
 
     const initFilter = (filter?: Filter) => {
         const computedFilter = filter ? computeFromTree(filter) : {};
@@ -223,7 +227,7 @@ const FilterModal = ({ filter, onClose = noop, ...rest }: Props) => {
                     />
                 );
             case Step.CONDITIONS:
-                return <FilterConditionsForm isNarrow={isNarrow} model={model} onChange={setModel} />;
+                return <FilterConditionsForm isDark={isDark} isNarrow={isNarrow} model={model} onChange={setModel} />;
             case Step.ACTIONS:
                 return (
                     <FilterActionsForm
@@ -233,6 +237,7 @@ const FilterModal = ({ filter, onClose = noop, ...rest }: Props) => {
                         model={model}
                         onChange={setModel}
                         isEdit={isEdit}
+                        isDark={isDark}
                     />
                 );
             case Step.PREVIEW:

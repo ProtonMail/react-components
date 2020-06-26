@@ -1,7 +1,7 @@
 import React from 'react';
 import { c } from 'ttag';
 
-import { Checkbox, Button, Tooltip, classnames, Icon, useModals } from 'react-components';
+import { Checkbox, Button, Tooltip, classnames, Icon, useModals } from '../../..';
 import { Label } from 'proton-shared/lib/interfaces/Label';
 import { Actions } from 'proton-shared/lib/filters/interfaces';
 
@@ -12,6 +12,7 @@ interface Props {
     isNarrow: boolean;
     actions: Actions;
     handleUpdateActions: (onUpdateActions: Partial<Actions>) => void;
+    isDark: boolean;
 }
 
 type ChangePayload = {
@@ -19,7 +20,7 @@ type ChangePayload = {
     isOpen: boolean;
 };
 
-const FilterActionsFormLabelsRow = ({ actions, isNarrow, handleUpdateActions, labels }: Props) => {
+const FilterActionsFormLabelsRow = ({ actions, isNarrow, handleUpdateActions, labels, isDark }: Props) => {
     const { createModal } = useModals();
     const { labelAs } = actions;
     const { isOpen } = labelAs;
@@ -41,9 +42,20 @@ const FilterActionsFormLabelsRow = ({ actions, isNarrow, handleUpdateActions, la
         handleChangeModel({ labels: [] });
     };
 
+    const handleCreateLabel = async () => {
+        const label: Label = await new Promise((resolve, reject) => {
+            createModal(<EditLabelModal onAdd={resolve} onClose={reject} type="label" />);
+        });
+
+        handleChangeModel({ labels: [...labelAs.labels, label.Name] });
+    };
+
     const renderClosed = () => {
         if (!labelAs?.labels.length) {
-            return <em className="color-global-altgrey">{c('Info').t`No label selected`}</em>;
+            return (
+                <em className={classnames([isDark ? 'color-global-muted' : 'color-global-altgrey'])}>{c('Info')
+                    .t`No label selected`}</em>
+            );
         }
 
         return (
@@ -59,8 +71,9 @@ const FilterActionsFormLabelsRow = ({ actions, isNarrow, handleUpdateActions, la
                             style={{
                                 color: label?.Color
                             }}
+                            title={label?.Name}
                         >
-                            <span className="pm-badgeLabel-link color-white">{label?.Name}</span>
+                            <span className="pm-badgeLabel-link color-white ellipsis">{label?.Name}</span>
                         </span>
                     );
                 })}
@@ -76,7 +89,7 @@ const FilterActionsFormLabelsRow = ({ actions, isNarrow, handleUpdateActions, la
                     {c('Label').t`Label as`}
                 </span>
             </button>
-            <div className="ml1 flex-item-fluid">
+            <div className={classnames(['flex-item-fluid', !isNarrow && 'ml1'])}>
                 {isOpen ? (
                     <>
                         <div className="w100">
@@ -105,7 +118,9 @@ const FilterActionsFormLabelsRow = ({ actions, isNarrow, handleUpdateActions, la
                                                 }}
                                                 title={label.Name}
                                             >
-                                                <span className="pm-badgeLabel-link color-white">{label.Name}</span>
+                                                <span className="pm-badgeLabel-link color-white ellipsis">
+                                                    {label.Name}
+                                                </span>
                                             </span>
                                         </Checkbox>
                                     </div>
@@ -114,8 +129,8 @@ const FilterActionsFormLabelsRow = ({ actions, isNarrow, handleUpdateActions, la
                                 <div className="pt0-5 mb1">{c('Label').t`No label found`}</div>
                             )}
                         </div>
-                        <Button className="mt0" onClick={() => createModal(<EditLabelModal type="label" />)}>
-                            {c('Action').t`Create new label`}
+                        <Button className="mt0" onClick={handleCreateLabel}>
+                            {c('Action').t`Create label`}
                         </Button>
                     </>
                 ) : (
@@ -128,7 +143,10 @@ const FilterActionsFormLabelsRow = ({ actions, isNarrow, handleUpdateActions, la
                     onClick={handleClear}
                     className={classnames(['pm-button--for-icon', isNarrow ? 'mt1' : 'ml1'])}
                 >
-                    <Tooltip title={c('Action').t`Reset`} className="color-global-altgrey">
+                    <Tooltip
+                        title={c('Action').t`Reset`}
+                        className={classnames([isDark ? 'color-global-muted' : 'color-global-altgrey'])}
+                    >
                         <Icon name="remove-text-formatting" />
                     </Tooltip>
                 </Button>

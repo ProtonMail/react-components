@@ -1,7 +1,7 @@
 import React from 'react';
 import { c } from 'ttag';
 
-import { Checkbox, Button, Tooltip, classnames, Icon } from 'react-components';
+import { Checkbox, Button, Tooltip, classnames, Icon } from '../../..';
 
 import { Actions } from 'proton-shared/lib/filters/interfaces';
 
@@ -9,6 +9,7 @@ interface Props {
     isNarrow: boolean;
     actions: Actions;
     handleUpdateActions: (onUpdateActions: Partial<Actions>) => void;
+    isDark: boolean;
 }
 
 type ChangePayload = {
@@ -17,7 +18,7 @@ type ChangePayload = {
     isOpen: boolean;
 };
 
-const FilterActionsFormMarkAsRow = ({ isNarrow, actions, handleUpdateActions }: Props) => {
+const FilterActionsFormMarkAsRow = ({ isNarrow, actions, handleUpdateActions, isDark }: Props) => {
     const { markAs } = actions;
     const { isOpen } = markAs;
 
@@ -40,7 +41,10 @@ const FilterActionsFormMarkAsRow = ({ isNarrow, actions, handleUpdateActions }: 
 
     const renderClosed = () => {
         if (!markAs?.read && !markAs?.starred) {
-            return <em className="pt0-5 color-global-altgrey">{c('Info').t`No action selected`}</em>;
+            return (
+                <em className={classnames(['pt0-5', isDark ? 'color-global-muted' : 'color-global-altgrey'])}>{c('Info')
+                    .t`No action selected`}</em>
+            );
         }
 
         return (
@@ -69,7 +73,7 @@ const FilterActionsFormMarkAsRow = ({ isNarrow, actions, handleUpdateActions }: 
                     {c('Label').t`Mark as`}
                 </span>
             </button>
-            <div className="ml1 flex flex-column flex-item-fluid">
+            <div className={classnames(['flex flex-column flex-item-fluid', !isNarrow && 'ml1'])}>
                 {isOpen ? (
                     <div className="w100 pt0-5 pb0-5">
                         <Checkbox
@@ -102,7 +106,10 @@ const FilterActionsFormMarkAsRow = ({ isNarrow, actions, handleUpdateActions }: 
                     onClick={handleClear}
                     className={classnames(['pm-button--for-icon', isNarrow ? 'mt1' : 'ml1'])}
                 >
-                    <Tooltip title={c('Action').t`Reset`} className="color-global-altgrey">
+                    <Tooltip
+                        title={c('Action').t`Reset`}
+                        className={classnames([isDark ? 'color-global-muted' : 'color-global-altgrey'])}
+                    >
                         <Icon name="remove-text-formatting" />
                     </Tooltip>
                 </Button>

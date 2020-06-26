@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
 
-import { classnames } from 'react-components';
+import { classnames } from '../../..';
 
 import { Folder } from 'proton-shared/lib/interfaces/Folder';
 import { Label } from 'proton-shared/lib/interfaces/Label';
@@ -26,9 +26,14 @@ const FilterPreview = ({ isNarrow, labels, folders, model }: Props) => {
             <div className="border-bottom">
                 <div className="flex flex-nowrap onmobile-flex-column align-items-center pb1">
                     <div className={classnames(['w25 pt0-5', isNarrow && 'mb1'])}>
-                        <span className="ml0-5 mr0-5">{c('Label').t`Filter Name`}</span>
+                        <span className={classnames(['mr0-5', !isNarrow && 'ml0-5'])}>{c('Label').t`Filter Name`}</span>
                     </div>
-                    <div className="ml1 pt0-5 flex flex-column flex-item-fluid">{model.name}</div>
+                    <div
+                        title={model.name}
+                        className={classnames(['pt0-5 flex flex-column flex-item-fluid mw100', !isNarrow && 'ml1'])}
+                    >
+                        <span className="mw100 ellipsis">{model.name}</span>
+                    </div>
                 </div>
             </div>
             <FilterPreviewConditions

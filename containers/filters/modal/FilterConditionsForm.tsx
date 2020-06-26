@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { c } from 'ttag';
 
-import { classnames, Radio, LinkButton } from 'react-components';
+import { classnames, Radio, LinkButton } from '../../..';
 
 import {
     Condition,
@@ -22,9 +22,10 @@ interface Props {
     isNarrow: boolean;
     model: SimpleFilterModalModel;
     onChange: (newModel: SimpleFilterModalModel) => void;
+    isDark: boolean;
 }
 
-const FilterConditionsForm = ({ isNarrow, model, onChange }: Props) => {
+const FilterConditionsForm = ({ isNarrow, model, isDark, onChange }: Props) => {
     const [conditions, setConditions] = useState<Condition[]>(
         model.conditions.length ? model.conditions : [conditionTemplate]
     );
@@ -70,8 +71,9 @@ const FilterConditionsForm = ({ isNarrow, model, onChange }: Props) => {
                         }
                     >
                         {c('Label').t`ALL`}
-                        <em className="ml0-5 color-global-altgrey">{c('Info')
-                            .t`(Filter if ALL of the following conditions are met)`}</em>
+                        <em
+                            className={classnames(['ml0-5', isDark ? 'color-global-muted' : 'color-global-altgrey'])}
+                        >{c('Info').t`(Filter if ALL of the following conditions are met)`}</em>
                     </Radio>
                     <Radio
                         id="statement-any"
@@ -85,8 +87,9 @@ const FilterConditionsForm = ({ isNarrow, model, onChange }: Props) => {
                         }
                     >
                         {c('Label').t`ANY`}
-                        <em className="ml0-5 color-global-altgrey">{c('Info')
-                            .t`(Filter if ANY of the following conditions are met)`}</em>
+                        <em
+                            className={classnames(['ml0-5', isDark ? 'color-global-muted' : 'color-global-altgrey'])}
+                        >{c('Info').t`(Filter if ANY of the following conditions are met)`}</em>
                     </Radio>
                 </div>
             </div>

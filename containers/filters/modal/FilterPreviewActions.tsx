@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { c } from 'ttag';
 
-import { classnames, Icon } from 'react-components';
+import { classnames, Icon } from '../../..';
 
 import { Folder } from 'proton-shared/lib/interfaces/Folder';
 import { Label } from 'proton-shared/lib/interfaces/Label';
@@ -45,7 +45,9 @@ const FilterPreviewActions = ({ isOpen, isNarrow, toggleOpen, labels, folders, m
                                 color: labelsMap[l].Color
                             }}
                         >
-                            <span className="pm-badgeLabel-link color-white ellipsis nodecoration">{l}</span>
+                            <span className="pm-badgeLabel-link color-white ellipsis nodecoration" title={l}>
+                                {l}
+                            </span>
                         </span>
                     ) : (
                         <strong>{l}</strong>
@@ -70,7 +72,9 @@ const FilterPreviewActions = ({ isOpen, isNarrow, toggleOpen, labels, folders, m
 
             const folderElement = isOpen ? (
                 <span className="inline-flex flex-row flex-items-center condition-token mb0-5" role="listitem">
-                    <span className="ellipsis nodecoration">{selectedFolder}</span>
+                    <span className="ellipsis nodecoration" title={selectedFolder}>
+                        {selectedFolder}
+                    </span>
                 </span>
             ) : (
                 <strong>{selectedFolder}</strong>
@@ -153,7 +157,7 @@ const FilterPreviewActions = ({ isOpen, isNarrow, toggleOpen, labels, folders, m
                     <Icon name="caret" className={classnames([isOpen && 'rotateX-180'])} />
                     <span className="ml0-5">{c('Label').t`Actions`}</span>
                 </button>
-                <div className="ml1 flex flex-column flex-item-fluid">
+                <div className={classnames(['flex flex-column flex-item-fluid', !isNarrow && 'ml1'])}>
                     <div className={classnames(['pt0-5', !isOpen && 'mw100 ellipsis'])}>{actionsRenderer}</div>
                 </div>
             </div>

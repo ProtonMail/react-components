@@ -1,5 +1,5 @@
 import React, { ChangeEvent } from 'react';
-import { Alert, classnames, Field, Input } from 'react-components';
+import { Alert, classnames, Field, Input } from '../../..';
 import { c } from 'ttag';
 import { SimpleFilterModalModel, AdvancedSimpleFilterModalModel } from 'proton-shared/lib/filters/interfaces';
 
@@ -23,7 +23,7 @@ const FilterNameForm = ({ isNarrow, model, errors, onChange }: Props) => {
                 <label htmlFor="name" className={classnames(['w25 pt0-5', isNarrow && 'mb1'])}>
                     {c('Label').t`Filter name`}
                 </label>
-                <Field className="ml1">
+                <Field className={classnames([!isNarrow && 'ml1'])}>
                     <Input
                         id="name"
                         placeholder={c('Placeholder').t`Name`}

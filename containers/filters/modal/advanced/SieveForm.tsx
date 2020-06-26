@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Alert } from 'react-components';
+import { Alert } from '../../../..';
 import { c } from 'ttag';
 import { isDarkTheme } from 'proton-shared/lib/themes/helpers';
 import { AdvancedSimpleFilterModalModel, ErrorsSieve } from 'proton-shared/lib/filters/interfaces';

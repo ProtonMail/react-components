@@ -1,6 +1,6 @@
 import React, { ChangeEvent } from 'react';
 import { c } from 'ttag';
-import { Button, Select, Tooltip, classnames, Icon, useModals } from 'react-components';
+import { Button, Select, Tooltip, classnames, Icon, useModals } from '../../..';
 import { buildTreeview, formatFolderName } from 'proton-shared/lib/helpers/folder';
 import { Folder } from 'proton-shared/lib/interfaces/Folder';
 import { Actions } from 'proton-shared/lib/filters/interfaces';
@@ -40,6 +40,7 @@ interface Props {
     isNarrow: boolean;
     actions: Actions;
     handleUpdateActions: (onUpdateActions: Partial<Actions>) => void;
+    isDark: boolean;
 }
 
 interface FolderWithSubFolders extends Folder {
@@ -73,7 +74,7 @@ const reducer = (acc: SelectOption[] = [], folder: FolderWithSubFolders, level =
     return acc;
 };
 
-const FilterActionsFormFolderRow = ({ folders, isNarrow, actions, handleUpdateActions }: Props) => {
+const FilterActionsFormFolderRow = ({ folders, isNarrow, actions, handleUpdateActions, isDark }: Props) => {
     const { createModal } = useModals();
     const treeview = buildTreeview(folders);
 
@@ -101,9 +102,20 @@ const FilterActionsFormFolderRow = ({ folders, isNarrow, actions, handleUpdateAc
         handleChangeModel({ folder: undefined });
     };
 
+    const handleCreateFolder = async () => {
+        const folder: Folder = await new Promise((resolve, reject) => {
+            createModal(<EditLabelModal onAdd={resolve} onClose={reject} type="folder" />);
+        });
+
+        handleChangeModel({ folder: folder.Path });
+    };
+
     const renderClosed = () => {
         if (!moveTo?.folder) {
-            return <em className="pt0-5 color-global-altgrey">{c('Info').t`No folder selected`}</em>;
+            return (
+                <em className={classnames(['pt0-5', isDark ? 'color-global-muted' : 'color-global-altgrey'])}>{c('Info')
+                    .t`No folder selected`}</em>
+            );
         }
 
         let selectedFolder;
@@ -127,15 +139,19 @@ const FilterActionsFormFolderRow = ({ folders, isNarrow, actions, handleUpdateAc
                             }}
                         />
                     )}
-                    <span className={classnames(['inline-flex flex-items-center', i !== 0 && 'ml0-5'])}>
+                    <span
+                        className={classnames(['mw100 flex-nowrap inline-flex flex-items-center', i !== 0 && 'ml0-5'])}
+                    >
                         <Icon name="folder" className="mr0-5" />
-                        {f}
+                        <span className="ellipsis" title={f}>
+                            {f}
+                        </span>
                     </span>
                 </React.Fragment>
             ));
         }
 
-        return <div className="pt0-5 flex flex-items-center">{selectedFolder}</div>;
+        return <div className="pt0-5 flex flex-items-center mw100">{selectedFolder}</div>;
     };
 
     return (
@@ -145,7 +161,7 @@ const FilterActionsFormFolderRow = ({ folders, isNarrow, actions, handleUpdateAc
                 <span className={classnames(['ml0-5', actions.error && 'color-global-warning'])}>{c('Label')
                     .t`Move to`}</span>
             </button>
-            <div className="ml1 flex flex-column flex-item-fluid">
+            <div className={classnames(['flex flex-column flex-item-fluid', !isNarrow && 'ml1'])}>
                 {isOpen ? (
                     <div className="w100">
                         <Select
@@ -156,8 +172,8 @@ const FilterActionsFormFolderRow = ({ folders, isNarrow, actions, handleUpdateAc
                                 handleChangeModel({ folder: value })
                             }
                         />
-                        <Button className="mt1" onClick={() => createModal(<EditLabelModal type="folder" />)}>
-                            {c('Action').t`Create new folder`}
+                        <Button className="mt1" onClick={handleCreateFolder}>
+                            {c('Action').t`Create folder`}
                         </Button>
                     </div>
                 ) : (
@@ -170,7 +186,10 @@ const FilterActionsFormFolderRow = ({ folders, isNarrow, actions, handleUpdateAc
                     onClick={handleClear}
                     className={classnames(['pm-button--for-icon', isNarrow ? 'mt1' : 'ml1'])}
                 >
-                    <Tooltip title={c('Action').t`Reset`} className="color-global-altgrey">
+                    <Tooltip
+                        title={c('Action').t`Reset`}
+                        className={classnames([isDark ? 'color-global-muted' : 'color-global-altgrey'])}
+                    >
                         <Icon name="remove-text-formatting" />
                     </Tooltip>
                 </Button>
