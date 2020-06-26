@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { API_CUSTOM_ERROR_CODES } from 'proton-shared/lib/errors';
 import { c } from 'ttag';
 
-import { FormModal, useNotifications } from '../../index';
+import { FormModal, useLoading, useNotifications } from '../../index';
 import './HumanVerificationModal.scss';
 import HumanVerificationForm, { MethodType } from './HumanVerificationForm';
 
@@ -16,9 +16,12 @@ interface Props<T> {
 const HumanVerificationModal = <T,>({ token, methods = [], onSuccess, onVerify, ...rest }: Props<T>) => {
     const title = c('Title').t`Human verification`;
     const { createNotification } = useNotifications();
-    const [resetCaptchaKey, setResetCaptchaKey] = useState(0);
+    const [loading, withLoading] = useLoading();
 
     const handleSubmit = async (token: string, tokenType: string) => {
+        if (loading) {
+            return;
+        }
         try {
             const result = await onVerify(token, tokenType);
             createNotification({ text: c('Success').t`Verification successful` });
@@ -31,8 +34,9 @@ const HumanVerificationModal = <T,>({ token, methods = [], onSuccess, onVerify, 
                 createNotification({ text: c('Error').t`Invalid verification code`, type: 'error' });
             }
 
+            // Captcha is just given one attempt
             if (tokenType === 'captcha') {
-                setResetCaptchaKey((o) => ++o);
+                rest.onClose();
             }
         }
     };
@@ -46,8 +50,7 @@ const HumanVerificationModal = <T,>({ token, methods = [], onSuccess, onVerify, 
             {...rest}
         >
             <HumanVerificationForm
-                captchaKey={resetCaptchaKey}
-                onSubmit={handleSubmit}
+                onSubmit={(...args) => withLoading(handleSubmit(...args))}
                 methods={methods}
                 token={token}
             />
