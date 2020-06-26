@@ -42,7 +42,6 @@ interface AuthCacheResult {
     authVersion?: AuthVersion;
     authResult?: AuthResponse;
     userSaltResult?: [tsUser, tsKeySalt[]];
-    isPending?: boolean;
 }
 
 export interface State {
@@ -108,10 +107,6 @@ const useLogin = ({ onLogin, ignoreUnlock }: Props) => {
         if (!cache || !cache.userSaltResult) {
             throw new Error('Invalid state');
         }
-        if (cache.isPending) {
-            return;
-        }
-        cache.isPending = true;
 
         const { userSaltResult } = cache;
         const [User, KeySalts] = userSaltResult;
@@ -136,7 +131,6 @@ const useLogin = ({ onLogin, ignoreUnlock }: Props) => {
         const { hasTotp, hasU2F, hasUnlock } = getAuthTypes(authResult);
 
         const gotoForm = (form: FORM) => {
-            cache.isPending = false;
             return setState((state: State) => ({ ...state, form }));
         };
 
@@ -187,10 +181,6 @@ const useLogin = ({ onLogin, ignoreUnlock }: Props) => {
         if (!cache || !cache.authResult) {
             throw new Error('Missing cache');
         }
-        if (cache.isPending) {
-            return;
-        }
-        cache.isPending = true;
 
         const { authResult } = cache;
         const { UID, AccessToken } = authResult;
@@ -217,13 +207,6 @@ const useLogin = ({ onLogin, ignoreUnlock }: Props) => {
      */
     const handleLogin = async () => {
         try {
-            const cache = cacheRef.current || {};
-            if (cache.isPending) {
-                return;
-            }
-
-            cache.isPending = true;
-
             const { username, password } = state;
             const infoResult = await api<InfoResponse>(getInfo(username));
             const { authVersion, result: authResult } = await loginWithFallback({
@@ -232,8 +215,10 @@ const useLogin = ({ onLogin, ignoreUnlock }: Props) => {
                 initialAuthInfo: infoResult
             });
 
-            cache.authResult = authResult;
-            cache.authVersion = authVersion;
+            cacheRef.current = {
+                authResult,
+                authVersion
+            };
 
             await next(FORM.LOGIN);
         } catch (error) {
