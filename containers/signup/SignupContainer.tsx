@@ -21,7 +21,7 @@ import { generateKeySaltAndPassphrase } from 'proton-shared/lib/keys/keys';
 import { getResetAddressesKeys } from 'proton-shared/lib/keys/resetKeys';
 import { getRandomString } from 'proton-shared/lib/helpers/string';
 import { getAuthHeaders } from 'proton-shared/lib/api';
-import { isEmail } from 'proton-shared/lib/helpers/validators';
+import { validateEmailAddress } from 'proton-shared/lib/helpers/string';
 import { Address } from 'proton-shared/lib/interfaces/Address';
 import { c } from 'ttag';
 import {
@@ -124,7 +124,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
         return {
             username: !model.username ? c('Signup error').t`This field is required` : usernameError,
             email: model.email
-                ? isEmail(model.email)
+                ? validateEmailAddress(model.email)
                     ? ''
                     : c('Signup error').t`Email address invalid`
                 : c('Signup error').t`This field is required`,
@@ -135,7 +135,7 @@ const SignupContainer = ({ onLogin, history }: Props) => {
                     : ''
                 : c('Signup error').t`This field is required`,
             recoveryEmail: model.recoveryEmail
-                ? isEmail(model.recoveryEmail)
+                ? validateEmailAddress(model.recoveryEmail)
                     ? ''
                     : c('Signup error').t`Email address invalid`
                 : c('Signup error').t`This field is required`,

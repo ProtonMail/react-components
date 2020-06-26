@@ -1,5 +1,5 @@
 import React from 'react';
-import { isEmail } from 'proton-shared/lib/helpers/validators';
+import { validateEmailAddress } from 'proton-shared/lib/helpers/string';
 import { c } from 'ttag';
 
 import { UNSECURE_DOMAINS } from './constants';
@@ -10,7 +10,7 @@ interface Props {
 }
 
 const UnsecureEmailInfo = ({ email }: Props) => {
-    if (!isEmail(email)) {
+    if (!validateEmailAddress(email)) {
         return null;
     }
 
