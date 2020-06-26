@@ -52,6 +52,7 @@ import BackButton from './BackButton';
 import RequestNewCodeModal from '../api/RequestNewCodeModal';
 import SignupCreatingAccount from './SignupCreatingAccount';
 import { PaymentParameters } from '../payments/usePayment';
+import { MethodType } from '../api/HumanVerificationForm';
 
 interface Props {
     history: History;
@@ -207,8 +208,16 @@ const SignupContainer = ({ onLogin, history }: Props) => {
         }
     };
 
-    const humanApi = <T,>(config: any, currentModel = model): Promise<T> =>
-        humanApiHelper(config, { api, createModal, model: currentModel, updateModel });
+    const humanApi = <T,>(config: any, currentModel = model): Promise<T> => {
+        const onToken = (token: string, tokenType: MethodType) => {
+            updateModel((model) => ({
+                ...model,
+                verificationToken: token,
+                verificationTokenType: tokenType
+            }));
+        };
+        return humanApiHelper(config, { api, createModal, model: currentModel, onToken });
+    };
 
     const handleResend = async () => {
         await humanApi(queryVerificationCode('email', { Address: model.email }));

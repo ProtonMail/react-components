@@ -10,7 +10,7 @@ interface Props<T> {
     token: string;
     methods: MethodType[];
     onSuccess: (data: T) => void;
-    onVerify: (token: string, tokenType: string) => Promise<T>;
+    onVerify: (token: string, tokenType: MethodType) => Promise<T>;
     [key: string]: any;
 }
 const HumanVerificationModal = <T,>({ token, methods = [], onSuccess, onVerify, ...rest }: Props<T>) => {
@@ -18,7 +18,7 @@ const HumanVerificationModal = <T,>({ token, methods = [], onSuccess, onVerify, 
     const { createNotification } = useNotifications();
     const [loading, withLoading] = useLoading();
 
-    const handleSubmit = async (token: string, tokenType: string) => {
+    const handleSubmit = async (token: string, tokenType: MethodType) => {
         if (loading) {
             return;
         }

@@ -11,14 +11,14 @@ interface ExtraArguments {
     api: Api;
     createModal: any;
     model: SignupModel;
-    updateModel: (data: SignupModel) => void;
+    onToken: (token: string, tokenType: MethodType) => void;
 }
 
 /**
  * Special human api handling for the signup since the human verification code needs to be triggered and included
  * in possibly multiple api requests.
  */
-const humanApi = <T,>(config: any, { api, createModal, model, updateModel }: ExtraArguments): Promise<T> => {
+const humanApi = <T,>(config: any, { api, createModal, model, onToken }: ExtraArguments): Promise<T> => {
     return api<T>({
         ...config,
         headers: {
@@ -44,15 +44,18 @@ const humanApi = <T,>(config: any, { api, createModal, model, updateModel }: Ext
                 },
                 noHandling: [API_CUSTOM_ERROR_CODES.HUMAN_VERIFICATION_REQUIRED],
                 silence: [API_CUSTOM_ERROR_CODES.TOKEN_INVALID]
-            }).then((result: T) => {
-                // Token was ok, set it in the model
-                updateModel({
-                    ...model,
-                    verificationToken: token,
-                    verificationTokenType: tokenType
+            })
+                .then((result: T) => {
+                    onToken(token, tokenType);
+                    return result;
+                })
+                .catch((error) => {
+                    const Code = error?.data?.Code;
+                    if (Code && Code !== API_CUSTOM_ERROR_CODES.TOKEN_INVALID) {
+                        onToken(token, tokenType);
+                    }
+                    throw error;
                 });
-                return result;
-            });
         };
 
         const handleVerification = ({ token, methods, onVerify }: any): Promise<T> => {
