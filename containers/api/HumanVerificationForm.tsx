@@ -13,14 +13,15 @@ interface Props {
     onSubmit: (token: string, tokenType: MethodType) => void;
     token: string;
     methods: MethodType[];
+    captchaKey?: number;
 }
 
-const HumanVerificationForm = ({ methods, token, onSubmit }: Props) => {
+const HumanVerificationForm = ({ methods, token, onSubmit, captchaKey }: Props) => {
     const tabs = [
         methods.includes('captcha') && {
             method: 'captcha',
             title: c('Human verification method').t`CAPTCHA`,
-            content: <Captcha token={token} onSubmit={(token) => onSubmit(token, 'captcha')} />
+            content: <Captcha key={captchaKey} token={token} onSubmit={(token) => onSubmit(token, 'captcha')} />
         },
         methods.includes('email') && {
             method: 'email',
