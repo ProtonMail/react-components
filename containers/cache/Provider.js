@@ -6,7 +6,7 @@ import CacheContext from './cacheContext';
 const Provider = ({ cache, children }) => {
     useEffect(() => {
         return () => {
-            cache.reset();
+            cache.clear();
         };
     }, []);
 
