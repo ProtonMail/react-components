@@ -39,11 +39,19 @@ const FilterPreviewConditions = ({ isOpen, isNarrow, toggleOpen, model }: Props)
                 ) : (
                     <strong key={label}>{label}</strong>
                 );
-                return c('Label').jt`the email was sent ${attachment}`;
+
+                return {
+                    element: c('Label').jt`the email was sent ${attachment}`,
+                    title: c('Label').t`the email was sent ${label}`
+                };
             }
 
             const typeLabel = TYPES.find((t) => t.value === cond.type)?.label;
             const comparatorLabel = COMPARATORS.find((t) => t.value === cond.comparator)?.label;
+
+            const titleValues = cond?.values?.map((v, i) => {
+                return i > 0 ? t` or ${v}` : v;
+            });
 
             const values = cond?.values?.map((v, i) => {
                 const value = isOpen ? (
@@ -61,26 +69,40 @@ const FilterPreviewConditions = ({ isOpen, isNarrow, toggleOpen, model }: Props)
                 );
                 return i > 0 ? jt` or ${value}` : value;
             });
-            return c('Label ').jt`${typeLabel?.toLowerCase()} ${comparatorLabel} ${values}`;
+
+            return {
+                element: c('Label ').jt`${typeLabel?.toLowerCase()} ${comparatorLabel} ${values}`,
+                title: c('Label').t`${typeLabel?.toLowerCase()} ${comparatorLabel} ${titleValues}`
+            };
         });
 
         const ifLabel = c('Label').t`If`;
         const operator = model.statement === FilterStatement.ALL ? c('Label').t`And` : c('Label').t`Or`;
+        const title: string = conditionsRows.reduce((acc, cond, i) => {
+            acc += i === 0 ? ifLabel : ` ${operator.toLowerCase()}`;
+            return `${acc} ${cond.title}`;
+        }, '');
 
-        return conditionsRows.map((cond, i) =>
-            isOpen ? (
-                <div key={`preview-condition-${i}`}>
-                    {i === 0 ? ifLabel : operator}
-                    {` `}
-                    {cond}
-                </div>
-            ) : (
-                <span key={`preview-condition-${i}`}>
-                    {i === 0 ? ifLabel : operator.toLowerCase()}
-                    {` `}
-                    {cond}
-                </span>
-            )
+        return isOpen ? (
+            <div className="pt0-5">
+                {conditionsRows.map((cond, i) => (
+                    <div key={`preview-condition-${i}`}>
+                        {i === 0 ? ifLabel : operator}
+                        {` `}
+                        {cond.element}
+                    </div>
+                ))}
+            </div>
+        ) : (
+            <div className="pt0-5 mw100 ellipsis" title={title}>
+                {conditionsRows.map((cond, i) => (
+                    <span key={`preview-condition-${i}`}>
+                        {i === 0 ? ifLabel : operator.toLowerCase()}
+                        {` `}
+                        {cond.element}
+                    </span>
+                ))}
+            </div>
         );
     }, [isOpen]);
 
@@ -92,7 +114,7 @@ const FilterPreviewConditions = ({ isOpen, isNarrow, toggleOpen, model }: Props)
                     <span className="ml0-5">{c('Label').t`Conditions`}</span>
                 </button>
                 <div className={classnames(['flex flex-column flex-item-fluid', !isNarrow && 'ml1'])}>
-                    <div className={classnames(['pt0-5', !isOpen && 'mw100 ellipsis'])}>{conditionsRenderer}</div>
+                    {conditionsRenderer}
                 </div>
             </div>
         </div>

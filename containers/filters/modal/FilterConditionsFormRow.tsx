@@ -3,7 +3,7 @@ import { c, t, jt } from 'ttag';
 
 import { classnames, Input, Select, Radio, Tooltip, Icon, Button } from '../../..';
 import { TYPES, COMPARATORS } from 'proton-shared/lib/filters/constants';
-
+import { OptionProps } from '../../../components/select/Select';
 import { Condition, FilterStatement, ConditionType, ConditionComparator } from 'proton-shared/lib/filters/interfaces';
 
 import './FilterConditionsFormRow.scss';
@@ -29,8 +29,17 @@ const FilterConditionsRow = ({
     handleUpdateCondition,
     displayDelete
 }: Props) => {
-    const typeOptions = TYPES.map(({ label: text, value }) => ({ text, value }));
-    const ConditionComparatorOptions = COMPARATORS.map(({ label: text, value }) => ({ text, value }));
+    const typeOptions = TYPES.map(({ label: text, value }, i) => {
+        const option: OptionProps = { text, value };
+        if (i === 0) {
+            option.disabled = true;
+        }
+        return option;
+    });
+    const ConditionComparatorOptions = COMPARATORS.map(({ label: text, value }) => ({
+        text,
+        value
+    }));
     const [isOpen, setIsOpen] = useState(condition.isOpen);
     const [tokens, setTokens] = useState<string[]>(condition.values || []);
     const [inputValue, setInputValue] = useState('');

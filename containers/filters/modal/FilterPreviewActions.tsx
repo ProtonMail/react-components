@@ -34,6 +34,9 @@ const FilterPreviewActions = ({ isOpen, isNarrow, toggleOpen, labels, folders, m
         const actionsRows = [];
 
         if (actions.labelAs.labels.length) {
+            const labelsTitles = actions.labelAs.labels.map((l, i) => {
+                return i > 0 ? c('Label').t` and ${l}` : l;
+            });
             const labelsElements = actions.labelAs.labels.map((l, i) => (
                 <React.Fragment key={l}>
                     {i > 0 && c('Label').t` and `}
@@ -55,13 +58,16 @@ const FilterPreviewActions = ({ isOpen, isNarrow, toggleOpen, labels, folders, m
                 </React.Fragment>
             ));
 
-            actionsRows.push(
-                <span className="pm-badgeLabel-container">
-                    {LABELS_ACTION.labelAs}
-                    {` `}
-                    {labelsElements}
-                </span>
-            );
+            actionsRows.push({
+                element: (
+                    <span className="pm-badgeLabel-container">
+                        {LABELS_ACTION.labelAs}
+                        {` `}
+                        {labelsElements}
+                    </span>
+                ),
+                title: `${LABELS_ACTION.labelAs} ${labelsTitles}`
+            });
         }
 
         if (actions.moveTo.folder) {
@@ -80,13 +86,16 @@ const FilterPreviewActions = ({ isOpen, isNarrow, toggleOpen, labels, folders, m
                 <strong>{selectedFolder}</strong>
             );
 
-            actionsRows.push(
-                <>
-                    {LABELS_ACTION.moveTo}
-                    {` `}
-                    {folderElement}
-                </>
-            );
+            actionsRows.push({
+                element: (
+                    <>
+                        {LABELS_ACTION.moveTo}
+                        {` `}
+                        {folderElement}
+                    </>
+                ),
+                title: `${LABELS_ACTION.moveTo} ${selectedFolder}`
+            });
         }
 
         if (actions.markAs.read || actions.markAs.starred) {
@@ -105,48 +114,72 @@ const FilterPreviewActions = ({ isOpen, isNarrow, toggleOpen, labels, folders, m
                 <strong>{c('Filter preview').t`starred`}</strong>
             );
 
-            actionsRows.push(
-                <>
-                    {LABELS_ACTION.markAs}
-                    {` `}
-                    {actions.markAs.read && readElement}
-                    {actions.markAs.read && actions.markAs.starred && (
-                        <>
-                            {` `}
-                            {c('Label').t`and`}
-                            {` `}
-                        </>
-                    )}
-                    {actions.markAs.starred && starredElement}
-                </>
-            );
+            const markAsTitle = `${actions.markAs.read && c('Filter preview').t`read`}${actions.markAs.read &&
+                actions.markAs.starred &&
+                ` ${c('Label').t`and`} `}${actions.markAs.starred && c('Filter preview').t`starred`}`;
+
+            actionsRows.push({
+                element: (
+                    <>
+                        {LABELS_ACTION.markAs}
+                        {` `}
+                        {actions.markAs.read && readElement}
+                        {actions.markAs.read && actions.markAs.starred && (
+                            <>
+                                {` `}
+                                {c('Label').t`and`}
+                                {` `}
+                            </>
+                        )}
+                        {actions.markAs.starred && starredElement}
+                    </>
+                ),
+                title: `${LABELS_ACTION.markAs} ${markAsTitle}`
+            });
         }
 
         if (actions.autoReply) {
             const label = isOpen ? (
                 <span className="inline-flex flex-row flex-items-center condition-token mb0-5" role="listitem">
-                    <span className="ellipsis nodecoration">{LABELS_ACTION.autoReply}</span>
+                    <span className="nodecoration" style={{ maxWidth: 'inherit' }}>
+                        {LABELS_ACTION.autoReply}
+                    </span>
                 </span>
             ) : (
                 <strong>{LABELS_ACTION.autoReply}</strong>
             );
-            actionsRows.push(label);
+
+            actionsRows.push({
+                element: label,
+                title: LABELS_ACTION.autoReply
+            });
         }
 
-        return actionsRows.map((action, i) =>
-            isOpen ? (
-                <div key={`preview-action-${i}`}>
-                    {i === 0 ? c('Label').t`Then` : c('Label').t`And`}
-                    {` `}
-                    {action}
-                </div>
-            ) : (
-                <span key={`preview-action-${i}`}>
-                    {i === 0 ? c('Label').t`Then` : ` ${c('Label').t`and`}`}
-                    {` `}
-                    {action}
-                </span>
-            )
+        const title: string = actionsRows.reduce((acc, action, i) => {
+            acc += i === 0 ? c('Label').t`Then` : ` ${c('Label').t`and`}`;
+            return `${acc} ${action.title}`;
+        }, '');
+
+        return isOpen ? (
+            <div className="pt0-5">
+                {actionsRows.map((action, i) => (
+                    <div key={`preview-action-${i}`}>
+                        {i === 0 ? c('Label').t`Then` : c('Label').t`And`}
+                        {` `}
+                        {action.element}
+                    </div>
+                ))}
+            </div>
+        ) : (
+            <div className="pt0-5 mw100 ellipsis" title={title}>
+                {actionsRows.map((action, i) => (
+                    <span key={`preview-action-${i}`}>
+                        {i === 0 ? c('Label').t`Then` : ` ${c('Label').t`and`}`}
+                        {` `}
+                        {action.element}
+                    </span>
+                ))}
+            </div>
         );
     }, [isOpen]);
 
@@ -158,7 +191,7 @@ const FilterPreviewActions = ({ isOpen, isNarrow, toggleOpen, labels, folders, m
                     <span className="ml0-5">{c('Label').t`Actions`}</span>
                 </button>
                 <div className={classnames(['flex flex-column flex-item-fluid', !isNarrow && 'ml1'])}>
-                    <div className={classnames(['pt0-5', !isOpen && 'mw100 ellipsis'])}>{actionsRenderer}</div>
+                    {actionsRenderer}
                 </div>
             </div>
         </div>

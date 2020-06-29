@@ -9,9 +9,10 @@ import EditLabelModal from '../../labels/modals/Edit';
 
 export const DEFAULT_FOLDERS = [
     {
-        group: c('Option group').t`Action`,
-        text: c('Filter Actions').t`Move to ...`,
-        value: ''
+        group: c('Option group').t`Move to...`,
+        text: c('Filter Actions').t`Select a folder`,
+        value: '',
+        disabled: true
     },
     {
         group: c('Option group').t`Default folders`,
