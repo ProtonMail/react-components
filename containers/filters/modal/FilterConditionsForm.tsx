@@ -57,7 +57,7 @@ const FilterConditionsForm = ({ isNarrow, model, isDark, onChange }: Props) => {
     return (
         <>
             <div className="flex flex-nowrap mb0 onmobile-flex-column border-bottom">
-                <div className={classnames(['w25', isNarrow && 'mb1'])}>{c('Label').t`Statement`}</div>
+                <div className={classnames(['w20', isNarrow && 'mb1'])}>{c('Label').t`Statement`}</div>
                 <div className={classnames([!isNarrow && 'ml1'])}>
                     <Radio
                         id="statement-all"

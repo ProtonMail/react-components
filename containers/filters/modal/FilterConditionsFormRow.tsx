@@ -206,7 +206,7 @@ const FilterConditionsRow = ({
             <div className="flex flex-nowrap onmobile-flex-column align-items-center pt1 pb1">
                 <button
                     type="button"
-                    className={classnames(['w25 alignleft', isNarrow && 'mb1'])}
+                    className={classnames(['w20 alignleft', isNarrow && 'mb1'])}
                     onClick={toggleSection}
                 >
                     <Icon name="caret" className={classnames([isOpen && 'rotateX-180'])} />

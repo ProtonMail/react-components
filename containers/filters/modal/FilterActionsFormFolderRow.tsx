@@ -156,7 +156,7 @@ const FilterActionsFormFolderRow = ({ folders, isNarrow, actions, handleUpdateAc
 
     return (
         <div className="border-bottom flex flex-nowrap onmobile-flex-column align-items-center pt1 pb1">
-            <button type="button" className={classnames(['w25 alignleft', isNarrow && 'mb1'])} onClick={toggleSection}>
+            <button type="button" className={classnames(['w20 alignleft', isNarrow && 'mb1'])} onClick={toggleSection}>
                 <Icon name="caret" className={classnames([isOpen && 'rotateX-180'])} />
                 <span className={classnames(['ml0-5', actions.error && 'color-global-warning'])}>{c('Label')
                     .t`Move to`}</span>

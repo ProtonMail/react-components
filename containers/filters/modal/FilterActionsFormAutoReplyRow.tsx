@@ -39,7 +39,7 @@ const FilterActionsFormAutoReplyRow = ({ isEdit, isNarrow, actions, handleUpdate
         <div className="flex flex-nowrap onmobile-flex-column align-items-center pt1 pb1">
             {user.hasPaidMail ? (
                 <>
-                    <label htmlFor="autoReply" className={classnames(['w25 pt0-5', isNarrow && 'mb1'])}>
+                    <label htmlFor="autoReply" className={classnames(['w20 pt0-5', isNarrow && 'mb1'])}>
                         <span className={classnames([!isNarrow && 'ml1'])}>{c('Label').t`Send auto-reply`}</span>
                     </label>
                     <div className={classnames(['flex flex-column flex-item-fluid', !isNarrow && 'ml1'])}>
@@ -66,7 +66,7 @@ const FilterActionsFormAutoReplyRow = ({ isEdit, isNarrow, actions, handleUpdate
                 </>
             ) : (
                 <>
-                    <div className={classnames(['w25 mr1 pt0-5', isNarrow && 'mb1'])}>
+                    <div className={classnames(['w20 mr1 pt0-5', isNarrow && 'mb1'])}>
                         <span className="ml0-5 mr0-5">{c('Label').t`Send auto-reply`}</span>
                     </div>
                     <Tooltip title={c('Tooltip').t`This feature is only available for paid users`}>
