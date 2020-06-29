@@ -33,6 +33,7 @@ import { isDarkTheme } from 'proton-shared/lib/themes/helpers';
 import { noop } from 'proton-shared/lib/helpers/function';
 import { addTreeFilter, updateFilter } from 'proton-shared/lib/api/filters';
 import { convertModel } from 'proton-shared/lib/filters/utils';
+import isDeepEqual from 'proton-shared/lib/helpers/isDeepEqual';
 import { computeFromTree } from 'proton-shared/lib/filters/sieve';
 
 import HeaderFilterModal from './HeaderFilterModal';
@@ -90,6 +91,7 @@ const FilterModal = ({ filter, onClose = noop, ...rest }: Props) => {
     const { createModal } = useModals();
     const [mailSettings] = useMailSettings();
     const isDark = useMemo(() => isDarkTheme(mailSettings.Theme), [mailSettings.Theme]);
+    const [modelChanged, setModelChanged] = useState(false);
 
     const initFilter = (filter?: Filter) => {
         const computedFilter = filter ? computeFromTree(filter) : {};
@@ -208,6 +210,10 @@ const FilterModal = ({ filter, onClose = noop, ...rest }: Props) => {
     };
 
     const handleClose = () => {
+        if (!modelChanged) {
+            return onClose();
+        }
+
         createModal(
             <ConfirmModal onConfirm={onClose} title={c('Title').t`Are you sure you want to close?`}>
                 <Alert type="error">{c('Info').t`All your changes will be lost.`}</Alert>
@@ -248,10 +254,19 @@ const FilterModal = ({ filter, onClose = noop, ...rest }: Props) => {
     };
 
     useEffect(() => {
-        if (!loadingFolders && !loadingLabels) {
+        if (filter && !loadingFolders && !loadingLabels) {
             setModel(initFilter(filter));
         }
     }, [loadingFolders, loadingLabels]);
+
+    useEffect(() => {
+        if (!isDeepEqual(model, initFilter(filter))) {
+            setModelChanged(true);
+            return;
+        }
+
+        setModelChanged(false);
+    }, [model]);
 
     return (
         <FormModal

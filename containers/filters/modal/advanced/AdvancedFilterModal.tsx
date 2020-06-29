@@ -27,6 +27,7 @@ import HeaderAdvancedFilterModal from './HeaderAdvancedFilterModal';
 import FooterAdvancedFilterModal from './FooterAdvancedFilterModal';
 import SieveForm from './SieveForm';
 import { noop } from 'proton-shared/lib/helpers/function';
+import isDeepEqual from 'proton-shared/lib/helpers/isDeepEqual';
 
 interface Props {
     filter: Filter;
@@ -42,19 +43,22 @@ const AdvancedFilterModal = ({ filter, onClose = noop, ...rest }: Props) => {
     const { createNotification } = useNotifications();
     const { call } = useEventManager();
     const { createModal } = useModals();
+    const [modelChanged, setModelChanged] = useState(false);
 
     const isEdit = !!filter?.ID;
     const title = isEdit ? c('Title').t`Edit sieve filter` : c('Title').t`Add sieve filter`;
 
     const sieveTemplate = sieveTemplates[filter?.Version || FILTER_VERSION];
 
-    const [model, setModel] = useState<AdvancedSimpleFilterModalModel>({
+    const initialModel = {
         id: filter?.ID,
         step: StepSieve.NAME,
         sieve: filter?.Sieve || sieveTemplate || '',
         name: filter?.Name || '',
         issues: []
-    });
+    };
+
+    const [model, setModel] = useState<AdvancedSimpleFilterModalModel>(initialModel);
     const sieve = useDebounceInput(model.sieve);
 
     const errors = useMemo<ErrorsSieve>(() => {
@@ -110,6 +114,10 @@ const AdvancedFilterModal = ({ filter, onClose = noop, ...rest }: Props) => {
     };
 
     const handleClose = () => {
+        if (!modelChanged) {
+            return onClose();
+        }
+
         createModal(
             <ConfirmModal onConfirm={onClose} title={c('Title').t`Are you sure you want to close?`}>
                 <Alert type="error">{c('Info').t`All your changes will be lost.`}</Alert>
@@ -132,6 +140,15 @@ const AdvancedFilterModal = ({ filter, onClose = noop, ...rest }: Props) => {
             setModel({ ...model, issues: [] });
         }
     }, [sieve]);
+
+    useEffect(() => {
+        if (!isDeepEqual(model, initialModel)) {
+            setModelChanged(true);
+            return;
+        }
+
+        setModelChanged(false);
+    }, [model]);
 
     return (
         <FormModal
