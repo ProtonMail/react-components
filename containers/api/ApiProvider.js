@@ -11,7 +11,7 @@ import withApiHandlers, {
 import { getError } from 'proton-shared/lib/apiHandlers';
 import { getDateHeader } from 'proton-shared/lib/fetch/helpers';
 import { API_CUSTOM_ERROR_CODES } from 'proton-shared/lib/errors';
-import { updateServerTime } from 'pmcrypto';
+import { updateServerTime, serverTime as getServerTime } from 'pmcrypto';
 import { c } from 'ttag';
 
 import ApiContext from './apiContext';
@@ -153,7 +153,7 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
             }
             return callWithApiHandlers(rest).then((response) => {
                 const serverTime = getDateHeader(response.headers);
-                if (serverTime) {
+                if (getServerTime() < serverTime) {
                     updateServerTime(serverTime);
                 }
                 hideOfflineNotification();
