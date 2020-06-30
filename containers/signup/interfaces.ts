@@ -1,6 +1,14 @@
 import { SIGNUP_STEPS } from './constants';
 import { MethodType } from '../api/HumanVerificationForm';
-import { Payment } from '../payments/usePayment';
+
+export enum SERVICES {
+    mail = 'ProtonMail',
+    calendar = 'ProtonCalendar',
+    contacts = 'ProtonContacts',
+    drive = 'ProtonDrive',
+    vpn = 'ProtonVPN'
+}
+export type SERVICES_KEYS = keyof typeof SERVICES;
 
 export interface PlanIDs {
     [planID: string]: number;
@@ -21,10 +29,6 @@ export interface SubscriptionCheckResult {
     };
 }
 
-interface Payload {
-    [id: string]: string;
-}
-
 export interface SignupModel {
     step: SIGNUP_STEPS;
     username: string;
@@ -41,13 +45,9 @@ export interface SignupModel {
     planIDs: PlanIDs;
     humanVerificationMethods: MethodType[];
     humanVerificationToken: string;
-    verificationToken?: string;
-    verificationTokenType?: MethodType;
-    payload?: Payload;
-    payment?: Payment;
 }
 
-export interface SignupErros {
+export interface SignupErrors {
     email?: string;
     username?: string;
     password?: string;
@@ -81,4 +81,15 @@ export interface SignupPayPal {
     loadingVerification: boolean;
     onToken: () => void;
     onVerification: () => void;
+}
+
+export class HumanVerificationError extends Error {
+    methods: MethodType[];
+    token: string;
+    constructor(methods: MethodType[], token: string) {
+        super('HumanVerificationError');
+        this.methods = methods;
+        this.token = token;
+        Object.setPrototypeOf(this, HumanVerificationError.prototype);
+    }
 }

@@ -93,7 +93,7 @@ export const AOL_DOMAINS = [
 export const MAIL_RU_DOMAINS = ['mail.ru', 'inbox.ru', 'list.ru', 'bk.ru'];
 export const GMAIL_DOMAINS = ['gmail.com', 'googlemail.com', 'google.com', 'googlegroups.com'];
 
-export const UNSECURE_DOMAINS = [
+export const INSECURE_DOMAINS = [
     ...GMAIL_DOMAINS,
     ...AOL_DOMAINS,
     ...YAHOO_DOMAINS,

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FunctionComponent } from 'react';
 import { Link } from 'react-router-dom';
 import { c } from 'ttag';
 import { noop } from 'proton-shared/lib/helpers/function';
@@ -11,13 +11,16 @@ import RecoveryForm from './RecoveryForm';
 import UnlockForm from './UnlockForm';
 import { getErrorText } from './helper';
 import AbuseModal from './AbuseModal';
-import SignLayout from '../signup/SignLayout';
+import { Props as SignLayoutProps } from '../signup/SignLayout';
 import BackButton from '../signup/BackButton';
-import ProtonLogo from '../../components/logo/ProtonLogo';
 import OneAccountIllustration from '../illustration/OneAccountIllustration';
 import useLogin, { Props as UseLoginProps, FORM } from './useLogin';
 
-const LoginForm = ({ onLogin, ignoreUnlock = false }: UseLoginProps) => {
+interface Props extends UseLoginProps {
+    WrapSignLayout: FunctionComponent<SignLayoutProps>;
+}
+
+const LoginForm = ({ onLogin, ignoreUnlock = false, WrapSignLayout }: Props) => {
     const { createNotification } = useNotifications();
     const { createModal } = useModals();
     const {
@@ -55,7 +58,7 @@ const LoginForm = ({ onLogin, ignoreUnlock = false }: UseLoginProps) => {
         );
 
         return (
-            <SignLayout title={c('Title').t`Sign in`} center={<ProtonLogo />} aside={<OneAccountIllustration />}>
+            <WrapSignLayout title={c('Title').t`Sign in`} aside={<OneAccountIllustration />}>
                 <form name="loginForm" className="signup-form" onSubmit={handleSubmit}>
                     <PasswordForm
                         username={username}
@@ -80,7 +83,7 @@ const LoginForm = ({ onLogin, ignoreUnlock = false }: UseLoginProps) => {
                     </div>
                 </form>
                 <div className="mb2 alignright">{c('Info').jt`New to Proton? ${signupLink}`}</div>
-            </SignLayout>
+            </WrapSignLayout>
         );
     }
 
@@ -98,15 +101,9 @@ const LoginForm = ({ onLogin, ignoreUnlock = false }: UseLoginProps) => {
             );
         };
         return (
-            <SignLayout
+            <WrapSignLayout
                 title={c('Title').t`Two-factor authentication`}
                 left={<BackButton onClick={handleCancel} />}
-                center={<ProtonLogo />}
-                right={
-                    <SupportDropdown noCaret={true} className="link">
-                        {c('Action').t`Need help?`}
-                    </SupportDropdown>
-                }
             >
                 <form name="totpForm" className="signup-form" onSubmit={handleSubmit} autoComplete="off">
                     {isTotpRecovery ? (
@@ -136,7 +133,7 @@ const LoginForm = ({ onLogin, ignoreUnlock = false }: UseLoginProps) => {
                         </PrimaryButton>
                     </div>
                 </form>
-            </SignLayout>
+            </WrapSignLayout>
         );
     }
 
@@ -156,16 +153,7 @@ const LoginForm = ({ onLogin, ignoreUnlock = false }: UseLoginProps) => {
             );
         };
         return (
-            <SignLayout
-                title={c('Title').t`Unlock your mailbox`}
-                left={<BackButton onClick={handleCancel} />}
-                center={<ProtonLogo />}
-                right={
-                    <SupportDropdown noCaret={true} className="link">
-                        {c('Action').t`Need help?`}
-                    </SupportDropdown>
-                }
-            >
+            <WrapSignLayout title={c('Title').t`Unlock your mailbox`} left={<BackButton onClick={handleCancel} />}>
                 <form name="unlockForm" className="signup-form" onSubmit={handleSubmit}>
                     <UnlockForm password={keyPassword} setPassword={loading ? noop : setKeyPassword} />
                     <div className="alignright mb1">
@@ -180,7 +168,7 @@ const LoginForm = ({ onLogin, ignoreUnlock = false }: UseLoginProps) => {
                         </PrimaryButton>
                     </div>
                 </form>
-            </SignLayout>
+            </WrapSignLayout>
         );
     }
 

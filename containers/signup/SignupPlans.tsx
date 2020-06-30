@@ -10,9 +10,10 @@ interface Props {
     onSelectPlan: (planID: string) => void;
     loading: boolean;
     plans?: SignupPlan[];
+    planNameSelected?: string;
 }
 
-const SignupPlans = ({ plans = [], model, onChange, onSelectPlan, loading }: Props) => {
+const SignupPlans = ({ plans = [], planNameSelected = '', model, onChange, onSelectPlan, loading }: Props) => {
     return (
         <>
             <div className="flex flex-nowrap flex-items-center onmobile-flex-column">
@@ -31,9 +32,11 @@ const SignupPlans = ({ plans = [], model, onChange, onSelectPlan, loading }: Pro
             </div>
 
             <MailSubscriptionTable
+                planNameSelected={planNameSelected}
                 disabled={loading}
                 mode="button"
                 selected={c('Status').t`Selected`}
+                currentPlan={c('Status').t`Selected plan`}
                 plans={plans}
                 cycle={model.cycle}
                 currency={model.currency}

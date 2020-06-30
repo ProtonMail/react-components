@@ -1,18 +1,18 @@
-import React from 'react';
+import React, { FunctionComponent } from 'react';
 import { c } from 'ttag';
 import { History } from 'history';
 import { requestUsername } from 'proton-shared/lib/api/reset';
 
-import { useApi, useNotifications, useLoading, ForgotUsernameForm, SupportDropdown } from '../../index';
-import SignLayout from '../signup/SignLayout';
-import ProtonLogo from '../../components/logo/ProtonLogo';
+import { useApi, useNotifications, useLoading, ForgotUsernameForm } from '../../index';
+import { Props as SignLayoutProps } from '../signup/SignLayout';
 import BackButton from '../signup/BackButton';
 
 interface Props {
     history: History;
+    WrapSignLayout: FunctionComponent<SignLayoutProps>;
 }
 
-const ForgotUsernameContainer = ({ history }: Props) => {
+const ForgotUsernameContainer = ({ history, WrapSignLayout }: Props) => {
     const api = useApi();
     const [loading, withLoading] = useLoading();
     const { createNotification } = useNotifications();
@@ -31,18 +31,9 @@ const ForgotUsernameContainer = ({ history }: Props) => {
     };
 
     return (
-        <SignLayout
-            title={c('Title').t`Find email or username`}
-            left={<BackButton onClick={handleBack} />}
-            center={<ProtonLogo />}
-            right={
-                <SupportDropdown noCaret={true} className="link">
-                    {c('Action').t`Need help?`}
-                </SupportDropdown>
-            }
-        >
+        <WrapSignLayout title={c('Title').t`Find email or username`} left={<BackButton onClick={handleBack} />}>
             <ForgotUsernameForm onSubmit={(data) => withLoading(handleSubmit(data))} loading={loading} />
-        </SignLayout>
+        </WrapSignLayout>
     );
 };
 

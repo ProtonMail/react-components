@@ -2,28 +2,31 @@ import React from 'react';
 import { API_CUSTOM_ERROR_CODES } from 'proton-shared/lib/errors';
 import { getVerificationHeaders } from 'proton-shared/lib/api';
 
-import HumanVerificationModal from '../api/HumanVerificationModal';
+import HumanVerificationModal from '../../api/HumanVerificationModal';
 import { Api } from 'proton-shared/lib/interfaces';
-import { SignupModel } from './interfaces';
-import { MethodType } from '../api/HumanVerificationForm';
+import { MethodType } from '../../api/HumanVerificationForm';
 
 interface ExtraArguments {
     api: Api;
     createModal: any;
-    model: SignupModel;
     onToken: (token: string, tokenType: MethodType) => void;
+    verificationToken?: string;
+    verificationTokenType?: MethodType;
 }
 
 /**
  * Special human api handling for the signup since the human verification code needs to be triggered and included
  * in possibly multiple api requests.
  */
-const humanApi = <T,>(config: any, { api, createModal, model, onToken }: ExtraArguments): Promise<T> => {
+const humanApiHelper = <T,>(
+    config: any,
+    { api, createModal, verificationToken, verificationTokenType, onToken }: ExtraArguments
+): Promise<T> => {
     return api<T>({
         ...config,
         headers: {
             ...config.headers,
-            ...getVerificationHeaders(model.verificationToken, model.verificationTokenType)
+            ...getVerificationHeaders(verificationToken, verificationTokenType)
         },
         noHandling: [API_CUSTOM_ERROR_CODES.HUMAN_VERIFICATION_REQUIRED],
         silence: [API_CUSTOM_ERROR_CODES.HUMAN_VERIFICATION_REQUIRED]
@@ -79,4 +82,35 @@ const humanApi = <T,>(config: any, { api, createModal, model, onToken }: ExtraAr
     });
 };
 
-export default humanApi;
+const createHumanApi = ({ api, createModal }: { api: Api; createModal: (node: React.ReactNode) => void }) => {
+    let verificationsTokens: undefined | { verificationToken: string; verificationTokenType: MethodType };
+
+    const clearToken = () => {
+        verificationsTokens = undefined;
+    };
+
+    const setToken = (token: string, tokenType: MethodType) => {
+        verificationsTokens = {
+            verificationToken: token,
+            verificationTokenType: tokenType
+        };
+    };
+
+    const humanApiCaller = <T,>(config: any) =>
+        humanApiHelper<T>(config, {
+            api,
+            createModal,
+            ...verificationsTokens,
+            onToken: setToken
+        });
+
+    return {
+        api: humanApiCaller,
+        setToken,
+        clearToken
+    };
+};
+
+export type HumanApi = ReturnType<typeof createHumanApi>;
+
+export default createHumanApi;

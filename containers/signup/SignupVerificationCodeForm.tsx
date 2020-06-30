@@ -2,7 +2,7 @@ import React, { ChangeEvent, FormEvent } from 'react';
 import { c } from 'ttag';
 
 import { VerificationCodeInput, InlineLinkButton, Alert } from '../../index';
-import { SignupModel, SignupErros } from './interfaces';
+import { SignupModel, SignupErrors } from './interfaces';
 import { PrimaryButton } from '../../components/button';
 
 interface Props {
@@ -10,7 +10,7 @@ interface Props {
     onChange: (model: SignupModel) => void;
     onResend: () => void;
     onSubmit: (event: FormEvent<HTMLFormElement>) => void;
-    errors: SignupErros;
+    errors: SignupErrors;
     loading: boolean;
 }
 
