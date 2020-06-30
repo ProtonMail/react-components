@@ -1,12 +1,12 @@
-import React, { ReactNode, useEffect } from 'react';
+import React, { ReactNode } from 'react';
 import { c } from 'ttag';
 
-import { classnames, Href, useConfig } from '../../index';
-import LanguageSelect from './LanguageSelect';
+import { classnames, Href, useAppTitle, useConfig } from '../../index';
+import PublicLanguageSelect from './PublicLanguageSelect';
 
 import './SignLayout.scss';
 
-interface Props {
+export interface Props {
     children: ReactNode;
     title: string;
     aside?: ReactNode;
@@ -14,10 +14,11 @@ interface Props {
     left?: ReactNode;
     center?: ReactNode;
     larger?: boolean;
+    locales?: { [key: string]: () => Promise<void> };
 }
 
-const SignLayout = ({ children, title, aside, larger, left, center, right }: Props) => {
-    const { CLIENT_VERSION } = useConfig();
+const SignLayout = ({ children, title, aside, larger, left, center, right, locales }: Props) => {
+    const { APP_VERSION } = useConfig();
     const termsLink = (
         <Href
             key="terms"
@@ -31,9 +32,7 @@ const SignLayout = ({ children, title, aside, larger, left, center, right }: Pro
         ).t`Privacy policy`}</Href>
     );
 
-    useEffect(() => {
-        document.title = `${title} - Proton`;
-    }, []);
+    useAppTitle(title, 'Proton');
 
     return (
         <div className="pt1 pb1 pl2 pr2 onmobile-p0 scroll-if-needed h100v signLayout-container flex flex-nowrap flex-column flex-spacebetween">
@@ -57,7 +56,12 @@ const SignLayout = ({ children, title, aside, larger, left, center, right }: Pro
                             </div>
                             <footer className="flex flex-items-center flex-nowrap">
                                 <span className="flex-item-fluid">
-                                    <LanguageSelect className="pm-field pm-field--linkSelect" />
+                                    {locales ? (
+                                        <PublicLanguageSelect
+                                            className="pm-field pm-field--linkSelect"
+                                            locales={locales}
+                                        />
+                                    ) : null}
                                 </span>
                                 <span className="flex-item-fluid alignright">{right}</span>
                             </footer>
@@ -83,7 +87,7 @@ const SignLayout = ({ children, title, aside, larger, left, center, right }: Pro
                 <span className="opacity-50 pl0-75 pr0-75 nomobile" aria-hidden="true">
                     |
                 </span>
-                <span className="opacity-50 automobile">{c('Info').jt`Version ${CLIENT_VERSION}`}</span>
+                <span className="opacity-50 automobile">{c('Info').jt`Version ${APP_VERSION}`}</span>
             </footer>
         </div>
     );

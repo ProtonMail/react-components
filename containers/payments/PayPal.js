@@ -38,7 +38,7 @@ const PayPal = ({ amount: Amount, currency: Currency, onPay, type }) => {
             onPay(toParams({ Amount, Currency }, Token, type));
         } catch (error) {
             // if not coming from API error
-            if (error.message && !error.config) {
+            if (error && error.message && !error.config) {
                 setTextError(error.message);
             }
         }

@@ -194,9 +194,8 @@ const CodeVerification = ({ email: defaultEmail = '', method, onSubmit }: Props)
                         placeholder="123456"
                         onChange={handleChangeCode}
                         onKeyDown={(event) => {
-                            event.preventDefault();
-
                             if (event.key === 'Enter') {
+                                event.preventDefault();
                                 return withLoadingVerification(verifyCode());
                             }
                         }}

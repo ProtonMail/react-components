@@ -102,6 +102,7 @@ export { default as LoaderIcon } from './components/loader/LoaderIcon';
 export { default as MainLogo } from './components/logo/MainLogo';
 export { default as MailLogo } from './components/logo/MailLogo';
 export { default as VpnLogo } from './components/logo/VpnLogo';
+export { default as ProtonLogo } from './components/logo/ProtonLogo';
 export { default as ToolbarSeparator } from './components/toolbar/ToolbarSeparator';
 export { default as Toolbar } from './components/toolbar/Toolbar';
 export { default as ToolbarButton } from './components/toolbar/ToolbarButton';
@@ -153,6 +154,8 @@ export { default as MinimalResetPasswordContainer } from './containers/resetPass
 export { default as ProtonMailAppsSection } from './containers/apps/ProtonMailAppsSection';
 export { default as ProtonMailBetaSection } from './containers/apps/ProtonMailBetaSection';
 export { default as ProtonMailBridgeSection } from './containers/apps/ProtonMailBridgeSection';
+export { default as SignLayout } from './containers/signup/SignLayout';
+export { default as BackButton } from './containers/signup/BackButton';
 export { default as DKIMSection } from './containers/domains/DKIMSection';
 export { default as DomainStatus } from './containers/domains/DomainStatus';
 export { default as DomainsTable } from './containers/domains/DomainsTable';

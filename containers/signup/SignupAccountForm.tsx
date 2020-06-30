@@ -1,4 +1,4 @@
-import React, { useRef, ChangeEvent, FormEvent } from 'react';
+import React, { useRef, ChangeEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { c } from 'ttag';
 import { History } from 'history';
@@ -14,37 +14,27 @@ import {
 } from '../../index';
 import { USERNAME_PLACEHOLDER } from 'proton-shared/lib/constants';
 
-import { SignupModel, SignupErros } from './interfaces';
+import { SignupModel, SignupErrors, SERVICES } from './interfaces';
 import { SIGNUP_STEPS } from './constants';
-import UnsecureEmailInfo from './UnsecureEmailInfo';
-import { ChallengeRef } from '../../components/challenge/ChallengeFrame';
+import InsecureEmailInfo from './InsecureEmailInfo';
+import { ChallengeRef, ChallengeResult } from '../../components/challenge/ChallengeFrame';
 
 interface Props {
     history: History;
     model: SignupModel;
     onChange: (model: SignupModel) => void;
-    onSubmit: (model: SignupModel) => void;
-    errors: SignupErros;
+    onSubmit: (payload: ChallengeResult) => void;
+    errors: SignupErrors;
     loading: boolean;
+    service?: SERVICES;
 }
 
 const { ACCOUNT_CREATION_USERNAME, ACCOUNT_CREATION_EMAIL } = SIGNUP_STEPS;
 
-enum SERVICES {
-    mail = 'ProtonMail',
-    calendar = 'ProtonCalendar',
-    contacts = 'ProtonContacts',
-    drive = 'ProtonDrive',
-    vpn = 'ProtonVPN'
-}
-type SERVICES_KEYS = keyof typeof SERVICES;
-
-const SignupAccountForm = ({ history, model, onChange, onSubmit, errors, loading }: Props) => {
+const SignupAccountForm = ({ model, onChange, onSubmit, errors, loading, service }: Props) => {
     const challengeRefLogin = useRef<ChallengeRef>();
-    const formRef = useRef<HTMLFormElement>(null);
-    const searchParams = new URLSearchParams(history.location.search);
     const [loadingChallenge, withLoadingChallenge] = useLoading();
-    const service = searchParams.get('service') as null | SERVICES_KEYS;
+
     const [availableDomain = ''] = model.domains;
     const loginLink = <Link key="loginLink" className="nodecoration" to="/login">{c('Link').t`Sign in`}</Link>;
     const disableSubmit = !!(
@@ -54,32 +44,17 @@ const SignupAccountForm = ({ history, model, onChange, onSubmit, errors, loading
         errors.confirmPassword
     );
 
-    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
+    const handleSubmit = async () => {
+        if (disableSubmit) {
+            return;
+        }
         const payload = await challengeRefLogin.current?.getChallenge();
-        onSubmit({
-            ...model,
-            payload: payload
-                ? {
-                      ...model.payload,
-                      ...payload
-                  }
-                : model.payload
-        });
+        onSubmit(payload);
     };
 
-    return (
-        <form
-            name="accountForm"
-            className="signup-form"
-            onSubmit={(e) => withLoadingChallenge(handleSubmit(e))}
-            autoComplete="off"
-            ref={formRef}
-        >
-            {service && SERVICES[service] ? (
-                <div className="mb1">{c('Info').t`to continue to ${SERVICES[service]}`}</div>
-            ) : null}
-            {model.step === ACCOUNT_CREATION_USERNAME ? (
+    const inner = (() => {
+        if (model.step === ACCOUNT_CREATION_USERNAME) {
+            return (
                 <div className="flex onmobile-flex-column signup-label-field-container mb1">
                     <Label htmlFor="login">{c('Signup label').t`Username`}</Label>
                     <div className="flex-item-fluid">
@@ -97,9 +72,12 @@ const SignupAccountForm = ({ history, model, onChange, onSubmit, errors, loading
                                         onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
                                             onChange({ ...model, username: target.value })
                                         }
-                                        onKeyDown={({ keyCode }: React.KeyboardEvent<HTMLInputElement>) =>
-                                            keyCode === 13 && formRef.current?.submit()
-                                        }
+                                        onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                                            if (e.key === 'Enter') {
+                                                // formRef.submit does not trigger handler
+                                                withLoadingChallenge(handleSubmit());
+                                            }
+                                        }}
                                         error={errors.username}
                                         placeholder={USERNAME_PLACEHOLDER}
                                         className="pm-field--username"
@@ -115,8 +93,11 @@ const SignupAccountForm = ({ history, model, onChange, onSubmit, errors, loading
                         </Challenge>
                     </div>
                 </div>
-            ) : null}
-            {model.step === ACCOUNT_CREATION_EMAIL ? (
+            );
+        }
+
+        if (model.step === ACCOUNT_CREATION_EMAIL) {
+            return (
                 <div className="flex onmobile-flex-column signup-label-field-container mb1">
                     <Label htmlFor="login">{c('Signup label').t`Email`}</Label>
                     <div className="flex-item-fluid">
@@ -133,14 +114,16 @@ const SignupAccountForm = ({ history, model, onChange, onSubmit, errors, loading
                                     onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
                                         onChange({ ...model, email: target.value })
                                     }
-                                    onKeyDown={({ keyCode }: React.KeyboardEvent<HTMLInputElement>) =>
-                                        keyCode === 13 && formRef.current?.submit()
-                                    }
+                                    onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                                        if (e.key === 'Enter') {
+                                            withLoadingChallenge(handleSubmit());
+                                        }
+                                    }}
                                     error={errors.email}
                                     required
                                 />
                             </div>
-                            <UnsecureEmailInfo email={model.email} />
+                            <InsecureEmailInfo email={model.email} />
                             <InlineLinkButton
                                 id="proton-email-button"
                                 onClick={() => onChange({ ...model, email: '', step: ACCOUNT_CREATION_USERNAME })}
@@ -148,7 +131,24 @@ const SignupAccountForm = ({ history, model, onChange, onSubmit, errors, loading
                         </Challenge>
                     </div>
                 </div>
-            ) : null}
+            );
+        }
+
+        return null;
+    })();
+
+    return (
+        <form
+            name="accountForm"
+            className="signup-form"
+            onSubmit={(e) => {
+                e.preventDefault();
+                withLoadingChallenge(handleSubmit());
+            }}
+            autoComplete="off"
+        >
+            {service ? <div className="mb1">{c('Info').t`to continue to ${service}`}</div> : null}
+            {inner}
             <div className="flex flex-nowrap mb2">
                 <div className="flex flex-item-fluid onmobile-flex-column signup-label-field-container mr0-5">
                     <Label htmlFor="password">{c('Signup label').t`Password`}</Label>

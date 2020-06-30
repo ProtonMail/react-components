@@ -13,22 +13,23 @@ import {
     useLoading
 } from '../../index';
 
-import { SignupModel, SignupErros } from './interfaces';
+import { SignupModel, SignupErrors } from './interfaces';
 import { SIGNUP_STEPS } from './constants';
 import InlineLinkButton from '../../components/button/InlineLinkButton';
-import { ChallengeRef } from '../../components/challenge/ChallengeFrame';
+import { ChallengeRef, ChallengeResult } from '../../components/challenge/ChallengeFrame';
 
 interface Props {
     model: SignupModel;
     onChange: (model: SignupModel) => void;
-    onSubmit: (model: SignupModel) => void;
-    errors: SignupErros;
+    onSubmit: (payload: ChallengeResult) => void;
+    onSkip: (payload: ChallengeResult) => void;
+    errors: SignupErrors;
     loading: boolean;
 }
 
-const { RECOVERY_EMAIL, RECOVERY_PHONE, PLANS } = SIGNUP_STEPS;
+const { RECOVERY_EMAIL, RECOVERY_PHONE } = SIGNUP_STEPS;
 
-const SignupRecoveryForm = ({ model, onChange, onSubmit, errors, loading }: Props) => {
+const SignupRecoveryForm = ({ model, onChange, onSubmit, onSkip, errors, loading }: Props) => {
     const formRef = useRef<HTMLFormElement>(null);
     const { createModal } = useModals();
     const challengeRefRecovery = useRef<ChallengeRef>();
@@ -49,40 +50,18 @@ const SignupRecoveryForm = ({ model, onChange, onSubmit, errors, loading }: Prop
             );
         });
         const payload = await challengeRefRecovery.current?.getChallenge();
-        onChange({
-            ...model,
-            step: PLANS,
-            payload: payload
-                ? {
-                      ...model.payload,
-                      ...payload
-                  }
-                : model.payload
-        });
+        onSkip(payload);
     };
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const payload = await challengeRefRecovery.current?.getChallenge();
-        onSubmit({
-            ...model,
-            payload: payload
-                ? {
-                      ...model.payload,
-                      ...payload
-                  }
-                : model.payload
-        });
+        onSubmit(payload);
     };
 
-    return (
-        <form
-            name="recoveryForm"
-            className="signup-form"
-            onSubmit={(e) => withLoadingChallenge(handleSubmit(e))}
-            ref={formRef}
-        >
-            {model.step === RECOVERY_EMAIL ? (
+    const inner = (() => {
+        if (model.step === RECOVERY_EMAIL) {
+            return (
                 <>
                     <p>{c('Info')
                         .t`We will send you a recovery link to this email address if you forget your password or get locked out of your account.`}</p>
@@ -122,8 +101,11 @@ const SignupRecoveryForm = ({ model, onChange, onSubmit, errors, loading }: Prop
                         </div>
                     </div>
                 </>
-            ) : null}
-            {model.step === RECOVERY_PHONE ? (
+            );
+        }
+
+        if (model.step === RECOVERY_PHONE) {
+            return (
                 <>
                     <p>{c('Info')
                         .t`We will send a code to this phone number if you forget your password or get locked out of your account.`}</p>
@@ -150,7 +132,18 @@ const SignupRecoveryForm = ({ model, onChange, onSubmit, errors, loading }: Prop
                         </div>
                     </div>
                 </>
-            ) : null}
+            );
+        }
+    })();
+
+    return (
+        <form
+            name="recoveryForm"
+            className="signup-form"
+            onSubmit={(e) => withLoadingChallenge(handleSubmit(e))}
+            ref={formRef}
+        >
+            {inner}
             <div className="alignright mb1">
                 <LinkButton
                     className="mr2 pm-button--large nodecoration"

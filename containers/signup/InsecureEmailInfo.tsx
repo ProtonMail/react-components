@@ -2,14 +2,14 @@ import React from 'react';
 import { validateEmailAddress } from 'proton-shared/lib/helpers/string';
 import { c } from 'ttag';
 
-import { UNSECURE_DOMAINS } from './constants';
-import UnsecureEmailIcon from './UnsecureEmailIcon';
+import { INSECURE_DOMAINS } from './constants';
+import InsecureEmailIcon from './InsecureEmailIcon';
 
 interface Props {
     email: string;
 }
 
-const UnsecureEmailInfo = ({ email }: Props) => {
+const InsecureEmailInfo = ({ email }: Props) => {
     if (!validateEmailAddress(email)) {
         return null;
     }
@@ -19,11 +19,11 @@ const UnsecureEmailInfo = ({ email }: Props) => {
         .toLowerCase()
         .split('@');
 
-    if (UNSECURE_DOMAINS.includes(domain)) {
+    if (INSECURE_DOMAINS.includes(domain)) {
         return (
             <div className="mb1 flex flex-nowrap flex-items-center">
                 <span className="mr1">{c('Title').t`This email may be insecure`}</span>
-                <UnsecureEmailIcon email={email} />
+                <InsecureEmailIcon email={email} />
             </div>
         );
     }
@@ -31,4 +31,4 @@ const UnsecureEmailInfo = ({ email }: Props) => {
     return null;
 };
 
-export default UnsecureEmailInfo;
+export default InsecureEmailInfo;
