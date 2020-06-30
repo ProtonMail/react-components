@@ -67,7 +67,7 @@
     margin: 0 0.2rem 0.2rem 0;
 }
 
-.editor::after {
+.editor--disabled::after {
     content: '';
     position: absolute;
     top: 0;
@@ -77,7 +77,7 @@
     background-color: var(--bgcolor-item-column-list, #eeee);
     border-radius: $global-border-radius;
 }
-.isDarkMode .editor::after {
+.isDarkMode .editor--disabled::after {
     opacity: .9;
 }
 
