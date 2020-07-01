@@ -25,6 +25,7 @@ interface Props<T, M extends Model<T>, E, EvtM extends Model<E>> {
     openpgpConfig?: object;
     preloadModels?: M[];
     eventModels?: EvtM[];
+    noModals?: boolean;
     children: React.ReactNode;
 }
 
@@ -36,6 +37,7 @@ const StandardPrivateApp = <T, M extends Model<T>, E, EvtM extends Model<E>>({
     openpgpConfig,
     preloadModels = [],
     eventModels = [],
+    noModals = false,
     children
 }: Props<T, M, E, EvtM>) => {
     const [loading, setLoading] = useState(true);
@@ -93,7 +95,7 @@ const StandardPrivateApp = <T, M extends Model<T>, E, EvtM extends Model<E>>({
                 <EventModelListener models={eventModels} />
                 <EventNotices />
                 <ThemeInjector />
-                <ModalsChildren />
+                {!noModals && <ModalsChildren />}
                 <ForceRefreshProvider>{children}</ForceRefreshProvider>
             </ContactProvider>
         </EventManagerProvider>
