@@ -7,7 +7,6 @@ import { getClosestMatches, getBrowserLocale } from 'proton-shared/lib/i18n/help
 import createEventManager from 'proton-shared/lib/eventManager/eventManager';
 import { loadModels } from 'proton-shared/lib/models/helper';
 import { destroyOpenPGP, loadOpenPGP } from 'proton-shared/lib/openpgp';
-import { Model } from 'proton-shared/lib/interfaces/Model';
 
 import EventModelListener from '../eventManager/EventModelListener';
 import EventNotices from '../eventManager/EventNotices';
@@ -17,19 +16,19 @@ import { useApi, useCache } from '../../index';
 import loadEventID from './loadEventID';
 import StandardLoadError from './StandardLoadError';
 
-interface Props<T, M extends Model<T>, E, EvtM extends Model<E>> {
+interface Props {
     locales?: any;
     onInit?: () => void;
     onLogout: () => void;
     fallback?: React.ReactNode;
     openpgpConfig?: object;
-    preloadModels?: M[];
-    eventModels?: EvtM[];
+    preloadModels?: any[]; // TODO :D
+    eventModels?: any[]; // TODO :D
     noModals?: boolean;
     children: React.ReactNode;
 }
 
-const StandardPrivateApp = <T, M extends Model<T>, E, EvtM extends Model<E>>({
+const StandardPrivateApp = ({
     locales = {},
     onLogout,
     onInit,
@@ -39,7 +38,7 @@ const StandardPrivateApp = <T, M extends Model<T>, E, EvtM extends Model<E>>({
     eventModels = [],
     noModals = false,
     children
-}: Props<T, M, E, EvtM>) => {
+}: Props) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const eventManagerRef = useRef<ReturnType<typeof createEventManager>>();
