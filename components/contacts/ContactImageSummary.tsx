@@ -114,7 +114,7 @@ const ContactImageSummary = ({ photo, name }: Props) => {
     }
 
     return (
-        <div className="bordered bg-white-dm ratio-container-square mb0">
+        <div className="bordered rounded bg-white-dm ratio-container-square mb0">
             <span className="inner-ratio-container flex">
                 <span className="mauto color-global-border">
                     <Button className="m0-5" onClick={handleClick}>{c('Action').t`Load photo`}</Button>
