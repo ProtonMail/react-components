@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FormEvent } from 'react';
 import { c } from 'ttag';
 import { useLoading, LinkButton, PrimaryButton, useNotifications, useModals } from 'react-components';
 import { noop } from 'proton-shared/lib/helpers/function';
@@ -35,7 +35,7 @@ const LoginForm = ({ onLogin, ignoreUnlock = false, needHelp }: Props) => {
     const { form, username, password, totp, keyPassword } = state;
 
     if (form === FORM.LOGIN) {
-        const handleSubmit = (event) => {
+        const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
             event.preventDefault();
 
             withLoading(
@@ -71,7 +71,7 @@ const LoginForm = ({ onLogin, ignoreUnlock = false, needHelp }: Props) => {
     );
 
     if (form === FORM.TOTP) {
-        const handleSubmit = (event) => {
+        const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
             event.preventDefault();
 
             withLoading(
@@ -97,7 +97,7 @@ const LoginForm = ({ onLogin, ignoreUnlock = false, needHelp }: Props) => {
     }
 
     if (form === FORM.UNLOCK) {
-        const handleSubmit = (event) => {
+        const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
             event.preventDefault();
 
             withLoading(
