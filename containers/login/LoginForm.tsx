@@ -1,8 +1,8 @@
 import React, { FormEvent } from 'react';
 import { c } from 'ttag';
-import { useLoading, LinkButton, PrimaryButton, useNotifications, useModals } from 'react-components';
 import { noop } from 'proton-shared/lib/helpers/function';
 import { API_CUSTOM_ERROR_CODES } from 'proton-shared/lib/errors';
+import { useLoading, LinkButton, PrimaryButton, useNotifications, useModals } from '../../index';
 
 import PasswordForm from './PasswordForm';
 import TOTPForm from './TOTPForm';
