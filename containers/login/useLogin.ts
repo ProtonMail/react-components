@@ -1,12 +1,10 @@
-import { useApi } from '../../index';
 import { useRef, useState } from 'react';
 import { AUTH_VERSION } from 'pm-srp';
 import { srpVerify } from 'proton-shared/lib/srp';
+import { c } from 'ttag';
 import { upgradePassword } from 'proton-shared/lib/api/settings';
 import { auth2FA, getInfo, setCookies } from 'proton-shared/lib/api/auth';
 import { getRandomString } from 'proton-shared/lib/helpers/string';
-import { getAuthTypes, handleUnlockKey } from './helper';
-import { c } from 'ttag';
 import { KeySalt as tsKeySalt, User as tsUser } from 'proton-shared/lib/interfaces';
 import { getUser } from 'proton-shared/lib/api/user';
 import { getKeySalts } from 'proton-shared/lib/api/keys';
@@ -15,6 +13,8 @@ import { AuthResponse, AuthVersion, InfoResponse } from 'proton-shared/lib/authe
 import loginWithFallback from 'proton-shared/lib/authentication/loginWithFallback';
 import { mergeHeaders } from 'proton-shared/lib/fetch/helpers';
 import { getAuthHeaders } from 'proton-shared/lib/api';
+import { getAuthTypes, handleUnlockKey } from './helper';
+import { useApi } from '../../index';
 
 const withAuthHeaders = (UID: string, AccessToken: string, config: any) =>
     mergeHeaders(config, getAuthHeaders(UID, AccessToken));
