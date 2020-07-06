@@ -396,7 +396,7 @@ export { default as usePromiseResult } from './hooks/usePromiseResult';
 export { useAddresses, useGetAddresses } from './hooks/useAddresses';
 export { default as useDomains } from './hooks/useDomains';
 export { default as usePremiumDomains } from './hooks/usePremiumDomains';
-export { useCalendars, useGetCalendars, useUserCalendars } from './hooks/useCalendars';
+export { useCalendars, useGetCalendars } from './hooks/useCalendars';
 export { default as useActiveBreakpoint } from './hooks/useActiveBreakpoint';
 export { default as useSvgGraphicsBbox } from './hooks/useSvgGraphicsBbox';
 export { default as useWindowSize } from './hooks/useWindowSize';
