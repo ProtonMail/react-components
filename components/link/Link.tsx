@@ -1,19 +1,13 @@
 import React from 'react';
-import { Link as ReactRouterLink, LinkProps } from 'react-router-dom';
+import { Link as ReactRouterLink } from 'react-router-dom';
 
 import Href, { Props as HrefProps } from './Href';
 
-export interface ExternalProps extends HrefProps {
+export interface Props extends HrefProps {
     to: string;
-    external: true;
+    external?: boolean;
 }
 
-export interface LocalProps extends LinkProps {
-    to: string;
-    external?: false;
-}
-
-export type Props = LocalProps | ExternalProps;
 const Link = (props: Props) => {
     if (props.external) {
         const { to, target = '_self', children, ...rest } = props;

@@ -1,7 +1,6 @@
 import React from 'react';
 
-export interface Props
-    extends React.DetailedHTMLProps<React.AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement> {
+export interface Props extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
     url?: string;
     target?: string;
     rel?: string;

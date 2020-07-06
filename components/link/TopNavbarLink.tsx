@@ -1,14 +1,12 @@
 import React from 'react';
 
 import { Icon } from '../../index';
-import Link, { LocalProps, ExternalProps } from './Link';
+import Link, { Props as LinkProps } from './Link';
 
-interface NavbarProps {
+export interface Props extends LinkProps {
     text: string;
     icon: string;
 }
-
-export type Props = (NavbarProps & LocalProps) | (NavbarProps & ExternalProps);
 
 const TopNavbarLink = ({ icon, text, ...rest }: Props) => {
     const iconComponent = <Icon className="topnav-icon mr0-5 flex-item-centered-vert" name={icon} />;
