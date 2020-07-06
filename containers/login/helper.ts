@@ -5,8 +5,9 @@ import { TWO_FA_FLAGS, PASSWORD_MODE } from 'proton-shared/lib/constants';
 import { hasBit } from 'proton-shared/lib/helpers/bitset';
 import { KeySalt as tsKeySalt } from 'proton-shared/lib/interfaces/KeySalt';
 import { User as tsUser } from 'proton-shared/lib/interfaces/User';
+import { AuthResponse } from 'proton-shared/lib/authentication/interface';
 
-export const getAuthTypes = ({ '2FA': { Enabled }, PasswordMode }: any = {}) => {
+export const getAuthTypes = ({ '2FA': { Enabled }, PasswordMode }: AuthResponse) => {
     return {
         hasTotp: hasBit(Enabled, TWO_FA_FLAGS.TOTP),
         hasU2F: hasBit(Enabled, TWO_FA_FLAGS.U2F),
