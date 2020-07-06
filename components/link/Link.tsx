@@ -8,17 +8,14 @@ export interface Props extends HrefProps {
     external?: boolean;
 }
 
-const Link = (props: Props) => {
-    if (props.external) {
-        const { to, target = '_self', children, ...rest } = props;
+const Link = ({ to, external, target = '_self', children, ...rest }: Props) => {
+    if (external) {
         return (
             <Href url={to} target={target} {...rest}>
                 {children}
             </Href>
         );
     }
-
-    const { to, children, ...rest } = props;
     return (
         <ReactRouterLink to={to} {...rest}>
             {children}
