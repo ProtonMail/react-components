@@ -73,15 +73,7 @@ const LoginForm = ({ onLogin, ignoreUnlock = false, needHelp }: Props) => {
     if (form === FORM.TOTP) {
         const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
             event.preventDefault();
-
-            withLoading(
-                handleTotp().catch((e) => {
-                    // In case of any other error than retry error, automatically cancel here to allow the user to retry.
-                    if (e.name !== 'RetryTOTPError') {
-                        return handleCancel();
-                    }
-                })
-            );
+            withLoading(handleTotp());
         };
         return (
             <form name="totpForm" onSubmit={handleSubmit}>

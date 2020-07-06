@@ -68,6 +68,11 @@ const useLogin = ({ onLogin, ignoreUnlock }: Props) => {
 
     const [state, setState] = useState<State>(INITIAL_STATE);
 
+    const handleCancel = () => {
+        cacheRef.current = undefined;
+        setState(INITIAL_STATE);
+    };
+
     /**
      * Finalize login can be called without a key password in these cases:
      * 1) The admin panel
@@ -111,14 +116,14 @@ const useLogin = ({ onLogin, ignoreUnlock }: Props) => {
         const { userSaltResult } = cache;
         const [User, KeySalts] = userSaltResult;
 
-        const { keyPassword } = await handleUnlockKey(User, KeySalts, password).catch(() => ({ keyPassword: '' }));
-        if (!keyPassword) {
+        const result = await handleUnlockKey(User, KeySalts, password).catch(() => undefined);
+        if (!result) {
             const error = new Error(c('Error').t`Wrong mailbox password`);
             error.name = 'PasswordError';
             throw error;
         }
 
-        return finalizeLogin(keyPassword);
+        return finalizeLogin(result.keyPassword);
     };
 
     const next = async (previousForm: FORM) => {
@@ -187,13 +192,9 @@ const useLogin = ({ onLogin, ignoreUnlock }: Props) => {
         const { totp } = state;
 
         await api(withAuthHeaders(UID, AccessToken, auth2FA({ totp }))).catch((e) => {
-            if (e.status === HTTP_ERROR_CODES.UNPROCESSABLE_ENTITY) {
-                const error = new Error('Retry TOTP error');
-                error.name = 'RetryTOTPError';
-                // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-                // @ts-ignore
-                error.data = e.data;
-                throw error;
+            // In case of any other error than retry error, automatically cancel here to allow the user to retry.
+            if (e.status !== HTTP_ERROR_CODES.UNPROCESSABLE_ENTITY) {
+                handleCancel();
             }
             throw e;
         });
@@ -221,15 +222,11 @@ const useLogin = ({ onLogin, ignoreUnlock }: Props) => {
             };
 
             await next(FORM.LOGIN);
-        } catch (error) {
+        } catch (e) {
             cacheRef.current = undefined;
-            throw error;
-        }
-    };
 
-    const handleCancel = () => {
-        cacheRef.current = undefined;
-        setState(INITIAL_STATE);
+            throw e;
+        }
     };
 
     const getSetter = <T>(key: keyof State) => (value: T) => setState({ ...state, [key]: value });
