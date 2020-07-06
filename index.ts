@@ -149,7 +149,7 @@ export { default as SignInLayout } from './containers/login/SignInLayout';
 export { default as PublicHeader } from './containers/login/PublicHeader';
 export { default as ResetPasswordContainer } from './containers/login/ResetPasswordContainer';
 export { default as ForgotUsernameContainer } from './containers/login/ForgotUsernameContainer';
-export { default as LoginForm } from './containers/login/LoginForm';
+export { default as MinimalLoginContainer } from './containers/login/MinimalLoginContainer';
 export { default as ResetPasswordForm } from './containers/resetPassword/ResetPasswordForm';
 export { default as ForgotUsernameForm } from './containers/resetPassword/ForgotUsernameForm';
 export { default as ProtonMailAppsSection } from './containers/apps/ProtonMailAppsSection';

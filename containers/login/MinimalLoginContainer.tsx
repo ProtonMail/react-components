@@ -15,7 +15,7 @@ interface Props extends UseLoginProps {
     needHelp?: React.ReactNode;
 }
 
-const LoginForm = ({ onLogin, ignoreUnlock = false, needHelp }: Props) => {
+const MinimalLoginContainer = ({ onLogin, ignoreUnlock = false, needHelp }: Props) => {
     const { createNotification } = useNotifications();
     const { createModal } = useModals();
     const {
@@ -123,4 +123,4 @@ const LoginForm = ({ onLogin, ignoreUnlock = false, needHelp }: Props) => {
     throw new Error('Unsupported form');
 };
 
-export default LoginForm;
+export default MinimalLoginContainer;
