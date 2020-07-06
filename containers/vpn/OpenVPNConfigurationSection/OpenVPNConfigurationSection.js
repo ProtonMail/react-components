@@ -2,8 +2,6 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { c } from 'ttag';
 import {
     Alert,
-    ButtonGroup,
-    Group,
     Href,
     Icon,
     Info,
@@ -63,8 +61,6 @@ const OpenVPNConfigurationSection = () => {
         const blob = new Blob([buffer], { type: 'application/zip' });
         downloadFile(blob, 'ProtonVPN_server_configs.zip');
     };
-
-    const handleSelectConfig = (option) => () => setCategory(option);
 
     const servers = useMemo(
         () =>
@@ -191,25 +187,19 @@ const OpenVPNConfigurationSection = () => {
             </div>
 
             <h3 className="mt2">{c('Title').t`3. Select connection and download`}</h3>
-            <Group className="mb1-5">
-                <ButtonGroup
-                    onClick={handleSelectConfig(CATEGORY.SECURE_CORE)}
-                    className={category === CATEGORY.SECURE_CORE ? 'is-active' : ''}
-                >{c('Tab').t`Secure Core configs`}</ButtonGroup>
-                <ButtonGroup
-                    onClick={handleSelectConfig(CATEGORY.COUNTRY)}
-                    className={category === CATEGORY.COUNTRY ? 'is-active' : ''}
-                >{c('Tab').t`Country configs`}</ButtonGroup>
-                <ButtonGroup
-                    onClick={handleSelectConfig(CATEGORY.SERVER)}
-                    className={category === CATEGORY.SERVER ? 'is-active' : ''}
-                >{c('Tab').t`Standard server configs`}</ButtonGroup>
-                <ButtonGroup
-                    onClick={handleSelectConfig(CATEGORY.FREE)}
-                    className={category === CATEGORY.FREE ? 'is-active' : ''}
-                >{c('Tab').t`Free server configs`}</ButtonGroup>
-            </Group>
-
+            <div className="flex onmobile-flex-column mb1-5">
+                <RadioGroup
+                    name="category"
+                    value={category}
+                    onChange={setCategory}
+                    options={[
+                        { value: CATEGORY.SECURE_CORE, label: c('Option').t`Secure Core configs` },
+                        { value: CATEGORY.COUNTRY, label: c('Option').t`Country configs` },
+                        { value: CATEGORY.SERVER, label: c('Option').t`Standard server configs` },
+                        { value: CATEGORY.FREE, label: c('Option').t`Free server configs` }
+                    ]}
+                />
+            </div>
             <Block>
                 {category === CATEGORY.SECURE_CORE && (
                     <>
