@@ -14,6 +14,7 @@ import {
     TableCell,
     useApiWithoutResult,
     useNotifications,
+    useUser,
     Icon,
     classnames
 } from 'react-components';
@@ -66,6 +67,7 @@ const Tor = () => (
 const ConfigsTable = ({ loading, servers = [], platform, protocol, category, isUpgradeRequired }) => {
     const { request } = useApiWithoutResult(getVPNServerConfig);
     const { createNotification } = useNotifications();
+    const [{ hasPaidVpn }] = useUser();
 
     const handleClickDownload = ({ ID, ExitCountry, Domain }) => async () => {
         const buffer = await request({
@@ -138,7 +140,7 @@ const ConfigsTable = ({ loading, servers = [], platform, protocol, category, isU
                                 >
                                     <Link
                                         className="pm-button--primary pm-button--small"
-                                        to="/dashboard?plan=vpnplus"
+                                        to={`/dashboard${hasPaidVpn ? '?plan=vpnbasic' : ''}`}
                                     >{c('Action').t`Upgrade`}</Link>
                                 </Tooltip>
                             ) : (
