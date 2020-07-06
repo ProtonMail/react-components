@@ -125,7 +125,7 @@ const LoginForm = ({ onLogin, ignoreUnlock = false, needHelp }: Props) => {
     }
 
     if (form === FORM.U2F) {
-        return 'U2F not implemented';
+        return <>{'U2F not implemented'}</>;
     }
 
     throw new Error('Unsupported form');
