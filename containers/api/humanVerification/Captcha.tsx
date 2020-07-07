@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { getHost } from 'proton-shared/lib/helpers/url';
 import { createUrl } from 'proton-shared/lib/fetch/helpers';
 import { isURL } from 'proton-shared/lib/helpers/validators';
@@ -10,6 +10,7 @@ interface Props {
 }
 const Captcha = ({ token, onSubmit }: Props) => {
     const [style, setStyle] = useState<any>();
+    const iframeRef = useRef<HTMLIFrameElement>(null);
     const { API_URL } = useConfig();
     const client = 'web';
     const host = isURL(API_URL) ? getHost(API_URL) : window.location.host;
@@ -19,9 +20,9 @@ const Captcha = ({ token, onSubmit }: Props) => {
 
     useEffect(() => {
         const handleMessage = (event: MessageEvent) => {
-            const { origin, data } = event;
-
-            if (origin !== targetOrigin || !data) {
+            const contentWindow = iframeRef.current?.contentWindow;
+            const { origin, data, source } = event;
+            if (!contentWindow || origin !== targetOrigin || !data || source !== contentWindow) {
                 return;
             }
 
@@ -41,7 +42,15 @@ const Captcha = ({ token, onSubmit }: Props) => {
         };
     }, []);
 
-    return <iframe className="w100" src={src} style={style} sandbox="allow-scripts allow-same-origin allow-popups" />;
+    return (
+        <iframe
+            ref={iframeRef}
+            className="w100"
+            src={src}
+            style={style}
+            sandbox="allow-scripts allow-same-origin allow-popups"
+        />
+    );
 };
 
 export default Captcha;
