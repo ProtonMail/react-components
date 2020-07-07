@@ -72,7 +72,7 @@ const DKIMSection = ({ domain }) => {
             </Table>
             <Alert type="warning">
                 {c('Info')
-                    .t`Please note that for some registrars, you might have to remove the trailing dot from the value.`}
+                    .t`IMPORTANT: Some registrars do not accept CNAME values with a period at the end (while others require it). If your registrar does not accept your CNAME records, please delete the period at the end of each CNAME value and try again.`}
             </Alert>
             <Alert type="warning">
                 {c('Info').t`Keep those records in your DNS for as long as you want to use DKIM.`}
