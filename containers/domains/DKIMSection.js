@@ -70,8 +70,13 @@ const DKIMSection = ({ domain }) => {
                     ))}
                 </TableBody>
             </Table>
-            <Alert type="warning">{c('Info')
-                .t`Keep those records in your DNS for as long as you want to use DKIM.`}</Alert>
+            <Alert type="warning">
+                {c('Info')
+                    .t`Please note that for some registrars, you might have to remove the trailing dot from the value.`}
+            </Alert>
+            <Alert type="warning">
+                {c('Info').t`Keep those records in your DNS for as long as you want to use DKIM.`}
+            </Alert>
         </>
     );
 };
