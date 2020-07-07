@@ -26,8 +26,8 @@ const HumanVerificationModal = <T,>({ token, methods = [], onSuccess, onVerify, 
         try {
             const result = await onVerify(token, tokenType);
             createNotification({ text: c('Success').t`Verification successful` });
-            rest.onClose();
             onSuccess(result);
+            rest.onClose();
         } catch (error) {
             const { data: { Code } = { Code: 0 } } = error;
 
@@ -46,13 +46,7 @@ const HumanVerificationModal = <T,>({ token, methods = [], onSuccess, onVerify, 
     };
 
     return (
-        <FormModal
-            className="human-verification-modal pm-modal--heightAuto"
-            hasClose={false}
-            title={title}
-            footer={null}
-            {...rest}
-        >
+        <FormModal className="human-verification-modal pm-modal--heightAuto" title={title} footer={null} {...rest}>
             <HumanVerificationForm
                 onSubmit={(...args) => withLoading(handleSubmit(...args))}
                 methods={methods}

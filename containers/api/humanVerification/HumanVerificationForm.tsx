@@ -38,18 +38,11 @@ const HumanVerificationForm = ({ methods, token, onSubmit }: Props) => {
         }
     ].filter(isTruthy);
 
-    const actualTabs = tabs.length
-        ? tabs
-        : [
-              {
-                  title: c('Human verification method').t`No human verification available`,
-                  content: (
-                      <Alert type="warning">{c('Human verification method').t`No human verification available`}</Alert>
-                  )
-              }
-          ];
-
     const [index, setIndex] = useState(0);
+
+    if (tabs.length === 0) {
+        return <Alert type="error">{c('Human verification method').t`No verification method available`}</Alert>;
+    }
 
     return (
         <>
@@ -62,7 +55,7 @@ const HumanVerificationForm = ({ methods, token, onSubmit }: Props) => {
             ) : (
                 <p>{c('Info').t`To fight spam and abuse, please verify you are human.`}</p>
             )}
-            <Tabs tabs={actualTabs} value={index} onChange={setIndex} />
+            <Tabs tabs={tabs} value={index} onChange={setIndex} />
         </>
     );
 };
