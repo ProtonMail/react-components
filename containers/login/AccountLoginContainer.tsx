@@ -4,17 +4,26 @@ import { c } from 'ttag';
 import { noop } from 'proton-shared/lib/helpers/function';
 import { API_CUSTOM_ERROR_CODES } from 'proton-shared/lib/errors';
 
-import { useLoading, InlineLinkButton, PrimaryButton, SupportDropdown, useNotifications, useModals } from '../..';
-import PasswordForm from './PasswordForm';
-import TOTPForm from './TOTPForm';
-import RecoveryForm from './RecoveryForm';
-import UnlockForm from './UnlockForm';
+import {
+    useLoading,
+    InlineLinkButton,
+    PrimaryButton,
+    SupportDropdown,
+    useNotifications,
+    useModals,
+    Label
+} from '../..';
 import { getErrorText } from './helper';
 import AbuseModal from './AbuseModal';
 import { Props as AccountPublicLayoutProps } from '../signup/AccountPublicLayout';
 import BackButton from '../signup/BackButton';
 import OneAccountIllustration from '../illustration/OneAccountIllustration';
 import useLogin, { Props as UseLoginProps, FORM } from './useLogin';
+import LoginUsernameInput from './LoginUsernameInput';
+import LoginPasswordInput from './LoginPasswordInput';
+import LoginTotpInput from './LoginTotpInput';
+import LoginRecoveryCodeInput from './LoginRecoveryCodeInput';
+import LoginUnlockInput from './LoginUnlockInput';
 
 interface Props extends UseLoginProps {
     Layout: FunctionComponent<AccountPublicLayoutProps>;
@@ -57,15 +66,29 @@ const AccountLoginContainer = ({ onLogin, ignoreUnlock = false, Layout }: Props)
             <Link key="signupLink" className="nodecoration" to="/signup">{c('Link').t`Create an account`}</Link>
         );
 
+        const usernameInput = (
+            <div className="flex onmobile-flex-column signup-label-field-container mb0-5">
+                <Label htmlFor="login">{c('Label').t`Email or Username`}</Label>
+                <div className="flex-item-fluid">
+                    <LoginUsernameInput id="login" username={username} setUsername={loading ? noop : setUsername} />
+                </div>
+            </div>
+        );
+
+        const passwordInput = (
+            <div className="flex onmobile-flex-column signup-label-field-container mb0-5">
+                <Label htmlFor="password">{c('Label').t`Password`}</Label>
+                <div className="flex-item-fluid">
+                    <LoginPasswordInput password={password} setPassword={loading ? noop : setPassword} id="password" />
+                </div>
+            </div>
+        );
+
         return (
             <Layout title={c('Title').t`Sign in`} aside={<OneAccountIllustration />}>
                 <form name="loginForm" className="signup-form" onSubmit={handleSubmit}>
-                    <PasswordForm
-                        username={username}
-                        setUsername={loading ? noop : setUsername}
-                        password={password}
-                        setPassword={loading ? noop : setPassword}
-                    />
+                    {usernameInput}
+                    {passwordInput}
                     <div className="mb1">
                         <SupportDropdown noCaret={true} className="link">
                             {c('Action').t`Need help?`}
@@ -100,14 +123,29 @@ const AccountLoginContainer = ({ onLogin, ignoreUnlock = false, Layout }: Props)
                 })
             );
         };
+
+        const totpForm = (
+            <div className="flex onmobile-flex-column signup-label-field-container mb0-5">
+                <Label htmlFor="twoFa">{c('Label').t`Two-factor code`}</Label>
+                <div className="flex-item-fluid">
+                    <LoginTotpInput totp={totp} setTotp={loading ? noop : setTotp} id="twoFa" />
+                </div>
+            </div>
+        );
+
+        const recoveryForm = (
+            <div className="flex onmobile-flex-column signup-label-field-container mb0-5">
+                <Label htmlFor="twoFa">{c('Label').t`Two-factor code`}</Label>
+                <div className="flex-item-fluid">
+                    <LoginRecoveryCodeInput code={totp} setCode={loading ? noop : setTotp} id="recoveryCode" />
+                </div>
+            </div>
+        );
+
         return (
             <Layout title={c('Title').t`Two-factor authentication`} left={<BackButton onClick={handleCancel} />}>
                 <form name="totpForm" className="signup-form" onSubmit={handleSubmit} autoComplete="off">
-                    {isTotpRecovery ? (
-                        <RecoveryForm code={totp} setCode={loading ? noop : setTotp} />
-                    ) : (
-                        <TOTPForm totp={totp} setTotp={loading ? noop : setTotp} />
-                    )}
+                    {isTotpRecovery ? recoveryForm : totpForm}
                     <div className="mb1">
                         <InlineLinkButton
                             onClick={() => {
@@ -149,10 +187,22 @@ const AccountLoginContainer = ({ onLogin, ignoreUnlock = false, Layout }: Props)
                 })
             );
         };
+        const unlockInput = (
+            <div className="flex onmobile-flex-column signup-label-field-container mb0-5">
+                <Label htmlFor="password" className="mr1">{c('Label').t`Mailbox password`}</Label>
+                <div className="flex-item-fluid">
+                    <LoginUnlockInput
+                        password={keyPassword}
+                        setPassword={loading ? noop : setKeyPassword}
+                        id="password"
+                    />
+                </div>
+            </div>
+        );
         return (
             <Layout title={c('Title').t`Unlock your mailbox`} left={<BackButton onClick={handleCancel} />}>
                 <form name="unlockForm" className="signup-form" onSubmit={handleSubmit}>
-                    <UnlockForm password={keyPassword} setPassword={loading ? noop : setKeyPassword} />
+                    {unlockInput}
                     <div className="alignright mb1">
                         <PrimaryButton
                             type="submit"
