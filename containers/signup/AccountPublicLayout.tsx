@@ -4,7 +4,7 @@ import { c } from 'ttag';
 import { classnames, Href, useAppTitle, useConfig } from '../../index';
 import PublicLanguageSelect from './PublicLanguageSelect';
 
-import './SignLayout.scss';
+import './AccountPublicLayout.scss';
 
 export interface Props {
     children: ReactNode;
@@ -17,7 +17,7 @@ export interface Props {
     locales?: { [key: string]: () => Promise<void> };
 }
 
-const SignLayout = ({ children, title, aside, larger, left, center, right, locales }: Props) => {
+const AccountPublicLayout = ({ children, title, aside, larger, left, center, right, locales }: Props) => {
     const { APP_VERSION } = useConfig();
     const termsLink = (
         <Href
@@ -93,4 +93,4 @@ const SignLayout = ({ children, title, aside, larger, left, center, right, local
     );
 };
 
-export default SignLayout;
+export default AccountPublicLayout;

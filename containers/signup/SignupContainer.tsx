@@ -20,7 +20,7 @@ import {
     HumanVerificationForm,
     BackButton
 } from '../../index';
-import { Props as SignLayoutProps } from './SignLayout';
+import { Props as AccountPublicLayoutProps } from './AccountPublicLayout';
 import SignupAccountForm from './SignupAccountForm';
 import SignupRecoveryForm from './SignupRecoveryForm';
 import SignupVerificationCodeForm from './SignupVerificationCodeForm';
@@ -58,7 +58,7 @@ import OneAccountIllustration from '../illustration/OneAccountIllustration';
 interface Props {
     history: History;
     onLogin: (data: { UID: string; EventID: string }) => void;
-    WrapSignLayout: FunctionComponent<SignLayoutProps>;
+    Layout: FunctionComponent<AccountPublicLayoutProps>;
 }
 
 const {
@@ -87,7 +87,7 @@ const getSearchParams = (search: History.Search) => {
     return { currency, cycle, preSelectedPlan, service: service ? SERVICES[service] : undefined };
 };
 
-const SignupContainer = ({ onLogin, history, WrapSignLayout }: Props) => {
+const SignupContainer = ({ onLogin, history, Layout }: Props) => {
     const { currency, cycle, preSelectedPlan, service } = useMemo(() => {
         return getSearchParams(history.location.search);
     }, [history.location.search]);
@@ -319,9 +319,9 @@ const SignupContainer = ({ onLogin, history, WrapSignLayout }: Props) => {
 
     if (step === NO_SIGNUP) {
         return (
-            <WrapSignLayout title={c('Title').t`Signup disabled`}>
+            <Layout title={c('Title').t`Signup disabled`}>
                 <NoSignup />
-            </WrapSignLayout>
+            </Layout>
         );
     }
 
@@ -343,7 +343,7 @@ const SignupContainer = ({ onLogin, history, WrapSignLayout }: Props) => {
         const handleSubmit = step === ACCOUNT_CREATION_EMAIL ? handleSubmitEmail : handleSubmitUsername;
 
         return (
-            <WrapSignLayout title={c('Title').t`Create your Proton Account`} aside={<OneAccountIllustration />}>
+            <Layout title={c('Title').t`Create your Proton Account`} aside={<OneAccountIllustration />}>
                 <SignupAccountForm
                     history={history}
                     model={model}
@@ -356,7 +356,7 @@ const SignupContainer = ({ onLogin, history, WrapSignLayout }: Props) => {
                     }}
                     loading={loading}
                 />
-            </WrapSignLayout>
+            </Layout>
         );
     }
 
@@ -379,7 +379,7 @@ const SignupContainer = ({ onLogin, history, WrapSignLayout }: Props) => {
         };
 
         return (
-            <WrapSignLayout
+            <Layout
                 title={c('Title').t`Add a recovery email (highly recommended)`}
                 left={<BackButton onClick={handleBack} />}
             >
@@ -397,7 +397,7 @@ const SignupContainer = ({ onLogin, history, WrapSignLayout }: Props) => {
                     }}
                     loading={loading}
                 />
-            </WrapSignLayout>
+            </Layout>
         );
     }
 
@@ -461,7 +461,7 @@ const SignupContainer = ({ onLogin, history, WrapSignLayout }: Props) => {
         };
 
         return (
-            <WrapSignLayout title={c('Title').t`Account verification`} left={<BackButton onClick={handleBack} />}>
+            <Layout title={c('Title').t`Account verification`} left={<BackButton onClick={handleBack} />}>
                 <SignupVerificationCodeForm
                     model={model}
                     errors={errors}
@@ -473,7 +473,7 @@ const SignupContainer = ({ onLogin, history, WrapSignLayout }: Props) => {
                     onResend={handleOuterResend}
                     loading={loading}
                 />
-            </WrapSignLayout>
+            </Layout>
         );
     }
 
@@ -507,7 +507,7 @@ const SignupContainer = ({ onLogin, history, WrapSignLayout }: Props) => {
         const firstPlanID = Object.keys(model.planIDs || {})[0];
         const selectedPlan = (plans || []).find(({ ID }) => firstPlanID === ID);
         return (
-            <WrapSignLayout
+            <Layout
                 title={c('Title').t`Choose a plan`}
                 left={handleBack ? <BackButton onClick={handleBack} /> : undefined}
                 larger
@@ -520,7 +520,7 @@ const SignupContainer = ({ onLogin, history, WrapSignLayout }: Props) => {
                     onSelectPlan={(planID) => withLoading(handleSelectPlan(planID))}
                     loading={loading || loadingPlans}
                 />
-            </WrapSignLayout>
+            </Layout>
         );
     }
 
@@ -529,11 +529,7 @@ const SignupContainer = ({ onLogin, history, WrapSignLayout }: Props) => {
             setModelDiff({ step: PLANS });
         };
         return (
-            <WrapSignLayout
-                title={c('Title').t`Choose a payment method`}
-                left={<BackButton onClick={handleBack} />}
-                larger
-            >
+            <Layout title={c('Title').t`Choose a payment method`} left={<BackButton onClick={handleBack} />} larger>
                 <SignupPayment
                     paypal={paypal}
                     paypalCredit={paypalCredit}
@@ -553,7 +549,7 @@ const SignupContainer = ({ onLogin, history, WrapSignLayout }: Props) => {
                         handleFinalizeSignup();
                     }}
                 />
-            </WrapSignLayout>
+            </Layout>
         );
     }
 
@@ -566,21 +562,21 @@ const SignupContainer = ({ onLogin, history, WrapSignLayout }: Props) => {
             setModelDiff({ step: PLANS });
         };
         return (
-            <WrapSignLayout title={c('Title').t`Are you human?`} left={<BackButton onClick={handleBack} />}>
+            <Layout title={c('Title').t`Are you human?`} left={<BackButton onClick={handleBack} />}>
                 <HumanVerificationForm
                     token={model.humanVerificationToken}
                     methods={model.humanVerificationMethods}
                     onSubmit={handleSubmit}
                 />
-            </WrapSignLayout>
+            </Layout>
         );
     }
 
     if (step === CREATING_ACCOUNT) {
         return (
-            <WrapSignLayout title={c('Title').t`Creating account`}>
+            <Layout title={c('Title').t`Creating account`}>
                 <SignupCreatingAccount model={model} />
-            </WrapSignLayout>
+            </Layout>
         );
     }
 

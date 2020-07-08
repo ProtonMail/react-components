@@ -151,11 +151,10 @@ export { default as OrderableTableRow } from './components/orderableTable/Ordera
 export { default as LabelModal } from './containers/labels/modals/Edit';
 export * from './containers/login';
 export { default as MinimalResetPasswordContainer } from './containers/resetPassword/MinimalResetPasswordContainer';
+export * from './containers/signup';
 export { default as ProtonMailAppsSection } from './containers/apps/ProtonMailAppsSection';
 export { default as ProtonMailBetaSection } from './containers/apps/ProtonMailBetaSection';
 export { default as ProtonMailBridgeSection } from './containers/apps/ProtonMailBridgeSection';
-export { default as SignLayout } from './containers/signup/SignLayout';
-export { default as BackButton } from './containers/signup/BackButton';
 export { default as DKIMSection } from './containers/domains/DKIMSection';
 export { default as DomainStatus } from './containers/domains/DomainStatus';
 export { default as DomainsTable } from './containers/domains/DomainsTable';

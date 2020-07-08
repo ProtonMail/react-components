@@ -1,13 +1,9 @@
 import { srpAuth } from 'proton-shared/lib/srp';
 import { AuthResponse } from 'proton-shared/lib/authentication/interface';
 import { auth, setCookies } from 'proton-shared/lib/api/auth';
-import { mergeHeaders } from 'proton-shared/lib/fetch/helpers';
-import { getAuthHeaders } from 'proton-shared/lib/api';
+import { withAuthHeaders } from 'proton-shared/lib/fetch/headers';
 import { Api } from 'proton-shared/lib/interfaces';
 import { getRandomString } from 'proton-shared/lib/helpers/string';
-
-const withAuthHeaders = (UID: string, AccessToken: string, config: any) =>
-    mergeHeaders(config, getAuthHeaders(UID, AccessToken));
 
 interface Args {
     api: Api;

@@ -11,16 +11,16 @@ import RecoveryForm from './RecoveryForm';
 import UnlockForm from './UnlockForm';
 import { getErrorText } from './helper';
 import AbuseModal from './AbuseModal';
-import { Props as SignLayoutProps } from '../signup/SignLayout';
+import { Props as AccountPublicLayoutProps } from '../signup/AccountPublicLayout';
 import BackButton from '../signup/BackButton';
 import OneAccountIllustration from '../illustration/OneAccountIllustration';
 import useLogin, { Props as UseLoginProps, FORM } from './useLogin';
 
 interface Props extends UseLoginProps {
-    WrapSignLayout: FunctionComponent<SignLayoutProps>;
+    Layout: FunctionComponent<AccountPublicLayoutProps>;
 }
 
-const LoginForm = ({ onLogin, ignoreUnlock = false, WrapSignLayout }: Props) => {
+const AccountLoginContainer = ({ onLogin, ignoreUnlock = false, Layout }: Props) => {
     const { createNotification } = useNotifications();
     const { createModal } = useModals();
     const {
@@ -58,7 +58,7 @@ const LoginForm = ({ onLogin, ignoreUnlock = false, WrapSignLayout }: Props) => 
         );
 
         return (
-            <WrapSignLayout title={c('Title').t`Sign in`} aside={<OneAccountIllustration />}>
+            <Layout title={c('Title').t`Sign in`} aside={<OneAccountIllustration />}>
                 <form name="loginForm" className="signup-form" onSubmit={handleSubmit}>
                     <PasswordForm
                         username={username}
@@ -83,7 +83,7 @@ const LoginForm = ({ onLogin, ignoreUnlock = false, WrapSignLayout }: Props) => 
                     </div>
                 </form>
                 <div className="mb2 alignright">{c('Info').jt`New to Proton? ${signupLink}`}</div>
-            </WrapSignLayout>
+            </Layout>
         );
     }
 
@@ -101,10 +101,7 @@ const LoginForm = ({ onLogin, ignoreUnlock = false, WrapSignLayout }: Props) => 
             );
         };
         return (
-            <WrapSignLayout
-                title={c('Title').t`Two-factor authentication`}
-                left={<BackButton onClick={handleCancel} />}
-            >
+            <Layout title={c('Title').t`Two-factor authentication`} left={<BackButton onClick={handleCancel} />}>
                 <form name="totpForm" className="signup-form" onSubmit={handleSubmit} autoComplete="off">
                     {isTotpRecovery ? (
                         <RecoveryForm code={totp} setCode={loading ? noop : setTotp} />
@@ -133,7 +130,7 @@ const LoginForm = ({ onLogin, ignoreUnlock = false, WrapSignLayout }: Props) => 
                         </PrimaryButton>
                     </div>
                 </form>
-            </WrapSignLayout>
+            </Layout>
         );
     }
 
@@ -153,7 +150,7 @@ const LoginForm = ({ onLogin, ignoreUnlock = false, WrapSignLayout }: Props) => 
             );
         };
         return (
-            <WrapSignLayout title={c('Title').t`Unlock your mailbox`} left={<BackButton onClick={handleCancel} />}>
+            <Layout title={c('Title').t`Unlock your mailbox`} left={<BackButton onClick={handleCancel} />}>
                 <form name="unlockForm" className="signup-form" onSubmit={handleSubmit}>
                     <UnlockForm password={keyPassword} setPassword={loading ? noop : setKeyPassword} />
                     <div className="alignright mb1">
@@ -168,7 +165,7 @@ const LoginForm = ({ onLogin, ignoreUnlock = false, WrapSignLayout }: Props) => 
                         </PrimaryButton>
                     </div>
                 </form>
-            </WrapSignLayout>
+            </Layout>
         );
     }
 
@@ -179,4 +176,4 @@ const LoginForm = ({ onLogin, ignoreUnlock = false, WrapSignLayout }: Props) => 
     throw new Error('Unsupported form');
 };
 
-export default LoginForm;
+export default AccountLoginContainer;
