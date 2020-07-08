@@ -417,7 +417,7 @@ export { default as useCombinedRefs } from './hooks/useCombinedRefs';
 export { useUserScopes } from './hooks/useUserScopes';
 export { useHandler, useEventListener, useSubscribeEventManager, useInterval } from './hooks/useHandler';
 export { default as useKeyPress } from './hooks/useKeyPress';
-export { default as usePreventLeave } from './hooks/usePreventLeave';
+export { default as usePreventLeave, PreventLeaveProvider } from './hooks/usePreventLeave';
 
 export { default as ErrorBoundary } from './containers/app/ErrorBoundary';
 export { default as ProtonApp } from './containers/app/ProtonApp';
