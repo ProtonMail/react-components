@@ -20,6 +20,7 @@ import {
     HumanVerificationForm,
     BackButton
 } from '../../index';
+import { HumanVerificationMethodType } from 'proton-shared/lib/interfaces';
 import { Props as AccountPublicLayoutProps } from './AccountPublicLayout';
 import SignupAccountForm from './SignupAccountForm';
 import SignupRecoveryForm from './SignupRecoveryForm';
@@ -27,7 +28,7 @@ import SignupVerificationCodeForm from './SignupVerificationCodeForm';
 import SignupPlans from './SignupPlans';
 import SignupPayment from './SignupPayment';
 import NoSignup from './NoSignup';
-import InvalidVerificationCodeModal from '../api/InvalidVerificationCodeModal';
+import InvalidVerificationCodeModal from '../api/humanVerification/InvalidVerificationCodeModal';
 import {
     HumanVerificationError,
     PlanIDs,
@@ -39,10 +40,9 @@ import {
 } from './interfaces';
 import { DEFAULT_SIGNUP_MODEL, DEFAULT_CHECK_RESULT, SIGNUP_STEPS } from './constants';
 import createHumanApi from './helpers/humanApi';
-import RequestNewCodeModal from '../api/RequestNewCodeModal';
+import RequestNewCodeModal from '../api/humanVerification/RequestNewCodeModal';
 import SignupCreatingAccount from './SignupCreatingAccount';
 import { PaymentParameters, Payment } from '../payments/usePayment';
-import { MethodType } from '../api/HumanVerificationForm';
 import { ChallengeResult } from '../../components/challenge/ChallengeFrame';
 import getSignupErrors from './helpers/getSignupErrors';
 import { hasPaidPlan } from './helpers/helper';
@@ -554,7 +554,7 @@ const SignupContainer = ({ onLogin, history, Layout }: Props) => {
     }
 
     if (step === HUMAN_VERIFICATION) {
-        const handleSubmit = (token: string, tokenType: MethodType) => {
+        const handleSubmit = (token: string, tokenType: HumanVerificationMethodType) => {
             humanApi.setToken(token, tokenType);
             return handleFinalizeSignup();
         };

@@ -335,7 +335,7 @@ export { default as useNotifications } from './containers/notifications/useNotif
 export { default as useIsMounted } from './hooks/useIsMounted';
 export { default as useInstance } from './hooks/useInstance';
 export { default as useConfig } from './containers/config/useConfig';
-export { default as HumanVerificationForm } from './containers/api/HumanVerificationForm';
+export { default as HumanVerificationForm } from './containers/api/humanVerification/HumanVerificationForm';
 export { default as useApi } from './containers/api/useApi';
 export { default as useApiResult } from './hooks/useApiResult';
 export { default as useModals } from './containers/modals/useModals';
