@@ -2,16 +2,15 @@ import React from 'react';
 import { API_CUSTOM_ERROR_CODES } from 'proton-shared/lib/errors';
 import { getVerificationHeaders } from 'proton-shared/lib/api';
 
-import HumanVerificationModal from '../../api/HumanVerificationModal';
-import { Api } from 'proton-shared/lib/interfaces';
-import { MethodType } from '../../api/HumanVerificationForm';
+import HumanVerificationModal from '../../api/humanVerification/HumanVerificationModal';
+import { Api, HumanVerificationMethodType } from 'proton-shared/lib/interfaces';
 
 interface ExtraArguments {
     api: Api;
     createModal: any;
-    onToken: (token: string, tokenType: MethodType) => void;
+    onToken: (token: string, tokenType: HumanVerificationMethodType) => void;
     verificationToken?: string;
-    verificationTokenType?: MethodType;
+    verificationTokenType?: HumanVerificationMethodType;
 }
 
 /**
@@ -28,24 +27,24 @@ const humanApiHelper = <T,>(
             ...config.headers,
             ...getVerificationHeaders(verificationToken, verificationTokenType)
         },
-        noHandling: [API_CUSTOM_ERROR_CODES.HUMAN_VERIFICATION_REQUIRED],
+        ignoreHandler: [API_CUSTOM_ERROR_CODES.HUMAN_VERIFICATION_REQUIRED],
         silence: [API_CUSTOM_ERROR_CODES.HUMAN_VERIFICATION_REQUIRED]
     }).catch((error: any) => {
         if (
             error.data?.Code !== API_CUSTOM_ERROR_CODES.HUMAN_VERIFICATION_REQUIRED ||
-            config.noHandling?.includes(API_CUSTOM_ERROR_CODES.HUMAN_VERIFICATION_REQUIRED)
+            config.ignoreHandler?.includes(API_CUSTOM_ERROR_CODES.HUMAN_VERIFICATION_REQUIRED)
         ) {
             throw error;
         }
 
-        const onVerify = (token: string, tokenType: MethodType): Promise<T> => {
+        const onVerify = (token: string, tokenType: HumanVerificationMethodType): Promise<T> => {
             return api<T>({
                 ...config,
                 headers: {
                     ...config.headers,
                     ...getVerificationHeaders(token, tokenType)
                 },
-                noHandling: [API_CUSTOM_ERROR_CODES.HUMAN_VERIFICATION_REQUIRED],
+                ignoreHandler: [API_CUSTOM_ERROR_CODES.HUMAN_VERIFICATION_REQUIRED],
                 silence: [API_CUSTOM_ERROR_CODES.TOKEN_INVALID]
             })
                 .then((result: T) => {
@@ -83,13 +82,15 @@ const humanApiHelper = <T,>(
 };
 
 const createHumanApi = ({ api, createModal }: { api: Api; createModal: (node: React.ReactNode) => void }) => {
-    let verificationsTokens: undefined | { verificationToken: string; verificationTokenType: MethodType };
+    let verificationsTokens:
+        | undefined
+        | { verificationToken: string; verificationTokenType: HumanVerificationMethodType };
 
     const clearToken = () => {
         verificationsTokens = undefined;
     };
 
-    const setToken = (token: string, tokenType: MethodType) => {
+    const setToken = (token: string, tokenType: HumanVerificationMethodType) => {
         verificationsTokens = {
             verificationToken: token,
             verificationTokenType: tokenType

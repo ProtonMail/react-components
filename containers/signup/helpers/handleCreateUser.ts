@@ -36,7 +36,7 @@ export const handleCreateUser = async ({
                         Payload: payload
                     }),
                     silence: [API_CUSTOM_ERROR_CODES.HUMAN_VERIFICATION_REQUIRED],
-                    noHandling: [API_CUSTOM_ERROR_CODES.HUMAN_VERIFICATION_REQUIRED]
+                    ignoreHandler: [API_CUSTOM_ERROR_CODES.HUMAN_VERIFICATION_REQUIRED]
                 }
             });
         } catch (error) {
