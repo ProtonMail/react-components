@@ -197,8 +197,16 @@ const FilterConditionsRow = ({
             const titleValues = condition?.values?.map((v, i) => {
                 return i > 0 ? t` or ${v}` : v;
             });
-            title = c('Label').t`${typeLabel} ${comparatorLabel} ${titleValues}`;
-            label = c('Label').jt`${typeLabel} ${comparatorLabel} ${values}`;
+            title = `${typeLabel} ${comparatorLabel} ${titleValues}`;
+            label = (
+                <>
+                    {typeLabel}
+                    {` `}
+                    {comparatorLabel}
+                    {` `}
+                    {values}
+                </>
+            );
         }
 
         return (
