@@ -1,9 +1,10 @@
-import React, { useState, ReactNode } from 'react';
+import React, { useState } from 'react';
 
-import { generateUID, usePopperAnchor, Dropdown, DropdownMenu, DropdownMenuButton, Icon } from '../..';
+import { generateUID, Dropdown, DropdownMenu, DropdownMenuButton, Icon } from '../..';
 
 interface Props {
-    children: ReactNode;
+    isOpen: boolean;
+    close: () => void;
     menuItems: {
         name: string;
         icon: string;
@@ -11,9 +12,8 @@ interface Props {
     }[];
 }
 
-const ContextManu = ({ children, menuItems }: Props) => {
+const ContextMenu = React.forwardRef<HTMLElement, Props>(({ isOpen, close, menuItems }, ref) => {
     const [uid] = useState(generateUID('context-menu'));
-    const { anchorRef, isOpen, close } = usePopperAnchor<HTMLDivElement>();
 
     const dropdownMenuButtons = menuItems.map((item) => (
         <DropdownMenuButton key={item.name} className="flex flex-nowrap alignleft" onClick={item.onClick}>
@@ -24,14 +24,11 @@ const ContextManu = ({ children, menuItems }: Props) => {
 
     return (
         <>
-            <div aria-describedby={uid} ref={anchorRef}>
-                {children}
-            </div>
-            <Dropdown id={uid} isOpen={isOpen} anchorRef={anchorRef} onClose={close} originalPlacement="right">
+            <Dropdown id={uid} isOpen={isOpen} anchorRef={ref as any} onClose={close} originalPlacement="right">
                 <DropdownMenu>{dropdownMenuButtons}</DropdownMenu>
             </Dropdown>
         </>
     );
-};
+});
 
-export default ContextManu;
+export default ContextMenu;
