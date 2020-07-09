@@ -105,7 +105,9 @@ const FilterActionsFormFolderRow = ({ folders, isNarrow, actions, handleUpdateAc
 
     const handleCreateFolder = async () => {
         const folder: Folder = await new Promise((resolve, reject) => {
-            createModal(<EditLabelModal onAdd={resolve} onClose={reject} type="folder" />);
+            createModal(
+                <EditLabelModal onAdd={resolve as () => undefined} onClose={reject as () => undefined} type="folder" />
+            );
         });
 
         handleChangeModel({ folder: folder.Path });
