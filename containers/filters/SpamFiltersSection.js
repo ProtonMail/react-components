@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { c } from 'ttag';
 import {
     Alert,
-    SubTitle,
     useApiResult,
     useApiWithoutResult,
     useApi,
@@ -15,7 +14,7 @@ import {
     updateIncomingDefault,
     deleteIncomingDefaults
 } from 'proton-shared/lib/api/incomingDefaults';
-import { MAILBOX_IDENTIFIERS, WHITELIST_LOCATION, BLACKLIST_LOCATION } from 'proton-shared/lib/constants';
+import { WHITELIST_LOCATION, BLACKLIST_LOCATION } from 'proton-shared/lib/constants';
 
 import useSpamList from '../../hooks/useSpamList';
 import SpamListItem from './spamlist/SpamListItem';
@@ -86,7 +85,12 @@ function SpamFiltersSection() {
         const { Email, Domain, ID, Location } = incomingDefault;
         const type = Location === WHITELIST_LOCATION ? BLACKLIST_LOCATION : WHITELIST_LOCATION;
         const { IncomingDefault: data } = await api(updateIncomingDefault(ID, { Location: type }));
-        createNotification({ text: c('Moved to black/whitelist').t`${Email || Domain} moved` });
+        createNotification({
+            text:
+                Location === WHITELIST_LOCATION
+                    ? c('Spam filter moved to whitelist').t`${Email || Domain} moved to whitelist`
+                    : c('Spam filter moved to blacklist').t`${Email || Domain} moved to blacklist`
+        });
         move(type, data);
     };
 
