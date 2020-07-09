@@ -71,8 +71,16 @@ const FilterPreviewConditions = ({ isOpen, isNarrow, toggleOpen, model }: Props)
             });
 
             return {
-                element: c('Label ').jt`${typeLabel?.toLowerCase()} ${comparatorLabel} ${values}`,
-                title: c('Label').t`${typeLabel?.toLowerCase()} ${comparatorLabel} ${titleValues}`
+                element: (
+                    <>
+                        {typeLabel?.toLowerCase()}
+                        {` `}
+                        {comparatorLabel}
+                        {` `}
+                        {values}
+                    </>
+                ),
+                title: `${typeLabel?.toLowerCase()} ${comparatorLabel} ${titleValues}`
             };
         });
 
