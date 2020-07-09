@@ -44,7 +44,9 @@ const FilterActionsFormLabelsRow = ({ actions, isNarrow, handleUpdateActions, la
 
     const handleCreateLabel = async () => {
         const label: Label = await new Promise((resolve, reject) => {
-            createModal(<EditLabelModal onAdd={resolve} onClose={reject} type="label" />);
+            createModal(
+                <EditLabelModal onAdd={resolve as () => undefined} onClose={reject as () => undefined} type="label" />
+            );
         });
 
         handleChangeModel({ labels: [...labelAs.labels, label.Name] });
