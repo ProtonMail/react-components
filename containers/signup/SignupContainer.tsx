@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useRef, FunctionComponent } from '
 import { History } from 'history';
 import { queryAvailableDomains } from 'proton-shared/lib/api/domains';
 import { PAYMENT_METHOD_TYPES, TOKEN_TYPES } from 'proton-shared/lib/constants';
+import { API_CUSTOM_ERROR_CODES } from 'proton-shared/lib/errors';
 import { checkSubscription, subscribe } from 'proton-shared/lib/api/payments';
 import { c } from 'ttag';
 import {
@@ -333,7 +334,13 @@ const SignupContainer = ({ onLogin, history, Layout }: Props) => {
 
         const handleSubmitUsername = async () => {
             try {
-                await humanApi.api(queryCheckUsernameAvailability(username));
+                await humanApi.api({
+                    ...queryCheckUsernameAvailability(username),
+                    silence: [
+                        API_CUSTOM_ERROR_CODES.HUMAN_VERIFICATION_REQUIRED,
+                        API_CUSTOM_ERROR_CODES.USER_EXISTS_USERNAME_ALREADY_USED
+                    ]
+                });
                 setModelDiff({ step: RECOVERY_EMAIL });
             } catch (error) {
                 setUsernameError(error.data ? error.data.Error : c('Error').t`Can't check username, try again later`);

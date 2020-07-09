@@ -22,13 +22,13 @@ const humanApiHelper = <T,>(
     { api, createModal, verificationToken, verificationTokenType, onToken }: ExtraArguments
 ): Promise<T> => {
     return api<T>({
+        silence: [API_CUSTOM_ERROR_CODES.HUMAN_VERIFICATION_REQUIRED],
         ...config,
         headers: {
             ...config.headers,
             ...getVerificationHeaders(verificationToken, verificationTokenType)
         },
-        ignoreHandler: [API_CUSTOM_ERROR_CODES.HUMAN_VERIFICATION_REQUIRED],
-        silence: [API_CUSTOM_ERROR_CODES.HUMAN_VERIFICATION_REQUIRED]
+        ignoreHandler: [API_CUSTOM_ERROR_CODES.HUMAN_VERIFICATION_REQUIRED]
     }).catch((error: any) => {
         if (
             error.data?.Code !== API_CUSTOM_ERROR_CODES.HUMAN_VERIFICATION_REQUIRED ||
