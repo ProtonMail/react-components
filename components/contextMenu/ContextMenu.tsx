@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { generateUID, Dropdown, DropdownMenu, DropdownMenuButton, Icon } from '../..';
 
 interface Props {
     isOpen: boolean;
     close: () => void;
+    autoClose?: boolean;
     menuItems: {
         name: string;
         icon: string;
@@ -12,8 +13,30 @@ interface Props {
     }[];
 }
 
-const ContextMenu = React.forwardRef<HTMLElement, Props>(({ isOpen, close, menuItems }, ref) => {
+const ContextMenu = React.forwardRef<HTMLElement, Props>(({ isOpen, close, autoClose = true, menuItems }, ref) => {
     const [uid] = useState(generateUID('context-menu'));
+
+    if (!menuItems.length) {
+        return null;
+    }
+
+    useEffect(() => {
+        if (!isOpen) {
+            return;
+        }
+
+        const handleContextMenu = () => {
+            if (autoClose) {
+                close();
+            }
+        };
+
+        document.addEventListener('contextmenu', handleContextMenu);
+
+        return () => {
+            document.removeEventListener('contextmenu', handleContextMenu);
+        };
+    }, [isOpen, autoClose, close]);
 
     const dropdownMenuButtons = menuItems.map((item) => (
         <DropdownMenuButton key={item.name} className="flex flex-nowrap alignleft" onClick={item.onClick}>
@@ -23,11 +46,9 @@ const ContextMenu = React.forwardRef<HTMLElement, Props>(({ isOpen, close, menuI
     ));
 
     return (
-        <>
-            <Dropdown id={uid} isOpen={isOpen} anchorRef={ref as any} onClose={close} originalPlacement="right">
-                <DropdownMenu>{dropdownMenuButtons}</DropdownMenu>
-            </Dropdown>
-        </>
+        <Dropdown id={uid} isOpen={isOpen} anchorRef={ref as any} onClose={close} originalPlacement="bottom">
+            <DropdownMenu>{dropdownMenuButtons}</DropdownMenu>
+        </Dropdown>
     );
 });
 
