@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { createToken } from 'proton-shared/lib/api/payments';
 import { PAYMENT_METHOD_TYPES } from 'proton-shared/lib/constants';
 
-import { useApi, useLoading, useModals, useDebounceInput } from '../index';
+import { useApi, useLoading, useModals } from '../index';
 import PaymentVerificationModal from '../containers/payments/PaymentVerificationModal';
 import { process } from '../containers/payments/paymentTokenHelper';
 
 interface Props {
-    isActive: boolean;
     amount: number;
     currency: string;
     type: PAYMENT_METHOD_TYPES.PAYPAL | PAYMENT_METHOD_TYPES.PAYPAL_CREDIT;
@@ -26,23 +25,27 @@ const DEFAULT_MODEL = {
     ReturnHost: ''
 };
 
-const usePayPal = ({ isActive, amount = 0, currency: Currency = '', type: Type, onPay }: Props) => {
+const usePayPal = ({ amount = 0, currency: Currency = '', type: Type, onPay }: Props) => {
     const api = useApi();
     const [model, setModel] = useState<Model>(DEFAULT_MODEL);
     const [loadingVerification, withLoadingVerification] = useLoading();
     const [loadingToken, withLoadingToken] = useLoading();
     const { createModal } = useModals();
-    const debouncedAmount = useDebounceInput(amount);
 
     const onToken = async () => {
-        const result = await api<Model>(
-            createToken({
-                Amount: debouncedAmount,
-                Currency,
-                Payment: { Type }
-            })
-        );
-        setModel(result);
+        try {
+            const result = await api(
+                createToken({
+                    Amount: amount,
+                    Currency,
+                    Payment: { Type }
+                })
+            );
+            setModel(result);
+        } catch (error) {
+            setModel({});
+            throw error;
+        }
     };
 
     const onVerification = async () => {
@@ -63,7 +66,7 @@ const usePayPal = ({ isActive, amount = 0, currency: Currency = '', type: Type, 
             };
             createModal(
                 <PaymentVerificationModal
-                    params={{ Amount: debouncedAmount, Currency }}
+                    params={{ Amount: amount, Currency }}
                     token={Token}
                     onSubmit={resolve}
                     onClose={reject}
@@ -75,12 +78,6 @@ const usePayPal = ({ isActive, amount = 0, currency: Currency = '', type: Type, 
         });
         onPay(result);
     };
-
-    useEffect(() => {
-        if (isActive && debouncedAmount) {
-            withLoadingToken(onToken());
-        }
-    }, [isActive, debouncedAmount, Currency]);
 
     return {
         isReady: !!model.Token,

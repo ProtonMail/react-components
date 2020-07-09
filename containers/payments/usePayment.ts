@@ -46,16 +46,14 @@ const usePayment = ({ amount, currency, onPay }: Props) => {
         amount,
         currency,
         type: PAYPAL,
-        onPay,
-        isActive: isPayPalActive
+        onPay
     });
 
     const paypalCredit = usePayPal({
         amount,
         currency,
         type: PAYPAL_CREDIT,
-        onPay,
-        isActive: isPayPalActive
+        onPay
     });
 
     const hasToken = (): boolean => {
