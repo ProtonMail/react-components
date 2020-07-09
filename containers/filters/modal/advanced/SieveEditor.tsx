@@ -19,8 +19,10 @@ interface Props {
 
 const clean = normalize();
 
+let uglyGlobal: ((text: string) => SieveIssue[]) | undefined;
+
 const lint = (text = '') => {
-    const lint = codemirror._uglyGlobal;
+    const lint = uglyGlobal;
     return lint ? lint(clean(text)) : [];
 };
 
@@ -30,18 +32,13 @@ if (typeof window !== 'undefined') {
 
 const SieveEditor = ({ value, issues = [], onChange, theme }: Props) => {
     const editorRef = useRef<codemirror.Editor>();
-    const options = {
+    const options: codemirror.EditorConfiguration = {
         mode: 'sieve',
         lineNumbers: true,
         lineWrapping: true,
         readOnly: false,
         fixedGutter: false,
-        spellcheck: false,
-        lint: {
-            delay: 800
-        },
         gutters: ['CodeMirror-lint-markers'],
-        autoRefresh: true,
         ...(theme ? { theme } : {})
     };
 
@@ -50,10 +47,10 @@ const SieveEditor = ({ value, issues = [], onChange, theme }: Props) => {
             Ugly hack to avoid broken context with react lifecycle as we can't
             unregister the hook and we need to have the right API for the hook
          */
-        codemirror._uglyGlobal = () => issues;
+        uglyGlobal = () => issues;
 
         return () => {
-            delete codemirror._uglyGlobal;
+            uglyGlobal = undefined;
         };
     }, [issues]);
 
