@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { c, jt, t } from 'ttag';
+import { c } from 'ttag';
 
 import { classnames, Icon } from '../../..';
 
@@ -25,7 +25,9 @@ const FilterPreviewConditions = ({ isOpen, isNarrow, toggleOpen, model }: Props)
         const conditionsRows = conditions?.map((cond) => {
             if (cond.type === ConditionType.ATTACHMENTS) {
                 const label =
-                    cond.comparator === ConditionComparator.CONTAINS ? t`with attachments` : t`without attachments`;
+                    cond.comparator === ConditionComparator.CONTAINS
+                        ? c('Label').t`with attachments`
+                        : c('Label').t`without attachments`;
                 const attachment = isOpen ? (
                     <span
                         key={label}
@@ -50,7 +52,7 @@ const FilterPreviewConditions = ({ isOpen, isNarrow, toggleOpen, model }: Props)
             const comparatorLabel = COMPARATORS.find((t) => t.value === cond.comparator)?.label;
 
             const titleValues = cond?.values?.map((v, i) => {
-                return i > 0 ? t` or ${v}` : v;
+                return i > 0 ? ` or ${v}` : v;
             });
 
             const values = cond?.values?.map((v, i) => {
@@ -67,7 +69,16 @@ const FilterPreviewConditions = ({ isOpen, isNarrow, toggleOpen, model }: Props)
                 ) : (
                     <strong key={`${v}${i}`}>{v}</strong>
                 );
-                return i > 0 ? jt` or ${value}` : value;
+                return i > 0 ? (
+                    <>
+                        {` `}
+                        {c('Label').t`or`}
+                        {` `}
+                        {value}
+                    </>
+                ) : (
+                    value
+                );
             });
 
             return {

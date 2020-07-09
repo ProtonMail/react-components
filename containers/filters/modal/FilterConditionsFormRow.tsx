@@ -1,5 +1,5 @@
 import React, { useState, ChangeEvent, useEffect } from 'react';
-import { c, t, jt } from 'ttag';
+import { c } from 'ttag';
 
 import { classnames, Input, Select, Radio, Tooltip, Icon, Button } from '../../..';
 import { TYPES, COMPARATORS } from 'proton-shared/lib/filters/constants';
@@ -183,7 +183,9 @@ const FilterConditionsRow = ({
 
         if (type === ConditionType.ATTACHMENTS) {
             const attachment =
-                condition?.comparator === ConditionComparator.CONTAINS ? t`with attachment` : t`without attachment`;
+                condition?.comparator === ConditionComparator.CONTAINS
+                    ? c('Label').t`with attachments`
+                    : c('Label').t`without attachment`;
             const attachmentStrong = <strong key="attachments">{attachment}</strong>;
             label = c('Label').jt`The email was sent ${attachmentStrong}`;
             title = c('Label').t`The email was sent ${attachment}`;
@@ -192,10 +194,19 @@ const FilterConditionsRow = ({
             const comparatorLabel = COMPARATORS.find((t) => t.value === comparator)?.label;
             const values = condition?.values?.map((v, i) => {
                 const value = <strong key={`${v}${i}`}>{v}</strong>;
-                return i > 0 ? jt` or ${value}` : value;
+                return i > 0 ? (
+                    <>
+                        {` `}
+                        {c('Label').t`or`}
+                        {` `}
+                        {value}
+                    </>
+                ) : (
+                    value
+                );
             });
             const titleValues = condition?.values?.map((v, i) => {
-                return i > 0 ? t` or ${v}` : v;
+                return i > 0 ? ` or ${v}` : v;
             });
             title = `${typeLabel} ${comparatorLabel} ${titleValues}`;
             label = (
