@@ -72,7 +72,7 @@ const SupportDropdown = ({ className, children, location, noCaret = false }: Pro
                                 href={
                                     CLIENT_TYPE === VPN
                                         ? 'https://protonvpn.com/support/login-problems/'
-                                        : 'https://protonmail.com/support/login-problems/'
+                                        : 'https://protonmail.com/support/knowledge-base/common-login-problems/'
                                 }
                                 target="_blank"
                                 className="flex flex-nowrap alignleft"
