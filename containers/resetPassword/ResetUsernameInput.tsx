@@ -3,12 +3,12 @@ import { c } from 'ttag';
 import { Input } from '../../index';
 
 interface Props {
-    username: string;
-    setUsername: (username: string) => void;
+    value: string;
+    setValue: (username: string) => void;
     id: string;
 }
 
-const ResetUsernameInput = ({ id, username, setUsername }: Props) => {
+const ResetUsernameInput = ({ id, value, setValue }: Props) => {
     return (
         <Input
             name="username"
@@ -17,8 +17,8 @@ const ResetUsernameInput = ({ id, username, setUsername }: Props) => {
             autoCorrect="off"
             id={id}
             placeholder={c('Placeholder').t`Username`}
-            value={username}
-            onChange={({ target: { value } }) => setUsername(value)}
+            value={value}
+            onChange={({ target: { value } }) => setValue(value)}
             required
         />
     );

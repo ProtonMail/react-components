@@ -4,14 +4,14 @@ import { Input } from '../../index';
 
 interface Props {
     id: string;
-    token: string;
-    setToken: (token: string) => void;
+    value: string;
+    setValue: (token: string) => void;
 }
-const ResetTokenInput = ({ id, token, setToken }: Props) => {
+const ResetTokenInput = ({ id, value, setValue }: Props) => {
     return (
         <Input
-            value={token}
-            onChange={({ target }) => setToken(target.value)}
+            value={value}
+            onChange={({ target }) => setValue(target.value)}
             name="resetToken"
             id={id}
             autoFocus

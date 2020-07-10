@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { c } from 'ttag';
 import { Link } from 'react-router-dom';
 import { CLIENT_TYPES } from 'proton-shared/lib/constants';
@@ -12,14 +12,12 @@ import {
     PasswordInput,
     PrimaryButton,
     useConfig,
-    useLoading,
     useModals
 } from '../../index';
 import useResetPassword, { STEPS } from './useResetPassword';
 import { OnLoginArgs } from '../login/useLogin';
 import ResetUsernameInput from './ResetUsernameInput';
 import ResetPasswordInput from './ResetPasswordInput';
-
 import ResetTokenInput from './ResetTokenInput';
 import ResetDangerInput from './ResetDangerInput';
 
@@ -31,29 +29,26 @@ interface Props {
 
 const MinimalResetPasswordContainer = ({ onLogin }: Props) => {
     const {
-        step,
-        username,
-        setUsername,
-        email,
-        setEmail,
-        handleRequest,
-        token,
-        setToken,
-        password,
-        confirmPassword,
-        setPassword,
-        setConfirmPassword,
-        danger,
+        loading,
+        state,
         dangerWord,
-        setDanger,
+        handleRequest,
         handleValidateResetToken,
         handleDanger,
-        handleNewPassword
+        handleNewPassword,
+        setUsername,
+        setEmail,
+        setPassword,
+        setConfirmPassword,
+        setToken,
+        setDanger
     } = useResetPassword({ onLogin });
 
     const { CLIENT_TYPE } = useConfig();
-    const [loading, withLoading] = useLoading();
     const { createModal } = useModals();
+    const hasModal = useRef<boolean>(false);
+
+    const { step, username, email, password, confirmPassword, danger, token } = state;
 
     if (step === STEPS.REQUEST_RESET_TOKEN) {
         const handleSubmit = async () => {
@@ -71,7 +66,13 @@ const MinimalResetPasswordContainer = ({ onLogin }: Props) => {
             <form
                 onSubmit={(e) => {
                     e.preventDefault();
-                    withLoading(handleSubmit());
+                    if (hasModal.current) {
+                        return;
+                    }
+                    hasModal.current = true;
+                    handleSubmit()
+                        .then(() => (hasModal.current = false))
+                        .catch(() => (hasModal.current = false));
                 }}
             >
                 <Alert
@@ -85,13 +86,13 @@ const MinimalResetPasswordContainer = ({ onLogin }: Props) => {
                     {c('Label').t`Username`}
                 </Label>
                 <div className="mb1">
-                    <ResetUsernameInput id="username" username={username} setUsername={setUsername} />
+                    <ResetUsernameInput id="username" value={username} setValue={setUsername} />
                 </div>
                 <Label htmlFor="email" className="sr-only">
                     {c('Label').t`Email`}
                 </Label>
                 <div className="mb1">
-                    <ResetPasswordInput id="email" email={email} setEmail={setEmail} />
+                    <ResetPasswordInput id="email" value={email} setValue={setEmail} />
                 </div>
                 <div className="flex flex-nowrap flex-spacebetween mb1">
                     <Link to="/login">{c('Link').t`Back to login`}</Link>
@@ -106,7 +107,7 @@ const MinimalResetPasswordContainer = ({ onLogin }: Props) => {
             <form
                 onSubmit={(e) => {
                     e.preventDefault();
-                    withLoading(handleValidateResetToken());
+                    handleValidateResetToken();
                 }}
             >
                 <Alert>{c('Info')
@@ -115,7 +116,7 @@ const MinimalResetPasswordContainer = ({ onLogin }: Props) => {
                     {c('Label').t`Token`}
                 </Label>
                 <div className="mb1">
-                    <ResetTokenInput id="reset-token" token={token} setToken={setToken} />
+                    <ResetTokenInput id="reset-token" value={token} setValue={setToken} />
                 </div>
                 <Alert type="warning">{c('Info')
                     .t`IMPORTANT: Do not close or navigate away from this page. You will need to enter the reset code into the field below once you receive it.`}</Alert>
@@ -127,7 +128,7 @@ const MinimalResetPasswordContainer = ({ onLogin }: Props) => {
     }
 
     if (step === STEPS.DANGER_VERIFICATION) {
-        const loginLink = <Href key="0" url="https://mail.protonmail.com/login">{c('Link').t`here`}</Href>;
+        const hereLink = <Href key="0" url="https://mail.protonmail.com/login">{c('Link').t`here`}</Href>;
         return (
             <form
                 onSubmit={(e) => {
@@ -139,13 +140,13 @@ const MinimalResetPasswordContainer = ({ onLogin }: Props) => {
                     type="warning"
                     learnMore="https://protonmail.com/support/knowledge-base/updating-your-login-password/"
                 >{c('Info')
-                    .jt`Resetting your password will reset your encryption keys for all Proton related services (Mail and VPN). You will be unable to read your existing messages. If you know your ProtonMail credentials, do NOT reset. You can log in with them ${loginLink}.`}</Alert>
+                    .jt`Resetting your password will reset your encryption keys for all Proton related services (Mail and VPN). You will be unable to read your existing messages. If you know your ProtonMail credentials, do NOT reset. You can log in with them ${hereLink}.`}</Alert>
                 <Alert type="warning">{c('Info').t`ALL YOUR DATA WILL BE LOST!`}</Alert>
                 <Label htmlFor="danger" className="sr-only">
                     {c('Label').t`Danger`}
                 </Label>
                 <div className="mb1">
-                    <ResetDangerInput danger={danger} setDanger={setDanger} dangerWord={dangerWord} id="danger" />
+                    <ResetDangerInput value={danger} setValue={setDanger} dangerWord={dangerWord} id="danger" />
                 </div>
                 {CLIENT_TYPE === VPN ? null : (
                     <Alert learnMore="https://protonmail.com/support/knowledge-base/restoring-encrypted-mailbox/">{c(
@@ -164,7 +165,7 @@ const MinimalResetPasswordContainer = ({ onLogin }: Props) => {
             <form
                 onSubmit={(e) => {
                     e.preventDefault();
-                    withLoading(handleNewPassword());
+                    handleNewPassword();
                 }}
             >
                 <Alert type="warning">{c('Info').t`Keep this password safe, it cannot be recovered.`}</Alert>

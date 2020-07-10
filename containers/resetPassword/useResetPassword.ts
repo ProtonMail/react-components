@@ -9,7 +9,7 @@ import { Address } from 'proton-shared/lib/interfaces';
 import { setCookies, auth } from 'proton-shared/lib/api/auth';
 import { getRandomString } from 'proton-shared/lib/helpers/string';
 import { OnLoginArgs } from '../login/useLogin';
-import { useApi, useNotifications } from '../../index';
+import { useApi, useLoading, useNotifications } from '../../index';
 
 export enum STEPS {
     REQUEST_RESET_TOKEN,
@@ -23,38 +23,62 @@ interface Props {
     onLogin: (args: OnLoginArgs) => void;
 }
 
+export interface State {
+    username: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+    token: string;
+    danger: string;
+    step: STEPS;
+}
+
+const INITIAL_STATE = {
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    token: '',
+    danger: '',
+    step: STEPS.REQUEST_RESET_TOKEN
+};
+
 const useResetPassword = ({ onLogin }: Props) => {
     const api = useApi();
-    const [step, setStep] = useState(STEPS.REQUEST_RESET_TOKEN);
+    const [state, setState] = useState<State>(INITIAL_STATE);
+    const [loading, withLoading] = useLoading();
+
     const { createNotification } = useNotifications();
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
-    const [token, setToken] = useState('');
-    const [password, setPassword] = useState('');
-    const [danger, setDanger] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
     const addressesRef = useRef<Address[]>([]);
     const dangerWord = 'DANGER';
 
+    const gotoStep = (step: STEPS) => {
+        return setState((state: State) => ({ ...state, step }));
+    };
+
     const handleRequest = async () => {
+        const { username, email } = state;
         await api(requestLoginResetToken({ Username: username, NotificationEmail: email }));
-        setStep(STEPS.VALIDATE_RESET_TOKEN);
+        gotoStep(STEPS.VALIDATE_RESET_TOKEN);
     };
 
     const handleValidateResetToken = async () => {
+        const { username, token } = state;
         const { Addresses = [] } = await api<{ Addresses: Address[] }>(validateResetToken(username, token));
         addressesRef.current = Addresses;
-        setStep(STEPS.DANGER_VERIFICATION);
+        gotoStep(STEPS.DANGER_VERIFICATION);
     };
 
-    const handleDanger = () => {
+    const handleDanger = async () => {
+        const { danger } = state;
         if (danger !== dangerWord) {
             return;
         }
-        setStep(STEPS.NEW_PASSWORD);
+        gotoStep(STEPS.NEW_PASSWORD);
     };
 
     const handleNewPassword = async () => {
+        const { username, token, password, confirmPassword } = state;
         if (!password.length || password !== confirmPassword) {
             return;
         }
@@ -93,29 +117,55 @@ const useResetPassword = ({ onLogin }: Props) => {
         onLogin({ UID, keyPassword: passphrase, EventID });
     };
 
+    const getSetter = <T>(key: keyof State) => (value: T) =>
+        loading ? undefined : setState({ ...state, [key]: value });
+
+    const setUsername = getSetter<string>('username');
+    const setEmail = getSetter<string>('email');
+    const setPassword = getSetter<string>('password');
+    const setConfirmPassword = getSetter<string>('confirmPassword');
+    const setToken = getSetter<string>('token');
+    const setDanger = getSetter<string>('danger');
+
     return {
-        username,
-        setUsername,
-        token,
-        setToken,
-        email,
-        setEmail,
-        password,
-        setPassword,
-        confirmPassword,
-        setConfirmPassword,
-        danger,
-        setDanger,
+        loading,
+        state,
         dangerWord,
-        handleRequest,
-        handleValidateResetToken,
-        handleDanger,
-        handleNewPassword: () =>
-            handleNewPassword().catch((e) => {
-                setStep(STEPS.ERROR);
-                throw e;
-            }),
-        step
+        setUsername,
+        setEmail,
+        setPassword,
+        setConfirmPassword,
+        setToken,
+        setDanger,
+        handleRequest: () => {
+            if (loading) {
+                return;
+            }
+            withLoading(handleRequest());
+        },
+        handleValidateResetToken: () => {
+            if (loading) {
+                return;
+            }
+            withLoading(handleValidateResetToken());
+        },
+        handleDanger: () => {
+            if (loading) {
+                return;
+            }
+            withLoading(handleDanger());
+        },
+        handleNewPassword: () => {
+            if (loading) {
+                return;
+            }
+            withLoading(
+                handleNewPassword().catch((e) => {
+                    gotoStep(STEPS.ERROR);
+                    throw e;
+                })
+            );
+        }
     };
 };
 

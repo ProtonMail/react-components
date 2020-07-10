@@ -3,11 +3,11 @@ import { c } from 'ttag';
 import { EmailInput } from '../../index';
 
 interface Props {
-    email: string;
-    setEmail: (email: string) => void;
+    value: string;
+    setValue: (email: string) => void;
     id: string;
 }
-const ResetPasswordInput = ({ email, setEmail, id }: Props) => {
+const ResetPasswordInput = ({ value, setValue, id }: Props) => {
     return (
         <EmailInput
             name="email"
@@ -15,8 +15,8 @@ const ResetPasswordInput = ({ email, setEmail, id }: Props) => {
             autoCorrect="off"
             id={id}
             placeholder={c('Placeholder').t`Recovery email`}
-            value={email}
-            onChange={({ target: { value } }) => setEmail(value)}
+            value={value}
+            onChange={({ target: { value } }) => setValue(value)}
             required
         />
     );
