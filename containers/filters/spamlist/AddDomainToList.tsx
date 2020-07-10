@@ -1,6 +1,6 @@
 import React, { ChangeEvent } from 'react';
 import { c } from 'ttag';
-import { Input, Label, Row, Field } from 'react-components';
+import { Input, Label, Row, Field } from '../../..';
 import { DOMAIN_PLACEHOLDER } from 'proton-shared/lib/constants';
 import { isDomain } from 'proton-shared/lib/helpers/validators';
 

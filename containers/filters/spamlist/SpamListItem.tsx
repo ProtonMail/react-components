@@ -1,6 +1,6 @@
 import React from 'react';
 import { c } from 'ttag';
-import { Bordered, Loader, Alert, classnames, DropdownActions, PrimaryButton } from 'react-components';
+import { Bordered, Loader, Alert, classnames, DropdownActions, PrimaryButton } from '../../..';
 import { IncomingDefault } from 'proton-shared/lib/interfaces/IncomingDefault';
 import { WHITELIST_LOCATION, BLACKLIST_LOCATION } from 'proton-shared/lib/constants';
 

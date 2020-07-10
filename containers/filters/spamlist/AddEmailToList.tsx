@@ -1,6 +1,6 @@
 import React, { ChangeEvent } from 'react';
 import { c } from 'ttag';
-import { EmailInput, Label, Row, Field } from 'react-components';
+import { EmailInput, Label, Row, Field } from '../../..';
 import { EXTERNAL_EMAIL_PLACEHOLDER } from 'proton-shared/lib/constants';
 
 interface Props {
