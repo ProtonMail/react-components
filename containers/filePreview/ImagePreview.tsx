@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import loadImage, { MetaData, Exif } from 'blueimp-load-image';
+import brokenImageSvg from 'design-system/assets/img/shared/broken-image.svg';
 import { c } from 'ttag';
 import ZoomControl from './ZoomControl';
-import brokenImageSvg from './broken-image.svg';
 import { PrimaryButton } from '../../components/button';
 import useElementRect from '../../hooks/useElementRect';
 

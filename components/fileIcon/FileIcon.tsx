@@ -3,25 +3,22 @@ import { isSupportedImage, isSupportedText, isVideo } from '../../containers/fil
 import { classnames } from '../../helpers/component';
 import Icon from '../icon/Icon';
 
-const iconsMap: { [mimeType: string]: { name: string; colorClass?: string } } = {
+const iconsMap: { [mimeType: string]: { name: string } } = {
     Folder: { name: 'folder' },
-    'application/msword': { name: 'file-doc', colorClass: 'pd-icon-blue' },
+    'application/msword': { name: 'file-doc' },
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document': {
-        name: 'file-docx',
-        colorClass: 'pd-icon-blue'
+        name: 'file-docx'
     },
-    'application/pdf': { name: 'file-pdf', colorClass: 'pd-icon-red' },
-    'application/vnd.ms-powerpoint': { name: 'file-ppt', colorClass: 'pd-icon-orange' },
+    'application/pdf': { name: 'file-pdf' },
+    'application/vnd.ms-powerpoint': { name: 'file-ppt' },
     'application/vnd.openxmlformats-officedocument.presentationml.presentation': {
-        name: 'file-pptx',
-        colorClass: 'pd-icon-orange'
+        name: 'file-pptx'
     },
     'application/x-rar-compressed': { name: 'file-rar-zip' },
     'application/zip': { name: 'file-rar-zip' },
-    'application/vnd.ms-excel': { name: 'file-xls', colorClass: 'pd-icon-green' },
+    'application/vnd.ms-excel': { name: 'file-xls' },
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': {
-        name: 'file-xslx',
-        colorClass: 'pd-icon-green'
+        name: 'file-xslx'
     },
     'application/xliff+xml': { name: 'file-xliff' },
     'application/xml': { name: 'file-xml' }
