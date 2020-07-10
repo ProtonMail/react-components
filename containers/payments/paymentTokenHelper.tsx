@@ -104,13 +104,16 @@ export const process = ({
             }
 
             if (tab && tab.closed) {
-                reset();
-                return pull({ Token, api, signal })
-                    .then(resolve)
-                    .catch(() => {
-                        const error = new Error(c('Error').t`Tab closed`);
-                        return reject({ ...error, tryAgain: true });
-                    });
+                try {
+                    reset();
+                    const { Status } = await api({ ...getTokenStatus(Token), signal });
+                    if (Status === STATUS_CHARGEABLE) {
+                        return resolve();
+                    }
+                    throw new Error(c('Error').t`Tab closed`);
+                } catch (error) {
+                    return reject({ ...error, tryAgain: true });
+                }
             }
 
             await wait(DELAY_LISTENING);
