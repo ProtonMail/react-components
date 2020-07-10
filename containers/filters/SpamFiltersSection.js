@@ -85,11 +85,12 @@ function SpamFiltersSection() {
         const { Email, Domain, ID, Location } = incomingDefault;
         const type = Location === WHITELIST_LOCATION ? BLACKLIST_LOCATION : WHITELIST_LOCATION;
         const { IncomingDefault: data } = await api(updateIncomingDefault(ID, { Location: type }));
+        const item = Email || Domain;
         createNotification({
             text:
                 Location === WHITELIST_LOCATION
-                    ? c('Spam filter moved to whitelist').t`${Email || Domain} moved to whitelist`
-                    : c('Spam filter moved to blacklist').t`${Email || Domain} moved to blacklist`
+                    ? c('Spam filter moved to whitelist').t`${item} moved to whitelist`
+                    : c('Spam filter moved to blacklist').t`${item} moved to blacklist`
         });
         move(type, data);
     };
@@ -97,7 +98,8 @@ function SpamFiltersSection() {
     const handleRemove = async (incomingDefault) => {
         const { Email, Domain, ID } = incomingDefault;
         await api(deleteIncomingDefaults([ID]));
-        createNotification({ text: c('Moved to black/whitelist').t`${Email || Domain} removed` });
+        const item = Email || Domain;
+        createNotification({ text: c('Moved to black/whitelist').t`${item} removed` });
         remove(incomingDefault);
     };
 
