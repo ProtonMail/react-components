@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { c } from 'ttag';
 import { History } from 'history';
 
@@ -70,8 +70,14 @@ const ContactModal = ({
     const [loading, withLoading] = useLoading();
     const { call } = useEventManager();
     const [userKeysList, loadingUserKeys] = useUserKeys();
-    const [submitDisabled, setSubmitDisabled] = useState(true);
     const [properties, setProperties] = useState<ContactProperties>(formatModel(initialProperties));
+    const submitDisabled = useMemo(() => {
+        if (properties.every((p) => !p.value)) {
+            return true;
+        }
+        return false;
+    }, [properties]);
+
     const title = contactID ? c('Title').t`Edit contact details` : c('Title').t`Create contact`;
 
     const handleRemove = (propertyUID: string) => {
@@ -148,14 +154,6 @@ const ContactModal = ({
             handleAdd(newField)();
         }
     }, [newField]);
-
-    useEffect(() => {
-        if (properties.every((p) => !p.value)) {
-            setSubmitDisabled(true);
-            return;
-        }
-        submitDisabled && setSubmitDisabled(false);
-    }, [properties]);
 
     return (
         <FormModal
