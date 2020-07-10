@@ -1,4 +1,4 @@
-import React, { useRef, ChangeEvent, FormEvent } from 'react';
+import React, { useRef, useState, ChangeEvent, FormEvent } from 'react';
 import { c } from 'ttag';
 import {
     Alert,
@@ -10,7 +10,8 @@ import {
     ConfirmModal,
     Challenge,
     Label,
-    useLoading
+    useLoading,
+    FullLoader
 } from '../../index';
 
 import { SignupModel, SignupErrors } from './interfaces';
@@ -31,6 +32,7 @@ const { RECOVERY_EMAIL, RECOVERY_PHONE } = SIGNUP_STEPS;
 
 const SignupRecoveryForm = ({ model, onChange, onSubmit, onSkip, errors, loading }: Props) => {
     const formRef = useRef<HTMLFormElement>(null);
+    const [challengeLoading, setChallengeLoading] = useState(true);
     const { createModal } = useModals();
     const challengeRefRecovery = useRef<ChallengeRef>();
     const [loadingChallenge, withLoadingChallenge] = useLoading();
@@ -59,6 +61,8 @@ const SignupRecoveryForm = ({ model, onChange, onSubmit, onSkip, errors, loading
         onSubmit(payload);
     };
 
+    const handleChallengeLoaded = () => setChallengeLoading(false);
+
     const inner = (() => {
         if (model.step === RECOVERY_EMAIL) {
             return (
@@ -72,6 +76,7 @@ const SignupRecoveryForm = ({ model, onChange, onSubmit, onSkip, errors, loading
                                 bodyClassName="signLayout-container"
                                 challengeRef={challengeRefRecovery}
                                 type={1}
+                                onLoaded={handleChallengeLoaded}
                             >
                                 <div className="mb0-5">
                                     <EmailInput
@@ -137,27 +142,35 @@ const SignupRecoveryForm = ({ model, onChange, onSubmit, onSkip, errors, loading
     })();
 
     return (
-        <form
-            name="recoveryForm"
-            className="signup-form"
-            onSubmit={(e) => withLoadingChallenge(handleSubmit(e))}
-            ref={formRef}
-        >
-            {inner}
-            <div className="alignright mb1">
-                <LinkButton
-                    className="mr2 pm-button--large nodecoration"
-                    disabled={loading || loadingChallenge}
-                    onClick={handleSkip}
-                >{c('Action').t`Skip`}</LinkButton>
-                <PrimaryButton
-                    className="pm-button--large"
-                    loading={loading || loadingChallenge}
-                    disabled={disableSubmit}
-                    type="submit"
-                >{c('Action').t`Next`}</PrimaryButton>
-            </div>
-        </form>
+        <>
+            {model.step === RECOVERY_EMAIL && challengeLoading ? (
+                <div className="aligncenter">
+                    <FullLoader className="color-primary" size={200} />
+                </div>
+            ) : null}
+            <form
+                name="recoveryForm"
+                className="signup-form"
+                onSubmit={(e) => withLoadingChallenge(handleSubmit(e))}
+                hidden={model.step === RECOVERY_EMAIL && challengeLoading}
+                ref={formRef}
+            >
+                {inner}
+                <div className="alignright mb1">
+                    <LinkButton
+                        className="mr2 pm-button--large nodecoration"
+                        disabled={loading || loadingChallenge}
+                        onClick={handleSkip}
+                    >{c('Action').t`Skip`}</LinkButton>
+                    <PrimaryButton
+                        className="pm-button--large"
+                        loading={loading || loadingChallenge}
+                        disabled={disableSubmit}
+                        type="submit"
+                    >{c('Action').t`Next`}</PrimaryButton>
+                </div>
+            </form>
+        </>
     );
 };
 
