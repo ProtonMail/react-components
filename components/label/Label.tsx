@@ -3,7 +3,7 @@ import { classnames } from '../../helpers/component';
 
 type Props = React.LabelHTMLAttributes<HTMLLabelElement>;
 
-const Label = ({ htmlFor, className = '', children, ...rest }: Props) => {
+const Label = ({ htmlFor, className, children, ...rest }: Props) => {
     return (
         <label htmlFor={htmlFor} className={classnames(['pm-label', className])} {...rest}>
             {children}
