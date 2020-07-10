@@ -1,6 +1,5 @@
 import React from 'react';
 import { isSupportedImage, isSupportedText, isVideo } from '../../containers/filePreview/helpers';
-import { classnames } from '../../helpers/component';
 import Icon from '../icon/Icon';
 
 const iconsMap: { [mimeType: string]: { name: string } } = {
@@ -46,9 +45,8 @@ interface Props {
 
 const FileIcon = ({ mimeType, ...rest }: Props) => {
     const name = getIconName(mimeType);
-    const colorClass = iconsMap[mimeType]?.colorClass;
 
-    return <Icon name={name} className={classnames(['flex-item-noshrink mr0-5', colorClass])} {...rest} />;
+    return <Icon name={name} className="flex-item-noshrink mr0-5" {...rest} />;
 };
 
 export default FileIcon;
