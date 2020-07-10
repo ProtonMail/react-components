@@ -125,7 +125,6 @@ const SignupRecoveryForm = ({ model, onChange, onSubmit, onSkip, errors, loading
                                     inputClassName="w100"
                                     autoFocus
                                     onPhoneNumberChange={handleChangePhone}
-                                    onPhoneNumberBlur={handleChangePhone}
                                     required
                                 />
                             </div>
