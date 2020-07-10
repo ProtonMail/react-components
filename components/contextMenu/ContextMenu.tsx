@@ -46,7 +46,7 @@ const ContextMenu = React.forwardRef<HTMLElement, Props>(({ isOpen, close, autoC
     ));
 
     return (
-        <Dropdown id={uid} isOpen={isOpen} anchorRef={ref as any} onClose={close} originalPlacement="bottom">
+        <Dropdown id={uid} isOpen={isOpen} anchorRef={ref as any} onClose={close}>
             <DropdownMenu>{dropdownMenuButtons}</DropdownMenu>
         </Dropdown>
     );
