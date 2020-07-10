@@ -4,6 +4,10 @@ import { generateUID, Dropdown, DropdownMenu, DropdownMenuButton, Icon } from '.
 
 interface Props {
     isOpen: boolean;
+    position?: {
+        top: number;
+        left: number;
+    };
     close: () => void;
     autoClose?: boolean;
     menuItems: {
@@ -13,43 +17,53 @@ interface Props {
     }[];
 }
 
-const ContextMenu = React.forwardRef<HTMLElement, Props>(({ isOpen, close, autoClose = true, menuItems }, ref) => {
-    const [uid] = useState(generateUID('context-menu'));
+const ContextMenu = React.forwardRef<HTMLElement, Props>(
+    ({ isOpen, position, close, autoClose = true, menuItems }, ref) => {
+        const [uid] = useState(generateUID('context-menu'));
 
-    if (!menuItems.length) {
-        return null;
-    }
-
-    useEffect(() => {
-        if (!isOpen) {
-            return;
+        if (!menuItems.length) {
+            return null;
         }
 
-        const handleContextMenu = () => {
-            if (autoClose) {
-                close();
+        useEffect(() => {
+            if (!isOpen) {
+                return;
             }
-        };
 
-        document.addEventListener('contextmenu', handleContextMenu);
+            const handleContextMenu = () => {
+                if (autoClose) {
+                    close();
+                }
+            };
 
-        return () => {
-            document.removeEventListener('contextmenu', handleContextMenu);
-        };
-    }, [isOpen, autoClose, close]);
+            document.addEventListener('contextmenu', handleContextMenu);
 
-    const dropdownMenuButtons = menuItems.map((item) => (
-        <DropdownMenuButton key={item.name} className="flex flex-nowrap alignleft" onClick={item.onClick}>
-            <Icon className="mt0-25 mr0-5" name={item.icon} />
-            {item.name}
-        </DropdownMenuButton>
-    ));
+            return () => {
+                document.removeEventListener('contextmenu', handleContextMenu);
+            };
+        }, [isOpen, autoClose, close, ref]);
 
-    return (
-        <Dropdown id={uid} isOpen={isOpen} anchorRef={ref as any} onClose={close}>
-            <DropdownMenu>{dropdownMenuButtons}</DropdownMenu>
-        </Dropdown>
-    );
-});
+        const dropdownMenuButtons = menuItems.map((item) => (
+            <DropdownMenuButton key={item.name} className="flex flex-nowrap alignleft" onClick={item.onClick}>
+                <Icon className="mt0-25 mr0-5" name={item.icon} />
+                {item.name}
+            </DropdownMenuButton>
+        ));
+
+        return (
+            <Dropdown
+                id={uid}
+                isOpen={isOpen}
+                originalPosition={position}
+                noCaret
+                originalPlacement="bottom-left"
+                anchorRef={ref as any}
+                onClose={close}
+            >
+                <DropdownMenu>{dropdownMenuButtons}</DropdownMenu>
+            </Dropdown>
+        );
+    }
+);
 
 export default ContextMenu;

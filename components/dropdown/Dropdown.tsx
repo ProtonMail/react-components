@@ -20,7 +20,12 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
     originalPlacement?: string;
     isOpen?: boolean;
     noMaxSize?: boolean;
+    noCaret?: boolean;
     availablePlacements?: string[];
+    originalPosition?: {
+        top: number;
+        left: number;
+    };
     autoClose?: boolean;
     autoCloseOutside?: boolean;
     contentProps?: ContentProps;
@@ -32,9 +37,11 @@ const Dropdown = ({
     className,
     originalPlacement = 'bottom',
     availablePlacements = ALL_PLACEMENTS,
+    originalPosition,
     onClose = noop,
     isOpen = false,
     noMaxSize = false,
+    noCaret = false,
     autoClose = true,
     autoCloseOutside = true,
     contentProps,
@@ -106,6 +113,7 @@ const Dropdown = ({
         'dropDown',
         `dropDown--${placement}`,
         isClosing && `is-dropdownOut`,
+        noCaret && 'dropDown--noCaret',
         className
     ]);
 
@@ -113,10 +121,15 @@ const Dropdown = ({
         return null;
     }
 
-    const varPosition = {
-        '--top': position.top,
-        '--left': position.left
-    } as any;
+    const varPosition: any = originalPosition
+        ? {
+              '--top': originalPosition.top,
+              '--left': originalPosition.left
+          }
+        : {
+              '--top': position.top,
+              '--left': position.left
+          };
 
     const varSize = contentRect
         ? {
