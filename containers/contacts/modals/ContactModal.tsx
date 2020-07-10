@@ -24,6 +24,7 @@ import useEventManager from '../../eventManager/useEventManager';
 import Alert from '../../../components/alert/Alert';
 import FormModal from '../../../components/modal/FormModal';
 import { generateUID } from '../../../helpers/component';
+import PrimaryButton from '../../../components/button/PrimaryButton';
 
 const DEFAULT_MODEL = [
     { field: 'fn', value: '' },
@@ -69,6 +70,7 @@ const ContactModal = ({
     const [loading, withLoading] = useLoading();
     const { call } = useEventManager();
     const [userKeysList, loadingUserKeys] = useUserKeys();
+    const [submitDisabled, setSubmitDisabled] = useState(true);
     const [properties, setProperties] = useState<ContactProperties>(formatModel(initialProperties));
     const title = contactID ? c('Title').t`Edit contact details` : c('Title').t`Create contact`;
 
@@ -147,12 +149,28 @@ const ContactModal = ({
         }
     }, [newField]);
 
+    useEffect(() => {
+        if (properties.every((p) => !p.value)) {
+            setSubmitDisabled(true);
+            return;
+        }
+        submitDisabled && setSubmitDisabled(false);
+    }, [properties]);
+
     return (
         <FormModal
             loading={loading || loadingUserKeys}
             onSubmit={() => withLoading(handleSubmit())}
             title={title}
-            submit={c('Action').t`Save`}
+            submit={
+                <PrimaryButton
+                    loading={loading || loadingUserKeys}
+                    disabled={submitDisabled}
+                    onClick={() => withLoading(handleSubmit())}
+                >
+                    {c('Action').t`Save`}
+                </PrimaryButton>
+            }
             onClose={onClose}
             {...rest}
         >
