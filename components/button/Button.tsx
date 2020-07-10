@@ -1,5 +1,7 @@
 import React from 'react';
+
 import Icon from '../icon/Icon';
+import LoaderIcon from '../loader/LoaderIcon';
 import { classnames } from '../../helpers/component';
 
 export interface Props
@@ -32,11 +34,16 @@ const Button = ({
             type={type}
             tabIndex={disabled ? -1 : tabIndex}
             ref={buttonRef}
-            aria-busy={loading}
             {...rest}
         >
-            {iconComponent}
-            {children}
+            {loading ? (
+                <LoaderIcon />
+            ) : (
+                <>
+                    {iconComponent}
+                    {children}
+                </>
+            )}
         </button>
     );
 };
