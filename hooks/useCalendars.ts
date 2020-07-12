@@ -5,7 +5,7 @@ import useApi from '../containers/api/useApi';
 import useCache from '../containers/cache/useCache';
 import useCachedModelResult, { getPromiseValue } from './useCachedModelResult';
 
-export const useGetCalendars = () => {
+export const useGetCalendars = (): (() => Promise<Calendar[] | undefined>) => {
     const api = useApi();
     const cache = useCache();
     const miss = useCallback(() => CalendarsModel.get(api), [api]);
