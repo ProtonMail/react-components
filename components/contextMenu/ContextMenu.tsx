@@ -21,10 +21,6 @@ const ContextMenu = React.forwardRef<HTMLElement, Props>(
     ({ isOpen, position, close, autoClose = true, menuItems }, ref) => {
         const [uid] = useState(generateUID('context-menu'));
 
-        if (!menuItems.length) {
-            return null;
-        }
-
         useEffect(() => {
             if (!isOpen) {
                 return;
@@ -41,7 +37,7 @@ const ContextMenu = React.forwardRef<HTMLElement, Props>(
             return () => {
                 document.removeEventListener('contextmenu', handleContextMenu);
             };
-        }, [isOpen, autoClose, close, ref]);
+        }, [isOpen, autoClose, close]);
 
         const dropdownMenuButtons = menuItems.map((item) => (
             <DropdownMenuButton key={item.name} className="flex flex-nowrap alignleft" onClick={item.onClick}>
@@ -50,7 +46,7 @@ const ContextMenu = React.forwardRef<HTMLElement, Props>(
             </DropdownMenuButton>
         ));
 
-        return (
+        const drowpdown = menuItems.length ? (
             <Dropdown
                 id={uid}
                 isOpen={isOpen}
@@ -62,7 +58,9 @@ const ContextMenu = React.forwardRef<HTMLElement, Props>(
             >
                 <DropdownMenu>{dropdownMenuButtons}</DropdownMenu>
             </Dropdown>
-        );
+        ) : null;
+
+        return drowpdown;
     }
 );
 
