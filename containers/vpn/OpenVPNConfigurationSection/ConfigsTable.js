@@ -140,7 +140,7 @@ const ConfigsTable = ({ loading, servers = [], platform, protocol, category, isU
                                 >
                                     <Link
                                         className="pm-button--primary pm-button--small"
-                                        to={`/dashboard${hasPaidVpn ? '?plan=vpnbasic' : ''}`}
+                                        to={`/dashboard${hasPaidVpn ? '?plan=vpnplus' : ''}`}
                                     >{c('Action').t`Upgrade`}</Link>
                                 </Tooltip>
                             ) : (
