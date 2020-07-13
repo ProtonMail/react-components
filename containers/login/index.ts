@@ -3,7 +3,8 @@ export { default as MinimalForgotUsernameContainer } from '../forgotUsername/Min
 export { default as MinimalLoginContainer } from './MinimalLoginContainer';
 export { default as FooterDetails } from './FooterDetails';
 
-export { default as useLogin, OnLoginArgs } from './useLogin';
+export { default as useLogin } from './useLogin';
+export * from './interface';
 
 export { default as UnlockModal } from './UnlockModal';
 export { default as SignInLayout } from './SignInLayout';
