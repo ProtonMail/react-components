@@ -15,6 +15,17 @@ export const ALL_PLACEMENTS = [
     'right-top'
 ];
 
+export const CORNERS_ONLY_PLACEMENTS = [
+    'bottom-left',
+    'bottom-right',
+    'top-left',
+    'top-right',
+    'left-bottom',
+    'left-top',
+    'right-bottom',
+    'right-top'
+];
+
 const inverted: any = {
     left: 'right',
     right: 'left',
@@ -81,23 +92,38 @@ const calculatePosition = (
     placement: string,
     offset = DEFAULT_TOOLTIP_OFFSET,
     originalPosition?: Position
-) => {
-    const alignCenter = {
-        top: originalPosition?.top || target.top + target.height / 2 - tooltip.height / 2,
-        left: originalPosition?.left || target.left + target.width / 2 - tooltip.width / 2
+): Position => {
+    let alignCenter = {
+        top: target.top + target.height / 2 - tooltip.height / 2,
+        left: target.left + target.width / 2 - tooltip.width / 2
     };
 
-    const alignTop = originalPosition?.top || target.top;
-    const alignBottom = originalPosition?.top || target.top + target.height - tooltip.height;
-    const alignLeft = originalPosition?.left || target.left;
-    const alignRight = originalPosition?.left || target.left - tooltip.width + target.width;
+    let alignTop = target.top;
+    let alignBottom = target.top + target.height - tooltip.height;
+    let alignLeft = target.left;
+    let alignRight = target.left - tooltip.width + target.width;
 
-    const placeAbove = originalPosition?.top || target.top - tooltip.height - offset;
-    const placeBelow = originalPosition?.top || target.top + target.height + offset;
-    const placeLeft = originalPosition?.left || target.left - tooltip.width - offset;
-    const placeRight = originalPosition?.left || target.left + target.width + offset;
+    let placeAbove = target.top - tooltip.height - offset;
+    let placeBelow = target.top + target.height + offset;
+    let placeLeft = target.left - tooltip.width - offset;
+    let placeRight = target.left + target.width + offset;
 
-    // console.log('placement ', placement);
+    if (originalPosition) {
+        alignCenter = {
+            top: originalPosition.top + target.height / 2 - tooltip.height / 2,
+            left: originalPosition.left + target.width / 2 - tooltip.width / 2
+        };
+
+        alignTop = originalPosition.top;
+        alignBottom = originalPosition.top - tooltip.height;
+        alignLeft = originalPosition.left;
+        alignRight = originalPosition.left - tooltip.width;
+
+        placeAbove = originalPosition.top - tooltip.height - offset;
+        placeBelow = originalPosition.top + offset;
+        placeLeft = originalPosition.left - tooltip.width - offset;
+        placeRight = originalPosition.left + offset;
+    }
 
     const placementList: any = {
         top: { left: alignCenter.left, top: placeAbove },
@@ -113,6 +139,7 @@ const calculatePosition = (
         'left-bottom': { left: placeLeft, top: alignBottom },
         'left-top': { left: placeLeft, top: alignTop }
     };
+
     return placementList[placement];
 };
 
@@ -172,7 +199,6 @@ export const adjustPosition = (
     );
 
     if (!optimalLocation) {
-        // console.log('non-optimal');
         // No good position on screen, fallback to original
         const position = calculatePosition(target, tooltip, placement, offset, originalPosition);
         return {

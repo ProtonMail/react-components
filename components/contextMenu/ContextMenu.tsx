@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import { generateUID, Dropdown, DropdownMenu, DropdownMenuButton, Icon } from '../..';
+import { CORNERS_ONLY_PLACEMENTS } from '../popper/utils';
 
 interface Props {
     isOpen: boolean;
@@ -51,6 +52,7 @@ const ContextMenu = React.forwardRef<HTMLElement, Props>(
                 id={uid}
                 isOpen={isOpen}
                 originalPosition={position}
+                availablePlacements={CORNERS_ONLY_PLACEMENTS}
                 noCaret
                 originalPlacement="bottom-left"
                 offset={0}
