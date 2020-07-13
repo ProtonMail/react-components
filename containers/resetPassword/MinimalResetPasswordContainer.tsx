@@ -15,7 +15,7 @@ import {
     useModals
 } from '../../index';
 import useResetPassword, { STEPS } from './useResetPassword';
-import { OnLoginArgs } from '../login/useLogin';
+import { OnLoginArgs } from '../login/interface';
 import ResetUsernameInput from './ResetUsernameInput';
 import ResetPasswordInput from './ResetPasswordInput';
 import ResetTokenInput from './ResetTokenInput';

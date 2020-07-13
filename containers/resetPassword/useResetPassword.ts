@@ -8,8 +8,7 @@ import { resetKeysRoute } from 'proton-shared/lib/api/keys';
 import { Address } from 'proton-shared/lib/interfaces';
 import { setCookies, auth } from 'proton-shared/lib/api/auth';
 import { getRandomString } from 'proton-shared/lib/helpers/string';
-import { OnLoginArgs } from '../login/useLogin';
-import { useApi, useLoading, useNotifications } from '../../index';
+import { useApi, useLoading, useNotifications, OnLoginArgs } from '../../index';
 
 export enum STEPS {
     REQUEST_RESET_TOKEN,
