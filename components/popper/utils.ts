@@ -15,11 +15,20 @@ export const ALL_PLACEMENTS = [
     'right-top'
 ];
 
-const inverted = {
+const inverted: any = {
     left: 'right',
     right: 'left',
     bottom: 'top',
     top: 'bottom'
+};
+
+type Position = { top: number; left: number };
+
+type ElementRect = {
+    top: number;
+    left: number;
+    width: number;
+    height: number;
 };
 
 /**
@@ -32,11 +41,11 @@ const inverted = {
  *
  * always prefers alignment to be the same as original alignment or orientation.
  */
-export const orderPlacements = (originalPlacement, placements = ALL_PLACEMENTS) => {
+export const orderPlacements = (originalPlacement: string, placements = ALL_PLACEMENTS) => {
     const orientation = originalPlacement.split('-')[0];
     const alignment = originalPlacement.split('-')[1];
 
-    const compareAlignment = (a, b) => {
+    const compareAlignment = (a: string, b: string) => {
         if (
             (b.endsWith(alignment) && !b.startsWith(alignment) && !a.endsWith(alignment)) ||
             (b.endsWith(orientation) && !b.startsWith(orientation) && !a.endsWith(orientation))
@@ -66,23 +75,31 @@ export const orderPlacements = (originalPlacement, placements = ALL_PLACEMENTS) 
     return [...preferred, ...remaining];
 };
 
-const calculatePosition = (target, tooltip, placement, offset = DEFAULT_TOOLTIP_OFFSET) => {
+const calculatePosition = (
+    target: ElementRect,
+    tooltip: ElementRect,
+    placement: string,
+    offset = DEFAULT_TOOLTIP_OFFSET,
+    originalPosition?: Position
+) => {
     const alignCenter = {
-        top: target.top + target.height / 2 - tooltip.height / 2,
-        left: target.left + target.width / 2 - tooltip.width / 2
+        top: originalPosition?.top || target.top + target.height / 2 - tooltip.height / 2,
+        left: originalPosition?.left || target.left + target.width / 2 - tooltip.width / 2
     };
 
-    const alignTop = target.top;
-    const alignBottom = target.top + target.height - tooltip.height;
-    const alignLeft = target.left;
-    const alignRight = target.left - tooltip.width + target.width;
+    const alignTop = originalPosition?.top || target.top;
+    const alignBottom = originalPosition?.top || target.top + target.height - tooltip.height;
+    const alignLeft = originalPosition?.left || target.left;
+    const alignRight = originalPosition?.left || target.left - tooltip.width + target.width;
 
-    const placeAbove = target.top - tooltip.height - offset;
-    const placeBelow = target.top + target.height + offset;
-    const placeLeft = target.left - tooltip.width - offset;
-    const placeRight = target.left + target.width + offset;
+    const placeAbove = originalPosition?.top || target.top - tooltip.height - offset;
+    const placeBelow = originalPosition?.top || target.top + target.height + offset;
+    const placeLeft = originalPosition?.left || target.left - tooltip.width - offset;
+    const placeRight = originalPosition?.left || target.left + target.width + offset;
 
-    return {
+    // console.log('placement ', placement);
+
+    const placementList: any = {
         top: { left: alignCenter.left, top: placeAbove },
         bottom: { left: alignCenter.left, top: placeBelow },
         left: { left: placeLeft, top: alignCenter.top },
@@ -95,10 +112,11 @@ const calculatePosition = (target, tooltip, placement, offset = DEFAULT_TOOLTIP_
         'right-top': { left: placeRight, top: alignTop },
         'left-bottom': { left: placeLeft, top: alignBottom },
         'left-top': { left: placeLeft, top: alignTop }
-    }[placement];
+    };
+    return placementList[placement];
 };
 
-const isOutOfScreen = (tooltip, position) => {
+const isOutOfScreen = (tooltip: ElementRect, position: Position) => {
     return (
         position.top + tooltip.height > window.innerHeight ||
         position.left + tooltip.width > window.innerWidth ||
@@ -107,25 +125,56 @@ const isOutOfScreen = (tooltip, position) => {
     );
 };
 
-const optimisePositionAndPlacement = (target, tooltip, offset, availablePlacements = ALL_PLACEMENTS) => {
+const optimisePositionAndPlacement = (
+    target: ElementRect,
+    tooltip: ElementRect,
+    offset: number,
+    availablePlacements = ALL_PLACEMENTS,
+    originalPosition?: Position
+): { position: Position; placement: string } | null => {
     if (!availablePlacements.length) {
         return null;
     }
+
     const [placement, ...rest] = availablePlacements;
-    const position = calculatePosition(target, tooltip, placement, offset);
+    const position = calculatePosition(target, tooltip, placement, offset, originalPosition);
 
     return isOutOfScreen(tooltip, position)
-        ? optimisePositionAndPlacement(target, tooltip, offset, rest)
+        ? optimisePositionAndPlacement(target, tooltip, offset, rest, originalPosition)
         : { position, placement };
 };
 
-export const adjustPosition = (target, tooltip, placement, offset, availablePlacements = ALL_PLACEMENTS) => {
+export const adjustPosition = (
+    target: {
+        top: number;
+        left: number;
+        width: number;
+        height: number;
+    },
+    tooltip: {
+        top: number;
+        left: number;
+        width: number;
+        height: number;
+    },
+    placement: string,
+    offset: number,
+    originalPosition?: Position,
+    availablePlacements = ALL_PLACEMENTS
+) => {
     const placementsByPriority = orderPlacements(placement, availablePlacements);
-    const optimalLocation = optimisePositionAndPlacement(target, tooltip, offset, placementsByPriority);
+    const optimalLocation = optimisePositionAndPlacement(
+        target,
+        tooltip,
+        offset,
+        placementsByPriority,
+        originalPosition
+    );
 
     if (!optimalLocation) {
+        // console.log('non-optimal');
         // No good position on screen, fallback to original
-        const position = calculatePosition(target, tooltip, placement, offset);
+        const position = calculatePosition(target, tooltip, placement, offset, originalPosition);
         return {
             position,
             placement
@@ -134,7 +183,7 @@ export const adjustPosition = (target, tooltip, placement, offset, availablePlac
     return optimalLocation;
 };
 
-export const computedSize = (stylePixels, boundsSize) => {
+export const computedSize = (stylePixels: string, boundsSize: number) => {
     const computedStyleSize = Number(stylePixels.replace('px', ''));
     return isNaN(computedStyleSize) ? boundsSize : computedStyleSize;
 };

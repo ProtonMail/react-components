@@ -5,8 +5,14 @@ const getPosition = (
     anchorEl: HTMLElement,
     popperEl: HTMLElement,
     originalPlacement: string,
-    offset: number,
-    availablePlacements: string[]
+    availablePlacements: string[],
+    originalPosition:
+        | {
+              top: number;
+              left: number;
+          }
+        | undefined,
+    offset: number
 ) => {
     const wrapperBounds = anchorEl.getBoundingClientRect();
     const tooltipBounds = popperEl.getBoundingClientRect();
@@ -29,6 +35,7 @@ const getPosition = (
         },
         originalPlacement,
         offset,
+        originalPosition,
         availablePlacements
     );
 };
@@ -39,6 +46,10 @@ interface Props {
     isOpen?: boolean;
     originalPlacement?: string;
     availablePlacements?: string[];
+    originalPosition?: {
+        top: number;
+        left: number;
+    };
     offset?: number;
     scrollContainerClass?: string;
 }
@@ -49,11 +60,13 @@ const usePopper = ({
     isOpen = false,
     originalPlacement = 'bottom',
     availablePlacements = ALL_PLACEMENTS,
+    originalPosition,
     offset = 10,
     scrollContainerClass = ''
 }: Props) => {
+    const initialPosition = originalPosition || { top: -1000, left: -1000 };
     const [placement, setPlacement] = useState(originalPlacement);
-    const [position, setPosition] = useState({ top: -1000, left: -1000 });
+    const [position, setPosition] = useState(initialPosition);
 
     useEffect(() => {
         if (!isOpen) {
@@ -66,8 +79,9 @@ const usePopper = ({
                     anchorEl,
                     popperEl,
                     originalPlacement,
-                    offset,
-                    availablePlacements
+                    availablePlacements,
+                    originalPosition,
+                    offset
                 );
                 setPlacement(adjustedPlacement);
                 setPosition(adjustedPosition);
@@ -75,7 +89,7 @@ const usePopper = ({
             }
 
             setPlacement(originalPlacement);
-            setPosition({ top: -1000, left: -1000 });
+            setPosition(initialPosition);
         };
 
         updatePosition();
@@ -91,7 +105,7 @@ const usePopper = ({
         };
     }, [isOpen, anchorEl, popperEl]);
 
-    return { position, placement };
+    return { position, placement, initialPosition };
 };
 
 export default usePopper;
