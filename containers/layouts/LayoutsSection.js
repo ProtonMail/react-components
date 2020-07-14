@@ -23,7 +23,7 @@ import {
     updateRightToLeft
 } from 'proton-shared/lib/api/mailSettings';
 import { updateDensity } from 'proton-shared/lib/api/settings';
-import { VIEW_MODE, STICKY_LABELS } from 'proton-shared/lib/constants';
+import { VIEW_MODE, STICKY_LABELS, FEATURE_FLAGS } from 'proton-shared/lib/constants';
 
 import DraftTypeSelect from './DraftTypeSelect';
 import TextDirectionSelect from './TextDirectionSelect';
@@ -154,15 +154,17 @@ const LayoutsSection = () => {
                     id="viewMode"
                 />
             </Row>
-            <Row>
-                <Label htmlFor="density">{c('Label').t`Density`}</Label>
-                <DensityRadios
-                    density={Density}
-                    onChange={(value) => withLoadingDensity(handleChangeDensity(value))}
-                    loading={loadingDensity}
-                    id="density"
-                />
-            </Row>
+            {FEATURE_FLAGS.includes('density') ? (
+                <Row>
+                    <Label htmlFor="density">{c('Label').t`Density`}</Label>
+                    <DensityRadios
+                        density={Density}
+                        onChange={(value) => withLoadingDensity(handleChangeDensity(value))}
+                        loading={loadingDensity}
+                        id="density"
+                    />
+                </Row>
+            ) : null}
             {ViewMode === GROUP ? (
                 <Row>
                     <Label htmlFor={'stickyLabelsToggle'}>
