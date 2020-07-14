@@ -172,18 +172,8 @@ const optimisePositionAndPlacement = (
 };
 
 export const adjustPosition = (
-    target: {
-        top: number;
-        left: number;
-        width: number;
-        height: number;
-    },
-    tooltip: {
-        top: number;
-        left: number;
-        width: number;
-        height: number;
-    },
+    target: ElementRect,
+    tooltip: ElementRect,
     placement: string,
     offset: number,
     originalPosition?: Position,
