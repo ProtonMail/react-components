@@ -4,7 +4,7 @@ import { noop } from 'proton-shared/lib/helpers/function';
 import { classnames } from '../../helpers/component';
 import { usePopper } from '../popper';
 import useRightToLeft from '../../containers/rightToLeft/useRightToLeft';
-import { ALL_PLACEMENTS } from '../popper/utils';
+import { ALL_PLACEMENTS, Position } from '../popper/utils';
 import Portal from '../portal/Portal';
 import useIsClosing from './useIsClosing';
 
@@ -22,10 +22,7 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
     noMaxSize?: boolean;
     noCaret?: boolean;
     availablePlacements?: string[];
-    originalPosition?: {
-        top: number;
-        left: number;
-    };
+    originalPosition?: Position;
     offset?: number;
     autoClose?: boolean;
     autoCloseOutside?: boolean;
