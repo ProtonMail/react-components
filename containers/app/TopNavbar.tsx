@@ -1,10 +1,13 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { UserDropdown } from 'react-components';
 
 import { classnames } from '../../helpers/component';
 
-const TopNavbar = ({ children, className = '' }) => {
+interface Props {
+    children?: React.ReactNode;
+    className?: string;
+}
+
+const TopNavbar = ({ children, className = '' }: Props) => {
     const navIcons = React.Children.toArray(children).filter((child) => React.isValidElement(child)).length;
 
     return (
@@ -22,7 +25,7 @@ const TopNavbar = ({ children, className = '' }) => {
             >
                 {React.Children.map(children, (child) => {
                     return (
-                        child && (
+                        React.isValidElement(child) && (
                             <li className="flex-item-noshrink">
                                 {React.cloneElement(child, {
                                     className: 'topnav-link inline-flex flex-nowrap nodecoration'
@@ -31,17 +34,9 @@ const TopNavbar = ({ children, className = '' }) => {
                         )
                     );
                 })}
-                <li className="mtauto mbauto relative">
-                    <UserDropdown />
-                </li>
             </ul>
         </div>
     );
-};
-
-TopNavbar.propTypes = {
-    children: PropTypes.node,
-    className: PropTypes.string
 };
 
 export default TopNavbar;
