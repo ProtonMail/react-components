@@ -103,9 +103,9 @@ const usePopper = ({
             contentArea.removeEventListener('scroll', updatePosition);
             window.removeEventListener('resize', updatePosition);
         };
-    }, [isOpen, anchorEl, popperEl]);
+    }, [isOpen, anchorEl, popperEl, initialPosition]);
 
-    return { position, placement, initialPosition };
+    return { position, placement };
 };
 
 export default usePopper;

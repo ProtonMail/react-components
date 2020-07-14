@@ -54,7 +54,7 @@ const ContextMenu = React.forwardRef<HTMLElement, Props>(
                 originalPosition={position}
                 availablePlacements={CORNERS_ONLY_PLACEMENTS}
                 noCaret
-                originalPlacement="bottom-left"
+                originalPlacement="bottom-right"
                 offset={0}
                 anchorRef={ref as any}
                 onClose={close}
