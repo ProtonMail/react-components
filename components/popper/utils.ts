@@ -33,7 +33,7 @@ const inverted: any = {
     top: 'bottom'
 };
 
-type Position = { top: number; left: number };
+export type Position = { top: number; left: number };
 
 type ElementRect = {
     top: number;

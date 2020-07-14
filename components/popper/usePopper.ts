@@ -1,18 +1,13 @@
 import { useState, useEffect } from 'react';
-import { adjustPosition, computedSize, ALL_PLACEMENTS } from './utils';
+import { adjustPosition, computedSize, ALL_PLACEMENTS, Position } from './utils';
 
 const getPosition = (
     anchorEl: HTMLElement,
     popperEl: HTMLElement,
     originalPlacement: string,
     availablePlacements: string[],
-    originalPosition:
-        | {
-              top: number;
-              left: number;
-          }
-        | undefined,
-    offset: number
+    offset: number,
+    originalPosition?: Position
 ) => {
     const wrapperBounds = anchorEl.getBoundingClientRect();
     const tooltipBounds = popperEl.getBoundingClientRect();
@@ -46,10 +41,7 @@ interface Props {
     isOpen?: boolean;
     originalPlacement?: string;
     availablePlacements?: string[];
-    originalPosition?: {
-        top: number;
-        left: number;
-    };
+    originalPosition?: Position;
     offset?: number;
     scrollContainerClass?: string;
 }
@@ -80,8 +72,8 @@ const usePopper = ({
                     popperEl,
                     originalPlacement,
                     availablePlacements,
-                    originalPosition,
-                    offset
+                    offset,
+                    originalPosition
                 );
                 setPlacement(adjustedPlacement);
                 setPosition(adjustedPosition);
