@@ -124,7 +124,7 @@ const Dropdown = ({
         return null;
     }
 
-    const varPosition: any = {
+    const varPosition = {
         '--top': position.top,
         '--left': position.left
     };

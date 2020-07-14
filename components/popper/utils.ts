@@ -114,10 +114,10 @@ const calculatePosition = (
             left: originalPosition.left + target.width / 2 - tooltip.width / 2
         };
 
-        alignTop = originalPosition.top - tooltip.height;
-        alignBottom = originalPosition.top;
-        alignLeft = originalPosition.left - tooltip.width;
-        alignRight = originalPosition.left;
+        alignTop = originalPosition.top;
+        alignBottom = originalPosition.top + tooltip.height;
+        alignLeft = originalPosition.left;
+        alignRight = originalPosition.left - tooltip.width;
 
         placeAbove = originalPosition.top - tooltip.height - offset;
         placeBelow = originalPosition.top + offset;

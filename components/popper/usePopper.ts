@@ -64,7 +64,7 @@ const usePopper = ({
     offset = 10,
     scrollContainerClass = ''
 }: Props) => {
-    const initialPosition = originalPosition || { top: -1000, left: -1000 };
+    const initialPosition = { top: -1000, left: -1000 };
     const [placement, setPlacement] = useState(originalPlacement);
     const [position, setPosition] = useState(initialPosition);
 
@@ -103,7 +103,7 @@ const usePopper = ({
             contentArea.removeEventListener('scroll', updatePosition);
             window.removeEventListener('resize', updatePosition);
         };
-    }, [isOpen, anchorEl, popperEl, initialPosition]);
+    }, [isOpen, anchorEl, popperEl]);
 
     return { position, placement };
 };
