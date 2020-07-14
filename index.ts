@@ -128,6 +128,7 @@ export { default as ChallengeFrame } from './components/challenge/ChallengeFrame
 export { default as ContextMenu } from './components/contextMenu/ContextMenu';
 export { default as Price } from './components/price/Price';
 export { default as Progress } from './components/progress/Progress';
+export { default as DynamicProgress } from './components/progress/DynamicProgress';
 export { default as Meter } from './components/progress/Meter';
 export { default as CircularProgress } from './components/progress/CircularProgress';
 export { default as Legend } from './components/text/Legend';

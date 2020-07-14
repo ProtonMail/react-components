@@ -1,6 +1,6 @@
 import React from 'react';
 import { c } from 'ttag';
-import { Icon, Button } from 'react-components';
+import { Icon, Button } from '../../index';
 
 import humanSize from 'proton-shared/lib/helpers/humanSize';
 import { splitExtension } from 'proton-shared/lib/helpers/file';
