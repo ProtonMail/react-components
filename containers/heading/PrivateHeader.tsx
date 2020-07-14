@@ -54,7 +54,9 @@ const PrivateHeader = ({
                     text={c('Title').t`Back`}
                 />
                 <TopNavbar>
-                    <UserDropdown />
+                    <TopNavbarItem>
+                        <UserDropdown />
+                    </TopNavbarItem>
                 </TopNavbar>
             </Header>
         );
