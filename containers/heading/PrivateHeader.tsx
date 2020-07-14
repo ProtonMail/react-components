@@ -12,6 +12,7 @@ import {
 import { c } from 'ttag';
 import Header, { Props as HeaderProps } from '../../components/header/Header';
 import UserDropdown from './UserDropdown';
+import { TopNavbarItem } from '../app/TopNavbar';
 
 interface Props extends HeaderProps {
     url?: string;
@@ -73,18 +74,28 @@ const PrivateHeader = ({
             {title && isNarrow ? <span className="big lh-standard mtauto mbauto ellipsis">{title}</span> : null}
             {isNarrow ? null : searchBox}
             <TopNavbar>
-                {isNarrow && searchDropdown ? searchDropdown : null}
-                {hasPaidMail || isNarrow ? null : <UpgradeButton className="topnav-link" external={true} />}
-                {!settingsUrl ? null : (
-                    <TopNavbarLink
-                        data-test-id="view:general-settings"
-                        to={settingsUrl}
-                        icon="settings-master"
-                        text={c('Title').t`Settings`}
-                    />
+                {isNarrow && searchDropdown ? <TopNavbarItem>{searchDropdown}</TopNavbarItem> : null}
+                {hasPaidMail || isNarrow ? null : (
+                    <TopNavbarItem>
+                        <UpgradeButton external={true} />
+                    </TopNavbarItem>
                 )}
-                <SupportDropdown className="topnav-link" />
-                <UserDropdown />
+                {!settingsUrl ? null : (
+                    <TopNavbarItem>
+                        <TopNavbarLink
+                            data-test-id="view:general-settings"
+                            to={settingsUrl}
+                            icon="settings-master"
+                            text={c('Title').t`Settings`}
+                        />
+                    </TopNavbarItem>
+                )}
+                <TopNavbarItem>
+                    <SupportDropdown />
+                </TopNavbarItem>
+                <TopNavbarItem className="relative">
+                    <UserDropdown />
+                </TopNavbarItem>
             </TopNavbar>
             {isNarrow && floatingButton ? floatingButton : null}
         </Header>
