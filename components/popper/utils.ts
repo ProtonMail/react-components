@@ -26,7 +26,7 @@ export const CORNERS_ONLY_PLACEMENTS = [
     'right-top'
 ];
 
-const inverted: any = {
+const inverted: { [key: string]: string } = {
     left: 'right',
     right: 'left',
     bottom: 'top',
@@ -125,7 +125,7 @@ const calculatePosition = (
         placeRight = originalPosition.left + offset;
     }
 
-    const placementList: any = {
+    const placementList: { [key: string]: Position } = {
         top: { left: alignCenter.left, top: placeAbove },
         bottom: { left: alignCenter.left, top: placeBelow },
         left: { left: placeLeft, top: alignCenter.top },
