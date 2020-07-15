@@ -143,7 +143,7 @@ const AccountResetPasswordContainer = ({ onLogin, history, Layout }: Props) => {
                         .jt`Resetting your password will reset your encryption keys for all Proton related services (Mail and VPN). You will be unable to read your existing messages. If you know your ProtonMail credentials, do NOT reset. You can log in with them ${hereLink}.`}</Alert>
                     <Alert type="warning">{c('Info').t`ALL YOUR DATA WILL BE LOST!`}</Alert>
                     <SignupLabelInputRow
-                        label={<Label htmlFor="danger">{c('Label').t`Danger`}</Label>}
+                        label={<Label htmlFor="danger">{c('Label').t`Confirm reset`}</Label>}
                         input={
                             <ResetDangerInput id="danger" value={danger} setValue={setDanger} dangerWord={dangerWord} />
                         }
@@ -170,7 +170,7 @@ const AccountResetPasswordContainer = ({ onLogin, history, Layout }: Props) => {
                 >
                     <Alert type="warning">{c('Info').t`Keep this password safe, it cannot be recovered.`}</Alert>
                     <SignupLabelInputRow
-                        label={<Label htmlFor="new-password" className="sr-only">{c('Label').t`New password`}</Label>}
+                        label={<Label htmlFor="new-password">{c('Label').t`New password`}</Label>}
                         input={
                             <PasswordInput
                                 id="new-password"
