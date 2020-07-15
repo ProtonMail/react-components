@@ -13,7 +13,8 @@ import {
     generateUID,
     PrimaryButton,
     useConfig,
-    useSubscription
+    useSubscription,
+    Link
 } from '../../';
 import { revoke } from 'proton-shared/lib/api/auth';
 import { APPS, CLIENT_TYPES, PLANS } from 'proton-shared/lib/constants';
@@ -76,13 +77,14 @@ const UserDropdown = ({ ...rest }) => {
                     </li>
                     {CLIENT_TYPE === VPN || APP_NAME === APPS.PROTONACCOUNT ? null : (
                         <li className="dropDown-item">
-                            <a
+                            <Link
+                                external={APP_NAME !== APPS.PROTONMAIL_SETTINGS}
                                 className="w100 flex flex-nowrap dropDown-item-link nodecoration pl1 pr1 pt0-5 pb0-5"
-                                href="/settings"
+                                to="/settings"
                             >
                                 <Icon className="mt0-25 mr0-5" name="settings-master" />
                                 {c('Action').t`Settings`}
-                            </a>
+                            </Link>
                         </li>
                     )}
                     <li className="dropDown-item">
