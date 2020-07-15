@@ -1,4 +1,5 @@
 import React, { ReactNode } from 'react';
+import { TtagLocaleMap } from 'proton-shared/lib/interfaces/Locale';
 import { c } from 'ttag';
 
 import { classnames, Href, useAppTitle, useConfig, PublicTopBanners } from '../..';
@@ -14,7 +15,7 @@ export interface Props {
     left?: ReactNode;
     center?: ReactNode;
     larger?: boolean;
-    locales?: { [key: string]: () => Promise<void> };
+    locales?: TtagLocaleMap;
 }
 
 const AccountPublicLayout = ({ children, title, aside, larger, left, center, right, locales }: Props) => {
