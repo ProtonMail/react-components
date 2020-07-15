@@ -15,16 +15,18 @@ const IndexSection = ({ pages }: { pages: SectionConfig[] }) => {
                         key={to}
                         className={classnames(['setting-grid', subsections.length > 4 && 'setting-grid--tall'])}
                     >
-                        <h2 className="h6 mb0-5">
-                            <strong>{text}</strong>
-                        </h2>
-                        <Sections
-                            to={to}
-                            subsections={subsections}
-                            text={text}
-                            permissions={permissions}
-                            pagePermissions={pagePermissions}
-                        />
+                        <div className="bordered-container bg-main-area p2">
+                            <h2 className="h6 mb0-5">
+                                <strong>{text}</strong>
+                            </h2>
+                            <Sections
+                                to={to}
+                                subsections={subsections}
+                                text={text}
+                                permissions={permissions}
+                                pagePermissions={pagePermissions}
+                            />
+                        </div>
                     </div>
                 );
             })}
