@@ -1,5 +1,5 @@
+import { HumanVerificationMethodType } from 'proton-shared/lib/interfaces';
 import { SIGNUP_STEPS } from './constants';
-import { MethodType } from '../api/HumanVerificationForm';
 
 export enum SERVICES {
     mail = 'ProtonMail',
@@ -43,7 +43,7 @@ export interface SignupModel {
     currency: string;
     cycle: number;
     planIDs: PlanIDs;
-    humanVerificationMethods: MethodType[];
+    humanVerificationMethods: HumanVerificationMethodType[];
     humanVerificationToken: string;
 }
 
@@ -84,9 +84,9 @@ export interface SignupPayPal {
 }
 
 export class HumanVerificationError extends Error {
-    methods: MethodType[];
+    methods: HumanVerificationMethodType[];
     token: string;
-    constructor(methods: MethodType[], token: string) {
+    constructor(methods: HumanVerificationMethodType[], token: string) {
         super('HumanVerificationError');
         this.methods = methods;
         this.token = token;
