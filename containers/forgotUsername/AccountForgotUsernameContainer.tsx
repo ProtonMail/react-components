@@ -14,7 +14,7 @@ interface Props {
     Layout: FunctionComponent<AccountLayoutProps>;
 }
 
-const ForgotUsernameContainer = ({ history, Layout }: Props) => {
+const AccountForgotUsernameContainer = ({ history, Layout }: Props) => {
     const api = useApi();
     const [loading, withLoading] = useLoading();
     const { createNotification } = useNotifications();
@@ -72,4 +72,4 @@ const ForgotUsernameContainer = ({ history, Layout }: Props) => {
     );
 };
 
-export default ForgotUsernameContainer;
+export default AccountForgotUsernameContainer;
