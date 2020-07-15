@@ -11,7 +11,10 @@ interface Props extends React.HTMLAttributes<HTMLTimeElement> {
 
 const getValue = (value?: string | number | null) => {
     if (typeof value === 'string') {
-        return parseInt(value, 10);
+        const numberValue = parseInt(value, 10);
+        if (!isNaN(numberValue)) {
+            return numberValue;
+        }
     }
     if (typeof value === 'number') {
         return value;
