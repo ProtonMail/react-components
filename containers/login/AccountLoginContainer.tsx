@@ -8,7 +8,7 @@ import {
     useLoading,
     InlineLinkButton,
     PrimaryButton,
-    SupportDropdown,
+    AccountSupportDropdown,
     useNotifications,
     useModals,
     Label
@@ -90,9 +90,9 @@ const AccountLoginContainer = ({ onLogin, ignoreUnlock = false, Layout }: Props)
                     {usernameInput}
                     {passwordInput}
                     <div className="mb1">
-                        <SupportDropdown noCaret={true} className="link">
+                        <AccountSupportDropdown noCaret={true} className="link">
                             {c('Action').t`Need help?`}
-                        </SupportDropdown>
+                        </AccountSupportDropdown>
                     </div>
                     <div className="alignright mb2">
                         <PrimaryButton
