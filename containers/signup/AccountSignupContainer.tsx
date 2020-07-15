@@ -22,6 +22,8 @@ import {
     BackButton
 } from '../../index';
 import { HumanVerificationMethodType } from 'proton-shared/lib/interfaces';
+import { queryAddresses } from 'proton-shared/lib/api/addresses';
+import { Address } from 'proton-shared/lib/interfaces';
 import { Props as AccountPublicLayoutProps } from './AccountPublicLayout';
 import SignupAccountForm from './SignupAccountForm';
 import SignupRecoveryForm from './SignupRecoveryForm';
@@ -50,8 +52,6 @@ import { hasPaidPlan } from './helpers/helper';
 import { handlePaymentToken } from '../payments/paymentTokenHelper';
 import handleCreateUser from './helpers/handleCreateUser';
 import createAuthApi from './helpers/authApi';
-import { queryAddresses } from 'proton-shared/lib/api/addresses';
-import { Address } from 'proton-shared/lib/interfaces';
 import handleCreateAddress from './helpers/handleCreateAddress';
 import handleCreateKeys from './helpers/handleCreateKeys';
 import OneAccountIllustration from '../illustration/OneAccountIllustration';
@@ -88,7 +88,7 @@ const getSearchParams = (search: History.Search) => {
     return { currency, cycle, preSelectedPlan, service: service ? SERVICES[service] : undefined };
 };
 
-const SignupContainer = ({ onLogin, history, Layout }: Props) => {
+const AccountSignupContainer = ({ onLogin, history, Layout }: Props) => {
     const { currency, cycle, preSelectedPlan, service } = useMemo(() => {
         return getSearchParams(history.location.search);
     }, [history.location.search]);
@@ -590,4 +590,4 @@ const SignupContainer = ({ onLogin, history, Layout }: Props) => {
     throw new Error('Unknown step');
 };
 
-export default SignupContainer;
+export default AccountSignupContainer;

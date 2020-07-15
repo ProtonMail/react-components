@@ -151,6 +151,7 @@ export { default as OrderableTableRow } from './components/orderableTable/Ordera
 export { default as LabelModal } from './containers/labels/modals/Edit';
 export * from './containers/login';
 export { default as MinimalResetPasswordContainer } from './containers/resetPassword/MinimalResetPasswordContainer';
+export { default as AccountResetPasswordContainer } from './containers/resetPassword/AccountResetPasswordContainer';
 export * from './containers/signup';
 export { default as ProtonMailAppsSection } from './containers/apps/ProtonMailAppsSection';
 export { default as ProtonMailBetaSection } from './containers/apps/ProtonMailBetaSection';

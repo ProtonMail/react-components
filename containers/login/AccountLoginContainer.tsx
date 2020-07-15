@@ -24,6 +24,8 @@ import LoginPasswordInput from './LoginPasswordInput';
 import LoginTotpInput from './LoginTotpInput';
 import LoginRecoveryCodeInput from './LoginRecoveryCodeInput';
 import LoginUnlockInput from './LoginUnlockInput';
+import SignupLabelInputRow from '../signup/SignupLabelInputRow';
+import SignupSubmitRow from '../signup/SignupSubmitRow';
 
 interface Props extends UseLoginProps {
     Layout: FunctionComponent<AccountPublicLayoutProps>;
@@ -67,21 +69,19 @@ const AccountLoginContainer = ({ onLogin, ignoreUnlock = false, Layout }: Props)
         );
 
         const usernameInput = (
-            <div className="flex onmobile-flex-column signup-label-field-container mb0-5">
-                <Label htmlFor="login">{c('Label').t`Email or Username`}</Label>
-                <div className="flex-item-fluid">
-                    <LoginUsernameInput id="login" username={username} setUsername={loading ? noop : setUsername} />
-                </div>
-            </div>
+            <SignupLabelInputRow
+                label={<Label htmlFor="login">{c('Label').t`Email or Username`}</Label>}
+                input={<LoginUsernameInput id="login" username={username} setUsername={loading ? noop : setUsername} />}
+            />
         );
 
         const passwordInput = (
-            <div className="flex onmobile-flex-column signup-label-field-container mb0-5">
-                <Label htmlFor="password">{c('Label').t`Password`}</Label>
-                <div className="flex-item-fluid">
-                    <LoginPasswordInput password={password} setPassword={loading ? noop : setPassword} id="password" />
-                </div>
-            </div>
+            <SignupLabelInputRow
+                label={<Label htmlFor="password">{c('Label').t`Password`}</Label>}
+                input={
+                    <LoginPasswordInput id="password" password={password} setPassword={loading ? noop : setPassword} />
+                }
+            />
         );
 
         return (
@@ -94,7 +94,7 @@ const AccountLoginContainer = ({ onLogin, ignoreUnlock = false, Layout }: Props)
                             {c('Action').t`Need help?`}
                         </AccountSupportDropdown>
                     </div>
-                    <div className="alignright mb2">
+                    <SignupSubmitRow>
                         <PrimaryButton
                             type="submit"
                             className="pm-button--large"
@@ -103,7 +103,7 @@ const AccountLoginContainer = ({ onLogin, ignoreUnlock = false, Layout }: Props)
                         >
                             {c('Action').t`Sign in`}
                         </PrimaryButton>
-                    </div>
+                    </SignupSubmitRow>
                 </form>
                 <div className="mb2 alignright">{c('Info').jt`New to Proton? ${signupLink}`}</div>
             </Layout>
@@ -125,21 +125,17 @@ const AccountLoginContainer = ({ onLogin, ignoreUnlock = false, Layout }: Props)
         };
 
         const totpForm = (
-            <div className="flex onmobile-flex-column signup-label-field-container mb0-5">
-                <Label htmlFor="twoFa">{c('Label').t`Two-factor code`}</Label>
-                <div className="flex-item-fluid">
-                    <LoginTotpInput totp={totp} setTotp={loading ? noop : setTotp} id="twoFa" />
-                </div>
-            </div>
+            <SignupLabelInputRow
+                label={<Label htmlFor="twoFa">{c('Label').t`Two-factor code`}</Label>}
+                input={<LoginTotpInput totp={totp} setTotp={loading ? noop : setTotp} id="twoFa" />}
+            />
         );
 
         const recoveryForm = (
-            <div className="flex onmobile-flex-column signup-label-field-container mb0-5">
-                <Label htmlFor="twoFa">{c('Label').t`Two-factor code`}</Label>
-                <div className="flex-item-fluid">
-                    <LoginRecoveryCodeInput code={totp} setCode={loading ? noop : setTotp} id="recoveryCode" />
-                </div>
-            </div>
+            <SignupLabelInputRow
+                label={<Label htmlFor="twoFa">{c('Label').t`Two-factor code`}</Label>}
+                input={<LoginRecoveryCodeInput code={totp} setCode={loading ? noop : setTotp} id="recoveryCode" />}
+            />
         );
 
         return (
@@ -156,7 +152,7 @@ const AccountLoginContainer = ({ onLogin, ignoreUnlock = false, Layout }: Props)
                             {isTotpRecovery ? c('Action').t`Use two-factor code` : c('Action').t`Use recovery code`}
                         </InlineLinkButton>
                     </div>
-                    <div className="alignright mb1">
+                    <SignupSubmitRow>
                         <PrimaryButton
                             type="submit"
                             disabled={!totp}
@@ -166,7 +162,7 @@ const AccountLoginContainer = ({ onLogin, ignoreUnlock = false, Layout }: Props)
                         >
                             {c('Action').t`Authenticate`}
                         </PrimaryButton>
-                    </div>
+                    </SignupSubmitRow>
                 </form>
             </Layout>
         );
@@ -187,23 +183,25 @@ const AccountLoginContainer = ({ onLogin, ignoreUnlock = false, Layout }: Props)
                 })
             );
         };
+
         const unlockInput = (
-            <div className="flex onmobile-flex-column signup-label-field-container mb0-5">
-                <Label htmlFor="password" className="mr1">{c('Label').t`Mailbox password`}</Label>
-                <div className="flex-item-fluid">
+            <SignupLabelInputRow
+                label={<Label htmlFor="password" className="mr1">{c('Label').t`Mailbox password`}</Label>}
+                input={
                     <LoginUnlockInput
                         password={keyPassword}
                         setPassword={loading ? noop : setKeyPassword}
                         id="password"
                     />
-                </div>
-            </div>
+                }
+            />
         );
+
         return (
             <Layout title={c('Title').t`Unlock your mailbox`} left={<BackButton onClick={handleCancel} />}>
                 <form name="unlockForm" className="signup-form" onSubmit={handleSubmit}>
                     {unlockInput}
-                    <div className="alignright mb1">
+                    <SignupSubmitRow>
                         <PrimaryButton
                             type="submit"
                             className="pm-button--large"
@@ -213,7 +211,7 @@ const AccountLoginContainer = ({ onLogin, ignoreUnlock = false, Layout }: Props)
                         >
                             {c('Action').t`Unlock`}
                         </PrimaryButton>
-                    </div>
+                    </SignupSubmitRow>
                 </form>
             </Layout>
         );

@@ -19,6 +19,8 @@ import { SignupModel, SignupErrors, SERVICES } from './interfaces';
 import { SIGNUP_STEPS } from './constants';
 import InsecureEmailInfo from './InsecureEmailInfo';
 import { ChallengeRef, ChallengeResult } from '../../components/challenge/ChallengeFrame';
+import SignupSubmitRow from './SignupSubmitRow';
+import SignupLabelInputRow from './SignupLabelInputRow';
 
 interface Props {
     history: History;
@@ -58,93 +60,95 @@ const SignupAccountForm = ({ model, onChange, onSubmit, errors, loading, service
 
     const inner = (() => {
         if (model.step === ACCOUNT_CREATION_USERNAME) {
-            return (
-                <div className="flex onmobile-flex-column signup-label-field-container mb1">
-                    <Label htmlFor="login">{c('Signup label').t`Username`}</Label>
-                    <div className="flex-item-fluid">
-                        <Challenge
-                            bodyClassName="signLayout-container"
-                            challengeRef={challengeRefLogin}
-                            type={0}
-                            onLoaded={handleChallengeLoaded}
-                        >
-                            <div className="flex flex-nowrap flex-items-center flex-item-fluid relative mb0-5">
-                                <div className="flex-item-fluid">
-                                    <Input
-                                        id="login"
-                                        name="login"
-                                        autoFocus
-                                        autoComplete="off"
-                                        autoCapitalize="off"
-                                        autoCorrect="off"
-                                        value={model.username}
-                                        onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
-                                            onChange({ ...model, username: target.value })
-                                        }
-                                        onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                                            if (e.key === 'Enter') {
-                                                // formRef.submit does not trigger handler
-                                                withLoadingChallenge(handleSubmit());
-                                            }
-                                        }}
-                                        error={errors.username}
-                                        placeholder={USERNAME_PLACEHOLDER}
-                                        className="pm-field--username"
-                                        required
-                                    />
-                                </div>
-                                <span className="pt0-75 right-icon absolute">@{availableDomain}</span>
-                            </div>
-                            <InlineLinkButton
-                                id="existing-email-button"
-                                onClick={() => onChange({ ...model, username: '', step: ACCOUNT_CREATION_EMAIL })}
-                            >{c('Action').t`Use your current email address instead`}</InlineLinkButton>
-                        </Challenge>
+            const challenge = (
+                <Challenge
+                    bodyClassName="signLayout-container"
+                    challengeRef={challengeRefLogin}
+                    type={0}
+                    onLoaded={handleChallengeLoaded}
+                >
+                    <div className="flex flex-nowrap flex-items-center flex-item-fluid relative mb0-5">
+                        <div className="flex-item-fluid">
+                            <Input
+                                id="login"
+                                name="login"
+                                autoFocus
+                                autoComplete="off"
+                                autoCapitalize="off"
+                                autoCorrect="off"
+                                value={model.username}
+                                onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
+                                    onChange({ ...model, username: target.value })
+                                }
+                                onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                                    if (e.key === 'Enter') {
+                                        // formRef.submit does not trigger handler
+                                        withLoadingChallenge(handleSubmit());
+                                    }
+                                }}
+                                error={errors.username}
+                                placeholder={USERNAME_PLACEHOLDER}
+                                className="pm-field--username"
+                                required
+                            />
+                        </div>
+                        <span className="pt0-75 right-icon absolute">@{availableDomain}</span>
                     </div>
-                </div>
+                    <InlineLinkButton
+                        id="existing-email-button"
+                        onClick={() => onChange({ ...model, username: '', step: ACCOUNT_CREATION_EMAIL })}
+                    >{c('Action').t`Use your current email address instead`}</InlineLinkButton>
+                </Challenge>
+            );
+            return (
+                <SignupLabelInputRow
+                    label={<Label htmlFor="login">{c('Signup label').t`Username`}</Label>}
+                    input={challenge}
+                />
             );
         }
 
         if (model.step === ACCOUNT_CREATION_EMAIL) {
-            return (
-                <div className="flex onmobile-flex-column signup-label-field-container mb1">
-                    <Label htmlFor="login">{c('Signup label').t`Email`}</Label>
-                    <div className="flex-item-fluid">
-                        <Challenge
-                            bodyClassName="signLayout-container"
-                            challengeRef={challengeRefLogin}
-                            type={0}
-                            onLoad={handleChallengeLoaded}
-                        >
-                            <div className="mb0-5 flex-item-fluid">
-                                <EmailInput
-                                    id="login"
-                                    name="login"
-                                    autoFocus
-                                    autoComplete="off"
-                                    autoCapitalize="off"
-                                    autoCorrect="off"
-                                    value={model.email}
-                                    onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
-                                        onChange({ ...model, email: target.value })
-                                    }
-                                    onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                                        if (e.key === 'Enter') {
-                                            withLoadingChallenge(handleSubmit());
-                                        }
-                                    }}
-                                    error={errors.email}
-                                    required
-                                />
-                            </div>
-                            <InsecureEmailInfo email={model.email} />
-                            <InlineLinkButton
-                                id="proton-email-button"
-                                onClick={() => onChange({ ...model, email: '', step: ACCOUNT_CREATION_USERNAME })}
-                            >{c('Action').t`Create a secure ProtonMail address instead`}</InlineLinkButton>
-                        </Challenge>
+            const challenge = (
+                <Challenge
+                    bodyClassName="signLayout-container"
+                    challengeRef={challengeRefLogin}
+                    type={0}
+                    onLoad={handleChallengeLoaded}
+                >
+                    <div className="mb0-5 flex-item-fluid">
+                        <EmailInput
+                            id="login"
+                            name="login"
+                            autoFocus
+                            autoComplete="off"
+                            autoCapitalize="off"
+                            autoCorrect="off"
+                            value={model.email}
+                            onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
+                                onChange({ ...model, email: target.value })
+                            }
+                            onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                                if (e.key === 'Enter') {
+                                    withLoadingChallenge(handleSubmit());
+                                }
+                            }}
+                            error={errors.email}
+                            required
+                        />
                     </div>
-                </div>
+                    <InsecureEmailInfo email={model.email} />
+                    <InlineLinkButton
+                        id="proton-email-button"
+                        onClick={() => onChange({ ...model, email: '', step: ACCOUNT_CREATION_USERNAME })}
+                    >{c('Action').t`Create a secure ProtonMail address instead`}</InlineLinkButton>
+                </Challenge>
+            );
+            return (
+                <SignupLabelInputRow
+                    label={<Label htmlFor="login">{c('Signup label').t`Email`}</Label>}
+                    input={challenge}
+                />
             );
         }
 
@@ -171,9 +175,10 @@ const SignupAccountForm = ({ model, onChange, onSubmit, errors, loading, service
                 {service ? <div className="mb1">{c('Info').t`to continue to ${service}`}</div> : null}
                 {inner}
                 <div className="flex flex-nowrap mb2">
-                    <div className="flex flex-item-fluid onmobile-flex-column signup-label-field-container mr0-5">
-                        <Label htmlFor="password">{c('Signup label').t`Password`}</Label>
-                        <div className="flex-item-fluid">
+                    <SignupLabelInputRow
+                        className="mr0-5"
+                        label={<Label htmlFor="password">{c('Signup label').t`Password`}</Label>}
+                        input={
                             <PasswordInput
                                 id="password"
                                 name="password"
@@ -187,11 +192,12 @@ const SignupAccountForm = ({ model, onChange, onSubmit, errors, loading, service
                                 error={errors.password}
                                 required
                             />
-                        </div>
-                    </div>
-                    <div className="flex flex-item-fluid onmobile-flex-column signup-label-field-container ml0-5">
-                        <Label htmlFor="password-repeat">{c('Signup label').t`Confirm`}</Label>
-                        <div className="flex-item-fluid">
+                        }
+                    />
+                    <SignupLabelInputRow
+                        className="ml0-5"
+                        label={<Label htmlFor="password-repeat">{c('Signup label').t`Confirm`}</Label>}
+                        input={
                             <PasswordInput
                                 id="password-repeat"
                                 name="password-repeat"
@@ -205,17 +211,17 @@ const SignupAccountForm = ({ model, onChange, onSubmit, errors, loading, service
                                 error={errors.confirmPassword}
                                 required
                             />
-                        </div>
-                    </div>
+                        }
+                    />
                 </div>
-                <div className="alignright mb2">
+                <SignupSubmitRow>
                     <PrimaryButton
                         className="pm-button--large flex-item-noshrink onmobile-w100"
                         loading={loading || loadingChallenge}
                         disabled={disableSubmit}
                         type="submit"
                     >{c('Action').t`Create account`}</PrimaryButton>
-                </div>
+                </SignupSubmitRow>
                 <div className="alignright">
                     <span>{c('Info').jt`Already have an account? ${loginLink}`}</span>
                 </div>

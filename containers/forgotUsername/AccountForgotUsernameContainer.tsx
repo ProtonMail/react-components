@@ -6,6 +6,8 @@ import { requestUsername } from 'proton-shared/lib/api/reset';
 import { useApi, useNotifications, useLoading, EmailInput, PrimaryButton, Label } from '../../index';
 import { Props as AccountLayoutProps } from '../signup/AccountPublicLayout';
 import BackButton from '../signup/BackButton';
+import SignupLabelInputRow from '../signup/SignupLabelInputRow';
+import SignupSubmitRow from '../signup/SignupSubmitRow';
 
 interface Props {
     history: History;
@@ -42,9 +44,9 @@ const ForgotUsernameContainer = ({ history, Layout }: Props) => {
             >
                 <p>{c('Info')
                     .t`Enter your recovery email address or recovery phone number and we will send you your username or email address.`}</p>
-                <div className="flex onmobile-flex-column signup-label-field-container mb2">
-                    <Label htmlFor="email">{c('Label').t`Recovery email`}</Label>
-                    <div className="flex-item-fluid">
+                <SignupLabelInputRow
+                    label={<Label htmlFor="email">{c('Label').t`Recovery email`}</Label>}
+                    input={
                         <EmailInput
                             name="email"
                             autoFocus
@@ -55,16 +57,16 @@ const ForgotUsernameContainer = ({ history, Layout }: Props) => {
                             onChange={({ target }) => setEmail(target.value)}
                             required
                         />
-                    </div>
-                </div>
-                <div className="flex flex-nowrap flex-justify-end mb1">
+                    }
+                />
+                <SignupSubmitRow>
                     <PrimaryButton
                         className="pm-button--large onmobile-w100"
                         disabled={!email}
                         loading={loading}
                         type="submit"
                     >{c('Action').t`Send my username`}</PrimaryButton>
-                </div>
+                </SignupSubmitRow>
             </form>
         </Layout>
     );

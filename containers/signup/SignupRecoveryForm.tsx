@@ -18,6 +18,8 @@ import { SignupModel, SignupErrors } from './interfaces';
 import { SIGNUP_STEPS } from './constants';
 import InlineLinkButton from '../../components/button/InlineLinkButton';
 import { ChallengeRef, ChallengeResult } from '../../components/challenge/ChallengeFrame';
+import SignupLabelInputRow from './SignupLabelInputRow';
+import SignupSubmitRow from './SignupSubmitRow';
 
 interface Props {
     model: SignupModel;
@@ -65,46 +67,48 @@ const SignupRecoveryForm = ({ model, onChange, onSubmit, onSkip, errors, loading
 
     const inner = (() => {
         if (model.step === RECOVERY_EMAIL) {
+            const challenge = (
+                <Challenge
+                    bodyClassName="signLayout-container"
+                    challengeRef={challengeRefRecovery}
+                    type={1}
+                    onLoaded={handleChallengeLoaded}
+                >
+                    <div className="mb0-5">
+                        <EmailInput
+                            id="recovery-email"
+                            name="recovery-email"
+                            autoFocus
+                            autoComplete="on"
+                            autoCapitalize="off"
+                            autoCorrect="off"
+                            value={model.recoveryEmail}
+                            onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
+                                onChange({ ...model, recoveryEmail: target.value })
+                            }
+                            onKeyDown={({ keyCode }: React.KeyboardEvent<HTMLInputElement>) =>
+                                keyCode === 13 && formRef.current?.submit()
+                            }
+                            required
+                        />
+                    </div>
+                    <div>
+                        <InlineLinkButton
+                            id="recovery-phone-button"
+                            onClick={() => onChange({ ...model, recoveryEmail: '', step: RECOVERY_PHONE })}
+                        >{c('Action').t`Add a recovery phone number instead`}</InlineLinkButton>
+                    </div>
+                </Challenge>
+            );
+
             return (
                 <>
                     <p>{c('Info')
                         .t`We will send you a recovery link to this email address if you forget your password or get locked out of your account.`}</p>
-                    <div className="flex onmobile-flex-column signup-label-field-container mb1">
-                        <Label htmlFor="recovery-email">{c('Label').t`Recovery email`}</Label>
-                        <div className="flex-item-fluid">
-                            <Challenge
-                                bodyClassName="signLayout-container"
-                                challengeRef={challengeRefRecovery}
-                                type={1}
-                                onLoaded={handleChallengeLoaded}
-                            >
-                                <div className="mb0-5">
-                                    <EmailInput
-                                        id="recovery-email"
-                                        name="recovery-email"
-                                        autoFocus
-                                        autoComplete="on"
-                                        autoCapitalize="off"
-                                        autoCorrect="off"
-                                        value={model.recoveryEmail}
-                                        onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
-                                            onChange({ ...model, recoveryEmail: target.value })
-                                        }
-                                        onKeyDown={({ keyCode }: React.KeyboardEvent<HTMLInputElement>) =>
-                                            keyCode === 13 && formRef.current?.submit()
-                                        }
-                                        required
-                                    />
-                                </div>
-                                <div>
-                                    <InlineLinkButton
-                                        id="recovery-phone-button"
-                                        onClick={() => onChange({ ...model, recoveryEmail: '', step: RECOVERY_PHONE })}
-                                    >{c('Action').t`Add a recovery phone number instead`}</InlineLinkButton>
-                                </div>
-                            </Challenge>
-                        </div>
-                    </div>
+                    <SignupLabelInputRow
+                        label={<Label htmlFor="recovery-email">{c('Label').t`Recovery email`}</Label>}
+                        input={challenge}
+                    />
                 </>
             );
         }
@@ -114,27 +118,29 @@ const SignupRecoveryForm = ({ model, onChange, onSubmit, onSkip, errors, loading
                 <>
                     <p>{c('Info')
                         .t`We will send a code to this phone number if you forget your password or get locked out of your account.`}</p>
-                    <div className="flex onmobile-flex-column signup-label-field-container mb1">
-                        <Label htmlFor="recovery-phone">{c('Label').t`Recovery phone`}</Label>
-                        <div className="flex-item-fluid">
-                            <div className="mb0-5">
-                                <IntlTelInput
-                                    id="recovery-phone"
-                                    name="recovery-phone"
-                                    containerClassName="w100"
-                                    inputClassName="w100"
-                                    autoFocus
-                                    onPhoneNumberChange={handleChangePhone}
-                                    required
-                                />
-                            </div>
-                            <div>
-                                <InlineLinkButton
-                                    onClick={() => onChange({ ...model, recoveryPhone: '', step: RECOVERY_EMAIL })}
-                                >{c('Action').t`Add an email address instead`}</InlineLinkButton>
-                            </div>
-                        </div>
-                    </div>
+                    <SignupLabelInputRow
+                        label={<Label htmlFor="recovery-phone">{c('Label').t`Recovery phone`}</Label>}
+                        input={
+                            <>
+                                <div className="mb0-5">
+                                    <IntlTelInput
+                                        id="recovery-phone"
+                                        name="recovery-phone"
+                                        containerClassName="w100"
+                                        inputClassName="w100"
+                                        autoFocus
+                                        onPhoneNumberChange={handleChangePhone}
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <InlineLinkButton
+                                        onClick={() => onChange({ ...model, recoveryPhone: '', step: RECOVERY_EMAIL })}
+                                    >{c('Action').t`Add an email address instead`}</InlineLinkButton>
+                                </div>
+                            </>
+                        }
+                    />
                 </>
             );
         }
@@ -155,7 +161,7 @@ const SignupRecoveryForm = ({ model, onChange, onSubmit, onSkip, errors, loading
                 ref={formRef}
             >
                 {inner}
-                <div className="alignright mb1">
+                <SignupSubmitRow>
                     <LinkButton
                         className="mr2 pm-button--large nodecoration"
                         disabled={loading || loadingChallenge}
@@ -167,7 +173,7 @@ const SignupRecoveryForm = ({ model, onChange, onSubmit, onSkip, errors, loading
                         disabled={disableSubmit}
                         type="submit"
                     >{c('Action').t`Next`}</PrimaryButton>
-                </div>
+                </SignupSubmitRow>
             </form>
         </>
     );
