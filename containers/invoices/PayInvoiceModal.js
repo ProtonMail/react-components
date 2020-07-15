@@ -44,7 +44,7 @@ const PayInvoiceModal = ({ invoice, fetchInvoices, ...rest }) => {
         createNotification({ text: c('Success').t`Invoice paid` });
     };
 
-    const { paypal, card, setCard, errors, method, setMethod, parameters, canPay } = usePayment({
+    const { card, setCard, errors, method, setMethod, parameters, canPay, paypal } = usePayment({
         amount: AmountDue,
         currency: Currency,
         onPay: handleSubmit
