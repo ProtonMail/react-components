@@ -1,5 +1,5 @@
 include:
   - project: 'deploy-app/fe-scripts'
-    ref: master
+    ref: feat/make-cache
     file: '/jobs/lib.gitlab-ci.yaml'
 
