@@ -135,7 +135,7 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
             });
         };
 
-        const handleMissingScope = (missingScopes = []) => {
+        const handleMissingScopes = (missingScopes = []) => {
             if (missingScopes.includes('nondelinquent')) {
                 return createModal(<DelinquentModal />);
             }
@@ -153,7 +153,7 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
             onError: handleError,
             onUnlock: handleUnlock,
             onVerification: handleVerification,
-            onMissingScopes: handleMissingScope,
+            onMissingScopes: handleMissingScopes,
         });
 
         apiRef.current = ({ output = 'json', ...rest }) => {
