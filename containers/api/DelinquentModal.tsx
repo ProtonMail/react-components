@@ -36,6 +36,7 @@ const DelinquentModal = ({ history, ...rest }: Props) => {
             close={null}
             submit={c('Action').t`View invoice`}
             onSubmit={handleSubmit}
+            small={true}
             {...rest}
         >
             <Alert type="warning">{c('Info')
