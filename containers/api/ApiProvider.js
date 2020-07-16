@@ -18,6 +18,7 @@ import ApiContext from './apiContext';
 import useNotifications from '../notifications/useNotifications';
 import useModals from '../modals/useModals';
 import UnlockModal from '../login/UnlockModal';
+import DelinquentModal from './DelinquentModal';
 import HumanVerificationModal from './humanVerification/HumanVerificationModal';
 import OfflineNotification from './OfflineNotification';
 
@@ -134,6 +135,12 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
             });
         };
 
+        const handleMissingScope = (missingScopes = []) => {
+            if (missingScopes.includes('nondelinquent')) {
+                return createModal(<DelinquentModal />);
+            }
+        };
+
         const call = configureApi({
             ...config,
             xhr,
@@ -146,6 +153,7 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
             onError: handleError,
             onUnlock: handleUnlock,
             onVerification: handleVerification,
+            onMissingScopes: handleMissingScope,
         });
 
         apiRef.current = ({ output = 'json', ...rest }) => {
