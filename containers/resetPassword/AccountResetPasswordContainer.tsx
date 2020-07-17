@@ -251,32 +251,38 @@ const AccountResetPasswordContainer = ({ onLogin, Layout }: Props) => {
                         handleNewPassword();
                     }}
                 >
-                    <SignupLabelInputRow
-                        label={<Label htmlFor="new-password">{c('Label').t`Password`}</Label>}
-                        input={
-                            <PasswordInput
-                                id="new-password"
-                                autoFocus
-                                value={password}
-                                placeholder={c('Placeholder').t`Choose a new password`}
-                                onChange={({ target }) => setPassword(target.value)}
-                                required
-                            />
-                        }
-                    />
-                    <SignupLabelInputRow
-                        label={<Label htmlFor="confirm-password">{c('Label').t`Confirm`}</Label>}
-                        input={
-                            <PasswordInput
-                                id="confirm-password"
-                                value={confirmPassword}
-                                placeholder={c('Password').t`Confirm new password`}
-                                onChange={({ target }) => setConfirmPassword(target.value)}
-                                error={password !== confirmPassword ? c('Error').t`Passwords do not match` : undefined}
-                                required
-                            />
-                        }
-                    />
+                    <div className="flex">
+                        <SignupLabelInputRow
+                            className="flex-item-fluid"
+                            label={<Label htmlFor="new-password">{c('Label').t`Password`}</Label>}
+                            input={
+                                <PasswordInput
+                                    id="new-password"
+                                    autoFocus
+                                    value={password}
+                                    placeholder={c('Placeholder').t`Choose a new password`}
+                                    onChange={({ target }) => setPassword(target.value)}
+                                    required
+                                />
+                            }
+                        />
+                        <SignupLabelInputRow
+                            className="flex-item-fluid"
+                            label={<Label htmlFor="confirm-password">{c('Label').t`Confirm`}</Label>}
+                            input={
+                                <PasswordInput
+                                    id="confirm-password"
+                                    value={confirmPassword}
+                                    placeholder={c('Password').t`Confirm new password`}
+                                    onChange={({ target }) => setConfirmPassword(target.value)}
+                                    error={
+                                        password !== confirmPassword ? c('Error').t`Passwords do not match` : undefined
+                                    }
+                                    required
+                                />
+                            }
+                        />
+                    </div>
                     <SignupSubmitRow>
                         <PrimaryButton
                             disabled={!password || password !== confirmPassword}
