@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { c } from 'ttag';
 import { requestLoginResetToken, validateResetToken } from 'proton-shared/lib/api/reset';
+import { getRecoveryMethods } from 'proton-shared/lib/api/user';
 import { generateKeySaltAndPassphrase } from 'proton-shared/lib/keys/keys';
 import { getResetAddressesKeys } from 'proton-shared/lib/keys/resetKeys';
 import { srpAuth, srpVerify } from 'proton-shared/lib/srp';
@@ -16,6 +17,8 @@ import { useApi, useNotifications, useLoading } from '../../hooks';
 import { OnLoginCallback } from '../app';
 
 export enum STEPS {
+    REQUEST_RECOVERY_METHODS,
+    NO_RECOVERY_METHODS,
     REQUEST_RESET_TOKEN,
     VALIDATE_RESET_TOKEN,
     DANGER_VERIFICATION,
@@ -27,19 +30,25 @@ interface Props {
     onLogin: OnLoginCallback;
 }
 
+export type RecoveryMethod = 'email' | 'sms' | 'login';
+export type AccountType = 'internal' | 'external';
+
 export interface State {
     username: string;
     email: string;
+    phone: string;
     password: string;
     confirmPassword: string;
     token: string;
     danger: string;
+    methods?: RecoveryMethod[];
     step: STEPS;
 }
 
 const INITIAL_STATE = {
     username: '',
     email: '',
+    phone: '',
     password: '',
     confirmPassword: '',
     token: '',
@@ -54,10 +63,33 @@ const useResetPassword = ({ onLogin }: Props) => {
 
     const { createNotification } = useNotifications();
     const addressesRef = useRef<Address[]>([]);
+    const accountTypeRef = useRef<AccountType>();
     const dangerWord = 'DANGER';
 
     const gotoStep = (step: STEPS) => {
         return setState((state: State) => ({ ...state, step }));
+    };
+
+    const handleRequestRecoveryMethods = async () => {
+        const { username } = state;
+        const { Type, Methods }: { Type: AccountType; Methods: RecoveryMethod[] } = await api(
+            getRecoveryMethods(username)
+        );
+        accountTypeRef.current = Type;
+        if (Type === 'external' && Methods.includes('login')) {
+            await api(requestLoginResetToken({ Username: username, NotificationEmail: username }));
+            return setState((state: State) => ({
+                ...state,
+                email: username,
+                methods: Methods,
+                step: STEPS.VALIDATE_RESET_TOKEN
+            }));
+        }
+        setState((state: State) => ({
+            ...state,
+            methods: Methods,
+            step: STEPS.REQUEST_RESET_TOKEN
+        }));
     };
 
     const handleRequest = async () => {
@@ -66,14 +98,14 @@ const useResetPassword = ({ onLogin }: Props) => {
         gotoStep(STEPS.VALIDATE_RESET_TOKEN);
     };
 
-    const handleValidateResetToken = async () => {
+    const handleValidateResetToken = async (step = STEPS.DANGER_VERIFICATION) => {
         const { username, token } = state;
         const { Addresses = [] } = await api<{ Addresses: Address[] }>(validateResetToken(username, token));
         addressesRef.current = Addresses;
-        gotoStep(STEPS.DANGER_VERIFICATION);
+        gotoStep(step);
     };
 
-    const handleDanger = async () => {
+    const handleDanger = () => {
         const { danger } = state;
         if (danger !== dangerWord) {
             return;
@@ -128,6 +160,7 @@ const useResetPassword = ({ onLogin }: Props) => {
 
     const setUsername = getSetter<string>('username');
     const setEmail = getSetter<string>('email');
+    const setPhone = getSetter<string>('phone');
     const setPassword = getSetter<string>('password');
     const setConfirmPassword = getSetter<string>('confirmPassword');
     const setToken = getSetter<string>('token');
@@ -137,29 +170,34 @@ const useResetPassword = ({ onLogin }: Props) => {
         loading,
         state,
         dangerWord,
+        gotoStep,
         setUsername,
         setEmail,
+        setPhone,
         setPassword,
         setConfirmPassword,
         setToken,
         setDanger,
+        handleRequestRecoveryMethods: () => {
+            if (!loading) {
+                return;
+            }
+            withLoading(handleRequestRecoveryMethods());
+        },
         handleRequest: () => {
             if (loading) {
                 return;
             }
             withLoading(handleRequest());
         },
-        handleValidateResetToken: () => {
+        handleValidateResetToken: (step?: STEPS) => {
             if (loading) {
                 return;
             }
-            withLoading(handleValidateResetToken());
+            withLoading(handleValidateResetToken(step));
         },
         handleDanger: () => {
-            if (loading) {
-                return;
-            }
-            withLoading(handleDanger());
+            handleDanger();
         },
         handleNewPassword: () => {
             if (loading) {

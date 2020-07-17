@@ -7,7 +7,7 @@ interface Props {
     setValue: (email: string) => void;
     id: string;
 }
-const ResetPasswordInput = ({ value, setValue, id }: Props) => {
+const ResetPasswordEmailInput = ({ value, setValue, id }: Props) => {
     return (
         <EmailInput
             name="email"
@@ -22,4 +22,4 @@ const ResetPasswordInput = ({ value, setValue, id }: Props) => {
     );
 };
 
-export default ResetPasswordInput;
+export default ResetPasswordEmailInput;
