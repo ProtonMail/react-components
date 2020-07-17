@@ -8,26 +8,27 @@ import { SectionConfig } from '../../components/layout';
 const IndexSection = ({ pages }: { pages: SectionConfig[] }) => {
     const permissions = usePermissions();
     return (
-        <div className="settings-grid-container">
+        <div className="overview-grid">
             {pages.map(({ text, to, subsections = [], permissions: pagePermissions }) => {
                 return (
-                    <div
+                    <section
                         key={to}
-                        className={classnames(['setting-grid', subsections.length > 4 && 'setting-grid--tall'])}
+                        className={classnames([
+                            'overview-grid-item bordered-container bg-white-dm tiny-shadow-container p2',
+                            subsections.length > 3 && 'overview-grid-item--tall'
+                        ])}
                     >
-                        <div className="bordered-container bg-main-area p2">
-                            <h2 className="h6 mb0-5">
-                                <strong>{text}</strong>
-                            </h2>
-                            <Sections
-                                to={to}
-                                subsections={subsections}
-                                text={text}
-                                permissions={permissions}
-                                pagePermissions={pagePermissions}
-                            />
-                        </div>
-                    </div>
+                        <h2 className="h6 mb1">
+                            <strong>{text}</strong>
+                        </h2>
+                        <Sections
+                            to={to}
+                            subsections={subsections}
+                            text={text}
+                            permissions={permissions}
+                            pagePermissions={pagePermissions}
+                        />
+                    </section>
                 );
             })}
         </div>
