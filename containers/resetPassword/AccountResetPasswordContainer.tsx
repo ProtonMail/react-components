@@ -152,7 +152,7 @@ const AccountResetPasswordContainer = ({ onLogin, Layout }: Props) => {
                     }}
                 >
                     <p>{c('Info').t`We will send a password reset code to your recovery ${recoveryMethodText}.`}</p>
-                    <Tabs tabs={tabs} value={tabIndex} onChange={setTabIndex} />
+                    {tabs.length === 1 ? tabs[0].content : <Tabs tabs={tabs} value={tabIndex} onChange={setTabIndex} />}
                     <SignupSubmitRow>
                         <InlineLinkButton onClick={() => gotoStep(STEPS.VALIDATE_RESET_TOKEN)}>{c('Action')
                             .t`I already have a code`}</InlineLinkButton>
