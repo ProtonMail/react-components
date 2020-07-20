@@ -7,22 +7,38 @@ import { PLAN_SERVICES, APPS } from 'proton-shared/lib/constants';
 import { getAccountSettingsApp } from 'proton-shared/lib/apps/helper';
 
 import { AppLink, Loader, Icon, Href } from '../../components';
-import { useSubscription, useOrganization, useConfig } from '../../hooks';
+import { useSubscription, useOrganization, useConfig, useUserSettings } from '../../hooks';
+
+const flags = require.context('design-system/assets/img/shared/flags/4x3', true, /.svg$/);
+const flagsMap = flags.keys().reduce((acc, key) => {
+    acc[key] = () => flags(key);
+    return acc;
+}, {});
+
+const getFlagSvg = (abbreviation) => {
+    const key = `./${abbreviation.toLowerCase()}.svg`;
+    if (!flagsMap[key]) {
+        return;
+    }
+    return flagsMap[key]().default;
+};
 
 interface Props {
     user: UserModel;
 }
 
 const SummarySection = ({ user }: Props) => {
-    const { APP_NAME } = useConfig();
+    const { APP_NAME, LOCALES = {} } = useConfig();
+    const [{ Locale }, loadUserSettings] = useUserSettings();
     const [subscription, loadingSubscription] = useSubscription();
     const [organization, loadingOrganization] = useOrganization();
-    const loading = loadingSubscription || loadingOrganization;
+    const loading = loadingSubscription || loadingOrganization || loadUserSettings;
 
     if (loading) {
         return <Loader />;
     }
 
+    const abbreviation = Locale.slice(-2);
     const { Email, DisplayName, Name, isAdmin, isPaid } = user;
     const { UsedMembers, UsedDomains, MaxMembers, MaxDomains } = organization;
     const initials = getInitial(DisplayName || Name || undefined);
@@ -54,6 +70,15 @@ const SummarySection = ({ user }: Props) => {
                     </ul>
                 </div>
             ) : null}
+            <div className="mb1">
+                <strong className="bl mb0-5">{c('Title').t`Default language`}</strong>
+                <ul className="unstyled mt0 mb0">
+                    <li>
+                        <img width={20} className="mr0-5" src={getFlagSvg(abbreviation)} alt={LOCALES[Locale]} />
+                        {LOCALES[Locale]}
+                    </li>
+                </ul>
+            </div>
             {isAdmin && isPaid && APP_NAME !== APPS.PROTONACCOUNT ? (
                 <div className="mb1">
                     <strong className="bl mb0-5">{c('Title').t`Your organization`}</strong>
