@@ -115,7 +115,12 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
             throw e;
         };
 
-        const handleUnlock = () => {
+        const handleUnlock = (missingScopes = []) => {
+            if (missingScopes.includes('nondelinquent')) {
+                return new Promise((resolve, reject) => {
+                    createModal(<DelinquentModal onClose={() => reject(CancelUnlockError())} />);
+                });
+            }
             return new Promise((resolve, reject) => {
                 createModal(<UnlockModal onClose={() => reject(CancelUnlockError())} onSuccess={resolve} />);
             });
@@ -135,12 +140,6 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
             });
         };
 
-        const handleMissingScopes = (missingScopes = []) => {
-            if (missingScopes.includes('nondelinquent')) {
-                return createModal(<DelinquentModal />);
-            }
-        };
-
         const call = configureApi({
             ...config,
             xhr,
@@ -153,7 +152,6 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
             onError: handleError,
             onUnlock: handleUnlock,
             onVerification: handleVerification,
-            onMissingScopes: handleMissingScopes,
         });
 
         apiRef.current = ({ output = 'json', ...rest }) => {
