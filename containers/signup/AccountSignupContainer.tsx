@@ -25,6 +25,8 @@ import {
 import { HumanVerificationMethodType } from 'proton-shared/lib/interfaces';
 import { queryAddresses } from 'proton-shared/lib/api/addresses';
 import { Address } from 'proton-shared/lib/interfaces';
+import { generateKeySaltAndPassphrase } from 'proton-shared/lib/keys/keys';
+import { getResetAddressesKeys } from 'proton-shared/lib/keys/resetKeys';
 import { Props as AccountPublicLayoutProps } from './AccountPublicLayout';
 import SignupAccountForm from './SignupAccountForm';
 import SignupRecoveryForm from './SignupRecoveryForm';
@@ -56,8 +58,6 @@ import createAuthApi from './helpers/authApi';
 import handleCreateAddress from './helpers/handleCreateAddress';
 import handleCreateKeys from './helpers/handleCreateKeys';
 import OneAccountIllustration from '../illustration/OneAccountIllustration';
-import { generateKeySaltAndPassphrase } from 'proton-shared/lib/keys/keys';
-import { getResetAddressesKeys } from 'proton-shared/lib/keys/resetKeys';
 
 interface Props {
     history: History;
