@@ -1,18 +1,26 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { c } from 'ttag';
-import { Link, SettingsTitle, useUser, useConfig, useSubscription } from '../..';
+import { Link, SettingsTitle, useUser, useConfig, useSubscription, useOrganization, useUserSettings } from '../..';
 import { hasMailPlus } from 'proton-shared/lib/helpers/subscription';
 import { APPS } from 'proton-shared/lib/constants';
 
 import SummarySection from './SummarySection';
 import IndexSection from './IndexSection';
 
-const OverviewLayout = ({ pages, children }) => {
+interface Props {
+    title: string;
+    pages: SettingsConfig[];
+    children?: React.ReactNode;
+}
+
+const OverviewLayout = ({ title, pages, children }: Props) => {
     const mainAreaRef = useRef<HTMLDivElement>(null);
     const [scrollTop, setScrollTop] = useState<number>(0);
-    const [user] = useUser();
     const { APP_NAME } = useConfig();
-    const [subscription] = useSubscription();
+    const [user] = useUser();
+    const [userSettings = {}] = useUserSettings();
+    const [organization = {}] = useOrganization();
+    const [subscription = {}] = useSubscription();
     const { isFree } = user;
 
     useEffect(() => {
@@ -32,7 +40,7 @@ const OverviewLayout = ({ pages, children }) => {
                 onScroll={handleScroll}
                 className="relative flex-nowrap flex-item-fluid bg-global-highlight ondesktop-h100 scroll-if-needed"
             >
-                <SettingsTitle onTop={!scrollTop}>{c('Title').t`Mail settings`}</SettingsTitle>
+                <SettingsTitle onTop={!scrollTop}>{title}</SettingsTitle>
                 <div className="container-section-sticky pt0">
                     <div className="flex onmobile-flex-column pb2">
                         <div className="flex-item-fluid">
@@ -47,7 +55,12 @@ const OverviewLayout = ({ pages, children }) => {
                 </div>
             </div>
             <aside className="context-bar ondesktop-h100 scroll-if-needed p2">
-                <SummarySection user={user} />
+                <SummarySection
+                    user={user}
+                    userSettings={userSettings}
+                    subscription={subscription}
+                    organization={organization}
+                />
                 {hasMailPlus(subscription) ? (
                     <div className="bg-pm-blue-gradient color-white rounded aligncenter p1 mt2 relative">
                         <p className="mt0 mb1">

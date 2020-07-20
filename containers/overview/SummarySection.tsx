@@ -1,13 +1,13 @@
 import React from 'react';
 import { c, msgid } from 'ttag';
-import { UserModel } from 'proton-shared/lib/interfaces';
+import { UserModel, UserSettings, Organization, Subscription } from 'proton-shared/lib/interfaces';
 import { getInitial } from 'proton-shared/lib/helpers/string';
 import { getPlan } from 'proton-shared/lib/helpers/subscription';
 import { PLAN_SERVICES, APPS } from 'proton-shared/lib/constants';
 import { getAccountSettingsApp } from 'proton-shared/lib/apps/helper';
 
-import { AppLink, Loader, Icon, Href } from '../../components';
-import { useSubscription, useOrganization, useConfig, useUserSettings } from '../../hooks';
+import { AppLink, Icon, Href } from '../../components';
+import { useConfig } from '../../hooks';
 
 const flags = require.context('design-system/assets/img/shared/flags/4x3', true, /.svg$/);
 const flagsMap = flags.keys().reduce((acc, key) => {
@@ -15,7 +15,7 @@ const flagsMap = flags.keys().reduce((acc, key) => {
     return acc;
 }, {});
 
-const getFlagSvg = (abbreviation) => {
+const getFlagSvg = (abbreviation: string) => {
     const key = `./${abbreviation.toLowerCase()}.svg`;
     if (!flagsMap[key]) {
         return;
@@ -25,22 +25,17 @@ const getFlagSvg = (abbreviation) => {
 
 interface Props {
     user: UserModel;
+    userSettings: UserSettings;
+    organization: Organization;
+    subscription: Subscription;
 }
 
-const SummarySection = ({ user }: Props) => {
+const SummarySection = ({ user, userSettings, organization, subscription }: Props) => {
     const { APP_NAME, LOCALES = {} } = useConfig();
-    const [{ Locale }, loadUserSettings] = useUserSettings();
-    const [subscription, loadingSubscription] = useSubscription();
-    const [organization, loadingOrganization] = useOrganization();
-    const loading = loadingSubscription || loadingOrganization || loadUserSettings;
-
-    if (loading) {
-        return <Loader />;
-    }
-
+    const { Locale } = userSettings;
     const abbreviation = Locale.slice(-2);
     const { Email, DisplayName, Name, canPay, isAdmin } = user;
-    const { UsedMembers, UsedDomains, MaxMembers, MaxDomains } = organization;
+    const { UsedMembers = 0, UsedDomains = 0, MaxMembers = 0, MaxDomains = 0 } = organization;
     const initials = getInitial(DisplayName || Name || undefined);
     const vpnPlan = getPlan(subscription, PLAN_SERVICES.VPN);
     const mailPlan = getPlan(subscription, PLAN_SERVICES.MAIL);
