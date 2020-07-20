@@ -3,5 +3,13 @@
   "arrowParens": "always",
   "singleQuote": true,
   "tabWidth": 4,
-  "proseWrap": "never"
+  "proseWrap": "never",
+  "overrides": [
+    {
+      "files": "*.scss",
+      "options": {
+        "useTabs": true
+      }
+    }
+  ]
 }
