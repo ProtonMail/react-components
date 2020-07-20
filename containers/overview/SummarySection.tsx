@@ -73,7 +73,7 @@ const SummarySection = ({ user }: Props) => {
             <div className="mb1">
                 <strong className="bl mb0-5">{c('Title').t`Default language`}</strong>
                 <ul className="unstyled mt0 mb0">
-                    <li>
+                    <li className="flex flex-nowrap flex-items-center">
                         <img width={20} className="mr0-5" src={getFlagSvg(abbreviation)} alt={LOCALES[Locale]} />
                         {LOCALES[Locale]}
                     </li>
