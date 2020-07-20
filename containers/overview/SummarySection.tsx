@@ -39,7 +39,7 @@ const SummarySection = ({ user }: Props) => {
     }
 
     const abbreviation = Locale.slice(-2);
-    const { Email, DisplayName, Name, isAdmin, isPaid } = user;
+    const { Email, DisplayName, Name, canPay, isAdmin } = user;
     const { UsedMembers, UsedDomains, MaxMembers, MaxDomains } = organization;
     const initials = getInitial(DisplayName || Name || undefined);
     const vpnPlan = getPlan(subscription, PLAN_SERVICES.VPN);
@@ -55,7 +55,7 @@ const SummarySection = ({ user }: Props) => {
                 {organization.Name ? <p className="mt0 mb0-5">{organization.Name}</p> : null}
                 <p className="mt0 mb0">{Email}</p>
             </div>
-            {isAdmin ? (
+            {canPay ? (
                 <div className="mb1">
                     <strong className="bl mb0-5">{c('Title').t`Plans`}</strong>
                     <ul className="unstyled mt0 mb0">
@@ -79,7 +79,7 @@ const SummarySection = ({ user }: Props) => {
                     </li>
                 </ul>
             </div>
-            {isAdmin && isPaid && APP_NAME !== APPS.PROTONACCOUNT ? (
+            {isAdmin && APP_NAME !== APPS.PROTONACCOUNT ? (
                 <div className="mb1">
                     <strong className="bl mb0-5">{c('Title').t`Your organization`}</strong>
                     <ul className="unstyled mt0 mb0">
@@ -125,7 +125,7 @@ const SummarySection = ({ user }: Props) => {
             ) : null}
             {isAdmin ? (
                 <div className="mb1">
-                    <AppLink to="/subscription" toApp={getAccountSettingsApp()}>{c('Link').t`Manage account`}</AppLink>
+                    <AppLink to={canPay ? '/subscription' : '/account'} toApp={getAccountSettingsApp()}>{c('Link').t`Manage account`}</AppLink>
                 </div>
             ) : null}
         </div>
