@@ -13,6 +13,7 @@ const ResetPasswordEmailInput = ({ value, setValue, id }: Props) => {
             name="email"
             autoCapitalize="off"
             autoCorrect="off"
+            autoFocus={true}
             id={id}
             placeholder={c('Placeholder').t`Recovery email`}
             value={value}
