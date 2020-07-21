@@ -118,7 +118,7 @@ const SummarySection = ({ user, userSettings, organization, subscription }: Prop
                     </ul>
                 </div>
             ) : null}
-            {isAdmin ? (
+            {APP_NAME === APPS.PROTONACCOUNT ? null ? (
                 <div className="mb1">
                     <AppLink to={canPay ? '/subscription' : '/account'} toApp={getAccountSettingsApp()}>{c('Link').t`Manage account`}</AppLink>
                 </div>
