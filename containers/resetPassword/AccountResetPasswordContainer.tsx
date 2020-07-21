@@ -221,19 +221,21 @@ const AccountResetPasswordContainer = ({ onLogin, Layout }: Props) => {
                         label={<Label htmlFor="reset-token">{c('Label').t`Recovery code`}</Label>}
                         input={<ResetTokenInput id="reset-token" value={token} setValue={setToken} />}
                     />
-                    <InlineLinkButton
-                        disabled={loading}
-                        onClick={() =>
-                            createModal(
-                                <RequestNewCodeModal
-                                    onEdit={handleBack}
-                                    onResend={handleRequest}
-                                    email={email}
-                                    phone={phone}
-                                />
-                            )
-                        }
-                    >{c('Action').t`Did not receive a code?`}</InlineLinkButton>
+                    {email || phone ? (
+                        <InlineLinkButton
+                            disabled={loading}
+                            onClick={() =>
+                                createModal(
+                                    <RequestNewCodeModal
+                                        onEdit={handleBack}
+                                        onResend={handleRequest}
+                                        email={email}
+                                        phone={phone}
+                                    />
+                                )
+                            }
+                        >{c('Action').t`Did not receive a code?`}</InlineLinkButton>
+                    ) : null}
                     <SignupSubmitRow>
                         <PrimaryButton
                             className="pm-button--large onmobile-w100"
