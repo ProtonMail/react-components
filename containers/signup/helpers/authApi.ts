@@ -28,7 +28,7 @@ const createAuthApi = async ({ api, username, password }: Args) => {
         api: authApiCaller,
         getAuthResponse: () => authResponse,
         setCookies: () => {
-            return api(setCookies({ UID, AccessToken, RefreshToken, State: getRandomString(24) }));
+            return authApiCaller(setCookies({ UID, RefreshToken, State: getRandomString(24) }));
         },
     };
 };
