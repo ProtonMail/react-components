@@ -21,6 +21,23 @@ import RightToLeftProvider from '../rightToLeft/Provider';
 import { setTmpEventID } from './loadEventID';
 import clearKeyCache from './clearKeyCache';
 import { PreventLeaveProvider } from '../../hooks/usePreventLeave';
+import { getPersistedSession } from 'proton-shared/lib/authentication/session';
+
+const getUIDFromLocalID = () => {
+    const maybeLocalID = window.location.pathname.match(/\/\d{0,6}\//);
+    if (maybeLocalID === undefined) {
+        return;
+    }
+    const localID = parseInt(maybeLocalID[1], 10);
+    if (!Number.isInteger(localID)) {
+        return;
+    }
+    const persistedSession = getPersistedSession(localID);
+    if (!persistedSession) {
+        return;
+    }
+    return persistedSession.UID;
+};
 
 /** @type any */
 const ProtonApp = ({ config, children }) => {
@@ -28,16 +45,19 @@ const ProtonApp = ({ config, children }) => {
         createAuthentication(createSecureSessionStorage([MAILBOX_PASSWORD_KEY, UID_KEY]))
     );
     const cacheRef = useRef();
-    const [UID, setUID] = useState(() => authentication.getUID());
+    const [UID, setUID] = useState(() => {
+        return authentication.getUID() || getUIDFromLocalID();
+    });
     const tempDataRef = useRef({});
 
     if (!cacheRef.current) {
         cacheRef.current = createCache();
     }
 
-    const handleLogin = useCallback(({ UID: newUID, EventID, keyPassword, User }) => {
+    const handleLogin = useCallback(({ UID: newUID, EventID, keyPassword, User, LocalID: newLocalID }) => {
         authentication.setUID(newUID);
         authentication.setPassword(keyPassword);
+        authentication.setLocalID(newLocalID);
 
         const oldCache = cacheRef.current;
         if (oldCache) {

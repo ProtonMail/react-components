@@ -19,7 +19,7 @@ export enum STEPS {
 }
 
 interface Props {
-    onLogin: (args: OnLoginArgs) => void;
+    onLogin: (args: OnLoginArgs) => Promise<void>;
 }
 
 export interface State {
@@ -113,7 +113,7 @@ const useResetPassword = ({ onLogin }: Props) => {
         });
         await api(setCookies({ UID, AccessToken, RefreshToken, State: getRandomString(24) }));
 
-        onLogin({ UID, keyPassword: passphrase, EventID });
+        await onLogin({ UID, keyPassword: passphrase, EventID });
     };
 
     const getSetter = <T>(key: keyof State) => (value: T) =>

@@ -1,17 +1,18 @@
 import { useRef, useState } from 'react';
 import { AUTH_VERSION } from 'pm-srp';
-import { srpVerify } from 'proton-shared/lib/srp';
 import { c } from 'ttag';
+import { srpVerify } from 'proton-shared/lib/srp';
 import { upgradePassword } from 'proton-shared/lib/api/settings';
-import { auth2FA, getInfo, setCookies } from 'proton-shared/lib/api/auth';
+import { auth2FA, getInfo, getLocalKey, setCookies } from 'proton-shared/lib/api/auth';
 import { getRandomString } from 'proton-shared/lib/helpers/string';
 import { KeySalt as tsKeySalt, User as tsUser } from 'proton-shared/lib/interfaces';
 import { getUser } from 'proton-shared/lib/api/user';
 import { getKeySalts } from 'proton-shared/lib/api/keys';
 import { HTTP_ERROR_CODES } from 'proton-shared/lib/errors';
-import { AuthResponse, AuthVersion, InfoResponse } from 'proton-shared/lib/authentication/interface';
+import { AuthResponse, AuthVersion, InfoResponse, LocalKeyResponse } from 'proton-shared/lib/authentication/interface';
 import loginWithFallback from 'proton-shared/lib/authentication/loginWithFallback';
 import { withAuthHeaders } from 'proton-shared/lib/fetch/headers';
+import { setPersistedSession, setPersistedSessionBlob } from 'proton-shared/lib/authentication/session';
 import { getAuthTypes, handleUnlockKey } from './helper';
 import { useApi } from '../../index';
 import { OnLoginArgs } from './interface';
@@ -77,7 +78,7 @@ const useLogin = ({ onLogin, ignoreUnlock }: Props) => {
         const { authVersion, authResult, userSaltResult = [] } = cache;
 
         const [User] = userSaltResult;
-        const { UID, EventID, AccessToken, RefreshToken } = authResult;
+        const { UID, EventID, AccessToken, RefreshToken, LocalID } = authResult;
         const { password } = state;
 
         if (authVersion < AUTH_VERSION) {
@@ -88,9 +89,17 @@ const useLogin = ({ onLogin, ignoreUnlock }: Props) => {
             });
         }
 
-        await api(setCookies({ UID, AccessToken, RefreshToken, State: getRandomString(24) }));
+        await api(withAuthHeaders(UID, AccessToken, setCookies({ UID, RefreshToken, State: getRandomString(24) })));
 
-        onLogin({ UID, User, keyPassword, EventID });
+        // if sso mode && persist
+        if (!keyPassword) {
+            setPersistedSession(LocalID, { UID });
+        } else {
+            const { ClientKey } = await api<LocalKeyResponse>(getLocalKey());
+            await setPersistedSessionBlob(LocalID, { UID, clientKey: ClientKey, keyPassword });
+        }
+
+        onLogin({ UID, User, keyPassword, EventID, LocalID });
     };
 
     /**

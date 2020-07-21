@@ -4,5 +4,6 @@ export interface OnLoginArgs {
     UID: string;
     User?: tsUser;
     keyPassword?: string;
+    LocalID: number;
     EventID: string;
 }
