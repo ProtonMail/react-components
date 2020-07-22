@@ -11,9 +11,10 @@ interface Props {
     title: string;
     pages: SettingsConfig[];
     children?: React.ReactNode;
+    limit?: number;
 }
 
-const OverviewLayout = ({ title, pages, children }: Props) => {
+const OverviewLayout = ({ title, pages, children, limit }: Props) => {
     const mainAreaRef = useRef<HTMLDivElement>(null);
     const [scrollTop, setScrollTop] = useState<number>(0);
     const { APP_NAME } = useConfig();
@@ -49,7 +50,7 @@ const OverviewLayout = ({ title, pages, children }: Props) => {
                                     {children}
                                 </section>
                             ) : null}
-                            <IndexSection pages={pages} />
+                            <IndexSection pages={pages} limit={limit} />
                         </div>
                     </div>
                 </div>

@@ -7,7 +7,7 @@ import { classnames } from '../../helpers';
 import Sections from './Sections';
 import { SectionConfig } from '../../components/layout';
 
-const IndexSection = ({ pages }: { pages: SectionConfig[] }) => {
+const IndexSection = ({ pages, limit = 4 }: { pages: SectionConfig[]; limit?: number }) => {
     const permissions = usePermissions();
     return (
         <div className="overview-grid">
@@ -17,7 +17,7 @@ const IndexSection = ({ pages }: { pages: SectionConfig[] }) => {
                         key={to}
                         className={classnames([
                             'overview-grid-item bordered-container bg-white-dm tiny-shadow-container p2',
-                            subsections.length > 4 && 'overview-grid-item--tall'
+                            subsections.length > limit && 'overview-grid-item--tall',
                         ])}
                     >
                         <h2 className="h6 mb1">
