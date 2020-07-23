@@ -56,11 +56,11 @@ const SummarySection = ({ user, userSettings, organization, subscription }: Prop
                     <ul className="unstyled mt0 mb0">
                         <li>
                             <Icon name="protonvpn" className="mr0-5" />
-                            ProtonVPN {vpnPlan.Title || 'Free'}
+                            {vpnPlan.Title || 'ProtonVPN Free'}
                         </li>
                         <li>
                             <Icon name="protonmail" className="mr0-5" />
-                            ProtonMail {mailPlan.Title || 'Free'}
+                            {mailPlan.Title || 'ProtonMail Free'}
                         </li>
                     </ul>
                 </div>
