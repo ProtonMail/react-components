@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import getMemberAndAddress, { getMemberAndAddressID } from '../../proton-calendar/src/app/helpers/getMemberAndAddress';
+import getMemberAndAddress, { getMemberAndAddressID } from 'proton-shared/lib/calendar/integration/getMemberAndAddress';
 import { useGetAddresses } from './useAddresses';
 import { useGetAddressKeys } from './useGetAddressKeys';
 import { useGetCalendarBootstrap } from './useGetCalendarBootstrap';
