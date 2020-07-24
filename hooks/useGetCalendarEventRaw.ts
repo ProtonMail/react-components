@@ -1,3 +1,7 @@
+import { OpenPGPKey } from 'pmcrypto';
+import { unique } from 'proton-shared/lib/helpers/array';
+import { normalizeEmail, normalizeInternalEmail } from 'proton-shared/lib/helpers/email';
+import { SimpleMap } from 'proton-shared/lib/interfaces/utils';
 import { useCallback } from 'react';
 import { readCalendarEvent, readSessionKeys } from 'proton-shared/lib/calendar/deserialize';
 import { splitKeys } from 'proton-shared/lib/keys/keys';
@@ -7,7 +11,8 @@ import {
     useGetAddressKeys,
     useGetCalendarBootstrap,
     useGetCalendarKeys,
-    useGetPublicKeys
+    useGetEncryptionPreferences,
+    useGetPublicKeys,
 } from '../index';
 
 const useGetCalendarEventRaw = () => {
@@ -16,25 +21,42 @@ const useGetCalendarEventRaw = () => {
     const getPublicKeys = useGetPublicKeys();
     const getAddresses = useGetAddresses();
     const getAddressKeys = useGetAddressKeys();
+    const getEncryptionPreferences = useGetEncryptionPreferences();
 
     return useCallback(
         async (Event: CalendarEvent) => {
-            const getAuthorPublicKeys = async () => {
+            const getAuthorPublicKeysMap = async () => {
+                const publicKeysMap: SimpleMap<OpenPGPKey | OpenPGPKey[]> = {};
+                const authors = unique(
+                    [...Event.SharedEvents, ...Event.CalendarEvents, ...Event.PersonalEvent].map(({ Author }) =>
+                        normalizeEmail(Author)
+                    )
+                );
                 const addresses = await getAddresses();
-                const ownAddress = addresses.find(({ Email }) => Email === Event.Author);
+                const normalizedAddresses = addresses.map((address) => ({
+                    ...address,
+                    normalizedEmailAddress: normalizeInternalEmail(address.Email),
+                }));
+                const promises = authors.map(async (author) => {
+                    const ownAddress = normalizedAddresses.find(
+                        ({ normalizedEmailAddress }) => normalizedEmailAddress === author
+                    );
+                    if (ownAddress) {
+                        const result = await getAddressKeys(ownAddress.ID);
+                        publicKeysMap[author] = splitKeys(result).publicKeys;
+                    } else {
+                        const { pinnedKeys } = await getEncryptionPreferences(author);
+                        publicKeysMap[author] = pinnedKeys;
+                    }
+                });
+                await Promise.all(promises);
 
-                if (ownAddress) {
-                    const result = await getAddressKeys(ownAddress.ID);
-                    return splitKeys(result).publicKeys;
-                }
-
-                const { publicKeys = [] } = await getPublicKeys(Event.Author);
-                return publicKeys.filter(Boolean);
+                return publicKeysMap;
             };
 
-            const [calendarKeys, authorPublicKeys] = await Promise.all([
+            const [calendarKeys, publicKeysMap] = await Promise.all([
                 getCalendarKeys(Event.CalendarID),
-                getAuthorPublicKeys()
+                getAuthorPublicKeysMap(),
             ]);
             const [sharedSessionKey, calendarSessionKey] = await readSessionKeys(
                 Event,
@@ -42,9 +64,9 @@ const useGetCalendarEventRaw = () => {
             );
             return readCalendarEvent({
                 event: Event,
-                publicKeys: authorPublicKeys,
+                publicKeysMap,
                 sharedSessionKey,
-                calendarSessionKey
+                calendarSessionKey,
             });
         },
         [getAddresses, getAddressKeys, getCalendarBootstrap, getCalendarKeys, getPublicKeys]
