@@ -7,14 +7,16 @@ import createEventManager from 'proton-shared/lib/eventManager/eventManager';
 import { loadModels } from 'proton-shared/lib/models/helper';
 import { destroyOpenPGP, loadOpenPGP } from 'proton-shared/lib/openpgp';
 import { Model } from 'proton-shared/lib/interfaces/Model';
+import { FEATURE_FLAGS } from 'proton-shared/lib/constants';
 import {
     EventManagerProvider,
     ModalsChildren,
     ThemeInjector,
     DensityInjector,
     ContactProvider,
+    useAuthentication,
     useApi,
-    useCache,
+    useCache
 } from '../../index';
 
 import EventModelListener from '../eventManager/EventModelListener';
@@ -53,6 +55,7 @@ const StandardPrivateApp = <T, M extends Model<T>, E, EvtM extends Model<E>>({
     const eventManagerRef = useRef<ReturnType<typeof createEventManager>>();
     const api = useApi();
     const cache = useCache();
+    const authentication = useAuthentication();
 
     useEffect(() => {
         const eventManagerPromise = loadEventID(api, cache).then((eventID) => {
@@ -67,6 +70,14 @@ const StandardPrivateApp = <T, M extends Model<T>, E, EvtM extends Model<E>>({
                 });
             })
             .then(() => onInit?.()); // onInit has to happen after locales have been loaded to allow applications to override it
+
+        if (FEATURE_FLAGS.includes('sso')) {
+            const persistedSession = authentication.getPersistedSession();
+            // If there is a temporary persisted session, we attempt to read it
+            if (persistedSession?.blob) {
+                const authPromise = api()
+            }
+        }
 
         Promise.all([eventManagerPromise, modelsPromise, loadOpenPGP(openpgpConfig)])
             .then(() => {

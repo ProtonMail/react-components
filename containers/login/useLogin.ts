@@ -16,6 +16,7 @@ import { setPersistedSession, setPersistedSessionBlob } from 'proton-shared/lib/
 import { getAuthTypes, handleUnlockKey } from './helper';
 import { useApi } from '../../index';
 import { OnLoginArgs } from './interface';
+import { FEATURE_FLAGS } from 'proton-shared/lib/constants';
 
 export enum FORM {
     LOGIN,
@@ -89,14 +90,19 @@ const useLogin = ({ onLogin, ignoreUnlock }: Props) => {
             });
         }
 
-        await api(withAuthHeaders(UID, AccessToken, setCookies({ UID, RefreshToken, State: getRandomString(24) })));
+        const setHeaders = () => api(withAuthHeaders(UID, AccessToken, setCookies({ UID, RefreshToken, State: getRandomString(24) })));
 
-        // if sso mode && persist
-        if (!keyPassword) {
-            setPersistedSession(LocalID, { UID });
+        if (FEATURE_FLAGS.includes('sso')) {
+            if (keyPassword) {
+                const { ClientKey } = await api<LocalKeyResponse>(withAuthHeaders(UID, AccessToken, getLocalKey()));
+                await setPersistedSessionBlob(LocalID, { UID, clientKey: ClientKey, keyPassword });
+                await setHeaders();
+            } else {
+                await setHeaders();
+                setPersistedSession(LocalID, { UID });
+            }
         } else {
-            const { ClientKey } = await api<LocalKeyResponse>(getLocalKey());
-            await setPersistedSessionBlob(LocalID, { UID, clientKey: ClientKey, keyPassword });
+            await setHeaders();
         }
 
         onLogin({ UID, User, keyPassword, EventID, LocalID });
