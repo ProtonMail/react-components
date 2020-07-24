@@ -61,10 +61,9 @@ const INITIAL_STATE = {
 
 const useResetPassword = ({ onLogin, initalStep }: Props) => {
     const api = useApi();
+    const { createNotification } = useNotifications();
     const [state, setState] = useState<State>({ ...INITIAL_STATE, step: initalStep || INITIAL_STATE.step });
     const [loading, withLoading] = useLoading();
-
-    const { createNotification } = useNotifications();
     const addressesRef = useRef<Address[]>([]);
     const accountTypeRef = useRef<AccountType>();
     const dangerWord = 'DANGER';
@@ -72,6 +71,9 @@ const useResetPassword = ({ onLogin, initalStep }: Props) => {
     const gotoStep = (step: STEPS) => {
         return setState((state: State) => ({ ...state, step }));
     };
+
+    const displayTokenNotification = (destination: string) =>
+        createNotification({ text: c('Info').t`Reset instructions sent to ${destination}` });
 
     const handleRequestRecoveryMethods = async () => {
         const { username } = state;
@@ -89,6 +91,7 @@ const useResetPassword = ({ onLogin, initalStep }: Props) => {
             }
             if (Type === 'external' && Methods.includes('login')) {
                 await api(requestLoginResetToken({ Username: username, Email: username }));
+                displayTokenNotification(username);
                 return setState((state: State) => ({
                     ...state,
                     email: username,
@@ -118,10 +121,12 @@ const useResetPassword = ({ onLogin, initalStep }: Props) => {
         const { username, email, phone } = state;
         if (email) {
             await api(requestLoginResetToken({ Username: username, Email: email }));
+            displayTokenNotification(email);
             return gotoStep(STEPS.VALIDATE_RESET_TOKEN);
         }
         if (phone) {
             await api(requestLoginResetToken({ Username: username, Phone: phone }));
+            displayTokenNotification(phone);
             return gotoStep(STEPS.VALIDATE_RESET_TOKEN);
         }
     };
