@@ -90,20 +90,16 @@ const useLogin = ({ onLogin, ignoreUnlock }: Props) => {
             });
         }
 
-        const setHeaders = () => api(withAuthHeaders(UID, AccessToken, setCookies({ UID, RefreshToken, State: getRandomString(24) })));
-
         if (FEATURE_FLAGS.includes('sso')) {
             if (keyPassword) {
                 const { ClientKey } = await api<LocalKeyResponse>(withAuthHeaders(UID, AccessToken, getLocalKey()));
                 await setPersistedSessionBlob(LocalID, { UID, clientKey: ClientKey, keyPassword });
-                await setHeaders();
             } else {
-                await setHeaders();
                 setPersistedSession(LocalID, { UID });
             }
-        } else {
-            await setHeaders();
         }
+
+        await api(withAuthHeaders(UID, AccessToken, setCookies({ UID, RefreshToken, State: getRandomString(24) })));
 
         onLogin({ UID, User, keyPassword, EventID, LocalID });
     };

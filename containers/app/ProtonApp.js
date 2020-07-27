@@ -43,7 +43,7 @@ const ProtonApp = ({ config, children }) => {
         if (!persistedSession?.UID) {
             return;
         }
-        authentication.setPersistedSession(persistedSession);
+        authentication.setTmpPersistedSession(persistedSession);
         return persistedSession.UID;
 
     });

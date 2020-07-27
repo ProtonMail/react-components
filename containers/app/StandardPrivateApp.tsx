@@ -72,8 +72,8 @@ const StandardPrivateApp = <T, M extends Model<T>, E, EvtM extends Model<E>>({
             .then(() => onInit?.()); // onInit has to happen after locales have been loaded to allow applications to override it
 
         if (FEATURE_FLAGS.includes('sso')) {
-            const persistedSession = authentication.getPersistedSession();
-            // If there is a temporary persisted session, we attempt to read it
+            const persistedSession = authentication.getTmpPersistedSession();
+            // If there is a temporary persisted session, attempt to read it
             if (persistedSession?.blob) {
                 const authPromise = api()
             }
