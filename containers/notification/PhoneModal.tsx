@@ -65,7 +65,7 @@ const PhoneModal = ({ phone, hasReset, onClose, ...rest }: Props) => {
             title={c('Title').t`Update recovery phone number`}
             {...rest}
         >
-            <Row>
+            <Row className="pb4 mb4">
                 <Label htmlFor="phoneInput">{c('Label').t`Phone number`}</Label>
                 <Field>
                     <IntlTelInput
