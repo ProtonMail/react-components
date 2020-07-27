@@ -80,7 +80,7 @@ const RecoveryMethodsSection = () => {
             return createNotification({ type: 'error', text: c('Error').t`Please set a recovery phone number first` });
         }
         await new Promise((resolve, reject) => {
-            createModal(<AuthModal onClose={reject} onSuccess={resolve} config={updateResetPhone(value)} />);
+            createModal(<AuthModal onClose={reject} onSuccess={resolve} config={updateResetPhone({ Reset: value })} />);
         });
         await call();
     };
