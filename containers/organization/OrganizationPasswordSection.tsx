@@ -13,7 +13,7 @@ import {
     useModals,
     useNotifications,
     useOrganization,
-    useOrganizationKey,
+    useOrganizationKey
 } from '../../index';
 import { USER_ROLES } from 'proton-shared/lib/constants';
 
@@ -50,13 +50,14 @@ const OrganizationSection = () => {
         const nonPrivateMembers = members.filter(({ Private }) => Private === 0);
 
         if (nonPrivateMembers.length > 0 && !isOrganizationKeyActive) {
-            return createNotification(
-                c('Error').t`You must privatize all sub-accounts before generating new organization keys`
-            );
+            return createNotification({
+                text: c('Error').t`You must privatize all sub-accounts before generating new organization keys`,
+                type: 'error'
+            });
         }
 
         if (!organizationKey?.privateKey) {
-            return createNotification(c('Error').t`Organization key is not decrypted.`);
+            return createNotification({ text: c('Error').t`Organization key is not decrypted.`, type: 'error' });
         }
 
         createModal(
@@ -70,7 +71,7 @@ const OrganizationSection = () => {
 
     const handleChangeOrganizationPassword = () => {
         if (!organizationKey?.privateKey) {
-            return createNotification(c('Error').t`Organization key is not decrypted.`);
+            return createNotification({ text: c('Error').t`Organization key is not decrypted.`, type: 'error' });
         }
 
         createModal(
@@ -134,7 +135,7 @@ const OrganizationSection = () => {
                                 <code key={1} className="mw100 inbl ellipsis">
                                     {displayOrganizationKey.fingerprint}
                                 </code>,
-                                displayOrganizationKey.algorithm,
+                                displayOrganizationKey.algorithm
                             ]}
                         />
                     </TableBody>
