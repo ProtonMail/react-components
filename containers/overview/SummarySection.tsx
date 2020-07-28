@@ -93,14 +93,14 @@ const SummarySection = ({ user, userSettings, organization, subscription }: Prop
                             {c('Organization attribute').ngettext(
                                 msgid`${UsedMembers}/${MaxMembers} active user`,
                                 `${UsedMembers}/${MaxMembers} active users`,
-                                UsedMembers
+                                MaxMembers
                             )}
                         </li>
                         <li>
                             {c('Organization attribute').ngettext(
                                 msgid`${UsedDomains}/${MaxDomains} custom domain`,
                                 `${UsedDomains}/${MaxDomains} custom domains`,
-                                UsedMembers
+                                MaxDomains
                             )}
                         </li>
                     </ul>
