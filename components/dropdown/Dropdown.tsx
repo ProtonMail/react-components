@@ -91,8 +91,8 @@ const Dropdown = ({
             // Do nothing if clicking ref's element or descendent elements
             if (
                 !autoCloseOutside ||
-                (autoCloseOutsideAnchor && anchorEl && anchorEl.contains(targetNode)) ||
-                (popperEl && popperEl.contains(targetNode))
+                (autoCloseOutsideAnchor && anchorEl?.contains(targetNode)) ||
+                popperEl?.contains(targetNode)
             ) {
                 return;
             }
