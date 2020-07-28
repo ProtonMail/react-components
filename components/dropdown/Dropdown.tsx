@@ -26,7 +26,7 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
     offset?: number;
     autoClose?: boolean;
     autoCloseOutside?: boolean;
-    autoCloseOutsideOfElement?: boolean;
+    autoCloseOutsideAnchor?: boolean;
     contentProps?: ContentProps;
 }
 
@@ -44,7 +44,7 @@ const Dropdown = ({
     noCaret = false,
     autoClose = true,
     autoCloseOutside = true,
-    autoCloseOutsideOfElement = false,
+    autoCloseOutsideAnchor = false,
     contentProps,
     ...rest
 }: Props) => {
@@ -91,7 +91,7 @@ const Dropdown = ({
             // Do nothing if clicking ref's element or descendent elements
             if (
                 !autoCloseOutside ||
-                (!autoCloseOutsideOfElement && anchorEl && anchorEl.contains(targetNode)) ||
+                (!autoCloseOutsideAnchor && anchorEl && anchorEl.contains(targetNode)) ||
                 (popperEl && popperEl.contains(targetNode))
             ) {
                 return;
