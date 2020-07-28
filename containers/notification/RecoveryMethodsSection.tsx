@@ -25,6 +25,7 @@ import RecoveryEmail from './RecoveryEmail';
 import RecoveryPhone from './RecoveryPhone';
 import EmailModal from './EmailModal';
 import PhoneModal from './PhoneModal';
+import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 
 const { VPN } = CLIENT_TYPES;
 
@@ -149,7 +150,7 @@ const RecoveryMethodsSection = () => {
                         </>
                     ),
                 },
-                {
+                CLIENT_TYPE !== VPN && {
                     title: c('Recovery method').t`SMS`,
                     content: (
                         <>
@@ -175,7 +176,7 @@ const RecoveryMethodsSection = () => {
                         </>
                     ),
                 },
-            ]}
+            ].filter(isTruthy)}
         />
     );
 };
