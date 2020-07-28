@@ -44,7 +44,7 @@ const Dropdown = ({
     noCaret = false,
     autoClose = true,
     autoCloseOutside = true,
-    autoCloseOutsideAnchor = false,
+    autoCloseOutsideAnchor = true,
     contentProps,
     ...rest
 }: Props) => {
@@ -91,7 +91,7 @@ const Dropdown = ({
             // Do nothing if clicking ref's element or descendent elements
             if (
                 !autoCloseOutside ||
-                (!autoCloseOutsideAnchor && anchorEl && anchorEl.contains(targetNode)) ||
+                (autoCloseOutsideAnchor && anchorEl && anchorEl.contains(targetNode)) ||
                 (popperEl && popperEl.contains(targetNode))
             ) {
                 return;

@@ -43,7 +43,7 @@ const ContextMenu = ({ anchorRef, children, isOpen, position, close, autoClose =
             originalPosition={position}
             availablePlacements={CORNERS_ONLY_PLACEMENTS}
             noCaret
-            autoCloseOutsideAnchor
+            autoCloseOutsideAnchor={false}
             originalPlacement="bottom-left"
             offset={0}
             anchorRef={anchorRef}
