@@ -12,11 +12,11 @@ import { HTTP_ERROR_CODES } from 'proton-shared/lib/errors';
 import { AuthResponse, AuthVersion, InfoResponse, LocalKeyResponse } from 'proton-shared/lib/authentication/interface';
 import loginWithFallback from 'proton-shared/lib/authentication/loginWithFallback';
 import { withAuthHeaders } from 'proton-shared/lib/fetch/headers';
+import { isSSOMode } from 'proton-shared/lib/constants';
 import { setPersistedSession, setPersistedSessionBlob } from 'proton-shared/lib/authentication/session';
 import { getAuthTypes, handleUnlockKey } from './helper';
 import { useApi } from '../../index';
 import { OnLoginArgs } from './interface';
-import { FEATURE_FLAGS } from 'proton-shared/lib/constants';
 
 export enum FORM {
     LOGIN,
@@ -90,7 +90,7 @@ const useLogin = ({ onLogin, ignoreUnlock }: Props) => {
             });
         }
 
-        if (FEATURE_FLAGS.includes('sso')) {
+        if (isSSOMode) {
             if (keyPassword) {
                 const { ClientKey } = await api<LocalKeyResponse>(withAuthHeaders(UID, AccessToken, getLocalKey()));
                 await setPersistedSessionBlob(LocalID, { UID, clientKey: ClientKey, keyPassword });

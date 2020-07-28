@@ -1,12 +1,14 @@
 import React, { useState, useCallback, useRef, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { BrowserRouter as Router } from 'react-router-dom';
-import createAuthentication from 'proton-shared/lib/authenticationStore';
+import createAuthentication from 'proton-shared/lib/authentication/createAuthenticationStore';
 import createCache from 'proton-shared/lib/helpers/cache';
 import { formatUser, UserModel } from 'proton-shared/lib/models/userModel';
 import { STATUS } from 'proton-shared/lib/models/cache';
-import createSecureSessionStorage from 'proton-shared/lib/createSecureSessionStorage';
-import { MAILBOX_PASSWORD_KEY, UID_KEY } from 'proton-shared/lib/constants';
+import createSecureSessionStorage from 'proton-shared/lib/authentication/createSecureSessionStorage';
+import createSecureSessionStorage2 from 'proton-shared/lib/authentication/createSecureSessionStorage2';
+import { isSSOMode, MAILBOX_PASSWORD_KEY, UID_KEY } from 'proton-shared/lib/constants';
+import { getPersistedSession } from 'proton-shared/lib/authentication/session';
 
 import CompatibilityCheck from './CompatibilityCheck';
 import Icons from '../../components/icon/Icons';
@@ -22,32 +24,42 @@ import { setTmpEventID } from './loadEventID';
 import clearKeyCache from './clearKeyCache';
 import { PreventLeaveProvider } from '../../hooks/usePreventLeave';
 import { getLocalID } from './authHelper';
-import { getPersistedSession } from 'proton-shared/lib/authentication/session';
 
 /** @type any */
 const ProtonApp = ({ config, children }) => {
-    const authentication = useInstance(() =>
-        createAuthentication(createSecureSessionStorage([MAILBOX_PASSWORD_KEY, UID_KEY]))
-    );
+    const authentication = useInstance(() => {
+        if (isSSOMode) {
+            return createAuthentication(createSecureSessionStorage2());
+        }
+        return createAuthentication(createSecureSessionStorage([MAILBOX_PASSWORD_KEY, UID_KEY]));
+    });
     const cacheRef = useRef();
     const [UID, setUID] = useState(() => {
-        const uid = authentication.getUID();
-        if (uid) {
-            return uid;
+        const UID = authentication.getUID();
+        if (!isSSOMode) {
+            return UID;
         }
         const localID = getLocalID(window.location.pathname);
         if (localID === undefined) {
             return;
         }
+        const oldLocalId = authentication.getLocalID();
+        // Current session is active and actual
+        if (UID && localID === oldLocalId) {
+            return UID;
+        }
         const persistedSession = getPersistedSession(localID);
-        if (!persistedSession?.UID) {
+        const persistedUID = persistedSession?.UID;
+        // Persistent session is invalid
+        if (!persistedUID) {
             return;
         }
+        // Persistent session to be validated
+        authentication.setUID(persistedUID);
         authentication.setTmpPersistedSession(persistedSession);
-        return persistedSession.UID;
-
+        authentication.setLocalID(localID);
+        return persistedUID;
     });
-    const tempDataRef = useRef({});
 
     if (!cacheRef.current) {
         cacheRef.current = createCache();
@@ -83,8 +95,6 @@ const ProtonApp = ({ config, children }) => {
         authentication.setUID();
         authentication.setPassword();
 
-        tempDataRef.current = {};
-
         const oldCache = cacheRef.current;
         if (oldCache) {
             clearKeyCache(oldCache);
@@ -111,13 +121,21 @@ const ProtonApp = ({ config, children }) => {
         };
     }, [UID]);
 
+    const basename = useMemo(() => {
+        if (!isSSOMode) {
+            return;
+        }
+        const localID = authentication.getLocalID();
+        return UID && localID !== undefined ? `u${localID}` : '';
+    }, [UID]);
+
     return (
         <ConfigProvider config={config}>
             <CompatibilityCheck>
                 <Icons />
                 <RightToLeftProvider>
-                    <Router>
-                        <React.Fragment key={UID}>
+                    <React.Fragment key={UID}>
+                        <Router basename={basename}>
                             <PreventLeaveProvider>
                                 <NotificationsProvider>
                                     <ModalsProvider>
@@ -129,8 +147,8 @@ const ProtonApp = ({ config, children }) => {
                                     </ModalsProvider>
                                 </NotificationsProvider>
                             </PreventLeaveProvider>
-                        </React.Fragment>
-                    </Router>
+                        </Router>
+                    </React.Fragment>
                 </RightToLeftProvider>
             </CompatibilityCheck>
         </ConfigProvider>

@@ -7,7 +7,12 @@ import createEventManager from 'proton-shared/lib/eventManager/eventManager';
 import { loadModels } from 'proton-shared/lib/models/helper';
 import { destroyOpenPGP, loadOpenPGP } from 'proton-shared/lib/openpgp';
 import { Model } from 'proton-shared/lib/interfaces/Model';
-import { FEATURE_FLAGS } from 'proton-shared/lib/constants';
+import { isSSOMode } from 'proton-shared/lib/constants';
+import { LocalKeyResponse } from 'proton-shared/lib/authentication/interface';
+import { getLocalKey } from 'proton-shared/lib/api/auth';
+import { getDecryptedBlob, getPersistedSessionBlob } from 'proton-shared/lib/authentication/session';
+import { InactiveSessionError } from 'proton-shared/lib/api/helpers/withApiHandlers';
+
 import {
     EventManagerProvider,
     ModalsChildren,
@@ -71,15 +76,28 @@ const StandardPrivateApp = <T, M extends Model<T>, E, EvtM extends Model<E>>({
             })
             .then(() => onInit?.()); // onInit has to happen after locales have been loaded to allow applications to override it
 
-        if (FEATURE_FLAGS.includes('sso')) {
+        let authPromise = Promise.resolve();
+        if (isSSOMode) {
             const persistedSession = authentication.getTmpPersistedSession();
+            const persistedSessionBlobString = persistedSession?.blob;
             // If there is a temporary persisted session, attempt to read it
-            if (persistedSession?.blob) {
-                const authPromise = api()
+            if (persistedSessionBlobString) {
+                const getAuthPromise = async () => {
+                    const { ClientKey } = await api<LocalKeyResponse>(getLocalKey());
+                    const blob = await getDecryptedBlob(ClientKey, persistedSessionBlobString).catch(() => {
+                        throw InactiveSessionError();
+                    });
+                    const persistedSessionBlob = getPersistedSessionBlob(blob);
+                    if (!persistedSessionBlob) {
+                        throw InactiveSessionError();
+                    }
+                    authentication.setPassword(persistedSessionBlob?.keyPassword);
+                };
+                authPromise = getAuthPromise();
             }
         }
 
-        Promise.all([eventManagerPromise, modelsPromise, loadOpenPGP(openpgpConfig)])
+        Promise.all([eventManagerPromise, modelsPromise, authPromise, loadOpenPGP(openpgpConfig)])
             .then(() => {
                 setLoading(false);
             })
