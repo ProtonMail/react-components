@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import { generateUID, Dropdown } from '../..';
 import { CORNERS_ONLY_PLACEMENTS } from '../popper/utils';
@@ -17,7 +17,7 @@ interface Props {
 
 const ContextMenu = ({ anchorRef, children, isOpen, position, close, autoClose = true }: Props) => {
     const [uid] = useState(generateUID('context-menu'));
-    const [elementRef, setElementRef] = useState<HTMLDivElement | null>(null);
+    const elementRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
         if (!isOpen) {
@@ -33,7 +33,7 @@ const ContextMenu = ({ anchorRef, children, isOpen, position, close, autoClose =
         const handleClickOutside = ({ target }: MouseEvent) => {
             const targetNode = target as Node;
             // Do nothing, if clicking ref element
-            if (!autoClose || (elementRef && elementRef.contains(targetNode))) {
+            if (!autoClose || elementRef.current?.contains(targetNode)) {
                 return;
             }
             close();
@@ -46,10 +46,10 @@ const ContextMenu = ({ anchorRef, children, isOpen, position, close, autoClose =
             document.removeEventListener('contextmenu', handleContextMenu);
             document.removeEventListener('click', handleClickOutside);
         };
-    }, [elementRef, isOpen, autoClose, close]);
+    }, [elementRef.current, isOpen, autoClose, close]);
 
     return (
-        <div ref={setElementRef}>
+        <div style={{ display: 'none' }} ref={elementRef}>
             <Dropdown
                 id={uid}
                 isOpen={isOpen}
