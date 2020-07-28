@@ -17,6 +17,7 @@ interface Props {
 
 const ContextMenu = ({ anchorRef, children, isOpen, position, close, autoClose = true }: Props) => {
     const [uid] = useState(generateUID('context-menu'));
+    const [elementRef, setElementRef] = useState<HTMLDivElement | null>(null);
 
     useEffect(() => {
         if (!isOpen) {
@@ -29,27 +30,40 @@ const ContextMenu = ({ anchorRef, children, isOpen, position, close, autoClose =
             }
         };
 
+        const handleClickOutside = ({ target }: MouseEvent) => {
+            const targetNode = target as Node;
+            // Do nothing, if clicking ref element
+            if (!autoClose || (elementRef && elementRef.contains(targetNode))) {
+                return;
+            }
+            close();
+        };
+
         document.addEventListener('contextmenu', handleContextMenu);
+        document.addEventListener('click', handleClickOutside);
 
         return () => {
             document.removeEventListener('contextmenu', handleContextMenu);
+            document.removeEventListener('click', handleClickOutside);
         };
-    }, [isOpen, autoClose, close]);
+    }, [elementRef, isOpen, autoClose, close]);
 
     return (
-        <Dropdown
-            id={uid}
-            isOpen={isOpen}
-            originalPosition={position}
-            availablePlacements={CORNERS_ONLY_PLACEMENTS}
-            noCaret
-            originalPlacement="bottom-left"
-            offset={0}
-            anchorRef={anchorRef}
-            onClose={close}
-        >
-            {children}
-        </Dropdown>
+        <div ref={setElementRef}>
+            <Dropdown
+                id={uid}
+                isOpen={isOpen}
+                originalPosition={position}
+                availablePlacements={CORNERS_ONLY_PLACEMENTS}
+                noCaret
+                originalPlacement="bottom-left"
+                offset={0}
+                anchorRef={anchorRef}
+                onClose={close}
+            >
+                {children}
+            </Dropdown>
+        </div>
     );
 };
 
