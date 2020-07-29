@@ -1,0 +1,27 @@
+[1mdiff --git a/containers/resetPassword/AccountResetPasswordContainer.tsx b/containers/resetPassword/AccountResetPasswordContainer.tsx[m
+[1mindex b77c7a2e..755a689c 100644[m
+[1m--- a/containers/resetPassword/AccountResetPasswordContainer.tsx[m
+[1m+++ b/containers/resetPassword/AccountResetPasswordContainer.tsx[m
+[36m@@ -91,11 +91,11 @@[m [mconst AccountResetPasswordContainer = ({ onLogin, history, Layout }: Props) => {[m
+                 <form className="signup-form">[m
+                     <p>{c('Info').t`Unfortunately there is no recovery method saved for this account.`}</p>[m
+                     <SignupSubmitRow>[m
+[31m-                        <Href url="https://protonmail.com/support-form" target="_self">{c('Action')[m
+[32m+[m[32m                        <Href className="mr2 nodecoration" url="https://protonmail.com/support-form" target="_self">{c('Action')[m
+                             .t`Contact support`}</Href>[m
+                         <Link[m
+                             to="/login"[m
+[31m-                            className="pm-button--primary pm-button--large flex-item-noshrink onmobile-w100"[m
+[32m+[m[32m                            className="WOZAAAAAAAAAAAA pm-button--primary pm-button--large flex-item-noshrink onmobile-w100"[m
+                         >{c('Action').t`Return to login`}</Link>[m
+                     </SignupSubmitRow>[m
+                 </form>[m
+[36m@@ -309,7 +309,7 @@[m [mconst AccountResetPasswordContainer = ({ onLogin, history, Layout }: Props) => {[m
+                 <Layout title={c('Title').t`Error`} left={<BackButton onClick={handleBack} />}>[m
+                     <Alert type="error">{error}</Alert>[m
+                     <SignupSubmitRow>[m
+[31m-                        <Href url="https://protonmail.com/support-form" target="_self">{c('Action')[m
+[32m+[m[32m                        <Href className="mr2 nodecoration" url="https://protonmail.com/support-form" target="_self">{c('Action')[m
+                             .t`Contact support`}</Href>[m
+                         <Link[m
+                             to="/login"[m

@@ -92,11 +92,14 @@ const AccountResetPasswordContainer = ({ onLogin, Layout }: Props) => {
                 <form className="signup-form">
                     <p>{c('Info').t`Unfortunately there is no recovery method saved for this account.`}</p>
                     <SignupSubmitRow>
-                        <Href url="https://protonmail.com/support-form" target="_self">{c('Action')
-                            .t`Contact support`}</Href>
+                        <Href
+                            className="mr2 nodecoration onmobile-aligncenter onmobile-p1 onmobile-mr0"
+                            url="https://protonmail.com/support-form"
+                            target="_self"
+                        >{c('Action').t`Contact support`}</Href>
                         <Link
                             to="/login"
-                            className="pm-button--primary pm-button--large flex-item-noshrink onmobile-w100"
+                            className="pm-button--primary pm-button--large flex-item-noshrink onmobile-w100 onmobile-aligncenter"
                         >{c('Action').t`Return to login`}</Link>
                     </SignupSubmitRow>
                 </form>
@@ -310,11 +313,14 @@ const AccountResetPasswordContainer = ({ onLogin, Layout }: Props) => {
                 <Layout title={c('Title').t`Error`} left={<BackButton onClick={handleBack} />}>
                     <Alert type="error">{error}</Alert>
                     <SignupSubmitRow>
-                        <Href url="https://protonmail.com/support-form" target="_self">{c('Action')
-                            .t`Contact support`}</Href>
+                        <Href
+                            className="mr2 nodecoration onmobile-aligncenter onmobile-p1 onmobile-mr0"
+                            url="https://protonmail.com/support-form"
+                            target="_self"
+                        >{c('Action').t`Contact support`}</Href>
                         <Link
                             to="/login"
-                            className="pm-button--primary pm-button--large flex-item-noshrink onmobile-w100"
+                            className="pm-button--primary pm-button--large flex-item-noshrink onmobile-w100 onmobile-aligncenter"
                         >{c('Action').t`Return to login`}</Link>
                     </SignupSubmitRow>
                 </Layout>
