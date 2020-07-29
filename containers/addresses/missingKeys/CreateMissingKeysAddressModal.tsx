@@ -63,15 +63,15 @@ const CreateMissingKeysAddressModal = ({ onClose, member, addresses, organizatio
         const PrimaryKey = member.Keys.find(({ Primary }) => Primary === 1);
 
         if (!PrimaryKey) {
-            await createNotification({ text: c('Error').t`Member keys are not set up.` });
+            createNotification({ text: c('Error').t`Member keys are not set up.` });
             return;
         }
         if (!PrimaryKey.Token) {
-            await createNotification({ text: c('Error').t`Member token invalid.` });
+            createNotification({ text: c('Error').t`Member token invalid.` });
             return;
         }
         if (!organizationKey?.privateKey) {
-            await createNotification({ text: c('Error').t`Organization key is not decrypted.` });
+            createNotification({ text: c('Error').t`Organization key is not decrypted.` });
             return;
         }
 
