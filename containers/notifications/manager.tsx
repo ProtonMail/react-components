@@ -35,7 +35,7 @@ function createNotificationManager(setNotifications: Dispatch<SetStateAction<Not
                 }
                 return {
                     ...oldNotification,
-                    isClosing: true
+                    isClosing: true,
                 };
             });
         });
@@ -61,8 +61,8 @@ function createNotificationManager(setNotifications: Dispatch<SetStateAction<Not
                 expiration,
                 type,
                 ...rest,
-                isClosing: false
-            }
+                isClosing: false,
+            },
         ]);
 
         intervalIds.set(id, expiration === -1 ? -1 : setTimeout(() => hideNotification(id), expiration));
@@ -84,7 +84,7 @@ function createNotificationManager(setNotifications: Dispatch<SetStateAction<Not
         createNotification,
         removeNotification,
         hideNotification,
-        clearNotifications
+        clearNotifications,
     };
 }
 

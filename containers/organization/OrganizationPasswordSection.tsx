@@ -13,7 +13,7 @@ import {
     useModals,
     useNotifications,
     useOrganization,
-    useOrganizationKey
+    useOrganizationKey,
 } from '../../index';
 import { USER_ROLES } from 'proton-shared/lib/constants';
 
@@ -52,7 +52,7 @@ const OrganizationSection = () => {
         if (nonPrivateMembers.length > 0 && !isOrganizationKeyActive) {
             return createNotification({
                 text: c('Error').t`You must privatize all sub-accounts before generating new organization keys`,
-                type: 'error'
+                type: 'error',
             });
         }
 
@@ -135,7 +135,7 @@ const OrganizationSection = () => {
                                 <code key={1} className="mw100 inbl ellipsis">
                                     {displayOrganizationKey.fingerprint}
                                 </code>,
-                                displayOrganizationKey.algorithm
+                                displayOrganizationKey.algorithm,
                             ]}
                         />
                     </TableBody>

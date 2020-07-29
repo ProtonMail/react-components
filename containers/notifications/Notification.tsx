@@ -6,13 +6,13 @@ const TYPES_CLASS = {
     error: 'notification-alert',
     warning: 'notification-warning',
     info: 'notification-info',
-    success: 'notification-success'
+    success: 'notification-success',
 };
 
 const CLASSES = {
     NOTIFICATION: 'notification',
     NOTIFICATION_IN: 'notificationIn',
-    NOTIFICATION_OUT: 'notificationOut'
+    NOTIFICATION_OUT: 'notificationOut',
 };
 
 interface Props {
@@ -41,7 +41,7 @@ const Notification = ({ children, type, isClosing, onClick, onExit }: Props) => 
                 CLASSES.NOTIFICATION,
                 CLASSES.NOTIFICATION_IN,
                 TYPES_CLASS[type] || TYPES_CLASS.success,
-                isClosing && CLASSES.NOTIFICATION_OUT
+                isClosing && CLASSES.NOTIFICATION_OUT,
             ])}
             onClick={onClick}
             onAnimationEnd={handleAnimationEnd}
