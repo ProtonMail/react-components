@@ -1,8 +1,7 @@
 import React, { useState, useCallback, useRef, useMemo } from 'react';
-import PropTypes from 'prop-types';
 import { BrowserRouter as Router } from 'react-router-dom';
 import createAuthentication from 'proton-shared/lib/authentication/createAuthenticationStore';
-import createCache from 'proton-shared/lib/helpers/cache';
+import createCache, { Cache } from 'proton-shared/lib/helpers/cache';
 import { formatUser, UserModel } from 'proton-shared/lib/models/userModel';
 import { STATUS } from 'proton-shared/lib/models/cache';
 import createSecureSessionStorage from 'proton-shared/lib/authentication/createSecureSessionStorage';
@@ -12,7 +11,6 @@ import { getPersistedSession } from 'proton-shared/lib/authentication/session';
 
 import CompatibilityCheck from './CompatibilityCheck';
 import Icons from '../../components/icon/Icons';
-import useInstance from '../../hooks/useInstance';
 import ConfigProvider from '../config/Provider';
 import NotificationsProvider from '../notifications/Provider';
 import ModalsProvider from '../modals/Provider';
@@ -22,18 +20,25 @@ import AuthenticationProvider from '../authentication/Provider';
 import RightToLeftProvider from '../rightToLeft/Provider';
 import { setTmpEventID } from './loadEventID';
 import clearKeyCache from './clearKeyCache';
+import useInstance from '../../hooks/useInstance';
 import { PreventLeaveProvider } from '../../hooks/usePreventLeave';
 import { getLocalID } from './authHelper';
 
-/** @type any */
-const ProtonApp = ({ config, children }) => {
+interface Props {
+    config: any;
+    children: React.ReactNode;
+}
+const ProtonApp = ({ config, children }: Props) => {
     const authentication = useInstance(() => {
         if (isSSOMode) {
             return createAuthentication(createSecureSessionStorage2());
         }
         return createAuthentication(createSecureSessionStorage([MAILBOX_PASSWORD_KEY, UID_KEY]));
     });
-    const cacheRef = useRef();
+    const cacheRef = useRef<Cache<string, any>>();
+    if (!cacheRef.current) {
+        cacheRef.current = createCache<string, any>();
+    }
     const [UID, setUID] = useState(() => {
         const UID = authentication.getUID();
         if (!isSSOMode) {
@@ -51,7 +56,7 @@ const ProtonApp = ({ config, children }) => {
         const persistedSession = getPersistedSession(localID);
         const persistedUID = persistedSession?.UID;
         // Persistent session is invalid
-        if (!persistedUID) {
+        if (!persistedSession || !persistedUID) {
             return;
         }
         // Persistent session to be validated
@@ -60,10 +65,6 @@ const ProtonApp = ({ config, children }) => {
         authentication.setLocalID(localID);
         return persistedUID;
     });
-
-    if (!cacheRef.current) {
-        cacheRef.current = createCache();
-    }
 
     const handleLogin = useCallback(({ UID: newUID, EventID, keyPassword, User, LocalID: newLocalID }) => {
         authentication.setUID(newUID);
@@ -75,7 +76,7 @@ const ProtonApp = ({ config, children }) => {
             oldCache.clear();
             oldCache.clearListeners();
         }
-        const cache = createCache();
+        const cache = createCache<string, any>();
 
         // If the user was received from the login call, pre-set it directly.
         User &&
@@ -92,8 +93,8 @@ const ProtonApp = ({ config, children }) => {
     }, []);
 
     const handleLogout = useCallback(() => {
-        authentication.setUID();
-        authentication.setPassword();
+        authentication.setUID(undefined);
+        authentication.setPassword(undefined);
 
         const oldCache = cacheRef.current;
         if (oldCache) {
@@ -102,9 +103,9 @@ const ProtonApp = ({ config, children }) => {
             oldCache.clearListeners();
         }
 
-        cacheRef.current = createCache();
+        cacheRef.current = createCache<string, any>();
 
-        setUID();
+        setUID(undefined);
     }, []);
 
     const authenticationValue = useMemo(() => {
@@ -116,7 +117,6 @@ const ProtonApp = ({ config, children }) => {
         return {
             UID,
             ...authentication,
-            login: handleLogin,
             logout: handleLogout,
         };
     }, [UID]);
@@ -153,11 +153,6 @@ const ProtonApp = ({ config, children }) => {
             </CompatibilityCheck>
         </ConfigProvider>
     );
-};
-
-ProtonApp.propTypes = {
-    config: PropTypes.object.isRequired,
-    children: PropTypes.node.isRequired,
 };
 
 export default ProtonApp;

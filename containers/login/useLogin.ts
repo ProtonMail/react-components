@@ -16,7 +16,7 @@ import { isSSOMode } from 'proton-shared/lib/constants';
 import { setPersistedSession, setPersistedSessionBlob } from 'proton-shared/lib/authentication/session';
 import { getAuthTypes, handleUnlockKey } from './helper';
 import { useApi } from '../../index';
-import { OnLoginArgs } from './interface';
+import { OnLoginCallback } from '../app/interface';
 
 export enum FORM {
     LOGIN,
@@ -26,7 +26,7 @@ export enum FORM {
 }
 
 export interface Props {
-    onLogin: (args: OnLoginArgs) => void;
+    onLogin: OnLoginCallback;
     ignoreUnlock?: boolean;
 }
 

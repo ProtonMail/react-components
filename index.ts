@@ -442,19 +442,11 @@ export { useHandler, useEventListener, useSubscribeEventManager, useInterval } f
 export { default as useKeyPress } from './hooks/useKeyPress';
 export { default as usePreventLeave, PreventLeaveProvider } from './hooks/usePreventLeave';
 
-export { default as ErrorBoundary } from './containers/app/ErrorBoundary';
-export { default as ProtonApp } from './containers/app/ProtonApp';
-export { default as TopBanners } from './containers/app/TopBanners';
-export { default as PublicTopBanners } from './containers/app/PublicTopBanners';
-export { default as StandardPrivateApp } from './containers/app/StandardPrivateApp';
-export { default as StandardPublicApp } from './containers/app/StandardPublicApp';
-export { default as AppsDropdown } from './containers/app/AppsDropdown';
-export { default as TopNavbar } from './containers/app/TopNavbar';
-export { default as LoaderPage } from './containers/app/LoaderPage';
-
 export { default as SquireEditor } from './components/editor/SquireEditor';
 export { default as SimpleSquireEditor } from './components/editor/SimpleSquireEditor';
 
 export * from './helpers/component';
 
 export * from './components/layout';
+
+export * from './containers/app';
