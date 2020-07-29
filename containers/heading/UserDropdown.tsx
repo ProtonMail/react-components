@@ -1,34 +1,34 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
-import { APPS, isSSOMode, PLANS, SSO_PATHS } from 'proton-shared/lib/constants';
-import { getPlanName } from 'proton-shared/lib/helpers/subscription';
+import { APPS, isSSOMode, SSO_PATHS } from 'proton-shared/lib/constants';
 import { getAccountSettingsApp, getAppHref } from 'proton-shared/lib/apps/helper';
 import { requestFork } from 'proton-shared/lib/authentication/sessionForking';
 import { FORK_TYPE } from 'proton-shared/lib/authentication/ForkInterface';
-import { useAuthentication, useConfig, useModals, useOrganization, useSubscription, useUser } from '../../hooks';
-import { usePopperAnchor, Dropdown, Icon, PrimaryButton } from '../../components';
-
+import { useAuthentication, useConfig, useModals, useUser, useLoading } from '../../hooks';
+import { usePopperAnchor, Dropdown, Icon, Toggle, PrimaryButton } from '../../components';
 import UserDropdownButton from './UserDropdownButton';
 import AppLink from '../../components/link/AppLink';
 import { generateUID } from '../../helpers';
 import { DonateModal } from '../payments';
 
-const { PROFESSIONAL, VISIONARY } = PLANS;
+enum Theme {
+    Normal,
+    Dark,
+}
 
 const UserDropdown = ({ ...rest }) => {
     const { APP_NAME } = useConfig();
     const [user] = useUser();
-    const { DisplayName, Email, Name } = user;
-    const [{ Name: organizationName } = { Name: '' }] = useOrganization();
-    const [subscription] = useSubscription();
     const { logout } = useAuthentication();
     const { createModal } = useModals();
     const [uid] = useState(generateUID('dropdown'));
     const { anchorRef, isOpen, toggle, close } = usePopperAnchor<HTMLButtonElement>();
-    const planName = getPlanName(subscription) as PLANS;
+    const [theme, setTheme] = useState(Theme.Normal);
+    const [loading, withLoading] = useLoading();
 
     const handleSupportUsClick = () => {
         createModal(<DonateModal />);
+        close();
     };
 
     const handleSwitchAccount = () => {
@@ -41,6 +41,12 @@ const UserDropdown = ({ ...rest }) => {
 
     const handleLogout = () => {
         logout();
+        close();
+    };
+
+    const handleThemeToggle = async () => {
+        const newTheme = theme === Theme.Normal ? Theme.Dark : Theme.Normal;
+        setTheme(newTheme);
     };
 
     return (
@@ -52,25 +58,11 @@ const UserDropdown = ({ ...rest }) => {
                 isOpen={isOpen}
                 noMaxSize
                 anchorRef={anchorRef}
+                autoClose={false}
                 onClose={close}
                 originalPlacement="bottom-right"
             >
                 <ul className="unstyled mt0 mb0">
-                    <li className="dropDown-item pt0-5 pb0-5 pl1 pr1 flex flex-column">
-                        <strong title={DisplayName || Name} className="ellipsis mw100 capitalize">
-                            {DisplayName || Name}
-                        </strong>
-                        {Email ? (
-                            <span title={Email} className="ellipsis mw100">
-                                {Email}
-                            </span>
-                        ) : null}
-                        {[PROFESSIONAL, VISIONARY].includes(planName) && organizationName ? (
-                            <span title={organizationName} className="ellipsis mw100">
-                                {organizationName}
-                            </span>
-                        ) : null}
-                    </li>
                     {APP_NAME === APPS.PROTONVPN_SETTINGS || APP_NAME === APPS.PROTONACCOUNT ? null : (
                         <li className="dropDown-item">
                             <AppLink
@@ -79,7 +71,7 @@ const UserDropdown = ({ ...rest }) => {
                                 toApp={getAccountSettingsApp()}
                             >
                                 <Icon className="mt0-25 mr0-5" name="settings-master" />
-                                {c('Action').t`Settings`}
+                                {c('Action').t`Account settings`}
                             </AppLink>
                         </li>
                     )}
@@ -116,6 +108,17 @@ const UserDropdown = ({ ...rest }) => {
                             </button>
                         </li>
                     ) : null}
+                    <li className="dropDown-item">
+                        <div className="pl1 pr1 pt0-5 pb0-5 w100 flex flex-nowrap flex-spacebetween flex-items-center">
+                            <label htmlFor="theme-toggle" className="mr1">{c('Action').t`Display mode`}</label>
+                            <Toggle
+                                id="theme-toggle"
+                                checked={theme === Theme.Dark}
+                                loading={loading}
+                                onChange={() => withLoading(handleThemeToggle())}
+                            />
+                        </div>
+                    </li>
                     <li className="dropDown-item pt0-5 pb0-5 pl1 pr1 flex">
                         <PrimaryButton
                             className="w100 aligncenter navigationUser-logout"
