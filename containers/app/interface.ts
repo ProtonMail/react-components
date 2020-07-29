@@ -3,7 +3,7 @@ import { AuthenticationStore } from 'proton-shared/lib/authentication/createAuth
 
 interface OnLoginCallbackArguments {
     UID: string;
-    EventID: string;
+    EventID?: string;
     keyPassword?: string;
     User?: tsUser;
     LocalID?: number;

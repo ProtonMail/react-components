@@ -4,6 +4,7 @@ import StandalonePublicApp from './StandalonePublicApp';
 import { TtagLocaleMap } from 'proton-shared/lib/interfaces/Locale';
 import { Loader, useAuthentication } from '../../index';
 import { PrivateAuthenticationStore, PublicAuthenticationStore } from './interface';
+import SSOPublicApp from './SSOPublicApp';
 
 const Redirect = () => {
     document.location.replace(document.location.origin);
@@ -24,7 +25,7 @@ const Setup = ({ locales, PrivateApp }: Props) => {
     }
 
     if (isSSOMode) {
-        return 'todo';
+        return <SSOPublicApp onLogin={login} />;
     }
 
     if (isStandaloneMode) {

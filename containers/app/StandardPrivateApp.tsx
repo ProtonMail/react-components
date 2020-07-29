@@ -10,10 +10,6 @@ import { Model } from 'proton-shared/lib/interfaces/Model';
 import { isSSOMode } from 'proton-shared/lib/constants';
 import { LocalKeyResponse } from 'proton-shared/lib/authentication/interface';
 import { getLocalKey } from 'proton-shared/lib/api/auth';
-import { getDecryptedBlob, getPersistedSessionBlob } from 'proton-shared/lib/authentication/session';
-import { InactiveSessionError } from 'proton-shared/lib/api/helpers/withApiHandlers';
-import { Api } from 'proton-shared/lib/interfaces';
-import { AuthenticationStore } from 'proton-shared/lib/authentication/createAuthenticationStore';
 
 import {
     EventManagerProvider,
@@ -33,6 +29,7 @@ import ForceRefreshProvider from '../forceRefresh/Provider';
 
 import loadEventID from './loadEventID';
 import StandardLoadError from './StandardLoadError';
+import { getDecryptedPersistedSessionBlob } from './authHelper';
 
 interface Props<T, M extends Model<T>, E, EvtM extends Model<E>> {
     locales?: any;
@@ -45,22 +42,6 @@ interface Props<T, M extends Model<T>, E, EvtM extends Model<E>> {
     noModals?: boolean;
     children: React.ReactNode;
 }
-
-const getPersistedSessionPromise = async (
-    api: Api,
-    authentication: AuthenticationStore,
-    persistedSessionBlobString: string
-) => {
-    const { ClientKey } = await api<LocalKeyResponse>(getLocalKey());
-    const blob = await getDecryptedBlob(ClientKey, persistedSessionBlobString).catch(() => {
-        throw InactiveSessionError();
-    });
-    const persistedSessionBlob = getPersistedSessionBlob(blob);
-    if (!persistedSessionBlob) {
-        throw InactiveSessionError();
-    }
-    authentication.setPassword(persistedSessionBlob?.keyPassword);
-};
 
 const StandardPrivateApp = <T, M extends Model<T>, E, EvtM extends Model<E>>({
     locales = {},
@@ -100,7 +81,15 @@ const StandardPrivateApp = <T, M extends Model<T>, E, EvtM extends Model<E>>({
             const persistedSessionBlobString = persistedSession?.blob;
             // If there is a temporary persisted session, attempt to read it
             if (persistedSessionBlobString) {
-                authPromise = getPersistedSessionPromise(api, authentication, persistedSessionBlobString);
+                const run = async () => {
+                    const { ClientKey } = await api<LocalKeyResponse>(getLocalKey());
+                    const { keyPassword } = await getDecryptedPersistedSessionBlob(
+                        ClientKey,
+                        persistedSessionBlobString
+                    );
+                    authentication.setPassword(keyPassword);
+                };
+                authPromise = run();
             }
         }
 
