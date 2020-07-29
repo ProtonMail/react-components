@@ -24,7 +24,7 @@ const useAutocompleteAriaProps = ({ baseId, selectedSuggest }: { baseId: string;
         inputAriaProps: {
             id: inputId,
             role: 'combobox',
-            'aria-autocomplete': 'both' as const,
+            'aria-autocomplete': 'list' as const,
             'aria-owns': suggestionsId,
             'aria-activedescendant': selectedSuggest !== undefined ? getOptionId(selectedSuggest) : undefined,
             'aria-described-by': helpTextId,
