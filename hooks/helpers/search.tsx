@@ -9,10 +9,6 @@ const normalize = (input: string) =>
 
 /**
  *  Returns a formatted JSX with all matches wrapped with <b></b>
- *
- * @param {(string | undefined)} input
- * @param {string} match
- * @returns
  */
 export const getMatch = (input: string | undefined, match: string) => {
     if (!input) return input;
