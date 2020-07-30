@@ -119,10 +119,17 @@ const UserDropdown = ({ ...rest }) => {
                                 loading={loading}
                                 onChange={() => withLoading(handleThemeToggle())}
                                 label={(key: ToggleState) => {
-                                    const alt = key === ToggleState.on ? c('Toggle button').t`Normal` : c('Toggle button').t`Dark`;
+                                    const alt =
+                                        key === ToggleState.on
+                                            ? c('Toggle button').t`Normal`
+                                            : c('Toggle button').t`Dark`;
                                     return (
                                         <span className="pm-toggle-label-text">
-                                            <Icon name={key === ToggleState.on ? 'crescent-moon' : 'half-moon'} alt={alt} className="pm-toggle-label-img" />
+                                            <Icon
+                                                name={key === ToggleState.on ? 'crescent-moon' : 'half-moon'}
+                                                alt={alt}
+                                                className="pm-toggle-label-img"
+                                            />
                                         </span>
                                     );
                                 }}
