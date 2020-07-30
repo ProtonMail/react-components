@@ -8,14 +8,21 @@ export enum DestinationLabelID {
     STARRED = 10,
     ARCHIVE = 6,
     SENT = 7,
-    DRAFTS = 8
+    DRAFTS = 8,
 }
 
-export interface Folder {
+export enum IMPORT_ERROR {
+    AUTH_IMAP = 2000,
+    AUTH_CREDENTIALS = 2902,
+    ALREADY_EXISTS = 2500,
+}
+
+export interface ImportedFolder {
     SourceFolder: string;
     DestinationLabelID?: DestinationLabelID;
     DestinationLabelName?: string;
     Processed: number;
+    Total: number;
 }
 
 export interface MailImportFolder {
@@ -35,10 +42,10 @@ export interface MailImportFolderModel extends MailImportFolder {
 export enum Step {
     START,
     PREPARE,
-    STARTED
+    STARTED,
 }
 
-export interface ModalModel {
+export interface ImportModalModel {
     newFolders: MailImportFolderModel[];
     oldFolders: MailImportFolder[];
     step: Step;
@@ -57,7 +64,7 @@ export enum ImportMailStatus {
     PAUSED = 2,
     CANCELED = 3,
     DONE = 4,
-    FAILED = 5
+    FAILED = 5,
 }
 
 export interface ImportMail {
@@ -68,13 +75,13 @@ export interface ImportMail {
     Status: ImportMailStatus;
     FilterStartDate: string;
     FilterEndDate: string;
-    FolderMapping: Folder[];
+    FolderMapping: ImportedFolder[];
 }
 
 export enum ImportMailReportStatus {
     CANCELED = 3,
     DONE = 4,
-    FAILED = 5
+    FAILED = 5,
 }
 
 export interface ImportMailReport {

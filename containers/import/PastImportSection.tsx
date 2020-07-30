@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import {
-    SubTitle,
     Alert,
     ConfirmModal,
     Loader,
@@ -13,10 +12,10 @@ import {
     useApi,
     useLoading,
     useModals,
-    useNotifications
-} from 'react-components';
+    useNotifications,
+} from '../..';
 import { c } from 'ttag';
-import { queryMailImportReport, deleteMailImportReport } from 'proton-shared/lib/api/mailImport';
+import { queryMailImportHistory, deleteMailImportReport } from 'proton-shared/lib/api/mailImport';
 
 import { ImportMailReport, ImportMailReportStatus } from './interfaces';
 import { noop } from 'proton-shared/lib/helpers/function';
@@ -50,7 +49,7 @@ const PastImportsSection = () => {
     const { createNotification } = useNotifications();
 
     const fetch = async () => {
-        const { Imports = [] } = await api(queryMailImportReport());
+        const { Imports = [] } = await api(queryMailImportHistory());
         setImports(Imports);
     };
 
@@ -67,21 +66,11 @@ const PastImportsSection = () => {
     }, []);
 
     if (loading) {
-        return (
-            <>
-                <SubTitle>{c('Title').t`Import history`}</SubTitle>
-                <Loader />
-            </>
-        );
+        return <Loader />;
     }
 
     if (!imports.length) {
-        return (
-            <>
-                <SubTitle>{c('Title').t`Import history`}</SubTitle>
-                <Alert>{c('Info').t`No past imports found`}</Alert>
-            </>
-        );
+        return <Alert>{c('Info').t`No past imports found`}</Alert>;
     }
 
     const handleDelete = async (ID: string, email: string) => {
@@ -107,46 +96,43 @@ const PastImportsSection = () => {
     };
 
     return (
-        <>
-            <SubTitle>{c('Title').t`Import history`}</SubTitle>
-            <Table>
-                <TableHeader
-                    cells={[c('Title header').t`Import`, c('Title header').t`Status`, c('Title header').t`Actions`]}
-                />
-                <TableBody>
-                    {imports.map(({ Status, Email, ID, Report }, index) => {
-                        return (
-                            <TableRow
-                                key={index}
-                                cells={[
-                                    Email,
-                                    <ImportStatus key="status" status={Status} />,
-                                    <DropdownActions
-                                        key="actions"
-                                        loading={loadingActions}
-                                        className="pm-button--small"
-                                        list={[
-                                            {
-                                                text: c('Action').t`Show details`,
-                                                onClick() {
-                                                    handleShowDetails(Report);
-                                                }
+        <Table>
+            <TableHeader
+                cells={[c('Title header').t`Import`, c('Title header').t`Status`, c('Title header').t`Actions`]}
+            />
+            <TableBody>
+                {imports.map(({ Status, Email, ID, Report }, index) => {
+                    return (
+                        <TableRow
+                            key={index}
+                            cells={[
+                                Email,
+                                <ImportStatus key="status" status={Status} />,
+                                <DropdownActions
+                                    key="actions"
+                                    loading={loadingActions}
+                                    className="pm-button--small"
+                                    list={[
+                                        {
+                                            text: c('Action').t`Show details`,
+                                            onClick() {
+                                                handleShowDetails(Report);
                                             },
-                                            {
-                                                text: c('Action').t`Delete`,
-                                                onClick() {
-                                                    withLoadingActions(handleDelete(ID, Email));
-                                                }
-                                            }
-                                        ]}
-                                    />
-                                ]}
-                            />
-                        );
-                    })}
-                </TableBody>
-            </Table>
-        </>
+                                        },
+                                        {
+                                            text: c('Action').t`Delete`,
+                                            onClick() {
+                                                withLoadingActions(handleDelete(ID, Email));
+                                            },
+                                        },
+                                    ]}
+                                />,
+                            ]}
+                        />
+                    );
+                })}
+            </TableBody>
+        </Table>
     );
 };
 

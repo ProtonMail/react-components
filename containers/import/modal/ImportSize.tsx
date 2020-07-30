@@ -1,25 +1,26 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { c } from 'ttag';
-import { useApi, Loader } from 'react-components';
+import { useApi, Loader } from '../../..';
 import humanSize from 'proton-shared/lib/helpers/humanSize';
 import { getMailImport } from 'proton-shared/lib/api/mailImport';
 
-import { MailboxSize } from './interfaces';
+import { MailboxSize } from '../interfaces';
 
 interface Props {
     ID: string;
+    Code: string;
 }
 
 const getTotal = (mailboSize: MailboxSize) => Object.entries(mailboSize).reduce((acc, [, size]) => acc + size, 0);
 
-const ImportSize = ({ ID }: Props) => {
+const ImportSize = ({ ID, Code }: Props) => {
     const api = useApi();
     const [total, setTotal] = useState(0);
     const intervalIDRef = useRef<NodeJS.Timeout>();
 
     const fetch = async () => {
-        const { Import = {} } = await api(getMailImport(ID)); // TODO if UserSpaceLeft > MailboxSize stop fetching
-        const { MailboxSize, UserSpaceLeft } = Import;
+        const { Importer } = await api(getMailImport(ID, { Code })); // TODO if UserSpaceLeft > MailboxSize stop fetching
+        const { MailboxSize, UserSpaceLeft } = Importer || {};
 
         if (MailboxSize) {
             const totalSize = getTotal(MailboxSize);
