@@ -1,23 +1,28 @@
 import { sanitizeString } from 'proton-shared/lib/sanitize';
-import { ChangeEvent, ReactNode, useCallback, useMemo, useState, KeyboardEvent } from 'react';
+import { ReactNode, useCallback, useMemo, useState, KeyboardEvent } from 'react';
 import { getMatch } from './helpers/search';
 
 function useSearch<T extends { [key in keyof T]: string }, K = Extract<keyof T, string>>({
+    inputValue = '',
+    minSymbols = 1,
     onSelect,
+    resetField,
     sources,
     keys,
 }: {
+    inputValue?: string;
+    minSymbols?: number;
     onSelect: (item: T) => void;
+    resetField: () => void;
     sources: ((match: string) => T[])[];
     keys?: K[];
 }) {
-    const [inputValue, setInputValue] = useState('');
     const [isFocused, setIsFocused] = useState(false);
     const [selectedSuggest, setSelectedSuggest] = useState<number | undefined>();
 
     const searchSuggestions = useMemo(() => {
-        const matchString = inputValue.toLowerCase();
-        if (matchString.length < 1 || !isFocused) return [];
+        const matchString = sanitizeString(inputValue).toLowerCase();
+        if (matchString.length < minSymbols || !isFocused) return [];
         const itemList = sources.flatMap((source) => source(matchString));
         const results = itemList
             .map((item) => {
@@ -34,15 +39,6 @@ function useSearch<T extends { [key in keyof T]: string }, K = Extract<keyof T, 
         return results;
     }, [inputValue, isFocused, sources]);
 
-    const resetField = useCallback(() => {
-        setInputValue('');
-        setIsFocused(false);
-    }, [setInputValue, setIsFocused]);
-
-    const onChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-        setInputValue(sanitizeString(event.currentTarget?.value || ''));
-        setSelectedSuggest(undefined);
-    }, []);
     const onKeyDown = useCallback(
         (event: KeyboardEvent<HTMLInputElement>) => {
             switch (event.key) {
@@ -57,6 +53,7 @@ function useSearch<T extends { [key in keyof T]: string }, K = Extract<keyof T, 
                     const firstSuggestion = searchSuggestions[0]?.item;
                     if (firstSuggestion) {
                         onSelect(firstSuggestion);
+                        setIsFocused(false);
                         resetField();
                     }
                     break;
@@ -85,13 +82,13 @@ function useSearch<T extends { [key in keyof T]: string }, K = Extract<keyof T, 
         [selectedSuggest, setSelectedSuggest, searchSuggestions]
     );
     const onFocus = useCallback(() => setIsFocused(true), [isFocused]);
-    const onBlur = useCallback(() => setTimeout(resetField, 100), [isFocused, setSelectedSuggest]);
+    const onBlur = useCallback(() => setTimeout(() => setIsFocused(false), 100), [isFocused]);
 
     return {
-        inputProps: { value: inputValue, onChange, onKeyDown, onBlur, onFocus },
+        inputProps: { onKeyDown, onBlur, onFocus },
         searchSuggestions,
         selectedSuggest,
-        resetField,
+        setIsFocused,
     };
 }
 
