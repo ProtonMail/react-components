@@ -2,14 +2,14 @@ import { sanitizeString } from 'proton-shared/lib/sanitize';
 import { ChangeEvent, ReactNode, useCallback, useMemo, useState, KeyboardEvent } from 'react';
 import { getMatch } from './helpers/search';
 
-function useSearch<T>({
+function useSearch<T extends { [key in keyof T]: string }, K = Extract<keyof T, string>>({
     onSelect,
     sources,
     keys,
 }: {
     onSelect: (item: T) => void;
     sources: ((match: string) => T[])[];
-    keys: string[];
+    keys?: K[];
 }) {
     const [inputValue, setInputValue] = useState('');
     const [isFocused, setIsFocused] = useState(false);
@@ -21,11 +21,12 @@ function useSearch<T>({
         const itemList = sources.flatMap((source) => source(matchString));
         const results = itemList
             .map((item) => {
-                const matchedProps: { [key: string]: ReactNode } = {};
-                for (const prop of keys) {
-                    const content = ((item as unknown) as { [key: string]: unknown })[prop];
-                    const match = content && getMatch(content as string, matchString);
-                    if (match) matchedProps[prop] = match;
+                const matchedProps: { [Prop in keyof T]?: ReactNode } = {};
+                const keyList = keys || Object.keys(item);
+                for (const prop of keyList) {
+                    const content = item[prop as keyof T];
+                    const match = content && getMatch(content, matchString);
+                    if (match) matchedProps[prop as keyof T] = match;
                 }
                 return { item, matchedProps };
             })
