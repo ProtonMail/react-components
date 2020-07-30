@@ -18,7 +18,7 @@ const handleCreateUser = async ({ api, username, password, recoveryEmail, client
         throw new Error('Missing username');
     }
     try {
-        return await srpVerify({
+        await srpVerify({
             api,
             credentials: { password },
             config: {
