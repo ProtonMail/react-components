@@ -115,6 +115,7 @@ const UserDropdown = ({ ...rest }) => {
                             <label htmlFor="theme-toggle" className="mr1">{c('Action').t`Display mode`}</label>
                             <Toggle
                                 id="theme-toggle"
+                                className="pm-toggle-label--theme-toggle"
                                 checked={theme === Theme.Dark}
                                 loading={loading}
                                 onChange={() => withLoading(handleThemeToggle())}
