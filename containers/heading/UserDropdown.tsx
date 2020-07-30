@@ -6,6 +6,7 @@ import { requestFork } from 'proton-shared/lib/authentication/sessionForking';
 import { FORK_TYPE } from 'proton-shared/lib/authentication/ForkInterface';
 import { useAuthentication, useConfig, useModals, useUser, useLoading } from '../../hooks';
 import { usePopperAnchor, Dropdown, Icon, Toggle, PrimaryButton } from '../../components';
+import { ToggleState } from '../../components/toggle/Toggle';
 import UserDropdownButton from './UserDropdownButton';
 import AppLink from '../../components/link/AppLink';
 import { generateUID } from '../../helpers';
@@ -76,7 +77,7 @@ const UserDropdown = ({ ...rest }) => {
                             </AppLink>
                         </li>
                     )}
-                    <li className="dropDown-item">
+                    <li>
                         <a
                             className="w100 flex flex-nowrap dropDown-item-link nodecoration pl1 pr1 pt0-5 pb0-5"
                             href="https://shop.protonmail.com"
@@ -117,7 +118,14 @@ const UserDropdown = ({ ...rest }) => {
                                 checked={theme === Theme.Dark}
                                 loading={loading}
                                 onChange={() => withLoading(handleThemeToggle())}
-                                // TODO add custom label
+                                label={(key: ToggleState) => {
+                                    const alt = key === ToggleState.on ? c('Toggle button').t`Normal` : c('Toggle button').t`Dark`;
+                                    return (
+                                        <span className="pm-toggle-label-text">
+                                            <Icon name={key === ToggleState.on ? 'crescent-moon' : 'half-moon'} alt={alt} className="pm-toggle-label-img" />
+                                        </span>
+                                    );
+                                }}
                             />
                         </div>
                     </li>
