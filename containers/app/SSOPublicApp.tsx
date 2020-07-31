@@ -1,15 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { getPersistedSession } from 'proton-shared/lib/authentication/session';
-import { LocalKeyResponse } from 'proton-shared/lib/authentication/interface';
-import { getLocalKey } from 'proton-shared/lib/api/auth';
-import { withUIDHeaders } from 'proton-shared/lib/fetch/headers';
-import { getUser } from 'proton-shared/lib/api/user';
+import { PersistentSessionInvalid } from 'proton-shared/lib/authentication/error';
 import { OnLoginCallback } from './interface';
 import GenericError from '../error/GenericError';
 import LoaderPage from './LoaderPage';
 import ModalsChildren from '../modals/Children';
-import { getDecryptedPersistedSessionBlob, getLocalID } from './authHelper';
-import { User as tsUser } from 'proton-shared/lib/interfaces';
+import { getLocalIDFromPathname, resumeSession } from './authHelper';
 import { useApi } from '../../index';
 
 interface Props {
@@ -22,28 +17,21 @@ const SSOPublicApp = ({ onLogin }: Props) => {
 
     useEffect(() => {
         const run = async () => {
-            const localID = getLocalID(window.location.pathname);
-            // No local ID in the url, redirect to the account switcher
+            const localID = getLocalIDFromPathname(window.location.pathname);
             if (localID === undefined) {
-                return;
+                // No local ID in the url, redirect to the account switcher
+                throw new Error('Handle redirect');
             }
-            const persistedSession = getPersistedSession(localID);
-            const persistedUID = persistedSession?.UID;
-            // Persistent session is invalid, redirect to re-fork this session
-            if (!persistedSession || !persistedUID) {
-                return;
+            try {
+                const result = await resumeSession(api, localID);
+                return onLogin(result);
+            } catch (e) {
+                if (e instanceof PersistentSessionInvalid) {
+                    // Redirect to re-fork the session
+                    throw new Error('Handle redirect');
+                }
+                throw e;
             }
-            // Persistent session to be validated
-            const persistedSessionBlobString = persistedSession.blob;
-            // User with password
-            if (persistedSessionBlobString) {
-                const { ClientKey } = await api<LocalKeyResponse>(withUIDHeaders(persistedUID, getLocalKey()));
-                const { keyPassword } = await getDecryptedPersistedSessionBlob(ClientKey, persistedSessionBlobString);
-                return onLogin({ UID: persistedUID, LocalID: localID, keyPassword });
-            }
-            // User without password
-            const { User } = await api<{ User: tsUser }>(withUIDHeaders(persistedUID, getUser()));
-            return onLogin({ UID: persistedUID, LocalID: localID, User });
         };
         run()
             .then(() => setLoading(false))

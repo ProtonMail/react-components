@@ -25,8 +25,8 @@ import {
     usePayment,
     HumanVerificationForm,
     BackButton,
-    OnLoginArgs,
 } from '../../index';
+import { OnLoginCallback } from '../app/interface';
 import { Props as AccountPublicLayoutProps } from './AccountPublicLayout';
 import SignupAccountForm from './SignupAccountForm';
 import SignupRecoveryForm from './SignupRecoveryForm';
@@ -62,7 +62,7 @@ import OneAccountIllustration from '../illustration/OneAccountIllustration';
 
 interface Props {
     history: History;
-    onLogin: (args: OnLoginArgs) => void;
+    onLogin: OnLoginCallback;
     Layout: FunctionComponent<AccountPublicLayoutProps>;
 }
 

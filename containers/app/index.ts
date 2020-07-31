@@ -12,3 +12,5 @@ export { default as StandardSetup } from './StandardSetup';
 export { default as TopBanner } from './TopBanner';
 export { default as TopBanners } from './TopBanners';
 export { default as TopNavbar } from './TopNavbar';
+
+export * from './interface';
