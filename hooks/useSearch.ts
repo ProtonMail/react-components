@@ -2,7 +2,13 @@ import { sanitizeString } from 'proton-shared/lib/sanitize';
 import { ReactNode, useCallback, useMemo, useState, KeyboardEvent } from 'react';
 import { getMatch } from './helpers/search';
 
-function useSearch<T extends { [key in keyof T]: string }, K = Extract<keyof T, string>>({
+// should result in an object that only has values from T that are assignable to string
+type SearchableObject<T> = { [Key in keyof T]: T[keyof T] extends string ? T[keyof T] : undefined };
+
+/**
+ * NB: if sources return different types, & them. This allows to pick keys that only exist on one of the types.
+ */
+function useSearch<T, K = keyof SearchableObject<T>>({
     inputValue = '',
     minSymbols = 1,
     onSelect,
@@ -12,9 +18,9 @@ function useSearch<T extends { [key in keyof T]: string }, K = Extract<keyof T, 
 }: {
     inputValue?: string;
     minSymbols?: number;
-    onSelect: (item: T) => void;
+    onSelect: (item: Partial<T>) => void;
     resetField: () => void;
-    sources: ((match: string) => T[])[];
+    sources: ((match: string) => Partial<T>[])[];
     keys?: K[];
 }) {
     const [isFocused, setIsFocused] = useState(false);
@@ -26,12 +32,14 @@ function useSearch<T extends { [key in keyof T]: string }, K = Extract<keyof T, 
         const itemList = sources.flatMap((source) => source(matchString));
         const results = itemList
             .map((item) => {
-                const matchedProps: { [Prop in keyof T]?: ReactNode } = {};
-                const keyList = keys || Object.keys(item);
+                const matchedProps: { [key in keyof SearchableObject<T>]?: ReactNode } = {};
+                // when keys are not defined we still pick only searchable keys
+                const keyList = (keys ||
+                    Object.keys(item).filter((key) => typeof item[key as keyof T] === 'string')) as K[];
                 for (const prop of keyList) {
-                    const content = item[prop as keyof T];
-                    const match = content && getMatch(content, matchString);
-                    if (match) matchedProps[prop as keyof T] = match;
+                    const content = item[(prop as unknown) as keyof T];
+                    const match = content && typeof content === 'string' && getMatch(content, matchString);
+                    if (match) matchedProps[(prop as unknown) as keyof T] = match;
                 }
                 return { item, matchedProps };
             })
