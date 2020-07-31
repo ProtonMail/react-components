@@ -4,7 +4,10 @@ import { APPS, isSSOMode, SSO_PATHS } from 'proton-shared/lib/constants';
 import { getAccountSettingsApp, getAppHref } from 'proton-shared/lib/apps/helper';
 import { requestFork } from 'proton-shared/lib/authentication/sessionForking';
 import { FORK_TYPE } from 'proton-shared/lib/authentication/ForkInterface';
-import { useAuthentication, useConfig, useModals, useUser, useLoading } from '../../hooks';
+import { updateThemeType } from 'proton-shared/lib/api/settings';
+import { ThemeTypes } from 'proton-shared/lib/themes/themes';
+
+import { useAuthentication, useConfig, useModals, useUser, useLoading, useApi, useEventManager, useUserSettings } from '../../hooks';
 import { usePopperAnchor, Dropdown, Icon, Toggle, PrimaryButton } from '../../components';
 import { ToggleState } from '../../components/toggle/Toggle';
 import UserDropdownButton from './UserDropdownButton';
@@ -12,19 +15,17 @@ import AppLink from '../../components/link/AppLink';
 import { generateUID } from '../../helpers';
 import { DonateModal } from '../payments';
 
-enum Theme {
-    Normal,
-    Dark,
-}
-
 const UserDropdown = ({ ...rest }) => {
     const { APP_NAME } = useConfig();
+    const api = useApi();
+    const { call } = useEventManager();
     const [user] = useUser();
+    const [userSettings] = useUserSettings();
     const { logout } = useAuthentication();
     const { createModal } = useModals();
     const [uid] = useState(generateUID('dropdown'));
     const { anchorRef, isOpen, toggle, close } = usePopperAnchor<HTMLButtonElement>();
-    const [theme, setTheme] = useState(Theme.Normal);
+    const [themeType, setThemeType] = useState(userSettings.ThemeType || ThemeTypes.Default);
     const [loading, withLoading] = useLoading();
 
     const handleSupportUsClick = () => {
@@ -46,9 +47,10 @@ const UserDropdown = ({ ...rest }) => {
     };
 
     const handleThemeToggle = async () => {
-        const newTheme = theme === Theme.Normal ? Theme.Dark : Theme.Normal;
-        // TODO Add API call
-        setTheme(newTheme);
+        const newThemeType = themeType === ThemeTypes.Default ? ThemeTypes.Dark : ThemeTypes.Default;
+        await api(updateThemeType(newThemeType));
+        await call();
+        setThemeType(newThemeType);
     };
 
     return (
@@ -116,7 +118,7 @@ const UserDropdown = ({ ...rest }) => {
                             <Toggle
                                 id="theme-toggle"
                                 className="pm-toggle-label--theme-toggle"
-                                checked={theme === Theme.Dark}
+                                checked={themeType === ThemeTypes.Dark}
                                 loading={loading}
                                 onChange={() => withLoading(handleThemeToggle())}
                                 label={(key: ToggleState) => {

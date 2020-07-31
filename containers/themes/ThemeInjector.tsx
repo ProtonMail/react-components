@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { getThemeIdentifier, getTheme, toStyle, isDarkTheme } from 'proton-shared/lib/themes/helpers';
-import { DEFAULT_THEME } from 'proton-shared/lib/themes/themes';
+import { PROTON_THEMES } from 'proton-shared/lib/themes/themes';
 import { DARK_MODE_CLASS } from 'proton-shared/lib/constants';
-import { useMailSettings, useOrganization } from '../../hooks';
+import { useUserSettings, useOrganization } from '../../hooks';
 
 const getStyle = (userTheme: string, orgTheme: string) => {
     const themeIdentifier = getThemeIdentifier(userTheme);
-    if (themeIdentifier === DEFAULT_THEME.identifier) {
+    if (themeIdentifier === PROTON_THEMES.DEFAULT.identifier) {
         return orgTheme;
     }
     const themeValue = getTheme(themeIdentifier);
@@ -17,7 +17,7 @@ const getStyle = (userTheme: string, orgTheme: string) => {
 };
 
 const ThemeInjector = () => {
-    const [{ Theme: userTheme = '' } = {}] = useMailSettings();
+    const [{ Theme: userTheme = '' } = {}] = useUserSettings();
     const [{ Theme: orgTheme = '' } = {}] = useOrganization();
     const [style, setStyle] = useState(() => getStyle(userTheme, orgTheme));
 
