@@ -32,6 +32,7 @@ const Notification = ({ children, type, isClosing, onClick, onExit }: Props) => 
 
     return (
         <div
+            data-test-id="notification"
             aria-atomic="true"
             role="alert"
             className={classnames([
