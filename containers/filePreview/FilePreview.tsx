@@ -44,6 +44,8 @@ const FilePreview = ({ contents, fileName, mimeType, loading, navigationControls
         if (isPDF(mimeType)) {
             return <PDFPreview contents={contents} filename={fileName} />;
         }
+
+        return <TextPreview contents={contents} />;
     };
 
     return (
