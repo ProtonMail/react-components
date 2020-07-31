@@ -26,8 +26,7 @@ const ThemesSection = () => {
 
     return (
         <>
-            <Alert>{c('Info').t`Choose the look and feel of your mailbox.`}</Alert>
-            <Alert type="warning">{c('Info').t`Selecting another mode will override your current mode.`}</Alert>
+            <Alert>{c('Info').t`Choose the look and feel of the application.`}</Alert>
             <ThemeCards
                 list={themes}
                 themeIdentifier={ThemeType}
