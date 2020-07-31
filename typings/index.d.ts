@@ -10,3 +10,5 @@ declare module 'squire-rte';
 declare module 'pm-srp';
 
 declare module 'is-valid-domain';
+
+declare module 'proton-shared/lib/calendar/vcal.js';
