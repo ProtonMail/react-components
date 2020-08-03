@@ -33,8 +33,8 @@ const DEFAULT_MODEL: ImportModalModel = {
     step: Step.START,
     needDetails: false,
     importID: '',
-    email: '',
-    password: '',
+    email: 'mindaugas2020v@gmail.com', // '',
+    password: 'wzwdtwptfzvsqoqt', // '',
     port: '',
     imap: '',
     errorCode: 0,
@@ -111,8 +111,6 @@ const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
             } catch (error) {
                 const { data: { Code } = { Code: 0 } } = error;
 
-                console.log(Code);
-
                 if ([IMPORT_ERROR.AUTH_CREDENTIALS, IMPORT_ERROR.AUTH_IMAP].includes(Code)) {
                     setModel({
                         ...model,
@@ -170,9 +168,7 @@ const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
                         })
                     );
 
-                    const { Folders = [] } = await api(getMailImportFolders(Importer.ID));
-
-                    console.log(Folders);
+                    const { Folders = [] } = await api(getMailImportFolders(Importer.ID, { Code: model.password }));
 
                     setModel({
                         ...model,
@@ -239,7 +235,7 @@ const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
             return null;
         }
 
-        return <Button loading={loading} onClick={handleCancel}>{c('Action').t`Cancel`}</Button>;
+        return <Button onClick={handleCancel}>{c('Action').t`Cancel`}</Button>;
     }, [model.step, loading]);
 
     const submit = useMemo(() => {
@@ -274,9 +270,7 @@ const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
         >
             <ImportMailWizard step={model.step} steps={wizardSteps} />
             {model.step === Step.START && <ImportStartStep model={model} setModel={setModel} />}
-            {model.step === Step.PREPARE && (
-                <ImportPrepareStep address={address} title={title} model={model} setModel={setModel} />
-            )}
+            {model.step === Step.PREPARE && <ImportPrepareStep address={address} model={model} setModel={setModel} />}
             {model.step === Step.STARTED && <ImportStartedStep />}
         </FormModal>
     );

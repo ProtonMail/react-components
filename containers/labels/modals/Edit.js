@@ -13,7 +13,16 @@ import NewLabelForm from '../NewLabelForm';
  * @type any
  * @param {any} options
  */
-function EditLabelModal({ label = null, mode = 'create', onEdit, onClose, onAdd, type = 'label', ...props }) {
+function EditLabelModal({
+    label = null,
+    mode = 'create',
+    onEdit,
+    onClose,
+    onAdd,
+    type = 'label',
+    doNotSave = false,
+    ...props
+}) {
     const { call } = useEventManager();
     const { createNotification } = useNotifications();
     const api = useApi();
@@ -66,7 +75,15 @@ function EditLabelModal({ label = null, mode = 'create', onEdit, onClose, onAdd,
 
     const ACTIONS = { create, edition: update };
 
-    const handleSubmit = () => withLoading(ACTIONS[mode](model));
+    const handleSubmit = () => {
+        /* Used in Custom import modal */
+        if (doNotSave) {
+            ACTIONS[mode] === 'create' ? onAdd?.(model) : onEdit?.(model);
+            onClose?.();
+            return;
+        }
+        withLoading(ACTIONS[mode](model));
+    };
 
     const handleChangeColor = (Color) => {
         setModel({
@@ -123,6 +140,7 @@ EditLabelModal.propTypes = {
     onAdd: PropTypes.func,
     onEdit: PropTypes.func,
     onClose: PropTypes.func,
+    doNotSave: PropTypes.bool,
 };
 
 export default EditLabelModal;

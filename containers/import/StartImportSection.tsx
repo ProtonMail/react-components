@@ -2,7 +2,7 @@ import React from 'react';
 import { PrimaryButton, useModals } from '../..';
 import { c } from 'ttag';
 
-import ImportMailModal from './modal/ImportMailModal';
+import ImportMailModal from './modals/ImportMailModal';
 
 const StartImportSection = () => {
     const { createModal } = useModals();
