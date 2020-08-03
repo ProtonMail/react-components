@@ -22,7 +22,7 @@ import { setTmpEventID } from './loadEventID';
 import clearKeyCache from './clearKeyCache';
 import useInstance from '../../hooks/useInstance';
 import { PreventLeaveProvider } from '../../hooks/usePreventLeave';
-import { getLocalID } from './authHelper';
+import { getLocalIDFromPathname } from './authHelper';
 
 interface Props {
     config: any;
@@ -44,7 +44,7 @@ const ProtonApp = ({ config, children }: Props) => {
         if (!isSSOMode) {
             return UID;
         }
-        const localID = getLocalID(window.location.pathname);
+        const localID = getLocalIDFromPathname(window.location.pathname);
         if (localID === undefined) {
             return;
         }
