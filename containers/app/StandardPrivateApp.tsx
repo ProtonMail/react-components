@@ -11,6 +11,7 @@ import { isSSOMode } from 'proton-shared/lib/constants';
 import { LocalKeyResponse } from 'proton-shared/lib/authentication/interface';
 import { getLocalKey } from 'proton-shared/lib/api/auth';
 import { PersistentSessionInvalid } from 'proton-shared/lib/authentication/error';
+import { TtagLocaleMap } from 'proton-shared/lib/interfaces/Locale';
 
 import {
     EventManagerProvider,
@@ -20,7 +21,7 @@ import {
     ContactProvider,
     useAuthentication,
     useApi,
-    useCache
+    useCache,
 } from '../../index';
 
 import EventModelListener from '../eventManager/EventModelListener';
@@ -33,7 +34,7 @@ import StandardLoadError from './StandardLoadError';
 import { getDecryptedPersistedSessionBlob } from './authHelper';
 
 interface Props<T, M extends Model<T>, E, EvtM extends Model<E>> {
-    locales?: any;
+    locales?: TtagLocaleMap;
     onInit?: () => void;
     onLogout: () => void;
     fallback?: React.ReactNode;

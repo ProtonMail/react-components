@@ -6,7 +6,8 @@ import { formatUser, UserModel } from 'proton-shared/lib/models/userModel';
 import { STATUS } from 'proton-shared/lib/models/cache';
 import createSecureSessionStorage from 'proton-shared/lib/authentication/createSecureSessionStorage';
 import createSecureSessionStorage2 from 'proton-shared/lib/authentication/createSecureSessionStorage2';
-import { isSSOMode, MAILBOX_PASSWORD_KEY, UID_KEY } from 'proton-shared/lib/constants';
+import { PUBLIC_PATH, isSSOMode, MAILBOX_PASSWORD_KEY, UID_KEY } from 'proton-shared/lib/constants';
+import { stripTrailingSlash } from 'proton-shared/lib/helpers/string';
 import { getPersistedSession } from 'proton-shared/lib/authentication/session';
 
 import CompatibilityCheck from './CompatibilityCheck';
@@ -23,6 +24,7 @@ import clearKeyCache from './clearKeyCache';
 import useInstance from '../../hooks/useInstance';
 import { PreventLeaveProvider } from '../../hooks/usePreventLeave';
 import { getLocalIDFromPathname } from './authHelper';
+import { MimeIcons } from '../../index';
 
 interface Props {
     config: any;
@@ -123,16 +125,17 @@ const ProtonApp = ({ config, children }: Props) => {
 
     const basename = useMemo(() => {
         if (!isSSOMode) {
-            return;
+            return stripTrailingSlash(PUBLIC_PATH);
         }
         const localID = authentication.getLocalID();
-        return UID && localID !== undefined ? `u${localID}` : '';
+        return UID && localID !== undefined ? `/u${localID}` : '';
     }, [UID]);
 
     return (
         <ConfigProvider config={config}>
             <CompatibilityCheck>
                 <Icons />
+                <MimeIcons />
                 <RightToLeftProvider>
                     <React.Fragment key={UID}>
                         <Router basename={basename}>

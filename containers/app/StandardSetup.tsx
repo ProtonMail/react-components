@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react';
 import { isSSOMode, isStandaloneMode } from 'proton-shared/lib/constants';
-import StandalonePublicApp from './StandalonePublicApp';
 import { TtagLocaleMap } from 'proton-shared/lib/interfaces/Locale';
+import StandalonePublicApp from './StandalonePublicApp';
 import { Loader, useAuthentication } from '../../index';
 import { PrivateAuthenticationStore, PublicAuthenticationStore } from './interface';
 import SSOPublicApp from './SSOPublicApp';
@@ -13,15 +13,15 @@ const Redirect = () => {
 
 interface Props {
     locales: TtagLocaleMap;
-    PrivateApp: FunctionComponent<{ onLogout: () => void }>;
+    PrivateApp: FunctionComponent<{ onLogout: () => void; locales: TtagLocaleMap }>;
 }
 
-const Setup = ({ locales, PrivateApp }: Props) => {
+const StandardSetup = ({ locales, PrivateApp }: Props) => {
     // Force for now
     const { UID, login, logout } = useAuthentication() as PublicAuthenticationStore & PrivateAuthenticationStore;
 
     if (UID) {
-        return <PrivateApp onLogout={logout} />;
+        return <PrivateApp locales={locales} onLogout={logout} />;
     }
 
     if (isSSOMode) {
@@ -35,4 +35,4 @@ const Setup = ({ locales, PrivateApp }: Props) => {
     return <Redirect />;
 };
 
-export default Setup;
+export default StandardSetup;
