@@ -5,7 +5,7 @@ import { mergeUint8Arrays } from 'proton-shared/lib/helpers/array';
 interface Props {
     contents?: Uint8Array[];
 }
-const DocPreview = ({ contents }: Props) => {
+const DocxPreview = ({ contents }: Props) => {
     const [htmlContentString, setHtml] = useState('');
 
     useEffect(() => {
@@ -28,4 +28,4 @@ const DocPreview = ({ contents }: Props) => {
     );
 };
 
-export default DocPreview;
+export default DocxPreview;

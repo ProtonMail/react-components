@@ -8,7 +8,7 @@ import UnsupportedPreview from './UnsupportedPreview';
 import PDFPreview from './PDFPreview';
 import { isPreviewAvailable, isSupportedImage, isSupportedText, isPDF, isSupportedDocument } from './helpers';
 import useKeyPress from '../../hooks/useKeyPress';
-import DocPreview from './DocPreview';
+import DocxPreview from './DocxPreview';
 
 interface Props {
     loading: boolean;
@@ -43,7 +43,7 @@ const FilePreview = ({ contents, fileName, mimeType, loading, navigationControls
             return <TextPreview contents={contents} />;
         }
         if (isSupportedDocument(mimeType)) {
-            return <DocPreview contents={contents} />;
+            return <DocxPreview contents={contents} />;
         }
         if (isPDF(mimeType)) {
             return <PDFPreview contents={contents} filename={fileName} />;
