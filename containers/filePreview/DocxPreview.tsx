@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import mammoth from 'mammoth';
+import { convertToHtml } from 'mammoth';
 import { mergeUint8Arrays } from 'proton-shared/lib/helpers/array';
+import { input } from 'proton-shared/lib/sanitize/purify';
 
 interface Props {
     contents?: Uint8Array[];
@@ -14,8 +15,8 @@ const DocxPreview = ({ contents }: Props) => {
         }
 
         const contentBuffer = mergeUint8Arrays(contents).buffer;
-        mammoth.convertToHtml({ arrayBuffer: contentBuffer }).then((result: any) => {
-            setHtml(result.value);
+        convertToHtml({ arrayBuffer: contentBuffer }).then((result: any) => {
+            setHtml(input(result.value));
         });
     }, [contents]);
 
