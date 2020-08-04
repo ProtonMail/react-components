@@ -78,7 +78,7 @@ function SpamListItem({ list, type, onCreate, onEdit, onMove, onRemove, classNam
                                             onClick() {
                                                 onRemove(item);
                                             },
-                                        },
+                                        } as const,
                                     ]}
                                 />
                             </li>
