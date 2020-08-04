@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, ChangeEvent } from 'react';
 import {
     Icon,
     Row,
@@ -8,10 +8,11 @@ import {
     useModals,
     ConfirmModal,
     Alert,
-    Checkbox,
-    DropdownActions,
+    Button,
+    Tooltip,
+    Select,
 } from '../../..';
-import { format } from 'date-fns';
+import { format, subYears, subMonths } from 'date-fns';
 import { c, msgid } from 'ttag';
 
 import { noop } from 'proton-shared/lib/helpers/function';
@@ -21,11 +22,8 @@ import { LABEL_COLORS, LABEL_TYPE } from 'proton-shared/lib/constants';
 import { randomIntFromInterval } from 'proton-shared/lib/helpers/function';
 
 import EditLabelModal from '../../labels/modals/Edit';
-
-import { ImportModalModel, DestinationLabelID } from '../interfaces';
-import { Button } from '../../../components/button';
-import Tooltip from '../../../components/tooltip/Tooltip';
-import Select from '../../../components/select/Select';
+import { ImportModalModel } from '../interfaces';
+import OrganizeFolders from './OrganizeFolders';
 
 interface Props {
     model: ImportModalModel;
@@ -34,21 +32,23 @@ interface Props {
     onClose?: () => void;
 }
 
-const FOLDER_ICONS = {
-    [DestinationLabelID.INBOX]: 'inbox',
-    [DestinationLabelID.ALL_DRAFTS]: 'drafts',
-    [DestinationLabelID.ALL_SENT]: 'sent',
-    [DestinationLabelID.TRASH]: 'trash',
-    [DestinationLabelID.SPAM]: 'spam',
-    [DestinationLabelID.ARCHIVE]: 'archive',
-    [DestinationLabelID.SENT]: 'sent',
-    [DestinationLabelID.DRAFTS]: 'drafts',
-    [DestinationLabelID.STARRED]: 'star',
-    [DestinationLabelID.ALL_MAIL]: 'all-emails',
-};
+enum TIME_UNIT {
+    BIG_BANG = 'big_bang',
+    LAST_YEAR = 'last_year',
+    LAST_3_MONTHS = 'last_3_months',
+    LAST_MONTH = 'last_month',
+}
 
-interface CustomizedImportModel {
-    label: Partial<Label>;
+/* @todo
+    Move this to ../interfaces.ts and its initialization to ./ImportMailModal.tsx
+    since it's basically the payload that we want to send to the API
+ */
+interface ImportModel {
+    AddressID: string;
+    Code: string;
+    ImportLabel: Partial<Label>;
+    StartTime?: Date;
+    EndTime?: Date;
 }
 
 const CustomizedImportModal = ({ model, setModel, address, onClose = noop, ...rest }: Props) => {
@@ -57,8 +57,10 @@ const CustomizedImportModal = ({ model, setModel, address, onClose = noop, ...re
     then onSubmit send it to the setModel
     onClose should add the confirmModel to avoid loosing internal state
     */
-    const [customizedImportModel, setCustomizedImportModel] = useState<CustomizedImportModel>({
-        label: {
+    const [customizedImportModel, setCustomizedImportModel] = useState<ImportModel>({
+        AddressID: model.importID,
+        Code: model.password,
+        ImportLabel: {
             Name: `${model.email.split('@')[1]} - export ${format(new Date(), 'yyyy-MM-dd')}`,
             Color: LABEL_COLORS[randomIntFromInterval(0, LABEL_COLORS.length - 1)],
             Type: LABEL_TYPE.MESSAGE_LABEL,
@@ -83,22 +85,11 @@ Your configuration will be lost.`}
         setOrganizeFolderVisible(!organizeFolderVisible);
     };
 
-    const dropdownActions = [
-        {
-            text: c('Action').t`Edit`,
-            onClick: noop,
-        },
-        {
-            text: c('Action').t`Add folder`,
-            onClick: noop,
-        },
-    ];
-
     const handleEditLabel = async () => {
-        const label: Label = await new Promise((resolve, reject) => {
+        const ImportLabel: Label = await new Promise((resolve, reject) => {
             createModal(
                 <EditLabelModal
-                    label={customizedImportModel.label}
+                    label={customizedImportModel.ImportLabel}
                     type="label"
                     onEdit={resolve}
                     onClose={reject}
@@ -108,7 +99,30 @@ Your configuration will be lost.`}
             );
         });
 
-        setCustomizedImportModel({ ...customizedImportModel, label });
+        setCustomizedImportModel({ ...customizedImportModel, ImportLabel });
+    };
+
+    const handleChangeTime = (period: TIME_UNIT) => {
+        let StartTime: Date | undefined;
+        let EndTime: Date | undefined = new Date();
+
+        switch (period) {
+            case TIME_UNIT.LAST_YEAR:
+                StartTime = subYears(EndTime, 1);
+                break;
+            case TIME_UNIT.LAST_3_MONTHS:
+                StartTime = subMonths(EndTime, 3);
+                break;
+            case TIME_UNIT.LAST_MONTH:
+                StartTime = subMonths(EndTime, 1);
+                break;
+            default:
+                StartTime = undefined;
+                EndTime = undefined;
+                break;
+        }
+
+        setCustomizedImportModel({ ...customizedImportModel, StartTime, EndTime });
     };
 
     return (
@@ -136,11 +150,11 @@ Your configuration will be lost.`}
                         <span className="inline-flex flew-row flex-items-center pm-badgeLabel-container">
                             <span
                                 className="badgeLabel flex flex-row flex-items-center"
-                                title={customizedImportModel.label.Name}
-                                style={{ color: customizedImportModel.label.Color }}
+                                title={customizedImportModel.ImportLabel.Name}
+                                style={{ color: customizedImportModel.ImportLabel.Color }}
                             >
                                 <span className="pm-badgeLabel-link ellipsis color-white nodecoration">
-                                    {customizedImportModel.label.Name}
+                                    {customizedImportModel.ImportLabel.Name}
                                 </span>
                             </span>
                         </span>
@@ -162,10 +176,25 @@ Your configuration will be lost.`}
                     <Field>
                         <Select
                             className="flex-item-fluid"
+                            onChange={({ target }: ChangeEvent<HTMLSelectElement>) =>
+                                handleChangeTime(target.value as TIME_UNIT)
+                            }
                             options={[
                                 {
-                                    value: 'pois',
-                                    text: c('Tooltip').t`From the beginning of time`,
+                                    value: TIME_UNIT.BIG_BANG,
+                                    text: c('Option').t`From the beginning of time`,
+                                },
+                                {
+                                    value: TIME_UNIT.LAST_YEAR,
+                                    text: c('Option').t`From last year`,
+                                },
+                                {
+                                    value: TIME_UNIT.LAST_3_MONTHS,
+                                    text: c('Option').t`From 3 last months`,
+                                },
+                                {
+                                    value: TIME_UNIT.LAST_MONTH,
+                                    text: c('Option').t`From last month`,
                                 },
                             ]}
                         />
@@ -179,7 +208,6 @@ Your configuration will be lost.`}
                         <Button onClick={toggleFolders}>
                             <Icon
                                 name="caret"
-                                className="mr0-5"
                                 style={
                                     !organizeFolderVisible
                                         ? {
@@ -188,7 +216,7 @@ Your configuration will be lost.`}
                                         : undefined
                                 }
                             />
-                            {c('Action').t`Organize folders`}
+                            <span className="ml0-5">{c('Action').t`Organize folders`}</span>
                         </Button>
                     </FormLabel>
                     <Field className="flex flex-items-center">
@@ -202,124 +230,7 @@ Your configuration will be lost.`}
                 </Row>
             </div>
 
-            {organizeFolderVisible && (
-                <>
-                    <div className="flex">
-                        <div className="flex-item-fluid ellipsis bg-global-muted pt1 pl1 pr1">
-                            <span>{c('Label').t`From`}</span>
-                            {`: `}
-                            <strong>{model.email}</strong>
-                        </div>
-                        <div className="flex-item-fluid ellipsis pt1 pl1 pr1">
-                            <span>{c('Label').t`To`}</span>
-                            {`: `}
-                            <strong>{address.Email}</strong>
-                        </div>
-                    </div>
-
-                    <div className="flex mb1">
-                        <div className="flex-item-fluid bg-global-muted pt0-5">
-                            <ul className="unstyled m0">
-                                {model.oldFolders.map(({ Name, DestinationLabelID }, index) => {
-                                    return (
-                                        <li
-                                            key={`oldFolder_${index}`}
-                                            className="flex flex-nowrap flex-items-center border-bottom pl1 pr1"
-                                            style={{
-                                                height: 50,
-                                            }}
-                                        >
-                                            <Checkbox id={`oldFolder_${index}`} className="flex-item-noshrink" />
-                                            <label
-                                                htmlFor={`oldFolder_${index}`}
-                                                title={Name}
-                                                className="flex-item-fluid-auto ellipsis"
-                                            >
-                                                <Icon
-                                                    name={
-                                                        typeof DestinationLabelID === 'undefined'
-                                                            ? 'folder'
-                                                            : FOLDER_ICONS[DestinationLabelID]
-                                                    }
-                                                    className="mr0-5 ml0-5 flex-item-noshrink"
-                                                />
-                                                {Name}
-                                            </label>
-                                        </li>
-                                    );
-                                })}
-                            </ul>
-                        </div>
-                        <div className="flex-item-fluid pt0-5">
-                            <ul className="unstyled m0">
-                                {model.newFolders
-                                    .filter(({ DestinationLabelID }) => typeof DestinationLabelID !== 'undefined')
-                                    .map(({ DestinationLabelID, Name }) => {
-                                        return (
-                                            <li
-                                                key={DestinationLabelID}
-                                                className="flex flex-nowrap flex-items-center pl1 pr1"
-                                                style={{
-                                                    height: 50,
-                                                }}
-                                            >
-                                                {/*
-                                                    <span title={Name} className="ellipsis">
-                                                        {Name}
-                                                    </span>
-                                                */}
-                                                <Select
-                                                    className="flex-item-fluid"
-                                                    options={[{ value: `${DestinationLabelID}`, text: Name }]}
-                                                />
-                                                <Button className="flex-item-noshrink ml1">
-                                                    {c('Action').t`Add folder`}
-                                                </Button>
-                                            </li>
-                                        );
-                                    })}
-                                {model.newFolders
-                                    .filter(({ DestinationLabelID }) => typeof DestinationLabelID === 'undefined')
-                                    .map(({ id, name }, index) => {
-                                        return (
-                                            <li
-                                                className="flex flex-nowrap flex-items-center pl1 pr1"
-                                                style={{
-                                                    height: 50,
-                                                }}
-                                                key={index}
-                                            >
-                                                {/*
-                                                        <Icon name="folder" className="mr0-5 flex-item-noshrink" />
-                                                        <input
-                                                            type="text"
-                                                            value={name}
-                                                            className="flex-item-fluid"
-                                                            onChange={({ target }) => {
-                                                                const newFolders = [...model.newFolders];
-                                                                const i = model.newFolders.findIndex(
-                                                                    (folder) => folder.id === id
-                                                                );
-                                                                newFolders[i].name = target.value;
-                                                                setModel({ ...model, newFolders });
-                                                            }}
-                                                        />
-                                                    */}
-                                                <Select
-                                                    className="flex-item-fluid"
-                                                    options={[{ value: id, text: name }]}
-                                                />
-                                                <div className="ml1">
-                                                    <DropdownActions key="dropdown" list={dropdownActions} />
-                                                </div>
-                                            </li>
-                                        );
-                                    })}
-                            </ul>
-                        </div>
-                    </div>
-                </>
-            )}
+            {organizeFolderVisible && <OrganizeFolders address={address} model={model} setModel={setModel} />}
         </FormModal>
     );
 };

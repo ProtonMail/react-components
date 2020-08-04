@@ -40,6 +40,7 @@ const DEFAULT_MODEL: ImportModalModel = {
     errorCode: 0,
     newFolders: [],
     oldFolders: [],
+    // payload: ImportModel,
 };
 
 const prepareFolders = (folders: MailImportFolder[]): MailImportFolderModel[] =>
