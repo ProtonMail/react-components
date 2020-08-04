@@ -11,6 +11,7 @@ type SearchableObject<T> = { [Key in keyof T]: T[keyof T] extends string ? T[key
 function useSearch<T, K = keyof SearchableObject<T>>({
     inputValue = '',
     minSymbols = 1,
+    mapFn,
     onSelect,
     resetField,
     sources,
@@ -19,6 +20,7 @@ function useSearch<T, K = keyof SearchableObject<T>>({
     inputValue?: string;
     minSymbols?: number;
     onSelect: (item: Partial<T>) => void;
+    mapFn?: (items: Partial<T>[]) => Partial<T>[];
     resetField: () => void;
     sources: ((match: string) => Partial<T>[])[];
     keys?: K[];
@@ -29,7 +31,9 @@ function useSearch<T, K = keyof SearchableObject<T>>({
     const searchSuggestions = useMemo(() => {
         const matchString = sanitizeString(inputValue).toLowerCase();
         if (matchString.length < minSymbols || !isFocused) return [];
-        const itemList = sources.flatMap((source) => source(matchString));
+        let itemList = sources.flatMap((source) => source(matchString));
+        // here you can do all filtering/sorting you want
+        if (mapFn) itemList = mapFn(itemList);
         const results = itemList
             .map((item) => {
                 const matchedProps: { [key in keyof SearchableObject<T>]?: ReactNode } = {};
@@ -45,7 +49,7 @@ function useSearch<T, K = keyof SearchableObject<T>>({
             })
             .filter(({ matchedProps }) => Object.keys(matchedProps).length > 0);
         return results;
-    }, [inputValue, isFocused, sources]);
+    }, [inputValue, isFocused, sources, mapFn]);
 
     const onKeyDown = useCallback(
         (event: KeyboardEvent<HTMLInputElement>) => {
