@@ -188,6 +188,7 @@ const AdvancedFilterModal = ({ filter, onClose = noop, ...rest }: Props) => {
                     onChange={(newModel) => setModel(newModel as AdvancedSimpleFilterModalModel)}
                     isNarrow={isNarrow}
                     errors={errors}
+                    isSieveFilter
                 />
             )}
             {model.step === StepSieve.SIEVE && (
