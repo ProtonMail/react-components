@@ -16,9 +16,14 @@ export const isSupportedImage = (mimeType: string) =>
         .includes(mimeType);
 
 export const isSupportedText = (mimeType: string) => mimeType.startsWith('text/');
+export const isSupportedDocument = (mimeType: string) =>
+    mimeType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
 export const isVideo = (mimeType: string) => mimeType.startsWith('video/');
 export const isPDF = (mimeType: string) => mimeType === 'application/pdf' || mimeType === 'x-pdf';
 
 // Will include more rules in the future
 export const isPreviewAvailable = (mimeType: string) =>
-    isSupportedImage(mimeType) || isSupportedText(mimeType) || (hasPDFSupport() && isPDF(mimeType));
+    isSupportedImage(mimeType) ||
+    isSupportedDocument(mimeType) ||
+    isSupportedText(mimeType) ||
+    (hasPDFSupport() && isPDF(mimeType));

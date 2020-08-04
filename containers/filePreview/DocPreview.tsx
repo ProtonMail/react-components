@@ -1,41 +1,30 @@
 import React, { useState, useEffect } from 'react';
+import mammoth from 'mammoth';
+import { mergeUint8Arrays } from 'proton-shared/lib/helpers/array';
 
 interface Props {
-    filename?: string;
     contents?: Uint8Array[];
 }
-const DocPreview = ({ filename = 'preview.pdf', contents }: Props) => {
-    const [url, setUrl] = useState<string>();
+const DocPreview = ({ contents }: Props) => {
+    const [htmlContentString, setHtml] = useState('');
 
     useEffect(() => {
-        const newUrl = URL.createObjectURL(
-            new Blob(contents, { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' })
-        );
-        setUrl(newUrl);
-        return () => {
-            if (newUrl) {
-                URL.revokeObjectURL(newUrl);
-            }
-        };
+        if (!contents) {
+            return;
+        }
+
+        const contentBuffer = mergeUint8Arrays(contents).buffer;
+        mammoth.convertToHtml({ arrayBuffer: contentBuffer }).then((result: any) => {
+            setHtml(result.value);
+        });
     }, [contents]);
 
+    const content = <div dangerouslySetInnerHTML={{ __html: htmlContentString }} />;
+
     return (
-        <>
-            {url && (
-                <object
-                    data={url}
-                    className="w100 flex flex-item-fluid flex-justify-center flex-items-center"
-                    type="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                    title={filename}
-                >
-                    <embed
-                        src={url}
-                        className="flex"
-                        type="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                    />
-                </object>
-            )}
-        </>
+        <div className="pd-file-preview-container">
+            <div className="pd-file-preview-text">{content}</div>
+        </div>
     );
 };
 

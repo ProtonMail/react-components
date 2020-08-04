@@ -55,6 +55,7 @@
     "date-fns": "^2.6.0",
     "design-system": "github:ProtonMail/design-system.git#master",
     "intersection-observer": "^0.5.1",
+    "mammoth": "^1.4.9",
     "markdown-it": "^10.0.0",
     "prop-types": "^15.7.2",
     "push.js": "^1.0.9",
