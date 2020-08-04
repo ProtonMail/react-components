@@ -1,7 +1,8 @@
 import React from 'react';
 import { classnames } from '../../helpers/component';
 
-interface Props extends React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
+export interface Props
+    extends React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
     loading?: boolean;
     isSelected?: boolean;
     /*
