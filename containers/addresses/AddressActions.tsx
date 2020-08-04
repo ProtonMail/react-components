@@ -108,11 +108,12 @@ const AddressActions = ({ address, member, user, organizationKey }: Props) => {
             text: c('Address action').t`Generate missing keys`,
             onClick: () => withLoading(handleGenerate()),
         },
-        canDelete && {
-            text: c('Address action').t`Delete`,
-            actionType: 'delete',
-            onClick: () => withLoading(handleDelete()),
-        },
+        canDelete &&
+            ({
+                text: c('Address action').t`Delete`,
+                actionType: 'delete',
+                onClick: () => withLoading(handleDelete()),
+            } as const),
     ].filter(isTruthy);
 
     return <DropdownActions className="pm-button--small" list={list} loading={loading} />;
