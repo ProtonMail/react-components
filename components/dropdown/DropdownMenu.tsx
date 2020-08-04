@@ -5,10 +5,9 @@ interface Props {
     children: React.ReactNode;
     className?: string;
     listRef?: Ref<HTMLUListElement>;
-    type?: string;
 }
 
-const DropdownMenu = ({ children, className = '', type = '', listRef }: Props) => {
+const DropdownMenu = ({ children, className = '', listRef }: Props) => {
     return (
         <ul className={classnames(['unstyled mt0 mb0', className])} ref={listRef}>
             {React.Children.toArray(children).map((child, i) => {
@@ -16,7 +15,7 @@ const DropdownMenu = ({ children, className = '', type = '', listRef }: Props) =
                     <li
                         className={classnames([
                             'dropDown-item',
-                            type === 'delete' && 'dropDown-item--delete',
+                            child.props.actionType === 'delete' && 'dropDown-item--delete',
                             child.props.liClassName,
                         ])}
                         key={child.key || i}

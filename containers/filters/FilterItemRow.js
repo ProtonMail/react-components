@@ -72,8 +72,7 @@ function FilterItemRow({ filter, ...rest }) {
         },
         {
             text: c('Action').t`Delete`,
-            liClassName: 'dropDown-item--delete',
-            type: 'delete',
+            actionType: 'delete',
             onClick: handleRemove,
         },
     ].filter(Boolean);
