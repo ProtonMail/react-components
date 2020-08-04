@@ -12,7 +12,7 @@ import Icon from '../../components/icon/Icon';
 import SimpleDropdown from '../../components/dropdown/SimpleDropdown';
 import Meter from '../../components/progress/Meter';
 
-const { PROTONMAIL, PROTONCONTACTS, PROTONCALENDAR, PROTONDRIVE } = APPS;
+const { PROTONMAIL, PROTONCONTACTS, PROTONCALENDAR, PROTONDRIVE, PROTONACCOUNT } = APPS;
 
 const AppsDropdown = () => {
     const [user] = useUser();
@@ -28,7 +28,12 @@ const AppsDropdown = () => {
             title: 'ProtonMail',
             link: '/inbox',
         },
-        { appNames: [PROTONCONTACTS], icon: 'protoncontacts', title: 'ProtonContacts', link: '/contacts' },
+        {
+            appNames: [PROTONCONTACTS],
+            icon: 'protoncontacts',
+            title: 'ProtonContacts',
+            link: '/contacts',
+        },
         {
             appNames: [PROTONCALENDAR],
             icon: 'protoncalendar',
@@ -40,6 +45,12 @@ const AppsDropdown = () => {
             icon: 'protondrive',
             title: 'ProtonDrive',
             link: '/drive',
+        },
+        {
+            appNames: [PROTONACCOUNT],
+            icon: 'protonaccount',
+            title: 'ProtonAccount',
+            link: '/account',
         },
     ].filter(isTruthy);
 
