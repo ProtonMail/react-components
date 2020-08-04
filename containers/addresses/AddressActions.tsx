@@ -110,6 +110,7 @@ const AddressActions = ({ address, member, user, organizationKey }: Props) => {
         },
         canDelete && {
             text: c('Address action').t`Delete`,
+            actionType: 'delete',
             onClick: () => withLoading(handleDelete()),
         },
     ].filter(isTruthy);

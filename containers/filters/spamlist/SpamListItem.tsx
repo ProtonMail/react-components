@@ -74,6 +74,7 @@ function SpamListItem({ list, type, onCreate, onEdit, onMove, onRemove, classNam
                                         },
                                         {
                                             text: c('Action').t`Delete`,
+                                            actionType: 'delete',
                                             onClick() {
                                                 onRemove(item);
                                             },

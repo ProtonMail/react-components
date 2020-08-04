@@ -60,6 +60,7 @@ const KeysActions = ({
         },
         onDeleteKey && {
             text: c('Keys actions').t`Delete`,
+            actionType: 'delete',
             onClick: () => onDeleteKey(ID),
         },
     ].filter(isTruthy);
