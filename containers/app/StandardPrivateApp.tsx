@@ -10,7 +10,7 @@ import { Model } from 'proton-shared/lib/interfaces/Model';
 import { isSSOMode } from 'proton-shared/lib/constants';
 import { LocalKeyResponse } from 'proton-shared/lib/authentication/interface';
 import { getLocalKey } from 'proton-shared/lib/api/auth';
-import { PersistentSessionInvalid } from 'proton-shared/lib/authentication/error';
+import { InvalidPersistentSessionError } from 'proton-shared/lib/authentication/error';
 import { getDecryptedPersistedSessionBlob } from 'proton-shared/lib/authentication/helper';
 import { TtagLocaleMap } from 'proton-shared/lib/interfaces/Locale';
 
@@ -100,7 +100,7 @@ const StandardPrivateApp = <T, M extends Model<T>, E, EvtM extends Model<E>>({
                 setLoading(false);
             })
             .catch((e) => {
-                if (e.name === 'InactiveSession' || e instanceof PersistentSessionInvalid) {
+                if (e.name === 'InactiveSession' || e instanceof InvalidPersistentSessionError) {
                     return onLogout();
                 }
                 setError(true);

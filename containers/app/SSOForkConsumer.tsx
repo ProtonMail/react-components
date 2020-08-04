@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
+import * as H from 'history';
 import { loadOpenPGP } from 'proton-shared/lib/openpgp';
 import { getBrowserLocale, getClosestMatches } from 'proton-shared/lib/i18n/helper';
 import loadLocale from 'proton-shared/lib/i18n/loadLocale';
 import { resumeSession, getValidatedLocalID, getValidatedApp } from 'proton-shared/lib/authentication/helper';
-import { PersistentSessionInvalid } from 'proton-shared/lib/authentication/error';
-import * as H from 'history';
-import { LoaderPage, ModalsChildren, GenericError, useApi } from '../../index';
+import { InvalidAuthorizeError, InvalidPersistentSessionError } from 'proton-shared/lib/authentication/error';
 import { getForkEncryptedBlob } from 'proton-shared/lib/authentication/session';
 import { forkSession } from 'proton-shared/lib/api/auth';
 import { ForkResponse } from 'proton-shared/lib/authentication/interface';
 import { APPS_CONFIGURATION } from 'proton-shared/lib/constants';
+import { redirectTo, replaceUrl } from 'proton-shared/lib/helpers/browser';
+import { getAppHref } from 'proton-shared/lib/apps/helper';
+import { LoaderPage, ModalsChildren, GenericError, useApi } from '../../index';
 
 interface Props {
     history: H.History;
@@ -26,21 +28,15 @@ const SSOAuthorize = ({ history, locales = {}, openpgpConfig, children }: Props)
     useEffect(() => {
         const browserLocale = getBrowserLocale();
 
-        const params = new URLSearchParams(window.location.search);
-        const app = params.get('app') || '';
-        const state = params.get('state') || '';
-        const localID = params.get('u') || '';
-
-        const validatedLocalID = getValidatedLocalID(localID);
-        const validatedApp = getValidatedApp(app);
-        const validatedState = state.slice(0, 100);
-        const validatedSessionKey = window.location.hash;
-
-        if (validatedApp === undefined || !validatedState || !validatedSessionKey) {
-            return history.replace('/');
-        }
+        const hashParams = new URLSearchParams(window.location.hash);
+        const validatedState = hashParams.get('state') || '';
+        const validatedSelector = hashParams.get('selector') || '';
 
         const loadForkDependencies = async () => {
+            if (!validatedState || !validatedSelector) {
+                throw new InvalidAuthorizeError();
+            }
+
             if (validatedLocalID === undefined) {
                 // Traverse persisted sessions, find a logged in account, and then get the list of active sessions
                 throw new Error('Handle account switcher');
@@ -48,8 +44,8 @@ const SSOAuthorize = ({ history, locales = {}, openpgpConfig, children }: Props)
             }
 
             const validatedSession = await resumeSession(api, validatedLocalID);
-            const payload = validatedSession.keyPassword ?
-                await getForkEncryptedBlob(validatedSessionKey, { keyPassword: validatedSession.keyPassword })
+            const payload = validatedSession.keyPassword
+                ? await getForkEncryptedBlob(validatedSessionKey, { keyPassword: validatedSession.keyPassword })
                 : undefined;
             const childClientID = APPS_CONFIGURATION[validatedApp].clientID;
             const { Selector } = await api<ForkResponse>(forkSession({
@@ -58,6 +54,11 @@ const SSOAuthorize = ({ history, locales = {}, openpgpConfig, children }: Props)
                 Independent: 0
             }));
 
+            const hashParams = new URLSearchParams();
+            hashParams.append('selector', Selector);
+            hashParams.append('state', state);
+
+            replaceUrl(getAppHref(`/fork#${hashParams.toString()}`, validatedApp));
         };
 
         (async () => {
@@ -72,7 +73,10 @@ const SSOAuthorize = ({ history, locales = {}, openpgpConfig, children }: Props)
         })()
             .then(() => setLoading(false))
             .catch((e) => {
-                if (e instanceof PersistentSessionInvalid) {
+                if (e instanceof InvalidPersistentSessionError) {
+                    return history.replace('/');
+                }
+                if (e instanceof InvalidAuthorizeError) {
                     return history.replace('/');
                 }
                 setError(true)
