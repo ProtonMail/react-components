@@ -1,11 +1,9 @@
-export interface BreadcrumbInfo {
+export interface BreadcrumbInfo
+    extends Omit<React.HTMLAttributes<HTMLButtonElement | HTMLLIElement>, 'children' | 'onClick' | 'className'> {
     key: string | number;
     text: string;
     collapsedText?: React.ReactNode;
+    noShrink?: boolean;
     highlighted?: boolean;
     onClick?: () => void;
-    onDragDrop?: (e: React.DragEvent<HTMLLIElement>) => void;
-    onDragOver?: (e: React.DragEvent<HTMLLIElement>) => void;
-    onDragLeave?: (e: React.DragEvent<HTMLLIElement>) => void;
-    noShrink?: boolean;
 }
