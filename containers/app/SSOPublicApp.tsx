@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { PersistentSessionInvalid } from 'proton-shared/lib/authentication/error';
+import { getLocalIDFromPathname, resumeSession } from 'proton-shared/lib/authentication/helper';
 import { OnLoginCallback } from './interface';
 import GenericError from '../error/GenericError';
 import LoaderPage from './LoaderPage';
 import ModalsChildren from '../modals/Children';
-import { getLocalIDFromPathname, resumeSession } from './authHelper';
 import { useApi } from '../../index';
 
 interface Props {

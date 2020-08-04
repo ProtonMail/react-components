@@ -2,9 +2,18 @@ import React, { FunctionComponent, useRef } from 'react';
 import { c } from 'ttag';
 import * as H from 'history';
 
-import { Alert, ConfirmModal, GenericError, Href, Label, PasswordInput, PrimaryButton, useModals } from '../../index';
+import {
+    Alert,
+    ConfirmModal,
+    GenericError,
+    Href,
+    Label,
+    OnLoginCallback,
+    PasswordInput,
+    PrimaryButton,
+    useModals
+} from '../../index';
 import useResetPassword, { STEPS } from './useResetPassword';
-import { OnLoginArgs } from '../login/interface';
 import ResetUsernameInput from './ResetUsernameInput';
 import ResetPasswordInput from './ResetPasswordInput';
 import ResetTokenInput from './ResetTokenInput';
@@ -15,7 +24,7 @@ import SignupLabelInputRow from '../signup/SignupLabelInputRow';
 import SignupSubmitRow from '../signup/SignupSubmitRow';
 
 interface Props {
-    onLogin: (args: OnLoginArgs) => void;
+    onLogin: OnLoginCallback;
     history: H.History;
     Layout: FunctionComponent<AccountPublicLayoutProps>;
 }

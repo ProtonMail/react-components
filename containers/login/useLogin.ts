@@ -3,17 +3,15 @@ import { AUTH_VERSION } from 'pm-srp';
 import { c } from 'ttag';
 import { srpVerify } from 'proton-shared/lib/srp';
 import { upgradePassword } from 'proton-shared/lib/api/settings';
-import { auth2FA, getInfo, getLocalKey, setCookies } from 'proton-shared/lib/api/auth';
-import { getRandomString } from 'proton-shared/lib/helpers/string';
+import { auth2FA, getInfo } from 'proton-shared/lib/api/auth';
 import { KeySalt as tsKeySalt, User as tsUser } from 'proton-shared/lib/interfaces';
 import { getUser } from 'proton-shared/lib/api/user';
 import { getKeySalts } from 'proton-shared/lib/api/keys';
 import { HTTP_ERROR_CODES } from 'proton-shared/lib/errors';
-import { AuthResponse, AuthVersion, InfoResponse, LocalKeyResponse } from 'proton-shared/lib/authentication/interface';
+import { AuthResponse, AuthVersion, InfoResponse } from 'proton-shared/lib/authentication/interface';
 import loginWithFallback from 'proton-shared/lib/authentication/loginWithFallback';
 import { withAuthHeaders } from 'proton-shared/lib/fetch/headers';
-import { isSSOMode } from 'proton-shared/lib/constants';
-import { setPersistedSession, setPersistedSessionBlob } from 'proton-shared/lib/authentication/session';
+import { persistLogin } from 'proton-shared/lib/authentication/helper';
 import { getAuthTypes, handleUnlockKey } from './helper';
 import { useApi } from '../../index';
 import { OnLoginCallback } from '../app/interface';
@@ -79,7 +77,7 @@ const useLogin = ({ onLogin, ignoreUnlock }: Props) => {
         const { authVersion, authResult, userSaltResult = [] } = cache;
 
         const [User] = userSaltResult;
-        const { UID, EventID, AccessToken, RefreshToken, LocalID } = authResult;
+        const { UID, AccessToken } = authResult;
         const { password } = state;
 
         if (authVersion < AUTH_VERSION) {
@@ -90,18 +88,9 @@ const useLogin = ({ onLogin, ignoreUnlock }: Props) => {
             });
         }
 
-        if (isSSOMode) {
-            if (keyPassword) {
-                const { ClientKey } = await api<LocalKeyResponse>(withAuthHeaders(UID, AccessToken, getLocalKey()));
-                await setPersistedSessionBlob(LocalID, { UID, clientKey: ClientKey, keyPassword });
-            } else {
-                setPersistedSession(LocalID, { UID });
-            }
-        }
+        await persistLogin({ ...authResult, api, keyPassword });
 
-        await api(withAuthHeaders(UID, AccessToken, setCookies({ UID, RefreshToken, State: getRandomString(24) })));
-
-        onLogin({ UID, User, keyPassword, EventID, LocalID });
+        onLogin({ ...authResult, User, keyPassword });
     };
 
     /**

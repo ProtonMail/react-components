@@ -58,7 +58,7 @@ export { default as ButtonGroup } from './components/button/ButtonGroup';
 export { default as Group } from './components/button/Group';
 export { default as Info } from './components/link/Info';
 export { default as Href } from './components/link/Href';
-export { default as Link } from './components/link/Link';
+export { default as AppLink } from './components/link/AppLink';
 export { default as LearnMore } from './components/link/LearnMore';
 export { default as TopNavbarLink } from './components/link/TopNavbarLink';
 export { default as Time } from './components/time/Time';

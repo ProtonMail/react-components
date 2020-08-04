@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
 import { c } from 'ttag';
-import { CLIENT_TYPES } from 'proton-shared/lib/constants';
+import { APPS } from 'proton-shared/lib/constants';
 import {
     Icon,
     Dropdown,
@@ -19,8 +19,6 @@ import {
 
 import AccountSupportDropdownButton from './AccountSupportDropdownButton';
 
-const { VPN } = CLIENT_TYPES;
-
 interface Props extends RouteComponentProps {
     className?: string;
     noCaret?: boolean;
@@ -29,7 +27,7 @@ interface Props extends RouteComponentProps {
 
 const AccountSupportDropdown = ({ className, children, location, noCaret = false }: Props) => {
     const { UID } = useAuthentication();
-    const { CLIENT_TYPE } = useConfig();
+    const { APP_NAME } = useConfig();
     const { createModal } = useModals();
     const [uid] = useState(generateUID('dropdown'));
     const { anchorRef, isOpen, toggle, close } = usePopperAnchor<HTMLButtonElement>();
@@ -39,6 +37,8 @@ const AccountSupportDropdown = ({ className, children, location, noCaret = false
     const handleBugReportClick = () => {
         createModal(isAuthenticated ? <AuthenticatedBugModal /> : <BugModal />);
     };
+
+    const isVPN = APP_NAME === APPS.PROTONVPN_SETTINGS;
 
     return (
         <>
@@ -70,7 +70,7 @@ const AccountSupportDropdown = ({ className, children, location, noCaret = false
                             </Link>
                             <DropdownMenuLink
                                 href={
-                                    CLIENT_TYPE === VPN
+                                    isVPN
                                         ? 'https://protonvpn.com/support/login-problems/'
                                         : 'https://protonmail.com/support/knowledge-base/common-login-problems/'
                                 }
@@ -81,7 +81,7 @@ const AccountSupportDropdown = ({ className, children, location, noCaret = false
                             </DropdownMenuLink>
                             <DropdownMenuLink
                                 href={
-                                    CLIENT_TYPE === VPN
+                                    isVPN
                                         ? 'https://protonvpn.com/support/'
                                         : 'https://protonmail.com/support/'
                                 }
@@ -99,7 +99,7 @@ const AccountSupportDropdown = ({ className, children, location, noCaret = false
                             <DropdownMenuLink
                                 className="flex flex-nowrap alignleft"
                                 href={
-                                    CLIENT_TYPE === VPN
+                                    isVPN
                                         ? 'https://protonvpn.com/support/'
                                         : 'https://protonmail.com/support/'
                                 }

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import unsupportedBrowserSettings from 'design-system/assets/img/shared/unsupported-browser-settings.svg';
-import { CLIENT_TYPES } from 'proton-shared/lib/constants';
+import { APPS } from 'proton-shared/lib/constants';
 import { Href, useConfig } from '../../index';
 
 const isGoodPrngAvailable = () => {
@@ -56,7 +56,7 @@ interface Props {
     children: React.ReactNode;
 }
 const CompatibilityCheck = ({ children }: Props) => {
-    const { CLIENT_TYPE } = useConfig();
+    const { APP_NAME } = useConfig();
 
     useEffect(() => {
         if (!compat) {
@@ -78,8 +78,8 @@ const CompatibilityCheck = ({ children }: Props) => {
             );
         });
 
-    const isProtonVPN = CLIENT_TYPE === CLIENT_TYPES.VPN;
-    const kbUrl = isProtonVPN
+    const isVPN = APP_NAME === APPS.PROTONVPN_SETTINGS;
+    const kbUrl = isVPN
         ? 'https://protonvpn.com/support/browsers-supported/'
         : 'https://protonmail.com/support/knowledge-base/browsers-supported/';
 

@@ -7,8 +7,10 @@ import { STATUS } from 'proton-shared/lib/models/cache';
 import createSecureSessionStorage from 'proton-shared/lib/authentication/createSecureSessionStorage';
 import createSecureSessionStorage2 from 'proton-shared/lib/authentication/createSecureSessionStorage2';
 import { PUBLIC_PATH, isSSOMode, MAILBOX_PASSWORD_KEY, UID_KEY } from 'proton-shared/lib/constants';
-import { stripTrailingSlash } from 'proton-shared/lib/helpers/string';
+import { stripLeadingAndTrailingSlash } from 'proton-shared/lib/helpers/string';
 import { getPersistedSession } from 'proton-shared/lib/authentication/session';
+import { getLocalIDFromPathname, getLocalIDPath } from 'proton-shared/lib/authentication/helper';
+import { ProtonConfig } from 'proton-shared/lib/interfaces';
 
 import CompatibilityCheck from './CompatibilityCheck';
 import Icons from '../../components/icon/Icons';
@@ -23,11 +25,10 @@ import { setTmpEventID } from './loadEventID';
 import clearKeyCache from './clearKeyCache';
 import useInstance from '../../hooks/useInstance';
 import { PreventLeaveProvider } from '../../hooks/usePreventLeave';
-import { getLocalIDFromPathname } from './authHelper';
 import { MimeIcons } from '../../index';
 
 interface Props {
-    config: any;
+    config: ProtonConfig;
     children: React.ReactNode;
 }
 const ProtonApp = ({ config, children }: Props) => {
@@ -125,10 +126,11 @@ const ProtonApp = ({ config, children }: Props) => {
 
     const basename = useMemo(() => {
         if (!isSSOMode) {
-            return stripTrailingSlash(PUBLIC_PATH);
+            const strippedPath = stripLeadingAndTrailingSlash(PUBLIC_PATH);
+            return strippedPath ? `/${strippedPath}` : undefined;
         }
         const localID = authentication.getLocalID();
-        return UID && localID !== undefined ? `/u${localID}` : '';
+        return UID && localID !== undefined ? `/${getLocalIDPath(localID)}` : '';
     }, [UID]);
 
     return (

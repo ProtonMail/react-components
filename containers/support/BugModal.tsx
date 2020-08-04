@@ -3,7 +3,7 @@ import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { c } from 'ttag';
 
 import { reportBug } from 'proton-shared/lib/api/reports';
-import { CLIENT_TYPES, CLIENT_IDS } from 'proton-shared/lib/constants';
+import { APPS } from 'proton-shared/lib/constants';
 import { noop } from 'proton-shared/lib/helpers/function';
 
 import AttachScreenshot from './AttachScreenshot';
@@ -33,12 +33,10 @@ interface Props extends RouteComponentProps {
     onClose?: () => void;
 }
 
-const { VPN } = CLIENT_TYPES;
-
 const BugModal = ({ onClose = noop, username: Username = '', location, addresses = [], ...rest }: Props) => {
     const api = useApi();
     const [loading, withLoading] = useLoading();
-    const { CLIENT_ID, APP_VERSION, CLIENT_TYPE } = useConfig();
+    const { CLIENT_ID, APP_VERSION, CLIENT_TYPE, APP_NAME } = useConfig();
 
     const mailTitles = [
         { value: 'Login problem', text: c('Bug category').t`Login problem` },
@@ -69,7 +67,8 @@ const BugModal = ({ onClose = noop, username: Username = '', location, addresses
         { value: 'Feature request', text: c('Bug category').t`Feature request` },
     ];
 
-    const isVpn = CLIENT_TYPE === VPN;
+    const isVpn = APP_NAME === APPS.PROTONVPN_SETTINGS;
+    const isDrive = APP_NAME === APPS.PROTONDRIVE;
 
     const titles = isVpn ? vpnTitles : mailTitles;
     const criticalEmail = isVpn ? 'contact@protonvpn.com' : 'security@protonmail.com';
@@ -77,7 +76,7 @@ const BugModal = ({ onClose = noop, username: Username = '', location, addresses
         ? 'https://protonvpn.com/support/clear-browser-cache-cookies/'
         : 'https://protonmail.com/support/knowledge-base/how-to-clean-cache-and-cookies/';
     const Client = getClient(CLIENT_ID);
-    const showCategory = Client !== CLIENT_IDS.WebDrive;
+    const showCategory = !isDrive;
     const { createNotification } = useNotifications();
     const [{ Email = '' } = {}] = addresses;
     const options = titles.reduce(

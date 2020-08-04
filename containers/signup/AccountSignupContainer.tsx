@@ -10,6 +10,7 @@ import { queryAddresses } from 'proton-shared/lib/api/addresses';
 import { Address } from 'proton-shared/lib/interfaces';
 import { generateKeySaltAndPassphrase } from 'proton-shared/lib/keys/keys';
 import { getResetAddressesKeys } from 'proton-shared/lib/keys/resetKeys';
+import { persistLogin } from 'proton-shared/lib/authentication/helper';
 import {
     queryCheckUsernameAvailability,
     queryDirectSignupStatus,
@@ -250,9 +251,9 @@ const AccountSignupContainer = ({ onLogin, history, Layout }: Props) => {
                 await handleCreateKeys({ api: authApi.api, salt, addressKeys: newAddressesKeys, password });
             }
 
-            await authApi.setCookies();
-            const { UID, EventID } = authApi.getAuthResponse();
-            onLogin({ UID, EventID, keyPassword });
+            const authResponse = authApi.getAuthResponse();
+            await persistLogin({ ...authResponse, keyPassword, api })
+            onLogin({ ...authResponse, keyPassword });
         } catch (error) {
             // TODO: If any of these requests fail we should probably handle it differently
             return setModelDiff({ step: oldStep });

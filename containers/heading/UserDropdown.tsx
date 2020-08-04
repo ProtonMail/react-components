@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
 import { revoke } from 'proton-shared/lib/api/auth';
-import { APPS, CLIENT_TYPES, PLANS } from 'proton-shared/lib/constants';
+import { APPS, PLANS } from 'proton-shared/lib/constants';
 import { getPlanName } from 'proton-shared/lib/helpers/subscription';
+import { getAccountSettingsApp } from 'proton-shared/lib/apps/helper';
 import {
     useUser,
     useOrganization,
@@ -17,16 +18,15 @@ import {
     PrimaryButton,
     useConfig,
     useSubscription,
-    Link,
 } from '../..';
 
 import UserDropdownButton from './UserDropdownButton';
+import AppLink from '../../components/link/AppLink';
 
-const { VPN } = CLIENT_TYPES;
 const { PROFESSIONAL, VISIONARY } = PLANS;
 
 const UserDropdown = ({ ...rest }) => {
-    const { APP_NAME, CLIENT_TYPE } = useConfig();
+    const { APP_NAME } = useConfig();
     const api = useApi();
     const [user] = useUser();
     const { DisplayName, Email, Name } = user;
@@ -75,16 +75,16 @@ const UserDropdown = ({ ...rest }) => {
                             </span>
                         ) : null}
                     </li>
-                    {CLIENT_TYPE === VPN || APP_NAME === APPS.PROTONACCOUNT ? null : (
+                    {APP_NAME === APPS.PROTONVPN_SETTINGS || APP_NAME === APPS.PROTONACCOUNT ? null : (
                         <li className="dropDown-item">
-                            <Link
-                                external={APP_NAME !== APPS.PROTONMAIL_SETTINGS}
+                            <AppLink
                                 className="w100 flex flex-nowrap dropDown-item-link nodecoration pl1 pr1 pt0-5 pb0-5"
                                 to="/settings"
+                                toApp={getAccountSettingsApp()}
                             >
                                 <Icon className="mt0-25 mr0-5" name="settings-master" />
                                 {c('Action').t`Settings`}
-                            </Link>
+                            </AppLink>
                         </li>
                     )}
                     <li className="dropDown-item">

@@ -25,6 +25,7 @@ const StandardSetup = ({ locales, PrivateApp }: Props) => {
     }
 
     if (isSSOMode) {
+        return <StandalonePublicApp locales={locales} onLogin={login} />;
         return <SSOPublicApp onLogin={login} />;
     }
 
