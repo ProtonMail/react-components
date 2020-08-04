@@ -19,6 +19,7 @@ const DropdownMenuButton = ({
     loading,
     children,
     liClassName, // eslint-disable-line no-unused-vars, @typescript-eslint/no-unused-vars
+    actionType, // eslint-disable-line no-unused-vars, @typescript-eslint/no-unused-vars
     ...rest
 }: Props) => {
     return (
