@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useRef } from 'react';
 import { omit } from 'proton-shared/lib/helpers/object';
 import { generateUID, classnames } from '../../helpers/component';
 import { usePopperAnchor } from '../popper';
@@ -17,12 +17,44 @@ function CollapsedBreadcrumb({ breadcrumbs }: Props) {
 
     const { anchorRef, isOpen, toggle, open, close } = usePopperAnchor<HTMLLIElement>();
 
+    const closeTimeout = useRef<any>();
+    const mouseEnterCounter = useRef(0);
+
+    const handleDragLeave = () => {
+        mouseEnterCounter.current -= 1;
+
+        if (mouseEnterCounter.current <= 0) {
+            mouseEnterCounter.current = 0;
+
+            closeTimeout.current = setTimeout(() => {
+                close();
+            }, 1000);
+        }
+    };
+
+    const handleDragEnter = () => {
+        clearTimeout(closeTimeout.current);
+
+        if (!mouseEnterCounter.current) {
+            open();
+        }
+
+        mouseEnterCounter.current += 1;
+    };
+
     return (
         <>
-            <Breadcrumb ref={anchorRef} onClick={toggle} onDragEnter={open}>
+            <Breadcrumb ref={anchorRef} onClick={toggle} onDragEnter={handleDragEnter} onDragLeave={handleDragLeave}>
                 ...
             </Breadcrumb>
-            <Dropdown id={uid} isOpen={isOpen} anchorRef={anchorRef} onClose={close}>
+            <Dropdown
+                id={uid}
+                isOpen={isOpen}
+                anchorRef={anchorRef}
+                onClose={close}
+                onDragLeave={handleDragLeave}
+                onDragEnter={handleDragEnter}
+            >
                 <DropdownMenu>
                     {breadcrumbs.map((breadcrumb) => {
                         const {
