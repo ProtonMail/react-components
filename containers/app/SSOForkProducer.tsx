@@ -4,7 +4,8 @@ import { getActiveSessions, resumeSession } from 'proton-shared/lib/authenticati
 import { getProduceForkParameters, produceFork, ProduceForkParameters } from 'proton-shared/lib/authentication/forking';
 import { InvalidForkProduceError, InvalidPersistentSessionError } from 'proton-shared/lib/authentication/error';
 import { LocalSessionResponse } from 'proton-shared/lib/authentication/interface';
-import { LoaderPage, ModalsChildren, useApi } from '../../index';
+import { getApiErrorMessage } from 'proton-shared/lib/api/helpers/getApiErrorMessage';
+import { LoaderPage, ModalsChildren, useApi, useNotifications } from '../../index';
 import CollapsableError from '../error/CollapsableError';
 
 interface Props {
@@ -16,7 +17,8 @@ const SSOForkProducer = ({ onSwitchSession, onInvalidFork }: Props) => {
     const [loading] = useState(true);
     const [error, setError] = useState<Error | undefined>();
     const normalApi = useApi();
-    const api = <T,>(config: any) => normalApi<T>({ ...config, silence: true });
+    const silentApi = <T,>(config: any) => normalApi<T>({ ...config, silence: true });
+    const { createNotification } = useNotifications();
 
     useEffect(() => {
         const run = async () => {
@@ -26,15 +28,15 @@ const SSOForkProducer = ({ onSwitchSession, onInvalidFork }: Props) => {
             }
             // Traverse persisted sessions, find a logged in account, and then get the list of active sessions
             if (localID === undefined) {
-                const activeSessions = await getActiveSessions(api);
+                const activeSessions = await getActiveSessions(silentApi);
                 return onSwitchSession({ app, state, sessionKey, activeSessions });
             }
             try {
                 // Resume session and produce the fork
                 await loadOpenPGP();
-                const validatedSession = await resumeSession(api, localID);
+                const validatedSession = await resumeSession(silentApi, localID);
                 await produceFork({
-                    api,
+                    api: silentApi,
                     keyPassword: validatedSession.keyPassword,
                     UID: validatedSession.UID,
                     sessionKey,
@@ -47,10 +49,13 @@ const SSOForkProducer = ({ onSwitchSession, onInvalidFork }: Props) => {
                     return;
                 }
                 if (e instanceof InvalidPersistentSessionError) {
-                    const activeSessions = await getActiveSessions(api);
+                    const activeSessions = await getActiveSessions(silentApi);
                     onSwitchSession({ app, state, sessionKey, activeSessions });
                     return;
                 }
+                const errorMessage = getApiErrorMessage(e) || 'Unknown error';
+                createNotification({ type: 'error', text: errorMessage });
+                console.error(error);
                 throw e;
             }
         };

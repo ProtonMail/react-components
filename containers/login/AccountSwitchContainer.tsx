@@ -7,6 +7,11 @@ import { InvalidPersistentSessionError } from 'proton-shared/lib/authentication/
 import { LocalSessionResponse } from 'proton-shared/lib/authentication/interface';
 import { getInitial } from 'proton-shared/lib/helpers/string';
 import { APP_NAMES, APPS_CONFIGURATION } from 'proton-shared/lib/constants';
+import { wait } from 'proton-shared/lib/helpers/promise';
+import { withUIDHeaders } from 'proton-shared/lib/fetch/headers';
+import { revoke } from 'proton-shared/lib/api/auth';
+import { getApiErrorMessage } from 'proton-shared/lib/api/helpers/getApiErrorMessage';
+import { getPersistedSession, removePersistedSession } from 'proton-shared/lib/authentication/session';
 
 import {
     useApi,
@@ -30,7 +35,7 @@ interface Props {
 const AccountSwitchContainer = ({ Layout, toAppNameKey, onLogin, activeSessions }: Props) => {
     const history = useHistory();
     const normalApi = useApi();
-    const api = <T,>(config: any) => normalApi<T>({ ...config, silence: true });
+    const silentApi = <T,>(config: any) => normalApi<T>({ ...config, silence: true });
 
     const [localActiveSessions, setLocalActiveSessions] = useState(activeSessions);
     const [loading, withLoading] = useLoading(!localActiveSessions);
@@ -43,22 +48,53 @@ const AccountSwitchContainer = ({ Layout, toAppNameKey, onLogin, activeSessions 
     useEffect(() => {
         if (!activeSessions) {
             const run = async () => {
-                const activeSessions = await getActiveSessions(api);
+                const activeSessions = await getActiveSessions(silentApi);
                 setLocalActiveSessions(activeSessions);
+                setLocalActiveSessions([
+                    {
+                        DisplayName: 'John Carpenter',
+                        PrimaryEmail: 'john.carpenter@gmail.com',
+                        LocalID: 1,
+                        UserID: '',
+                    },
+                    {
+                        DisplayName: 'J Carpenter',
+                        PrimaryEmail: 'jc@gmail.com',
+                        LocalID: 2,
+                        UserID: '',
+                    },
+                    {
+                        DisplayName: 'Home improvements',
+                        PrimaryEmail: 'admin@homeimprovements.com',
+                        LocalID: 3,
+                        UserID: '',
+                    },
+                ]);
             };
             withLoading(run().catch(() => setError(true)));
         }
     }, []);
 
     const handleSignOutAll = async () => {
-        // Clear everything
+        localActiveSessions?.map(({ LocalID }) => {
+            const persistedSession = getPersistedSession(LocalID);
+            removePersistedSession(LocalID);
+            if (persistedSession && persistedSession.UID) {
+                return silentApi(withUIDHeaders(persistedSession.UID, revoke()));
+            }
+        });
+        history.push('/login');
+    };
+
+    const handleAddAccount = () => {
         history.push('/login');
     };
 
     const handleClickSession = async (localID: number) => {
         try {
             setLoadingMap((old) => ({ ...old, [localID]: true }));
-            const validatedSession = await resumeSession(api, localID);
+            await wait(1000);
+            const validatedSession = await resumeSession(silentApi, localID);
             await onLogin({
                 keyPassword: validatedSession.keyPassword,
                 UID: validatedSession.UID,
@@ -68,13 +104,15 @@ const AccountSwitchContainer = ({ Layout, toAppNameKey, onLogin, activeSessions 
                 setLocalActiveSessions((list) => {
                     return list?.filter(({ LocalID: otherLocalID }) => otherLocalID !== localID);
                 });
+                createNotification({
+                    type: 'error',
+                    text: c('Error').t`The account has been signed out. Please sign in again.`,
+                });
                 return;
             }
+            const errorMessage = getApiErrorMessage(e) || 'Unknown error';
+            createNotification({ type: 'error', text: errorMessage });
             console.error(error);
-            createNotification({
-                type: 'error',
-                text: c('Error').t`Failed to resume session. Please refresh or try again later.`,
-            });
         } finally {
             setLoadingMap((old) => ({ ...old, [localID]: true }));
         }
@@ -90,10 +128,10 @@ const AccountSwitchContainer = ({ Layout, toAppNameKey, onLogin, activeSessions 
         if (loading) {
             return <Loader />;
         }
-        if (!activeSessions || !activeSessions.length) {
+        if (!localActiveSessions?.length) {
             return <Alert type="error">{c('Error').t`No active sessions`}</Alert>;
         }
-        return activeSessions.map(({ DisplayName, Username, LocalID, PrimaryEmail }) => {
+        return localActiveSessions.map(({ DisplayName, Username, LocalID, PrimaryEmail }) => {
             const nameToDisplay = DisplayName || Username || '';
             const initials = getInitial(nameToDisplay);
             return (
@@ -118,7 +156,12 @@ const AccountSwitchContainer = ({ Layout, toAppNameKey, onLogin, activeSessions 
             right={<LinkButton onClick={handleSignOutAll}>{c('Action').t`Sign out all accounts`}</LinkButton>}
         >
             <p>{c('Info').t`To continue to ${toAppName}`}</p>
-            <div>{inner()}</div>
+            <div>
+                {inner()}
+                <div>
+                    <LinkButton onClick={handleAddAccount}>{c('Action').t`Add account`}</LinkButton>
+                </div>
+            </div>
         </Layout>
     );
 };

@@ -8,11 +8,11 @@ import withApiHandlers, {
     CancelUnlockError,
     CancelVerificationError,
 } from 'proton-shared/lib/api/helpers/withApiHandlers';
-import { getError } from 'proton-shared/lib/apiHandlers';
 import { getDateHeader } from 'proton-shared/lib/fetch/helpers';
 import { API_CUSTOM_ERROR_CODES } from 'proton-shared/lib/errors';
 import { updateServerTime } from 'pmcrypto';
 import { c } from 'ttag';
+import { getApiError, getApiErrorMessage } from 'proton-shared/lib/api/helpers/getApiErrorMessage';
 
 import ApiContext from './apiContext';
 import useNotifications from '../notifications/useNotifications';
@@ -46,7 +46,8 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
 
     if (!apiRef.current) {
         const handleError = (e) => {
-            const { message, code } = getError(e);
+            const { code } = getApiError(e);
+            const errorMessage = getApiErrorMessage(e);
 
             if (appVersionBad.current) {
                 throw e;
@@ -69,7 +70,7 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
                 // The only way to get out of this one is to refresh.
                 createNotification({
                     type: 'error',
-                    text: message || c('Info').t`Application upgrade required`,
+                    text: errorMessage,
                     expiration: -1,
                     disableAutoClose: true,
                 });
@@ -86,6 +87,7 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
                     type: 'warning',
                     text: (
                         <OfflineNotification
+                            message={errorMessage}
                             onRetry={() => {
                                 hideOfflineNotification();
                                 // If there is a session, get user to validate it's still active after coming back online
@@ -103,13 +105,13 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
 
             if (e.name === 'TimeoutError') {
                 const isSilenced = getSilenced(e.config, code);
-                !isSilenced && createNotification({ type: 'error', text: c('Error').t`Request timed out.` });
+                !isSilenced && createNotification({ type: 'error', text: errorMessage });
                 throw e;
             }
 
-            if (message) {
+            if (errorMessage) {
                 const isSilenced = getSilenced(e.config, code);
-                !isSilenced && createNotification({ type: 'error', text: `${message}` });
+                !isSilenced && createNotification({ type: 'error', text: errorMessage });
             }
 
             throw e;
