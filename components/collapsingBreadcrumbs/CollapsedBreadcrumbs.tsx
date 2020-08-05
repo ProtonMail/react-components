@@ -20,31 +20,40 @@ function CollapsedBreadcrumb({ breadcrumbs }: Props) {
     const closeTimeout = useRef<any>();
     const mouseEnterCounter = useRef(0);
 
+    const closeWithTimeout = () => {
+        closeTimeout.current = setTimeout(() => {
+            mouseEnterCounter.current = 0;
+            close();
+        }, 1000);
+    };
+
     const handleDragLeave = () => {
         mouseEnterCounter.current -= 1;
 
         if (mouseEnterCounter.current <= 0) {
-            mouseEnterCounter.current = 0;
-
-            closeTimeout.current = setTimeout(() => {
-                close();
-            }, 1000);
+            closeWithTimeout();
         }
     };
 
     const handleDragEnter = () => {
         clearTimeout(closeTimeout.current);
-
-        if (!mouseEnterCounter.current) {
-            open();
-        }
-
         mouseEnterCounter.current += 1;
+    };
+
+    const handleBreadcrumbDragEnter = () => {
+        clearTimeout(closeTimeout.current);
+        mouseEnterCounter.current = 1;
+        open();
     };
 
     return (
         <>
-            <Breadcrumb ref={anchorRef} onClick={toggle} onDragEnter={handleDragEnter} onDragLeave={handleDragLeave}>
+            <Breadcrumb
+                ref={anchorRef}
+                onClick={toggle}
+                onDragEnter={handleBreadcrumbDragEnter}
+                onDragLeave={handleDragLeave}
+            >
                 ...
             </Breadcrumb>
             <Dropdown
@@ -54,6 +63,7 @@ function CollapsedBreadcrumb({ breadcrumbs }: Props) {
                 onClose={close}
                 onDragLeave={handleDragLeave}
                 onDragEnter={handleDragEnter}
+                onDrop={closeWithTimeout}
             >
                 <DropdownMenu>
                     {breadcrumbs.map((breadcrumb) => {
