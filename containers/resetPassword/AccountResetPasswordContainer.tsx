@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useRef } from 'react';
 import { c } from 'ttag';
-import * as H from 'history';
+import { useHistory } from 'react-router-dom';
 
 import {
     Alert,
@@ -25,11 +25,11 @@ import SignupSubmitRow from '../signup/SignupSubmitRow';
 
 interface Props {
     onLogin: OnLoginCallback;
-    history: H.History;
     Layout: FunctionComponent<AccountPublicLayoutProps>;
 }
 
-const AccountResetPasswordContainer = ({ onLogin, history, Layout }: Props) => {
+const AccountResetPasswordContainer = ({ onLogin, Layout }: Props) => {
+    const history = useHistory();
     const {
         loading,
         state,

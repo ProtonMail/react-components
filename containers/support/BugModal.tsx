@@ -1,5 +1,5 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { c } from 'ttag';
 
 import { reportBug } from 'proton-shared/lib/api/reports';
@@ -27,14 +27,15 @@ import { Button } from '../../components/button';
 import FormModal from '../../components/modal/FormModal';
 import Select from '../../components/select/Select';
 
-interface Props extends RouteComponentProps {
+interface Props {
     username?: string;
     addresses?: { Email: string }[];
     onClose?: () => void;
 }
 
-const BugModal = ({ onClose = noop, username: Username = '', location, addresses = [], ...rest }: Props) => {
+const BugModal = ({ onClose = noop, username: Username = '', addresses = [], ...rest }: Props) => {
     const api = useApi();
+    const location = useLocation();
     const [loading, withLoading] = useLoading();
     const { CLIENT_ID, APP_VERSION, CLIENT_TYPE, APP_NAME } = useConfig();
 
@@ -268,4 +269,4 @@ const BugModal = ({ onClose = noop, username: Username = '', location, addresses
     );
 };
 
-export default withRouter(BugModal);
+export default BugModal;

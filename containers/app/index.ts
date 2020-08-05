@@ -8,7 +8,7 @@ export { default as StandalonePublicApp } from './StandalonePublicApp';
 export { default as StandardLoadError } from './StandardLoadError';
 export { default as StandardPrivateApp } from './StandardPrivateApp';
 export { default as StandardPublicApp } from './StandardPublicApp';
-export { default as SSOAuthorize } from './SSOAuthorize';
+export { default as SSOForkProducer } from './SSOForkProducer';
 export { default as StandardSetup } from './StandardSetup';
 export { default as TopBanner } from './TopBanner';
 export { default as TopBanners } from './TopBanners';

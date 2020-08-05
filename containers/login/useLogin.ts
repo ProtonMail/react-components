@@ -11,7 +11,7 @@ import { HTTP_ERROR_CODES } from 'proton-shared/lib/errors';
 import { AuthResponse, AuthVersion, InfoResponse } from 'proton-shared/lib/authentication/interface';
 import loginWithFallback from 'proton-shared/lib/authentication/loginWithFallback';
 import { withAuthHeaders } from 'proton-shared/lib/fetch/headers';
-import { persistLogin } from 'proton-shared/lib/authentication/helper';
+import { persistSession } from 'proton-shared/lib/authentication/helper';
 import { getAuthTypes, handleUnlockKey } from './helper';
 import { useApi } from '../../index';
 import { OnLoginCallback } from '../app/interface';
@@ -88,7 +88,7 @@ const useLogin = ({ onLogin, ignoreUnlock }: Props) => {
             });
         }
 
-        await persistLogin({ ...authResult, api, keyPassword });
+        await persistSession({ ...authResult, api, keyPassword });
 
         onLogin({ ...authResult, User, keyPassword });
     };

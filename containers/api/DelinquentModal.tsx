@@ -1,19 +1,20 @@
 import React from 'react';
 import { c } from 'ttag';
 import { History } from 'history';
-import { withRouter } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { APPS, isSSOMode, isStandaloneMode } from 'proton-shared/lib/constants';
 import { replaceUrl } from 'proton-shared/lib/helpers/browser';
+import { getAppHref } from 'proton-shared/lib/apps/helper';
 
 import { FormModal, useConfig, Alert } from '../../index';
-import { getAppHref } from 'proton-shared/lib/apps/helper';
 
 interface Props {
     history: History;
     [key: string]: any;
 }
 
-const DelinquentModal = ({ history, ...rest }: Props) => {
+const DelinquentModal = ({ ...rest }: Props) => {
+    const history = useHistory();
     const { APP_NAME } = useConfig();
     const title = c('Delinquent modal title').t`Overdue invoice`;
 
@@ -31,12 +32,12 @@ const DelinquentModal = ({ history, ...rest }: Props) => {
             return history.push('/subscription#invoices');
         }
         if (isSSOMode) {
-            replaceUrl(getAppHref('/settings/subscription#invoices'); // TODO replace this URL once general settings are in proton-account
+            replaceUrl(getAppHref('/settings/subscription#invoices')); // TODO replace this URL once general settings are in proton-account
         }
         if (isStandaloneMode) {
             return;
         }
-        replaceUrl(getAppHref('/settings/subscription#invoices'); // TODO replace this URL once general settings are in proton-account
+        replaceUrl(getAppHref('/settings/subscription#invoices')); // TODO replace this URL once general settings are in proton-account
     };
 
     return (
@@ -55,4 +56,4 @@ const DelinquentModal = ({ history, ...rest }: Props) => {
     );
 };
 
-export default withRouter(DelinquentModal);
+export default DelinquentModal;

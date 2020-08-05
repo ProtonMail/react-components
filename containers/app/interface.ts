@@ -1,7 +1,7 @@
 import { User as tsUser } from 'proton-shared/lib/interfaces';
 import { AuthenticationStore } from 'proton-shared/lib/authentication/createAuthenticationStore';
 
-interface OnLoginCallbackArguments {
+export interface OnLoginCallbackArguments {
     UID: string;
     EventID?: string;
     keyPassword?: string;

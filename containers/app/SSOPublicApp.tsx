@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { InvalidPersistentSessionError } from 'proton-shared/lib/authentication/error';
 import { getLocalIDFromPathname, resumeSession } from 'proton-shared/lib/authentication/helper';
-import { replaceUrl } from 'proton-shared/lib/helpers/browser';
-import { getAppHref } from 'proton-shared/lib/apps/helper';
-import { APPS } from 'proton-shared/lib/constants';
+import { requestFork } from 'proton-shared/lib/authentication/forking';
 import { OnLoginCallback } from './interface';
-import GenericError from '../error/GenericError';
 import LoaderPage from './LoaderPage';
 import ModalsChildren from '../modals/Children';
 import { useApi, useConfig } from '../../index';
+import CollapsableError from '../error/CollapsableError';
 
 interface Props {
     onLogin: OnLoginCallback;
@@ -16,29 +14,15 @@ interface Props {
 const SSOPublicApp = ({ onLogin }: Props) => {
     const { APP_NAME } = useConfig();
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
+    const [error, setError] = useState<Error | undefined>();
     const api = useApi();
 
     useEffect(() => {
-        const forkAndRedirect = (localID?: number) => {
-            const searchParams = new URLSearchParams();
-            searchParams.append('app', APP_NAME);
-            searchParams.append('state', state);
-            if (localID !== undefined) {
-                searchParams.append('u', `${localID}`);
-            }
-
-            const hashParams = new URLSearchParams();
-            hashParams.append('sk', sessionKey);
-
-            return replaceUrl(getAppHref(`/authorize?${searchParams.toString()}#${hashParams.toString()}`, APPS.PROTONACCOUNT));
-        }
-
         const run = async () => {
             const localID = getLocalIDFromPathname(window.location.pathname);
             if (localID === undefined) {
                 // No local ID in the url, redirect to the account switcher
-                return forkAndRedirect(undefined);
+                return requestFork(APP_NAME, undefined);
             }
             try {
                 const result = await resumeSession(api, localID);
@@ -46,18 +30,18 @@ const SSOPublicApp = ({ onLogin }: Props) => {
             } catch (e) {
                 if (e instanceof InvalidPersistentSessionError) {
                     // Persistent session not active anymore, redirect and re-fork
-                    return forkAndRedirect(localID);
+                    return requestFork(APP_NAME, localID);
                 }
                 throw e;
             }
         };
         run()
             .then(() => setLoading(false))
-            .catch(() => setError(true));
+            .catch((e) => setError(e));
     }, []);
 
     if (error) {
-        return <GenericError />;
+        return <CollapsableError error={error} />;
     }
 
     if (loading) {

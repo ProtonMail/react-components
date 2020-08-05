@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { c } from 'ttag';
 import { APPS } from 'proton-shared/lib/constants';
 import {
@@ -19,13 +19,14 @@ import {
 
 import AccountSupportDropdownButton from './AccountSupportDropdownButton';
 
-interface Props extends RouteComponentProps {
+interface Props {
     className?: string;
     noCaret?: boolean;
     children?: React.ReactNode;
 }
 
-const AccountSupportDropdown = ({ className, children, location, noCaret = false }: Props) => {
+const AccountSupportDropdown = ({ className, children, noCaret = false }: Props) => {
+    const location = useLocation();
     const { UID } = useAuthentication();
     const { APP_NAME } = useConfig();
     const { createModal } = useModals();
@@ -120,4 +121,4 @@ const AccountSupportDropdown = ({ className, children, location, noCaret = false
     );
 };
 
-export default withRouter(AccountSupportDropdown);
+export default AccountSupportDropdown;

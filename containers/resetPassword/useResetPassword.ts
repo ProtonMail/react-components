@@ -7,7 +7,7 @@ import { srpAuth, srpVerify } from 'proton-shared/lib/srp';
 import { resetKeysRoute } from 'proton-shared/lib/api/keys';
 import { Address } from 'proton-shared/lib/interfaces';
 import { auth } from 'proton-shared/lib/api/auth';
-import { persistLogin } from 'proton-shared/lib/authentication/helper';
+import { persistSession } from 'proton-shared/lib/authentication/helper';
 import { AuthResponse } from 'proton-shared/lib/authentication/interface';
 import { useApi, useLoading, useNotifications, OnLoginCallback } from '../../index';
 
@@ -112,7 +112,7 @@ const useResetPassword = ({ onLogin }: Props) => {
             credentials: { username, password },
             config: auth({ Username: username }),
         });
-        await persistLogin({ ...authResponse, api, keyPassword: passphrase });
+        await persistSession({ ...authResponse, api, keyPassword: passphrase });
 
         onLogin({ ...authResponse, keyPassword: passphrase });
     };

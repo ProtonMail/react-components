@@ -1,5 +1,6 @@
 import './typings/index.d';
 import './typings/css.d';
+import useAppLink from './components/link/useAppLink';
 
 export { default as Autocomplete } from './components/autocomplete/Autocomplete';
 export { default as AutocompleteSelection } from './components/autocomplete/AutocompleteSelection';
@@ -58,6 +59,7 @@ export { default as ButtonGroup } from './components/button/ButtonGroup';
 export { default as Group } from './components/button/Group';
 export { default as Info } from './components/link/Info';
 export { default as Href } from './components/link/Href';
+export { default as useAppLink } from './components/link/useAppLink';
 export { default as AppLink } from './components/link/AppLink';
 export { default as LearnMore } from './components/link/LearnMore';
 export { default as TopNavbarLink } from './components/link/TopNavbarLink';

@@ -1,10 +1,12 @@
 import React, { FunctionComponent } from 'react';
 import { isSSOMode, isStandaloneMode } from 'proton-shared/lib/constants';
 import { TtagLocaleMap } from 'proton-shared/lib/interfaces/Locale';
+import { Route, Switch } from 'react-router';
 import StandalonePublicApp from './StandalonePublicApp';
 import { Loader, useAuthentication } from '../../index';
 import { PrivateAuthenticationStore, PublicAuthenticationStore } from './interface';
 import SSOPublicApp from './SSOPublicApp';
+import SSOForkConsumer from './SSOForkConsumer';
 
 const Redirect = () => {
     document.location.replace(document.location.origin);
@@ -25,8 +27,16 @@ const StandardSetup = ({ locales, PrivateApp }: Props) => {
     }
 
     if (isSSOMode) {
-        return <StandalonePublicApp locales={locales} onLogin={login} />;
-        return <SSOPublicApp onLogin={login} />;
+        return (
+            <Switch>
+                <Route path="/fork">
+                    <SSOForkConsumer locales={locales} onLogin={login} />
+                </Route>
+                <Route path="*">
+                    <SSOPublicApp onLogin={login}/>
+                </Route>
+            </Switch>
+        )
     }
 
     if (isStandaloneMode) {

@@ -1,102 +1,69 @@
 import React, { useEffect, useState } from 'react';
-import * as H from 'history';
 import { loadOpenPGP } from 'proton-shared/lib/openpgp';
 import { getBrowserLocale, getClosestMatches } from 'proton-shared/lib/i18n/helper';
 import loadLocale from 'proton-shared/lib/i18n/loadLocale';
-import { resumeSession, getValidatedLocalID, getValidatedApp } from 'proton-shared/lib/authentication/helper';
-import { InvalidAuthorizeError, InvalidPersistentSessionError } from 'proton-shared/lib/authentication/error';
-import { getForkEncryptedBlob } from 'proton-shared/lib/authentication/session';
-import { forkSession } from 'proton-shared/lib/api/auth';
-import { ForkResponse } from 'proton-shared/lib/authentication/interface';
-import { APPS_CONFIGURATION } from 'proton-shared/lib/constants';
-import { redirectTo, replaceUrl } from 'proton-shared/lib/helpers/browser';
-import { getAppHref } from 'proton-shared/lib/apps/helper';
-import { LoaderPage, ModalsChildren, GenericError, useApi } from '../../index';
+import { InvalidForkConsumeError } from 'proton-shared/lib/authentication/error';
+import { consumeFork, getConsumeForkParameters } from 'proton-shared/lib/authentication/forking';
+import { LoaderPage, ModalsChildren, useApi, OnLoginCallback } from '../../index';
+import CollapsableError from '../error/CollapsableError';
 
 interface Props {
-    history: H.History;
     locales?: any;
     openpgpConfig?: object;
     children: React.ReactNode;
+    onLogin: OnLoginCallback;
 }
 
-const SSOAuthorize = ({ history, locales = {}, openpgpConfig, children }: Props) => {
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
+const SSOForkConsumer = ({ onLogin, locales = {} }: Props) => {
+    const [loading] = useState(true);
+    const [error, setError] = useState<Error | undefined>();
     const api = useApi();
 
     useEffect(() => {
         const browserLocale = getBrowserLocale();
 
-        const hashParams = new URLSearchParams(window.location.hash);
-        const validatedState = hashParams.get('state') || '';
-        const validatedSelector = hashParams.get('selector') || '';
-
         const loadForkDependencies = async () => {
-            if (!validatedState || !validatedSelector) {
-                throw new InvalidAuthorizeError();
+            const { state, selector } = getConsumeForkParameters();
+            if (!state || !selector) {
+                throw new InvalidForkConsumeError('Missing state or selector');
             }
-
-            if (validatedLocalID === undefined) {
-                // Traverse persisted sessions, find a logged in account, and then get the list of active sessions
-                throw new Error('Handle account switcher');
-                return;
-            }
-
-            const validatedSession = await resumeSession(api, validatedLocalID);
-            const payload = validatedSession.keyPassword
-                ? await getForkEncryptedBlob(validatedSessionKey, { keyPassword: validatedSession.keyPassword })
-                : undefined;
-            const childClientID = APPS_CONFIGURATION[validatedApp].clientID;
-            const { Selector } = await api<ForkResponse>(forkSession({
-                Payload: payload,
-                ChildClientID: childClientID,
-                Independent: 0
-            }));
-
-            const hashParams = new URLSearchParams();
-            hashParams.append('selector', Selector);
-            hashParams.append('state', state);
-
-            replaceUrl(getAppHref(`/fork#${hashParams.toString()}`, validatedApp));
+            const { UID, keyPassword, LocalID } = await consumeFork({ selector, api, state });
+            onLogin({ UID, keyPassword, LocalID });
         };
 
         (async () => {
             await Promise.all([
-                loadForkDependencies(),
-                loadOpenPGP(openpgpConfig),
+                loadOpenPGP().then(() => {
+                    return loadForkDependencies();
+                }),
                 loadLocale({
                     ...getClosestMatches({ locale: browserLocale, browserLocale, locales }),
                     locales,
                 }),
             ]);
         })()
-            .then(() => setLoading(false))
             .catch((e) => {
-                if (e instanceof InvalidPersistentSessionError) {
-                    return history.replace('/');
+                if (e instanceof InvalidForkConsumeError) {
+                    //return history.replace('/');
                 }
-                if (e instanceof InvalidAuthorizeError) {
-                    return history.replace('/');
-                }
-                setError(true)
+                setError(e)
             });
     }, []);
 
     if (error) {
-        return <GenericError />;
+        return <CollapsableError error={error} />;
     }
 
     if (loading) {
-        return <LoaderPage />;
+        return (
+            <>
+                <LoaderPage />
+                <ModalsChildren/>
+            </>
+        )
     }
 
-    return (
-        <>
-            <ModalsChildren />
-            {children}
-        </>
-    );
+    return null;
 };
 
-export default SSOAuthorize;
+export default SSOForkConsumer;

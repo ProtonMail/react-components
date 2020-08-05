@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { useHistory } from 'react-router-dom';
 import {
     APP_NAMES,
     isSSOMode,
@@ -8,16 +9,12 @@ import { getAppHref, getAppHrefBundle } from 'proton-shared/lib/apps/helper';
 
 import { useAuthentication, useConfig } from '../..';
 
-export interface Props {
-    to: string;
-    toApp?: APP_NAMES;
-}
-
 const useAppLink = () => {
     const { APP_NAME } = useConfig();
     const authentication = useAuthentication();
+    const history = useHistory();
 
-    return useCallback(({ to, toApp }: Props) => {
+    return useCallback((to: string, toApp?: APP_NAMES) => {
         if (toApp && toApp !== APP_NAME) {
             if (isSSOMode) {
                 const localID = authentication.getLocalID?.();
@@ -29,8 +26,7 @@ const useAppLink = () => {
             }
             return document.location.assign(getAppHrefBundle(to, toApp));
         }
-
-        return history.pushState(to);
+        return history.push(to);
     }, [authentication]);
 };
 
