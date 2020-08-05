@@ -17,11 +17,11 @@ interface Props {
 const ImportPrepareStep = ({ model, setModel, address }: Props) => {
     const { createModal } = useModals();
 
-    const messagesFound = useMemo(() => model.oldFolders.reduce((acc, { Total }) => acc + Total, 0), [
-        model.oldFolders,
+    const messagesFound = useMemo(() => model.providerFolders.reduce((acc, { Total }) => acc + Total, 0), [
+        model.providerFolders,
     ]);
 
-    const foldersFound = useMemo(() => model.oldFolders.length, [model.oldFolders]);
+    const foldersFound = useMemo(() => model.providerFolders.length, [model.providerFolders]);
 
     const onClickCustomize = () => {
         createModal(<CustomizedImportModal address={address} model={model} setModel={setModel} />);

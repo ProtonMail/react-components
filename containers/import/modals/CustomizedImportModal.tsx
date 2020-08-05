@@ -43,12 +43,20 @@ enum TIME_UNIT {
     Move this to ../interfaces.ts and its initialization to ./ImportMailModal.tsx
     since it's basically the payload that we want to send to the API
  */
+interface FolderMapping {
+    Source: string;
+    Destinations: {
+        FolderName: string;
+    };
+}
+
 interface ImportModel {
     AddressID: string;
     Code: string;
-    ImportLabel: Partial<Label>;
+    ImportLabel?: Partial<Label>;
     StartTime?: Date;
     EndTime?: Date;
+    Mapping: FolderMapping[];
 }
 
 const CustomizedImportModal = ({ model, setModel, address, onClose = noop, ...rest }: Props) => {
@@ -66,7 +74,9 @@ const CustomizedImportModal = ({ model, setModel, address, onClose = noop, ...re
             Type: LABEL_TYPE.MESSAGE_LABEL,
             Order: 0,
         },
+        Mapping: [],
     });
+
     const [organizeFolderVisible, setOrganizeFolderVisible] = useState(false);
     const { createModal } = useModals();
 
@@ -150,11 +160,11 @@ Your configuration will be lost.`}
                         <span className="inline-flex flew-row flex-items-center pm-badgeLabel-container">
                             <span
                                 className="badgeLabel flex flex-row flex-items-center"
-                                title={customizedImportModel.ImportLabel.Name}
-                                style={{ color: customizedImportModel.ImportLabel.Color }}
+                                title={customizedImportModel.ImportLabel?.Name}
+                                style={{ color: customizedImportModel.ImportLabel?.Color }}
                             >
                                 <span className="pm-badgeLabel-link ellipsis color-white nodecoration">
-                                    {customizedImportModel.ImportLabel.Name}
+                                    {customizedImportModel.ImportLabel?.Name}
                                 </span>
                             </span>
                         </span>
@@ -222,9 +232,9 @@ Your configuration will be lost.`}
                     <Field className="flex flex-items-center">
                         <Icon name="parent-folder" className="mr0-5" />
                         {c('Info').ngettext(
-                            msgid`${model.newFolders.length} folder selected`,
-                            `${model.newFolders.length} folders selected`,
-                            model.newFolders.length
+                            msgid`${model.providerFolders.length} folder selected`,
+                            `${model.providerFolders.length} folders selected`,
+                            model.providerFolders.length
                         )}
                     </Field>
                 </Row>

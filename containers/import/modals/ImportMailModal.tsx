@@ -10,7 +10,6 @@ import {
     useModals,
     useLoading,
     useAddresses,
-    generateUID,
 } from '../../..';
 import {
     getAuthenticationMethod,
@@ -21,7 +20,7 @@ import {
 } from 'proton-shared/lib/api/mailImport';
 import { noop } from 'proton-shared/lib/helpers/function';
 
-import { MailImportFolderModel, Step, ImportModalModel, MailImportFolder, IMPORT_ERROR } from '../interfaces';
+import { Step, ImportModalModel, IMPORT_ERROR, MailImportFolder } from '../interfaces';
 
 import ImportMailWizard from '../../../components/import/ImportMailWizard';
 
@@ -38,17 +37,21 @@ const DEFAULT_MODEL: ImportModalModel = {
     port: '',
     imap: '',
     errorCode: 0,
-    newFolders: [],
-    oldFolders: [],
+    providerFolders: [],
     // payload: ImportModel,
 };
-
-const prepareFolders = (folders: MailImportFolder[]): MailImportFolderModel[] =>
-    folders.map((folder) => ({ ...folder, id: generateUID('folder'), name: folder.Name }));
 
 interface Props {
     onClose?: () => void;
 }
+
+const destinationFoldersFirst = (a: MailImportFolder, b: MailImportFolder) => {
+    if (a.DestinationFolder && b.DestinationFolder) {
+        return 0;
+    }
+
+    return a.DestinationFolder ? -1 : 1;
+};
 
 const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
     const [loading, withLoading] = useLoading();
@@ -104,8 +107,7 @@ const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
                 const { Folders = [] } = await api(getMailImportFolders(Importer.ID));
                 setModel({
                     ...model,
-                    newFolders: prepareFolders(Folders),
-                    oldFolders: Folders,
+                    providerFolders: Folders.sort(destinationFoldersFirst),
                     importID: Importer.ID,
                     step: Step.PREPARE,
                 });
@@ -141,8 +143,7 @@ const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
 
                     setModel({
                         ...model,
-                        newFolders: prepareFolders(Folders),
-                        oldFolders: Folders,
+                        providerFolders: Folders.sort(destinationFoldersFirst),
                         importID: Importer.ID,
                         step: Step.PREPARE,
                     });
@@ -173,8 +174,7 @@ const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
 
                     setModel({
                         ...model,
-                        newFolders: prepareFolders(Folders),
-                        oldFolders: Folders,
+                        providerFolders: Folders.sort(destinationFoldersFirst),
                         importID: Importer.ID,
                         step: Step.PREPARE,
                     });
@@ -201,23 +201,25 @@ const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
         }
 
         if (model.step === Step.PREPARE) {
-            await api(
-                createJobImport(model.importID, {
-                    AddressID: address.ID,
-                    Folders: model.newFolders.map(({ name, Name, DestinationLabelID }) => {
-                        if (typeof DestinationLabelID !== 'undefined') {
-                            return {
-                                SourceFolder: Name,
-                                DestinationLabelID,
-                            };
-                        }
-                        return {
-                            SourceFolder: Name,
-                            DestinationLabelName: name,
-                        };
-                    }),
-                })
-            );
+            /* @todo this gonna change */
+
+            // await api(
+            //     createJobImport(model.importID, {
+            //         AddressID: address.ID,
+            //         Folders: model.providerFolders.map(({ Name, DestinationLabelID }) => {
+            //             if (typeof DestinationLabelID !== 'undefined') {
+            //                 return {
+            //                     SourceFolder: Name,
+            //                     DestinationLabelID,
+            //                 };
+            //             }
+            //             return {
+            //                 SourceFolder: Name,
+            //                 DestinationLabelName: Name,
+            //             };
+            //         }),
+            //     })
+            // );
             setModel({
                 ...model,
                 step: Step.STARTED,

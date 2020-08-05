@@ -1,14 +1,16 @@
-export enum DestinationLabelID {
-    INBOX = 0,
-    ALL_DRAFTS = 1,
-    ALL_SENT = 2,
-    TRASH = 3,
-    SPAM = 4,
-    ALL_MAIL = 5,
-    STARRED = 10,
-    ARCHIVE = 6,
-    SENT = 7,
-    DRAFTS = 8,
+export enum DestinationFolder {
+    // @todo warning discrepancy FE/BE 'Inbox' vs 'INBOX'
+    INBOX = 'INBOX',
+    ALL_DRAFTS = 'All Drafts',
+    ALL_SENT = 'All Sent',
+    TRASH = 'Trash',
+    SPAM = 'Spam',
+    ALL_MAIL = 'All Mail',
+    // @todo warning discrepancy FE/BE 'Starred' vs 'Flagged'
+    STARRED = 'Flagged',
+    ARCHIVE = 'Archive',
+    SENT = 'Sent',
+    DRAFTS = 'Drafts',
 }
 
 export enum IMPORT_ERROR {
@@ -19,8 +21,7 @@ export enum IMPORT_ERROR {
 
 export interface ImportedFolder {
     SourceFolder: string;
-    DestinationLabelID?: DestinationLabelID;
-    DestinationLabelName?: string;
+    DestinationFolder?: DestinationFolder;
     Processed: number;
     Total: number;
 }
@@ -29,14 +30,8 @@ export interface MailImportFolder {
     Name: string;
     Total: number;
     Flags: string[];
-    DestinationLabelID?: DestinationLabelID;
-    DestinationLabelName?: string;
+    DestinationFolder?: DestinationFolder;
     Size: number;
-}
-
-export interface MailImportFolderModel extends MailImportFolder {
-    id: string;
-    name: string;
 }
 
 export enum Step {
@@ -46,8 +41,7 @@ export enum Step {
 }
 
 export interface ImportModalModel {
-    newFolders: MailImportFolderModel[];
-    oldFolders: MailImportFolder[];
+    providerFolders: MailImportFolder[];
     step: Step;
     needDetails: boolean;
     importID: string;

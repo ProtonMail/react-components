@@ -1,10 +1,13 @@
 import React from 'react';
-import { Icon, Button, Select, Checkbox, DropdownActions } from '../../..';
+import { Icon, Button, Select, Checkbox, DropdownActions, useFolders } from '../../..';
 import { c } from 'ttag';
 
 import { noop } from 'proton-shared/lib/helpers/function';
+import { buildTreeview, formatFolderName } from 'proton-shared/lib/helpers/folder';
 import { Address } from 'proton-shared/lib/interfaces';
-import { ImportModalModel, DestinationLabelID } from '../interfaces';
+
+import { ImportModalModel, DestinationFolder } from '../interfaces';
+import { FolderWithSubFolders } from 'proton-shared/lib/interfaces/Folder';
 
 interface Props {
     model: ImportModalModel;
@@ -13,73 +16,121 @@ interface Props {
 }
 
 interface FolderSelectOption {
-    value: DestinationLabelID | string;
+    value: DestinationFolder | string;
     text: string;
     group?: string;
-    disabled?: boolean;
 }
 
 const FOLDER_GROUP = {
     DEFAULT: c('Option group').t`Default folders`,
     CUSTOM: c('Option group').t`Custom folders`,
-    PROVIDER: c('Option group').t`Default folders`,
+    PROVIDER: c('Option group').t`Provider folders`,
 };
 
 const FOLDER_ICONS = {
-    [DestinationLabelID.INBOX]: 'inbox',
-    [DestinationLabelID.ALL_DRAFTS]: 'drafts',
-    [DestinationLabelID.ALL_SENT]: 'sent',
-    [DestinationLabelID.TRASH]: 'trash',
-    [DestinationLabelID.SPAM]: 'spam',
-    [DestinationLabelID.ARCHIVE]: 'archive',
-    [DestinationLabelID.SENT]: 'sent',
-    [DestinationLabelID.DRAFTS]: 'drafts',
-    [DestinationLabelID.STARRED]: 'star',
-    [DestinationLabelID.ALL_MAIL]: 'all-emails',
+    [DestinationFolder.INBOX]: 'inbox',
+    [DestinationFolder.ALL_DRAFTS]: 'drafts',
+    [DestinationFolder.ALL_SENT]: 'sent',
+    [DestinationFolder.TRASH]: 'trash',
+    [DestinationFolder.SPAM]: 'spam',
+    [DestinationFolder.ARCHIVE]: 'archive',
+    [DestinationFolder.SENT]: 'sent',
+    [DestinationFolder.DRAFTS]: 'drafts',
+    [DestinationFolder.STARRED]: 'star',
+    [DestinationFolder.ALL_MAIL]: 'all-emails',
+};
+
+const defaultFolders: FolderSelectOption[] = [
+    {
+        text: c('Import Destination').t`Do not import`,
+        value: '',
+    },
+    {
+        group: FOLDER_GROUP.DEFAULT,
+        text: c('Import Destination').t`Inbox`,
+        value: DestinationFolder.INBOX,
+    },
+    {
+        group: FOLDER_GROUP.DEFAULT,
+        text: DestinationFolder.ARCHIVE,
+        value: DestinationFolder.ARCHIVE,
+    },
+    {
+        group: FOLDER_GROUP.DEFAULT,
+        text: DestinationFolder.SENT,
+        value: DestinationFolder.SENT,
+    },
+    {
+        group: FOLDER_GROUP.DEFAULT,
+        text: c('Import Destination').t`Starred`,
+        value: DestinationFolder.STARRED,
+    },
+    {
+        group: FOLDER_GROUP.DEFAULT,
+        text: DestinationFolder.DRAFTS,
+        value: DestinationFolder.DRAFTS,
+    },
+    {
+        group: FOLDER_GROUP.DEFAULT,
+        text: DestinationFolder.SPAM,
+        value: DestinationFolder.SPAM,
+    },
+    {
+        group: FOLDER_GROUP.DEFAULT,
+        text: DestinationFolder.TRASH,
+        value: DestinationFolder.TRASH,
+    },
+    {
+        group: FOLDER_GROUP.DEFAULT,
+        text: DestinationFolder.ALL_MAIL,
+        value: DestinationFolder.ALL_MAIL,
+    },
+];
+
+const formatOption = ({ Path, Name }: FolderWithSubFolders, level = 0) => ({
+    value: Path || '',
+    text: formatFolderName(level, Name, ' • '),
+    group: FOLDER_GROUP.CUSTOM,
+});
+
+const folderReducer = (
+    acc: FolderSelectOption[] = [],
+    folder: FolderWithSubFolders,
+    level = 0
+): FolderSelectOption[] => {
+    acc.push(formatOption(folder, level));
+
+    if (Array.isArray(folder.subfolders)) {
+        folder.subfolders.forEach((folder) => folderReducer(acc, folder, level + 1));
+    }
+
+    return acc;
 };
 
 const OrganizeFolders = ({ model, setModel, address }: Props) => {
-    const foldersOptions: FolderSelectOption[] = [
-        {
-            text: c('Import Destination').t`Do not import`,
-            value: '',
-        },
-        {
-            group: FOLDER_GROUP.DEFAULT,
-            text: c('Import Destination').t`Inbox`,
-            value: DestinationLabelID.INBOX,
-        },
-        {
-            group: FOLDER_GROUP.DEFAULT,
-            text: c('Import Destination').t`Archive`,
-            value: DestinationLabelID.ARCHIVE,
-        },
-        {
-            group: FOLDER_GROUP.DEFAULT,
-            text: c('Import Destination').t`Sent`,
-            value: DestinationLabelID.SENT,
-        },
-        {
-            group: FOLDER_GROUP.DEFAULT,
-            text: c('Import Destination').t`Draft`,
-            value: DestinationLabelID.DRAFTS,
-        },
-        {
-            group: FOLDER_GROUP.DEFAULT,
-            text: c('Import Destination').t`Spam`,
-            value: DestinationLabelID.SPAM,
-        },
-        {
-            group: FOLDER_GROUP.DEFAULT,
-            text: c('Import Destination').t`Trash`,
-            value: DestinationLabelID.TRASH,
-        },
-        {
-            group: FOLDER_GROUP.DEFAULT,
-            text: c('Import Destination').t`All mails`,
-            value: DestinationLabelID.ALL_MAIL,
-        },
-    ];
+    const [folders = []] = useFolders();
+    const treeview = buildTreeview(folders);
+    const reducedFolders = treeview.reduce<FolderSelectOption[]>((acc, folder) => {
+        return folderReducer(acc, folder, 0);
+    }, []);
+
+    /* @todo treeview of providerFolders */
+    const tempFolders = model.providerFolders
+        .filter((f) => !f.DestinationFolder)
+        .map((f) => {
+            const split = f.Name.split('/');
+            const level = split.length - 1;
+            const maxLevel = Math.min(level, 2);
+            const formatted = formatFolderName(maxLevel, split.slice(maxLevel).join('/'), ' • ');
+
+            return {
+                value: f.Name,
+                text: formatted,
+                group: FOLDER_GROUP.PROVIDER,
+            };
+        });
+
+    const foldersOptions = [...defaultFolders, ...reducedFolders, ...tempFolders];
 
     const dropdownActions = [
         {
@@ -95,7 +146,7 @@ const OrganizeFolders = ({ model, setModel, address }: Props) => {
     return (
         <>
             <div className="flex">
-                <div className="flex-item-fluid ellipsis bg-global-muted pt1 pl1 pr1">
+                <div className="flex-item-fluid ellipsis bg-global-light pt1 pl1 pr1">
                     <span>{c('Label').t`From`}</span>
                     {`: `}
                     <strong>{model.email}</strong>
@@ -108,32 +159,39 @@ const OrganizeFolders = ({ model, setModel, address }: Props) => {
             </div>
 
             <div className="flex mb1">
-                <div className="flex-item-fluid bg-global-muted pt0-5">
+                <div className="flex-item-fluid bg-global-light pt0-5">
                     <ul className="unstyled m0">
-                        {model.oldFolders.map(({ Name, DestinationLabelID }, index) => {
+                        {model.providerFolders.map(({ Name, DestinationFolder }, index) => {
+                            const split = Name.split('/');
+                            const level = split.length - 1;
+                            const displayName = split[level];
+
                             return (
                                 <li
-                                    key={`oldFolder_${index}`}
+                                    key={`providerFolder_${index}`}
                                     className="flex flex-nowrap flex-items-center border-bottom pl1 pr1"
                                     style={{
                                         height: 50,
                                     }}
                                 >
-                                    <Checkbox id={`oldFolder_${index}`} className="flex-item-noshrink" />
+                                    <span
+                                        className="flex-item-noshrink"
+                                        style={{
+                                            marginLeft: `${level}em`,
+                                        }}
+                                    >
+                                        <Checkbox id={`providerFolder_${index}`} />
+                                    </span>
                                     <label
-                                        htmlFor={`oldFolder_${index}`}
-                                        title={Name}
+                                        htmlFor={`providerFolder_${index}`}
+                                        title={displayName}
                                         className="flex-item-fluid-auto ellipsis"
                                     >
                                         <Icon
-                                            name={
-                                                typeof DestinationLabelID === 'undefined'
-                                                    ? 'folder'
-                                                    : FOLDER_ICONS[DestinationLabelID]
-                                            }
+                                            name={DestinationFolder ? FOLDER_ICONS[DestinationFolder] : 'folder'}
                                             className="mr0-5 ml0-5 flex-item-noshrink"
                                         />
-                                        {Name}
+                                        {displayName}
                                     </label>
                                 </li>
                             );
@@ -142,12 +200,12 @@ const OrganizeFolders = ({ model, setModel, address }: Props) => {
                 </div>
                 <div className="flex-item-fluid pt0-5">
                     <ul className="unstyled m0">
-                        {model.newFolders
-                            .filter(({ DestinationLabelID }) => typeof DestinationLabelID !== 'undefined')
-                            .map(({ DestinationLabelID, Name }) => {
+                        {model.providerFolders
+                            .filter(({ DestinationFolder }) => typeof DestinationFolder !== 'undefined')
+                            .map(({ DestinationFolder }) => {
                                 return (
                                     <li
-                                        key={DestinationLabelID}
+                                        key={DestinationFolder}
                                         className="flex flex-nowrap flex-items-center pl1 pr1"
                                         style={{
                                             height: 50,
@@ -155,16 +213,16 @@ const OrganizeFolders = ({ model, setModel, address }: Props) => {
                                     >
                                         <Select
                                             className="flex-item-fluid"
-                                            // options={[{ value: `${DestinationLabelID}`, text: Name }]}
                                             options={foldersOptions}
+                                            defaultValue={DestinationFolder}
                                         />
                                         <Button className="flex-item-noshrink ml1">{c('Action').t`Add folder`}</Button>
                                     </li>
                                 );
                             })}
-                        {model.newFolders
-                            .filter(({ DestinationLabelID }) => typeof DestinationLabelID === 'undefined')
-                            .map(({ id, name }, index) => {
+                        {model.providerFolders
+                            .filter(({ DestinationFolder }) => typeof DestinationFolder === 'undefined')
+                            .map(({ Name }, index) => {
                                 return (
                                     <li
                                         className="flex flex-nowrap flex-items-center pl1 pr1"
@@ -173,26 +231,10 @@ const OrganizeFolders = ({ model, setModel, address }: Props) => {
                                         }}
                                         key={index}
                                     >
-                                        {/*
-                                        <Icon name="folder" className="mr0-5 flex-item-noshrink" />
-                                        <input
-                                            type="text"
-                                            value={name}
-                                            className="flex-item-fluid"
-                                            onChange={({ target }) => {
-                                                const newFolders = [...model.newFolders];
-                                                const i = model.newFolders.findIndex(
-                                                    (folder) => folder.id === id
-                                                );
-                                                newFolders[i].name = target.value;
-                                                setModel({ ...model, newFolders });
-                                            }}
-                                        />
-                                    */}
                                         <Select
                                             className="flex-item-fluid"
-                                            // options={[{ value: id, text: name }]}
                                             options={foldersOptions}
+                                            defaultValue={Name}
                                         />
                                         <div className="ml1">
                                             <DropdownActions key="dropdown" list={dropdownActions} />
