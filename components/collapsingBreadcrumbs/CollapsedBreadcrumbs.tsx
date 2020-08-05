@@ -21,8 +21,10 @@ function CollapsedBreadcrumb({ breadcrumbs }: Props) {
     const mouseEnterCounter = useRef(0);
 
     const closeWithTimeout = () => {
+        clearTimeout(closeTimeout.current);
+        mouseEnterCounter.current = 0;
+
         closeTimeout.current = setTimeout(() => {
-            mouseEnterCounter.current = 0;
             close();
         }, 1000);
     };
@@ -38,22 +40,15 @@ function CollapsedBreadcrumb({ breadcrumbs }: Props) {
     const handleDragEnter = () => {
         clearTimeout(closeTimeout.current);
         mouseEnterCounter.current += 1;
-    };
 
-    const handleBreadcrumbDragEnter = () => {
-        clearTimeout(closeTimeout.current);
-        mouseEnterCounter.current = 1;
-        open();
+        if (!isOpen) {
+            open();
+        }
     };
 
     return (
         <>
-            <Breadcrumb
-                ref={anchorRef}
-                onClick={toggle}
-                onDragEnter={handleBreadcrumbDragEnter}
-                onDragLeave={handleDragLeave}
-            >
+            <Breadcrumb ref={anchorRef} onClick={toggle} onDragEnter={handleDragEnter} onDragLeave={handleDragLeave}>
                 ...
             </Breadcrumb>
             <Dropdown
