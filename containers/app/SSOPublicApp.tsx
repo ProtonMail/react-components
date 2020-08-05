@@ -15,7 +15,8 @@ const SSOPublicApp = ({ onLogin }: Props) => {
     const { APP_NAME } = useConfig();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<Error | undefined>();
-    const api = useApi();
+    const normalApi = useApi();
+    const api = <T,>(config: any) => normalApi<T>({ ...config, silence: true });
 
     useEffect(() => {
         const run = async () => {
@@ -45,10 +46,13 @@ const SSOPublicApp = ({ onLogin }: Props) => {
     }
 
     if (loading) {
-        return <LoaderPage />;
+        return (
+            <>
+                <LoaderPage />
+                <ModalsChildren />
+            </>
+        );
     }
-
-    return <ModalsChildren />;
 };
 
 export default SSOPublicApp;

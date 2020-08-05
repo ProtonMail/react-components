@@ -11,8 +11,8 @@ import { isSSOMode } from 'proton-shared/lib/constants';
 import { LocalKeyResponse } from 'proton-shared/lib/authentication/interface';
 import { getLocalKey } from 'proton-shared/lib/api/auth';
 import { InvalidPersistentSessionError } from 'proton-shared/lib/authentication/error';
-import { getDecryptedPersistedSessionBlob } from 'proton-shared/lib/authentication/helper';
 import { TtagLocaleMap } from 'proton-shared/lib/interfaces/Locale';
+import { getDecryptedPersistedSessionBlob } from 'proton-shared/lib/authentication/session';
 
 import {
     EventManagerProvider,
