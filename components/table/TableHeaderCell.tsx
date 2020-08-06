@@ -10,30 +10,8 @@ interface Props extends React.ThHTMLAttributes<HTMLTableHeaderCellElement> {
 
 const TableHeaderCell = ({ children, direction, onSort, ...rest }: Props) => {
     const content = onSort ? (
-        <SortingTableCellHeader onClick={onSort} direction={direction}>
-            {children}
-        </SortingTableCellHeader>
-    ) : (
-        children
-    );
-
-    return (
-        <th scope="col" {...rest}>
-            {content}
-        </th>
-    );
-};
-
-interface SortingProps {
-    children: React.ReactNode;
-    direction?: SORT_DIRECTION;
-    onClick: () => {};
-}
-
-const SortingTableCellHeader = ({ children, direction, onClick }: SortingProps) => {
-    return (
         <div className="flex-nowrap inline-flex-vcenter">
-            <span className="link mr0-5" onClick={onClick}>
+            <span className="link mr0-5" onClick={onSort}>
                 {children}
             </span>
             {direction ?? (
@@ -43,6 +21,14 @@ const SortingTableCellHeader = ({ children, direction, onClick }: SortingProps) 
                 />
             )}
         </div>
+    ) : (
+        children
+    );
+
+    return (
+        <th scope="col" {...rest}>
+            {content}
+        </th>
     );
 };
 
