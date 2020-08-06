@@ -10,8 +10,8 @@ import { APP_NAMES, APPS_CONFIGURATION } from 'proton-shared/lib/constants';
 import { wait } from 'proton-shared/lib/helpers/promise';
 import { withUIDHeaders } from 'proton-shared/lib/fetch/headers';
 import { revoke } from 'proton-shared/lib/api/auth';
-import { getApiErrorMessage } from 'proton-shared/lib/api/helpers/getApiErrorMessage';
 import { getPersistedSession, removePersistedSession } from 'proton-shared/lib/authentication/session';
+import { getApiErrorMessage } from 'proton-shared/lib/api/helpers/apiErrorHelper';
 
 import {
     useApi,

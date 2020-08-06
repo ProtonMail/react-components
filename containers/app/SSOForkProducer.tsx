@@ -4,7 +4,7 @@ import { getActiveSessions, resumeSession } from 'proton-shared/lib/authenticati
 import { getProduceForkParameters, produceFork, ProduceForkParameters } from 'proton-shared/lib/authentication/forking';
 import { InvalidPersistentSessionError } from 'proton-shared/lib/authentication/error';
 import { LocalSessionResponse } from 'proton-shared/lib/authentication/interface';
-import { getApiErrorMessage } from 'proton-shared/lib/api/helpers/getApiErrorMessage';
+import { getApiErrorMessage, getIs401Error } from 'proton-shared/lib/api/helpers/apiErrorHelper';
 import { LoaderPage, ModalsChildren, StandardLoadError, useApi, useNotifications } from '../../index';
 
 interface Props {
@@ -44,7 +44,7 @@ const SSOForkProducer = ({ onSwitchSession, onInvalidFork }: Props) => {
                     app,
                 });
             } catch (e) {
-                if (e instanceof InvalidPersistentSessionError || e.name === 'InvalidSession') {
+                if (e instanceof InvalidPersistentSessionError || getIs401Error(e)) {
                     const activeSessions = await getActiveSessions(silentApi);
                     onSwitchSession({ app, state, sessionKey }, activeSessions);
                     return;

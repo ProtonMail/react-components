@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { loadOpenPGP } from 'proton-shared/lib/openpgp';
 import { InvalidForkConsumeError } from 'proton-shared/lib/authentication/error';
 import { consumeFork, getConsumeForkParameters } from 'proton-shared/lib/authentication/forking';
-import { getApiErrorMessage } from 'proton-shared/lib/api/helpers/getApiErrorMessage';
 import { persistSession } from 'proton-shared/lib/authentication/helper';
+import { getApiErrorMessage } from 'proton-shared/lib/api/helpers/apiErrorHelper';
 import {
     LoaderPage,
     ModalsChildren,

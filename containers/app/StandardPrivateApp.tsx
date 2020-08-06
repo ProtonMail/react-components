@@ -13,6 +13,7 @@ import { getLocalKey } from 'proton-shared/lib/api/auth';
 import { InvalidPersistentSessionError } from 'proton-shared/lib/authentication/error';
 import { TtagLocaleMap } from 'proton-shared/lib/interfaces/Locale';
 import { getDecryptedPersistedSessionBlob } from 'proton-shared/lib/authentication/session';
+import { getIs401Error } from 'proton-shared/lib/api/helpers/apiErrorHelper';
 
 import {
     EventManagerProvider,
@@ -100,7 +101,7 @@ const StandardPrivateApp = <T, M extends Model<T>, E, EvtM extends Model<E>>({
                 setLoading(false);
             })
             .catch((e) => {
-                if (e.name === 'InactiveSession' || e instanceof InvalidPersistentSessionError) {
+                if (getIs401Error(e) || e instanceof InvalidPersistentSessionError) {
                     return onLogout();
                 }
                 setError(true);
