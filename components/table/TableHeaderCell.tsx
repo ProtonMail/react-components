@@ -10,7 +10,7 @@ interface Props extends React.ThHTMLAttributes<HTMLTableHeaderCellElement> {
 
 const TableHeaderCell = ({ children, direction, onSort, ...rest }: Props) => {
     const content = onSort ? (
-        <div className="flex-nowrap inline-flex-vcenter" onClick={onSort}>
+        <div className="flex-nowrap inline-flex-vcenter cursor-pointer" onClick={onSort}>
             <span className="mr0-25">{children}</span>
             {direction && (
                 <Icon
