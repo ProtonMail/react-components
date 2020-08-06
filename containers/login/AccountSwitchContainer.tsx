@@ -50,6 +50,7 @@ const AccountSwitchContainer = ({ Layout, toAppNameKey, onLogin, activeSessions 
             const run = async () => {
                 const activeSessions = await getActiveSessions(silentApi);
                 setLocalActiveSessions(activeSessions);
+                /*
                 setLocalActiveSessions([
                     {
                         DisplayName: 'John Carpenter',
@@ -70,6 +71,7 @@ const AccountSwitchContainer = ({ Layout, toAppNameKey, onLogin, activeSessions 
                         UserID: '',
                     },
                 ]);
+            */
             };
             withLoading(run().catch(() => setError(true)));
         }
@@ -96,6 +98,7 @@ const AccountSwitchContainer = ({ Layout, toAppNameKey, onLogin, activeSessions 
             await wait(1000);
             const validatedSession = await resumeSession(silentApi, localID);
             await onLogin({
+                LocalID: localID,
                 keyPassword: validatedSession.keyPassword,
                 UID: validatedSession.UID,
             });
@@ -106,7 +109,7 @@ const AccountSwitchContainer = ({ Layout, toAppNameKey, onLogin, activeSessions 
                 });
                 createNotification({
                     type: 'error',
-                    text: c('Error').t`The account has been signed out. Please sign in again.`,
+                    text: c('Error').t`The session has expired. Please sign in again.`,
                 });
                 return;
             }

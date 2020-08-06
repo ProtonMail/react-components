@@ -89,8 +89,7 @@ const useLogin = ({ onLogin, ignoreUnlock }: Props) => {
         }
 
         await persistSession({ ...authResult, api, keyPassword });
-
-        onLogin({ ...authResult, User, keyPassword });
+        await onLogin({ ...authResult, User, keyPassword });
     };
 
     /**

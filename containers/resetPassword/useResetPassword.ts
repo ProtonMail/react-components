@@ -113,8 +113,7 @@ const useResetPassword = ({ onLogin }: Props) => {
             config: auth({ Username: username }),
         });
         await persistSession({ ...authResponse, api, keyPassword: passphrase });
-
-        onLogin({ ...authResponse, keyPassword: passphrase });
+        await onLogin({ ...authResponse, keyPassword: passphrase });
     };
 
     const getSetter = <T>(key: keyof State) => (value: T) =>

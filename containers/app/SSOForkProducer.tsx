@@ -2,14 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { loadOpenPGP } from 'proton-shared/lib/openpgp';
 import { getActiveSessions, resumeSession } from 'proton-shared/lib/authentication/helper';
 import { getProduceForkParameters, produceFork, ProduceForkParameters } from 'proton-shared/lib/authentication/forking';
-import { InvalidForkProduceError, InvalidPersistentSessionError } from 'proton-shared/lib/authentication/error';
+import { InvalidPersistentSessionError } from 'proton-shared/lib/authentication/error';
 import { LocalSessionResponse } from 'proton-shared/lib/authentication/interface';
 import { getApiErrorMessage } from 'proton-shared/lib/api/helpers/getApiErrorMessage';
-import { LoaderPage, ModalsChildren, useApi, useNotifications } from '../../index';
-import CollapsableError from '../error/CollapsableError';
+import { LoaderPage, ModalsChildren, StandardLoadError, useApi, useNotifications } from '../../index';
 
 interface Props {
-    onSwitchSession: (data: ProduceForkParameters & { activeSessions: LocalSessionResponse[] }) => void;
+    onSwitchSession: (data: ProduceForkParameters, activeSessions: LocalSessionResponse[]) => void;
     onInvalidFork: () => void;
 }
 
@@ -24,16 +23,17 @@ const SSOForkProducer = ({ onSwitchSession, onInvalidFork }: Props) => {
         const run = async () => {
             const { app, state, localID, sessionKey } = getProduceForkParameters();
             if (!app || !state || !sessionKey || sessionKey.length !== 32) {
-                throw new InvalidForkProduceError();
+                onInvalidFork();
+                return;
             }
-            // Traverse persisted sessions, find a logged in account, and then get the list of active sessions
+            await loadOpenPGP();
+            // Show the account switcher if no specific id
             if (localID === undefined) {
                 const activeSessions = await getActiveSessions(silentApi);
-                return onSwitchSession({ app, state, sessionKey, activeSessions });
+                return onSwitchSession({ app, state, sessionKey }, activeSessions);
             }
             try {
                 // Resume session and produce the fork
-                await loadOpenPGP();
                 const validatedSession = await resumeSession(silentApi, localID);
                 await produceFork({
                     api: silentApi,
@@ -44,26 +44,24 @@ const SSOForkProducer = ({ onSwitchSession, onInvalidFork }: Props) => {
                     app,
                 });
             } catch (e) {
-                if (e instanceof InvalidForkProduceError) {
-                    onInvalidFork();
-                    return;
-                }
-                if (e instanceof InvalidPersistentSessionError) {
+                if (e instanceof InvalidPersistentSessionError || e.name === 'InvalidSession') {
                     const activeSessions = await getActiveSessions(silentApi);
-                    onSwitchSession({ app, state, sessionKey, activeSessions });
+                    onSwitchSession({ app, state, sessionKey }, activeSessions);
                     return;
                 }
-                const errorMessage = getApiErrorMessage(e) || 'Unknown error';
-                createNotification({ type: 'error', text: errorMessage });
-                console.error(error);
                 throw e;
             }
         };
-        run().catch((e) => setError(e));
+        run().catch((e) => {
+            const errorMessage = getApiErrorMessage(e) || 'Unknown error';
+            createNotification({ type: 'error', text: errorMessage });
+            console.error(error);
+            setError(e);
+        });
     }, []);
 
     if (error) {
-        return <CollapsableError error={error} />;
+        return <StandardLoadError />;
     }
 
     if (loading) {

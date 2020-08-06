@@ -8,7 +8,7 @@ export interface OnLoginCallbackArguments {
     User?: tsUser;
     LocalID?: number;
 }
-export type OnLoginCallback = (data: OnLoginCallbackArguments) => void;
+export type OnLoginCallback = (data: OnLoginCallbackArguments) => Promise<void>;
 
 export interface PrivateAuthenticationStore extends AuthenticationStore {
     UID: string;

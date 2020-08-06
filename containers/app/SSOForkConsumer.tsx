@@ -1,66 +1,68 @@
 import React, { useEffect, useState } from 'react';
 import { loadOpenPGP } from 'proton-shared/lib/openpgp';
-import { getBrowserLocale, getClosestMatches } from 'proton-shared/lib/i18n/helper';
-import loadLocale from 'proton-shared/lib/i18n/loadLocale';
 import { InvalidForkConsumeError } from 'proton-shared/lib/authentication/error';
 import { consumeFork, getConsumeForkParameters } from 'proton-shared/lib/authentication/forking';
-import { LoaderPage, ModalsChildren, useApi, OnLoginCallback } from '../../index';
-import CollapsableError from '../error/CollapsableError';
+import { getApiErrorMessage } from 'proton-shared/lib/api/helpers/getApiErrorMessage';
+import { persistSession } from 'proton-shared/lib/authentication/helper';
+import {
+    LoaderPage,
+    ModalsChildren,
+    useApi,
+    useNotifications,
+    StandardLoadError,
+    OnLoginCallbackArguments,
+} from '../../index';
 
 interface Props {
-    locales?: any;
-    openpgpConfig?: object;
-    children: React.ReactNode;
-    onLogin: OnLoginCallback;
+    onLogin: (args: OnLoginCallbackArguments, pathname: string) => void;
+    onInvalidFork: () => void;
 }
 
-const SSOForkConsumer = ({ onLogin, locales = {} }: Props) => {
+const SSOForkConsumer = ({ onLogin, onInvalidFork }: Props) => {
     const [loading] = useState(true);
     const [error, setError] = useState<Error | undefined>();
-    const api = useApi();
+    const normalApi = useApi();
+    const silentApi = <T,>(config: any) => normalApi<T>({ ...config, silence: true });
+    const { createNotification } = useNotifications();
 
     useEffect(() => {
-        const browserLocale = getBrowserLocale();
-
-        const loadForkDependencies = async () => {
+        const run = async () => {
             const { state, selector } = getConsumeForkParameters();
             if (!state || !selector) {
-                throw new InvalidForkConsumeError('Missing state or selector');
+                return onInvalidFork();
             }
-            const { UID, keyPassword, LocalID } = await consumeFork({ selector, api, state });
-            onLogin({ UID, keyPassword, LocalID });
+            await loadOpenPGP();
+            try {
+                const { pathname, ...authResponse } = await consumeFork({ selector, api: silentApi, state });
+                await persistSession({ api: silentApi, ...authResponse });
+                return onLogin(authResponse, pathname);
+            } catch (e) {
+                if (e instanceof InvalidForkConsumeError) {
+                    return onInvalidFork();
+                }
+                throw e;
+            }
         };
 
-        (async () => {
-            await Promise.all([
-                loadOpenPGP().then(() => {
-                    return loadForkDependencies();
-                }),
-                loadLocale({
-                    ...getClosestMatches({ locale: browserLocale, browserLocale, locales }),
-                    locales,
-                }),
-            ]);
-        })()
-            .catch((e) => {
-                if (e instanceof InvalidForkConsumeError) {
-                    //return history.replace('/');
-                }
-                setError(e)
-            });
+        run().catch((e) => {
+            const errorMessage = getApiErrorMessage(e) || 'Unknown error';
+            createNotification({ type: 'error', text: errorMessage });
+            console.error(error);
+            setError(e);
+        });
     }, []);
 
     if (error) {
-        return <CollapsableError error={error} />;
+        return <StandardLoadError />;
     }
 
     if (loading) {
         return (
             <>
                 <LoaderPage />
-                <ModalsChildren/>
+                <ModalsChildren />
             </>
-        )
+        );
     }
 
     return null;

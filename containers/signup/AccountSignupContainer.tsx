@@ -253,8 +253,8 @@ const AccountSignupContainer = ({ onLogin, Layout }: Props) => {
             }
 
             const authResponse = authApi.getAuthResponse();
-            await persistSession({ ...authResponse, keyPassword, api })
-            onLogin({ ...authResponse, keyPassword });
+            await persistSession({ ...authResponse, keyPassword, api });
+            await onLogin({ ...authResponse, keyPassword });
         } catch (error) {
             // TODO: If any of these requests fail we should probably handle it differently
             return setModelDiff({ step: oldStep });
