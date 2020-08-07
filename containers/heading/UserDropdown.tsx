@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
-import { APPS, PLANS } from 'proton-shared/lib/constants';
+import { APPS, isSSOMode, PLANS, SSO_SWITCH_PATH } from 'proton-shared/lib/constants';
 import { getPlanName } from 'proton-shared/lib/helpers/subscription';
-import { getAccountSettingsApp } from 'proton-shared/lib/apps/helper';
+import { getAccountSettingsApp, getAppHref } from 'proton-shared/lib/apps/helper';
 import {
     useUser,
     useOrganization,
@@ -37,6 +37,12 @@ const UserDropdown = ({ ...rest }) => {
 
     const handleSupportUsClick = () => {
         createModal(<DonateModal />);
+    };
+
+    const handleSwitchAccount = () => {
+        // Always force a refresh, just so that the logged in account isn't used
+        const href = getAppHref(SSO_SWITCH_PATH, APPS.PROTONACCOUNT);
+        return document.location.assign(href);
     };
 
     const handleLogout = () => {
@@ -104,6 +110,18 @@ const UserDropdown = ({ ...rest }) => {
                             {c('Action').t`Support us`}
                         </button>
                     </li>
+                    {isSSOMode ? (
+                        <li className="dropDown-item">
+                            <button
+                                type="button"
+                                className="w100 flex underline-hover dropDown-item-link pl1 pr1 pt0-5 pb0-5 alignleft"
+                                onClick={handleSwitchAccount}
+                            >
+                                <Icon className="mt0-25 mr0-5" name="organization-users" />
+                                {c('Action').t`Switch account`}
+                            </button>
+                        </li>
+                    ) : null}
                     <li className="dropDown-item pt0-5 pb0-5 pl1 pr1 flex">
                         <PrimaryButton
                             className="w100 aligncenter navigationUser-logout"
