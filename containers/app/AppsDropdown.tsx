@@ -1,6 +1,6 @@
 import React from 'react';
 import { c } from 'ttag';
-import { APPS, FEATURE_FLAGS } from 'proton-shared/lib/constants';
+import { APPS, APPS_CONFIGURATION, FEATURE_FLAGS } from 'proton-shared/lib/constants';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 import { getAccountSettingsApp } from 'proton-shared/lib/apps/helper';
 import humanSize from 'proton-shared/lib/helpers/humanSize';
@@ -11,7 +11,7 @@ import Icon from '../../components/icon/Icon';
 import SimpleDropdown from '../../components/dropdown/SimpleDropdown';
 import Meter from '../../components/progress/Meter';
 
-const { PROTONMAIL, PROTONCONTACTS, PROTONCALENDAR, PROTONDRIVE } = APPS;
+const { PROTONACCOUNT, PROTONMAIL, PROTONCONTACTS, PROTONCALENDAR, PROTONDRIVE } = APPS;
 
 const AppsDropdown = () => {
     const [user] = useUser();
@@ -20,27 +20,18 @@ const AppsDropdown = () => {
     const spaceHuman = `${humanSize(UsedSpace)} / ${humanSize(MaxSpace)}`;
 
     const apps = [
-        {
-            toApp: PROTONMAIL,
-            icon: 'protonmail',
-            title: 'ProtonMail',
-        },
-        {
-            toApp: PROTONCONTACTS,
-            icon: 'protoncontacts',
-            title: 'ProtonContacts',
-        },
-        {
-            toApp: PROTONCALENDAR,
-            icon: 'protoncalendar',
-            title: 'ProtonCalendar',
-        },
-        FEATURE_FLAGS.includes('drive') && {
-            toApp: PROTONDRIVE,
-            icon: 'protondrive',
-            title: 'ProtonDrive',
-        },
-    ].filter(isTruthy);
+        PROTONMAIL,
+        PROTONCONTACTS,
+        PROTONCALENDAR,
+        FEATURE_FLAGS.includes('drive') && PROTONDRIVE,
+        PROTONACCOUNT,
+    ]
+        .filter(isTruthy)
+        .map((app) => ({
+            toApp: app,
+            icon: APPS_CONFIGURATION[app].icon,
+            title: APPS_CONFIGURATION[app].name,
+        }));
 
     return (
         <SimpleDropdown
