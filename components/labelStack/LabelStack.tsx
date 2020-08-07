@@ -19,7 +19,7 @@ interface Props {
     className?: string;
 }
 
-const LabelStack = ({ labels, showDelete = true, isStacked = true, maxNumber, className }: Props) => (
+const LabelStack = ({ labels, showDelete = true, isStacked = false, maxNumber, className }: Props) => (
     <ul
         className={classnames([
             'label-stack unstyled m0 inline-flex flew-row flex-nowrap flex-items-center stop-propagation',
@@ -29,13 +29,13 @@ const LabelStack = ({ labels, showDelete = true, isStacked = true, maxNumber, cl
     >
         {labels.slice(0, maxNumber).map((label: LabelDescription) => (
             <li
-                className="label-stack-item flex flex-row flex-items-center flex-nowrap"
+                className="label-stack-item flex flex-row flex-items-center flex-justify-start flex-nowrap"
                 style={{ '--color': label.color }}
                 key={label.name}
             >
                 <button
                     type="button"
-                    className="label-stack-item-button ellipsis color-white"
+                    className="label-stack-item-button ellipsis"
                     onClick={label.onClick}
                     title={label.title}
                 >
@@ -45,7 +45,7 @@ const LabelStack = ({ labels, showDelete = true, isStacked = true, maxNumber, cl
                 {showDelete && (
                     <button
                         type="button"
-                        className="label-stack-item-delete flex-item-noshrink color-white"
+                        className="label-stack-item-delete flex-item-noshrink"
                         onClick={label.onDelete}
                         title={`${c('Action').t`Remove`} ${label.title}`}
                     >
