@@ -16,13 +16,15 @@ interface Props {
     showDelete?: boolean;
     isStacked?: boolean;
     maxNumber?: number;
+    className?: string;
 }
 
-const LabelStack = ({ labels, showDelete = false, isStacked = true, maxNumber }: Props) => (
+const LabelStack = ({ labels, showDelete = true, isStacked = true, maxNumber, className }: Props) => (
     <ul
         className={classnames([
             'label-stack unstyled m0 inline-flex flew-row flex-nowrap flex-items-center stop-propagation',
             isStacked && 'is-stacked',
+            className,
         ])}
     >
         {labels.slice(0, maxNumber).map((label: LabelDescription) => (
