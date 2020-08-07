@@ -1,6 +1,7 @@
 import React from 'react';
 import { c } from 'ttag';
 import brokenImageSvg from 'design-system/assets/img/shared/broken-image.svg';
+import brokenFileSvg from 'design-system/assets/img/shared/broken-file.svg';
 import { PrimaryButton } from '../../components/button';
 
 interface Props {
@@ -9,16 +10,13 @@ interface Props {
 }
 
 const UnsupportedPreview = ({ onSave, type = 'file' }: Props) => {
-    // TODO: change based on
-    const imageSrc = type === 'file' ? brokenImageSvg : brokenImageSvg;
-    const text =
-        type === 'file' ? c('Info').t`Preview for this file is unsupported.` : c('Info').t`No preview available.`;
+    const imageSrc = type === 'file' ? brokenFileSvg : brokenImageSvg;
 
     return (
         <div className="pd-file-preview-container">
             <div className="centered-absolute aligncenter">
                 <img className="mb0-5" src={imageSrc} alt={c('Info').t`Unsupported file`} />
-                <div className="p0-25">{text}</div>
+                <div className="p0-25">{c('Info').t`No preview available.`}</div>
                 {onSave && <PrimaryButton onClick={onSave} className="mt2">{c('Action').t`Download`}</PrimaryButton>}
             </div>
         </div>
