@@ -13,8 +13,7 @@ import loginWithFallback from 'proton-shared/lib/authentication/loginWithFallbac
 import { withAuthHeaders } from 'proton-shared/lib/fetch/headers';
 import { persistSession } from 'proton-shared/lib/authentication/helper';
 import { getAuthTypes, handleUnlockKey } from './helper';
-import { useApi } from '../../index';
-import { OnLoginCallback } from '../app/interface';
+import { OnLoginCallback, useApi } from '../../index';
 
 export enum FORM {
     LOGIN,

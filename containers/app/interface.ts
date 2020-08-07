@@ -7,14 +7,17 @@ export interface OnLoginCallbackArguments {
     keyPassword?: string;
     User?: tsUser;
     LocalID?: number;
+    pathname?: string;
 }
+export type ProtonLoginCallback = (data: OnLoginCallbackArguments) => void;
 export type OnLoginCallback = (data: OnLoginCallbackArguments) => Promise<void>;
 
 export interface PrivateAuthenticationStore extends AuthenticationStore {
     UID: string;
+    localID?: number;
     logout: () => void;
 }
 
 export interface PublicAuthenticationStore {
-    login: OnLoginCallback;
+    login: ProtonLoginCallback;
 }

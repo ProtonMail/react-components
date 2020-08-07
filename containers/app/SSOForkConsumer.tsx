@@ -10,11 +10,11 @@ import {
     useApi,
     useNotifications,
     StandardLoadError,
-    OnLoginCallbackArguments,
+    ProtonLoginCallback,
 } from '../../index';
 
 interface Props {
-    onLogin: (args: OnLoginCallbackArguments, pathname: string) => void;
+    onLogin: ProtonLoginCallback;
     onInvalidFork: () => void;
 }
 
@@ -33,9 +33,9 @@ const SSOForkConsumer = ({ onLogin, onInvalidFork }: Props) => {
             }
             await loadOpenPGP();
             try {
-                const { pathname, ...authResponse } = await consumeFork({ selector, api: silentApi, state });
+                const authResponse = await consumeFork({ selector, api: silentApi, state });
                 await persistSession({ api: silentApi, ...authResponse });
-                return onLogin(authResponse, pathname);
+                return onLogin(authResponse);
             } catch (e) {
                 if (e instanceof InvalidForkConsumeError) {
                     return onInvalidFork();

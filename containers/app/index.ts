@@ -9,6 +9,7 @@ export { default as StandardLoadError } from './StandardLoadError';
 export { default as StandardPrivateApp } from './StandardPrivateApp';
 export { default as StandardPublicApp } from './StandardPublicApp';
 export { default as SSOForkProducer } from './SSOForkProducer';
+export { default as Signout } from './Signout';
 export { default as StandardSetup } from './StandardSetup';
 export { default as TopBanner } from './TopBanner';
 export { default as TopBanners } from './TopBanners';

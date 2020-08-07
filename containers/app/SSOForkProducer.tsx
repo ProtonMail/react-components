@@ -29,8 +29,8 @@ const SSOForkProducer = ({ onSwitchSession, onInvalidFork }: Props) => {
             await loadOpenPGP();
             // Show the account switcher if no specific id
             if (localID === undefined) {
-                const activeSessions = await getActiveSessions(silentApi);
-                return onSwitchSession({ app, state, sessionKey }, activeSessions);
+                const { sessions } = await getActiveSessions(silentApi);
+                return onSwitchSession({ app, state, sessionKey }, sessions);
             }
             try {
                 // Resume session and produce the fork
@@ -45,8 +45,8 @@ const SSOForkProducer = ({ onSwitchSession, onInvalidFork }: Props) => {
                 });
             } catch (e) {
                 if (e instanceof InvalidPersistentSessionError || getIs401Error(e)) {
-                    const activeSessions = await getActiveSessions(silentApi);
-                    onSwitchSession({ app, state, sessionKey }, activeSessions);
+                    const { sessions } = await getActiveSessions(silentApi);
+                    onSwitchSession({ app, state, sessionKey }, sessions);
                     return;
                 }
                 throw e;
@@ -67,7 +67,7 @@ const SSOForkProducer = ({ onSwitchSession, onInvalidFork }: Props) => {
     if (loading) {
         return (
             <>
-                <LoaderPage />;
+                <LoaderPage />
                 <ModalsChildren />
             </>
         );

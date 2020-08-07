@@ -1,17 +1,28 @@
-import React, { useState, useCallback, useRef, useMemo } from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
+import React, { useState, useCallback, useRef, useMemo, useEffect } from 'react';
+import { Router } from 'react-router';
+import { createBrowserHistory as createHistory } from 'history';
 import createAuthentication from 'proton-shared/lib/authentication/createAuthenticationStore';
 import createCache, { Cache } from 'proton-shared/lib/helpers/cache';
 import { formatUser, UserModel } from 'proton-shared/lib/models/userModel';
 import { STATUS } from 'proton-shared/lib/models/cache';
 import createSecureSessionStorage from 'proton-shared/lib/authentication/createSecureSessionStorage';
 import createSecureSessionStorage2 from 'proton-shared/lib/authentication/createSecureSessionStorage2';
-import { PUBLIC_PATH, isSSOMode, MAILBOX_PASSWORD_KEY, UID_KEY } from 'proton-shared/lib/constants';
-import { stripLeadingAndTrailingSlash } from 'proton-shared/lib/helpers/string';
+import {
+    isSSOMode,
+    MAILBOX_PASSWORD_KEY,
+    UID_KEY,
+    SSO_AUTHORIZE_PATH,
+    SSO_FORK_PATH,
+    APPS,
+    SSO_SWITCH_PATH,
+} from 'proton-shared/lib/constants';
 import { getPersistedSession } from 'proton-shared/lib/authentication/session';
-import { getLocalIDFromPathname, getLocalIDPath } from 'proton-shared/lib/authentication/helper';
+import { getBasename, getLocalIDFromPathname } from 'proton-shared/lib/authentication/helper';
 import { ProtonConfig } from 'proton-shared/lib/interfaces';
+import { replaceUrl } from 'proton-shared/lib/helpers/browser';
+import { getAppHref } from 'proton-shared/lib/apps/helper';
 
+import Signout from './Signout';
 import CompatibilityCheck from './CompatibilityCheck';
 import Icons from '../../components/icon/Icons';
 import ConfigProvider from '../config/Provider';
@@ -31,6 +42,7 @@ interface Props {
     config: ProtonConfig;
     children: React.ReactNode;
 }
+
 const ProtonApp = ({ config, children }: Props) => {
     const authentication = useInstance(() => {
         if (isSSOMode) {
@@ -38,23 +50,42 @@ const ProtonApp = ({ config, children }: Props) => {
         }
         return createAuthentication(createSecureSessionStorage([MAILBOX_PASSWORD_KEY, UID_KEY]));
     });
+    const pathnameRef = useRef<string | undefined>();
     const cacheRef = useRef<Cache<string, any>>();
     if (!cacheRef.current) {
         cacheRef.current = createCache<string, any>();
     }
-    const [UID, setUID] = useState(() => {
+    const [authData, setAuthData] = useState(() => {
         const UID = authentication.getUID();
         if (!isSSOMode) {
-            return UID;
+            return {
+                UID,
+                localID: undefined,
+                basename: getBasename(),
+            };
         }
-        const localID = getLocalIDFromPathname(window.location.pathname);
+        const pathname = window.location.pathname;
+        if (
+            pathname.startsWith(SSO_FORK_PATH) ||
+            pathname.startsWith(SSO_AUTHORIZE_PATH) ||
+            pathname.startsWith(SSO_SWITCH_PATH)
+        ) {
+            // Special routes which should never be logged in
+            return;
+        }
+        const localID = getLocalIDFromPathname(pathname);
         if (localID === undefined) {
             return;
         }
         const oldLocalId = authentication.getLocalID();
+        const oldPersistedSession = getPersistedSession(oldLocalId);
         // Current session is active and actual
-        if (UID && localID === oldLocalId) {
-            return UID;
+        if (oldPersistedSession?.UID === UID && localID === oldLocalId) {
+            return {
+                UID,
+                localID,
+                basename: getBasename(localID),
+            };
         }
         const persistedSession = getPersistedSession(localID);
         const persistedUID = persistedSession?.UID;
@@ -66,10 +97,14 @@ const ProtonApp = ({ config, children }: Props) => {
         authentication.setUID(persistedUID);
         authentication.setTmpPersistedSession(persistedSession);
         authentication.setLocalID(localID);
-        return persistedUID;
+        return {
+            UID: persistedUID,
+            localID,
+            basename: getBasename(localID),
+        };
     });
 
-    const handleLogin = useCallback(({ UID: newUID, EventID, keyPassword, User, LocalID: newLocalID }) => {
+    const handleLogin = useCallback(({ UID: newUID, EventID, keyPassword, User, LocalID: newLocalID, pathname }) => {
         authentication.setUID(newUID);
         authentication.setPassword(keyPassword);
         authentication.setLocalID(newLocalID);
@@ -91,11 +126,22 @@ const ProtonApp = ({ config, children }: Props) => {
         setTmpEventID(cache, EventID);
 
         cacheRef.current = cache;
+        pathnameRef.current = pathname || '/';
 
-        setUID(newUID);
+        setAuthData({
+            UID: newUID,
+            localID: newLocalID,
+            basename: getBasename(newLocalID),
+        });
     }, []);
 
+    const [isFinalizeLogout, setIsFinalizeLogout] = useState(false);
+
     const handleLogout = useCallback(() => {
+        setIsFinalizeLogout(true);
+    }, []);
+
+    const handleFinalizeLogout = useCallback(() => {
         authentication.setUID(undefined);
         authentication.setPassword(undefined);
 
@@ -107,9 +153,15 @@ const ProtonApp = ({ config, children }: Props) => {
         }
 
         cacheRef.current = createCache<string, any>();
+        pathnameRef.current = '/';
 
-        setUID(undefined);
+        if (isSSOMode) {
+            return replaceUrl(getAppHref('/login', APPS.PROTONACCOUNT));
+        }
+        setAuthData(undefined);
     }, []);
+
+    const { UID, basename, localID } = authData || {};
 
     const authenticationValue = useMemo(() => {
         if (!UID) {
@@ -119,19 +171,37 @@ const ProtonApp = ({ config, children }: Props) => {
         }
         return {
             UID,
+            localID,
             ...authentication,
             logout: handleLogout,
         };
     }, [UID]);
 
-    const basename = useMemo(() => {
-        if (!isSSOMode) {
-            const strippedPath = stripLeadingAndTrailingSlash(PUBLIC_PATH);
-            return strippedPath ? `/${strippedPath}` : undefined;
-        }
-        const localID = authentication.getLocalID();
-        return UID && localID !== undefined ? `/${getLocalIDPath(localID)}` : '';
+    const history = useMemo(() => {
+        return createHistory({ basename });
     }, [UID]);
+
+    const [, setRerender] = useState<any>();
+    useEffect(() => {
+        if (pathnameRef.current !== undefined) {
+            // This is to avoid a race condition where the path cannot be replaced imperatively in login or logout
+            // because the context will re-render the public app and redirect to a wrong url
+            // and while there is a redirect to consume the children are not rendered to avoid the default redirects triggering
+            history.replace(pathnameRef.current);
+            pathnameRef.current = undefined;
+            setRerender({});
+        }
+    }, [pathnameRef.current, history]);
+
+    const render = () => {
+        if (isFinalizeLogout) {
+            return <Signout onDone={handleFinalizeLogout} />;
+        }
+        if (pathnameRef.current) {
+            return null;
+        }
+        return children;
+    };
 
     return (
         <ConfigProvider config={config}>
@@ -140,13 +210,13 @@ const ProtonApp = ({ config, children }: Props) => {
                 <MimeIcons />
                 <RightToLeftProvider>
                     <React.Fragment key={UID}>
-                        <Router basename={basename}>
+                        <Router history={history}>
                             <PreventLeaveProvider>
                                 <NotificationsProvider>
                                     <ModalsProvider>
                                         <ApiProvider UID={UID} config={config} onLogout={handleLogout}>
                                             <AuthenticationProvider store={authenticationValue}>
-                                                <CacheProvider cache={cacheRef.current}>{children}</CacheProvider>
+                                                <CacheProvider cache={cacheRef.current}>{render()}</CacheProvider>
                                             </AuthenticationProvider>
                                         </ApiProvider>
                                     </ModalsProvider>

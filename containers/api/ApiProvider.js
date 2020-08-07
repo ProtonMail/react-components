@@ -12,7 +12,7 @@ import { getDateHeader } from 'proton-shared/lib/fetch/helpers';
 import { API_CUSTOM_ERROR_CODES } from 'proton-shared/lib/errors';
 import { updateServerTime } from 'pmcrypto';
 import { c } from 'ttag';
-import { getApiError, getApiErrorMessage, getIs401Error } from 'proton-shared/lib/api/helpers/apiErrorHelper';
+import { getApiError, getApiErrorMessage } from 'proton-shared/lib/api/helpers/apiErrorHelper';
 
 import ApiContext from './apiContext';
 import useNotifications from '../notifications/useNotifications';
@@ -77,7 +77,7 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
                 throw e;
             }
 
-            if (getIs401Error(e)) {
+            if (e.name === 'InactiveSession') {
                 onLogout();
                 throw e;
             }

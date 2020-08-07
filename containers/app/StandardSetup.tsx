@@ -1,12 +1,12 @@
-import React, { FunctionComponent, useEffect, useState } from 'react';
-import { APPS, isSSOMode, isStandaloneMode } from 'proton-shared/lib/constants';
+import React, { FunctionComponent } from 'react';
+import { APPS, isSSOMode, isStandaloneMode, SSO_FORK_PATH } from 'proton-shared/lib/constants';
 import { TtagLocaleMap } from 'proton-shared/lib/interfaces/Locale';
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { replaceUrl } from 'proton-shared/lib/helpers/browser';
 import { getAppHref } from 'proton-shared/lib/apps/helper';
 import { requestFork } from 'proton-shared/lib/authentication/forking';
 import StandalonePublicApp from './StandalonePublicApp';
-import { Loader, OnLoginCallbackArguments, useAuthentication, useConfig } from '../../index';
+import { Loader, useAuthentication, useConfig } from '../../index';
 import { PrivateAuthenticationStore, PublicAuthenticationStore } from './interface';
 import SSOPublicApp from './SSOPublicApp';
 import SSOForkConsumer from './SSOForkConsumer';
@@ -21,28 +21,12 @@ interface Props {
     PrivateApp: FunctionComponent<{ onLogout: () => void; locales: TtagLocaleMap }>;
 }
 
-const RedirectOnce = ({ to, onDone }: { to: string; onDone: () => void }) => {
-    useEffect(onDone, []);
-    return <Redirect to={to} />;
-};
-
 const StandardSetup = ({ locales, PrivateApp }: Props) => {
-    // Force for now
-    const { UID, login, logout } = useAuthentication() as PublicAuthenticationStore & PrivateAuthenticationStore;
     const { APP_NAME } = useConfig();
-    const [toPathname, setToPathname] = useState<string | undefined>();
+
+    const { UID, logout, login } = useAuthentication() as PublicAuthenticationStore & PrivateAuthenticationStore;
 
     if (UID) {
-        if (toPathname) {
-            return (
-                <RedirectOnce
-                    to={toPathname}
-                    onDone={() => {
-                        setToPathname(undefined);
-                    }}
-                />
-            );
-        }
         return <PrivateApp locales={locales} onLogout={logout} />;
     }
 
@@ -54,14 +38,10 @@ const StandardSetup = ({ locales, PrivateApp }: Props) => {
         const handleInactiveSession = (localID?: number) => {
             return requestFork(APP_NAME, localID);
         };
-        const handleLogin = (args: OnLoginCallbackArguments, pathname: string) => {
-            setToPathname(`/${pathname}`);
-            return login(args);
-        };
         return (
             <Switch>
-                <Route path="/fork">
-                    <SSOForkConsumer onInvalidFork={handleInvalidFork} onLogin={handleLogin} />
+                <Route path={SSO_FORK_PATH}>
+                    <SSOForkConsumer onInvalidFork={handleInvalidFork} onLogin={login} />
                 </Route>
                 <Route path="*">
                     <SSOPublicApp onLogin={login} onInactiveSession={handleInactiveSession} />
@@ -70,7 +50,7 @@ const StandardSetup = ({ locales, PrivateApp }: Props) => {
         );
     }
 
-    if (isStandaloneMode) {
+    if (isStandaloneMode || document.location.pathname === '/') {
         return <StandalonePublicApp locales={locales} onLogin={login} />;
     }
 

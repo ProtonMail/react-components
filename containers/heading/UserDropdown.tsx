@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
-import { revoke } from 'proton-shared/lib/api/auth';
 import { APPS, PLANS } from 'proton-shared/lib/constants';
 import { getPlanName } from 'proton-shared/lib/helpers/subscription';
 import { getAccountSettingsApp } from 'proton-shared/lib/apps/helper';
@@ -10,7 +9,6 @@ import {
     useAuthentication,
     useModals,
     usePopperAnchor,
-    useApi,
     Icon,
     Dropdown,
     DonateModal,
@@ -27,7 +25,6 @@ const { PROFESSIONAL, VISIONARY } = PLANS;
 
 const UserDropdown = ({ ...rest }) => {
     const { APP_NAME } = useConfig();
-    const api = useApi();
     const [user] = useUser();
     const { DisplayName, Email, Name } = user;
     const [{ Name: organizationName } = { Name: '' }] = useOrganization();
@@ -43,7 +40,6 @@ const UserDropdown = ({ ...rest }) => {
     };
 
     const handleLogout = () => {
-        api(revoke()); // Kick off the revoke request, but don't care for the result.
         logout();
     };
 
@@ -79,7 +75,7 @@ const UserDropdown = ({ ...rest }) => {
                         <li className="dropDown-item">
                             <AppLink
                                 className="w100 flex flex-nowrap dropDown-item-link nodecoration pl1 pr1 pt0-5 pb0-5"
-                                to="/settings"
+                                to="/"
                                 toApp={getAccountSettingsApp()}
                             >
                                 <Icon className="mt0-25 mr0-5" name="settings-master" />

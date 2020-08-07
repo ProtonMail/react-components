@@ -3,13 +3,12 @@ import { InvalidPersistentSessionError } from 'proton-shared/lib/authentication/
 import { getLocalIDFromPathname, resumeSession } from 'proton-shared/lib/authentication/helper';
 import { getApiErrorMessage, getIs401Error } from 'proton-shared/lib/api/helpers/apiErrorHelper';
 import { loadOpenPGP } from 'proton-shared/lib/openpgp';
-import { OnLoginCallback } from './interface';
 import LoaderPage from './LoaderPage';
 import ModalsChildren from '../modals/Children';
-import { StandardLoadError, useApi, useNotifications } from '../../index';
+import { ProtonLoginCallback, StandardLoadError, useApi, useNotifications } from '../../index';
 
 interface Props {
-    onLogin: OnLoginCallback;
+    onLogin: ProtonLoginCallback;
     onInactiveSession: (localID?: number) => void;
 }
 const SSOPublicApp = ({ onLogin, onInactiveSession }: Props) => {
