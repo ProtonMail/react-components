@@ -10,7 +10,7 @@ import { queryAddresses } from 'proton-shared/lib/api/addresses';
 import { Address } from 'proton-shared/lib/interfaces';
 import { generateKeySaltAndPassphrase } from 'proton-shared/lib/keys/keys';
 import { getResetAddressesKeys } from 'proton-shared/lib/keys/resetKeys';
-import { persistSession } from 'proton-shared/lib/authentication/helper';
+import { persistSession } from 'proton-shared/lib/authentication/persistedSessionHelper';
 import { useHistory } from 'react-router-dom';
 import {
     queryCheckUsernameAvailability,

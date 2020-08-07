@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { InvalidPersistentSessionError } from 'proton-shared/lib/authentication/error';
-import { getLocalIDFromPathname, resumeSession } from 'proton-shared/lib/authentication/helper';
+import { getLocalIDFromPathname } from 'proton-shared/lib/authentication/pathnameHelper';
+import { resumeSession } from 'proton-shared/lib/authentication/persistedSessionHelper';
 import { getApiErrorMessage, getIs401Error } from 'proton-shared/lib/api/helpers/apiErrorHelper';
 import { loadOpenPGP } from 'proton-shared/lib/openpgp';
+
 import LoaderPage from './LoaderPage';
 import ModalsChildren from '../modals/Children';
 import { ProtonLoginCallback, StandardLoadError, useApi, useNotifications } from '../../index';
@@ -12,7 +14,6 @@ interface Props {
     onInactiveSession: (localID?: number) => void;
 }
 const SSOPublicApp = ({ onLogin, onInactiveSession }: Props) => {
-    const [loading] = useState(true);
     const [error, setError] = useState<Error | undefined>();
     const normalApi = useApi();
     const silentApi = <T,>(config: any) => normalApi<T>({ ...config, silence: true });
@@ -48,16 +49,12 @@ const SSOPublicApp = ({ onLogin, onInactiveSession }: Props) => {
         return <StandardLoadError />;
     }
 
-    if (loading) {
-        return (
-            <>
-                <LoaderPage />
-                <ModalsChildren />
-            </>
-        );
-    }
-
-    return null;
+    return (
+        <>
+            <LoaderPage />
+            <ModalsChildren />
+        </>
+    );
 };
 
 export default SSOPublicApp;

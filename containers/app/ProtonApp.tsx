@@ -16,8 +16,8 @@ import {
     APPS,
     SSO_SWITCH_PATH,
 } from 'proton-shared/lib/constants';
-import { getPersistedSession } from 'proton-shared/lib/authentication/session';
-import { getBasename, getLocalIDFromPathname } from 'proton-shared/lib/authentication/helper';
+import { getPersistedSession } from 'proton-shared/lib/authentication/persistedSessionStorage';
+import { getBasename, getLocalIDFromPathname } from 'proton-shared/lib/authentication/pathnameHelper';
 import { ProtonConfig } from 'proton-shared/lib/interfaces';
 import { replaceUrl } from 'proton-shared/lib/helpers/browser';
 import { getAppHref } from 'proton-shared/lib/apps/helper';
@@ -159,6 +159,7 @@ const ProtonApp = ({ config, children }: Props) => {
             return replaceUrl(getAppHref('/login', APPS.PROTONACCOUNT));
         }
         setAuthData(undefined);
+        setIsFinalizeLogout(false);
     }, []);
 
     const { UID, basename, localID } = authData || {};

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { loadOpenPGP } from 'proton-shared/lib/openpgp';
 import { InvalidForkConsumeError } from 'proton-shared/lib/authentication/error';
-import { consumeFork, getConsumeForkParameters } from 'proton-shared/lib/authentication/forking';
-import { persistSession } from 'proton-shared/lib/authentication/helper';
+import { consumeFork, getConsumeForkParameters } from 'proton-shared/lib/authentication/sessionForking';
+import { persistSession } from 'proton-shared/lib/authentication/persistedSessionHelper';
 import { getApiErrorMessage } from 'proton-shared/lib/api/helpers/apiErrorHelper';
 import {
     LoaderPage,
@@ -19,7 +19,6 @@ interface Props {
 }
 
 const SSOForkConsumer = ({ onLogin, onInvalidFork }: Props) => {
-    const [loading] = useState(true);
     const [error, setError] = useState<Error | undefined>();
     const normalApi = useApi();
     const silentApi = <T,>(config: any) => normalApi<T>({ ...config, silence: true });
@@ -56,16 +55,12 @@ const SSOForkConsumer = ({ onLogin, onInvalidFork }: Props) => {
         return <StandardLoadError />;
     }
 
-    if (loading) {
-        return (
-            <>
-                <LoaderPage />
-                <ModalsChildren />
-            </>
-        );
-    }
-
-    return null;
+    return (
+        <>
+            <LoaderPage />
+            <ModalsChildren />
+        </>
+    );
 };
 
 export default SSOForkConsumer;

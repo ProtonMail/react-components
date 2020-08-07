@@ -2,7 +2,8 @@ import React, { FunctionComponent, useEffect, useState } from 'react';
 import { c } from 'ttag';
 import { useHistory } from 'react-router-dom';
 
-import { getActiveSessions, resumeSession } from 'proton-shared/lib/authentication/helper';
+import { resumeSession, getActiveSessions } from 'proton-shared/lib/authentication/persistedSessionHelper';
+import { getPersistedSession, removePersistedSession } from 'proton-shared/lib/authentication/persistedSessionStorage';
 import { InvalidPersistentSessionError } from 'proton-shared/lib/authentication/error';
 import { LocalSessionResponse } from 'proton-shared/lib/authentication/interface';
 import { getInitial } from 'proton-shared/lib/helpers/string';
@@ -10,7 +11,6 @@ import { APP_NAMES, APPS_CONFIGURATION } from 'proton-shared/lib/constants';
 import { wait } from 'proton-shared/lib/helpers/promise';
 import { withUIDHeaders } from 'proton-shared/lib/fetch/headers';
 import { revoke } from 'proton-shared/lib/api/auth';
-import { getPersistedSession, removePersistedSession } from 'proton-shared/lib/authentication/session';
 import { getApiErrorMessage } from 'proton-shared/lib/api/helpers/apiErrorHelper';
 
 import {

@@ -4,7 +4,7 @@ import { TtagLocaleMap } from 'proton-shared/lib/interfaces/Locale';
 import { Route, Switch } from 'react-router-dom';
 import { replaceUrl } from 'proton-shared/lib/helpers/browser';
 import { getAppHref } from 'proton-shared/lib/apps/helper';
-import { requestFork } from 'proton-shared/lib/authentication/forking';
+import { requestFork } from 'proton-shared/lib/authentication/sessionForking';
 import StandalonePublicApp from './StandalonePublicApp';
 import { Loader, useAuthentication, useConfig } from '../../index';
 import { PrivateAuthenticationStore, PublicAuthenticationStore } from './interface';

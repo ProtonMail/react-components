@@ -11,7 +11,7 @@ import { HTTP_ERROR_CODES } from 'proton-shared/lib/errors';
 import { AuthResponse, AuthVersion, InfoResponse } from 'proton-shared/lib/authentication/interface';
 import loginWithFallback from 'proton-shared/lib/authentication/loginWithFallback';
 import { withAuthHeaders } from 'proton-shared/lib/fetch/headers';
-import { persistSession } from 'proton-shared/lib/authentication/helper';
+import { persistSession } from 'proton-shared/lib/authentication/persistedSessionHelper';
 import { getAuthTypes, handleUnlockKey } from './helper';
 import { OnLoginCallback, useApi } from '../../index';
 

@@ -12,7 +12,7 @@ import { LocalKeyResponse } from 'proton-shared/lib/authentication/interface';
 import { getLocalKey } from 'proton-shared/lib/api/auth';
 import { InvalidPersistentSessionError } from 'proton-shared/lib/authentication/error';
 import { TtagLocaleMap } from 'proton-shared/lib/interfaces/Locale';
-import { getDecryptedPersistedSessionBlob } from 'proton-shared/lib/authentication/session';
+import { getDecryptedPersistedSessionBlob } from 'proton-shared/lib/authentication/persistedSessionStorage';
 import { getIs401Error } from 'proton-shared/lib/api/helpers/apiErrorHelper';
 
 import {

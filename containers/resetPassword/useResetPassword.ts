@@ -7,7 +7,7 @@ import { srpAuth, srpVerify } from 'proton-shared/lib/srp';
 import { resetKeysRoute } from 'proton-shared/lib/api/keys';
 import { Address } from 'proton-shared/lib/interfaces';
 import { auth } from 'proton-shared/lib/api/auth';
-import { persistSession } from 'proton-shared/lib/authentication/helper';
+import { persistSession } from 'proton-shared/lib/authentication/persistedSessionHelper';
 import { AuthResponse } from 'proton-shared/lib/authentication/interface';
 import { useApi, useLoading, useNotifications, OnLoginCallback } from '../../index';
 

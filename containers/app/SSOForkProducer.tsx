@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { loadOpenPGP } from 'proton-shared/lib/openpgp';
-import { getActiveSessions, resumeSession } from 'proton-shared/lib/authentication/helper';
-import { getProduceForkParameters, produceFork, ProduceForkParameters } from 'proton-shared/lib/authentication/forking';
+import { getActiveSessions, resumeSession } from 'proton-shared/lib/authentication/persistedSessionHelper';
+import {
+    getProduceForkParameters,
+    produceFork,
+    ProduceForkParameters,
+} from 'proton-shared/lib/authentication/sessionForking';
 import { InvalidPersistentSessionError } from 'proton-shared/lib/authentication/error';
 import { LocalSessionResponse } from 'proton-shared/lib/authentication/interface';
 import { getApiErrorMessage, getIs401Error } from 'proton-shared/lib/api/helpers/apiErrorHelper';
@@ -13,7 +17,6 @@ interface Props {
 }
 
 const SSOForkProducer = ({ onSwitchSession, onInvalidFork }: Props) => {
-    const [loading] = useState(true);
     const [error, setError] = useState<Error | undefined>();
     const normalApi = useApi();
     const silentApi = <T,>(config: any) => normalApi<T>({ ...config, silence: true });
@@ -64,16 +67,12 @@ const SSOForkProducer = ({ onSwitchSession, onInvalidFork }: Props) => {
         return <StandardLoadError />;
     }
 
-    if (loading) {
-        return (
-            <>
-                <LoaderPage />
-                <ModalsChildren />
-            </>
-        );
-    }
-
-    return null;
+    return (
+        <>
+            <LoaderPage />
+            <ModalsChildren />
+        </>
+    );
 };
 
 export default SSOForkProducer;
