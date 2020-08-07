@@ -1,4 +1,7 @@
 import React, { MouseEvent } from 'react';
+import { c } from 'ttag';
+import { classnames } from '../../helpers/component';
+import Icon from '../icon/Icon';
 
 export interface LabelDescription {
     name: string;
@@ -16,28 +19,45 @@ interface Props {
 }
 
 const LabelStack = ({ labels, showDelete = false, isStacked = true, maxNumber }: Props) => (
-    <div
-        className="inline-flex mw100 flew-row flex-nowrap flex-items-center pm-badgeLabel-container stop-propagation pm-badgeLabel-container--collapsed"
-        role="list"
+    <ul
+        className={classnames([
+            'label-stack unstyled m0 inline-flex flew-row flex-nowrap flex-items-center stop-propagation',
+            isStacked && 'is-stacked',
+        ])}
     >
         {labels.slice(0, maxNumber).map((label: LabelDescription) => (
-            <span
-                className="badgeLabel flex flex-row flex-items-center"
-                style={{
-                    color: label.color,
-                }}
+            <li
+                className="label-stack-item flex flex-row flex-items-center flex-nowrap"
+                style={{ '--color': label.color }}
                 key={label.name}
-                onClick={label.onClick}
-                title={label.title}
             >
-                <span className="pm-badgeLabel-link ellipsis mw100 color-white nodecoration">
+                <button
+                    type="button"
+                    className="label-stack-item-button ellipsis color-white"
+                    onClick={label.onClick}
+                    title={label.title}
+                >
                     {label.name}
-                    {showDelete}
-                    {isStacked}
-                </span>
-            </span>
+                </button>
+
+                {showDelete && (
+                    <button
+                        type="button"
+                        className="label-stack-item-delete flex-item-noshrink color-white"
+                        onClick={label.onDelete}
+                        title={`${c('Action').t`Remove`} ${label.title}`}
+                    >
+                        <Icon
+                            name="close"
+                            size={12}
+                            className="label-stack-item-delete-icon"
+                            alt={c('Action').t`Remove`}
+                        />
+                    </button>
+                )}
+            </li>
         ))}
-    </div>
+    </ul>
 );
 
 export default LabelStack;
