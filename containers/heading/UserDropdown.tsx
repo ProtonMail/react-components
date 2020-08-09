@@ -1,21 +1,23 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
-import { APPS, isSSOMode, PLANS, SSO_SWITCH_PATH } from 'proton-shared/lib/constants';
+import { APPS, isSSOMode, PLANS, SSO_PATHS } from 'proton-shared/lib/constants';
 import { getPlanName } from 'proton-shared/lib/helpers/subscription';
 import { getAccountSettingsApp, getAppHref } from 'proton-shared/lib/apps/helper';
+import { requestFork } from 'proton-shared/lib/authentication/sessionForking';
+import { FORK_TYPE } from 'proton-shared/lib/authentication/ForkInterface';
 import {
-    useUser,
-    useOrganization,
-    useAuthentication,
-    useModals,
-    usePopperAnchor,
-    Icon,
-    Dropdown,
     DonateModal,
+    Dropdown,
     generateUID,
+    Icon,
     PrimaryButton,
+    useAuthentication,
     useConfig,
+    useModals,
+    useOrganization,
+    usePopperAnchor,
     useSubscription,
+    useUser,
 } from '../..';
 
 import UserDropdownButton from './UserDropdownButton';
@@ -40,9 +42,11 @@ const UserDropdown = ({ ...rest }) => {
     };
 
     const handleSwitchAccount = () => {
-        // Always force a refresh, just so that the logged in account isn't used
-        const href = getAppHref(SSO_SWITCH_PATH, APPS.PROTONACCOUNT);
-        return document.location.assign(href);
+        if (APP_NAME === APPS.PROTONACCOUNT) {
+            const href = getAppHref(SSO_PATHS.SWITCH, APPS.PROTONACCOUNT);
+            return document.location.assign(href);
+        }
+        return requestFork(APP_NAME, undefined, FORK_TYPE.SWITCH);
     };
 
     const handleLogout = () => {

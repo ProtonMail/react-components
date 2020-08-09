@@ -7,17 +7,13 @@ import { formatUser, UserModel } from 'proton-shared/lib/models/userModel';
 import { STATUS } from 'proton-shared/lib/models/cache';
 import createSecureSessionStorage from 'proton-shared/lib/authentication/createSecureSessionStorage';
 import createSecureSessionStorage2 from 'proton-shared/lib/authentication/createSecureSessionStorage2';
-import {
-    isSSOMode,
-    MAILBOX_PASSWORD_KEY,
-    UID_KEY,
-    SSO_AUTHORIZE_PATH,
-    SSO_FORK_PATH,
-    APPS,
-    SSO_SWITCH_PATH,
-} from 'proton-shared/lib/constants';
+import { isSSOMode, MAILBOX_PASSWORD_KEY, UID_KEY, SSO_PATHS, APPS } from 'proton-shared/lib/constants';
 import { getPersistedSession } from 'proton-shared/lib/authentication/persistedSessionStorage';
-import { getBasename, getLocalIDFromPathname } from 'proton-shared/lib/authentication/pathnameHelper';
+import {
+    getBasename,
+    getLocalIDFromPathname,
+    getStrippedPathnameFromURL,
+} from 'proton-shared/lib/authentication/pathnameHelper';
 import { ProtonConfig } from 'proton-shared/lib/interfaces';
 import { replaceUrl } from 'proton-shared/lib/helpers/browser';
 import { getAppHref } from 'proton-shared/lib/apps/helper';
@@ -43,6 +39,18 @@ interface Props {
     children: React.ReactNode;
 }
 
+const getIsSSOPath = (pathname: string) => {
+    return (
+        pathname.startsWith(SSO_PATHS.FORK) ||
+        pathname.startsWith(SSO_PATHS.AUTHORIZE) ||
+        pathname.startsWith(SSO_PATHS.SWITCH) ||
+        pathname.startsWith(SSO_PATHS.LOGIN) ||
+        pathname.startsWith(SSO_PATHS.SIGNUP) ||
+        pathname.startsWith(SSO_PATHS.RESET_PASSWORD) ||
+        pathname.startsWith(SSO_PATHS.FORGOT_USERNAME)
+    );
+};
+
 const ProtonApp = ({ config, children }: Props) => {
     const authentication = useInstance(() => {
         if (isSSOMode) {
@@ -65,11 +73,7 @@ const ProtonApp = ({ config, children }: Props) => {
             };
         }
         const pathname = window.location.pathname;
-        if (
-            pathname.startsWith(SSO_FORK_PATH) ||
-            pathname.startsWith(SSO_AUTHORIZE_PATH) ||
-            pathname.startsWith(SSO_SWITCH_PATH)
-        ) {
+        if (getIsSSOPath(pathname)) {
             // Special routes which should never be logged in
             return;
         }
@@ -87,21 +91,6 @@ const ProtonApp = ({ config, children }: Props) => {
                 basename: getBasename(localID),
             };
         }
-        const persistedSession = getPersistedSession(localID);
-        const persistedUID = persistedSession?.UID;
-        // Persistent session is invalid
-        if (!persistedSession || !persistedUID) {
-            return;
-        }
-        // Persistent session to be validated
-        authentication.setUID(persistedUID);
-        authentication.setTmpPersistedSession(persistedSession);
-        authentication.setLocalID(localID);
-        return {
-            UID: persistedUID,
-            localID,
-            basename: getBasename(localID),
-        };
     });
 
     const handleLogin = useCallback(({ UID: newUID, EventID, keyPassword, User, LocalID: newLocalID, pathname }) => {
@@ -126,7 +115,9 @@ const ProtonApp = ({ config, children }: Props) => {
         setTmpEventID(cache, EventID);
 
         cacheRef.current = cache;
-        pathnameRef.current = pathname || '/';
+        const strippedPathname = getStrippedPathnameFromURL(window.location.href);
+        const newPathname = `/${pathname || strippedPathname}`;
+        pathnameRef.current = getIsSSOPath(newPathname) ? '/' : newPathname;
 
         setAuthData({
             UID: newUID,

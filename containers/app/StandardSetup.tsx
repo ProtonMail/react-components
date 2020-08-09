@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { APPS, isSSOMode, isStandaloneMode, SSO_FORK_PATH } from 'proton-shared/lib/constants';
+import { APPS, isSSOMode, isStandaloneMode, SSO_PATHS } from 'proton-shared/lib/constants';
 import { TtagLocaleMap } from 'proton-shared/lib/interfaces/Locale';
 import { Route, Switch } from 'react-router-dom';
 import { replaceUrl } from 'proton-shared/lib/helpers/browser';
@@ -24,10 +24,18 @@ interface Props {
 const StandardSetup = ({ locales, PrivateApp }: Props) => {
     const { APP_NAME } = useConfig();
 
-    const { UID, logout, login } = useAuthentication() as PublicAuthenticationStore & PrivateAuthenticationStore;
+    const { UID, logout, login, getLocalID } = useAuthentication() as PublicAuthenticationStore &
+        PrivateAuthenticationStore;
 
     if (UID) {
-        return <PrivateApp locales={locales} onLogout={logout} />;
+        const handleInactiveSession = () => {
+            // If the session becomes inactive on first load, the child session has probably expired, so request to be forked
+            if (isSSOMode) {
+                return requestFork(APP_NAME, getLocalID?.());
+            }
+            logout();
+        };
+        return <PrivateApp locales={locales} onLogout={handleInactiveSession} />;
     }
 
     if (isSSOMode) {
@@ -40,7 +48,7 @@ const StandardSetup = ({ locales, PrivateApp }: Props) => {
         };
         return (
             <Switch>
-                <Route path={SSO_FORK_PATH}>
+                <Route path={SSO_PATHS.FORK}>
                     <SSOForkConsumer onInvalidFork={handleInvalidFork} onLogin={login} />
                 </Route>
                 <Route path="*">
@@ -51,7 +59,7 @@ const StandardSetup = ({ locales, PrivateApp }: Props) => {
     }
 
     if (isStandaloneMode || document.location.pathname === '/') {
-        return <StandalonePublicApp locales={locales} onLogin={login} />;
+        return <StandalonePublicApp locales={locales} onLogin={async (data) => login(data)} />;
     }
 
     return <ReplaceToBase />;

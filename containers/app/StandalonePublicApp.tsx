@@ -1,10 +1,10 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import { TtagLocaleMap } from 'proton-shared/lib/interfaces/Locale';
-import { StandardPublicApp, MinimalLoginContainer, ProtonLoginCallback } from '../../index';
+import { StandardPublicApp, MinimalLoginContainer, OnLoginCallback } from '../../index';
 
 interface Props {
-    onLogin: ProtonLoginCallback;
+    onLogin: OnLoginCallback;
     locales: TtagLocaleMap;
 }
 const StandalonePublicApp = ({ onLogin, locales }: Props) => {

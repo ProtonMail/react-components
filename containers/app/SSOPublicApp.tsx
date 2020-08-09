@@ -31,7 +31,6 @@ const SSOPublicApp = ({ onLogin, onInactiveSession }: Props) => {
                 return onLogin(result);
             } catch (e) {
                 if (e instanceof InvalidPersistentSessionError || getIs401Error(e)) {
-                    // Persistent session inactive, redirect and re-fork
                     return onInactiveSession(localID);
                 }
                 throw e;

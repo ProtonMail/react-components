@@ -7,13 +7,8 @@ import createEventManager from 'proton-shared/lib/eventManager/eventManager';
 import { loadModels } from 'proton-shared/lib/models/helper';
 import { destroyOpenPGP, loadOpenPGP } from 'proton-shared/lib/openpgp';
 import { Model } from 'proton-shared/lib/interfaces/Model';
-import { isSSOMode } from 'proton-shared/lib/constants';
-import { LocalKeyResponse } from 'proton-shared/lib/authentication/interface';
-import { getLocalKey } from 'proton-shared/lib/api/auth';
-import { InvalidPersistentSessionError } from 'proton-shared/lib/authentication/error';
 import { TtagLocaleMap } from 'proton-shared/lib/interfaces/Locale';
-import { getDecryptedPersistedSessionBlob } from 'proton-shared/lib/authentication/persistedSessionStorage';
-import { getIs401Error } from 'proton-shared/lib/api/helpers/apiErrorHelper';
+import { getApiErrorMessage, getIs401Error } from 'proton-shared/lib/api/helpers/apiErrorHelper';
 
 import {
     EventManagerProvider,
@@ -21,9 +16,9 @@ import {
     ThemeInjector,
     DensityInjector,
     ContactProvider,
-    useAuthentication,
     useApi,
     useCache,
+    useNotifications,
 } from '../../index';
 
 import EventModelListener from '../eventManager/EventModelListener';
@@ -60,16 +55,20 @@ const StandardPrivateApp = <T, M extends Model<T>, E, EvtM extends Model<E>>({
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const eventManagerRef = useRef<ReturnType<typeof createEventManager>>();
-    const api = useApi();
+    const normalApi = useApi();
+    const silentApi = <T,>(config: any) => normalApi<T>({ ...config, silence: true });
     const cache = useCache();
-    const authentication = useAuthentication();
+    const { createNotification } = useNotifications();
 
     useEffect(() => {
-        const eventManagerPromise = loadEventID(api, cache).then((eventID) => {
-            eventManagerRef.current = createEventManager({ api, eventID });
+        const eventManagerPromise = loadEventID(silentApi, cache).then((eventID) => {
+            eventManagerRef.current = createEventManager({ api: silentApi, eventID });
         });
 
-        const modelsPromise = loadModels(unique([UserSettingsModel, UserModel, ...preloadModels]), { api, cache })
+        const modelsPromise = loadModels(unique([UserSettingsModel, UserModel, ...preloadModels]), {
+            api: silentApi,
+            cache,
+        })
             .then(([userSettings]) => {
                 return loadLocale({
                     ...getClosestMatches({ locale: userSettings.Locale, browserLocale: getBrowserLocale(), locales }),
@@ -78,32 +77,17 @@ const StandardPrivateApp = <T, M extends Model<T>, E, EvtM extends Model<E>>({
             })
             .then(() => onInit?.()); // onInit has to happen after locales have been loaded to allow applications to override it
 
-        let authPromise = Promise.resolve();
-        if (isSSOMode) {
-            const persistedSession = authentication.getTmpPersistedSession();
-            const persistedSessionBlobString = persistedSession?.blob;
-            // If there is a temporary persisted session, attempt to read it
-            if (persistedSessionBlobString) {
-                const run = async () => {
-                    const { ClientKey } = await api<LocalKeyResponse>(getLocalKey());
-                    const { keyPassword } = await getDecryptedPersistedSessionBlob(
-                        ClientKey,
-                        persistedSessionBlobString
-                    );
-                    authentication.setPassword(keyPassword);
-                };
-                authPromise = run();
-            }
-        }
-
-        Promise.all([eventManagerPromise, modelsPromise, authPromise, loadOpenPGP(openpgpConfig)])
+        Promise.all([eventManagerPromise, modelsPromise, loadOpenPGP(openpgpConfig)])
             .then(() => {
                 setLoading(false);
             })
             .catch((e) => {
-                if (getIs401Error(e) || e instanceof InvalidPersistentSessionError) {
+                if (getIs401Error(e)) {
                     return onLogout();
                 }
+                const errorMessage = getApiErrorMessage(e) || 'Unknown error';
+                createNotification({ type: 'error', text: errorMessage });
+                console.error(error);
                 setError(true);
             });
 

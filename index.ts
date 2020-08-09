@@ -1,6 +1,5 @@
 import './typings/index.d';
 import './typings/css.d';
-import useAppLink from './components/link/useAppLink';
 
 export { default as Autocomplete } from './components/autocomplete/Autocomplete';
 export { default as AutocompleteSelection } from './components/autocomplete/AutocompleteSelection';
