@@ -24,6 +24,8 @@ import Icons from '../../components/icon/Icons';
 import ConfigProvider from '../config/Provider';
 import NotificationsProvider from '../notifications/Provider';
 import ModalsProvider from '../modals/Provider';
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+// @ts-ignore
 import ApiProvider from '../api/ApiProvider';
 import CacheProvider from '../cache/Provider';
 import AuthenticationProvider from '../authentication/Provider';
