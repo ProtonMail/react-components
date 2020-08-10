@@ -29,6 +29,7 @@ const getSilenced = ({ silence } = {}, code) => {
     return !!silence;
 };
 
+/** @type any */
 const ApiProvider = ({ config, onLogout, children, UID }) => {
     const { createNotification, hideNotification } = useNotifications();
     const { createModal } = useModals();
