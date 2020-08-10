@@ -33,7 +33,9 @@ const SSOForkConsumer = ({ onLogin, onInvalidFork }: Props) => {
             await loadOpenPGP();
             try {
                 const authResponse = await consumeFork({ selector, api: silentApi, state });
-                await persistSession({ api: silentApi, ...authResponse });
+                if (authResponse.AccessToken) {
+                    await persistSession({ api: silentApi, ...authResponse });
+                }
                 return onLogin(authResponse);
             } catch (e) {
                 if (e instanceof InvalidForkConsumeError) {
