@@ -22,7 +22,7 @@ interface Props {
 const LabelStack = ({ labels, showDelete = true, isStacked = false, maxNumber, className }: Props) => (
     <ul
         className={classnames([
-            'label-stack unstyled m0 inline-flex flew-row flex-nowrap flex-items-center stop-propagation',
+            'label-stack unstyled m0 inline-flex flew-row flex-items-center stop-propagation',
             isStacked && 'is-stacked',
             className,
         ])}
