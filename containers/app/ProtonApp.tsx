@@ -8,6 +8,7 @@ import { STATUS } from 'proton-shared/lib/models/cache';
 import createSecureSessionStorage from 'proton-shared/lib/authentication/createSecureSessionStorage';
 import createSecureSessionStorage2 from 'proton-shared/lib/authentication/createSecureSessionStorage2';
 import { isSSOMode, MAILBOX_PASSWORD_KEY, UID_KEY, SSO_PATHS, APPS } from 'proton-shared/lib/constants';
+import { stripLeadingAndTrailingSlash } from 'proton-shared/lib/helpers/string';
 import { getPersistedSession } from 'proton-shared/lib/authentication/persistedSessionStorage';
 import {
     getBasename,
@@ -34,7 +35,7 @@ import { setTmpEventID } from './loadEventID';
 import clearKeyCache from './clearKeyCache';
 import useInstance from '../../hooks/useInstance';
 import { PreventLeaveProvider } from '../../hooks/usePreventLeave';
-import { MimeIcons } from '../../index';
+import { MimeIcons, OnLoginCallbackArguments } from '../../index';
 
 interface Props {
     config: ProtonConfig;
@@ -95,38 +96,46 @@ const ProtonApp = ({ config, children }: Props) => {
         }
     });
 
-    const handleLogin = useCallback(({ UID: newUID, EventID, keyPassword, User, LocalID: newLocalID, pathname }) => {
-        authentication.setUID(newUID);
-        authentication.setPassword(keyPassword);
-        authentication.setLocalID(newLocalID);
+    const handleLogin = useCallback(
+        ({ UID: newUID, EventID, keyPassword, User, LocalID: newLocalID, pathname }: OnLoginCallbackArguments) => {
+            authentication.setUID(newUID);
+            authentication.setPassword(keyPassword);
+            if (newLocalID !== undefined) {
+                authentication.setLocalID(newLocalID);
+            }
 
-        const oldCache = cacheRef.current;
-        if (oldCache) {
-            oldCache.clear();
-            oldCache.clearListeners();
-        }
-        const cache = createCache<string, any>();
+            const oldCache = cacheRef.current;
+            if (oldCache) {
+                oldCache.clear();
+                oldCache.clearListeners();
+            }
+            const cache = createCache<string, any>();
 
-        // If the user was received from the login call, pre-set it directly.
-        User &&
-            cache.set(UserModel.key, {
-                value: formatUser(User),
-                status: STATUS.RESOLVED,
+            // If the user was received from the login call, pre-set it directly.
+            User &&
+                cache.set(UserModel.key, {
+                    value: formatUser(User),
+                    status: STATUS.RESOLVED,
+                });
+
+            if (EventID !== undefined) {
+                setTmpEventID(cache, EventID);
+            }
+
+            cacheRef.current = cache;
+            const oldPathname = getStrippedPathnameFromURL(window.location.href);
+            const requestedPathname = pathname ? stripLeadingAndTrailingSlash(pathname) : '';
+            const newPathname = `/${requestedPathname || oldPathname}`;
+            pathnameRef.current = getIsSSOPath(newPathname) ? '/' : newPathname;
+
+            setAuthData({
+                UID: newUID,
+                localID: newLocalID,
+                basename: getBasename(newLocalID),
             });
-
-        setTmpEventID(cache, EventID);
-
-        cacheRef.current = cache;
-        const strippedPathname = getStrippedPathnameFromURL(window.location.href);
-        const newPathname = `/${pathname || strippedPathname}`;
-        pathnameRef.current = getIsSSOPath(newPathname) ? '/' : newPathname;
-
-        setAuthData({
-            UID: newUID,
-            localID: newLocalID,
-            basename: getBasename(newLocalID),
-        });
-    }, []);
+        },
+        []
+    );
 
     const [isFinalizeLogout, setIsFinalizeLogout] = useState(false);
 
