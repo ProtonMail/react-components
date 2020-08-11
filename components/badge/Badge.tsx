@@ -16,7 +16,7 @@ const wrapTooltip = (children: React.ReactNode, title: string, className?: strin
     </Tooltip>
 );
 
-interface Props {
+export interface Props {
     children: React.ReactNode;
     className?: string;
     tooltip?: string;
