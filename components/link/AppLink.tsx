@@ -1,10 +1,6 @@
 import React from 'react';
 import { Link as ReactRouterLink } from 'react-router-dom';
-import {
-    APP_NAMES,
-    isSSOMode,
-    isStandaloneMode
-} from 'proton-shared/lib/constants';
+import { APP_NAMES, isSSOMode, isStandaloneMode } from 'proton-shared/lib/constants';
 import { getAppHref, getAppHrefBundle } from 'proton-shared/lib/apps/helper';
 
 import Href, { Props as HrefProps } from './Href';
@@ -24,7 +20,9 @@ const AppLink = ({ to, toApp, children, ...rest }: Props) => {
             const localID = authentication.getLocalID?.();
             const href = getAppHref(to, toApp, localID);
             return (
-                <Href target="_blank" {...rest} href={href}>{children}</Href>
+                <Href target="_blank" {...rest} href={href}>
+                    {children}
+                </Href>
             );
         }
         if (isStandaloneMode) {
@@ -32,7 +30,9 @@ const AppLink = ({ to, toApp, children, ...rest }: Props) => {
         }
         const href = getAppHrefBundle(to, toApp);
         return (
-            <Href href={href} target="_self">{children}</Href>
+            <Href {...rest} href={href} target="_self">
+                {children}
+            </Href>
         );
     }
 
