@@ -34,7 +34,7 @@ export default ({
                 await createKeyHelper({
                     api,
                     privateKeyArmored,
-                    fingerprint: privateKey.getFingerprint(),
+                    privateKey,
                     Address: address,
                     keys: [],
                     signingKey: privateKey,

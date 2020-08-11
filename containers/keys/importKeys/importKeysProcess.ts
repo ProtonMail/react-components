@@ -76,7 +76,7 @@ export default async ({
                 updatedAddressKeys = await createKeyHelper({
                     api,
                     privateKeyArmored,
-                    fingerprint: reformattedPrivateKey.getFingerprint(),
+                    privateKey: reformattedPrivateKey,
                     Address,
                     keys: updatedAddressKeys,
                     signingKey,

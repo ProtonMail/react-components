@@ -1,5 +1,5 @@
 import { c } from 'ttag';
-import { decryptPrivateKey, encryptPrivateKey, getKeys, OpenPGPKey } from 'pmcrypto';
+import { decryptPrivateKey, encryptPrivateKey, getKeys, getSHA256Fingerprints, OpenPGPKey } from 'pmcrypto';
 import { reformatAddressKey, decryptPrivateKeyWithSalt } from 'proton-shared/lib/keys/keys';
 import { KeySalt, KeyAction, Api, Address } from 'proton-shared/lib/interfaces';
 import { reactivateKeyAction, findKeyByFingerprint } from 'proton-shared/lib/keys/keysAction';
@@ -31,6 +31,7 @@ export const reactivatePrivateKey = async ({
         ID,
         keys: keyList,
         fingerprint: privateKey.getFingerprint(),
+        sha256Fingerprints: await getSHA256Fingerprints(privateKey),
         flags: Address ? getKeyFlagsAddress(Address, keyList) : getKeyFlagsUser(),
     });
 

@@ -119,13 +119,13 @@ const AddressKeysSection = () => {
         if (!addressKey || isLoadingKey) {
             return;
         }
-        const { privateKey: primaryPrivateKey } = getPrimaryKey(addressKeys) || {};
-        if (!primaryPrivateKey) {
+        const { privateKey: primaryPrivateKey, Key } = getPrimaryKey(addressKeys) || {};
+        if (!primaryPrivateKey || !Key) {
             return;
         }
 
         const process = async () => {
-            const newKeyFlags = getNewKeyFlags(flagAction);
+            const newKeyFlags = getNewKeyFlags(Key.Flags, flagAction);
             const updatedKeys = setFlagsKeyAction({
                 keys: await getKeysActionList(addressKeys),
                 ID,
@@ -218,17 +218,16 @@ const AddressKeysSection = () => {
                 passphrase: authentication.getPassword(),
                 encryptionConfig,
             });
-            const fingerprint = privateKey.getFingerprint();
             await createKeyHelper({
                 api,
                 privateKeyArmored,
-                fingerprint,
+                privateKey,
                 Address,
                 keys: await getKeysActionList(addressKeys),
                 signingKey: primaryPrivateKey,
             });
             await call();
-            return fingerprint;
+            return privateKey.getFingerprint();
         };
 
         const existingAlgorithms = addressKeysDisplay.map(({ algorithmInfo }) => algorithmInfo).filter(isTruthy);

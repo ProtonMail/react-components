@@ -1,4 +1,4 @@
-import { encryptPrivateKey, OpenPGPKey } from 'pmcrypto';
+import { encryptPrivateKey, getSHA256Fingerprints, OpenPGPKey } from 'pmcrypto';
 import { addKeyAction } from 'proton-shared/lib/keys/keysAction';
 import { generateMemberToken, encryptMemberToken } from 'proton-shared/lib/keys/memberToken';
 import { getKeyFlagsAddress } from 'proton-shared/lib/keys/keyFlags';
@@ -41,6 +41,7 @@ export const setupMemberKey = async ({
         flags: getKeyFlagsAddress(Address, []),
         keys: [],
         fingerprint: privateKey.getFingerprint(),
+        sha256Fingerprints: await getSHA256Fingerprints(privateKey),
     });
 
     const newKey = updatedKeys.find(({ ID }) => ID === 'temp');
@@ -109,6 +110,7 @@ export const createMemberAddressKeys = async ({
         ID: 'temp',
         flags: getKeyFlagsAddress(Address, keys),
         fingerprint: privateKey.getFingerprint(),
+        sha256Fingerprints: await getSHA256Fingerprints(privateKey),
     });
 
     const newKey = newKeys.find(({ ID }) => ID === 'temp');
