@@ -125,7 +125,7 @@ const AddressKeysSection = () => {
         }
 
         const process = async () => {
-            const newKeyFlags = getNewKeyFlags(Key.Flags, flagAction);
+            const newKeyFlags = getNewKeyFlags(addressKey.Key.Flags, flagAction);
             const updatedKeys = setFlagsKeyAction({
                 keys: await getKeysActionList(addressKeys),
                 ID,
