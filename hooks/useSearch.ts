@@ -3,10 +3,20 @@ import { ReactNode, useCallback, useMemo, useState, KeyboardEvent } from 'react'
 import { getMatch } from './helpers/search';
 
 // should result in an object that only has values from T that are assignable to string
-type SearchableObject<T> = { [Key in keyof T]: T[keyof T] extends string ? T[keyof T] : undefined };
+type SearchableObject<T> = { [Key in KeyOfUnion<T>]: T[KeyOfUnion<T>] extends string ? T[KeyOfUnion<T>] : undefined };
+type KeyOfUnion<T> = T extends any ? keyof T : never;
 
 /**
- * NB: if sources return different types, & them. This allows to pick keys that only exist on one of the types.
+ *useSearch hook
+ *
+ * @template T Type of entries, could be union
+ * @param sources Array of functions returning entires
+ * @param keys Array of entries' keys to search, all by default
+ * @param mapFn Function that accepts a list of items collected from sources and returns a list items, do sorting/filter here
+ * @param inputValue Search string
+ * @param minSymbols Minimum symbols to start searching
+ * @param resetField
+ * @param onSelect
  */
 function useSearch<T, K = keyof SearchableObject<T>>({
     inputValue = '',
@@ -20,7 +30,7 @@ function useSearch<T, K = keyof SearchableObject<T>>({
     inputValue?: string;
     minSymbols?: number;
     onSelect: (item: Partial<T>) => void;
-    mapFn?: (items: Partial<T>[]) => Partial<T>[];
+    mapFn?: (items: SearchableObject<T>[]) => Partial<T>[];
     resetField: () => void;
     sources: ((match: string) => Partial<T>[])[];
     keys?: K[];
@@ -32,18 +42,21 @@ function useSearch<T, K = keyof SearchableObject<T>>({
         const matchString = sanitizeString(inputValue).toLowerCase();
         if (matchString.length < minSymbols || !isFocused) return [];
         let itemList = sources.flatMap((source) => source(matchString));
-        // here you can do all filtering/sorting you want
-        if (mapFn) itemList = mapFn(itemList);
+        // theoretically, this is an error in types, but it's the only way to let typescript
+        // typecheck keys and mapFn arguments without doing the work in runtime
+        if (mapFn) itemList = mapFn((itemList as unknown) as SearchableObject<T>[]);
         const results = itemList
             .map((item) => {
-                const matchedProps: { [key in keyof SearchableObject<T>]?: ReactNode } = {};
+                const matchedProps: { [key in KeyOfUnion<T>]?: ReactNode } = {};
                 // when keys are not defined we still pick only searchable keys
                 const keyList = (keys ||
-                    Object.keys(item).filter((key) => typeof item[key as keyof T] === 'string')) as K[];
+                    Object.keys(item).filter((key) => typeof item[key as KeyOfUnion<T>] === 'string')) as KeyOfUnion<
+                    T
+                >[];
                 for (const prop of keyList) {
-                    const content = item[(prop as unknown) as keyof T];
+                    const content = item[prop];
                     const match = content && typeof content === 'string' && getMatch(content, matchString);
-                    if (match) matchedProps[(prop as unknown) as keyof T] = match;
+                    if (match) matchedProps[prop] = match;
                 }
                 return { item, matchedProps };
             })
