@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { APPS, APPS_CONFIGURATION, FEATURE_FLAGS } from 'proton-shared/lib/constants';
+import { APPS, APPS_CONFIGURATION, FEATURE_FLAGS, isSSOMode } from 'proton-shared/lib/constants';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 
 import useConfig from '../../containers/config/useConfig';
@@ -17,7 +17,7 @@ const MobileAppsLinks = () => {
         PROTONCONTACTS,
         PROTONCALENDAR,
         FEATURE_FLAGS.includes('drive') && PROTONDRIVE,
-        PROTONACCOUNT,
+        isSSOMode && PROTONACCOUNT,
     ]
         .filter(isTruthy)
         .map((app) => ({
