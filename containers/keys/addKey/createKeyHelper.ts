@@ -1,25 +1,34 @@
-import { getSHA256Fingerprints, OpenPGPKey } from 'pmcrypto';
+import { OpenPGPKey } from 'pmcrypto';
 import { addKeyAction } from 'proton-shared/lib/keys/keysAction';
 import { getKeyFlagsAddress } from 'proton-shared/lib/keys/keyFlags';
 import getSignedKeyList from 'proton-shared/lib/keys/getSignedKeyList';
 import { createAddressKeyRoute } from 'proton-shared/lib/api/keys';
-import { Address, KeyAction, Api } from 'proton-shared/lib/interfaces';
+import { Address, KeyAction, Api, CachedKey } from 'proton-shared/lib/interfaces';
 
 interface CreateKeyArguments {
     api: Api;
     signingKey: OpenPGPKey;
     privateKey: OpenPGPKey;
     privateKeyArmored: string;
-    keys: KeyAction[];
+    parsedKeys: CachedKey[];
+    actionableKeys: KeyAction[];
     Address: Address;
 }
-export default async ({ api, privateKey, privateKeyArmored, signingKey, keys, Address }: CreateKeyArguments) => {
+export default async ({
+    api,
+    privateKey,
+    privateKeyArmored,
+    signingKey,
+    parsedKeys,
+    actionableKeys,
+    Address,
+}: CreateKeyArguments) => {
     const updatedKeys = addKeyAction({
         ID: 'temp',
-        flags: getKeyFlagsAddress(Address, keys),
-        keys,
-        fingerprint: privateKey.getFingerprint(),
-        sha256Fingerprints: await getSHA256Fingerprints(privateKey),
+        flags: getKeyFlagsAddress(Address, parsedKeys),
+        parsedKeys,
+        actionableKeys,
+        privateKey,
     });
 
     const createdKey = updatedKeys.find(({ ID }) => ID === 'temp');

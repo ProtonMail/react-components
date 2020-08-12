@@ -36,7 +36,8 @@ export default ({
                     privateKeyArmored,
                     privateKey,
                     Address: address,
-                    keys: [],
+                    parsedKeys: [],
+                    actionableKeys: [],
                     signingKey: privateKey,
                 });
 

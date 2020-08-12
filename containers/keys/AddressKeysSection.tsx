@@ -9,6 +9,8 @@ import getSignedKeyList from 'proton-shared/lib/keys/getSignedKeyList';
 import getCachedKeyByID from 'proton-shared/lib/keys/getCachedKeyByID';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 import { EncryptionConfig } from 'proton-shared/lib/interfaces';
+import getParsedKeys from 'proton-shared/lib/keys/getParsedKeys';
+
 import { Alert, Block, Loader, PrimaryButton, Select } from '../../components';
 import {
     useAddresses,
@@ -94,7 +96,7 @@ const AddressKeysSection = () => {
 
         const process = async () => {
             const updatedKeys = setPrimaryKeyAction({
-                keys: await getKeysActionList(addressKeys),
+                actionableKeys: await getKeysActionList(addressKeys),
                 ID,
             });
             await api(
@@ -127,7 +129,7 @@ const AddressKeysSection = () => {
         const process = async () => {
             const newKeyFlags = getNewKeyFlags(addressKey.Key.Flags, flagAction);
             const updatedKeys = setFlagsKeyAction({
-                keys: await getKeysActionList(addressKeys),
+                actionableKeys: await getKeysActionList(addressKeys),
                 ID,
                 flags: newKeyFlags,
             });
@@ -170,7 +172,7 @@ const AddressKeysSection = () => {
 
         const onDelete = async (): Promise<void> => {
             const updatedKeys = removeKeyAction({
-                keys: await getKeysActionList(addressKeys),
+                actionableKeys: await getKeysActionList(addressKeys),
                 ID,
             });
             const signedKeyList = await getSignedKeyList(updatedKeys, primaryPrivateKey);
@@ -223,7 +225,8 @@ const AddressKeysSection = () => {
                 privateKeyArmored,
                 privateKey,
                 Address,
-                keys: await getKeysActionList(addressKeys),
+                parsedKeys: await getParsedKeys(addressKeys),
+                actionableKeys: await getKeysActionList(addressKeys),
                 signingKey: primaryPrivateKey,
             });
             await call();
@@ -249,8 +252,8 @@ const AddressKeysSection = () => {
                 setKeysToImport,
                 api,
                 password: authentication.getPassword(),
-                keys: await getKeysActionList(addressKeys),
-                addressKeys,
+                actionableKeys: await getKeysActionList(addressKeys),
+                parsedKeys: await getParsedKeys(addressKeys),
                 signingKey: primaryPrivateKey,
                 Address,
             });

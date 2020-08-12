@@ -57,7 +57,7 @@ export const getDisplayKey = ({
         canExportPrivateKey: isDecrypted,
         canSetPrimary: canModify && !isAddressDisabled && isDecrypted && canEncryptAndSign,
         canSetObsolete: canModify && !isAddressDisabled && isDecrypted && !isObsolete && !isCompromised,
-        canSetNotObsolete: canModify && isObsolete,
+        canSetNotObsolete: canModify && isObsolete && !isCompromised,
         canSetCompromised: canModify && !isCompromised,
         canSetNotCompromised: canModify && isCompromised,
         canDelete: canModify,
