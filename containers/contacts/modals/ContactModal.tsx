@@ -71,11 +71,14 @@ const ContactModal = ({
     const { call } = useEventManager();
     const [userKeysList, loadingUserKeys] = useUserKeys();
     const [properties, setProperties] = useState<ContactProperties>(formatModel(initialProperties));
+
     const submitDisabled = useMemo(() => {
-        if (properties.every((p) => !p.value)) {
-            return true;
-        }
-        return false;
+        const nameIndex = properties.findIndex((property) => property.field === 'fn');
+        const nameProperty = properties[nameIndex];
+        const otherProperties = properties.filter((_, i) => i !== nameIndex);
+        const nameFilled = !!nameProperty.value;
+        const dataFilled = otherProperties.length > 0 && otherProperties.every((p) => !!p.value);
+        return !nameFilled || !dataFilled;
     }, [properties]);
 
     const title = contactID ? c('Title').t`Edit contact details` : c('Title').t`Create contact`;
