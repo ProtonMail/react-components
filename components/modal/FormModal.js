@@ -8,7 +8,7 @@ import {
     InnerModal,
     ResetButton,
     PrimaryButton,
-    Icon
+    Icon,
 } from 'react-components';
 import { c } from 'ttag';
 import { noop } from 'proton-shared/lib/helpers/function';
@@ -94,7 +94,7 @@ function DemoModal({ onAdd, ...rest }) {
                     {title}
                 </HeaderModal>
             ) : (
-                <button type="button" className="pm-modalClose" onClick={onClose}>
+                <button type="button" className="pm-modalClose mt0-5 mr0-5" onClick={onClose}>
                     <Icon className="pm-modalClose-icon" name="close" />
                 </button>
             )}
