@@ -20,9 +20,10 @@ interface Props {
     uid?: string;
     value: string | string[];
     onChange: (payload: ContactPropertyChange) => void;
+    isSubmitted?: boolean;
 }
 
-const ContactFieldProperty = ({ field, value, uid, onChange, ...rest }: Props) => {
+const ContactFieldProperty = ({ field, value, uid, onChange, isSubmitted = false, ...rest }: Props) => {
     const { createModal } = useModals();
     const labels: { [key: string]: string } = getAllFieldLabels();
     const label = labels[field];
@@ -77,7 +78,17 @@ const ContactFieldProperty = ({ field, value, uid, onChange, ...rest }: Props) =
     }
 
     if (field === 'fn') {
-        return <Input value={value} placeholder={label} onChange={handleChange} autoFocus required {...rest} />;
+        return (
+            <Input
+                value={value}
+                placeholder={label}
+                onChange={handleChange}
+                isSubmitted={isSubmitted}
+                autoFocus
+                required
+                {...rest}
+            />
+        );
     }
 
     return <Input value={value} placeholder={label} onChange={handleChange} autoFocus {...rest} />;

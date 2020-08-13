@@ -34,6 +34,7 @@ interface Props {
     onOrderChange?: (field: string, orderedProperties: ContactProperties) => void;
     onAdd?: () => void;
     onRemove: (value: string) => void;
+    isSubmitted?: boolean;
 }
 
 const ContactModalProperties = ({
@@ -43,6 +44,7 @@ const ContactModalProperties = ({
     onOrderChange,
     onAdd,
     onRemove,
+    isSubmitted = false,
 }: Props) => {
     const title = field ? TITLES[field] : TITLES.other;
     const iconName = field ? ICONS[field] : ICONS.other;
@@ -54,6 +56,7 @@ const ContactModalProperties = ({
             properties.map((property) => (
                 <ContactModalRow
                     key={property.uid}
+                    isSubmitted={isSubmitted}
                     property={property}
                     onChange={onChange}
                     onRemove={onRemove}

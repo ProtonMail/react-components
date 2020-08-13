@@ -18,9 +18,10 @@ interface Props {
     onChange: (payload: ContactPropertyChange) => void;
     onRemove: (value: string) => void;
     isOrderable?: boolean;
+    isSubmitted?: boolean;
 }
 
-const ContactModalRow = ({ property, onChange, onRemove, isOrderable = false }: Props) => {
+const ContactModalRow = ({ property, onChange, onRemove, isOrderable = false, isSubmitted = false }: Props) => {
     const { isNarrow } = useActiveBreakpoint();
     const { createModal } = useModals();
     const { field, uid, value } = property;
@@ -84,6 +85,7 @@ const ContactModalRow = ({ property, onChange, onRemove, isOrderable = false }: 
                                 value={property.value}
                                 uid={property.uid}
                                 onChange={onChange}
+                                isSubmitted={isSubmitted}
                             />
                         </div>
                     </span>

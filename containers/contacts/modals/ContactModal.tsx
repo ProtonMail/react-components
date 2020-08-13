@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect, useMemo } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { c } from 'ttag';
 import { History } from 'history';
 
@@ -69,16 +69,15 @@ const ContactModal = ({
     const { createNotification } = useNotifications();
     const [loading, withLoading] = useLoading();
     const { call } = useEventManager();
+    const [isSubmitted, setIsSubmitted] = useState(false);
     const [userKeysList, loadingUserKeys] = useUserKeys();
     const [properties, setProperties] = useState<ContactProperties>(formatModel(initialProperties));
 
-    const submitDisabled = useMemo(() => {
+    const isFormValid = () => {
         const nameProperty = properties.find((property) => property.field === 'fn');
-        const otherProperties = properties.filter((property) => property !== nameProperty);
         const nameFilled = !!nameProperty?.value;
-        const dataFilled = otherProperties.length > 0 && otherProperties.every((p) => !!p.value);
-        return !nameFilled || !dataFilled;
-    }, [properties]);
+        return nameFilled;
+    };
 
     const title = contactID ? c('Title').t`Edit contact details` : c('Title').t`Create contact`;
 
@@ -99,6 +98,12 @@ const ContactModal = ({
     };
 
     const handleSubmit = async () => {
+        setIsSubmitted(true);
+
+        if (!isFormValid()) {
+            return;
+        }
+
         const notEditableProperties = initialProperties.filter(({ field }) => !editableFields.includes(field));
         const Contacts = await prepareContacts([properties.concat(notEditableProperties)], userKeysList[0]);
         const labels = hasCategories(notEditableProperties) ? INCLUDE : IGNORE;
@@ -163,11 +168,7 @@ const ContactModal = ({
             onSubmit={() => withLoading(handleSubmit())}
             title={title}
             submit={
-                <PrimaryButton
-                    loading={loading || loadingUserKeys}
-                    disabled={submitDisabled}
-                    onClick={() => withLoading(handleSubmit())}
-                >
+                <PrimaryButton loading={loading || loadingUserKeys} onClick={() => withLoading(handleSubmit())}>
                     {c('Action').t`Save`}
                 </PrimaryButton>
             }
@@ -179,12 +180,14 @@ const ContactModal = ({
             <ContactModalProperties
                 properties={properties}
                 field="fn"
+                isSubmitted={isSubmitted}
                 onChange={handleChange}
                 onRemove={handleRemove}
             />
             <ContactModalProperties
                 properties={properties}
                 field="email"
+                isSubmitted={isSubmitted}
                 onChange={handleChange}
                 onRemove={handleRemove}
                 onOrderChange={handleOrderChange}
@@ -193,6 +196,7 @@ const ContactModal = ({
             <ContactModalProperties
                 properties={properties}
                 field="tel"
+                isSubmitted={isSubmitted}
                 onChange={handleChange}
                 onRemove={handleRemove}
                 onOrderChange={handleOrderChange}
@@ -201,12 +205,14 @@ const ContactModal = ({
             <ContactModalProperties
                 properties={properties}
                 field="adr"
+                isSubmitted={isSubmitted}
                 onChange={handleChange}
                 onRemove={handleRemove}
                 onOrderChange={handleOrderChange}
                 onAdd={handleAdd('adr')}
             />
             <ContactModalProperties
+                isSubmitted={isSubmitted}
                 properties={properties}
                 onChange={handleChange}
                 onRemove={handleRemove}
