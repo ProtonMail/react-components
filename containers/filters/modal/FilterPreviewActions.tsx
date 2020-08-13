@@ -41,13 +41,15 @@ const FilterPreviewActions = ({ isOpen, isNarrow, toggleOpen, labels, folders, m
                     {i > 0 && c('Label').t` and `}
                     {isOpen ? (
                         <span
-                            className="ml0-5 mr0-5 mb0-5 badgeLabel flex flex-row flex-items-center ellipsis"
+                            className="mb0-5 badgeLabel inline-flex flex-row flex-items-center ellipsis"
                             role="listitem"
                             style={{
                                 color: labelsMap[l].Color,
+                                borderColor: labelsMap[l].Color,
+                                backgroundColor: labelsMap[l].Color,
                             }}
                         >
-                            <span className="pm-badgeLabel-link color-white ellipsis nodecoration" title={l}>
+                            <span className="color-white ellipsis nodecoration" title={l}>
                                 {l}
                             </span>
                         </span>
@@ -59,7 +61,7 @@ const FilterPreviewActions = ({ isOpen, isNarrow, toggleOpen, labels, folders, m
 
             actionsRows.push({
                 element: (
-                    <span className="pm-badgeLabel-container">
+                    <span>
                         {LABELS_ACTION.labelAs}
                         {` `}
                         {labelsElements}
