@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import { Icon, Button, Select, Checkbox, DropdownActions, useFolders } from '../../..';
 import { c } from 'ttag';
 
@@ -6,13 +6,16 @@ import { noop } from 'proton-shared/lib/helpers/function';
 import { buildTreeview, formatFolderName } from 'proton-shared/lib/helpers/folder';
 import { Address } from 'proton-shared/lib/interfaces';
 
-import { ImportModalModel, DestinationFolder } from '../interfaces';
+import { ImportModalModel, DestinationFolder, ImportModel, FolderMapping } from '../interfaces';
 import { FolderWithSubFolders } from 'proton-shared/lib/interfaces/Folder';
+import Loader from '../../../components/loader/Loader';
+import { classnames } from '../../../helpers/component';
 
 interface Props {
-    model: ImportModalModel;
-    setModel: React.Dispatch<React.SetStateAction<ImportModalModel>>;
+    modalModel: ImportModalModel;
     address: Address;
+    importModel: ImportModel;
+    setImportModel: React.Dispatch<React.SetStateAction<ImportModel>>;
 }
 
 interface FolderSelectOption {
@@ -42,12 +45,8 @@ const FOLDER_ICONS = {
 
 const defaultFolders: FolderSelectOption[] = [
     {
-        text: c('Import Destination').t`Do not import`,
-        value: '',
-    },
-    {
         group: FOLDER_GROUP.DEFAULT,
-        text: c('Import Destination').t`Inbox`,
+        text: DestinationFolder.INBOX, // c('Import Destination').t`Inbox`,
         value: DestinationFolder.INBOX,
     },
     {
@@ -62,7 +61,7 @@ const defaultFolders: FolderSelectOption[] = [
     },
     {
         group: FOLDER_GROUP.DEFAULT,
-        text: c('Import Destination').t`Starred`,
+        text: DestinationFolder.STARRED, // c('Import Destination').t`Starred`,
         value: DestinationFolder.STARRED,
     },
     {
@@ -107,15 +106,16 @@ const folderReducer = (
     return acc;
 };
 
-const OrganizeFolders = ({ model, setModel, address }: Props) => {
-    const [folders = []] = useFolders();
+const OrganizeFolders = ({ modalModel, importModel, setImportModel, address }: Props) => {
+    const { providerFolders } = modalModel;
+    const [folders = [], foldersLoading] = useFolders();
     const treeview = buildTreeview(folders);
-    const reducedFolders = treeview.reduce<FolderSelectOption[]>((acc, folder) => {
+    const customFolders = treeview.reduce<FolderSelectOption[]>((acc, folder) => {
         return folderReducer(acc, folder, 0);
     }, []);
 
-    /* @todo treeview of providerFolders */
-    const tempFolders = model.providerFolders
+    /* @todo put this in its own state */
+    const tempFolders = providerFolders
         .filter((f) => !f.DestinationFolder)
         .map((f) => {
             const split = f.Name.split('/');
@@ -130,7 +130,12 @@ const OrganizeFolders = ({ model, setModel, address }: Props) => {
             };
         });
 
-    const foldersOptions = [...defaultFolders, ...reducedFolders, ...tempFolders];
+    const foldersOptions = [
+        { text: c('Import Destination').t`Do not import`, value: '' },
+        ...defaultFolders,
+        ...customFolders,
+        ...tempFolders,
+    ];
 
     const dropdownActions = [
         {
@@ -143,13 +148,49 @@ const OrganizeFolders = ({ model, setModel, address }: Props) => {
         },
     ];
 
-    return (
+    const onToggleCheck = (index: number, checked: boolean) => {
+        const oldMapping = importModel.Mapping;
+        const folderFromProvider = providerFolders[index];
+
+        const Mapping: FolderMapping[] = [
+            ...oldMapping.slice(0, index),
+            {
+                Source: oldMapping[index].Source,
+                Destinations: {
+                    FolderName: checked ? folderFromProvider.DestinationFolder || folderFromProvider.Name : '',
+                },
+            },
+            ...oldMapping.slice(index + 1),
+        ];
+
+        setImportModel({ ...importModel, Mapping });
+    };
+
+    const onChangeSelect = (index: number, value: string) => {
+        const oldMapping = importModel.Mapping;
+        const Mapping: FolderMapping[] = [
+            ...oldMapping.slice(0, index),
+            {
+                Source: oldMapping[index].Source,
+                Destinations: {
+                    FolderName: value,
+                },
+            },
+            ...oldMapping.slice(index + 1),
+        ];
+
+        setImportModel({ ...importModel, Mapping });
+    };
+
+    return foldersLoading ? (
+        <Loader />
+    ) : (
         <>
             <div className="flex">
                 <div className="flex-item-fluid ellipsis bg-global-light pt1 pl1 pr1">
                     <span>{c('Label').t`From`}</span>
                     {`: `}
-                    <strong>{model.email}</strong>
+                    <strong>{modalModel.email}</strong>
                 </div>
                 <div className="flex-item-fluid ellipsis pt1 pl1 pr1">
                     <span>{c('Label').t`To`}</span>
@@ -161,7 +202,7 @@ const OrganizeFolders = ({ model, setModel, address }: Props) => {
             <div className="flex mb1">
                 <div className="flex-item-fluid bg-global-light pt0-5">
                     <ul className="unstyled m0">
-                        {model.providerFolders.map(({ Name, DestinationFolder }, index) => {
+                        {providerFolders.map(({ Name, DestinationFolder }, index) => {
                             const split = Name.split('/');
                             const level = split.length - 1;
                             const displayName = split[level];
@@ -169,18 +210,31 @@ const OrganizeFolders = ({ model, setModel, address }: Props) => {
                             return (
                                 <li
                                     key={`providerFolder_${index}`}
-                                    className="flex flex-nowrap flex-items-center border-bottom pl1 pr1"
+                                    className={classnames([
+                                        'flex flex-nowrap flex-items-center border-bottom pl1 pr1',
+                                        !importModel.Mapping[index].Destinations.FolderName && 'opacity-50',
+                                    ])}
                                     style={{
                                         height: 50,
                                     }}
                                 >
                                     <span
                                         className="flex-item-noshrink"
-                                        style={{
-                                            marginLeft: `${level}em`,
-                                        }}
+                                        style={
+                                            DestinationFolder
+                                                ? undefined
+                                                : {
+                                                      marginLeft: `${level}em`,
+                                                  }
+                                        }
                                     >
-                                        <Checkbox id={`providerFolder_${index}`} />
+                                        <Checkbox
+                                            onChange={({ target }: ChangeEvent<HTMLInputElement>) => {
+                                                onToggleCheck(index, target.checked);
+                                            }}
+                                            id={`providerFolder_${index}`}
+                                            checked={importModel.Mapping[index].Destinations.FolderName !== ''}
+                                        />
                                     </span>
                                     <label
                                         htmlFor={`providerFolder_${index}`}
@@ -200,48 +254,46 @@ const OrganizeFolders = ({ model, setModel, address }: Props) => {
                 </div>
                 <div className="flex-item-fluid pt0-5">
                     <ul className="unstyled m0">
-                        {model.providerFolders
-                            .filter(({ DestinationFolder }) => typeof DestinationFolder !== 'undefined')
-                            .map(({ DestinationFolder }) => {
-                                return (
-                                    <li
-                                        key={DestinationFolder}
-                                        className="flex flex-nowrap flex-items-center pl1 pr1"
-                                        style={{
-                                            height: 50,
-                                        }}
-                                    >
+                        {providerFolders.map(({ Name, DestinationFolder }, index) => (
+                            <li
+                                className={classnames([
+                                    'flex flex-nowrap flex-items-center pl1 pr1',
+                                    !importModel.Mapping[index].Destinations.FolderName && 'opacity-50',
+                                ])}
+                                style={{
+                                    height: 50,
+                                }}
+                                key={Name}
+                            >
+                                {DestinationFolder ? (
+                                    <>
                                         <Select
                                             className="flex-item-fluid"
                                             options={foldersOptions}
-                                            defaultValue={DestinationFolder}
+                                            value={importModel.Mapping[index].Destinations.FolderName}
+                                            onChange={({ target }: ChangeEvent<HTMLSelectElement>) => {
+                                                onChangeSelect(index, target.value);
+                                            }}
                                         />
                                         <Button className="flex-item-noshrink ml1">{c('Action').t`Add folder`}</Button>
-                                    </li>
-                                );
-                            })}
-                        {model.providerFolders
-                            .filter(({ DestinationFolder }) => typeof DestinationFolder === 'undefined')
-                            .map(({ Name }, index) => {
-                                return (
-                                    <li
-                                        className="flex flex-nowrap flex-items-center pl1 pr1"
-                                        style={{
-                                            height: 50,
-                                        }}
-                                        key={index}
-                                    >
+                                    </>
+                                ) : (
+                                    <>
                                         <Select
                                             className="flex-item-fluid"
                                             options={foldersOptions}
-                                            defaultValue={Name}
+                                            value={importModel.Mapping[index].Destinations.FolderName}
+                                            onChange={({ target }: ChangeEvent<HTMLSelectElement>) => {
+                                                onChangeSelect(index, target.value);
+                                            }}
                                         />
                                         <div className="ml1">
                                             <DropdownActions key="dropdown" list={dropdownActions} />
                                         </div>
-                                    </li>
-                                );
-                            })}
+                                    </>
+                                )}
+                            </li>
+                        ))}
                     </ul>
                 </div>
             </div>

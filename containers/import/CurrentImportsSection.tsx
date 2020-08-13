@@ -87,7 +87,7 @@ const CurrentImportsSection = () => {
                         <TableRow
                             key={index}
                             cells={[
-                                Email,
+                                <div className="w100 ellipsis">{Email}</div>,
                                 <Time key="creation" format="PPp">
                                     {CreationTime}
                                 </Time>,

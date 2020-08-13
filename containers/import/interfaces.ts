@@ -1,13 +1,14 @@
+import { Label } from 'proton-shared/lib/interfaces/Label';
+import { TIME_UNIT } from './constants';
+
 export enum DestinationFolder {
-    // @todo warning discrepancy FE/BE 'Inbox' vs 'INBOX'
-    INBOX = 'INBOX',
+    INBOX = 'Inbox',
     ALL_DRAFTS = 'All Drafts',
     ALL_SENT = 'All Sent',
     TRASH = 'Trash',
     SPAM = 'Spam',
     ALL_MAIL = 'All Mail',
-    // @todo warning discrepancy FE/BE 'Starred' vs 'Flagged'
-    STARRED = 'Flagged',
+    STARRED = 'Starred',
     ARCHIVE = 'Archive',
     SENT = 'Sent',
     DRAFTS = 'Drafts',
@@ -89,4 +90,21 @@ export interface ImportMailReport {
 
 export interface MailboxSize {
     [mailboxID: string]: number;
+}
+
+export interface FolderMapping {
+    Source: string;
+    Destinations: {
+        FolderName: string;
+    };
+}
+
+export interface ImportModel {
+    AddressID?: string;
+    Code?: string;
+    ImportLabel?: Partial<Label>;
+    StartTime?: Date;
+    EndTime?: Date;
+    Mapping: FolderMapping[];
+    selectedPeriod: TIME_UNIT;
 }

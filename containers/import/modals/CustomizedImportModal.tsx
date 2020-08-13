@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState, ChangeEvent, useEffect } from 'react';
 import {
     Icon,
     Row,
@@ -12,70 +12,51 @@ import {
     Tooltip,
     Select,
 } from '../../..';
-import { format, subYears, subMonths } from 'date-fns';
+import { subYears, subMonths } from 'date-fns';
 import { c, msgid } from 'ttag';
 
 import { noop } from 'proton-shared/lib/helpers/function';
 import { Address } from 'proton-shared/lib/interfaces';
 import { Label } from 'proton-shared/lib/interfaces/Label';
-import { LABEL_COLORS, LABEL_TYPE } from 'proton-shared/lib/constants';
-import { randomIntFromInterval } from 'proton-shared/lib/helpers/function';
 
 import EditLabelModal from '../../labels/modals/Edit';
-import { ImportModalModel } from '../interfaces';
+import { ImportModalModel, ImportModel } from '../interfaces';
+import { TIME_UNIT, timeUnitLabels } from '../constants';
 import OrganizeFolders from './OrganizeFolders';
 
 interface Props {
-    model: ImportModalModel;
-    setModel: React.Dispatch<React.SetStateAction<ImportModalModel>>;
+    modalModel: ImportModalModel;
+    updateModalModel: (newModel: ImportModalModel) => void;
+    importModel: ImportModel;
+    updateImportModel: (newModel: ImportModel) => void;
     address: Address;
     onClose?: () => void;
 }
 
-enum TIME_UNIT {
-    BIG_BANG = 'big_bang',
-    LAST_YEAR = 'last_year',
-    LAST_3_MONTHS = 'last_3_months',
-    LAST_MONTH = 'last_month',
-}
-
-/* @todo
-    Move this to ../interfaces.ts and its initialization to ./ImportMailModal.tsx
-    since it's basically the payload that we want to send to the API
- */
-interface FolderMapping {
-    Source: string;
-    Destinations: {
-        FolderName: string;
-    };
-}
-
-interface ImportModel {
-    AddressID: string;
-    Code: string;
-    ImportLabel?: Partial<Label>;
-    StartTime?: Date;
-    EndTime?: Date;
-    Mapping: FolderMapping[];
-}
-
-const CustomizedImportModal = ({ model, setModel, address, onClose = noop, ...rest }: Props) => {
+const CustomizedImportModal = ({
+    modalModel,
+    updateModalModel,
+    importModel,
+    updateImportModel,
+    address,
+    onClose = noop,
+    ...rest
+}: Props) => {
     /*
-    This modal would have its own state
-    then onSubmit send it to the setModel
-    onClose should add the confirmModel to avoid loosing internal state
+        This modal would have its own state
+        then onSubmit send it to the setModel
     */
-    const [customizedImportModel, setCustomizedImportModel] = useState<ImportModel>({
-        AddressID: model.importID,
-        Code: model.password,
-        ImportLabel: {
-            Name: `${model.email.split('@')[1]} - export ${format(new Date(), 'yyyy-MM-dd')}`,
-            Color: LABEL_COLORS[randomIntFromInterval(0, LABEL_COLORS.length - 1)],
-            Type: LABEL_TYPE.MESSAGE_LABEL,
-            Order: 0,
-        },
-        Mapping: [],
-    });
+    const [customizedImportModel, setCustomizedImportModel] = useState<ImportModel>(importModel);
+
+    useEffect(() => {
+        setCustomizedImportModel({
+            AddressID: address.ID,
+            Code: importModel.Code,
+            ImportLabel: importModel.ImportLabel,
+            Mapping: importModel.Mapping,
+            selectedPeriod: importModel.selectedPeriod,
+        });
+    }, []);
 
     const [organizeFolderVisible, setOrganizeFolderVisible] = useState(false);
     const { createModal } = useModals();
@@ -112,11 +93,11 @@ Your configuration will be lost.`}
         setCustomizedImportModel({ ...customizedImportModel, ImportLabel });
     };
 
-    const handleChangeTime = (period: TIME_UNIT) => {
+    const handleChangePeriod = (selectedPeriod: TIME_UNIT) => {
         let StartTime: Date | undefined;
         let EndTime: Date | undefined = new Date();
 
-        switch (period) {
+        switch (selectedPeriod) {
             case TIME_UNIT.LAST_YEAR:
                 StartTime = subYears(EndTime, 1);
                 break;
@@ -132,19 +113,31 @@ Your configuration will be lost.`}
                 break;
         }
 
-        setCustomizedImportModel({ ...customizedImportModel, StartTime, EndTime });
+        setCustomizedImportModel({
+            ...customizedImportModel,
+            StartTime,
+            EndTime,
+            selectedPeriod,
+        });
+    };
+
+    const selectedFoldersCount = customizedImportModel.Mapping.filter((f) => !!f.Destinations.FolderName).length;
+
+    const handleSubmit = () => {
+        updateImportModel(customizedImportModel);
+        onClose();
     };
 
     return (
         <FormModal
             title={c('Title').t`Setup customized import`}
             // submit={submit}
-            // onSubmit={(e: FormEvent<HTMLFormElement>) => withLoading(handleSubmit(e))}
             // close={cancel}
+            onSubmit={handleSubmit}
             onClose={handleCancel}
             style={{
                 maxWidth: '84rem',
-                width: '84rem',
+                width: '100%',
             }}
             {...rest}
         >
@@ -187,24 +180,24 @@ Your configuration will be lost.`}
                         <Select
                             className="flex-item-fluid"
                             onChange={({ target }: ChangeEvent<HTMLSelectElement>) =>
-                                handleChangeTime(target.value as TIME_UNIT)
+                                handleChangePeriod(target.value as TIME_UNIT)
                             }
                             options={[
                                 {
                                     value: TIME_UNIT.BIG_BANG,
-                                    text: c('Option').t`From the beginning of time`,
+                                    text: c('Option').t`From ${timeUnitLabels[TIME_UNIT.BIG_BANG]}`,
                                 },
                                 {
                                     value: TIME_UNIT.LAST_YEAR,
-                                    text: c('Option').t`From last year`,
+                                    text: c('Option').t`From ${timeUnitLabels[TIME_UNIT.LAST_YEAR]}`,
                                 },
                                 {
                                     value: TIME_UNIT.LAST_3_MONTHS,
-                                    text: c('Option').t`From 3 last months`,
+                                    text: c('Option').t`From ${timeUnitLabels[TIME_UNIT.LAST_3_MONTHS]}`,
                                 },
                                 {
                                     value: TIME_UNIT.LAST_MONTH,
-                                    text: c('Option').t`From last month`,
+                                    text: c('Option').t`From ${timeUnitLabels[TIME_UNIT.LAST_MONTH]}`,
                                 },
                             ]}
                         />
@@ -232,15 +225,22 @@ Your configuration will be lost.`}
                     <Field className="flex flex-items-center">
                         <Icon name="parent-folder" className="mr0-5" />
                         {c('Info').ngettext(
-                            msgid`${model.providerFolders.length} folder selected`,
-                            `${model.providerFolders.length} folders selected`,
-                            model.providerFolders.length
+                            msgid`${selectedFoldersCount} folder selected`,
+                            `${selectedFoldersCount} folders selected`,
+                            selectedFoldersCount
                         )}
                     </Field>
                 </Row>
             </div>
 
-            {organizeFolderVisible && <OrganizeFolders address={address} model={model} setModel={setModel} />}
+            {organizeFolderVisible && (
+                <OrganizeFolders
+                    address={address}
+                    modalModel={modalModel}
+                    importModel={customizedImportModel}
+                    setImportModel={setCustomizedImportModel}
+                />
+            )}
         </FormModal>
     );
 };

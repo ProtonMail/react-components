@@ -5,13 +5,13 @@ import { c } from 'ttag';
 import { ImportModalModel, IMPORT_ERROR } from '../../interfaces';
 
 interface Props {
-    model: ImportModalModel;
-    setModel: React.Dispatch<React.SetStateAction<ImportModalModel>>;
+    modalModel: ImportModalModel;
+    updateModalModel: (newModel: ImportModalModel) => void;
 }
 
-const ImportStartStep = ({ model, setModel }: Props) => (
+const ImportStartStep = ({ modalModel, updateModalModel }: Props) => (
     <>
-        {[IMPORT_ERROR.AUTH_IMAP, IMPORT_ERROR.AUTH_CREDENTIALS].includes(model.errorCode) ? (
+        {[IMPORT_ERROR.AUTH_IMAP, IMPORT_ERROR.AUTH_CREDENTIALS].includes(modalModel.errorCode) ? (
             <Alert type="error">
                 <div className="mb1">
                     {c('Error').t`Server error. We cannot connect to your mail service provider. Please check if:`}
@@ -33,9 +33,9 @@ const ImportStartStep = ({ model, setModel }: Props) => (
             <Field>
                 <EmailInput
                     id="emailAddress"
-                    value={model.email}
+                    value={modalModel.email}
                     onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
-                        setModel({ ...model, email: target.value })
+                        updateModalModel({ ...modalModel, email: target.value })
                     }
                     autoFocus={true}
                     required
@@ -47,15 +47,15 @@ const ImportStartStep = ({ model, setModel }: Props) => (
             <Field>
                 <PasswordInput
                     id="password"
-                    value={model.password}
+                    value={modalModel.password}
                     onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
-                        setModel({ ...model, password: target.value })
+                        updateModalModel({ ...modalModel, password: target.value })
                     }
                     required
                 />
             </Field>
         </Row>
-        {model.needDetails && (
+        {modalModel.needDetails && (
             <>
                 <Row>
                     <Label htmlFor="imap">{c('Label').t`IMAP server`}</Label>
@@ -63,9 +63,9 @@ const ImportStartStep = ({ model, setModel }: Props) => (
                         <Input
                             id="imap"
                             placeholder="imap.domain.com"
-                            value={model.imap}
+                            value={modalModel.imap}
                             onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
-                                setModel({ ...model, imap: target.value })
+                                updateModalModel({ ...modalModel, imap: target.value })
                             }
                             required
                         />
@@ -77,9 +77,9 @@ const ImportStartStep = ({ model, setModel }: Props) => (
                         <Input
                             id="port"
                             placeholder="993"
-                            value={model.port}
+                            value={modalModel.port}
                             onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
-                                setModel({ ...model, port: target.value })
+                                updateModalModel({ ...modalModel, port: target.value })
                             }
                             required
                         />

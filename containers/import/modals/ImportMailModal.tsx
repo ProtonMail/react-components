@@ -20,16 +20,17 @@ import {
 } from 'proton-shared/lib/api/mailImport';
 import { noop } from 'proton-shared/lib/helpers/function';
 
-import { Step, ImportModalModel, IMPORT_ERROR, MailImportFolder } from '../interfaces';
+import { Step, ImportModalModel, IMPORT_ERROR, MailImportFolder, ImportModel } from '../interfaces';
 
 import ImportMailWizard from '../../../components/import/ImportMailWizard';
 
 import ImportStartStep from './steps/ImportStartStep';
 import ImportPrepareStep from './steps/ImportPrepareStep';
 import ImportStartedStep from './steps/ImportStartedStep';
+import { TIME_UNIT } from '../constants';
 
-const DEFAULT_MODEL: ImportModalModel = {
-    step: Step.START,
+const DEFAULT_MODAL_MODEL: ImportModalModel = {
+    step: Step.STARTED, // Step.START,
     needDetails: false,
     importID: '',
     email: 'mindaugas2020v@gmail.com', // '',
@@ -38,7 +39,6 @@ const DEFAULT_MODEL: ImportModalModel = {
     imap: '',
     errorCode: 0,
     providerFolders: [],
-    // payload: ImportModel,
 };
 
 interface Props {
@@ -56,13 +56,17 @@ const destinationFoldersFirst = (a: MailImportFolder, b: MailImportFolder) => {
 const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
     const [loading, withLoading] = useLoading();
     const { createModal } = useModals();
-    const [addresses] = useAddresses();
+    const [addresses, loadingAddresses] = useAddresses();
     const [address] = addresses || [];
-    const [model, setModel] = useState<ImportModalModel>(DEFAULT_MODEL);
+    const [modalModel, setModalModel] = useState<ImportModalModel>(DEFAULT_MODAL_MODEL);
+    const [importModel, setImportModel] = useState<ImportModel>({
+        Mapping: [],
+        selectedPeriod: TIME_UNIT.BIG_BANG,
+    });
     const api = useApi();
 
     const title = useMemo(() => {
-        switch (model.step) {
+        switch (modalModel.step) {
             case Step.START:
                 return c('Title').t`Start a new import`;
             case Step.PREPARE:
@@ -72,7 +76,7 @@ const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
             default:
                 return '';
         }
-    }, [model.step]);
+    }, [modalModel.step]);
 
     const wizardSteps = [
         c('Wizard step').t`Authentication`,
@@ -88,25 +92,21 @@ const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
         );
     };
 
-    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
-        setModel({ ...model, errorCode: 0 });
-
-        if (model.step === Step.START && model.needDetails) {
+    const submitStartStep = async (needDetails: boolean) => {
+        if (needDetails) {
             try {
                 const { Importer } = await api(
                     createMailImport({
-                        Email: model.email,
-                        ImapHost: model.imap,
-                        ImapPort: parseInt(model.port),
+                        Email: modalModel.email,
+                        ImapHost: modalModel.imap,
+                        ImapPort: parseInt(modalModel.port),
                         Sasl: 'PLAIN',
-                        Code: model.password,
+                        Code: modalModel.password,
                     })
                 );
                 const { Folders = [] } = await api(getMailImportFolders(Importer.ID));
-                setModel({
-                    ...model,
+                setModalModel({
+                    ...modalModel,
                     providerFolders: Folders.sort(destinationFoldersFirst),
                     importID: Importer.ID,
                     step: Step.PREPARE,
@@ -115,8 +115,8 @@ const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
                 const { data: { Code } = { Code: 0 } } = error;
 
                 if ([IMPORT_ERROR.AUTH_CREDENTIALS, IMPORT_ERROR.AUTH_IMAP].includes(Code)) {
-                    setModel({
-                        ...model,
+                    setModalModel({
+                        ...modalModel,
                         errorCode: Code,
                     });
                     return;
@@ -129,124 +129,142 @@ const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
             return;
         }
 
-        if (model.step === Step.START) {
-            const { Authentication } = await api(getAuthenticationMethod({ Email: model.email }));
-            const { ImapHost, ImapPort, ImporterID } = Authentication;
+        const { Authentication } = await api(getAuthenticationMethod({ Email: modalModel.email }));
+        const { ImapHost, ImapPort, ImporterID } = Authentication;
 
-            /* @todo Refactor this, lot of repetition */
-            /*       Same with the needDetails */
-            if (ImporterID) {
-                try {
-                    const { Importer } = await api(getMailImport(ImporterID));
+        /* @todo Refactor this, lot of repetition */
+        /*       Same with the needDetails */
+        if (ImporterID) {
+            try {
+                const { Importer } = await api(getMailImport(ImporterID));
 
-                    const { Folders = [] } = await api(getMailImportFolders(Importer.ID, { Code: model.password }));
+                const { Folders = [] } = await api(getMailImportFolders(Importer.ID, { Code: modalModel.password }));
 
-                    setModel({
-                        ...model,
-                        providerFolders: Folders.sort(destinationFoldersFirst),
-                        importID: Importer.ID,
-                        step: Step.PREPARE,
-                    });
-                } catch (error) {
-                    const { data: { Code } = { Code: 0 } } = error;
-
-                    if ([IMPORT_ERROR.AUTH_CREDENTIALS, IMPORT_ERROR.AUTH_IMAP].includes(Code)) {
-                        setModel({
-                            ...model,
-                            errorCode: Code,
-                        });
-                        return;
-                    }
-                }
-            } else if (ImapHost) {
-                try {
-                    const { Importer } = await api(
-                        createMailImport({
-                            Email: model.email,
-                            ImapHost,
-                            ImapPort,
-                            Sasl: 'PLAIN',
-                            Code: model.password,
-                        })
-                    );
-
-                    const { Folders = [] } = await api(getMailImportFolders(Importer.ID, { Code: model.password }));
-
-                    setModel({
-                        ...model,
-                        providerFolders: Folders.sort(destinationFoldersFirst),
-                        importID: Importer.ID,
-                        step: Step.PREPARE,
-                    });
-                } catch (error) {
-                    const { data: { Code } = { Code: 0 } } = error;
-
-                    if ([IMPORT_ERROR.AUTH_CREDENTIALS, IMPORT_ERROR.AUTH_IMAP].includes(Code)) {
-                        setModel({
-                            ...model,
-                            errorCode: Code,
-                        });
-                        return;
-                    }
-                }
-            } else {
-                setModel({
-                    ...model,
-                    imap: '',
-                    port: ImapPort,
-                    needDetails: true,
+                setModalModel({
+                    ...modalModel,
+                    providerFolders: Folders.sort(destinationFoldersFirst),
+                    importID: Importer.ID,
+                    step: Step.PREPARE,
                 });
+            } catch (error) {
+                const { data: { Code } = { Code: 0 } } = error;
+
+                if ([IMPORT_ERROR.AUTH_CREDENTIALS, IMPORT_ERROR.AUTH_IMAP].includes(Code)) {
+                    setModalModel({
+                        ...modalModel,
+                        errorCode: Code,
+                    });
+                    return;
+                }
             }
-            return;
-        }
+        } else if (ImapHost) {
+            try {
+                const { Importer } = await api(
+                    createMailImport({
+                        Email: modalModel.email,
+                        ImapHost,
+                        ImapPort,
+                        Sasl: 'PLAIN',
+                        Code: modalModel.password,
+                    })
+                );
+                const { Folders = [] } = await api(getMailImportFolders(Importer.ID, { Code: modalModel.password }));
+                setModalModel({
+                    ...modalModel,
+                    providerFolders: Folders.sort(destinationFoldersFirst),
+                    importID: Importer.ID,
+                    step: Step.PREPARE,
+                });
+            } catch (error) {
+                const { data: { Code } = { Code: 0 } } = error;
 
-        if (model.step === Step.PREPARE) {
-            /* @todo this gonna change */
-
-            // await api(
-            //     createJobImport(model.importID, {
-            //         AddressID: address.ID,
-            //         Folders: model.providerFolders.map(({ Name, DestinationLabelID }) => {
-            //             if (typeof DestinationLabelID !== 'undefined') {
-            //                 return {
-            //                     SourceFolder: Name,
-            //                     DestinationLabelID,
-            //                 };
-            //             }
-            //             return {
-            //                 SourceFolder: Name,
-            //                 DestinationLabelName: Name,
-            //             };
-            //         }),
-            //     })
-            // );
-            setModel({
-                ...model,
-                step: Step.STARTED,
+                if ([IMPORT_ERROR.AUTH_CREDENTIALS, IMPORT_ERROR.AUTH_IMAP].includes(Code)) {
+                    setModalModel({
+                        ...modalModel,
+                        errorCode: Code,
+                    });
+                    return;
+                }
+            }
+        } else {
+            setModalModel({
+                ...modalModel,
+                imap: '',
+                port: ImapPort,
+                needDetails: true,
             });
-            return;
         }
+    };
 
-        if (model.step === Step.STARTED) {
-            onClose();
-            return;
+    const submitPrepareStep = async () => {
+        const cleanMapping = importModel.Mapping.filter((m) => m.Destinations.FolderName).map((m) => {
+            const split = m.Destinations.FolderName.split('/');
+            const level = split.length - 1;
+            const maxLevel = Math.min(level, 2);
+
+            return {
+                Source: m.Source,
+                Destinations: {
+                    FolderName:
+                        level <= 2
+                            ? m.Destinations.FolderName
+                            : `${split.slice(0, maxLevel).join('/')}/${split.slice(maxLevel).join('\\/')}`,
+                },
+            };
+        });
+
+        const dateToTimestamp = (date: Date) => Math.floor(date.getTime() / 1000);
+
+        await api(
+            createJobImport(modalModel.importID, {
+                ...importModel,
+                StartTime: importModel.StartTime ? dateToTimestamp(importModel.StartTime) : undefined,
+                EndTime: importModel.EndTime ? dateToTimestamp(importModel.EndTime) : undefined,
+                Mapping: cleanMapping,
+                selectedPeriod: undefined,
+            })
+        );
+
+        setModalModel({
+            ...modalModel,
+            step: Step.STARTED,
+        });
+    };
+
+    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        setModalModel({ ...modalModel, errorCode: 0 });
+
+        switch (modalModel.step) {
+            case Step.START:
+                withLoading(submitStartStep(modalModel.needDetails));
+                break;
+            case Step.PREPARE:
+                withLoading(submitPrepareStep());
+                break;
+            case Step.STARTED:
+                onClose();
+                break;
+            default:
+                break;
         }
     };
 
     const cancel = useMemo(() => {
-        if (model.step === Step.STARTED) {
+        if (modalModel.step === Step.STARTED) {
             return null;
         }
 
         return <Button onClick={handleCancel}>{c('Action').t`Cancel`}</Button>;
-    }, [model.step, loading]);
+    }, [modalModel.step, loading]);
 
     const submit = useMemo(() => {
-        switch (model.step) {
+        switch (modalModel.step) {
             case Step.START:
-                const disabled = model.needDetails
-                    ? !model.email || !model.password || !model.imap || !model.port
-                    : !model.email || !model.password;
+                const disabled = modalModel.needDetails
+                    ? !modalModel.email || !modalModel.password || !modalModel.imap || !modalModel.port
+                    : !modalModel.email || !modalModel.password;
                 return (
                     <PrimaryButton type="submit" disabled={disabled} loading={loading}>
                         {c('Action').t`Next`}
@@ -259,7 +277,15 @@ const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
             default:
                 return null;
         }
-    }, [model.step, model.email, model.password, model.needDetails, model.imap, model.port, loading]);
+    }, [
+        modalModel.step,
+        modalModel.email,
+        modalModel.password,
+        modalModel.needDetails,
+        modalModel.imap,
+        modalModel.port,
+        loading,
+    ]);
 
     return (
         <FormModal
@@ -267,14 +293,29 @@ const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
             loading={loading}
             submit={submit}
             close={cancel}
-            onSubmit={(e: FormEvent<HTMLFormElement>) => withLoading(handleSubmit(e))}
+            onSubmit={handleSubmit}
             onClose={handleCancel}
             {...rest}
         >
-            <ImportMailWizard step={model.step} steps={wizardSteps} />
-            {model.step === Step.START && <ImportStartStep model={model} setModel={setModel} />}
-            {model.step === Step.PREPARE && <ImportPrepareStep address={address} model={model} setModel={setModel} />}
-            {model.step === Step.STARTED && <ImportStartedStep />}
+            <ImportMailWizard step={modalModel.step} steps={wizardSteps} />
+            {modalModel.step === Step.START && (
+                <ImportStartStep
+                    modalModel={modalModel}
+                    updateModalModel={(newModel: ImportModalModel) => setModalModel(newModel)}
+                />
+            )}
+            {modalModel.step === Step.PREPARE && (
+                <ImportPrepareStep
+                    address={address}
+                    importModel={importModel}
+                    updateImportModel={(newModel: ImportModel) => setImportModel(newModel)}
+                    modalModel={modalModel}
+                    updateModalModel={(newModel: ImportModalModel) => setModalModel(newModel)}
+                />
+            )}
+            {modalModel.step === Step.STARTED && !loadingAddresses && address && (
+                <ImportStartedStep address={address} modalModel={modalModel} />
+            )}
         </FormModal>
     );
 };
