@@ -18,7 +18,13 @@ export const isSupportedImage = (mimeType: string) =>
 export const isSupportedText = (mimeType: string) => mimeType.startsWith('text/');
 export const isVideo = (mimeType: string) => mimeType.startsWith('video/');
 export const isPDF = (mimeType: string) => mimeType === 'application/pdf' || mimeType === 'x-pdf';
+export const isExcel = (mimeType: string) =>
+    mimeType === 'application/vnd.ms-excel' ||
+    mimeType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
 
 // Will include more rules in the future
 export const isPreviewAvailable = (mimeType: string) =>
-    isSupportedImage(mimeType) || isSupportedText(mimeType) || (hasPDFSupport() && isPDF(mimeType));
+    isSupportedImage(mimeType) ||
+    isSupportedText(mimeType) ||
+    (hasPDFSupport() && isPDF(mimeType)) ||
+    isExcel(mimeType);

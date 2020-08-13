@@ -6,7 +6,8 @@ import PreviewLoader from './PreviewLoader';
 import TextPreview from './TextPreview';
 import UnsupportedPreview from './UnsupportedPreview';
 import PDFPreview from './PDFPreview';
-import { isPreviewAvailable, isSupportedImage, isSupportedText, isPDF } from './helpers';
+import ExcelPreview from './ExcelPreview';
+import { isPreviewAvailable, isSupportedImage, isSupportedText, isPDF, isExcel } from './helpers';
 import useKeyPress from '../../hooks/useKeyPress';
 
 interface Props {
@@ -47,6 +48,9 @@ const FilePreview = ({ contents, fileName, mimeType, loading, navigationControls
         }
         if (isPDF(mimeType)) {
             return <PDFPreview contents={contents} filename={fileName} />;
+        }
+        if (isExcel(mimeType)) {
+            return <ExcelPreview contents={contents} />;
         }
     };
 
