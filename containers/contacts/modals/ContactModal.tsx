@@ -73,10 +73,9 @@ const ContactModal = ({
     const [properties, setProperties] = useState<ContactProperties>(formatModel(initialProperties));
 
     const submitDisabled = useMemo(() => {
-        const nameIndex = properties.findIndex((property) => property.field === 'fn');
-        const nameProperty = properties[nameIndex];
-        const otherProperties = properties.filter((_, i) => i !== nameIndex);
-        const nameFilled = !!nameProperty.value;
+        const nameProperty = properties.find((property) => property.field === 'fn');
+        const otherProperties = properties.filter((property) => property !== nameProperty);
+        const nameFilled = !!nameProperty?.value;
         const dataFilled = otherProperties.length > 0 && otherProperties.every((p) => !!p.value);
         return !nameFilled || !dataFilled;
     }, [properties]);

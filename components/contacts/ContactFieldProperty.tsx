@@ -75,6 +75,11 @@ const ContactFieldProperty = ({ field, value, uid, onChange, ...rest }: Props) =
         };
         return <ContactImageField value={value as string} onChange={handleChangeImage} {...rest} />;
     }
+
+    if (field === 'fn') {
+        return <Input value={value} placeholder={label} onChange={handleChange} autoFocus required {...rest} />;
+    }
+
     return <Input value={value} placeholder={label} onChange={handleChange} autoFocus {...rest} />;
 };
 
