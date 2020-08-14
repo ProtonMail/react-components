@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { c } from 'ttag';
 import { History } from 'history';
 
@@ -72,6 +72,7 @@ const ContactModal = ({
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [userKeysList, loadingUserKeys] = useUserKeys();
     const [properties, setProperties] = useState<ContactProperties>(formatModel(initialProperties));
+    const nameFieldRef = useRef<HTMLInputElement>(null);
 
     const isFormValid = () => {
         const nameProperty = properties.find((property) => property.field === 'fn');
@@ -101,6 +102,7 @@ const ContactModal = ({
         setIsSubmitted(true);
 
         if (!isFormValid()) {
+            nameFieldRef.current?.focus();
             return;
         }
 
@@ -178,6 +180,7 @@ const ContactModal = ({
             <Alert>{c('Info')
                 .t`Email address, phone number and address at the top of their respective list are automatically set as the default information and will be displayed in the contact information's summary section.`}</Alert>
             <ContactModalProperties
+                ref={nameFieldRef}
                 properties={properties}
                 field="fn"
                 isSubmitted={isSubmitted}
