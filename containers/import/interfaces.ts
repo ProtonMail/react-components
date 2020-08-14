@@ -51,6 +51,24 @@ export interface ImportModalModel {
     port: string;
     imap: string;
     errorCode: number;
+    selectedPeriod: TIME_UNIT;
+    payload: ImportPayloadModel;
+}
+
+export interface FolderMapping {
+    Source: string;
+    Destinations: {
+        FolderName: string;
+    };
+}
+
+export interface ImportPayloadModel {
+    AddressID?: string;
+    Code?: string;
+    ImportLabel?: Partial<Label>;
+    StartTime?: Date;
+    EndTime?: Date;
+    Mapping: FolderMapping[];
 }
 
 export enum ImportMailStatus {
@@ -86,25 +104,4 @@ export interface ImportMailReport {
     CreateTime: number;
     EndTime: number;
     Report: string;
-}
-
-export interface MailboxSize {
-    [mailboxID: string]: number;
-}
-
-export interface FolderMapping {
-    Source: string;
-    Destinations: {
-        FolderName: string;
-    };
-}
-
-export interface ImportModel {
-    AddressID?: string;
-    Code?: string;
-    ImportLabel?: Partial<Label>;
-    StartTime?: Date;
-    EndTime?: Date;
-    Mapping: FolderMapping[];
-    selectedPeriod: TIME_UNIT;
 }

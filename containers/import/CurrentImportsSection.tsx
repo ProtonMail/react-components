@@ -13,7 +13,7 @@ import {
     useNotifications,
 } from '../..';
 import { c } from 'ttag';
-import { queryMailImportCurrent, resumeMailImport, cancelMailImport } from 'proton-shared/lib/api/mailImport';
+import { queryMailImport, resumeMailImport, cancelMailImport } from 'proton-shared/lib/api/mailImport';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 
 import { ImportMail, ImportMailStatus } from './interfaces';
@@ -26,7 +26,7 @@ const CurrentImportsSection = () => {
     const { createNotification } = useNotifications();
 
     const fetch = async () => {
-        const { Imports = [] } = await api(queryMailImportCurrent());
+        const { Imports = [] } = await api(queryMailImport());
         setImports(Imports);
     };
 

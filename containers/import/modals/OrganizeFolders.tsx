@@ -1,15 +1,15 @@
 import React, { ChangeEvent } from 'react';
-import { Icon, Button, Select, Checkbox, DropdownActions, useFolders } from '../../..';
+import { Icon, Button, Select, Checkbox, DropdownActions, useFolders, classnames } from '../../..';
 import { c } from 'ttag';
 
 import { noop } from 'proton-shared/lib/helpers/function';
 import { buildTreeview, formatFolderName } from 'proton-shared/lib/helpers/folder';
+import { getLightOrDark } from 'proton-shared/lib/themes/helpers';
 import { Address } from 'proton-shared/lib/interfaces';
 
 import { ImportModalModel, DestinationFolder, ImportModel, FolderMapping } from '../interfaces';
 import { FolderWithSubFolders } from 'proton-shared/lib/interfaces/Folder';
 import Loader from '../../../components/loader/Loader';
-import { classnames } from '../../../helpers/component';
 
 interface Props {
     modalModel: ImportModalModel;
@@ -187,7 +187,12 @@ const OrganizeFolders = ({ modalModel, importModel, setImportModel, address }: P
     ) : (
         <>
             <div className="flex">
-                <div className="flex-item-fluid ellipsis bg-global-light pt1 pl1 pr1">
+                <div
+                    className={`flex-item-fluid ellipsis ${getLightOrDark(
+                        'bg-global-light',
+                        'bg-global-altgrey'
+                    )} pt1 pl1 pr1`}
+                >
                     <span>{c('Label').t`From`}</span>
                     {`: `}
                     <strong>{modalModel.email}</strong>
@@ -200,7 +205,7 @@ const OrganizeFolders = ({ modalModel, importModel, setImportModel, address }: P
             </div>
 
             <div className="flex mb1">
-                <div className="flex-item-fluid bg-global-light pt0-5">
+                <div className={`flex-item-fluid ${getLightOrDark('bg-global-light', 'bg-global-altgrey')} pt0-5`}>
                     <ul className="unstyled m0">
                         {providerFolders.map(({ Name, DestinationFolder }, index) => {
                             const split = Name.split('/');

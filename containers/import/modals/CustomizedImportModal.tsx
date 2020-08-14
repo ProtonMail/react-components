@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, useEffect } from 'react';
+import React, { useState, ChangeEvent } from 'react';
 import {
     Icon,
     Row,
@@ -11,6 +11,8 @@ import {
     Button,
     Tooltip,
     Select,
+    PrimaryButton,
+    LabelStack,
 } from '../../..';
 import { subYears, subMonths } from 'date-fns';
 import { c, msgid } from 'ttag';
@@ -20,43 +22,33 @@ import { Address } from 'proton-shared/lib/interfaces';
 import { Label } from 'proton-shared/lib/interfaces/Label';
 
 import EditLabelModal from '../../labels/modals/Edit';
-import { ImportModalModel, ImportModel } from '../interfaces';
+import { ImportModalModel, ImportPayloadModel } from '../interfaces';
 import { TIME_UNIT, timeUnitLabels } from '../constants';
 import OrganizeFolders from './OrganizeFolders';
 
 interface Props {
     modalModel: ImportModalModel;
     updateModalModel: (newModel: ImportModalModel) => void;
-    importModel: ImportModel;
-    updateImportModel: (newModel: ImportModel) => void;
     address: Address;
     onClose?: () => void;
 }
 
-const CustomizedImportModal = ({
-    modalModel,
-    updateModalModel,
-    importModel,
-    updateImportModel,
-    address,
-    onClose = noop,
-    ...rest
-}: Props) => {
+const CustomizedImportModal = ({ modalModel, updateModalModel, address, onClose = noop, ...rest }: Props) => {
     /*
         This modal would have its own state
         then onSubmit send it to the setModel
     */
-    const [customizedImportModel, setCustomizedImportModel] = useState<ImportModel>(importModel);
-
-    useEffect(() => {
-        setCustomizedImportModel({
-            AddressID: address.ID,
-            Code: importModel.Code,
-            ImportLabel: importModel.ImportLabel,
-            Mapping: importModel.Mapping,
-            selectedPeriod: importModel.selectedPeriod,
-        });
-    }, []);
+    const [customizedPayload, setCustomizedPayload] = useState<ImportPayloadModel>({ ...modalModel.payload });
+    const [selectedPeriod, setSelectedPeriod] = useState<TIME_UNIT>(modalModel.selectedPeriod);
+    // useEffect(() => {
+    //     setCustomizedPayload({
+    //         AddressID: address.ID,
+    //         Code: importModel.Code,
+    //         ImportLabel: importModel.ImportLabel,
+    //         Mapping: importModel.Mapping,
+    //         selectedPeriod: importModel.selectedPeriod,
+    //     });
+    // }, []);
 
     const [organizeFolderVisible, setOrganizeFolderVisible] = useState(false);
     const { createModal } = useModals();
@@ -80,7 +72,7 @@ Your configuration will be lost.`}
         const ImportLabel: Label = await new Promise((resolve, reject) => {
             createModal(
                 <EditLabelModal
-                    label={customizedImportModel.ImportLabel}
+                    label={customizedPayload.ImportLabel}
                     type="label"
                     onEdit={resolve}
                     onClose={reject}
@@ -90,7 +82,7 @@ Your configuration will be lost.`}
             );
         });
 
-        setCustomizedImportModel({ ...customizedImportModel, ImportLabel });
+        setCustomizedPayload({ ...customizedPayload, ImportLabel });
     };
 
     const handleChangePeriod = (selectedPeriod: TIME_UNIT) => {
@@ -113,26 +105,30 @@ Your configuration will be lost.`}
                 break;
         }
 
-        setCustomizedImportModel({
-            ...customizedImportModel,
+        setSelectedPeriod(selectedPeriod);
+        setCustomizedPayload({
+            ...customizedPayload,
             StartTime,
             EndTime,
-            selectedPeriod,
         });
     };
 
-    const selectedFoldersCount = customizedImportModel.Mapping.filter((f) => !!f.Destinations.FolderName).length;
+    const selectedFoldersCount = customizedPayload.Mapping.filter((f) => !!f.Destinations.FolderName).length;
 
     const handleSubmit = () => {
-        updateImportModel(customizedImportModel);
+        updateModalModel({
+            ...modalModel,
+            selectedPeriod,
+            payload: customizedPayload,
+        });
         onClose();
     };
 
     return (
         <FormModal
             title={c('Title').t`Setup customized import`}
-            // submit={submit}
-            // close={cancel}
+            submit={<PrimaryButton type="submit">{c('Action').t`Save`}</PrimaryButton>}
+            close={<Button onClick={handleCancel}>{c('Action').t`Cancel`}</Button>}
             onSubmit={handleSubmit}
             onClose={handleCancel}
             style={{
@@ -150,17 +146,18 @@ Your configuration will be lost.`}
                         </Tooltip>
                     </FormLabel>
                     <Field className="flex flex-items-center flex-nowrap">
-                        <span className="inline-flex flew-row flex-items-center pm-badgeLabel-container">
-                            <span
-                                className="badgeLabel flex flex-row flex-items-center"
-                                title={customizedImportModel.ImportLabel?.Name}
-                                style={{ color: customizedImportModel.ImportLabel?.Color }}
-                            >
-                                <span className="pm-badgeLabel-link ellipsis color-white nodecoration">
-                                    {customizedImportModel.ImportLabel?.Name}
-                                </span>
-                            </span>
-                        </span>
+                        {customizedPayload.ImportLabel && customizedPayload.ImportLabel.Name && (
+                            <LabelStack
+                                labels={[
+                                    {
+                                        name: customizedPayload.ImportLabel.Name,
+                                        color: customizedPayload.ImportLabel.Color,
+                                        title: customizedPayload.ImportLabel.Name,
+                                    },
+                                ]}
+                                showDelete={false}
+                            />
+                        )}
                         <Button className="flex-item-noshrink ml1" onClick={handleEditLabel}>
                             {c('Action').t`Edit label`}
                         </Button>
@@ -237,8 +234,8 @@ Your configuration will be lost.`}
                 <OrganizeFolders
                     address={address}
                     modalModel={modalModel}
-                    importModel={customizedImportModel}
-                    setImportModel={setCustomizedImportModel}
+                    importModel={customizedPayload}
+                    setImportModel={setCustomizedPayload}
                 />
             )}
         </FormModal>

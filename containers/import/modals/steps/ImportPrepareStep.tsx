@@ -7,21 +7,19 @@ import { Address } from 'proton-shared/lib/interfaces';
 import { LABEL_COLORS, LABEL_TYPE } from 'proton-shared/lib/constants';
 import { randomIntFromInterval } from 'proton-shared/lib/helpers/function';
 
-import { Icon, Button, useModals } from '../../../..';
+import { Icon, Button, useModals, LabelStack } from '../../../..';
 
-import { ImportModalModel, ImportModel } from '../../interfaces';
-// import { TIME_UNIT, timeUnitLabels } from '../../constants';
+import { ImportModalModel } from '../../interfaces';
+import { timeUnitLabels } from '../../constants';
 import CustomizedImportModal from '../CustomizedImportModal';
 
 interface Props {
     modalModel: ImportModalModel;
     updateModalModel: (newModel: ImportModalModel) => void;
-    importModel: ImportModel;
-    updateImportModel: (newModel: ImportModel) => void;
     address: Address;
 }
 
-const ImportPrepareStep = ({ modalModel, updateModalModel, importModel, updateImportModel, address }: Props) => {
+const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => {
     const { createModal } = useModals();
     const { providerFolders, password } = modalModel;
 
@@ -33,13 +31,7 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, importModel, updateIm
 
     const onClickCustomize = () => {
         createModal(
-            <CustomizedImportModal
-                address={address}
-                modalModel={modalModel}
-                updateModalModel={updateModalModel}
-                importModel={importModel}
-                updateImportModel={updateImportModel}
-            />
+            <CustomizedImportModal address={address} modalModel={modalModel} updateModalModel={updateModalModel} />
         );
     };
 
@@ -51,17 +43,18 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, importModel, updateIm
             },
         }));
 
-        updateImportModel({
-            AddressID: address.ID,
-            Code: password,
-            Mapping,
-            selectedPeriod: importModel.selectedPeriod,
-            // @todo might end up optional
-            ImportLabel: {
-                Name: `${modalModel.email.split('@')[1]} - export ${format(new Date(), 'yyyy-MM-dd')}`,
-                Color: LABEL_COLORS[randomIntFromInterval(0, LABEL_COLORS.length - 1)],
-                Type: LABEL_TYPE.MESSAGE_LABEL,
-                Order: 0,
+        updateModalModel({
+            ...modalModel,
+            payload: {
+                AddressID: address.ID,
+                Code: password,
+                Mapping,
+                ImportLabel: {
+                    Name: `${modalModel.email.split('@')[1]} - export ${format(new Date(), 'yyyy-MM-dd')}`,
+                    Color: LABEL_COLORS[randomIntFromInterval(0, LABEL_COLORS.length - 1)],
+                    Type: LABEL_TYPE.MESSAGE_LABEL,
+                    Order: 0,
+                },
             },
         });
     }, []);
@@ -108,12 +101,27 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, importModel, updateIm
                 {/* @todo use enum and labels here, put that in one of the model somehow */}
                 <div className="mb1 ml1 flex flex-items-center">
                     <Icon className="mr0-5" name="clock" />
-                    {importModel.StartTime && importModel.EndTime
-                        ? c('Info').t`Import all messages from ${format(
-                              importModel.StartTime,
-                              'd MMM yyyy'
-                          )} to ${format(importModel.EndTime, 'd MMM yyyy')}`
-                        : c('Info').t`Import all messages from the beginning of the time`}
+                    {c('Info').t`Import all imported from ${timeUnitLabels[modalModel.selectedPeriod]}`}
+                </div>
+
+                <div className="mb1 ml1 flex flex-items-center">
+                    <Icon className="mr0-5" name="label" />
+                    {c('Info').t`Label all imported messages as`}
+
+                    {modalModel.payload.ImportLabel && modalModel.payload.ImportLabel.Name && (
+                        <span className="ml0-5">
+                            <LabelStack
+                                labels={[
+                                    {
+                                        name: modalModel.payload.ImportLabel.Name,
+                                        color: modalModel.payload.ImportLabel.Color,
+                                        title: modalModel.payload.ImportLabel.Name,
+                                    },
+                                ]}
+                                showDelete={false}
+                            />
+                        </span>
+                    )}
                 </div>
 
                 <Button onClick={onClickCustomize}>{c('Action').t`Customized Import`}</Button>

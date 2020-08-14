@@ -20,7 +20,7 @@ import {
 } from 'proton-shared/lib/api/mailImport';
 import { noop } from 'proton-shared/lib/helpers/function';
 
-import { Step, ImportModalModel, IMPORT_ERROR, MailImportFolder, ImportModel } from '../interfaces';
+import { Step, ImportModalModel, IMPORT_ERROR, MailImportFolder, FolderMapping } from '../interfaces';
 
 import ImportMailWizard from '../../../components/import/ImportMailWizard';
 
@@ -30,7 +30,7 @@ import ImportStartedStep from './steps/ImportStartedStep';
 import { TIME_UNIT } from '../constants';
 
 const DEFAULT_MODAL_MODEL: ImportModalModel = {
-    step: Step.STARTED, // Step.START,
+    step: Step.START,
     needDetails: false,
     importID: '',
     email: 'mindaugas2020v@gmail.com', // '',
@@ -39,11 +39,17 @@ const DEFAULT_MODAL_MODEL: ImportModalModel = {
     imap: '',
     errorCode: 0,
     providerFolders: [],
+    selectedPeriod: TIME_UNIT.BIG_BANG,
+    payload: {
+        Mapping: [],
+    },
 };
 
 interface Props {
     onClose?: () => void;
 }
+
+const dateToTimestamp = (date: Date) => Math.floor(date.getTime() / 1000);
 
 const destinationFoldersFirst = (a: MailImportFolder, b: MailImportFolder) => {
     if (a.DestinationFolder && b.DestinationFolder) {
@@ -59,10 +65,6 @@ const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
     const [addresses, loadingAddresses] = useAddresses();
     const [address] = addresses || [];
     const [modalModel, setModalModel] = useState<ImportModalModel>(DEFAULT_MODAL_MODEL);
-    const [importModel, setImportModel] = useState<ImportModel>({
-        Mapping: [],
-        selectedPeriod: TIME_UNIT.BIG_BANG,
-    });
     const api = useApi();
 
     const title = useMemo(() => {
@@ -197,29 +199,29 @@ const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
     };
 
     const submitPrepareStep = async () => {
-        const cleanMapping = importModel.Mapping.filter((m) => m.Destinations.FolderName).map((m) => {
-            const split = m.Destinations.FolderName.split('/');
-            const level = split.length - 1;
-            const maxLevel = Math.min(level, 2);
+        const cleanMapping = modalModel.payload.Mapping.filter((m: FolderMapping) => m.Destinations.FolderName).map(
+            (m: FolderMapping) => {
+                const split = m.Destinations.FolderName.split('/');
+                const level = split.length - 1;
+                const maxLevel = Math.min(level, 2);
 
-            return {
-                Source: m.Source,
-                Destinations: {
-                    FolderName:
-                        level <= 2
-                            ? m.Destinations.FolderName
-                            : `${split.slice(0, maxLevel).join('/')}/${split.slice(maxLevel).join('\\/')}`,
-                },
-            };
-        });
-
-        const dateToTimestamp = (date: Date) => Math.floor(date.getTime() / 1000);
+                return {
+                    Source: m.Source,
+                    Destinations: {
+                        FolderName:
+                            level <= 2
+                                ? m.Destinations.FolderName
+                                : `${split.slice(0, maxLevel).join('/')}/${split.slice(maxLevel).join('\\/')}`,
+                    },
+                };
+            }
+        );
 
         await api(
             createJobImport(modalModel.importID, {
-                ...importModel,
-                StartTime: importModel.StartTime ? dateToTimestamp(importModel.StartTime) : undefined,
-                EndTime: importModel.EndTime ? dateToTimestamp(importModel.EndTime) : undefined,
+                ...modalModel.payload,
+                StartTime: modalModel.payload.StartTime ? dateToTimestamp(modalModel.payload.StartTime) : undefined,
+                EndTime: modalModel.payload.EndTime ? dateToTimestamp(modalModel.payload.EndTime) : undefined,
                 Mapping: cleanMapping,
                 selectedPeriod: undefined,
             })
@@ -307,8 +309,6 @@ const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
             {modalModel.step === Step.PREPARE && (
                 <ImportPrepareStep
                     address={address}
-                    importModel={importModel}
-                    updateImportModel={(newModel: ImportModel) => setImportModel(newModel)}
                     modalModel={modalModel}
                     updateModalModel={(newModel: ImportModalModel) => setModalModel(newModel)}
                 />
