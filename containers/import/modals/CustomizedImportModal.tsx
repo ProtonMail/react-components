@@ -40,15 +40,8 @@ const CustomizedImportModal = ({ modalModel, updateModalModel, address, onClose 
     */
     const [customizedPayload, setCustomizedPayload] = useState<ImportPayloadModel>({ ...modalModel.payload });
     const [selectedPeriod, setSelectedPeriod] = useState<TIME_UNIT>(modalModel.selectedPeriod);
-    // useEffect(() => {
-    //     setCustomizedPayload({
-    //         AddressID: address.ID,
-    //         Code: importModel.Code,
-    //         ImportLabel: importModel.ImportLabel,
-    //         Mapping: importModel.Mapping,
-    //         selectedPeriod: importModel.selectedPeriod,
-    //     });
-    // }, []);
+
+    const handleChangePayload = (newPayload: ImportPayloadModel) => setCustomizedPayload(newPayload);
 
     const [organizeFolderVisible, setOrganizeFolderVisible] = useState(false);
     const { createModal } = useModals();
@@ -197,6 +190,7 @@ Your configuration will be lost.`}
                                     text: c('Option').t`From ${timeUnitLabels[TIME_UNIT.LAST_MONTH]}`,
                                 },
                             ]}
+                            value={selectedPeriod}
                         />
                     </Field>
                 </Row>
@@ -234,8 +228,8 @@ Your configuration will be lost.`}
                 <OrganizeFolders
                     address={address}
                     modalModel={modalModel}
-                    importModel={customizedPayload}
-                    setImportModel={setCustomizedPayload}
+                    payload={customizedPayload}
+                    onChangePayload={handleChangePayload}
                 />
             )}
         </FormModal>

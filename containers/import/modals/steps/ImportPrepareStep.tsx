@@ -9,7 +9,7 @@ import { randomIntFromInterval } from 'proton-shared/lib/helpers/function';
 
 import { Icon, Button, useModals, LabelStack } from '../../../..';
 
-import { ImportModalModel } from '../../interfaces';
+import { ImportModalModel, MailImportFolder } from '../../interfaces';
 import { timeUnitLabels } from '../../constants';
 import CustomizedImportModal from '../CustomizedImportModal';
 
@@ -25,6 +25,18 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
 
     const foldersFound = useMemo(() => providerFolders.length, [providerFolders]);
     const messagesFound = useMemo(() => providerFolders.reduce((acc, { Total }) => acc + Total, 0), [providerFolders]);
+    const selectedFolders = useMemo(
+        () =>
+            modalModel.payload.Mapping.filter((m) => m.Destinations.FolderName).map(
+                (mappedFolder) =>
+                    providerFolders.find((p) => p.Name === mappedFolder.Source) || ({} as MailImportFolder)
+            ),
+        [modalModel.payload.Mapping, providerFolders]
+    );
+    const selectedFoldersMessageCount = useMemo(() => selectedFolders.reduce((acc, { Total = 0 }) => acc + Total, 0), [
+        modalModel.payload.Mapping,
+        providerFolders,
+    ]);
 
     /*  @todo Missing Size in folders */
     // const importSize = useMemo(() => providerFolders.reduce((acc, { Size = 0 }) => acc + Size, 0), [providerFolders]);
@@ -89,6 +101,17 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
                     )}
                 </div>
 
+                {selectedFoldersMessageCount !== messagesFound && (
+                    <div className="mb0-5 ml2 flex flex-items-center">
+                        <Icon className="mr0-5" name="all-emails" />
+                        {c('Info').ngettext(
+                            msgid`${selectedFoldersMessageCount} message has been selected`,
+                            `${selectedFoldersMessageCount} messages have been selected`,
+                            selectedFoldersMessageCount
+                        )}
+                    </div>
+                )}
+
                 <div className="mb0-5 ml1 flex flex-items-center">
                     <Icon className="mr0-5" name="parent-folder" />
                     {c('Info').ngettext(
@@ -98,13 +121,23 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
                     )}
                 </div>
 
-                {/* @todo use enum and labels here, put that in one of the model somehow */}
-                <div className="mb1 ml1 flex flex-items-center">
+                {selectedFolders.length !== foldersFound && (
+                    <div className="mb0-5 ml2 flex flex-items-center">
+                        <Icon className="mr0-5" name="parent-folder" />
+                        {c('Info').ngettext(
+                            msgid`${selectedFolders.length} folder selected`,
+                            `${selectedFolders.length} folders selected`,
+                            selectedFolders.length
+                        )}
+                    </div>
+                )}
+
+                <div className="mb0-5 ml1 flex flex-items-center">
                     <Icon className="mr0-5" name="clock" />
                     {c('Info').t`Import all imported from ${timeUnitLabels[modalModel.selectedPeriod]}`}
                 </div>
 
-                <div className="mb1 ml1 flex flex-items-center">
+                <div className="mb0-5 ml1 flex flex-items-center">
                     <Icon className="mr0-5" name="label" />
                     {c('Info').t`Label all imported messages as`}
 
@@ -123,8 +156,7 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
                         </span>
                     )}
                 </div>
-
-                <Button onClick={onClickCustomize}>{c('Action').t`Customized Import`}</Button>
+                <Button className="mt0-5" onClick={onClickCustomize}>{c('Action').t`Customized Import`}</Button>
             </div>
         </>
     );

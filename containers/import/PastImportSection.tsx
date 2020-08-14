@@ -8,7 +8,6 @@ import {
     TableHeader,
     TableBody,
     TableRow,
-    DropdownActions,
     useApi,
     useLoading,
     useModals,
@@ -18,7 +17,7 @@ import { c } from 'ttag';
 import { queryMailImportHistory, deleteMailImportReport } from 'proton-shared/lib/api/mailImport';
 
 import { ImportMailReport, ImportMailReportStatus } from './interfaces';
-import { noop } from 'proton-shared/lib/helpers/function';
+import { Button } from '../../components/button';
 
 interface Props {
     status: ImportMailReportStatus;
@@ -87,14 +86,6 @@ const PastImportsSection = () => {
         createNotification({ text: c('Success').t`Import deleted` });
     };
 
-    const handleShowDetails = (report: string) => {
-        createModal(
-            <ConfirmModal title="REPORT" onConfirm={noop} onClose={noop} small={false}>
-                <pre>{report}</pre>
-            </ConfirmModal>
-        );
-    };
-
     return (
         <Table>
             <TableHeader
@@ -108,25 +99,13 @@ const PastImportsSection = () => {
                             cells={[
                                 Email,
                                 <ImportStatus key="status" status={Status} />,
-                                <DropdownActions
-                                    key="actions"
+                                <Button
                                     loading={loadingActions}
                                     className="pm-button--small"
-                                    list={[
-                                        {
-                                            text: c('Action').t`Show details`,
-                                            onClick() {
-                                                handleShowDetails(Report);
-                                            },
-                                        },
-                                        {
-                                            text: c('Action').t`Delete`,
-                                            onClick() {
-                                                withLoadingActions(handleDelete(ID, Email));
-                                            },
-                                        },
-                                    ]}
-                                />,
+                                    onClick={() => {
+                                        withLoadingActions(handleDelete(ID, Email));
+                                    }}
+                                >{c('Action').t`Delete record`}</Button>,
                             ]}
                         />
                     );

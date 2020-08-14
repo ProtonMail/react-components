@@ -7,15 +7,15 @@ import { buildTreeview, formatFolderName } from 'proton-shared/lib/helpers/folde
 import { getLightOrDark } from 'proton-shared/lib/themes/helpers';
 import { Address } from 'proton-shared/lib/interfaces';
 
-import { ImportModalModel, DestinationFolder, ImportModel, FolderMapping } from '../interfaces';
+import { ImportModalModel, DestinationFolder, ImportPayloadModel, FolderMapping } from '../interfaces';
 import { FolderWithSubFolders } from 'proton-shared/lib/interfaces/Folder';
 import Loader from '../../../components/loader/Loader';
 
 interface Props {
     modalModel: ImportModalModel;
     address: Address;
-    importModel: ImportModel;
-    setImportModel: React.Dispatch<React.SetStateAction<ImportModel>>;
+    payload: ImportPayloadModel;
+    onChangePayload: (newPayload: ImportPayloadModel) => void;
 }
 
 interface FolderSelectOption {
@@ -106,7 +106,7 @@ const folderReducer = (
     return acc;
 };
 
-const OrganizeFolders = ({ modalModel, importModel, setImportModel, address }: Props) => {
+const OrganizeFolders = ({ modalModel, address, payload, onChangePayload }: Props) => {
     const { providerFolders } = modalModel;
     const [folders = [], foldersLoading] = useFolders();
     const treeview = buildTreeview(folders);
@@ -149,7 +149,7 @@ const OrganizeFolders = ({ modalModel, importModel, setImportModel, address }: P
     ];
 
     const onToggleCheck = (index: number, checked: boolean) => {
-        const oldMapping = importModel.Mapping;
+        const oldMapping = payload.Mapping;
         const folderFromProvider = providerFolders[index];
 
         const Mapping: FolderMapping[] = [
@@ -163,11 +163,11 @@ const OrganizeFolders = ({ modalModel, importModel, setImportModel, address }: P
             ...oldMapping.slice(index + 1),
         ];
 
-        setImportModel({ ...importModel, Mapping });
+        onChangePayload({ ...payload, Mapping });
     };
 
     const onChangeSelect = (index: number, value: string) => {
-        const oldMapping = importModel.Mapping;
+        const oldMapping = payload.Mapping;
         const Mapping: FolderMapping[] = [
             ...oldMapping.slice(0, index),
             {
@@ -179,7 +179,7 @@ const OrganizeFolders = ({ modalModel, importModel, setImportModel, address }: P
             ...oldMapping.slice(index + 1),
         ];
 
-        setImportModel({ ...importModel, Mapping });
+        onChangePayload({ ...payload, Mapping });
     };
 
     return foldersLoading ? (
@@ -217,7 +217,7 @@ const OrganizeFolders = ({ modalModel, importModel, setImportModel, address }: P
                                     key={`providerFolder_${index}`}
                                     className={classnames([
                                         'flex flex-nowrap flex-items-center border-bottom pl1 pr1',
-                                        !importModel.Mapping[index].Destinations.FolderName && 'opacity-50',
+                                        !payload.Mapping[index].Destinations.FolderName && 'opacity-50',
                                     ])}
                                     style={{
                                         height: 50,
@@ -238,7 +238,7 @@ const OrganizeFolders = ({ modalModel, importModel, setImportModel, address }: P
                                                 onToggleCheck(index, target.checked);
                                             }}
                                             id={`providerFolder_${index}`}
-                                            checked={importModel.Mapping[index].Destinations.FolderName !== ''}
+                                            checked={payload.Mapping[index].Destinations.FolderName !== ''}
                                         />
                                     </span>
                                     <label
@@ -263,7 +263,7 @@ const OrganizeFolders = ({ modalModel, importModel, setImportModel, address }: P
                             <li
                                 className={classnames([
                                     'flex flex-nowrap flex-items-center pl1 pr1',
-                                    !importModel.Mapping[index].Destinations.FolderName && 'opacity-50',
+                                    !payload.Mapping[index].Destinations.FolderName && 'opacity-50',
                                 ])}
                                 style={{
                                     height: 50,
@@ -275,7 +275,7 @@ const OrganizeFolders = ({ modalModel, importModel, setImportModel, address }: P
                                         <Select
                                             className="flex-item-fluid"
                                             options={foldersOptions}
-                                            value={importModel.Mapping[index].Destinations.FolderName}
+                                            value={payload.Mapping[index].Destinations.FolderName}
                                             onChange={({ target }: ChangeEvent<HTMLSelectElement>) => {
                                                 onChangeSelect(index, target.value);
                                             }}
@@ -287,7 +287,7 @@ const OrganizeFolders = ({ modalModel, importModel, setImportModel, address }: P
                                         <Select
                                             className="flex-item-fluid"
                                             options={foldersOptions}
-                                            value={importModel.Mapping[index].Destinations.FolderName}
+                                            value={payload.Mapping[index].Destinations.FolderName}
                                             onChange={({ target }: ChangeEvent<HTMLSelectElement>) => {
                                                 onChangeSelect(index, target.value);
                                             }}
