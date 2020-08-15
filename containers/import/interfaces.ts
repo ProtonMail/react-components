@@ -44,13 +44,14 @@ export enum Step {
 export interface ImportModalModel {
     providerFolders: MailImportFolder[];
     step: Step;
-    needDetails: boolean;
+    needIMAPDetails: boolean;
     importID: string;
     email: string;
     password: string;
     port: string;
     imap: string;
     errorCode: number;
+    errorLabel: string;
     selectedPeriod: TIME_UNIT;
     payload: ImportPayloadModel;
 }
@@ -82,13 +83,16 @@ export enum ImportMailStatus {
 
 export interface ImportMail {
     ID: string;
-    CreationTime: number;
+    CreateTime: number;
+    // CreationTime: number;
     Email: string;
     AddressID: string;
-    Status: ImportMailStatus;
+    State: ImportMailStatus;
+    // Status: ImportMailStatus;
     FilterStartDate: string;
     FilterEndDate: string;
-    FolderMapping: ImportedFolder[];
+    Mapping: ImportedFolder[];
+    // FolderMapping: ImportedFolder[];
 }
 
 export enum ImportMailReportStatus {

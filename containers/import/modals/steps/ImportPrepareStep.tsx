@@ -10,7 +10,7 @@ import { randomIntFromInterval } from 'proton-shared/lib/helpers/function';
 import { Icon, Button, useModals, LabelStack } from '../../../..';
 
 import { ImportModalModel, MailImportFolder } from '../../interfaces';
-import { timeUnitLabels } from '../../constants';
+import { timeUnitLabels, TIME_UNIT } from '../../constants';
 import CustomizedImportModal from '../CustomizedImportModal';
 
 interface Props {
@@ -104,11 +104,13 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
                 {selectedFoldersMessageCount !== messagesFound && (
                     <div className="mb0-5 ml2 flex flex-items-center">
                         <Icon className="mr0-5" name="all-emails" />
-                        {c('Info').ngettext(
-                            msgid`${selectedFoldersMessageCount} message has been selected`,
-                            `${selectedFoldersMessageCount} messages have been selected`,
-                            selectedFoldersMessageCount
-                        )}
+                        <strong>
+                            {c('Info').ngettext(
+                                msgid`${selectedFoldersMessageCount} message has been selected`,
+                                `${selectedFoldersMessageCount} messages have been selected`,
+                                selectedFoldersMessageCount
+                            )}
+                        </strong>
                     </div>
                 )}
 
@@ -123,18 +125,24 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
 
                 {selectedFolders.length !== foldersFound && (
                     <div className="mb0-5 ml2 flex flex-items-center">
-                        <Icon className="mr0-5" name="parent-folder" />
-                        {c('Info').ngettext(
-                            msgid`${selectedFolders.length} folder selected`,
-                            `${selectedFolders.length} folders selected`,
-                            selectedFolders.length
-                        )}
+                        <strong>
+                            <Icon className="mr0-5" name="parent-folder" />
+                            {c('Info').ngettext(
+                                msgid`${selectedFolders.length} folder selected`,
+                                `${selectedFolders.length} folders selected`,
+                                selectedFolders.length
+                            )}
+                        </strong>
                     </div>
                 )}
 
                 <div className="mb0-5 ml1 flex flex-items-center">
                     <Icon className="mr0-5" name="clock" />
-                    {c('Info').t`Import all imported from ${timeUnitLabels[modalModel.selectedPeriod]}`}
+                    {modalModel.selectedPeriod === TIME_UNIT.BIG_BANG
+                        ? c('Info').t`Import all imported from ${timeUnitLabels[modalModel.selectedPeriod]}`
+                        : c('Info').jt`Import all imported from ${(
+                              <strong className="ml0-5">{timeUnitLabels[modalModel.selectedPeriod]}</strong>
+                          )}`}
                 </div>
 
                 <div className="mb0-5 ml1 flex flex-items-center">

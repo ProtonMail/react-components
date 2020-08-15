@@ -13,3 +13,6 @@ export const timeUnitLabels = {
     [TIME_UNIT.LAST_3_MONTHS]: c('Label').t`the last 3 months`,
     [TIME_UNIT.LAST_MONTH]: c('Label').t`the last month`,
 };
+
+export const INVALID_CREDENTIALS_ERROR_LABEL = 'Invalid credentials';
+export const IMAP_CONNECTION_ERROR_LABEL = 'Cannot establish connection with IMAP server';

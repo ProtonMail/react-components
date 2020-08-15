@@ -31,13 +31,14 @@ import { TIME_UNIT } from '../constants';
 
 const DEFAULT_MODAL_MODEL: ImportModalModel = {
     step: Step.START,
-    needDetails: false,
+    needIMAPDetails: false,
     importID: '',
     email: 'mindaugas2020v@gmail.com', // '',
     password: 'wzwdtwptfzvsqoqt', // '',
     port: '',
     imap: '',
     errorCode: 0,
+    errorLabel: '',
     providerFolders: [],
     selectedPeriod: TIME_UNIT.BIG_BANG,
     payload: {
@@ -94,48 +95,11 @@ const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
         );
     };
 
-    const submitStartStep = async (needDetails: boolean) => {
-        if (needDetails) {
-            try {
-                const { Importer } = await api(
-                    createMailImport({
-                        Email: modalModel.email,
-                        ImapHost: modalModel.imap,
-                        ImapPort: parseInt(modalModel.port),
-                        Sasl: 'PLAIN',
-                        Code: modalModel.password,
-                    })
-                );
-                const { Folders = [] } = await api(getMailImportFolders(Importer.ID));
-                setModalModel({
-                    ...modalModel,
-                    providerFolders: Folders.sort(destinationFoldersFirst),
-                    importID: Importer.ID,
-                    step: Step.PREPARE,
-                });
-            } catch (error) {
-                const { data: { Code } = { Code: 0 } } = error;
-
-                if ([IMPORT_ERROR.AUTH_CREDENTIALS, IMPORT_ERROR.AUTH_IMAP].includes(Code)) {
-                    setModalModel({
-                        ...modalModel,
-                        errorCode: Code,
-                    });
-                    return;
-                }
-                if (Code === IMPORT_ERROR.ALREADY_EXISTS) {
-                    alert('oh no, import already exists');
-                }
-            }
-
-            return;
-        }
-
+    /* @todo Refactor this big mess */
+    const submitStartStep = async (needIMAPDetails = false) => {
         const { Authentication } = await api(getAuthenticationMethod({ Email: modalModel.email }));
         const { ImapHost, ImapPort, ImporterID } = Authentication;
 
-        /* @todo Refactor this, lot of repetition */
-        /*       Same with the needDetails */
         if (ImporterID) {
             try {
                 const { Importer } = await api(getMailImport(ImporterID));
@@ -160,6 +124,43 @@ const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
                 }
             }
         } else if (ImapHost) {
+            if (needIMAPDetails) {
+                try {
+                    const { Importer } = await api(
+                        createMailImport({
+                            Email: modalModel.email,
+                            ImapHost: modalModel.imap,
+                            ImapPort: parseInt(modalModel.port),
+                            Sasl: 'PLAIN',
+                            Code: modalModel.password,
+                        })
+                    );
+                    const { Folders = [] } = await api(getMailImportFolders(Importer.ID));
+                    setModalModel({
+                        ...modalModel,
+                        providerFolders: Folders.sort(destinationFoldersFirst),
+                        importID: Importer.ID,
+                        step: Step.PREPARE,
+                    });
+                } catch (error) {
+                    const { data: { Code, Error } = { Code: 0, Error: '' } } = error;
+
+                    if ([IMPORT_ERROR.AUTH_CREDENTIALS, IMPORT_ERROR.AUTH_IMAP].includes(Code)) {
+                        setModalModel({
+                            ...modalModel,
+                            errorCode: Code,
+                            errorLabel: Error,
+                        });
+                        return;
+                    }
+                    if (Code === IMPORT_ERROR.ALREADY_EXISTS) {
+                        // console.log('import already exists');
+                    }
+                }
+
+                return;
+            }
+
             try {
                 const { Importer } = await api(
                     createMailImport({
@@ -193,7 +194,7 @@ const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
                 ...modalModel,
                 imap: '',
                 port: ImapPort,
-                needDetails: true,
+                needIMAPDetails: true,
             });
         }
     };
@@ -240,7 +241,7 @@ const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
 
         switch (modalModel.step) {
             case Step.START:
-                withLoading(submitStartStep(modalModel.needDetails));
+                withLoading(submitStartStep(modalModel.needIMAPDetails));
                 break;
             case Step.PREPARE:
                 withLoading(submitPrepareStep());
@@ -264,7 +265,7 @@ const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
     const submit = useMemo(() => {
         switch (modalModel.step) {
             case Step.START:
-                const disabled = modalModel.needDetails
+                const disabled = modalModel.needIMAPDetails
                     ? !modalModel.email || !modalModel.password || !modalModel.imap || !modalModel.port
                     : !modalModel.email || !modalModel.password;
                 return (
@@ -273,9 +274,9 @@ const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
                     </PrimaryButton>
                 );
             case Step.PREPARE:
-                return <PrimaryButton type="submit">{c('Action').t`Start import`}</PrimaryButton>;
+                return <PrimaryButton loading={loading} type="submit">{c('Action').t`Start import`}</PrimaryButton>;
             case Step.STARTED:
-                return <PrimaryButton type="submit">{c('Action').t`Close`}</PrimaryButton>;
+                return <PrimaryButton loading={loading} type="submit">{c('Action').t`Close`}</PrimaryButton>;
             default:
                 return null;
         }
@@ -283,7 +284,7 @@ const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
         modalModel.step,
         modalModel.email,
         modalModel.password,
-        modalModel.needDetails,
+        modalModel.needIMAPDetails,
         modalModel.imap,
         modalModel.port,
         loading,

@@ -18,6 +18,15 @@ import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 
 import { ImportMail, ImportMailStatus } from './interfaces';
 
+interface ImportsFromServer {
+    Active: ImportMail;
+    Email: string;
+    ID: string;
+    ImapHost: string;
+    ImapPort: number;
+    Sasl: string;
+}
+
 const CurrentImportsSection = () => {
     const api = useApi();
     const [imports, setImports] = useState<ImportMail[]>([]);
@@ -26,8 +35,17 @@ const CurrentImportsSection = () => {
     const { createNotification } = useNotifications();
 
     const fetch = async () => {
-        const { Imports = [] } = await api(queryMailImport());
-        setImports(Imports);
+        const data: { Importers: ImportsFromServer[] } = await api(queryMailImport());
+        const imports = data.Importers || [];
+        setImports(
+            imports
+                .filter((i) => i.Active)
+                .map((i) => ({
+                    ...i.Active,
+                    ID: i.ID,
+                    Email: i.Email,
+                }))
+        );
     };
 
     useEffect(() => {
@@ -73,9 +91,9 @@ const CurrentImportsSection = () => {
                 ]}
             />
             <TableBody>
-                {imports.map(({ ID, Email, Status, CreationTime, FolderMapping = [] }, index) => {
-                    const { total, processed } = FolderMapping.reduce(
-                        (acc, { Total, Processed }) => {
+                {imports.map(({ ID, Email, State, CreateTime, Mapping = [] }, index) => {
+                    const { total, processed } = Mapping.reduce(
+                        (acc, { Total = 0, Processed = 0 }) => {
                             acc.total += Total;
                             acc.processed += Processed;
                             return acc;
@@ -89,7 +107,7 @@ const CurrentImportsSection = () => {
                             cells={[
                                 <div className="w100 ellipsis">{Email}</div>,
                                 <Time key="creation" format="PPp">
-                                    {CreationTime}
+                                    {CreateTime}
                                 </Time>,
                                 c('Import status').t`${isNaN(percentage) ? 0 : Math.round(percentage)}% imported...`,
                                 <DropdownActions
@@ -97,13 +115,13 @@ const CurrentImportsSection = () => {
                                     loading={loadingActions}
                                     className="pm-button--small"
                                     list={[
-                                        Status !== ImportMailStatus.CANCELED && {
+                                        State !== ImportMailStatus.CANCELED && {
                                             text: c('Action').t`Cancel`,
                                             onClick() {
                                                 withLoadingActions(handleCancel(ID));
                                             },
                                         },
-                                        Status === ImportMailStatus.PAUSED && {
+                                        State === ImportMailStatus.PAUSED && {
                                             text: c('Action').t`Resume`,
                                             onClick() {
                                                 withLoadingActions(handleResume(ID));
