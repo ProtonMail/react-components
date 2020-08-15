@@ -4,9 +4,9 @@ import creditCardType from 'credit-card-type';
 import { getLightOrDark } from 'proton-shared/lib/themes/helpers';
 import { isNumber } from 'proton-shared/lib/helpers/validators';
 
-const banks = require.context('design-system/assets/img/shared/bank-icons', true, /.svg$/);
-
 import { Input, Icon } from '../../components';
+
+const banks = require.context('design-system/assets/img/shared/bank-icons', true, /.svg$/);
 
 const banksMap = banks.keys().reduce((acc, key) => {
     acc[key] = () => banks(key);

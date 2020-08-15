@@ -5,9 +5,9 @@ import { PAYMENT_METHOD_TYPES, TOKEN_TYPES } from 'proton-shared/lib/constants';
 import { API_CUSTOM_ERROR_CODES } from 'proton-shared/lib/errors';
 import { checkSubscription, subscribe } from 'proton-shared/lib/api/payments';
 import { c } from 'ttag';
-import { HumanVerificationMethodType } from 'proton-shared/lib/interfaces';
+import { HumanVerificationMethodType , Address } from 'proton-shared/lib/interfaces';
 import { queryAddresses } from 'proton-shared/lib/api/addresses';
-import { Address } from 'proton-shared/lib/interfaces';
+
 import { generateKeySaltAndPassphrase } from 'proton-shared/lib/keys/keys';
 import { getResetAddressesKeys } from 'proton-shared/lib/keys/resetKeys';
 import { persistSession } from 'proton-shared/lib/authentication/persistedSessionHelper';
@@ -511,9 +511,9 @@ const AccountSignupContainer = ({ onLogin, Layout }: Props) => {
         const getBackStep = () => {
             if (model.username && model.recoveryPhone) {
                 return RECOVERY_PHONE;
-            } else if (model.username) {
+            } if (model.username) {
                 return RECOVERY_EMAIL;
-            } else if (model.email) {
+            } if (model.email) {
                 return VERIFICATION_CODE;
             }
         };

@@ -61,7 +61,7 @@ const getInitialState = (oldUID?: string, oldLocalID?: number): { UID?: string; 
             localID: undefined,
         };
     }
-    const pathname = window.location.pathname;
+    const { pathname } = window.location;
     if (getIsSSOPath(pathname)) {
         // Special routes which should never be logged in
         return;
