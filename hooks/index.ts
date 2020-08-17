@@ -66,3 +66,5 @@ export { default as useInstance } from './useInstance';
 export { default as useCache } from './useCache';
 export { default as useForceRefresh } from './useForceRefresh';
 export { default as usePermissions } from './usePermissions';
+export { default as useSearch } from './useSearch';
+export { default as useAutocompleteAriaProps } from './useAutocompleteAriaProps';
