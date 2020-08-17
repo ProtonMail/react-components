@@ -7,12 +7,20 @@ import { FORK_TYPE } from 'proton-shared/lib/authentication/ForkInterface';
 import { updateThemeType } from 'proton-shared/lib/api/settings';
 import { ThemeTypes } from 'proton-shared/lib/themes/themes';
 
-import { useAuthentication, useConfig, useModals, useUser, useLoading, useApi, useEventManager, useUserSettings } from '../../hooks';
-import { usePopperAnchor, Dropdown, Icon, Toggle, PrimaryButton } from '../../components';
+import {
+    useAuthentication,
+    useConfig,
+    useModals,
+    useUser,
+    useLoading,
+    useApi,
+    useEventManager,
+    useUserSettings,
+} from '../../hooks';
+import { usePopperAnchor, Dropdown, Icon, Toggle, PrimaryButton, AppLink } from '../../components';
+import { generateUID } from '../../helpers';
 import { ToggleState } from '../../components/toggle/Toggle';
 import UserDropdownButton from './UserDropdownButton';
-import AppLink from '../../components/link/AppLink';
-import { generateUID } from '../../helpers';
 import { DonateModal } from '../payments';
 
 const UserDropdown = ({ ...rest }) => {
