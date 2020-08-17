@@ -5,10 +5,9 @@ import { noop } from 'proton-shared/lib/helpers/function';
 import { buildTreeview, formatFolderName } from 'proton-shared/lib/helpers/folder';
 import { getLightOrDark } from 'proton-shared/lib/themes/helpers';
 import { Address } from 'proton-shared/lib/interfaces';
-import { FolderWithSubFolders } from 'proton-shared/lib/interfaces/Folder';
+import { FolderWithSubFolders, Folder } from 'proton-shared/lib/interfaces/Folder';
 
-import { useFolders } from '../../../hooks';
-import { Icon, Checkbox, Button, Select, DropdownActions, Loader } from '../../../components';
+import { Icon, Checkbox, Button, Select, DropdownActions } from '../../../components';
 import { classnames } from '../../../helpers';
 
 import { ImportModalModel, DestinationFolder, ImportPayloadModel, FolderMapping } from '../interfaces';
@@ -18,6 +17,7 @@ interface Props {
     address: Address;
     payload: ImportPayloadModel;
     onChangePayload: (newPayload: ImportPayloadModel) => void;
+    folders: Folder[];
 }
 
 interface FolderSelectOption {
@@ -108,9 +108,8 @@ const folderReducer = (
     return acc;
 };
 
-const OrganizeFolders = ({ modalModel, address, payload, onChangePayload }: Props) => {
+const OrganizeFolders = ({ modalModel, address, payload, folders, onChangePayload }: Props) => {
     const { providerFolders } = modalModel;
-    const [folders = [], foldersLoading] = useFolders();
     const treeview = buildTreeview(folders);
     const customFolders = treeview.reduce<FolderSelectOption[]>((acc, folder) => {
         return folderReducer(acc, folder, 0);
@@ -184,9 +183,7 @@ const OrganizeFolders = ({ modalModel, address, payload, onChangePayload }: Prop
         onChangePayload({ ...payload, Mapping });
     };
 
-    return foldersLoading ? (
-        <Loader />
-    ) : (
+    return (
         <>
             <div className="flex">
                 <div

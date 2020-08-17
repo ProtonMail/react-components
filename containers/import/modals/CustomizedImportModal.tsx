@@ -5,6 +5,7 @@ import { c, msgid } from 'ttag';
 import { noop } from 'proton-shared/lib/helpers/function';
 import { Address } from 'proton-shared/lib/interfaces';
 import { Label } from 'proton-shared/lib/interfaces/Label';
+import { Folder } from 'proton-shared/lib/interfaces/Folder';
 
 import EditLabelModal from '../../labels/modals/Edit';
 
@@ -33,9 +34,10 @@ interface Props {
     updateModalModel: (newModel: ImportModalModel) => void;
     address: Address;
     onClose?: () => void;
+    folders: Folder[];
 }
 
-const CustomizedImportModal = ({ modalModel, updateModalModel, address, onClose = noop, ...rest }: Props) => {
+const CustomizedImportModal = ({ modalModel, updateModalModel, address, folders, onClose = noop, ...rest }: Props) => {
     const [customizedPayload, setCustomizedPayload] = useState<ImportPayloadModel>({ ...modalModel.payload });
     const [selectedPeriod, setSelectedPeriod] = useState<TIME_UNIT>(modalModel.selectedPeriod);
 
@@ -228,6 +230,7 @@ Your configuration will be lost.`}
                     modalModel={modalModel}
                     payload={customizedPayload}
                     onChangePayload={handleChangePayload}
+                    folders={folders}
                 />
             )}
         </FormModal>
