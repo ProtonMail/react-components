@@ -1,6 +1,8 @@
 import React from 'react';
-import { PrimaryButton, useModals } from '../..';
 import { c } from 'ttag';
+
+import { useModals } from '../../hooks';
+import { PrimaryButton } from '../../components';
 
 import ImportMailModal from './modals/ImportMailModal';
 

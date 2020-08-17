@@ -1,10 +1,12 @@
 import React, { ChangeEvent, useMemo } from 'react';
-import { Row, Label, Field, Input, Alert, EmailInput, PasswordInput } from '../../../..';
 import { c } from 'ttag';
 
 import { validateEmailAddress } from 'proton-shared/lib/helpers/email';
-import { ImportModalModel, IMPORT_ERROR } from '../../interfaces';
+
+import { Alert, Row, Label, Field, PasswordInput, EmailInput, Input } from '../../../../components';
+
 import { INVALID_CREDENTIALS_ERROR_LABEL, IMAP_CONNECTION_ERROR_LABEL } from '../../constants';
+import { ImportModalModel, IMPORT_ERROR } from '../../interfaces';
 
 interface Props {
     modalModel: ImportModalModel;

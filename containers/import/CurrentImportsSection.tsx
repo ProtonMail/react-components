@@ -1,20 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import {
-    Alert,
-    Table,
-    TableHeader,
-    TableBody,
-    TableRow,
-    Time,
-    Loader,
-    DropdownActions,
-    useApi,
-    useLoading,
-    useNotifications,
-} from '../..';
+
 import { c } from 'ttag';
 import { queryMailImport, resumeMailImport, cancelMailImport } from 'proton-shared/lib/api/mailImport';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
+
+import { useApi, useLoading, useNotifications } from '../../hooks';
+import { Loader, Alert, Table, TableHeader, TableBody, TableRow, Time, DropdownActions } from '../../components';
 
 import { ImportMail, ImportMailStatus } from './interfaces';
 

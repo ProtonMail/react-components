@@ -1,19 +1,4 @@
 import React, { useState, ChangeEvent } from 'react';
-import {
-    Icon,
-    Row,
-    Label as FormLabel,
-    Field,
-    FormModal,
-    useModals,
-    ConfirmModal,
-    Alert,
-    Button,
-    Tooltip,
-    Select,
-    PrimaryButton,
-    LabelStack,
-} from '../../..';
 import { subYears, subMonths } from 'date-fns';
 import { c, msgid } from 'ttag';
 
@@ -22,6 +7,23 @@ import { Address } from 'proton-shared/lib/interfaces';
 import { Label } from 'proton-shared/lib/interfaces/Label';
 
 import EditLabelModal from '../../labels/modals/Edit';
+
+import { useModals } from '../../../hooks';
+import {
+    Row,
+    Tooltip,
+    Alert,
+    Field,
+    Icon,
+    LabelStack,
+    Select,
+    ConfirmModal,
+    FormModal,
+    PrimaryButton,
+    Button,
+    Label as FormLabel,
+} from '../../../components';
+
 import { ImportModalModel, ImportPayloadModel } from '../interfaces';
 import { TIME_UNIT, timeUnitLabels } from '../constants';
 import OrganizeFolders from './OrganizeFolders';
@@ -34,10 +36,6 @@ interface Props {
 }
 
 const CustomizedImportModal = ({ modalModel, updateModalModel, address, onClose = noop, ...rest }: Props) => {
-    /*
-        This modal would have its own state
-        then onSubmit send it to the setModel
-    */
     const [customizedPayload, setCustomizedPayload] = useState<ImportPayloadModel>({ ...modalModel.payload });
     const [selectedPeriod, setSelectedPeriod] = useState<TIME_UNIT>(modalModel.selectedPeriod);
 

@@ -1,23 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import {
-    Alert,
-    ConfirmModal,
-    Loader,
-    Badge,
-    Table,
-    TableHeader,
-    TableBody,
-    TableRow,
-    useApi,
-    useLoading,
-    useModals,
-    useNotifications,
-} from '../..';
+
 import { c } from 'ttag';
 import { queryMailImportHistory, deleteMailImportReport } from 'proton-shared/lib/api/mailImport';
 
+import { useApi, useLoading, useNotifications, useModals } from '../../hooks';
+import { Button, Loader, Alert, Table, TableHeader, TableBody, TableRow, Badge } from '../../components';
+
+import { ConfirmModal } from '../../components/modal';
+
 import { ImportMailReport, ImportMailReportStatus } from './interfaces';
-import { Button } from '../../components/button';
 
 interface Props {
     status: ImportMailReportStatus;

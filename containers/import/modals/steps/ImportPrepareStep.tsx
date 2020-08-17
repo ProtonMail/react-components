@@ -2,15 +2,16 @@ import React, { useMemo, useEffect } from 'react';
 import { format } from 'date-fns';
 import { c, msgid } from 'ttag';
 
-// import humanSize from 'proton-shared/lib/helpers/humanSize';
 import { Address } from 'proton-shared/lib/interfaces';
 import { LABEL_COLORS, LABEL_TYPE } from 'proton-shared/lib/constants';
 import { randomIntFromInterval } from 'proton-shared/lib/helpers/function';
 
-import { Icon, Button, useModals, LabelStack } from '../../../..';
+import { useModals } from '../../../../hooks';
+import { Icon, LabelStack, Button } from '../../../../components';
 
 import { ImportModalModel, MailImportFolder } from '../../interfaces';
 import { timeUnitLabels, TIME_UNIT } from '../../constants';
+
 import CustomizedImportModal from '../CustomizedImportModal';
 
 interface Props {

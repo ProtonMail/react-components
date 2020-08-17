@@ -1,16 +1,6 @@
 import React, { useState, useMemo, FormEvent } from 'react';
 import { c } from 'ttag';
-import {
-    Alert,
-    FormModal,
-    ConfirmModal,
-    PrimaryButton,
-    Button,
-    useApi,
-    useModals,
-    useLoading,
-    useAddresses,
-} from '../../..';
+
 import {
     getAuthenticationMethod,
     createMailImport,
@@ -20,14 +10,16 @@ import {
 } from 'proton-shared/lib/api/mailImport';
 import { noop } from 'proton-shared/lib/helpers/function';
 
-import { Step, ImportModalModel, IMPORT_ERROR, MailImportFolder, FolderMapping } from '../interfaces';
-
+import { useLoading, useAddresses, useModals, useApi } from '../../../hooks';
+import { ConfirmModal, FormModal, Button, PrimaryButton, Alert } from '../../../components';
 import ImportMailWizard from '../../../components/import/ImportMailWizard';
+
+import { TIME_UNIT } from '../constants';
+import { Step, ImportModalModel, IMPORT_ERROR, MailImportFolder, FolderMapping } from '../interfaces';
 
 import ImportStartStep from './steps/ImportStartStep';
 import ImportPrepareStep from './steps/ImportPrepareStep';
 import ImportStartedStep from './steps/ImportStartedStep';
-import { TIME_UNIT } from '../constants';
 
 const DEFAULT_MODAL_MODEL: ImportModalModel = {
     step: Step.START,
@@ -95,108 +87,69 @@ const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
         );
     };
 
-    /* @todo Refactor this big mess */
+    const moveToPrepareStep = (importID: string, providerFolders: MailImportFolder[]) => {
+        setModalModel({
+            ...modalModel,
+            providerFolders: providerFolders.sort(destinationFoldersFirst),
+            importID,
+            step: Step.PREPARE,
+        });
+    };
+
+    const handleSubmitStartError = (error: Error & { data: { Code: number; Error: string } }) => {
+        const { data: { Code, Error } = { Code: 0, Error: '' } } = error;
+
+        if ([IMPORT_ERROR.AUTH_CREDENTIALS, IMPORT_ERROR.AUTH_IMAP].includes(Code)) {
+            setModalModel({
+                ...modalModel,
+                errorCode: Code,
+                errorLabel: Error,
+            });
+            return;
+        }
+    };
+
     const submitStartStep = async (needIMAPDetails = false) => {
         const { Authentication } = await api(getAuthenticationMethod({ Email: modalModel.email }));
         const { ImapHost, ImapPort, ImporterID } = Authentication;
 
+        /* If we already have an importID we can just fetch the folders and move on */
         if (ImporterID) {
             try {
                 const { Importer } = await api(getMailImport(ImporterID));
-
                 const { Folders = [] } = await api(getMailImportFolders(Importer.ID, { Code: modalModel.password }));
-
-                setModalModel({
-                    ...modalModel,
-                    providerFolders: Folders.sort(destinationFoldersFirst),
-                    importID: Importer.ID,
-                    step: Step.PREPARE,
-                });
+                moveToPrepareStep(Importer.ID, Folders);
             } catch (error) {
-                const { data: { Code } = { Code: 0 } } = error;
-
-                if ([IMPORT_ERROR.AUTH_CREDENTIALS, IMPORT_ERROR.AUTH_IMAP].includes(Code)) {
-                    setModalModel({
-                        ...modalModel,
-                        errorCode: Code,
-                    });
-                    return;
-                }
+                handleSubmitStartError(error);
             }
-        } else if (ImapHost) {
-            if (needIMAPDetails) {
-                try {
-                    const { Importer } = await api(
-                        createMailImport({
-                            Email: modalModel.email,
-                            ImapHost: modalModel.imap,
-                            ImapPort: parseInt(modalModel.port),
-                            Sasl: 'PLAIN',
-                            Code: modalModel.password,
-                        })
-                    );
-                    const { Folders = [] } = await api(getMailImportFolders(Importer.ID));
-                    setModalModel({
-                        ...modalModel,
-                        providerFolders: Folders.sort(destinationFoldersFirst),
-                        importID: Importer.ID,
-                        step: Step.PREPARE,
-                    });
-                } catch (error) {
-                    const { data: { Code, Error } = { Code: 0, Error: '' } } = error;
+            return;
+        }
 
-                    if ([IMPORT_ERROR.AUTH_CREDENTIALS, IMPORT_ERROR.AUTH_IMAP].includes(Code)) {
-                        setModalModel({
-                            ...modalModel,
-                            errorCode: Code,
-                            errorLabel: Error,
-                        });
-                        return;
-                    }
-                    if (Code === IMPORT_ERROR.ALREADY_EXISTS) {
-                        // console.log('import already exists');
-                    }
-                }
-
-                return;
-            }
-
+        if (ImapHost) {
             try {
                 const { Importer } = await api(
                     createMailImport({
                         Email: modalModel.email,
-                        ImapHost,
-                        ImapPort,
+                        ImapHost: needIMAPDetails ? modalModel.imap : ImapHost,
+                        ImapPort: needIMAPDetails ? parseInt(modalModel.port) : ImapPort,
                         Sasl: 'PLAIN',
                         Code: modalModel.password,
                     })
                 );
                 const { Folders = [] } = await api(getMailImportFolders(Importer.ID, { Code: modalModel.password }));
-                setModalModel({
-                    ...modalModel,
-                    providerFolders: Folders.sort(destinationFoldersFirst),
-                    importID: Importer.ID,
-                    step: Step.PREPARE,
-                });
+                moveToPrepareStep(Importer.ID, Folders);
             } catch (error) {
-                const { data: { Code } = { Code: 0 } } = error;
-
-                if ([IMPORT_ERROR.AUTH_CREDENTIALS, IMPORT_ERROR.AUTH_IMAP].includes(Code)) {
-                    setModalModel({
-                        ...modalModel,
-                        errorCode: Code,
-                    });
-                    return;
-                }
+                handleSubmitStartError(error);
             }
-        } else {
-            setModalModel({
-                ...modalModel,
-                imap: '',
-                port: ImapPort,
-                needIMAPDetails: true,
-            });
+            return;
         }
+
+        setModalModel({
+            ...modalModel,
+            imap: '',
+            port: ImapPort,
+            needIMAPDetails: true,
+        });
     };
 
     const submitPrepareStep = async () => {

@@ -1,15 +1,17 @@
 import React, { ChangeEvent } from 'react';
-import { Icon, Button, Select, Checkbox, DropdownActions, useFolders, classnames } from '../../..';
 import { c } from 'ttag';
 
 import { noop } from 'proton-shared/lib/helpers/function';
 import { buildTreeview, formatFolderName } from 'proton-shared/lib/helpers/folder';
 import { getLightOrDark } from 'proton-shared/lib/themes/helpers';
 import { Address } from 'proton-shared/lib/interfaces';
+import { FolderWithSubFolders } from 'proton-shared/lib/interfaces/Folder';
+
+import { useFolders } from '../../../hooks';
+import { Icon, Checkbox, Button, Select, DropdownActions, Loader } from '../../../components';
+import { classnames } from '../../../helpers';
 
 import { ImportModalModel, DestinationFolder, ImportPayloadModel, FolderMapping } from '../interfaces';
-import { FolderWithSubFolders } from 'proton-shared/lib/interfaces/Folder';
-import Loader from '../../../components/loader/Loader';
 
 interface Props {
     modalModel: ImportModalModel;

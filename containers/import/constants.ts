@@ -8,8 +8,8 @@ export enum TIME_UNIT {
 }
 
 export const timeUnitLabels = {
-    [TIME_UNIT.BIG_BANG]: c('Label').t`the beginning of the time`,
-    [TIME_UNIT.LAST_YEAR]: c('Label').t`the last year`,
+    [TIME_UNIT.BIG_BANG]: c('Label').t`the beginning of time`,
+    [TIME_UNIT.LAST_YEAR]: c('Label').t`the last 12 months`,
     [TIME_UNIT.LAST_3_MONTHS]: c('Label').t`the last 3 months`,
     [TIME_UNIT.LAST_MONTH]: c('Label').t`the last month`,
 };
