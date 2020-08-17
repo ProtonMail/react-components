@@ -35,6 +35,7 @@ const UserDropdown = ({ ...rest }) => {
     const { anchorRef, isOpen, toggle, close } = usePopperAnchor<HTMLButtonElement>();
     const [themeType, setThemeType] = useState(userSettings.ThemeType || ThemeTypes.Default);
     const [loading, withLoading] = useLoading();
+    const displayName = user.DisplayName || user.Name;
 
     const handleSupportUsClick = () => {
         createModal(<DonateModal />);
@@ -75,7 +76,29 @@ const UserDropdown = ({ ...rest }) => {
                 originalPlacement="bottom-right"
             >
                 <ul className="unstyled mt0 mb0">
-                    {APP_NAME === APPS.PROTONVPN_SETTINGS || APP_NAME === APPS.PROTONACCOUNT ? null : (
+                    {!isSSOMode && APP_NAME !== APPS.PROTONVPN_SETTINGS ? (
+                        <>
+                            <li className="dropDown-item pt0-5 pb0-5 pl1 pr1 flex flex-column">
+                                <div className="bold ellipsis mw100 capitalize" title={displayName}>
+                                    {displayName}
+                                </div>
+                                <div className="ellipsis mw100" title={user.Email}>
+                                    {user.Email}
+                                </div>
+                            </li>
+                            <li className="dropDown-item">
+                                <AppLink
+                                    className="w100 flex flex-nowrap dropDown-item-link nodecoration pl1 pr1 pt0-5 pb0-5"
+                                    to="/"
+                                    toApp={APPS.PROTONMAIL_SETTINGS}
+                                >
+                                    <Icon className="mt0-25 mr0-5" name="settings-master" />
+                                    {c('Action').t`Settings`}
+                                </AppLink>
+                            </li>
+                        </>
+                    ) : null}
+                    {APP_NAME === APPS.PROTONVPN_SETTINGS || APP_NAME === APPS.PROTONACCOUNT || !isSSOMode ? null : (
                         <li className="dropDown-item">
                             <AppLink
                                 className="w100 flex flex-nowrap dropDown-item-link nodecoration pl1 pr1 pt0-5 pb0-5"
