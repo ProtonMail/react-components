@@ -82,7 +82,7 @@ const UserDropdown = ({ ...rest }) => {
                                 to="/"
                                 toApp={getAccountSettingsApp()}
                             >
-                                <Icon className="mt0-25 mr0-5" name="settings-master" />
+                                <Icon className="mt0-25 mr0-5" name="account" />
                                 {c('Action').t`Account settings`}
                             </AppLink>
                         </li>
