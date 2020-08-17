@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { RadioCard } from '../..';
+import { RadioCard } from '../../components';
 
 interface Props {
     label: string;

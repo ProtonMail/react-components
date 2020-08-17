@@ -1,6 +1,8 @@
 import React from 'react';
-import { ThemeCard, Block } from '../..';
 import { ThemeTypes } from 'proton-shared/lib/themes/themes';
+
+import { Block } from '../../components';
+import ThemeCard from './ThemeCard';
 
 interface Theme {
     label: string;

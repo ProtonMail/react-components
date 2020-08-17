@@ -3,7 +3,9 @@ import { c } from 'ttag';
 import { updateThemeType } from 'proton-shared/lib/api/settings';
 import { PROTON_THEMES, ThemeTypes } from 'proton-shared/lib/themes/themes';
 
-import { useUserSettings, useEventManager, useApi, useLoading, Alert, ThemeCards, useNotifications } from '../..';
+import { Alert } from '../../components';
+import { useUserSettings, useEventManager, useApi, useLoading, useNotifications } from '../../hooks';
+import ThemeCards from './ThemeCards';
 
 const availableThemes = [PROTON_THEMES.DEFAULT, PROTON_THEMES.DARK];
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { PROTON_THEMES, ThemeTypes } from 'proton-shared/lib/themes/themes';
 import { DARK_MODE_CLASS } from 'proton-shared/lib/constants';
+
 import { useUserSettings } from '../../hooks';
 
 const getStyle = (themeType: ThemeTypes) => {
