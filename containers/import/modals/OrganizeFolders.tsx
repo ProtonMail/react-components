@@ -115,7 +115,6 @@ const OrganizeFolders = ({ modalModel, address, payload, folders, onChangePayloa
         return folderReducer(acc, folder, 0);
     }, []);
 
-    /* @todo put this in its own state */
     const tempFolders = providerFolders
         .filter((f) => !f.DestinationFolder)
         .map((f) => {
@@ -269,32 +268,20 @@ const OrganizeFolders = ({ modalModel, address, payload, folders, onChangePayloa
                                 }}
                                 key={Name}
                             >
+                                <Select
+                                    className="flex-item-fluid"
+                                    options={foldersOptions}
+                                    value={payload.Mapping[index].Destinations.FolderName}
+                                    onChange={({ target }: ChangeEvent<HTMLSelectElement>) => {
+                                        onChangeSelect(index, target.value);
+                                    }}
+                                />
                                 {DestinationFolder ? (
-                                    <>
-                                        <Select
-                                            className="flex-item-fluid"
-                                            options={foldersOptions}
-                                            value={payload.Mapping[index].Destinations.FolderName}
-                                            onChange={({ target }: ChangeEvent<HTMLSelectElement>) => {
-                                                onChangeSelect(index, target.value);
-                                            }}
-                                        />
-                                        <Button className="flex-item-noshrink ml1">{c('Action').t`Add folder`}</Button>
-                                    </>
+                                    <Button className="flex-item-noshrink ml1">{c('Action').t`Add folder`}</Button>
                                 ) : (
-                                    <>
-                                        <Select
-                                            className="flex-item-fluid"
-                                            options={foldersOptions}
-                                            value={payload.Mapping[index].Destinations.FolderName}
-                                            onChange={({ target }: ChangeEvent<HTMLSelectElement>) => {
-                                                onChangeSelect(index, target.value);
-                                            }}
-                                        />
-                                        <div className="ml1">
-                                            <DropdownActions key="dropdown" list={dropdownActions} />
-                                        </div>
-                                    </>
+                                    <div className="ml1">
+                                        <DropdownActions key="dropdown" list={dropdownActions} />
+                                    </div>
                                 )}
                             </li>
                         ))}

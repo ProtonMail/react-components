@@ -14,7 +14,7 @@ import { useLoading, useAddresses, useModals, useApi } from '../../../hooks';
 import { ConfirmModal, FormModal, Button, PrimaryButton, Alert } from '../../../components';
 import ImportMailWizard from '../../../components/import/ImportMailWizard';
 
-import { TIME_UNIT } from '../constants';
+import { TIME_UNIT, IMAP_CONNECTION_ERROR_LABEL } from '../constants';
 import { Step, ImportModalModel, IMPORT_ERROR, MailImportFolder, FolderMapping } from '../interfaces';
 
 import ImportStartStep from './steps/ImportStartStep';
@@ -25,8 +25,8 @@ const DEFAULT_MODAL_MODEL: ImportModalModel = {
     step: Step.START,
     needIMAPDetails: false,
     importID: '',
-    email: 'mindaugas2020v@gmail.com', // '',
-    password: 'wzwdtwptfzvsqoqt', // '',
+    email: 'minde_v@outlook.com', // '',
+    password: 'ZhpdmqV9#9g*', // '',
     port: '',
     imap: '',
     errorCode: 0,
@@ -104,8 +104,8 @@ const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
                 ...modalModel,
                 errorCode: Code,
                 errorLabel: Error,
+                needIMAPDetails: Error === IMAP_CONNECTION_ERROR_LABEL,
             });
-            return;
         }
     };
 
