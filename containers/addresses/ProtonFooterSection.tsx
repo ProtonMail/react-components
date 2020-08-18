@@ -1,7 +1,7 @@
 import React from 'react';
 import { c } from 'ttag';
 
-import { Row, Label } from '../..';
+import { Row, Label } from '../../components';
 import PMSignatureField from './PMSignatureField';
 
 const ProtonFooterSection = () => {
