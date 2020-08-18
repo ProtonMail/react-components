@@ -10,7 +10,7 @@ import { AppLink, Icon, Href } from '../../components';
 import { useConfig } from '../../hooks';
 
 const flags = require.context('design-system/assets/img/shared/flags/4x3', true, /.svg$/);
-const flagsMap = flags.keys().reduce((acc, key) => {
+const flagsMap = flags.keys().reduce<{ [key: string]: () => { default: any } }>((acc, key) => {
     acc[key] = () => flags(key);
     return acc;
 }, {});
@@ -65,14 +65,18 @@ const SummarySection = ({ user, userSettings, organization, subscription }: Prop
                 <div className="mb1">
                     <strong className="bl mb0-5">{c('Title').t`Plans`}</strong>
                     <ul className="unstyled mt0 mb0">
-                        <li>
-                            <Icon name="protonvpn" className="mr0-5" />
-                            {getPlanTitle(vpnPlan, 'ProtonVPN')}
-                        </li>
-                        <li>
-                            <Icon name="protonmail" className="mr0-5" />
-                            {getPlanTitle(mailPlan, 'ProtonMail')}
-                        </li>
+                        {vpnPlan ? (
+                            <li>
+                                <Icon name="protonvpn" className="mr0-5" />
+                                {getPlanTitle(vpnPlan, 'ProtonVPN')}
+                            </li>
+                        ) : null}
+                        {mailPlan ? (
+                            <li>
+                                <Icon name="protonmail" className="mr0-5" />
+                                {getPlanTitle(mailPlan, 'ProtonMail')}
+                            </li>
+                        ) : null}
                     </ul>
                 </div>
             ) : null}
@@ -131,7 +135,8 @@ const SummarySection = ({ user, userSettings, organization, subscription }: Prop
             ) : null}
             {APP_NAME === APPS.PROTONACCOUNT ? null : (
                 <div className="mb1">
-                    <AppLink to={canPay ? '/subscription' : '/account'} toApp={getAccountSettingsApp()}>{c('Link').t`Manage account`}</AppLink>
+                    <AppLink to={canPay ? '/subscription' : '/account'} toApp={getAccountSettingsApp()}>{c('Link')
+                        .t`Manage account`}</AppLink>
                 </div>
             )}
         </div>
