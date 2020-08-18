@@ -3,14 +3,15 @@ import { c } from 'ttag';
 import { hasMailPlus } from 'proton-shared/lib/helpers/subscription';
 import { getAccountSettingsApp } from 'proton-shared/lib/apps/helper';
 
+import { AppLink, SettingsTitle, Loader, SectionConfig } from '../../components';
+import { useUser, useSubscription, useOrganization, useUserSettings } from '../../hooks';
+
 import SummarySection from './SummarySection';
 import IndexSection from './IndexSection';
-import { AppLink, SettingsTitle, Loader } from '../../components';
-import { useUser, useSubscription, useOrganization, useUserSettings } from '../../hooks';
 
 interface Props {
     title: string;
-    pages: SettingsConfig[];
+    pages: SectionConfig[];
     children?: React.ReactNode;
     limit?: number;
 }
