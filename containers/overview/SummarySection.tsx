@@ -3,10 +3,10 @@ import { c, msgid } from 'ttag';
 import { UserModel, UserSettings, Organization, Subscription, Plan } from 'proton-shared/lib/interfaces';
 import { getInitial } from 'proton-shared/lib/helpers/string';
 import { getPlan } from 'proton-shared/lib/helpers/subscription';
-import { PLAN_SERVICES, APPS, PLANS } from 'proton-shared/lib/constants';
+import { PLAN_SERVICES, APPS, PLANS, FEATURE_FLAGS } from 'proton-shared/lib/constants';
 import { getAccountSettingsApp } from 'proton-shared/lib/apps/helper';
 
-import { AppLink, Icon, Href } from '../../components';
+import { AppLink, Icon } from '../../components';
 import { useConfig } from '../../hooks';
 
 const flags = require.context('design-system/assets/img/shared/flags/4x3', true, /.svg$/);
@@ -116,20 +116,26 @@ const SummarySection = ({ user, userSettings, organization, subscription }: Prop
                     <ul className="unstyled mt0 mb0">
                         <li>
                             <Icon name="protonmail" className="mr0-5" />
-                            <Href target="_self">{c('Link').t`ProtonMail settings`}</Href>
+                            <AppLink to="/overview" toApp={APPS.PROTONMAIL_SETTINGS}>{c('Link')
+                                .t`ProtonMail settings`}</AppLink>
                         </li>
                         <li>
                             <Icon name="protoncalendar" className="mr0-5" />
-                            <Href target="_self">{c('Link').t`ProtonCalendar settings`}</Href>
+                            <AppLink to="/settings/overview" toApp={APPS.PROTONCALENDAR}>{c('Link')
+                                .t`ProtonCalendar settings`}</AppLink>
                         </li>
                         <li>
                             <Icon name="protoncontacts" className="mr0-5" />
-                            <Href target="_self">{c('Link').t`ProtonContacts settings`}</Href>
+                            <AppLink to="/settings/overview" toApp={APPS.PROTONCONTACTS}>{c('Link')
+                                .t`ProtonContacts settings`}</AppLink>
                         </li>
-                        <li>
-                            <Icon name="protondrive" className="mr0-5" />
-                            <Href target="_self">{c('Link').t`ProtonDrive settings`}</Href>
-                        </li>
+                        {FEATURE_FLAGS.includes('drive') ? (
+                            <li>
+                                <Icon name="protondrive" className="mr0-5" />
+                                <AppLink to="/settings/overview" toApp={APPS.PROTONDRIVE}>{c('Link')
+                                    .t`ProtonDrive settings`}</AppLink>
+                            </li>
+                        ) : null}
                     </ul>
                 </div>
             ) : null}
