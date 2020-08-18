@@ -10,7 +10,7 @@ type KeyOfUnion<T> = T extends any ? keyof T : never;
  *useSearch hook
  *
  * @template T Type of entries, could be union
- * @param sources Array of functions returning entires
+ * @param sources Array of functions returning entries
  * @param keys Array of entries' keys to search, all by default
  * @param mapFn Function that accepts a list of items collected from sources and returns a list items, do sorting/filter here
  * @param inputValue Search string
@@ -30,9 +30,9 @@ function useSearch<T, K = keyof SearchableObject<T>>({
     inputValue?: string;
     minSymbols?: number;
     onSelect: (item: Partial<T>) => void;
-    mapFn?: (items: SearchableObject<T>[]) => Partial<T>[];
+    mapFn?: (items: SearchableObject<T>[]) => T[];
     resetField: () => void;
-    sources: ((match: string) => Partial<T>[])[];
+    sources: ((match: string) => T[])[];
     keys?: K[];
 }) {
     const [isFocused, setIsFocused] = useState(false);
@@ -66,6 +66,7 @@ function useSearch<T, K = keyof SearchableObject<T>>({
 
     const onKeyDown = useCallback(
         (event: KeyboardEvent<HTMLInputElement>) => {
+            const totalSuggestions = searchSuggestions.length;
             switch (event.key) {
                 case 'Escape': {
                     event.preventDefault();
@@ -84,20 +85,20 @@ function useSearch<T, K = keyof SearchableObject<T>>({
                     break;
                 }
                 case 'ArrowDown': {
-                    if (!searchSuggestions.length) return;
+                    if (!totalSuggestions) return;
                     event.preventDefault();
                     const newSelectedSuggest =
-                        selectedSuggest !== undefined ? (selectedSuggest + 1) % searchSuggestions.length : 0;
+                        selectedSuggest !== undefined ? (selectedSuggest + 1) % totalSuggestions : 0;
                     setSelectedSuggest(newSelectedSuggest);
                     break;
                 }
                 case 'ArrowUp': {
-                    if (!searchSuggestions.length) return;
+                    if (!totalSuggestions) return;
                     event.preventDefault();
                     const newSelectedSuggest =
                         selectedSuggest !== undefined
-                            ? (selectedSuggest + searchSuggestions.length - 1) % searchSuggestions.length
-                            : searchSuggestions.length - 1;
+                            ? (selectedSuggest + totalSuggestions - 1) % totalSuggestions
+                            : totalSuggestions - 1;
                     setSelectedSuggest(newSelectedSuggest);
                     break;
                 }
@@ -106,8 +107,8 @@ function useSearch<T, K = keyof SearchableObject<T>>({
         },
         [selectedSuggest, setSelectedSuggest, searchSuggestions]
     );
-    const onFocus = useCallback(() => setIsFocused(true), [isFocused]);
-    const onBlur = useCallback(() => setTimeout(() => setIsFocused(false), 100), [isFocused]);
+    const onFocus = useCallback(() => setIsFocused(true), [setIsFocused]);
+    const onBlur = useCallback(() => setTimeout(() => setIsFocused(false), 100), [setIsFocused]);
 
     return {
         inputProps: { onKeyDown, onBlur, onFocus },
