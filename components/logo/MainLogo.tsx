@@ -28,11 +28,12 @@ const MainLogo = ({ className = '', ...rest }: AppLinkProps) => {
     const { APP_NAME } = useConfig();
     const [subscription] = useSubscription();
     const classNames = classnames(['logo-link flex nodecoration', className]);
-    const planName = hasLifetime(subscription)
-        ? 'Lifetime'
-        : APP_NAME === PROTONCALENDAR
-        ? 'beta'
-        : getPlanName(subscription, APP_NAME === PROTONVPN_SETTINGS ? VPN : MAIL);
+    const planName =
+        subscription && hasLifetime(subscription)
+            ? 'Lifetime'
+            : APP_NAME === PROTONCALENDAR
+            ? 'beta'
+            : getPlanName(subscription, APP_NAME === PROTONVPN_SETTINGS ? VPN : MAIL);
 
     const logo = (() => {
         if (APP_NAME === PROTONMAIL || APP_NAME === PROTONMAIL_SETTINGS) {
