@@ -19,5 +19,4 @@ export interface SectionConfig {
     icon: string;
     subsections?: SubSectionConfig[];
     permissions?: PERMISSIONS[];
-    hideOnOverview?: boolean;
 }
