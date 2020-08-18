@@ -51,6 +51,9 @@ const SummarySection = ({ user, userSettings, organization, subscription }: Prop
         return `${service} Free`;
     };
 
+    const languageText = LOCALES[Locale];
+    const flagSvg = getFlagSvg(abbreviation);
+
     return (
         <div className="bordered-container bg-white-dm tiny-shadow-container p2">
             <div className="mb2 aligncenter">
@@ -80,15 +83,17 @@ const SummarySection = ({ user, userSettings, organization, subscription }: Prop
                     </ul>
                 </div>
             ) : null}
-            <div className="mb1">
-                <strong className="bl mb0-5">{c('Title').t`Default language`}</strong>
-                <ul className="unstyled mt0 mb0">
-                    <li className="flex flex-nowrap flex-items-center">
-                        <img width={20} className="mr0-5" src={getFlagSvg(abbreviation)} alt={LOCALES[Locale]} />
-                        {LOCALES[Locale]}
-                    </li>
-                </ul>
-            </div>
+            {languageText && flagSvg ? (
+                <div className="mb1">
+                    <strong className="bl mb0-5">{c('Title').t`Default language`}</strong>
+                    <ul className="unstyled mt0 mb0">
+                        <li className="flex flex-nowrap flex-items-center">
+                            <img width={20} className="mr0-5" src={flagSvg} alt={languageText} />
+                            {languageText}
+                        </li>
+                    </ul>
+                </div>
+            ) : null}
             {isAdmin && APP_NAME !== APPS.PROTONACCOUNT ? (
                 <div className="mb1">
                     <strong className="bl mb0-5">{c('Title').t`Your organization`}</strong>
