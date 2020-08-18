@@ -17,7 +17,7 @@ const ActivateOrganizationButton = ({ organization }: Props) => {
     const { createModal } = useModals();
 
     const handleClick = async () => {
-        if (organization && organization.MaxMembers === 1) {
+        if (organization?.MaxMembers === 1) {
             return createNotification({
                 type: 'error',
                 text: c('Error')
