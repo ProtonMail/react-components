@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { c } from 'ttag';
-import { Link, SettingsTitle, useUser, useConfig, useSubscription, useOrganization, useUserSettings } from '../..';
 import { hasMailPlus } from 'proton-shared/lib/helpers/subscription';
-import { APPS } from 'proton-shared/lib/constants';
+import { getAccountSettingsApp } from 'proton-shared/lib/apps/helper';
 
 import SummarySection from './SummarySection';
 import IndexSection from './IndexSection';
+import { AppLink, SettingsTitle, Loader } from '../../components';
+import { useUser, useSubscription, useOrganization, useUserSettings } from '../../hooks';
 
 interface Props {
     title: string;
@@ -17,11 +18,10 @@ interface Props {
 const OverviewLayout = ({ title, pages, children, limit }: Props) => {
     const mainAreaRef = useRef<HTMLDivElement>(null);
     const [scrollTop, setScrollTop] = useState<number>(0);
-    const { APP_NAME } = useConfig();
     const [user] = useUser();
-    const [userSettings = {}] = useUserSettings();
-    const [organization = {}] = useOrganization();
-    const [subscription = {}] = useSubscription();
+    const [userSettings] = useUserSettings();
+    const [organization, loadingOrganization] = useOrganization();
+    const [subscription, loadingSubscription] = useSubscription();
     const { isFree } = user;
 
     useEffect(() => {
@@ -33,6 +33,10 @@ const OverviewLayout = ({ title, pages, children, limit }: Props) => {
     const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
         setScrollTop(e.currentTarget.scrollTop);
     };
+
+    if (loadingOrganization || loadingSubscription) {
+        return <Loader />;
+    }
 
     return (
         <div className="flex flex-item-fluid ondesktop-h100 ontablet-flex-column flex-nowrap">
@@ -62,20 +66,20 @@ const OverviewLayout = ({ title, pages, children, limit }: Props) => {
                     subscription={subscription}
                     organization={organization}
                 />
-                {hasMailPlus(subscription) ? (
+                {subscription && hasMailPlus(subscription) ? (
                     <div className="bg-pm-blue-gradient color-white rounded aligncenter p1 mt2 relative">
                         <p className="mt0 mb1">
                             {c('Info')
                                 .t`Upgrade to a paid plan with multi-user support to add more users to your organization.`}
                         </p>
                         <div>
-                            <Link
+                            <AppLink
                                 className="pm-button--transparent inbl increase-surface-click"
-                                to="/subscription"
-                                external={APP_NAME !== APPS.PROTONACCOUNT}
+                                to="/"
+                                toApp={getAccountSettingsApp()}
                             >
                                 {c('Action').t`Upgrade`}
-                            </Link>
+                            </AppLink>
                         </div>
                     </div>
                 ) : null}
@@ -86,13 +90,13 @@ const OverviewLayout = ({ title, pages, children, limit }: Props) => {
                                 .t`Upgrade to a paid plan to unlock premium features and increase your storage space.`}
                         </p>
                         <div>
-                            <Link
+                            <AppLink
                                 className="pm-button--transparent inbl increase-surface-click"
-                                to="/subscription"
-                                external={APP_NAME !== APPS.PROTONACCOUNT}
+                                to="/"
+                                toApp={getAccountSettingsApp()}
                             >
                                 {c('Action').t`Upgrade`}
-                            </Link>
+                            </AppLink>
                         </div>
                     </div>
                 ) : null}
