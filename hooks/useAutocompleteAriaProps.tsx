@@ -6,13 +6,15 @@ const useAutocompleteAriaProps = ({ baseId, selectedSuggest }: { baseId: string;
     const helpText = (
         <span id={helpTextId} className="sr-only">
             {c('Help')
-                .t`Use Up and Down keys to access and browse suggestions after input. Press Enter to confirm your choice, or Escape to close suggestions box.`}
+                .t`Use Up and Down keys to access and browse suggestions after input. Press Enter to confirm your choice, or Escape to close the suggestions box.`}
         </span>
     );
     const getNumberHelpText = (numberOfSuggests: number) =>
-        numberOfSuggests > 0 && (
+        numberOfSuggests > 0 ? (
             <div className="sr-only" aria-live="assertive">{c('Help')
                 .t`Found ${numberOfSuggests} suggestions, use keyboard to navigate.`}</div>
+        ) : (
+            ''
         );
     const inputId = `${baseId}-input`;
     const suggestionsId = `${baseId}-suggestions`;

@@ -1,26 +1,20 @@
 import React from 'react';
-
-// remove unicode accents for easier search
-const normalize = (input: string) =>
-    input
-        .normalize('NFD')
-        .toLowerCase()
-        .replace(/[\u0300-\u036f]/g, '');
+import { normalize } from 'proton-shared/lib/helpers/string';
 
 /**
  *  Returns a formatted JSX with all matches wrapped with <b></b>
  */
 export const getMatch = (input: string | undefined, match: string) => {
     if (!input) return input;
-    const parts = normalize(input).split(match);
+    const parts = normalize(input, true).split(match);
     if (parts.length < 2) return;
     const { result } = parts.reduce(
-        (acc, part, partIdx) => {
+        (acc, part, partIndex) => {
             const matchPart = (
                 <>
                     {acc.result}
-                    {input.substr(acc.currentIdx, part.length)}
-                    {partIdx !== parts.length - 1 && <b>{match}</b>}
+                    {input.substring(acc.currentIdx, acc.currentIdx + part.length)}
+                    {partIndex !== parts.length - 1 && <b>{match}</b>}
                 </>
             );
             return { result: matchPart, currentIdx: acc.currentIdx + part.length + match.length };
