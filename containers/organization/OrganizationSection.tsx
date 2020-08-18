@@ -14,7 +14,7 @@ interface Props {
 
 const OrganizationSection = ({ organization }: Props) => {
     const { createModal } = useModals();
-    const { Name, HasKeys } = organization || {};
+    const { Name = '', HasKeys } = organization || {};
 
     if (!HasKeys) {
         return (
