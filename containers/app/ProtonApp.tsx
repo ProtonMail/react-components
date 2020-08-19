@@ -12,8 +12,9 @@ import { getPersistedSession } from 'proton-shared/lib/authentication/persistedS
 import {
     getBasename,
     getLocalIDFromPathname,
-    getStrippedPathname,
+    stripLocalBasenameFromPathname,
 } from 'proton-shared/lib/authentication/pathnameHelper';
+import { stripLeadingAndTrailingSlash } from 'proton-shared/lib/helpers/string';
 import { ProtonConfig } from 'proton-shared/lib/interfaces';
 import { replaceUrl } from 'proton-shared/lib/helpers/browser';
 import { getAppHref } from 'proton-shared/lib/apps/helper';
@@ -42,28 +43,17 @@ interface Props {
 }
 
 const getIsSSOPath = (pathname: string) => {
-    return (
-        pathname.startsWith(SSO_PATHS.FORK) ||
-        pathname.startsWith(SSO_PATHS.AUTHORIZE) ||
-        pathname.startsWith(SSO_PATHS.SWITCH) ||
-        pathname.startsWith(SSO_PATHS.LOGIN) ||
-        pathname.startsWith(SSO_PATHS.SIGNUP) ||
-        pathname.startsWith(SSO_PATHS.RESET_PASSWORD) ||
-        pathname.startsWith(SSO_PATHS.FORGOT_USERNAME)
-    );
+    const strippedPathname = `/${stripLeadingAndTrailingSlash(pathname)}`;
+    return Object.values(SSO_PATHS).some((path) => strippedPathname.startsWith(path));
 };
 
 const getSafePath = (url: string) => {
     try {
-        const { pathname, hash } = new URL(url, window.location.origin);
-        const strippedPathname = getStrippedPathname(pathname);
-        if (getIsSSOPath(strippedPathname)) {
+        const { pathname, hash, search } = new URL(url, window.location.origin);
+        if (getIsSSOPath(pathname)) {
             return '';
         }
-        if (hash) {
-            return `${strippedPathname}#${hash}`;
-        }
-        return strippedPathname;
+        return `${stripLeadingAndTrailingSlash(stripLocalBasenameFromPathname(pathname))}${search}${hash}`;
     } catch (e) {
         return '';
     }
