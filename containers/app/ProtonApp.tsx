@@ -8,12 +8,11 @@ import { STATUS } from 'proton-shared/lib/models/cache';
 import createSecureSessionStorage from 'proton-shared/lib/authentication/createSecureSessionStorage';
 import createSecureSessionStorage2 from 'proton-shared/lib/authentication/createSecureSessionStorage2';
 import { isSSOMode, MAILBOX_PASSWORD_KEY, UID_KEY, SSO_PATHS, APPS } from 'proton-shared/lib/constants';
-import { stripLeadingAndTrailingSlash } from 'proton-shared/lib/helpers/string';
 import { getPersistedSession } from 'proton-shared/lib/authentication/persistedSessionStorage';
 import {
     getBasename,
     getLocalIDFromPathname,
-    getStrippedPathnameFromURL,
+    getStrippedPathname,
 } from 'proton-shared/lib/authentication/pathnameHelper';
 import { ProtonConfig } from 'proton-shared/lib/interfaces';
 import { replaceUrl } from 'proton-shared/lib/helpers/browser';
@@ -52,6 +51,26 @@ const getIsSSOPath = (pathname: string) => {
         pathname.startsWith(SSO_PATHS.RESET_PASSWORD) ||
         pathname.startsWith(SSO_PATHS.FORGOT_USERNAME)
     );
+};
+
+const getSafePath = (url: string) => {
+    try {
+        const { pathname, hash } = new URL(url, window.location.origin);
+        const strippedPathname = getStrippedPathname(pathname);
+        if (getIsSSOPath(strippedPathname)) {
+            return '';
+        }
+        if (hash) {
+            return `${strippedPathname}#${hash}`;
+        }
+        return strippedPathname;
+    } catch (e) {
+        return '';
+    }
+};
+
+const getPath = (oldUrl: string, requestedPath?: string) => {
+    return `/${getSafePath(requestedPath || '/') || getSafePath(oldUrl)}`;
 };
 
 const getInitialState = (oldUID?: string, oldLocalID?: number): { UID?: string; localID?: number } | undefined => {
@@ -94,7 +113,7 @@ const ProtonApp = ({ config, children }: Props) => {
         }
         return createAuthentication(createSecureSessionStorage([MAILBOX_PASSWORD_KEY, UID_KEY]));
     });
-    const pathnameRef = useRef<string | undefined>();
+    const pathRef = useRef<string | undefined>();
     const cacheRef = useRef<Cache<string, any>>();
     if (!cacheRef.current) {
         cacheRef.current = createCache<string, any>();
@@ -109,7 +128,7 @@ const ProtonApp = ({ config, children }: Props) => {
     });
 
     const handleLogin = useCallback(
-        ({ UID: newUID, EventID, keyPassword, User, LocalID: newLocalID, pathname }: OnLoginCallbackArguments) => {
+        ({ UID: newUID, EventID, keyPassword, User, LocalID: newLocalID, path }: OnLoginCallbackArguments) => {
             authentication.setUID(newUID);
             authentication.setPassword(keyPassword);
             if (newLocalID !== undefined) {
@@ -135,10 +154,7 @@ const ProtonApp = ({ config, children }: Props) => {
             }
 
             cacheRef.current = cache;
-            const oldPathname = getStrippedPathnameFromURL(window.location.href);
-            const requestedPathname = pathname ? stripLeadingAndTrailingSlash(pathname) : '';
-            const newPathname = `/${requestedPathname || oldPathname}`;
-            pathnameRef.current = getIsSSOPath(newPathname) ? '/' : newPathname;
+            pathRef.current = getPath(window.location.href, path);
 
             setAuthData({
                 UID: newUID,
@@ -168,7 +184,7 @@ const ProtonApp = ({ config, children }: Props) => {
         }
 
         cacheRef.current = createCache<string, any>();
-        pathnameRef.current = '/';
+        pathRef.current = '/';
 
         if (isSSOMode) {
             return replaceUrl(getAppHref('/login', APPS.PROTONACCOUNT));
@@ -196,21 +212,21 @@ const ProtonApp = ({ config, children }: Props) => {
 
     const [, setRerender] = useState<any>();
     useEffect(() => {
-        if (pathnameRef.current !== undefined) {
+        if (pathRef.current !== undefined) {
             // This is to avoid a race condition where the path cannot be replaced imperatively in login or logout
             // because the context will re-render the public app and redirect to a wrong url
             // and while there is a redirect to consume the children are not rendered to avoid the default redirects triggering
-            history.replace(pathnameRef.current);
-            pathnameRef.current = undefined;
+            history.replace(pathRef.current);
+            pathRef.current = undefined;
             setRerender({});
         }
-    }, [pathnameRef.current, history]);
+    }, [pathRef.current, history]);
 
     const render = () => {
         if (isLoggingOut) {
             return <Signout onDone={handleFinalizeLogout} />;
         }
-        if (pathnameRef.current) {
+        if (pathRef.current) {
             return null;
         }
         return children;
