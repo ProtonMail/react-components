@@ -1,5 +1,5 @@
 import React from 'react';
-import { IntlTelInput } from '../../index';
+import { IntlTelInput } from '../../components';
 
 interface Props {
     value: string;
@@ -16,7 +16,7 @@ const ResetPasswordPhoneInput = ({ value, setValue, id }: Props) => {
             containerClassName="w100"
             inputClassName="w100"
             dropdownContainer="body"
-            onPhoneNumberChange={(status, value, countryData, number: string) => setValue(number)}
+            onPhoneNumberChange={(_status: any, _value: any, _countryData: any, number: string) => setValue(number)}
             required
         />
     );
