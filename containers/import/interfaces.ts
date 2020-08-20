@@ -84,28 +84,29 @@ export enum ImportMailStatus {
 export interface ImportMail {
     ID: string;
     CreateTime: number;
-    // CreationTime: number;
     Email: string;
     AddressID: string;
     State: ImportMailStatus;
-    // Status: ImportMailStatus;
     FilterStartDate: string;
     FilterEndDate: string;
     Mapping: ImportedFolder[];
-    // FolderMapping: ImportedFolder[];
 }
 
 export enum ImportMailReportStatus {
-    CANCELED = 3,
-    DONE = 4,
-    FAILED = 5,
+    QUEUED = 0,
+    RUNNING = 1,
+    DONE = 2,
+    FAILED = 3,
+    PAUSED = 4,
+    CANCELED = 5,
 }
 
 export interface ImportMailReport {
     ID: string;
     Email: string;
-    Status: ImportMailReportStatus;
     CreateTime: number;
     EndTime: number;
-    Report: string;
+    NumMessages: number;
+    State: ImportMailReportStatus;
+    TotalSize: number;
 }

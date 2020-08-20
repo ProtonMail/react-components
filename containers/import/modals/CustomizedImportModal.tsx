@@ -40,11 +40,10 @@ interface Props {
 const CustomizedImportModal = ({ modalModel, updateModalModel, address, folders, onClose = noop, ...rest }: Props) => {
     const [customizedPayload, setCustomizedPayload] = useState<ImportPayloadModel>({ ...modalModel.payload });
     const [selectedPeriod, setSelectedPeriod] = useState<TIME_UNIT>(modalModel.selectedPeriod);
-
-    const handleChangePayload = (newPayload: ImportPayloadModel) => setCustomizedPayload(newPayload);
-
     const [organizeFolderVisible, setOrganizeFolderVisible] = useState(false);
     const { createModal } = useModals();
+
+    const handleChangePayload = (newPayload: ImportPayloadModel) => setCustomizedPayload(newPayload);
 
     const handleCancel = () => {
         createModal(

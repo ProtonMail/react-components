@@ -176,8 +176,8 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
                 <div className="mb1 ml1 flex flex-items-center">
                     <Icon className="mr0-5" name="clock" />
                     {modalModel.selectedPeriod === TIME_UNIT.BIG_BANG
-                        ? c('Info').t`Import all imported from ${timeUnitLabels[modalModel.selectedPeriod]}`
-                        : c('Info').jt`Import all imported from ${(
+                        ? c('Info').t`Import all messages from ${timeUnitLabels[modalModel.selectedPeriod]}`
+                        : c('Info').jt`Import all messages from ${(
                               <strong className="ml0-5">{timeUnitLabels[modalModel.selectedPeriod]}</strong>
                           )}`}
                 </div>

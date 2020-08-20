@@ -152,16 +152,17 @@ const OrganizeFolders = ({ modalModel, address, payload, folders, onChangePayloa
         const oldMapping = payload.Mapping;
         const folderFromProvider = providerFolders[index];
 
-        const Mapping: FolderMapping[] = [
-            ...oldMapping.slice(0, index),
-            {
-                Source: oldMapping[index].Source,
+        const Mapping: FolderMapping[] = oldMapping.map((m) => {
+            if (m.Source.includes(folderFromProvider.Name)) {
+                return {
+                    Source: m.Source,
                 Destinations: {
                     FolderName: checked ? folderFromProvider.DestinationFolder || folderFromProvider.Name : '',
                 },
-            },
-            ...oldMapping.slice(index + 1),
-        ];
+                };
+            }
+            return m;
+        });
 
         onChangePayload({ ...payload, Mapping });
     };

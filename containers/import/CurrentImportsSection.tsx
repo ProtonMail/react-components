@@ -5,7 +5,19 @@ import { queryMailImport, resumeMailImport, cancelMailImport } from 'proton-shar
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 
 import { useApi, useLoading, useNotifications } from '../../hooks';
-import { Loader, Alert, Table, TableHeader, TableBody, TableRow, Time, DropdownActions } from '../../components';
+import {
+    Loader,
+    Alert,
+    Table,
+    TableHeader,
+    TableBody,
+    TableRow,
+    Time,
+    DropdownActions,
+    Badge,
+    // Tooltip,
+    // Icon,
+} from '../../components';
 
 import { ImportMail, ImportMailStatus } from './interfaces';
 
@@ -76,8 +88,8 @@ const CurrentImportsSection = () => {
             <TableHeader
                 cells={[
                     c('Title header').t`Import`,
-                    c('Title header').t`Started`,
                     c('Title header').t`Progress`,
+                    c('Title header').t`Started`,
                     c('Title header').t`Actions`,
                 ]}
             />
@@ -91,16 +103,54 @@ const CurrentImportsSection = () => {
                         },
                         { total: 0, processed: 0 }
                     );
-                    const percentage = (processed * 100) / total;
+
+                    const badgeRenderer = () => {
+                        const percentage = (processed * 100) / total;
+
+                        if (State === ImportMailStatus.PAUSED) {
+                            return (
+                                <>
+                                    <Badge type="warning">{c('Import status').t`Paused`}</Badge>
+                                    {/*
+                                    @todo manage errors
+                                    <Tooltip
+                                        title={c('Tooltip').t`ProtonMail mailbox is almost full.`}
+                                    >
+                                        <Icon name="attention" />
+                                    </Tooltip>
+
+                                    <Tooltip
+                                        title={c('Tooltip').t`Account is disconnected.`}
+                                    >
+                                        <Icon name="attention" />
+                                    </Tooltip>
+
+                                    <Tooltip
+                                        title={c('Tooltip').t`ProtonMail mailbox is almost full. Please free up some space or upgrade your plan to resume the import.`}
+                                    >
+                                        <Icon name="attention" />
+                                    </Tooltip>
+                                    */}
+                                </>
+                            );
+                        }
+
+                        return (
+                            <Badge>
+                                {c('Import status').t`${isNaN(percentage) ? 0 : Math.round(percentage)}% imported`}
+                            </Badge>
+                        );
+                    };
+
                     return (
                         <TableRow
                             key={index}
                             cells={[
                                 <div className="w100 ellipsis">{Email}</div>,
+                                badgeRenderer(),
                                 <Time key="creation" format="PPp">
                                     {CreateTime}
                                 </Time>,
-                                c('Import status').t`${isNaN(percentage) ? 0 : Math.round(percentage)}% imported...`,
                                 <DropdownActions
                                     key="actions"
                                     loading={loadingActions}
