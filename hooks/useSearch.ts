@@ -12,7 +12,7 @@ type KeyOfUnion<T> = T extends any ? keyof T : never;
  * @template T Type of entries, could be union
  * @param sources Array of functions returning entries
  * @param keys Array of entries' keys to search, all by default
- * @param mapFn Function that accepts a list of items collected from sources and returns a list items, do sorting/filter here
+ * @param mapFn Function that accepts a list of items collected from sources and returns a subset of that list, do sorting/filter here
  * @param inputValue Search string
  * @param minSymbols Minimum symbols to start searching
  * @param resetField
