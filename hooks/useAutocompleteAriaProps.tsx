@@ -11,20 +11,19 @@ const useAutocompleteAriaProps = ({ baseId, selectedSuggest }: { baseId: string;
     );
     const getNumberHelpText = (numberOfSuggests: number) =>
         numberOfSuggests > 0 ? (
-            <div className="sr-only" aria-live="assertive">{c('Help')
+            <div className="sr-only" aria-atomic="true" aria-live="assertive">{c('Help')
                 .t`Found ${numberOfSuggests} suggestions, use keyboard to navigate.`}</div>
         ) : (
             ''
         );
-    const inputId = `${baseId}-input`;
     const suggestionsId = `${baseId}-suggestions`;
     const getOptionId = (idx: number) => `${baseId}-option-${idx}`;
     return {
         labelAriaProps: {
-            for: inputId,
+            for: baseId,
         },
         inputAriaProps: {
-            id: inputId,
+            id: baseId,
             role: 'combobox',
             'aria-autocomplete': 'list' as const,
             'aria-owns': suggestionsId,
