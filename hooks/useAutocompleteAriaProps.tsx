@@ -29,7 +29,7 @@ const useAutocompleteAriaProps = ({ baseId, selectedSuggest }: { baseId: string;
             'aria-autocomplete': 'list' as const,
             'aria-owns': suggestionsId,
             'aria-activedescendant': selectedSuggest !== undefined ? getOptionId(selectedSuggest) : undefined,
-            'aria-described-by': helpTextId,
+            'aria-describedby': helpTextId,
             autoCorrect: 'off',
             autoCapitalize: 'off',
             spellCheck: false,
