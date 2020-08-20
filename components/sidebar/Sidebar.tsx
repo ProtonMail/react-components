@@ -10,6 +10,7 @@ interface Props {
     primary?: ReactNode;
     isNarrow?: boolean;
     children?: ReactNode;
+    description?: ReactNode;
     version?: ReactNode;
     hasAppLinks?: boolean;
 }
@@ -21,6 +22,7 @@ const Sidebar = ({
     logo,
     primary,
     children,
+    description,
     version,
 }: Props) => {
     return (
@@ -36,6 +38,7 @@ const Sidebar = ({
             <div className="flex-item-fluid flex-nowrap flex flex-column scroll-if-needed customScrollBar-container pb1">
                 {children}
             </div>
+            {description}
             {version}
             {hasAppLinks ? <MobileAppsLinks /> : null}
         </div>
