@@ -1,9 +1,9 @@
 import { c } from 'ttag';
 import { decryptPrivateKey, encryptPrivateKey, getKeys, OpenPGPKey } from 'pmcrypto';
 import { reformatAddressKey, decryptPrivateKeyWithSalt } from 'proton-shared/lib/keys/keys';
-import { KeySalt, KeyAction, Api, Address, CachedKey } from 'proton-shared/lib/interfaces';
+import { KeySalt, ActionableKey, Api, Address, CachedKey } from 'proton-shared/lib/interfaces';
 import { reactivateKeyAction } from 'proton-shared/lib/keys/keysAction';
-import { getKeyFlagsAddress, getKeyFlagsUser } from 'proton-shared/lib/keys/keyFlags';
+import { getDefaultKeyFlagsAddress, getDefaultKeyFlagsUser } from 'proton-shared/lib/keys/keyFlags';
 import { reactivateKeyRoute } from 'proton-shared/lib/api/keys';
 import getSignedKeyList from 'proton-shared/lib/keys/getSignedKeyList';
 import { noop } from 'proton-shared/lib/helpers/function';
@@ -12,7 +12,7 @@ interface ReactivatePrivateKeyArguments {
     api: Api;
     ID: string;
     parsedKeys: CachedKey[];
-    actionableKeys: KeyAction[];
+    actionableKeys: ActionableKey[];
     signingKey: OpenPGPKey;
     privateKey: OpenPGPKey;
     encryptedPrivateKeyArmored: string;
@@ -33,7 +33,7 @@ export const reactivatePrivateKey = async ({
         parsedKeys,
         actionableKeys,
         privateKey,
-        flags: Address ? getKeyFlagsAddress(Address, parsedKeys) : getKeyFlagsUser(),
+        flags: Address ? getDefaultKeyFlagsAddress(Address, parsedKeys) : getDefaultKeyFlagsUser(),
     });
 
     await api(

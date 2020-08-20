@@ -1,6 +1,6 @@
 import { c } from 'ttag';
 import { OpenPGPKey } from 'pmcrypto';
-import { Address as tsAddress, CachedKey, KeyAction, Api } from 'proton-shared/lib/interfaces';
+import { Address as tsAddress, CachedKey, ActionableKey, Api } from 'proton-shared/lib/interfaces';
 import { reformatAddressKey } from 'proton-shared/lib/keys/keys';
 import { SetKeys, ImportKey, Status } from './interface';
 import createKeyHelper from '../addKey/createKeyHelper';
@@ -14,7 +14,7 @@ interface Arguments {
     setKeysToImport: SetKeys;
     password: string;
     parsedKeys: CachedKey[];
-    actionableKeys: KeyAction[];
+    actionableKeys: ActionableKey[];
     Address: tsAddress;
 }
 export default async ({

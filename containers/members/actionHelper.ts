@@ -1,7 +1,7 @@
 import { encryptPrivateKey, OpenPGPKey } from 'pmcrypto';
 import { addKeyAction } from 'proton-shared/lib/keys/keysAction';
 import { generateMemberToken, encryptMemberToken } from 'proton-shared/lib/keys/memberToken';
-import { getKeyFlagsAddress } from 'proton-shared/lib/keys/keyFlags';
+import { getDefaultKeyFlagsAddress } from 'proton-shared/lib/keys/keyFlags';
 import { createMemberKeyRoute, setupMemberKeyRoute } from 'proton-shared/lib/api/memberKeys';
 import getSignedKeyList from 'proton-shared/lib/keys/getSignedKeyList';
 import { srpVerify } from 'proton-shared/lib/srp';
@@ -9,7 +9,7 @@ import { generateAddressKey, generateKeySaltAndPassphrase } from 'proton-shared/
 import {
     EncryptionConfig,
     Address as tsAddress,
-    KeyAction,
+    ActionableKey,
     Api,
     CachedKey,
     Member as tsMember,
@@ -45,7 +45,7 @@ export const setupMemberKey = async ({
 
     const updatedKeys = addKeyAction({
         ID: 'temp',
-        flags: getKeyFlagsAddress(Address, []),
+        flags: getDefaultKeyFlagsAddress(Address, []),
         privateKey,
         parsedKeys: [],
         actionableKeys: [],
@@ -93,7 +93,7 @@ interface CreateMemberAddressKeysArguments {
     Address: tsAddress;
     Member: tsMember;
     parsedKeys: CachedKey[];
-    actionableKeys: KeyAction[];
+    actionableKeys: ActionableKey[];
     privateKey: OpenPGPKey;
     signingKey: OpenPGPKey;
     privateKeyArmored: string;
@@ -118,7 +118,7 @@ export const createMemberAddressKeys = async ({
         parsedKeys,
         actionableKeys,
         ID: 'temp',
-        flags: getKeyFlagsAddress(Address, parsedKeys),
+        flags: getDefaultKeyFlagsAddress(Address, parsedKeys),
         privateKey,
     });
 

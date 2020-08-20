@@ -1,6 +1,6 @@
 import { c } from 'ttag';
 import { getKeySalts } from 'proton-shared/lib/api/keys';
-import getKeysActionList from 'proton-shared/lib/keys/getKeysActionList';
+import getActionableKeysList from 'proton-shared/lib/keys/getActionableKeysList';
 import getPrimaryKey from 'proton-shared/lib/keys/getPrimaryKey';
 import { KeySalt, CachedKey, Api } from 'proton-shared/lib/interfaces';
 import getParsedKeys from 'proton-shared/lib/keys/getParsedKeys';
@@ -41,7 +41,7 @@ export default async ({
         if (!primaryPrivateKey) {
             throw new Error(c('Error').t`Primary private key not decrypted`);
         }
-        let updatedKeyList = await getKeysActionList(completeKeyList);
+        let updatedKeyList = await getActionableKeysList(completeKeyList);
         const parsedKeys = await getParsedKeys(completeKeyList);
 
         for (const inactiveKey of keys) {
@@ -54,7 +54,7 @@ export default async ({
             if (!PrivateKey) {
                 throw new Error(c('Error').t`Key not found`);
             }
-            if (oldPrivateKey && oldPrivateKey.isDecrypted()) {
+            if (oldPrivateKey?.isDecrypted()) {
                 throw new Error(c('Error').t`Key is already decrypted`);
             }
 
