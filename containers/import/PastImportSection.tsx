@@ -100,35 +100,38 @@ const PastImportsSection = () => {
     }
 
     return (
-        <Table>
-            <TableHeader
-                cells={[
-                    c('Title header').t`Import`,
-                    c('Title header').t`Status`,
-                    c('Title header').t`Date`,
-                    c('Title header').t`Imported data`,
-                    c('Title header').t`Actions`,
-                ]}
-            />
-            <TableBody>
-                {imports.map(({ State, Email, ID, TotalSize, EndTime }, index) => {
-                    return (
-                        <TableRow
-                            key={index}
-                            cells={[
-                                <div className="w100 ellipsis">{Email}</div>,
-                                <ImportStatus key="status" status={State} />,
-                                <Time key="importDate" format="PPp">
-                                    {EndTime}
-                                </Time>,
-                                humanSize(TotalSize),
-                                <DeleteButton ID={ID} email={Email} callback={fetch} />,
-                            ]}
-                        />
-                    );
-                })}
-            </TableBody>
-        </Table>
+        <>
+            <Alert>{c('Info').t`Check already processed imports`}</Alert>;
+            <Table>
+                <TableHeader
+                    cells={[
+                        c('Title header').t`Import`,
+                        c('Title header').t`Status`,
+                        c('Title header').t`Date`,
+                        c('Title header').t`Imported data`,
+                        c('Title header').t`Actions`,
+                    ]}
+                />
+                <TableBody>
+                    {imports.map(({ State, Email, ID, TotalSize, EndTime }, index) => {
+                        return (
+                            <TableRow
+                                key={index}
+                                cells={[
+                                    <div className="w100 ellipsis">{Email}</div>,
+                                    <ImportStatus key="status" status={State} />,
+                                    <Time key="importDate" format="PPp">
+                                        {EndTime}
+                                    </Time>,
+                                    humanSize(TotalSize),
+                                    <DeleteButton ID={ID} email={Email} callback={fetch} />,
+                                ]}
+                            />
+                        );
+                    })}
+                </TableBody>
+            </Table>
+        </>
     );
 };
 

@@ -84,34 +84,36 @@ const CurrentImportsSection = () => {
     };
 
     return (
-        <Table>
-            <TableHeader
-                cells={[
-                    c('Title header').t`Import`,
-                    c('Title header').t`Progress`,
-                    c('Title header').t`Started`,
-                    c('Title header').t`Actions`,
-                ]}
-            />
-            <TableBody>
-                {imports.map(({ ID, Email, State, CreateTime, Mapping = [] }, index) => {
-                    const { total, processed } = Mapping.reduce(
-                        (acc, { Total = 0, Processed = 0 }) => {
-                            acc.total += Total;
-                            acc.processed += Processed;
-                            return acc;
-                        },
-                        { total: 0, processed: 0 }
-                    );
+        <>
+            <Alert>{c('Info').t`Check the status of imports in progress`}</Alert>;
+            <Table>
+                <TableHeader
+                    cells={[
+                        c('Title header').t`Import`,
+                        c('Title header').t`Progress`,
+                        c('Title header').t`Started`,
+                        c('Title header').t`Actions`,
+                    ]}
+                />
+                <TableBody>
+                    {imports.map(({ ID, Email, State, CreateTime, Mapping = [] }, index) => {
+                        const { total, processed } = Mapping.reduce(
+                            (acc, { Total = 0, Processed = 0 }) => {
+                                acc.total += Total;
+                                acc.processed += Processed;
+                                return acc;
+                            },
+                            { total: 0, processed: 0 }
+                        );
 
-                    const badgeRenderer = () => {
-                        const percentage = (processed * 100) / total;
+                        const badgeRenderer = () => {
+                            const percentage = (processed * 100) / total;
 
-                        if (State === ImportMailStatus.PAUSED) {
-                            return (
-                                <>
-                                    <Badge type="warning">{c('Import status').t`Paused`}</Badge>
-                                    {/*
+                            if (State === ImportMailStatus.PAUSED) {
+                                return (
+                                    <>
+                                        <Badge type="warning">{c('Import status').t`Paused`}</Badge>
+                                        {/*
                                     @todo manage errors
                                     <Tooltip
                                         title={c('Tooltip').t`ProtonMail mailbox is almost full.`}
@@ -131,51 +133,52 @@ const CurrentImportsSection = () => {
                                         <Icon name="attention" />
                                     </Tooltip>
                                     */}
-                                </>
+                                    </>
+                                );
+                            }
+
+                            return (
+                                <Badge>
+                                    {c('Import status').t`${isNaN(percentage) ? 0 : Math.round(percentage)}% imported`}
+                                </Badge>
                             );
-                        }
+                        };
 
                         return (
-                            <Badge>
-                                {c('Import status').t`${isNaN(percentage) ? 0 : Math.round(percentage)}% imported`}
-                            </Badge>
+                            <TableRow
+                                key={index}
+                                cells={[
+                                    <div className="w100 ellipsis">{Email}</div>,
+                                    badgeRenderer(),
+                                    <Time key="creation" format="PPp">
+                                        {CreateTime}
+                                    </Time>,
+                                    <DropdownActions
+                                        key="actions"
+                                        loading={loadingActions}
+                                        className="pm-button--small"
+                                        list={[
+                                            State !== ImportMailStatus.CANCELED && {
+                                                text: c('Action').t`Cancel`,
+                                                onClick() {
+                                                    withLoadingActions(handleCancel(ID));
+                                                },
+                                            },
+                                            State === ImportMailStatus.PAUSED && {
+                                                text: c('Action').t`Resume`,
+                                                onClick() {
+                                                    withLoadingActions(handleResume(ID));
+                                                },
+                                            },
+                                        ].filter(isTruthy)}
+                                    />,
+                                ]}
+                            />
                         );
-                    };
-
-                    return (
-                        <TableRow
-                            key={index}
-                            cells={[
-                                <div className="w100 ellipsis">{Email}</div>,
-                                badgeRenderer(),
-                                <Time key="creation" format="PPp">
-                                    {CreateTime}
-                                </Time>,
-                                <DropdownActions
-                                    key="actions"
-                                    loading={loadingActions}
-                                    className="pm-button--small"
-                                    list={[
-                                        State !== ImportMailStatus.CANCELED && {
-                                            text: c('Action').t`Cancel`,
-                                            onClick() {
-                                                withLoadingActions(handleCancel(ID));
-                                            },
-                                        },
-                                        State === ImportMailStatus.PAUSED && {
-                                            text: c('Action').t`Resume`,
-                                            onClick() {
-                                                withLoadingActions(handleResume(ID));
-                                            },
-                                        },
-                                    ].filter(isTruthy)}
-                                />,
-                            ]}
-                        />
-                    );
-                })}
-            </TableBody>
-        </Table>
+                    })}
+                </TableBody>
+            </Table>
+        </>
     );
 };
 

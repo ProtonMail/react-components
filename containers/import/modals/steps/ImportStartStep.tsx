@@ -19,7 +19,7 @@ const ImportStartStep = ({ modalModel, updateModalModel }: Props) => {
     return (
         <>
             {[IMPORT_ERROR.AUTH_IMAP, IMPORT_ERROR.AUTH_CREDENTIALS].includes(modalModel.errorCode) ? (
-                <Alert type="error">
+                <Alert type="error" learnMore="https://protonmail.com/support/knowledge-base/">
                     <div className="mb1">
                         {c('Error').t`Server error. We cannot connect to your mail service provider. Please check if:`}
                     </div>

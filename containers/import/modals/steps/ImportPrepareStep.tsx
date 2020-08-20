@@ -7,7 +7,7 @@ import { LABEL_COLORS, LABEL_TYPE } from 'proton-shared/lib/constants';
 import { randomIntFromInterval } from 'proton-shared/lib/helpers/function';
 
 import { useFolders, useModals } from '../../../../hooks';
-import { Icon, LabelStack, Button, Alert, Href, Loader } from '../../../../components';
+import { Icon, LabelStack, Button, Alert, Loader } from '../../../../components';
 
 import { ImportModalModel, MailImportFolder } from '../../interfaces';
 import { timeUnitLabels, TIME_UNIT } from '../../constants';
@@ -71,7 +71,7 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
                 Code: password,
                 Mapping,
                 ImportLabel: {
-                    Name: `${modalModel.email.split('@')[1]} - export ${format(new Date(), 'yyyy-MM-dd')}`,
+                    Name: `${modalModel.email.split('@')[1]} - export ${format(new Date(), 'yyyy-MM-dd hh:mm')}`,
                     Color: LABEL_COLORS[randomIntFromInterval(0, LABEL_COLORS.length - 1)],
                     Type: LABEL_TYPE.MESSAGE_LABEL,
                     Order: 0,
@@ -80,15 +80,17 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
         });
     }, []);
 
-    return foldersLoading ? (
-        <Loader />
-    ) : (
+    if (foldersLoading) {
+        return <Loader />;
+    }
+
+    return (
         <>
             {/*
 
             @todo: add warning if size exceeds capacity
 
-            <Alert type="warning" className="mt1 mb1">
+            <Alert type="warning" className="mt1 mb1" learnMore="https://protonmail.com/support/knowledge-base/">
                 <div className="mb0-5">
                     {c('Warning')
                         .t`Required storage space for this import possibly exceeds your available Proton storage capacity.`}
@@ -97,7 +99,6 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
                     {c('Warning')
                         .t`The import will transfer as much as possible, starting with the most recent messages.`}
                 </div>
-                <Href url="https://protonmail.com/support/knowledge-base/">{c('Info').t`Learn more`}</Href>
             </Alert>
             */}
 

@@ -20,6 +20,7 @@ import { Step, ImportModalModel, IMPORT_ERROR, MailImportFolder, FolderMapping }
 import ImportStartStep from './steps/ImportStartStep';
 import ImportPrepareStep from './steps/ImportPrepareStep';
 import ImportStartedStep from './steps/ImportStartedStep';
+import { format } from 'date-fns';
 
 const DEFAULT_MODAL_MODEL: ImportModalModel = {
     step: Step.START,
@@ -109,7 +110,7 @@ const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
         }
     };
 
-    const submitStartStep = async (needIMAPDetails = false) => {
+    const submitAuthentication = async (needIMAPDetails = false) => {
         const { Authentication } = await api(getAuthenticationMethod({ Email: modalModel.email }));
         const { ImapHost, ImapPort, ImporterID } = Authentication;
 
@@ -152,7 +153,7 @@ const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
         });
     };
 
-    const submitPrepareStep = async () => {
+    const launchImport = async () => {
         const cleanMapping = modalModel.payload.Mapping.filter((m: FolderMapping) => m.Destinations.FolderName).map(
             (m: FolderMapping) => {
                 const split = m.Destinations.FolderName.split('/');
@@ -177,7 +178,10 @@ const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
                 StartTime: modalModel.payload.StartTime ? dateToTimestamp(modalModel.payload.StartTime) : undefined,
                 EndTime: modalModel.payload.EndTime ? dateToTimestamp(modalModel.payload.EndTime) : undefined,
                 Mapping: cleanMapping,
-                selectedPeriod: undefined,
+                // update time in the label
+                ImportLabel: {
+                    Name: `${modalModel.email.split('@')[1]} - export ${format(new Date(), 'yyyy-MM-dd hh:mm')}`,
+                },
             })
         );
 
@@ -194,10 +198,10 @@ const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
 
         switch (modalModel.step) {
             case Step.START:
-                withLoading(submitStartStep(modalModel.needIMAPDetails));
+                withLoading(submitAuthentication(modalModel.needIMAPDetails));
                 break;
             case Step.PREPARE:
-                withLoading(submitPrepareStep());
+                withLoading(launchImport());
                 break;
             case Step.STARTED:
                 onClose();
