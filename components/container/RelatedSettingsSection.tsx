@@ -6,7 +6,7 @@ import Paragraph from '../paragraph/Paragraph';
 interface BlockListItem {
     icon: string;
     text: string;
-    to: string;
+    to?: string;
     link: string | React.ReactElement;
 }
 
