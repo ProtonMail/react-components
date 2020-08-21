@@ -101,7 +101,7 @@ const PastImportsSection = () => {
 
     return (
         <>
-            <Alert>{c('Info').t`Check already processed imports`}</Alert>;
+            <Alert>{c('Info').t`Check already processed imports`}</Alert>
             <Table>
                 <TableHeader
                     cells={[
