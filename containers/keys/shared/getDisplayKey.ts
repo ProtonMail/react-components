@@ -31,7 +31,7 @@ export const getDisplayKey = ({
     const isAddressKey = !!Address;
     const isPrimary = Primary === 1;
 
-    // Flags undefined for contact keys
+    // Flags undefined for user keys
     const canEncrypt = Flags === undefined ? true : hasBit(Flags, KEY_FLAG.ENCRYPT);
     const canSign = Flags === undefined ? true : hasBit(Flags, KEY_FLAG.VERIFY);
 

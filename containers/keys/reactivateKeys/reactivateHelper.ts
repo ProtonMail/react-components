@@ -81,7 +81,7 @@ export const reactivateByUpload = async ({
         throw new Error(c('Error').t`Key ID mismatch`);
     }
 
-    // When reactivating a key by uploading it, get the email from the old armored private key to ensure it's correct for the contact keys
+    // When reactivating a key by uploading it, get the email from the old armored private key to ensure it's correct for the user keys
     const oldUserId = (await getOldUserID(PrivateKey).catch(noop)) || email;
 
     const { privateKey: reformattedPrivateKey, privateKeyArmored } = await reformatAddressKey({
