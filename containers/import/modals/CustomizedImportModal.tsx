@@ -1,6 +1,6 @@
 import React, { useState, ChangeEvent } from 'react';
 import { subYears, subMonths } from 'date-fns';
-import { c, msgid } from 'ttag';
+import { c /* msgid */ } from 'ttag';
 
 import { noop } from 'proton-shared/lib/helpers/function';
 import { Address } from 'proton-shared/lib/interfaces';
@@ -27,7 +27,7 @@ import {
 
 import { ImportModalModel, ImportPayloadModel } from '../interfaces';
 import { TIME_UNIT, timeUnitLabels } from '../constants';
-import OrganizeFolders from './OrganizeFolders';
+// import OrganizeFolders from './OrganizeFolders';
 
 interface Props {
     modalModel: ImportModalModel;
@@ -40,10 +40,10 @@ interface Props {
 const CustomizedImportModal = ({ modalModel, updateModalModel, address, folders, onClose = noop, ...rest }: Props) => {
     const [customizedPayload, setCustomizedPayload] = useState<ImportPayloadModel>({ ...modalModel.payload });
     const [selectedPeriod, setSelectedPeriod] = useState<TIME_UNIT>(modalModel.selectedPeriod);
-    const [organizeFolderVisible, setOrganizeFolderVisible] = useState(false);
+    // const [organizeFolderVisible, setOrganizeFolderVisible] = useState(false);
     const { createModal } = useModals();
 
-    const handleChangePayload = (newPayload: ImportPayloadModel) => setCustomizedPayload(newPayload);
+    // const handleChangePayload = (newPayload: ImportPayloadModel) => setCustomizedPayload(newPayload);
 
     const handleCancel = () => {
         createModal(
@@ -56,9 +56,9 @@ Your configuration will be lost.`}
         );
     };
 
-    const toggleFolders = () => {
-        setOrganizeFolderVisible(!organizeFolderVisible);
-    };
+    // const toggleFolders = () => {
+    //     setOrganizeFolderVisible(!organizeFolderVisible);
+    // };
 
     const handleEditLabel = async () => {
         const ImportLabel: Label = await new Promise((resolve, reject) => {
@@ -105,7 +105,7 @@ Your configuration will be lost.`}
         });
     };
 
-    const selectedFoldersCount = customizedPayload.Mapping.filter((f) => !!f.Destinations.FolderName).length;
+    // const selectedFoldersCount = customizedPayload.Mapping.filter((f) => !!f.Destinations.FolderName).length;
 
     const handleSubmit = () => {
         updateModalModel({
@@ -195,6 +195,7 @@ Your configuration will be lost.`}
                 </Row>
             </div>
 
+            {/*
             <div className="mb1 pt1 flex-items-center">
                 <Row>
                     <FormLabel>
@@ -232,6 +233,7 @@ Your configuration will be lost.`}
                     folders={folders}
                 />
             )}
+            */}
         </FormModal>
     );
 };
