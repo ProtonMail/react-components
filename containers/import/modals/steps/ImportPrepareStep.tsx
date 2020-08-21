@@ -71,7 +71,7 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
                 Code: password,
                 Mapping,
                 ImportLabel: {
-                    Name: `${modalModel.email.split('@')[1]} - export ${format(new Date(), 'yyyy-MM-dd hh:mm')}`,
+                    Name: `${modalModel.email.split('@')[1]} - export ${format(new Date(), 'yyyy-MM-dd HH:mm')}`,
                     Color: LABEL_COLORS[randomIntFromInterval(0, LABEL_COLORS.length - 1)],
                     Type: LABEL_TYPE.MESSAGE_LABEL,
                     Order: 0,
