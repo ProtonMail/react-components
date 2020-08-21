@@ -85,7 +85,7 @@ const CurrentImportsSection = () => {
 
     return (
         <>
-            <Alert>{c('Info').t`Check the status of imports in progress`}</Alert>;
+            <Alert>{c('Info').t`Check the status of imports in progress`}</Alert>
             <Table>
                 <TableHeader
                     cells={[

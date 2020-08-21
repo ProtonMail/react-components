@@ -83,7 +83,7 @@ const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
     const handleCancel = () => {
         createModal(
             <ConfirmModal onConfirm={onClose}>
-                <Alert type="warning">{c('Warning').t`Are you sure you want to cancel your import?`}</Alert>
+                <Alert type="error">{c('Warning').t`Are you sure you want to cancel your import?`}</Alert>
             </ConfirmModal>
         );
     };
