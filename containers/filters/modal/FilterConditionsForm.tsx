@@ -95,20 +95,18 @@ const FilterConditionsForm = ({ isNarrow, model, isDark, onChange }: Props) => {
                     </Radio>
                 </div>
             </div>
-            {conditions.map((condition, i) => {
-                return (
-                    <FilterConditionsFormRow
-                        key={condition.id}
-                        isNarrow={isNarrow}
-                        condition={condition}
-                        conditionIndex={i}
-                        handleDelete={onDeleteCondition}
-                        handleUpdateCondition={onUpdateCondition}
-                        statement={model.statement}
-                        displayDelete={conditions.length > 1}
-                    />
-                );
-            })}
+            {conditions.map((condition, i) => (
+                <FilterConditionsFormRow
+                    key={condition.id}
+                    isNarrow={isNarrow}
+                    condition={condition}
+                    conditionIndex={i}
+                    handleDelete={onDeleteCondition}
+                    handleUpdateCondition={onUpdateCondition}
+                    statement={model.statement}
+                    displayDelete={conditions.length > 1}
+                />
+            ))}
             <LinkButton onClick={onAddCondition} className="mt1 mb0-5">
                 <strong>{c('Action').t`Add condition`}</strong>
             </LinkButton>
