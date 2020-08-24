@@ -96,7 +96,7 @@ const FilterConditionsForm = ({ isNarrow, model, isDark, onChange }: Props) => {
             </div>
             {conditions.map((condition, i) => (
                 <FilterConditionsFormRow
-                    key={`Condition_${i}`}
+                    key={`Condition_${condition.type}_${i}`}
                     isNarrow={isNarrow}
                     condition={condition}
                     conditionIndex={i}
