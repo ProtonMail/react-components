@@ -5,6 +5,7 @@ import getActionableKeysList from 'proton-shared/lib/keys/getActionableKeysList'
 import getSignedKeyList from 'proton-shared/lib/keys/getSignedKeyList';
 import { activateKeyRoute } from 'proton-shared/lib/api/keys';
 import { traceError } from 'proton-shared/lib/helpers/sentry';
+import { MEMBER_PRIVATE } from 'proton-shared/lib/constants';
 
 import { useApi, useAuthentication, useGetUser, useGetAddresses, useGetAddressKeys } from '../../hooks';
 
@@ -19,8 +20,8 @@ const ReadableMemberKeyActivation = () => {
     useEffect(() => {
         const run = async () => {
             const user = await getUser();
-            // If signed in as subuser, or private user
-            if (user.OrganizationPrivateKey || user.Private !== 0) {
+            // If signed in as subuser, or not a readable member
+            if (user.OrganizationPrivateKey || user.Private !== MEMBER_PRIVATE.READABLE) {
                 return;
             }
             const addresses = await getAddresses();

@@ -1,6 +1,11 @@
 import React, { useEffect } from 'react';
 import { Address } from 'proton-shared/lib/interfaces';
-import { ADDRESS_STATUS, DEFAULT_ENCRYPTION_CONFIG, ENCRYPTION_CONFIGS } from 'proton-shared/lib/constants';
+import {
+    ADDRESS_STATUS,
+    DEFAULT_ENCRYPTION_CONFIG,
+    ENCRYPTION_CONFIGS,
+    MEMBER_PRIVATE,
+} from 'proton-shared/lib/constants';
 import { generateAddressKey } from 'proton-shared/lib/keys/keys';
 import { traceError } from 'proton-shared/lib/helpers/sentry';
 
@@ -18,8 +23,8 @@ const PrivateMemberKeyGeneration = () => {
     useEffect(() => {
         const run = async () => {
             const user = await getUser();
-            // If signed in as subuser, or non-private user
-            if (user.OrganizationPrivateKey || user.Private !== 1) {
+            // If signed in as subuser, or not a private user
+            if (user.OrganizationPrivateKey || user.Private !== MEMBER_PRIVATE.UNREADABLE) {
                 return;
             }
             const addresses = await getAddresses();

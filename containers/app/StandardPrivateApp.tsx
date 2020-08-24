@@ -36,8 +36,8 @@ interface Props<T, M extends Model<T>, E, EvtM extends Model<E>> {
     preloadModels?: M[];
     eventModels?: EvtM[];
     noModals?: boolean;
-    noReadableMemberKeyActivation?: boolean;
-    noPrivateMemberKeyGeneration?: boolean;
+    hasPrivateMemberKeyGeneration?: boolean;
+    hasReadableMemberKeyActivation?: boolean;
     children: React.ReactNode;
 }
 
@@ -50,8 +50,8 @@ const StandardPrivateApp = <T, M extends Model<T>, E, EvtM extends Model<E>>({
     preloadModels = [],
     eventModels = [],
     noModals = false,
-    noPrivateMemberKeyGeneration = false,
-    noReadableMemberKeyActivation = false,
+    hasPrivateMemberKeyGeneration = false,
+    hasReadableMemberKeyActivation = false,
     children,
 }: Props<T, M, E, EvtM>) => {
     const [loading, setLoading] = useState(true);
@@ -120,8 +120,8 @@ const StandardPrivateApp = <T, M extends Model<T>, E, EvtM extends Model<E>>({
                 <EventNotices />
                 <ThemeInjector />
                 <DensityInjector />
-                {!noPrivateMemberKeyGeneration && <PrivateMemberKeyGeneration />}
-                {!noReadableMemberKeyActivation && <ReadableMemberKeyActivation />}
+                {hasPrivateMemberKeyGeneration && <PrivateMemberKeyGeneration />}
+                {hasReadableMemberKeyActivation && <ReadableMemberKeyActivation />}
                 {!noModals && <ModalsChildren />}
                 <ForceRefreshProvider>{children}</ForceRefreshProvider>
             </ContactProvider>
