@@ -34,6 +34,10 @@ const ReadableMemberKeyActivation = () => {
 
             const mailboxPassword = authentication.getPassword();
 
+            if (!mailboxPassword) {
+                throw new Error('Password required to generate keys');
+            }
+
             const activateAddressKeys = async (address: Address) => {
                 const addressKeys = await getAddressKeys(address.ID);
                 if (!addressKeys.length) {

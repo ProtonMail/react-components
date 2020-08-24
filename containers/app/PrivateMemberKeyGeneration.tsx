@@ -36,12 +36,16 @@ const PrivateMemberKeyGeneration = () => {
                 return;
             }
 
-            const password = authentication.getPassword();
+            const mailboxPassword = authentication.getPassword();
+
+            if (!mailboxPassword) {
+                throw new Error('Password required to generate keys');
+            }
 
             const generateAddressKeys = async (address: Address) => {
                 const { privateKey, privateKeyArmored } = await generateAddressKey({
                     email: address.Email,
-                    passphrase: password,
+                    passphrase: mailboxPassword,
                     encryptionConfig: ENCRYPTION_CONFIGS[DEFAULT_ENCRYPTION_CONFIG],
                 });
 
