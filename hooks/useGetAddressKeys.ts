@@ -3,6 +3,7 @@ import { decryptPrivateKey } from 'pmcrypto';
 import { getAddressKeyToken, splitKeys } from 'proton-shared/lib/keys/keys';
 import { CachedKey, Key as tsKey } from 'proton-shared/lib/interfaces';
 import { decryptMemberToken } from 'proton-shared/lib/keys/memberToken';
+import { MEMBER_PRIVATE } from 'proton-shared/lib/constants';
 
 import useAuthentication from './useAuthentication';
 import useCache from './useCache';
@@ -43,7 +44,7 @@ export const useGetAddressKeysRaw = (): ((id: string) => Promise<CachedKey[]>) =
             const primaryUserKey = privateKeys[0];
 
             const getKeyPassword = ({ Activation, Token, Signature }: tsKey) => {
-                if (!OrganizationPrivateKey && Private === 0 && primaryUserKey) {
+                if (!OrganizationPrivateKey && Private === MEMBER_PRIVATE.READABLE && primaryUserKey) {
                     // Since the activation process is asynchronous, allow the private key to get decrypted already here so that it can be used
                     if (Activation) {
                         return decryptMemberToken(Activation, primaryUserKey);
