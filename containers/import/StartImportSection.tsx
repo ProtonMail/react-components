@@ -13,10 +13,13 @@ const StartImportSection = () => {
         <>
             <Alert learnMore="https://protonmail.com/support/knowledge-base/">
                 {c('Info')
-                    .t`The Proton Migration Tool allows you to easily and securely import your data from your previous provider.`}
+                    .t`Proton's Import tool allows you to easily and securely transfer your messages and folders from another email service into your ProtonMail account.`}
                 <br />
                 {c('Info')
-                    .t`Simply connect to your previous account, select what you would like to import and you’re done. The selected data will be transferred, encrypted, and securely stored inside your Proton account.`}
+                    .t`Simply connect to your previous account, decide what you would like to import, and you're done.`}
+                <br />
+                {c('Info')
+                    .t`To use the Import tool, Proton needs permission to contact your external email provider and export your data.`}
             </Alert>
             <PrimaryButton className="mt0-5" onClick={handleClick}>{c('Action').t`Start import`}</PrimaryButton>
         </>

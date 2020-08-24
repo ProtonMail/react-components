@@ -75,9 +75,9 @@ const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
     }, [modalModel.step]);
 
     const wizardSteps = [
-        c('Wizard step').t`Authentication`,
-        c('Wizard step').t`Import strategy`,
-        c('Wizard step').t`Confirmation`,
+        c('Wizard step').t`Authenticate`,
+        c('Wizard step').t`Plan import`,
+        c('Wizard step').t`Confirm`,
     ];
 
     const handleCancel = () => {

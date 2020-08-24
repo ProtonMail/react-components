@@ -20,20 +20,40 @@ const ImportStartStep = ({ modalModel, updateModalModel }: Props) => {
         <>
             {[IMPORT_ERROR.AUTH_IMAP, IMPORT_ERROR.AUTH_CREDENTIALS].includes(modalModel.errorCode) ? (
                 <Alert type="error" learnMore="https://protonmail.com/support/knowledge-base/">
-                    <div className="mb1">
-                        {c('Error').t`Server error. We cannot connect to your mail service provider. Please check if:`}
-                    </div>
-                    <ul className="m0">
-                        <li>{c('Error').t`IMAP access is enabled on your account`}</li>
-                        {modalModel.errorLabel === INVALID_CREDENTIALS_ERROR_LABEL ? (
-                            <li>{c('Error').t`Your login credentials are correct`}</li>
-                        ) : (
-                            <li>{c('Error').t`The mail server address and a port number are correct`}</li>
-                        )}
-                    </ul>
+                    {modalModel.errorLabel === INVALID_CREDENTIALS_ERROR_LABEL && (
+                        <>
+                            <div className="mb1">
+                                {c('Error')
+                                    .t`Proton cannot connect to your email server provider. Please make sure you:`}
+                            </div>
+                            <ul className="m0">
+                                <li>{c('Error').t`enabled IMAP access on your external account`}</li>
+                                <li>{c('Error').t`entered the correct email address and password`}</li>
+                            </ul>
+                        </>
+                    )}
+                    {modalModel.errorLabel === IMAP_CONNECTION_ERROR_LABEL && (
+                        <>
+                            <div className="mb1">
+                                {c('Error').t`Proton cannot connect to your email server provider. Please make sure:`}
+                            </div>
+                            <ul className="m0">
+                                <li>{c('Error').t`IMAP access on your external account is enabled`}</li>
+                                <li>{c('Error').t`the mail server address and port number are correct`}</li>
+                            </ul>
+                        </>
+                    )}
                 </Alert>
             ) : (
-                <Alert>{c('Info').t`To start an import please connect to your account`}</Alert>
+                <>
+                    <Alert>{c('Info').t`Enter the address of the email account you want to import from`}</Alert>
+                    {showPassword && (
+                        <Alert type="warning" learnMore="https://protonmail.com/support/knowledge-base/">
+                            {c('Info')
+                                .t`By sharing your login credentials, you are giving Proton permission to fetch data from your external email provider. We will delete your login information once the import is complete.`}
+                        </Alert>
+                    )}
+                </>
             )}
             <Row>
                 <Label htmlFor="emailAddress">{c('Label').t`Email`}</Label>

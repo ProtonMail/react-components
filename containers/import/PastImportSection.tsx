@@ -46,9 +46,15 @@ const DeleteButton = ({ ID, email, callback }: DeleteButtonProps) => {
     const handleDelete = async () => {
         await new Promise((resolve, reject) => {
             createModal(
-                <ConfirmModal onConfirm={resolve} onClose={reject} title={c('Title').t`Delete mail import report`}>
+                <ConfirmModal
+                    onConfirm={resolve}
+                    onClose={reject}
+                    title={c('Title').t`Remove from the list?`}
+                    cancel={c('Title').t`Keep`}
+                    confirm={c('Title').t`Remove`}
+                >
                     <Alert type="error">
-                        {c('Warning').t`Are you sure you want to delete ${email} mail import report?`}
+                        {c('Warning').t`You will not see this import record in the list anymore.`}
                     </Alert>
                 </ConfirmModal>
             );
@@ -96,19 +102,19 @@ const PastImportsSection = () => {
     }
 
     if (!imports.length) {
-        return <Alert>{c('Info').t`No past imports found`}</Alert>;
+        return <Alert>{c('Info').t`No previous imports`}</Alert>;
     }
 
     return (
         <>
-            <Alert>{c('Info').t`Check already processed imports`}</Alert>
+            <Alert>{c('Info').t`Check records of already processed imports`}</Alert>
             <Table>
                 <TableHeader
                     cells={[
                         c('Title header').t`Import`,
                         c('Title header').t`Status`,
                         c('Title header').t`Date`,
-                        c('Title header').t`Imported data`,
+                        c('Title header').t`Size`,
                         c('Title header').t`Actions`,
                     ]}
                 />

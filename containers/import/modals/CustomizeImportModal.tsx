@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState, ChangeEvent, useMemo } from 'react';
 import { subYears, subMonths } from 'date-fns';
 import { c /* msgid */ } from 'ttag';
 
@@ -6,6 +6,7 @@ import { noop } from 'proton-shared/lib/helpers/function';
 import { Address } from 'proton-shared/lib/interfaces';
 import { Label } from 'proton-shared/lib/interfaces/Label';
 import { Folder } from 'proton-shared/lib/interfaces/Folder';
+import isDeepEqual from 'proton-shared/lib/helpers/isDeepEqual';
 
 import EditLabelModal from '../../labels/modals/Edit';
 
@@ -37,21 +38,47 @@ interface Props {
     folders: Folder[];
 }
 
-const CustomizedImportModal = ({ modalModel, updateModalModel, address, folders, onClose = noop, ...rest }: Props) => {
-    const [customizedPayload, setCustomizedPayload] = useState<ImportPayloadModel>({ ...modalModel.payload });
+const CustomizeImportModal = ({ modalModel, updateModalModel, address, folders, onClose = noop, ...rest }: Props) => {
+    const initialPayload = modalModel.payload;
+    const [customizedPayload, setCustomizedPayload] = useState<ImportPayloadModel>({ ...initialPayload });
     const [selectedPeriod, setSelectedPeriod] = useState<TIME_UNIT>(modalModel.selectedPeriod);
     // const [organizeFolderVisible, setOrganizeFolderVisible] = useState(false);
     const { createModal } = useModals();
 
+    const hasChanged = useMemo(() => {
+        if (
+            customizedPayload.StartTime !== initialPayload.StartTime ||
+            customizedPayload.EndTime !== initialPayload.EndTime ||
+            !isDeepEqual(customizedPayload.Mapping, initialPayload.Mapping) ||
+            !isDeepEqual(customizedPayload.ImportLabel, initialPayload.ImportLabel)
+        ) {
+            return true;
+        }
+
+        return false;
+    }, [
+        customizedPayload.ImportLabel,
+        customizedPayload.StartTime,
+        customizedPayload.EndTime,
+        customizedPayload.Mapping,
+    ]);
+
     // const handleChangePayload = (newPayload: ImportPayloadModel) => setCustomizedPayload(newPayload);
 
     const handleCancel = () => {
+        if (!hasChanged) {
+            onClose();
+            return;
+        }
+
         createModal(
-            <ConfirmModal onConfirm={onClose}>
-                <Alert type="error">
-                    {c('Warning').t`Are you sure you want to stop the import setup?
-Your configuration will be lost.`}
-                </Alert>
+            <ConfirmModal
+                onConfirm={onClose}
+                title={c('Action').t`Quit import customization?`}
+                cancel={c('Action').t`Continue`}
+                confirm={c('Action').t`Quit`}
+            >
+                <Alert type="error">{c('Warning').t`Any custom changes you made will be lost.`}</Alert>
             </ConfirmModal>
         );
     };
@@ -118,7 +145,7 @@ Your configuration will be lost.`}
 
     return (
         <FormModal
-            title={c('Title').t`Setup customized import`}
+            title={c('Title').t`Customize import`}
             submit={<PrimaryButton type="submit">{c('Action').t`Save`}</PrimaryButton>}
             close={<Button onClick={handleCancel}>{c('Action').t`Cancel`}</Button>}
             onSubmit={handleSubmit}
@@ -132,8 +159,8 @@ Your configuration will be lost.`}
             <div className="mb1 pt1 border-bottom flex-items-center">
                 <Row>
                     <FormLabel className="flex flex-items-center">
-                        {c('Label').t`Apply label to all messages`}
-                        <Tooltip title={c('Tooltip').t`We will apply this label to all your imported emails`}>
+                        {c('Label').t`All messages labeled as`}
+                        <Tooltip title={c('Tooltip').t`Each imported email will have this label`}>
                             <Icon name="info" className="ml0-5" />
                         </Tooltip>
                     </FormLabel>
@@ -160,8 +187,8 @@ Your configuration will be lost.`}
             <div className="mb1 pt1 border-bottom flex-items-center">
                 <Row>
                     <FormLabel className="flex flex-items-center">
-                        {c('Label').t`Timeframe to import`}
-                        <Tooltip title={c('Tooltip').t`From the newest to oldest order`}>
+                        {c('Label').t`Import messages since`}
+                        <Tooltip title={c('Tooltip').t`The import will start with the most recent messages.`}>
                             <Icon name="info" className="ml0-5" />
                         </Tooltip>
                     </FormLabel>
@@ -174,19 +201,19 @@ Your configuration will be lost.`}
                             options={[
                                 {
                                     value: TIME_UNIT.BIG_BANG,
-                                    text: c('Option').t`From ${timeUnitLabels[TIME_UNIT.BIG_BANG]}`,
+                                    text: c('Option').t`${timeUnitLabels[TIME_UNIT.BIG_BANG]}`,
                                 },
                                 {
                                     value: TIME_UNIT.LAST_YEAR,
-                                    text: c('Option').t`From ${timeUnitLabels[TIME_UNIT.LAST_YEAR]}`,
+                                    text: c('Option').t`${timeUnitLabels[TIME_UNIT.LAST_YEAR]}`,
                                 },
                                 {
                                     value: TIME_UNIT.LAST_3_MONTHS,
-                                    text: c('Option').t`From ${timeUnitLabels[TIME_UNIT.LAST_3_MONTHS]}`,
+                                    text: c('Option').t`${timeUnitLabels[TIME_UNIT.LAST_3_MONTHS]}`,
                                 },
                                 {
                                     value: TIME_UNIT.LAST_MONTH,
-                                    text: c('Option').t`From ${timeUnitLabels[TIME_UNIT.LAST_MONTH]}`,
+                                    text: c('Option').t`${timeUnitLabels[TIME_UNIT.LAST_MONTH]}`,
                                 },
                             ]}
                             value={selectedPeriod}
@@ -210,7 +237,7 @@ Your configuration will be lost.`}
                                         : undefined
                                 }
                             />
-                            <span className="ml0-5">{c('Action').t`Organize folders`}</span>
+                            <span className="ml0-5">{c('Action').t`Manage folders`}</span>
                         </Button>
                     </FormLabel>
                     <Field className="flex flex-items-center">
@@ -238,4 +265,4 @@ Your configuration will be lost.`}
     );
 };
 
-export default CustomizedImportModal;
+export default CustomizeImportModal;

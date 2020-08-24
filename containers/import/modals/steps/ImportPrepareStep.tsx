@@ -6,13 +6,13 @@ import { Address } from 'proton-shared/lib/interfaces';
 import { LABEL_COLORS, LABEL_TYPE } from 'proton-shared/lib/constants';
 import { randomIntFromInterval } from 'proton-shared/lib/helpers/function';
 
-import { useFolders, useModals } from '../../../../hooks';
-import { Icon, LabelStack, Button, Alert, Loader } from '../../../../components';
+import { useFolders, useUser, useModals } from '../../../../hooks';
+import { Icon, LabelStack, Button, Alert, Loader, Tooltip } from '../../../../components';
 
 import { ImportModalModel, MailImportFolder } from '../../interfaces';
 import { timeUnitLabels, TIME_UNIT } from '../../constants';
 
-import CustomizedImportModal from '../CustomizedImportModal';
+import CustomizeImportModal from '../CustomizeImportModal';
 
 interface Props {
     modalModel: ImportModalModel;
@@ -21,6 +21,7 @@ interface Props {
 }
 
 const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => {
+    const [user, userLoading] = useUser();
     const { createModal } = useModals();
     const { providerFolders, password } = modalModel;
     const [folders = [], foldersLoading] = useFolders();
@@ -42,12 +43,28 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
         providerFolders,
     ]);
 
-    /*  @todo Missing Size in folders */
-    // const importSize = useMemo(() => providerFolders.reduce((acc, { Size = 0 }) => acc + Size, 0), [providerFolders]);
+    const importSize = useMemo(() => selectedFolders.reduce((acc, { Size = 0 }) => acc + Size, 0), [selectedFolders]);
+
+    const showSizeWarning = useMemo(() => importSize + user.UsedSpace >= user.MaxSpace * 2, [
+        importSize,
+        user.UsedSpace,
+        user.MaxSpace,
+    ]);
+    const showFoldersNumError = useMemo(() => selectedFolders.length + folders.length >= 500, [
+        selectedFolders,
+        folders,
+    ]);
+    const showFoldersNameError = useMemo(
+        () =>
+            modalModel.payload.Mapping.some(
+                (m) => m.Destinations.FolderName && m.Destinations.FolderName.length >= 100
+            ),
+        [modalModel.payload.Mapping]
+    );
 
     const onClickCustomize = () => {
         createModal(
-            <CustomizedImportModal
+            <CustomizeImportModal
                 folders={folders}
                 address={address}
                 modalModel={modalModel}
@@ -80,34 +97,33 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
         });
     }, []);
 
-    if (foldersLoading) {
+    if (foldersLoading || userLoading) {
         return <Loader />;
     }
 
     return (
         <>
-            {/*
-
-            @todo: add warning if size exceeds capacity
-
-            <Alert type="warning" className="mt1 mb1" learnMore="https://protonmail.com/support/knowledge-base/">
-                <div className="mb0-5">
+            {showSizeWarning && (
+                <Alert type="warning" className="mt1 mb1" learnMore="https://protonmail.com/support/knowledge-base/">
                     {c('Warning')
-                        .t`Required storage space for this import possibly exceeds your available Proton storage capacity.`}
-                </div>
-                <div className="mb0-5">
+                        .t`This import may exceed the storage capacity currently available in your Proton account.`}
+                    <br />
                     {c('Warning')
-                        .t`The import will transfer as much as possible, starting with the most recent messages.`}
-                </div>
-            </Alert>
-            */}
+                        .t`Proton will transfer as much data as possible, starting with your most recent messages.`}
+                </Alert>
+            )}
 
-            {selectedFolders.length + folders.length >= 500 && (
+            {showFoldersNumError && (
                 <Alert type="error" className="mt1 mb1">
-                    <div>
-                        {c('Error')
-                            .t`The found number of folders exceeds the maximum limit for a single ProtonMail account. Please decrease the number of imported folders by customizing the import.`}
-                    </div>
+                    {c('Error')
+                        .t`There are too many folders in your external account. Please customize the import to delete some folders.`}
+                </Alert>
+            )}
+
+            {showFoldersNameError && (
+                <Alert type="error" className="mt1 mb1">
+                    {c('Error')
+                        .t`Some of your folder names exceed ProtonMail's maximum character limit. Please customize the import to edit these names.`}
                 </Alert>
             )}
 
@@ -133,8 +149,8 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
                 <div className="mb1 ml1 flex flex-items-center">
                     <Icon className="mr0-5" name="all-emails" />
                     {c('Info').ngettext(
-                        msgid`${providerMessageNum} message has been found`,
-                        `${providerMessageNum} messages have been found`,
+                        msgid`${providerMessageNum} message found`,
+                        `${providerMessageNum.toLocaleString()} messages found`,
                         providerMessageNum
                     )}
                 </div>
@@ -144,8 +160,8 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
                         <Icon className="mr0-5" name="all-emails" />
                         <strong>
                             {c('Info').ngettext(
-                                msgid`${selectedFoldersMessageCount} message has been selected`,
-                                `${selectedFoldersMessageCount} messages have been selected`,
+                                msgid`${selectedFoldersMessageCount} message selected`,
+                                `${selectedFoldersMessageCount.toLocaleString()} messages selected`,
                                 selectedFoldersMessageCount
                             )}
                         </strong>
@@ -155,9 +171,18 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
                 <div className="mb1 ml1 flex flex-items-center">
                     <Icon className="mr0-5" name="parent-folder" />
                     {c('Info').ngettext(
-                        msgid`${providerFoldersNum} folder has been found`,
-                        `${providerFoldersNum} folders have been found`,
+                        msgid`${providerFoldersNum} folder found`,
+                        `${providerFoldersNum.toLocaleString()} folders found`,
                         providerFoldersNum
+                    )}
+
+                    {showFoldersNumError && (
+                        <Tooltip
+                            title={c('Tooltip').t`Customize import to reduce the number of folders`}
+                            originalPlacement="right"
+                        >
+                            <Icon name="attention-plain" size={18} />
+                        </Tooltip>
                     )}
                 </div>
 
@@ -167,7 +192,7 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
                             <Icon className="mr0-5" name="parent-folder" />
                             {c('Info').ngettext(
                                 msgid`${selectedFolders.length} folder selected`,
-                                `${selectedFolders.length} folders selected`,
+                                `${selectedFolders.length.toLocaleString()} folders selected`,
                                 selectedFolders.length
                             )}
                         </strong>
@@ -176,11 +201,17 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
 
                 <div className="mb1 ml1 flex flex-items-center">
                     <Icon className="mr0-5" name="clock" />
-                    {modalModel.selectedPeriod === TIME_UNIT.BIG_BANG
-                        ? c('Info').t`Import all messages from ${timeUnitLabels[modalModel.selectedPeriod]}`
-                        : c('Info').jt`Import all messages from ${(
-                              <strong className="ml0-5">{timeUnitLabels[modalModel.selectedPeriod]}</strong>
-                          )}`}
+                    {modalModel.selectedPeriod === TIME_UNIT.BIG_BANG ? (
+                        c('Info').t`Import all messages since ${timeUnitLabels[
+                            modalModel.selectedPeriod
+                        ].toLowerCase()}`
+                    ) : (
+                        <span>
+                            {c('Info').jt`Import all messages since`}
+                            {` `}
+                            <strong>{timeUnitLabels[modalModel.selectedPeriod]}</strong>
+                        </span>
+                    )}
                 </div>
 
                 <div className="mb1 ml1 flex flex-items-center">
@@ -202,7 +233,19 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
                         </span>
                     )}
                 </div>
-                <Button className="mt0-5" onClick={onClickCustomize}>{c('Action').t`Customized Import`}</Button>
+
+                <div className="mt0-5 flex flex-items-center">
+                    <Button onClick={onClickCustomize}>{c('Action').t`Customize Import`}</Button>
+                    {showFoldersNameError && (
+                        <Tooltip
+                            title={c('Tooltip').t`Update folders name`}
+                            className="ml0-5"
+                            originalPlacement="right"
+                        >
+                            <Icon name="attention-plain" size={20} />
+                        </Tooltip>
+                    )}
+                </div>
             </div>
         </>
     );

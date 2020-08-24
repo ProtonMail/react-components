@@ -8,10 +8,10 @@ export enum TIME_UNIT {
 }
 
 export const timeUnitLabels = {
-    [TIME_UNIT.BIG_BANG]: c('Label').t`the beginning of time`,
-    [TIME_UNIT.LAST_YEAR]: c('Label').t`the last 12 months`,
-    [TIME_UNIT.LAST_3_MONTHS]: c('Label').t`the last 3 months`,
-    [TIME_UNIT.LAST_MONTH]: c('Label').t`the last month`,
+    [TIME_UNIT.BIG_BANG]: c('Label').t`Email account creation`,
+    [TIME_UNIT.LAST_YEAR]: c('Label').t`12 months ago`,
+    [TIME_UNIT.LAST_3_MONTHS]: c('Label').t`3 months ago`,
+    [TIME_UNIT.LAST_MONTH]: c('Label').t`1 month ago`,
 };
 
 export const INVALID_CREDENTIALS_ERROR_LABEL = 'Invalid credentials';

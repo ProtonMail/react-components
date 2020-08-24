@@ -68,7 +68,7 @@ const CurrentImportsSection = () => {
     }
 
     if (!imports.length) {
-        return <Alert>{c('Info').t`No ongoing import`}</Alert>;
+        return <Alert>{c('Info').t`No imports in progress`}</Alert>;
     }
 
     const handleResume = async (importID: string) => {
@@ -85,7 +85,7 @@ const CurrentImportsSection = () => {
 
     return (
         <>
-            <Alert>{c('Info').t`Check the status of imports in progress`}</Alert>
+            <Alert>{c('Info').t`Check the status of your imports in progress`}</Alert>
             <Table>
                 <TableHeader
                     cells={[
