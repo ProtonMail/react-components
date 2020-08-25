@@ -7,27 +7,25 @@
 .wizard.import-mail-wizard {
 	margin-top: 0;
 	background-color: red($color: #000000);
+}
 
-	.wizard-item {
-		.wizard-item-inner {
-			text-align: center;
-		}
+.wizard-label {
+	flex: 1;
+	text-align: center;
 
-		&:first-child .wizard-item-inner {
-			text-align: left;
-		}
-		&:last-child .wizard-item-inner {
-			text-align: right;
-		}
+	&:first-child {
+		text-align: left;
+	}
+	&:last-child {
+		text-align: right;
+	}
 
-		&[aria-current='step'] {
-			.wizard-item-inner {
-				top: unset;
-				width: 100%;
-				bottom: 0;
-				font-size: 1em;
-				font-weight: 500;
-			}
-		}
+	&.is-complete {
+		opacity: 0.5;
+	}
+
+	&[aria-current='step'] {
+		font-size: 1em;
+		font-weight: 600;
 	}
 }

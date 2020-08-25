@@ -15,12 +15,24 @@ const ImportMailWizard = ({ step = 0, steps = [] }: Props) => {
                 {steps.map((text = '', index) => {
                     return (
                         <li
-                            key={index.toString()}
+                            key={`wizard-dot-${index.toString()}`}
                             className={classnames(['wizard-item', index < step && 'is-complete'])}
                             aria-current={index === step ? 'step' : undefined}
                         >
                             <span className="wizard-marker" />
-                            <span className="wizard-item-inner">{text}</span>
+                        </li>
+                    );
+                })}
+            </ul>
+            <ul className="unstyled flex flex-nowrap m0">
+                {steps.map((text = '', index) => {
+                    return (
+                        <li
+                            key={`wizard-label-${index.toString()}`}
+                            className={classnames(['wizard-label', index < step && 'is-complete'])}
+                            aria-current={index === step ? 'step' : undefined}
+                        >
+                            <span>{text}</span>
                         </li>
                     );
                 })}

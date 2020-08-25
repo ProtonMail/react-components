@@ -20,7 +20,6 @@ import { Step, ImportModalModel, IMPORT_ERROR, MailImportFolder, FolderMapping }
 import ImportStartStep from './steps/ImportStartStep';
 import ImportPrepareStep from './steps/ImportPrepareStep';
 import ImportStartedStep from './steps/ImportStartedStep';
-import { format } from 'date-fns';
 
 const DEFAULT_MODAL_MODEL: ImportModalModel = {
     step: Step.START,
@@ -178,10 +177,6 @@ const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
                 StartTime: modalModel.payload.StartTime ? dateToTimestamp(modalModel.payload.StartTime) : undefined,
                 EndTime: modalModel.payload.EndTime ? dateToTimestamp(modalModel.payload.EndTime) : undefined,
                 Mapping: cleanMapping,
-                // update time in the label
-                ImportLabel: {
-                    Name: `${modalModel.email.split('@')[1]} - export ${format(new Date(), 'yyyy-MM-dd hh:mm')}`,
-                },
             })
         );
 
@@ -193,8 +188,6 @@ const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
-        setModalModel({ ...modalModel, errorCode: 0 });
 
         switch (modalModel.step) {
             case Step.START:

@@ -26,7 +26,7 @@ const ImportStartStep = ({ modalModel, updateModalModel }: Props) => {
                                 {c('Error')
                                     .t`Proton cannot connect to your email server provider. Please make sure you:`}
                             </div>
-                            <ul className="m0">
+                            <ul className="m0 pb1">
                                 <li>{c('Error').t`enabled IMAP access on your external account`}</li>
                                 <li>{c('Error').t`entered the correct email address and password`}</li>
                             </ul>
@@ -37,7 +37,7 @@ const ImportStartStep = ({ modalModel, updateModalModel }: Props) => {
                             <div className="mb1">
                                 {c('Error').t`Proton cannot connect to your email server provider. Please make sure:`}
                             </div>
-                            <ul className="m0">
+                            <ul className="m0 pb1">
                                 <li>{c('Error').t`IMAP access on your external account is enabled`}</li>
                                 <li>{c('Error').t`the mail server address and port number are correct`}</li>
                             </ul>

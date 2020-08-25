@@ -235,7 +235,7 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
                 </div>
 
                 <div className="mt0-5 flex flex-items-center">
-                    <Button onClick={onClickCustomize}>{c('Action').t`Customize Import`}</Button>
+                    <Button onClick={onClickCustomize}>{c('Action').t`Customize import`}</Button>
                     {showFoldersNameError && (
                         <Tooltip
                             title={c('Tooltip').t`Update folders name`}
