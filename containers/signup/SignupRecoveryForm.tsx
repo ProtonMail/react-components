@@ -1,5 +1,7 @@
-import React, { useRef, useState, ChangeEvent, FormEvent } from 'react';
+import React, { useRef, useState, ChangeEvent, FormEvent, useEffect } from 'react';
 import { c } from 'ttag';
+import { validateEmail } from 'proton-shared/lib/api/core/validate';
+
 import {
     Alert,
     EmailInput,
@@ -11,9 +13,9 @@ import {
     Label,
     FullLoader,
     InlineLinkButton,
+    useDebounceInput,
 } from '../../components';
-import { useModals, useLoading } from '../../hooks';
-
+import { useModals, useLoading, useApi } from '../../hooks';
 import { SignupModel, SignupErrors } from './interfaces';
 import { SIGNUP_STEPS } from './constants';
 import { ChallengeRef, ChallengeResult } from '../../components/challenge/ChallengeFrame';
@@ -32,12 +34,33 @@ interface Props {
 const { RECOVERY_EMAIL, RECOVERY_PHONE } = SIGNUP_STEPS;
 
 const SignupRecoveryForm = ({ model, onChange, onSubmit, onSkip, errors, loading }: Props) => {
+    const normalApi = useApi();
+    const silentApi = <T,>(config: any) => normalApi<T>({ ...config, silence: true });
     const formRef = useRef<HTMLFormElement>(null);
     const [challengeLoading, setChallengeLoading] = useState(true);
     const { createModal } = useModals();
     const challengeRefRecovery = useRef<ChallengeRef>();
     const [loadingChallenge, withLoadingChallenge] = useLoading();
+    const [loadingTestEmail, withLoadingTestEmail] = useLoading();
     const disableSubmit = model.step === RECOVERY_EMAIL ? !!errors.recoveryEmail : !!errors.recoveryPhone;
+    const recoveryEmailDebounced = useDebounceInput(model.recoveryEmail);
+    const [recoveryEmailError, setRecoveryEmailError] = useState('');
+
+    const textEmail = async (email: string) => {
+        try {
+            await silentApi(validateEmail(email));
+            setRecoveryEmailError('');
+        } catch (error) {
+            const { data = {} } = error;
+            setRecoveryEmailError(data.Error);
+        }
+    };
+
+    useEffect(() => {
+        recoveryEmailDebounced &&
+            typeof recoveryEmailDebounced === 'string' &&
+            withLoadingTestEmail(textEmail(recoveryEmailDebounced));
+    }, [recoveryEmailDebounced]);
 
     const handleChangePhone = (status: any, value: any, countryData: any, number: string) => {
         onChange({ ...model, recoveryPhone: number });
@@ -85,6 +108,8 @@ const SignupRecoveryForm = ({ model, onChange, onSubmit, onSkip, errors, loading
                             name="recovery-email"
                             autoFocus
                             autoComplete="on"
+                            loading={loadingTestEmail}
+                            error={recoveryEmailError}
                             autoCapitalize="off"
                             autoCorrect="off"
                             value={model.recoveryEmail}
