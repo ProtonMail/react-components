@@ -38,8 +38,8 @@ const TimeSection = () => {
                     value={userSettings.TimeFormat}
                     options={[
                         { text: c('Option').t`Use system settings`, value: SETTINGS_TIME_FORMAT.LOCALE_DEFAULT },
-                        { text: '12h', value: SETTINGS_TIME_FORMAT.H12 },
-                        { text: '24h', value: SETTINGS_TIME_FORMAT.H24 },
+                        { text: '1:00pm', value: SETTINGS_TIME_FORMAT.H12 },
+                        { text: '13:00', value: SETTINGS_TIME_FORMAT.H24 },
                     ]}
                 />
             </Field>
