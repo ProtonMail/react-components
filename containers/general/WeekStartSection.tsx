@@ -31,6 +31,7 @@ const WeekStartSection = () => {
                     }
                     value={userSettings.WeekStart}
                     options={[
+                        { text: c('Option').t`Locale default`, value: SETTINGS_WEEK_START.LOCALE_DEFAULT },
                         { text: c('Day').t`Monday`, value: SETTINGS_WEEK_START.MONDAY },
                         { text: c('Day').t`Saturday`, value: SETTINGS_WEEK_START.SATURDAY },
                         { text: c('Day').t`Sunday`, value: SETTINGS_WEEK_START.SUNDAY },

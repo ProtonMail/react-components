@@ -2,6 +2,7 @@ import React, { ChangeEvent } from 'react';
 import { c } from 'ttag';
 import { SETTINGS_TIME_FORMAT } from 'proton-shared/lib/interfaces/calendar';
 import updateLongLocale from 'proton-shared/lib/i18n/updateLongLocale';
+import { isMilitaryTime } from 'proton-shared/lib/i18n/dateFnLocale';
 import { updateTimeFormat } from 'proton-shared/lib/api/settings';
 
 import { Row, Label, Field, Select } from '../../components';
@@ -17,7 +18,10 @@ const TimeSection = () => {
     const handleTimeFormat = async (value: SETTINGS_TIME_FORMAT) => {
         await api(updateTimeFormat(value));
         await call();
-        updateLongLocale({ displayAMPM: value === SETTINGS_TIME_FORMAT.H12 });
+        updateLongLocale({
+            displayAMPM:
+                value === SETTINGS_TIME_FORMAT.LOCALE_DEFAULT ? !isMilitaryTime() : value === SETTINGS_TIME_FORMAT.H12,
+        });
         createNotification({ text: c('Success').t`Preference saved` });
     };
 
