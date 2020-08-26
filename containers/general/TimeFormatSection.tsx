@@ -37,7 +37,7 @@ const TimeSection = () => {
                     }
                     value={userSettings.TimeFormat}
                     options={[
-                        { text: c('Option').t`Locale default`, value: SETTINGS_TIME_FORMAT.LOCALE_DEFAULT },
+                        { text: c('Option').t`Use system settings`, value: SETTINGS_TIME_FORMAT.LOCALE_DEFAULT },
                         { text: '12h', value: SETTINGS_TIME_FORMAT.H12 },
                         { text: '24h', value: SETTINGS_TIME_FORMAT.H24 },
                     ]}

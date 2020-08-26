@@ -31,7 +31,7 @@ const DateFormatSection = () => {
                     }
                     value={userSettings.DateFormat}
                     options={[
-                        { text: c('Option').t`Locale default`, value: SETTINGS_DATE_FORMAT.LOCALE_DEFAULT },
+                        { text: c('Option').t`Use system settings`, value: SETTINGS_DATE_FORMAT.LOCALE_DEFAULT },
                         { text: 'DD/MM/YYYY', value: SETTINGS_DATE_FORMAT.DDMMYYYY },
                         { text: 'MM/DD/YYYY', value: SETTINGS_DATE_FORMAT.MMDDYYYY },
                         { text: 'YYYY/MM/DD', value: SETTINGS_DATE_FORMAT.YYYYMMDD },
