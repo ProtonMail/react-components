@@ -1,6 +1,7 @@
 import React, { useRef, useState, ChangeEvent, FormEvent } from 'react';
 import { c } from 'ttag';
 import { validateEmail } from 'proton-shared/lib/api/core/validate';
+import { getApiErrorMessage } from 'proton-shared/lib/api/helpers/apiErrorHelper';
 
 import {
     Alert,
@@ -70,8 +71,7 @@ const SignupRecoveryForm = ({ model, onChange, onSubmit, onSkip, errors, loading
                 await api(validateEmail(model.recoveryEmail));
                 setRecoveryEmailError('');
             } catch (error) {
-                const { data = {} } = error;
-                setRecoveryEmailError(data.Error);
+                setRecoveryEmailError(getApiErrorMessage(error));
                 throw error;
             }
             return onSubmit(payload);
