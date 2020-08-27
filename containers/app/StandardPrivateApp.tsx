@@ -10,7 +10,7 @@ import { UserSettings as tsUserSettings } from 'proton-shared/lib/interfaces';
 import { TtagLocaleMap } from 'proton-shared/lib/interfaces/Locale';
 import { getApiErrorMessage, getIs401Error } from 'proton-shared/lib/api/helpers/apiErrorHelper';
 import { traceError } from 'proton-shared/lib/helpers/sentry';
-import { getClosestLocaleCode } from 'proton-shared/lib/i18n/helper';
+import { getBrowserLocale, getClosestLocaleCode } from 'proton-shared/lib/i18n/helper';
 
 import { useApi, useCache, useNotifications } from '../../hooks';
 
@@ -70,15 +70,17 @@ const StandardPrivateApp = <T, M extends Model<T>, E, EvtM extends Model<E>>({
         const modelsPromise = loadModels(unique([UserSettingsModel, UserModel, ...preloadModels]), {
             api: silentApi,
             cache,
-        })
-            .then(async (result: any) => {
-                const [userSettings] = result as [tsUserSettings];
-                const localeCode = getClosestLocaleCode(userSettings.Locale, locales);
-                return Promise.all([loadLocale(localeCode, locales), loadDateLocale(localeCode, userSettings)]);
-            })
-            .then(() => onInit?.()); // onInit has to happen after locales have been loaded to allow applications to override it
+        }).then(async (result: any) => {
+            const [userSettings] = result as [tsUserSettings];
+            const browserLocale = getBrowserLocale();
+            const localeCode = getClosestLocaleCode(userSettings.Locale, locales);
+            return Promise.all([
+                loadLocale(localeCode, locales),
+                loadDateLocale(localeCode, browserLocale, userSettings),
+            ]);
+        });
 
-        Promise.all([eventManagerPromise, modelsPromise, loadOpenPGP(openpgpConfig)])
+        Promise.all([eventManagerPromise, modelsPromise, onInit?.(), loadOpenPGP(openpgpConfig)])
             .then(() => {
                 setLoading(false);
             })

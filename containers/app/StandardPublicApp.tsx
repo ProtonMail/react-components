@@ -19,11 +19,12 @@ const StandardPublicApp = ({ locales = {}, openpgpConfig, children }: Props) => 
 
     useEffect(() => {
         const run = () => {
-            const localeCode = getClosestLocaleCode(getBrowserLocale(), locales);
+            const browserLocale = getBrowserLocale();
+            const localeCode = getClosestLocaleCode(browserLocale, locales);
             return Promise.all([
                 loadOpenPGP(openpgpConfig),
                 loadLocale(localeCode, locales),
-                loadDateLocale(localeCode),
+                loadDateLocale(localeCode, browserLocale),
             ]);
         };
         run()

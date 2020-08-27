@@ -2,7 +2,7 @@ import React, { ChangeEvent } from 'react';
 import { c } from 'ttag';
 import { updateLocale } from 'proton-shared/lib/api/settings';
 import { loadLocale, loadDateLocale } from 'proton-shared/lib/i18n/loadLocale';
-import { getClosestLocaleCode } from 'proton-shared/lib/i18n/helper';
+import { getBrowserLocale, getClosestLocaleCode } from 'proton-shared/lib/i18n/helper';
 import { TtagLocaleMap } from 'proton-shared/lib/interfaces/Locale';
 import {
     useApi,
@@ -37,7 +37,10 @@ const LanguageSection = ({ locales = {} }: Props) => {
         const newLocale = target.value;
         await api(updateLocale(newLocale));
         const localeCode = getClosestLocaleCode(newLocale, locales);
-        await Promise.all([loadLocale(localeCode, locales), loadDateLocale(localeCode, userSettings)]);
+        await Promise.all([
+            loadLocale(localeCode, locales),
+            loadDateLocale(localeCode, getBrowserLocale(), userSettings),
+        ]);
         await call();
         createNotification({ text: c('Success').t`Locale updated` });
         forceRefresh();
