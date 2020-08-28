@@ -1,11 +1,10 @@
 import React, { useState, ChangeEvent, useMemo } from 'react';
 import { subYears, subMonths } from 'date-fns';
-import { c /* msgid */ } from 'ttag';
+import { c, msgid } from 'ttag';
 
 import { noop } from 'proton-shared/lib/helpers/function';
 import { Address } from 'proton-shared/lib/interfaces';
 import { Label } from 'proton-shared/lib/interfaces/Label';
-import { Folder } from 'proton-shared/lib/interfaces/Folder';
 import isDeepEqual from 'proton-shared/lib/helpers/isDeepEqual';
 
 import EditLabelModal from '../../labels/modals/Edit';
@@ -28,21 +27,28 @@ import {
 
 import { ImportModalModel, ImportPayloadModel } from '../interfaces';
 import { TIME_UNIT, timeUnitLabels } from '../constants';
-// import OrganizeFolders from './OrganizeFolders';
+import ImportManageFolders from './ImportManageFolders';
 
 interface Props {
     modalModel: ImportModalModel;
     updateModalModel: (newModel: ImportModalModel) => void;
     address: Address;
     onClose?: () => void;
-    folders: Folder[];
+    customizeFoldersOpen: boolean;
 }
 
-const CustomizeImportModal = ({ modalModel, updateModalModel, address, folders, onClose = noop, ...rest }: Props) => {
+const CustomizeImportModal = ({
+    modalModel,
+    updateModalModel,
+    address,
+    onClose = noop,
+    customizeFoldersOpen = false,
+    ...rest
+}: Props) => {
     const initialPayload = modalModel.payload;
     const [customizedPayload, setCustomizedPayload] = useState<ImportPayloadModel>({ ...initialPayload });
     const [selectedPeriod, setSelectedPeriod] = useState<TIME_UNIT>(modalModel.selectedPeriod);
-    // const [organizeFolderVisible, setOrganizeFolderVisible] = useState(false);
+    const [organizeFolderVisible, setOrganizeFolderVisible] = useState(customizeFoldersOpen);
     const { createModal } = useModals();
 
     const hasChanged = useMemo(() => {
@@ -63,7 +69,7 @@ const CustomizeImportModal = ({ modalModel, updateModalModel, address, folders, 
         customizedPayload.Mapping,
     ]);
 
-    // const handleChangePayload = (newPayload: ImportPayloadModel) => setCustomizedPayload(newPayload);
+    const handleChangePayload = (newPayload: ImportPayloadModel) => setCustomizedPayload(newPayload);
 
     const handleCancel = () => {
         if (!hasChanged) {
@@ -83,9 +89,9 @@ const CustomizeImportModal = ({ modalModel, updateModalModel, address, folders, 
         );
     };
 
-    // const toggleFolders = () => {
-    //     setOrganizeFolderVisible(!organizeFolderVisible);
-    // };
+    const toggleFolders = () => {
+        setOrganizeFolderVisible(!organizeFolderVisible);
+    };
 
     const handleEditLabel = async () => {
         const ImportLabel: Label = await new Promise((resolve, reject) => {
@@ -132,7 +138,7 @@ const CustomizeImportModal = ({ modalModel, updateModalModel, address, folders, 
         });
     };
 
-    // const selectedFoldersCount = customizedPayload.Mapping.filter((f) => !!f.Destinations.FolderName).length;
+    const selectedFoldersCount = customizedPayload.Mapping.filter((f) => !!f.Destinations.FolderName).length;
 
     const handleSubmit = () => {
         updateModalModel({
@@ -222,11 +228,17 @@ const CustomizeImportModal = ({ modalModel, updateModalModel, address, folders, 
                 </Row>
             </div>
 
-            {/*
             <div className="mb1 pt1 flex-items-center">
                 <Row>
-                    <FormLabel>
-                        <Button onClick={toggleFolders}>
+                    <FormLabel>{c('Label').t`Manage folders`}</FormLabel>
+                    <div className="flex flex-items-center">
+                        <Icon name="parent-folder" className="mr0-5" />
+                        {c('Info').ngettext(
+                            msgid`${selectedFoldersCount} folder selected`,
+                            `${selectedFoldersCount} folders selected`,
+                            selectedFoldersCount
+                        )}
+                        <Button className="ml2" onClick={toggleFolders}>
                             <Icon
                                 name="caret"
                                 style={
@@ -237,30 +249,22 @@ const CustomizeImportModal = ({ modalModel, updateModalModel, address, folders, 
                                         : undefined
                                 }
                             />
-                            <span className="ml0-5">{c('Action').t`Manage folders`}</span>
+                            <span className="ml0-5">
+                                {organizeFolderVisible ? c('Action').t`Hide folders` : c('Action').t`Show folders`}
+                            </span>
                         </Button>
-                    </FormLabel>
-                    <Field className="flex flex-items-center">
-                        <Icon name="parent-folder" className="mr0-5" />
-                        {c('Info').ngettext(
-                            msgid`${selectedFoldersCount} folder selected`,
-                            `${selectedFoldersCount} folders selected`,
-                            selectedFoldersCount
-                        )}
-                    </Field>
+                    </div>
                 </Row>
             </div>
 
             {organizeFolderVisible && (
-                <OrganizeFolders
+                <ImportManageFolders
                     address={address}
                     modalModel={modalModel}
                     payload={customizedPayload}
                     onChangePayload={handleChangePayload}
-                    folders={folders}
                 />
             )}
-            */}
         </FormModal>
     );
 };

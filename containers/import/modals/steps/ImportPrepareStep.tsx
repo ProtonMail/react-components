@@ -65,10 +65,10 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
     const onClickCustomize = () => {
         createModal(
             <CustomizeImportModal
-                folders={folders}
                 address={address}
                 modalModel={modalModel}
                 updateModalModel={updateModalModel}
+                customizeFoldersOpen={showFoldersNumError || showFoldersNameError}
             />
         );
     };

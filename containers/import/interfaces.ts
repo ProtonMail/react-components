@@ -110,3 +110,11 @@ export interface ImportMailReport {
     State: ImportMailReportStatus;
     TotalSize: number;
 }
+
+export interface ProviderFoldersMapItem {
+    providerName: string;
+    destinationName: string;
+    checked: boolean;
+    recommendedFolder?: DestinationFolder;
+    descendants: string[];
+}
