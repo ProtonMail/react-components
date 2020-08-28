@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { UserModel as tsUserModel, Address } from 'proton-shared/lib/interfaces';
 import { noop } from 'proton-shared/lib/helpers/function';
 
@@ -16,22 +16,19 @@ const KeyBackgroundManager = ({
     hasPrivateMemberKeyGeneration = false,
     hasReadableMemberKeyActivation = false,
 }: Props) => {
-    const onceRef = useRef<{ user?: tsUserModel; addresses?: Address[] }>({});
+    const [once, setOnce] = useState<{ user?: tsUserModel; addresses?: Address[] }>({});
     const getUser = useGetUser();
     const getAddresses = useGetAddresses();
 
     useEffect(() => {
         const run = async () => {
             const [user, addresses] = await Promise.all([getUser(), getAddresses()]);
-            onceRef.current = {
-                user,
-                addresses,
-            };
+            setOnce({ user, addresses });
         };
         run().catch(noop);
     }, []);
 
-    const { addresses, user } = onceRef.current;
+    const { addresses, user } = once || {};
 
     return (
         <>

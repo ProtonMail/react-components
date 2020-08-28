@@ -40,7 +40,6 @@ interface Props<T, M extends Model<T>, E, EvtM extends Model<E>> {
     noModals?: boolean;
     hasPrivateMemberKeyGeneration?: boolean;
     hasReadableMemberKeyActivation?: boolean;
-    hasInternalEmailAddressRequirement?: boolean;
     children: React.ReactNode;
 }
 
