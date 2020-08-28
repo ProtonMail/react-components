@@ -13,7 +13,7 @@ import LoginUsernameInput from './LoginUsernameInput';
 import LoginTotpInput from './LoginTotpInput';
 import LoginUnlockInput from './LoginUnlockInput';
 
-interface Props extends UseLoginProps {
+interface Props extends Omit<UseLoginProps, 'api'> {
     needHelp?: React.ReactNode;
 }
 
