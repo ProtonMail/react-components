@@ -34,12 +34,14 @@ const ImportManageFolders = ({ modalModel, address, payload, onChangePayload }: 
 
     const [providerFoldersMap, setProviderFoldersMap] = useState(
         providerFolders.reduce((acc: ProviderFolderMap, folder) => {
+            const found = payload.Mapping.find((m) => m.Source === folder.Name);
+
             acc[folder.Name] = {
                 providerPath: folder.Name,
-                destinationPath: folder.DestinationFolder || folder.Name,
+                destinationPath: found?.Destinations.FolderName || folder.DestinationFolder || folder.Name,
                 recommendedFolder: folder.DestinationFolder,
                 descendants: getDescendants(folder.Name),
-                checked: true,
+                checked: !!found && found.checked,
             };
             return acc;
         }, {})
@@ -89,32 +91,6 @@ const ImportManageFolders = ({ modalModel, address, payload, onChangePayload }: 
         setProviderFoldersMap(newProviderFoldersMap);
     };
 
-    useEffect(() => {
-        const Mapping = Object.values(providerFoldersMap).reduce(
-            (acc: FolderMapping[], { providerPath, checked, destinationPath }: ProviderFoldersMapItem) => {
-                if (checked) {
-                    return [
-                        ...acc,
-                        {
-                            Source: providerPath,
-                            Destinations: {
-                                FolderName: destinationPath,
-                            },
-                        },
-                    ];
-                }
-
-                return acc;
-            },
-            []
-        );
-
-        onChangePayload({
-            ...payload,
-            Mapping,
-        });
-    }, [providerFoldersMap]);
-
     const renderRow = (item: ProviderFoldersMapItem) => {
         const ancestorsFolders = getAncestorMapItems(item.providerPath);
         const disabled = ancestorsFolders.some((folder) => !folder.checked);
@@ -130,6 +106,29 @@ const ImportManageFolders = ({ modalModel, address, payload, onChangePayload }: 
             />
         );
     };
+
+    useEffect(() => {
+        const Mapping = Object.values(providerFoldersMap).reduce(
+            (acc: FolderMapping[], { providerPath, checked, destinationPath }: ProviderFoldersMapItem) => {
+                return [
+                    ...acc,
+                    {
+                        Source: providerPath,
+                        Destinations: {
+                            FolderName: destinationPath,
+                        },
+                        checked,
+                    },
+                ];
+            },
+            []
+        );
+
+        onChangePayload({
+            ...payload,
+            Mapping,
+        });
+    }, [providerFoldersMap]);
 
     return (
         <>

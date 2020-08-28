@@ -1,5 +1,5 @@
-import React, { useMemo, useEffect } from 'react';
-import { format } from 'date-fns';
+import React, { useMemo, useEffect, useRef } from 'react';
+import { format, isValid } from 'date-fns';
 import { c, msgid } from 'ttag';
 
 import { Address } from 'proton-shared/lib/interfaces';
@@ -7,12 +7,13 @@ import { LABEL_COLORS, LABEL_TYPE } from 'proton-shared/lib/constants';
 import { randomIntFromInterval } from 'proton-shared/lib/helpers/function';
 
 import { useFolders, useUser, useModals } from '../../../../hooks';
-import { Icon, LabelStack, Button, Alert, Loader, Tooltip } from '../../../../components';
+import { Icon, LabelStack, Button, Alert, Loader, Tooltip, InlineLinkButton } from '../../../../components';
 
 import { ImportModalModel, MailImportFolder } from '../../interfaces';
 import { timeUnitLabels, TIME_UNIT } from '../../constants';
 
 import CustomizeImportModal from '../CustomizeImportModal';
+import isDeepEqual from 'proton-shared/lib/helpers/isDeepEqual';
 
 interface Props {
     modalModel: ImportModalModel;
@@ -21,6 +22,7 @@ interface Props {
 }
 
 const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => {
+    const initialModel = useRef<ImportModalModel>(modalModel);
     const [user, userLoading] = useUser();
     const { createModal } = useModals();
     const { providerFolders, password } = modalModel;
@@ -32,7 +34,7 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
     ]);
     const selectedFolders = useMemo(
         () =>
-            modalModel.payload.Mapping.filter((m) => m.Destinations.FolderName).map(
+            modalModel.payload.Mapping.filter((m) => m.checked).map(
                 (mappedFolder) =>
                     providerFolders.find((p) => p.Name === mappedFolder.Source) || ({} as MailImportFolder)
             ),
@@ -57,12 +59,12 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
     const showFoldersNameError = useMemo(
         () =>
             modalModel.payload.Mapping.some(
-                (m) => m.Destinations.FolderName && m.Destinations.FolderName.length >= 100
+                (m) => m.checked && m.Destinations.FolderName && m.Destinations.FolderName.length >= 100
             ),
         [modalModel.payload.Mapping]
     );
 
-    const onClickCustomize = () => {
+    const handleClickCustomize = () => {
         createModal(
             <CustomizeImportModal
                 address={address}
@@ -73,28 +75,49 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
         );
     };
 
+    const handleReset = () => {
+        updateModalModel(initialModel.current);
+    };
+
+    const isCustom = useMemo(() => !isDeepEqual(initialModel.current.payload, modalModel.payload), [
+        initialModel.current.payload,
+        modalModel.payload,
+    ]);
+
+    useEffect(() => {
+        updateModalModel({ ...modalModel, isPayloadValid: showFoldersNumError || showFoldersNameError });
+    }, [showFoldersNumError, showFoldersNameError]);
+
     useEffect(() => {
         const Mapping = providerFolders.map((folder) => ({
             Source: folder.Name,
             Destinations: {
                 FolderName: folder.DestinationFolder || folder.Name,
             },
+            checked: true,
         }));
 
-        updateModalModel({
+        const ImportLabel = {
+            Name: `${modalModel.email.split('@')[1]} - export ${format(new Date(), 'yyyy-MM-dd HH:mm')}`,
+            Color: LABEL_COLORS[randomIntFromInterval(0, LABEL_COLORS.length - 1)],
+            Type: LABEL_TYPE.MESSAGE_LABEL,
+            Order: 0,
+        };
+
+        const newModel = {
             ...modalModel,
             payload: {
                 AddressID: address.ID,
                 Code: password,
                 Mapping,
-                ImportLabel: {
-                    Name: `${modalModel.email.split('@')[1]} - export ${format(new Date(), 'yyyy-MM-dd HH:mm')}`,
-                    Color: LABEL_COLORS[randomIntFromInterval(0, LABEL_COLORS.length - 1)],
-                    Type: LABEL_TYPE.MESSAGE_LABEL,
-                    Order: 0,
-                },
+                ImportLabel,
             },
-        });
+        };
+
+        updateModalModel(newModel);
+        if (initialModel) {
+            initialModel.current = newModel;
+        }
     }, []);
 
     if (foldersLoading || userLoading) {
@@ -235,7 +258,7 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
                 </div>
 
                 <div className="mt0-5 flex flex-items-center">
-                    <Button onClick={onClickCustomize}>{c('Action').t`Customize import`}</Button>
+                    <Button onClick={handleClickCustomize}>{c('Action').t`Customize import`}</Button>
                     {showFoldersNameError && (
                         <Tooltip
                             title={c('Tooltip').t`Update folders name`}
@@ -244,6 +267,11 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
                         >
                             <Icon name="attention-plain" size={20} />
                         </Tooltip>
+                    )}
+                    {isCustom && isValid && (
+                        <InlineLinkButton className="ml1" onClick={handleReset}>
+                            {c('Action').t`Reset to default`}
+                        </InlineLinkButton>
                     )}
                 </div>
             </div>

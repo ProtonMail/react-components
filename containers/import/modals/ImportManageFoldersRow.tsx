@@ -88,13 +88,8 @@ const ImportManageFoldersRow = ({
         }
     };
 
-    useEffect(() => {
-        if (editMode && inputRef && inputRef.current) {
-            inputRef.current.focus();
-        }
-    }, [editMode]);
-
     const emptyValueError = useMemo(() => !inputValue || !inputValue.trim(), [inputValue]);
+
     const nameTooLongError = useMemo(() => {
         const newPath = [...splittedDestination.slice(0, levelDestination), inputValue.trim()].join('/');
         return newPath.length > 100;
@@ -146,6 +141,12 @@ const ImportManageFoldersRow = ({
             />
         );
     };
+
+    useEffect(() => {
+        if (editMode && inputRef && inputRef.current) {
+            inputRef.current.focus();
+        }
+    }, [editMode]);
 
     return (
         <li className="border-bottom">

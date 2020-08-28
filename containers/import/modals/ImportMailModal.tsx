@@ -36,6 +36,7 @@ const DEFAULT_MODAL_MODEL: ImportModalModel = {
     payload: {
         Mapping: [],
     },
+    isPayloadValid: false,
 };
 
 interface Props {
@@ -153,7 +154,7 @@ const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
     };
 
     const launchImport = async () => {
-        const cleanMapping = modalModel.payload.Mapping.filter((m: FolderMapping) => m.Destinations.FolderName).map(
+        const cleanMapping = modalModel.payload.Mapping.filter((m: FolderMapping) => m.checked).map(
             (m: FolderMapping) => {
                 const split = m.Destinations.FolderName.split('/');
                 const level = split.length - 1;
@@ -224,7 +225,11 @@ const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
                     </PrimaryButton>
                 );
             case Step.PREPARE:
-                return <PrimaryButton loading={loading} type="submit">{c('Action').t`Start import`}</PrimaryButton>;
+                return (
+                    <PrimaryButton loading={loading} disabled={modalModel.isPayloadValid} type="submit">
+                        {c('Action').t`Start import`}
+                    </PrimaryButton>
+                );
             case Step.STARTED:
                 return <PrimaryButton loading={loading} type="submit">{c('Action').t`Close`}</PrimaryButton>;
             default:
@@ -237,6 +242,7 @@ const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
         modalModel.needIMAPDetails,
         modalModel.imap,
         modalModel.port,
+        modalModel.isPayloadValid,
         loading,
     ]);
 

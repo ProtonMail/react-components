@@ -138,7 +138,7 @@ const CustomizeImportModal = ({
         });
     };
 
-    const selectedFoldersCount = customizedPayload.Mapping.filter((f) => !!f.Destinations.FolderName).length;
+    const selectedFoldersCount = customizedPayload.Mapping.filter((f) => f.checked).length;
 
     const handleSubmit = () => {
         updateModalModel({
@@ -152,7 +152,7 @@ const CustomizeImportModal = ({
     return (
         <FormModal
             title={c('Title').t`Customize import`}
-            submit={<PrimaryButton type="submit">{c('Action').t`Save`}</PrimaryButton>}
+            submit={<PrimaryButton disabled={!selectedFoldersCount} type="submit">{c('Action').t`Save`}</PrimaryButton>}
             close={<Button onClick={handleCancel}>{c('Action').t`Cancel`}</Button>}
             onSubmit={handleSubmit}
             onClose={handleCancel}
