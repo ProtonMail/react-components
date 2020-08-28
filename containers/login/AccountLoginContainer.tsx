@@ -14,23 +14,23 @@ import { removePersistedSession } from 'proton-shared/lib/authentication/persist
 
 import { InlineLinkButton, PrimaryButton, Label } from '../../components';
 import { useApi, useLoading, useModals, useNotifications } from '../../hooks';
+
 import AccountSupportDropdown from '../heading/AccountSupportDropdown';
 import AbuseModal from './AbuseModal';
 import { Props as AccountPublicLayoutProps } from '../signup/AccountPublicLayout';
 import BackButton from '../signup/BackButton';
 import OneAccountIllustration from '../illustration/OneAccountIllustration';
+import SignupLabelInputRow from '../signup/SignupLabelInputRow';
+import SignupSubmitRow from '../signup/SignupSubmitRow';
+import { getToAppName } from '../signup/helpers/helper';
+import { OnLoginCallbackArguments } from '../app';
 import useLogin, { Props as UseLoginProps, FORM } from './useLogin';
 import LoginUsernameInput from './LoginUsernameInput';
 import LoginPasswordInput from './LoginPasswordInput';
 import LoginTotpInput from './LoginTotpInput';
 import LoginRecoveryCodeInput from './LoginRecoveryCodeInput';
 import LoginUnlockInput from './LoginUnlockInput';
-import SignupLabelInputRow from '../signup/SignupLabelInputRow';
-import SignupSubmitRow from '../signup/SignupSubmitRow';
-import { getToAppName } from '../signup/helpers/helper';
-import { OnLoginCallbackArguments } from '../app';
 import AccountGenerateInternalAddressContainer from './AccountGenerateInternalAddressContainer';
-import AccountPublicLayoutWrapper from '../../../proton-account/src/app/content/AccountPublicLayoutWrapper';
 
 interface InternalAddressGeneration {
     externalEmailAddress: Address;
@@ -112,7 +112,7 @@ const AccountLoginContainer = ({ onLogin, ignoreUnlock = false, Layout, toApp }:
     if (generateInternalAddress) {
         return (
             <AccountGenerateInternalAddressContainer
-                Layout={AccountPublicLayoutWrapper}
+                Layout={Layout}
                 toApp={toApp}
                 onDone={generateInternalAddress.onDone}
                 onBack={() => {
