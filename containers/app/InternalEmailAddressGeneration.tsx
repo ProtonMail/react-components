@@ -6,9 +6,9 @@ import { Address } from 'proton-shared/lib/interfaces';
 import { ProtonLogo, useAppLink } from '../../components';
 import { useApi, useAuthentication, useConfig } from '../../hooks';
 
-import { AccountGenerateInternalAddressContainer } from '../login';
 import { AccountSupportDropdown } from '../heading';
 import AccountPublicLayout, { Props as AccountProps } from '../signup/AccountPublicLayout';
+import AccountGenerateInternalAddressContainer from '../login/AccountGenerateInternalAddressContainer';
 
 interface Props {
     children: React.ReactNode;
