@@ -112,9 +112,13 @@ export interface ImportMailReport {
 }
 
 export interface ProviderFoldersMapItem {
-    providerName: string;
-    destinationName: string;
+    providerPath: string;
+    destinationPath: string;
     checked: boolean;
     recommendedFolder?: DestinationFolder;
     descendants: string[];
+}
+
+export interface ProviderFolderMap {
+    [key: string]: ProviderFoldersMapItem;
 }

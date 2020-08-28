@@ -4,9 +4,10 @@ import { c } from 'ttag';
 import { Tooltip, Icon, Checkbox, InlineLinkButton, Input } from '../../../components';
 import { classnames } from '../../../helpers';
 
-import { DestinationFolder, ProviderFoldersMapItem } from '../interfaces';
+import { DestinationFolder, ProviderFolderMap, ProviderFoldersMapItem } from '../interfaces';
 
 interface Props extends ProviderFoldersMapItem {
+    providerFoldersMap: ProviderFolderMap;
     onRename: (providerName: string, destinationName: string) => void;
     onToggleCheck: (providerName: string, checked: boolean) => void;
     disabled: boolean;
@@ -25,28 +26,33 @@ const FOLDER_ICONS = {
     [DestinationFolder.ALL_MAIL]: 'all-emails',
 };
 
+const ERRORS = {
+    nameTooLongError: c('Error').t`Folder name is too long. Please use a different name.`,
+    emptyValueError: c('Error').t`Folder name cannot be empty`,
+};
+
 const DIMMED_OPACITY_CLASSNAME = 'opacity-30';
 
 const ImportManageFoldersRow = ({
-    providerName,
+    providerPath,
     recommendedFolder,
     checked,
-    destinationName,
+    destinationPath,
     disabled,
     onToggleCheck,
     onRename,
 }: Props) => {
-    const splittedSource = providerName.split('/');
+    const splittedSource = providerPath.split('/');
     const levelSource = splittedSource.length - 1;
-    const displayNameSource = splittedSource[levelSource];
+    const providerName = splittedSource[levelSource];
 
-    const splittedDestination = destinationName.split('/');
+    const splittedDestination = destinationPath.split('/');
     const levelDestination = Math.min(splittedDestination.length - 1, 2);
-    const displayNameDestination = splittedDestination.slice(levelDestination).join('/');
+    const destinationName = splittedDestination.slice(levelDestination).join('/');
 
     const inputRef = useRef<HTMLInputElement>(null);
     const [editMode, setEditMode] = useState(false);
-    const [inputValue, setInputValue] = useState(displayNameDestination);
+    const [inputValue, setInputValue] = useState(destinationName);
     const initialValue = useRef<string>(inputValue);
 
     const toggleEditMode = (e: React.MouseEvent) => {
@@ -62,15 +68,9 @@ const ImportManageFoldersRow = ({
 
     const handleSave = (e: React.MouseEvent | React.KeyboardEvent) => {
         e.stopPropagation();
-
-        const trimmedValue = inputValue.trim();
-        if (!trimmedValue) {
-            console.log('empty value, should be handle onChange anyway...');
-            return;
-        }
-        const newDestination = [...splittedDestination.slice(0, levelDestination), trimmedValue].join('/');
-        onRename(providerName, newDestination);
+        const newPath = [...splittedDestination.slice(0, levelDestination), inputValue.trim()].join('/');
         setEditMode(false);
+        onRename(providerPath, newPath);
     };
 
     const handleCancel = (e: React.MouseEvent) => {
@@ -94,14 +94,23 @@ const ImportManageFoldersRow = ({
         }
     }, [editMode]);
 
-    const emptyValueError: boolean = useMemo(() => !inputValue, [inputValue]);
+    const emptyValueError = useMemo(() => !inputValue || !inputValue.trim(), [inputValue]);
+    const nameTooLongError = useMemo(() => {
+        const newPath = [...splittedDestination.slice(0, levelDestination), inputValue.trim()].join('/');
+        return newPath.length > 100;
+    }, [destinationPath, inputValue]);
+
+    const hasError = emptyValueError || nameTooLongError;
 
     const renderInput = () => {
         let error;
         let item;
 
         if (emptyValueError) {
-            error = c('Error').t`Field cannot be empty`;
+            error = ERRORS.emptyValueError;
+        }
+        if (nameTooLongError) {
+            error = ERRORS.nameTooLongError;
         }
 
         if (error) {
@@ -126,6 +135,9 @@ const ImportManageFoldersRow = ({
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputValue(e.target.value)}
                 onPressEnter={(e: React.KeyboardEvent) => {
                     e.preventDefault();
+                    if (emptyValueError || nameTooLongError) {
+                        return;
+                    }
                     handleSave(e);
                 }}
                 icon={item}
@@ -138,7 +150,7 @@ const ImportManageFoldersRow = ({
     return (
         <li className="border-bottom">
             <label
-                htmlFor={providerName}
+                htmlFor={providerPath}
                 className={classnames([
                     'flex flex-nowrap flex-items-center pt1 pb1',
                     !checked && DIMMED_OPACITY_CLASSNAME,
@@ -153,15 +165,15 @@ const ImportManageFoldersRow = ({
                                 if (!checked && editMode) {
                                     setEditMode(false);
                                 }
-                                onToggleCheck(providerName, checked);
+                                onToggleCheck(providerPath, checked);
                             }}
-                            id={providerName}
+                            id={providerPath}
                             checked={checked}
                             disabled={disabled}
                         />
                     </div>
-                    <div title={displayNameSource} className="ml0-5 flex-item-fluid-auto ellipsis">
-                        {displayNameSource}
+                    <div title={providerName} className="ml0-5 flex-item-fluid-auto ellipsis">
+                        {providerName}
                     </div>
                 </div>
 
@@ -172,10 +184,30 @@ const ImportManageFoldersRow = ({
                     >
                         <Icon
                             name={recommendedFolder ? FOLDER_ICONS[recommendedFolder] : 'folder'}
-                            className="flex-item-noshrink"
+                            className={classnames(['flex-item-noshrink', nameTooLongError && 'color-global-warning'])}
                         />
-                        <div className="ml0-5 flex-item-fluid-auto ellipsis">
-                            {editMode && !disabled ? renderInput() : <span>{displayNameDestination}</span>}
+                        <div
+                            className={classnames([
+                                'ml0-5 w100 flex flex-nowrap',
+                                nameTooLongError && 'color-global-warning',
+                            ])}
+                        >
+                            {editMode && !disabled ? (
+                                renderInput()
+                            ) : (
+                                <>
+                                    <span className="flex-item-fluid-auto ellipsis">{destinationName}</span>
+                                    {nameTooLongError && (
+                                        <Tooltip title={ERRORS.nameTooLongError} className="flex-item-noshrink">
+                                            <Icon
+                                                tabIndex={-1}
+                                                name="info"
+                                                className="color-global-warning inline-flex flex-self-vcenter flex-item-noshrink"
+                                            />
+                                        </Tooltip>
+                                    )}
+                                </>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -186,9 +218,9 @@ const ImportManageFoldersRow = ({
                             <>
                                 <InlineLinkButton
                                     onClick={handleSave}
-                                    className={classnames(['p0-5', emptyValueError && DIMMED_OPACITY_CLASSNAME])}
-                                    aria-disabled={emptyValueError}
-                                    disabled={emptyValueError}
+                                    className={classnames(['p0-5', hasError && DIMMED_OPACITY_CLASSNAME])}
+                                    aria-disabled={hasError}
+                                    disabled={hasError}
                                 >
                                     {c('Action').t`Save`}
                                 </InlineLinkButton>

@@ -239,19 +239,7 @@ const CustomizeImportModal = ({
                             selectedFoldersCount
                         )}
                         <Button className="ml2" onClick={toggleFolders}>
-                            <Icon
-                                name="caret"
-                                style={
-                                    !organizeFolderVisible
-                                        ? {
-                                              transform: 'rotate(-90deg)',
-                                          }
-                                        : undefined
-                                }
-                            />
-                            <span className="ml0-5">
-                                {organizeFolderVisible ? c('Action').t`Hide folders` : c('Action').t`Show folders`}
-                            </span>
+                            {organizeFolderVisible ? c('Action').t`Hide folders` : c('Action').t`Show folders`}
                         </Button>
                     </div>
                 </Row>

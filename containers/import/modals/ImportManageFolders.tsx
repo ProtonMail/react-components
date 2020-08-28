@@ -1,9 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { c } from 'ttag';
 
 import { Address } from 'proton-shared/lib/interfaces';
 
-import { ImportModalModel, ProviderFoldersMapItem, ImportPayloadModel, MailImportFolder } from '../interfaces';
+import {
+    ImportModalModel,
+    ProviderFoldersMapItem,
+    ProviderFolderMap,
+    ImportPayloadModel,
+    MailImportFolder,
+    FolderMapping,
+} from '../interfaces';
 import ImportManageFoldersRow from './ImportManageFoldersRow';
 
 interface Props {
@@ -26,10 +33,10 @@ const ImportManageFolders = ({ modalModel, address, payload, onChangePayload }: 
         }, []);
 
     const [providerFoldersMap, setProviderFoldersMap] = useState(
-        providerFolders.reduce((acc: { [key: string]: ProviderFoldersMapItem }, folder) => {
+        providerFolders.reduce((acc: ProviderFolderMap, folder) => {
             acc[folder.Name] = {
-                providerName: folder.Name,
-                destinationName: folder.DestinationFolder || folder.Name,
+                providerPath: folder.Name,
+                destinationPath: folder.DestinationFolder || folder.Name,
                 recommendedFolder: folder.DestinationFolder,
                 descendants: getDescendants(folder.Name),
                 checked: true,
@@ -42,44 +49,81 @@ const ImportManageFolders = ({ modalModel, address, payload, onChangePayload }: 
         Object.values(providerFoldersMap).filter((f: ProviderFoldersMapItem) => f.descendants.includes(providerName));
 
     const handleToggleCheck = (providerName: string, checked: boolean) => {
-        const newProviderFoldersMap = Object.values(providerFoldersMap).reduce(
-            (acc: { [key: string]: ProviderFoldersMapItem }, folder) => {
-                if (
-                    folder.providerName === providerName ||
-                    providerFoldersMap[providerName].descendants.includes(folder.providerName)
-                ) {
-                    acc[folder.providerName] = {
-                        ...folder,
-                        checked,
-                    };
+        const newProviderFoldersMap = Object.values(providerFoldersMap).reduce((acc: ProviderFolderMap, folder) => {
+            if (
+                folder.providerPath === providerName ||
+                providerFoldersMap[providerName].descendants.includes(folder.providerPath)
+            ) {
+                acc[folder.providerPath] = {
+                    ...folder,
+                    checked,
+                };
 
-                    return acc;
+                return acc;
+            }
+
+            acc[folder.providerPath] = folder;
+
+            return acc;
+        }, {});
+
+        setProviderFoldersMap(newProviderFoldersMap);
+    };
+
+    const handleRename = (providerName: string, newPath: string) => {
+        const newProviderFoldersMap = { ...providerFoldersMap };
+        const newLevel = newPath.split('/').length - 1;
+        const oldPath = providerFoldersMap[providerName].destinationPath;
+
+        if (newLevel < 2) {
+            newProviderFoldersMap[providerName].descendants.forEach((name: string) => {
+                newProviderFoldersMap[name].destinationPath = newProviderFoldersMap[name].destinationPath.replace(
+                    oldPath,
+                    newPath
+                );
+            });
+        }
+
+        newProviderFoldersMap[providerName].destinationPath = newPath;
+
+        setProviderFoldersMap(newProviderFoldersMap);
+    };
+
+    useEffect(() => {
+        const Mapping = Object.values(providerFoldersMap).reduce(
+            (acc: FolderMapping[], { providerPath, checked, destinationPath }: ProviderFoldersMapItem) => {
+                if (checked) {
+                    return [
+                        ...acc,
+                        {
+                            Source: providerPath,
+                            Destinations: {
+                                FolderName: destinationPath,
+                            },
+                        },
+                    ];
                 }
-
-                acc[folder.providerName] = folder;
 
                 return acc;
             },
-            {}
+            []
         );
 
-        setProviderFoldersMap(newProviderFoldersMap);
-    };
-
-    const handleRename = (providerName: string, destinationName: string) => {
-        const newProviderFoldersMap = { ...providerFoldersMap };
-        newProviderFoldersMap[providerName].destinationName = destinationName;
-        setProviderFoldersMap(newProviderFoldersMap);
-    };
+        onChangePayload({
+            ...payload,
+            Mapping,
+        });
+    }, [providerFoldersMap]);
 
     const renderRow = (item: ProviderFoldersMapItem) => {
-        const ancestorsFolders = getAncestorMapItems(item.providerName);
+        const ancestorsFolders = getAncestorMapItems(item.providerPath);
         const disabled = ancestorsFolders.some((folder) => !folder.checked);
 
         return (
             <ImportManageFoldersRow
                 {...item}
-                key={item.providerName}
+                providerFoldersMap={providerFoldersMap}
+                key={item.providerPath}
                 onRename={handleRename}
                 onToggleCheck={handleToggleCheck}
                 disabled={disabled}
