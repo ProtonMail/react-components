@@ -32,9 +32,14 @@ const ERRORS = {
     emptyValueError: c('Error').t`Folder name cannot be empty`,
 };
 
+const WARNINGS = {
+    mergeWarning: c('Warning').t`This folder already exists. Mails will be imported in the existing folder`,
+};
+
 const DIMMED_OPACITY_CLASSNAME = 'opacity-30';
 
 const ImportManageFoldersRow = ({
+    providerFoldersMap,
     providerPath,
     recommendedFolder,
     checked,
@@ -62,6 +67,13 @@ const ImportManageFoldersRow = ({
         const newPath = [...splittedDestination.slice(0, levelDestination), inputValue.trim()].join('/');
         return newPath.length > 100;
     }, [destinationPath, inputValue]);
+
+    const mergeWarning = useMemo(() => {
+        const newPath = [...splittedDestination.slice(0, levelDestination), inputValue.trim()].join('/');
+        return Object.values(providerFoldersMap).some((f) => {
+            return f.providerPath !== providerPath && f.destinationPath === newPath;
+        });
+    }, [providerFoldersMap, inputValue]);
 
     const hasError = emptyValueError || nameTooLongError;
 
@@ -102,6 +114,7 @@ const ImportManageFoldersRow = ({
 
     const renderInput = () => {
         let error;
+        let warning;
         let item;
 
         if (emptyValueError) {
@@ -109,6 +122,18 @@ const ImportManageFoldersRow = ({
         }
         if (nameTooLongError) {
             error = ERRORS.nameTooLongError;
+        }
+
+        if (warning) {
+            item = (
+                <Tooltip title={WARNINGS.mergeWarning}>
+                    <Icon
+                        tabIndex={-1}
+                        name="info"
+                        className="color-global-attention inline-flex flex-self-vcenter flex-item-noshrink"
+                    />
+                </Tooltip>
+            );
         }
 
         if (error) {
@@ -125,9 +150,9 @@ const ImportManageFoldersRow = ({
 
         return (
             <Input
-                autoFocus={true}
-                required={true}
-                isSubmitted={true}
+                autoFocus
+                required
+                isSubmitted
                 ref={inputRef}
                 value={inputValue}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => setInputValue(e.target.value)}
@@ -139,7 +164,7 @@ const ImportManageFoldersRow = ({
                     handleSave(e);
                 }}
                 icon={item}
-                error={error}
+                error={error || warning}
                 errorZoneClassName="hidden"
             />
         );
@@ -188,25 +213,46 @@ const ImportManageFoldersRow = ({
                     >
                         <Icon
                             name={recommendedFolder ? FOLDER_ICONS[recommendedFolder] : 'folder'}
-                            className={classnames(['flex-item-noshrink', nameTooLongError && 'color-global-warning'])}
+                            className={classnames([
+                                'flex-item-noshrink',
+                                nameTooLongError && 'color-global-warning',
+                                mergeWarning && 'color-global-attention',
+                            ])}
                         />
                         <div
                             className={classnames([
                                 'ml0-5 w100 flex flex-nowrap',
                                 nameTooLongError && 'color-global-warning',
+                                mergeWarning && 'color-global-attention',
                             ])}
                         >
                             {editMode && !disabled ? (
                                 renderInput()
                             ) : (
                                 <>
-                                    <span className="flex-item-fluid-auto ellipsis">{destinationName}</span>
+                                    <span
+                                        className={classnames([
+                                            'flex-item-fluid-auto ellipsis',
+                                            (nameTooLongError || mergeWarning) && 'bold',
+                                        ])}
+                                    >
+                                        {destinationName}
+                                    </span>
                                     {nameTooLongError && (
                                         <Tooltip title={ERRORS.nameTooLongError} className="flex-item-noshrink">
                                             <Icon
                                                 tabIndex={-1}
                                                 name="info"
                                                 className="color-global-warning inline-flex flex-self-vcenter flex-item-noshrink"
+                                            />
+                                        </Tooltip>
+                                    )}
+                                    {mergeWarning && (
+                                        <Tooltip title={WARNINGS.mergeWarning} className="flex-item-noshrink">
+                                            <Icon
+                                                tabIndex={-1}
+                                                name="info"
+                                                className="color-global-attention inline-flex flex-self-vcenter flex-item-noshrink"
                                             />
                                         </Tooltip>
                                     )}
