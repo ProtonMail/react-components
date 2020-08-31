@@ -25,8 +25,8 @@ const DEFAULT_MODAL_MODEL: ImportModalModel = {
     step: Step.START,
     needIMAPDetails: false,
     importID: '',
-    email: '',
-    password: '',
+    email: 'minde_v@outlook.com',
+    password: 'ZhpdmqV9#9g*', // '',
     port: '',
     imap: '',
     errorCode: 0,
@@ -49,8 +49,19 @@ const destinationFoldersFirst = (a: MailImportFolder, b: MailImportFolder) => {
     if (a.DestinationFolder && b.DestinationFolder) {
         return 0;
     }
-
-    return a.DestinationFolder ? -1 : 1;
+    if (a.DestinationFolder && !b.DestinationFolder) {
+        return -1;
+    }
+    if (!a.DestinationFolder && b.DestinationFolder) {
+        return 1;
+    }
+    if (a.Name < b.Name) {
+        return -1;
+    }
+    if (a.Name > b.Name) {
+        return 1;
+    }
+    return 0;
 };
 
 const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
