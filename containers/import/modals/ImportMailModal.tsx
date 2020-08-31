@@ -25,8 +25,8 @@ const DEFAULT_MODAL_MODEL: ImportModalModel = {
     step: Step.START,
     needIMAPDetails: false,
     importID: '',
-    email: 'minde_v@outlook.com',
-    password: 'ZhpdmqV9#9g*', // '',
+    email: '',
+    password: '',
     port: '',
     imap: '',
     errorCode: 0,
@@ -225,13 +225,14 @@ const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
     }, [modalModel.step, loading]);
 
     const submit = useMemo(() => {
+        const disabledStartStep = modalModel.needIMAPDetails
+            ? !modalModel.email || !modalModel.password || !modalModel.imap || !modalModel.port
+            : !modalModel.email || !modalModel.password;
+
         switch (modalModel.step) {
             case Step.START:
-                const disabled = modalModel.needIMAPDetails
-                    ? !modalModel.email || !modalModel.password || !modalModel.imap || !modalModel.port
-                    : !modalModel.email || !modalModel.password;
                 return (
-                    <PrimaryButton type="submit" disabled={disabled} loading={loading}>
+                    <PrimaryButton type="submit" disabled={disabledStartStep} loading={loading}>
                         {c('Action').t`Next`}
                     </PrimaryButton>
                 );
