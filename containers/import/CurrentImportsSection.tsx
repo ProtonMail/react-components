@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, forwardRef, useImperativeHandle } from 'react';
 import { format } from 'date-fns';
 import { c } from 'ttag';
 
@@ -30,7 +30,7 @@ interface ImportsFromServer {
     Sasl: string;
 }
 
-const CurrentImportsSection = () => {
+const CurrentImportsSection = forwardRef(({}, ref) => {
     const api = useApi();
     const [imports, setImports] = useState<ImportMail[]>([]);
     const [loading, withLoading] = useLoading();
@@ -50,6 +50,10 @@ const CurrentImportsSection = () => {
                 }))
         );
     };
+
+    useImperativeHandle(ref, () => ({
+        fetch,
+    }));
 
     useEffect(() => {
         withLoading(fetch());
@@ -178,6 +182,6 @@ const CurrentImportsSection = () => {
             </Table>
         </>
     );
-};
+});
 
 export default CurrentImportsSection;

@@ -8,7 +8,6 @@ import {
     ProviderFoldersMapItem,
     ProviderFolderMap,
     ImportPayloadModel,
-    MailImportFolder,
     FolderMapping,
 } from '../interfaces';
 import ImportManageFoldersRow from './ImportManageFoldersRow';

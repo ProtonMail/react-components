@@ -6,9 +6,13 @@ import { PrimaryButton, Alert } from '../../components';
 
 import ImportMailModal from './modals/ImportMailModal';
 
-const StartImportSection = () => {
+interface Props {
+    onImportComplete: () => void;
+}
+
+const StartImportSection = ({ onImportComplete }: Props) => {
     const { createModal } = useModals();
-    const handleClick = () => createModal(<ImportMailModal />);
+    const handleClick = () => createModal(<ImportMailModal onImportComplete={onImportComplete} />);
     return (
         <>
             <Alert learnMore="https://protonmail.com/support/knowledge-base/">
