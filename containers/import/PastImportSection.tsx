@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
-
+import { format } from 'date-fns';
 import { c } from 'ttag';
+
 import { queryMailImportHistory, deleteMailImportReport } from 'proton-shared/lib/api/mailImport';
+import humanSize from 'proton-shared/lib/helpers/humanSize';
 
 import { useApi, useLoading, useNotifications, useModals } from '../../hooks';
-import { Button, Loader, Alert, Table, TableHeader, TableBody, TableRow, Badge, Time } from '../../components';
+import { Button, Loader, Alert, Table, TableHeader, TableBody, TableRow, Badge } from '../../components';
 
 import { ConfirmModal } from '../../components/modal';
 
 import { ImportMailReport, ImportMailReportStatus } from './interfaces';
-import humanSize from 'proton-shared/lib/helpers/humanSize';
 
 interface ImportStatusProps {
     status: ImportMailReportStatus;
@@ -126,9 +127,7 @@ const PastImportsSection = () => {
                                 cells={[
                                     <div className="w100 ellipsis">{Email}</div>,
                                     <ImportStatus key="status" status={State} />,
-                                    <Time key="importDate" format="PPp">
-                                        {EndTime}
-                                    </Time>,
+                                    <time key="importDate">{format(EndTime * 1000, 'PPp')}</time>,
                                     humanSize(TotalSize),
                                     <DeleteButton ID={ID} email={Email} callback={fetch} />,
                                 ]}

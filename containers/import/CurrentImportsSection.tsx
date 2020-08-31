@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-
+import { format } from 'date-fns';
 import { c } from 'ttag';
+
 import { queryMailImport, resumeMailImport, cancelMailImport } from 'proton-shared/lib/api/mailImport';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 
@@ -12,7 +13,6 @@ import {
     TableHeader,
     TableBody,
     TableRow,
-    Time,
     DropdownActions,
     Badge,
     // Tooltip,
@@ -150,9 +150,7 @@ const CurrentImportsSection = () => {
                                 cells={[
                                     <div className="w100 ellipsis">{Email}</div>,
                                     badgeRenderer(),
-                                    <Time key="creation" format="PPp">
-                                        {CreateTime}
-                                    </Time>,
+                                    <time key="importDate">{format(CreateTime * 1000, 'PPp')}</time>,
                                     <DropdownActions
                                         key="actions"
                                         loading={loadingActions}
