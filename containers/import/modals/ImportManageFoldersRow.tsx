@@ -126,7 +126,7 @@ const ImportManageFoldersRow = ({
 
         if (warning) {
             item = (
-                <Tooltip title={WARNINGS.mergeWarning}>
+                <Tooltip title={WARNINGS.mergeWarning} className="tooltip--attention">
                     <Icon
                         tabIndex={-1}
                         name="info"
@@ -138,7 +138,7 @@ const ImportManageFoldersRow = ({
 
         if (error) {
             item = (
-                <Tooltip title={error}>
+                <Tooltip title={error} className="tooltip--warning">
                     <Icon
                         tabIndex={-1}
                         name="info"
@@ -239,7 +239,10 @@ const ImportManageFoldersRow = ({
                                         {destinationName}
                                     </span>
                                     {nameTooLongError && (
-                                        <Tooltip title={ERRORS.nameTooLongError} className="flex-item-noshrink">
+                                        <Tooltip
+                                            title={ERRORS.nameTooLongError}
+                                            className="flex-item-noshrink tooltip--warning"
+                                        >
                                             <Icon
                                                 tabIndex={-1}
                                                 name="info"
@@ -248,7 +251,10 @@ const ImportManageFoldersRow = ({
                                         </Tooltip>
                                     )}
                                     {mergeWarning && (
-                                        <Tooltip title={WARNINGS.mergeWarning} className="flex-item-noshrink">
+                                        <Tooltip
+                                            title={WARNINGS.mergeWarning}
+                                            className="flex-item-noshrink tooltip--attention"
+                                        >
                                             <Icon
                                                 tabIndex={-1}
                                                 name="info"
