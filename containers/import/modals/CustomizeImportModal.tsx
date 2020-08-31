@@ -84,7 +84,7 @@ const CustomizeImportModal = ({
                 cancel={c('Action').t`Continue`}
                 confirm={c('Action').t`Quit`}
             >
-                <Alert type="error">{c('Warning').t`Any custom changes you made will be lost.`}</Alert>
+                <Alert type="error">{c('Warning').t`You will lose any customization you made so far.`}</Alert>
             </ConfirmModal>
         );
     };

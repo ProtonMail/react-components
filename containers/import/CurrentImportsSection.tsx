@@ -5,7 +5,7 @@ import { c } from 'ttag';
 import { queryMailImport, resumeMailImport, cancelMailImport } from 'proton-shared/lib/api/mailImport';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 
-import { useApi, useLoading, useNotifications } from '../../hooks';
+import { useApi, useLoading, useNotifications, useModals } from '../../hooks';
 import {
     Loader,
     Alert,
@@ -15,6 +15,7 @@ import {
     TableRow,
     DropdownActions,
     Badge,
+    ConfirmModal,
     // Tooltip,
     // Icon,
 } from '../../components';
@@ -32,6 +33,7 @@ interface ImportsFromServer {
 
 const CurrentImportsSection = forwardRef(({}, ref) => {
     const api = useApi();
+    const { createModal } = useModals();
     const [imports, setImports] = useState<ImportMail[]>([]);
     const [loading, withLoading] = useLoading();
     const [loadingActions, withLoadingActions] = useLoading();
@@ -82,6 +84,22 @@ const CurrentImportsSection = forwardRef(({}, ref) => {
     };
 
     const handleCancel = async (importID: string) => {
+        await new Promise((resolve, reject) => {
+            createModal(
+                <ConfirmModal
+                    onConfirm={resolve}
+                    onClose={reject}
+                    title={c('Title').t`Import is not finished, cancel anyway?`}
+                    cancel={c('Title').t`Cancel import`}
+                    confirm={c('Title').t`Back to import`}
+                >
+                    <Alert type="error">
+                        {c('Warning')
+                            .t`To finish importing, you will have to start over. All progress so far was saved in your Proton account.`}
+                    </Alert>
+                </ConfirmModal>
+            );
+        });
         await api(cancelMailImport(importID));
         await fetch();
         createNotification({ text: c('Success').t`Import canceled` });

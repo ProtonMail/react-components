@@ -100,8 +100,13 @@ const ImportMailModal = ({ onImportComplete, onClose = noop, ...rest }: Props) =
         }
 
         createModal(
-            <ConfirmModal onConfirm={onClose}>
-                <Alert type="error">{c('Warning').t`Are you sure you want to cancel your import?`}</Alert>
+            <ConfirmModal
+                onConfirm={onClose}
+                title={c('Action').t`Quit importing?`}
+                cancel={c('Action').t`Continue`}
+                confirm={c('Action').t`Quit`}
+            >
+                <Alert type="error">{c('Warning').t`You will lose all changes you made so far.`}</Alert>
             </ConfirmModal>
         );
     };
