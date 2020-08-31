@@ -21,16 +21,10 @@ interface Props {
 }
 
 const ImportManageFolders = ({ modalModel, address, payload, onChangePayload }: Props) => {
-    const { providerFolders } = modalModel;
+    const { providerFolders, separator } = modalModel;
 
-    const getDescendants = (providerName: string): string[] =>
-        providerFolders.reduce((acc: string[], folder: MailImportFolder) => {
-            if (folder.Name !== providerName && folder.Name.startsWith(providerName)) {
-                return [...acc, folder.Name];
-            }
-
-            return acc;
-        }, []);
+    const getChildren = (providerName: string): string[] =>
+        providerFolders.filter((f) => f.Name !== providerName && f.Name.startsWith(providerName)).map((f) => f.Name);
 
     const [providerFoldersMap, setProviderFoldersMap] = useState(
         providerFolders.reduce((acc: ProviderFolderMap, folder) => {
@@ -38,9 +32,12 @@ const ImportManageFolders = ({ modalModel, address, payload, onChangePayload }: 
 
             acc[folder.Name] = {
                 providerPath: folder.Name,
-                destinationPath: found?.Destinations.FolderName || folder.DestinationFolder || folder.Name,
+                destinationPath:
+                    found?.Destinations.FolderName ||
+                    folder.DestinationFolder ||
+                    folder.Name.split(separator).join('/'),
                 recommendedFolder: folder.DestinationFolder,
-                descendants: getDescendants(folder.Name),
+                children: getChildren(folder.Name),
                 checked: !!found && found.checked,
             };
             return acc;
@@ -48,13 +45,13 @@ const ImportManageFolders = ({ modalModel, address, payload, onChangePayload }: 
     );
 
     const getAncestorMapItems = (providerName: string) =>
-        Object.values(providerFoldersMap).filter((f: ProviderFoldersMapItem) => f.descendants.includes(providerName));
+        Object.values(providerFoldersMap).filter((f: ProviderFoldersMapItem) => f.children.includes(providerName));
 
     const handleToggleCheck = (providerName: string, checked: boolean) => {
         const newProviderFoldersMap = Object.values(providerFoldersMap).reduce((acc: ProviderFolderMap, folder) => {
             if (
                 folder.providerPath === providerName ||
-                providerFoldersMap[providerName].descendants.includes(folder.providerPath)
+                providerFoldersMap[providerName].children.includes(folder.providerPath)
             ) {
                 acc[folder.providerPath] = {
                     ...folder,
@@ -78,7 +75,7 @@ const ImportManageFolders = ({ modalModel, address, payload, onChangePayload }: 
         const oldPath = providerFoldersMap[providerName].destinationPath;
 
         if (newLevel < 2) {
-            newProviderFoldersMap[providerName].descendants.forEach((name: string) => {
+            newProviderFoldersMap[providerName].children.forEach((name: string) => {
                 newProviderFoldersMap[name].destinationPath = newProviderFoldersMap[name].destinationPath.replace(
                     oldPath,
                     newPath
@@ -103,6 +100,7 @@ const ImportManageFolders = ({ modalModel, address, payload, onChangePayload }: 
                 onRename={handleRename}
                 onToggleCheck={handleToggleCheck}
                 disabled={disabled}
+                separator={separator}
             />
         );
     };

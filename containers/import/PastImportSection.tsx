@@ -6,7 +6,7 @@ import { queryMailImportHistory, deleteMailImportReport } from 'proton-shared/li
 import humanSize from 'proton-shared/lib/helpers/humanSize';
 
 import { useApi, useLoading, useNotifications, useModals } from '../../hooks';
-import { Button, Loader, Alert, Table, TableHeader, TableBody, TableRow, Badge } from '../../components';
+import { Button, Loader, Alert, Table, TableHeader, TableBody, TableRow, Badge, ErrorButton } from '../../components';
 
 import { ConfirmModal } from '../../components/modal';
 
@@ -52,7 +52,7 @@ const DeleteButton = ({ ID, email, callback }: DeleteButtonProps) => {
                     onClose={reject}
                     title={c('Title').t`Remove from the list?`}
                     cancel={c('Title').t`Keep`}
-                    confirm={c('Title').t`Remove`}
+                    confirm={<ErrorButton type="submit">{c('Title').t`Remove`}</ErrorButton>}
                 >
                     <Alert type="error">
                         {c('Warning').t`You will not see this import record in the list anymore.`}

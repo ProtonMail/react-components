@@ -92,7 +92,7 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
         const Mapping = providerFolders.map((folder) => ({
             Source: folder.Name,
             Destinations: {
-                FolderName: folder.DestinationFolder || folder.Name,
+                FolderName: folder.DestinationFolder || folder.Name.split(modalModel.separator).join('/'),
             },
             checked: true,
         }));

@@ -37,6 +37,7 @@ const DEFAULT_MODAL_MODEL: ImportModalModel = {
         Mapping: [],
     },
     isPayloadValid: false,
+    separator: '/',
 };
 
 interface Props {
@@ -92,6 +93,11 @@ const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
     ];
 
     const handleCancel = () => {
+        if (!modalModel.email) {
+            onClose();
+            return;
+        }
+
         createModal(
             <ConfirmModal onConfirm={onClose}>
                 <Alert type="error">{c('Warning').t`Are you sure you want to cancel your import?`}</Alert>
@@ -100,11 +106,30 @@ const ImportMailModal = ({ onClose = noop, ...rest }: Props) => {
     };
 
     const moveToPrepareStep = (importID: string, providerFolders: MailImportFolder[]) => {
+        // Finds the source folders separator
+        // (e.g `|` for Yandex vs `/` for other providers, so far...)
+        // but since it could be anything, that's why we need the following
+        const separator = providerFolders.reduce((acc, folder) => {
+            // if already found we return it
+            if (acc) {
+                return acc;
+            }
+
+            const children = providerFolders.filter((f) => f.Name !== folder.Name && f.Name.startsWith(folder.Name));
+            const lastChild = children.pop();
+
+            if (lastChild) {
+                return lastChild.Name.replace(folder.Name, '').substring(0, 1);
+            }
+            return acc;
+        }, '');
+
         setModalModel({
             ...modalModel,
             providerFolders: providerFolders.sort(destinationFoldersFirst),
             importID,
             step: Step.PREPARE,
+            separator,
         });
     };
 

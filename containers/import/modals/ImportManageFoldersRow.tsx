@@ -11,6 +11,7 @@ interface Props extends ProviderFoldersMapItem {
     onRename: (providerName: string, destinationName: string) => void;
     onToggleCheck: (providerName: string, checked: boolean) => void;
     disabled: boolean;
+    separator: string;
 }
 
 const FOLDER_ICONS = {
@@ -41,8 +42,9 @@ const ImportManageFoldersRow = ({
     disabled,
     onToggleCheck,
     onRename,
+    separator,
 }: Props) => {
-    const splittedSource = providerPath.split('/');
+    const splittedSource = providerPath.split(separator);
     const levelSource = splittedSource.length - 1;
     const providerName = splittedSource[levelSource];
 
@@ -51,9 +53,19 @@ const ImportManageFoldersRow = ({
     const destinationName = splittedDestination.slice(levelDestination).join('/');
 
     const inputRef = useRef<HTMLInputElement>(null);
-    const [editMode, setEditMode] = useState(false);
     const [inputValue, setInputValue] = useState(destinationName);
     const initialValue = useRef<string>(inputValue);
+
+    const emptyValueError = useMemo(() => !inputValue || !inputValue.trim(), [inputValue]);
+
+    const nameTooLongError = useMemo(() => {
+        const newPath = [...splittedDestination.slice(0, levelDestination), inputValue.trim()].join('/');
+        return newPath.length > 100;
+    }, [destinationPath, inputValue]);
+
+    const hasError = emptyValueError || nameTooLongError;
+
+    const [editMode, setEditMode] = useState(nameTooLongError);
 
     const toggleEditMode = (e: React.MouseEvent) => {
         if (disabled || editMode) {
@@ -87,15 +99,6 @@ const ImportManageFoldersRow = ({
             e.stopPropagation();
         }
     };
-
-    const emptyValueError = useMemo(() => !inputValue || !inputValue.trim(), [inputValue]);
-
-    const nameTooLongError = useMemo(() => {
-        const newPath = [...splittedDestination.slice(0, levelDestination), inputValue.trim()].join('/');
-        return newPath.length > 100;
-    }, [destinationPath, inputValue]);
-
-    const hasError = emptyValueError || nameTooLongError;
 
     const renderInput = () => {
         let error;

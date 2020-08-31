@@ -55,6 +55,7 @@ export interface ImportModalModel {
     selectedPeriod: TIME_UNIT;
     payload: ImportPayloadModel;
     isPayloadValid: boolean;
+    separator: string;
 }
 
 export interface FolderMapping {
@@ -118,7 +119,7 @@ export interface ProviderFoldersMapItem {
     destinationPath: string;
     checked: boolean;
     recommendedFolder?: DestinationFolder;
-    descendants: string[];
+    children: string[];
 }
 
 export interface ProviderFolderMap {
