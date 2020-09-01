@@ -4,14 +4,29 @@ import { usePopper, Popper, usePopperAnchor } from '../popper';
 import useRightToLeft from '../../containers/rightToLeft/useRightToLeft';
 import useTooltipHandlers from './useTooltipHandlers';
 
+enum TooltipType {
+    INFO = 'info',
+    ERROR = 'error',
+    WARNING = 'warning',
+}
+
 interface Props {
     children: React.ReactNode;
     title?: string;
     originalPlacement?: 'top' | 'bottom' | 'left' | 'right';
     scrollContainerClass?: string;
     className?: string;
-    type?: 'info' | 'error' | 'warning';
+    type?: TooltipType;
 }
+
+const getTooltipTypeClass = (type: TooltipType) => {
+    if (type === TooltipType.ERROR) {
+        return 'tooltip--warning';
+    }
+    if (type === TooltipType.WARNING) {
+        return 'tooltip--attention';
+    }
+};
 
 const Tooltip = ({
     children,
@@ -19,7 +34,7 @@ const Tooltip = ({
     originalPlacement = 'top',
     scrollContainerClass = 'main',
     className,
-    type = 'info',
+    type = TooltipType.INFO,
 }: Props) => {
     const [uid] = useState(generateUID('tooltip'));
 
@@ -39,20 +54,6 @@ const Tooltip = ({
     });
     const tooltipHandlers = useTooltipHandlers(open, close, isOpen);
 
-    let tooltipClass = '';
-
-    switch (type) {
-        case 'error':
-            tooltipClass = 'tooltip--warning';
-            break;
-        case 'warning':
-            tooltipClass = 'tooltip--attention';
-            break;
-        case 'info':
-        default:
-            break;
-    }
-
     return (
         <>
             <span ref={anchorRef} {...tooltipHandlers} aria-describedby={uid} className={className}>
@@ -63,7 +64,7 @@ const Tooltip = ({
                 id={uid}
                 isOpen={!!title && isOpen}
                 style={position}
-                className={classnames(['tooltip', `tooltip--${placement}`, tooltipClass])}
+                className={classnames(['tooltip', `tooltip--${placement}`, getTooltipTypeClass(type)])}
             >
                 {title}
             </Popper>
