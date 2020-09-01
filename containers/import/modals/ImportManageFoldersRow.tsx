@@ -126,7 +126,7 @@ const ImportManageFoldersRow = ({
 
         if (warning) {
             item = (
-                <Tooltip title={WARNINGS.mergeWarning} className="tooltip--attention">
+                <Tooltip title={WARNINGS.mergeWarning} type="warning">
                     <Icon
                         tabIndex={-1}
                         name="info"
@@ -138,7 +138,7 @@ const ImportManageFoldersRow = ({
 
         if (error) {
             item = (
-                <Tooltip title={error} className="tooltip--warning">
+                <Tooltip title={error} type="error">
                     <Icon
                         tabIndex={-1}
                         name="info"
@@ -241,7 +241,8 @@ const ImportManageFoldersRow = ({
                                     {nameTooLongError && (
                                         <Tooltip
                                             title={ERRORS.nameTooLongError}
-                                            className="flex-item-noshrink tooltip--warning"
+                                            className="flex-item-noshrink"
+                                            type="error"
                                         >
                                             <Icon
                                                 tabIndex={-1}
@@ -253,7 +254,8 @@ const ImportManageFoldersRow = ({
                                     {mergeWarning && (
                                         <Tooltip
                                             title={WARNINGS.mergeWarning}
-                                            className="flex-item-noshrink tooltip--attention"
+                                            className="flex-item-noshrink"
+                                            type="warning"
                                         >
                                             <Icon
                                                 tabIndex={-1}
