@@ -65,7 +65,6 @@ const useResetPassword = ({ onLogin, initalStep }: Props) => {
     const [state, setState] = useState<State>({ ...INITIAL_STATE, step: initalStep || INITIAL_STATE.step });
     const [loading, withLoading] = useLoading();
     const addressesRef = useRef<Address[]>([]);
-    const accountTypeRef = useRef<AccountType>();
     const dangerWord = 'DANGER';
 
     const gotoStep = (step: STEPS) => {
@@ -81,7 +80,6 @@ const useResetPassword = ({ onLogin, initalStep }: Props) => {
             const { Type, Methods }: { Type: AccountType; Methods: RecoveryMethod[] } = await api(
                 getRecoveryMethods(username)
             );
-            accountTypeRef.current = Type;
             if (Type === 'internal' && Methods.length) {
                 return setState((state: State) => ({
                     ...state,
