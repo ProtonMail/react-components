@@ -10,9 +10,17 @@ interface Props {
     originalPlacement?: 'top' | 'bottom' | 'left' | 'right';
     scrollContainerClass?: string;
     className?: string;
+    type?: 'error' | 'warning';
 }
 
-const Tooltip = ({ children, title, originalPlacement = 'top', scrollContainerClass = 'main', className }: Props) => {
+const Tooltip = ({
+    children,
+    title,
+    originalPlacement = 'top',
+    scrollContainerClass = 'main',
+    className,
+    type,
+}: Props) => {
     const [uid] = useState(generateUID('tooltip'));
 
     const { isRTL } = useRightToLeft();
@@ -31,6 +39,19 @@ const Tooltip = ({ children, title, originalPlacement = 'top', scrollContainerCl
     });
     const tooltipHandlers = useTooltipHandlers(open, close, isOpen);
 
+    let tooltipClass = '';
+
+    switch (type) {
+        case 'error':
+            tooltipClass = 'tooltip--warning';
+            break;
+        case 'warning':
+            tooltipClass = 'tooltip--attention';
+            break;
+        default:
+            break;
+    }
+
     return (
         <>
             <span ref={anchorRef} {...tooltipHandlers} aria-describedby={uid} className={className}>
@@ -41,7 +62,7 @@ const Tooltip = ({ children, title, originalPlacement = 'top', scrollContainerCl
                 id={uid}
                 isOpen={!!title && isOpen}
                 style={position}
-                className={classnames(['tooltip', `tooltip--${placement}`])}
+                className={classnames(['tooltip', `tooltip--${placement}`, ...tooltipClass])}
             >
                 {title}
             </Popper>
