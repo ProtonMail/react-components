@@ -187,7 +187,6 @@ function useSearch<T, K = keyof SearchableObject<T>>({
 
     return {
         error,
-        parentRef,
         selectedSuggest,
         inputProps: { onKeyDown, onFocus },
         searchSuggestions,
@@ -196,6 +195,10 @@ function useSearch<T, K = keyof SearchableObject<T>>({
                 'autocomplete-suggestions',
                 isFocused && searchSuggestions.length > 0 ? 'autocomplete-suggestions--open' : 'no-pointer-events',
             ]),
+        },
+        parentProps: {
+            className: classnames(['autocomplete-input relative']),
+            ref: parentRef,
         },
         isFocused,
     };
