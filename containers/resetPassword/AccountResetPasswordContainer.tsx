@@ -41,7 +41,7 @@ const AccountResetPasswordContainer = ({ onLogin, Layout }: Props) => {
         setPhone,
         setPassword,
         setConfirmPassword,
-        setToken
+        setToken,
     } = useResetPassword({ onLogin, initalStep: STEPS.REQUEST_RECOVERY_METHODS });
     const { createModal } = useModals();
     const hasModal = useRef<boolean>(false);
@@ -53,7 +53,11 @@ const AccountResetPasswordContainer = ({ onLogin, Layout }: Props) => {
 
     if (step === STEPS.REQUEST_RECOVERY_METHODS) {
         return (
-            <Layout title={c('Title').t`Enter Proton Account`} left={<BackButton onClick={handleBack} />}>
+            <Layout
+                title={c('Title').t`Enter Proton Account`}
+                subtitle={c('Info').t`Enter the Proton Account that you would like to reset the password for.`}
+                left={<BackButton onClick={handleBack} />}
+            >
                 <form
                     className="signup-form"
                     onSubmit={(e) => {
@@ -61,7 +65,6 @@ const AccountResetPasswordContainer = ({ onLogin, Layout }: Props) => {
                         handleRequestRecoveryMethods();
                     }}
                 >
-                    <p>{c('Info').t`Enter the Proton Account that you would like to reset the password for.`}</p>
                     <SignupLabelInputRow
                         label={<Label htmlFor="username">{c('Label').t`Email or username`}</Label>}
                         input={
@@ -88,9 +91,12 @@ const AccountResetPasswordContainer = ({ onLogin, Layout }: Props) => {
 
     if (step === STEPS.NO_RECOVERY_METHODS) {
         return (
-            <Layout title={c('Title').t`No recovery method`} left={<BackButton onClick={handleBack} />}>
+            <Layout
+                title={c('Title').t`No recovery method`}
+                subtitle={c('Info').t`Unfortunately there is no recovery method saved for this account.`}
+                left={<BackButton onClick={handleBack} />}
+            >
                 <form className="signup-form">
-                    <p>{c('Info').t`Unfortunately there is no recovery method saved for this account.`}</p>
                     <SignupSubmitRow>
                         <Href
                             className="mr2 nodecoration onmobile-aligncenter onmobile-p1 onmobile-mr0"
@@ -118,7 +124,7 @@ const AccountResetPasswordContainer = ({ onLogin, Layout }: Props) => {
                         label={<Label htmlFor="email">{c('Label').t`Recovery email`}</Label>}
                         input={<ResetPasswordEmailInput value={email} setValue={setEmail} id="email" />}
                     />
-                )
+                ),
             },
             methods?.includes('sms') && {
                 title: c('Recovery method').t`Phone number`,
@@ -128,8 +134,8 @@ const AccountResetPasswordContainer = ({ onLogin, Layout }: Props) => {
                         label={<Label htmlFor="phone">{c('Label').t`Recovery phone`}</Label>}
                         input={<ResetPasswordPhoneInput value={phone} setValue={setPhone} id="phone" />}
                     />
-                )
-            }
+                ),
+            },
         ].filter(isTruthy);
         const recoveryTitle =
             tabs[tabIndex].method === 'email'
@@ -147,7 +153,11 @@ const AccountResetPasswordContainer = ({ onLogin, Layout }: Props) => {
             setTabIndex(newIndex);
         };
         return (
-            <Layout title={recoveryTitle} left={<BackButton onClick={handleBack} />}>
+            <Layout
+                title={recoveryTitle}
+                subtitle={c('Info').t`We will send a password reset code to your recovery ${recoveryMethodText}.`}
+                left={<BackButton onClick={handleBack} />}
+            >
                 <form
                     className="signup-form"
                     onSubmit={(e) => {
@@ -155,7 +165,6 @@ const AccountResetPasswordContainer = ({ onLogin, Layout }: Props) => {
                         handleRequest();
                     }}
                 >
-                    <p>{c('Info').t`We will send a password reset code to your recovery ${recoveryMethodText}.`}</p>
                     {tabs.length === 1 ? (
                         tabs[0].content
                     ) : (
@@ -205,7 +214,11 @@ const AccountResetPasswordContainer = ({ onLogin, Layout }: Props) => {
             await handleValidateResetToken(STEPS.NEW_PASSWORD);
         };
         return (
-            <Layout title={c('Title').t`Enter recovery code`} left={<BackButton onClick={handleBack} />}>
+            <Layout
+                title={c('Title').t`Enter recovery code`}
+                subtitle={subTitle}
+                left={<BackButton onClick={handleBack} />}
+            >
                 <form
                     className="signup-form"
                     onSubmit={(e) => {
@@ -219,7 +232,6 @@ const AccountResetPasswordContainer = ({ onLogin, Layout }: Props) => {
                             .catch(() => (hasModal.current = false));
                     }}
                 >
-                    <p>{subTitle}</p>
                     <SignupLabelInputRow
                         label={<Label htmlFor="reset-token">{c('Label').t`Recovery code`}</Label>}
                         input={<ResetTokenInput id="reset-token" value={token} setValue={setToken} />}
