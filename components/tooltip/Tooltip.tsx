@@ -10,7 +10,7 @@ interface Props {
     originalPlacement?: 'top' | 'bottom' | 'left' | 'right';
     scrollContainerClass?: string;
     className?: string;
-    type?: 'error' | 'warning';
+    type?: 'info' | 'error' | 'warning';
 }
 
 const Tooltip = ({
@@ -19,7 +19,7 @@ const Tooltip = ({
     originalPlacement = 'top',
     scrollContainerClass = 'main',
     className,
-    type,
+    type = 'info',
 }: Props) => {
     const [uid] = useState(generateUID('tooltip'));
 
@@ -48,6 +48,7 @@ const Tooltip = ({
         case 'warning':
             tooltipClass = 'tooltip--attention';
             break;
+        case 'info':
         default:
             break;
     }
@@ -62,7 +63,7 @@ const Tooltip = ({
                 id={uid}
                 isOpen={!!title && isOpen}
                 style={position}
-                className={classnames(['tooltip', `tooltip--${placement}`, ...tooltipClass])}
+                className={classnames(['tooltip', `tooltip--${placement}`, tooltipClass])}
             >
                 {title}
             </Popper>
