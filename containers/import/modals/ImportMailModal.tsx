@@ -11,7 +11,7 @@ import {
 import { noop } from 'proton-shared/lib/helpers/function';
 
 import { useLoading, useAddresses, useModals, useApi } from '../../../hooks';
-import { ConfirmModal, FormModal, Button, PrimaryButton, Alert } from '../../../components';
+import { ConfirmModal, FormModal, Button, PrimaryButton, Alert, ErrorButton } from '../../../components';
 import ImportMailWizard from '../../../components/import/ImportMailWizard';
 
 import { TIME_UNIT, IMAP_CONNECTION_ERROR_LABEL } from '../constants';
@@ -101,11 +101,11 @@ const ImportMailModal = ({ onImportComplete, onClose = noop, ...rest }: Props) =
         createModal(
             <ConfirmModal
                 onConfirm={onClose}
-                title={c('Action').t`Quit importing?`}
-                cancel={c('Action').t`Continue`}
-                confirm={c('Action').t`Quit`}
+                title={c('Action').t`Quit import?`}
+                cancel={c('Action').t`Continue import`}
+                confirm={<ErrorButton type="submit">{c('Title').t`Quit`}</ErrorButton>}
             >
-                <Alert type="error">{c('Warning').t`You will lose all changes you made so far.`}</Alert>
+                <Alert type="error">{c('Warning').t`You will lose all progress if you quit.`}</Alert>
             </ConfirmModal>
         );
     };

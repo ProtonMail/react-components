@@ -34,7 +34,7 @@ const ERRORS = {
 };
 
 const WARNINGS = {
-    mergeWarning: c('Warning').t`This folder already exists. Mails will be imported in the existing folder`,
+    mergeWarning: c('Warning').t`This folder name already exists. Messages will be imported into the existing folder.`,
 };
 
 const DIMMED_OPACITY_CLASSNAME = 'opacity-30';
@@ -104,7 +104,7 @@ const ImportManageFoldersRow = ({
     const nameTooLongError = useMemo(() => {
         const splittedDestination = destinationPath.split(PATH_SPLIT_REGEX);
         const newPath = [...splittedDestination.slice(0, levelDestination), inputValue.trim()].join('/');
-        return newPath.length > 100;
+        return newPath.length >= 100;
     }, [destinationPath, inputValue]);
 
     const mergeWarning = useMemo(() => {

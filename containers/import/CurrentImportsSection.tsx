@@ -17,6 +17,7 @@ import {
     ConfirmModal,
     Tooltip,
     Icon,
+    ErrorButton,
 } from '../../components';
 
 import { ImportMail, ImportMailStatus } from './interfaces';
@@ -54,9 +55,9 @@ const RowActions = ({ ID, State, callback }: RowActionsProps) => {
                 <ConfirmModal
                     onConfirm={resolve}
                     onClose={reject}
-                    title={c('Title').t`Import is not finished, cancel anyway?`}
+                    title={c('Title').t`Import is not finished. Cancel anyway?`}
                     cancel={c('Title').t`Back to import`}
-                    confirm={c('Title').t`Cancel import`}
+                    confirm={<ErrorButton type="submit">{c('Title').t`Cancel import`}</ErrorButton>}
                 >
                     <Alert type="error">
                         {c('Warning')

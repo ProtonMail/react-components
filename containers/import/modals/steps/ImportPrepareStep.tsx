@@ -10,7 +10,7 @@ import { useFolders, useUser, useModals } from '../../../../hooks';
 import { Icon, LabelStack, Button, Alert, Loader, Tooltip, InlineLinkButton } from '../../../../components';
 
 import { ImportModalModel, MailImportFolder } from '../../interfaces';
-import { timeUnitLabels, TIME_UNIT } from '../../constants';
+import { timeUnitLabels, TIME_UNIT, PATH_SPLIT_REGEX } from '../../constants';
 
 import CustomizeImportModal from '../CustomizeImportModal';
 import isDeepEqual from 'proton-shared/lib/helpers/isDeepEqual';
@@ -92,13 +92,15 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
         const Mapping = providerFolders.map((folder) => ({
             Source: folder.Source,
             Destinations: {
-                FolderName: folder.DestinationFolder || folder.Source,
+                FolderName:
+                    folder.DestinationFolder ||
+                    folder.Source.split(folder.Separator === '/' ? PATH_SPLIT_REGEX : folder.Separator).join('/'),
             },
             checked: true,
         }));
 
         const ImportLabel = {
-            Name: `${modalModel.email.split('@')[1]} - export ${format(new Date(), 'yyyy-MM-dd HH:mm')}`,
+            Name: `${modalModel.email.split('@')[1]} - ${format(new Date(), 'dd/MM/yyyy HH:mm')}`,
             Color: LABEL_COLORS[randomIntFromInterval(0, LABEL_COLORS.length - 1)],
             Type: LABEL_TYPE.MESSAGE_LABEL,
             Order: 0,
