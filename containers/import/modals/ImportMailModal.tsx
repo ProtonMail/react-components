@@ -37,7 +37,6 @@ const DEFAULT_MODAL_MODEL: ImportModalModel = {
         Mapping: [],
     },
     isPayloadValid: false,
-    separator: '/',
 };
 
 interface Props {
@@ -57,10 +56,10 @@ const destinationFoldersFirst = (a: MailImportFolder, b: MailImportFolder) => {
     if (!a.DestinationFolder && b.DestinationFolder) {
         return 1;
     }
-    if (a.Name < b.Name) {
+    if (a.Source < b.Source) {
         return -1;
     }
-    if (a.Name > b.Name) {
+    if (a.Source > b.Source) {
         return 1;
     }
     return 0;
@@ -112,30 +111,11 @@ const ImportMailModal = ({ onImportComplete, onClose = noop, ...rest }: Props) =
     };
 
     const moveToPrepareStep = (importID: string, providerFolders: MailImportFolder[]) => {
-        // Finds the source folders separator
-        // (e.g `|` for Yandex vs `/` for other providers, so far...)
-        // but since it could be anything, that's why we need the following
-        const separator = providerFolders.reduce((acc, folder) => {
-            // if already found we return it
-            if (acc) {
-                return acc;
-            }
-
-            const children = providerFolders.filter((f) => f.Name !== folder.Name && f.Name.startsWith(folder.Name));
-            const lastChild = children.pop();
-
-            if (lastChild) {
-                return lastChild.Name.replace(folder.Name, '').substring(0, 1);
-            }
-            return acc;
-        }, '');
-
         setModalModel({
             ...modalModel,
             providerFolders: providerFolders.sort(destinationFoldersFirst),
             importID,
             step: Step.PREPARE,
-            separator,
         });
     };
 
@@ -196,30 +176,12 @@ const ImportMailModal = ({ onImportComplete, onClose = noop, ...rest }: Props) =
     };
 
     const launchImport = async () => {
-        const cleanMapping = modalModel.payload.Mapping.filter((m: FolderMapping) => m.checked).map(
-            (m: FolderMapping) => {
-                const split = m.Destinations.FolderName.split('/');
-                const level = split.length - 1;
-                const maxLevel = Math.min(level, 2);
-
-                return {
-                    Source: m.Source,
-                    Destinations: {
-                        FolderName:
-                            level <= 2
-                                ? m.Destinations.FolderName
-                                : `${split.slice(0, maxLevel).join('/')}/${split.slice(maxLevel).join('\\/')}`,
-                    },
-                };
-            }
-        );
-
         await api(
             createJobImport(modalModel.importID, {
                 ...modalModel.payload,
                 StartTime: modalModel.payload.StartTime ? dateToTimestamp(modalModel.payload.StartTime) : undefined,
                 EndTime: modalModel.payload.EndTime ? dateToTimestamp(modalModel.payload.EndTime) : undefined,
-                Mapping: cleanMapping,
+                Mapping: modalModel.payload.Mapping.filter((m: FolderMapping) => m.checked),
             })
         );
 

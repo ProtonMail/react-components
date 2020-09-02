@@ -28,7 +28,8 @@ export interface ImportedFolder {
 }
 
 export interface MailImportFolder {
-    Name: string;
+    Source: string;
+    Separator: string;
     Total: number;
     Flags: string[];
     DestinationFolder?: DestinationFolder;
@@ -55,7 +56,6 @@ export interface ImportModalModel {
     selectedPeriod: TIME_UNIT;
     payload: ImportPayloadModel;
     isPayloadValid: boolean;
-    separator: string;
 }
 
 export interface FolderMapping {
@@ -114,14 +114,18 @@ export interface ImportMailReport {
     TotalSize: number;
 }
 
-export interface ProviderFoldersMapItem {
-    providerPath: string;
-    destinationPath: string;
-    checked: boolean;
-    recommendedFolder?: DestinationFolder;
-    children: string[];
+export interface CheckedFoldersMap {
+    [key: string]: boolean;
 }
 
-export interface ProviderFolderMap {
-    [key: string]: ProviderFoldersMapItem;
+export interface DisabledFoldersMap {
+    [key: string]: boolean;
+}
+
+export interface ChildrenRelationshipMap {
+    [key: string]: string[];
+}
+
+export interface FoldersNameMap {
+    [key: string]: string;
 }

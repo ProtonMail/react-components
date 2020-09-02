@@ -3,7 +3,6 @@ import { format } from 'date-fns';
 import { c } from 'ttag';
 
 import { queryMailImport, resumeMailImport, cancelMailImport } from 'proton-shared/lib/api/mailImport';
-import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 
 import { useApi, useLoading, useNotifications, useModals } from '../../hooks';
 import {
@@ -16,8 +15,8 @@ import {
     DropdownActions,
     Badge,
     ConfirmModal,
-    // Tooltip,
-    // Icon,
+    Tooltip,
+    Icon,
 } from '../../components';
 
 import { ImportMail, ImportMailStatus } from './interfaces';
@@ -31,13 +30,73 @@ interface ImportsFromServer {
     Sasl: string;
 }
 
-const CurrentImportsSection = forwardRef(({}, ref) => {
+interface RowActionsProps {
+    ID: string;
+    callback: () => void;
+    State: ImportMailStatus;
+}
+
+const RowActions = ({ ID, State, callback }: RowActionsProps) => {
     const api = useApi();
     const { createModal } = useModals();
+    const { createNotification } = useNotifications();
+    const [loadingActions, withLoadingActions] = useLoading();
+
+    const handleResume = async (importID: string) => {
+        await api(resumeMailImport(importID));
+        await callback();
+        createNotification({ text: c('Success').t`Import resumed` });
+    };
+
+    const handleCancel = async (importID: string) => {
+        await new Promise((resolve, reject) => {
+            createModal(
+                <ConfirmModal
+                    onConfirm={resolve}
+                    onClose={reject}
+                    title={c('Title').t`Import is not finished, cancel anyway?`}
+                    cancel={c('Title').t`Back to import`}
+                    confirm={c('Title').t`Cancel import`}
+                >
+                    <Alert type="error">
+                        {c('Warning')
+                            .t`To finish importing, you will have to start over. All progress so far was saved in your Proton account.`}
+                    </Alert>
+                </ConfirmModal>
+            );
+        });
+        await api(cancelMailImport(importID));
+        await callback();
+        createNotification({ text: c('Success').t`Import canceled` });
+    };
+
+    const list = [];
+
+    if (State !== ImportMailStatus.CANCELED) {
+        list.push({
+            text: c('Action').t`Cancel`,
+            onClick: () => {
+                withLoadingActions(handleCancel(ID));
+            },
+        });
+    }
+
+    if (State === ImportMailStatus.PAUSED) {
+        list.push({
+            text: c('Action').t`Resume`,
+            onClick: () => {
+                withLoadingActions(handleResume(ID));
+            },
+        });
+    }
+
+    return <DropdownActions key="actions" loading={loadingActions} className="pm-button--small" list={list} />;
+};
+
+const CurrentImportsSection = forwardRef(({}, ref) => {
+    const api = useApi();
     const [imports, setImports] = useState<ImportMail[]>([]);
     const [loading, withLoading] = useLoading();
-    const [loadingActions, withLoadingActions] = useLoading();
-    const { createNotification } = useNotifications();
 
     const fetch = async () => {
         const data: { Importers: ImportsFromServer[] } = await api(queryMailImport());
@@ -77,34 +136,6 @@ const CurrentImportsSection = forwardRef(({}, ref) => {
         return <Alert>{c('Info').t`No imports in progress`}</Alert>;
     }
 
-    const handleResume = async (importID: string) => {
-        await api(resumeMailImport(importID));
-        await fetch();
-        createNotification({ text: c('Success').t`Import resumed` });
-    };
-
-    const handleCancel = async (importID: string) => {
-        await new Promise((resolve, reject) => {
-            createModal(
-                <ConfirmModal
-                    onConfirm={resolve}
-                    onClose={reject}
-                    title={c('Title').t`Import is not finished, cancel anyway?`}
-                    cancel={c('Title').t`Cancel import`}
-                    confirm={c('Title').t`Back to import`}
-                >
-                    <Alert type="error">
-                        {c('Warning')
-                            .t`To finish importing, you will have to start over. All progress so far was saved in your Proton account.`}
-                    </Alert>
-                </ConfirmModal>
-            );
-        });
-        await api(cancelMailImport(importID));
-        await fetch();
-        createNotification({ text: c('Success').t`Import canceled` });
-    };
-
     return (
         <>
             <Alert>{c('Info').t`Check the status of your imports in progress`}</Alert>
@@ -135,26 +166,21 @@ const CurrentImportsSection = forwardRef(({}, ref) => {
                                 return (
                                     <>
                                         <Badge type="warning">{c('Import status').t`Paused`}</Badge>
-                                        {/*
-                                    @todo manage errors
-                                    <Tooltip
-                                        title={c('Tooltip').t`ProtonMail mailbox is almost full.`}
-                                    >
-                                        <Icon name="attention" />
-                                    </Tooltip>
 
-                                    <Tooltip
-                                        title={c('Tooltip').t`Account is disconnected.`}
-                                    >
-                                        <Icon name="attention" />
-                                    </Tooltip>
+                                        <Tooltip title={c('Tooltip').t`ProtonMail mailbox is almost full.`}>
+                                            <Icon name="attention" />
+                                        </Tooltip>
 
-                                    <Tooltip
-                                        title={c('Tooltip').t`ProtonMail mailbox is almost full. Please free up some space or upgrade your plan to resume the import.`}
-                                    >
-                                        <Icon name="attention" />
-                                    </Tooltip>
-                                    */}
+                                        <Tooltip title={c('Tooltip').t`Account is disconnected.`}>
+                                            <Icon name="attention" />
+                                        </Tooltip>
+
+                                        <Tooltip
+                                            title={c('Tooltip')
+                                                .t`ProtonMail mailbox is almost full. Please free up some space or upgrade your plan to resume the import.`}
+                                        >
+                                            <Icon name="attention" />
+                                        </Tooltip>
                                     </>
                                 );
                             }
@@ -173,25 +199,7 @@ const CurrentImportsSection = forwardRef(({}, ref) => {
                                     <div className="w100 ellipsis">{Email}</div>,
                                     badgeRenderer(),
                                     <time key="importDate">{format(CreateTime * 1000, 'PPp')}</time>,
-                                    <DropdownActions
-                                        key="actions"
-                                        loading={loadingActions}
-                                        className="pm-button--small"
-                                        list={[
-                                            State !== ImportMailStatus.CANCELED && {
-                                                text: c('Action').t`Cancel`,
-                                                onClick() {
-                                                    withLoadingActions(handleCancel(ID));
-                                                },
-                                            },
-                                            State === ImportMailStatus.PAUSED && {
-                                                text: c('Action').t`Resume`,
-                                                onClick() {
-                                                    withLoadingActions(handleResume(ID));
-                                                },
-                                            },
-                                        ].filter(isTruthy)}
-                                    />,
+                                    <RowActions ID={ID} State={State} callback={fetch} />,
                                 ]}
                             />
                         );

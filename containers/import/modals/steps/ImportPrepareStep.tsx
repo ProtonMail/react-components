@@ -36,7 +36,7 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
         () =>
             modalModel.payload.Mapping.filter((m) => m.checked).map(
                 (mappedFolder) =>
-                    providerFolders.find((p) => p.Name === mappedFolder.Source) || ({} as MailImportFolder)
+                    providerFolders.find((p) => p.Source === mappedFolder.Source) || ({} as MailImportFolder)
             ),
         [modalModel.payload.Mapping, providerFolders]
     );
@@ -90,9 +90,9 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
 
     useEffect(() => {
         const Mapping = providerFolders.map((folder) => ({
-            Source: folder.Name,
+            Source: folder.Source,
             Destinations: {
-                FolderName: folder.DestinationFolder || folder.Name.split(modalModel.separator).join('/'),
+                FolderName: folder.DestinationFolder || folder.Source,
             },
             checked: true,
         }));

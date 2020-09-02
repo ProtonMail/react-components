@@ -4,15 +4,16 @@ import { c } from 'ttag';
 import { Tooltip, Icon, Checkbox, InlineLinkButton, Input } from '../../../components';
 import { classnames } from '../../../helpers';
 
-import { DestinationFolder, ProviderFolderMap, ProviderFoldersMapItem } from '../interfaces';
+import {
+    DestinationFolder,
+    CheckedFoldersMap,
+    DisabledFoldersMap,
+    ChildrenRelationshipMap,
+    MailImportFolder,
+    FoldersNameMap,
+} from '../interfaces';
 
-interface Props extends ProviderFoldersMapItem {
-    providerFoldersMap: ProviderFolderMap;
-    onRename: (providerName: string, destinationName: string) => void;
-    onToggleCheck: (providerName: string, checked: boolean) => void;
-    disabled: boolean;
-    separator: string;
-}
+import { PATH_SPLIT_REGEX } from '../constants';
 
 const FOLDER_ICONS = {
     [DestinationFolder.INBOX]: 'inbox',
@@ -38,46 +39,86 @@ const WARNINGS = {
 
 const DIMMED_OPACITY_CLASSNAME = 'opacity-30';
 
-const ImportManageFoldersRow = ({
-    providerFoldersMap,
-    providerPath,
-    recommendedFolder,
-    checked,
-    destinationPath,
-    disabled,
-    onToggleCheck,
-    onRename,
-    separator,
-}: Props) => {
-    const splittedSource = providerPath.split(separator);
-    const levelSource = splittedSource.length - 1;
-    const providerName = splittedSource[levelSource];
+interface Props {
+    onRename: (providerName: string, newPath: string, previousPath: string) => void;
+    onToggleCheck: (providerName: string, checked: boolean) => void;
+    folder: MailImportFolder;
+    level: number;
+    checkedFoldersMap: CheckedFoldersMap;
+    disabledFoldersMap: DisabledFoldersMap;
+    childrenRelationshipMap: ChildrenRelationshipMap;
+    providerFolders: MailImportFolder[];
+    foldersNameMap: FoldersNameMap;
+}
 
-    const splittedDestination = destinationPath.split('/');
-    const levelDestination = Math.min(splittedDestination.length - 1, 2);
-    const destinationName = splittedDestination.slice(levelDestination).join('/');
+const escapeSlashes = (s: string) => s.split(PATH_SPLIT_REGEX).join('\\/');
+const unescapeSlashes = (s: string) => s.split('\\/').join('/');
+
+const getSourceDisplayName = (name: string, separator: string) =>
+    name.split(separator === '/' ? PATH_SPLIT_REGEX : separator).pop() || name;
+
+const getDestinationDisplayName = (destinationPath: string, levelDestination = 0) => {
+    const splittedDestination = destinationPath.split(PATH_SPLIT_REGEX);
+    splittedDestination.splice(0, levelDestination);
+    return levelDestination ? unescapeSlashes(splittedDestination.join('/')) : unescapeSlashes(destinationPath);
+};
+
+const ImportManageFoldersRow = ({
+    folder,
+    level,
+    onToggleCheck,
+    checkedFoldersMap,
+    disabledFoldersMap,
+    childrenRelationshipMap,
+    providerFolders,
+    foldersNameMap,
+    onRename,
+}: Props) => {
+    const { Source, Separator, DestinationFolder } = folder;
+    const checked = checkedFoldersMap[Source];
+    const disabled = disabledFoldersMap[Source];
+    const children = childrenRelationshipMap[Source].reduce<MailImportFolder[]>((acc, childName) => {
+        const found = providerFolders.find((f) => f.Source === childName);
+        if (found) {
+            acc.push(found);
+        }
+        return acc;
+    }, []);
+
+    const levelDestination = Math.min(level, 2);
+    const destinationPath = foldersNameMap[Source];
+
+    const destinationName = getDestinationDisplayName(destinationPath, levelDestination);
 
     const inputRef = useRef<HTMLInputElement>(null);
     const [inputValue, setInputValue] = useState(destinationName);
     const initialValue = useRef<string>(inputValue);
 
+    const preventDefaultAndStopPropagation = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+    };
+
     const emptyValueError = useMemo(() => !inputValue || !inputValue.trim(), [inputValue]);
 
     const nameTooLongError = useMemo(() => {
+        const splittedDestination = destinationPath.split(PATH_SPLIT_REGEX);
         const newPath = [...splittedDestination.slice(0, levelDestination), inputValue.trim()].join('/');
         return newPath.length > 100;
     }, [destinationPath, inputValue]);
 
     const mergeWarning = useMemo(() => {
+        const splittedDestination = destinationPath.split(PATH_SPLIT_REGEX);
         const newPath = [...splittedDestination.slice(0, levelDestination), inputValue.trim()].join('/');
-        return Object.values(providerFoldersMap).some((f) => {
-            return f.providerPath !== providerPath && f.destinationPath === newPath;
+
+        return Object.entries(foldersNameMap).some(([sourcePath, destinationPath]) => {
+            return sourcePath !== Source && destinationPath === newPath;
         });
-    }, [providerFoldersMap, inputValue]);
+    }, [foldersNameMap, destinationPath, inputValue]);
 
     const hasError = emptyValueError || nameTooLongError;
 
-    const [editMode, setEditMode] = useState(nameTooLongError);
+    const [editMode, setEditMode] = useState(hasError);
 
     const toggleEditMode = (e: React.MouseEvent) => {
         if (disabled || editMode) {
@@ -92,24 +133,19 @@ const ImportManageFoldersRow = ({
 
     const handleSave = (e: React.MouseEvent | React.KeyboardEvent) => {
         e.stopPropagation();
-        const newPath = [...splittedDestination.slice(0, levelDestination), inputValue.trim()].join('/');
+        const splittedDestination = destinationPath.split(PATH_SPLIT_REGEX);
+        const newPath = [...splittedDestination.slice(0, levelDestination), escapeSlashes(inputValue.trim())].join('/');
+        // const newPath = [...splittedDestination.slice(0, levelDestination), inputValue.trim()].join('/');
         setEditMode(false);
-        onRename(providerPath, newPath);
+        onRename(Source, newPath, initialValue.current);
+        initialValue.current = inputValue;
     };
 
     const handleCancel = (e: React.MouseEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
+        preventDefaultAndStopPropagation(e);
 
         setEditMode(false);
         setInputValue(initialValue.current);
-    };
-
-    const preventDefault = (e: React.MouseEvent) => {
-        if (disabled) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
     };
 
     const renderInput = () => {
@@ -117,11 +153,12 @@ const ImportManageFoldersRow = ({
         let warning;
         let item;
 
-        if (emptyValueError) {
-            error = ERRORS.emptyValueError;
-        }
         if (nameTooLongError) {
             error = ERRORS.nameTooLongError;
+        }
+
+        if (emptyValueError) {
+            error = ERRORS.emptyValueError;
         }
 
         if (warning) {
@@ -171,135 +208,181 @@ const ImportManageFoldersRow = ({
     };
 
     useEffect(() => {
+        setEditMode(false);
+        setInputValue(initialValue.current);
+    }, [disabled]);
+
+    useEffect(() => {
         if (editMode && inputRef && inputRef.current) {
             inputRef.current.focus();
         }
     }, [editMode]);
 
     return (
-        <li className="border-bottom">
-            <label
-                htmlFor={providerPath}
-                className={classnames([
-                    'flex flex-nowrap flex-items-center pt1 pb1',
-                    !checked && DIMMED_OPACITY_CLASSNAME,
-                    disabled && 'cursor-default',
-                ])}
-                onClick={preventDefault}
-            >
-                <div className="flex w40 flex-nowrap flex-items-center flex-item-noshrink pr1">
-                    <div style={recommendedFolder ? undefined : { marginLeft: `${levelSource}em` }}>
-                        <Checkbox
-                            onChange={({ target: { checked } }: ChangeEvent<HTMLInputElement>) => {
-                                if (!checked && editMode) {
-                                    setEditMode(false);
-                                }
-                                onToggleCheck(providerPath, checked);
-                            }}
-                            id={providerPath}
-                            checked={checked}
-                            disabled={disabled}
-                        />
-                    </div>
-                    <div title={providerName} className="ml0-5 flex-item-fluid-auto ellipsis">
-                        {providerName}
-                    </div>
-                </div>
-
-                <div className="flex w40 pr1">
-                    <div
-                        className="flex flex-nowrap flex-items-center flex-item-fluid-auto"
-                        style={recommendedFolder ? undefined : { marginLeft: `${levelDestination}em` }}
-                    >
-                        <Icon
-                            name={recommendedFolder ? FOLDER_ICONS[recommendedFolder] : 'folder'}
-                            className={classnames([
-                                'flex-item-noshrink',
-                                nameTooLongError && 'color-global-warning',
-                                mergeWarning && 'color-global-attention',
-                            ])}
-                        />
+        <li>
+            <div className="border-bottom">
+                <label
+                    htmlFor={Source}
+                    className={classnames([
+                        'flex flex-nowrap flex-items-center pt1 pb1',
+                        !checked && DIMMED_OPACITY_CLASSNAME,
+                        (disabled || editMode) && 'cursor-default',
+                    ])}
+                    onClick={(e: React.MouseEvent<HTMLLabelElement>) => {
+                        if (editMode) {
+                            preventDefaultAndStopPropagation(e);
+                        }
+                    }}
+                >
+                    <div className="flex w40 flex-nowrap flex-items-center flex-item-noshrink pr1">
                         <div
-                            className={classnames([
-                                'ml0-5 w100 flex flex-nowrap',
-                                nameTooLongError && 'color-global-warning',
-                                mergeWarning && 'color-global-attention',
-                            ])}
+                            className="flex-item-noshrink"
+                            style={DestinationFolder ? undefined : { marginLeft: `${level}em` }}
                         >
-                            {editMode && !disabled ? (
-                                renderInput()
-                            ) : (
-                                <>
-                                    <span
-                                        className={classnames([
-                                            'flex-item-fluid-auto ellipsis',
-                                            (nameTooLongError || mergeWarning) && 'bold',
-                                        ])}
-                                    >
-                                        {destinationName}
-                                    </span>
-                                    {nameTooLongError && (
-                                        <Tooltip
-                                            title={ERRORS.nameTooLongError}
-                                            className="flex-item-noshrink"
-                                            type="error"
-                                        >
-                                            <Icon
-                                                tabIndex={-1}
-                                                name="info"
-                                                className="color-global-warning inline-flex flex-self-vcenter flex-item-noshrink"
-                                            />
-                                        </Tooltip>
-                                    )}
-                                    {mergeWarning && (
-                                        <Tooltip
-                                            title={WARNINGS.mergeWarning}
-                                            className="flex-item-noshrink"
-                                            type="warning"
-                                        >
-                                            <Icon
-                                                tabIndex={-1}
-                                                name="info"
-                                                className="color-global-attention inline-flex flex-self-vcenter flex-item-noshrink"
-                                            />
-                                        </Tooltip>
-                                    )}
-                                </>
-                            )}
+                            <Checkbox
+                                onChange={({ target: { checked } }: ChangeEvent<HTMLInputElement>) => {
+                                    if (!checked && editMode) {
+                                        setEditMode(false);
+                                    }
+                                    onToggleCheck(Source, checked);
+                                }}
+                                id={Source}
+                                checked={checked}
+                                disabled={disabled}
+                            />
+                        </div>
+                        <div
+                            className="ml0-5 flex-item-fluid-auto ellipsis"
+                            // @todo put me back
+                            // title={getSourceDisplayName(Source)}
+                            title={Source}
+                        >
+                            {getSourceDisplayName(Source, Separator)}
                         </div>
                     </div>
-                </div>
 
-                {!recommendedFolder && (
-                    <div className="flex w20 flex-items-center" onClick={preventDefault}>
-                        {editMode && !disabled ? (
-                            <>
-                                <InlineLinkButton
-                                    onClick={handleSave}
-                                    className={classnames(['p0-5', hasError && DIMMED_OPACITY_CLASSNAME])}
-                                    aria-disabled={hasError}
-                                    disabled={hasError}
-                                >
-                                    {c('Action').t`Save`}
-                                </InlineLinkButton>
-                                <InlineLinkButton onClick={handleCancel} className="ml0-5 p0-5">
-                                    {c('Action').t`Cancel`}
-                                </InlineLinkButton>
-                            </>
-                        ) : (
-                            <InlineLinkButton
-                                aria-disabled={!checked}
-                                disabled={!checked}
-                                tabIndex={disabled ? -1 : 0}
-                                onClick={toggleEditMode}
-                                className="p0-5"
+                    <div className="flex w40 pr1">
+                        <div
+                            className="flex flex-nowrap flex-items-center flex-item-fluid-auto"
+                            style={DestinationFolder ? undefined : { marginLeft: `${levelDestination}em` }}
+                        >
+                            <Icon
+                                name={DestinationFolder ? FOLDER_ICONS[DestinationFolder] : 'folder'}
+                                className={classnames([
+                                    'flex-item-noshrink',
+                                    hasError && 'color-global-warning',
+                                    mergeWarning && 'color-global-attention',
+                                ])}
+                            />
+                            <div
+                                className={classnames([
+                                    'ml0-5 w100 flex flex-nowrap',
+                                    hasError && 'color-global-warning',
+                                    mergeWarning && 'color-global-attention',
+                                ])}
                             >
-                                {c('Action').t`Rename`}
-                            </InlineLinkButton>
-                        )}
+                                {editMode && !disabled ? (
+                                    renderInput()
+                                ) : (
+                                    <>
+                                        <span
+                                            className={classnames([
+                                                'flex-item-fluid-auto ellipsis',
+                                                (nameTooLongError || mergeWarning) && 'bold',
+                                            ])}
+                                            // @todo put me back
+                                            // title={destinationName}
+                                            title={destinationPath}
+                                        >
+                                            {destinationName}
+                                        </span>
+                                        {nameTooLongError && (
+                                            <Tooltip
+                                                title={ERRORS.nameTooLongError}
+                                                className="flex-item-noshrink"
+                                                type="error"
+                                            >
+                                                <Icon
+                                                    tabIndex={-1}
+                                                    name="info"
+                                                    className="color-global-warning inline-flex flex-self-vcenter flex-item-noshrink"
+                                                />
+                                            </Tooltip>
+                                        )}
+                                        {mergeWarning && (
+                                            <Tooltip
+                                                title={WARNINGS.mergeWarning}
+                                                className="flex-item-noshrink"
+                                                type="warning"
+                                            >
+                                                <Icon
+                                                    tabIndex={-1}
+                                                    name="info"
+                                                    className="color-global-attention inline-flex flex-self-vcenter flex-item-noshrink"
+                                                />
+                                            </Tooltip>
+                                        )}
+                                    </>
+                                )}
+                            </div>
+                        </div>
                     </div>
-                )}
-            </label>
+                    {!DestinationFolder && (
+                        <div
+                            className="flex w20 flex-items-center"
+                            onClick={(e) => {
+                                if (disabled) {
+                                    preventDefaultAndStopPropagation(e);
+                                }
+                            }}
+                        >
+                            {editMode && !disabled ? (
+                                <>
+                                    <InlineLinkButton
+                                        onClick={handleSave}
+                                        className={classnames(['p0-5', hasError && DIMMED_OPACITY_CLASSNAME])}
+                                        aria-disabled={hasError}
+                                        disabled={hasError}
+                                    >
+                                        {c('Action').t`Save`}
+                                    </InlineLinkButton>
+                                    <InlineLinkButton onClick={handleCancel} className="ml0-5 p0-5">
+                                        {c('Action').t`Cancel`}
+                                    </InlineLinkButton>
+                                </>
+                            ) : (
+                                <InlineLinkButton
+                                    aria-disabled={!checked}
+                                    disabled={!checked}
+                                    tabIndex={disabled ? -1 : 0}
+                                    onClick={toggleEditMode}
+                                    className="p0-5"
+                                >
+                                    {c('Action').t`Rename`}
+                                </InlineLinkButton>
+                            )}
+                        </div>
+                    )}
+                </label>
+            </div>
+            {children.length > 0 && (
+                <ul className="unstyled m0">
+                    {children.map((f) => (
+                        <ImportManageFoldersRow
+                            onToggleCheck={onToggleCheck}
+                            key={f.Source}
+                            folder={f}
+                            level={level + 1}
+                            checkedFoldersMap={checkedFoldersMap}
+                            disabledFoldersMap={disabledFoldersMap}
+                            childrenRelationshipMap={childrenRelationshipMap}
+                            providerFolders={providerFolders}
+                            foldersNameMap={foldersNameMap}
+                            onRename={onRename}
+                        />
+                    ))}
+                </ul>
+            )}
         </li>
     );
 };

@@ -1,15 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { c } from 'ttag';
 
 import { Address } from 'proton-shared/lib/interfaces';
 
 import {
     ImportModalModel,
-    ProviderFoldersMapItem,
-    ProviderFolderMap,
     ImportPayloadModel,
     FolderMapping,
+    MailImportFolder,
+    CheckedFoldersMap,
+    DisabledFoldersMap,
+    ChildrenRelationshipMap,
 } from '../interfaces';
+import { PATH_SPLIT_REGEX } from '../constants';
+
 import ImportManageFoldersRow from './ImportManageFoldersRow';
 
 interface Props {
@@ -19,113 +23,116 @@ interface Props {
     onChangePayload: (newPayload: ImportPayloadModel) => void;
 }
 
+const getLevel = (name: string, separator: string) => {
+    return name.split(separator === '/' ? PATH_SPLIT_REGEX : separator).length - 1;
+};
+
 const ImportManageFolders = ({ modalModel, address, payload, onChangePayload }: Props) => {
-    const { providerFolders, separator } = modalModel;
+    const { providerFolders } = modalModel;
 
-    const getChildren = (providerName: string): string[] =>
-        providerFolders.filter((f) => f.Name !== providerName && f.Name.startsWith(providerName)).map((f) => f.Name);
+    const childrenRelationshipMap = providerFolders.reduce((acc: ChildrenRelationshipMap, folder) => {
+        const currentLevel = getLevel(folder.Source, folder.Separator);
 
-    const [providerFoldersMap, setProviderFoldersMap] = useState(
-        providerFolders.reduce((acc: ProviderFolderMap, folder) => {
-            const found = payload.Mapping.find((m) => m.Source === folder.Name);
+        acc[folder.Source] = providerFolders
+            .filter((f) => {
+                const level = getLevel(f.Source, f.Separator);
+                return currentLevel + 1 === level && f.Source.startsWith(folder.Source);
+            })
+            .map((f) => f.Source);
 
-            acc[folder.Name] = {
-                providerPath: folder.Name,
-                destinationPath:
-                    found?.Destinations.FolderName ||
-                    folder.DestinationFolder ||
-                    folder.Name.split(separator).join('/'),
-                recommendedFolder: folder.DestinationFolder,
-                children: getChildren(folder.Name),
-                checked: !!found && found.checked,
-            };
+        return acc;
+    }, {});
+
+    const [checkedFoldersMap, setCheckedFoldersMap] = useState(
+        providerFolders.reduce<CheckedFoldersMap>((acc, folder) => {
+            const found = payload.Mapping.find((m) => m.Source === folder.Source);
+            acc[folder.Source] = !!found;
             return acc;
         }, {})
     );
 
-    const getAncestorMapItems = (providerName: string) =>
-        Object.values(providerFoldersMap).filter((f: ProviderFoldersMapItem) => f.children.includes(providerName));
+    const [foldersNameMap, setFoldersNameMap] = useState(
+        providerFolders.reduce<{ [key: string]: string }>((acc, folder) => {
+            const found = payload.Mapping.find((m) => m.Source === folder.Source);
+            acc[folder.Source] = found?.Destinations.FolderName || folder.DestinationFolder || folder.Source;
+            return acc;
+        }, {})
+    );
 
-    const handleToggleCheck = (providerName: string, checked: boolean) => {
-        const newProviderFoldersMap = Object.values(providerFoldersMap).reduce((acc: ProviderFolderMap, folder) => {
-            if (
-                folder.providerPath === providerName ||
-                providerFoldersMap[providerName].children.includes(folder.providerPath)
-            ) {
-                acc[folder.providerPath] = {
-                    ...folder,
-                    checked,
-                };
+    const getParent = (folderName: string) => {
+        const [parentName] =
+            Object.entries(childrenRelationshipMap).find(([_, children]) => {
+                return children.includes(folderName);
+            }) || [];
+        return parentName;
+    };
 
-                return acc;
-            }
-
-            acc[folder.providerPath] = folder;
-
+    const disabledFoldersMap = useMemo(() => {
+        return providerFolders.reduce<DisabledFoldersMap>((acc, folder) => {
+            const parentName = getParent(folder.Source);
+            acc[folder.Source] = parentName ? acc[parentName] || !checkedFoldersMap[parentName] : false;
             return acc;
         }, {});
+    }, [checkedFoldersMap]);
 
-        setProviderFoldersMap(newProviderFoldersMap);
+    const getDescendants = (children: string[]) => {
+        const grandChildren: string[] = children.reduce<string[]>((acc, childName) => {
+            const children = childrenRelationshipMap[childName];
+
+            return [...acc, ...getDescendants(children)];
+        }, []);
+
+        return [...children, ...grandChildren];
     };
 
-    const handleRename = (providerName: string, newPath: string) => {
-        const newProviderFoldersMap = { ...providerFoldersMap };
-        const newLevel = newPath.split('/').length - 1;
-        const oldPath = providerFoldersMap[providerName].destinationPath;
+    const handleToggleCheck = (providerName: string, checked: boolean) => {
+        const newCheckedFoldersMap = {
+            ...checkedFoldersMap,
+            [providerName]: checked,
+        };
 
-        if (newLevel < 2) {
-            newProviderFoldersMap[providerName].children.forEach((name: string) => {
-                newProviderFoldersMap[name].destinationPath = newProviderFoldersMap[name].destinationPath.replace(
-                    oldPath,
-                    newPath
-                );
-            });
-        }
+        const children = childrenRelationshipMap[providerName];
+        const descendants = children ? getDescendants(children) : [];
 
-        newProviderFoldersMap[providerName].destinationPath = newPath;
+        descendants.forEach((folderName) => (newCheckedFoldersMap[folderName] = checked));
 
-        setProviderFoldersMap(newProviderFoldersMap);
+        setCheckedFoldersMap(newCheckedFoldersMap);
     };
 
-    const renderRow = (item: ProviderFoldersMapItem) => {
-        const ancestorsFolders = getAncestorMapItems(item.providerPath);
-        const disabled = ancestorsFolders.some((folder) => !folder.checked);
+    const handleRename = (providerName: string, newPath: string, previousPath: string) => {
+        const newFoldersNameMap = { ...foldersNameMap };
 
-        return (
-            <ImportManageFoldersRow
-                {...item}
-                providerFoldersMap={providerFoldersMap}
-                key={item.providerPath}
-                onRename={handleRename}
-                onToggleCheck={handleToggleCheck}
-                disabled={disabled}
-                separator={separator}
-            />
-        );
+        newFoldersNameMap[providerName] = newPath;
+        const children = childrenRelationshipMap[providerName];
+        const descendants = children ? getDescendants(children) : [];
+
+        descendants.forEach((folderName) => {
+            newFoldersNameMap[folderName] = newFoldersNameMap[folderName].replace(previousPath, newPath);
+        });
+
+        setFoldersNameMap(newFoldersNameMap);
     };
 
     useEffect(() => {
-        const Mapping = Object.values(providerFoldersMap).reduce(
-            (acc: FolderMapping[], { providerPath, checked, destinationPath }: ProviderFoldersMapItem) => {
-                return [
-                    ...acc,
-                    {
-                        Source: providerPath,
-                        Destinations: {
-                            FolderName: destinationPath,
-                        },
-                        checked,
+        const Mapping = providerFolders.reduce<FolderMapping[]>((acc, folder) => {
+            if (checkedFoldersMap[folder.Source]) {
+                acc.push({
+                    Source: folder.Source,
+                    Destinations: {
+                        FolderName: foldersNameMap[folder.Source],
                     },
-                ];
-            },
-            []
-        );
+                    checked: true,
+                });
+            }
+
+            return acc;
+        }, []);
 
         onChangePayload({
             ...payload,
             Mapping,
         });
-    }, [providerFoldersMap]);
+    }, [checkedFoldersMap, foldersNameMap]);
 
     return (
         <>
@@ -147,7 +154,24 @@ const ImportManageFolders = ({ modalModel, address, payload, onChangePayload }: 
 
             <div className="flex mb1">
                 <div className="flex-item-fluid pt0-5">
-                    <ul className="unstyled m0">{Object.values(providerFoldersMap).map(renderRow)}</ul>
+                    <ul className="unstyled m0">
+                        {providerFolders
+                            .filter((folder) => getLevel(folder.Source, folder.Separator) === 0)
+                            .map((item: MailImportFolder) => (
+                                <ImportManageFoldersRow
+                                    onToggleCheck={handleToggleCheck}
+                                    key={item.Source}
+                                    folder={item}
+                                    level={0}
+                                    disabledFoldersMap={disabledFoldersMap}
+                                    checkedFoldersMap={checkedFoldersMap}
+                                    childrenRelationshipMap={childrenRelationshipMap}
+                                    providerFolders={providerFolders}
+                                    foldersNameMap={foldersNameMap}
+                                    onRename={handleRename}
+                                />
+                            ))}
+                    </ul>
                 </div>
             </div>
         </>
