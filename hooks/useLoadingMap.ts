@@ -1,13 +1,13 @@
+import { noop } from 'proton-shared/lib/helpers/function';
+import { LoadingMap, SimpleMap } from 'proton-shared/lib/interfaces/utils';
 import { useRef, useState, useEffect, useCallback } from 'react';
-import { LoadingMap } from '../../proton-mail/src/app/models/utils';
 
-type WithLoadingMap = (promiseMap: { [key: string]: Promise<any | void> }) => Promise<any | void>;
-type NumberMap = { [key: string]: number };
+type WithLoadingMap = (promiseMap: { [key: string]: Promise<void> }) => Promise<void>;
 
 const useLoadingMap = (initialState = {}): [LoadingMap, WithLoadingMap] => {
     const [loadingMap, setLoadingMap] = useState<LoadingMap>(initialState);
     const unmountedRef = useRef(false);
-    const counterMapRef = useRef<NumberMap>({});
+    const counterMapRef = useRef<SimpleMap<number>>({});
 
     useEffect(() => {
         return () => {
@@ -20,41 +20,31 @@ const useLoadingMap = (initialState = {}): [LoadingMap, WithLoadingMap] => {
             setLoadingMap({});
             return Promise.resolve();
         }
-        const counterMapNext = Object.keys(promiseMap).reduce<NumberMap>((acc, key) => {
-            const currentCounter = acc[key] || 0;
-            acc[key] = currentCounter + 1;
-            return acc;
-        }, counterMapRef.current);
+        const counterMapNext = Object.keys(promiseMap).reduce<SimpleMap<number>>(
+            (acc, key) => {
+                const currentCounter = acc[key] || 0;
+                acc[key] = currentCounter + 1;
+                return acc;
+            },
+            { ...counterMapRef.current }
+        );
         counterMapRef.current = counterMapNext;
         const initialMap = Object.fromEntries(Object.keys(promiseMap).map((key) => [key, true]));
         setLoadingMap(initialMap);
         return Promise.all(
-            Object.entries(promiseMap).map(async ([key, promise]) => {
-                try {
-                    const result = await promise;
+            Object.entries(promiseMap).map(([key, promise]) => {
+                return promise.catch(noop).finally(() => {
                     // Ensure that the latest promise is setting the new state
-                    if (counterMapRef.current[key] !== counterMapNext[key]) {
+                    if (counterMapRef.current[key] !== counterMapNext[key] || unmountedRef.current) {
                         return;
                     }
-                    !unmountedRef.current &&
-                        setLoadingMap((loadingMap) => ({
-                            ...loadingMap,
-                            [key]: false,
-                        }));
-                    return result;
-                } catch (e) {
-                    if (counterMapRef.current[key] !== counterMapNext[key]) {
-                        return;
-                    }
-                    !unmountedRef.current &&
-                        setLoadingMap((loadingMap) => ({
-                            ...loadingMap,
-                            [key]: false,
-                        }));
-                    throw e;
-                }
+                    setLoadingMap((loadingMap) => ({
+                        ...loadingMap,
+                        [key]: false,
+                    }));
+                });
             })
-        );
+        ).then(noop);
     }, []);
 
     return [loadingMap, withLoadingMap];
