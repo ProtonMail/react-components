@@ -24,36 +24,35 @@ const useLoadingMap = (initialState = {}): [LoadingMap, WithLoadingMap] => {
             const currentCounter = acc[key] || 0;
             acc[key] = currentCounter + 1;
             return acc;
-        }, {});
+        }, counterMapRef.current);
         counterMapRef.current = counterMapNext;
         const initialMap = Object.fromEntries(Object.keys(promiseMap).map((key) => [key, true]));
         setLoadingMap(initialMap);
         return Promise.all(
-            Object.entries(promiseMap).map(([key, promise]) => {
-                return promise
-                    .then((result) => {
-                        // Ensure that the latest promise is setting the new state
-                        if (counterMapRef.current[key] !== counterMapNext[key]) {
-                            return;
-                        }
-                        !unmountedRef.current &&
-                            setLoadingMap((loadingMap) => ({
-                                ...loadingMap,
-                                [key]: false,
-                            }));
-                        return result;
-                    })
-                    .catch((e) => {
-                        if (counterMapRef.current[key] !== counterMapNext[key]) {
-                            return;
-                        }
-                        !unmountedRef.current &&
-                            setLoadingMap((loadingMap) => ({
-                                ...loadingMap,
-                                [key]: false,
-                            }));
-                        throw e;
-                    });
+            Object.entries(promiseMap).map(async ([key, promise]) => {
+                try {
+                    const result = await promise;
+                    // Ensure that the latest promise is setting the new state
+                    if (counterMapRef.current[key] !== counterMapNext[key]) {
+                        return;
+                    }
+                    !unmountedRef.current &&
+                        setLoadingMap((loadingMap) => ({
+                            ...loadingMap,
+                            [key]: false,
+                        }));
+                    return result;
+                } catch (e) {
+                    if (counterMapRef.current[key] !== counterMapNext[key]) {
+                        return;
+                    }
+                    !unmountedRef.current &&
+                        setLoadingMap((loadingMap) => ({
+                            ...loadingMap,
+                            [key]: false,
+                        }));
+                    throw e;
+                }
             })
         );
     }, []);
