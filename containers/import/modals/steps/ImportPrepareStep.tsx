@@ -5,6 +5,7 @@ import { c, msgid } from 'ttag';
 import { Address } from 'proton-shared/lib/interfaces';
 import { LABEL_COLORS, LABEL_TYPE } from 'proton-shared/lib/constants';
 import { randomIntFromInterval } from 'proton-shared/lib/helpers/function';
+import isDeepEqual from 'proton-shared/lib/helpers/isDeepEqual';
 
 import { useFolders, useUser, useModals } from '../../../../hooks';
 import { Icon, LabelStack, Button, Alert, Loader, Tooltip, InlineLinkButton } from '../../../../components';
@@ -13,7 +14,6 @@ import { ImportModalModel, MailImportFolder } from '../../interfaces';
 import { timeUnitLabels, TIME_UNIT, PATH_SPLIT_REGEX } from '../../constants';
 
 import CustomizeImportModal from '../CustomizeImportModal';
-import isDeepEqual from 'proton-shared/lib/helpers/isDeepEqual';
 
 interface Props {
     modalModel: ImportModalModel;
@@ -262,11 +262,7 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
                 <div className="mt0-5 flex flex-items-center">
                     <Button onClick={handleClickCustomize}>{c('Action').t`Customize import`}</Button>
                     {showFoldersNameError && (
-                        <Tooltip
-                            title={c('Tooltip').t`Update folders name`}
-                            className="ml0-5"
-                            originalPlacement="right"
-                        >
+                        <Tooltip title={c('Tooltip').t`Edit folder names`} className="ml0-5" originalPlacement="right">
                             <Icon name="attention-plain" size={20} />
                         </Tooltip>
                     )}
