@@ -47,6 +47,7 @@ const AccountGenerateInternalAddressContainer = ({
     const [username, setUsername] = useState('');
     const [usernameError, setUsernameError] = useState('');
     const [loading, withLoading] = useLoading();
+    const [loadingAvailableDomains, withLoadingAvailableDomains] = useLoading();
     const { createNotification } = useNotifications();
     const [availableDomains, setAvailableDomains] = useState([]);
 
@@ -94,7 +95,7 @@ const AccountGenerateInternalAddressContainer = ({
     };
 
     useEffect(() => {
-        fetchAvailableDomains();
+        withLoadingAvailableDomains(fetchAvailableDomains());
     }, []);
 
     return (
@@ -142,7 +143,13 @@ const AccountGenerateInternalAddressContainer = ({
                     }
                 />
                 <SignupSubmitRow>
-                    <PrimaryButton type="submit" className="pm-button--large" loading={loading} data-cy-login="submit">
+                    <PrimaryButton
+                        type="submit"
+                        className="pm-button--large"
+                        disabled={loadingAvailableDomains}
+                        loading={loading}
+                        data-cy-login="submit"
+                    >
                         {c('Action').t`Next`}
                     </PrimaryButton>
                 </SignupSubmitRow>
