@@ -102,8 +102,11 @@ function useSearch<T, K = keyof SearchableObject<T>>({
         );
     }, [selectedSuggest]);
     useEffect(() => {
+        if (!isFocused) {
+            return;
+        }
         selectedSuggestRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, [itemProps]);
+    }, [itemProps, isFocused]);
 
     const selectNextItem = useCallback(() => {
         const newSelectedSuggest = (selectedSuggest + 1) % totalSuggestions;
