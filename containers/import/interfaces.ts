@@ -76,12 +76,12 @@ export interface ImportPayloadModel {
 }
 
 export enum ImportMailStatus {
-    NOT_STARTED = 0,
-    IN_PROGRESS = 1,
-    PAUSED = 2,
-    CANCELED = 3,
-    DONE = 4,
-    FAILED = 5,
+    QUEUED = 0,
+    RUNNING = 1,
+    DONE = 2,
+    FAILED = 3,
+    PAUSED = 4,
+    CANCELED = 5,
 }
 
 export interface ImportMail {
