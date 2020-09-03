@@ -12,7 +12,7 @@ export const getMatch = (
     if (!input) {
         return input;
     }
-    const parts = normalize(input, true).split(normalize(match, true));
+    const parts = normalize(input, true).split(match);
     if (parts.length < 2) {
         return;
     }
