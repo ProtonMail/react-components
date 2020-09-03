@@ -58,8 +58,7 @@ const AccountGenerateInternalAddressContainer = ({
         await api(queryCheckUsernameAvailability(username));
         await api(updateUsername({ Username: username }));
 
-        const { Domains: domains } = await api(queryAvailableDomains());
-        const [Address] = await handleSetupAddress({ api, domains, username });
+        const [Address] = await handleSetupAddress({ api, domains: availableDomains, username });
 
         const { privateKey, privateKeyArmored } = await generateAddressKey({
             email: Address.Email,
