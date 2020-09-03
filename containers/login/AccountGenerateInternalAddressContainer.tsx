@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FunctionComponent, useState } from 'react';
+import React, { ChangeEvent, FunctionComponent, useState, useEffect } from 'react';
 import { c } from 'ttag';
 import {
     APP_NAMES,
@@ -48,6 +48,7 @@ const AccountGenerateInternalAddressContainer = ({
     const [usernameError, setUsernameError] = useState('');
     const [loading, withLoading] = useLoading();
     const { createNotification } = useNotifications();
+    const [availableDomains, setAvailableDomains] = useState([]);
 
     const handleCreateAddressAndKey = async () => {
         if (!keyPassword) {
@@ -88,6 +89,15 @@ const AccountGenerateInternalAddressContainer = ({
         }
     };
 
+    const fetchAvailableDomains = async () => {
+        const { Domains = [] } = await api(queryAvailableDomains());
+        setAvailableDomains(Domains);
+    };
+
+    useEffect(() => {
+        fetchAvailableDomains();
+    }, []);
+
     return (
         <Layout
             title={c('Title').t`Create a ProtonMail address`}
@@ -106,23 +116,30 @@ const AccountGenerateInternalAddressContainer = ({
                 <SignupLabelInputRow
                     label={<Label htmlFor="login">{c('Label').t`Username`}</Label>}
                     input={
-                        <Input
-                            id="username"
-                            name="username"
-                            autoFocus
-                            autoComplete="off"
-                            autoCapitalize="off"
-                            autoCorrect="off"
-                            value={username}
-                            onChange={({ target }: ChangeEvent<HTMLInputElement>) => {
-                                setUsername(target.value);
-                                setUsernameError('');
-                            }}
-                            error={usernameError}
-                            placeholder={USERNAME_PLACEHOLDER}
-                            className="pm-field--username"
-                            required
-                        />
+                        <div className="flex flex-nowrap flex-items-center flex-item-fluid relative mb0-5">
+                            <div className="flex-item-fluid">
+                                <Input
+                                    id="username"
+                                    name="username"
+                                    autoFocus
+                                    autoComplete="off"
+                                    autoCapitalize="off"
+                                    autoCorrect="off"
+                                    value={username}
+                                    onChange={({ target }: ChangeEvent<HTMLInputElement>) => {
+                                        setUsername(target.value);
+                                        setUsernameError('');
+                                    }}
+                                    error={usernameError}
+                                    placeholder={USERNAME_PLACEHOLDER}
+                                    className="pm-field--username"
+                                    required
+                                />
+                            </div>
+                            {availableDomains.length ? (
+                                <span className="pt0-75 right-icon absolute">@{availableDomains[0]}</span>
+                            ) : null}
+                        </div>
                     }
                 />
                 <SignupSubmitRow>
