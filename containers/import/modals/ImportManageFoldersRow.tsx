@@ -29,7 +29,7 @@ const FOLDER_ICONS = {
 };
 
 const ERRORS = {
-    nameTooLongError: c('Error').t`Folder name is too long. Please use a different name.`,
+    nameTooLongError: c('Error').t`The folder name is too long. Please choose a different name.`,
     emptyValueError: c('Error').t`Folder name cannot be empty`,
 };
 

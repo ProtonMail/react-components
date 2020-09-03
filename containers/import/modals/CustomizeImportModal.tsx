@@ -22,6 +22,7 @@ import {
     FormModal,
     PrimaryButton,
     Button,
+    ErrorButton,
     Label as FormLabel,
 } from '../../../components';
 
@@ -88,9 +89,9 @@ const CustomizeImportModal = ({
         createModal(
             <ConfirmModal
                 onConfirm={onClose}
-                title={c('Action').t`Quit import customization?`}
-                cancel={c('Action').t`Continue`}
-                confirm={c('Action').t`Quit`}
+                title={c('Confirm modal title').t`Quit import customization?`}
+                cancel={c('Action').t`Stay`}
+                confirm={<ErrorButton type="submit">{c('Action').t`Quit`}</ErrorButton>}
             >
                 <Alert type="error">{c('Warning').t`You will lose any customization you made so far.`}</Alert>
             </ConfirmModal>
@@ -146,6 +147,7 @@ const CustomizeImportModal = ({
         });
     };
 
+    const totalFoldersCount = customizedPayload.Mapping.length;
     const selectedFoldersCount = customizedPayload.Mapping.filter((f) => f.checked).length;
 
     const handleSubmit = () => {
@@ -174,10 +176,15 @@ const CustomizeImportModal = ({
             }}
             {...rest}
         >
+            <Alert>
+                {c('Info')
+                    .t`Choose a label for the messages imported in your ProtonMail account, a time range for this import, and the folders you would like to import.`}
+            </Alert>
+
             <div className="mb1 pt1 border-bottom flex-items-center">
                 <Row>
                     <FormLabel className="flex flex-items-center">
-                        {c('Label').t`All messages labeled as`}
+                        {c('Label').t`Label messages as`}
                         <Tooltip title={c('Tooltip').t`Each imported email will have this label`}>
                             <Icon name="info" className="ml0-5" />
                         </Tooltip>
@@ -245,10 +252,22 @@ const CustomizeImportModal = ({
                     <FormLabel>{c('Label').t`Manage folders`}</FormLabel>
                     <div className="flex flex-items-center">
                         <Icon name="parent-folder" className="mr0-5" />
-                        {c('Info').ngettext(
-                            msgid`${selectedFoldersCount} folder selected`,
-                            `${selectedFoldersCount} folders selected`,
-                            selectedFoldersCount
+                        {selectedFoldersCount === totalFoldersCount ? (
+                            <span>
+                                {c('Info').ngettext(
+                                    msgid`All (${totalFoldersCount} folder)`,
+                                    `All (${totalFoldersCount} folders)`,
+                                    totalFoldersCount
+                                )}
+                            </span>
+                        ) : (
+                            <span>
+                                {c('Info').ngettext(
+                                    msgid`${selectedFoldersCount} folder selected`,
+                                    `${selectedFoldersCount} folders selected`,
+                                    selectedFoldersCount
+                                )}
+                            </span>
                         )}
                         <Button className="ml2" onClick={toggleFolders}>
                             {organizeFolderVisible ? c('Action').t`Hide folders` : c('Action').t`Show folders`}

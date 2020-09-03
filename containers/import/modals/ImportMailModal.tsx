@@ -101,9 +101,9 @@ const ImportMailModal = ({ onImportComplete, onClose = noop, ...rest }: Props) =
         createModal(
             <ConfirmModal
                 onConfirm={onClose}
-                title={c('Action').t`Quit import?`}
+                title={c('Confirm modal title').t`Quit import?`}
                 cancel={c('Action').t`Continue import`}
-                confirm={<ErrorButton type="submit">{c('Title').t`Quit`}</ErrorButton>}
+                confirm={<ErrorButton type="submit">{c('Action').t`Quit`}</ErrorButton>}
             >
                 <Alert type="error">{c('Warning').t`You will lose all progress if you quit.`}</Alert>
             </ConfirmModal>

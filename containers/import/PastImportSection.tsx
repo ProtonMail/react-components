@@ -50,9 +50,9 @@ const DeleteButton = ({ ID, email, callback }: DeleteButtonProps) => {
                 <ConfirmModal
                     onConfirm={resolve}
                     onClose={reject}
-                    title={c('Title').t`Remove from the list?`}
-                    cancel={c('Title').t`Keep`}
-                    confirm={<ErrorButton type="submit">{c('Title').t`Remove`}</ErrorButton>}
+                    title={c('Confirm modal title').t`Remove from the list?`}
+                    cancel={c('Action').t`Keep`}
+                    confirm={<ErrorButton type="submit">{c('Action').t`Remove`}</ErrorButton>}
                 >
                     <Alert type="error">
                         {c('Warning').t`You will not see this import record in the list anymore.`}

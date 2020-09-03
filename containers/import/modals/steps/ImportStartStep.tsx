@@ -49,7 +49,7 @@ const ImportStartStep = ({ modalModel, updateModalModel }: Props) => {
                     <Alert>{c('Info').t`Enter the address of the email account you want to import from`}</Alert>
                     {showPassword && (
                         <Alert type="warning" learnMore="https://protonmail.com/support/knowledge-base/">
-                            {c('Info')
+                            {c('Warning')
                                 .t`By sharing your login credentials, you are giving Proton permission to fetch data from your external email provider. We will delete your login information once the import is complete.`}
                         </Alert>
                     )}

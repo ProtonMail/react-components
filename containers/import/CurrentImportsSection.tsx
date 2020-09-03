@@ -55,9 +55,9 @@ const RowActions = ({ ID, State, callback }: RowActionsProps) => {
                 <ConfirmModal
                     onConfirm={resolve}
                     onClose={reject}
-                    title={c('Title').t`Import is not finished. Cancel anyway?`}
-                    cancel={c('Title').t`Back to import`}
-                    confirm={<ErrorButton type="submit">{c('Title').t`Cancel import`}</ErrorButton>}
+                    title={c('Confirm modal title').t`Import is not finished. Cancel anyway?`}
+                    cancel={c('Action').t`Back to import`}
+                    confirm={<ErrorButton type="submit">{c('Action').t`Cancel import`}</ErrorButton>}
                 >
                     <Alert type="error">
                         {c('Warning')

@@ -15,6 +15,7 @@ import {
 import { PATH_SPLIT_REGEX } from '../constants';
 
 import ImportManageFoldersRow from './ImportManageFoldersRow';
+import { Alert } from '../../../components';
 
 interface Props {
     modalModel: ImportModalModel;
@@ -144,7 +145,7 @@ const ImportManageFolders = ({ modalModel, address, payload, onChangePayload }: 
 
     return (
         <>
-            <div className="mt1 mb1">{c('Info').t`Please select the source folders of you want to import:`}</div>
+            <Alert className="mt2 mb1">{c('Info').t`Please select the folders you would like to import:`}</Alert>
 
             <div className="flex">
                 <div className="w40 ellipsis pt1">
