@@ -75,11 +75,13 @@ const ImportManageFolders = ({ modalModel, address, payload, onChangePayload }: 
         }, {});
     }, [checkedFoldersMap]);
 
-    const getDescendants = (children: string[]) => {
+    const getDescendants = (children: string[], maxLevel?: number, separatorSymbol?: string | RegExp) => {
+        const separator = separatorSymbol === '/' ? PATH_SPLIT_REGEX : separatorSymbol;
+
         const grandChildren: string[] = children.reduce<string[]>((acc, childName) => {
             const children = childrenRelationshipMap[childName];
 
-            return [...acc, ...getDescendants(children)];
+            return [...acc, ...getDescendants(children, maxLevel, separator)];
         }, []);
 
         return [...children, ...grandChildren];
@@ -103,12 +105,18 @@ const ImportManageFolders = ({ modalModel, address, payload, onChangePayload }: 
         const newFoldersNameMap = { ...foldersNameMap };
 
         newFoldersNameMap[providerName] = newPath;
-        const children = childrenRelationshipMap[providerName];
-        const descendants = children ? getDescendants(children) : [];
 
-        descendants.forEach((folderName) => {
-            newFoldersNameMap[folderName] = newFoldersNameMap[folderName].replace(previousPath, newPath);
-        });
+        const found = providerFolders.find((f) => f.Source === providerName);
+        const level = found ? getLevel(found.Source, found.Separator) : undefined;
+
+        if (typeof level !== 'undefined' && level <= 1) {
+            const children = childrenRelationshipMap[providerName];
+            const descendants = children ? getDescendants(children) : [];
+
+            descendants.forEach((folderName) => {
+                newFoldersNameMap[folderName] = newFoldersNameMap[folderName].replace(previousPath, newPath);
+            });
+        }
 
         setFoldersNameMap(newFoldersNameMap);
     };

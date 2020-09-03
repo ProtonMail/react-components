@@ -51,8 +51,8 @@ interface Props {
     foldersNameMap: FoldersNameMap;
 }
 
-const escapeSlashes = (s: string) => s.split(PATH_SPLIT_REGEX).join('\\/');
-const unescapeSlashes = (s: string) => s.split('\\/').join('/');
+const escapeSlashes = (s: string) => s.split(PATH_SPLIT_REGEX).join('\\\\/');
+const unescapeSlashes = (s: string) => s.split('\\\\/').join('/');
 
 const getSourceDisplayName = (name: string, separator: string) =>
     name.split(separator === '/' ? PATH_SPLIT_REGEX : separator).pop() || name;
@@ -61,6 +61,11 @@ const getDestinationDisplayName = (destinationPath: string, levelDestination = 0
     const splittedDestination = destinationPath.split(PATH_SPLIT_REGEX);
     splittedDestination.splice(0, levelDestination);
     return levelDestination ? unescapeSlashes(splittedDestination.join('/')) : unescapeSlashes(destinationPath);
+};
+
+const forgeNewPath = (initialPath: string, level: number, newName: string) => {
+    const splitted = initialPath.split(PATH_SPLIT_REGEX);
+    return [...splitted.slice(0, level), escapeSlashes(newName.trim())].join('/');
 };
 
 const ImportManageFoldersRow = ({
@@ -102,14 +107,12 @@ const ImportManageFoldersRow = ({
     const emptyValueError = useMemo(() => !inputValue || !inputValue.trim(), [inputValue]);
 
     const nameTooLongError = useMemo(() => {
-        const splittedDestination = destinationPath.split(PATH_SPLIT_REGEX);
-        const newPath = [...splittedDestination.slice(0, levelDestination), inputValue.trim()].join('/');
+        const newPath = forgeNewPath(destinationPath, levelDestination, inputValue);
         return newPath.length >= 100;
     }, [destinationPath, inputValue]);
 
     const mergeWarning = useMemo(() => {
-        const splittedDestination = destinationPath.split(PATH_SPLIT_REGEX);
-        const newPath = [...splittedDestination.slice(0, levelDestination), inputValue.trim()].join('/');
+        const newPath = forgeNewPath(destinationPath, levelDestination, inputValue);
 
         return Object.entries(foldersNameMap).some(([sourcePath, destinationPath]) => {
             return sourcePath !== Source && destinationPath === newPath;
@@ -133,11 +136,9 @@ const ImportManageFoldersRow = ({
 
     const handleSave = (e: React.MouseEvent | React.KeyboardEvent) => {
         e.stopPropagation();
-        const splittedDestination = destinationPath.split(PATH_SPLIT_REGEX);
-        const newPath = [...splittedDestination.slice(0, levelDestination), escapeSlashes(inputValue.trim())].join('/');
-        // const newPath = [...splittedDestination.slice(0, levelDestination), inputValue.trim()].join('/');
+        const newPath = forgeNewPath(destinationPath, levelDestination, inputValue);
         setEditMode(false);
-        onRename(Source, newPath, initialValue.current);
+        onRename(Source, newPath, destinationPath);
         initialValue.current = inputValue;
     };
 
