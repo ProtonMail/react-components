@@ -15,6 +15,8 @@ import {
 
 import { PATH_SPLIT_REGEX } from '../constants';
 
+import { escapeSlashes, unescapeSlashes } from './ImportManageFolders';
+
 const FOLDER_ICONS = {
     [DestinationFolder.INBOX]: 'inbox',
     [DestinationFolder.ALL_DRAFTS]: 'drafts',
@@ -50,9 +52,6 @@ interface Props {
     providerFolders: MailImportFolder[];
     foldersNameMap: FoldersNameMap;
 }
-
-const escapeSlashes = (s: string) => s.split(PATH_SPLIT_REGEX).join('\\\\/');
-const unescapeSlashes = (s: string) => s.split('\\\\/').join('/');
 
 const getSourceDisplayName = (name: string, level: number, separator: string) => {
     if (level === 0) {

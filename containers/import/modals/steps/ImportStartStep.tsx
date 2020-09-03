@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useMemo } from 'react';
+import React, { ChangeEvent, useMemo, useEffect } from 'react';
 import { c } from 'ttag';
 
 import { validateEmailAddress } from 'proton-shared/lib/helpers/email';
@@ -15,6 +15,12 @@ interface Props {
 
 const ImportStartStep = ({ modalModel, updateModalModel }: Props) => {
     const showPassword = useMemo(() => validateEmailAddress(modalModel.email), [modalModel.email]);
+
+    useEffect(() => {
+        if (!showPassword) {
+            updateModalModel({ ...modalModel, password: '' });
+        }
+    }, [showPassword]);
 
     return (
         <>
@@ -100,10 +106,10 @@ const ImportStartStep = ({ modalModel, updateModalModel }: Props) => {
                 </Row>
             )}
 
-            {modalModel.needIMAPDetails && (
+            {modalModel.needIMAPDetails && modalModel.email && showPassword && (
                 <>
                     <Row>
-                        <Label htmlFor="imap">{c('Label').t`IMAP server`}</Label>
+                        <Label htmlFor="imap">{c('Label').t`Mail Server (IMAP)`}</Label>
                         <Field>
                             <Input
                                 id="imap"

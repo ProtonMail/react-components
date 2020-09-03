@@ -24,6 +24,9 @@ interface Props {
     onChangePayload: (newPayload: ImportPayloadModel) => void;
 }
 
+export const escapeSlashes = (s: string) => s.split(PATH_SPLIT_REGEX).join('\\\\/');
+export const unescapeSlashes = (s: string) => s.split('\\\\/').join('/');
+
 const ImportManageFolders = ({ modalModel, address, payload, onChangePayload }: Props) => {
     const { providerFolders } = modalModel;
 
@@ -114,7 +117,7 @@ const ImportManageFolders = ({ modalModel, address, payload, onChangePayload }: 
         const found = providerFolders.find((f) => f.Source === providerName);
         const level = found ? getLevel(found.Source, found.Separator) : undefined;
 
-        if (typeof level !== 'undefined' && level <= 1) {
+        if (typeof level !== 'undefined' && level < 2) {
             const children = childrenRelationshipMap[providerName];
             const descendants = children ? getDescendants(children) : [];
 
