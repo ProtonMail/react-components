@@ -209,8 +209,10 @@ const ImportManageFoldersRow = ({
     };
 
     useEffect(() => {
-        setEditMode(false);
-        setInputValue(initialValue.current);
+        if (disabled) {
+            setEditMode(false);
+            setInputValue(initialValue.current);
+        }
     }, [disabled]);
 
     useEffect(() => {
