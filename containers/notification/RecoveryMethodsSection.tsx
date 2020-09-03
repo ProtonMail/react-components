@@ -2,17 +2,11 @@ import React, { useState } from 'react';
 import { c } from 'ttag';
 import { updateNotifyEmail, updateResetEmail, updateResetPhone } from 'proton-shared/lib/api/settings';
 import { CLIENT_TYPES } from 'proton-shared/lib/constants';
+import isTruthy from 'proton-shared/lib/helpers/isTruthy';
+
+import { Toggle, Alert, Label, Row, Field, Info, Tabs, Loader } from '../../components';
 
 import {
-    AuthModal,
-    Toggle,
-    Alert,
-    Label,
-    Row,
-    Field,
-    Info,
-    Tabs,
-    Loader,
     useApi,
     useModals,
     useUserSettings,
@@ -20,12 +14,13 @@ import {
     useEventManager,
     useNotifications,
     useConfig,
-} from '../..';
+} from '../../hooks';
+
+import AuthModal from '../password/AuthModal';
 import RecoveryEmail from './RecoveryEmail';
 import RecoveryPhone from './RecoveryPhone';
 import EmailModal from './EmailModal';
 import PhoneModal from './PhoneModal';
-import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 
 const { VPN } = CLIENT_TYPES;
 

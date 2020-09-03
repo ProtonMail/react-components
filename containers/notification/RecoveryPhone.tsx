@@ -1,6 +1,7 @@
 import React from 'react';
 import { c } from 'ttag';
-import { PrimaryButton, Field } from '../..';
+
+import { PrimaryButton, Field } from '../../components';
 
 interface Props {
     phone: string | null;

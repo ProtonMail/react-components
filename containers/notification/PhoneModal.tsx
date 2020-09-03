@@ -1,20 +1,10 @@
 import React, { useState } from 'react';
-import {
-    AuthModal,
-    FormModal,
-    ConfirmModal,
-    Alert,
-    Row,
-    Label,
-    IntlTelInput,
-    Field,
-    useLoading,
-    useModals,
-    useNotifications,
-    useEventManager,
-} from '../..';
 import { c } from 'ttag';
 import { updatePhone } from 'proton-shared/lib/api/settings';
+
+import AuthModal from '../password/AuthModal';
+import { FormModal, ConfirmModal, Alert, Row, Label, IntlTelInput, Field } from '../../components';
+import { useLoading, useModals, useNotifications, useEventManager } from '../../hooks';
 
 interface Props {
     phone: string;
