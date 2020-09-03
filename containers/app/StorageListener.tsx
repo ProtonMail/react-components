@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { isSelf, getMessage, PASSWORD_CHANGE_MESSAGE_TYPE } from 'proton-shared/lib/helpers/crossTab';
+import { getIsSelf, getMessage, PASSWORD_CHANGE_MESSAGE_TYPE } from 'proton-shared/lib/helpers/crossTab';
 
 import { useAuthentication } from '../../hooks';
 
@@ -19,7 +19,7 @@ const StorageListener = () => {
             if (
                 type === PASSWORD_CHANGE_MESSAGE_TYPE &&
                 data?.localID === authentication.getLocalID?.() &&
-                !isSelf(id)
+                !getIsSelf(id)
             ) {
                 authentication.logout('soft');
             }
