@@ -15,8 +15,8 @@ import {
     DropdownActions,
     Badge,
     ConfirmModal,
-    Tooltip,
-    Icon,
+    // Tooltip,
+    // Icon,
     ErrorButton,
 } from '../../components';
 
@@ -167,21 +167,18 @@ const CurrentImportsSection = forwardRef(({}, ref) => {
                                 return (
                                     <>
                                         <Badge type="warning">{c('Import status').t`Paused`}</Badge>
-
-                                        <Tooltip title={c('Tooltip').t`ProtonMail mailbox is almost full.`}>
-                                            <Icon name="attention" />
-                                        </Tooltip>
-
+                                        {/*
                                         <Tooltip title={c('Tooltip').t`Account is disconnected.`}>
-                                            <Icon name="attention" />
+                                            <Icon name="attention-plain" />
                                         </Tooltip>
 
                                         <Tooltip
                                             title={c('Tooltip')
                                                 .t`ProtonMail mailbox is almost full. Please free up some space or upgrade your plan to resume the import.`}
                                         >
-                                            <Icon name="attention" />
+                                            <Icon name="attention-plain" />
                                         </Tooltip>
+                                        */}
                                     </>
                                 );
                             }

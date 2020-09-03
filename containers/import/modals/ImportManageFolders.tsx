@@ -24,12 +24,16 @@ interface Props {
     onChangePayload: (newPayload: ImportPayloadModel) => void;
 }
 
-const getLevel = (name: string, separator: string) => {
-    return name.split(separator === '/' ? PATH_SPLIT_REGEX : separator).length - 1;
-};
-
 const ImportManageFolders = ({ modalModel, address, payload, onChangePayload }: Props) => {
     const { providerFolders } = modalModel;
+
+    const getLevel = (name: string, separator: string) => {
+        const split = name.split(separator === '/' ? PATH_SPLIT_REGEX : separator);
+
+        const parent = providerFolders.find((f) => f.Source === split[0]);
+
+        return parent ? split.length - 1 : 0;
+    };
 
     const childrenRelationshipMap = providerFolders.reduce((acc: ChildrenRelationshipMap, folder) => {
         const currentLevel = getLevel(folder.Source, folder.Separator);
