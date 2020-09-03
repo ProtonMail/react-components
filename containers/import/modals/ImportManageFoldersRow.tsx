@@ -54,8 +54,13 @@ interface Props {
 const escapeSlashes = (s: string) => s.split(PATH_SPLIT_REGEX).join('\\\\/');
 const unescapeSlashes = (s: string) => s.split('\\\\/').join('/');
 
-const getSourceDisplayName = (name: string, separator: string) =>
-    name.split(separator === '/' ? PATH_SPLIT_REGEX : separator).pop() || name;
+const getSourceDisplayName = (name: string, level: number, separator: string) => {
+    if (level === 0) {
+        return name;
+    }
+    const pop = name.split(separator === '/' ? PATH_SPLIT_REGEX : separator).pop();
+    return pop ? escapeSlashes(pop) : escapeSlashes(name);
+};
 
 const getDestinationDisplayName = (destinationPath: string, levelDestination = 0) => {
     const splittedDestination = destinationPath.split(PATH_SPLIT_REGEX);
@@ -257,10 +262,10 @@ const ImportManageFoldersRow = ({
                         <div
                             className="ml0-5 flex-item-fluid-auto ellipsis"
                             // @todo put me back
-                            // title={getSourceDisplayName(Source)}
+                            // title={getSourceDisplayName(Source, level, Separator)}
                             title={Source}
                         >
-                            {getSourceDisplayName(Source, Separator)}
+                            {getSourceDisplayName(Source, level, Separator)}
                         </div>
                     </div>
 
