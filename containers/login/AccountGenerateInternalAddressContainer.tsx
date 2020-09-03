@@ -56,6 +56,11 @@ const AccountGenerateInternalAddressContainer = ({
             throw new Error('Password required to generate keys');
         }
 
+        if (!availableDomains.length) {
+            const error = c('Error').t`Domain not available, try again later`;
+            throw new Error(error);
+        }
+
         await api(queryCheckUsernameAvailability(username));
         await api(updateUsername({ Username: username }));
 
