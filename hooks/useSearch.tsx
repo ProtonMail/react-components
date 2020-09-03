@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { RefObject } from 'react';
 import { noop } from 'proton-shared/lib/helpers/function';
 import { sanitizeString } from 'proton-shared/lib/sanitize';
 import { ReactNode, useCallback, useMemo, useState, KeyboardEvent, useEffect, useRef } from 'react';
@@ -49,6 +49,8 @@ function useSearch<T, K = keyof SearchableObject<T>>({
     const [error, setError] = useState('');
     const [selectedSuggest, setSelectedSuggest] = useState<number>(0);
     const parentRef = useRef<HTMLDivElement>(null);
+    const selectedSuggestRef = useRef<HTMLDivElement>(null);
+    const [itemProps, setItemProps] = useState<({ ref: RefObject<HTMLDivElement> } | null)[]>([]);
 
     const searchSuggestions = useMemo(() => {
         const matchString = sanitizeString(inputValue).toLowerCase();
@@ -94,6 +96,14 @@ function useSearch<T, K = keyof SearchableObject<T>>({
             setIsFocused(true);
         }
     }, [inputValue]);
+    useEffect(() => {
+        setItemProps(
+            searchSuggestions.map((_, index) => (index === selectedSuggest ? { ref: selectedSuggestRef } : null))
+        );
+    }, [selectedSuggest]);
+    useEffect(() => {
+        selectedSuggestRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, [itemProps]);
 
     const selectNextItem = useCallback(() => {
         const newSelectedSuggest = (selectedSuggest + 1) % totalSuggestions;
@@ -200,6 +210,7 @@ function useSearch<T, K = keyof SearchableObject<T>>({
             className: classnames(['autocomplete-input relative']),
             ref: parentRef,
         },
+        itemProps,
         isFocused,
     };
 }
