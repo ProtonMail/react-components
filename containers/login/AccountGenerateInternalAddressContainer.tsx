@@ -14,7 +14,7 @@ import { generateAddressKey } from 'proton-shared/lib/keys/keys';
 import { Api } from 'proton-shared/lib/interfaces';
 
 import { Input, Label, PrimaryButton } from '../../components';
-import { useLoading } from '../../hooks';
+import { useLoading, useNotifications } from '../../hooks';
 
 import BackButton from '../signup/BackButton';
 import { Props as AccountPublicLayoutProps } from '../signup/AccountPublicLayout';
@@ -43,10 +43,12 @@ const AccountGenerateInternalAddressContainer = ({
     keyPassword,
 }: Props) => {
     const appName = getToAppName(toApp);
+
     const [username, setUsername] = useState('');
     const [usernameError, setUsernameError] = useState('');
     const [loading, withLoading] = useLoading();
     const [loadingAvailableDomains, withLoadingAvailableDomains] = useLoading();
+    const { createNotification } = useNotifications();
     const [availableDomains, setAvailableDomains] = useState([]);
 
     const handleCreateAddressAndKey = async () => {
@@ -61,12 +63,11 @@ const AccountGenerateInternalAddressContainer = ({
 
         try {
             await api(queryCheckUsernameAvailability(username));
-        } catch (error) {
-            const errorText = getApiErrorMessage(error) || c('Error').t`Can't check username, try again later`;
+        } catch (e) {
+            const errorText = getApiErrorMessage(e) || c('Error').t`Can't check username, try again later`;
             setUsernameError(errorText);
-            throw error;
+            throw e;
         }
-
         await api(updateUsername({ Username: username }));
 
         const [Address] = await handleSetupAddress({ api, domains: availableDomains, username });
@@ -89,8 +90,13 @@ const AccountGenerateInternalAddressContainer = ({
     };
 
     const handleSubmit = async () => {
-        await handleCreateAddressAndKey();
-        await onDone();
+        try {
+            await handleCreateAddressAndKey();
+            await onDone();
+        } catch (error) {
+            const errorText = getApiErrorMessage(error) || c('Error').t`Unknown error`;
+            createNotification({ type: 'error', text: errorText });
+        }
     };
 
     const fetchAvailableDomains = async () => {

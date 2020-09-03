@@ -56,7 +56,7 @@ const AccountLoginContainer = ({ onLogin, ignoreUnlock = false, Layout, toApp }:
 
     const handleDone = async (args: OnLoginCallbackArguments) => {
         const { UID, LocalID, keyPassword } = args;
-        const uidApi = <T,>(config: any) => normalApi<T>(withUIDHeaders(UID, config));
+        const uidApi = <T,>(config: any) => silentApi<T>(withUIDHeaders(UID, config));
 
         if (toApp && REQUIRES_INTERNAL_EMAIL_ADDRESS.includes(toApp)) {
             // Since the address route is slow, and in order to make the external check more efficient, query for a smaller number of addresses
