@@ -52,10 +52,12 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
         user.UsedSpace,
         user.MaxSpace,
     ]);
+
     const showFoldersNumError = useMemo(() => selectedFolders.length + folders.length >= 500, [
         selectedFolders,
         folders,
     ]);
+
     const showFoldersNameError = useMemo(
         () =>
             modalModel.payload.Mapping.some(

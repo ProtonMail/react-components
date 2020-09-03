@@ -51,6 +51,14 @@ const CustomizeImportModal = ({
     const [organizeFolderVisible, setOrganizeFolderVisible] = useState(customizeFoldersOpen);
     const { createModal } = useModals();
 
+    const hasFoldersTooLongError = useMemo(
+        () =>
+            customizedPayload.Mapping.some(
+                (m) => m.checked && m.Destinations.FolderName && m.Destinations.FolderName.length >= 100
+            ),
+        [customizedPayload.Mapping]
+    );
+
     const hasChanged = useMemo(() => {
         if (
             customizedPayload.StartTime !== initialPayload.StartTime ||
@@ -152,7 +160,11 @@ const CustomizeImportModal = ({
     return (
         <FormModal
             title={c('Title').t`Customize import`}
-            submit={<PrimaryButton disabled={!selectedFoldersCount} type="submit">{c('Action').t`Save`}</PrimaryButton>}
+            submit={
+                <PrimaryButton disabled={!selectedFoldersCount || hasFoldersTooLongError} type="submit">
+                    {c('Action').t`Save`}
+                </PrimaryButton>
+            }
             close={<Button onClick={handleCancel}>{c('Action').t`Cancel`}</Button>}
             onSubmit={handleSubmit}
             onClose={handleCancel}
