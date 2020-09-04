@@ -13,7 +13,6 @@ import useDomainsAddresses from '../../hooks/useDomainsAddresses';
 const DomainsSection = () => {
     const api = useApi();
     const cache = useCache();
-
     const [domains, loadingDomains] = useDomains();
     const [domainsAddressesMap, loadingDomainsAddressesMap] = useDomainsAddresses(domains);
     const [organization, loadingOrganization] = useOrganization();
