@@ -51,6 +51,7 @@ interface Props {
     childrenRelationshipMap: ChildrenRelationshipMap;
     providerFolders: MailImportFolder[];
     foldersNameMap: FoldersNameMap;
+    toggleEditing: (editing: boolean) => void;
 }
 
 const getSourceDisplayName = (name: string, level: number, separator: string) => {
@@ -82,6 +83,7 @@ const ImportManageFoldersRow = ({
     providerFolders,
     foldersNameMap,
     onRename,
+    toggleEditing,
 }: Props) => {
     const { Source, Separator, DestinationFolder } = folder;
     const checked = checkedFoldersMap[Source];
@@ -223,6 +225,7 @@ const ImportManageFoldersRow = ({
         if (editMode && inputRef && inputRef.current) {
             inputRef.current.focus();
         }
+        toggleEditing(editMode);
     }, [editMode]);
 
     return (
@@ -386,6 +389,7 @@ const ImportManageFoldersRow = ({
                             providerFolders={providerFolders}
                             foldersNameMap={foldersNameMap}
                             onRename={onRename}
+                            toggleEditing={toggleEditing}
                         />
                     ))}
                 </ul>

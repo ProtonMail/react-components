@@ -51,6 +51,7 @@ const CustomizeImportModal = ({
     const [selectedPeriod, setSelectedPeriod] = useState<TIME_UNIT>(modalModel.selectedPeriod);
     const [organizeFolderVisible, setOrganizeFolderVisible] = useState(customizeFoldersOpen);
     const { createModal } = useModals();
+    const [isEditing, setIsEditing] = useState(false);
 
     const hasFoldersTooLongError = useMemo(
         () =>
@@ -159,11 +160,15 @@ const CustomizeImportModal = ({
         onClose();
     };
 
+    const toggleEditing = (editing: boolean) => {
+        setIsEditing(editing);
+    };
+
     return (
         <FormModal
             title={c('Title').t`Customize import`}
             submit={
-                <PrimaryButton disabled={!selectedFoldersCount || hasFoldersTooLongError} type="submit">
+                <PrimaryButton disabled={isEditing || !selectedFoldersCount || hasFoldersTooLongError} type="submit">
                     {c('Action').t`Save`}
                 </PrimaryButton>
             }
@@ -282,6 +287,7 @@ const CustomizeImportModal = ({
                     modalModel={modalModel}
                     payload={customizedPayload}
                     onChangePayload={handleChangePayload}
+                    toggleEditing={toggleEditing}
                 />
             )}
         </FormModal>

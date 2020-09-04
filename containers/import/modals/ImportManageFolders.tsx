@@ -22,12 +22,13 @@ interface Props {
     address: Address;
     payload: ImportPayloadModel;
     onChangePayload: (newPayload: ImportPayloadModel) => void;
+    toggleEditing: (editing: boolean) => void;
 }
 
 export const escapeSlashes = (s: string) => s.split(PATH_SPLIT_REGEX).join('\\\\/');
 export const unescapeSlashes = (s: string) => s.split('\\\\/').join('/');
 
-const ImportManageFolders = ({ modalModel, address, payload, onChangePayload }: Props) => {
+const ImportManageFolders = ({ modalModel, address, payload, toggleEditing, onChangePayload }: Props) => {
     const { providerFolders } = modalModel;
 
     const getLevel = (name: string, separator: string) => {
@@ -185,6 +186,7 @@ const ImportManageFolders = ({ modalModel, address, payload, onChangePayload }: 
                                     providerFolders={providerFolders}
                                     foldersNameMap={foldersNameMap}
                                     onRename={handleRename}
+                                    toggleEditing={toggleEditing}
                                 />
                             ))}
                     </ul>
