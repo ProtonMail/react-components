@@ -14,7 +14,8 @@ interface Props {
 }
 
 const ImportStartStep = ({ modalModel, updateModalModel }: Props) => {
-    const showPassword = useMemo(() => validateEmailAddress(modalModel.email), [modalModel.email]);
+    const { email, password, needIMAPDetails, imap, port, errorCode, errorLabel } = modalModel;
+    const showPassword = useMemo(() => validateEmailAddress(email), [email]);
 
     useEffect(() => {
         if (!showPassword) {
@@ -22,11 +23,17 @@ const ImportStartStep = ({ modalModel, updateModalModel }: Props) => {
         }
     }, [showPassword]);
 
+    useEffect(() => {
+        if (!needIMAPDetails) {
+            updateModalModel({ ...modalModel, port: '', imap: '' });
+        }
+    }, [needIMAPDetails]);
+
     return (
         <>
-            {[IMPORT_ERROR.AUTH_IMAP, IMPORT_ERROR.AUTH_CREDENTIALS].includes(modalModel.errorCode) ? (
+            {[IMPORT_ERROR.AUTH_IMAP, IMPORT_ERROR.AUTH_CREDENTIALS].includes(errorCode) ? (
                 <Alert type="error" learnMore="https://protonmail.com/support/knowledge-base/">
-                    {modalModel.errorLabel === INVALID_CREDENTIALS_ERROR_LABEL && (
+                    {errorLabel === INVALID_CREDENTIALS_ERROR_LABEL && (
                         <>
                             <div className="mb1">
                                 {c('Error')
@@ -38,7 +45,7 @@ const ImportStartStep = ({ modalModel, updateModalModel }: Props) => {
                             </ul>
                         </>
                     )}
-                    {modalModel.errorLabel === IMAP_CONNECTION_ERROR_LABEL && (
+                    {errorLabel === IMAP_CONNECTION_ERROR_LABEL && (
                         <>
                             <div className="mb1">
                                 {c('Error').t`Proton cannot connect to your email server provider. Please make sure:`}
@@ -66,18 +73,14 @@ const ImportStartStep = ({ modalModel, updateModalModel }: Props) => {
                 <Field>
                     <EmailInput
                         id="emailAddress"
-                        value={modalModel.email}
+                        value={email}
                         onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
                             updateModalModel({ ...modalModel, email: target.value })
                         }
                         autoFocus
                         required
-                        isSubmitted={!!modalModel.errorLabel}
-                        error={
-                            modalModel.errorLabel === INVALID_CREDENTIALS_ERROR_LABEL
-                                ? modalModel.errorLabel
-                                : undefined
-                        }
+                        isSubmitted={!!errorLabel}
+                        error={errorLabel === INVALID_CREDENTIALS_ERROR_LABEL ? errorLabel : undefined}
                         errorZoneClassName="hidden"
                     />
                 </Field>
@@ -89,24 +92,20 @@ const ImportStartStep = ({ modalModel, updateModalModel }: Props) => {
                     <Field>
                         <PasswordInput
                             id="password"
-                            value={modalModel.password}
+                            value={password}
                             onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
                                 updateModalModel({ ...modalModel, password: target.value })
                             }
                             required
-                            isSubmitted={!!modalModel.errorLabel}
-                            error={
-                                modalModel.errorLabel === INVALID_CREDENTIALS_ERROR_LABEL
-                                    ? modalModel.errorLabel
-                                    : undefined
-                            }
+                            isSubmitted={!!errorLabel}
+                            error={errorLabel === INVALID_CREDENTIALS_ERROR_LABEL ? errorLabel : undefined}
                             errorZoneClassName="hidden"
                         />
                     </Field>
                 </Row>
             )}
 
-            {modalModel.needIMAPDetails && modalModel.email && showPassword && (
+            {needIMAPDetails && email && showPassword && (
                 <>
                     <Row>
                         <Label htmlFor="imap">{c('Label').t`Mail Server (IMAP)`}</Label>
@@ -114,17 +113,13 @@ const ImportStartStep = ({ modalModel, updateModalModel }: Props) => {
                             <Input
                                 id="imap"
                                 placeholder="imap.domain.com"
-                                value={modalModel.imap}
+                                value={imap}
                                 onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
                                     updateModalModel({ ...modalModel, imap: target.value })
                                 }
                                 required
-                                isSubmitted={!!modalModel.errorLabel}
-                                error={
-                                    modalModel.errorLabel === IMAP_CONNECTION_ERROR_LABEL
-                                        ? modalModel.errorLabel
-                                        : undefined
-                                }
+                                isSubmitted={!!errorLabel}
+                                error={errorLabel === IMAP_CONNECTION_ERROR_LABEL ? errorLabel : undefined}
                                 errorZoneClassName="hidden"
                             />
                         </Field>
@@ -135,17 +130,13 @@ const ImportStartStep = ({ modalModel, updateModalModel }: Props) => {
                             <Input
                                 id="port"
                                 placeholder="993"
-                                value={modalModel.port}
+                                value={port}
                                 onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
                                     updateModalModel({ ...modalModel, port: target.value })
                                 }
                                 required
-                                isSubmitted={!!modalModel.errorLabel}
-                                error={
-                                    modalModel.errorLabel === IMAP_CONNECTION_ERROR_LABEL
-                                        ? modalModel.errorLabel
-                                        : undefined
-                                }
+                                isSubmitted={!!errorLabel}
+                                error={errorLabel === IMAP_CONNECTION_ERROR_LABEL ? errorLabel : undefined}
                                 errorZoneClassName="hidden"
                             />
                         </Field>

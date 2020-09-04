@@ -28,20 +28,22 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
     const { providerFolders, password } = modalModel;
     const [folders = [], foldersLoading] = useFolders();
 
+    const { payload, selectedPeriod } = modalModel;
+
     const providerFoldersNum = useMemo(() => providerFolders.length, [providerFolders]);
     const providerMessageNum = useMemo(() => providerFolders.reduce((acc, { Total }) => acc + Total, 0), [
         providerFolders,
     ]);
     const selectedFolders = useMemo(
         () =>
-            modalModel.payload.Mapping.filter((m) => m.checked).map(
+            payload.Mapping.filter((m) => m.checked).map(
                 (mappedFolder) =>
                     providerFolders.find((p) => p.Source === mappedFolder.Source) || ({} as MailImportFolder)
             ),
-        [modalModel.payload.Mapping, providerFolders]
+        [payload.Mapping, providerFolders]
     );
     const selectedFoldersMessageCount = useMemo(() => selectedFolders.reduce((acc, { Total = 0 }) => acc + Total, 0), [
-        modalModel.payload.Mapping,
+        payload.Mapping,
         providerFolders,
     ]);
 
@@ -60,10 +62,10 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
 
     const showFoldersNameError = useMemo(
         () =>
-            modalModel.payload.Mapping.some(
+            payload.Mapping.some(
                 (m) => m.checked && m.Destinations.FolderName && m.Destinations.FolderName.length >= 100
             ),
-        [modalModel.payload.Mapping]
+        [payload.Mapping]
     );
 
     const handleClickCustomize = () => {
@@ -81,9 +83,9 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
         updateModalModel(initialModel.current);
     };
 
-    const isCustom = useMemo(() => !isDeepEqual(initialModel.current.payload, modalModel.payload), [
+    const isCustom = useMemo(() => !isDeepEqual(initialModel.current.payload, payload), [
         initialModel.current.payload,
-        modalModel.payload,
+        payload,
     ]);
 
     useEffect(() => {
@@ -228,15 +230,13 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
 
                 <div className="mb1 ml1 flex flex-items-center">
                     <Icon className="mr0-5" name="clock" />
-                    {modalModel.selectedPeriod === TIME_UNIT.BIG_BANG ? (
-                        c('Info').t`Import all messages since ${timeUnitLabels[
-                            modalModel.selectedPeriod
-                        ].toLowerCase()}`
+                    {selectedPeriod === TIME_UNIT.BIG_BANG ? (
+                        c('Info').t`Import all messages since ${timeUnitLabels[selectedPeriod].toLowerCase()}`
                     ) : (
                         <span>
                             {c('Info').jt`Import all messages since`}
                             {` `}
-                            <strong>{timeUnitLabels[modalModel.selectedPeriod]}</strong>
+                            <strong>{timeUnitLabels[selectedPeriod]}</strong>
                         </span>
                     )}
                 </div>
@@ -245,14 +245,14 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
                     <Icon className="mr0-5" name="label" />
                     {c('Info').t`Label all imported messages as`}
 
-                    {modalModel.payload.ImportLabel && modalModel.payload.ImportLabel.Name && (
+                    {payload.ImportLabel && payload.ImportLabel.Name && (
                         <span className="ml0-5">
                             <LabelStack
                                 labels={[
                                     {
-                                        name: modalModel.payload.ImportLabel.Name,
-                                        color: modalModel.payload.ImportLabel.Color,
-                                        title: modalModel.payload.ImportLabel.Name,
+                                        name: payload.ImportLabel.Name,
+                                        color: payload.ImportLabel.Color,
+                                        title: payload.ImportLabel.Name,
                                     },
                                 ]}
                                 showDelete={false}

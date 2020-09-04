@@ -127,7 +127,7 @@ const ImportMailModal = ({ onImportComplete, onClose = noop, ...rest }: Props) =
                 ...modalModel,
                 errorCode: Code,
                 errorLabel: Error,
-                needIMAPDetails: Error === IMAP_CONNECTION_ERROR_LABEL,
+                needIMAPDetails: modalModel.needIMAPDetails || Error === IMAP_CONNECTION_ERROR_LABEL,
             });
         }
     };
@@ -148,7 +148,7 @@ const ImportMailModal = ({ onImportComplete, onClose = noop, ...rest }: Props) =
             return;
         }
 
-        if (ImapHost) {
+        if ((ImapHost && ImapPort) || needIMAPDetails) {
             try {
                 const { Importer } = await api(
                     createMailImport({
@@ -176,11 +176,13 @@ const ImportMailModal = ({ onImportComplete, onClose = noop, ...rest }: Props) =
     };
 
     const launchImport = async () => {
+        const { importID, payload } = modalModel;
+
         await api(
-            createJobImport(modalModel.importID, {
-                ...modalModel.payload,
-                StartTime: modalModel.payload.StartTime ? dateToTimestamp(modalModel.payload.StartTime) : undefined,
-                EndTime: modalModel.payload.EndTime ? dateToTimestamp(modalModel.payload.EndTime) : undefined,
+            createJobImport(importID, {
+                ...payload,
+                StartTime: payload.StartTime ? dateToTimestamp(payload.StartTime) : undefined,
+                EndTime: payload.EndTime ? dateToTimestamp(payload.EndTime) : undefined,
                 Mapping: modalModel.payload.Mapping.filter((m: FolderMapping) => m.checked),
             })
         );
@@ -219,11 +221,11 @@ const ImportMailModal = ({ onImportComplete, onClose = noop, ...rest }: Props) =
     }, [modalModel.step, loading]);
 
     const submit = useMemo(() => {
-        const disabledStartStep = modalModel.needIMAPDetails
-            ? !modalModel.email || !modalModel.password || !modalModel.imap || !modalModel.port
-            : !modalModel.email || !modalModel.password;
+        const { email, password, needIMAPDetails, imap, port, isPayloadValid, step } = modalModel;
 
-        switch (modalModel.step) {
+        const disabledStartStep = needIMAPDetails ? !email || !password || !imap || !port : !email || !password;
+
+        switch (step) {
             case Step.START:
                 return (
                     <PrimaryButton type="submit" disabled={disabledStartStep} loading={loading}>
@@ -232,7 +234,7 @@ const ImportMailModal = ({ onImportComplete, onClose = noop, ...rest }: Props) =
                 );
             case Step.PREPARE:
                 return (
-                    <PrimaryButton loading={loading} disabled={modalModel.isPayloadValid} type="submit">
+                    <PrimaryButton loading={loading} disabled={isPayloadValid} type="submit">
                         {c('Action').t`Start import`}
                     </PrimaryButton>
                 );
