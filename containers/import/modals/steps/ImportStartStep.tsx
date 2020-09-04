@@ -18,16 +18,10 @@ const ImportStartStep = ({ modalModel, updateModalModel }: Props) => {
     const showPassword = useMemo(() => validateEmailAddress(email), [email]);
 
     useEffect(() => {
-        if (!showPassword) {
-            updateModalModel({ ...modalModel, password: '' });
+        if (!email) {
+            updateModalModel({ ...modalModel, password: '', port: '', imap: '' });
         }
-    }, [showPassword]);
-
-    useEffect(() => {
-        if (!needIMAPDetails) {
-            updateModalModel({ ...modalModel, port: '', imap: '' });
-        }
-    }, [needIMAPDetails]);
+    }, [email]);
 
     return (
         <>
