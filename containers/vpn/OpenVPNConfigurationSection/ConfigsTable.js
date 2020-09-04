@@ -13,6 +13,8 @@ import { classnames } from '../../../helpers';
 import LoadIndicator from './LoadIndicator';
 import Country from './Country';
 import { isP2PEnabled, isTorEnabled } from './utils';
+import IconP2P from './p2p.svg';
+import IconTor from './tor.svg';
 
 export const CATEGORY = {
     SECURE_CORE: 'SecureCore',
@@ -41,15 +43,19 @@ const ServerDown = () => (
     </span>
 );
 
-const P2P = () => (
-    <span className="ml0-5">
-        <Tooltip title={c('Info').t`P2P`}>p2p</Tooltip>
+export const P2P = () => (
+    <span className="ml0-5 rounded bg-global-border mr0-5" style={{ width: '24px', height: '24px' }}>
+        <Tooltip title={c('Info').t`p2p`}>
+            <img src={IconP2P} className="w100" />
+        </Tooltip>
     </span>
 );
 
-const Tor = () => (
-    <span className="ml0-5">
-        <Tooltip title={c('Info').t`Tor`}>tor</Tooltip>
+export const Tor = () => (
+    <span className="ml0-5 rounded bg-global-border mr0-5" style={{ width: '24px', height: '24px' }}>
+        <Tooltip title={c('Info').t`Tor`}>
+            <img src={IconTor} className="w100" />
+        </Tooltip>
     </span>
 );
 
