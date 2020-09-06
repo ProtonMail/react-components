@@ -75,7 +75,7 @@ const ImportManageFolders = ({ modalModel, address, payload, toggleEditing, onCh
         return parentName;
     };
 
-    const getNameValue = (destinationPath: string, folder: MailImportFolder) => {
+    const getNameValue = (destinationPath: string) => {
         const [firstLevel, secondLevel, ...restOfTheTree] = destinationPath.split(PATH_SPLIT_REGEX);
 
         // for level 3 or more
@@ -89,8 +89,7 @@ const ImportManageFolders = ({ modalModel, address, payload, toggleEditing, onCh
         providerFolders.reduce<FolderNamesMap>((acc, folder) => {
             const found = payload.Mapping.find((m) => m.Source === folder.Source);
             acc[folder.Source] = getNameValue(
-                found?.Destinations.FolderName || folder.DestinationFolder || folder.Source,
-                folder
+                found?.Destinations.FolderName || folder.DestinationFolder || folder.Source
             );
             return acc;
         }, {})

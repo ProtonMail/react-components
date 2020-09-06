@@ -33,11 +33,10 @@ const ImportStatus = ({ status }: ImportStatusProps) => {
 
 interface DeleteButtonProps {
     ID: string;
-    email: string;
     callback: () => void;
 }
 
-const DeleteButton = ({ ID, email, callback }: DeleteButtonProps) => {
+const DeleteButton = ({ ID, callback }: DeleteButtonProps) => {
     const api = useApi();
     const { createModal } = useModals();
 
@@ -125,11 +124,13 @@ const PastImportsSection = () => {
                             <TableRow
                                 key={index}
                                 cells={[
-                                    <div className="w100 ellipsis">{Email}</div>,
+                                    <div key="email" className="w100 ellipsis">
+                                        {Email}
+                                    </div>,
                                     <ImportStatus key="status" status={State} />,
                                     <time key="importDate">{format(EndTime * 1000, 'PPp')}</time>,
                                     humanSize(TotalSize),
-                                    <DeleteButton ID={ID} email={Email} callback={fetch} />,
+                                    <DeleteButton key="button" ID={ID} callback={fetch} />,
                                 ]}
                             />
                         );

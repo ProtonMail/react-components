@@ -183,21 +183,21 @@ const CurrentImportsSection = forwardRef(({}, ref) => {
                                 );
                             }
 
-                            return (
-                                <Badge>
-                                    {c('Import status').t`${isNaN(percentage) ? 0 : Math.round(percentage)}% imported`}
-                                </Badge>
-                            );
+                            const percentageValue = isNaN(percentage) ? 0 : Math.round(percentage);
+
+                            return <Badge>{c('Import status').t`${percentageValue}% imported`}</Badge>;
                         };
 
                         return (
                             <TableRow
                                 key={index}
                                 cells={[
-                                    <div className="w100 ellipsis">{Email}</div>,
+                                    <div key="email" className="w100 ellipsis">
+                                        {Email}
+                                    </div>,
                                     badgeRenderer(),
                                     <time key="importDate">{format(CreateTime * 1000, 'PPp')}</time>,
-                                    <RowActions ID={ID} State={State} callback={fetch} />,
+                                    <RowActions key="actions" ID={ID} State={State} callback={fetch} />,
                                 ]}
                             />
                         );

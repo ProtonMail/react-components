@@ -15,7 +15,7 @@ const ImportMailWizard = ({ step = 0, steps = [] }: Props) => {
                 {steps.map((text = '', index) => {
                     return (
                         <li
-                            key={`wizard-dot-${index.toString()}`}
+                            key={`wizard-dot-${text.split(' ').join('-')}`}
                             className={classnames(['wizard-item', index < step && 'is-complete'])}
                             aria-current={index === step ? 'step' : undefined}
                         >

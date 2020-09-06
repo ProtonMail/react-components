@@ -1,8 +1,8 @@
 import React, { ChangeEvent, useState, useRef, useEffect, useMemo } from 'react';
 import { c } from 'ttag';
 
-import { Tooltip, Icon, Checkbox, InlineLinkButton, Input } from '../../../components';
 import { classnames } from '../../../helpers';
+import { Tooltip, Icon, Checkbox, InlineLinkButton, Input } from '../../../components';
 
 import {
     DestinationFolder,
