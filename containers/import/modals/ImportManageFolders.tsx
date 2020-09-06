@@ -10,7 +10,9 @@ import {
     MailImportFolder,
     CheckedFoldersMap,
     DisabledFoldersMap,
-    ChildrenRelationshipMap,
+    FolderRelationshipsMap,
+    FolderNamesMap,
+    FolderPathsMap,
 } from '../interfaces';
 import { PATH_SPLIT_REGEX } from '../constants';
 
@@ -33,13 +35,18 @@ const ImportManageFolders = ({ modalModel, address, payload, toggleEditing, onCh
 
     const getLevel = (name: string, separator: string) => {
         const split = name.split(separator === '/' ? PATH_SPLIT_REGEX : separator);
+        let level = 0;
+        while (split.length) {
+            split.pop();
+            if (providerFolders.find((f) => f.Source === split.join(separator))) {
+                level += 1;
+            }
+        }
 
-        const parent = providerFolders.find((f) => f.Source === split[0]);
-
-        return parent ? split.length - 1 : 0;
+        return level;
     };
 
-    const childrenRelationshipMap = providerFolders.reduce((acc: ChildrenRelationshipMap, folder) => {
+    const folderRelationshipsMap = providerFolders.reduce((acc: FolderRelationshipsMap, folder) => {
         const currentLevel = getLevel(folder.Source, folder.Separator);
 
         acc[folder.Source] = providerFolders
@@ -60,26 +67,64 @@ const ImportManageFolders = ({ modalModel, address, payload, toggleEditing, onCh
         }, {})
     );
 
-    const [foldersNameMap, setFoldersNameMap] = useState(
-        providerFolders.reduce<{ [key: string]: string }>((acc, folder) => {
-            const found = payload.Mapping.find((m) => m.Source === folder.Source);
-            acc[folder.Source] = found?.Destinations.FolderName || folder.DestinationFolder || folder.Source;
-            return acc;
-        }, {})
-    );
-
     const getParent = (folderName: string) => {
         const [parentName] =
-            Object.entries(childrenRelationshipMap).find(([_, children]) => {
+            Object.entries(folderRelationshipsMap).find(([_, children]) => {
                 return children.includes(folderName);
             }) || [];
         return parentName;
     };
 
+    const getNameValue = (destinationPath: string, folder: MailImportFolder) => {
+        const [firstLevel, secondLevel, ...restOfTheTree] = destinationPath.split(PATH_SPLIT_REGEX);
+
+        // for level 3 or more
+        if (restOfTheTree.length) {
+            return restOfTheTree.join('/');
+        }
+        return secondLevel || firstLevel;
+    };
+
+    const [folderNamesMap, setFoldersNameMap] = useState(
+        providerFolders.reduce<FolderNamesMap>((acc, folder) => {
+            const found = payload.Mapping.find((m) => m.Source === folder.Source);
+            acc[folder.Source] = getNameValue(
+                found?.Destinations.FolderName || folder.DestinationFolder || folder.Source,
+                folder
+            );
+            return acc;
+        }, {})
+    );
+
+    const forgeNewPath = (folder: MailImportFolder) => {
+        let sourceParentPath = getParent(folder.Source);
+        const ancestors = [];
+
+        while (sourceParentPath) {
+            ancestors.unshift(folderNamesMap[sourceParentPath]);
+            sourceParentPath = getParent(sourceParentPath);
+        }
+
+        const [firstLevel, secondLevel] = ancestors;
+
+        return [firstLevel, secondLevel, folderNamesMap[folder.Source]].filter((value) => !!value).join('/');
+    };
+
+    const folderPathsMap = useMemo(
+        () =>
+            providerFolders.reduce<FolderPathsMap>((acc, folder) => {
+                acc[folder.Source] = forgeNewPath(folder);
+                return acc;
+            }, {}),
+        [folderNamesMap, checkedFoldersMap]
+    );
+
     const disabledFoldersMap = useMemo(() => {
         return providerFolders.reduce<DisabledFoldersMap>((acc, folder) => {
-            const parentName = getParent(folder.Source);
-            acc[folder.Source] = parentName ? acc[parentName] || !checkedFoldersMap[parentName] : false;
+            const sourceParentName = getParent(folder.Source);
+            acc[folder.Source] = sourceParentName
+                ? acc[sourceParentName] || !checkedFoldersMap[sourceParentName]
+                : false;
             return acc;
         }, {});
     }, [checkedFoldersMap]);
@@ -88,7 +133,7 @@ const ImportManageFolders = ({ modalModel, address, payload, toggleEditing, onCh
         const separator = separatorSymbol === '/' ? PATH_SPLIT_REGEX : separatorSymbol;
 
         const grandChildren: string[] = children.reduce<string[]>((acc, childName) => {
-            const children = childrenRelationshipMap[childName];
+            const children = folderRelationshipsMap[childName];
 
             return [...acc, ...getDescendants(children, maxLevel, separator)];
         }, []);
@@ -96,13 +141,13 @@ const ImportManageFolders = ({ modalModel, address, payload, toggleEditing, onCh
         return [...children, ...grandChildren];
     };
 
-    const handleToggleCheck = (providerName: string, checked: boolean) => {
+    const handleToggleCheck = (source: string, checked: boolean) => {
         const newCheckedFoldersMap = {
             ...checkedFoldersMap,
-            [providerName]: checked,
+            [source]: checked,
         };
 
-        const children = childrenRelationshipMap[providerName];
+        const children = folderRelationshipsMap[source];
         const descendants = children ? getDescendants(children) : [];
 
         descendants.forEach((folderName) => (newCheckedFoldersMap[folderName] = checked));
@@ -110,23 +155,9 @@ const ImportManageFolders = ({ modalModel, address, payload, toggleEditing, onCh
         setCheckedFoldersMap(newCheckedFoldersMap);
     };
 
-    const handleRename = (providerName: string, newPath: string, previousPath: string) => {
-        const newFoldersNameMap = { ...foldersNameMap };
-
-        newFoldersNameMap[providerName] = newPath;
-
-        const found = providerFolders.find((f) => f.Source === providerName);
-        const level = found ? getLevel(found.Source, found.Separator) : undefined;
-
-        if (typeof level !== 'undefined' && level < 2) {
-            const children = childrenRelationshipMap[providerName];
-            const descendants = children ? getDescendants(children) : [];
-
-            descendants.forEach((folderName) => {
-                newFoldersNameMap[folderName] = newFoldersNameMap[folderName].replace(previousPath, newPath);
-            });
-        }
-
+    const handleRename = (source: string, newName: string) => {
+        const newFoldersNameMap = { ...folderNamesMap };
+        newFoldersNameMap[source] = escapeSlashes(newName);
         setFoldersNameMap(newFoldersNameMap);
     };
 
@@ -136,7 +167,7 @@ const ImportManageFolders = ({ modalModel, address, payload, toggleEditing, onCh
                 acc.push({
                     Source: folder.Source,
                     Destinations: {
-                        FolderName: foldersNameMap[folder.Source],
+                        FolderName: forgeNewPath(folder),
                     },
                     checked: true,
                 });
@@ -149,7 +180,7 @@ const ImportManageFolders = ({ modalModel, address, payload, toggleEditing, onCh
             ...payload,
             Mapping,
         });
-    }, [checkedFoldersMap, foldersNameMap]);
+    }, [checkedFoldersMap, folderNamesMap]);
 
     return (
         <>
@@ -182,11 +213,13 @@ const ImportManageFolders = ({ modalModel, address, payload, toggleEditing, onCh
                                     level={0}
                                     disabledFoldersMap={disabledFoldersMap}
                                     checkedFoldersMap={checkedFoldersMap}
-                                    childrenRelationshipMap={childrenRelationshipMap}
+                                    folderRelationshipsMap={folderRelationshipsMap}
                                     providerFolders={providerFolders}
-                                    foldersNameMap={foldersNameMap}
+                                    folderNamesMap={folderNamesMap}
+                                    folderPathsMap={folderPathsMap}
                                     onRename={handleRename}
                                     toggleEditing={toggleEditing}
+                                    getParent={getParent}
                                 />
                             ))}
                     </ul>

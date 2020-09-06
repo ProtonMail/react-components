@@ -122,10 +122,14 @@ export interface DisabledFoldersMap {
     [key: string]: boolean;
 }
 
-export interface ChildrenRelationshipMap {
+export interface FolderRelationshipsMap {
     [key: string]: string[];
 }
 
-export interface FoldersNameMap {
+export interface FolderNamesMap {
+    [key: string]: string;
+}
+
+export interface FolderPathsMap {
     [key: string]: string;
 }

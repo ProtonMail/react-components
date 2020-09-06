@@ -27,7 +27,7 @@ import {
 } from '../../../components';
 
 import { ImportModalModel, ImportPayloadModel } from '../interfaces';
-import { TIME_UNIT, timeUnitLabels } from '../constants';
+import { TIME_UNIT, timeUnitLabels, PATH_SPLIT_REGEX } from '../constants';
 import ImportManageFolders from './ImportManageFolders';
 
 interface Props {
@@ -53,13 +53,12 @@ const CustomizeImportModal = ({
     const { createModal } = useModals();
     const [isEditing, setIsEditing] = useState(false);
 
-    const hasFoldersTooLongError = useMemo(
-        () =>
-            customizedPayload.Mapping.some(
-                (m) => m.checked && m.Destinations.FolderName && m.Destinations.FolderName.length >= 100
-            ),
-        [customizedPayload.Mapping]
-    );
+    const hasFoldersTooLongError = useMemo(() => {
+        return customizedPayload.Mapping.some((m) => {
+            const splitted = m.Destinations.FolderName.split(PATH_SPLIT_REGEX);
+            return m.checked && splitted[splitted.length - 1].length >= 100;
+        });
+    }, [customizedPayload.Mapping]);
 
     const hasChanged = useMemo(() => {
         if (

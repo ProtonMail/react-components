@@ -8,14 +8,15 @@ import {
     DestinationFolder,
     CheckedFoldersMap,
     DisabledFoldersMap,
-    ChildrenRelationshipMap,
+    FolderRelationshipsMap,
     MailImportFolder,
-    FoldersNameMap,
+    FolderNamesMap,
+    FolderPathsMap,
 } from '../interfaces';
 
 import { PATH_SPLIT_REGEX } from '../constants';
 
-import { escapeSlashes, unescapeSlashes } from './ImportManageFolders';
+import { unescapeSlashes, escapeSlashes } from './ImportManageFolders';
 
 const FOLDER_ICONS = {
     [DestinationFolder.INBOX]: 'inbox',
@@ -41,37 +42,37 @@ const WARNINGS = {
 
 const DIMMED_OPACITY_CLASSNAME = 'opacity-30';
 
+interface WrapperProps {
+    isLabel: boolean;
+    children: React.ReactNode;
+    checkboxId: string;
+    className: string;
+}
+
+const RowWrapperComponent = ({ isLabel, children, checkboxId, className }: WrapperProps) => {
+    return isLabel ? (
+        <label htmlFor={checkboxId} className={className}>
+            {children}
+        </label>
+    ) : (
+        <div className={className}>{children}</div>
+    );
+};
+
 interface Props {
-    onRename: (providerName: string, newPath: string, previousPath: string) => void;
-    onToggleCheck: (providerName: string, checked: boolean) => void;
+    onRename: (source: string, newName: string) => void;
+    onToggleCheck: (source: string, checked: boolean) => void;
     folder: MailImportFolder;
     level: number;
     checkedFoldersMap: CheckedFoldersMap;
     disabledFoldersMap: DisabledFoldersMap;
-    childrenRelationshipMap: ChildrenRelationshipMap;
+    folderRelationshipsMap: FolderRelationshipsMap;
     providerFolders: MailImportFolder[];
-    foldersNameMap: FoldersNameMap;
+    folderNamesMap: FolderNamesMap;
+    folderPathsMap: FolderPathsMap;
     toggleEditing: (editing: boolean) => void;
+    getParent: (folderName: string) => string | undefined;
 }
-
-const getSourceDisplayName = (name: string, level: number, separator: string) => {
-    if (level === 0) {
-        return name;
-    }
-    const pop = name.split(separator === '/' ? PATH_SPLIT_REGEX : separator).pop();
-    return pop ? escapeSlashes(pop) : escapeSlashes(name);
-};
-
-const getDestinationDisplayName = (destinationPath: string, levelDestination = 0) => {
-    const splittedDestination = destinationPath.split(PATH_SPLIT_REGEX);
-    splittedDestination.splice(0, levelDestination);
-    return levelDestination ? unescapeSlashes(splittedDestination.join('/')) : unescapeSlashes(destinationPath);
-};
-
-const forgeNewPath = (initialPath: string, level: number, newName: string) => {
-    const splitted = initialPath.split(PATH_SPLIT_REGEX);
-    return [...splitted.slice(0, level), escapeSlashes(newName.trim())].join('/');
-};
 
 const ImportManageFoldersRow = ({
     folder,
@@ -79,16 +80,20 @@ const ImportManageFoldersRow = ({
     onToggleCheck,
     checkedFoldersMap,
     disabledFoldersMap,
-    childrenRelationshipMap,
+    folderRelationshipsMap,
     providerFolders,
-    foldersNameMap,
+    folderNamesMap,
+    folderPathsMap,
     onRename,
     toggleEditing,
+    getParent,
 }: Props) => {
     const { Source, Separator, DestinationFolder } = folder;
+
     const checked = checkedFoldersMap[Source];
     const disabled = disabledFoldersMap[Source];
-    const children = childrenRelationshipMap[Source].reduce<MailImportFolder[]>((acc, childName) => {
+
+    const children = folderRelationshipsMap[Source].reduce<MailImportFolder[]>((acc, childName) => {
         const found = providerFolders.find((f) => f.Source === childName);
         if (found) {
             acc.push(found);
@@ -97,33 +102,41 @@ const ImportManageFoldersRow = ({
     }, []);
 
     const levelDestination = Math.min(level, 2);
-    const destinationPath = foldersNameMap[Source];
 
-    const destinationName = getDestinationDisplayName(destinationPath, levelDestination);
+    const destinationName = folderNamesMap[Source];
 
     const inputRef = useRef<HTMLInputElement>(null);
-    const [inputValue, setInputValue] = useState(destinationName);
+    const [inputValue, setInputValue] = useState(unescapeSlashes(destinationName));
     const initialValue = useRef<string>(inputValue);
-
-    const preventDefaultAndStopPropagation = (e: React.MouseEvent) => {
-        e.preventDefault();
-        e.stopPropagation();
-    };
 
     const emptyValueError = useMemo(() => !inputValue || !inputValue.trim(), [inputValue]);
 
     const nameTooLongError = useMemo(() => {
-        const newPath = forgeNewPath(destinationPath, levelDestination, inputValue);
-        return newPath.length >= 100;
-    }, [destinationPath, inputValue]);
+        if (!checked) {
+            return false;
+        }
+        return escapeSlashes(inputValue).length >= 100;
+    }, [inputValue, checked]);
 
     const mergeWarning = useMemo(() => {
-        const newPath = forgeNewPath(destinationPath, levelDestination, inputValue);
+        if (!checked) {
+            return false;
+        }
 
-        return Object.entries(foldersNameMap).some(([sourcePath, destinationPath]) => {
-            return sourcePath !== Source && destinationPath === newPath;
+        let parentPath = getParent(folder.Source);
+        const pathParts = [inputValue];
+
+        while (parentPath) {
+            pathParts.unshift(folderNamesMap[parentPath]);
+            parentPath = getParent(parentPath);
+        }
+
+        const newPath = pathParts.join('/');
+
+        return Object.entries(folderPathsMap).some(([source, path]) => {
+            return source !== Source && path === newPath && checkedFoldersMap[source];
         });
-    }, [foldersNameMap, destinationPath, inputValue]);
+    }, [inputValue, checked, folderNamesMap, folderPathsMap, checkedFoldersMap]);
 
     const hasError = emptyValueError || nameTooLongError;
 
@@ -142,10 +155,14 @@ const ImportManageFoldersRow = ({
 
     const handleSave = (e: React.MouseEvent | React.KeyboardEvent) => {
         e.stopPropagation();
-        const newPath = forgeNewPath(destinationPath, levelDestination, inputValue);
         setEditMode(false);
-        onRename(Source, newPath, destinationPath);
+        onRename(Source, inputValue);
         initialValue.current = inputValue;
+    };
+
+    const preventDefaultAndStopPropagation = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
     };
 
     const handleCancel = (e: React.MouseEvent) => {
@@ -214,6 +231,22 @@ const ImportManageFoldersRow = ({
         );
     };
 
+    const getSourceDisplayName = () => {
+        const split = Source.split(Separator === '/' ? PATH_SPLIT_REGEX : Separator);
+
+        let parentName = '';
+
+        while (split.length && !parentName) {
+            split.pop();
+            const parent = providerFolders.find((f) => f.Source === split.join(Separator));
+            if (parent) {
+                parentName = parent.Source;
+            }
+        }
+
+        return folder.Source.replace(`${parentName}${Separator}`, '');
+    };
+
     useEffect(() => {
         if (disabled) {
             setEditMode(false);
@@ -231,18 +264,14 @@ const ImportManageFoldersRow = ({
     return (
         <li>
             <div className="border-bottom">
-                <label
-                    htmlFor={Source}
+                <RowWrapperComponent
+                    isLabel={!editMode}
+                    checkboxId={Source}
                     className={classnames([
                         'flex flex-nowrap flex-items-center pt1 pb1',
                         !checked && DIMMED_OPACITY_CLASSNAME,
                         (disabled || editMode) && 'cursor-default',
                     ])}
-                    onClick={(e: React.MouseEvent<HTMLLabelElement>) => {
-                        if (editMode) {
-                            preventDefaultAndStopPropagation(e);
-                        }
-                    }}
                 >
                     <div className="flex w40 flex-nowrap flex-items-center flex-item-noshrink pr1">
                         <div
@@ -261,13 +290,8 @@ const ImportManageFoldersRow = ({
                                 disabled={disabled}
                             />
                         </div>
-                        <div
-                            className="ml0-5 flex-item-fluid-auto ellipsis"
-                            // @todo put me back
-                            // title={getSourceDisplayName(Source, level, Separator)}
-                            title={Source}
-                        >
-                            {getSourceDisplayName(Source, level, Separator)}
+                        <div className="ml0-5 flex-item-fluid-auto ellipsis" title={getSourceDisplayName()}>
+                            {getSourceDisplayName()}
                         </div>
                     </div>
 
@@ -300,11 +324,9 @@ const ImportManageFoldersRow = ({
                                                 'flex-item-fluid-auto ellipsis',
                                                 (nameTooLongError || mergeWarning) && 'bold',
                                             ])}
-                                            // @todo put me back
-                                            // title={destinationName}
-                                            title={destinationPath}
+                                            title={destinationName}
                                         >
-                                            {destinationName}
+                                            {unescapeSlashes(destinationName)}
                                         </span>
                                         {nameTooLongError && (
                                             <Tooltip
@@ -373,7 +395,7 @@ const ImportManageFoldersRow = ({
                             )}
                         </div>
                     )}
-                </label>
+                </RowWrapperComponent>
             </div>
             {children.length > 0 && (
                 <ul className="unstyled m0">
@@ -385,11 +407,13 @@ const ImportManageFoldersRow = ({
                             level={level + 1}
                             checkedFoldersMap={checkedFoldersMap}
                             disabledFoldersMap={disabledFoldersMap}
-                            childrenRelationshipMap={childrenRelationshipMap}
+                            folderRelationshipsMap={folderRelationshipsMap}
                             providerFolders={providerFolders}
-                            foldersNameMap={foldersNameMap}
+                            folderNamesMap={folderNamesMap}
+                            folderPathsMap={folderPathsMap}
                             onRename={onRename}
                             toggleEditing={toggleEditing}
+                            getParent={getParent}
                         />
                     ))}
                 </ul>

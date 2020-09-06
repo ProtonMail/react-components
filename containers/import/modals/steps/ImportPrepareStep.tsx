@@ -14,6 +14,7 @@ import { ImportModalModel, MailImportFolder } from '../../interfaces';
 import { timeUnitLabels, TIME_UNIT, PATH_SPLIT_REGEX } from '../../constants';
 
 import CustomizeImportModal from '../CustomizeImportModal';
+import { escapeSlashes } from '../ImportManageFolders';
 
 interface Props {
     modalModel: ImportModalModel;
@@ -60,13 +61,12 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
         folders,
     ]);
 
-    const showFoldersNameError = useMemo(
-        () =>
-            payload.Mapping.some(
-                (m) => m.checked && m.Destinations.FolderName && m.Destinations.FolderName.length >= 100
-            ),
-        [payload.Mapping]
-    );
+    const showFoldersNameError = useMemo(() => {
+        return payload.Mapping.some((m) => {
+            const splitted = m.Destinations.FolderName.split(PATH_SPLIT_REGEX);
+            return m.checked && splitted[splitted.length - 1].length >= 100;
+        });
+    }, [payload.Mapping]);
 
     const handleClickCustomize = () => {
         createModal(
@@ -83,22 +83,66 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
         updateModalModel(initialModel.current);
     };
 
-    const isCustom = useMemo(() => !isDeepEqual(initialModel.current.payload, payload), [
-        initialModel.current.payload,
-        payload,
-    ]);
+    const isCustom = useMemo(() => {
+        const { ImportLabel, StartTime, EndTime, Mapping } = initialModel.current.payload;
+
+        return (
+            StartTime !== payload.StartTime ||
+            EndTime !== payload.EndTime ||
+            !isDeepEqual(ImportLabel, payload.ImportLabel) ||
+            !isDeepEqual(Mapping, payload.Mapping)
+        );
+    }, [initialModel.current.payload, payload]);
 
     useEffect(() => {
         updateModalModel({ ...modalModel, isPayloadValid: showFoldersNumError || showFoldersNameError });
     }, [showFoldersNumError, showFoldersNameError]);
 
+    const getParentSource = (folderPath: string, separator: string) => {
+        const split = folderPath.split(separator === '/' ? PATH_SPLIT_REGEX : separator);
+
+        let parentName = '';
+
+        while (split.length && !parentName) {
+            split.pop();
+            const parent = providerFolders.find((f) => f.Source === split.join(separator));
+            if (parent) {
+                parentName = parent.Source;
+            }
+        }
+
+        return parentName;
+    };
+
+    const getFolderName = (folderPath: string, separator: string) => {
+        const parentSource = getParentSource(folderPath, separator);
+
+        return escapeSlashes(folderPath.replace(`${parentSource}${separator}`, ''));
+    };
+
+    const getDestinationFolderPath = (folderPath: string, separator: string) => {
+        const folderName = getFolderName(folderPath, separator);
+        const pathParts = [folderName];
+        let parentSource = getParentSource(folderPath, separator);
+
+        while (parentSource) {
+            pathParts.unshift(getFolderName(parentSource, separator));
+            parentSource = getParentSource(parentSource, separator);
+        }
+
+        if (pathParts.length > 2) {
+            const [firstLevel, secondLevel, ...rest] = pathParts;
+            return [firstLevel, secondLevel, escapeSlashes(rest.join('/'))].join('/');
+        }
+
+        return pathParts.join('/');
+    };
+
     useEffect(() => {
         const Mapping = providerFolders.map((folder) => ({
             Source: folder.Source,
             Destinations: {
-                FolderName:
-                    folder.DestinationFolder ||
-                    folder.Source.split(folder.Separator === '/' ? PATH_SPLIT_REGEX : folder.Separator).join('/'),
+                FolderName: folder.DestinationFolder || getDestinationFolderPath(folder.Source, folder.Separator),
             },
             checked: true,
         }));
