@@ -1,4 +1,5 @@
-import { Label } from 'proton-shared/lib/interfaces/Label';
+import { LABEL_TYPE } from 'proton-shared/lib/constants';
+
 import { TIME_UNIT } from './constants';
 
 export enum DestinationFolder {
@@ -69,7 +70,12 @@ export interface FolderMapping {
 export interface ImportPayloadModel {
     AddressID?: string;
     Code?: string;
-    ImportLabel?: Partial<Label>;
+    ImportLabel?: {
+        Name: string;
+        Color: string;
+        Type: LABEL_TYPE;
+        Order: number;
+    };
     StartTime?: Date;
     EndTime?: Date;
     Mapping: FolderMapping[];

@@ -7,7 +7,7 @@ import { Address } from 'proton-shared/lib/interfaces';
 import { Label } from 'proton-shared/lib/interfaces/Label';
 import isDeepEqual from 'proton-shared/lib/helpers/isDeepEqual';
 
-import EditLabelModal from '../../labels/modals/Edit';
+import EditLabelModal from '../../labels/modals/EditLabelModal';
 
 import { useModals } from '../../../hooks';
 import {
@@ -108,10 +108,9 @@ const CustomizeImportModal = ({
                 <EditLabelModal
                     label={customizedPayload.ImportLabel}
                     type="label"
-                    onEdit={resolve}
+                    onCheckAvailable={resolve as () => undefined}
                     onClose={reject}
-                    mode="edition"
-                    dryRun
+                    mode="checkAvailable"
                 />
             );
         });
