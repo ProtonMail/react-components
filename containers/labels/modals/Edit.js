@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import { LABEL_COLORS, ROOT_FOLDER, LABEL_TYPE } from 'proton-shared/lib/constants';
 import { randomIntFromInterval } from 'proton-shared/lib/helpers/function';
-import { create as createLabel, updateLabel } from 'proton-shared/lib/api/labels';
+import { create as createLabel, updateLabel, checkLabelAvailability } from 'proton-shared/lib/api/labels';
 
 import { FormModal } from '../../../components';
 import { useEventManager, useLoading, useApi, useNotifications } from '../../../hooks';
@@ -20,7 +20,7 @@ function EditLabelModal({
     onClose,
     onAdd,
     type = 'label',
-    doNotSave = false,
+    dryRun = false,
     ...props
 }) {
     const { call } = useEventManager();
@@ -75,13 +75,22 @@ function EditLabelModal({
 
     const ACTIONS = { create, edition: update };
 
+    const checkIsAvailable = async ({ Name, Type, ParentId }) => {
+        await api(checkLabelAvailability({ Name, Type, ParentId }));
+        onEdit?.(model);
+        onClose?.();
+    };
+
     const handleSubmit = () => {
-        /* Used in Custom import modal */
-        if (doNotSave) {
-            ACTIONS[mode] === 'create' ? onAdd?.(model) : onEdit?.(model);
-            onClose?.();
+        /*
+            Dry run (dryRun prop) checks if label is available
+            and returns it. Has been added for the import modal.
+        */
+        if (dryRun) {
+            withLoading(checkIsAvailable(model));
             return;
         }
+        ACTIONS[mode] === 'create' ? onAdd?.(model) : onEdit?.(model);
         withLoading(ACTIONS[mode](model));
     };
 
@@ -140,7 +149,7 @@ EditLabelModal.propTypes = {
     onAdd: PropTypes.func,
     onEdit: PropTypes.func,
     onClose: PropTypes.func,
-    doNotSave: PropTypes.bool,
+    dryRun: PropTypes.bool,
 };
 
 export default EditLabelModal;

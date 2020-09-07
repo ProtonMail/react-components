@@ -111,7 +111,7 @@ const CustomizeImportModal = ({
                     onEdit={resolve}
                     onClose={reject}
                     mode="edition"
-                    doNotSave
+                    dryRun
                 />
             );
         });
