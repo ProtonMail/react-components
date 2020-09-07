@@ -57,6 +57,8 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
     ]);
     const selectedFoldersMessageCountLocalized = selectedFoldersMessageCount.toLocaleString();
 
+    const selectedPeriodLowerCased = timeUnitLabels[selectedPeriod].toLowerCase();
+
     const importSize = useMemo(() => selectedFolders.reduce((acc, { Size = 0 }) => acc + Size, 0), [selectedFolders]);
 
     const showSizeWarning = useMemo(() => importSize + user.UsedSpace >= user.MaxSpace * 2, [
@@ -287,7 +289,7 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
                 <div className="mb1 ml1 flex flex-items-center">
                     <Icon className="mr0-5" name="clock" />
                     {selectedPeriod === TIME_UNIT.BIG_BANG ? (
-                        c('Info').t`Import all messages since ${timeUnitLabels[selectedPeriod].toLowerCase()}`
+                        c('Info').t`Import all messages since ${selectedPeriodLowerCased}`
                     ) : (
                         <span>
                             {c('Info').jt`Import all messages since`}
