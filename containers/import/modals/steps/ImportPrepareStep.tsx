@@ -119,11 +119,14 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
     const getFolderName = (folderPath: string, separator: string) => {
         const parentSource = getParentSource(folderPath, separator);
 
-        return escapeSlashes(folderPath.replace(`${parentSource}${separator}`, ''));
+        return parentSource
+            ? escapeSlashes(folderPath.replace(`${parentSource}${separator}`, ''))
+            : escapeSlashes(folderPath);
     };
 
     const getDestinationFolderPath = (folderPath: string, separator: string) => {
         const folderName = getFolderName(folderPath, separator);
+
         const pathParts = [folderName];
         let parentSource = getParentSource(folderPath, separator);
 

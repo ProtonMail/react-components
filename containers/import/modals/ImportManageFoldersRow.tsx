@@ -244,7 +244,7 @@ const ImportManageFoldersRow = ({
             }
         }
 
-        return folder.Source.replace(`${parentName}${Separator}`, '');
+        return parentName ? folder.Source.replace(`${parentName}${Separator}`, '') : folder.Source;
     };
 
     useEffect(() => {
