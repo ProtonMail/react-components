@@ -31,7 +31,11 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
 
     const { payload, selectedPeriod } = modalModel;
 
-    const providerFoldersNum = useMemo(() => providerFolders.length, [providerFolders]);
+    const providerFoldersNum = useMemo(() => {
+        return providerFolders.length;
+    }, [providerFolders]);
+    const providerFoldersNumLocalized = providerFoldersNum.toLocaleString();
+
     const providerMessageNum = useMemo(() => providerFolders.reduce((acc, { Total }) => acc + Total, 0), [
         providerFolders,
     ]);
@@ -251,7 +255,7 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
                     <Icon className="mr0-5" name="parent-folder" />
                     {c('Info').ngettext(
                         msgid`${providerFoldersNum} folder found`,
-                        `${providerFoldersNum.toLocaleString()} folders found`,
+                        `${providerFoldersNumLocalized} folders found`,
                         providerFoldersNum
                     )}
 
