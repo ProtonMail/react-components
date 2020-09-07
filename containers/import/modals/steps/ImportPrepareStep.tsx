@@ -35,6 +35,8 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
     const providerMessageNum = useMemo(() => providerFolders.reduce((acc, { Total }) => acc + Total, 0), [
         providerFolders,
     ]);
+    const providerMessageNumLocalized = providerMessageNum.toLocaleString();
+
     const selectedFolders = useMemo(
         () =>
             payload.Mapping.filter((m) => m.checked).map(
@@ -223,7 +225,7 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
                     <Icon className="mr0-5" name="all-emails" />
                     {c('Info').ngettext(
                         msgid`${providerMessageNum} message found`,
-                        `${providerMessageNum.toLocaleString()} messages found`,
+                        `${providerMessageNumLocalized} messages found`,
                         providerMessageNum
                     )}
                 </div>

@@ -142,7 +142,7 @@ const ImportManageFoldersRow = ({
 
     const [editMode, setEditMode] = useState(hasError);
 
-    const toggleEditMode = (e: React.MouseEvent) => {
+    const toggleEditMode = () => {
         if (disabled || editMode) {
             return;
         }
