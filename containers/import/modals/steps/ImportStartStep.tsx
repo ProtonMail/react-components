@@ -1,7 +1,5 @@
-import React, { ChangeEvent, useMemo, useEffect } from 'react';
+import React, { ChangeEvent, useEffect } from 'react';
 import { c } from 'ttag';
-
-import { validateEmailAddress } from 'proton-shared/lib/helpers/email';
 
 import { Alert, Row, Label, Field, PasswordInput, EmailInput, Input } from '../../../../components';
 
@@ -11,11 +9,12 @@ import { ImportModalModel, IMPORT_ERROR } from '../../interfaces';
 interface Props {
     modalModel: ImportModalModel;
     updateModalModel: (newModel: ImportModalModel) => void;
+    needAppPassword: boolean;
+    showPassword: boolean;
 }
 
-const ImportStartStep = ({ modalModel, updateModalModel }: Props) => {
+const ImportStartStep = ({ modalModel, updateModalModel, needAppPassword, showPassword }: Props) => {
     const { email, password, needIMAPDetails, imap, port, errorCode, errorLabel } = modalModel;
-    const showPassword = useMemo(() => validateEmailAddress(email), [email]);
 
     useEffect(() => {
         if (!email) {
@@ -82,7 +81,9 @@ const ImportStartStep = ({ modalModel, updateModalModel }: Props) => {
 
             {showPassword && (
                 <Row>
-                    <Label htmlFor="password">{c('Label').t`Password`}</Label>
+                    <Label htmlFor="password">
+                        {needAppPassword ? c('Label').t`App password` : c('Label').t`Password`}
+                    </Label>
                     <Field>
                         <PasswordInput
                             id="password"
@@ -90,6 +91,7 @@ const ImportStartStep = ({ modalModel, updateModalModel }: Props) => {
                             onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
                                 updateModalModel({ ...modalModel, password: target.value })
                             }
+                            autoFocus
                             required
                             isSubmitted={!!errorLabel}
                             error={errorLabel === INVALID_CREDENTIALS_ERROR_LABEL ? errorLabel : undefined}

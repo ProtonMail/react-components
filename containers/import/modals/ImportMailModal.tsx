@@ -1,4 +1,4 @@
-import React, { useState, useMemo, FormEvent } from 'react';
+import React, { useState, useMemo, FormEvent, useEffect } from 'react';
 import { c } from 'ttag';
 
 import {
@@ -9,9 +9,18 @@ import {
     getMailImport,
 } from 'proton-shared/lib/api/mailImport';
 import { noop } from 'proton-shared/lib/helpers/function';
+import { validateEmailAddress } from 'proton-shared/lib/helpers/email';
 
 import { useLoading, useAddresses, useModals, useApi } from '../../../hooks';
-import { ConfirmModal, FormModal, Button, PrimaryButton, Alert, ErrorButton } from '../../../components';
+import {
+    ConfirmModal,
+    FormModal,
+    Button,
+    PrimaryButton,
+    Alert,
+    ErrorButton,
+    useDebounceInput,
+} from '../../../components';
 import ImportMailWizard from '../../../components/import/ImportMailWizard';
 
 import { TIME_UNIT, IMAP_CONNECTION_ERROR_LABEL } from '../constants';
@@ -70,8 +79,15 @@ const ImportMailModal = ({ onImportComplete, onClose = noop, ...rest }: Props) =
     const { createModal } = useModals();
     const [addresses, loadingAddresses] = useAddresses();
     const [address] = addresses || [];
+    const [showPassword, setShowPassword] = useState(false);
     const [modalModel, setModalModel] = useState<ImportModalModel>(DEFAULT_MODAL_MODEL);
     const api = useApi();
+
+    const needAppPassword = useMemo(() => {
+        const IMAPsWithAppPasswords = ['imap.gmail.com', 'imap.mail.yahoo.com', 'imap.yandex.com', 'imap.fastmail.com'];
+
+        return IMAPsWithAppPasswords.includes(modalModel.imap);
+    }, [modalModel.imap]);
 
     const title = useMemo(() => {
         switch (modalModel.step) {
@@ -110,6 +126,37 @@ const ImportMailModal = ({ onImportComplete, onClose = noop, ...rest }: Props) =
         );
     };
 
+    const checkAuth = async () => {
+        const { Authentication } = await api(getAuthenticationMethod({ Email: modalModel.email }));
+        const { ImapHost, ImapPort, ImporterID } = Authentication;
+
+        setModalModel({
+            ...modalModel,
+            importID: ImporterID,
+            imap: ImapHost,
+            port: ImapPort,
+        });
+
+        setShowPassword(true);
+    };
+
+    const debouncedEmail = useDebounceInput(modalModel.email);
+
+    useEffect(() => {
+        if (debouncedEmail && validateEmailAddress(debouncedEmail)) {
+            withLoading(checkAuth());
+        } else {
+            setShowPassword(false);
+        }
+    }, [debouncedEmail]);
+
+    // this one is to avoid a UI glitch when removing the email
+    useEffect(() => {
+        if (!modalModel.email) {
+            setShowPassword(false);
+        }
+    }, [modalModel.email]);
+
     const moveToPrepareStep = (importID: string, providerFolders: MailImportFolder[]) => {
         setModalModel({
             ...modalModel,
@@ -133,13 +180,10 @@ const ImportMailModal = ({ onImportComplete, onClose = noop, ...rest }: Props) =
     };
 
     const submitAuthentication = async (needIMAPDetails = false) => {
-        const { Authentication } = await api(getAuthenticationMethod({ Email: modalModel.email }));
-        const { ImapHost, ImapPort, ImporterID } = Authentication;
-
         /* If we already have an importID we can just fetch the folders and move on */
-        if (ImporterID) {
+        if (modalModel.importID) {
             try {
-                const { Importer } = await api(getMailImport(ImporterID));
+                const { Importer } = await api(getMailImport(modalModel.importID));
                 const { Folders = [] } = await api(getMailImportFolders(Importer.ID, { Code: modalModel.password }));
                 moveToPrepareStep(Importer.ID, Folders);
             } catch (error) {
@@ -148,13 +192,13 @@ const ImportMailModal = ({ onImportComplete, onClose = noop, ...rest }: Props) =
             return;
         }
 
-        if ((ImapHost && ImapPort) || needIMAPDetails) {
+        if ((modalModel.imap && modalModel.port) || needIMAPDetails) {
             try {
                 const { Importer } = await api(
                     createMailImport({
                         Email: modalModel.email,
-                        ImapHost: needIMAPDetails ? modalModel.imap : ImapHost,
-                        ImapPort: needIMAPDetails ? parseInt(modalModel.port) : ImapPort,
+                        ImapHost: modalModel.imap,
+                        ImapPort: parseInt(modalModel.port),
                         Sasl: 'PLAIN',
                         Code: modalModel.password,
                     })
@@ -170,7 +214,6 @@ const ImportMailModal = ({ onImportComplete, onClose = noop, ...rest }: Props) =
         setModalModel({
             ...modalModel,
             imap: '',
-            port: ImapPort,
             needIMAPDetails: true,
         });
     };
@@ -269,6 +312,8 @@ const ImportMailModal = ({ onImportComplete, onClose = noop, ...rest }: Props) =
                 <ImportStartStep
                     modalModel={modalModel}
                     updateModalModel={(newModel: ImportModalModel) => setModalModel(newModel)}
+                    needAppPassword={needAppPassword}
+                    showPassword={showPassword}
                 />
             )}
             {modalModel.step === Step.PREPARE && (
