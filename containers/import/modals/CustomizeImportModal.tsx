@@ -230,19 +230,19 @@ const CustomizeImportModal = ({
                             options={[
                                 {
                                     value: TIME_UNIT.BIG_BANG,
-                                    text: c('Option').t`${timeUnitLabels[TIME_UNIT.BIG_BANG]}`,
+                                    text: timeUnitLabels[TIME_UNIT.BIG_BANG],
                                 },
                                 {
                                     value: TIME_UNIT.LAST_YEAR,
-                                    text: c('Option').t`${timeUnitLabels[TIME_UNIT.LAST_YEAR]}`,
+                                    text: timeUnitLabels[TIME_UNIT.LAST_YEAR],
                                 },
                                 {
                                     value: TIME_UNIT.LAST_3_MONTHS,
-                                    text: c('Option').t`${timeUnitLabels[TIME_UNIT.LAST_3_MONTHS]}`,
+                                    text: timeUnitLabels[TIME_UNIT.LAST_3_MONTHS],
                                 },
                                 {
                                     value: TIME_UNIT.LAST_MONTH,
-                                    text: c('Option').t`${timeUnitLabels[TIME_UNIT.LAST_MONTH]}`,
+                                    text: timeUnitLabels[TIME_UNIT.LAST_MONTH],
                                 },
                             ]}
                             value={selectedPeriod}
