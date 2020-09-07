@@ -17,6 +17,7 @@ type KeyOfUnion<T> = T extends any ? keyof T : never;
  * @param sources Array of functions returning entries
  * @param keys Array of entries' keys to search, all by default
  * @param mapFn Function that accepts a list of items collected from sources and returns a subset of that list, do sorting/filter here
+ * @param highlightFn Function that accepts a string and wraps it with element you need, <mark /> by default
  * @param inputValue Search string
  * @param minSymbols Minimum symbols to start searching
  * @param resetField
@@ -54,7 +55,9 @@ function useSearch<T, K = keyof SearchableObject<T>>({
 
     const searchSuggestions = useMemo(() => {
         const matchString = sanitizeString(inputValue).toLowerCase();
-        if (matchString.length < minSymbols) return [];
+        if (matchString.length < minSymbols) {
+            return [];
+        }
         let itemList = sources.flatMap((source) => source(matchString));
         // theoretically, this is an error in types, but it's the only way to let typescript
         // typecheck keys and mapFn arguments without doing the work in runtime
