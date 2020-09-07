@@ -49,6 +49,8 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
             ),
         [payload.Mapping, providerFolders]
     );
+    const selectedFoldersCountLocalized = selectedFolders.length.toLocaleString();
+
     const selectedFoldersMessageCount = useMemo(() => selectedFolders.reduce((acc, { Total = 0 }) => acc + Total, 0), [
         payload.Mapping,
         providerFolders,
@@ -275,7 +277,7 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
                             <Icon className="mr0-5" name="parent-folder" />
                             {c('Info').ngettext(
                                 msgid`${selectedFolders.length} folder selected`,
-                                `${selectedFolders.length.toLocaleString()} folders selected`,
+                                `${selectedFoldersCountLocalized} folders selected`,
                                 selectedFolders.length
                             )}
                         </strong>
