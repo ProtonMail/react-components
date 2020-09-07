@@ -49,6 +49,7 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
         payload.Mapping,
         providerFolders,
     ]);
+    const selectedFoldersMessageCountLocalized = selectedFoldersMessageCount.toLocaleString();
 
     const importSize = useMemo(() => selectedFolders.reduce((acc, { Size = 0 }) => acc + Size, 0), [selectedFolders]);
 
@@ -239,7 +240,7 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
                         <strong>
                             {c('Info').ngettext(
                                 msgid`${selectedFoldersMessageCount} message selected`,
-                                `${selectedFoldersMessageCount.toLocaleString()} messages selected`,
+                                `${selectedFoldersMessageCountLocalized} messages selected`,
                                 selectedFoldersMessageCount
                             )}
                         </strong>
