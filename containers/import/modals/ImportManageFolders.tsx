@@ -14,10 +14,14 @@ import {
     FolderNamesMap,
     FolderPathsMap,
 } from '../interfaces';
+
 import { PATH_SPLIT_REGEX } from '../constants';
 
-import ImportManageFoldersRow from './ImportManageFoldersRow';
+import { escapeSlashes } from '../helpers';
+
 import { Alert } from '../../../components';
+
+import ImportManageFoldersRow from './ImportManageFoldersRow';
 
 interface Props {
     modalModel: ImportModalModel;
@@ -26,9 +30,6 @@ interface Props {
     onChangePayload: (newPayload: ImportPayloadModel) => void;
     toggleEditing: (editing: boolean) => void;
 }
-
-export const escapeSlashes = (s: string) => s.split(PATH_SPLIT_REGEX).join('\\\\/');
-export const unescapeSlashes = (s: string) => s.split('\\\\/').join('/');
 
 const ImportManageFolders = ({ modalModel, address, payload, toggleEditing, onChangePayload }: Props) => {
     const { providerFolders } = modalModel;
@@ -69,7 +70,7 @@ const ImportManageFolders = ({ modalModel, address, payload, toggleEditing, onCh
 
     const getParent = (folderName: string) => {
         const [parentName] =
-            Object.entries(folderRelationshipsMap).find(([_, children]) => {
+            Object.entries(folderRelationshipsMap).find(([, children]) => {
                 return children.includes(folderName);
             }) || [];
         return parentName;

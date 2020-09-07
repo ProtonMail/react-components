@@ -94,7 +94,7 @@ const RowActions = ({ ID, State, callback }: RowActionsProps) => {
     return <DropdownActions key="actions" loading={loadingActions} className="pm-button--small" list={list} />;
 };
 
-const CurrentImportsSection = forwardRef(({}, ref) => {
+const CurrentImportsSection = forwardRef((_props, ref) => {
     const api = useApi();
     const [imports, setImports] = useState<ImportMail[]>([]);
     const [loading, withLoading] = useLoading();

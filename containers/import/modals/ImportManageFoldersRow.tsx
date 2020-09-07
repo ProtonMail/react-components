@@ -16,7 +16,7 @@ import {
 
 import { PATH_SPLIT_REGEX } from '../constants';
 
-import { unescapeSlashes, escapeSlashes } from './ImportManageFolders';
+import { escapeSlashes, unescapeSlashes } from '../helpers';
 
 const FOLDER_ICONS = {
     [DestinationFolder.INBOX]: 'inbox',

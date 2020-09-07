@@ -12,9 +12,9 @@ import { Icon, LabelStack, Button, Alert, Loader, Tooltip, InlineLinkButton } fr
 
 import { ImportModalModel, MailImportFolder } from '../../interfaces';
 import { timeUnitLabels, TIME_UNIT, PATH_SPLIT_REGEX } from '../../constants';
+import { escapeSlashes } from '../../helpers';
 
 import CustomizeImportModal from '../CustomizeImportModal';
-import { escapeSlashes } from '../ImportManageFolders';
 
 interface Props {
     modalModel: ImportModalModel;
