@@ -79,10 +79,7 @@ const EditorLinkModal = ({ inputLink, onSubmit, onClose, ...rest }: Props) => {
             onClose={onClose}
             {...rest}
         >
-            <Alert>
-                {c('Info')
-                    .t`In the first box, put the link/email/phone number the text should go to. In the second box, put the text you want to appear.`}
-            </Alert>
+            <Alert>{c('Info').t`Please select the type of link you want to insert and fill in all the fields.`}</Alert>
             <Row>
                 <Label htmlFor="link-modal-type" className="flex flex-column">
                     {c('Info').t`Link type`}
@@ -131,7 +128,7 @@ const EditorLinkModal = ({ inputLink, onSubmit, onClose, ...rest }: Props) => {
                     {url && label ? (
                         <Href url={getActualUrl(url, type)}>{label}</Href>
                     ) : (
-                        <span className="placeholder">{c('Info').t`Fill url and text to test your link`}</span>
+                        <span className="placeholder">{c('Info').t`Fill in the url and text to test your link`}</span>
                     )}
                 </Field>
             </Row>
