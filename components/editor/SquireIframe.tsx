@@ -56,19 +56,21 @@ const SquireIframe = forwardRef(
                     setSquireReady(true);
                     onReady();
                 } catch (error) {
-                    const button = (
-                        <LinkButton
-                            className="alignbaseline nodecoration bold pm-button--currentColor"
-                            onClick={() => {
-                                window.location.reload();
-                            }}
-                        >
-                            {c('Error').t`please refresh the page`}
-                        </LinkButton>
-                    );
                     createNotification({
                         type: 'error',
-                        text: c('Error').jt`The editor failed to initialize, ${button}.`,
+                        text: (
+                            <>
+                                {c('Error').t`The composer failed to load.` + ' '}
+                                <LinkButton
+                                    className="alignbaseline nodecoration bold pm-button--currentColor"
+                                    onClick={() => {
+                                        window.location.reload();
+                                    }}
+                                >
+                                    {c('Error').t`Please refresh the page.`}
+                                </LinkButton>
+                            </>
+                        ),
                         expiration: 20000,
                     });
                 }
