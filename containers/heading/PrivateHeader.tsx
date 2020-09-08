@@ -12,6 +12,7 @@ import { AppsDropdown, TopNavbar } from '../app';
 import SupportDropdown from './SupportDropdown';
 import UpgradeButton from './UpgradeButton';
 import UpgradeVPNButton from './UpgradeVPNButton';
+import BlackFridayNavbarLink from '../payments/subscription/BlackFridayNavbarLink';
 
 interface Props extends HeaderProps {
     logo?: React.ReactNode;
@@ -73,6 +74,7 @@ const PrivateHeader = ({
             {isNarrow ? null : searchBox}
             <TopNavbar>
                 {isNarrow && searchDropdown ? <TopNavbarItem>{searchDropdown}</TopNavbarItem> : null}
+                <BlackFridayNavbarLink />
                 {hasPaidMail || isNarrow || isVPN ? null : (
                     <TopNavbarItem>
                         <UpgradeButton />
