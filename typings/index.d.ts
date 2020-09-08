@@ -14,14 +14,13 @@ declare module 'is-valid-domain';
 declare class ResizeObserver {
     constructor(callback: ResizeObserverCallback);
     disconnect: () => void;
-    observe: (
-        target: Element,
-        options?: {
-            box?: 'content-box' | 'border-box';
-        }
-    ) => void;
+    observe: (target: Element, options?: ResizeObserverOptions) => void;
     unobserve: (target: Element) => void;
 }
+
+type ResizeObserverOptions = {
+    box?: 'content-box' | 'border-box';
+};
 
 type ResizeObserverCallback = (entries: ResizeObserverEntry[], observer: ResizeObserver) => void;
 
