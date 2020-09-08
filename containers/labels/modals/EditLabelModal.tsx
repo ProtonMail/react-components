@@ -8,13 +8,12 @@ import { create as createLabel, updateLabel, checkLabelAvailability } from 'prot
 import { FormModal } from '../../../components';
 import { useEventManager, useLoading, useApi, useNotifications } from '../../../hooks';
 import NewLabelForm from '../NewLabelForm';
+import { Folder } from 'proton-shared/lib/interfaces/Folder';
+import { Label } from 'proton-shared/lib/interfaces/Label';
 
-interface ModalModel {
+interface ModalModel extends Pick<Folder | Label, 'Name' | 'Color' | 'Type'> {
     ID?: string;
-    Name: string;
-    Color: string;
-    Type: LABEL_TYPE;
-    ParentID?: string;
+    ParentID?: string | number;
     Notify?: number;
 }
 
@@ -54,7 +53,7 @@ const EditLabelModal = ({
     );
 
     const create = async (label: ModalModel) => {
-        const { Label }: { Label: ModalModel } = await api(createLabel(label));
+        const { Label } = await api(createLabel(label));
         await call();
         createNotification({
             text: c('label/folder notification').t`${Label.Name} created`,
@@ -65,7 +64,7 @@ const EditLabelModal = ({
 
     const update = async (label: ModalModel) => {
         if (label.ID) {
-            const { Label }: { Label: ModalModel } = await api(updateLabel(label.ID, label));
+            const { Label } = await api(updateLabel(label.ID, label));
             await call();
             createNotification({
                 text: c('Filter notification').t`${Label.Name} updated`,
@@ -75,8 +74,8 @@ const EditLabelModal = ({
         onClose();
     };
 
-    const checkIsAvailable = async ({ Name, Type, ParentID }: ModalModel) => {
-        await api(checkLabelAvailability({ Name, Type, ParentID }));
+    const checkIsAvailable = async (label: ModalModel) => {
+        await api(checkLabelAvailability(label));
         onCheckAvailable(model);
         onClose();
     };
