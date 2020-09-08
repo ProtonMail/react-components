@@ -25,7 +25,7 @@ const getElementRect = (target) => {
     return target.getBoundingClientRect();
 };
 
-const useElementRect = (ref) => {
+const useElementRect = (ref, rateLimiter = debounce) => {
     const [elementRect, setElementRect] = useState(() => getElementRect(ref.current));
 
     useLayoutEffect(() => {
@@ -41,8 +41,8 @@ const useElementRect = (ref) => {
         };
 
         if (typeof ResizeObserver === 'function') {
-            // eslint-disable-next-line no-unused-vars
-            const onResize = debounce(([{ contentRect }]) => {
+            // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+            const onResize = rateLimiter(([{ contentRect }]) => {
                 // The contentRect does not give correct global positions?
                 // setElementRect((old) => reducer(old, contentRect));
                 setElementRect((old) => reducer(old, getElementRect(target)));
@@ -55,7 +55,7 @@ const useElementRect = (ref) => {
             };
         }
 
-        const onResize = debounce(() => {
+        const onResize = rateLimiter(() => {
             setElementRect((old) => reducer(old, getElementRect(target)));
         }, 100);
         window.addEventListener('resize', onResize);
