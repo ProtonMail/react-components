@@ -50,7 +50,7 @@ const RowActions = ({ currentImport, callback }: RowActionsProps) => {
         createNotification({ text: c('Success').t`Import resumed` });
     };
 
-    const handleReconnect = async (importID: string) => {
+    const handleReconnect = async () => {
         createModal(<ImportMailModal currentImport={currentImport} onImportComplete={callback} />);
     };
 
@@ -91,7 +91,7 @@ const RowActions = ({ currentImport, callback }: RowActionsProps) => {
         list.push({
             text: isAuthError ? c('Action').t`Reconnect` : c('Action').t`Resume`,
             onClick: () => {
-                isAuthError ? withLoadingActions(handleResume(ID)) : withLoadingActions(handleReconnect(ID));
+                isAuthError ? withLoadingActions(handleResume(ID)) : withLoadingActions(handleReconnect());
             },
         });
     }
