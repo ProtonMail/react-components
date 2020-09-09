@@ -60,7 +60,7 @@ const DeleteButton = ({ ID, callback }: DeleteButtonProps) => {
             );
         });
         await api(deleteMailImportReport(ID));
-        await callback();
+        callback();
         createNotification({ text: c('Success').t`Import record deleted` });
     };
 
