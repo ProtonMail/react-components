@@ -15,12 +15,13 @@ import {
     DropdownActions,
     Badge,
     ConfirmModal,
-    // Tooltip,
-    // Icon,
+    Tooltip,
+    Icon,
     ErrorButton,
 } from '../../components';
 
-import { ImportMail, ImportMailStatus } from './interfaces';
+import { ImportMail, ImportMailStatus, ImportMailError } from './interfaces';
+import ImportMailModal from './modals/ImportMailModal';
 
 interface ImportsFromServer {
     Active: ImportMail;
@@ -32,12 +33,12 @@ interface ImportsFromServer {
 }
 
 interface RowActionsProps {
-    ID: string;
+    currentImport: ImportMail;
     callback: () => void;
-    State: ImportMailStatus;
 }
 
-const RowActions = ({ ID, State, callback }: RowActionsProps) => {
+const RowActions = ({ currentImport, callback }: RowActionsProps) => {
+    const { ID, State, ErrorCode } = currentImport;
     const api = useApi();
     const { createModal } = useModals();
     const { createNotification } = useNotifications();
@@ -49,19 +50,30 @@ const RowActions = ({ ID, State, callback }: RowActionsProps) => {
         createNotification({ text: c('Success').t`Import resumed` });
     };
 
+    const handleReconnect = async (importID: string) => {
+        createModal(<ImportMailModal currentImport={currentImport} onImportComplete={callback} />);
+    };
+
     const handleCancel = async (importID: string) => {
         await new Promise((resolve, reject) => {
             createModal(
                 <ConfirmModal
                     onConfirm={resolve}
                     onClose={reject}
-                    title={c('Confirm modal title').t`Import is not finished. Cancel anyway?`}
-                    cancel={c('Action').t`Back to import`}
+                    title={
+                        ErrorCode
+                            ? c('Confirm modal title').t`Import is incomplete!`
+                            : c('Confirm modal title').t`Import is not finished. Cancel anyway?`
+                    }
+                    cancel={ErrorCode ? c('Action').t`Continue import` : c('Action').t`Back to import`}
                     confirm={<ErrorButton type="submit">{c('Action').t`Cancel import`}</ErrorButton>}
                 >
                     <Alert type="error">
-                        {c('Warning')
-                            .t`To finish importing, you will have to start over. All progress so far was saved in your Proton account.`}
+                        {ErrorCode
+                            ? c('Warning')
+                                  .t`If you quit, you will not be able to resume this import. All progress has been saved in your Proton account. Quit anyway?`
+                            : c('Warning')
+                                  .t`To finish importing, you will have to start over. All progress so far was saved in your Proton account.`}
                     </Alert>
                 </ConfirmModal>
             );
@@ -73,20 +85,22 @@ const RowActions = ({ ID, State, callback }: RowActionsProps) => {
 
     const list = [];
 
+    if (State === ImportMailStatus.PAUSED) {
+        const isAuthError = ErrorCode === ImportMailError.ERROR_CODE_IMAP_CONNECTION;
+
+        list.push({
+            text: isAuthError ? c('Action').t`Reconnect` : c('Action').t`Resume`,
+            onClick: () => {
+                isAuthError ? withLoadingActions(handleResume(ID)) : withLoadingActions(handleReconnect(ID));
+            },
+        });
+    }
+
     if (State !== ImportMailStatus.CANCELED) {
         list.push({
             text: c('Action').t`Cancel`,
             onClick: () => {
                 withLoadingActions(handleCancel(ID));
-            },
-        });
-    }
-
-    if (State === ImportMailStatus.PAUSED) {
-        list.push({
-            text: c('Action').t`Resume`,
-            onClick: () => {
-                withLoadingActions(handleResume(ID));
             },
         });
     }
@@ -109,6 +123,8 @@ const CurrentImportsSection = forwardRef((_props, ref) => {
                     ...i.Active,
                     ID: i.ID,
                     Email: i.Email,
+                    ImapHost: i.ImapHost,
+                    ImapPort: `${i.ImapPort}`,
                 }))
         );
     };
@@ -137,9 +153,34 @@ const CurrentImportsSection = forwardRef((_props, ref) => {
         return <Alert>{c('Info').t`No imports in progress`}</Alert>;
     }
 
+    const hasStoragePausedImports = imports.some(({ State, ErrorCode }: ImportMail) => {
+        return State === ImportMailStatus.PAUSED && ErrorCode === ImportMailError.ERROR_CODE_QUOTA_LIMIT;
+    });
+    const hasAuthPausedImports = imports.some(({ State, ErrorCode }: ImportMail) => {
+        return State === ImportMailStatus.PAUSED && ErrorCode === ImportMailError.ERROR_CODE_IMAP_CONNECTION;
+    });
+
     return (
         <>
-            <Alert>{c('Info').t`Check the status of your imports in progress`}</Alert>
+            {!hasStoragePausedImports && !hasAuthPausedImports && (
+                <Alert>{c('Info').t`Check the status of your imports in progress`}</Alert>
+            )}
+            {hasStoragePausedImports && (
+                <Alert type="warning">
+                    {c('Info')
+                        .t`Proton paused an import because your ProtonMail account is running out of space. To resume this import:`}
+                    <ul className="m0">
+                        <li>{c('Info').t`delete older messages to free up space`}</li>
+                        <li>{c('Info').t`upgrade your plan to get additional storage`}</li>
+                    </ul>
+                </Alert>
+            )}
+            {hasAuthPausedImports && (
+                <Alert type="warning">
+                    {c('Info')
+                        .t`Proton paused an import because it lost the connection with your other email provider. Please reconnect.`}
+                </Alert>
+            )}
             <Table>
                 <TableHeader
                     cells={[
@@ -150,7 +191,8 @@ const CurrentImportsSection = forwardRef((_props, ref) => {
                     ]}
                 />
                 <TableBody>
-                    {imports.map(({ ID, Email, State, CreateTime, Mapping = [] }, index) => {
+                    {imports.map((currentImport, index) => {
+                        const { Email, State, ErrorCode, CreateTime, Mapping = [] } = currentImport;
                         const { total, processed } = Mapping.reduce(
                             (acc, { Total = 0, Processed = 0 }) => {
                                 acc.total += Total;
@@ -167,18 +209,18 @@ const CurrentImportsSection = forwardRef((_props, ref) => {
                                 return (
                                     <>
                                         <Badge type="warning">{c('Import status').t`Paused`}</Badge>
-                                        {/*
-                                        <Tooltip title={c('Tooltip').t`Account is disconnected.`}>
-                                            <Icon name="attention-plain" />
-                                        </Tooltip>
 
-                                        <Tooltip
-                                            title={c('Tooltip')
-                                                .t`ProtonMail mailbox is almost full. Please free up some space or upgrade your plan to resume the import.`}
-                                        >
-                                            <Icon name="attention-plain" />
-                                        </Tooltip>
-                                        */}
+                                        {ErrorCode === ImportMailError.ERROR_CODE_IMAP_CONNECTION && (
+                                            <Tooltip title={c('Tooltip').t`Account is disconnected`}>
+                                                <Icon name="attention-plain" />
+                                            </Tooltip>
+                                        )}
+
+                                        {ErrorCode === ImportMailError.ERROR_CODE_QUOTA_LIMIT && (
+                                            <Tooltip title={c('Tooltip').t`Your ProtonMail inbox is almost full`}>
+                                                <Icon name="attention-plain" />
+                                            </Tooltip>
+                                        )}
                                     </>
                                 );
                             }
@@ -197,7 +239,7 @@ const CurrentImportsSection = forwardRef((_props, ref) => {
                                     </div>,
                                     badgeRenderer(),
                                     <time key="importDate">{format(CreateTime * 1000, 'PPp')}</time>,
-                                    <RowActions key="actions" ID={ID} State={State} callback={fetch} />,
+                                    <RowActions key="actions" currentImport={currentImport} callback={fetch} />,
                                 ]}
                             />
                         );

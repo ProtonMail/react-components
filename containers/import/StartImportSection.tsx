@@ -12,7 +12,9 @@ interface Props {
 
 const StartImportSection = ({ onImportComplete }: Props) => {
     const { createModal } = useModals();
+
     const handleClick = () => createModal(<ImportMailModal onImportComplete={onImportComplete} />);
+
     return (
         <>
             <Alert learnMore="https://protonmail.com/support/knowledge-base/">
