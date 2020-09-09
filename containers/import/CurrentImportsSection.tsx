@@ -34,10 +34,11 @@ interface ImportsFromServer {
 
 interface RowActionsProps {
     currentImport: ImportMail;
-    callback: () => void;
+    fetchCurrentImports: () => void;
+    fetchPastImports: () => void;
 }
 
-const RowActions = ({ currentImport, callback }: RowActionsProps) => {
+const RowActions = ({ currentImport, fetchCurrentImports, fetchPastImports }: RowActionsProps) => {
     const { ID, State, ErrorCode } = currentImport;
     const api = useApi();
     const { createModal } = useModals();
@@ -46,13 +47,13 @@ const RowActions = ({ currentImport, callback }: RowActionsProps) => {
 
     const handleResume = async (importID: string) => {
         await api(resumeMailImport(importID));
-        callback();
+        fetchCurrentImports();
         createNotification({ text: c('Success').t`Import resumed` });
     };
 
     const handleReconnect = async () => {
-        await createModal(<ImportMailModal currentImport={currentImport} onImportComplete={callback} />);
-        callback();
+        await createModal(<ImportMailModal currentImport={currentImport} onImportComplete={fetchCurrentImports} />);
+        fetchCurrentImports();
     };
 
     const handleCancel = async (importID: string) => {
@@ -80,7 +81,8 @@ const RowActions = ({ currentImport, callback }: RowActionsProps) => {
             );
         });
         await api(cancelMailImport(importID));
-        callback();
+        fetchPastImports();
+        fetchCurrentImports();
         createNotification({ text: c('Success').t`Import canceled` });
     };
 
@@ -109,7 +111,11 @@ const RowActions = ({ currentImport, callback }: RowActionsProps) => {
     return <DropdownActions key="actions" loading={loadingActions} className="pm-button--small" list={list} />;
 };
 
-const CurrentImportsSection = forwardRef((_props, ref) => {
+interface Props {
+    fetchPastImports: () => void;
+}
+
+const CurrentImportsSection = forwardRef(({ fetchPastImports }: Props, ref) => {
     const api = useApi();
     const [imports, setImports] = useState<ImportMail[]>([]);
     const [loading, withLoading] = useLoading();
@@ -240,7 +246,12 @@ const CurrentImportsSection = forwardRef((_props, ref) => {
                                     </div>,
                                     badgeRenderer(),
                                     <time key="importDate">{format(CreateTime * 1000, 'PPp')}</time>,
-                                    <RowActions key="actions" currentImport={currentImport} callback={fetch} />,
+                                    <RowActions
+                                        key="actions"
+                                        currentImport={currentImport}
+                                        fetchCurrentImports={fetch}
+                                        fetchPastImports={fetchPastImports}
+                                    />,
                                 ]}
                             />
                         );
