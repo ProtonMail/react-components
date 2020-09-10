@@ -10,7 +10,7 @@ import Country from './Country';
 import ServerNumber from './ServerNumber';
 import CityNumber from './CityNumber';
 import { isP2PEnabled, isTorEnabled } from './utils';
-import { P2P, Tor } from './ConfigsTable';
+import { P2PIcon, TorIcon } from './ConfigsTable';
 
 const getServerNum = (server) => Number(server.Name.replace('-TOR', '').split('#')[1]);
 const getServerRegion = (server) => server.Name.split('#')[0];
@@ -65,15 +65,9 @@ const ServerConfigs = ({ servers, category, ...rest }) => {
                                 {category === CATEGORY.SERVER ? (
                                     <div className="w33 flex flex-spacebetween">
                                         <CityNumber group={group} />
-                                        <div className="flex">
-                                            {category === CATEGORY.SERVER &&
-                                            group.some((s) => isP2PEnabled(s.Features)) ? (
-                                                <P2P />
-                                            ) : null}
-                                            {category === CATEGORY.SERVER &&
-                                            group.some((s) => isTorEnabled(s.Features)) ? (
-                                                <Tor />
-                                            ) : null}
+                                        <div className={classnames([category === CATEGORY.SERVER ? 'flex' : ''])}>
+                                            {group.some(({ Features }) => isP2PEnabled(Features)) ? <P2PIcon /> : null}
+                                            {group.some(({ Features }) => isTorEnabled(Features)) ? <TorIcon /> : null}
                                         </div>
                                     </div>
                                 ) : null}
