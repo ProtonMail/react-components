@@ -147,7 +147,9 @@ const DateInput = ({
                 onKeyDown={handleKeyDown}
                 value={showTemporary ? temporaryInput : currentInput}
                 onChange={handleInputChange}
-                placeholder={placeholder !== undefined ? placeholder : `${c('Title').t`ex: `}${placeholderInLocale}`}
+                placeholder={
+                    placeholder !== undefined ? placeholder : `${c('Placeholder').t`E.g., `}${placeholderInLocale}`
+                }
                 autoFocus={autoFocus}
                 {...rest}
             />
