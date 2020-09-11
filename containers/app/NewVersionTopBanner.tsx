@@ -4,7 +4,6 @@ import { APPS_CONFIGURATION } from 'proton-shared/lib/constants';
 
 import { LinkButton } from '../../components';
 import { useConfig } from '../../hooks';
-
 import TopBanner from './TopBanner';
 
 const NewVersionTopBanner = () => {
@@ -14,15 +13,21 @@ const NewVersionTopBanner = () => {
 
     const isNewVersionAvailable = async () => {
         const { commit } = await fetch(VERSION_PATH).then((response) => response.json());
-        return isDifferent(commit, COMMIT_RELEASE);
+        setNewVersionAvailable(isDifferent(commit, COMMIT_RELEASE));
     };
 
     useEffect(() => {
+        isNewVersionAvailable();
         const intervalID = setInterval(() => {
-            isNewVersionAvailable().then(setNewVersionAvailable);
-        }, 5 * 1000);
+            isNewVersionAvailable();
+        }, 30 * 60 * 1000);
         return () => clearInterval(intervalID);
     }, []);
+
+    // No banner during local development
+    if (window.location.hostname === 'localhost') {
+        return null;
+    }
 
     if (!newVersionAvailable) {
         return null;
@@ -30,7 +35,9 @@ const NewVersionTopBanner = () => {
 
     const appName = APPS_CONFIGURATION[APP_NAME].name;
     const reloadTab = () => window.location.reload();
-    const reloadButton = () => <LinkButton onClick={() => reloadTab()}>{c('Action').t`Reload tab`}</LinkButton>;
+    const reloadButton = (
+        <LinkButton className="color-currentColor" onClick={() => reloadTab()}>{c('Action').t`Reload tab`}</LinkButton>
+    );
 
     return (
         <TopBanner className="bg-global-attention">
