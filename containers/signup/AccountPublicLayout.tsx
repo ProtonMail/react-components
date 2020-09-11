@@ -15,7 +15,7 @@ import './AccountPublicLayout.scss';
 export interface Props {
     children: ReactNode;
     title: string;
-    subtitle?: string;
+    subtitle?: ReactNode;
     aside?: ReactNode;
     right?: ReactNode;
     left?: ReactNode;
