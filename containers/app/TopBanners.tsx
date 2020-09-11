@@ -5,9 +5,9 @@ import { c } from 'ttag';
 import { getAccountSettingsApp } from 'proton-shared/lib/apps/helper';
 
 import { useUser, useOnline, useConfig } from '../../hooks';
-import TopBanner from './TopBanner';
 import AppLink from '../../components/link/AppLink';
 import NewVersionTopBanner from './NewVersionTopBanner';
+import TopBanner from './TopBanner';
 
 const IGNORE_STORAGE_LIMIT_KEY = 'ignore-storage-limit';
 
