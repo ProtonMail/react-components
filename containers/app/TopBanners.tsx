@@ -7,6 +7,7 @@ import { getAccountSettingsApp } from 'proton-shared/lib/apps/helper';
 import { useUser, useOnline, useConfig } from '../../hooks';
 import TopBanner from './TopBanner';
 import AppLink from '../../components/link/AppLink';
+import NewVersionTopBanner from './NewVersionTopBanner';
 
 const IGNORE_STORAGE_LIMIT_KEY = 'ignore-storage-limit';
 
@@ -106,6 +107,7 @@ const TopBanners = () => {
             {onlineStatus && backOnline ? (
                 <TopBanner className="bg-global-success">{c('Info').t`Internet connection restored.`}</TopBanner>
             ) : null}
+            <NewVersionTopBanner />
         </>
     );
 };
