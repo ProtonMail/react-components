@@ -6,10 +6,12 @@ import { LinkButton } from '../../components';
 import { useConfig } from '../../hooks';
 import TopBanner from './TopBanner';
 
+const EVERY_THIRTY_MINUTES = 30 * 60 * 1000;
+const isDifferent = (a?: string, b?: string) => !!a && !!b && b !== a;
+
 const NewVersionTopBanner = () => {
     const { VERSION_PATH, COMMIT_RELEASE, APP_NAME } = useConfig();
     const [newVersionAvailable, setNewVersionAvailable] = useState(false);
-    const isDifferent = (a?: string, b?: string) => !!a && b !== a;
 
     const isNewVersionAvailable = async () => {
         const { commit } = await fetch(VERSION_PATH).then((response) => response.json());
@@ -20,7 +22,7 @@ const NewVersionTopBanner = () => {
         isNewVersionAvailable();
         const intervalID = setInterval(() => {
             isNewVersionAvailable();
-        }, 30 * 60 * 1000);
+        }, EVERY_THIRTY_MINUTES);
         return () => clearInterval(intervalID);
     }, []);
 
