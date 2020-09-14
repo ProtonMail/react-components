@@ -6,6 +6,7 @@ import { requestFork } from 'proton-shared/lib/authentication/sessionForking';
 import { FORK_TYPE } from 'proton-shared/lib/authentication/ForkInterface';
 import { updateThemeType } from 'proton-shared/lib/api/settings';
 import { ThemeTypes } from 'proton-shared/lib/themes/themes';
+import humanSize from 'proton-shared/lib/helpers/humanSize';
 
 import {
     useAuthentication,
@@ -17,7 +18,7 @@ import {
     useEventManager,
     useUserSettings,
 } from '../../hooks';
-import { usePopperAnchor, Dropdown, Icon, Toggle, PrimaryButton, AppLink } from '../../components';
+import { usePopperAnchor, Dropdown, Icon, Toggle, PrimaryButton, AppLink, Meter } from '../../components';
 import { generateUID } from '../../helpers';
 import { ToggleState } from '../../components/toggle/Toggle';
 import UserDropdownButton from './UserDropdownButton';
@@ -29,12 +30,14 @@ const UserDropdown = ({ ...rest }) => {
     const { call } = useEventManager();
     const [user] = useUser();
     const [userSettings] = useUserSettings();
+    const { UsedSpace, MaxSpace } = user;
+    const spacePercentage = Math.round((UsedSpace * 100) / MaxSpace);
+    const spaceHuman = `${humanSize(UsedSpace)} / ${humanSize(MaxSpace)}`;
     const { logout } = useAuthentication();
     const { createModal } = useModals();
     const [uid] = useState(generateUID('dropdown'));
     const { anchorRef, isOpen, toggle, close } = usePopperAnchor<HTMLButtonElement>();
     const [loading, withLoading] = useLoading();
-    const nameToDisplay = user.DisplayName || user.Name; // nameToDisplay can be falsy for external account
 
     const handleSupportUsClick = () => {
         createModal(<DonateModal />);
@@ -74,51 +77,34 @@ const UserDropdown = ({ ...rest }) => {
                 originalPlacement="bottom-right"
             >
                 <ul className="unstyled mt0 mb0">
-                    {!isSSOMode && APP_NAME !== APPS.PROTONVPN_SETTINGS ? (
-                        <>
-                            {nameToDisplay ? (
-                                <li className="dropDown-item pt0-5 pb0-5 pl1 pr1 flex flex-column">
-                                    <div className="bold ellipsis mw100" title={nameToDisplay}>
-                                        {nameToDisplay}
-                                    </div>
-                                    {user.Email ? (
-                                        <div className="ellipsis mw100" title={user.Email}>
-                                            {user.Email}
-                                        </div>
-                                    ) : null}
-                                </li>
-                            ) : (
-                                <li className="dropDown-item pt0-5 pb0-5 pl1 pr1 flex flex-column">
-                                    <div className="bold ellipsis mw100" title={user.Email}>
-                                        {user.Email}
-                                    </div>
-                                </li>
-                            )}
-                            <li className="dropDown-item">
-                                <AppLink
-                                    className="w100 flex flex-nowrap dropDown-item-link nodecoration pl1 pr1 pt0-5 pb0-5"
-                                    to="/"
-                                    toApp={APPS.PROTONMAIL_SETTINGS}
-                                >
-                                    <Icon className="mt0-25 mr0-5" name="settings-master" />
-                                    {c('Action').t`Settings`}
-                                </AppLink>
-                            </li>
-                        </>
-                    ) : null}
-                    {APP_NAME === APPS.PROTONVPN_SETTINGS || APP_NAME === APPS.PROTONACCOUNT || !isSSOMode ? null : (
-                        <li className="dropDown-item">
+                    {APP_NAME !== APPS.PROTONVPN_SETTINGS ? (
+                        <li className="dropDown-item pt0-5 pb0-5 pl1 pr1 flex">
+                            <div>
+                                <label htmlFor="storage-space" className="opacity-50 smaller m0">{c('Label')
+                                    .t`Storage space`}</label>
+                                <div className="flex flex-items-center flex-nowrap flex-spacebetween">
+                                    <span>{spaceHuman}</span>
+                                    <AppLink
+                                        to="/subscription"
+                                        toApp={getAccountSettingsApp()}
+                                        className="smaller link m0"
+                                        title={c('Apps dropdown').t`Add storage space`}
+                                    >
+                                        {c('Action').t`Add storage`}
+                                    </AppLink>
+                                </div>
+                            </div>
+                            <Meter id="storage-space" className="is-thin bl mt0-25 mb1" value={spacePercentage} />
                             <AppLink
-                                className="w100 flex flex-nowrap dropDown-item-link nodecoration pl1 pr1 pt0-5 pb0-5"
                                 to="/"
+                                className="w100 aligncenter pm-button pm-button--primaryborder"
                                 toApp={getAccountSettingsApp()}
                             >
-                                <Icon className="mt0-25 mr0-5" name="account" />
-                                {c('Action').t`Account settings`}
+                                {c('Action').t`Manage account`}
                             </AppLink>
                         </li>
-                    )}
-                    <li>
+                    ) : null}
+                    <li className="dropDown-item">
                         <a
                             className="w100 flex flex-nowrap dropDown-item-link nodecoration pl1 pr1 pt0-5 pb0-5"
                             href="https://shop.protonmail.com"
