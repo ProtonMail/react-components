@@ -1,11 +1,12 @@
 import { queryAddresses } from 'proton-shared/lib/api/members';
+import { Address, Member } from 'proton-shared/lib/interfaces';
 import useCache from './useCache';
 import useApi from './useApi';
 import usePromiseResult from './usePromiseResult';
 import { cachedPromise } from './helpers/cachedPromise';
 import { useAddresses } from './useAddresses';
 
-const useMemberAddresses = (members) => {
+const useMemberAddresses = (members: Member[]) => {
     const cache = useCache();
     const api = useApi();
     const [addresses] = useAddresses();
@@ -24,7 +25,9 @@ const useMemberAddresses = (members) => {
                     cache,
                     member.ID,
                     () => {
-                        return api(queryAddresses(member.ID)).then(({ Addresses = [] }) => Addresses);
+                        return api<{ Addresses?: Address[] }>(queryAddresses(member.ID)).then(
+                            ({ Addresses = [] }) => Addresses
+                        );
                     },
                     member
                 );
@@ -36,7 +39,7 @@ const useMemberAddresses = (members) => {
                 ...acc,
                 [ID]: memberAddresses[i],
             };
-        }, {});
+        }, {} as { [id: string]: Address[] });
     }, [members, addresses]);
 };
 
