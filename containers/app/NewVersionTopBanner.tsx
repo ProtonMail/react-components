@@ -6,7 +6,7 @@ import { LinkButton } from '../../components';
 import { useConfig } from '../../hooks';
 import TopBanner from './TopBanner';
 
-const EVERY_THIRTY_MINUTES = 60 * 1000; // TODO set to 30 min
+const EVERY_THIRTY_MINUTES = 30 * 60 * 1000;
 const isDifferent = (a?: string, b?: string) => !!a && !!b && b !== a;
 
 const NewVersionTopBanner = () => {
@@ -14,10 +14,12 @@ const NewVersionTopBanner = () => {
     const [newVersionAvailable, setNewVersionAvailable] = useState(false);
 
     const isNewVersionAvailable = async () => {
-        const { commit } = await fetch(VERSION_PATH).then((response) => response.json());
-        // eslint-disable-next-line
-        console.log({ commit, COMMIT_RELEASE }); // TODO to remove
-        setNewVersionAvailable(isDifferent(commit, COMMIT_RELEASE));
+        try {
+            const { commit } = await fetch(VERSION_PATH).then((response) => response.json());
+            setNewVersionAvailable(isDifferent(commit, COMMIT_RELEASE));
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     useEffect(() => {
