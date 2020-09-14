@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { c } from 'ttag';
 import { APPS_CONFIGURATION } from 'proton-shared/lib/constants';
 
-import { LinkButton } from '../../components';
 import { useConfig } from '../../hooks';
 import TopBanner from './TopBanner';
 
@@ -37,7 +36,8 @@ const NewVersionTopBanner = () => {
     const appName = APPS_CONFIGURATION[APP_NAME].name;
     const reloadTab = () => window.location.reload();
     const reloadButton = (
-        <LinkButton className="color-currentColor" onClick={() => reloadTab()}>{c('Action').t`Reload tab`}</LinkButton>
+        <button type="button" role="button" className="link color-currentColor" onClick={() => reloadTab()}>{c('Action')
+            .t`Reload tab`}</button>
     );
 
     return (
