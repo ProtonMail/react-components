@@ -6,7 +6,7 @@ import { LinkButton } from '../../components';
 import { useConfig } from '../../hooks';
 import TopBanner from './TopBanner';
 
-const EVERY_THIRTY_MINUTES = 30 * 60 * 1000;
+const EVERY_THIRTY_MINUTES = 60 * 1000; // TODO set to 30 min
 const isDifferent = (a?: string, b?: string) => !!a && !!b && b !== a;
 
 const NewVersionTopBanner = () => {
@@ -15,6 +15,8 @@ const NewVersionTopBanner = () => {
 
     const isNewVersionAvailable = async () => {
         const { commit } = await fetch(VERSION_PATH).then((response) => response.json());
+        // eslint-disable-next-line
+        console.log({ commit, COMMIT_RELEASE }); // TODO to remove
         setNewVersionAvailable(isDifferent(commit, COMMIT_RELEASE));
     };
 
