@@ -30,11 +30,6 @@ const NewVersionTopBanner = () => {
         return () => clearInterval(intervalID);
     }, []);
 
-    // No banner during local development
-    if (window.location.hostname === 'localhost') {
-        return null;
-    }
-
     if (!newVersionAvailable) {
         return null;
     }
