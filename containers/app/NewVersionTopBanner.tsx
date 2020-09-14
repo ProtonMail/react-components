@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { c } from 'ttag';
 import { APPS_CONFIGURATION } from 'proton-shared/lib/constants';
+import { traceError } from 'proton-shared/lib/helpers/sentry';
 
 import { useConfig } from '../../hooks';
 import TopBanner from './TopBanner';
@@ -17,7 +18,7 @@ const NewVersionTopBanner = () => {
             const { commit } = await fetch(VERSION_PATH).then((response) => response.json());
             setNewVersionAvailable(isDifferent(commit, COMMIT_RELEASE));
         } catch (error) {
-            console.error(error);
+            traceError(error);
         }
     };
 
@@ -37,7 +38,7 @@ const NewVersionTopBanner = () => {
     const reloadTab = () => window.location.reload();
     const reloadButton = (
         <button type="button" role="button" className="link color-currentColor" onClick={() => reloadTab()}>{c('Action')
-            .t`Reload tab`}</button>
+            .t`Refresh the page`}</button>
     );
 
     return (
