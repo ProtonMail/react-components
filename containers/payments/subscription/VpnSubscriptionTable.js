@@ -53,9 +53,8 @@ const VpnSubscriptionTable = ({
                 {
                     icon: 'close',
                     content: (
-                        <del className=" mr0-5" key="filesharing">
+                        <del className="mr0-5" key="filesharing">
                             <span className="opacity-50">
-                                {' '}
                                 {c('Plan feature').t`P2P filesharing/BitTorrent support`}
                             </span>
                             <span className="ml0-5">
@@ -70,7 +69,7 @@ const VpnSubscriptionTable = ({
                 {
                     icon: 'close',
                     content: (
-                        <del className=" mr0-5" key="secure">
+                        <del className="mr0-5" key="secure">
                             <span className="opacity-50"> {c('Plan feature').t`Secure Core VPN`}</span>
                             <span className="ml0-5">
                                 <Info
@@ -85,7 +84,7 @@ const VpnSubscriptionTable = ({
                 {
                     icon: 'close',
                     content: (
-                        <del className=" mr0-5" key="advanced">
+                        <del className="mr0-5" key="advanced">
                             <span className="opacity-50"> {c('Plan feature').t`Tor over VPN`}</span>
                             <span className="ml0-5">
                                 <Info
@@ -100,7 +99,7 @@ const VpnSubscriptionTable = ({
                 {
                     icon: 'close',
                     content: (
-                        <del className=" mr0-5" key="access">
+                        <del className="mr0-5" key="access">
                             <span className="opacity-50"> {c('Plan feature').t`Access blocked content`}</span>
                             <span className="ml0-5">
                                 <Info
@@ -158,7 +157,7 @@ const VpnSubscriptionTable = ({
                 {
                     icon: 'close',
                     content: (
-                        <del className=" mr0-5" key="advanced">
+                        <del className="mr0-5" key="advanced">
                             <span className="opacity-50"> {c('Plan feature').t`Tor over VPN`}</span>
                             <span className="ml0-5">
                                 <Info
