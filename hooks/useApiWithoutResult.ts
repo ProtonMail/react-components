@@ -8,7 +8,7 @@ interface Result<R, U extends any[]> {
     request: (...args: U) => Promise<R>;
 }
 
-const useApiWithoutResult = <R, F extends QueryFunction>(fn: F): Result<R, Parameters<F>> => {
+const useApiWithoutResult = <R, F extends QueryFunction = QueryFunction>(fn: F): Result<R, Parameters<F>> => {
     const request = useApi();
     const { loading, run } = useAsync(false);
 

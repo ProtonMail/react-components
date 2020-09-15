@@ -3,7 +3,13 @@ import { useContext } from 'react';
 import Context from '../containers/eventManager/context';
 
 const useEventManager = () => {
-    return useContext(Context);
+    const eventManager = useContext(Context);
+
+    if (!eventManager) {
+        throw new Error('Trying to use uninitialized EventManagerContext');
+    }
+
+    return eventManager;
 };
 
 export default useEventManager;
