@@ -35,7 +35,7 @@ const AppsDropdown = () => {
                 {apps.map(({ toApp, icon, title }, index) => {
                     const key = `${index}`;
                     return (
-                        <li className="dropDown-item appsDropdown-item" key={key}>
+                        <li key={key}>
                             <AppLink
                                 to="/"
                                 toApp={toApp}
@@ -48,7 +48,7 @@ const AppsDropdown = () => {
                         </li>
                     );
                 })}
-                <li className="dropDown-item appsDropdown-item">
+                <li>
                     <Href
                         url="https://account.protonvpn.com/login"
                         className="appsDropdown-link big m0 p1 pt0-75 pb0-75 flex flex-nowrap flex-items-center"
