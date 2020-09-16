@@ -17,6 +17,7 @@ import {
     useApi,
     useEventManager,
     useUserSettings,
+    useOrganization,
 } from '../../hooks';
 import { usePopperAnchor, Dropdown, Icon, Toggle, PrimaryButton, AppLink, Meter } from '../../components';
 import { generateUID } from '../../helpers';
@@ -28,11 +29,12 @@ const UserDropdown = ({ ...rest }) => {
     const { APP_NAME } = useConfig();
     const api = useApi();
     const { call } = useEventManager();
+    const [organization] = useOrganization();
+    const { Name: organizationName } = organization || {};
     const [user] = useUser();
     const [userSettings] = useUserSettings();
     const { UsedSpace, MaxSpace } = user;
     const spacePercentage = Math.round((UsedSpace * 100) / MaxSpace);
-    const spaceHuman = `${humanSize(UsedSpace)} / ${humanSize(MaxSpace)}`;
     const { logout } = useAuthentication();
     const { createModal } = useModals();
     const [uid] = useState(generateUID('dropdown'));
@@ -76,57 +78,47 @@ const UserDropdown = ({ ...rest }) => {
                 onClose={close}
                 originalPlacement="bottom-right"
             >
-                <ul className="unstyled mt0 mb0">
+                <ul className="unstyled mt1 mb1">
                     {APP_NAME !== APPS.PROTONVPN_SETTINGS ? (
-                        <li className="dropDown-item pt0-5 pb0-5 pl1 pr1 flex">
-                            <div>
-                                <label htmlFor="storage-space" className="opacity-50 smaller m0">{c('Label')
-                                    .t`Storage space`}</label>
-                                <div className="flex flex-items-center flex-nowrap flex-spacebetween">
-                                    <span>{spaceHuman}</span>
+                        <>
+                            <li className="pl1 pr1">
+                                {!organizationName ? (
+                                    <>
+                                        <div className="opacity-50 small m0">{c('Label').t`Organization`}</div>
+                                        <div className="mb1">organizationName</div>
+                                    </>
+                                ) : null}
+                                <label htmlFor="storage-space" className="opacity-50 small m0">
+                                    {c('Label').t`Storage space`}
+                                </label>
+                                <div className="flex flex-items-baseline flex-nowrap flex-spacebetween">
+                                    <span>
+                                        <span className="semibold">{humanSize(UsedSpace)} </span>
+                                        /&nbsp;{humanSize(MaxSpace)}
+                                    </span>
                                     <AppLink
                                         to="/subscription"
                                         toApp={getAccountSettingsApp()}
-                                        className="smaller link m0"
+                                        className="small link m0 ml0-5"
                                         title={c('Apps dropdown').t`Add storage space`}
                                     >
                                         {c('Action').t`Add storage`}
                                     </AppLink>
                                 </div>
-                            </div>
-                            <Meter id="storage-space" className="is-thin bl mt0-25 mb1" value={spacePercentage} />
-                            <AppLink
-                                to="/"
-                                className="w100 aligncenter pm-button pm-button--primaryborder"
-                                toApp={getAccountSettingsApp()}
-                            >
-                                {c('Action').t`Manage account`}
-                            </AppLink>
-                        </li>
+                                <Meter id="storage-space" className="is-thin bl mt0-5 mb1" value={spacePercentage} />
+                                <AppLink
+                                    to="/"
+                                    className="bl w100 mt1-5 mb1-5 aligncenter pm-button pm-button--primaryborder"
+                                    toApp={getAccountSettingsApp()}
+                                >
+                                    {c('Action').t`Manage account`}
+                                </AppLink>
+                            </li>
+                            <li className="dropDown-item-hr mt0-5 mb0-5" aria-hidden="false"></li>
+                        </>
                     ) : null}
-                    <li className="dropDown-item">
-                        <a
-                            className="w100 flex flex-nowrap dropDown-item-link nodecoration pl1 pr1 pt0-5 pb0-5"
-                            href="https://shop.protonmail.com"
-                            // eslint-disable-next-line react/jsx-no-target-blank
-                            target="_blank"
-                        >
-                            <Icon className="mt0-25 mr0-5" name="shop" />
-                            {c('Action').t`Proton shop`}
-                        </a>
-                    </li>
-                    <li className="dropDown-item">
-                        <button
-                            type="button"
-                            className="w100 flex underline-hover dropDown-item-link pl1 pr1 pt0-5 pb0-5 alignleft"
-                            onClick={handleSupportUsClick}
-                        >
-                            <Icon className="mt0-25 mr0-5" name="donate" />
-                            {c('Action').t`Support us`}
-                        </button>
-                    </li>
                     {isSSOMode ? (
-                        <li className="dropDown-item">
+                        <li>
                             <button
                                 type="button"
                                 className="w100 flex underline-hover dropDown-item-link pl1 pr1 pt0-5 pb0-5 alignleft"
@@ -137,7 +129,29 @@ const UserDropdown = ({ ...rest }) => {
                             </button>
                         </li>
                     ) : null}
-                    <li className="dropDown-item">
+                    <li>
+                        <a
+                            className="w100 flex flex-nowrap dropDown-item-link nodecoration pl1 pr1 pt0-5 pb0-5"
+                            href="https://shop.protonmail.com"
+                            // eslint-disable-next-line react/jsx-no-target-blank
+                            target="_blank"
+                        >
+                            <Icon className="mt0-25 mr0-5" name="shop" />
+                            {c('Action').t`Proton shop`}
+                        </a>
+                    </li>
+                    <li>
+                        <button
+                            type="button"
+                            className="w100 flex underline-hover dropDown-item-link pl1 pr1 pt0-5 pb0-5 alignleft"
+                            onClick={handleSupportUsClick}
+                        >
+                            <Icon className="mt0-25 mr0-5" name="donate" />
+                            {c('Action').t`Support us`}
+                        </button>
+                    </li>
+                    <li className="dropDown-item-hr mt0-5" aria-hidden="false"></li>
+                    <li>
                         <div className="pl1 pr1 pt0-5 pb0-5 w100 flex flex-nowrap flex-spacebetween flex-items-center">
                             <label htmlFor="theme-toggle" className="mr1">{c('Action').t`Display mode`}</label>
                             <Toggle
@@ -164,7 +178,8 @@ const UserDropdown = ({ ...rest }) => {
                             />
                         </div>
                     </li>
-                    <li className="dropDown-item pt0-5 pb0-5 pl1 pr1 flex">
+                    <li className="dropDown-item-hr mb0-5" aria-hidden="false"></li>
+                    <li className="pt0-5 pb0-5 pl1 pr1 flex">
                         <PrimaryButton
                             className="w100 aligncenter navigationUser-logout"
                             onClick={handleLogout}
