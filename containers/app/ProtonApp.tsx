@@ -38,6 +38,7 @@ import clearKeyCache from './clearKeyCache';
 import useInstance from '../../hooks/useInstance';
 import { PreventLeaveProvider } from '../../hooks';
 import { OnLoginCallbackArguments } from './interface';
+import { GlobalLoaderProvider, GlobalLoader } from '../../components/globalLoader';
 
 interface Props {
     config: ProtonConfig;
@@ -239,29 +240,32 @@ const ProtonApp = ({ config, children }: Props) => {
     };
 
     return (
-        <ConfigProvider config={config}>
-            <CompatibilityCheck>
-                <Icons />
-                <MimeIcons />
-                <RightToLeftProvider>
-                    <React.Fragment key={UID}>
-                        <Router history={history}>
-                            <PreventLeaveProvider>
-                                <NotificationsProvider>
-                                    <ModalsProvider>
-                                        <ApiProvider UID={UID} config={config} onLogout={handleLogout}>
-                                            <AuthenticationProvider store={authenticationValue}>
-                                                <CacheProvider cache={cacheRef.current}>{render()}</CacheProvider>
-                                            </AuthenticationProvider>
-                                        </ApiProvider>
-                                    </ModalsProvider>
-                                </NotificationsProvider>
-                            </PreventLeaveProvider>
-                        </Router>
-                    </React.Fragment>
-                </RightToLeftProvider>
-            </CompatibilityCheck>
-        </ConfigProvider>
+        <GlobalLoaderProvider>
+            <ConfigProvider config={config}>
+                <CompatibilityCheck>
+                    <GlobalLoader />
+                    <Icons />
+                    <MimeIcons />
+                    <RightToLeftProvider>
+                        <React.Fragment key={UID}>
+                            <Router history={history}>
+                                <PreventLeaveProvider>
+                                    <NotificationsProvider>
+                                        <ModalsProvider>
+                                            <ApiProvider UID={UID} config={config} onLogout={handleLogout}>
+                                                <AuthenticationProvider store={authenticationValue}>
+                                                    <CacheProvider cache={cacheRef.current}>{render()}</CacheProvider>
+                                                </AuthenticationProvider>
+                                            </ApiProvider>
+                                        </ModalsProvider>
+                                    </NotificationsProvider>
+                                </PreventLeaveProvider>
+                            </Router>
+                        </React.Fragment>
+                    </RightToLeftProvider>
+                </CompatibilityCheck>
+            </ConfigProvider>
+        </GlobalLoaderProvider>
     );
 };
 
