@@ -115,6 +115,7 @@ const Dropdown = ({
     const [isClosing, isClosed, setIsClosed] = useIsClosing(isOpen);
     const popperClassName = classnames([
         'dropDown',
+        noMaxSize && 'dropDown--noMaxSize',
         `dropDown--${placement}`,
         isClosing && `is-dropdownOut`,
         noCaret && 'dropDown--noCaret',
@@ -163,11 +164,7 @@ const Dropdown = ({
                 <button type="button" className="dropDown-backdrop" title={c('Action').t`Close`} onClick={onClose}>
                     <span className="sr-only">{c('Action').t`Close`}</span>
                 </button>
-                <div
-                    ref={contentRef}
-                    className={classnames(['dropDown-content', noMaxSize && 'dropDown-content--noMaxSize'])}
-                    {...contentProps}
-                >
+                <div ref={contentRef} className={classnames(['dropDown-content'])} {...contentProps}>
                     {children}
                 </div>
             </div>
