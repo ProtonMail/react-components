@@ -91,7 +91,7 @@ const BugModal = ({ onClose = noop, username: Username = '', addresses = [], ...
     const { createNotification } = useNotifications();
     const [{ Email = '' } = {}] = addresses;
     const options = titles.reduce<OptionProps[]>(
-        (acc, { text, value, group }) => {
+        (acc, { text, value, group }: { text: string; value: string; group?: string }) => {
             acc.push({ text, value, group });
             return acc;
         },
