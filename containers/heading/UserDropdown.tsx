@@ -71,6 +71,7 @@ const UserDropdown = ({ ...rest }) => {
             <Dropdown
                 id={uid}
                 className="userDropdown"
+                style={{ '--min-width': '20em' }}
                 isOpen={isOpen}
                 noMaxSize
                 anchorRef={anchorRef}
@@ -88,9 +89,7 @@ const UserDropdown = ({ ...rest }) => {
                                         <div className="mb1">organizationName</div>
                                     </>
                                 ) : null}
-                                <label htmlFor="storage-space" className="opacity-50 small m0">
-                                    {c('Label').t`Storage space`}
-                                </label>
+                                <div className="opacity-50 small m0">{c('Label').t`Storage space`}</div>
                                 <div className="flex flex-items-baseline flex-nowrap flex-spacebetween">
                                     <span>
                                         <span className="semibold">{humanSize(UsedSpace)} </span>
@@ -105,7 +104,7 @@ const UserDropdown = ({ ...rest }) => {
                                         {c('Action').t`Add storage`}
                                     </AppLink>
                                 </div>
-                                <Meter id="storage-space" className="is-thin bl mt0-5 mb1" value={spacePercentage} />
+                                <Meter className="is-thin bl mt0-5 mb1" value={spacePercentage} />
                                 <AppLink
                                     to="/"
                                     className="bl w100 mt1-5 mb1-5 aligncenter pm-button pm-button--primaryborder"
@@ -157,6 +156,7 @@ const UserDropdown = ({ ...rest }) => {
                             <Toggle
                                 id="theme-toggle"
                                 className="pm-toggle-label--theme-toggle"
+                                title={c('Title').t`Toggle display mode`}
                                 checked={userSettings.ThemeType === ThemeTypes.Dark}
                                 loading={loading}
                                 onChange={() => withLoading(handleThemeToggle())}
@@ -185,7 +185,7 @@ const UserDropdown = ({ ...rest }) => {
                             onClick={handleLogout}
                             data-cy-header-user-dropdown="logout"
                         >
-                            {c('Action').t`Logout`}
+                            {c('Action').t`Sign out`}
                         </PrimaryButton>
                     </li>
                 </ul>

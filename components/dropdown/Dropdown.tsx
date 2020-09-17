@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, CSSProperties } from 'react';
 import { c } from 'ttag';
 import { noop } from 'proton-shared/lib/helpers/function';
 import { classnames } from '../../helpers';
@@ -16,6 +16,7 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
     anchorRef: React.RefObject<HTMLElement>;
     children: React.ReactNode;
     className?: string;
+    style?: CSSProperties;
     onClose?: () => void;
     onContextMenu?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
     originalPlacement?: string;
@@ -35,6 +36,7 @@ const Dropdown = ({
     anchorRef,
     children,
     className,
+    style,
     originalPlacement = 'bottom',
     availablePlacements = ALL_PLACEMENTS,
     originalPosition,
@@ -152,7 +154,7 @@ const Dropdown = ({
         <Portal>
             <div
                 ref={setPopperEl}
-                style={{ ...varPosition, ...varSize }}
+                style={{ ...style, ...varPosition, ...varSize }}
                 role="dialog"
                 className={popperClassName}
                 onClick={handleClickContent}
