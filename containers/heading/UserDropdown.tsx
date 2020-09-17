@@ -83,10 +83,10 @@ const UserDropdown = ({ ...rest }) => {
                     {APP_NAME !== APPS.PROTONVPN_SETTINGS ? (
                         <>
                             <li className="pl1 pr1">
-                                {!organizationName ? (
+                                {organizationName ? (
                                     <>
                                         <div className="opacity-50 small m0">{c('Label').t`Organization`}</div>
-                                        <div className="mb1">organizationName</div>
+                                        <div className="mb1">{organizationName}</div>
                                     </>
                                 ) : null}
                                 <div className="opacity-50 small m0">{c('Label').t`Storage space`}</div>
