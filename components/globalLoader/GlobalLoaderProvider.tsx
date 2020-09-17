@@ -1,4 +1,4 @@
-import React, { createContext, useReducer, useCallback } from 'react';
+import React, { createContext, useReducer, useCallback, useMemo } from 'react';
 
 export interface TaskOptions {
     text?: string;
@@ -52,9 +52,11 @@ interface Props {
 const GlobalLoaderProvider = ({ children }: Props) => {
     const { addPendingTask, tasks } = useGlobalLoaderProvider();
 
+    const globalLoader = useMemo(() => ({ addPendingTask }), [addPendingTask]);
+
     return (
         <GlobalLoaderTasksContext.Provider value={tasks}>
-            <GlobalLoaderContext.Provider value={{ addPendingTask }}>{children}</GlobalLoaderContext.Provider>
+            <GlobalLoaderContext.Provider value={globalLoader}>{children}</GlobalLoaderContext.Provider>
         </GlobalLoaderTasksContext.Provider>
     );
 };
