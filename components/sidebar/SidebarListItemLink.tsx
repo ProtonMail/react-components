@@ -1,17 +1,17 @@
 import React from 'react';
-import { NavLink, NavLinkProps } from 'react-router-dom';
+import { Link, LinkProps } from 'react-router-dom';
 import { classnames } from '../../helpers';
 
-export interface Props extends NavLinkProps {
+export interface Props extends LinkProps {
     children: React.ReactNode;
     itemClassName?: string;
 }
 
 const SidebarListItemLink = ({ children, itemClassName = 'navigation__link', className, ...rest }: Props) => {
     return (
-        <NavLink className={classnames([itemClassName, className])} {...rest}>
+        <Link className={classnames([itemClassName, className])} {...rest}>
             {children}
-        </NavLink>
+        </Link>
     );
 };
 
