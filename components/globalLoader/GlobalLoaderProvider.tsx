@@ -1,4 +1,4 @@
-import React, { createContext, useReducer } from 'react';
+import React, { createContext, useReducer, useCallback } from 'react';
 
 export interface TaskOptions {
     text?: string;
@@ -23,7 +23,7 @@ const reducer = (state: Task[], action: Action) => {
 const useGlobalLoaderProvider = () => {
     const [tasks, dispatch] = useReducer(reducer, []);
 
-    const addPendingTask = <T,>(promise: Promise<T>, options: TaskOptions): [Promise<T>, Task] => {
+    const addPendingTask = useCallback(<T,>(promise: Promise<T>, options: TaskOptions): [Promise<T>, Task] => {
         const task = { options, promise };
         dispatch({ type: 'addPendingTask', payload: task });
         return [
@@ -32,7 +32,7 @@ const useGlobalLoaderProvider = () => {
             }),
             task,
         ];
-    };
+    }, []);
 
     return {
         tasks,
@@ -40,16 +40,23 @@ const useGlobalLoaderProvider = () => {
     };
 };
 
-export const GlobalLoaderContext = createContext<ReturnType<typeof useGlobalLoaderProvider> | null>(null);
+export const GlobalLoaderTasksContext = createContext<Task[] | null>(null);
+export const GlobalLoaderContext = createContext<{
+    addPendingTask: <T>(promise: Promise<T>, options: TaskOptions) => [Promise<T>, Task];
+} | null>(null);
 
 interface Props {
     children: React.ReactNode;
 }
 
 const GlobalLoaderProvider = ({ children }: Props) => {
-    const state = useGlobalLoaderProvider();
+    const { addPendingTask, tasks } = useGlobalLoaderProvider();
 
-    return <GlobalLoaderContext.Provider value={state}>{children}</GlobalLoaderContext.Provider>;
+    return (
+        <GlobalLoaderTasksContext.Provider value={tasks}>
+            <GlobalLoaderContext.Provider value={{ addPendingTask }}>{children}</GlobalLoaderContext.Provider>
+        </GlobalLoaderTasksContext.Provider>
+    );
 };
 
 export default GlobalLoaderProvider;

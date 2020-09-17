@@ -1,26 +1,23 @@
 import React, { useContext } from 'react';
-import { GlobalLoaderContext } from './GlobalLoaderProvider';
+import { Loader } from '../loader';
+import { GlobalLoaderTasksContext } from './GlobalLoaderProvider';
 
-// TODO: Proper styles when design is ready
 const GlobalLoader = () => {
-    const loaderState = useContext(GlobalLoaderContext);
-
-    const task = loaderState?.tasks[0];
+    const [task] = useContext(GlobalLoaderTasksContext) || [];
 
     if (!task) {
         return null;
     }
 
+    const text = task.options.text;
+
     return (
         <div
-            style={{
-                display: 'fixed',
-                top: 20,
-                left: '50%',
-                background: 'red',
-            }}
+            className="fixed flex centered-absolute-horizontal bg-white-dm color-global-grey-dm p0-5 rounded"
+            style={{ top: '1.5em' }}
         >
-            Loading {task.options.text}
+            <Loader size="small" className="flex" />
+            {text && <span className="ml0-5">{text}</span>}
         </div>
     );
 };
