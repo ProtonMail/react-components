@@ -1,25 +1,21 @@
-import { useContext, useRef } from 'react';
-import { GlobalLoaderContext, TaskOptions, Task } from './GlobalLoaderProvider';
+import { useContext } from 'react';
+import { GlobalLoaderContext, TaskOptions } from './GlobalLoaderProvider';
 
 type WithGlobalLoading = <T>(promise: Promise<T>) => Promise<T>;
 
-function useGlobalLoader(options: TaskOptions = {}): [WithGlobalLoading, boolean] {
-    const taskRef = useRef<Task>();
+function useGlobalLoader(defaultTaskOptions: TaskOptions = {}): WithGlobalLoading {
     const state = useContext(GlobalLoaderContext);
 
     if (!state) {
         throw new Error('Trying to use uninitialized GlobalLoaderContext');
     }
 
-    const withGlobalLoader = <T>(promise: Promise<T>) => {
-        const [task, taskPromise] = state.addPendingTask(promise, options);
-        taskRef.current = task;
+    const withGlobalLoader = <T>(promise: Promise<T>, options: TaskOptions = defaultTaskOptions) => {
+        const [taskPromise] = state.addPendingTask(promise, options);
         return taskPromise;
     };
 
-    const isLoading = !!taskRef.current && state.tasks.includes(taskRef.current);
-
-    return [withGlobalLoader, isLoading];
+    return withGlobalLoader;
 }
 
 export default useGlobalLoader;

@@ -23,14 +23,14 @@ const reducer = (state: Task[], action: Action) => {
 const useGlobalLoaderProvider = () => {
     const [tasks, dispatch] = useReducer(reducer, []);
 
-    const addPendingTask = <T,>(promise: Promise<T>, options: TaskOptions): [Task, Promise<T>] => {
+    const addPendingTask = <T,>(promise: Promise<T>, options: TaskOptions): [Promise<T>, Task] => {
         const task = { options, promise };
         dispatch({ type: 'addPendingTask', payload: task });
         return [
-            task,
             promise.finally(() => {
                 dispatch({ type: 'resolvePendingTask', payload: task });
             }),
+            task,
         ];
     };
 
