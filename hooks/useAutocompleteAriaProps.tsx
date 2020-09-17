@@ -1,5 +1,5 @@
 import React from 'react';
-import { c } from 'ttag';
+import { c, msgid } from 'ttag';
 
 const useAutocompleteAriaProps = ({ baseId, selectedSuggest }: { baseId: string; selectedSuggest?: number }) => {
     const helpTextId = `${baseId}-help-text`;
@@ -13,7 +13,7 @@ const useAutocompleteAriaProps = ({ baseId, selectedSuggest }: { baseId: string;
         numberOfSuggests > 0 ? (
             <div className="sr-only" aria-atomic="true" aria-live="assertive">
                 {c('Help').ngettext(
-                    `Found ${numberOfSuggests} suggestion, use keyboard to navigate.`,
+                    msgid`Found ${numberOfSuggests} suggestion, use keyboard to navigate.`,
                     `Found ${numberOfSuggests} suggestions, use keyboard to navigate.`,
                     numberOfSuggests
                 )}
