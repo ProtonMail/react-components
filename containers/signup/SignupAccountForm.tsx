@@ -103,6 +103,7 @@ const SignupAccountForm = ({ model, onChange, onSubmit, errors, loading, hasExte
                     </Challenge>
                     {hasExternalSignup ? (
                         <InlineLinkButton
+                            className="nodecoration mt0-25"
                             id="existing-email-button"
                             onClick={() => onChange({ ...model, username: '', step: ACCOUNT_CREATION_EMAIL })}
                         >{c('Action').t`Use your current email address instead`}</InlineLinkButton>
@@ -120,7 +121,7 @@ const SignupAccountForm = ({ model, onChange, onSubmit, errors, loading, hasExte
         if (model.step === ACCOUNT_CREATION_EMAIL) {
             const challenge = (
                 <>
-                    <div className="mb0-5 flex-item-fluid">
+                    <div className="flex-item-fluid">
                         <Challenge
                             bodyClassName="signLayout-container"
                             challengeRef={challengeRefLogin}
@@ -152,6 +153,7 @@ const SignupAccountForm = ({ model, onChange, onSubmit, errors, loading, hasExte
                     <InsecureEmailInfo email={model.email} />
                     <InlineLinkButton
                         id="proton-email-button"
+                        className="nodecoration mt0-25"
                         onClick={() => onChange({ ...model, email: '', step: ACCOUNT_CREATION_USERNAME })}
                     >{c('Action').t`Create a secure ProtonMail address instead`}</InlineLinkButton>
                 </>
