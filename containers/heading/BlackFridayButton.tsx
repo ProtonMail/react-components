@@ -1,24 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { APPS } from 'proton-shared/lib/constants';
-import { getAccountSettingsApp } from 'proton-shared/lib/apps/helper';
+// import { getAccountSettingsApp } from 'proton-shared/lib/apps/helper';
 import { PlanIDs, Cycle, Currency } from 'proton-shared/lib/interfaces';
 
-import { useUser, useApi, useLoading, useBlackFriday, usePlans, useModals, useConfig } from '../../../hooks';
-import { TopNavbarLink } from '../../../components';
-import { checkLastCancelledSubscription } from './helpers';
-import NewSubscriptionModal from './NewSubscriptionModal';
-import VPNBlackFridayModal from './VPNBlackFridayModal';
-import MailBlackFridayModal from './MailBlackFridayModal';
+import { usePlans, useModals, useConfig } from '../../hooks';
+import { TopNavbarLink, Icon } from '../../components';
+import NewSubscriptionModal from '../payments/subscription/NewSubscriptionModal';
+import VPNBlackFridayModal from '../payments/subscription/VPNBlackFridayModal';
+import MailBlackFridayModal from '../payments/subscription/MailBlackFridayModal';
+import { TopNavbarItem } from '../app/TopNavbar';
 
-const BlackFridayNavbarLink = ({ ...rest }) => {
+const BlackFridayButton = ({ ...rest }) => {
     const { APP_NAME } = useConfig();
-    const [plans, loadingPlans] = usePlans();
     const { createModal } = useModals();
-    const api = useApi();
-    const [loading, withLoading] = useLoading();
-    const [user] = useUser();
-    const isBlackFriday = useBlackFriday();
-    const [isEligible, setEligibility] = useState(false);
+    const [plans, loading] = usePlans();
     const icon = 'blackfriday';
     const text = 'Black Friday';
 
@@ -36,13 +31,7 @@ const BlackFridayNavbarLink = ({ ...rest }) => {
         createModal(<NewSubscriptionModal planIDs={planIDs} cycle={cycle} currency={currency} coupon={couponCode} />);
     };
 
-    useEffect(() => {
-        if (user.isFree && isBlackFriday) {
-            withLoading(checkLastCancelledSubscription(api).then(setEligibility));
-        }
-    }, [isBlackFriday, user.isFree]);
-
-    if (!isBlackFriday || !isEligible || user.isPaid || loading || loadingPlans) {
+    if (loading) {
         return null;
     }
 
@@ -62,6 +51,22 @@ const BlackFridayNavbarLink = ({ ...rest }) => {
     }
 
     return (
+        <TopNavbarItem>
+            <button
+                className="topnav-link"
+                type="button"
+                onClick={() => {
+                    createModal(<MailBlackFridayModal plans={plans} onSelect={onSelect} />);
+                }}
+            >
+                <Icon className="topnav-icon mr0-5 flex-item-centered-vert" name={icon} />
+                <span className="navigation-title topnav-linkText">{text}</span>
+            </button>
+        </TopNavbarItem>
+    );
+
+    /*
+    return (
         <TopNavbarLink
             to="/subscription"
             toApp={getAccountSettingsApp()}
@@ -73,6 +78,7 @@ const BlackFridayNavbarLink = ({ ...rest }) => {
             {...rest}
         />
     );
+    */
 };
 
-export default BlackFridayNavbarLink;
+export default BlackFridayButton;
