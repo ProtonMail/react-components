@@ -1,14 +1,23 @@
 import React from 'react';
 import { c } from 'ttag';
-import { APPS, APPS_CONFIGURATION, FEATURE_FLAGS } from 'proton-shared/lib/constants';
+import { APPS, APPS_CONFIGURATION, COUPON_CODES } from 'proton-shared/lib/constants';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 
 import { AppLink, Icon, SimpleDropdown, Href } from '../../components';
+import { useSubscription } from '../../hooks';
 
 const { PROTONMAIL, PROTONCONTACTS, PROTONCALENDAR, PROTONDRIVE } = APPS;
+const { PMTEAM, LIFETIME } = COUPON_CODES;
 
 const AppsDropdown = () => {
-    const apps = [PROTONMAIL, PROTONCONTACTS, PROTONCALENDAR, FEATURE_FLAGS.includes('drive') && PROTONDRIVE]
+    const [subscription] = useSubscription();
+    const coupon = subscription?.CouponCode || ''; // CouponCode can be null
+    const apps = [
+        PROTONMAIL,
+        PROTONCONTACTS,
+        PROTONCALENDAR,
+        [PMTEAM, LIFETIME].includes(coupon as COUPON_CODES) && PROTONDRIVE,
+    ]
         .filter(isTruthy)
         .map((app) => ({
             toApp: app,
