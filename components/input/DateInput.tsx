@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { format, parse, addDays } from 'date-fns';
 import { dateLocale } from 'proton-shared/lib/i18n';
 import { c } from 'ttag';
+import { Locale } from 'date-fns';
 import Input, { Props as InputProps } from './Input';
 import { usePopperAnchor } from '../popper';
 import Dropdown from '../dropdown/Dropdown';

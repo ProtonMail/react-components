@@ -150,11 +150,12 @@ const MemberActions = ({ member, addresses = [], organization }: Props) => {
             text: c('Member action').t`Edit`,
             onClick: openEdit,
         },
-        canDelete && {
-            text: c('Member action').t`Delete`,
-            actionType: 'delete' as 'delete',
-            onClick: openDelete,
-        },
+        canDelete &&
+            ({
+                text: c('Member action').t`Delete`,
+                actionType: 'delete',
+                onClick: openDelete,
+            } as const),
         canMakeAdmin && {
             text: c('Member action').t`Make admin`,
             onClick: () => withLoading(makeAdmin()),
