@@ -543,9 +543,11 @@ const AccountSignupContainer = ({ toApp, onLogin, Layout }: Props) => {
         const getBackStep = () => {
             if (model.username && model.recoveryPhone) {
                 return RECOVERY_PHONE;
-            } else if (model.username) {
+            }
+            if (model.username) {
                 return RECOVERY_EMAIL;
-            } else if (model.email) {
+            }
+            if (model.email) {
                 return VERIFICATION_CODE;
             }
         };

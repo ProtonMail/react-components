@@ -1,7 +1,7 @@
-import React, { RefObject } from 'react';
+import React, { RefObject, ReactNode, useCallback, useMemo, useState, KeyboardEvent, useEffect, useRef } from 'react';
 import { noop } from 'proton-shared/lib/helpers/function';
 import { sanitizeString } from 'proton-shared/lib/sanitize';
-import { ReactNode, useCallback, useMemo, useState, KeyboardEvent, useEffect, useRef } from 'react';
+
 import { getMatch } from './helpers/search';
 import useClickOutside from './useClickOutside';
 import { classnames } from '../helpers';
@@ -130,7 +130,9 @@ function useSearch<T, K = keyof SearchableObject<T>>({
                     resetField();
                 }
             } catch ({ message }) {
-                message && setError(message);
+                if (message) {
+                    setError(message);
+                }
             }
         },
         [validate, inputValue, onSubmit, resetField, setError]
@@ -164,12 +166,10 @@ function useSearch<T, K = keyof SearchableObject<T>>({
                             const firstSuggestion = searchSuggestions[selectedSuggest]?.item;
                             onSelect(firstSuggestion);
                             resetField();
+                        } else if (event.shiftKey) {
+                            selectPreviousItem();
                         } else {
-                            if (event.shiftKey) {
-                                selectPreviousItem();
-                            } else {
-                                selectNextItem();
-                            }
+                            selectNextItem();
                         }
                     } else {
                         if (!inputValue) return;
