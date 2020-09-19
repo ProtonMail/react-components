@@ -81,7 +81,7 @@ const TimeInput = ({ onChange, value, interval = 30, min, displayDuration = fals
         try {
             const newDate = fromFormatted(temporaryInput, dateLocale);
             const newDateTime = +newDate;
-            if (!isNaN(newDateTime)) {
+            if (!Number.isNaN(newDateTime)) {
                 handleSelectDate(newDate);
             }
             // eslint-disable-next-line no-empty

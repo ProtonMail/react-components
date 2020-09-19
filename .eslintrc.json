@@ -13,6 +13,7 @@
             "submit": true,
             "reset": true
         }],
-        "react/forbid-prop-types": ["off"]
+        "react/forbid-prop-types": ["warn"],
+        "react/no-array-index-key": ["warn"]
     }
 }
