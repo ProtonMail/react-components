@@ -273,7 +273,7 @@ const wrapInsertHTML = (squire: any) => {
         if (isPaste) {
             try {
                 const fragment = SQUIRE_CONFIG.sanitizeToDOMFragment(html, isPaste, squire);
-                const { firstElementChild: first, lastElementChild: last } = (fragment as any) as Element;
+                const { firstElementChild: first, lastElementChild: last } = (fragment as any) as ParentNode;
 
                 // Check if it is just one image being pasted.
                 // If so, block normal insertion because it will be added as embedded image.
