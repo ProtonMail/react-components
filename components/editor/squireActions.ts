@@ -219,6 +219,8 @@ const rightToLeftToString = (rtl: RIGHT_TO_LEFT) => {
             return 'rtl';
         case RIGHT_TO_LEFT.OFF:
             return 'ltr';
+        default:
+            break;
     }
 };
 
