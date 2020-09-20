@@ -61,7 +61,9 @@ function useSearch<T, K = keyof SearchableObject<T>>({
         let itemList = sources.flatMap((source) => source(matchString));
         // theoretically, this is an error in types, but it's the only way to let typescript
         // typecheck keys and mapFn arguments without doing the work in runtime
-        if (mapFn) itemList = mapFn((itemList as unknown) as SearchableObject<T>[]);
+        if (mapFn) {
+            itemList = mapFn((itemList as unknown) as SearchableObject<T>[]);
+        }
         const results = itemList
             .map((item) => {
                 const matchedProps: { [key in KeyOfUnion<T>]?: ReactNode } = {};
@@ -73,7 +75,9 @@ function useSearch<T, K = keyof SearchableObject<T>>({
                 for (const prop of keyList) {
                     const content = item[prop];
                     const match = content && typeof content === 'string' && getMatch(content, matchString, highlightFn);
-                    if (match) matchedProps[prop] = match;
+                    if (match) {
+                        matchedProps[prop] = match;
+                    }
                 }
                 return { item, matchedProps };
             })
@@ -153,7 +157,9 @@ function useSearch<T, K = keyof SearchableObject<T>>({
                         onSelect(firstSuggestion);
                         resetField();
                     } else {
-                        if (!inputValue) return;
+                        if (!inputValue) {
+                            return;
+                        }
                         event.preventDefault();
                         trySubmit();
                     }
@@ -172,20 +178,26 @@ function useSearch<T, K = keyof SearchableObject<T>>({
                             selectNextItem();
                         }
                     } else {
-                        if (!inputValue) return;
+                        if (!inputValue) {
+                            return;
+                        }
                         event.preventDefault();
                         trySubmit();
                     }
                     break;
                 }
                 case 'ArrowDown': {
-                    if (!totalSuggestions) return;
+                    if (!totalSuggestions) {
+                        return;
+                    }
                     event.preventDefault();
                     selectNextItem();
                     break;
                 }
                 case 'ArrowUp': {
-                    if (!totalSuggestions) return;
+                    if (!totalSuggestions) {
+                        return;
+                    }
                     event.preventDefault();
                     selectPreviousItem();
                     break;
