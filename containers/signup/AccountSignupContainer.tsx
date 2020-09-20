@@ -382,7 +382,6 @@ const AccountSignupContainer = ({ toApp, onLogin, Layout }: Props) => {
                 aside={<OneAccountIllustration />}
             >
                 <SignupAccountForm
-                    history={history}
                     model={model}
                     errors={errors}
                     onChange={setModel}

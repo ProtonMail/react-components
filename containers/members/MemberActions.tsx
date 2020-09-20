@@ -87,7 +87,7 @@ const MemberActions = ({ member, addresses = [], organization }: Props) => {
         }
 
         // Legacy mode
-        const url = `${location.origin}/login/sub`;
+        const url = `${window.location.origin}/login/sub`;
         await memberLogin({ UID, mailboxPassword: authentication.getPassword(), url } as any);
     };
 
