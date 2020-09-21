@@ -63,7 +63,7 @@ const PrivateMainSettingsArea = ({ setActiveSection, location, title, children, 
         };
 
         const options = {
-            passive: false,
+            passive: true,
             capture: true,
         };
 
