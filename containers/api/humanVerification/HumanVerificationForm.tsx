@@ -11,10 +11,11 @@ import RequestInvite from './RequestInvite';
 interface Props {
     onSubmit: (token: string, tokenType: HumanVerificationMethodType) => void;
     token: string;
+    mode: 'signup' | undefined;
     methods: HumanVerificationMethodType[];
 }
 
-const HumanVerificationForm = ({ methods, token, onSubmit }: Props) => {
+const HumanVerificationForm = ({ methods, mode, token, onSubmit }: Props) => {
     const tabs = [
         methods.includes('captcha') && {
             method: 'captcha',
@@ -24,12 +25,12 @@ const HumanVerificationForm = ({ methods, token, onSubmit }: Props) => {
         methods.includes('email') && {
             method: 'email',
             title: c('Human verification method').t`Email`,
-            content: <CodeVerification onSubmit={(token) => onSubmit(token, 'email')} method="email" />,
+            content: <CodeVerification mode={mode} onSubmit={(token) => onSubmit(token, 'email')} method="email" />,
         },
         methods.includes('sms') && {
             method: 'sms',
             title: c('Human verification method').t`SMS`,
-            content: <CodeVerification onSubmit={(token) => onSubmit(token, 'sms')} method="sms" />,
+            content: <CodeVerification mode={mode} onSubmit={(token) => onSubmit(token, 'sms')} method="sms" />,
         },
         methods.includes('invite') && {
             method: 'invite',

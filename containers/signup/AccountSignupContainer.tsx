@@ -615,6 +615,7 @@ const AccountSignupContainer = ({ toApp, onLogin, Layout }: Props) => {
                 <HumanVerificationForm
                     token={model.humanVerificationToken}
                     methods={model.humanVerificationMethods}
+                    mode='signup'
                     onSubmit={handleSubmit}
                 />
             </Layout>
