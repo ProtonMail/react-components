@@ -119,7 +119,7 @@ const ImportMailModal = ({ onImportComplete, onClose = noop, currentImport, ...r
     ];
 
     const handleCancel = () => {
-        if (!modalModel.email) {
+        if (!modalModel.email || modalModel.step === Step.STARTED) {
             onClose();
             return;
         }
