@@ -80,7 +80,7 @@ const VpnSubscriptionTable = ({
                 {
                     icon: 'close',
                     content: (
-                        <del className="mr0-5 test" key="advanced">
+                        <del className="mr0-5" key="advanced">
                             <span className="opacity-50 mr0-5"> {c('Plan feature').t`Tor over VPN`}</span>
                             <Info
                                 title={c('Info')
