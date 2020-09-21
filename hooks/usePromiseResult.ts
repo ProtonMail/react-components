@@ -37,9 +37,6 @@ const reducer = <T>(oldValue: State<T>, record: Record<T> = { status: STATUS.PEN
 /**
  * The difference with this hook vs `useCachedModelResult` is that this hook does not cache the result in the cache.
  * This hook stores it per component, which means the promise will always be re-run on initial mount.
- * @param {Function} miss
- * @param {Array} dependencies
- * @return {React.ReducerState<reducer>}
  */
 const usePromiseResult = <T>(miss: () => Promise<T>, dependencies: React.DependencyList) => {
     const ref = useRef<Record<T>>();
@@ -56,10 +53,10 @@ const usePromiseResult = <T>(miss: () => Promise<T>, dependencies: React.Depende
         const promise = miss();
 
         const record = {
-            status: STATUS.PENDING as STATUS.PENDING,
+            status: STATUS.PENDING,
             value: ref.current ? ref.current.value : undefined,
             promise,
-        };
+        } as const;
         ref.current = record;
         dispatch(record);
 
