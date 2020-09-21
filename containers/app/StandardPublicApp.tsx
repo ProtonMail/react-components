@@ -3,13 +3,13 @@ import { loadOpenPGP } from 'proton-shared/lib/openpgp';
 import { loadDateLocale, loadLocale } from 'proton-shared/lib/i18n/loadLocale';
 import { TtagLocaleMap } from 'proton-shared/lib/interfaces/Locale';
 import { getBrowserLocale, getClosestLocaleCode } from 'proton-shared/lib/i18n/helper';
-import GenericError from '../error/GenericError';
 import ModalsChildren from '../modals/Children';
 import LoaderPage from './LoaderPage';
+import StandardLoadError from './StandardLoadError';
 
 interface Props {
     locales?: TtagLocaleMap;
-    openpgpConfig?: object;
+    openpgpConfig?: any;
     children: React.ReactNode;
 }
 
@@ -33,7 +33,7 @@ const StandardPublicApp = ({ locales = {}, openpgpConfig, children }: Props) => 
     }, []);
 
     if (error) {
-        return <GenericError />;
+        return <StandardLoadError />;
     }
 
     if (loading) {

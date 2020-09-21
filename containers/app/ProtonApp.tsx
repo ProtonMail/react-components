@@ -18,6 +18,8 @@ import { stripLeadingAndTrailingSlash } from 'proton-shared/lib/helpers/string';
 import { ProtonConfig } from 'proton-shared/lib/interfaces';
 import { replaceUrl } from 'proton-shared/lib/helpers/browser';
 import { getAppHref } from 'proton-shared/lib/apps/helper';
+import { requestFork } from 'proton-shared/lib/authentication/sessionForking';
+import { FORK_TYPE } from 'proton-shared/lib/authentication/ForkInterface';
 
 import { MimeIcons, Icons } from '../../components';
 import Signout from './Signout';
@@ -25,8 +27,6 @@ import CompatibilityCheck from './CompatibilityCheck';
 import ConfigProvider from '../config/Provider';
 import NotificationsProvider from '../notifications/Provider';
 import ModalsProvider from '../modals/Provider';
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-// @ts-ignore
 import ApiProvider from '../api/ApiProvider';
 import CacheProvider from '../cache/Provider';
 import AuthenticationProvider from '../authentication/Provider';
@@ -36,6 +36,7 @@ import clearKeyCache from './clearKeyCache';
 import useInstance from '../../hooks/useInstance';
 import { PreventLeaveProvider } from '../../hooks';
 import { OnLoginCallbackArguments } from './interface';
+import { GlobalLoaderProvider, GlobalLoader } from '../../components/globalLoader';
 
 interface Props {
     config: ProtonConfig;
@@ -70,7 +71,7 @@ const getInitialState = (oldUID?: string, oldLocalID?: number): { UID?: string; 
             localID: undefined,
         };
     }
-    const pathname = window.location.pathname;
+    const { pathname } = window.location;
     if (getIsSSOPath(pathname)) {
         // Special routes which should never be logged in
         return;
@@ -133,11 +134,12 @@ const ProtonApp = ({ config, children }: Props) => {
             const cache = createCache<string, any>();
 
             // If the user was received from the login call, pre-set it directly.
-            User &&
+            if (User) {
                 cache.set(UserModel.key, {
                     value: formatUser(User),
                     status: STATUS.RESOLVED,
                 });
+            }
 
             if (EventID !== undefined) {
                 setTmpEventID(cache, EventID);
@@ -170,7 +172,11 @@ const ProtonApp = ({ config, children }: Props) => {
         pathRef.current = '/';
 
         if (isSSOMode) {
-            return replaceUrl(getAppHref('/switch?flow=logout', APPS.PROTONACCOUNT));
+            const { APP_NAME } = config;
+            if (APP_NAME === APPS.PROTONACCOUNT) {
+                return replaceUrl(getAppHref('/switch?flow=logout', APPS.PROTONACCOUNT));
+            }
+            return requestFork(APP_NAME, undefined, FORK_TYPE.SWITCH);
         }
         setAuthData({
             history: createHistory({ basename: getBasename() }),
@@ -245,7 +251,12 @@ const ProtonApp = ({ config, children }: Props) => {
                                     <ModalsProvider>
                                         <ApiProvider UID={UID} config={config} onLogout={handleLogout}>
                                             <AuthenticationProvider store={authenticationValue}>
-                                                <CacheProvider cache={cacheRef.current}>{render()}</CacheProvider>
+                                                <CacheProvider cache={cacheRef.current}>
+                                                    <GlobalLoaderProvider>
+                                                        <GlobalLoader />
+                                                        {render()}
+                                                    </GlobalLoaderProvider>
+                                                </CacheProvider>
                                             </AuthenticationProvider>
                                         </ApiProvider>
                                     </ModalsProvider>

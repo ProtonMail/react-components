@@ -1,28 +1,14 @@
 import React from 'react';
 import { c } from 'ttag';
-import { APPS, APPS_CONFIGURATION, FEATURE_FLAGS, isSSOMode } from 'proton-shared/lib/constants';
+import { APPS, APPS_CONFIGURATION, FEATURE_FLAGS } from 'proton-shared/lib/constants';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
-import { getAccountSettingsApp } from 'proton-shared/lib/apps/helper';
-import humanSize from 'proton-shared/lib/helpers/humanSize';
 
-import { useUser } from '../../hooks';
-import { Meter, AppLink, Icon, SimpleDropdown } from '../../components';
+import { AppLink, Icon, SimpleDropdown, Href } from '../../components';
 
-const { PROTONACCOUNT, PROTONMAIL, PROTONCONTACTS, PROTONCALENDAR, PROTONDRIVE } = APPS;
+const { PROTONMAIL, PROTONCONTACTS, PROTONCALENDAR, PROTONDRIVE } = APPS;
 
 const AppsDropdown = () => {
-    const [user] = useUser();
-    const { UsedSpace, MaxSpace } = user;
-    const spacePercentage = Math.round((UsedSpace * 100) / MaxSpace);
-    const spaceHuman = `${humanSize(UsedSpace)} / ${humanSize(MaxSpace)}`;
-
-    const apps = [
-        PROTONMAIL,
-        PROTONCONTACTS,
-        PROTONCALENDAR,
-        FEATURE_FLAGS.includes('drive') && PROTONDRIVE,
-        isSSOMode && PROTONACCOUNT,
-    ]
+    const apps = [PROTONMAIL, PROTONCONTACTS, PROTONCALENDAR, FEATURE_FLAGS.includes('drive') && PROTONDRIVE]
         .filter(isTruthy)
         .map((app) => ({
             toApp: app,
@@ -43,7 +29,7 @@ const AppsDropdown = () => {
                 {apps.map(({ toApp, icon, title }, index) => {
                     const key = `${index}`;
                     return (
-                        <li className="dropDown-item appsDropdown-item" key={key}>
+                        <li key={key}>
                             <AppLink
                                 to="/"
                                 toApp={toApp}
@@ -56,22 +42,15 @@ const AppsDropdown = () => {
                         </li>
                     );
                 })}
-                <li className="dropDown-item appsDropdown-item">
-                    <AppLink
-                        to="/subscription"
-                        toApp={getAccountSettingsApp()}
-                        className="appsDropdown-link big m0 bl p1 pt0-75 pb0-25"
-                        title={c('Apps dropdown').t`Add storage space`}
+                <li>
+                    <Href
+                        url="https://account.protonvpn.com/login"
+                        className="appsDropdown-link big m0 p1 pt0-75 pb0-75 flex flex-nowrap flex-items-center"
+                        title={c('Apps dropdown').t`Go to ProtonVPN`}
                     >
-                        <span className="flex flex-nowrap flex-items-center">
-                            <Icon name="user-storage" size={20} className="mr0-5" />
-                            <span>{c('Apps dropdown').t`Storage capacity`}</span>
-                        </span>
-                        <div className="ml1-5">
-                            <Meter className="is-thin bl mt0-25" value={spacePercentage} />
-                            <div className="smaller m0 opacity-50">{spaceHuman}</div>
-                        </div>
-                    </AppLink>
+                        <Icon name="protonvpn" size={20} className="mr0-5" />
+                        <span>ProtonVPN</span>
+                    </Href>
                 </li>
             </ul>
         </SimpleDropdown>

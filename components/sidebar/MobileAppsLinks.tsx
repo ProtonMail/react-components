@@ -5,6 +5,8 @@ import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 
 import { useConfig } from '../../hooks';
 import MobileNavServices from './MobileNavServices';
+import Href from '../link/Href';
+import Icon from '../icon/Icon';
 import MobileNavLink from './MobileNavLink';
 
 const { PROTONMAIL, PROTONCONTACTS, PROTONCALENDAR, PROTONDRIVE, PROTONACCOUNT } = APPS;
@@ -32,6 +34,9 @@ const MobileAppsLinks = () => {
                 const isCurrent = toApp === APP_NAME;
                 return <MobileNavLink key={index} to="/" toApp={toApp} icon={icon} current={isCurrent} />;
             })}
+            <Href url="https://account.protonvpn.com/login" className="flex aside-link">
+                <Icon name="protonvpn" className="aside-linkIcon mauto" />
+            </Href>
         </MobileNavServices>
     );
 };

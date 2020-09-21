@@ -23,13 +23,16 @@ const DomainsSelect = ({ member, onChange, className }) => {
 
     const formatDomains = (domains = []) =>
         domains.reduce((acc, { State, DomainName }) => {
-            State && acc.push(DomainName);
+            if (State) {
+                acc.push(DomainName);
+            }
             return acc;
         }, []);
 
     const queryDomains = async () => {
-        const premium = member.Self && user.hasPaidMail ? premiumDomains : [];
-        const available = member.Self ? await api(queryAvailableDomains()).then(({ Domains }) => Domains) : [];
+        const premium = member.Self && member.Subscriber && user.hasPaidMail ? premiumDomains : [];
+        const available =
+            member.Self && member.Subscriber ? await api(queryAvailableDomains()).then(({ Domains }) => Domains) : [];
         const domainNames = [].concat(premium, available, formatDomains(domains));
 
         setOptions(domainNames.map((text) => ({ text, value: text })));
@@ -56,9 +59,6 @@ const DomainsSelect = ({ member, onChange, className }) => {
 DomainsSelect.propTypes = {
     member: PropTypes.object.isRequired,
     onChange: PropTypes.func.isRequired,
-    user: PropTypes.object,
-    domains: PropTypes.object,
-    fetchDomains: PropTypes.func,
     className: PropTypes.string,
 };
 

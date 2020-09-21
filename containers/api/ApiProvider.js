@@ -110,27 +110,34 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
 
             if (e.name === 'TimeoutError') {
                 const isSilenced = getSilenced(e.config, code);
-                !isSilenced && createNotification({ type: 'error', text: errorMessage });
+                if (!isSilenced) {
+                    createNotification({ type: 'error', text: errorMessage });
+                }
                 throw e;
             }
 
             if (errorMessage) {
                 const isSilenced = getSilenced(e.config, code);
-                !isSilenced && createNotification({ type: 'error', text: errorMessage });
+                if (!isSilenced) {
+                    createNotification({ type: 'error', text: errorMessage });
+                }
             }
 
             throw e;
         };
 
-        const handleUnlock = (missingScopes = []) => {
+        const handleUnlock = (missingScopes = [], e) => {
             if (missingScopes.includes('nondelinquent')) {
                 return new Promise((resolve, reject) => {
                     createModal(<DelinquentModal onClose={() => reject(CancelUnlockError())} />);
                 });
             }
-            return new Promise((resolve, reject) => {
-                createModal(<UnlockModal onClose={() => reject(CancelUnlockError())} onSuccess={resolve} />);
-            });
+            if (missingScopes.includes('locked')) {
+                return new Promise((resolve, reject) => {
+                    createModal(<UnlockModal onClose={() => reject(CancelUnlockError())} onSuccess={resolve} />);
+                });
+            }
+            return Promise.reject(e);
         };
 
         const handleVerification = ({ token, methods, onVerify }) => {
