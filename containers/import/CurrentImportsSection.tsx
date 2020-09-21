@@ -173,9 +173,7 @@ const CurrentImportsSection = forwardRef(({ fetchPastImports }: Props, ref) => {
 
     return (
         <>
-            {!hasStoragePausedImports && !hasAuthPausedImports && (
-                <Alert>{c('Info').t`Check the status of your imports in progress`}</Alert>
-            )}
+            {!hasAuthPausedImports && <Alert>{c('Info').t`Check the status of your imports in progress`}</Alert>}
             {hasStoragePausedImports && (
                 <Alert type="warning">
                     {c('Info')
