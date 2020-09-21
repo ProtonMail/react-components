@@ -11,7 +11,7 @@ import RequestInvite from './RequestInvite';
 interface Props {
     onSubmit: (token: string, tokenType: HumanVerificationMethodType) => void;
     token: string;
-    mode: 'signup' | undefined;
+    mode?: 'signup' | undefined;
     methods: HumanVerificationMethodType[];
 }
 
