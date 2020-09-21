@@ -34,12 +34,12 @@ const useMemberAddresses = (members: Member[]) => {
             })
         );
 
-        return members.reduce((acc, { ID }, i) => {
+        return members.reduce<{ [id: string]: Address[] }>((acc, { ID }, i) => {
             return {
                 ...acc,
                 [ID]: memberAddresses[i],
             };
-        }, {} as { [id: string]: Address[] });
+        }, {});
     }, [members, addresses]);
 };
 
