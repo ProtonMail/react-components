@@ -1,5 +1,4 @@
 import React, { FormEvent } from 'react';
-import { Link } from 'react-router-dom';
 import { c } from 'ttag';
 import { noop } from 'proton-shared/lib/helpers/function';
 import { API_CUSTOM_ERROR_CODES } from 'proton-shared/lib/errors';
@@ -57,40 +56,32 @@ const MinimalLoginContainer = ({ onLogin, ignoreUnlock = false, needHelp }: Prop
             withLoading(handleLogin().catch(catchHandler));
         };
         return (
-            <>
-                <form name="loginForm" onSubmit={handleSubmit}>
-                    <Label htmlFor="login">{c('Label').t`Username or ProtonMail address`}</Label>
-                    <div className="mb1">
-                        <LoginUsernameInput
-                            id="login"
-                            title={c('Title').t`Enter your username or ProtonMail email address`}
-                            username={username}
-                            setUsername={loading ? noop : setUsername}
-                        />
-                    </div>
-                    <Label htmlFor="password">{c('Label').t`Password`}</Label>
-                    <div className="mb1">
-                        <LoginPasswordInput
-                            password={password}
-                            setPassword={loading ? noop : setPassword}
-                            id="password"
-                            title={c('Title').t`Enter your password`}
-                        />
-                    </div>
-                    <div className="flex flex-spacebetween">
-                        {needHelp}
-                        <PrimaryButton type="submit" loading={loading} data-cy-login="submit">
-                            {c('Action').t`Log in`}
-                        </PrimaryButton>
-                    </div>
-                </form>
-                <div className="w100 flex flex-justify-center flex-items-center flex-column mt1">
-                    <span className="flex-item-noshrink">
-                        <p className="bold">{c('Link').t`Don't have an account yet? Sign up for free!`}</p>
-                    </span>
-                    <Link className="ml1 pm-button--primary" to="/signup">{c('Link').t`Sign up for free`}</Link>
+            <form name="loginForm" onSubmit={handleSubmit}>
+                <Label htmlFor="login">{c('Label').t`Username or ProtonMail address`}</Label>
+                <div className="mb1">
+                    <LoginUsernameInput
+                        id="login"
+                        title={c('Title').t`Enter your username or ProtonMail email address`}
+                        username={username}
+                        setUsername={loading ? noop : setUsername}
+                    />
                 </div>
-            </>
+                <Label htmlFor="password">{c('Label').t`Password`}</Label>
+                <div className="mb1">
+                    <LoginPasswordInput
+                        password={password}
+                        setPassword={loading ? noop : setPassword}
+                        id="password"
+                        title={c('Title').t`Enter your password`}
+                    />
+                </div>
+                <div className="flex flex-spacebetween">
+                    {needHelp}
+                    <PrimaryButton type="submit" loading={loading} data-cy-login="submit">
+                        {c('Action').t`Log in`}
+                    </PrimaryButton>
+                </div>
+            </form>
         );
     }
 
