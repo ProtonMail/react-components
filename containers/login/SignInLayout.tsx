@@ -28,7 +28,7 @@ const SignInLayout = ({ children, title = '' }: Props) => {
             <PublicHeader
                 left={
                     <>
-                        <span className="opacity-50">{c('Label').t`Back to:`}</span>{' '}
+                        <span className="opacity-50">{c('Label').t`Back to:`}</span>
                         <Href url={staticURL} className="inbl color-white nodecoration hover-same-color" target="_self">
                             {domain}
                         </Href>
@@ -43,7 +43,7 @@ const SignInLayout = ({ children, title = '' }: Props) => {
                     <>
                         <div className="flex flex-justify-end">
                             <SupportDropdown className="pm-button--primaryborder-dark" />
-                            <Link className="ml1 notablet pm-button--primary" to="/signup">{c('Link')
+                            <Link className="ml1 nomobile notablet pm-button--primary" to="/signup">{c('Link')
                                 .t`Sign up for free`}</Link>
                         </div>
                     </>
@@ -55,12 +55,8 @@ const SignInLayout = ({ children, title = '' }: Props) => {
                     <div className="center bg-white color-global-grey mt2 mw40e w100 p2 bordered-container flex-item-noshrink">
                         {children}
                     </div>
-                    <p className="aligncenter flex-item-noshrink">
-                        <Link className="bold" to="/signup">{c('Link')
-                            .t`Don't have an account yet? Sign up for free!`}</Link>
-                    </p>
                 </div>
-                <footer className="opacity-50 mtauto flex-item-noshrink aligncenter pb1">
+                <footer className="opacity-50 flex-item-noshrink aligncenter pb1 mt1">
                     <FooterDetails link={<a href={staticURL}>{isVPN ? 'ProtonVPN.com' : 'ProtonMail.com'}</a>} />
                 </footer>
             </div>
