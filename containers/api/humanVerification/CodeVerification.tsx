@@ -4,7 +4,7 @@ import { isNumber } from 'proton-shared/lib/helpers/validators';
 import { validateEmailAddress } from 'proton-shared/lib/helpers/email';
 import { API_CUSTOM_ERROR_CODES } from 'proton-shared/lib/errors';
 import { c } from 'ttag';
-import { EmailInput, Input, IntlTelInput, InlineLinkButton, PrimaryButton } from '../../../components';
+import { EmailInput, Input, IntlTelInput, InlineLinkButton, PrimaryButton, Label } from '../../../components';
 import { useApi, useLoading, useModals, useNotifications } from '../../../hooks';
 import { classnames } from '../../../helpers';
 
@@ -86,7 +86,8 @@ const CodeVerification = ({ email: defaultEmail = '', mode, method, onSubmit }: 
         };
         return (
             <>
-                <label htmlFor="email" className={classnames(['pm-label bl', mode !== 'signup' && 'mb0-5'])}>{c('Label').t`Email address`}</label>
+                <Label htmlFor="email" className={classnames(['bl', mode !== 'signup' && 'mb0-5'])}>{c('Label')
+                    .t`Email address`}</Label>
                 <div className="mb1">
                     <EmailInput
                         id="email"
@@ -118,7 +119,8 @@ const CodeVerification = ({ email: defaultEmail = '', mode, method, onSubmit }: 
         const handleChangePhone = (status: any, value: any, countryData: any, number: string) => setPhone(number);
         return (
             <>
-                <label htmlFor="phone" className={classnames(['pm-label bl', mode !== 'signup' && 'mb0-5'])}>{c('Label').t`Phone number`}</label>
+                <Label htmlFor="phone" className={classnames(['bl', mode !== 'signup' && 'mb0-5'])}>{c('Label')
+                    .t`Phone number`}</Label>
                 <div className="mb1">
                     <IntlTelInput
                         id="phone"
@@ -162,7 +164,8 @@ const CodeVerification = ({ email: defaultEmail = '', mode, method, onSubmit }: 
                         ) : null}
                     </div>
                 ) : null}
-                <label htmlFor="code" className={classnames(['pm-label bl', mode !== 'signup' && 'mb0-5'])}>{c('Label').t`Verification code`}</label>
+                <Label htmlFor="code" className={classnames(['bl', mode !== 'signup' && 'mb0-5'])}>{c('Label')
+                    .t`Verification code`}</Label>
                 <div className="mb0-5">
                     <Input
                         id="code"
