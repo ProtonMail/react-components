@@ -176,11 +176,10 @@ const CurrentImportsSection = forwardRef(({ fetchPastImports }: Props, ref) => {
             {!hasAuthPausedImports && <Alert>{c('Info').t`Check the status of your imports in progress`}</Alert>}
             {hasStoragePausedImports && (
                 <Alert type="warning">
-                    {c('Info')
-                        .t`Proton paused an import because your ProtonMail account is running out of space. To resume this import:`}
+                    {c('Info').t`Proton paused an import because your account is running low on space. You can:`}
                     <ul className="m0">
-                        <li>{c('Info').t`delete older messages to free up space`}</li>
-                        <li>{c('Info').t`upgrade your plan to get additional storage`}</li>
+                        <li>{c('Info').t`free up space by deleting older messages or other data`}</li>
+                        <li>{c('Info').t`purchase additional storage`}</li>
                     </ul>
                 </Alert>
             )}
@@ -213,18 +212,18 @@ const CurrentImportsSection = forwardRef(({ fetchPastImports }: Props, ref) => {
 
                         const badgeRenderer = () => {
                             const percentage = (processed * 100) / total;
+                            const percentageValue = Number.isNaN(percentage) ? 0 : Math.round(percentage);
 
                             if (State === ImportMailStatus.PAUSED) {
                                 return (
                                     <>
-                                        <Badge type="warning">{c('Import status').t`Paused`}</Badge>
+                                        <Badge type="warning">{c('Import status').t`${percentageValue}% paused`}</Badge>
 
                                         {ErrorCode === ImportMailError.ERROR_CODE_IMAP_CONNECTION && (
                                             <Tooltip title={c('Tooltip').t`Account is disconnected`}>
                                                 <Icon name="attention-plain" />
                                             </Tooltip>
                                         )}
-
                                         {ErrorCode === ImportMailError.ERROR_CODE_QUOTA_LIMIT && (
                                             <Tooltip title={c('Tooltip').t`Your ProtonMail inbox is almost full`}>
                                                 <Icon name="attention-plain" />
@@ -233,8 +232,6 @@ const CurrentImportsSection = forwardRef(({ fetchPastImports }: Props, ref) => {
                                     </>
                                 );
                             }
-
-                            const percentageValue = Number.isNaN(percentage) ? 0 : Math.round(percentage);
 
                             return <Badge>{c('Import status').t`${percentageValue}% imported`}</Badge>;
                         };
