@@ -104,11 +104,9 @@ const StandardPrivateApp = <T, M extends Model<T>, E, EvtM extends Model<E>>({
             ]);
         });
 
-        const appPromise = () => {
-            return appFactory().then((result) => {
-                appRef.current = result.default;
-            });
-        };
+        const appPromise = appFactory().then((result) => {
+            appRef.current = result.default;
+        });
 
         Promise.all([
             eventManagerPromise,
@@ -116,7 +114,7 @@ const StandardPrivateApp = <T, M extends Model<T>, E, EvtM extends Model<E>>({
             addressesPromise,
             onInit?.(),
             loadOpenPGP(openpgpConfig),
-            appPromise(),
+            appPromise,
         ])
             .then(() => {
                 setLoading(false);
