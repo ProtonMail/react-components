@@ -7,6 +7,8 @@ import { reportBug } from 'proton-shared/lib/api/reports';
 import { srpAuth } from 'proton-shared/lib/srp';
 import { wait } from 'proton-shared/lib/helpers/promise';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
+import { getClientID } from 'proton-shared/lib/apps/helper';
+
 import { collectInfo, getClient } from '../../helpers/report';
 import {
     Checkbox,
@@ -49,7 +51,8 @@ const DeleteAccountModal = ({ onClose, ...rest }) => {
         password: '',
         twoFa: '',
     });
-    const { CLIENT_ID, APP_VERSION, CLIENT_TYPE } = useConfig();
+    const { APP_NAME, APP_VERSION, CLIENT_TYPE } = useConfig();
+    const CLIENT_ID = getClientID(APP_NAME);
     const Client = getClient(CLIENT_ID);
     const isDisabled = useMemo(() => {
         if (!model.check || !model.reason || !model.feedback || !model.email || !model.password) {
