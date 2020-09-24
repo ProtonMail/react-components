@@ -193,7 +193,7 @@ const CustomizeImportModal = ({
                             <Icon name="info" className="ml0-5" />
                         </Tooltip>
                     </FormLabel>
-                    <Field className="flex flex-items-center flex-nowrap">
+                    <Field className="auto flex flex-items-center flex-nowrap">
                         {customizedPayload.ImportLabel && customizedPayload.ImportLabel.Name && (
                             <LabelStack
                                 labels={[
@@ -204,6 +204,7 @@ const CustomizeImportModal = ({
                                     },
                                 ]}
                                 showDelete={false}
+                                className="mw100"
                             />
                         )}
                         <Button className="flex-item-noshrink ml1" onClick={handleEditLabel}>
