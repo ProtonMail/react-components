@@ -182,7 +182,7 @@ const CustomizeImportModal = ({
         >
             <Alert>
                 {c('Info')
-                    .t`Choose a label for the messages imported in your Proton account, a time range for this import, and the folders you would like to import.`}
+                    .t`Create a label for the imported messages, a time range for this import, and the folders you would like to import.`}
             </Alert>
 
             <div className="mb1 pt1 border-bottom flex-items-center">
