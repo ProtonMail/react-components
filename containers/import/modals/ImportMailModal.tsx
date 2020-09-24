@@ -53,7 +53,6 @@ const DEFAULT_MODAL_MODEL: ImportModalModel = {
 interface Props {
     currentImport?: ImportMail;
     onClose?: () => void;
-    onImportComplete: () => void;
 }
 
 const dateToTimestamp = (date: Date) => Math.floor(date.getTime() / 1000);
@@ -77,7 +76,7 @@ const destinationFoldersFirst = (a: MailImportFolder, b: MailImportFolder) => {
     return 0;
 };
 
-const ImportMailModal = ({ onImportComplete, onClose = noop, currentImport, ...rest }: Props) => {
+const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
     const isReconnectMode = !!currentImport;
     const [loading, withLoading] = useLoading();
     const { createModal } = useModals();
@@ -240,7 +239,6 @@ const ImportMailModal = ({ onImportComplete, onClose = noop, currentImport, ...r
             ...modalModel,
             step: Step.STARTED,
         });
-        onImportComplete();
     };
 
     const resumeImport = async () => {
@@ -254,7 +252,6 @@ const ImportMailModal = ({ onImportComplete, onClose = noop, currentImport, ...r
             })
         );
         await api(resumeMailImport(modalModel.importID));
-        onImportComplete();
         onClose();
     };
 

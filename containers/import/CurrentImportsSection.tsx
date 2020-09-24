@@ -1,10 +1,10 @@
-import React, { useEffect, useState, forwardRef, useImperativeHandle } from 'react';
+import React from 'react';
 import { format } from 'date-fns';
 import { c } from 'ttag';
 
-import { queryMailImport, resumeMailImport, cancelMailImport } from 'proton-shared/lib/api/mailImport';
+import { resumeMailImport, cancelMailImport } from 'proton-shared/lib/api/mailImport';
 
-import { useApi, useLoading, useNotifications, useModals } from '../../hooks';
+import { useApi, useLoading, useNotifications, useModals, useImporters } from '../../hooks';
 import {
     Loader,
     Alert,
@@ -23,22 +23,11 @@ import {
 import { ImportMail, ImportMailStatus, ImportMailError } from './interfaces';
 import ImportMailModal from './modals/ImportMailModal';
 
-interface ImportsFromServer {
-    Active: ImportMail;
-    Email: string;
-    ID: string;
-    ImapHost: string;
-    ImapPort: number;
-    Sasl: string;
-}
-
 interface RowActionsProps {
     currentImport: ImportMail;
-    fetchCurrentImports: () => void;
-    fetchPastImports: () => void;
 }
 
-const RowActions = ({ currentImport, fetchCurrentImports, fetchPastImports }: RowActionsProps) => {
+const RowActions = ({ currentImport }: RowActionsProps) => {
     const { ID, State, ErrorCode } = currentImport;
     const api = useApi();
     const { createModal } = useModals();
@@ -48,13 +37,11 @@ const RowActions = ({ currentImport, fetchCurrentImports, fetchPastImports }: Ro
 
     const handleResume = async (importID: string) => {
         await api(resumeMailImport(importID));
-        fetchCurrentImports();
         createNotification({ text: c('Success').t`Import resumed` });
     };
 
     const handleReconnect = async () => {
-        await createModal(<ImportMailModal currentImport={currentImport} onImportComplete={fetchCurrentImports} />);
-        fetchCurrentImports();
+        await createModal(<ImportMailModal currentImport={currentImport} />);
     };
 
     const handleCancel = async (importID: string) => {
@@ -82,8 +69,6 @@ const RowActions = ({ currentImport, fetchCurrentImports, fetchPastImports }: Ro
             );
         });
         await api(cancelMailImport(importID));
-        fetchPastImports();
-        fetchCurrentImports();
         createNotification({ text: c('Success').t`Import canceled` });
     };
 
@@ -118,48 +103,26 @@ const RowActions = ({ currentImport, fetchCurrentImports, fetchPastImports }: Ro
     return <DropdownActions key="actions" className="pm-button--small" list={list} />;
 };
 
-interface Props {
-    fetchPastImports: () => void;
-}
+const CurrentImportsSection = () => {
+    const [imports, importersLoading] = useImporters();
 
-const CurrentImportsSection = forwardRef(({ fetchPastImports }: Props, ref) => {
-    const api = useApi();
-    const [imports, setImports] = useState<ImportMail[]>([]);
-    const [loading, withLoading] = useLoading();
+    // const fetch = async () => {
+    //     const data: { Importers: ImportsFromServer[] } = await api(queryMailImport());
+    //     const imports = data.Importers || [];
+    //     setImports(
+    //         imports
+    //             .filter((i) => i.Active)
+    //             .map((i) => ({
+    //                 ...i.Active,
+    //                 ID: i.ID,
+    //                 Email: i.Email,
+    //                 ImapHost: i.ImapHost,
+    //                 ImapPort: `${i.ImapPort}`,
+    //             }))
+    //     );
+    // };
 
-    const fetch = async () => {
-        const data: { Importers: ImportsFromServer[] } = await api(queryMailImport());
-        const imports = data.Importers || [];
-        setImports(
-            imports
-                .filter((i) => i.Active)
-                .map((i) => ({
-                    ...i.Active,
-                    ID: i.ID,
-                    Email: i.Email,
-                    ImapHost: i.ImapHost,
-                    ImapPort: `${i.ImapPort}`,
-                }))
-        );
-    };
-
-    useImperativeHandle(ref, () => ({
-        fetch,
-    }));
-
-    useEffect(() => {
-        withLoading(fetch());
-
-        const intervalID = setInterval(() => {
-            fetch();
-        }, 10 * 1000);
-
-        return () => {
-            clearTimeout(intervalID);
-        };
-    }, []);
-
-    if (loading) {
+    if (importersLoading) {
         return <Loader />;
     }
 
@@ -210,8 +173,8 @@ const CurrentImportsSection = forwardRef(({ fetchPastImports }: Props, ref) => {
                     <tr>{headerCells}</tr>
                 </thead>
                 <TableBody>
-                    {imports.map((currentImport, index) => {
-                        const { Email, State, ErrorCode, CreateTime, Mapping = [] } = currentImport;
+                    {imports.map((currentImporter: ImportMail, index: number) => {
+                        const { Email, State, ErrorCode, CreateTime, Mapping = [] } = currentImporter;
                         const { total, processed } = Mapping.reduce(
                             (acc, { Total = 0, Processed = 0 }) => {
                                 acc.total += Total;
@@ -265,12 +228,7 @@ const CurrentImportsSection = forwardRef(({ fetchPastImports }: Props, ref) => {
                                     </>,
                                     badgeRenderer(),
                                     <time key="importDate">{format(CreateTime * 1000, 'PPp')}</time>,
-                                    <RowActions
-                                        key="actions"
-                                        currentImport={currentImport}
-                                        fetchCurrentImports={fetch}
-                                        fetchPastImports={fetchPastImports}
-                                    />,
+                                    <RowActions key="actions" currentImport={currentImporter} />,
                                 ]}
                             />
                         );
@@ -279,6 +237,6 @@ const CurrentImportsSection = forwardRef(({ fetchPastImports }: Props, ref) => {
             </Table>
         </>
     );
-});
+};
 
 export default CurrentImportsSection;
