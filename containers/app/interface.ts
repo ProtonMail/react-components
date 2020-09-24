@@ -8,6 +8,7 @@ export interface OnLoginCallbackArguments {
     keyPassword?: string;
     LocalID?: number;
     path?: string;
+    flow?: 'signup';
 }
 export type ProtonLoginCallback = (data: OnLoginCallbackArguments) => void;
 export type OnLoginCallback = (data: OnLoginCallbackArguments) => Promise<void>;
