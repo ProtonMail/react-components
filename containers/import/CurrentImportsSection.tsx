@@ -43,7 +43,8 @@ const RowActions = ({ currentImport, fetchCurrentImports, fetchPastImports }: Ro
     const api = useApi();
     const { createModal } = useModals();
     const { createNotification } = useNotifications();
-    const [loadingActions, withLoadingActions] = useLoading();
+    const [loadingPrimaryAction, withLoadingPrimaryAction] = useLoading();
+    const [loadingSecondaryAction, withLoadingSecondaryAction] = useLoading();
 
     const handleResume = async (importID: string) => {
         await api(resumeMailImport(importID));
@@ -95,11 +96,12 @@ const RowActions = ({ currentImport, fetchCurrentImports, fetchPastImports }: Ro
             text: isAuthError ? c('Action').t`Reconnect` : c('Action').t`Resume`,
             onClick: () => {
                 if (isAuthError) {
-                    withLoadingActions(handleReconnect());
+                    withLoadingSecondaryAction(handleReconnect());
                 } else {
-                    withLoadingActions(handleResume(ID));
+                    withLoadingSecondaryAction(handleResume(ID));
                 }
             },
+            loading: loadingSecondaryAction,
         });
     }
 
@@ -107,12 +109,13 @@ const RowActions = ({ currentImport, fetchCurrentImports, fetchPastImports }: Ro
         list.push({
             text: c('Action').t`Cancel`,
             onClick: () => {
-                withLoadingActions(handleCancel(ID));
+                withLoadingPrimaryAction(handleCancel(ID));
             },
+            loading: loadingPrimaryAction,
         });
     }
 
-    return <DropdownActions key="actions" loading={loadingActions} className="pm-button--small" list={list} />;
+    return <DropdownActions key="actions" className="pm-button--small" list={list} />;
 };
 
 interface Props {
