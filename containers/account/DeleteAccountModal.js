@@ -52,8 +52,8 @@ const DeleteAccountModal = ({ onClose, ...rest }) => {
         twoFa: '',
     });
     const { APP_NAME, APP_VERSION, CLIENT_TYPE } = useConfig();
-    const CLIENT_ID = getClientID(APP_NAME);
-    const Client = getClient(CLIENT_ID);
+    const ClientID = getClientID(APP_NAME);
+    const Client = getClient(ClientID);
     const isDisabled = useMemo(() => {
         if (!model.check || !model.reason || !model.feedback || !model.email || !model.password) {
             return true;

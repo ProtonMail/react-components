@@ -87,8 +87,8 @@ const BugModal = ({ onClose = noop, username: Username = '', addresses = [], ...
     const clearCacheLink = isVpn
         ? 'https://protonvpn.com/support/clear-browser-cache-cookies/'
         : 'https://protonmail.com/support/knowledge-base/how-to-clean-cache-and-cookies/';
-    const CLIENT_ID = getClientID(APP_NAME);
-    const Client = getClient(CLIENT_ID);
+    const ClientID = getClientID(APP_NAME);
+    const Client = getClient(ClientID);
     const showCategory = !isDrive;
     const { createNotification } = useNotifications();
     const [{ Email = '' } = {}] = addresses;
