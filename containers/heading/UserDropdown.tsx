@@ -43,8 +43,10 @@ const UserDropdown = ({ ...rest }) => {
     const [uid] = useState(generateUID('dropdown'));
     const { anchorRef, isOpen, toggle, close } = usePopperAnchor<HTMLButtonElement>();
     const [loading, withLoading] = useLoading();
-
     const canAddStorage = useMemo(() => {
+        if (!subscription) {
+            return true;
+        }
         if (hasVisionary(subscription) || hasMailProfessional(subscription)) {
             return false;
         }
@@ -115,9 +117,7 @@ const UserDropdown = ({ ...rest }) => {
                                         >
                                             {c('Action').t`Add storage`}
                                         </AppLink>
-                                    ) : (
-                                        <span />
-                                    )}
+                                    ) : null}
                                 </div>
                                 <Meter className="is-thin bl mt0-5 mb1" value={spacePercentage} />
                                 <AppLink
