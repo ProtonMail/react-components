@@ -4,15 +4,15 @@ import useCache from './useCache';
 
 export const WELCOME_FLAG_KEY = 'flow';
 
-export interface State {
+export interface WelcomeFlagsState {
     isSignupFlow?: boolean;
     isWelcomeFlow?: boolean;
     isWelcomeFlag?: boolean;
 }
 
-const useWelcomeFlag = (): [State, () => void] => {
+const useWelcomeFlags = (): [WelcomeFlagsState, () => void] => {
     const cache = useCache();
-    const [state, setState] = useState<State>(() => {
+    const [state, setState] = useState<WelcomeFlagsState>(() => {
         // Set from ProtonApp
         const flow = cache.get(WELCOME_FLAG_KEY);
         const isSignupFlow = flow === 'signup';
@@ -30,4 +30,4 @@ const useWelcomeFlag = (): [State, () => void] => {
     return [state, setDone];
 }
 
-export default useWelcomeFlag;
+export default useWelcomeFlags;

@@ -13,10 +13,8 @@ interface Props {
     children?: React.ReactNode;
 }
 const OnboardingModal = ({ children, ...rest }: Props) => {
-    const [step, setStep] = useState(0);
-
     return (
-        <FormModal {...rest}>
+        <FormModal hasClose={false} {...rest}>
             {children}
         </FormModal>
     )

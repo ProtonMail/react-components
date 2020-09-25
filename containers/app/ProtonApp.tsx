@@ -36,7 +36,7 @@ import clearKeyCache from './clearKeyCache';
 import { OnLoginCallbackArguments } from './interface';
 import { useInstance, PreventLeaveProvider } from '../../hooks';
 import { GlobalLoaderProvider, GlobalLoader } from '../../components/globalLoader';
-import { WELCOME_FLAG_KEY } from '../../hooks/useWelcomeFlag';
+import { WELCOME_FLAG_KEY } from '../../hooks/useWelcomeFlags';
 
 interface Props {
     config: ProtonConfig;
