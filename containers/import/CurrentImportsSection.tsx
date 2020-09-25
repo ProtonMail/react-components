@@ -194,9 +194,17 @@ const CurrentImportsSection = () => {
                                 );
                             }
 
+                            if (State === ImportMailStatus.QUEUED) {
+                                return (
+                                    <div className="onmobile-aligncenter">
+                                        <Badge type="origin">{c('Import status').t`Queued`}</Badge>
+                                    </div>
+                                );
+                            }
+
                             return (
                                 <div className="onmobile-aligncenter">
-                                    <Badge className="m0">{c('Import status').t`${percentageValue}% imported`}</Badge>
+                                    <Badge>{c('Import status').t`${percentageValue}% imported`}</Badge>
                                 </div>
                             );
                         };
