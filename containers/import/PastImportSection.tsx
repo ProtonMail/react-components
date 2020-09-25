@@ -10,7 +10,7 @@ import { Button, Loader, Alert, Table, TableCell, TableBody, TableRow, Badge, Er
 
 import { ConfirmModal } from '../../components/modal';
 
-import { ImportMailReport, ImportMailReportStatus } from './interfaces';
+import { ImportMailReportStatus } from './interfaces';
 
 interface ImportStatusProps {
     status: ImportMailReportStatus;
@@ -108,7 +108,7 @@ const PastImportsSection = () => {
                     <tr>{headerCells}</tr>
                 </thead>
                 <TableBody>
-                    {imports.map(({ State, Email, ID, TotalSize, EndTime }: ImportMailReport, index: number) => {
+                    {imports.map(({ State, Email, ID, TotalSize, EndTime }, index) => {
                         return (
                             <TableRow
                                 key={index}

@@ -117,10 +117,10 @@ const CurrentImportsSection = () => {
         return <Alert>{c('Info').t`No imports in progress`}</Alert>;
     }
 
-    const hasStoragePausedImports = imports.some(({ State, ErrorCode }: ImportMail) => {
+    const hasStoragePausedImports = imports.some(({ State, ErrorCode }) => {
         return State === ImportMailStatus.PAUSED && ErrorCode === ImportMailError.ERROR_CODE_QUOTA_LIMIT;
     });
-    const hasAuthPausedImports = imports.some(({ State, ErrorCode }: ImportMail) => {
+    const hasAuthPausedImports = imports.some(({ State, ErrorCode }) => {
         return State === ImportMailStatus.PAUSED && ErrorCode === ImportMailError.ERROR_CODE_IMAP_CONNECTION;
     });
 
@@ -160,7 +160,7 @@ const CurrentImportsSection = () => {
                     <tr>{headerCells}</tr>
                 </thead>
                 <TableBody>
-                    {imports.map((currentImporter: ImportMail, index: number) => {
+                    {imports.map((currentImporter, index) => {
                         const { Email, State, ErrorCode, CreateTime, Mapping = [] } = currentImporter;
                         const { total, processed } = Mapping.reduce(
                             (acc, { Total = 0, Processed = 0 }) => {
