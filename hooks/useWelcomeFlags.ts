@@ -1,5 +1,5 @@
-import { UserSettingsModel } from 'proton-shared/lib/models/userSettingsModel';
 import { useCallback, useState } from 'react';
+import { UserSettingsModel } from 'proton-shared/lib/models';
 import useCache from './useCache';
 
 export const WELCOME_FLAG_KEY = 'flow';
@@ -22,12 +22,12 @@ const useWelcomeFlags = (): [WelcomeFlagsState, () => void] => {
             isSignupFlow,
             isWelcomeFlag,
             isWelcomeFlow: isSignupFlow || isWelcomeFlag,
-        }
+        };
     });
     const setDone = useCallback(() => {
         setState({});
     }, []);
     return [state, setDone];
-}
+};
 
 export default useWelcomeFlags;
