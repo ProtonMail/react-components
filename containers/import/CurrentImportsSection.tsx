@@ -20,11 +20,11 @@ import {
     ErrorButton,
 } from '../../components';
 
-import { ImportMail, ImportMailStatus, ImportMailError } from './interfaces';
+import { Importer, ImportMailStatus, ImportMailError } from './interfaces';
 import ImportMailModal from './modals/ImportMailModal';
 
 interface RowActionsProps {
-    currentImport: ImportMail;
+    currentImport: Importer;
 }
 
 const RowActions = ({ currentImport }: RowActionsProps) => {

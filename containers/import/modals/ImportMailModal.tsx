@@ -26,7 +26,7 @@ import {
 import ImportMailWizard from '../../../components/import/ImportMailWizard';
 
 import { TIME_UNIT, IMAP_CONNECTION_ERROR_LABEL } from '../constants';
-import { Step, ImportModalModel, IMPORT_ERROR, MailImportFolder, FolderMapping, ImportMail } from '../interfaces';
+import { Step, ImportModalModel, IMPORT_ERROR, MailImportFolder, FolderMapping, Importer } from '../interfaces';
 
 import ImportStartStep from './steps/ImportStartStep';
 import ImportPrepareStep from './steps/ImportPrepareStep';
@@ -51,7 +51,7 @@ const DEFAULT_MODAL_MODEL: ImportModalModel = {
 };
 
 interface Props {
-    currentImport?: ImportMail;
+    currentImport?: Importer;
     onClose?: () => void;
 }
 

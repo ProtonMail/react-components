@@ -95,7 +95,7 @@ export enum ImportMailError {
     ERROR_CODE_QUOTA_LIMIT = 2,
 }
 
-export interface ImportMail {
+export interface Importer {
     ID: string;
     CreateTime: number;
     Email: string;
@@ -118,7 +118,7 @@ export enum ImportMailReportStatus {
     CANCELED = 5,
 }
 
-export interface ImportMailReport {
+export interface ImportHistory {
     ID: string;
     Email: string;
     CreateTime: number;
