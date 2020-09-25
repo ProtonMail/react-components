@@ -5,7 +5,7 @@ import { c } from 'ttag';
 import { deleteMailImportReport } from 'proton-shared/lib/api/mailImport';
 import humanSize from 'proton-shared/lib/helpers/humanSize';
 
-import { useApi, useLoading, useNotifications, useModals, useImportHistory } from '../../hooks';
+import { useApi, useLoading, useEventManager, useNotifications, useModals, useImportHistory } from '../../hooks';
 import { Button, Loader, Alert, Table, TableCell, TableBody, TableRow, Badge, ErrorButton } from '../../components';
 
 import { ConfirmModal } from '../../components/modal';
@@ -37,6 +37,7 @@ interface DeleteButtonProps {
 
 const DeleteButton = ({ ID }: DeleteButtonProps) => {
     const api = useApi();
+    const { call } = useEventManager();
     const { createModal } = useModals();
 
     const [loadingActions, withLoadingActions] = useLoading();
@@ -59,6 +60,7 @@ const DeleteButton = ({ ID }: DeleteButtonProps) => {
             );
         });
         await api(deleteMailImportReport(ID));
+        await call();
         createNotification({ text: c('Success').t`Import record deleted` });
     };
 

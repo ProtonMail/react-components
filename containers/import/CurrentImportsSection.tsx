@@ -4,7 +4,7 @@ import { c } from 'ttag';
 
 import { resumeMailImport, cancelMailImport } from 'proton-shared/lib/api/mailImport';
 
-import { useApi, useLoading, useNotifications, useModals, useImporters } from '../../hooks';
+import { useApi, useLoading, useNotifications, useEventManager, useModals, useImporters } from '../../hooks';
 import {
     Loader,
     Alert,
@@ -30,6 +30,7 @@ interface RowActionsProps {
 const RowActions = ({ currentImport }: RowActionsProps) => {
     const { ID, State, ErrorCode } = currentImport;
     const api = useApi();
+    const { call } = useEventManager();
     const { createModal } = useModals();
     const { createNotification } = useNotifications();
     const [loadingPrimaryAction, withLoadingPrimaryAction] = useLoading();
@@ -37,6 +38,7 @@ const RowActions = ({ currentImport }: RowActionsProps) => {
 
     const handleResume = async (importID: string) => {
         await api(resumeMailImport(importID));
+        await call();
         createNotification({ text: c('Success').t`Import resumed` });
     };
 
@@ -69,6 +71,7 @@ const RowActions = ({ currentImport }: RowActionsProps) => {
             );
         });
         await api(cancelMailImport(importID));
+        await call();
         createNotification({ text: c('Success').t`Import canceled` });
     };
 
@@ -104,25 +107,9 @@ const RowActions = ({ currentImport }: RowActionsProps) => {
 };
 
 const CurrentImportsSection = () => {
-    const [imports, importersLoading] = useImporters();
+    const [imports, importsLoading] = useImporters();
 
-    // const fetch = async () => {
-    //     const data: { Importers: ImportsFromServer[] } = await api(queryMailImport());
-    //     const imports = data.Importers || [];
-    //     setImports(
-    //         imports
-    //             .filter((i) => i.Active)
-    //             .map((i) => ({
-    //                 ...i.Active,
-    //                 ID: i.ID,
-    //                 Email: i.Email,
-    //                 ImapHost: i.ImapHost,
-    //                 ImapPort: `${i.ImapPort}`,
-    //             }))
-    //     );
-    // };
-
-    if (importersLoading) {
+    if (importsLoading) {
         return <Loader />;
     }
 

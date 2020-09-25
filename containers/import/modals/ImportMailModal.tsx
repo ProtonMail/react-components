@@ -13,7 +13,7 @@ import {
 import { noop } from 'proton-shared/lib/helpers/function';
 import { validateEmailAddress } from 'proton-shared/lib/helpers/email';
 
-import { useLoading, useAddresses, useModals, useApi } from '../../../hooks';
+import { useLoading, useAddresses, useModals, useApi, useEventManager } from '../../../hooks';
 import {
     ConfirmModal,
     FormModal,
@@ -91,6 +91,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
         port: currentImport?.ImapPort || '',
     });
     const api = useApi();
+    const { call } = useEventManager();
 
     const needAppPassword = useMemo(() => {
         const IMAPsWithAppPasswords = ['imap.gmail.com', 'imap.mail.yahoo.com', 'imap.yandex.com', 'imap.fastmail.com'];
@@ -234,6 +235,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
                 Mapping: modalModel.payload.Mapping.filter((m: FolderMapping) => m.checked),
             })
         );
+        await call();
 
         setModalModel({
             ...modalModel,
@@ -252,6 +254,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
             })
         );
         await api(resumeMailImport(modalModel.importID));
+        await call();
         onClose();
     };
 
