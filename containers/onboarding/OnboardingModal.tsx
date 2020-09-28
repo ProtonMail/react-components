@@ -34,9 +34,15 @@ const OnboardingModal = ({ children, setWelcomeFlags = true, ...rest }: Props) =
 
     const displayNameError = !displayName ? c('Signup error').t`This field is required` : '';
 
-    useEffect(() => {
+    const handleUpdateWelcomeFlags = async () => {
         if (setWelcomeFlags) {
-            api(updateWelcomeFlags()).catch(noop);
+            return api(updateWelcomeFlags()).catch(noop);
+        }
+    };
+
+    useEffect(() => {
+        if (!welcomeFlags?.hasDisplayNameStep && setWelcomeFlags) {
+            handleUpdateWelcomeFlags();
         }
     }, []);
 
@@ -50,11 +56,13 @@ const OnboardingModal = ({ children, setWelcomeFlags = true, ...rest }: Props) =
             const firstAddress = addresses[0];
             // Should never happen.
             if (!firstAddress) {
+                handleUpdateWelcomeFlags();
                 onNext();
                 return;
             }
             await api(updateAddress(firstAddress.ID, { DisplayName: displayName, Signature: firstAddress.Signature }));
             await call();
+            handleUpdateWelcomeFlags();
             onNext();
         };
         return (

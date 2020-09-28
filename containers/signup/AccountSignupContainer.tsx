@@ -373,7 +373,7 @@ const AccountSignupContainer = ({ toApp, onLogin, Layout }: Props) => {
 
         const forkOrQueryApp = toApp || service;
         const toAppName = getToAppName(forkOrQueryApp);
-        const disableExternalSignup = false;
+        const disableExternalSignup = true;
 
         return (
             <Layout
