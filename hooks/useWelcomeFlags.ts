@@ -5,7 +5,7 @@ import useCache from './useCache';
 export const WELCOME_FLAG_KEY = 'flow';
 
 export interface WelcomeFlagsState {
-    isSignupFlow?: boolean;
+    hasDisplayNameStep?: boolean;
     isWelcomeFlow?: boolean;
     isWelcomeFlag?: boolean;
 }
@@ -15,13 +15,14 @@ const useWelcomeFlags = (): [WelcomeFlagsState, () => void] => {
     const [state, setState] = useState<WelcomeFlagsState>(() => {
         // Set from ProtonApp
         const flow = cache.get(WELCOME_FLAG_KEY);
-        const isSignupFlow = flow === 'signup';
+        const hasDisplayNameStep = flow === 'signup' || flow === 'welcome-full';
+        const hasWelcomeModal = flow === 'welcome';
         // Assumes that user settings has been pre-loaded. Not using hook to avoid re-renders.
-        const isWelcomeFlag = cache.get(UserSettingsModel.key)?.value?.WelcomeFlag === 0;
+        const isWelcomeFlag = cache.get(UserSettingsModel.key)?.value?.WelcomeFlag === 0 || hasWelcomeModal;
         return {
-            isSignupFlow,
+            hasDisplayNameStep,
             isWelcomeFlag,
-            isWelcomeFlow: isSignupFlow || isWelcomeFlag,
+            isWelcomeFlow: hasDisplayNameStep || isWelcomeFlag,
         };
     });
     const setDone = useCallback(() => {

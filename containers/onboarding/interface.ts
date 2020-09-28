@@ -5,10 +5,12 @@ export interface OnboardingStepProps {
     submit: React.ReactNode;
     close: React.ReactNode;
     children: React.ReactNode;
+    loading?: boolean;
+    onSubmit?: () => void;
+    onClose?: () => void;
 }
 
 export interface OnboardingStepRenderCallback {
-    step: number;
     onNext: () => void;
     onClose?: () => void;
 }
