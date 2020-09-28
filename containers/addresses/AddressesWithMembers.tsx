@@ -94,7 +94,7 @@ const AddressesWithMembers = ({ match, user, organization }: Props) => {
                                 <TableRow
                                     key={address.ID}
                                     cells={[
-                                        address.Email,
+                                        <div className="ellipsis">{address.Email}</div>,
                                         showUsername && member.Name,
                                         <AddressStatus key={1} {...getStatus(address, i)} />,
                                         <AddressActions
