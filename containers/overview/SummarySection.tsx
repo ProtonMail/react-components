@@ -64,7 +64,9 @@ const SummarySection = ({ user, userSettings, organization, subscription }: Prop
                 </span>
                 <h3 className="mb0-5">{DisplayName || Name}</h3>
                 {organization?.Name ? <p className="mt0 mb0-5">{organization.Name}</p> : null}
-                <p className="mt0 mb0 ellipsis">{Email}</p>
+                <p className="mt0 mb0 ellipsis" title={Email}>
+                    {Email}
+                </p>
             </div>
             {canPay ? (
                 <div className="mb1">
