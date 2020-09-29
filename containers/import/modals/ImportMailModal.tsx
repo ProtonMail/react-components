@@ -26,14 +26,24 @@ import {
 import ImportMailWizard from '../../../components/import/ImportMailWizard';
 
 import { TIME_UNIT, IMAP_CONNECTION_ERROR_LABEL } from '../constants';
-import { Step, ImportModalModel, IMPORT_ERROR, MailImportFolder, FolderMapping, Importer } from '../interfaces';
 
+import {
+    Step,
+    ImportModalModel,
+    IMPORT_ERROR,
+    MailImportFolder,
+    FolderMapping,
+    Importer,
+    PROVIDER_INSTRUCTIONS,
+} from '../interfaces';
+
+import ImportInstructionsStep from './steps/ImportInstructionsStep';
 import ImportStartStep from './steps/ImportStartStep';
 import ImportPrepareStep from './steps/ImportPrepareStep';
 import ImportStartedStep from './steps/ImportStartedStep';
 
 const DEFAULT_MODAL_MODEL: ImportModalModel = {
-    step: Step.START,
+    step: Step.INSTRUCTIONS,
     needIMAPDetails: false,
     importID: '',
     email: '',
@@ -49,6 +59,8 @@ const DEFAULT_MODAL_MODEL: ImportModalModel = {
     },
     isPayloadValid: false,
 };
+
+const GMAIL_INSTRUCTION_STEPS_COUNT = 3;
 
 interface Props {
     currentImport?: Importer;
@@ -82,6 +94,10 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
     const { createModal } = useModals();
     const [addresses, loadingAddresses] = useAddresses();
     const [address] = addresses || [];
+
+    const [providerInstructions, setProviderInstructions] = useState<PROVIDER_INSTRUCTIONS>();
+    const [instructionsCurrentStep, setInstructionsCurrentStep] = useState(0);
+
     const [showPassword, setShowPassword] = useState(false);
     const [modalModel, setModalModel] = useState<ImportModalModel>({
         ...DEFAULT_MODAL_MODEL,
@@ -93,6 +109,8 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
     const api = useApi();
     const { call } = useEventManager();
 
+    const changeProvider = (provider: PROVIDER_INSTRUCTIONS) => setProviderInstructions(provider);
+
     const needAppPassword = useMemo(() => {
         const IMAPsWithAppPasswords = ['imap.gmail.com', 'imap.mail.yahoo.com', 'imap.yandex.com', 'imap.fastmail.com'];
 
@@ -101,6 +119,18 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
 
     const title = useMemo(() => {
         switch (modalModel.step) {
+            case Step.INSTRUCTIONS:
+                if (!providerInstructions) {
+                    return c('Title').t`Prepare for import`;
+                }
+
+                if (providerInstructions === PROVIDER_INSTRUCTIONS.YAHOO) {
+                    return c('Title').t`Prepare Yahoo Mail for import`;
+                }
+
+                return c('Title').t`Prepare Gmail for import ${
+                    instructionsCurrentStep + 1
+                }/${GMAIL_INSTRUCTION_STEPS_COUNT}`;
             case Step.START:
                 return isReconnectMode ? c('Title').t`Reconnect your account` : c('Title').t`Start a new import`;
             case Step.PREPARE:
@@ -110,7 +140,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
             default:
                 return '';
         }
-    }, [modalModel.step]);
+    }, [modalModel.step, providerInstructions, instructionsCurrentStep]);
 
     const wizardSteps = [c('Wizard step').t`Authenticate`, c('Wizard step').t`Plan import`, c('Wizard step').t`Import`];
 
@@ -271,6 +301,20 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
                 }
                 withLoading(submitAuthentication(modalModel.needIMAPDetails));
                 break;
+            case Step.INSTRUCTIONS:
+                if (
+                    providerInstructions === PROVIDER_INSTRUCTIONS.GMAIL &&
+                    instructionsCurrentStep < GMAIL_INSTRUCTION_STEPS_COUNT - 1
+                ) {
+                    setInstructionsCurrentStep(instructionsCurrentStep + 1);
+                    return;
+                }
+
+                setModalModel({
+                    ...modalModel,
+                    step: Step.START,
+                });
+                break;
             case Step.PREPARE:
                 withLoading(launchImport());
                 break;
@@ -287,8 +331,24 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
             return null;
         }
 
+        if (modalModel.step === Step.INSTRUCTIONS && !providerInstructions) {
+            return (
+                <Button
+                    type="submit"
+                    onClick={() => {
+                        setModalModel({
+                            ...modalModel,
+                            step: Step.START,
+                        });
+                    }}
+                >
+                    {c('Action').t`Skip to import`}
+                </Button>
+            );
+        }
+
         return <Button onClick={handleCancel}>{c('Action').t`Cancel`}</Button>;
-    }, [modalModel.step, loading]);
+    }, [modalModel.step, providerInstructions, loading]);
 
     const submit = useMemo(() => {
         const { email, password, needIMAPDetails, imap, port, isPayloadValid, step } = modalModel;
@@ -296,6 +356,29 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
         const disabledStartStep = needIMAPDetails ? !email || !password || !imap || !port : !email || !password;
 
         switch (step) {
+            case Step.INSTRUCTIONS:
+                return providerInstructions ? (
+                    <div>
+                        {providerInstructions === PROVIDER_INSTRUCTIONS.GMAIL &&
+                            instructionsCurrentStep > 0 &&
+                            instructionsCurrentStep < GMAIL_INSTRUCTION_STEPS_COUNT && (
+                                <Button
+                                    onClick={() => {
+                                        setInstructionsCurrentStep(instructionsCurrentStep - 1);
+                                    }}
+                                    className="mr1"
+                                >
+                                    {c('Action').t`Back`}
+                                </Button>
+                            )}
+                        <PrimaryButton type="submit">
+                            {providerInstructions === PROVIDER_INSTRUCTIONS.GMAIL &&
+                            instructionsCurrentStep < GMAIL_INSTRUCTION_STEPS_COUNT - 1
+                                ? c('Action').t`Next`
+                                : c('Action').t`Start import assistant`}
+                        </PrimaryButton>
+                    </div>
+                ) : null;
             case Step.START:
                 return (
                     <PrimaryButton type="submit" disabled={disabledStartStep} loading={loading}>
@@ -314,6 +397,8 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
                 return null;
         }
     }, [
+        providerInstructions,
+        instructionsCurrentStep,
         modalModel.step,
         modalModel.email,
         modalModel.password,
@@ -334,7 +419,16 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
             onClose={handleCancel}
             {...rest}
         >
-            <ImportMailWizard step={modalModel.step} steps={wizardSteps} />
+            {!isReconnectMode && modalModel.step !== Step.INSTRUCTIONS && (
+                <ImportMailWizard step={modalModel.step} steps={wizardSteps} />
+            )}
+            {modalModel.step === Step.INSTRUCTIONS && (
+                <ImportInstructionsStep
+                    provider={providerInstructions}
+                    changeProvider={changeProvider}
+                    instructionsCurrentStep={instructionsCurrentStep}
+                />
+            )}
             {modalModel.step === Step.START && (
                 <ImportStartStep
                     modalModel={modalModel}

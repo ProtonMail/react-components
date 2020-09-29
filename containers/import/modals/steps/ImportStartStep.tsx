@@ -59,7 +59,7 @@ const ImportStartStep = ({ modalModel, updateModalModel, needAppPassword, showPa
                 </Alert>
             ) : (
                 <>
-                    <Alert>{c('Info').t`Enter the address of the email account you want to import from`}</Alert>
+                    <Alert>{c('Info').t`Enter the address of the email account you want to import from.`}</Alert>
                     {showPassword && (
                         <Alert type="warning" learnMore="https://protonmail.com/support/knowledge-base/">
                             {c('Warning')

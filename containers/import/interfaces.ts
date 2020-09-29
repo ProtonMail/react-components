@@ -41,6 +41,7 @@ export enum Step {
     START,
     PREPARE,
     STARTED,
+    INSTRUCTIONS,
 }
 
 export interface ImportModalModel {
@@ -148,4 +149,9 @@ export interface FolderNamesMap {
 
 export interface FolderPathsMap {
     [key: string]: string;
+}
+
+export enum PROVIDER_INSTRUCTIONS {
+    GMAIL = 'gmail',
+    YAHOO = 'yahoo',
 }
