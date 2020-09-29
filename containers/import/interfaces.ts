@@ -97,16 +97,18 @@ export enum ImportMailError {
 
 export interface Importer {
     ID: string;
-    CreateTime: number;
     Email: string;
-    AddressID: string;
-    State: ImportMailStatus;
-    FilterStartDate: string;
-    FilterEndDate: string;
-    Mapping: ImportedFolder[];
-    ErrorCode?: ImportMailError;
     ImapHost?: string;
     ImapPort?: string;
+    Active?: {
+        CreateTime: number;
+        AddressID: string;
+        State: ImportMailStatus;
+        FilterStartDate: string;
+        FilterEndDate: string;
+        Mapping: ImportedFolder[];
+        ErrorCode?: ImportMailError;
+    };
 }
 
 export enum ImportMailReportStatus {

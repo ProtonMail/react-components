@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { format } from 'date-fns';
 import { c } from 'ttag';
 
@@ -28,7 +28,8 @@ interface RowActionsProps {
 }
 
 const RowActions = ({ currentImport }: RowActionsProps) => {
-    const { ID, State, ErrorCode } = currentImport;
+    const { ID, Active } = currentImport;
+    const { State, ErrorCode } = Active || {};
     const api = useApi();
     const { call } = useEventManager();
     const { createModal } = useModals();
@@ -107,20 +108,31 @@ const RowActions = ({ currentImport }: RowActionsProps) => {
 };
 
 const CurrentImportsSection = () => {
-    const [imports, importsLoading] = useImporters();
+    const [imports = [], importsLoading] = useImporters();
+
+    const importsToDisplay = useMemo(() => imports.filter(({ Active }) => Active), [imports]);
 
     if (importsLoading) {
         return <Loader />;
     }
 
-    if (!imports.length) {
+    if (!importsToDisplay.length) {
         return <Alert>{c('Info').t`No imports in progress`}</Alert>;
     }
 
-    const hasStoragePausedImports = imports.some(({ State, ErrorCode }) => {
+    const hasStoragePausedImports = importsToDisplay.some(({ Active }) => {
+        if (!Active) {
+            return false;
+        }
+        const { State, ErrorCode } = Active;
         return State === ImportMailStatus.PAUSED && ErrorCode === ImportMailError.ERROR_CODE_QUOTA_LIMIT;
     });
-    const hasAuthPausedImports = imports.some(({ State, ErrorCode }) => {
+
+    const hasAuthPausedImports = importsToDisplay.some(({ Active }) => {
+        if (!Active) {
+            return false;
+        }
+        const { State, ErrorCode } = Active;
         return State === ImportMailStatus.PAUSED && ErrorCode === ImportMailError.ERROR_CODE_IMAP_CONNECTION;
     });
 
@@ -160,8 +172,10 @@ const CurrentImportsSection = () => {
                     <tr>{headerCells}</tr>
                 </thead>
                 <TableBody>
-                    {imports.map((currentImporter, index) => {
-                        const { Email, State, ErrorCode, CreateTime, Mapping = [] } = currentImporter;
+                    {importsToDisplay.map((currentImport, index) => {
+                        const { Email, Active } = currentImport;
+                        const { State, ErrorCode, CreateTime, Mapping = [] } = Active || {};
+
                         const { total, processed } = Mapping.reduce(
                             (acc, { Total = 0, Processed = 0 }) => {
                                 acc.total += Total;
@@ -175,9 +189,11 @@ const CurrentImportsSection = () => {
                             const percentage = (processed * 100) / total;
                             const percentageValue = Number.isNaN(percentage) ? 0 : Math.round(percentage);
 
+                            let badge = <Badge>{c('Import status').t`${percentageValue}% imported`}</Badge>;
+
                             if (State === ImportMailStatus.PAUSED) {
-                                return (
-                                    <div className="onmobile-aligncenter">
+                                badge = (
+                                    <>
                                         <Badge type="warning">{c('Import status').t`${percentageValue}% paused`}</Badge>
 
                                         {ErrorCode === ImportMailError.ERROR_CODE_IMAP_CONNECTION && (
@@ -190,23 +206,19 @@ const CurrentImportsSection = () => {
                                                 <Icon name="attention-plain" />
                                             </Tooltip>
                                         )}
-                                    </div>
+                                    </>
                                 );
                             }
 
                             if (State === ImportMailStatus.QUEUED) {
-                                return (
-                                    <div className="onmobile-aligncenter">
-                                        <Badge type="origin">{c('Import status').t`Queued`}</Badge>
-                                    </div>
-                                );
+                                badge = <Badge type="origin">{c('Import status').t`Queued`}</Badge>;
                             }
 
-                            return (
-                                <div className="onmobile-aligncenter">
-                                    <Badge>{c('Import status').t`${percentageValue}% imported`}</Badge>
-                                </div>
-                            );
+                            if (State === ImportMailStatus.CANCELED) {
+                                badge = <Badge type="origin">{c('Import status').t`Canceling`}</Badge>;
+                            }
+
+                            return <div className="onmobile-aligncenter">{badge}</div>;
                         };
 
                         return (
@@ -217,9 +229,9 @@ const CurrentImportsSection = () => {
                                         <div key="email" className="w100 ellipsis">
                                             {Email}
                                         </div>
-                                        <time key="importDate" className="nodesktop notablet">
-                                            {format(CreateTime * 1000, 'PPp')}
-                                        </time>
+                                            <time key="importDate" className="nodesktop notablet">
+                                                {format(CreateTime * 1000, 'PPp')}
+                                            </time>
                                     </>,
                                     badgeRenderer(),
                                     <time key="importDate">{format(CreateTime * 1000, 'PPp')}</time>,

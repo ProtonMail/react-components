@@ -209,6 +209,8 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
                         Code: modalModel.password,
                     })
                 );
+                await call();
+
                 const { Folders = [] } = await api(getMailImportFolders(Importer.ID, { Code: modalModel.password }));
                 moveToPrepareStep(Importer.ID, Folders);
             } catch (error) {
