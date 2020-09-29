@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { ChangeEvent, FunctionComponent, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { c } from 'ttag';
 import { noop } from 'proton-shared/lib/helpers/function';
@@ -24,13 +24,14 @@ import SignupLabelInputRow from '../signup/SignupLabelInputRow';
 import SignupSubmitRow from '../signup/SignupSubmitRow';
 import { getToAppName } from '../signup/helpers/helper';
 import { LoginFlows, OnLoginCallbackArguments } from '../app';
-import useLogin, { Props as UseLoginProps, FORM } from './useLogin';
+import useLogin, { Props as UseLoginProps } from './useLogin';
 import LoginUsernameInput from './LoginUsernameInput';
 import LoginPasswordInput from './LoginPasswordInput';
 import LoginTotpInput from './LoginTotpInput';
 import LoginRecoveryCodeInput from './LoginRecoveryCodeInput';
 import LoginUnlockInput from './LoginUnlockInput';
 import AccountGenerateInternalAddressContainer from './AccountGenerateInternalAddressContainer';
+import { FORM } from './interface';
 
 interface InternalAddressGeneration {
     externalEmailAddress: Address;
@@ -99,20 +100,16 @@ const AccountLoginContainer = ({ onLogin, ignoreUnlock = false, Layout, toApp }:
 
     const {
         state,
+        errors,
+        setters,
         handleLogin,
         handleTotp,
         handleUnlock,
+        handleSetNewPassword,
         handleCancel,
-        setUsername,
-        setPassword,
-        setKeyPassword,
-        setTotp,
-        setIsTotpRecovery,
     } = useLogin({ onLogin: handleDone, ignoreUnlock, generateKeys: true, api: silentApi });
 
     const [loading, withLoading] = useLoading();
-
-    const { form, username, password, isTotpRecovery, totp, keyPassword } = state;
 
     const catchHandler = (e: any) => {
         if (e.data?.Code === API_CUSTOM_ERROR_CODES.AUTH_ACCOUNT_DISABLED) {
@@ -150,21 +147,6 @@ const AccountLoginContainer = ({ onLogin, ignoreUnlock = false, Layout, toApp }:
 
         const signupLink = <Link key="signupLink" to="/signup">{c('Link').t`Create an account`}</Link>;
 
-        const usernameInput = (
-            <SignupLabelInputRow
-                label={<Label htmlFor="login">{c('Label').t`Email or Username`}</Label>}
-                input={<LoginUsernameInput id="login" username={username} setUsername={loading ? noop : setUsername} />}
-            />
-        );
-
-        const passwordInput = (
-            <SignupLabelInputRow
-                label={<Label htmlFor="password">{c('Label').t`Password`}</Label>}
-                input={
-                    <LoginPasswordInput id="password" password={password} setPassword={loading ? noop : setPassword} />
-                }
-            />
-        );
 
         const toAppName = getToAppName(toApp);
 
@@ -175,25 +157,7 @@ const AccountLoginContainer = ({ onLogin, ignoreUnlock = false, Layout, toApp }:
                 aside={<OneAccountIllustration />}
                 right={null}
             >
-                <form name="loginForm" className="signup-form" onSubmit={handleSubmit}>
-                    {usernameInput}
-                    {passwordInput}
-                    <div className="mb1">
-                        <AccountSupportDropdown noCaret className="link">
-                            {c('Action').t`Need help?`}
-                        </AccountSupportDropdown>
-                    </div>
-                    <SignupSubmitRow>
-                        <PrimaryButton
-                            type="submit"
-                            className="pm-button--large"
-                            loading={loading}
-                            data-cy-login="submit"
-                        >
-                            {c('Action').t`Sign in`}
-                        </PrimaryButton>
-                    </SignupSubmitRow>
-                </form>
+                <LoginForm />
                 <div className="mb2 alignright">{c('Info').jt`New to Proton? ${signupLink}`}</div>
             </Layout>
         );
@@ -290,6 +254,23 @@ const AccountLoginContainer = ({ onLogin, ignoreUnlock = false, Layout, toApp }:
 
     if (form === FORM.U2F) {
         throw new Error('U2F not implemented');
+    }
+
+    if (form === FORM.NEW_PASSWORD) {
+        const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+            event.preventDefault();
+            withLoading(handleSetNewPassword().catch(catchHandler));
+        };
+
+
+        return (
+            <Layout
+                title={c('Title').t`Set password`}
+                subtitle={c('Info').t`This will replace your temporary password. You will use it to access your Proton account in the future.`}
+                left={<BackButton onClick={handleCancel} />}
+            >
+            </Layout>
+        );
     }
 
     throw new Error('Unsupported form');
