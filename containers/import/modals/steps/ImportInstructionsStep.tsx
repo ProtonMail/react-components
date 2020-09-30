@@ -7,7 +7,7 @@ import gmailLessSecureAppsImg from 'design-system/assets/img/import-instructions
 import gmailAppPasswordImg from 'design-system/assets/img/import-instructions/gmail-2FA.jpg';
 import yahooAppPasswordImg from 'design-system/assets/img/import-instructions/yahoo.jpg';
 
-import { Alert, Button, Icon, Tabs } from '../../../../components';
+import { Alert, Button, Href, Icon, Tabs } from '../../../../components';
 
 import { PROVIDER_INSTRUCTIONS } from '../../interfaces';
 
@@ -24,11 +24,15 @@ const ImportInstructionsStep = ({ changeProvider, provider, instructionsCurrentS
             title: c('Import instructions tab title').t`2-step verification disabled (default settings)`,
             content: (
                 <>
-                    <div>
-                        {c('Import instructions')
-                            .t`Go to myaccount.google.com. In the Security section, turn on access for less secure apps. If you don't see this option, you might have 2-step verification enabled.`}
+                    <div className="mb1">
+                        {c('Import instructions').jt`Go to ${(
+                            <Href url="https://myaccount.google.com">myaccount.google.com</Href>
+                        )}. In the ${(<strong>Security</strong>)} section, ${(
+                            <strong>turn on access</strong>
+                        )} for less secure apps. If you don't see this option, you might have 2-step verification enabled.`}
                     </div>
                     <img
+                        className="border-currentColor"
                         src={gmailLessSecureAppsImg}
                         alt={c('Import instructions image alternative text')
                             .t`How to turn on access for Less Secure Apps in Gmail settings`}
@@ -40,11 +44,15 @@ const ImportInstructionsStep = ({ changeProvider, provider, instructionsCurrentS
             title: c('Import instructions tab title').t`2-step verification enabled`,
             content: (
                 <>
-                    <div>
-                        {c('Import instructions')
-                            .t`Go to myaccount.google.com. In the Security section, create an app password if you don't have one already. You will need this password during the import.`}
+                    <div className="mb1">
+                        {c('Import instructions').jt`Go to ${(
+                            <Href url="https://myaccount.google.com">myaccount.google.com</Href>
+                        )}. In the ${(<strong>Security</strong>)} section, create an ${(
+                            <strong>app password</strong>
+                        )} if you don't have one already. You will need this password during the import.`}
                     </div>
                     <img
+                        className="border-currentColor"
                         src={gmailAppPasswordImg}
                         alt={c('Import instructions image alternative text')
                             .t`How to create an app password in Gmail setings`}
@@ -60,11 +68,13 @@ const ImportInstructionsStep = ({ changeProvider, provider, instructionsCurrentS
             case 0:
                 return (
                     <>
-                        <div>
-                            {c('Import instructions')
-                                .t`In your Gmail Settings, go to Forwarding and POP/IMAP and make sure that IMAP access is enabled.`}
+                        <div className="mb1">
+                            {c('Import instructions').jt`In your ${(<strong>Gmail Settings</strong>)}, go to ${(
+                                <strong>Forwarding and POP/IMAP</strong>
+                            )} and make sure that ${(<strong>IMAP access</strong>)} is enabled.`}
                         </div>
                         <img
+                            className="border-currentColor"
                             src={gmailImapImg}
                             alt={c('Import instructions image alternative text')
                                 .t`How to enable IMAP Forwarding in Gmail setings`}
@@ -74,11 +84,13 @@ const ImportInstructionsStep = ({ changeProvider, provider, instructionsCurrentS
             case 1:
                 return (
                     <>
-                        <div>
-                            {c('Import instructions')
-                                .t`In the Labels section, choose the folders allowed for import into ProtonMail.`}
+                        <div className="mb1">
+                            {c('Import instructions').jt`In the ${(
+                                <strong>Labels</strong>
+                            )} section, choose the folders allowed for import into ProtonMail.`}
                         </div>
                         <img
+                            className="border-currentColor"
                             src={gmailImapFolderImg}
                             alt={c('Import instructions image alternative text')
                                 .t`How to show folders in IMAP in Gmail setings`}
@@ -88,9 +100,11 @@ const ImportInstructionsStep = ({ changeProvider, provider, instructionsCurrentS
             case 2:
                 return (
                     <>
-                        <div>
+                        <div className="mb1">
                             {c('Import instructions')
-                                .t`Allow ProtonMail access into your Gmail account: choose whether 2-step verification is enabled and follow the steps below.`}
+                                .jt`Allow ProtonMail access into your Gmail account: choose whether ${(
+                                <strong>2-step verification</strong>
+                            )} is enabled and follow the steps below.`}
                         </div>
                         <Tabs tabs={gmailTabs} value={tabIndex} onChange={handleChangeIndex} />
                     </>
@@ -150,11 +164,16 @@ const ImportInstructionsStep = ({ changeProvider, provider, instructionsCurrentS
     const renderYahoo = () => {
         return (
             <>
-                <div>
+                <div className="mb1">
                     {c('Import instructions')
-                        .t`Log into Yahoo Mail and click on your name in the upper right corner to access Account info. In the Account security section, go to Manage app passwords to generate a password. You will need this password during the import.`}
+                        .jt`Log into Yahoo Mail and click on your name in the upper right corner to access ${(
+                        <strong>Account info</strong>
+                    )}. In the ${(<strong>Account security</strong>)} section, go to  ${(
+                        <strong>Manage app passwords</strong>
+                    )} to generate a password. You will need this password during the import.`}
                 </div>
                 <img
+                    className="border-currentColor"
                     src={yahooAppPasswordImg}
                     alt={c('Import instructions image alternative text')
                         .t`How to create an app password in Gmail setings`}
