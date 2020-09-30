@@ -64,7 +64,7 @@ const RowActions = ({ currentImport }: RowActionsProps) => {
                     <Alert type="error">
                         {ErrorCode
                             ? c('Warning')
-                                  .t`If you quit, you will not be able to resume this import. All progress has been saved in your Proton account. Quit anyway?`
+                                  .t`If you cancel this import, you won't be able to resume it. Proton saved all progress in your account. Cancel anyway?`
                             : c('Warning')
                                   .t`To finish importing, you will have to start over. All progress so far was saved in your Proton account.`}
                     </Alert>
@@ -94,15 +94,14 @@ const RowActions = ({ currentImport }: RowActionsProps) => {
         });
     }
 
-    if (State !== ImportMailStatus.CANCELED) {
-        list.push({
-            text: c('Action').t`Cancel`,
-            onClick: () => {
-                withLoadingPrimaryAction(handleCancel(ID));
-            },
-            loading: loadingPrimaryAction,
-        });
-    }
+    list.push({
+        text: c('Action').t`Cancel`,
+        onClick: () => {
+            withLoadingPrimaryAction(handleCancel(ID));
+        },
+        loading: loadingPrimaryAction,
+        disabled: State === ImportMailStatus.CANCELED,
+    });
 
     return <DropdownActions key="actions" className="pm-button--small" list={list} />;
 };
@@ -174,7 +173,7 @@ const CurrentImportsSection = () => {
                 <TableBody>
                     {importsToDisplay.map((currentImport, index) => {
                         const { Email, Active } = currentImport;
-                        const { State, ErrorCode, CreateTime, Mapping = [] } = Active || {};
+                        const { State, ErrorCode, CreateTime = Date.now(), Mapping = [] } = Active || {};
 
                         const { total, processed } = Mapping.reduce(
                             (acc, { Total = 0, Processed = 0 }) => {
@@ -215,7 +214,7 @@ const CurrentImportsSection = () => {
                             }
 
                             if (State === ImportMailStatus.CANCELED) {
-                                badge = <Badge type="origin">{c('Import status').t`Canceling`}</Badge>;
+                                badge = <Badge type="error">{c('Import status').t`Canceling`}</Badge>;
                             }
 
                             return <div className="onmobile-aligncenter">{badge}</div>;
@@ -229,13 +228,13 @@ const CurrentImportsSection = () => {
                                         <div key="email" className="w100 ellipsis">
                                             {Email}
                                         </div>
-                                            <time key="importDate" className="nodesktop notablet">
-                                                {format(CreateTime * 1000, 'PPp')}
-                                            </time>
+                                        <time key="importDate" className="nodesktop notablet">
+                                            {format(CreateTime * 1000, 'PPp')}
+                                        </time>
                                     </>,
                                     badgeRenderer(),
                                     <time key="importDate">{format(CreateTime * 1000, 'PPp')}</time>,
-                                    <RowActions key="actions" currentImport={currentImporter} />,
+                                    <RowActions key="actions" currentImport={currentImport} />,
                                 ]}
                             />
                         );
