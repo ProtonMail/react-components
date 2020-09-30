@@ -112,7 +112,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
     const changeProvider = (provider: PROVIDER_INSTRUCTIONS) => setProviderInstructions(provider);
 
     const needAppPassword = useMemo(() => {
-        const IMAPsWithAppPasswords = ['imap.gmail.com', 'imap.mail.yahoo.com', 'imap.yandex.com', 'imap.fastmail.com'];
+        const IMAPsWithAppPasswords = ['imap.mail.yahoo.com'];
 
         return IMAPsWithAppPasswords.includes(modalModel.imap);
     }, [modalModel.imap]);
