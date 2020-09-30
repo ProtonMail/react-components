@@ -55,7 +55,7 @@ const Card = ({ card, errors, onChange, loading = false }) => {
                     />
                 </div>
                 <div>
-                    <Label className="mb0-5 bl flex flex-items-center" htmlFor="cvc">
+                    <Label className="mb0-5 bl flex flex-items-center break" htmlFor="cvc">
                         <span className="mr0-25">{c('Label').t`Security code`}</span>
                         <Info
                             title={c('Info')
