@@ -54,7 +54,7 @@ const RowActions = ({ currentImport }: RowActionsProps) => {
                     onConfirm={resolve}
                     onClose={reject}
                     title={c('Confirm modal title').t`Import is incomplete!`}
-                    cancel={ErrorCode ? c('Action').t`Continue import` : c('Action').t`Back to import`}
+                    cancel={c('Action').t`Continue import`}
                     confirm={<ErrorButton type="submit">{c('Action').t`Cancel import`}</ErrorButton>}
                 >
                     <Alert type="error">
