@@ -1,19 +1,23 @@
 import React from 'react';
 import { APPS } from 'proton-shared/lib/constants';
 // import { getAccountSettingsApp } from 'proton-shared/lib/apps/helper';
-import { PlanIDs, Cycle, Currency } from 'proton-shared/lib/interfaces';
+import { PlanIDs, Cycle, Currency, Subscription, Plan } from 'proton-shared/lib/interfaces';
 
-import { usePlans, useModals, useConfig } from '../../hooks';
+import { useModals, useConfig } from '../../hooks';
 import { TopNavbarLink, Icon } from '../../components';
 import NewSubscriptionModal from '../payments/subscription/NewSubscriptionModal';
 import VPNBlackFridayModal from '../payments/subscription/VPNBlackFridayModal';
 import MailBlackFridayModal from '../payments/subscription/MailBlackFridayModal';
 import { TopNavbarItem } from '../app/TopNavbar';
 
-const BlackFridayButton = ({ ...rest }) => {
+interface Props {
+    plans: Plan[];
+    subscription: Subscription;
+}
+
+const BlackFridayButton = ({ plans, subscription, ...rest }: Props) => {
     const { APP_NAME } = useConfig();
     const { createModal } = useModals();
-    const [plans, loading] = usePlans();
     const icon = 'blackfriday';
     const text = 'Black Friday';
 
@@ -43,7 +47,7 @@ const BlackFridayButton = ({ ...rest }) => {
                 icon={icon}
                 text={text}
                 onClick={() => {
-                    createModal(<VPNBlackFridayModal plans={plans} onSelect={onSelect} />);
+                    createModal(<VPNBlackFridayModal plans={plans} subscription={subscription} onSelect={onSelect} />);
                 }}
                 {...rest}
             />
@@ -56,7 +60,7 @@ const BlackFridayButton = ({ ...rest }) => {
                 className="topnav-link"
                 type="button"
                 onClick={() => {
-                    createModal(<MailBlackFridayModal plans={plans} onSelect={onSelect} />);
+                    createModal(<MailBlackFridayModal plans={plans} subscription={subscription} onSelect={onSelect} />);
                 }}
             >
                 <Icon className="topnav-icon mr0-5 flex-item-centered-vert" name={icon} />

@@ -1,9 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { APPS } from 'proton-shared/lib/constants';
 import { c } from 'ttag';
+import { isProductPayer } from 'proton-shared/lib/helpers/blackfriday';
+import { PlanIDs, Cycle, Currency } from 'proton-shared/lib/interfaces';
 
 import { Hamburger } from '../../components';
-import { useConfig, useUser, useLoading, useBlackFriday, useApi } from '../../hooks';
+import {
+    useConfig,
+    useUser,
+    useLoading,
+    useBlackFridayPeriod,
+    useApi,
+    useProductPayerPeriod,
+    useModals,
+    usePlans,
+    useSubscription,
+} from '../../hooks';
 import Header, { Props as HeaderProps } from '../../components/header/Header';
 import { checkLastCancelledSubscription } from '../payments/subscription/helpers';
 import UserDropdown from './UserDropdown';
@@ -14,6 +26,7 @@ import SupportDropdown from './SupportDropdown';
 import UpgradeButton from './UpgradeButton';
 import UpgradeVPNButton from './UpgradeVPNButton';
 import BlackFridayButton from './BlackFridayButton';
+import { MailBlackFridayModal, NewSubscriptionModal, VPNBlackFridayModal } from '../payments';
 
 interface Props extends HeaderProps {
     logo?: React.ReactNode;
@@ -41,19 +54,59 @@ const PrivateHeader = ({
     onToggleExpand,
     title,
 }: Props) => {
-    const [{ hasPaidMail, hasPaidVpn, isFree, isPaid }] = useUser();
+    const [{ hasPaidMail, hasPaidVpn, isFree }] = useUser();
+    const [plans] = usePlans();
+    const [subscription] = useSubscription();
     const { APP_NAME } = useConfig();
-    const isBlackFriday = useBlackFriday();
+    const isBlackFridayPeriod = useBlackFridayPeriod();
+    const isProductPayerPeriod = useProductPayerPeriod();
     const [loading, withLoading] = useLoading();
     const [isEligible, setEligibility] = useState(false);
+    const { createModal } = useModals();
     const api = useApi();
-    const showBlackFridayButton = !isBlackFriday || !isEligible || isPaid || loading;
+    const showBlackFridayButton = isBlackFridayPeriod && isEligible && !loading;
+
+    const onSelect = ({
+        planIDs,
+        cycle,
+        currency,
+        couponCode,
+    }: {
+        planIDs: PlanIDs;
+        cycle: Cycle;
+        currency: Currency;
+        couponCode?: string | null;
+    }) => {
+        createModal(<NewSubscriptionModal planIDs={planIDs} cycle={cycle} currency={currency} coupon={couponCode} />);
+    };
 
     useEffect(() => {
-        if (isFree && isBlackFriday) {
+        if (isFree && isBlackFridayPeriod) {
             withLoading(checkLastCancelledSubscription(api).then(setEligibility));
         }
-    }, [isBlackFriday, isFree]);
+    }, [isBlackFridayPeriod, isFree]);
+
+    useEffect(() => {
+        if (isBlackFridayPeriod && isEligible) {
+            if (APP_NAME === APPS.PROTONVPN_SETTINGS) {
+                return createModal(
+                    <VPNBlackFridayModal plans={plans} subscription={subscription} onSelect={onSelect} />
+                );
+            }
+            createModal(<MailBlackFridayModal plans={plans} subscription={subscription} onSelect={onSelect} />);
+        }
+    }, [isBlackFridayPeriod, isEligible]);
+
+    useEffect(() => {
+        if (isProductPayerPeriod && isProductPayer(subscription)) {
+            if (APP_NAME === APPS.PROTONVPN_SETTINGS) {
+                return createModal(
+                    <VPNBlackFridayModal plans={plans} subscription={subscription} onSelect={onSelect} />
+                );
+            }
+            createModal(<MailBlackFridayModal plans={plans} subscription={subscription} onSelect={onSelect} />);
+        }
+    }, [isProductPayerPeriod, subscription]);
 
     if (backUrl) {
         return (
@@ -88,7 +141,7 @@ const PrivateHeader = ({
                 {isNarrow && searchDropdown ? <TopNavbarItem>{searchDropdown}</TopNavbarItem> : null}
                 {showBlackFridayButton ? (
                     <TopNavbarItem>
-                        <BlackFridayButton />
+                        <BlackFridayButton plans={plans} subscription={subscription} />
                     </TopNavbarItem>
                 ) : null}
                 {hasPaidMail || isNarrow || isVPN ? null : (
