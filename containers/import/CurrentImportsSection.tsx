@@ -53,20 +53,13 @@ const RowActions = ({ currentImport }: RowActionsProps) => {
                 <ConfirmModal
                     onConfirm={resolve}
                     onClose={reject}
-                    title={
-                        ErrorCode
-                            ? c('Confirm modal title').t`Import is incomplete!`
-                            : c('Confirm modal title').t`Import is not finished. Cancel anyway?`
-                    }
+                    title={c('Confirm modal title').t`Import is incomplete!`}
                     cancel={ErrorCode ? c('Action').t`Continue import` : c('Action').t`Back to import`}
                     confirm={<ErrorButton type="submit">{c('Action').t`Cancel import`}</ErrorButton>}
                 >
                     <Alert type="error">
-                        {ErrorCode
-                            ? c('Warning')
-                                  .t`If you cancel this import, you won't be able to resume it. Proton saved all progress in your account. Cancel anyway?`
-                            : c('Warning')
-                                  .t`To finish importing, you will have to start over. All progress so far was saved in your Proton account.`}
+                        {c('Warning')
+                            .t`If you cancel this import, you won't be able to resume it. Proton saved all progress in your account. Cancel anyway?`}
                     </Alert>
                 </ConfirmModal>
             );
