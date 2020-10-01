@@ -126,6 +126,7 @@ const ImportInstructionsStep = ({ changeProvider, provider, instructionsCurrentS
                         onClick={() => changeProvider(PROVIDER_INSTRUCTIONS.GMAIL)}
                         className="inline-flex flex-items-center"
                     >
+                        <Icon name="gmail" className="mr0-5" />
                         <span>{c('Provider').t`Gmail`}</span>
                         <Icon
                             name="caret"
@@ -142,6 +143,7 @@ const ImportInstructionsStep = ({ changeProvider, provider, instructionsCurrentS
                         onClick={() => changeProvider(PROVIDER_INSTRUCTIONS.YAHOO)}
                         className="inline-flex flex-items-center"
                     >
+                        <Icon name="yahoo" className="mr0-5" />
                         <span>{c('Provider').t`Yahoo Mail`}</span>
                         <Icon
                             name="caret"
