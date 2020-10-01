@@ -107,7 +107,6 @@ $default-height-fields: 4.1rem;
 // case for VPN signup
 .payment-side-fields {
 	display: grid;
-	content: '';
 	grid-template-columns: repeat(auto-fill, minmax(10em, 1fr));
 	grid-gap: 1em;
 	align-items: end;
