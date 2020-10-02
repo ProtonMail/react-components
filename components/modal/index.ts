@@ -4,6 +4,7 @@ export { default as InnerModal } from './Inner';
 export { default as InputModal } from './Input';
 export { default as HeaderModal } from './Header';
 export { default as TitleModal } from './Title';
+export { default as BackButtonModal } from './BackButton';
 export { default as FormModal } from './FormModal';
 export { default as OverlayModal } from './Overlay';
 export { default as ConfirmModal } from './Confirm';
