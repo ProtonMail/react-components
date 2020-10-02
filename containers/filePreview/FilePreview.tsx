@@ -27,6 +27,7 @@ const FilePreview = ({ contents, fileName, mimeType, loading, navigationControls
     }, []);
 
     const renderPreview = () => {
+        console.log('application/pdf' in navigator.mimeTypes, mimeType, mimeType && isPreviewAvailable(mimeType));
         if (!mimeType || !isPreviewAvailable(mimeType)) {
             return (
                 <div className="pd-file-preview-container">
