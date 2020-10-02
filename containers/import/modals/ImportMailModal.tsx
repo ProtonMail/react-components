@@ -25,7 +25,7 @@ import {
 } from '../../../components';
 import ImportMailWizard from '../../../components/import/ImportMailWizard';
 
-import { TIME_UNIT, IMAP_CONNECTION_ERROR_LABEL } from '../constants';
+import { TIME_UNIT, IMAP_CONNECTION_ERROR_LABEL, IMAPS } from '../constants';
 
 import {
     Step,
@@ -111,11 +111,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
 
     const changeProvider = (provider: PROVIDER_INSTRUCTIONS) => setProviderInstructions(provider);
 
-    const needAppPassword = useMemo(() => {
-        const IMAPsWithAppPasswords = ['imap.mail.yahoo.com'];
-
-        return IMAPsWithAppPasswords.includes(modalModel.imap);
-    }, [modalModel.imap]);
+    const needAppPassword = useMemo(() => modalModel.imap === IMAPS.YAHOO, [modalModel.imap]);
 
     const title = useMemo(() => {
         switch (modalModel.step) {
@@ -435,7 +431,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
                     updateModalModel={(newModel: ImportModalModel) => setModalModel(newModel)}
                     needAppPassword={needAppPassword}
                     showPassword={showPassword}
-                    reconnectMode={isReconnectMode}
+                    currentImport={currentImport}
                 />
             )}
             {modalModel.step === Step.PREPARE && (

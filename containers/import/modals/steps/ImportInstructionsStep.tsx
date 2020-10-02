@@ -31,8 +31,11 @@ const ImportInstructionsStep = ({ changeProvider, provider, instructionsCurrentS
                             <Href key={randomHexString4()} url="https://myaccount.google.com">
                                 myaccount.google.com
                             </Href>
-                        )}. In the ${(<strong key={randomHexString4()}>Security</strong>)} section, ${(
-                            <strong key={randomHexString4()}>turn on access</strong>
+                        )}. In the ${(
+                            <strong key={randomHexString4()}>{c('Import instructions emphasis').t`Security`}</strong>
+                        )} section, ${(
+                            <strong key={randomHexString4()}>{c('Import instructions emphasis')
+                                .t`turn on access`}</strong>
                         )} for less secure apps. If you don't see this option, you might have 2-step verification enabled.`}
                     </div>
                     <img
@@ -53,8 +56,11 @@ const ImportInstructionsStep = ({ changeProvider, provider, instructionsCurrentS
                             <Href key={randomHexString4()} url="https://myaccount.google.com">
                                 myaccount.google.com
                             </Href>
-                        )}. In the ${(<strong key={randomHexString4()}>Security</strong>)} section, create an ${(
-                            <strong key={randomHexString4()}>app password</strong>
+                        )}. In the ${(
+                            <strong key={randomHexString4()}>{c('Import instructions emphasis').t`Security`}</strong>
+                        )} section, create an ${(
+                            <strong key={randomHexString4()}>{c('Import instructions emphasis')
+                                .t`app password`}</strong>
                         )} if you don't have one already. You will need this password during the import.`}
                     </div>
                     <img
@@ -76,11 +82,14 @@ const ImportInstructionsStep = ({ changeProvider, provider, instructionsCurrentS
                     <>
                         <div className="mb1">
                             {c('Import instructions').jt`In your ${(
-                                <strong key={randomHexString4()}>Gmail Settings</strong>
+                                <strong key={randomHexString4()}>{c('Import instructions emphasis')
+                                    .t`Gmail Settings`}</strong>
                             )}, go to ${(
-                                <strong key={randomHexString4()}>Forwarding and POP/IMAP</strong>
+                                <strong key={randomHexString4()}>{c('Import instructions emphasis')
+                                    .t`Forwarding and POP/IMAP`}</strong>
                             )} and make sure that ${(
-                                <strong key={randomHexString4()}>IMAP access</strong>
+                                <strong key={randomHexString4()}>{c('Import instructions emphasis')
+                                    .t`IMAP access`}</strong>
                             )} is enabled.`}
                         </div>
                         <img
@@ -96,7 +105,7 @@ const ImportInstructionsStep = ({ changeProvider, provider, instructionsCurrentS
                     <>
                         <div className="mb1">
                             {c('Import instructions').jt`In the ${(
-                                <strong key={randomHexString4()}>Labels</strong>
+                                <strong key={randomHexString4()}>{c('Import instructions emphasis').t`Labels`}</strong>
                             )} section, choose the folders allowed for import into ProtonMail.`}
                         </div>
                         <img
@@ -113,7 +122,8 @@ const ImportInstructionsStep = ({ changeProvider, provider, instructionsCurrentS
                         <div className="mb1">
                             {c('Import instructions')
                                 .jt`Allow ProtonMail access into your Gmail account: choose whether ${(
-                                <strong key={randomHexString4()}>2-step verification</strong>
+                                <strong key={randomHexString4()}>{c('Import instructions emphasis')
+                                    .t`2-step verification`}</strong>
                             )} is enabled and follow the steps below.`}
                         </div>
                         <Tabs tabs={gmailTabs} value={tabIndex} onChange={handleChangeIndex} />
@@ -179,9 +189,13 @@ const ImportInstructionsStep = ({ changeProvider, provider, instructionsCurrentS
                 <div className="mb1">
                     {c('Import instructions')
                         .jt`Log into Yahoo Mail and click on your name in the upper right corner to access ${(
-                        <strong key={randomHexString4()}>Account info</strong>
-                    )}. In the ${(<strong key={randomHexString4()}>Account security</strong>)} section, go to  ${(
-                        <strong key={randomHexString4()}>Manage app passwords</strong>
+                        <strong key={randomHexString4()}>{c('Import instructions emphasis').t`Account info`}</strong>
+                    )}. In the ${(
+                        <strong key={randomHexString4()}>{c('Import instructions emphasis')
+                            .t`Account security`}</strong>
+                    )} section, go to  ${(
+                        <strong key={randomHexString4()}>{c('Import instructions emphasis')
+                            .t`Manage app passwords`}</strong>
                     )} to generate a password. You will need this password during the import.`}
                 </div>
                 <img
