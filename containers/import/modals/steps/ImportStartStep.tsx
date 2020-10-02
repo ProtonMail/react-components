@@ -214,7 +214,7 @@ const ImportStartStep = ({ modalModel, updateModalModel, needAppPassword, showPa
                 message = (
                     <div className="mb1">
                         {c('Import error')
-                            .t`Proton can't connect to your Yahoo Mail account. Please make sure that your email address and app password are correct. Do ${(
+                            .jt`Proton can't connect to your Yahoo Mail account. Please make sure that your email address and app password are correct. Do ${(
                             <strong key={randomHexString4()}>{c('Import error emphasis').t`not`}</strong>
                         )} use your regular password.`}
                     </div>
