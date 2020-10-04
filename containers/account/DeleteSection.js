@@ -43,7 +43,7 @@ const DeleteSection = () => {
         <>
             <Alert type="error">
                 {c('Info')
-                    .t`This will permanently delete all data associated with your Proton Account. You will not be able to reactivate this account.`}
+                    .t`This will permanently delete all data associated with your account. You will not be able to reactivate this account.`}
             </Alert>
             <ErrorButton id="deleteButton" onClick={() => createModal(<DeleteAccountModal />)}>
                 {c('Action').t`Delete your account`}
