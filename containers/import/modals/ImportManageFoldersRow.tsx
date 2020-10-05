@@ -122,7 +122,7 @@ const ImportManageFoldersRow = ({
         }
 
         let parentPath = getParent(folder.Source);
-        const pathParts = [inputValue];
+        const pathParts = [escapeSlashes(inputValue)];
 
         while (parentPath) {
             pathParts.unshift(folderNamesMap[parentPath]);
