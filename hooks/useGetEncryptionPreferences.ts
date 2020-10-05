@@ -62,7 +62,7 @@ const useGetEncryptionPreferences = () => {
             });
             return extractEncryptionPreferences(publicKeyModel, mailSettings, selfSend);
         },
-        [api, getAddressKeys, getAddresses, mailSettings]
+        [api, getAddressKeys, getAddresses, getPublicKeys, mailSettings]
     );
 
     return useCallback(
