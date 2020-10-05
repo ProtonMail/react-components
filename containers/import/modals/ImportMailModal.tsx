@@ -133,7 +133,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
     const wizardSteps = [c('Wizard step').t`Authenticate`, c('Wizard step').t`Plan import`, c('Wizard step').t`Import`];
 
     const handleCancel = () => {
-        if (!modalModel.email || modalModel.step === Step.STARTED) {
+        if (!modalModel.email || modalModel.step === Step.STARTED || isReconnectMode) {
             onClose();
             return;
         }
