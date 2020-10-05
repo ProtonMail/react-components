@@ -7,14 +7,14 @@ import useApi from './useApi';
 
 export const CACHE_KEY = 'PUBLIC_KEYS';
 
-const DEFAULT_PUBLIC_KEYS_LIFETIME = 5 * MINUTE;
+const DEFAULT_LIFETIME = 30 * MINUTE;
 
 export const useGetPublicKeys = () => {
     const cache = useCache();
     const api = useApi();
 
     return useCallback(
-        (email, lifetime = DEFAULT_PUBLIC_KEYS_LIFETIME) => {
+        (email, lifetime = DEFAULT_LIFETIME) => {
             if (!cache.has(CACHE_KEY)) {
                 cache.set(CACHE_KEY, new Map());
             }

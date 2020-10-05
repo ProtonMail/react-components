@@ -1,16 +1,22 @@
-import { RECIPIENT_TYPES } from 'proton-shared/lib/constants';
+import { MINUTE, RECIPIENT_TYPES } from 'proton-shared/lib/constants';
 import { normalizeInternalEmail } from 'proton-shared/lib/helpers/email';
 import { useCallback } from 'react';
 import getPublicKeysVcardHelper from 'proton-shared/lib/api/helpers/getPublicKeysVcardHelper';
 import { getContactPublicKeyModel } from 'proton-shared/lib/keys/publicKeys';
 import extractEncryptionPreferences from 'proton-shared/lib/mail/encryptionPreferences';
 import { splitKeys } from 'proton-shared/lib/keys/keys';
-import { useAddresses } from './useAddresses';
 import useApi from './useApi';
+import { useGetAddresses } from './useAddresses';
 import { useGetAddressKeys } from './useGetAddressKeys';
 import useMailSettings from './useMailSettings';
 import { useGetUserKeys } from './useUserKeys';
 import useGetPublicKeys from './useGetPublicKeys';
+import { getPromiseValue } from './useCachedModelResult';
+import useCache from './useCache';
+
+export const CACHE_KEY = 'ENCRYPTION_PREFERENCES';
+
+const DEFAULT_LIFETIME = 5 * MINUTE;
 
 // Implement the logic in the document 'Encryption preferences for outgoing email'
 /**
@@ -20,14 +26,16 @@ import useGetPublicKeys from './useGetPublicKeys';
  */
 const useGetEncryptionPreferences = () => {
     const api = useApi();
+    const cache = useCache();
+    const getAddresses = useGetAddresses();
     const getUserKeys = useGetUserKeys();
     const getAddressKeys = useGetAddressKeys();
     const getPublicKeys = useGetPublicKeys();
     const [mailSettings] = useMailSettings();
-    const [addresses] = useAddresses();
 
-    return useCallback(
+    const getEncryptionPreferences = useCallback(
         async (emailAddress: string, lifetime?: number) => {
+            const addresses = await getAddresses();
             const selfAddress = addresses.find(
                 ({ Email }) => normalizeInternalEmail(Email) === normalizeInternalEmail(emailAddress)
             );
@@ -54,7 +62,19 @@ const useGetEncryptionPreferences = () => {
             });
             return extractEncryptionPreferences(publicKeyModel, mailSettings, selfSend);
         },
-        [api, getAddressKeys, mailSettings, addresses]
+        [api, getAddressKeys, getAddresses, mailSettings]
+    );
+
+    return useCallback(
+        (email, lifetime = DEFAULT_LIFETIME) => {
+            if (!cache.has(CACHE_KEY)) {
+                cache.set(CACHE_KEY, new Map());
+            }
+            const subCache = cache.get(CACHE_KEY);
+            const miss = () => getEncryptionPreferences(email, lifetime);
+            return getPromiseValue(subCache, email, miss, lifetime);
+        },
+        [cache, getEncryptionPreferences]
     );
 };
 
