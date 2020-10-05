@@ -42,24 +42,6 @@ import ImportStartStep from './steps/ImportStartStep';
 import ImportPrepareStep from './steps/ImportPrepareStep';
 import ImportStartedStep from './steps/ImportStartedStep';
 
-const DEFAULT_MODAL_MODEL: ImportModalModel = {
-    step: Step.INSTRUCTIONS,
-    needIMAPDetails: false,
-    importID: '',
-    email: '',
-    password: '',
-    port: '',
-    imap: '',
-    errorCode: 0,
-    errorLabel: '',
-    providerFolders: [],
-    selectedPeriod: TIME_UNIT.BIG_BANG,
-    payload: {
-        Mapping: [],
-    },
-    isPayloadValid: false,
-};
-
 const GMAIL_INSTRUCTION_STEPS_COUNT = 3;
 
 interface Props {
@@ -100,11 +82,21 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
 
     const [showPassword, setShowPassword] = useState(false);
     const [modalModel, setModalModel] = useState<ImportModalModel>({
-        ...DEFAULT_MODAL_MODEL,
+        step: isReconnectMode ? Step.START : Step.INSTRUCTIONS,
         importID: currentImport?.ID || '',
         email: currentImport?.Email || '',
+        password: '',
         imap: currentImport?.ImapHost || '',
         port: currentImport?.ImapPort || '',
+        errorCode: 0,
+        errorLabel: '',
+        providerFolders: [],
+        needIMAPDetails: false,
+        selectedPeriod: TIME_UNIT.BIG_BANG,
+        payload: {
+            Mapping: [],
+        },
+        isPayloadValid: false,
     });
     const api = useApi();
     const { call } = useEventManager();
