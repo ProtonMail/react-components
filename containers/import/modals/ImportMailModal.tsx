@@ -106,6 +106,8 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
     const needAppPassword = useMemo(() => modalModel.imap === IMAPS.YAHOO, [modalModel.imap]);
 
     const title = useMemo(() => {
+        const currentStepLabel = instructionsCurrentStep + 1;
+
         switch (modalModel.step) {
             case Step.INSTRUCTIONS:
                 if (!providerInstructions) {
@@ -116,9 +118,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
                     return c('Title').t`Prepare Yahoo Mail for import`;
                 }
 
-                return c('Title').t`Prepare Gmail for import ${
-                    instructionsCurrentStep + 1
-                }/${GMAIL_INSTRUCTION_STEPS_COUNT}`;
+                return c('Title').t`Prepare Gmail for import ${currentStepLabel}/${GMAIL_INSTRUCTION_STEPS_COUNT}`;
             case Step.START:
                 return isReconnectMode ? c('Title').t`Reconnect your account` : c('Title').t`Start a new import`;
             case Step.PREPARE:
