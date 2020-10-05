@@ -18,7 +18,7 @@ export const CACHE_KEY = 'ENCRYPTION_PREFERENCES';
 
 const DEFAULT_LIFETIME = 5 * MINUTE;
 
-// Implement the logic in the document 'Encryption preferences for outgoing email'
+// Implement the logic in the document 'Send preferences for outgoing email'
 /**
  * Given an email address and the user mail settings, return the encryption preferences for sending to that email.
  * The API entry point is also needed. The logic for how those preferences are determined is laid out in the
