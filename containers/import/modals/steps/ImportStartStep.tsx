@@ -1,4 +1,3 @@
-import { randomHexString4 } from 'proton-shared/lib/helpers/uid';
 import React, { ChangeEvent, useEffect } from 'react';
 import { c } from 'ttag';
 
@@ -40,6 +39,22 @@ const ImportStartStep = ({ modalModel, updateModalModel, needAppPassword, showPa
     const renderError = () => {
         let message = null;
 
+        const bold2StepsDisabled = (
+            <strong key="bold2StepsDisabled">{c('Import error emphasis').t`2-step verification is disabled`}</strong>
+        );
+        const bold2StepsEnabled = (
+            <strong key="bold2StepsEnabled">{c('Import error emphasis').t`2-step verification is enabled`}</strong>
+        );
+        const boldGoogleAccounts = (
+            <strong key="boldGoogleAccounts">{c('Import error emphasis').t`all your other Google accounts`}</strong>
+        );
+        const boldNot = <strong key="boldNot">{c('Import error emphasis').t`not`}</strong>;
+        const linkCAPTCHA = (
+            <Href key="linkCAPTCHA" url="https://accounts.google.com/DisplayUnlockCaptcha">
+                {c('Import error emphasis').t`CAPTCHA`}
+            </Href>
+        );
+
         if (isReconnect) {
             message = (
                 <>
@@ -64,10 +79,8 @@ const ImportStartStep = ({ modalModel, updateModalModel, needAppPassword, showPa
                         <div className="mb1">{c('Import error')
                             .t`Proton can't connect to your account. Please make sure that Gmail IMAP access is enabled.`}</div>
                         <div className="mb1">
-                            {c('Import error').jt`If ${(
-                                <strong key={randomHexString4()}>{c('Import error emphasis')
-                                    .t`2-step verification is disabled`}</strong>
-                            )} in Gmail (default settings), please make sure that:`}
+                            {c('Import error')
+                                .jt`If ${bold2StepsDisabled} in Gmail (default settings), please make sure that:`}
                         </div>
                         <ul className="m0 pb1">
                             <li>{c('Import error').t`your password is correct`}</li>
@@ -75,20 +88,12 @@ const ImportStartStep = ({ modalModel, updateModalModel, needAppPassword, showPa
                                 .t`"Less secure app access" is turned on in your Google account security settings`}</li>
                         </ul>
                         <div className="mb1">
-                            {c('Import error').jt`If ${(
-                                <strong key={randomHexString4()}>{c('Import error emphasis')
-                                    .t`2-step verification is enabled`}</strong>
-                            )} in Gmail, please make sure that you are using your app password instead of your regular password.`}
+                            {c('Import error')
+                                .jt`If ${bold2StepsEnabled} in Gmail, please make sure that you are using your app password instead of your regular password.`}
                         </div>
                         <div className="mb1">
-                            {c('Import error').jt`You can also try to sign out of ${(
-                                <strong key={randomHexString4()}>{c('Import error emphasis')
-                                    .t`all your other Google accounts`}</strong>
-                            )} in the browser, then unlock ${(
-                                <Href key={randomHexString4()} url="https://accounts.google.com/DisplayUnlockCaptcha">
-                                    {c('Import error emphasis').t`CAPTCHA`}
-                                </Href>
-                            )}.`}
+                            {c('Import error')
+                                .jt`You can also try to sign out of ${boldGoogleAccounts} in the browser, then unlock ${linkCAPTCHA}.`}
                         </div>
                     </>
                 );
@@ -103,9 +108,8 @@ const ImportStartStep = ({ modalModel, updateModalModel, needAppPassword, showPa
                         </div>
                         <ul className="m0 pb1">
                             <li>{c('Import error').t`IMAP access is enabled in your Yahoo account.`}</li>
-                            <li>{c('Import error').jt`your app password is correct. Do ${(
-                                <strong key={randomHexString4()}>{c('Import error emphasis').t`not`}</strong>
-                            )} use your regular password.
+                            <li>{c('Import error')
+                                .jt`your app password is correct. Do ${boldNot} use your regular password.
                             `}</li>
                         </ul>
                     </>
@@ -178,10 +182,8 @@ const ImportStartStep = ({ modalModel, updateModalModel, needAppPassword, showPa
                     <>
                         <div className="mb1">{c('Import error').t`Proton can't connect to your Gmail account.`}</div>
                         <div className="mb1">
-                            {c('Import error').jt`If ${(
-                                <strong key={randomHexString4()}>{c('Import error emphasis')
-                                    .t`2-step verification is disabled`}</strong>
-                            )} in Gmail (default settings), please make sure that:`}
+                            {c('Import error')
+                                .jt`If ${bold2StepsDisabled} in Gmail (default settings), please make sure that:`}
                         </div>
                         <ul className="m0 pb1">
                             <li>{c('Import error').t`your email address and password are correct`}</li>
@@ -189,22 +191,12 @@ const ImportStartStep = ({ modalModel, updateModalModel, needAppPassword, showPa
                                 .t`"Less secure app access" is turned on in your Google account security settings`}</li>
                         </ul>
                         <div className="mb1">
-                            {c('Import error').jt`If ${(
-                                <strong key={randomHexString4()}>{c('Import error emphasis')
-                                    .t`2-step verification is enabled`}</strong>
-                            )} in Gmail, please make sure that your email address and app password are correct. Do ${(
-                                <strong key={randomHexString4()}>{c('Import error emphasis').t`not`}</strong>
-                            )} use your regular password.`}
+                            {c('Import error')
+                                .jt`If ${bold2StepsEnabled} in Gmail, please make sure that your email address and app password are correct. Do ${boldNot} use your regular password.`}
                         </div>
                         <div className="mb1">
-                            {c('Import error').jt`You can also try to sign out of ${(
-                                <strong key={randomHexString4()}>{c('Import error emphasis')
-                                    .t`all your other Google accounts`}</strong>
-                            )} in the browser, then unlock ${(
-                                <Href key={randomHexString4()} url="https://accounts.google.com/DisplayUnlockCaptcha">
-                                    {c('Import error emphasis').t`CAPTCHA`}
-                                </Href>
-                            )}.`}
+                            {c('Import error')
+                                .jt`You can also try to sign out of ${boldGoogleAccounts} in the browser, then unlock ${linkCAPTCHA}.`}
                         </div>
                     </>
                 );
@@ -214,9 +206,7 @@ const ImportStartStep = ({ modalModel, updateModalModel, needAppPassword, showPa
                 message = (
                     <div className="mb1">
                         {c('Import error')
-                            .jt`Proton can't connect to your Yahoo Mail account. Please make sure that your email address and app password are correct. Do ${(
-                            <strong key={randomHexString4()}>{c('Import error emphasis').t`not`}</strong>
-                        )} use your regular password.`}
+                            .jt`Proton can't connect to your Yahoo Mail account. Please make sure that your email address and app password are correct. Do ${boldNot} use your regular password.`}
                     </div>
                 );
             }
