@@ -15,7 +15,7 @@ import AddressesWithUser from './AddressesWithUser';
 interface Props {
     user: UserModel;
     organization: Organization;
-    isOnlySelf: boolean;
+    isOnlySelf?: boolean;
 }
 const AddressesWithMembers = ({ user, organization, isOnlySelf }: Props) => {
     const match = useRouteMatch<{ memberID: string }>();
