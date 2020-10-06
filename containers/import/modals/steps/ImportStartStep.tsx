@@ -33,9 +33,6 @@ const ImportStartStep = ({ modalModel, updateModalModel, needAppPassword, showPa
     const isIMAPError = errorLabel === IMAP_CONNECTION_ERROR_LABEL;
     const isReconnect = currentImport?.Active?.ErrorCode === ImportMailError.ERROR_CODE_IMAP_CONNECTION;
 
-    const isGmail = modalModel.imap === IMAPS.GMAIL;
-    const isYahoo = modalModel.imap === IMAPS.YAHOO;
-
     const renderError = () => {
         let message = null;
 
@@ -55,161 +52,174 @@ const ImportStartStep = ({ modalModel, updateModalModel, needAppPassword, showPa
             </Href>
         );
 
-        if (isReconnect) {
-            message = (
-                <>
-                    <div className="mb1">
-                        {c('Import error').t`Proton can't connect to your account. Please make sure that:`}
-                    </div>
-                    <ul className="m0 pb1">
-                        <li>{c('Import error').t`IMAP access is enabled in your external account`}</li>
-                        <li>{c('Import error').t`your password is correct`}</li>
-                    </ul>
-                    <div className="mb1">{c('Import error').t`Use your app password if:`}</div>
-                    <ul className="m0 pb1">
-                        <li>{c('Import error').t`2-step verification is enabled in your external account`}</li>
-                        <li>{c('Import error').t`your email account requires one to export your data`}</li>
-                    </ul>
-                </>
-            );
+        switch (modalModel.imap) {
+            case IMAPS.GMAIL:
+                if (isReconnect) {
+                    message = (
+                        <>
+                            <div className="mb1">{c('Import error')
+                                .t`Proton can't connect to your account. Please make sure that Gmail IMAP access is enabled.`}</div>
+                            <div className="mb1">
+                                {c('Import error')
+                                    .jt`If ${bold2StepsDisabled} in Gmail (default settings), please make sure that:`}
+                            </div>
+                            <ul className="m0 pb1">
+                                <li>{c('Import error').t`your password is correct`}</li>
+                                <li>{c('Import error')
+                                    .t`"Less secure app access" is turned on in your Google account security settings`}</li>
+                            </ul>
+                            <div className="mb1">
+                                {c('Import error')
+                                    .jt`If ${bold2StepsEnabled} in Gmail, please make sure that you are using your app password instead of your regular password.`}
+                            </div>
+                            <div className="mb1">
+                                {c('Import error')
+                                    .jt`You can also try to sign out of ${boldGoogleAccounts} in the browser, then unlock ${linkCAPTCHA}.`}
+                            </div>
+                        </>
+                    );
+                }
 
-            if (isGmail) {
-                message = (
-                    <>
-                        <div className="mb1">{c('Import error')
-                            .t`Proton can't connect to your account. Please make sure that Gmail IMAP access is enabled.`}</div>
+                if (isIMAPError) {
+                    message = (
+                        <>
+                            <div className="mb1">
+                                {c('Import error')
+                                    .t`Proton can't connect to your Gmail account. Please make sure that:`}
+                            </div>
+                            <ul className="m0 pb1">
+                                <li>{c('Import error').t`IMAP access is enabled in Gmail`}</li>
+                                <li>{c('Import error').t`the mail server address and port number are correct`}</li>
+                            </ul>
+                        </>
+                    );
+                }
+
+                if (isAuthError) {
+                    message = (
+                        <>
+                            <div className="mb1">{c('Import error')
+                                .t`Proton can't connect to your Gmail account.`}</div>
+                            <div className="mb1">
+                                {c('Import error')
+                                    .jt`If ${bold2StepsDisabled} in Gmail (default settings), please make sure that:`}
+                            </div>
+                            <ul className="m0 pb1">
+                                <li>{c('Import error').t`your email address and password are correct`}</li>
+                                <li>{c('Import error')
+                                    .t`"Less secure app access" is turned on in your Google account security settings`}</li>
+                            </ul>
+                            <div className="mb1">
+                                {c('Import error')
+                                    .jt`If ${bold2StepsEnabled} in Gmail, please make sure that your email address and app password are correct. Do ${boldNot} use your regular password.`}
+                            </div>
+                            <div className="mb1">
+                                {c('Import error')
+                                    .jt`You can also try to sign out of ${boldGoogleAccounts} in the browser, then unlock ${linkCAPTCHA}.`}
+                            </div>
+                        </>
+                    );
+                }
+
+                break;
+            case IMAPS.YAHOO:
+                if (isReconnect) {
+                    message = (
+                        <>
+                            <div className="mb1">
+                                {c('Import error')
+                                    .t`Proton can't connect to your Yahoo Mail account. Please make sure that:`}
+                            </div>
+                            <ul className="m0 pb1">
+                                <li>{c('Import error').t`IMAP access is enabled in your Yahoo account.`}</li>
+                                <li>{c('Import error')
+                                    .jt`your app password is correct. Do ${boldNot} use your regular password.
+                                `}</li>
+                            </ul>
+                        </>
+                    );
+                }
+
+                if (isIMAPError) {
+                    message = (
+                        <>
+                            <div className="mb1">
+                                {c('Import error')
+                                    .t`Proton can't connect to your Yahoo Mail account. Please make sure that:`}
+                            </div>
+                            <ul className="m0 pb1">
+                                <li>{c('Import error').t`IMAP access is enabled in Yahoo Mail`}</li>
+                                <li>{c('Import error').t`the mail server address and port number are correct`}</li>
+                            </ul>
+                        </>
+                    );
+                }
+
+                if (isAuthError) {
+                    message = (
                         <div className="mb1">
                             {c('Import error')
-                                .jt`If ${bold2StepsDisabled} in Gmail (default settings), please make sure that:`}
+                                .jt`Proton can't connect to your Yahoo Mail account. Please make sure that your email address and app password are correct. Do ${boldNot} use your regular password.`}
                         </div>
-                        <ul className="m0 pb1">
-                            <li>{c('Import error').t`your password is correct`}</li>
-                            <li>{c('Import error')
-                                .t`"Less secure app access" is turned on in your Google account security settings`}</li>
-                        </ul>
-                        <div className="mb1">
-                            {c('Import error')
-                                .jt`If ${bold2StepsEnabled} in Gmail, please make sure that you are using your app password instead of your regular password.`}
-                        </div>
-                        <div className="mb1">
-                            {c('Import error')
-                                .jt`You can also try to sign out of ${boldGoogleAccounts} in the browser, then unlock ${linkCAPTCHA}.`}
-                        </div>
-                    </>
-                );
-            }
+                    );
+                }
 
-            if (isYahoo) {
-                message = (
-                    <>
-                        <div className="mb1">
-                            {c('Import error')
-                                .t`Proton can't connect to your Yahoo Mail account. Please make sure that:`}
-                        </div>
-                        <ul className="m0 pb1">
-                            <li>{c('Import error').t`IMAP access is enabled in your Yahoo account.`}</li>
-                            <li>{c('Import error')
-                                .jt`your app password is correct. Do ${boldNot} use your regular password.
-                            `}</li>
-                        </ul>
-                    </>
-                );
-            }
-        }
+                break;
+            default:
+                if (isReconnect) {
+                    message = (
+                        <>
+                            <div className="mb1">
+                                {c('Import error').t`Proton can't connect to your account. Please make sure that:`}
+                            </div>
+                            <ul className="m0 pb1">
+                                <li>{c('Import error').t`IMAP access is enabled in your external account`}</li>
+                                <li>{c('Import error').t`your password is correct`}</li>
+                            </ul>
+                            <div className="mb1">{c('Import error').t`Use your app password if:`}</div>
+                            <ul className="m0 pb1">
+                                <li>{c('Import error').t`2-step verification is enabled in your external account`}</li>
+                                <li>{c('Import error').t`your email account requires one to export your data`}</li>
+                            </ul>
+                        </>
+                    );
+                }
 
-        if (isIMAPError) {
-            message = (
-                <>
-                    <div className="mb1">
-                        {c('Import error').t`Proton can't connect to your external account. Please make sure that:`}
-                    </div>
-                    <ul className="m0 pb1">
-                        <li>{c('Import error').t`IMAP access is enabled in your external account`}</li>
-                        <li>{c('Import error').t`the mail server address and port number are correct`}</li>
-                    </ul>
-                </>
-            );
+                if (isIMAPError) {
+                    message = (
+                        <>
+                            <div className="mb1">
+                                {c('Import error')
+                                    .t`Proton can't connect to your external account. Please make sure that:`}
+                            </div>
+                            <ul className="m0 pb1">
+                                <li>{c('Import error').t`IMAP access is enabled in your external account`}</li>
+                                <li>{c('Import error').t`the mail server address and port number are correct`}</li>
+                            </ul>
+                        </>
+                    );
+                }
 
-            if (isGmail) {
-                message = (
-                    <>
-                        <div className="mb1">
-                            {c('Import error').t`Proton can't connect to your Gmail account. Please make sure that:`}
-                        </div>
-                        <ul className="m0 pb1">
-                            <li>{c('Import error').t`IMAP access is enabled in Gmail`}</li>
-                            <li>{c('Import error').t`the mail server address and port number are correct`}</li>
-                        </ul>
-                    </>
-                );
-            }
-
-            if (isYahoo) {
-                message = (
-                    <>
-                        <div className="mb1">
-                            {c('Import error')
-                                .t`Proton can't connect to your Yahoo Mail account. Please make sure that:`}
-                        </div>
-                        <ul className="m0 pb1">
-                            <li>{c('Import error').t`IMAP access is enabled in Yahoo Mail`}</li>
-                            <li>{c('Import error').t`the mail server address and port number are correct`}</li>
-                        </ul>
-                    </>
-                );
-            }
-        }
-
-        if (isAuthError) {
-            message = (
-                <>
-                    <div className="mb1">
-                        {c('Import error')
-                            .t`Proton can't connect to your external account. Please make sure that your email address and password are correct.`}
-                    </div>
-                    <div className="mb1">
-                        {c('Import error').t`Use your app password instead of your regular password if:`}
-                    </div>
-                    <ul className="m0 pb1">
-                        <li>{c('Import error').t`2-step verification is enabled in your external email account`}</li>
-                        <li>{c('Import error').t`your email account requires an app password to export your data`}</li>
-                    </ul>
-                </>
-            );
-
-            if (isGmail) {
-                message = (
-                    <>
-                        <div className="mb1">{c('Import error').t`Proton can't connect to your Gmail account.`}</div>
-                        <div className="mb1">
-                            {c('Import error')
-                                .jt`If ${bold2StepsDisabled} in Gmail (default settings), please make sure that:`}
-                        </div>
-                        <ul className="m0 pb1">
-                            <li>{c('Import error').t`your email address and password are correct`}</li>
-                            <li>{c('Import error')
-                                .t`"Less secure app access" is turned on in your Google account security settings`}</li>
-                        </ul>
-                        <div className="mb1">
-                            {c('Import error')
-                                .jt`If ${bold2StepsEnabled} in Gmail, please make sure that your email address and app password are correct. Do ${boldNot} use your regular password.`}
-                        </div>
-                        <div className="mb1">
-                            {c('Import error')
-                                .jt`You can also try to sign out of ${boldGoogleAccounts} in the browser, then unlock ${linkCAPTCHA}.`}
-                        </div>
-                    </>
-                );
-            }
-
-            if (isYahoo) {
-                message = (
-                    <div className="mb1">
-                        {c('Import error')
-                            .jt`Proton can't connect to your Yahoo Mail account. Please make sure that your email address and app password are correct. Do ${boldNot} use your regular password.`}
-                    </div>
-                );
-            }
+                if (isAuthError) {
+                    message = (
+                        <>
+                            <div className="mb1">
+                                {c('Import error')
+                                    .t`Proton can't connect to your external account. Please make sure that your email address and password are correct.`}
+                            </div>
+                            <div className="mb1">
+                                {c('Import error').t`Use your app password instead of your regular password if:`}
+                            </div>
+                            <ul className="m0 pb1">
+                                <li>{c('Import error')
+                                    .t`2-step verification is enabled in your external email account`}</li>
+                                <li>{c('Import error')
+                                    .t`your email account requires an app password to export your data`}</li>
+                            </ul>
+                        </>
+                    );
+                }
+                break;
         }
 
         return (
