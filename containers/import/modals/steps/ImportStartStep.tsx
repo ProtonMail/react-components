@@ -10,14 +10,14 @@ import {
     IMAP_CONNECTION_ERROR_LABEL,
 } from '../../constants';
 
-import { ImportMail, ImportMailError, ImportModalModel, IMPORT_ERROR } from '../../interfaces';
+import { Importer, ImportMailError, ImportModalModel, IMPORT_ERROR } from '../../interfaces';
 
 interface Props {
     modalModel: ImportModalModel;
     updateModalModel: (newModel: ImportModalModel) => void;
     needAppPassword: boolean;
     showPassword: boolean;
-    currentImport?: ImportMail;
+    currentImport?: Importer;
 }
 
 const ImportStartStep = ({ modalModel, updateModalModel, needAppPassword, showPassword, currentImport }: Props) => {
@@ -31,7 +31,7 @@ const ImportStartStep = ({ modalModel, updateModalModel, needAppPassword, showPa
 
     const isAuthError = [INVALID_CREDENTIALS_ERROR_LABEL, IMAP_AUTHENTICATION_ERROR_LABEL].includes(errorLabel);
     const isIMAPError = errorLabel === IMAP_CONNECTION_ERROR_LABEL;
-    const isReconnect = currentImport && currentImport.ErrorCode === ImportMailError.ERROR_CODE_IMAP_CONNECTION;
+    const isReconnect = currentImport?.Active?.ErrorCode === ImportMailError.ERROR_CODE_IMAP_CONNECTION;
 
     const isGmail = modalModel.imap === IMAPS.GMAIL;
     const isYahoo = modalModel.imap === IMAPS.YAHOO;
