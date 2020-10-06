@@ -1,11 +1,5 @@
 import { c } from 'ttag';
-
-export enum TIME_UNIT {
-    BIG_BANG = 'big_bang',
-    LAST_YEAR = 'last_year',
-    LAST_3_MONTHS = 'last_3_months',
-    LAST_MONTH = 'last_month',
-}
+import { TIME_UNIT } from './interfaces';
 
 export const timeUnitLabels = {
     [TIME_UNIT.BIG_BANG]: c('Label').t`Account creation date`,

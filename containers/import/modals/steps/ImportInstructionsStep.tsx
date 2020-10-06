@@ -9,15 +9,15 @@ import yahooAppPasswordImg from 'design-system/assets/img/import-instructions/ya
 
 import { Alert, Button, Href, Icon, Tabs } from '../../../../components';
 
-import { PROVIDER_INSTRUCTIONS } from '../../interfaces';
+import { GMAIL_INSTRUCTIONS, PROVIDER_INSTRUCTIONS } from '../../interfaces';
 
 interface Props {
     changeProvider: (provider: PROVIDER_INSTRUCTIONS) => void;
     provider?: PROVIDER_INSTRUCTIONS;
-    instructionsCurrentStep: number;
+    gmailInstructionsStep: GMAIL_INSTRUCTIONS;
 }
 
-const ImportInstructionsStep = ({ changeProvider, provider, instructionsCurrentStep }: Props) => {
+const ImportInstructionsStep = ({ changeProvider, provider, gmailInstructionsStep }: Props) => {
     const [tabIndex, setTabIndex] = useState(0);
 
     /* The following consts are to be used in translations */
@@ -80,8 +80,8 @@ const ImportInstructionsStep = ({ changeProvider, provider, instructionsCurrentS
         const boldLabels = <strong key="boldLabels">{c('Import instructions emphasis').t`Labels`}</strong>;
         const bold2Steps = <strong key="bold2Steps">{c('Import instructions emphasis').t`2-step verification`}</strong>;
 
-        switch (instructionsCurrentStep) {
-            case 0:
+        switch (gmailInstructionsStep) {
+            case GMAIL_INSTRUCTIONS.IMAP:
                 return (
                     <>
                         <div className="mb1">
@@ -96,7 +96,7 @@ const ImportInstructionsStep = ({ changeProvider, provider, instructionsCurrentS
                         />
                     </>
                 );
-            case 1:
+            case GMAIL_INSTRUCTIONS.LABELS:
                 return (
                     <>
                         <div className="mb1">
@@ -111,7 +111,7 @@ const ImportInstructionsStep = ({ changeProvider, provider, instructionsCurrentS
                         />
                     </>
                 );
-            case 2:
+            case GMAIL_INSTRUCTIONS.TWO_STEPS:
                 return (
                     <>
                         <div className="mb1">

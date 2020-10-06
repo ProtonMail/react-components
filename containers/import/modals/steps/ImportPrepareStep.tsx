@@ -10,8 +10,8 @@ import isDeepEqual from 'proton-shared/lib/helpers/isDeepEqual';
 import { useFolders, useUser, useModals } from '../../../../hooks';
 import { Icon, LabelStack, Button, Alert, Loader, Tooltip, InlineLinkButton } from '../../../../components';
 
-import { ImportModalModel, MailImportFolder } from '../../interfaces';
-import { timeUnitLabels, TIME_UNIT } from '../../constants';
+import { ImportModalModel, MailImportFolder, TIME_UNIT } from '../../interfaces';
+import { timeUnitLabels } from '../../constants';
 import { escapeSlashes, splitEscaped } from '../../helpers';
 
 import CustomizeImportModal from '../CustomizeImportModal';
