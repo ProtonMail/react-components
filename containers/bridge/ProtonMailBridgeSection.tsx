@@ -31,7 +31,7 @@ const ProtonMailBridgeSection = () => {
         {
             icon: 'linux',
             platform: 'GNU/Linux',
-            fileType: c('OS compatibility').t`PKGBUILD (for other distribtions)`,
+            fileType: c('OS compatibility').t`PKGBUILD (for other distributions)`,
             link: 'https://protonmail.com/bridge/install',
         },
     ];
