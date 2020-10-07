@@ -13,14 +13,8 @@ import getSendPreferences from 'proton-shared/lib/mail/send/getSendPreferences';
 import { encryptAttachment } from 'proton-shared/lib/mail/send/attachments';
 import { encryptPackages } from 'proton-shared/lib/mail/send/sendEncrypt';
 import { attachSubPackages } from 'proton-shared/lib/mail/send/sendSubPackages';
-import { useRef, useCallback } from 'react';
-import {
-    useApi,
-    useConfig,
-    useGetAddressKeys,
-    useGetEncryptionPreferences,
-    useUserSettings
-} from './index';
+import { useCallback } from 'react';
+import { useApi, useGetAddressKeys, useGetEncryptionPreferences, useUserSettings } from './index';
 import { generateUID } from '../helpers/component';
 
 const { PLAINTEXT } = MIME_TYPES;
@@ -36,18 +30,12 @@ interface Params {
 
 export const useSendIcs = () => {
     const api = useApi();
-    const config = useConfig();
     const [userSettings] = useUserSettings();
     const getAddressKeys = useGetAddressKeys();
     const getEncryptionPreferences = useGetEncryptionPreferences();
 
-    const ref = useRef<string>();
-
     const send = useCallback(
         async ({ ics, from, addressID, to, subject, plainTextBody = '' }: Params) => {
-            if (!ref.current) {
-                ref.current = generateUID('reply-invitation');
-            }
             if (!addressID) {
                 throw new Error('Missing addressID');
             }
@@ -67,39 +55,41 @@ export const useSendIcs = () => {
                     ToList: to,
                     CCList: [],
                     BCCList: [],
-                    MIMEType: MIME_TYPES.PLAINTEXT
-                }
+                    MIMEType: MIME_TYPES.PLAINTEXT,
+                },
             };
-            const message = inputMessage;
             const { data: Body } = await encryptMessage({
                 data: inputMessage.plainText,
                 publicKeys: [publicKeys?.[0]],
                 privateKeys: [privateKeys?.[0]],
-                compression: enums.compression.zip
+                compression: enums.compression.zip,
             });
             const { Message: updatedMessageData } = await api<{ Message: Message }>(
                 // MESSAGE_ACTIONS.NEW = -1, better not to export that constant for the moment
                 createDraft({
                     Action: -1,
-                    Message: { ...message.data, Body },
-                    AttachmentKeyPackets: {}
+                    Message: { ...inputMessage.data, Body },
+                    AttachmentKeyPackets: {},
                 } as any)
             );
             const replyAttachment = new File([new Blob([ics])], 'invite.ics', { type: 'text/calendar; method=REPLY' });
             const packets = await encryptAttachment(ics, replyAttachment, false, publicKeys, privateKeys);
 
             const { Attachment } = await api(
-                (await uploadAttachment({
+                await uploadAttachment({
                     Filename: packets.Filename,
                     MessageID: updatedMessageData.ID,
                     ContentID: '',
                     MIMEType: packets.MIMEType,
                     KeyPackets: new Blob([packets.keys] as any),
                     DataPacket: new Blob([packets.data] as any),
-                    Signature: packets.signature ? new Blob([packets.signature] as any) : undefined
-                }))
+                    Signature: packets.signature ? new Blob([packets.signature] as any) : undefined,
+                })
             );
-            const messageData: Message = { ...updatedMessageData, Attachments: [Attachment] };
+            const message = {
+                ...inputMessage,
+                data: { ...updatedMessageData, Attachments: [Attachment] },
+            };
             const emails = to.map(({ Address }) => Address);
             const mapSendPrefs: SimpleMap<SendPreferences> = {};
             await Promise.all(
@@ -109,17 +99,19 @@ export const useSendIcs = () => {
                     mapSendPrefs[email] = sendPreferences;
                 })
             );
-            let packages: Packages = { [PLAINTEXT]: {
-                    Flags: addReceived(messageData?.Flags),
+            let packages: Packages = {
+                [PLAINTEXT]: {
+                    Flags: addReceived(message.data?.Flags),
                     Addresses: {},
                     MIMEType: PLAINTEXT,
-                    Body: plainTextBody
-                } };
-            packages = await attachSubPackages(packages, messageData, emails, mapSendPrefs, api);
+                    Body: plainTextBody,
+                },
+            };
+            packages = await attachSubPackages(packages, message.data, emails, mapSendPrefs, api);
             packages = await encryptPackages(message, packages, getAddressKeys);
-            await api(sendMessage(messageData.ID, { Packages: packages, AutoSaveContacts: 0 } as any));
+            await api(sendMessage(message.data.ID, { Packages: packages, AutoSaveContacts: 0 } as any));
         },
-        [config, userSettings]
+        [api, userSettings, getAddressKeys, getEncryptionPreferences]
     );
     return send;
 };

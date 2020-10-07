@@ -1,5 +1,6 @@
 import { ICAL_ATTENDEE_STATUS } from 'proton-shared/lib/calendar/constants';
-import isTruthy from 'proton-shared/lib/helpers/isTruthy';
+import { move } from 'proton-shared/lib/helpers/array';
+import { noop } from 'proton-shared/lib/helpers/function';
 import { InviteActions } from 'proton-shared/lib/interfaces/calendar';
 import { c } from 'ttag';
 import React from 'react';
@@ -16,19 +17,18 @@ interface Props {
 const InviteButtons = ({ actions, partstat = ICAL_ATTENDEE_STATUS.NEEDS_ACTION, disabled, className = '' }: Props) => {
     const [loadingMap, withLoadingMap] = useLoadingMap();
 
-    const { onAccept, onTentative, onDecline } = actions;
+    const { accept, acceptTentatively, decline } = actions;
+    const onAccept = async () => withLoadingMap({ accept: accept() });
+    const onTentative = async () => withLoadingMap({ tentative: acceptTentatively() });
+    const onDecline = async () => withLoadingMap({ decline: decline() });
+
     const { accept: loadingAccept, tentative: loadingTentative, decline: loadingDecline } = loadingMap;
     const loadingAnswer = loadingAccept || loadingTentative || loadingDecline;
 
     if (partstat === ICAL_ATTENDEE_STATUS.NEEDS_ACTION) {
         return (
             <div className={className}>
-                <SmallButton
-                    onClick={onAccept}
-                    disabled={loadingAnswer}
-                    loading={loadingAccept}
-                    className="mr0-5"
-                >
+                <SmallButton onClick={onAccept} disabled={loadingAnswer} loading={loadingAccept} className="mr0-5">
                     {c('Action').t`Yes`}
                 </SmallButton>
                 <SmallButton
@@ -49,25 +49,27 @@ const InviteButtons = ({ actions, partstat = ICAL_ATTENDEE_STATUS.NEEDS_ACTION, 
     const tentative = partstat === ICAL_ATTENDEE_STATUS.TENTATIVE;
     const declined = partstat === ICAL_ATTENDEE_STATUS.DECLINED;
     const list = [
-        !accepted && {
+        {
             text: c('Action').t`Yes, I'm attending`,
-            onClick: () => onAccept(),
+            onClick: accepted ? noop : onAccept,
         },
-        !tentative && {
+        {
             text: c('Action').t`Maybe I'm attending`,
-            onClick: () => onTentative(),
+            onClick: tentative ? noop : onTentative,
         },
-        !declined && {
+        {
             text: c('Action').t`No, I'm not attending`,
-            actionType: 'delete',
-            onClick: () => onDecline(),
-        } as const,
-    ].filter(isTruthy);
+            onClick: declined ? noop : onDecline,
+        },
+    ];
+    const answerIndex = [accepted, tentative, declined].findIndex((bool) => bool === true);
+    const orderedList = move(list, answerIndex, 0);
+    list.unshift();
     return (
         <DropdownActions
             className="pm-button--small"
             key="actions"
-            list={list}
+            list={orderedList}
             loading={loadingAnswer}
             disabled={disabled}
         />

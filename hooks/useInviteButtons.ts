@@ -2,232 +2,199 @@ import { ICAL_ATTENDEE_STATUS } from 'proton-shared/lib/calendar/constants';
 import { getProdId } from 'proton-shared/lib/calendar/vcalHelper';
 import { pick } from 'proton-shared/lib/helpers/object';
 import { wait } from 'proton-shared/lib/helpers/promise';
-import { ProtonConfig } from 'proton-shared/lib/interfaces';
 import {
-    VcalVeventComponent
-} from 'proton-shared/lib/interfaces/calendar/VcalModel';
-import {
-    getParticipantHasAddressID,
+    CalendarEvent,
+    CalendarWidgetData,
+    InviteActions,
     Participant,
-    createReplyIcs
-} from 'proton-shared/lib/calendar/integration/invite';
-import { RequireSome } from 'proton-shared/lib/interfaces/utils';
+    SavedInviteData,
+} from 'proton-shared/lib/interfaces/calendar';
+import { VcalVeventComponent } from 'proton-shared/lib/interfaces/calendar/VcalModel';
+import { getParticipantHasAddressID, createReplyIcs } from 'proton-shared/lib/calendar/integration/invite';
+import {
+    createCalendarEventFromInvitation,
+    updateCalendarEventFromInvitation,
+} from 'proton-shared/lib/calendar/integration/inviteApi';
 import { useCallback } from 'react';
-import { c } from 'ttag';
-import { useApi } from './index';
-import { createCalendarEventFromInvitation, updateCalendarEventFromInvitation } from '../helpers/calendar/inviteApi';
+import { useApi, useConfig } from './index';
 import useSendIcs from './useSendIcs';
 
-interface Props {
-    vevent: Pick<VcalVeventComponent, 'uid' | 'dtstart' | 'dtend' | 'sequence' | 'recurrence-id'>;
-    attendee: Participant;
-    organizer: Participant;
+interface Args {
+    veventApi?: VcalVeventComponent;
+    veventIcs?: VcalVeventComponent;
+    attendee?: Participant;
+    organizer?: Participant;
     subject: string;
-    config: ProtonConfig;
-    onSuccess: (invitationApi: RequireSome<EventInvitation, 'calendarEvent' | 'attendee'>) => void;
-    onCreateEventError: (partstat: ICAL_ATTENDEE_STATUS) => void;
-    onUpdateEventError: (partstat: ICAL_ATTENDEE_STATUS) => void;
+    calendarData?: CalendarWidgetData;
+    calendarEvent?: CalendarEvent;
+    onEmailSuccess: () => void;
+    onEmailError: (error?: Error) => void;
+    onCreateEventSuccess: () => void;
+    onUpdateEventSuccess: () => void;
+    onCreateEventError: (partstat: ICAL_ATTENDEE_STATUS, error?: Error) => void;
+    onUpdateEventError: (partstat: ICAL_ATTENDEE_STATUS, error?: Error) => void;
+    onSuccess: (savedData: SavedInviteData) => void;
     onUnexpectedError: () => void;
 }
 const useInviteButtons = ({
-    vevent,
+    veventApi,
+    veventIcs,
     attendee,
     organizer,
     subject,
-    config,
-    onUnexpectedError,
+    calendarData,
+    calendarEvent,
+    onEmailSuccess,
+    onEmailError,
+    onCreateEventSuccess,
+    onUpdateEventSuccess,
     onSuccess,
     onCreateEventError,
-    onUpdateEventError
-}: Props) => {
+    onUpdateEventError,
+    onUnexpectedError,
+}: Args): InviteActions => {
     const api = useApi();
     const sendIcs = useSendIcs();
-    // const {
-    //     isOrganizerMode,
-    //     invitationIcs,
-    //     invitationIcs: { attendee, organizer, vevent: veventIcs },
-    //     calendarData: { calendar } = {},
-    //     updateAction
-    // } = model;
+    const config = useConfig();
 
-    const sendReplyEmail = async (partstat: ICAL_ATTENDEE_STATUS): Promise<boolean> => {
-        if (!getParticipantHasAddressID(attendee) || !organizer) {
-            onUnexpectedError();
-            return false;
-        }
-        try {
-            const prodId = getProdId(config);
-            const ics = createReplyIcs({
-                prodId,
-                vevent,
-                attendee,
-                partstat,
-                organizer,
-            });
-            await sendIcs({
-                ics,
-                addressID: attendee.addressID,
-                from: { Address: attendee.emailAddress, Name: attendee.displayName || attendee.emailAddress },
-                to: [{ Address: organizer.emailAddress, Name: organizer.name }],
-                subject,
-            });
-            createNotification({
-                type: 'success',
-                text: c('Reply to calendar invitation').t`Answer sent`
-            });
-            return true;
-        } catch (error) {
-            if (
-                error instanceof EventInvitationError &&
-                error.type === EVENT_INVITATION_ERROR_TYPE.UNEXPECTED_ERROR
-            ) {
+    // Returns true if the operation is succesful
+    const sendReplyEmail = useCallback(
+        async (partstat: ICAL_ATTENDEE_STATUS) => {
+            const vevent = veventApi || veventIcs;
+            if (!vevent || !attendee || !getParticipantHasAddressID(attendee) || !organizer || !config) {
                 onUnexpectedError();
                 return false;
             }
-            createNotification({
-                type: 'error',
-                text: c('Reply to calendar invitation').t`Answering invitation failed`
-            });
-            return false;
-        }
-    };
+            try {
+                const prodId = getProdId(config);
+                const ics = createReplyIcs({
+                    prodId,
+                    vevent: pick(vevent, ['uid', 'dtstart', 'dtend', 'sequence', 'recurrence-id']),
+                    attendee,
+                    partstat,
+                    organizer,
+                });
+                await sendIcs({
+                    ics,
+                    addressID: attendee.addressID,
+                    from: { Address: attendee.emailAddress, Name: attendee.displayName || attendee.emailAddress },
+                    to: [{ Address: organizer.emailAddress, Name: organizer.name }],
+                    subject,
+                });
+                onEmailSuccess();
+                return true;
+            } catch (error) {
+                onEmailError(error);
+                return false;
+            }
+        },
+        [veventApi, veventIcs, attendee, organizer, config, onEmailSuccess, onEmailError]
+    );
 
     const createCalendarEvent = useCallback(
-        (attendee: Participant) => {
-            return async (partstat: ICAL_ATTENDEE_STATUS) => {
-                try {
-                    const { createdEvent, savedVevent, savedVcalAttendee } = await createCalendarEventFromInvitation({
-                        partstat,
-                        model,
-                        api
-                    });
-                    createNotification({
-                        type: 'success',
-                        text: c('Reply to calendar invitation').t`Calendar event created`
-                    });
-                    const invitationToSave = {
-                        vevent: savedVevent,
-                        calendarEvent: createdEvent,
-                        attendee: {
-                            ...attendee,
-                            vcalComponent: savedVcalAttendee,
-                            partstat
-                        },
-                        timeStatus: EVENT_TIME_STATUS.FUTURE
-                    };
-                    onSuccess(invitationToSave);
-                } catch (error) {
-                    createNotification({
-                        type: 'error',
-                        text: c('Reply to calendar invitation').t`Creating calendar event failed`
-                    });
-                    if (
-                        error instanceof EventInvitationError &&
-                        error.type === EVENT_INVITATION_ERROR_TYPE.UNEXPECTED_ERROR
-                    ) {
-                        onUnexpectedError();
-                        return;
-                    }
-                    onCreateEventError(partstat);
-                }
-            };
+        async (partstat: ICAL_ATTENDEE_STATUS) => {
+            if (!attendee || !veventIcs || !organizer) {
+                onUnexpectedError();
+                return;
+            }
+            try {
+                const {
+                    savedEvent,
+                    savedVevent,
+                    savedAttendee,
+                    savedOrganizer,
+                } = await createCalendarEventFromInvitation({
+                    vevent: veventIcs,
+                    attendee,
+                    organizer,
+                    partstat,
+                    api,
+                    calendarData,
+                });
+                onCreateEventSuccess();
+                return { savedEvent, savedVevent, savedAttendee, savedOrganizer };
+            } catch (error) {
+                onCreateEventError(partstat, error);
+            }
         },
-        [model, api]
+        [veventIcs, attendee, organizer, api, calendarData]
     );
 
     const updateCalendarEvent = useCallback(
-        (attendee: Participant) => {
-            return async (partstat: ICAL_ATTENDEE_STATUS) => {
-                try {
-                    const { updatedEvent, savedVevent, savedVcalAttendee } = await updateCalendarEventFromInvitation({
-                        partstat,
-                        model,
-                        api
-                    });
-                    createNotification({
-                        type: 'success',
-                        text: c('Reply to calendar invitation').t`Calendar event updated`
-                    });
-                    const invitationToSave = {
-                        vevent: savedVevent,
-                        calendarEvent: updatedEvent,
-                        attendee: {
-                            ...attendee,
-                            vcalComponent: savedVcalAttendee,
-                            partstat
-                        },
-                        timeStatus: EVENT_TIME_STATUS.FUTURE
-                    };
-                    onSuccess(invitationToSave);
-                } catch (error) {
-                    createNotification({
-                        type: 'error',
-                        text: c('Reply to calendar invitation').t`Updating calendar event failed`
-                    });
-                    if (
-                        error instanceof EventInvitationError &&
-                        error.type === EVENT_INVITATION_ERROR_TYPE.UNEXPECTED_ERROR
-                    ) {
-                        onUnexpectedError();
-                        return;
-                    }
-                    onUpdateEventError(partstat);
-                }
-            };
+        async (partstat: ICAL_ATTENDEE_STATUS) => {
+            if (!attendee || !veventApi || !calendarEvent || !organizer) {
+                onUnexpectedError();
+                return;
+            }
+            try {
+                const {
+                    savedEvent,
+                    savedVevent,
+                    savedAttendee,
+                    savedOrganizer,
+                } = await updateCalendarEventFromInvitation({
+                    veventIcs,
+                    veventApi,
+                    calendarEvent,
+                    attendee,
+                    organizer,
+                    partstat,
+                    oldPartstat: attendee.partstat,
+                    api,
+                    calendarData,
+                });
+                onUpdateEventSuccess();
+                return { savedEvent, savedVevent, savedAttendee, savedOrganizer };
+            } catch (error) {
+                onUpdateEventError(partstat, error);
+            }
         },
-        [model, api]
+        [veventApi, veventIcs, attendee, organizer, api, calendarData, calendarEvent]
     );
 
     const answerInvitation = useCallback(
         async (partstat: ICAL_ATTENDEE_STATUS) => {
-            // Send the corresponding email
-            if (!attendee || !getParticipantHasAddressID(attendee) || !organizer || !calendar) {
-                onUnexpectedError();
-                return;
-            }
-            const sent = await sendReplyEmail({
-                attendee,
-                organizer,
-                ...pick(veventIcs, ['uid', 'sequence', 'recurrence-id', 'dtstart', 'dtend'])
-            })(partstat);
+            const sent = await sendReplyEmail(partstat);
             if (!sent) {
                 return;
             }
-            if (updateAction === undefined) {
-                await createCalendarEvent(attendee)(partstat);
-                return;
-            }
-            if ([NONE, KEEP_PARTSTAT, RESET_PARTSTAT].includes(updateAction)) {
-                await updateCalendarEvent(attendee)(partstat);
-                return;
+            const result = !veventApi ? await createCalendarEvent(partstat) : await updateCalendarEvent(partstat);
+            if (result) {
+                onSuccess(result);
             }
         },
-        [sendReplyEmail, sendIcs, updateAction]
+        [sendReplyEmail, createCalendarEvent, updateCalendarEvent]
     );
 
-    const dummyButtons = {
+    const dummyActions = {
         accept: () => wait(0),
         acceptTentatively: () => wait(0),
         decline: () => wait(0),
         retryCreateEvent: () => wait(0),
-        retryUpdateEvent: () => wait(0)
+        retryUpdateEvent: () => wait(0),
     };
 
-    if (!attendee) {
-        return dummyButtons;
+    if (!attendee || !organizer) {
+        return dummyActions;
     }
 
-    if (!isOrganizerMode) {
-        return {
-            accept: () => answerInvitation(ICAL_ATTENDEE_STATUS.ACCEPTED),
-            acceptTentatively: () => answerInvitation(ICAL_ATTENDEE_STATUS.TENTATIVE),
-            decline: () => answerInvitation(ICAL_ATTENDEE_STATUS.DECLINED),
-            retryCreateEvent: createCalendarEvent(attendee),
-            retryUpdateEvent: updateCalendarEvent(attendee)
-        };
-    }
-
-    return dummyButtons;
+    return {
+        accept: () => answerInvitation(ICAL_ATTENDEE_STATUS.ACCEPTED),
+        acceptTentatively: () => answerInvitation(ICAL_ATTENDEE_STATUS.TENTATIVE),
+        decline: () => answerInvitation(ICAL_ATTENDEE_STATUS.DECLINED),
+        retryCreateEvent: async (partstat: ICAL_ATTENDEE_STATUS) => {
+            const result = await createCalendarEvent(partstat);
+            if (result) {
+                onSuccess(result);
+            }
+        },
+        retryUpdateEvent: async (partstat: ICAL_ATTENDEE_STATUS) => {
+            const result = await updateCalendarEvent(partstat);
+            if (result) {
+                onSuccess(result);
+            }
+        },
+    };
 };
 
 export default useInviteButtons;
