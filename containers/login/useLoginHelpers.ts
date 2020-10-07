@@ -30,7 +30,7 @@ export const getLoginErrors = (state: LoginModel) => {
                 ? c('Signup error').t`Passwords do not match`
                 : ''
             : required,
-    };
+    } as const;
 };
 
 export type LoginErrors = ReturnType<typeof getLoginErrors>;
