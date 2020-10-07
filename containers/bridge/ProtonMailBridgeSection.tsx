@@ -1,38 +1,37 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import { Alert, Href, Table, TableHeader, TableBody, TableRow, Icon } from '../../components';
 
-const ProtonMailBridgeSection = ({ permission }) => {
+const ProtonMailBridgeSection = () => {
     const bridgeClients = [
         {
             icon: 'apple',
             platform: 'Mac OSX',
-            fileType: '.dmg (10.12 or later)',
+            fileType: c('OS compatibility').t`.dmg (10.12 or later)`,
             link: 'https://protonmail.com/bridge/install',
         },
         {
             icon: 'windows',
             platform: 'Windows',
-            fileType: '.exe (64-bit)',
+            fileType: c('OS compatibility').t`.exe (64-bit)`,
             link: 'https://protonmail.com/bridge/install',
         },
         {
             icon: 'linux',
             platform: 'GNU/Linux',
-            fileType: '.deb (for Debian/Ubuntu)',
+            fileType: c('OS compatibility').t`.deb (for Debian/Ubuntu)`,
             link: 'https://protonmail.com/bridge/install',
         },
         {
             icon: 'linux',
             platform: 'GNU/Linux',
-            fileType: '.rpm (for Fedora/openSUSE)',
+            fileType: c('OS compatibility').t`.rpm (for Fedora/openSUSE)`,
             link: 'https://protonmail.com/bridge/install',
         },
         {
             icon: 'linux',
             platform: 'GNU/Linux',
-            fileType: 'PKGBUILD (for other distribtions)',
+            fileType: c('OS compatibility').t`PKGBUILD (for other distribtions)`,
             link: 'https://protonmail.com/bridge/install',
         },
     ];
@@ -76,10 +75,6 @@ const ProtonMailBridgeSection = ({ permission }) => {
                 .jt`To access more download options and instructions on how to install and use ProtonMail Bridge, please visit our ${bridgeLink}`}</Alert>
         </>
     );
-};
-
-ProtonMailBridgeSection.propTypes = {
-    permission: PropTypes.bool,
 };
 
 export default ProtonMailBridgeSection;
