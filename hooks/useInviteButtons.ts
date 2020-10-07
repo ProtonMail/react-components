@@ -4,6 +4,7 @@ import { pick } from 'proton-shared/lib/helpers/object';
 import { wait } from 'proton-shared/lib/helpers/promise';
 import {
     CalendarEvent,
+    CalendarEventSharedData,
     CalendarWidgetData,
     InviteActions,
     Participant,
@@ -26,7 +27,7 @@ interface Args {
     organizer?: Participant;
     subject: string;
     calendarData?: CalendarWidgetData;
-    calendarEvent?: CalendarEvent;
+    calendarEvent?: CalendarEvent | CalendarEventSharedData;
     onEmailSuccess: () => void;
     onEmailError: (error?: Error) => void;
     onCreateEventSuccess: () => void;
@@ -69,10 +70,9 @@ const useInviteButtons = ({
                 const prodId = getProdId(config);
                 const ics = createReplyIcs({
                     prodId,
-                    vevent: pick(vevent, ['uid', 'dtstart', 'dtend', 'sequence', 'recurrence-id']),
-                    attendee,
+                    vevent: pick(vevent, ['uid', 'dtstart', 'dtend', 'sequence', 'recurrence-id', 'organizer']),
+                    emailTo: attendee.vcalComponent.value,
                     partstat,
-                    organizer,
                 });
                 await sendIcs({
                     ics,
@@ -93,63 +93,51 @@ const useInviteButtons = ({
 
     const createCalendarEvent = useCallback(
         async (partstat: ICAL_ATTENDEE_STATUS) => {
-            if (!attendee || !veventIcs || !organizer) {
+            if (!attendee || !veventIcs) {
                 onUnexpectedError();
                 return;
             }
             try {
-                const {
-                    savedEvent,
-                    savedVevent,
-                    savedAttendee,
-                    savedOrganizer,
-                } = await createCalendarEventFromInvitation({
+                const { savedEvent, savedVevent, savedVcalAttendee } = await createCalendarEventFromInvitation({
                     vevent: veventIcs,
-                    attendee,
-                    organizer,
+                    vcalAttendee: attendee.vcalComponent,
                     partstat,
                     api,
                     calendarData,
                 });
                 onCreateEventSuccess();
-                return { savedEvent, savedVevent, savedAttendee, savedOrganizer };
+                return { savedEvent, savedVevent, savedVcalAttendee };
             } catch (error) {
                 onCreateEventError(partstat, error);
             }
         },
-        [veventIcs, attendee, organizer, api, calendarData]
+        [veventIcs, attendee, api, calendarData]
     );
 
     const updateCalendarEvent = useCallback(
         async (partstat: ICAL_ATTENDEE_STATUS) => {
-            if (!attendee || !veventApi || !calendarEvent || !organizer) {
+            if (!attendee || !veventApi || !calendarEvent) {
                 onUnexpectedError();
                 return;
             }
             try {
-                const {
-                    savedEvent,
-                    savedVevent,
-                    savedAttendee,
-                    savedOrganizer,
-                } = await updateCalendarEventFromInvitation({
+                const { savedEvent, savedVevent, savedVcalAttendee } = await updateCalendarEventFromInvitation({
                     veventIcs,
                     veventApi,
                     calendarEvent,
-                    attendee,
-                    organizer,
+                    vcalAttendee: attendee.vcalComponent,
                     partstat,
                     oldPartstat: attendee.partstat,
                     api,
                     calendarData,
                 });
                 onUpdateEventSuccess();
-                return { savedEvent, savedVevent, savedAttendee, savedOrganizer };
+                return { savedEvent, savedVevent, savedVcalAttendee };
             } catch (error) {
                 onUpdateEventError(partstat, error);
             }
         },
-        [veventApi, veventIcs, attendee, organizer, api, calendarData, calendarEvent]
+        [veventApi, veventIcs, attendee, api, calendarData, calendarEvent]
     );
 
     const answerInvitation = useCallback(

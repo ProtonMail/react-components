@@ -66,13 +66,15 @@ const InviteButtons = ({ actions, partstat = ICAL_ATTENDEE_STATUS.NEEDS_ACTION, 
     const orderedList = move(list, answerIndex, 0);
     list.unshift();
     return (
-        <DropdownActions
-            className="pm-button--small"
-            key="actions"
-            list={orderedList}
-            loading={loadingAnswer}
-            disabled={disabled}
-        />
+        <div className={className}>
+            <DropdownActions
+                className="pm-button--small"
+                key="actions"
+                list={orderedList}
+                loading={loadingAnswer}
+                disabled={disabled}
+            />
+        </div>
     );
 };
 
