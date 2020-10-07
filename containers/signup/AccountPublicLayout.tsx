@@ -3,7 +3,7 @@ import { TtagLocaleMap } from 'proton-shared/lib/interfaces/Locale';
 import { c } from 'ttag';
 
 import { useAppTitle, useConfig } from '../../hooks';
-import { classnames } from '../../helpers';
+import { classnames, getAppVersion } from '../../helpers';
 
 import PublicTopBanners from '../app/PublicTopBanners';
 import { Href } from '../../components';
@@ -37,7 +37,7 @@ const AccountPublicLayout = ({ children, title, subtitle, aside, larger, left, c
 
     useAppTitle(title);
 
-    const appVersion = APP_VERSION_DISPLAY || APP_VERSION;
+    const appVersion = getAppVersion(APP_VERSION_DISPLAY || APP_VERSION);
 
     return (
         <div className="scroll-if-needed h100v">

@@ -3,6 +3,7 @@ import { APPS_CONFIGURATION } from 'proton-shared/lib/constants';
 
 import { useModals, useConfig } from '../../hooks';
 import ChangelogModal from './ChangelogModal';
+import { getAppVersion } from '../../helpers';
 
 interface Props {
     appName?: string;
@@ -19,7 +20,7 @@ const AppVersion = ({ appVersion: maybeAppVersion, appName: maybeAppName, change
     };
 
     const appName = maybeAppName || APPS_CONFIGURATION[APP_NAME]?.name;
-    const appVersion = maybeAppVersion || APP_VERSION_DISPLAY || APP_VERSION;
+    const appVersion = getAppVersion(maybeAppVersion || APP_VERSION_DISPLAY || APP_VERSION);
 
     return (
         <button
