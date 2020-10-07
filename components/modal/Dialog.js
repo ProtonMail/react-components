@@ -1,7 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+
 import Portal from '../portal/Portal';
 import { classnames } from '../../helpers';
+import { FocusTrap } from '../focus';
 
 const CLASSES = {
     MODAL: 'pm-modal',
@@ -37,24 +39,26 @@ const Dialog = ({
 
     return (
         <Portal>
-            <div className={classnames(['pm-modalContainer', isBehind && 'pm-modalContainer--inBackground'])}>
-                <dialog
-                    aria-labelledby={modalTitleID}
-                    aria-modal="true"
-                    open
-                    className={classnames([
-                        CLASSES.MODAL,
-                        isSmall && CLASSES.MODAL_SMALL,
-                        isSmall && 'pm-modal--shorterLabels',
-                        isClosing && CLASSES.MODAL_OUT,
-                        extraClassNames,
-                    ])}
-                    onAnimationEnd={handleAnimationEnd}
-                    {...rest}
-                >
-                    {children}
-                </dialog>
-            </div>
+            <FocusTrap>
+                <div className={classnames(['pm-modalContainer', isBehind && 'pm-modalContainer--inBackground'])}>
+                    <dialog
+                        aria-labelledby={modalTitleID}
+                        aria-modal="true"
+                        open
+                        className={classnames([
+                            CLASSES.MODAL,
+                            isSmall && CLASSES.MODAL_SMALL,
+                            isSmall && 'pm-modal--shorterLabels',
+                            isClosing && CLASSES.MODAL_OUT,
+                            extraClassNames,
+                        ])}
+                        onAnimationEnd={handleAnimationEnd}
+                        {...rest}
+                    >
+                        {children}
+                    </dialog>
+                </div>
+            </FocusTrap>
         </Portal>
     );
 };
