@@ -111,6 +111,9 @@ const useLogin = ({ api, onLogin, ignoreUnlock, hasGenerateKeys = false }: Props
         await finalizeLogin(result.keyPassword);
     };
 
+    /**
+     * Setup keys and address for users that have not setup.
+     */
     const handleSetupPassword = async (newPassword: string) => {
         const cache = cacheRef.current;
         if (!cache || cache.authResult === undefined) {

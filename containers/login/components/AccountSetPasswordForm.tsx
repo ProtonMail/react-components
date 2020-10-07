@@ -1,5 +1,5 @@
 import { c } from 'ttag';
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 
 import SignupSubmitRow from '../../signup/SignupSubmitRow';
 import { Label, PasswordInput, PrimaryButton } from '../../../components';
@@ -16,9 +16,14 @@ interface Props {
 }
 const AccountSetPasswordForm = ({ onSubmit, errors, state, setters }: Props) => {
     const [loading, withLoading] = useLoading();
+    const [isSubmitted, setIsSubmitted] = useState(false);
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        setIsSubmitted(true);
+        if (errors.newPassword || errors.confirmNewPassword) {
+            return;
+        }
         withLoading(onSubmit());
     };
 
@@ -35,6 +40,7 @@ const AccountSetPasswordForm = ({ onSubmit, errors, state, setters }: Props) => 
                     value={state.newPassword}
                     onChange={({ target }: ChangeEvent<HTMLInputElement>) => setters.newPassword(target.value)}
                     error={errors.newPassword}
+                    isSubmitted={isSubmitted}
                     required
                 />
             }
@@ -43,7 +49,7 @@ const AccountSetPasswordForm = ({ onSubmit, errors, state, setters }: Props) => 
 
     const confirmNewPasswordInput = (
         <SignupLabelInputRow
-            label={<Label htmlFor="password">{c('Label').t`Confirm password`}</Label>}
+            label={<Label htmlFor="password-repeat">{c('Label').t`Confirm password`}</Label>}
             input={
                 <PasswordInput
                     id="password-repeat"
@@ -54,6 +60,7 @@ const AccountSetPasswordForm = ({ onSubmit, errors, state, setters }: Props) => 
                     value={state.confirmNewPassword}
                     onChange={({ target }: ChangeEvent<HTMLInputElement>) => setters.confirmNewPassword(target.value)}
                     error={errors.confirmNewPassword}
+                    isSubmitted={isSubmitted}
                     required
                 />
             }

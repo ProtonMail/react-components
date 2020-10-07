@@ -1,11 +1,6 @@
-import React, { ChangeEvent, FunctionComponent, useState, useEffect } from 'react';
+import React, { FunctionComponent, useState, useEffect } from 'react';
 import { c } from 'ttag';
-import {
-    APP_NAMES,
-    DEFAULT_ENCRYPTION_CONFIG,
-    ENCRYPTION_CONFIGS,
-    USERNAME_PLACEHOLDER,
-} from 'proton-shared/lib/constants';
+import { APP_NAMES, DEFAULT_ENCRYPTION_CONFIG, ENCRYPTION_CONFIGS } from 'proton-shared/lib/constants';
 import { queryCheckUsernameAvailability } from 'proton-shared/lib/api/user';
 import { getApiErrorMessage } from 'proton-shared/lib/api/helpers/apiErrorHelper';
 import { queryAvailableDomains } from 'proton-shared/lib/api/domains';
@@ -13,16 +8,14 @@ import { updateUsername } from 'proton-shared/lib/api/settings';
 import { generateAddressKey } from 'proton-shared/lib/keys/keys';
 import { Api } from 'proton-shared/lib/interfaces';
 
-import { Input, Label, PrimaryButton } from '../../components';
-import { useLoading, useNotifications } from '../../hooks';
+import { useNotifications } from '../../hooks';
 
 import BackButton from '../signup/BackButton';
 import { Props as AccountPublicLayoutProps } from '../signup/AccountPublicLayout';
 import { getToAppName } from '../signup/helpers/helper';
 import createKeyHelper from '../keys/addKey/createKeyHelper';
-import SignupLabelInputRow from '../signup/SignupLabelInputRow';
-import SignupSubmitRow from '../signup/SignupSubmitRow';
 import handleSetupAddress from '../signup/helpers/handleSetupAddress';
+import AccountGenerateInternalAddressForm from './components/AccountGenerateInternalAddressForm';
 
 interface Props {
     Layout: FunctionComponent<AccountPublicLayoutProps>;
@@ -46,8 +39,6 @@ const AccountGenerateInternalAddressContainer = ({
 
     const [username, setUsername] = useState('');
     const [usernameError, setUsernameError] = useState('');
-    const [loading, withLoading] = useLoading();
-    const [loadingAvailableDomains, withLoadingAvailableDomains] = useLoading();
     const { createNotification } = useNotifications();
     const [availableDomains, setAvailableDomains] = useState([]);
 
@@ -99,13 +90,12 @@ const AccountGenerateInternalAddressContainer = ({
         }
     };
 
-    const fetchAvailableDomains = async () => {
-        const { Domains = [] } = await api(queryAvailableDomains());
-        setAvailableDomains(Domains);
-    };
-
     useEffect(() => {
-        withLoadingAvailableDomains(fetchAvailableDomains());
+        const fetchAvailableDomains = async () => {
+            const { Domains = [] } = await api(queryAvailableDomains());
+            setAvailableDomains(Domains);
+        };
+        fetchAvailableDomains();
     }, []);
 
     return (
@@ -115,57 +105,14 @@ const AccountGenerateInternalAddressContainer = ({
                 .t`Your Proton Account is associated with ${externalEmailAddress}. To use ${appName}, please create an address.`}
             left={<BackButton onClick={onBack} />}
         >
-            <form
-                name="addressForm"
-                className="signup-form"
-                onSubmit={(e) => {
-                    e.preventDefault();
-                    withLoading(handleSubmit());
-                }}
-            >
-                <SignupLabelInputRow
-                    label={<Label htmlFor="login">{c('Label').t`Username`}</Label>}
-                    input={
-                        <div className="flex flex-nowrap flex-items-center flex-item-fluid relative mb0-5">
-                            <div className="flex-item-fluid">
-                                <Input
-                                    id="username"
-                                    name="username"
-                                    autoFocus
-                                    autoComplete="off"
-                                    autoCapitalize="off"
-                                    autoCorrect="off"
-                                    value={username}
-                                    onChange={({ target }: ChangeEvent<HTMLInputElement>) => {
-                                        setUsername(target.value);
-                                        setUsernameError('');
-                                    }}
-                                    error={usernameError}
-                                    placeholder={USERNAME_PLACEHOLDER}
-                                    className="pm-field--username"
-                                    required
-                                />
-                            </div>
-                            {availableDomains.length ? (
-                                <span className="flex right-text absolute">
-                                    <span className="right-text-inner mauto">@{availableDomains[0]}</span>
-                                </span>
-                            ) : null}
-                        </div>
-                    }
-                />
-                <SignupSubmitRow>
-                    <PrimaryButton
-                        type="submit"
-                        className="pm-button--large"
-                        disabled={loadingAvailableDomains}
-                        loading={loading}
-                        data-cy-login="submit"
-                    >
-                        {c('Action').t`Next`}
-                    </PrimaryButton>
-                </SignupSubmitRow>
-            </form>
+            <AccountGenerateInternalAddressForm
+                username={username}
+                usernameError={usernameError}
+                setUsername={setUsername}
+                setUsernameError={setUsernameError}
+                availableDomains={availableDomains}
+                onSubmit={handleSubmit}
+            />
         </Layout>
     );
 };
