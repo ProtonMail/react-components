@@ -1,6 +1,6 @@
-import React, { FunctionComponent, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { c } from 'ttag';
-import { APP_NAMES, DEFAULT_ENCRYPTION_CONFIG, ENCRYPTION_CONFIGS } from 'proton-shared/lib/constants';
+import { DEFAULT_ENCRYPTION_CONFIG, ENCRYPTION_CONFIGS } from 'proton-shared/lib/constants';
 import { queryCheckUsernameAvailability } from 'proton-shared/lib/api/user';
 import { getApiErrorMessage } from 'proton-shared/lib/api/helpers/apiErrorHelper';
 import { queryAvailableDomains } from 'proton-shared/lib/api/domains';
@@ -10,33 +10,16 @@ import { Api } from 'proton-shared/lib/interfaces';
 
 import { useNotifications } from '../../hooks';
 
-import BackButton from '../signup/BackButton';
-import { Props as AccountPublicLayoutProps } from '../signup/AccountPublicLayout';
-import { getToAppName } from '../signup/helpers/helper';
 import createKeyHelper from '../keys/addKey/createKeyHelper';
 import handleSetupAddress from '../signup/helpers/handleSetupAddress';
 import AccountGenerateInternalAddressForm from './components/AccountGenerateInternalAddressForm';
 
 interface Props {
-    Layout: FunctionComponent<AccountPublicLayoutProps>;
-    externalEmailAddress: string;
-    toApp?: APP_NAMES;
     onDone: () => Promise<void>;
-    onBack: () => void;
     api: Api;
     keyPassword: string;
 }
-const AccountGenerateInternalAddressContainer = ({
-    Layout,
-    externalEmailAddress,
-    toApp,
-    onBack,
-    onDone,
-    api,
-    keyPassword,
-}: Props) => {
-    const appName = getToAppName(toApp);
-
+const AccountGenerateInternalAddressContainer = ({ onDone, api, keyPassword }: Props) => {
     const [username, setUsername] = useState('');
     const [usernameError, setUsernameError] = useState('');
     const { createNotification } = useNotifications();
@@ -99,21 +82,14 @@ const AccountGenerateInternalAddressContainer = ({
     }, []);
 
     return (
-        <Layout
-            title={c('Title').t`Create a ProtonMail address`}
-            subtitle={c('Info')
-                .t`Your Proton Account is associated with ${externalEmailAddress}. To use ${appName}, please create an address.`}
-            left={<BackButton onClick={onBack} />}
-        >
-            <AccountGenerateInternalAddressForm
-                username={username}
-                usernameError={usernameError}
-                setUsername={setUsername}
-                setUsernameError={setUsernameError}
-                availableDomains={availableDomains}
-                onSubmit={handleSubmit}
-            />
-        </Layout>
+        <AccountGenerateInternalAddressForm
+            username={username}
+            usernameError={usernameError}
+            setUsername={setUsername}
+            setUsernameError={setUsernameError}
+            availableDomains={availableDomains}
+            onSubmit={handleSubmit}
+        />
     );
 };
 

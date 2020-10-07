@@ -114,21 +114,28 @@ const AccountLoginContainer = ({ onLogin, ignoreUnlock = false, Layout, toApp }:
         createNotification({ type: 'error', text: getApiErrorMessage(e) || 'Unknown error' });
     };
 
+    const toAppName = getToAppName(toApp);
+
     if (generateInternalAddress) {
+        const handleBack = () => {
+            generateInternalAddress?.revoke?.();
+            handleCancel();
+            setGenerateInternalAddress(undefined);
+        };
+        const externalEmailAddressValue = generateInternalAddress.externalEmailAddress.Email || '';
         return (
-            <AccountGenerateInternalAddressContainer
-                Layout={Layout}
-                toApp={toApp}
-                onDone={generateInternalAddress.onDone}
-                onBack={() => {
-                    generateInternalAddress?.revoke?.();
-                    handleCancel();
-                    setGenerateInternalAddress(undefined);
-                }}
-                api={generateInternalAddress.api}
-                externalEmailAddress={generateInternalAddress.externalEmailAddress.Email || ''}
-                keyPassword={generateInternalAddress.keyPassword}
-            />
+            <Layout
+                title={c('Title').t`Create a ProtonMail address`}
+                subtitle={c('Info')
+                    .t`Your Proton Account is associated with ${externalEmailAddressValue}. To use ${toAppName}, please create an address.`}
+                left={<BackButton onClick={handleBack} />}
+            >
+                <AccountGenerateInternalAddressContainer
+                    onDone={generateInternalAddress.onDone}
+                    api={generateInternalAddress.api}
+                    keyPassword={generateInternalAddress.keyPassword}
+                />
+            </Layout>
         );
     }
 
@@ -138,7 +145,6 @@ const AccountLoginContainer = ({ onLogin, ignoreUnlock = false, Layout, toApp }:
         };
 
         const signupLink = <Link key="signupLink" to="/signup">{c('Link').t`Create an account`}</Link>;
-        const toAppName = getToAppName(toApp);
 
         return (
             <Layout
