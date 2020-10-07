@@ -7,26 +7,30 @@ import { Alert, AppLink, Href, Table, TableHeader, TableBody, TableRow } from '.
 const ProtonMailBridgeSection = ({ permission }) => {
     const bridgeClients = [
         {
-            compatibility: '10.12 or later',
             platform: 'Mac OSX',
+            fileType: '.dmg',
             link: 'https://protonmail.com/bridge/install',
         },
         {
-            compatibility: '64-bit system',
             platform: 'Windows',
+            fileType: '.exe',
             link: 'https://protonmail.com/bridge/install',
         },
         {
-            compatibility: 'Debian distribution',
             platform: 'Linux',
+            fileType: '.deb',
             link: 'https://protonmail.com/bridge/install',
         },
         {
-            compatibility: 'Fedora distribtion',
             platform: 'Linux',
+            fileType: '.rpm',
             link: 'https://protonmail.com/bridge/install',
         },
-        { compatibility: 'Other distribution', platform: 'Linux', link: 'https://protonmail.com/bridge/install' },
+        {
+            platform: 'Linux',
+            fileType: 'PKGBUILD',
+            link: 'https://protonmail.com/bridge/install',
+        },
     ];
 
     const bridgeLink = (
@@ -43,19 +47,19 @@ const ProtonMailBridgeSection = ({ permission }) => {
                         <TableHeader
                             cells={[
                                 c('Title for downloads section').t`Platform`,
-                                c('Title for downloads section').t`Compatibility`,
+                                c('Title for downloads section').t`File type`,
                                 c('Title for downloads section').t`Action`,
                             ]}
                         />
                         <TableBody>
-                            {bridgeClients.map(({ compatibility, platform, link }, index) => {
+                            {bridgeClients.map(({ fileType, platform, link }, index) => {
                                 const key = index.toString();
                                 return (
                                     <TableRow
                                         key={key}
                                         cells={[
                                             platform,
-                                            compatibility,
+                                            fileType,
                                             <Href key={key} url={link}>{c('Action').t`Download`}</Href>,
                                         ]}
                                     />
