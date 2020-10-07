@@ -10,6 +10,7 @@ import { FormModal, Loader, Countdown, Button, Price } from '../../../components
 import { useLoading, useApi, useSubscription } from '../../../hooks';
 import { classnames } from '../../../helpers';
 import CurrencySelector from '../CurrencySelector';
+import './BlackFridayModal.scss';
 
 const { MONTHLY, YEARLY, TWO_YEARS } = CYCLE;
 const EVERY_SECOND = SECOND;
@@ -81,7 +82,7 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
             );
         }
         return (
-            <div className="bold big aligncenter mt0 blackfriday-countdown-container">
+            <div className="bold aligncenter mt0 blackfriday-countdown-container mb2">
                 <Countdown end={isAfter(now, BLACK_FRIDAY.CYBER_START) ? BLACK_FRIDAY.END : BLACK_FRIDAY.CYBER_START} />
             </div>
         );
@@ -157,7 +158,11 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
                             const withCouponMonthly = withCoupon / cycle;
                             const percentage = 100 - Math.round((withCouponMonthly * 100) / withoutCouponMonthly);
                             const monthlyPrice = (
-                                <Price currency={currency} className="blackfriday-monthly-price" suffix="/mo">
+                                <Price
+                                    currency={currency}
+                                    className="blackfriday-monthly-price"
+                                    suffix={c('info').t`per month`}
+                                >
                                     {withCoupon / cycle}
                                 </Price>
                             );
@@ -180,14 +185,14 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
                                         </span>
                                     ) : null}
                                     {popular ? (
-                                        <div className="uppercase bold rounded bg-primary color-white pt1 pb1 mt0 mb0 aligncenter">{c(
+                                        <div className="uppercase bold rounded bg-primary color-white pt0-5 pb0-5 mt0 mb0 aligncenter">{c(
                                             'Title'
                                         ).t`Most popular`}</div>
                                     ) : null}
                                     <div className="blackfriday-plan bordered-container p1 mb1 flex flex-column flex-items-center flex-justify-end">
                                         <strong className="aligncenter big mt0 mb0">{name}</strong>
                                         <strong>{DEAL_TITLE[cycle]}</strong>
-                                        <div className={classnames(['h2 mb0', popular && 'color-primary bold'])}>
+                                        <div className={classnames(['mb0', popular && 'color-primary'])}>
                                             {monthlyPrice}
                                         </div>
                                         <Button
