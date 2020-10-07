@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { c } from 'ttag';
 import { noop } from 'proton-shared/lib/helpers/function';
@@ -12,26 +12,21 @@ import { getHasOnlyExternalAddresses } from 'proton-shared/lib/helpers/address';
 import { revoke } from 'proton-shared/lib/api/auth';
 import { removePersistedSession } from 'proton-shared/lib/authentication/persistedSessionStorage';
 
-import { InlineLinkButton, PrimaryButton, Label } from '../../components';
-import { useApi, useLoading, useModals, useNotifications } from '../../hooks';
+import { useApi, useModals, useNotifications } from '../../hooks';
 
-import AccountSupportDropdown from '../heading/AccountSupportDropdown';
 import AbuseModal from './AbuseModal';
 import { Props as AccountPublicLayoutProps } from '../signup/AccountPublicLayout';
 import BackButton from '../signup/BackButton';
 import OneAccountIllustration from '../illustration/OneAccountIllustration';
-import SignupLabelInputRow from '../signup/SignupLabelInputRow';
-import SignupSubmitRow from '../signup/SignupSubmitRow';
 import { getToAppName } from '../signup/helpers/helper';
 import { LoginFlows, OnLoginCallbackArguments } from '../app';
 import useLogin, { Props as UseLoginProps } from './useLogin';
-import LoginUsernameInput from './LoginUsernameInput';
-import LoginPasswordInput from './LoginPasswordInput';
-import LoginTotpInput from './LoginTotpInput';
-import LoginRecoveryCodeInput from './LoginRecoveryCodeInput';
-import LoginUnlockInput from './LoginUnlockInput';
 import AccountGenerateInternalAddressContainer from './AccountGenerateInternalAddressContainer';
 import { FORM } from './interface';
+import AccountLoginForm from './components/AccountLoginForm';
+import AccountTOTPForm from './components/AccountTOTPForm';
+import AccountUnlockForm from './components/AccountUnlockForm';
+import AccountSetPasswordForm from './components/AccountSetPasswordForm';
 
 interface InternalAddressGeneration {
     externalEmailAddress: Address;
@@ -107,9 +102,7 @@ const AccountLoginContainer = ({ onLogin, ignoreUnlock = false, Layout, toApp }:
         handleUnlock,
         handleSetNewPassword,
         handleCancel,
-    } = useLogin({ onLogin: handleDone, ignoreUnlock, generateKeys: true, api: silentApi });
-
-    const [loading, withLoading] = useLoading();
+    } = useLogin({ onLogin: handleDone, ignoreUnlock, hasGenerateKeys: true, api: silentApi });
 
     const catchHandler = (e: any) => {
         if (e.data?.Code === API_CUSTOM_ERROR_CODES.AUTH_ACCOUNT_DISABLED) {
@@ -140,14 +133,11 @@ const AccountLoginContainer = ({ onLogin, ignoreUnlock = false, Layout, toApp }:
     }
 
     if (state.form === FORM.LOGIN) {
-        const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-            event.preventDefault();
-            withLoading(handleLogin().catch(catchHandler));
+        const handleSubmit = () => {
+            return handleLogin().catch(catchHandler);
         };
 
         const signupLink = <Link key="signupLink" to="/signup">{c('Link').t`Create an account`}</Link>;
-
-
         const toAppName = getToAppName(toApp);
 
         return (
@@ -157,118 +147,53 @@ const AccountLoginContainer = ({ onLogin, ignoreUnlock = false, Layout, toApp }:
                 aside={<OneAccountIllustration />}
                 right={null}
             >
-                <LoginForm />
+                <AccountLoginForm onSubmit={handleSubmit} state={state} setters={setters} />
                 <div className="mb2 alignright">{c('Info').jt`New to Proton? ${signupLink}`}</div>
             </Layout>
         );
     }
 
-    if (form === FORM.TOTP) {
-        const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-            event.preventDefault();
-            withLoading(handleTotp().catch(catchHandler));
+    if (state.form === FORM.TOTP) {
+        const handleSubmit = () => {
+            return handleTotp().catch(catchHandler);
         };
-
-        const totpForm = (
-            <SignupLabelInputRow
-                label={<Label htmlFor="twoFa">{c('Label').t`Two-factor code`}</Label>}
-                input={<LoginTotpInput totp={totp} setTotp={loading ? noop : setTotp} id="twoFa" />}
-            />
-        );
-
-        const recoveryForm = (
-            <SignupLabelInputRow
-                label={<Label htmlFor="twoFa">{c('Label').t`Recovery code`}</Label>}
-                input={<LoginRecoveryCodeInput code={totp} setCode={loading ? noop : setTotp} id="recoveryCode" />}
-            />
-        );
 
         return (
             <Layout title={c('Title').t`Two-factor authentication`} left={<BackButton onClick={handleCancel} />}>
-                <form name="totpForm" className="signup-form" onSubmit={handleSubmit} autoComplete="off">
-                    {isTotpRecovery ? recoveryForm : totpForm}
-                    <div className="mb1">
-                        <InlineLinkButton
-                            onClick={() => {
-                                setTotp('');
-                                setIsTotpRecovery(!isTotpRecovery);
-                            }}
-                        >
-                            {isTotpRecovery ? c('Action').t`Use two-factor code` : c('Action').t`Use recovery code`}
-                        </InlineLinkButton>
-                    </div>
-                    <SignupSubmitRow>
-                        <PrimaryButton
-                            type="submit"
-                            disabled={totp.length < 6}
-                            className="pm-button--large"
-                            loading={loading}
-                            data-cy-login="submit TOTP"
-                        >
-                            {c('Action').t`Authenticate`}
-                        </PrimaryButton>
-                    </SignupSubmitRow>
-                </form>
+                <AccountTOTPForm state={state} setters={setters} onSubmit={handleSubmit} />
             </Layout>
         );
     }
 
-    if (form === FORM.UNLOCK) {
-        const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-            event.preventDefault();
-            withLoading(handleUnlock().catch(catchHandler));
+    if (state.form === FORM.UNLOCK) {
+        const handleSubmit = () => {
+            return handleUnlock().catch(catchHandler);
         };
-
-        const unlockInput = (
-            <SignupLabelInputRow
-                label={<Label htmlFor="password" className="mr1">{c('Label').t`Mailbox password`}</Label>}
-                input={
-                    <LoginUnlockInput
-                        password={keyPassword}
-                        setPassword={loading ? noop : setKeyPassword}
-                        id="password"
-                    />
-                }
-            />
-        );
 
         return (
             <Layout title={c('Title').t`Unlock your mailbox`} left={<BackButton onClick={handleCancel} />}>
-                <form name="unlockForm" className="signup-form" onSubmit={handleSubmit}>
-                    {unlockInput}
-                    <SignupSubmitRow>
-                        <PrimaryButton
-                            type="submit"
-                            className="pm-button--large"
-                            disabled={!keyPassword}
-                            loading={loading}
-                            data-cy-login="submit mailbox password"
-                        >
-                            {c('Action').t`Unlock`}
-                        </PrimaryButton>
-                    </SignupSubmitRow>
-                </form>
+                <AccountUnlockForm state={state} setters={setters} onSubmit={handleSubmit} />
             </Layout>
         );
     }
 
-    if (form === FORM.U2F) {
+    if (state.form === FORM.U2F) {
         throw new Error('U2F not implemented');
     }
 
-    if (form === FORM.NEW_PASSWORD) {
-        const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-            event.preventDefault();
-            withLoading(handleSetNewPassword().catch(catchHandler));
+    if (state.form === FORM.NEW_PASSWORD) {
+        const handleSubmit = () => {
+            return handleSetNewPassword().catch(catchHandler);
         };
-
 
         return (
             <Layout
                 title={c('Title').t`Set password`}
-                subtitle={c('Info').t`This will replace your temporary password. You will use it to access your Proton account in the future.`}
+                subtitle={c('Info')
+                    .t`This will replace your temporary password. You will use it to access your Proton account in the future.`}
                 left={<BackButton onClick={handleCancel} />}
             >
+                <AccountSetPasswordForm onSubmit={handleSubmit} state={state} setters={setters} errors={errors} />
             </Layout>
         );
     }

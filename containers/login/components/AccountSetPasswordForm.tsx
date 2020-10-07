@@ -4,24 +4,36 @@ import React, { ChangeEvent } from 'react';
 import SignupSubmitRow from '../../signup/SignupSubmitRow';
 import { Label, PasswordInput, PrimaryButton } from '../../../components';
 import SignupLabelInputRow from '../../signup/SignupLabelInputRow';
+import { LoginModel } from '../interface';
+import { LoginErrors, LoginSetters } from '../useLoginHelpers';
+import { useLoading } from '../../../hooks';
 
 interface Props {
+    state: LoginModel;
+    setters: LoginSetters;
+    errors: LoginErrors;
+    onSubmit: () => Promise<void>;
 }
-const SetPasswordForm = ({ errors, state, setters }: Props) => {
+const AccountSetPasswordForm = ({ onSubmit, errors, state, setters }: Props) => {
+    const [loading, withLoading] = useLoading();
+
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        withLoading(onSubmit());
+    };
+
     const newPasswordInput = (
         <SignupLabelInputRow
             label={<Label htmlFor="login">{c('Label').t`New password`}</Label>}
             input={
                 <PasswordInput
-                    id="password-repeat"
-                    name="password-repeat"
+                    id="password"
+                    name="password"
                     autoComplete="off"
                     autoCapitalize="off"
                     autoCorrect="off"
-                    value={newPassword}
-                    onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
-                        setNewPassword(target.value)
-                    }
+                    value={state.newPassword}
+                    onChange={({ target }: ChangeEvent<HTMLInputElement>) => setters.newPassword(target.value)}
                     error={errors.newPassword}
                     required
                 />
@@ -39,11 +51,9 @@ const SetPasswordForm = ({ errors, state, setters }: Props) => {
                     autoComplete="off"
                     autoCapitalize="off"
                     autoCorrect="off"
-                    value={newPassword}
-                    onChange={({ target }: ChangeEvent<HTMLInputElement>) =>
-                        setNewPassword(target.value)
-                    }
-                    error={errors.confirmPassword}
+                    value={state.confirmNewPassword}
+                    onChange={({ target }: ChangeEvent<HTMLInputElement>) => setters.confirmNewPassword(target.value)}
+                    error={errors.confirmNewPassword}
                     required
                 />
             }
@@ -55,17 +65,12 @@ const SetPasswordForm = ({ errors, state, setters }: Props) => {
             {newPasswordInput}
             {confirmNewPasswordInput}
             <SignupSubmitRow>
-                <PrimaryButton
-                    type="submit"
-                    className="pm-button--large"
-                    loading={loading}
-                    data-cy-login="submit"
-                >
+                <PrimaryButton type="submit" className="pm-button--large" loading={loading} data-cy-login="submit">
                     {c('Action').t`Confirm`}
                 </PrimaryButton>
             </SignupSubmitRow>
         </form>
-    )
-}
+    );
+};
 
-export default SetPasswordForm;
+export default AccountSetPasswordForm;

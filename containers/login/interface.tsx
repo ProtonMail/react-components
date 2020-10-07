@@ -6,7 +6,7 @@ export enum FORM {
     TOTP,
     U2F,
     UNLOCK,
-    NEW_PASSWORD
+    NEW_PASSWORD,
 }
 
 export interface AuthCacheResult {
@@ -24,16 +24,4 @@ export interface LoginModel {
     newPassword: string;
     confirmNewPassword: string;
     form: FORM;
-}
-
-export interface LoginErrors {
-    username: string;
-    password: string;
-    newPassword: string;
-    confirmNewPassword: string;
-}
-
-export interface LoginSetters {
-    username:
-
 }

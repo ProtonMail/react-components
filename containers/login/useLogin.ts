@@ -17,8 +17,9 @@ import { MEMBER_PRIVATE, USER_ROLES } from 'proton-shared/lib/constants';
 
 import { getAuthTypes, handleUnlockKey } from './helper';
 import handleSetupAddressKeys from './handleSetupAddressKeys';
-import { AuthCacheResult, FORM, LoginErrors, LoginModel, LoginSetters } from './interface';
+import { AuthCacheResult, FORM, LoginModel } from './interface';
 import { OnLoginCallback } from '../app';
+import { getLoginErrors, getLoginSetters } from './useLoginHelpers';
 
 const INITIAL_STATE: LoginModel = {
     username: '',
@@ -35,12 +36,11 @@ export interface Props {
     api: Api;
     onLogin: OnLoginCallback;
     ignoreUnlock?: boolean;
-    generateKeys?: boolean;
+    hasGenerateKeys?: boolean;
 }
 
-const useLogin = ({ api, onLogin, ignoreUnlock, generateKeys = false }: Props) => {
+const useLogin = ({ api, onLogin, ignoreUnlock, hasGenerateKeys = false }: Props) => {
     const cacheRef = useRef<AuthCacheResult>();
-
     const [state, setState] = useState<LoginModel>(INITIAL_STATE);
 
     const handleCancel = () => {
@@ -125,7 +125,7 @@ const useLogin = ({ api, onLogin, ignoreUnlock, generateKeys = false }: Props) =
             password: newPassword,
         });
         await finalizeLogin(keyPassword);
-    }
+    };
 
     const next = async (previousForm: FORM) => {
         const cache = cacheRef.current;
@@ -163,7 +163,7 @@ const useLogin = ({ api, onLogin, ignoreUnlock, generateKeys = false }: Props) =
         const [User] = cache.userSaltResult;
 
         if (User.Keys.length === 0) {
-            if (generateKeys) {
+            if (hasGenerateKeys) {
                 if (User.Role === USER_ROLES.MEMBER_ROLE && User.Private === MEMBER_PRIVATE.UNREADABLE) {
                     return gotoForm(FORM.NEW_PASSWORD);
                 }
@@ -224,31 +224,12 @@ const useLogin = ({ api, onLogin, ignoreUnlock, generateKeys = false }: Props) =
         await next(FORM.LOGIN);
     };
 
-    const setters = useMemo<LoginSetters>(() => {
-        const getSetter = <K extends keyof LoginModel>(key: K) => (value: LoginModel[K]) => setState({ ...state, [key]: value });
-        return {
-            username: getSetter('username'),
-            password: getSetter('password'),
-            newPassword: getSetter('newPassword'),
-            confirmNewPassword: getSetter('confirmNewPassword'),
-            totp: getSetter('totp'),
-            keyPassword: getSetter('keyPassword'),
-            isTotpRecovery: getSetter('isTotpRecovery')
-        } as const
+    const setters = useMemo(() => {
+        return getLoginSetters(setState);
     }, []);
 
-    const errors = useMemo<LoginErrors>(() => {
-        const required = c('Error').t`This field is required`;
-        return {
-            username: state.username ? '' : required,
-            password: state.password ? '' : required,
-            newPassword: state.newPassword ? '' : required,
-            confirmNewPassword: state.confirmNewPassword
-                ? state.newPassword !== state.confirmNewPassword
-                    ? c('Signup error').t`Passwords do not match`
-                    : ''
-                : required,
-        };
+    const errors = useMemo(() => {
+        return getLoginErrors(state);
     }, [state]);
 
     return {
