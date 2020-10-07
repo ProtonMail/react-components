@@ -63,7 +63,7 @@ const ProtonMailBridgeSection = ({ permission }) => {
                                     <TableRow
                                         key={key}
                                         cells={[
-                                            <span className="inline-flex flex-items-center">
+                                            <span key="platform" className="inline-flex flex-items-center">
                                                 <Icon name={icon} className="mr0-5" />
                                                 <span>{platform}</span>
                                             </span>,
