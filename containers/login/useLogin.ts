@@ -226,7 +226,7 @@ const useLogin = ({ api, onLogin, ignoreUnlock, hasGenerateKeys = false }: Props
 
     const setters = useMemo(() => {
         return getLoginSetters(setState);
-    }, []);
+    }, [setState]);
 
     const errors = useMemo(() => {
         return getLoginErrors(state);
