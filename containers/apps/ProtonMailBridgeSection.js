@@ -2,31 +2,36 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import { getAccountSettingsApp } from 'proton-shared/lib/apps/helper';
-import { Alert, AppLink, Href, Table, TableHeader, TableBody, TableRow } from '../../components';
+import { Alert, AppLink, Href, Table, TableHeader, TableBody, TableRow, Icon } from '../../components';
 
 const ProtonMailBridgeSection = ({ permission }) => {
     const bridgeClients = [
         {
+            icon: 'apple',
             platform: 'Mac OSX',
             fileType: '.dmg',
             link: 'https://protonmail.com/bridge/install',
         },
         {
+            icon: 'windows',
             platform: 'Windows',
             fileType: '.exe',
             link: 'https://protonmail.com/bridge/install',
         },
         {
+            icon: 'linux',
             platform: 'Linux',
             fileType: '.deb',
             link: 'https://protonmail.com/bridge/install',
         },
         {
+            icon: 'linux',
             platform: 'Linux',
             fileType: '.rpm',
             link: 'https://protonmail.com/bridge/install',
         },
         {
+            icon: 'linux',
             platform: 'Linux',
             fileType: 'PKGBUILD',
             link: 'https://protonmail.com/bridge/install',
@@ -52,13 +57,16 @@ const ProtonMailBridgeSection = ({ permission }) => {
                             ]}
                         />
                         <TableBody>
-                            {bridgeClients.map(({ fileType, platform, link }, index) => {
+                            {bridgeClients.map(({ fileType, icon, platform, link }, index) => {
                                 const key = index.toString();
                                 return (
                                     <TableRow
                                         key={key}
                                         cells={[
-                                            platform,
+                                            <span className="inline-flex flex-items-center">
+                                                <Icon name={icon} className="mr0-5" />
+                                                <span>{platform}</span>
+                                            </span>,
                                             fileType,
                                             <Href key={key} url={link}>{c('Action').t`Download`}</Href>,
                                         ]}
