@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { checkSubscription } from 'proton-shared/lib/api/payments';
 import { CYCLE, DEFAULT_CURRENCY, DEFAULT_CYCLE, BLACK_FRIDAY, SECOND } from 'proton-shared/lib/constants';
 import { c } from 'ttag';
-import { isAfter } from 'date-fns';
+import { isBefore } from 'date-fns';
 import { Cycle, PlanIDs } from 'proton-shared/lib/interfaces';
-import { isProductPayer } from 'proton-shared/lib/helpers/blackfriday';
+import { isProductPayer, isCyberMonday } from 'proton-shared/lib/helpers/blackfriday';
 
 import { FormModal, Loader, Countdown, Button, Price } from '../../../components';
 import { useLoading, useApi, useSubscription } from '../../../hooks';
@@ -64,6 +64,9 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
         if (productPayer) {
             return c('Title').t`ProtonDrive early access offer`;
         }
+        if (isCyberMonday()) {
+            return c('Title').t`Cyber Monday Sale`;
+        }
         return c('Title').t`Black Friday Sale`;
     };
 
@@ -83,7 +86,15 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
         }
         return (
             <div className="bold aligncenter mt0 blackfriday-countdown-container mb2">
-                <Countdown end={isAfter(now, BLACK_FRIDAY.CYBER_START) ? BLACK_FRIDAY.END : BLACK_FRIDAY.CYBER_START} />
+                <Countdown
+                    end={
+                        isBefore(now, BLACK_FRIDAY.CYBER_START)
+                            ? BLACK_FRIDAY.CYBER_START
+                            : isCyberMonday()
+                            ? BLACK_FRIDAY.CYBER_END
+                            : BLACK_FRIDAY.END
+                    }
+                />
             </div>
         );
     };
