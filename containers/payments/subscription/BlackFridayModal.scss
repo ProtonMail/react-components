@@ -1,15 +1,61 @@
 @import '~design-system/_sass/reusable-components/_design-system-config.scss';
 
-.blackfriday-plan:hover {
-	border-color: $pm-primary;
+.blackfriday-mostPopular {
+	border-radius: $global-border-radius $global-border-radius 0 0;
+	left: 0;
+	right: 0;
+	bottom: 100%;
 }
 
 .blackfriday-percentage {
-	color: $white;
-	text-transform: uppercase;
-	top: -1.3em;
 	left: 50%;
-	transform: translateX(-50%);
+	transform: translateX(-50%) translateY(-50%);
+	border-radius: 1em;
+	padding: 0.1em 0.75em;
+	z-index: 10;
+}
+
+.blackfriday-monthly-price.blackfriday-monthly-price {
+	display: block;
+	.suffix {
+		display: block;
+	}
+	.amount {
+		font-size: 3.4em;
+	}
+	.currency {
+		font-size: 2em;
+	}
+}
+
+.blackfriday-plan-container:not(:first-child) {
+	margin-left: 1em;
+	@include respond-to($breakpoint-small) {
+		margin-left: 0;
+	}
+}
+
+.blackfriday-protonDrive-free {
+	display: inline-block;
+	border-radius: 1em;
+}
+
+.blackfriday-standardPrice .price {
+	text-decoration: line-through;
+}
+
+// some tiny modifications
+.blackfriday-plan-container--mostPopular {
+	.blackfriday-plan {
+		border-top-left-radius: 0;
+		border-top-right-radius: 0;
+		border-width: 2px;
+		border-color: $pm-primary;
+	}
+	.blackfriday-percentage {
+		top: -2.8em;
+		z-index: 10;
+	}
 }
 
 @include respond-to($breakpoint-small) {

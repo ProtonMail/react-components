@@ -162,7 +162,7 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
             ) : (
                 <>
                     {getDescription()}
-                    <div className="flex-autogrid onmobile-flex-column flex-items-end">
+                    <div className="flex flex-nowrap flex-spacearound mt4 onmobile-flex-column">
                         {bundles.map(({ name, cycle, planIDs, popular, couponCode }, index) => {
                             const key = `${index}`;
                             const { withCoupon = 0, withoutCouponMonthly = 0 } = pricing[index] || {};
@@ -183,32 +183,68 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
                                 </Price>
                             );
                             const regularPrice = (
-                                <del key={key}>
+                                <span className="strike" key={key}>
                                     <Price currency={currency}>{withoutCouponMonthly * cycle}</Price>
-                                </del>
+                                </span>
                             );
 
                             return (
-                                <div key={key} className="flex-autogrid-item relative blackfriday-plan-container">
+                                <div
+                                    key={key}
+                                    className={classnames([
+                                        'relative flex blackfriday-plan-container',
+                                        popular && 'blackfriday-plan-container--mostPopular',
+                                    ])}
+                                >
                                     {percentage ? (
-                                        <span className="uppercase bold mb1 mr0 absolute bg-global-warning color-white blackfriday-percentage aligncenter">
+                                        <span
+                                            className={classnames([
+                                                'uppercase bold absolute color-white blackfriday-percentage aligncenter',
+                                                popular ? 'bg-global-warning' : 'bg-global-grey',
+                                            ])}
+                                        >
                                             {`${percentage}% off`}
                                         </span>
                                     ) : null}
                                     {popular ? (
-                                        <div className="uppercase bold rounded bg-primary color-white pt0-5 pb0-5 mt0 mb0 aligncenter">{c(
+                                        <div className="uppercase absolute bold bg-primary color-white pt0-75 pb0-5 mt0 mb0 aligncenter blackfriday-mostPopular">{c(
                                             'Title'
                                         ).t`Most popular`}</div>
                                     ) : null}
-                                    <div className="blackfriday-plan bordered-container p1 mb1 flex flex-column flex-items-center flex-justify-end">
-                                        <strong className="aligncenter big mt0 mb0">{name}</strong>
+                                    <div className="blackfriday-plan bordered-container p1 mb1 flex flex-column flex-items-center flex-justify-end onmobile-w100">
+                                        <strong className="aligncenter big mt0-5 mb0">{name}</strong>
                                         <strong>{DEAL_TITLE[cycle]}</strong>
-                                        <div className={classnames(['mb0', popular && 'color-primary'])}>
+                                        <div
+                                            className={classnames([
+                                                'mb1 mt1 aligncenter lh130',
+                                                popular && 'color-primary',
+                                            ])}
+                                        >
                                             {monthlyPrice}
+                                        </div>
+                                        <div className="aligncenter flex-item-fluid-auto">
+                                            {index !== 0 ? (
+                                                <>
+                                                    <p className="m0">Includes</p>
+                                                    <p className="mt0 color-global-success">
+                                                        early access to
+                                                        <strong className="blackfriday-protonDrive-productName ml0-25">
+                                                            ProtonDrive
+                                                        </strong>
+                                                        <span className="bl">
+                                                            <span className="blackfriday-protonDrive-free bg-global-success color-white bold pl0-5 pr0-5">
+                                                                FREE
+                                                            </span>
+                                                        </span>
+                                                    </p>
+                                                </>
+                                            ) : (
+                                                ''
+                                            )}
                                         </div>
                                         <Button
                                             className={classnames([
-                                                'mb1',
+                                                'mb1 uppercase increase-surface-click',
                                                 popular ? 'pm-button--primary' : 'pm-button--primaryborder',
                                             ])}
                                             onClick={() => {
@@ -218,8 +254,11 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
                                         >
                                             {getCTA()}
                                         </Button>
-                                        <small>{BILLED_DESCRIPTION({ cycle, amount: amountDue })}</small>
-                                        <small className="mb1">{c('Info').jt`Standard price: ${regularPrice}`}</small>
+                                        <small className="bold">
+                                            {BILLED_DESCRIPTION({ cycle, amount: amountDue })}
+                                        </small>
+                                        <small className="opacity-50 blackfriday-standardPrice mb1">{c('Info')
+                                            .jt`Standard price: ${regularPrice}`}</small>
                                     </div>
                                 </div>
                             );
