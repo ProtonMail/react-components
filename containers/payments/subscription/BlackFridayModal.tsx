@@ -223,7 +223,7 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
                                             {monthlyPrice}
                                         </div>
                                         <div className="aligncenter flex-item-fluid-auto">
-                                            {index !== 0 ? (
+                                            {index !== 0 ? ( // real condition to add :)
                                                 <>
                                                     <p className="m0">{c('blackfriday Info').t`Includes`}</p>
                                                     <p className="mt0 color-global-success">
