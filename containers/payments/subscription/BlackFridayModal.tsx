@@ -48,39 +48,39 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
     const [now, setNow] = useState(new Date());
 
     const DEAL_TITLE = {
-        [MONTHLY]: c('Title').t`for 1 month`,
-        [YEARLY]: c('Title').t`for 1 year`,
-        [TWO_YEARS]: c('Title').t`for 2 years`,
+        [MONTHLY]: c('blackfriday Title').t`for 1 month`,
+        [YEARLY]: c('blackfriday Title').t`for 1 year`,
+        [TWO_YEARS]: c('blackfriday Title').t`for 2 years`,
     };
 
     const BILLED_DESCRIPTION = ({ cycle, amount }: { cycle: Cycle; amount: React.ReactNode }) =>
         ({
-            [MONTHLY]: c('Title').jt`Billed as ${amount}`,
-            [YEARLY]: c('Title').jt`Billed as ${amount}`,
-            [TWO_YEARS]: c('Title').jt`Billed as ${amount}`,
+            [MONTHLY]: c('blackfriday Title').jt`Billed as ${amount}`,
+            [YEARLY]: c('blackfriday Title').jt`Billed as ${amount}`,
+            [TWO_YEARS]: c('blackfriday Title').jt`Billed as ${amount}`,
         }[cycle]);
 
     const getTitle = () => {
         if (productPayer) {
-            return c('Title').t`ProtonDrive early access offer`;
+            return c('blackfriday Title').t`ProtonDrive early access offer`;
         }
         if (isCyberMonday()) {
-            return c('Title').t`Cyber Monday Sale`;
+            return c('blackfriday Title').t`Cyber Monday Sale`;
         }
-        return c('Title').t`Black Friday Sale`;
+        return c('blackfriday Title').t`Black Friday Sale`;
     };
 
     const getCTA = () => {
         if (productPayer) {
-            return c('Action').t`Upgrade`;
+            return c('blackfriday Action').t`Upgrade`;
         }
-        return c('Action').t`Get limited-time deal`;
+        return c('blackfriday Action').t`Get limited-time deal`;
     };
 
     const getDescription = () => {
         if (productPayer) {
             return (
-                <p>{c('Info')
+                <p>{c('blackfriday Info')
                     .t`Get early access to our new encrypted drive for FREE by upgrading to a Plus bundle now.`}</p>
             );
         }
@@ -172,7 +172,7 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
                                 <Price
                                     currency={currency}
                                     className="blackfriday-monthly-price"
-                                    suffix={c('info').t`per month`}
+                                    suffix={c('blackfriday info').t`per month`}
                                 >
                                     {withCoupon / cycle}
                                 </Price>
@@ -225,15 +225,15 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
                                         <div className="aligncenter flex-item-fluid-auto">
                                             {index !== 0 ? (
                                                 <>
-                                                    <p className="m0">Includes</p>
+                                                    <p className="m0">{c('blackfriday Info').t`Includes`}</p>
                                                     <p className="mt0 color-global-success">
-                                                        early access to
+                                                        {c('blackfriday Info').t`early access to`}
                                                         <strong className="blackfriday-protonDrive-productName ml0-25">
-                                                            ProtonDrive
+                                                            {c('blackfriday Info').t`ProtonDrive`}
                                                         </strong>
                                                         <span className="bl">
-                                                            <span className="blackfriday-protonDrive-free bg-global-success color-white bold pl0-5 pr0-5">
-                                                                FREE
+                                                            <span className="blackfriday-protonDrive-free bg-global-success uppercase color-white bold pl0-5 pr0-5">
+                                                                {c('blackfriday Info').t`Free`}
                                                             </span>
                                                         </span>
                                                     </p>
@@ -257,8 +257,9 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
                                         <small className="bold">
                                             {BILLED_DESCRIPTION({ cycle, amount: amountDue })}
                                         </small>
-                                        <small className="opacity-50 blackfriday-standardPrice mb1">{c('Info')
-                                            .jt`Standard price: ${regularPrice}`}</small>
+                                        <small className="opacity-50 blackfriday-standardPrice mb1">{c(
+                                            'blackfriday Info'
+                                        ).jt`Standard price: ${regularPrice}`}</small>
                                     </div>
                                 </div>
                             );
@@ -272,13 +273,13 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
                             onSelect={updateCurrency}
                         />
                     </div>
-                    <p className="smaller opacity-50 aligncenter">{c('Info')
+                    <p className="smaller opacity-50 aligncenter">{c('blackfriday Info')
                         .t`Offer valid only for first-time paid subscriptions.`}</p>
-                    <p className="smaller mt0 mb0 opacity-50 aligncenter">{c('Info')
+                    <p className="smaller mt0 mb0 opacity-50 aligncenter">{c('blackfriday Info')
                         .t`Subscriptions automatically renew at the same rate until cancelled.`}</p>
-                    <p className="smaller mt0 mb0 opacity-50 aligncenter">{c('Info')
+                    <p className="smaller mt0 mb0 opacity-50 aligncenter">{c('blackfriday Info')
                         .t`Discounts are calculated based off of monthly subscriptions prices.`}</p>
-                    <p className="smaller mt0 mb0 opacity-50 aligncenter">{c('Info')
+                    <p className="smaller mt0 mb0 opacity-50 aligncenter">{c('blackfriday Info')
                         .t`The Plus Bundle subscription includes 5 GB of storage shared between your ProtonMail and ProtonDrive accounts.`}</p>
                 </>
             )}
