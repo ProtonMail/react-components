@@ -28,18 +28,23 @@ const InviteButtons = ({ actions, partstat = ICAL_ATTENDEE_STATUS.NEEDS_ACTION, 
     if (partstat === ICAL_ATTENDEE_STATUS.NEEDS_ACTION) {
         return (
             <div className={className}>
-                <SmallButton onClick={onAccept} disabled={loadingAnswer} loading={loadingAccept} className="mr0-5">
+                <SmallButton
+                    onClick={onAccept}
+                    disabled={loadingAnswer || disabled}
+                    loading={loadingAccept}
+                    className="mr0-5"
+                >
                     {c('Action').t`Yes`}
                 </SmallButton>
                 <SmallButton
                     onClick={onTentative}
-                    disabled={loadingAnswer}
+                    disabled={loadingAnswer || disabled}
                     loading={loadingTentative}
                     className="mr0-5"
                 >
                     {c('Action').t`Maybe`}
                 </SmallButton>
-                <SmallButton onClick={onDecline} disabled={loadingAnswer} loading={loadingDecline}>
+                <SmallButton onClick={onDecline} disabled={loadingAnswer || disabled} loading={loadingDecline}>
                     {c('Action').t`No`}
                 </SmallButton>
             </div>

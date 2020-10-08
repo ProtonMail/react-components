@@ -4,7 +4,6 @@ import { pick } from 'proton-shared/lib/helpers/object';
 import { wait } from 'proton-shared/lib/helpers/promise';
 import {
     CalendarEvent,
-    CalendarEventSharedData,
     CalendarWidgetData,
     InviteActions,
     Participant,
@@ -27,7 +26,7 @@ interface Args {
     organizer?: Participant;
     subject: string;
     calendarData?: CalendarWidgetData;
-    calendarEvent?: CalendarEvent | CalendarEventSharedData;
+    calendarEvent?: CalendarEvent;
     onEmailSuccess: () => void;
     onEmailError: (error?: Error) => void;
     onCreateEventSuccess: () => void;
@@ -36,6 +35,7 @@ interface Args {
     onUpdateEventError: (partstat: ICAL_ATTENDEE_STATUS, error?: Error) => void;
     onSuccess: (savedData: SavedInviteData) => void;
     onUnexpectedError: () => void;
+    disabled?: boolean;
 }
 const useInviteButtons = ({
     veventApi,
@@ -53,6 +53,7 @@ const useInviteButtons = ({
     onCreateEventError,
     onUpdateEventError,
     onUnexpectedError,
+    disabled = false,
 }: Args): InviteActions => {
     const api = useApi();
     const sendIcs = useSendIcs();
@@ -162,7 +163,7 @@ const useInviteButtons = ({
         retryUpdateEvent: () => wait(0),
     };
 
-    if (!attendee || !organizer) {
+    if (!attendee || !organizer || disabled) {
         return dummyActions;
     }
 
