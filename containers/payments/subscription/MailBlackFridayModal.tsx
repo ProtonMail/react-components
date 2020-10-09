@@ -17,7 +17,7 @@ const MailBlackFridayModal = ({ plans = [], subscription, ...rest }: Props) => {
     const bundles = isProductPayer(subscription)
         ? [
               {
-                  name: 'Plus Bundle',
+                  name: 'ProtonMail Plus + ProtonVPN Plus',
                   cycle: CYCLE.TWO_YEARS,
                   planIDs: {
                       [plansMap.plus.ID]: 1,
@@ -33,7 +33,7 @@ const MailBlackFridayModal = ({ plans = [], subscription, ...rest }: Props) => {
                   couponCode: BLACK_FRIDAY.COUPON_CODE,
               },
               {
-                  name: 'Plus Bundle',
+                  name: 'ProtonMail Plus + ProtonVPN Plus',
                   cycle: CYCLE.TWO_YEARS,
                   planIDs: {
                       [plansMap.plus.ID]: 1,
@@ -43,7 +43,7 @@ const MailBlackFridayModal = ({ plans = [], subscription, ...rest }: Props) => {
                   popular: true,
               },
               {
-                  name: 'Plus Bundle',
+                  name: 'ProtonMail Plus + ProtonVPN Plus',
                   cycle: CYCLE.YEARLY,
                   planIDs: {
                       [plansMap.plus.ID]: 1,

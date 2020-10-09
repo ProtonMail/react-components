@@ -99,6 +99,23 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
         );
     };
 
+    const getFooter = () => {
+        if (productPayer) {
+            return (
+                <p className="smaller opacity-50 aligncenter">{c('blackfriday Info')
+                    .t`This subscription will automatically renew after 2 years at the same rate until it is cancelled.`}</p>
+            );
+        }
+        return (
+            <>
+                <p className="smaller mt0 mb0 opacity-50 aligncenter">{c('blackfriday Info')
+                    .t`Discounts are based on monthly pricing.`}</p>
+                <p className="smaller opacity-50 aligncenter">{c('blackfriday Info')
+                    .t`Offer valid only for first-time paid subscriptions.`}</p>
+            </>
+        );
+    };
+
     const getBundlePrices = async () => {
         const result = await Promise.all(
             bundles.map(({ planIDs = [], cycle = DEFAULT_CYCLE, couponCode }) => {
@@ -269,14 +286,7 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
                             onSelect={updateCurrency}
                         />
                     </div>
-                    <p className="smaller opacity-50 aligncenter">{c('blackfriday Info')
-                        .t`Offer valid only for first-time paid subscriptions.`}</p>
-                    <p className="smaller mt0 mb0 opacity-50 aligncenter">{c('blackfriday Info')
-                        .t`Subscriptions automatically renew at the same rate until cancelled.`}</p>
-                    <p className="smaller mt0 mb0 opacity-50 aligncenter">{c('blackfriday Info')
-                        .t`Discounts are calculated based off of monthly subscriptions prices.`}</p>
-                    <p className="smaller mt0 mb0 opacity-50 aligncenter">{c('blackfriday Info')
-                        .t`The Plus Bundle subscription includes 5 GB of storage shared between your ProtonMail and ProtonDrive accounts.`}</p>
+                    {getFooter()}
                 </>
             )}
         </FormModal>
