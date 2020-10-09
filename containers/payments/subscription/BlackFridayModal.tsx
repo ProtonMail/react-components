@@ -53,11 +53,11 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
         [TWO_YEARS]: c('blackfriday Title').t`for 2 years`,
     };
 
-    const BILLED_DESCRIPTION = ({ cycle, amount }: { cycle: Cycle; amount: React.ReactNode }) =>
+    const BILLED_DESCRIPTION = ({ cycle, amount, notice }: { cycle: Cycle; amount: React.ReactNode; notice: number }) =>
         ({
-            [MONTHLY]: c('blackfriday Title').jt`Billed as ${amount}`,
-            [YEARLY]: c('blackfriday Title').jt`Billed as ${amount}`,
-            [TWO_YEARS]: c('blackfriday Title').jt`Billed as ${amount}`,
+            [MONTHLY]: c('blackfriday Title').jt`Billed as ${amount} (${notice})`,
+            [YEARLY]: c('blackfriday Title').jt`Billed as ${amount} (${notice})`,
+            [TWO_YEARS]: c('blackfriday Title').jt`Billed as ${amount} (${notice})`,
         }[cycle]);
 
     const AFTER_INFO = ({ amount, notice }: { amount: React.ReactNode; notice: number }) =>
@@ -134,7 +134,7 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
                 })}
                 <p className="smaller mt1 mb0 opacity-50 aligncenter">{c('blackfriday Info')
                     .t`Discounts are based on monthly pricing.`}</p>
-                <p className="smaller opacity-50 aligncenter">{c('blackfriday Info')
+                <p className="smaller mt0 mb0 opacity-50 aligncenter">{c('blackfriday Info')
                     .t`Offer valid only for first-time paid subscriptions.`}</p>
             </>
         );
@@ -292,7 +292,7 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
                                             {getCTA()}
                                         </Button>
                                         <small className="bold">
-                                            {BILLED_DESCRIPTION({ cycle, amount: amountDue })}
+                                            {BILLED_DESCRIPTION({ cycle, amount: amountDue, notice: index + 1 })}
                                         </small>
                                         <small className="opacity-50 blackfriday-standardPrice mb1">{c(
                                             'blackfriday Info'
