@@ -144,7 +144,7 @@ const ImportStartStep = ({ modalModel, updateModalModel, needAppPassword, showPa
                             </div>
                             <ul className="m0 pb1">
                                 <li>{c('Import error')
-                                    .t`your email address and app password are correct. Do ${boldNot} use your regular password.`}</li>
+                                    .jt`your email address and app password are correct. Do ${boldNot} use your regular password.`}</li>
                                 <li>{c('Import error').t`IMAP access is enabled in your Yahoo account`}</li>
                             </ul>
                         </>
@@ -195,7 +195,14 @@ const ImportStartStep = ({ modalModel, updateModalModel, needAppPassword, showPa
         }
 
         return (
-            <Alert type="error" learnMore="https://protonmail.com/support/knowledge-base/">
+            <Alert
+                type="error"
+                learnMore={
+                    isReconnect
+                        ? 'https://protonmail.com/support/knowledge-base/import-assistant/#reconnection-errors'
+                        : 'https://protonmail.com/support/knowledge-base/import-assistant/#common-questions-and-import-errors/'
+                }
+            >
                 {message}
             </Alert>
         );
@@ -209,7 +216,7 @@ const ImportStartStep = ({ modalModel, updateModalModel, needAppPassword, showPa
                 <>
                     <Alert>{c('Info').t`Enter the credentials of the email account you want to import from.`}</Alert>
                     {showPassword && (
-                        <Alert type="warning" learnMore="https://protonmail.com/support/knowledge-base/">
+                        <Alert type="warning" learnMore="https://protonmail.com/privacy-policy/">
                             {c('Warning')
                                 .t`By sharing your login credentials, you are giving Proton permission to fetch data from your external email provider. We will delete your login information once the import is complete.`}
                         </Alert>
