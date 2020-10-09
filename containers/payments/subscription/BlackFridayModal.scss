@@ -1,9 +1,23 @@
 @import '~design-system/_sass/reusable-components/_design-system-config.scss';
 
-.blackfriday-mail-modal {
+$amount-size: 48;
+$price-size: 21;
+
+.blackfriday-mail-modal.pm-modal {
+	width: 80rem;
+	max-width: 80rem;
+
+	.pm-modalHeader {
+		padding-bottom: 0.5em;
+	}
 	.pm-modalTitle {
 		text-align: center;
 		padding-right: 0;
+	}
+
+	@include respond-to($breakpoint-medium) {
+		width: 98%;
+		max-width: 98%;
 	}
 }
 
@@ -28,10 +42,13 @@
 		display: block;
 	}
 	.amount {
-		font-size: 3.4em;
+		font-size: em($amount-size);
 	}
 	.currency {
-		font-size: 2em;
+		font-size: em($price-size);
+	}
+	.decimal {
+		font-size: em($price-size, $amount-size);
 	}
 }
 
@@ -68,5 +85,9 @@
 @include respond-to($breakpoint-small) {
 	.blackfriday-plan-container {
 		margin-bottom: 4em;
+
+		&:first-of-type {
+			order: 10;
+		}
 	}
 }

@@ -85,7 +85,7 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
             );
         }
         return (
-            <div className="bold aligncenter mt0 blackfriday-countdown-container mb2">
+            <div className="bold aligncenter mt0 blackfriday-countdown-container pb1 mb2">
                 <Countdown
                     end={
                         isBefore(now, BLACK_FRIDAY.CYBER_START)
