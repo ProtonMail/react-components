@@ -60,6 +60,16 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
             [TWO_YEARS]: c('blackfriday Title').jt`Billed as ${amount}`,
         }[cycle]);
 
+    const AFTER_INFO = ({ amount, notice }: { amount: React.ReactNode; notice: number }) =>
+        ({
+            1: c('Title')
+                .jt`(${notice}) Renews after 1 year at a discounted annual price of ${amount} every year (20% discount).`,
+            2: c('Title')
+                .jt`(${notice}) Renews after 2 years at a discounted 2-year price of ${amount} every 2 years (47% discount).`,
+            3: c('Title')
+                .jt`(${notice}) Renews after 1 year at a discounted annual & bundle price of ${amount} every year (36% discount).`,
+        }[notice]);
+
     const getTitle = () => {
         if (productPayer) {
             return c('blackfriday Title').t`ProtonDrive early access offer`;
@@ -108,7 +118,21 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
         }
         return (
             <>
-                <p className="smaller mt0 mb0 opacity-50 aligncenter">{c('blackfriday Info')
+                {bundles.map((b, index) => {
+                    const key = `${index}`;
+                    const { withoutCoupon = 0 } = pricing[index] || {};
+                    const amount = (
+                        <Price key={key} currency={currency}>
+                            {withoutCoupon}
+                        </Price>
+                    );
+                    return (
+                        <p key={key} className="smaller mt0 mb0 opacity-50 aligncenter">
+                            {AFTER_INFO({ notice: index + 1, amount })}
+                        </p>
+                    );
+                })}
+                <p className="smaller mt1 mb0 opacity-50 aligncenter">{c('blackfriday Info')
                     .t`Discounts are based on monthly pricing.`}</p>
                 <p className="smaller opacity-50 aligncenter">{c('blackfriday Info')
                     .t`Offer valid only for first-time paid subscriptions.`}</p>
