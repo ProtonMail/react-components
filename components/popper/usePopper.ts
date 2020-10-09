@@ -42,7 +42,7 @@ const getPosition = (
                 top: -9999,
                 left: -9999,
             },
-            placement: 'top',
+            placement: 'hidden',
         };
     }
 
