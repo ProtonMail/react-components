@@ -44,6 +44,8 @@ import ImportStartStep from './steps/ImportStartStep';
 import ImportPrepareStep from './steps/ImportPrepareStep';
 import ImportStartedStep from './steps/ImportStartedStep';
 
+import './ImportMailModal.scss';
+
 interface Props {
     currentImport?: Importer;
     onClose?: () => void;
@@ -260,11 +262,17 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
     };
 
     const handleCancel = () => {
-        if (modalModel.step === Step.INSTRUCTIONS && !providerInstructions) {
-            setModalModel({
-                ...modalModel,
-                step: Step.START,
-            });
+        if (modalModel.step === Step.INSTRUCTIONS) {
+            if (gmailInstructionsStep === GMAIL_INSTRUCTIONS.LABELS) {
+                setGmailInstructionsStep(GMAIL_INSTRUCTIONS.IMAP);
+                return;
+            }
+            if (gmailInstructionsStep === GMAIL_INSTRUCTIONS.TWO_STEPS) {
+                setGmailInstructionsStep(GMAIL_INSTRUCTIONS.LABELS);
+                return;
+            }
+
+            onClose();
             return;
         }
 
@@ -329,12 +337,13 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
             return null;
         }
 
-        const skipButton = modalModel.step === Step.INSTRUCTIONS && !providerInstructions;
+        const backButton =
+            modalModel.step === Step.INSTRUCTIONS &&
+            providerInstructions === PROVIDER_INSTRUCTIONS.GMAIL &&
+            [GMAIL_INSTRUCTIONS.LABELS, GMAIL_INSTRUCTIONS.TWO_STEPS].includes(gmailInstructionsStep);
 
-        return (
-            <Button onClick={handleCancel}>{skipButton ? c('Action').t`Skip to import` : c('Action').t`Cancel`}</Button>
-        );
-    }, [modalModel.step, providerInstructions, loading]);
+        return <Button onClick={handleCancel}>{backButton ? c('Action').t`Back` : c('Action').t`Cancel`}</Button>;
+    }, [modalModel.step, providerInstructions, gmailInstructionsStep, loading]);
 
     const submitRenderer = useMemo(() => {
         const { email, password, needIMAPDetails, imap, port, isPayloadValid, step } = modalModel;
@@ -345,36 +354,16 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
             case Step.INSTRUCTIONS:
                 return providerInstructions ? (
                     <div>
-                        {providerInstructions === PROVIDER_INSTRUCTIONS.GMAIL &&
-                            [GMAIL_INSTRUCTIONS.LABELS, GMAIL_INSTRUCTIONS.TWO_STEPS].includes(
-                                gmailInstructionsStep
-                            ) && (
-                                <Button
-                                    onClick={() => {
-                                        switch (gmailInstructionsStep) {
-                                            case GMAIL_INSTRUCTIONS.LABELS:
-                                                setGmailInstructionsStep(GMAIL_INSTRUCTIONS.IMAP);
-                                                break;
-                                            case GMAIL_INSTRUCTIONS.TWO_STEPS:
-                                                setGmailInstructionsStep(GMAIL_INSTRUCTIONS.LABELS);
-                                                break;
-                                            default:
-                                                break;
-                                        }
-                                    }}
-                                    className="mr1"
-                                >
-                                    {c('Action').t`Back`}
-                                </Button>
-                            )}
                         <PrimaryButton type="submit">
                             {providerInstructions === PROVIDER_INSTRUCTIONS.GMAIL &&
                             gmailInstructionsStep !== GMAIL_INSTRUCTIONS.TWO_STEPS
                                 ? c('Action').t`Next`
-                                : c('Action').t`Start import assistant`}
+                                : c('Action').t`Start Import Assistant`}
                         </PrimaryButton>
                     </div>
-                ) : null;
+                ) : (
+                    <PrimaryButton type="submit">{c('Action').t`Skip to import`}</PrimaryButton>
+                );
             case Step.START:
                 return (
                     <PrimaryButton type="submit" disabled={disabledStartStep} loading={loading}>
@@ -413,6 +402,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
             close={cancelRenderer}
             onSubmit={handleSubmit}
             onClose={handleCancel}
+            className={modalModel.step === Step.INSTRUCTIONS && providerInstructions && 'import-modal'}
             {...rest}
         >
             {!isReconnectMode && modalModel.step !== Step.INSTRUCTIONS && (
