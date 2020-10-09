@@ -341,11 +341,9 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
         const handleBack = () => {
             if (gmailInstructionsStep === GMAIL_INSTRUCTIONS.LABELS) {
                 setGmailInstructionsStep(GMAIL_INSTRUCTIONS.IMAP);
-                return;
             }
             if (gmailInstructionsStep === GMAIL_INSTRUCTIONS.TWO_STEPS) {
                 setGmailInstructionsStep(GMAIL_INSTRUCTIONS.LABELS);
-                return;
             }
         };
 
