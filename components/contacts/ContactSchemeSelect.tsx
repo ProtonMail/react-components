@@ -18,8 +18,7 @@ interface Props {
 }
 
 const ContactSchemeSelect = ({ value, mailSettings, onChange }: Props) => {
-    const { PGPScheme } = mailSettings || { PGPScheme: PACKAGE_TYPE.SEND_PM };
-    const defaultValueText = PGPScheme === PACKAGE_TYPE.SEND_PGP_INLINE ? INLINE : MIME;
+    const defaultValueText = mailSettings?.PGPScheme === PACKAGE_TYPE.SEND_PGP_INLINE ? INLINE : MIME;
 
     const options = [
         {
