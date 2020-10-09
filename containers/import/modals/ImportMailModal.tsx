@@ -194,6 +194,11 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
                 const { Importer } = await api(getMailImport(modalModel.importID));
                 const { Folders = [] } = await api({
                     ...getMailImportFolders(Importer.ID, { Code: modalModel.password }),
+                    /*
+                        For this call we display a custom
+                        error message on top of the form
+                        and want to prevent the growler error
+                    */
                     silence: true,
                 });
                 moveToPrepareStep(Importer.ID, Folders);
@@ -213,6 +218,11 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
                         Sasl: 'PLAIN',
                         Code: modalModel.password,
                     }),
+                    /*
+                        For this call we display a custom
+                        error message on top of the form
+                        and want to prevent the growler error
+                    */
                     silence: true,
                 });
                 await call();
@@ -252,39 +262,21 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
     };
 
     const resumeImport = async () => {
-        await api({
-            ...updateMailImport(modalModel.importID, {
+        await api(
+            updateMailImport(modalModel.importID, {
                 Email: modalModel.email,
                 Code: modalModel.password,
                 ImapHost: modalModel.imap,
                 ImapPort: parseInt(modalModel.port, 10),
                 Sasl: 'PLAIN',
-            }),
-            silence: true,
-        });
-        await api({
-            ...resumeMailImport(modalModel.importID),
-            silence: true,
-        });
+            })
+        );
+        await api(resumeMailImport(modalModel.importID));
         await call();
         onClose();
     };
 
     const handleCancel = () => {
-        if (modalModel.step === Step.INSTRUCTIONS) {
-            if (gmailInstructionsStep === GMAIL_INSTRUCTIONS.LABELS) {
-                setGmailInstructionsStep(GMAIL_INSTRUCTIONS.IMAP);
-                return;
-            }
-            if (gmailInstructionsStep === GMAIL_INSTRUCTIONS.TWO_STEPS) {
-                setGmailInstructionsStep(GMAIL_INSTRUCTIONS.LABELS);
-                return;
-            }
-
-            onClose();
-            return;
-        }
-
         if (!modalModel.email || modalModel.step === Step.STARTED || isReconnectMode) {
             onClose();
             return;
@@ -346,12 +338,27 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
             return null;
         }
 
+        const handleBack = () => {
+            if (gmailInstructionsStep === GMAIL_INSTRUCTIONS.LABELS) {
+                setGmailInstructionsStep(GMAIL_INSTRUCTIONS.IMAP);
+                return;
+            }
+            if (gmailInstructionsStep === GMAIL_INSTRUCTIONS.TWO_STEPS) {
+                setGmailInstructionsStep(GMAIL_INSTRUCTIONS.LABELS);
+                return;
+            }
+        };
+
         const backButton =
             modalModel.step === Step.INSTRUCTIONS &&
             providerInstructions === PROVIDER_INSTRUCTIONS.GMAIL &&
             [GMAIL_INSTRUCTIONS.LABELS, GMAIL_INSTRUCTIONS.TWO_STEPS].includes(gmailInstructionsStep);
 
-        return <Button onClick={handleCancel}>{backButton ? c('Action').t`Back` : c('Action').t`Cancel`}</Button>;
+        return (
+            <Button onClick={backButton ? handleBack : handleCancel}>
+                {backButton ? c('Action').t`Back` : c('Action').t`Cancel`}
+            </Button>
+        );
     }, [modalModel.step, providerInstructions, gmailInstructionsStep, loading]);
 
     const submitRenderer = useMemo(() => {
