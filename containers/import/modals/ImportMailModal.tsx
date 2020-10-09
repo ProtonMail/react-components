@@ -45,6 +45,7 @@ import ImportPrepareStep from './steps/ImportPrepareStep';
 import ImportStartedStep from './steps/ImportStartedStep';
 
 import './ImportMailModal.scss';
+import { classnames } from '../../../helpers';
 
 interface Props {
     currentImport?: Importer;
@@ -402,7 +403,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
             close={cancelRenderer}
             onSubmit={handleSubmit}
             onClose={handleCancel}
-            className={modalModel.step === Step.INSTRUCTIONS && providerInstructions && 'import-modal'}
+            className={classnames([modalModel.step === Step.INSTRUCTIONS && providerInstructions && 'import-modal'])}
             {...rest}
         >
             {!isReconnectMode && modalModel.step !== Step.INSTRUCTIONS && (
