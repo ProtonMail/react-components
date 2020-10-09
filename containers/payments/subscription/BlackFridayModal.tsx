@@ -252,9 +252,13 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
                                             'Title'
                                         ).t`Most popular`}</div>
                                     ) : null}
-                                    <div className="blackfriday-plan bordered-container p1 mb1 flex flex-column flex-items-center flex-justify-end onmobile-w100">
-                                        <strong className="aligncenter big mt0-5 mb0">{name}</strong>
-                                        <strong>{DEAL_TITLE[cycle]}</strong>
+                                    <div className="blackfriday-plan w100 bordered-container p1 mb1 flex flex-column flex-items-center flex-justify-end">
+                                        <div className="blackfriday-plan-namePeriod">
+                                            <strong className="blackfriday-plan-name bl aligncenter big mt0-5 mb0">
+                                                {name}
+                                            </strong>
+                                            <strong className="bl aligncenter">{DEAL_TITLE[cycle]}</strong>
+                                        </div>
                                         <div className="mb1 mt1 aligncenter lh130">{monthlyPrice}</div>
                                         <div className="aligncenter flex-item-fluid-auto">
                                             {Object.keys(planIDs).length > 1 ? (

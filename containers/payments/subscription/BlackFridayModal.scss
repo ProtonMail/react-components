@@ -1,11 +1,37 @@
 @import '~design-system/_sass/reusable-components/_design-system-config.scss';
+@import '~design-system/_sass/pm-styles/_pm-buttons-mixins.scss';
 
 $amount-size: 48;
 $price-size: 21;
+$modal-background: #1c1736;
 
+// overrides for dark/light mode => same design
 .blackfriday-mail-modal.pm-modal {
+	background: $modal-background;
+
 	width: 80rem;
 	max-width: 80rem;
+
+	.pm-modalContentInner,
+	.pm-modalTitle,
+	.pm-modalHeader {
+		color: $white;
+	}
+	.pm-modalContentInner {
+		background: $modal-background url(#{$path-images}world.svg) 50% 50%;
+	}
+	.scrollshadow-static {
+		background: $modal-background;
+	}
+	.scrollshadow-sticky {
+		&--top {
+			background-image: radial-gradient(farthest-side at 50% 0, #{$pm-tertiary-grey}, transparent);
+		}
+		&--bottom {
+			bottom: 0;
+			background-image: radial-gradient(farthest-side at 50% 100%, #{$pm-tertiary-grey}, transparent);
+		}
+	}
 
 	.pm-modalHeader {
 		padding-bottom: 0.5em;
@@ -14,6 +40,48 @@ $price-size: 21;
 		text-align: center;
 		padding-right: 0;
 	}
+	.blackfriday-plan {
+		background: $white;
+		color: $pm-global-grey;
+	}
+
+	.pm-button--primaryborder {
+		border-color: $pm-primary;
+		color: $pm-primary;
+		background-color: $white;
+
+		&:focus,
+		&:hover,
+		&:focus-within,
+		&.is-hover {
+			box-shadow: 0 0 em(5) 0 rgba(0, 0, 0, 0.2);
+			border-color: $pm-primary-dark;
+			color: $pm-primary-dark;
+		}
+		&:not(div):active, // not(div) prevents active state in case of button groups with dropdowns
+		&.is-active {
+			border-color: $pm-primary-dark;
+			color: $pm-primary-dark;
+			background-image: radial-gradient(closest-side, transparent, rgba(black, 0.1));
+			box-shadow: none;
+		}
+		&[disabled],
+		&.is-disabled {
+			@include button-disabled-state;
+		}
+	}
+
+	// currency
+	.pm-group-buttons {
+		.pm-button {
+			background: transparent !important; // I said I'm God.
+			color: $white;
+			border-color: $pm-tertiary-grey;
+			&.is-active {
+				border-bottom: 1px solid $white !important; // I said I'm God.
+			}
+		}
+	}
 
 	@include respond-to($breakpoint-medium) {
 		width: 98%;
@@ -21,6 +89,7 @@ $price-size: 21;
 	}
 }
 
+// then regular styles
 .blackfriday-mostPopular {
 	border-radius: $global-border-radius $global-border-radius 0 0;
 	left: 0;
@@ -52,10 +121,24 @@ $price-size: 21;
 	}
 }
 
-.blackfriday-plan-container:not(:first-child) {
-	margin-left: 1em;
+.blackfriday-plan-container {
+	flex: 1;
+	max-width: 25em;
+	&:not(:first-child) {
+		margin-left: 1em;
+		@include respond-to($breakpoint-small) {
+			margin-left: 0;
+		}
+	}
 	@include respond-to($breakpoint-small) {
-		margin-left: 0;
+		max-width: none;
+	}
+}
+
+.blackfriday-plan-name {
+	min-height: 3em;
+	@include respond-to($breakpoint-small) {
+		min-height: 0;
 	}
 }
 
