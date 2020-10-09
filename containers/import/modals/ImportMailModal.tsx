@@ -192,7 +192,10 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
         if (modalModel.importID) {
             try {
                 const { Importer } = await api(getMailImport(modalModel.importID));
-                const { Folders = [] } = await api(getMailImportFolders(Importer.ID, { Code: modalModel.password }));
+                const { Folders = [] } = await api({
+                    ...getMailImportFolders(Importer.ID, { Code: modalModel.password }),
+                    silence: true,
+                });
                 moveToPrepareStep(Importer.ID, Folders);
             } catch (error) {
                 handleSubmitStartError(error);
@@ -202,15 +205,16 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
 
         if ((modalModel.imap && modalModel.port) || needIMAPDetails) {
             try {
-                const { Importer } = await api(
-                    createMailImport({
+                const { Importer } = await api({
+                    ...createMailImport({
                         Email: modalModel.email,
                         ImapHost: modalModel.imap,
                         ImapPort: parseInt(modalModel.port, 10),
                         Sasl: 'PLAIN',
                         Code: modalModel.password,
-                    })
-                );
+                    }),
+                    silence: true,
+                });
                 await call();
 
                 const { Folders = [] } = await api(getMailImportFolders(Importer.ID, { Code: modalModel.password }));
@@ -248,16 +252,20 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
     };
 
     const resumeImport = async () => {
-        await api(
-            updateMailImport(modalModel.importID, {
+        await api({
+            ...updateMailImport(modalModel.importID, {
                 Email: modalModel.email,
                 Code: modalModel.password,
                 ImapHost: modalModel.imap,
                 ImapPort: parseInt(modalModel.port, 10),
                 Sasl: 'PLAIN',
-            })
-        );
-        await api(resumeMailImport(modalModel.importID));
+            }),
+            silence: true,
+        });
+        await api({
+            ...resumeMailImport(modalModel.importID),
+            silence: true,
+        });
         await call();
         onClose();
     };
