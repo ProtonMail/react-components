@@ -1,5 +1,12 @@
 @import '~design-system/_sass/reusable-components/_design-system-config.scss';
 
+.blackfriday-mail-modal {
+	.pm-modalTitle {
+		text-align: center;
+		padding-right: 0;
+	}
+}
+
 .blackfriday-mostPopular {
 	border-radius: $global-border-radius $global-border-radius 0 0;
 	left: 0;

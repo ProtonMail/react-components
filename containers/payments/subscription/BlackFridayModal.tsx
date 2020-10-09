@@ -226,7 +226,12 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
                                             {index !== 0 ? ( // real condition to add :)
                                                 <>
                                                     <p className="m0">{c('blackfriday Info').t`Includes`}</p>
-                                                    <p className="mt0 color-global-success">
+                                                    <p
+                                                        className={classnames([
+                                                            'mt0',
+                                                            popular && 'color-global-success',
+                                                        ])}
+                                                    >
                                                         {c('blackfriday Info').t`early access to`}
                                                         <strong className="blackfriday-protonDrive-productName ml0-25">
                                                             {c('blackfriday Info').t`ProtonDrive`}
