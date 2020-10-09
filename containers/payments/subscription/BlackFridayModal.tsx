@@ -223,7 +223,7 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
                                             {monthlyPrice}
                                         </div>
                                         <div className="aligncenter flex-item-fluid-auto">
-                                            {index !== 0 ? ( // real condition to add :)
+                                            {Object.keys(planIDs).length > 1 ? (
                                                 <>
                                                     <p className="m0">{c('blackfriday Info').t`Includes`}</p>
                                                     <p
@@ -243,9 +243,7 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
                                                         </span>
                                                     </p>
                                                 </>
-                                            ) : (
-                                                ''
-                                            )}
+                                            ) : null}
                                         </div>
                                         <Button
                                             className={classnames([
