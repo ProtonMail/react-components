@@ -1,17 +1,17 @@
 import { useEffect } from 'react';
 import { useMailSettings } from './useMailSettings';
 
-const useHotKeys = (callback: () => void) => {
+const useHotkeys = (callback: (e: KeyboardEvent) => void) => {
     const [{ Hotkeys } = { Hotkeys: 0 }] = useMailSettings();
 
     useEffect(() => {
         if (Hotkeys) {
-            document.addEventListener('keydown', callback, true);
+            document.addEventListener('keydown', callback);
         }
 
         return () => {
             if (Hotkeys) {
-                document.removeEventListener('keydown', callback, true);
+                document.removeEventListener('keydown', callback);
             }
         };
     }, [Hotkeys]);
@@ -19,4 +19,4 @@ const useHotKeys = (callback: () => void) => {
     return null;
 };
 
-export default useHotKeys;
+export default useHotkeys;
