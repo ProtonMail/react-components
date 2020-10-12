@@ -1,15 +1,15 @@
 import React from 'react';
 import { toMap } from 'proton-shared/lib/helpers/object';
 import { CYCLE, BLACK_FRIDAY } from 'proton-shared/lib/constants';
-import { Plan, Subscription } from 'proton-shared/lib/interfaces';
+import { Currency, Cycle, Plan, PlanIDs, Subscription } from 'proton-shared/lib/interfaces';
 import { isProductPayer } from 'proton-shared/lib/helpers/blackfriday';
 
-import BlackFridayModal, { Bundle } from './BlackFridayModal';
+import BlackFridayModal from './BlackFridayModal';
 
 interface Props {
     plans: Plan[];
     subscription: Subscription;
-    onSelect: (bundle: Bundle) => void;
+    onSelect: (params: { planIDs: PlanIDs; cycle: Cycle; currency: Currency; couponCode?: string | null }) => void;
 }
 
 const VPNBlackFridayModal = ({ plans = [], subscription, ...rest }: Props) => {

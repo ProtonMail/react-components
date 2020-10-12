@@ -3,7 +3,7 @@ import { checkSubscription } from 'proton-shared/lib/api/payments';
 import { CYCLE, DEFAULT_CURRENCY, DEFAULT_CYCLE, BLACK_FRIDAY, SECOND } from 'proton-shared/lib/constants';
 import { c } from 'ttag';
 import { isBefore } from 'date-fns';
-import { Cycle, PlanIDs } from 'proton-shared/lib/interfaces';
+import { Currency, Cycle, PlanIDs } from 'proton-shared/lib/interfaces';
 import { isProductPayer, isCyberMonday } from 'proton-shared/lib/helpers/blackfriday';
 
 import { FormModal, Loader, Countdown, Button, Price } from '../../../components';
@@ -11,6 +11,7 @@ import { useLoading, useApi, useSubscription } from '../../../hooks';
 import { classnames } from '../../../helpers';
 import CurrencySelector from '../CurrencySelector';
 import './BlackFridayModal.scss';
+import { SubscriptionCheckResult } from '../../signup/interfaces';
 
 const { MONTHLY, YEARLY, TWO_YEARS } = CYCLE;
 const EVERY_SECOND = SECOND;
@@ -25,9 +26,10 @@ export interface Bundle {
 }
 
 interface Props<T> {
-    onSelect: (bundle: Bundle) => void;
+    onSelect: (params: { planIDs: PlanIDs; cycle: Cycle; currency: Currency; couponCode?: string | null }) => void;
     bundles: Bundle[];
     className?: string;
+    onClose: () => void;
 }
 
 interface Pricing {
@@ -43,7 +45,7 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
     const [subscription] = useSubscription();
     const productPayer = isProductPayer(subscription);
     const [loading, withLoading] = useLoading();
-    const [currency, updateCurrency] = useState(DEFAULT_CURRENCY);
+    const [currency, updateCurrency] = useState<Currency>(DEFAULT_CURRENCY);
     const [pricing, updatePricing] = useState<Pricing>({});
     const [now, setNow] = useState(new Date());
 
@@ -60,7 +62,7 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
             [TWO_YEARS]: c('blackfriday Title').jt`Billed as ${amount} (${notice})`,
         }[cycle]);
 
-    const AFTER_INFO = ({ amount, notice }: { amount: React.ReactNode; notice: number }) =>
+    const AFTER_INFO = ({ amount, notice }: { amount: React.ReactNode; notice: 1 | 2 | 3 }) =>
         ({
             1: c('Title')
                 .jt`(${notice}) Renews after 1 year at a discounted annual price of ${amount} every year (20% discount).`,
@@ -151,21 +153,21 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
                             Currency: currency,
                             Cycle: cycle,
                         })
-                    ),
+                    ) as Promise<SubscriptionCheckResult>,
                     api(
                         checkSubscription({
                             PlanIDs: planIDs,
                             Currency: currency,
                             Cycle: cycle,
                         })
-                    ),
+                    ) as Promise<SubscriptionCheckResult>,
                     api(
                         checkSubscription({
                             PlanIDs: planIDs,
                             Currency: currency,
                             Cycle: MONTHLY,
                         })
-                    ),
+                    ) as Promise<SubscriptionCheckResult>,
                 ]);
             })
         );
@@ -289,7 +291,7 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
                                                 popular ? 'pm-button--primary' : 'pm-button--primaryborder',
                                             ])}
                                             onClick={() => {
-                                                rest.onClose?.();
+                                                rest.onClose();
                                                 onSelect({ planIDs, cycle, currency, couponCode });
                                             }}
                                         >
