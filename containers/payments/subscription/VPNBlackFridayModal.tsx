@@ -53,7 +53,7 @@ const VPNBlackFridayModal = ({ plans = [], subscription, ...rest }: Props) => {
               },
           ];
 
-    return <BlackFridayModal bundles={bundles} {...rest} />;
+    return <BlackFridayModal className="blackfriday-mail-modal" bundles={bundles} {...rest} />;
 };
 
 export default VPNBlackFridayModal;
