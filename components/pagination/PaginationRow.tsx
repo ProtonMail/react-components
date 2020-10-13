@@ -42,14 +42,14 @@ const PaginationRow = ({
                 onClick={() => onStart()}
                 title={c('Action').t`Go to first page`}
             >
-                <Icon name="TODO" />
+                <Icon name="caret-double-left" />
             </ButtonGroup>
             <ButtonGroup
                 disabled={disabled || disablePrevious}
                 onClick={() => onPrevious()}
                 title={c('Action').t`Go to previous page`}
             >
-                <Icon name="TODO" />
+                <Icon name="caret rotateZ-270" />
             </ButtonGroup>
             {pages.map((pageNumber) => {
                 const isActive = pageNumber === page;
@@ -70,14 +70,14 @@ const PaginationRow = ({
                 onClick={() => onNext()}
                 title={c('Action').t`Go to next page`}
             >
-                <Icon name="TODO" />
+                <Icon name="caret rotateZ-90" />
             </ButtonGroup>
             <ButtonGroup
                 disabled={disabled || disableNext}
                 onClick={() => onEnd()}
                 title={c('Action').t`Go to last page`}
             >
-                <Icon name="TODO" />
+                <Icon name="caret-double-left mirror" />
             </ButtonGroup>
         </Group>
     );
