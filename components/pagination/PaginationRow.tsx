@@ -21,17 +21,19 @@ interface Props {
 const PaginationRow = ({ onStart, onEnd, onPrevious, onNext, onPage, page, disabled, total, step = 1 }: Props) => {
     const pages = range(page - step, page + step).filter((pageNumber) => pageNumber > 0 && pageNumber <= total);
     const goToPageTitle = c('Action').t`Go to page ${page}`;
+    const disablePrevious = page === 1;
+    const disableNext = page === total;
     return (
         <Group>
             <ButtonGroup
-                disabled={disabled || page === 1}
+                disabled={disabled || disablePrevious}
                 onClick={() => onStart()}
                 title={c('Action').t`Go to first page`}
             >
                 <Icon name="TODO" />
             </ButtonGroup>
             <ButtonGroup
-                disabled={disabled || page === 1}
+                disabled={disabled || disablePrevious}
                 onClick={() => onPrevious()}
                 title={c('Action').t`Go to previous page`}
             >
@@ -52,14 +54,14 @@ const PaginationRow = ({ onStart, onEnd, onPrevious, onNext, onPage, page, disab
                 );
             })}
             <ButtonGroup
-                disabled={disabled || page === total}
+                disabled={disabled || disableNext}
                 onClick={() => onNext()}
                 title={c('Action').t`Go to next page`}
             >
                 <Icon name="TODO" />
             </ButtonGroup>
             <ButtonGroup
-                disabled={disabled || page === total}
+                disabled={disabled || disableNext}
                 onClick={() => onEnd()}
                 title={c('Action').t`Go to last page`}
             >
