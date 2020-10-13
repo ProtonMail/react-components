@@ -92,7 +92,7 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
     const getDescription = () => {
         if (productPayer) {
             return (
-                <p>{c('blackfriday Info')
+                <p className="aligncenter m0">{c('blackfriday Info')
                     .t`Get early access to our new encrypted drive for FREE by upgrading to a Plus bundle now.`}</p>
             );
         }
@@ -205,7 +205,12 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
             ) : (
                 <>
                     {getDescription()}
-                    <div className="flex flex-nowrap flex-spacearound mt4 onmobile-flex-column">
+                    <div
+                        className={classnames([
+                            'flex flex-nowrap flex-spacearound onmobile-flex-column',
+                            productPayer ? 'mt2' : 'mt4',
+                        ])}
+                    >
                         {bundles.map(({ name, cycle, planIDs, popular, couponCode }, index) => {
                             const key = `${index}`;
                             const { withCoupon = 0, withoutCouponMonthly = 0 } = pricing[index] || {};
@@ -237,6 +242,7 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
                                     className={classnames([
                                         'relative flex blackfriday-plan-container',
                                         popular && 'blackfriday-plan-container--mostPopular',
+                                        productPayer && 'blackfriday-plan-container--productPayer',
                                     ])}
                                 >
                                     {percentage ? (

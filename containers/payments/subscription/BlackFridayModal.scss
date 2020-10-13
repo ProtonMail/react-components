@@ -167,10 +167,13 @@ $modal-background: #1c1736;
 
 @include respond-to($breakpoint-small) {
 	.blackfriday-plan-container {
-		margin-bottom: 4em;
+		margin-bottom: 2em;
 
 		&:first-of-type {
 			order: 10;
 		}
+	}
+	.blackfriday-plan-container--productPayer {
+		margin-bottom: 0;
 	}
 }
