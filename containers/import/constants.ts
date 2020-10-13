@@ -16,3 +16,7 @@ export const IMAPS = {
 export const INVALID_CREDENTIALS_ERROR_LABEL = 'Invalid credentials';
 export const IMAP_CONNECTION_ERROR_LABEL = 'Cannot establish connection with IMAP server';
 export const IMAP_AUTHENTICATION_ERROR_LABEL = 'Authentication failed with IMAP server';
+
+export const GOOGLE_OAUTH_CLIENT_ID = '192543898962-v1mvc6s9jlfn71tms865ercsun7crnk4.apps.googleusercontent.com';
+export const GOOGLE_OAUTH_REDIRECT_URL = 'http://localhost:8080/settings/import';
+export const GOOGLE_OAUTH_SCOPE = 'https://mail.google.com/';
