@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { checkSubscription } from 'proton-shared/lib/api/payments';
-import { CYCLE, DEFAULT_CURRENCY, DEFAULT_CYCLE, BLACK_FRIDAY, SECOND } from 'proton-shared/lib/constants';
+import { CYCLE, DEFAULT_CURRENCY, DEFAULT_CYCLE } from 'proton-shared/lib/constants';
 import { c } from 'ttag';
-import { isBefore } from 'date-fns';
 import { Currency, Cycle, PlanIDs } from 'proton-shared/lib/interfaces';
 import { isProductPayer, isCyberMonday } from 'proton-shared/lib/helpers/blackfriday';
 
-import { FormModal, Loader, Countdown, Button, Price } from '../../../components';
+import { FormModal, Loader, Button, Price } from '../../../components';
 import { useLoading, useApi, useSubscription } from '../../../hooks';
 import { classnames } from '../../../helpers';
 import CurrencySelector from '../CurrencySelector';
 import './BlackFridayModal.scss';
 import { SubscriptionCheckResult } from '../../signup/interfaces';
+import BlackFridayModalDescription from './BlackFridayModalDescription';
 
 const { MONTHLY, YEARLY, TWO_YEARS } = CYCLE;
-const EVERY_SECOND = SECOND;
 
 export interface Bundle {
     planIDs: PlanIDs;
@@ -47,7 +46,6 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
     const [loading, withLoading] = useLoading();
     const [currency, updateCurrency] = useState<Currency>(DEFAULT_CURRENCY);
     const [pricing, updatePricing] = useState<Pricing>({});
-    const [now, setNow] = useState(new Date());
 
     const DEAL_TITLE = {
         [MONTHLY]: c('blackfriday Title').t`for 1 month`,
@@ -87,28 +85,6 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
             return c('blackfriday Action').t`Upgrade`;
         }
         return c('blackfriday Action').t`Get limited-time deal`;
-    };
-
-    const getDescription = () => {
-        if (productPayer) {
-            return (
-                <p className="aligncenter m0">{c('blackfriday Info')
-                    .t`Get early access to our new encrypted drive for FREE by upgrading to a Plus bundle now.`}</p>
-            );
-        }
-        return (
-            <div className="bold aligncenter mt0 blackfriday-countdown-container pb1 mb2">
-                <Countdown
-                    end={
-                        isBefore(now, BLACK_FRIDAY.CYBER_START)
-                            ? BLACK_FRIDAY.CYBER_START
-                            : isCyberMonday()
-                            ? BLACK_FRIDAY.CYBER_END
-                            : BLACK_FRIDAY.END
-                    }
-                />
-            </div>
-        );
     };
 
     const getFooter = () => {
@@ -188,23 +164,13 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
         withLoading(getBundlePrices());
     }, []);
 
-    useEffect(() => {
-        const intervalID = setInterval(() => {
-            setNow(new Date());
-        }, EVERY_SECOND);
-
-        return () => {
-            clearInterval(intervalID);
-        };
-    }, []);
-
     return (
         <FormModal title={getTitle()} loading={loading} footer={null} {...rest}>
             {loading ? (
                 <Loader />
             ) : (
                 <>
-                    {getDescription()}
+                    <BlackFridayModalDescription isProductPayer={productPayer} />
                     <div
                         className={classnames([
                             'flex flex-nowrap flex-spacearound onmobile-flex-column',
