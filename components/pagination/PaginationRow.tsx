@@ -23,15 +23,19 @@ const PaginationRow = ({ onStart, onEnd, onPrevious, onNext, onPage, page, disab
     const goToPageTitle = c('Action').t`Go to page ${page}`;
     return (
         <Group>
-            <ButtonGroup disabled={disabled || page === 1} onClick={onStart} title={c('Action').t`Go to first page`}>
-                <Icon name="" />
+            <ButtonGroup
+                disabled={disabled || page === 1}
+                onClick={() => onStart()}
+                title={c('Action').t`Go to first page`}
+            >
+                <Icon name="TODO" />
             </ButtonGroup>
             <ButtonGroup
                 disabled={disabled || page === 1}
-                onClick={onPrevious}
+                onClick={() => onPrevious()}
                 title={c('Action').t`Go to previous page`}
             >
-                <Icon name="" />
+                <Icon name="TODO" />
             </ButtonGroup>
             {pages.map((pageNumber) => {
                 const isActive = pageNumber === page;
@@ -47,11 +51,19 @@ const PaginationRow = ({ onStart, onEnd, onPrevious, onNext, onPage, page, disab
                     </ButtonGroup>
                 );
             })}
-            <ButtonGroup disabled={disabled || page === total} onClick={onNext} title={c('Action').t`Go to next page`}>
-                <Icon name="" />
+            <ButtonGroup
+                disabled={disabled || page === total}
+                onClick={() => onNext()}
+                title={c('Action').t`Go to next page`}
+            >
+                <Icon name="TODO" />
             </ButtonGroup>
-            <ButtonGroup disabled={disabled || page === total} onClick={onEnd} title={c('Action').t`Go to last page`}>
-                <Icon name="" />
+            <ButtonGroup
+                disabled={disabled || page === total}
+                onClick={() => onEnd()}
+                title={c('Action').t`Go to last page`}
+            >
+                <Icon name="TODO" />
             </ButtonGroup>
         </Group>
     );
