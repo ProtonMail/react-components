@@ -16,15 +16,27 @@ interface Props {
     total: number;
     disabled?: boolean;
     step?: number;
+    className?: string;
 }
 
-const PaginationRow = ({ onStart, onEnd, onPrevious, onNext, onPage, page, disabled, total, step = 1 }: Props) => {
+const PaginationRow = ({
+    onStart,
+    onEnd,
+    onPrevious,
+    onNext,
+    onPage,
+    page,
+    disabled,
+    total,
+    step = 1,
+    className,
+}: Props) => {
     const pages = range(page - step, page + step).filter((pageNumber) => pageNumber > 0 && pageNumber <= total);
     const goToPageTitle = c('Action').t`Go to page ${page}`;
     const disablePrevious = page === 1;
     const disableNext = page === total;
     return (
-        <Group>
+        <Group className={className}>
             <ButtonGroup
                 disabled={disabled || disablePrevious}
                 onClick={() => onStart()}
