@@ -62,11 +62,11 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
 
     const AFTER_INFO = ({ amount, notice }: { amount: React.ReactNode; notice: 1 | 2 | 3 }) =>
         ({
-            1: c('Title')
+            1: c('blackfriday Title')
                 .jt`(${notice}) Renews after 1 year at a discounted annual price of ${amount} every year (20% discount).`,
-            2: c('Title')
+            2: c('blackfriday Title')
                 .jt`(${notice}) Renews after 2 years at a discounted 2-year price of ${amount} every 2 years (47% discount).`,
-            3: c('Title')
+            3: c('blackfriday Title')
                 .jt`(${notice}) Renews after 1 year at a discounted annual & bundle price of ${amount} every year (36% discount).`,
         }[notice]);
 
@@ -223,7 +223,7 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
                                     ) : null}
                                     {popular ? (
                                         <div className="uppercase absolute bold bg-primary color-white pt0-75 pb0-5 mt0 mb0 aligncenter blackfriday-mostPopular">{c(
-                                            'Title'
+                                            'blackfriday Title'
                                         ).t`Most popular`}</div>
                                     ) : null}
                                     <div className="blackfriday-plan w100 bordered-container p1 mb1 flex flex-column flex-items-center flex-justify-end">
