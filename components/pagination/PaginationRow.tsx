@@ -38,6 +38,7 @@ const PaginationRow = ({
     return (
         <Group className={className}>
             <ButtonGroup
+                className="pm-button--for-icon"
                 disabled={disabled || disablePrevious}
                 onClick={() => onStart()}
                 title={c('Action').t`Go to first page`}
@@ -45,6 +46,7 @@ const PaginationRow = ({
                 <Icon name="caret-double-left" />
             </ButtonGroup>
             <ButtonGroup
+                className="pm-button--for-icon"
                 disabled={disabled || disablePrevious}
                 onClick={() => onPrevious()}
                 title={c('Action').t`Go to previous page`}
@@ -56,7 +58,7 @@ const PaginationRow = ({
                 return (
                     <ButtonGroup
                         disabled={disabled || isActive}
-                        className={classnames([isActive && 'is-active'])}
+                        className={classnames(['pm-button--for-icon', isActive && 'is-active'])}
                         key={pageNumber}
                         title={goToPageTitle}
                         onClick={() => onPage(pageNumber)}
@@ -66,6 +68,7 @@ const PaginationRow = ({
                 );
             })}
             <ButtonGroup
+                className="pm-button--for-icon"
                 disabled={disabled || disableNext}
                 onClick={() => onNext()}
                 title={c('Action').t`Go to next page`}
@@ -73,6 +76,7 @@ const PaginationRow = ({
                 <Icon name="caret rotateZ-90" />
             </ButtonGroup>
             <ButtonGroup
+                className="pm-button--for-icon"
                 disabled={disabled || disableNext}
                 onClick={() => onEnd()}
                 title={c('Action').t`Go to last page`}
