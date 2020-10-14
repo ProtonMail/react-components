@@ -218,7 +218,7 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
                                                 popular ? 'bg-global-warning' : 'bg-global-grey',
                                             ])}
                                         >
-                                            {`${percentage}% off`}
+                                            {c('blackfriday Info').jt`Save ${percentage}%`}
                                         </span>
                                     ) : null}
                                     {popular ? (
