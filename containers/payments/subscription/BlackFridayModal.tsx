@@ -28,7 +28,7 @@ interface Props<T> {
     onSelect: (params: { planIDs: PlanIDs; cycle: Cycle; currency: Currency; couponCode?: string | null }) => void;
     bundles: Bundle[];
     className?: string;
-    onClose: () => void;
+    onClose?: () => void;
 }
 
 interface Pricing {
@@ -60,7 +60,7 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
             [TWO_YEARS]: c('blackfriday Title').jt`Billed as ${amount} (${notice})`,
         }[cycle]);
 
-    const AFTER_INFO = ({ amount, notice }: { amount: React.ReactNode; notice: 1 | 2 | 3 }) =>
+    const AFTER_INFO = ({ amount, notice }: { amount: React.ReactNode; notice: number }) =>
         ({
             1: c('blackfriday Title')
                 .jt`(${notice}) Renews after 1 year at a discounted annual price of ${amount} every year (20% discount).`,
@@ -263,7 +263,7 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
                                                 popular ? 'pm-button--primary' : 'pm-button--primaryborder',
                                             ])}
                                             onClick={() => {
-                                                rest.onClose();
+                                                rest.onClose?.();
                                                 onSelect({ planIDs, cycle, currency, couponCode });
                                             }}
                                         >
