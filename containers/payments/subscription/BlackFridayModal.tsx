@@ -53,22 +53,42 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
         [TWO_YEARS]: c('blackfriday Title').t`for 2 years`,
     };
 
-    const BILLED_DESCRIPTION = ({ cycle, amount, notice }: { cycle: Cycle; amount: React.ReactNode; notice: number }) =>
-        ({
-            [MONTHLY]: c('blackfriday Title').jt`Billed as ${amount} (${notice})`,
-            [YEARLY]: c('blackfriday Title').jt`Billed as ${amount} (${notice})`,
-            [TWO_YEARS]: c('blackfriday Title').jt`Billed as ${amount} (${notice})`,
-        }[cycle]);
+    const BILLED_DESCRIPTION = ({
+        cycle,
+        amount,
+        notice,
+    }: {
+        cycle: Cycle;
+        amount: React.ReactNode;
+        notice: number;
+    }) => {
+        if (cycle === MONTHLY) {
+            return c('blackfriday Title').jt`Billed as ${amount} (${notice})`;
+        }
+        if (cycle === YEARLY) {
+            return c('blackfriday Title').jt`Billed as ${amount} (${notice})`;
+        }
+        if (cycle === TWO_YEARS) {
+            return c('blackfriday Title').jt`Billed as ${amount} (${notice})`;
+        }
+        return null;
+    };
 
-    const AFTER_INFO = ({ amount, notice }: { amount: React.ReactNode; notice: number }) =>
-        ({
-            1: c('blackfriday Title')
-                .jt`(${notice}) Renews after 1 year at a discounted annual price of ${amount} every year (20% discount).`,
-            2: c('blackfriday Title')
-                .jt`(${notice}) Renews after 2 years at a discounted 2-year price of ${amount} every 2 years (47% discount).`,
-            3: c('blackfriday Title')
-                .jt`(${notice}) Renews after 1 year at a discounted annual & bundle price of ${amount} every year (36% discount).`,
-        }[notice]);
+    const AFTER_INFO = ({ amount, notice }: { amount: React.ReactNode; notice: number }) => {
+        if (notice === 1) {
+            return c('blackfriday Title')
+                .jt`(${notice}) Renews after 1 year at a discounted annual price of ${amount} every year (20% discount).`;
+        }
+        if (notice === 2) {
+            return c('blackfriday Title')
+                .jt`(${notice}) Renews after 2 years at a discounted 2-year price of ${amount} every 2 years (47% discount).`;
+        }
+        if (notice === 3) {
+            return c('blackfriday Title')
+                .jt`(${notice}) Renews after 1 year at a discounted annual & bundle price of ${amount} every year (36% discount).`;
+        }
+        return null;
+    };
 
     const getTitle = () => {
         if (productPayer) {
