@@ -15,7 +15,7 @@ import {
     useModals,
     usePlans,
     useSubscription,
-    useLocalState,
+    useCookieState,
 } from '../../hooks';
 import Header, { Props as HeaderProps } from '../../components/header/Header';
 import { checkLastCancelledSubscription } from '../payments/subscription/helpers';
@@ -56,12 +56,22 @@ const PrivateHeader = ({
     onToggleExpand,
     title,
 }: Props) => {
+    const { hostname } = window.location;
+    const secondLevelDomain = hostname.substr(hostname.indexOf('.') + 1);
+    const cookieDomain = `.${secondLevelDomain}`;
     const [{ hasPaidMail, hasPaidVpn, isFree, ID }] = useUser();
-    const [blackFridayModalState, setBlackFridayModalState] = useLocalState(
-        false,
-        `${ID}${BLACK_FRIDAY.COUPON_CODE}-black-friday-modal`
+    const [blackFridayModalState, setBlackFridayModalState] = useCookieState(
+        'false',
+        `${ID}${BLACK_FRIDAY.COUPON_CODE}-black-friday-modal`,
+        BLACK_FRIDAY.END.toUTCString(),
+        cookieDomain
     );
-    const [productPayerModalState, setProductPayerModalState] = useLocalState(false, `${ID}-product-payer-modal`);
+    const [productPayerModalState, setProductPayerModalState] = useCookieState(
+        'false',
+        `${ID}-product-payer-modal`,
+        BLACK_FRIDAY.END.toUTCString(),
+        cookieDomain
+    );
     const [plans = []] = usePlans();
     const [subscription] = useSubscription();
     const { APP_NAME } = useConfig();
@@ -102,8 +112,8 @@ const PrivateHeader = ({
     }, [isBlackFridayPeriod, isFree]);
 
     useEffect(() => {
-        if (plans.length && isBlackFridayPeriod && isEligible && !blackFridayModalState) {
-            setBlackFridayModalState(true);
+        if (plans.length && isBlackFridayPeriod && isEligible && blackFridayModalState === 'false') {
+            setBlackFridayModalState('true');
             if (APP_NAME === APPS.PROTONVPN_SETTINGS) {
                 return createModal(
                     <VPNBlackFridayModal plans={plans} subscription={subscription} onSelect={onSelect} />
@@ -114,8 +124,13 @@ const PrivateHeader = ({
     }, [isBlackFridayPeriod, isEligible, plans]);
 
     useEffect(() => {
-        if (plans.length && isProductPayerPeriod && isProductPayer(subscription) && !productPayerModalState) {
-            setProductPayerModalState(true);
+        if (
+            plans.length &&
+            isProductPayerPeriod &&
+            isProductPayer(subscription) &&
+            productPayerModalState === 'false'
+        ) {
+            setProductPayerModalState('true');
             if (APP_NAME === APPS.PROTONVPN_SETTINGS) {
                 return createModal(
                     <VPNBlackFridayModal plans={plans} subscription={subscription} onSelect={onSelect} />
