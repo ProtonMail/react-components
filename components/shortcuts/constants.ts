@@ -21,10 +21,10 @@ export const getShortcutsForApp = (app: APP_NAMES) => {
                             name: c('Shortcut name').t`Apply / open`,
                             keys: 'Enter',
                         },
-                        {
-                            name: c('Shortcut name').t`Cance / close`,
-                            keys: 'Escape',
-                        },
+                        // {
+                        //     name: c('Shortcut name').t`Cancel / close`,
+                        //     keys: 'Escape',
+                        // },
                         {
                             name: c('Shortcut name').t`Select / unselect`,
                             keys: 'Space or X',
