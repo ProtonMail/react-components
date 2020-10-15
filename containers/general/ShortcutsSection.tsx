@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { c } from 'ttag';
+
+import { APPS } from 'proton-shared/lib/constants';
+
 import { Row, Label, Field, SmallButton } from '../../components';
 import { useMailSettings, useModals } from '../../hooks';
 
@@ -18,7 +21,7 @@ const ShortcutsSection = () => {
 
     const handleChange = (newValue: number) => setHotkeys(newValue);
 
-    const handleOpenModal = () => createModal(<ShortcutsModal />);
+    const handleOpenModal = () => createModal(<ShortcutsModal app={APPS.PROTONMAIL_SETTINGS} />, 'shortcuts-modal');
 
     return (
         <Row>
