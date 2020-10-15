@@ -64,14 +64,15 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
         amount: React.ReactNode;
         notice: number;
     }) => {
+        const supNotice = <sup key="notice">({notice})</sup>;
         if (cycle === MONTHLY) {
-            return c('blackfriday Title').jt`Billed as ${amount} (${notice})`;
+            return c('blackfriday Title').jt`Billed as ${amount} ${supNotice}`;
         }
         if (cycle === YEARLY) {
-            return c('blackfriday Title').jt`Billed as ${amount} (${notice})`;
+            return c('blackfriday Title').jt`Billed as ${amount} ${supNotice}`;
         }
         if (cycle === TWO_YEARS) {
-            return c('blackfriday Title').jt`Billed as ${amount} (${notice})`;
+            return c('blackfriday Title').jt`Billed as ${amount} ${supNotice}`;
         }
         return null;
     };
