@@ -3,7 +3,7 @@ import { checkSubscription } from 'proton-shared/lib/api/payments';
 import { CYCLE, DEFAULT_CURRENCY, DEFAULT_CYCLE } from 'proton-shared/lib/constants';
 import { c } from 'ttag';
 import { Currency, Cycle, PlanIDs } from 'proton-shared/lib/interfaces';
-import { isProductPayer, isCyberMonday } from 'proton-shared/lib/helpers/blackfriday';
+import { isProductPayer } from 'proton-shared/lib/helpers/blackfriday';
 
 import { FormModal, Loader, Button, Price } from '../../../components';
 import { useLoading, useApi, useSubscription } from '../../../hooks';
@@ -12,6 +12,7 @@ import CurrencySelector from '../CurrencySelector';
 import './BlackFridayModal.scss';
 import { SubscriptionCheckResult } from '../../signup/interfaces';
 import BlackFridayModalDescription from './BlackFridayModalDescription';
+import useBlackFridayModalTitle from './useBlackFridayModalTitle';
 
 const { MONTHLY, YEARLY, TWO_YEARS } = CYCLE;
 
@@ -46,6 +47,7 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
     const [loading, withLoading] = useLoading();
     const [currency, updateCurrency] = useState<Currency>(DEFAULT_CURRENCY);
     const [pricing, updatePricing] = useState<Pricing>({});
+    const title = useBlackFridayModalTitle(productPayer);
 
     const DEAL_TITLE = {
         [MONTHLY]: c('blackfriday Title').t`for 1 month`,
@@ -88,16 +90,6 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
                 .jt`(${notice}) Renews after 1 year at a discounted annual & bundle price of ${amount} every year (36% discount).`;
         }
         return null;
-    };
-
-    const getTitle = () => {
-        if (productPayer) {
-            return c('blackfriday Title').t`ProtonDrive early access offer`;
-        }
-        if (isCyberMonday()) {
-            return c('blackfriday Title').t`Cyber Monday Sale`;
-        }
-        return c('blackfriday Title').t`Black Friday Sale`;
     };
 
     const getCTA = () => {
@@ -185,7 +177,7 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
     }, []);
 
     return (
-        <FormModal title={getTitle()} loading={loading} footer={null} {...rest}>
+        <FormModal title={title} loading={loading} footer={null} {...rest}>
             {loading ? (
                 <Loader />
             ) : (
