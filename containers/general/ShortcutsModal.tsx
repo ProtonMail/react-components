@@ -26,10 +26,10 @@ const ShortcutsModal = ({ app, onClose = noop, ...rest }: Props) => {
     const shortcuts = getShortcutsForApp(app);
 
     const sectionRenderer = ({ name, shortcuts }: ShortcutSection) => (
-        <div key={name} className="mb1">
-            <h5>{name}</h5>
+        <div key={name} className="pr2 onmobile-pr0">
+            <h2 className="h5 mb0-5">{name}</h2>
             {shortcuts.length > 0 && (
-                <ul className="unstyled">
+                <ul className="unstyled ml1 mt1 pr2 onmobile-pr0">
                     {shortcuts.map(({ name, keys }: Shortcut) => (
                         <li key={name} className="flex flex-items-center flex-spacebetween mb0-5">
                             <span>{name}</span>
@@ -59,7 +59,7 @@ const ShortcutsModal = ({ app, onClose = noop, ...rest }: Props) => {
             onClose={onClose}
             {...rest}
         >
-            {shortcuts.map(sectionRenderer)}
+            <div className="list-2columns onmobile-list-1column">{shortcuts.map(sectionRenderer)}</div>
         </FormModal>
     );
 };
