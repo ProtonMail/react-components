@@ -14,7 +14,7 @@ const useCookieState = (cookieValue: string, cookieName: string, expirationDate?
 
     useEffect(() => {
         setCookie(cookieName, cookieValue, expirationDate, cookieDomain);
-    }, [cookieName, cookieValue, expirationDate, cookieDomain]);
+    }, [value]);
 
     return [value, setValue];
 };
