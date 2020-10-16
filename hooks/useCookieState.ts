@@ -12,13 +12,12 @@ const useCookieState = (
         if (!cookie) {
             return cookieValue;
         }
-        const [keyValue] = cookie.split(';');
-        const [, stickyValue] = keyValue.split('=');
+        const [, stickyValue] = cookie.split('=');
         return stickyValue;
     });
 
     useEffect(() => {
-        setCookie(cookieName, cookieValue, expirationDate, cookieDomain);
+        setCookie(cookieName, value, expirationDate, cookieDomain);
     }, [value]);
 
     return [value, setValue];
