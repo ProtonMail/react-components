@@ -3,6 +3,7 @@ import { APPS, BLACK_FRIDAY } from 'proton-shared/lib/constants';
 import { c } from 'ttag';
 import { isProductPayer } from 'proton-shared/lib/helpers/blackfriday';
 import { PlanIDs, Cycle, Currency } from 'proton-shared/lib/interfaces';
+import { useLocation } from 'react-router';
 
 import { Hamburger } from '../../components';
 import {
@@ -56,6 +57,7 @@ const PrivateHeader = ({
     onToggleExpand,
     title,
 }: Props) => {
+    const location = useLocation();
     const { hostname } = window.location;
     const secondLevelDomain = hostname.substr(hostname.indexOf('.') + 1);
     const cookieDomain = `.${secondLevelDomain}`;
@@ -83,6 +85,7 @@ const PrivateHeader = ({
     const { createModal } = useModals();
     const api = useApi();
     const showBlackFridayButton = isBlackFridayPeriod && isEligible && !loading;
+    const triggerBlackFridayModal = location.search.includes('modal=bf2020');
 
     const onSelect = ({
         planIDs,
@@ -113,7 +116,12 @@ const PrivateHeader = ({
     }, [isBlackFridayPeriod, isFree]);
 
     useEffect(() => {
-        if (plans.length && isBlackFridayPeriod && isEligible && blackFridayModalState === 'false') {
+        if (
+            plans.length &&
+            isBlackFridayPeriod &&
+            isEligible &&
+            (blackFridayModalState === 'false' || triggerBlackFridayModal)
+        ) {
             setBlackFridayModalState('true');
             if (APP_NAME === APPS.PROTONVPN_SETTINGS) {
                 return createModal(
