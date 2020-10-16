@@ -64,13 +64,11 @@ const PrivateHeader = ({
     const [{ hasPaidMail, hasPaidVpn, isFree, ID }] = useUser();
     const clearUserID = ID.replace(/=/g, ''); // '=' is causing issue when stored in cookie
     const [blackFridayModalState, setBlackFridayModalState] = useCookieState(
-        'false',
         `${clearUserID}${BLACK_FRIDAY.COUPON_CODE}-black-friday-modal`,
         BLACK_FRIDAY.END.toUTCString(),
         cookieDomain
     );
     const [productPayerModalState, setProductPayerModalState] = useCookieState(
-        'false',
         `${clearUserID}-product-payer-modal`,
         BLACK_FRIDAY.END.toUTCString(),
         cookieDomain
@@ -116,13 +114,8 @@ const PrivateHeader = ({
     }, [isBlackFridayPeriod, isFree]);
 
     useEffect(() => {
-        if (
-            plans.length &&
-            isBlackFridayPeriod &&
-            isEligible &&
-            (blackFridayModalState === 'false' || openBlackFridayModal)
-        ) {
-            setBlackFridayModalState('true');
+        if (plans.length && isBlackFridayPeriod && isEligible && (!blackFridayModalState || openBlackFridayModal)) {
+            setBlackFridayModalState(true);
             if (APP_NAME === APPS.PROTONVPN_SETTINGS) {
                 return createModal(
                     <VPNBlackFridayModal plans={plans} subscription={subscription} onSelect={onSelect} />
@@ -133,13 +126,8 @@ const PrivateHeader = ({
     }, [isBlackFridayPeriod, isEligible, plans]);
 
     useEffect(() => {
-        if (
-            plans.length &&
-            isProductPayerPeriod &&
-            isProductPayer(subscription) &&
-            productPayerModalState === 'false'
-        ) {
-            setProductPayerModalState('true');
+        if (plans.length && isProductPayerPeriod && isProductPayer(subscription) && !productPayerModalState) {
+            setProductPayerModalState(true);
             if (APP_NAME === APPS.PROTONVPN_SETTINGS) {
                 return createModal(
                     <VPNBlackFridayModal plans={plans} subscription={subscription} onSelect={onSelect} />
