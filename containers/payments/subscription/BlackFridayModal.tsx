@@ -242,7 +242,12 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
                                             'blackfriday Title'
                                         ).t`Most popular`}</div>
                                     ) : null}
-                                    <div className="blackfriday-plan w100 bordered-container p1 mb1 flex flex-column flex-items-center flex-justify-end">
+                                    <div
+                                        className={classnames([
+                                            'blackfriday-plan w100 bordered-container p1 mb1 flex flex-column flex-items-center flex-justify-end',
+                                            popular && 'block-info',
+                                        ])}
+                                    >
                                         <div className="blackfriday-plan-namePeriod">
                                             <strong className="blackfriday-plan-name bl aligncenter big mt0-5 mb0">
                                                 {name}
@@ -276,7 +281,9 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
                                         <Button
                                             className={classnames([
                                                 'mb1 uppercase increase-surface-click',
-                                                popular ? 'pm-button--primary' : 'pm-button--primaryborder',
+                                                popular
+                                                    ? 'pm-button--primary'
+                                                    : 'pm-button--primaryborderEvenInDarkMode',
                                             ])}
                                             onClick={() => {
                                                 rest.onClose?.();

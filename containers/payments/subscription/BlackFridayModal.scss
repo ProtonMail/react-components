@@ -45,32 +45,6 @@ $modal-background: #1c1736;
 		color: $pm-global-grey;
 	}
 
-	.pm-button--primaryborder {
-		border-color: $pm-primary;
-		color: $pm-primary;
-		background-color: $white;
-
-		&:focus,
-		&:hover,
-		&:focus-within,
-		&.is-hover {
-			box-shadow: 0 0 em(5) 0 rgba(0, 0, 0, 0.2);
-			border-color: $pm-primary-dark;
-			color: $pm-primary-dark;
-		}
-		&:not(div):active, // not(div) prevents active state in case of button groups with dropdowns
-		&.is-active {
-			border-color: $pm-primary-dark;
-			color: $pm-primary-dark;
-			background-image: radial-gradient(closest-side, transparent, rgba(black, 0.1));
-			box-shadow: none;
-		}
-		&[disabled],
-		&.is-disabled {
-			@include button-disabled-state;
-		}
-	}
-
 	// currency
 	.pm-group-buttons {
 		.pm-button {
@@ -163,7 +137,9 @@ $modal-background: #1c1736;
 		border-top-left-radius: 0;
 		border-top-right-radius: 0;
 		border-width: 2px;
-		border-color: $pm-primary;
+		// no mention of $pm-primary here, otherwise it will be blue for VPN.
+		// used a helper instead
+		//border-color: $pm-primary;
 	}
 	.blackfriday-percentage {
 		top: -2.8em;
