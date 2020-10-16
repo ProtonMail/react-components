@@ -5,7 +5,7 @@ import { c } from 'ttag';
 import { Currency, Cycle, PlanIDs } from 'proton-shared/lib/interfaces';
 import { isProductPayer } from 'proton-shared/lib/helpers/blackfriday';
 
-import { FormModal, Loader, Button, Price } from '../../../components';
+import { FormModal, FullLoader, Button, Price } from '../../../components';
 import { useLoading, useApi, useSubscription } from '../../../hooks';
 import { classnames } from '../../../helpers';
 import CurrencySelector from '../CurrencySelector';
@@ -183,7 +183,7 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
     return (
         <FormModal title={title} loading={loading} footer={null} {...rest}>
             {loading ? (
-                <Loader />
+                <FullLoader size={50} className="center flex mb2" />
             ) : (
                 <>
                     <BlackFridayModalDescription isProductPayer={productPayer} />
