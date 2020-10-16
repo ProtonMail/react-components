@@ -85,7 +85,7 @@ const PrivateHeader = ({
     const { createModal } = useModals();
     const api = useApi();
     const showBlackFridayButton = isBlackFridayPeriod && isEligible && !loading;
-    const triggerBlackFridayModal = location.search.includes('modal=bf2020');
+    const openBlackFridayModal = location.search.includes('modal=bf2020');
 
     const onSelect = ({
         planIDs,
@@ -120,7 +120,7 @@ const PrivateHeader = ({
             plans.length &&
             isBlackFridayPeriod &&
             isEligible &&
-            (blackFridayModalState === 'false' || triggerBlackFridayModal)
+            (blackFridayModalState === 'false' || openBlackFridayModal)
         ) {
             setBlackFridayModalState('true');
             if (APP_NAME === APPS.PROTONVPN_SETTINGS) {
