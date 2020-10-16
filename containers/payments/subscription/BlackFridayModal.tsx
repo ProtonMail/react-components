@@ -245,7 +245,7 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
                                     <div
                                         className={classnames([
                                             'blackfriday-plan w100 bordered-container p1 mb1 flex flex-column flex-items-center flex-justify-end',
-                                            popular && 'block-info',
+                                            popular && 'borderColor-primary',
                                         ])}
                                     >
                                         <div className="blackfriday-plan-namePeriod">
