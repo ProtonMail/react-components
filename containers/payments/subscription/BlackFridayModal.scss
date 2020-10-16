@@ -87,6 +87,12 @@ $modal-background: #1c1736;
 		width: 98%;
 		max-width: 98%;
 	}
+	@include respond-to(750, 'height') {
+		max-height: 90%;
+	}
+	@include respond-to($breakpoint-small) {
+		max-height: 98%;
+	}
 }
 
 // then regular styles
