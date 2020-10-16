@@ -231,7 +231,7 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
                                         <span
                                             className={classnames([
                                                 'uppercase bold absolute color-white blackfriday-percentage aligncenter',
-                                                popular ? 'bg-global-warning' : 'bg-global-grey',
+                                                popular ? 'bg-global-warning' : 'bg-primary',
                                             ])}
                                         >
                                             {c('blackfriday Info').jt`Save ${percentage}%`}
@@ -281,7 +281,7 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
                                         <Button
                                             className={classnames([
                                                 'mb1 uppercase increase-surface-click',
-                                                popular
+                                                popular || productPayer
                                                     ? 'pm-button--primary'
                                                     : 'pm-button--primaryborderEvenInDarkMode',
                                             ])}

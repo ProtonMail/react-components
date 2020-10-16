@@ -92,12 +92,15 @@ $modal-background: #1c1736;
 	}
 	.amount {
 		font-size: em($amount-size);
+		font-weight: bold;
 	}
 	.currency {
 		font-size: em($price-size);
+		font-weight: bold;
 	}
 	.decimal {
 		font-size: em($price-size, $amount-size);
+		font-weight: bold;
 	}
 }
 
