@@ -5,6 +5,8 @@ import { noop } from 'proton-shared/lib/helpers/function';
 
 import { classnames } from '../../helpers';
 import { FormModal } from '../../components';
+import { useActiveBreakpoint } from '../../hooks';
+
 import { getShortcutsForApp } from '../../components/shortcuts/constants';
 
 interface Shortcut {
@@ -23,13 +25,14 @@ interface Props {
 }
 
 const ShortcutsModal = ({ app, onClose = noop, ...rest }: Props) => {
+    const { isNarrow } = useActiveBreakpoint();
     const shortcuts = getShortcutsForApp(app);
 
     const sectionRenderer = ({ name, shortcuts }: ShortcutSection) => (
         <div key={name} className="pr2 onmobile-pr0">
             <h2 className="h5 mb0-5">{name}</h2>
             {shortcuts.length > 0 && (
-                <ul className="unstyled ml1 mt1 pr2 onmobile-pr0">
+                <ul className="unstyled mt1 onmobile-pr0">
                     {shortcuts.map(({ name, keys }: Shortcut) => (
                         <li key={name} className="flex flex-items-center flex-spacebetween mb0-5">
                             <span>{name}</span>
@@ -59,7 +62,13 @@ const ShortcutsModal = ({ app, onClose = noop, ...rest }: Props) => {
             onClose={onClose}
             {...rest}
         >
-            <div className="list-2columns onmobile-list-1column">{shortcuts.map(sectionRenderer)}</div>
+            <div
+                className="list-2columns onmobile-list-1column"
+                // to compensate the pr2 of the sections in the right column
+                style={isNarrow ? { marginRight: '-2em' } : undefined}
+            >
+                {shortcuts.map(sectionRenderer)}
+            </div>
         </FormModal>
     );
 };
