@@ -64,7 +64,7 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
         amount: React.ReactNode;
         notice: number;
     }) => {
-        const supNotice = <sup key="notice">({notice})</sup>;
+        const supNotice = <sup key="notice">{notice}</sup>;
         if (cycle === MONTHLY) {
             return c('blackfriday Title').jt`Billed as ${amount} ${supNotice}`;
         }
@@ -103,8 +103,11 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
     const getFooter = () => {
         if (productPayer) {
             return (
-                <p className="smaller opacity-50 aligncenter">{c('blackfriday Info')
-                    .t`This subscription will automatically renew after 2 years at the same rate until it is cancelled.`}</p>
+                <p className="smaller opacity-50 aligncenter">
+                    (1){' '}
+                    {c('blackfriday Info')
+                        .t`This subscription will automatically renew after 2 years at the same rate until it is cancelled.`}
+                </p>
             );
         }
         return (
