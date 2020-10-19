@@ -117,11 +117,10 @@ const PrivateHeader = ({
         if (plans.length && isBlackFridayPeriod && isEligible && (!blackFridayModalState || openBlackFridayModal)) {
             setBlackFridayModalState(true);
             if (APP_NAME === APPS.PROTONVPN_SETTINGS) {
-                return createModal(
-                    <VPNBlackFridayModal plans={plans} subscription={subscription} onSelect={onSelect} />
-                );
+                createModal(<VPNBlackFridayModal plans={plans} subscription={subscription} onSelect={onSelect} />);
+            } else {
+                createModal(<MailBlackFridayModal plans={plans} subscription={subscription} onSelect={onSelect} />);
             }
-            createModal(<MailBlackFridayModal plans={plans} subscription={subscription} onSelect={onSelect} />);
         }
     }, [isBlackFridayPeriod, isEligible, plans]);
 
@@ -129,11 +128,10 @@ const PrivateHeader = ({
         if (plans.length && isProductPayerPeriod && isProductPayer(subscription) && !productPayerModalState) {
             setProductPayerModalState(true);
             if (APP_NAME === APPS.PROTONVPN_SETTINGS) {
-                return createModal(
-                    <VPNBlackFridayModal plans={plans} subscription={subscription} onSelect={onSelect} />
-                );
+                createModal(<VPNBlackFridayModal plans={plans} subscription={subscription} onSelect={onSelect} />);
+            } else {
+                createModal(<MailBlackFridayModal plans={plans} subscription={subscription} onSelect={onSelect} />);
             }
-            createModal(<MailBlackFridayModal plans={plans} subscription={subscription} onSelect={onSelect} />);
         }
     }, [isProductPayerPeriod, subscription, plans]);
 
