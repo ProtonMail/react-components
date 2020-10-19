@@ -183,7 +183,9 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
     return (
         <FormModal title={title} loading={loading} footer={null} {...rest}>
             {loading ? (
-                <FullLoader size={50} className="center flex mb2" />
+                <div className="aligncenter">
+                    <FullLoader size={50} className="center flex mb2" />
+                </div>
             ) : (
                 <>
                     <BlackFridayModalDescription isProductPayer={productPayer} />
