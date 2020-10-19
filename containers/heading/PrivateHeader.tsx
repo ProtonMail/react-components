@@ -17,6 +17,7 @@ import {
     usePlans,
     useSubscription,
     useCookieState,
+    usePaidCookie,
 } from '../../hooks';
 import Header, { Props as HeaderProps } from '../../components/header/Header';
 import { checkLastCancelledSubscription } from '../payments/subscription/helpers';
@@ -84,7 +85,7 @@ const PrivateHeader = ({
     const api = useApi();
     const showBlackFridayButton = isBlackFridayPeriod && isEligible && !loading;
     const openBlackFridayModal = location.search.includes('modal=bf2020');
-
+    usePaidCookie();
     const onSelect = ({
         planIDs,
         cycle,
