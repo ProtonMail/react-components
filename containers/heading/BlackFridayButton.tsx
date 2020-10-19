@@ -1,10 +1,8 @@
 import React from 'react';
 import { APPS } from 'proton-shared/lib/constants';
-// import { getAccountSettingsApp } from 'proton-shared/lib/apps/helper';
 import { PlanIDs, Cycle, Currency, Subscription, Plan } from 'proton-shared/lib/interfaces';
-import { isCyberMonday } from 'proton-shared/lib/helpers/blackfriday';
 
-import { useModals, useConfig } from '../../hooks';
+import { useModals, useConfig, useCyberMondayPeriod } from '../../hooks';
 import { TopNavbarLink, Icon } from '../../components';
 import NewSubscriptionModal from '../payments/subscription/NewSubscriptionModal';
 import VPNBlackFridayModal from '../payments/subscription/VPNBlackFridayModal';
@@ -21,7 +19,8 @@ const BlackFridayButton = ({ plans, subscription, ...rest }: Props) => {
     const { APP_NAME } = useConfig();
     const { createModal } = useModals();
     const icon = 'blackfriday';
-    const text = isCyberMonday ? 'Cyber Monday' : 'Black Friday';
+    const cyberModay = useCyberMondayPeriod();
+    const text = cyberModay ? 'Cyber Monday' : 'Black Friday';
 
     const onSelect = ({
         planIDs,
@@ -74,21 +73,6 @@ const BlackFridayButton = ({ plans, subscription, ...rest }: Props) => {
             </button>
         </TopNavbarItem>
     );
-
-    /*
-    return (
-        <TopNavbarLink
-            to="/subscription"
-            toApp={getAccountSettingsApp()}
-            icon={icon}
-            text={text}
-            onClick={() => {
-                createModal(<MailBlackFridayModal plans={plans} onSelect={onSelect} />);
-            }}
-            {...rest}
-        />
-    );
-    */
 };
 
 export default BlackFridayButton;
