@@ -1,26 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { APPS, BLACK_FRIDAY } from 'proton-shared/lib/constants';
+import React from 'react';
+import { APPS } from 'proton-shared/lib/constants';
 import { c } from 'ttag';
-import { isProductPayer } from 'proton-shared/lib/helpers/blackfriday';
-import { PlanIDs, Cycle, Currency } from 'proton-shared/lib/interfaces';
-import { useLocation } from 'react-router';
 
 import { Hamburger } from '../../components';
-import {
-    useConfig,
-    useUser,
-    useLoading,
-    useBlackFridayPeriod,
-    useApi,
-    useProductPayerPeriod,
-    useModals,
-    usePlans,
-    useSubscription,
-    useCookieState,
-    usePaidCookie,
-} from '../../hooks';
+import { useConfig, useUser, usePlans, useSubscription, usePaidCookie } from '../../hooks';
 import Header, { Props as HeaderProps } from '../../components/header/Header';
-import { checkLastCancelledSubscription } from '../payments/subscription/helpers';
+
 import UserDropdown from './UserDropdown';
 import TopNavbarLink from '../../components/link/TopNavbarLink';
 import { TopNavbarItem } from '../app/TopNavbar';
@@ -29,8 +14,7 @@ import SupportDropdown from './SupportDropdown';
 import UpgradeButton from './UpgradeButton';
 import UpgradeVPNButton from './UpgradeVPNButton';
 import BlackFridayButton from './BlackFridayButton';
-import { MailBlackFridayModal, NewSubscriptionModal, VPNBlackFridayModal } from '../payments';
-import { SUBSCRIPTION_STEPS } from '../payments/subscription/constants';
+import useBlackFriday from './useBlackFriday';
 
 interface Props extends HeaderProps {
     logo?: React.ReactNode;
@@ -58,83 +42,12 @@ const PrivateHeader = ({
     onToggleExpand,
     title,
 }: Props) => {
-    const location = useLocation();
-    const { hostname } = window.location;
-    const secondLevelDomain = hostname.substr(hostname.indexOf('.') + 1);
-    const cookieDomain = `.${secondLevelDomain}`;
-    const [{ hasPaidMail, hasPaidVpn, isFree, ID }] = useUser();
-    const clearUserID = ID.replace(/=/g, ''); // '=' is causing issue when stored in cookie
-    const [blackFridayModalState, setBlackFridayModalState] = useCookieState(
-        `${clearUserID}${BLACK_FRIDAY.COUPON_CODE}-black-friday-modal`,
-        BLACK_FRIDAY.END.toUTCString(),
-        cookieDomain
-    );
-    const [productPayerModalState, setProductPayerModalState] = useCookieState(
-        `${clearUserID}-product-payer-modal`,
-        BLACK_FRIDAY.END.toUTCString(),
-        cookieDomain
-    );
+    const [{ hasPaidMail, hasPaidVpn }] = useUser();
     const [plans = []] = usePlans();
     const [subscription] = useSubscription();
     const { APP_NAME } = useConfig();
-    const isBlackFridayPeriod = useBlackFridayPeriod();
-    const isProductPayerPeriod = useProductPayerPeriod();
-    const [loading, withLoading] = useLoading();
-    const [isEligible, setEligibility] = useState(false);
-    const { createModal } = useModals();
-    const api = useApi();
-    const showBlackFridayButton = isBlackFridayPeriod && isEligible && !loading;
-    const openBlackFridayModal = location.search.includes('modal=bf2020');
+    const showBlackFridayButton = useBlackFriday();
     usePaidCookie();
-    const onSelect = ({
-        planIDs,
-        cycle,
-        currency,
-        couponCode,
-    }: {
-        planIDs: PlanIDs;
-        cycle: Cycle;
-        currency: Currency;
-        couponCode?: string | null;
-    }) => {
-        createModal(
-            <NewSubscriptionModal
-                planIDs={planIDs}
-                cycle={cycle}
-                currency={currency}
-                coupon={couponCode}
-                step={SUBSCRIPTION_STEPS.PAYMENT}
-            />
-        );
-    };
-
-    useEffect(() => {
-        if (isFree && isBlackFridayPeriod) {
-            withLoading(checkLastCancelledSubscription(api).then(setEligibility));
-        }
-    }, [isBlackFridayPeriod, isFree]);
-
-    useEffect(() => {
-        if (plans.length && isBlackFridayPeriod && isEligible && (!blackFridayModalState || openBlackFridayModal)) {
-            setBlackFridayModalState(true);
-            if (APP_NAME === APPS.PROTONVPN_SETTINGS) {
-                createModal(<VPNBlackFridayModal plans={plans} subscription={subscription} onSelect={onSelect} />);
-            } else {
-                createModal(<MailBlackFridayModal plans={plans} subscription={subscription} onSelect={onSelect} />);
-            }
-        }
-    }, [isBlackFridayPeriod, isEligible, plans]);
-
-    useEffect(() => {
-        if (plans.length && isProductPayerPeriod && isProductPayer(subscription) && !productPayerModalState) {
-            setProductPayerModalState(true);
-            if (APP_NAME === APPS.PROTONVPN_SETTINGS) {
-                createModal(<VPNBlackFridayModal plans={plans} subscription={subscription} onSelect={onSelect} />);
-            } else {
-                createModal(<MailBlackFridayModal plans={plans} subscription={subscription} onSelect={onSelect} />);
-            }
-        }
-    }, [isProductPayerPeriod, subscription, plans]);
 
     if (backUrl) {
         return (
