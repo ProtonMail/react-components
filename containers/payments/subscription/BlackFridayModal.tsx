@@ -145,21 +145,21 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
                             Currency: currency,
                             Cycle: cycle,
                         })
-                    ) as Promise<SubscriptionCheckResult>,
-                    api(
+                    ),
+                    api<SubscriptionCheckResult>(
                         checkSubscription({
                             PlanIDs: planIDs,
                             Currency: currency,
                             Cycle: cycle,
                         })
-                    ) as Promise<SubscriptionCheckResult>,
-                    api(
+                    ),
+                    api<SubscriptionCheckResult>(
                         checkSubscription({
                             PlanIDs: planIDs,
                             Currency: currency,
                             Cycle: MONTHLY,
                         })
-                    ) as Promise<SubscriptionCheckResult>,
+                    ),
                 ]);
             })
         );

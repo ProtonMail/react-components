@@ -3,6 +3,7 @@ import { isProductPayer } from 'proton-shared/lib/helpers/blackfriday';
 import { PlanIDs, Cycle, Currency } from 'proton-shared/lib/interfaces';
 import { APPS, BLACK_FRIDAY } from 'proton-shared/lib/constants';
 import { useLocation } from 'react-router';
+import { getSecondLevelDomain } from 'proton-shared/lib/helpers/url';
 
 import { checkLastCancelledSubscription } from '../payments/subscription/helpers';
 import {
@@ -26,8 +27,7 @@ const useBlackFriday = () => {
     const [{ isFree, ID }] = useUser();
     const [plans = []] = usePlans();
     const [subscription] = useSubscription();
-    const { hostname } = window.location;
-    const secondLevelDomain = hostname.substr(hostname.indexOf('.') + 1);
+    const secondLevelDomain = getSecondLevelDomain();
     const cookieDomain = `.${secondLevelDomain}`;
     const isBlackFridayPeriod = useBlackFridayPeriod();
     const isProductPayerPeriod = useProductPayerPeriod();
