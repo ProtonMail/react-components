@@ -138,7 +138,7 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
         const result = await Promise.all(
             bundles.map(({ planIDs = [], cycle = DEFAULT_CYCLE, couponCode }) => {
                 return Promise.all([
-                    api(
+                    api<SubscriptionCheckResult>(
                         checkSubscription({
                             PlanIDs: planIDs,
                             CouponCode: couponCode,
