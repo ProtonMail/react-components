@@ -10,13 +10,18 @@ const usePaidCookie = () => {
     const [user] = useUser();
 
     useEffect(() => {
-        const secondLevelDomain = getSecondLevelDomain();
-        const cookieDomain = `.${secondLevelDomain}`;
+        const cookieDomain = `.${getSecondLevelDomain()}`;
         const today = new Date();
         const lastDayOfTheYear = new Date(today.getFullYear(), 11, 31, 23, 59, 59);
 
         if (user.isPaid && !checkCookie(COOKIE_NAME, 'true')) {
-            setCookie(COOKIE_NAME, 'true', lastDayOfTheYear.toUTCString(), cookieDomain);
+            setCookie({
+                cookieName: COOKIE_NAME,
+                cookieValue: 'true',
+                cookieDomain,
+                expirationDate: lastDayOfTheYear.toUTCString(),
+                path: '/',
+            });
         }
     }, [user]);
 };

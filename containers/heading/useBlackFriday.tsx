@@ -3,7 +3,6 @@ import { isProductPayer } from 'proton-shared/lib/helpers/blackfriday';
 import { PlanIDs, Cycle, Currency } from 'proton-shared/lib/interfaces';
 import { APPS, BLACK_FRIDAY } from 'proton-shared/lib/constants';
 import { useLocation } from 'react-router';
-import { getSecondLevelDomain } from 'proton-shared/lib/helpers/url';
 
 import { checkLastCancelledSubscription } from '../payments/subscription/helpers';
 import {
@@ -27,21 +26,19 @@ const useBlackFriday = () => {
     const [{ isFree, ID }] = useUser();
     const [plans = []] = usePlans();
     const [subscription] = useSubscription();
-    const secondLevelDomain = getSecondLevelDomain();
-    const cookieDomain = `.${secondLevelDomain}`;
     const isBlackFridayPeriod = useBlackFridayPeriod();
     const isProductPayerPeriod = useProductPayerPeriod();
     const clearUserID = ID.replace(/=/g, ''); // '=' is causing issue when stored in cookie
-    const [blackFridayModalState, setBlackFridayModalState] = useCookieState(
-        `${clearUserID}${BLACK_FRIDAY.COUPON_CODE}-black-friday-modal`,
-        BLACK_FRIDAY.END.toUTCString(),
-        cookieDomain
-    );
-    const [productPayerModalState, setProductPayerModalState] = useCookieState(
-        `${clearUserID}-product-payer-modal`,
-        BLACK_FRIDAY.END.toUTCString(),
-        cookieDomain
-    );
+
+    const [blackFridayModalState, setBlackFridayModalState] = useCookieState({
+        cookieName: `${clearUserID}${BLACK_FRIDAY.COUPON_CODE}-black-friday-modal`,
+        expirationDate: BLACK_FRIDAY.END.toUTCString(),
+    });
+    const [productPayerModalState, setProductPayerModalState] = useCookieState({
+        cookieName: `${clearUserID}-product-payer-modal`,
+        expirationDate: BLACK_FRIDAY.END.toUTCString(),
+    });
+
     const [isEligible, setEligibility] = useState(false);
     const location = useLocation();
     const { createModal } = useModals();
