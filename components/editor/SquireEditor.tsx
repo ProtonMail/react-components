@@ -14,14 +14,13 @@ import { RIGHT_TO_LEFT } from 'proton-shared/lib/constants';
 import { noop } from 'proton-shared/lib/helpers/function';
 
 import { classnames } from '../../helpers';
-
 import EditorToolbar from './toolbar/SquireToolbar';
 import SquireIframe from './SquireIframe';
 import { SquireType } from './squireConfig';
 import { setTextDirectionWithoutFocus, insertImage } from './squireActions';
+import { SquireEditorMetadata } from './interface';
 
 import './SquireEditor.scss';
-import { SquireEditorMetadata } from './interface';
 
 const defaultMetadata: SquireEditorMetadata = {
     supportImages: true,
@@ -148,7 +147,6 @@ const SquireEditor = (
                 className,
                 'editor w100 h100 rounded flex flex-column-reverse',
                 disabled && 'editor--disabled',
-                showEllipseButton && 'editor--showEllipsisButton',
             ])}
         >
             {metadata.isPlainText ? (
@@ -163,26 +161,18 @@ const SquireEditor = (
                     />
                 </div>
             ) : (
-                <>
-                    {/* {showEllipseButton && ( // Ellispsis button is placed before because the flex flow is reversed
-                            <div className="editor-ellipsis-button-container p0-5 bg-white color-global-grey">
-                                <Button className="pm-button--small" onClick={onEllipseClick}>
-                                    ...
-                                </Button>
-                            </div>
-                        )} */}
-                    <SquireIframe
-                        ref={squireRef}
-                        placeholder={placeholder}
-                        metadata={metadata}
-                        onFocus={onFocus}
-                        onReady={handleReady}
-                        onInput={onChange}
-                        onAddImages={onAddImages}
-                        onEllipseClick={onEllipseClick}
-                        data-test-id="composer:body"
-                    />
-                </>
+                <SquireIframe
+                    ref={squireRef}
+                    placeholder={placeholder}
+                    metadata={metadata}
+                    onFocus={onFocus}
+                    onReady={handleReady}
+                    onInput={onChange}
+                    onAddImages={onAddImages}
+                    showEllipseButton={showEllipseButton}
+                    onEllipseClick={onEllipseClick}
+                    data-test-id="composer:body"
+                />
             )}
             <EditorToolbar
                 metadata={metadata}

@@ -314,20 +314,23 @@ const wrapInsertHTML = (squire: any) => {
 export const initSquire = async (document: Document, onEllipseClick: () => void): Promise<any> => {
     insertCustomStyle(document);
     const { default: Squire } = await import('squire-rte');
+
     const title = c('Title').t`Expand content`;
     document.body.innerHTML = `
         <div id="squire"></div>
-        <div><button id="ellispsis" title="${title}">&hellip;</button></div>
+        <div><button id="ellispsis" title="${title}" style="display: none;">&hellip;</button></div>
     `;
     const root = document.body.querySelector('#squire');
     const squire = new Squire(root, SQUIRE_CONFIG);
     wrapInsertHTML(squire);
-
-    const handleClick = () => {
-        document.body.querySelector('#ellispsis')?.remove();
-        onEllipseClick();
-    };
-    document.body.querySelector('#ellispsis')?.addEventListener('click', handleClick);
+    document.body.querySelector('#ellispsis')?.addEventListener('click', onEllipseClick);
 
     return squire;
+};
+
+export const toggleEllipsisButton = (document: Document, show: boolean) => {
+    const element = document.body.querySelector('#ellispsis') as HTMLDivElement | undefined;
+    if (element?.style?.display) {
+        element.style.display = show ? 'block' : 'none';
+    }
 };

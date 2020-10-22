@@ -3,7 +3,7 @@ import { c } from 'ttag';
 import { noop } from 'proton-shared/lib/helpers/function';
 
 import { useHandler, useNotifications } from '../../hooks';
-import { SquireType, getSquireRef, setSquireRef, initSquire } from './squireConfig';
+import { SquireType, getSquireRef, setSquireRef, initSquire, toggleEllipsisButton } from './squireConfig';
 import { pasteFileHandler } from './squireActions';
 import { SquireEditorMetadata } from './interface';
 import { LinkButton } from '../button';
@@ -17,6 +17,7 @@ interface Props {
     onFocus: () => void;
     onInput: (value: string) => void;
     onAddImages: (files: File[]) => void;
+    showEllipseButton: boolean;
     onEllipseClick: () => void;
 }
 
@@ -27,7 +28,17 @@ interface Props {
  * Uncontrolled components is prefered in this case
  */
 const SquireIframe = (
-    { placeholder, metadata, onReady, onFocus, onInput, onAddImages, onEllipseClick, ...rest }: Props,
+    {
+        placeholder,
+        metadata,
+        onReady,
+        onFocus,
+        onInput,
+        onAddImages,
+        showEllipseButton,
+        onEllipseClick,
+        ...rest
+    }: Props,
     ref: Ref<SquireType>
 ) => {
     const { createNotification } = useNotifications();
@@ -84,6 +95,12 @@ const SquireIframe = (
             void init(iframeDoc);
         }
     }, [iframeReady]);
+
+    useEffect(() => {
+        if (squireReady) {
+            toggleEllipsisButton(iframeRef.current?.contentWindow?.document as Document, showEllipseButton);
+        }
+    }, [squireReady, showEllipseButton]);
 
     const handleFocus = useHandler(() => {
         onFocus();
