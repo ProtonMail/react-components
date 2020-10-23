@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { checkCookie, setCookie, SetCookieArguments } from 'proton-shared/lib/helpers/cookies';
+import { useState, useCallback } from 'react';
+import { getCookie, setCookie, SetCookieArguments } from 'proton-shared/lib/helpers/cookies';
 import { getSecondLevelDomain } from 'proton-shared/lib/helpers/url';
-
-const COOKIE_VALUE = '1';
 
 interface Props extends Omit<SetCookieArguments, 'cookieValue'> {
     cookieValue?: string;
@@ -11,26 +9,37 @@ interface Props extends Omit<SetCookieArguments, 'cookieValue'> {
 // By default a cookie state is available on all subdomains
 const useCookieState = ({
     cookieName,
-    cookieValue = COOKIE_VALUE,
     expirationDate,
     path = '/',
     cookieDomain = `.${getSecondLevelDomain()}`,
-}: Props): [boolean, React.Dispatch<React.SetStateAction<boolean>>] => {
-    const [value, setValue] = useState(() => !!checkCookie(cookieName, cookieValue));
+}: Props): [string | undefined, (value: string | undefined) => void] => {
+    const [value, setValue] = useState(() => getCookie(cookieName));
 
-    useEffect(() => {
-        if (value) {
+    const setCookieValue = useCallback(
+        (value: string | undefined) => {
+            if (!value) {
+                setCookie({
+                    cookieName,
+                    cookieValue: '',
+                    expirationDate: new Date(0).toUTCString(),
+                    path,
+                    cookieDomain,
+                });
+                return;
+            }
             setCookie({
                 cookieName,
-                cookieValue,
+                cookieValue: value,
                 expirationDate,
                 path,
                 cookieDomain,
             });
-        }
-    }, [value]);
+            setValue(value);
+        },
+        [setValue]
+    );
 
-    return [value, setValue];
+    return [value, setCookieValue];
 };
 
 export default useCookieState;

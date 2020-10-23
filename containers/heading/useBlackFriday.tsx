@@ -74,8 +74,13 @@ const useBlackFriday = () => {
     }, [isBlackFridayPeriod, isFree]);
 
     useEffect(() => {
-        if (plans.length && isBlackFridayPeriod && isEligible && (!blackFridayModalState || openBlackFridayModal)) {
-            setBlackFridayModalState(true);
+        if (
+            plans.length &&
+            isBlackFridayPeriod &&
+            isEligible &&
+            (blackFridayModalState !== '1' || openBlackFridayModal)
+        ) {
+            setBlackFridayModalState('1');
             if (APP_NAME === APPS.PROTONVPN_SETTINGS) {
                 createModal(<VPNBlackFridayModal plans={plans} subscription={subscription} onSelect={onSelect} />);
             } else {
@@ -85,8 +90,8 @@ const useBlackFriday = () => {
     }, [isBlackFridayPeriod, isEligible, plans]);
 
     useEffect(() => {
-        if (plans.length && isProductPayerPeriod && isProductPayer(subscription) && !productPayerModalState) {
-            setProductPayerModalState(true);
+        if (plans.length && isProductPayerPeriod && isProductPayer(subscription) && productPayerModalState !== '1') {
+            setProductPayerModalState('1');
             if (APP_NAME === APPS.PROTONVPN_SETTINGS) {
                 createModal(<VPNBlackFridayModal plans={plans} subscription={subscription} onSelect={onSelect} />);
             } else {
