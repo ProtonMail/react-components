@@ -17,16 +17,7 @@ const useCookieState = ({
 
     const setCookieValue = useCallback(
         (value: string | undefined) => {
-            if (!value) {
-                setCookie({
-                    cookieName,
-                    cookieValue: '',
-                    expirationDate: new Date(0).toUTCString(),
-                    path,
-                    cookieDomain,
-                });
-                return;
-            }
+            setValue(value);
             setCookie({
                 cookieName,
                 cookieValue: value,
@@ -34,7 +25,6 @@ const useCookieState = ({
                 path,
                 cookieDomain,
             });
-            setValue(value);
         },
         [setValue]
     );
