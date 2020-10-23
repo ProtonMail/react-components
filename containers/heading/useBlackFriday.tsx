@@ -45,8 +45,8 @@ const useBlackFriday = () => {
     const isBlackFridayPeriod = useBlackFridayPeriod();
     const isProductPayerPeriod = useProductPayerPeriod();
 
-    const [blackFridayModalState, setBlackFridayModalState] = useState<string | undefined>();
-    const [productPayerModalState, setProductPayerModalState] = useState<string | undefined>();
+    const [blackFridayModalState, setBlackFridayModalState] = useState<string | undefined>(undefined);
+    const [productPayerModalState, setProductPayerModalState] = useState<string | undefined>(undefined);
 
     const keys = useRef<{ blackFridayStateKey?: string; productPayerStateKey?: string }>({});
 
@@ -60,8 +60,8 @@ const useBlackFriday = () => {
             keys.current.blackFridayStateKey = newBlackFridayStateKey.slice(0, 8);
             keys.current.productPayerStateKey = newProductPayerStateKey.slice(0, 8);
 
-            setBlackFridayModalState(getCookie(keys.current.blackFridayStateKey));
-            setProductPayerModalState(getCookie(keys.current.productPayerStateKey));
+            setBlackFridayModalState(getCookie(keys.current.blackFridayStateKey) || '');
+            setProductPayerModalState(getCookie(keys.current.productPayerStateKey) || '');
         };
         run();
     }, []);
