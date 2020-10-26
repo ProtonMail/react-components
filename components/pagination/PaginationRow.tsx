@@ -31,7 +31,7 @@ const PaginationRow = ({
     step = 1,
     className,
 }: Props) => {
-    const pages = range(page - step, page + step).filter((pageNumber) => pageNumber > 0 && pageNumber <= total);
+    const pages = range(page - step, page + step + 1).filter((pageNumber) => pageNumber > 0 && pageNumber <= total);
     const goToPageTitle = (page: number) => c('Action').t`Go to page ${page}`;
     const disablePrevious = page === 1;
     const disableNext = page === total;
