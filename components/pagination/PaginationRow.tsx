@@ -52,7 +52,7 @@ const PaginationRow = ({
                 onClick={() => onPrevious()}
                 title={c('Action').t`Go to previous page`}
             >
-                <Icon name="caret rotateZ-270" />
+                <Icon name="caret" className="rotateZ-90" />
                 <span className="sr-only">{c('Action').t`Go to previous page`}</span>
             </ButtonGroup>
             {pages.map((pageNumber) => {
@@ -77,7 +77,7 @@ const PaginationRow = ({
                 onClick={() => onNext()}
                 title={c('Action').t`Go to next page`}
             >
-                <Icon name="caret rotateZ-90" />
+                <Icon name="caret" className="rotateZ-270" />
                 <span className="sr-only">{c('Action').t`Go to next page`}</span>
             </ButtonGroup>
             <ButtonGroup
@@ -86,7 +86,7 @@ const PaginationRow = ({
                 onClick={() => onEnd()}
                 title={c('Action').t`Go to last page`}
             >
-                <Icon name="caret-double-left mirror" />
+                <Icon name="caret-double-left" className="mirror" />
                 <span className="sr-only">{c('Action').t`Go to last page`}</span>
             </ButtonGroup>
         </Group>
