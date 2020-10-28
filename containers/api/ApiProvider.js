@@ -16,6 +16,7 @@ import { getApiError, getApiErrorMessage } from 'proton-shared/lib/api/helpers/a
 import { getClientID } from 'proton-shared/lib/apps/helper';
 
 import ApiContext from './apiContext';
+import ApiStatusContext from './apiStatusContext';
 import { useModals, useNotifications } from '../../hooks';
 import UnlockModal from '../login/UnlockModal';
 import DelinquentModal from './DelinquentModal';
@@ -31,21 +32,19 @@ const getSilenced = ({ silence } = {}, code) => {
     return !!silence;
 };
 
+const defaultApiStatus = {
+    offline: false,
+    invalidVersion: false
+}
+
 /** @type any */
 const ApiProvider = ({ config, onLogout, children, UID }) => {
-    const { createNotification, hideNotification } = useNotifications();
+    const { createNotification } = useNotifications();
     const { createModal } = useModals();
+    const [apiStatus, setApiStatus] = useState(defaultApiStatus);
     const apiRef = useRef();
     const offlineRef = useRef();
     const appVersionBad = useRef();
-
-    const hideOfflineNotification = () => {
-        if (!offlineRef.current) {
-            return;
-        }
-        hideNotification(offlineRef.current.id);
-        offlineRef.current = undefined;
-    };
 
     if (!apiRef.current) {
         const handleError = (e) => {
@@ -59,13 +58,9 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
             if (e.name === 'CancelUnlock' || e.name === 'AbortError') {
                 throw e;
             }
-
-            // If the client knows it's offline and it's another offline error, just ignore it
-            if (offlineRef.current && e.name === 'OfflineError') {
+            if (e.name === 'OfflineError') {
+                setApiStatus((x) => ({ ...x, offline: true }));
                 throw e;
-            }
-            if (offlineRef.current && e.name !== 'OfflineError') {
-                hideOfflineNotification();
             }
 
             if (code === API_CUSTOM_ERROR_CODES.APP_VERSION_BAD) {
@@ -185,7 +180,13 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
         };
     }
 
-    return <ApiContext.Provider value={apiRef.current}>{children}</ApiContext.Provider>;
+    return (
+        <ApiContext.Provider value={apiRef.current}>
+            <ApiStatusContext.Provider value={}>
+                {children}
+            </ApiStatusContext.Provider>
+        </ApiContext.Provider>
+    );
 };
 
 ApiProvider.propTypes = {

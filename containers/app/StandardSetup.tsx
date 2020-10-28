@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useState } from "react";
 import { APPS, isSSOMode, isStandaloneMode, SSO_PATHS } from 'proton-shared/lib/constants';
 import { TtagLocaleMap } from 'proton-shared/lib/interfaces/Locale';
 import { Route, Switch } from 'react-router-dom';
@@ -24,6 +24,7 @@ interface Props {
 
 const StandardSetup = ({ locales, PrivateApp }: Props) => {
     const { APP_NAME } = useConfig();
+    const [isDone, setIsDone] = useState(false);
 
     const { UID, logout, login, getLocalID } = useAuthentication() as PublicAuthenticationStore &
         PrivateAuthenticationStore;
@@ -45,7 +46,10 @@ const StandardSetup = ({ locales, PrivateApp }: Props) => {
             return replaceUrl(getAppHref('/', APPS.PROTONACCOUNT));
         };
         const handleInactiveSession = (localID?: number) => {
-            return requestFork(APP_NAME, localID);
+            requestFork(APP_NAME, localID);
+            setTimeout(() => {
+                setIsDone(true);
+            })
         };
         return (
             <Switch>
@@ -65,6 +69,10 @@ const StandardSetup = ({ locales, PrivateApp }: Props) => {
 
     if (isStandaloneMode || document.location.pathname === '/') {
         return <StandalonePublicApp locales={locales} onLogin={async (data) => login(data)} />;
+    }
+
+    if (isDone) {
+        return "Done";
     }
 
     return <ReplaceToBase />;

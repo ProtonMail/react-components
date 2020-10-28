@@ -26,6 +26,7 @@ interface Props {
 
 const SSOForkProducer = ({ onActiveSessions, onInvalidFork }: Props) => {
     const [error, setError] = useState<Error | undefined>();
+    const [done, setDone] = useState(false);
     const normalApi = useApi();
     const silentApi = <T,>(config: any) => normalApi<T>({ ...config, silence: true });
     const { createNotification } = useNotifications();
@@ -50,6 +51,7 @@ const SSOForkProducer = ({ onActiveSessions, onInvalidFork }: Props) => {
                         state,
                         app,
                     });
+                    setDone(true);
                     return;
                 }
 
@@ -72,6 +74,7 @@ const SSOForkProducer = ({ onActiveSessions, onInvalidFork }: Props) => {
                     state,
                     app,
                 });
+                setDone(true);
             } catch (e) {
                 if (e instanceof InvalidPersistentSessionError || getIs401Error(e)) {
                     const activeSessionsResult = await getActiveSessions(silentApi);
