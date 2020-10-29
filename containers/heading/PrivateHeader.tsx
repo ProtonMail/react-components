@@ -14,7 +14,7 @@ import SupportDropdown from './SupportDropdown';
 import UpgradeButton from './UpgradeButton';
 import UpgradeVPNButton from './UpgradeVPNButton';
 import BlackFridayButton from './BlackFridayButton';
-import useBlackFriday from './useBlackFriday';
+// import useBlackFriday from './useBlackFriday';
 
 interface Props extends HeaderProps {
     logo?: React.ReactNode;
@@ -46,7 +46,7 @@ const PrivateHeader = ({
     const [plans = []] = usePlans();
     const [subscription] = useSubscription();
     const { APP_NAME } = useConfig();
-    const showBlackFridayButton = useBlackFriday();
+    const showBlackFridayButton = false; // useBlackFriday()
     usePaidCookie();
 
     if (backUrl) {
