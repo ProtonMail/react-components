@@ -10,11 +10,10 @@ import {
     ProduceForkParameters,
 } from 'proton-shared/lib/authentication/sessionForking';
 import { InvalidPersistentSessionError } from 'proton-shared/lib/authentication/error';
-import { getApiErrorMessage, getIs401Error } from 'proton-shared/lib/api/helpers/apiErrorHelper';
-import { traceError } from 'proton-shared/lib/helpers/sentry';
+import { getIs401Error } from 'proton-shared/lib/api/helpers/apiErrorHelper';
 import { FORK_TYPE } from 'proton-shared/lib/authentication/ForkInterface';
 
-import { useApi, useNotifications } from '../../hooks';
+import { useApi, useErrorHandler } from '../../hooks';
 import LoaderPage from './LoaderPage';
 import ModalsChildren from '../modals/Children';
 import StandardLoadError from './StandardLoadError';
@@ -26,10 +25,9 @@ interface Props {
 
 const SSOForkProducer = ({ onActiveSessions, onInvalidFork }: Props) => {
     const [error, setError] = useState<Error | undefined>();
-    const [done, setDone] = useState(false);
     const normalApi = useApi();
     const silentApi = <T,>(config: any) => normalApi<T>({ ...config, silence: true });
-    const { createNotification } = useNotifications();
+    const errorHandler = useErrorHandler();
 
     useEffect(() => {
         const run = async () => {
@@ -51,7 +49,6 @@ const SSOForkProducer = ({ onActiveSessions, onInvalidFork }: Props) => {
                         state,
                         app,
                     });
-                    setDone(true);
                     return;
                 }
 
@@ -74,7 +71,6 @@ const SSOForkProducer = ({ onActiveSessions, onInvalidFork }: Props) => {
                     state,
                     app,
                 });
-                setDone(true);
             } catch (e) {
                 if (e instanceof InvalidPersistentSessionError || getIs401Error(e)) {
                     const activeSessionsResult = await getActiveSessions(silentApi);
@@ -85,10 +81,7 @@ const SSOForkProducer = ({ onActiveSessions, onInvalidFork }: Props) => {
             }
         };
         run().catch((e) => {
-            const errorMessage = getApiErrorMessage(e) || 'Unknown error';
-            createNotification({ type: 'error', text: errorMessage });
-            traceError(e);
-            console.error(e);
+            errorHandler(e);
             setError(e);
         });
     }, []);
