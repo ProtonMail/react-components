@@ -52,6 +52,7 @@ export { useUserScopes } from './useUserScopes';
 export { useHandler, useEventListener, useSubscribeEventManager, useInterval } from './useHandler';
 export { default as useKeyPress } from './useKeyPress';
 export { default as usePreventLeave, PreventLeaveProvider } from './usePreventLeave';
+export { default as useFocusArea, FocusAreaProvider } from './useFocusArea';
 
 export { default as useDragMove } from './useDragMove';
 export { default as useStep } from './useStep';

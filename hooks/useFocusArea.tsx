@@ -1,25 +1,18 @@
-import React, { createContext, useState, ReactNode, useContext, useMemo } from 'react';
+import React, { createContext, useState, useContext } from 'react';
+import { noop } from 'proton-shared/lib/helpers/function';
 
-const FocusAreaContext = createContext<{
-    focusArea: string;
-    changeFocusArea: (value: string) => void;
-} | null>(null);
+const FocusAreaContext = createContext<[string, Function]>(['', noop]);
 
 const useFocusArea = () => useContext(FocusAreaContext);
 
-export const FocusAreaProvider = ({ children }: { children: ReactNode }) => {
+interface Props {
+    children?: React.ReactNode;
+}
+
+export const FocusAreaProvider = ({ children }: Props) => {
     const [focusArea, setFocusArea] = useState('');
 
-    const changeFocusArea = (value: string) => setFocusArea(value);
-
-    const value = useMemo(
-        () => ({
-            focusArea,
-            changeFocusArea,
-        }),
-        [focusArea, changeFocusArea]
-    );
-    return <FocusAreaContext.Provider value={value}>{children}</FocusAreaContext.Provider>;
+    return <FocusAreaContext.Provider value={[focusArea, setFocusArea]}>{children}</FocusAreaContext.Provider>;
 };
 
 export default useFocusArea;
