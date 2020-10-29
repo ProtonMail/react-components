@@ -61,6 +61,7 @@ interface Props {
     onLogin: OnLoginCallback;
     Layout: FunctionComponent<AccountPublicLayoutProps>;
     toApp?: APP_NAMES;
+    onBack?: () => void;
 }
 
 const {
@@ -89,7 +90,7 @@ const getSearchParams = (search: History.Search) => {
     return { currency, cycle, preSelectedPlan, service: service ? SERVICES[service] : undefined };
 };
 
-const AccountSignupContainer = ({ toApp, onLogin, Layout }: Props) => {
+const AccountSignupContainer = ({ toApp, onLogin, onBack, Layout }: Props) => {
     const history = useHistory();
     const { currency, cycle, preSelectedPlan, service } = useMemo(() => {
         return getSearchParams(history.location.search);
@@ -380,6 +381,7 @@ const AccountSignupContainer = ({ toApp, onLogin, Layout }: Props) => {
                 title={c('Title').t`Create your Proton Account`}
                 subtitle={toAppName ? c('Info').t`to continue to ${toAppName}` : undefined}
                 aside={<OneAccountIllustration />}
+                left={onBack && <BackButton onClick={onBack} />}
             >
                 <SignupAccountForm
                     model={model}
