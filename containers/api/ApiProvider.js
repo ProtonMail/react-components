@@ -10,6 +10,8 @@ import { getDateHeader } from 'proton-shared/lib/fetch/helpers';
 import { updateServerTime } from 'pmcrypto';
 import { getApiError, getApiErrorMessage } from 'proton-shared/lib/api/helpers/apiErrorHelper';
 import { getClientID } from 'proton-shared/lib/apps/helper';
+import { localeCode } from 'proton-shared/lib/i18n';
+import { withLocaleHeaders } from 'proton-shared/lib/fetch/headers';
 
 import ApiContext from './apiContext';
 import ApiStatusContext, { defaultApiStatus } from './apiStatusContext';
@@ -134,14 +136,23 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
         });
 
         apiRef.current = ({ output = 'json', ...rest }) => {
-            return callWithApiHandlers(rest).then((response) => {
-                const serverTime = getDateHeader(response.headers);
-                if (serverTime) {
-                    updateServerTime(serverTime);
-                }
-                setApiStatus({ apiUnreachable: false });
-                return output === 'stream' ? response.body : response[output]();
-            });
+            // Only need to send locale headers in public app
+            const config = UID ? rest : withLocaleHeaders(localeCode, rest);
+            return callWithApiHandlers(config)
+                .then((response) => {
+                    const serverTime = getDateHeader(response.headers);
+                    if (serverTime) {
+                        updateServerTime(serverTime);
+                    }
+                    return output === 'stream' ? response.body : response[output]();
+                })
+                .catch((e) => {
+                    const serverTime = e.response?.headers ? getDateHeader(e.response.headers) : undefined;
+                    if (serverTime) {
+                        updateServerTime(serverTime);
+                    }
+                    throw e;
+                });
         };
     }
 
