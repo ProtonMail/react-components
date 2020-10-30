@@ -21,7 +21,7 @@ const CheckoutRow = ({ title, amount = 0, currency, className = '' }) => {
         return (
             <div className={classnames(['flex flex-nowrap flex-spacebetween mb0-5', className])}>
                 <div className="pr0-5">{title}</div>
-                <span className="color-global-success">{c('Price').t`FREE`}</span>
+                <span className="color-global-success uppercase">{c('Price').t`Free`}</span>
             </div>
         );
     }
