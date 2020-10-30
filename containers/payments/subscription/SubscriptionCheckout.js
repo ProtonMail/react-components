@@ -6,7 +6,7 @@ import { orderBy } from 'proton-shared/lib/helpers/array';
 import { hasBit } from 'proton-shared/lib/helpers/bitset';
 import { PLAN_SERVICES, PLAN_TYPES, CYCLE, PLANS, ADDON_NAMES, APPS } from 'proton-shared/lib/constants';
 import humanSize from 'proton-shared/lib/helpers/humanSize';
-import { Price, Info } from '../../../components';
+import { Price, Info, Badge } from '../../../components';
 import { useConfig } from '../../../hooks';
 import { classnames } from '../../../helpers';
 import CycleSelector from '../CycleSelector';
@@ -64,6 +64,11 @@ const SubscriptionCheckout = ({ submit = c('Action').t`Pay`, plans = [], model, 
             }, {}),
         }) / model.cycle;
     const total = checkResult.Amount + checkResult.CouponDiscount;
+    const totalWithoutDiscount =
+        Object.entries(model.planIDs).reduce((acc, [planID, quantity]) => {
+            return acc + plansMap[planID].Pricing[CYCLE.MONTHLY] * quantity;
+        }, 0) * model.cycle;
+    const totalDiscount = 100 - Math.round((total * 100) / totalWithoutDiscount);
     const monthlyTotal = total / model.cycle;
     const discount = monthlyTotal - subTotal;
     const collection = orderBy(
@@ -215,7 +220,14 @@ const SubscriptionCheckout = ({ submit = c('Action').t`Pay`, plans = [], model, 
                         ) : null}
                         <CheckoutRow
                             className="bigger m0"
-                            title={c('Title').t`Total`}
+                            title={
+                                <>
+                                    <span className="mr0-5 pr0-5">{c('Title').t`Total`}</span>
+                                    {[CYCLE.YEARLY, CYCLE.TWO_YEARS].includes(model.cycle) ? (
+                                        <Badge>{`${totalDiscount}%`}</Badge>
+                                    ) : null}
+                                </>
+                            }
                             amount={total}
                             currency={model.currency}
                         />
