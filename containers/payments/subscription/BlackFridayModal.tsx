@@ -288,7 +288,7 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
                                         </div>
                                         <Button
                                             className={classnames([
-                                                'mb1 uppercase increase-surface-click',
+                                                'mb1 uppercase',
                                                 popular || productPayer
                                                     ? 'pm-button--primary'
                                                     : 'pm-button--primaryborderEvenInDarkMode',
