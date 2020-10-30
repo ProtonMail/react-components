@@ -176,7 +176,7 @@ const SubscriptionCheckout = ({ submit = c('Action').t`Pay`, plans = [], model, 
                     {hasVisionary ||
                     (hasMailPlus && hasVpnPlus && [CYCLE.YEARLY, CYCLE.TWO_YEARS].includes(model.cycle)) ? (
                         <div className="border-top border-top--dashed pt0-5">
-                            <CheckoutRow className="bold" title={c('Info').t`ProtonDrive early access`} amount={0} />
+                            <CheckoutRow className="bold" title={c('Info').t`ProtonDrive`} amount={0} />
                         </div>
                     ) : null}
                 </div>
