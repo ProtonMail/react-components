@@ -1,9 +1,13 @@
+import { APPS } from 'proton-shared/lib/constants';
 import React from 'react';
 import { c } from 'ttag';
 
-import { Alert, Href, Icon, Table, TableBody, TableHeader, TableRow } from '../../components';
+import { Alert, AppLink, Href, Icon, Table, TableBody, TableHeader, TableRow } from '../../components';
+import { useUser } from '../../hooks';
 
 const ImportExportSection = () => {
+    const [{ hasPaidMail }] = useUser();
+
     const clients = [
         {
             icon: 'apple',
@@ -36,6 +40,20 @@ const ImportExportSection = () => {
             link: 'https://protonmail.com/import-export',
         },
     ];
+
+    if (!hasPaidMail) {
+        const upgradeLink = (
+            <AppLink to="/subscription" toApp={APPS.PROTONACCOUNT}>
+                {c('Action').t`upgrade`}
+            </AppLink>
+        );
+        return (
+            <Alert>
+                {c('Info')
+                    .jt`Import and export your messages for local backups with Proton's dedicated desktop app. To use Import-Export, ${upgradeLink} to a paid account.`}
+            </Alert>
+        );
+    }
 
     return (
         <>
