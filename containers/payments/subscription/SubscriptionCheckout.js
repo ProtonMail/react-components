@@ -118,7 +118,9 @@ const SubscriptionCheckout = ({ submit = c('Action').t`Pay`, plans = [], model, 
                                     {Type === PLAN_TYPES.PLAN ? Title : getTitle(Name, quantity)}
                                 </span>
                                 {[CYCLE.YEARLY, CYCLE.TWO_YEARS].includes(model.cycle) && (
-                                    <CycleDiscountBadge cycle={model.cycle} />
+                                    <span className="nobold">
+                                        <CycleDiscountBadge cycle={model.cycle} />
+                                    </span>
                                 )}
                             </>
                         }
@@ -224,7 +226,9 @@ const SubscriptionCheckout = ({ submit = c('Action').t`Pay`, plans = [], model, 
                                 <>
                                     <span className="mr0-5 pr0-5">{c('Title').t`Total`}</span>
                                     {[CYCLE.YEARLY, CYCLE.TWO_YEARS].includes(model.cycle) ? (
-                                        <Badge type="success">{`${totalDiscount}%`}</Badge>
+                                        <span className="bold">
+                                            <Badge type="success">{`${totalDiscount}%`}</Badge>
+                                        </span>
                                     ) : null}
                                 </>
                             }
