@@ -5,7 +5,7 @@ import { c } from 'ttag';
 import { Currency, Cycle, PlanIDs } from 'proton-shared/lib/interfaces';
 import { isProductPayer } from 'proton-shared/lib/helpers/blackfriday';
 
-import { FormModal, FullLoader, Button, Price } from '../../../components';
+import { FormModal, FullLoader, Button, Price, Info } from '../../../components';
 import { useLoading, useApi, useSubscription } from '../../../hooks';
 import { classnames } from '../../../helpers';
 import CurrencySelector from '../CurrencySelector';
@@ -276,6 +276,7 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
                                                         <strong className="blackfriday-protonDrive-productName ml0-25">
                                                             {c('blackfriday Info').t`ProtonDrive`}
                                                         </strong>
+                                                        <Info url="https://protonmail.com/support/knowledge-base/protondrive-early-access/" />
                                                         <span className="bl">
                                                             <span className="blackfriday-protonDrive-free bg-global-success uppercase color-white bold pl0-5 pr0-5">
                                                                 {c('blackfriday Info').t`Free`}
