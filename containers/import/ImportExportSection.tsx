@@ -58,8 +58,7 @@ const ImportExportSection = () => {
     return (
         <>
             <Alert>
-                {c('Info')
-                    .t`Download the Import-Export app to securely import messages from a different email provider or to back up ProtonMail messages on your device.`}
+                {c('Info').t`Import and export your messages for local backups with Proton's dedicated desktop app.`}
             </Alert>
 
             <Table className="pm-simple-table--has-actions">
