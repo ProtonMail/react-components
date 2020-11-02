@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
+import { getAccountSettingsApp } from 'proton-shared/lib/apps/helper';
 
-import { Row, Field, Label, Info } from '../../components';
-import { useMailSettings } from '../../hooks';
+import { Row, Field, Label, Info, AppLink } from '../../components';
+import { useMailSettings, useUser } from '../../hooks';
 
 import RemoteToggle from './RemoteToggle';
 import EmbeddedToggle from './EmbeddedToggle';
@@ -11,6 +12,7 @@ import RequestLinkConfirmationToggle from './RequestLinkConfirmationToggle';
 import DelaySendSecondsToggle from './DelaySendSecondsToggle';
 
 const MessagesSection = () => {
+    const [user] = useUser();
     const [{ ShowImages, ConfirmLink, DelaySendSeconds } = {}] = useMailSettings();
     const [showImages, setShowImages] = useState(ShowImages);
     const handleChange = (newValue) => setShowImages(newValue);
@@ -63,7 +65,11 @@ const MessagesSection = () => {
                     />
                 </Label>
                 <Field>
-                    <DelaySendSecondsToggle id="delaySendSecondsToggle" delaySendSeconds={DelaySendSeconds} />
+                    {user.isPaid ? (
+                        <DelaySendSecondsToggle id="delaySendSecondsToggle" delaySendSeconds={DelaySendSeconds} />
+                    ) : (
+                        <AppLink to="/subscription" toApp={getAccountSettingsApp()}>{c('Action').t`Upgrade`}</AppLink>
+                    )}
                 </Field>
             </Row>
         </>
