@@ -8,9 +8,10 @@ import RemoteToggle from './RemoteToggle';
 import EmbeddedToggle from './EmbeddedToggle';
 import ShowMovedToggle from './ShowMovedToggle';
 import RequestLinkConfirmationToggle from './RequestLinkConfirmationToggle';
+import DelaySendSecondsToggle from './DelaySendSecondsToggle';
 
 const MessagesSection = () => {
-    const [{ ShowImages, ConfirmLink } = {}] = useMailSettings();
+    const [{ ShowImages, ConfirmLink, DelaySendSeconds } = {}] = useMailSettings();
     const [showImages, setShowImages] = useState(ShowImages);
     const handleChange = (newValue) => setShowImages(newValue);
 
@@ -51,6 +52,18 @@ const MessagesSection = () => {
                 <Label htmlFor="requestLinkConfirmationToggle">{c('Label').t`Request link confirmation`}</Label>
                 <Field>
                     <RequestLinkConfirmationToggle confirmLink={ConfirmLink} id="requestLinkConfirmationToggle" />
+                </Field>
+            </Row>
+            <Row>
+                <Label htmlFor="delaySendSecondsToggle">
+                    <span className="mr0-5">{c('Label').t`Delay message sending`}</span>
+                    <Info
+                        title={c('Tooltip')
+                            .t`You can delay your message sending by 5 seconds, which gives you the possibility to cancel and go back to editing your draft.`}
+                    />
+                </Label>
+                <Field>
+                    <DelaySendSecondsToggle id="delaySendSecondsToggle" delaySendSeconds={DelaySendSeconds} />
                 </Field>
             </Row>
         </>
