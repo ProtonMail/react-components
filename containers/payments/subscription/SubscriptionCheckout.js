@@ -68,7 +68,7 @@ const SubscriptionCheckout = ({ submit = c('Action').t`Pay`, plans = [], model, 
         Object.entries(model.planIDs).reduce((acc, [planID, quantity]) => {
             return acc + plansMap[planID].Pricing[CYCLE.MONTHLY] * quantity;
         }, 0) * model.cycle;
-    const totalDiscount = 100 - Math.round((total * 100) / totalWithoutDiscount);
+    const totalDiscount = Math.round((total * 100) / totalWithoutDiscount) - 100;
     const monthlyTotal = total / model.cycle;
     const discount = monthlyTotal - subTotal;
     const collection = orderBy(
