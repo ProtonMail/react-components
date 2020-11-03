@@ -1,5 +1,29 @@
-include:
-  - project: 'deploy-app/fe-scripts'
-    ref: master
-    file: '/jobs/lib/libs.gitlab-ci.yaml'
+stages:
+     - deploybis
 
+
+
+run-app-pipeline:
+  allow_failure: true
+  image: $CI_REGISTRY/infra/kubernetes/images/docker:stable
+  stage: deploybis
+  script:
+    - |
+      apk update && apk add curl jq;
+      # 567: proton-contacts
+      # 566: proton-mail-settings
+      # 565: proton-mail
+      # 565: proton-vpn-settings
+      # 484: proton-drive
+      # 481: proton-calendar
+      # 667: proton-account
+
+      for id in 567 566 565 331 484 481 667; do
+        echo "[trigger pipeline]: project $id";
+        curl \
+          -X POST \
+          --silent \
+          --header "PRIVATE-TOKEN: ${PRIVATE_TOKEN_GITLAB_API}" \
+          "https://gitlab.protontech.ch/api/v4/projects/${id}/pipeline?ref=${CI_COMMIT_BRANCH}" \
+        | jq .
+      done;
