@@ -144,6 +144,7 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
                     if (serverTime) {
                         updateServerTime(serverTime);
                     }
+                    setApiStatus({ apiUnreachable: false });
                     return output === 'stream' ? response.body : response[output]();
                 })
                 .catch((e) => {
