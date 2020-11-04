@@ -35,7 +35,7 @@ const Option = ({ type = 'button', value, selected, active, onChange, ...rest }:
                 type={type}
                 isSelected={selected}
                 onClick={handleClick}
-                className="ellipsis alignleft"
+                className="ellipsis alignleft no-outline"
                 {...rest}
             />
         </li>

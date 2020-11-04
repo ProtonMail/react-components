@@ -210,7 +210,7 @@ const Select = ({
         <>
             <DropdownButton
                 style={{ width: '100%', listStyleType: 'none' }}
-                className="alignleft ellipsis"
+                className="alignleft ellipsis no-outline"
                 isOpen={isOpen}
                 hasCaret
                 buttonRef={anchorRef}
