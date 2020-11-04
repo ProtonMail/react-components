@@ -8,7 +8,12 @@ import withApiHandlers, {
 } from 'proton-shared/lib/api/helpers/withApiHandlers';
 import { getDateHeader } from 'proton-shared/lib/fetch/helpers';
 import { updateServerTime } from 'pmcrypto';
-import { getApiError, getApiErrorMessage } from 'proton-shared/lib/api/helpers/apiErrorHelper';
+import {
+    getApiError,
+    getApiErrorMessage,
+    getIsTimeoutError,
+    getIsUnreachableError,
+} from 'proton-shared/lib/api/helpers/apiErrorHelper';
 import { getClientID } from 'proton-shared/lib/apps/helper';
 import { localeCode } from 'proton-shared/lib/i18n';
 import { withLocaleHeaders } from 'proton-shared/lib/fetch/headers';
@@ -55,10 +60,11 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
                 throw e;
             }
 
-            if (e.name === 'OfflineError') {
+            if (getIsUnreachableError(e)) {
                 setApiStatus({ apiUnreachable: true });
                 throw e;
             }
+
             setApiStatus({ apiUnreachable: false });
 
             if (e.name === 'AppVersionBadError') {
@@ -74,7 +80,7 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
                 throw e;
             }
 
-            if (e.name === 'TimeoutError') {
+            if (getIsTimeoutError(e)) {
                 const isSilenced = getSilenced(e.config, code);
                 if (!isSilenced) {
                     createNotification({ type: 'error', text: errorMessage });
