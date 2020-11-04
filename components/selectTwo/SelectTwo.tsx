@@ -124,7 +124,11 @@ const Select = ({
     }
 
     function handleAnchorClick() {
-        open();
+        if (isOpen) {
+            close();
+        } else {
+            open();
+        }
     }
 
     function handleAnchorKeydown(e: React.KeyboardEvent<HTMLButtonElement>) {
