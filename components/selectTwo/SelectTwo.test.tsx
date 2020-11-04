@@ -122,18 +122,16 @@ describe('SelectTwo component', () => {
     //     expect(getAnchor(output)).toHaveFocus();
     // });
 
-    ['ArrowDown', 'Tab'].forEach((key) => {
-        it(`should focus the next option on "${key}" keydown`, () => {
-            const output = renderBasicSelect();
+    it(`should focus the next option on "ArrowDown" keydown`, () => {
+        const output = renderBasicSelect();
 
-            openByClick(output);
+        openByClick(output);
 
-            fireEvent.keyDown(getList(output), { key });
+        fireEvent.keyDown(getList(output), { key: 'ArrowDown' });
 
-            const { getByText } = within(getList(output));
+        const { getByText } = within(getList(output));
 
-            expect(getByText('two')).toHaveFocus();
-        });
+        expect(getByText('two')).toHaveFocus();
     });
 
     it(`should focus the previous option on "ArrowUp" keydown`, () => {
@@ -142,18 +140,6 @@ describe('SelectTwo component', () => {
         openByClick(output);
 
         fireEvent.keyDown(getList(output), { key: 'ArrowUp' });
-
-        const { getByText } = within(getList(output));
-
-        expect(getByText('one')).toHaveFocus();
-    });
-
-    it(`should focus the previous option on "Tab" keydown while "Shift" is pressed`, () => {
-        const output = renderSelectWithSelectedOption();
-
-        openByClick(output);
-
-        fireEvent.keyDown(getList(output), { key: 'Tab', shiftKey: true });
 
         const { getByText } = within(getList(output));
 

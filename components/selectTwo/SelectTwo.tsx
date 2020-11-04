@@ -166,24 +166,6 @@ const Select = ({
                 break;
             }
 
-            case 'Tab': {
-                if (e.shiftKey) {
-                    if (focusedIndex === 0) {
-                        close();
-                        anchorRef.current?.focus();
-                    } else {
-                        goToPreviousItem();
-                    }
-                } else if (focusedIndex === children.length - 1) {
-                    close();
-                    anchorRef.current?.focus();
-                } else {
-                    goToNextItem();
-                }
-
-                break;
-            }
-
             default:
         }
 
