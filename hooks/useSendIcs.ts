@@ -1,3 +1,4 @@
+import { ICAL_METHOD } from 'proton-shared/lib/calendar/constants';
 import { concatArrays } from 'pmcrypto';
 import { MIME_TYPES } from 'proton-shared/lib/constants';
 import { uint8ArrayToBase64String } from 'proton-shared/lib/helpers/encoding';
@@ -18,6 +19,7 @@ import { useCallback } from 'react';
 import { useApi, useGetAddressKeys, useGetEncryptionPreferences, useGetMailSettings } from './index';
 
 interface Params {
+    method: ICAL_METHOD;
     ics: string;
     from: RequireSome<Recipient, 'Address' | 'Name'>;
     addressID: string;
@@ -33,7 +35,7 @@ export const useSendIcs = () => {
     const getEncryptionPreferences = useGetEncryptionPreferences();
 
     const send = useCallback(
-        async ({ ics, from, addressID, to, subject, plainTextBody = '' }: Params) => {
+        async ({ method, ics, from, addressID, to, subject, plainTextBody = '' }: Params) => {
             if (!addressID) {
                 throw new Error('Missing addressID');
             }
@@ -43,8 +45,10 @@ export const useSendIcs = () => {
             const [publicKeys, privateKeys] = [allPublicKeys.slice(0, 1), allPrivateKeys.slice(0, 1)];
             const { AutoSaveContacts, Sign } = await getMailSettings();
 
-            const replyAttachment = new File([new Blob([ics])], 'invite.ics', { type: 'text/calendar; method=REPLY' });
-            const packets = await encryptAttachment(ics, replyAttachment, false, publicKeys, privateKeys);
+            const inviteAttachment = new File([new Blob([ics])], 'invite.ics', {
+                type: `text/calendar; method=${method}`,
+            });
+            const packets = await encryptAttachment(ics, inviteAttachment, false, publicKeys, privateKeys);
             const concatenatedPackets = concatArrays([packets.data, packets.keys, packets.signature].filter(isTruthy));
             const emails = to.map(({ Address }) => Address);
             const attachment = {
