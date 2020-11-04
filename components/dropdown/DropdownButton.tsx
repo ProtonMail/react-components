@@ -18,7 +18,7 @@ export interface Props
 const DropdownButton = ({
     children,
     buttonRef,
-    className = 'pm-button',
+    className,
     hasCaret = false,
     isOpen = false,
     caretClassName = '',
@@ -30,10 +30,11 @@ const DropdownButton = ({
         <button
             ref={buttonRef}
             type="button"
-            className={classnames(['flex-item-noshrink', className])}
+            className={classnames(['flex-item-noshrink', 'pm-button', className])}
             aria-expanded={isOpen}
             aria-busy={loading}
             disabled={loading ? true : disabled}
+            data-testid="dropdown-button"
             {...rest}
         >
             <span className="mauto">
