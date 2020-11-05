@@ -183,6 +183,8 @@ const SubscriptionCheckout = ({ submit = c('Action').t`Pay`, plans = [], model, 
                     {hasVisionary ||
                     (hasMailPlus && hasVpnPlus && model.cycle === CYCLE.TWO_YEARS) ||
                     (model.coupon === BLACK_FRIDAY.COUPON_CODE &&
+                        hasMailPlus &&
+                        hasVpnPlus &&
                         [CYCLE.YEARLY, CYCLE.TWO_YEARS].includes(model.cycle)) ? (
                         <div className="border-top border-top--dashed pt0-5">
                             <CheckoutRow className="bold" title={c('Info').t`ProtonDrive`} amount={0} />
