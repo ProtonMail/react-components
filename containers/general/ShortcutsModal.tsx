@@ -2,12 +2,11 @@ import React from 'react';
 import { c } from 'ttag';
 import { APP_NAMES, APPS_CONFIGURATION } from 'proton-shared/lib/constants';
 import { noop } from 'proton-shared/lib/helpers/function';
+import { getShortcutsForApp } from 'proton-shared/lib/shortcuts/constants';
 
 import { classnames } from '../../helpers';
 import { FormModal } from '../../components';
 import { useActiveBreakpoint } from '../../hooks';
-
-import { getShortcutsForApp } from '../../components/shortcuts/constants';
 
 interface Shortcut {
     name: string;

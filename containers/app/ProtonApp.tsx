@@ -34,7 +34,7 @@ import RightToLeftProvider from '../rightToLeft/Provider';
 import { setTmpEventID } from './loadEventID';
 import clearKeyCache from './clearKeyCache';
 import { OnLoginCallbackArguments } from './interface';
-import { useInstance, PreventLeaveProvider, FocusAreaProvider } from '../../hooks';
+import { useInstance, PreventLeaveProvider } from '../../hooks';
 import { GlobalLoaderProvider, GlobalLoader } from '../../components/globalLoader';
 import { WELCOME_FLAG_KEY } from '../../hooks/useWelcomeFlags';
 
@@ -253,20 +253,18 @@ const ProtonApp = ({ config, children, hasInitialAuth }: Props) => {
                         <Router history={history}>
                             <PreventLeaveProvider>
                                 <NotificationsProvider>
-                                    <FocusAreaProvider>
-                                        <ModalsProvider>
-                                            <ApiProvider UID={UID} config={config} onLogout={handleLogout}>
-                                                <AuthenticationProvider store={authenticationValue}>
-                                                    <CacheProvider cache={cacheRef.current}>
-                                                        <GlobalLoaderProvider>
-                                                            <GlobalLoader />
-                                                            {render()}
-                                                        </GlobalLoaderProvider>
-                                                    </CacheProvider>
-                                                </AuthenticationProvider>
-                                            </ApiProvider>
-                                        </ModalsProvider>
-                                    </FocusAreaProvider>
+                                    <ModalsProvider>
+                                        <ApiProvider UID={UID} config={config} onLogout={handleLogout}>
+                                            <AuthenticationProvider store={authenticationValue}>
+                                                <CacheProvider cache={cacheRef.current}>
+                                                    <GlobalLoaderProvider>
+                                                        <GlobalLoader />
+                                                        {render()}
+                                                    </GlobalLoaderProvider>
+                                                </CacheProvider>
+                                            </AuthenticationProvider>
+                                        </ApiProvider>
+                                    </ModalsProvider>
                                 </NotificationsProvider>
                             </PreventLeaveProvider>
                         </Router>
