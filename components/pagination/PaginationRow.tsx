@@ -34,24 +34,14 @@ const PaginationRow = ({
 }: Props) => {
     const pages = range(page - step, page + step + 1).filter((pageNumber) => pageNumber > 0 && pageNumber <= total);
     const goToPageTitle = (page: number) => c('Action').t`Go to page ${page}`;
-    const disablePrevious = page === 1;
-    const disableNext = page === total;
     return (
         <Group className={className}>
-            <ButtonGroup
-                className="pm-button--for-icon relative"
-                disabled={disabled || disablePrevious}
-                onClick={() => onStart()}
-            >
+            <ButtonGroup className="pm-button--for-icon relative" disabled={disabled} onClick={onStart}>
                 <Tooltip title={c('Action').t`Go to first page`} className="flex increase-surface-click">
                     <Icon name="caret-double-left" />
                 </Tooltip>
             </ButtonGroup>
-            <ButtonGroup
-                className="pm-button--for-icon relative"
-                disabled={disabled || disablePrevious}
-                onClick={() => onPrevious()}
-            >
+            <ButtonGroup className="pm-button--for-icon relative" disabled={disabled} onClick={onPrevious}>
                 <Tooltip title={c('Action').t`Go to previous page`} className="flex increase-surface-click">
                     <Icon name="caret" className="rotateZ-90" />
                 </Tooltip>
@@ -72,20 +62,12 @@ const PaginationRow = ({
                     </ButtonGroup>
                 );
             })}
-            <ButtonGroup
-                className="pm-button--for-icon relative"
-                disabled={disabled || disableNext}
-                onClick={() => onNext()}
-            >
+            <ButtonGroup className="pm-button--for-icon relative" disabled={disabled} onClick={onNext}>
                 <Tooltip title={c('Action').t`Go to next page`} className="flex increase-surface-click">
                     <Icon name="caret" className="rotateZ-270" />
                 </Tooltip>
             </ButtonGroup>
-            <ButtonGroup
-                className="pm-button--for-icon relative"
-                disabled={disabled || disableNext}
-                onClick={() => onEnd()}
-            >
+            <ButtonGroup className="pm-button--for-icon relative" disabled={disabled} onClick={onEnd}>
                 <Tooltip title={c('Action').t`Go to last page`} className="flex increase-surface-click">
                     <Icon name="caret-double-left" className="mirror" />
                 </Tooltip>
