@@ -158,7 +158,6 @@ const Dropdown = ({
             : {};
 
     const handleAnimationEnd = ({ animationName }: React.AnimationEvent) => {
-        console.log('hello');
         if (animationName.includes('dropdownOut') && isClosing) {
             setIsClosed();
             setContentRect(undefined);
