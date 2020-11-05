@@ -5,32 +5,34 @@ import { Dropdown, DropdownButton } from '../dropdown';
 import { Props as DropdownButtonProps } from '../dropdown/DropdownButton';
 import { Props as OptionProps } from '../option/Option';
 
-export type FakeSelectChangeEvent = {
-    value: unknown;
+export type FakeSelectChangeEvent<V> = {
+    value: V;
     selectedIndex: number;
 };
 
-export interface Props extends Omit<DropdownButtonProps, 'value' | 'onClick' | 'onChange' | 'onKeyDown'> {
-    value?: unknown;
+export interface Props<V> extends Omit<DropdownButtonProps, 'value' | 'onClick' | 'onChange' | 'onKeyDown'> {
+    value?: V;
     isOpen?: boolean;
-    children: React.ReactElement<OptionProps>[];
+    children: React.ReactElement<OptionProps<V>>[];
     clearSearchAfter?: number;
-    getSearchableValue?: (value: unknown) => string;
-    onChange?: (e: FakeSelectChangeEvent) => void;
+    getSearchableValue?: (value: V) => string;
+    onChange?: (e: FakeSelectChangeEvent<V>) => void;
     onClose?: () => void;
+    onOpen?: () => void;
 }
 
-const Select = ({
+const Select = <V extends any>({
     children,
     value,
     placeholder,
     isOpen: controlledOpen,
     onClose,
+    onOpen,
     onChange: onChangeProp,
     clearSearchAfter = 500,
     getSearchableValue,
     ...rest
-}: Props) => {
+}: Props<V>) => {
     const anchorRef = useRef<HTMLButtonElement | null>(null);
 
     const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
@@ -95,7 +97,7 @@ const Select = ({
 
     function open() {
         if (isControlled) {
-            onClose?.();
+            onOpen?.();
         } else {
             setUncontrolledOpen(true);
         }
@@ -142,7 +144,7 @@ const Select = ({
         }
     }
 
-    function handleChange(event: FakeSelectChangeEvent) {
+    function handleChange(event: FakeSelectChangeEvent<V>) {
         onChangeProp?.(event);
     }
 
@@ -186,7 +188,7 @@ const Select = ({
     }
 
     function handleChildChange(index: number) {
-        return (value: unknown) => {
+        return (value: V) => {
             handleChange({ value, selectedIndex: index });
         };
     }

@@ -2,14 +2,14 @@ import React, { useEffect, useRef } from 'react';
 import usePrevious from '../../hooks/usePrevious';
 import { DropdownMenuButton } from '../dropdown';
 
-export interface Props extends Omit<React.ComponentPropsWithoutRef<'button'>, 'value' | 'onChange'> {
-    value: unknown;
-    onChange?: (value: unknown) => void;
+export interface Props<V> extends Omit<React.ComponentPropsWithoutRef<'button'>, 'value' | 'onChange'> {
+    value: V;
+    onChange?: (value: V) => void;
     selected?: boolean;
     active?: boolean;
 }
 
-const Option = ({ type = 'button', value, selected, active, onChange, ...rest }: Props) => {
+const Option = <V extends any>({ type = 'button', value, selected, active, onChange, ...rest }: Props<V>) => {
     function handleClick() {
         onChange?.(value);
     }
