@@ -29,7 +29,7 @@ interface Props {
 
 const OnboardingModal = ({ children, showGenericSteps, setWelcomeFlags = true, ...rest }: Props) => {
     const [user] = useUser();
-    const [displayName, setDisplayName] = useState(user.Name || '');
+    const [displayName, setDisplayName] = useState(user.DisplayName || user.Name || '');
     const [loadingDisplayName, withLoading] = useLoading();
     const getAddresses = useGetAddresses();
     const api = useApi();
