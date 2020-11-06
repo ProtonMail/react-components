@@ -211,11 +211,11 @@ const Select = <V extends any>({
     return (
         <>
             <DropdownButton
-                style={{ width: '100%', listStyleType: 'none' }}
-                className="alignleft ellipsis no-outline"
+                className="alignleft w100 ellipsis no-outline pm-select"
                 isOpen={isOpen}
                 hasCaret
                 buttonRef={anchorRef}
+                caretClassName="mtauto mbauto"
                 onClick={handleAnchorClick}
                 onKeyDown={handleAnchorKeydown}
                 {...rest}
@@ -232,11 +232,7 @@ const Select = <V extends any>({
                 noMaxWidth
                 sameAnchorWidth
             >
-                <ul
-                    style={{ listStyleType: 'none', padding: 0, margin: 0 }}
-                    onKeyDown={handleMenuKeydown}
-                    data-testid="select-list"
-                >
+                <ul className="unstyled m0 p0" onKeyDown={handleMenuKeydown} data-testid="select-list">
                     {items}
                 </ul>
             </Dropdown>
