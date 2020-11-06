@@ -5,7 +5,7 @@ import { updateWelcomeFlags } from 'proton-shared/lib/api/settings';
 import { noop } from 'proton-shared/lib/helpers/function';
 import { range } from 'proton-shared/lib/helpers/array';
 
-import { StepDots, StepDot, FormModal, ResetButton, PrimaryButton } from '../../components';
+import { StepDots, StepDot, FormModal, Button, PrimaryButton } from '../../components';
 import { useApi, useEventManager, useGetAddresses, useLoading, useUser, useWelcomeFlags } from '../../hooks';
 
 import { OnboardingStepProps, OnboardingStepRenderCallback } from './interface';
@@ -109,7 +109,6 @@ const OnboardingModal = ({
             submit={c('Action').t`Next`}
             close={c('Action').t`Back`}
             onSubmit={handleNext}
-            onReset={handleBack}
         >
             <OnboardingAccessingProtonApps id="onboarding-1" />
         </OnboardingStep>
@@ -121,7 +120,6 @@ const OnboardingModal = ({
             submit={c('Action').t`Next`}
             close={c('Action').t`Back`}
             onSubmit={handleNext}
-            onReset={handleBack}
         >
             <OnboardingManageAccount id="onboarding-2" />
         </OnboardingStep>
@@ -176,7 +174,9 @@ const OnboardingModal = ({
             footer={
                 <>
                     {typeof childStep.props.close === 'string' ? (
-                        <ResetButton disabled={childStep.props.loading}>{childStepProps.close}</ResetButton>
+                        <Button disabled={childStep.props.loading} onClick={handleBack}>
+                            {childStepProps.close}
+                        </Button>
                     ) : (
                         childStep.props.close
                     )}

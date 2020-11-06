@@ -8,7 +8,6 @@ export interface OnboardingStepProps {
     loading?: boolean;
     onSubmit?: () => void;
     onClose?: () => void;
-    onReset?: () => void;
 }
 
 export interface OnboardingStepRenderCallback {

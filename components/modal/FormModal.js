@@ -12,7 +12,6 @@ import { ResetButton, PrimaryButton } from '../button';
 /** @type any */
 const Modal = ({
     onClose,
-    onReset,
     onSubmit,
     title,
     close = c('Action').t`Cancel`,
@@ -94,7 +93,7 @@ function DemoModal({ onAdd, ...rest }) {
             </HeaderModal>
             <ContentModal
                 onSubmit={rest.isClosing || loading ? noop : onSubmit}
-                onReset={onReset}
+                onReset={onClose}
                 noValidate={noValidate}
             >
                 <InnerModal>{children}</InnerModal>
