@@ -1,4 +1,4 @@
-import { MINUTE, RECIPIENT_TYPES } from 'proton-shared/lib/constants';
+import { ADDRESS_STATUS, MINUTE, RECIPIENT_TYPES } from 'proton-shared/lib/constants';
 import { normalizeInternalEmail } from 'proton-shared/lib/helpers/email';
 import { useCallback } from 'react';
 import getPublicKeysVcardHelper from 'proton-shared/lib/api/helpers/getPublicKeysVcardHelper';
@@ -37,7 +37,9 @@ const useGetEncryptionPreferences = () => {
         async (emailAddress: string, lifetime?: number) => {
             const [addresses, mailSettings] = await Promise.all([getAddresses(), getMailSettings()]);
             const selfAddress = addresses.find(
-                ({ Email }) => normalizeInternalEmail(Email) === normalizeInternalEmail(emailAddress)
+                ({ Email, Status }) =>
+                    normalizeInternalEmail(Email) === normalizeInternalEmail(emailAddress) &&
+                    Status === ADDRESS_STATUS.STATUS_ENABLED
             );
             let selfSend;
             let apiKeysConfig;
