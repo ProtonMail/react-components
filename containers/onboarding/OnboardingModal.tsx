@@ -26,9 +26,17 @@ interface Props {
     setWelcomeFlags?: boolean;
     showGenericSteps?: boolean;
     allowClose?: boolean;
+    hideDisplayName?: boolean;
 }
 
-const OnboardingModal = ({ children, showGenericSteps, allowClose, setWelcomeFlags = true, ...rest }: Props) => {
+const OnboardingModal = ({
+    children,
+    showGenericSteps,
+    allowClose,
+    hideDisplayName,
+    setWelcomeFlags = true,
+    ...rest
+}: Props) => {
     const [user] = useUser();
     const [displayName, setDisplayName] = useState(user.DisplayName || user.Name || '');
     const [loadingDisplayName, withLoading] = useLoading();
@@ -84,9 +92,14 @@ const OnboardingModal = ({ children, showGenericSteps, allowClose, setWelcomeFla
             submit={c('Action').t`Next`}
             loading={loadingDisplayName}
             close={null}
-            onSubmit={() => withLoading(handleSetDisplayNameNext())}
+            onSubmit={hideDisplayName ? handleNext : () => withLoading(handleSetDisplayNameNext())}
         >
-            <OnboardingSetDisplayName id="onboarding-0" displayName={displayName} setDisplayName={setDisplayName} />
+            <OnboardingSetDisplayName
+                id="onboarding-0"
+                displayName={displayName}
+                setDisplayName={setDisplayName}
+                hideDisplayName={hideDisplayName}
+            />
         </OnboardingStep>
     );
 
