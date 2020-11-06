@@ -17,6 +17,7 @@ const ResetPasswordPhoneInput = ({ value, setValue, id }: Props) => {
             inputClassName="w100"
             dropdownContainer="body"
             onPhoneNumberChange={(_status: any, _value: any, _countryData: any, number: string) => setValue(number)}
+            placeholder=""
             required
         />
     );

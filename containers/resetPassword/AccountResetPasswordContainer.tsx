@@ -200,16 +200,19 @@ const AccountResetPasswordContainer = ({ onLogin, Layout, onBack }: Props) => {
 
         const handleSubmit = async () => {
             await new Promise((resolve, reject) => {
+                const loseAllData = (
+                    <span className="bold">{c('Info').t`lose access to all current encrypted data`}</span>
+                );
                 createModal(
                     <ConfirmModal
                         title={c('Title').t`Reset password`}
-                        confirm={c('Action').t`Confirm password reset`}
+                        confirm={c('Action').t`Reset password`}
                         onConfirm={resolve}
                         onClose={reject}
                     >
                         <div>
                             <p className="mt0">{c('Info')
-                                .t`You will lose access to all current encrypted data in your ${BRAND_NAME} Account. To restore it, you will need to enter your old password.`}</p>
+                                .jt`You will ${loseAllData} in your ${BRAND_NAME} Account. To restore it, you will need to enter your old password.`}</p>
                             <p className="mt0">{c('Info')
                                 .t`This will also disable any 2-Factor Authentication method associated with this account.`}</p>
                             <p className="mt0 mb0">{c('Info').t`Continue anyway?`}</p>
@@ -220,11 +223,7 @@ const AccountResetPasswordContainer = ({ onLogin, Layout, onBack }: Props) => {
             await handleValidateResetToken(STEPS.NEW_PASSWORD);
         };
         return (
-            <Layout
-                title={c('Title').t`Enter recovery code`}
-                subtitle={subTitle}
-                left={<BackButton onClick={handleBack} />}
-            >
+            <Layout title={c('Title').t`Reset password`} subtitle={subTitle} left={<BackButton onClick={handleBack} />}>
                 <form
                     className="signup-form"
                     onSubmit={(e) => {
@@ -243,7 +242,7 @@ const AccountResetPasswordContainer = ({ onLogin, Layout, onBack }: Props) => {
                     }}
                 >
                     <SignupLabelInputRow
-                        label={<Label htmlFor="reset-token">{c('Label').t`Recovery code`}</Label>}
+                        label={<Label htmlFor="reset-token">{c('Label').t`Code`}</Label>}
                         input={<ResetTokenInput id="reset-token" value={token} setValue={setToken} />}
                     />
                     {email || phone ? (

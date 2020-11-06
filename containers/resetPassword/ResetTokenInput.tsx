@@ -1,4 +1,3 @@
-import { c } from 'ttag';
 import React from 'react';
 import { Input } from '../../components';
 
@@ -16,7 +15,6 @@ const ResetTokenInput = ({ id, value, setValue }: Props) => {
             id={id}
             autoFocus
             required
-            placeholder={c('Placeholder').t`Reset code`}
         />
     );
 };
