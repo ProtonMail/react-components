@@ -32,7 +32,7 @@ interface Props {
 const OnboardingModal = ({
     children,
     showGenericSteps,
-    allowClose,
+    allowClose = false,
     hideDisplayName,
     setWelcomeFlags = true,
     ...rest
@@ -174,7 +174,7 @@ const OnboardingModal = ({
             footer={
                 <>
                     {typeof childStep.props.close === 'string' ? (
-                        <Button disabled={childStep.props.loading} onClick={handleBack}>
+                        <Button disabled={childStep.props.loading} onClick={childStep.props.onClose || handleBack}>
                             {childStepProps.close}
                         </Button>
                     ) : (
