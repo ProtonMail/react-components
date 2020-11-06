@@ -25,9 +25,10 @@ interface Props {
     children?: ((props: OnboardingStepRenderCallback) => JSX.Element)[];
     setWelcomeFlags?: boolean;
     showGenericSteps?: boolean;
+    allowClose?: boolean;
 }
 
-const OnboardingModal = ({ children, showGenericSteps, setWelcomeFlags = true, ...rest }: Props) => {
+const OnboardingModal = ({ children, showGenericSteps, allowClose, setWelcomeFlags = true, ...rest }: Props) => {
     const [user] = useUser();
     const [displayName, setDisplayName] = useState(user.DisplayName || user.Name || '');
     const [loadingDisplayName, withLoading] = useLoading();
@@ -95,7 +96,7 @@ const OnboardingModal = ({ children, showGenericSteps, setWelcomeFlags = true, .
             submit={c('Action').t`Next`}
             close={c('Action').t`Back`}
             onSubmit={handleNext}
-            onClose={handleBack}
+            onReset={handleBack}
         >
             <OnboardingAccessingProtonApps id="onboarding-1" />
         </OnboardingStep>
@@ -107,7 +108,7 @@ const OnboardingModal = ({ children, showGenericSteps, setWelcomeFlags = true, .
             submit={c('Action').t`Next`}
             close={c('Action').t`Back`}
             onSubmit={handleNext}
-            onClose={handleBack}
+            onReset={handleBack}
         >
             <OnboardingManageAccount id="onboarding-2" />
         </OnboardingStep>
@@ -156,7 +157,7 @@ const OnboardingModal = ({ children, showGenericSteps, setWelcomeFlags = true, .
     return (
         <FormModal
             {...rest}
-            hasClose={false}
+            hasClose={allowClose}
             autoFocusClose
             {...childStepProps}
             footer={
