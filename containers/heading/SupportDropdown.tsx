@@ -29,7 +29,7 @@ const SupportDropdown = ({ className, content, hasButtonCaret = false }: Props) 
     };
 
     const handleTourClick = () => {
-        createModal(<OnboardingModal showGenericSteps />);
+        createModal(<OnboardingModal showGenericSteps allowClose />);
     };
 
     return (
