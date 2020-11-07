@@ -1,4 +1,4 @@
-import {FocusableElement, tabbable} from 'tabbable';
+import { FocusableElement, tabbable } from 'tabbable';
 import { MutableRefObject, useEffect, useRef, useState } from 'react';
 
 const findParentElement = (el: Element | null | undefined, cb: (el: Element) => boolean) => {
@@ -79,13 +79,12 @@ const useFocusTrap = ({ active = true, restoreFocus = true, preventScroll = true
                 rootElement.removeAttribute('tabIndex');
                 tabIndexRef.current = undefined;
             }
-        }
+        };
 
         const focusElement = (node?: FocusableElement | HTMLElement | null, fallback?: HTMLElement) => {
             if (node === document.activeElement) {
                 return;
             }
-            console.log('focusing ', node);
             if (!node?.focus) {
                 focusElement(fallback);
                 return;
@@ -95,7 +94,6 @@ const useFocusTrap = ({ active = true, restoreFocus = true, preventScroll = true
 
         const initFocus = (rootElement: HTMLElement) => {
             const tabbableElements = tabbable(rootElement);
-            console.log('in init focus', tabbableElements);
             setRootTabIndex(tabbableElements, rootElement);
             if (!tabbableElements.length) {
                 focusElement(rootElement);
@@ -135,7 +133,6 @@ const useFocusTrap = ({ active = true, restoreFocus = true, preventScroll = true
             }
             const { current: rootElement } = rootRef;
             const tabbableElements = tabbable(rootElement);
-            console.log(tabbableElements, event.target);
             setRootTabIndex(tabbableElements, rootElement);
             if (tabbableElements.length === 0) {
                 focusElement(rootElement);
@@ -144,12 +141,10 @@ const useFocusTrap = ({ active = true, restoreFocus = true, preventScroll = true
             const firstTabbableNode = tabbableElements[0];
             const lastTabbableNode = tabbableElements[tabbableElements.length - 1];
             if (event.shiftKey && event.target === firstTabbableNode) {
-                console.log('changing to last node');
                 event.preventDefault();
                 focusElement(lastTabbableNode, rootElement);
             }
             if (!event.shiftKey && event.target === lastTabbableNode) {
-                console.log('changing to first node');
                 event.preventDefault();
                 focusElement(firstTabbableNode, rootElement);
             }
@@ -180,8 +175,8 @@ const useFocusTrap = ({ active = true, restoreFocus = true, preventScroll = true
     return {
         ...(pendingRef.current && { 'data-focus-pending': pendingRef.current }),
         'data-focus-root': '1',
-        ...(tabIndexRef.current && { 'tabIndex': tabIndexRef.current })
-    }
+        ...(tabIndexRef.current && { tabIndex: tabIndexRef.current }),
+    };
 };
 
 export default useFocusTrap;
