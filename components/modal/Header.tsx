@@ -37,7 +37,7 @@ const Header = ({
                     className="pm-modalClose"
                     title={closeText}
                     onClick={onClose}
-                    data-focus-fallback="3"
+                    data-focus-fallback="-3"
                 >
                     <span className={classnames(['mr0-25', !closeTextVisible && 'sr-only'])}>{closeText}</span>
                     <Icon className="pm-modalClose-icon" name="close" />

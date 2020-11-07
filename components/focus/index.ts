@@ -1,1 +1,1 @@
-export { default as FocusTrap } from './FocusTrap';
+export { default as useFocusTrap } from './useFocusTrap';

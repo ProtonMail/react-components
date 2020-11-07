@@ -1,13 +1,13 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import { render } from '@testing-library/react';
-import FocusTrap from './FocusTrap';
+import UseFocusTrap from './FocusTrap';
+import useFocusTrap from './useFocusTrap';
 
 describe('FocusTrap', () => {
     let initialFocus: HTMLElement;
 
     beforeEach(() => {
         initialFocus = document.createElement('button');
-        initialFocus.tabIndex = 0;
         document.body.appendChild(initialFocus);
         initialFocus.focus();
     });
@@ -16,20 +16,25 @@ describe('FocusTrap', () => {
         document.body.removeChild(initialFocus);
     });
 
-    it('should focus the wrapper root', () => {
-        const { container } = render(
-            <FocusTrap>
-                <input data-testid="auto-focus" />
-            </FocusTrap>
-        );
-        expect(container.querySelector('[data-test=sentinelRoot]')).toHaveFocus();
+    it('should focus the first focusable element', () => {
+        const Component = () => {
+            const rootRef = useRef<HTMLDivElement>(null);
+            const props = useFocusTrap({ rootRef })
+            return (
+                <div ref={rootRef} {...props}>
+                    <input data-testid="auto-focus" />
+                </div>
+            )
+        }
+        const { getByTestId } = render(<Component/>);
+        expect(getByTestId('auto-focus')).toHaveFocus();
     });
 
     it('should respect autoFocus in children', () => {
         const { container, getByTestId } = render(
-            <FocusTrap>
+            <UseFocusTrap>
                 <input autoFocus data-testid="auto-focus" />
-            </FocusTrap>
+            </UseFocusTrap>
         );
         expect(getByTestId('auto-focus')).toHaveFocus();
         initialFocus.focus();
@@ -43,10 +48,10 @@ describe('FocusTrap', () => {
                 <div>
                     <button data-testid="button" onClick={() => setOpen(true)} />
                     {open && (
-                        <FocusTrap>
+                        <UseFocusTrap>
                             <input autoFocus data-testid="input" />
                             <button data-testid="close" onClick={() => setOpen(false)} />
-                        </FocusTrap>
+                        </UseFocusTrap>
                     )}
                 </div>
             );

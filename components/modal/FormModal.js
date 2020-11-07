@@ -63,7 +63,7 @@ function DemoModal({ onAdd, ...rest }) {
 
         const nodeSubmit =
             typeof submit === 'string' ? (
-                <PrimaryButton loading={loading} type="submit" data-focus-fallback="1">
+                <PrimaryButton loading={loading} type="submit" data-focus-fallback="-1">
                     {submit}
                 </PrimaryButton>
             ) : (
@@ -74,7 +74,7 @@ function DemoModal({ onAdd, ...rest }) {
         return (
             <FooterModal>
                 {typeof close === 'string' ? (
-                    <ResetButton disabled={loading} data-focus-fallback="2">
+                    <ResetButton disabled={loading} data-focus-fallback="-2">
                         {close}
                     </ResetButton>
                 ) : (
