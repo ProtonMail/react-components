@@ -135,11 +135,11 @@ const Select = <V extends any>({
 
     function handleAnchorKeydown(e: React.KeyboardEvent<HTMLButtonElement>) {
         switch (e.key) {
-            case ' ':
-            case 'Enter': {
+            case ' ': {
                 open();
                 break;
             }
+
             default:
         }
     }

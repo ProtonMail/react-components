@@ -77,14 +77,12 @@ describe('SelectTwo component', () => {
         expect(getByText('Placeholder')).toBeTruthy();
     });
 
-    ['Enter', ' '].forEach((key) => {
-        it(`should open on "${key}" keydown`, () => {
-            const output = renderBasicSelect();
+    it(`should open on " " (Space) keydown`, () => {
+        const output = renderBasicSelect();
 
-            fireEvent.keyDown(getAnchor(output), { key });
+        fireEvent.keyDown(getAnchor(output), { key: ' ' });
 
-            expect(getList(output)).toBeInTheDocument();
-        });
+        expect(getList(output)).toBeInTheDocument();
     });
 
     it('should focus the first element when opened and no option is selected', () => {
