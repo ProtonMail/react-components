@@ -218,6 +218,9 @@ const Select = <V extends any>({
                 caretClassName="mtauto mbauto"
                 onClick={handleAnchorClick}
                 onKeyDown={handleAnchorKeydown}
+                aria-live="assertive"
+                aria-atomic="true"
+                aria-label="Selected value here please"
                 {...rest}
             >
                 {displayedValue}
