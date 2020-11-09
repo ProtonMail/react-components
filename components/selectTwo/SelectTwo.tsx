@@ -220,7 +220,7 @@ const Select = <V extends any>({
                 onKeyDown={handleAnchorKeydown}
                 aria-live="assertive"
                 aria-atomic="true"
-                aria-label="Selected value here please"
+                aria-label={displayedValue}
                 {...rest}
             >
                 {displayedValue}
