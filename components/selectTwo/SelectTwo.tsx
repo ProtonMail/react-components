@@ -10,11 +10,13 @@ export type FakeSelectChangeEvent<V> = {
     selectedIndex: number;
 };
 
-export interface Props<V> extends Omit<DropdownButtonProps, 'value' | 'onClick' | 'onChange' | 'onKeyDown'> {
+export interface Props<V>
+    extends Omit<DropdownButtonProps, 'value' | 'onClick' | 'onChange' | 'onKeyDown' | 'aria-label'> {
     value?: V;
     isOpen?: boolean;
     children: React.ReactElement<OptionProps<V>>[];
     clearSearchAfter?: number;
+    'aria-label': string | undefined;
     getSearchableValue?: (value: V) => string;
     onChange?: (e: FakeSelectChangeEvent<V>) => void;
     onClose?: () => void;
@@ -31,6 +33,7 @@ const Select = <V extends any>({
     onChange: onChangeProp,
     clearSearchAfter = 500,
     getSearchableValue,
+    'aria-label': ariaLabel,
     ...rest
 }: Props<V>) => {
     const anchorRef = useRef<HTMLButtonElement | null>(null);
@@ -220,7 +223,7 @@ const Select = <V extends any>({
                 onKeyDown={handleAnchorKeydown}
                 aria-live="assertive"
                 aria-atomic="true"
-                aria-label={displayedValue}
+                aria-label={ariaLabel}
                 {...rest}
             >
                 {displayedValue}
