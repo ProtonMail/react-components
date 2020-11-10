@@ -1,5 +1,4 @@
 import React from 'react';
-import { c } from 'ttag';
 
 import { Input } from '../../components';
 
@@ -10,7 +9,7 @@ interface Props {
     placeholder?: string;
 }
 
-const ResetUsernameInput = ({ id, value, setValue, placeholder = c('Placeholder').t`Username` }: Props) => {
+const ResetUsernameInput = ({ id, value, setValue, placeholder }: Props) => {
     return (
         <Input
             name="username"

@@ -70,14 +70,7 @@ const AccountResetPasswordContainer = ({ onLogin, Layout, onBack }: Props) => {
                 >
                     <SignupLabelInputRow
                         label={<Label htmlFor="username">{c('Label').t`Email or username`}</Label>}
-                        input={
-                            <ResetUsernameInput
-                                id="username"
-                                value={username}
-                                setValue={setUsername}
-                                placeholder={c('Label').t`Email or username`}
-                            />
-                        }
+                        input={<ResetUsernameInput id="username" value={username} setValue={setUsername} />}
                     />
                     <SignupSubmitRow>
                         <PrimaryButton
@@ -182,7 +175,7 @@ const AccountResetPasswordContainer = ({ onLogin, Layout, onBack }: Props) => {
                             disabled={!email && !phone}
                             loading={loading}
                             type="submit"
-                        >{c('Action').t`Reset password`}</PrimaryButton>
+                        >{c('Action').t`Send code`}</PrimaryButton>
                     </SignupSubmitRow>
                 </form>
             </Layout>
