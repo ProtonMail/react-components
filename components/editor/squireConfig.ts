@@ -316,17 +316,24 @@ export const initSquire = async (document: Document, onEllipseClick: () => void)
     insertCustomStyle(document);
     const { default: Squire } = await import('squire-rte');
 
+    // Good old HTML management because there is no React or anything inside the iframe
     const title = c('Title').t`Expand content`;
     document.body.innerHTML = `
         <div id="squire"></div>
-        <div><button id="ellispsis" title="${title}" style="display: none;">&hellip;</button></div>
+        <div id="ellispsis-container">
+            <button id="ellispsis" title="${title}" style="display: none;">&hellip;</button>
+        </div>
     `;
-    const root = document.body.querySelector('#squire');
-    const squire = new Squire(root, SQUIRE_CONFIG);
+    const squireContainer = document.body.querySelector('#squire');
+    const ellipsisContainer = document.querySelector('#ellispsis-container');
+    const ellipsisButton = document.querySelector('#ellispsis');
+
+    const squire = new Squire(squireContainer, SQUIRE_CONFIG);
     wrapInsertHTML(squire);
-    document.body.querySelector('#ellispsis')?.addEventListener('click', onEllipseClick);
+
+    ellipsisButton?.addEventListener('click', onEllipseClick);
     document.addEventListener('click', (event) => {
-        if (event.target === document.documentElement) {
+        if (event.target === document.documentElement || event.target === ellipsisContainer) {
             squire.focus();
         }
     });
