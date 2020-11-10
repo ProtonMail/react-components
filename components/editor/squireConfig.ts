@@ -181,6 +181,7 @@ export const insertCustomStyle = (document: Document) => {
         html {
             height: 100%;
             font-size: 62.5%;
+            cursor: text;
         }
 
         body {
@@ -324,6 +325,11 @@ export const initSquire = async (document: Document, onEllipseClick: () => void)
     const squire = new Squire(root, SQUIRE_CONFIG);
     wrapInsertHTML(squire);
     document.body.querySelector('#ellispsis')?.addEventListener('click', onEllipseClick);
+    document.addEventListener('click', (event) => {
+        if (event.target === document.documentElement) {
+            squire.focus();
+        }
+    });
 
     return squire;
 };
