@@ -205,7 +205,7 @@ export const insertCustomStyle = (document: Document) => {
             outline: none;
         }
 
-        [id="ellispsis"] {
+        [id="ellipsis"] {
             color: inherit;
             border: 1px solid silver;
             background-color: white;
@@ -216,8 +216,8 @@ export const insertCustomStyle = (document: Document) => {
             padding: 0 .5em;
         }
 
-        [id="ellispsis"]:hover,
-        [id="ellispsis"]:focus {
+        [id="ellipsis"]:hover,
+        [id="ellipsis"]:focus {
             border-color: darkgrey;
             background-color: whitesmoke;
         }
@@ -320,13 +320,13 @@ export const initSquire = async (document: Document, onEllipseClick: () => void)
     const title = c('Title').t`Expand content`;
     document.body.innerHTML = `
         <div id="squire"></div>
-        <div id="ellispsis-container">
-            <button id="ellispsis" title="${title}" style="display: none;">&hellip;</button>
+        <div id="ellipsis-container">
+            <button id="ellipsis" title="${title}" style="display: none;">&hellip;</button>
         </div>
     `;
     const squireContainer = document.body.querySelector('#squire');
-    const ellipsisContainer = document.querySelector('#ellispsis-container');
-    const ellipsisButton = document.querySelector('#ellispsis');
+    const ellipsisContainer = document.querySelector('#ellipsis-container');
+    const ellipsisButton = document.querySelector('#ellipsis');
 
     const squire = new Squire(squireContainer, SQUIRE_CONFIG);
     wrapInsertHTML(squire);
@@ -342,7 +342,7 @@ export const initSquire = async (document: Document, onEllipseClick: () => void)
 };
 
 export const toggleEllipsisButton = (document: Document, show: boolean) => {
-    const element = document.body.querySelector('#ellispsis') as HTMLDivElement | undefined;
+    const element = document.body.querySelector('#ellipsis') as HTMLDivElement | undefined;
     if (element?.style?.display) {
         element.style.display = show ? 'block' : 'none';
     }
