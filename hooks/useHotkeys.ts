@@ -106,15 +106,14 @@ const useHotkeys = (
         });
     };
 
-    // @todo TS fix me
     useEffect(() => {
         if (ref && ref.current) {
-            ref.current.addEventListener(keyEventType, handleKeyDown);
+            ref.current.addEventListener(keyEventType, handleKeyDown as EventListener);
         }
 
         return () => {
             if (ref && ref.current) {
-                ref.current.removeEventListener(keyEventType, handleKeyDown);
+                ref.current.removeEventListener(keyEventType, handleKeyDown as EventListener);
             }
         };
     }, []);
