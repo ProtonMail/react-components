@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getFeature, updateFeature } from 'proton-shared/lib/api/features';
+import { getFeature, updateFeatureValue } from 'proton-shared/lib/api/features';
 
 import { useApi } from '../../hooks';
 
@@ -20,7 +20,7 @@ const usePromoModalState = () => {
     }, []);
 
     const onChange = async (Value: boolean) => {
-        await api(updateFeature({ Code: FEATURE_ID, Value }));
+        await api(updateFeatureValue(FEATURE_ID, Value));
         setState(Value);
     };
 
