@@ -71,12 +71,16 @@ const useHotkeys = (
             return;
         }
 
+        const isAlphaNumerical = key.match(/[a-zA-Z1-9]/gi);
+
         const modifiedKey = [
             key,
             e.metaKey && MODIFIER_KEYS.META,
-            e.shiftKey && MODIFIER_KEYS.SHIFT,
-            e.altKey && MODIFIER_KEYS.ALT,
             e.ctrlKey && MODIFIER_KEYS.CONTROL,
+            // Some non-alphanumerical keys need
+            // Shift or Alt to be used (e.g. "?"" or "/")
+            isAlphaNumerical && e.shiftKey && MODIFIER_KEYS.SHIFT,
+            isAlphaNumerical && e.altKey && MODIFIER_KEYS.ALT,
         ].filter(isTruthy);
 
         sequence.current.push(modifiedKey);
@@ -105,12 +109,12 @@ const useHotkeys = (
     // @todo TS fix me
     useEffect(() => {
         if (ref && ref.current) {
-            ref.current.addEventListener(keyEventType, handleKeyDown, true);
+            ref.current.addEventListener(keyEventType, handleKeyDown);
         }
 
         return () => {
             if (ref && ref.current) {
-                ref.current.removeEventListener(keyEventType, handleKeyDown, true);
+                ref.current.removeEventListener(keyEventType, handleKeyDown);
             }
         };
     }, []);
