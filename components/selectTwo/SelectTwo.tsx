@@ -90,7 +90,7 @@ const Select = <V extends any>({
          * type-cast is a safe assumption here
          */
         const indexOfMatchedOption = allOptionValues.findIndex((v) =>
-            (getSearchableValue?.(v) || (v as string)).startsWith(search)
+            (getSearchableValue?.(v) || String(v)).startsWith(search)
         );
 
         if (indexOfMatchedOption !== -1) {
@@ -98,7 +98,7 @@ const Select = <V extends any>({
         }
     }, [search]);
 
-    function open() {
+    const open = () => {
         if (isControlled) {
             onOpen?.();
         } else {
@@ -106,37 +106,37 @@ const Select = <V extends any>({
         }
 
         setFocusedIndex(selectedIndex || 0);
-    }
+    };
 
-    function close() {
+    const close = () => {
         if (isControlled) {
             onClose?.();
         } else {
             setUncontrolledOpen(false);
         }
-    }
+    };
 
-    function goToPreviousItem() {
+    const goToPreviousItem = () => {
         if (focusedIndex !== null && focusedIndex !== 0) {
             setFocusedIndex(focusedIndex - 1);
         }
-    }
+    };
 
-    function goToNextItem() {
+    const goToNextItem = () => {
         if (focusedIndex !== null && focusedIndex !== children.length - 1) {
             setFocusedIndex(focusedIndex + 1);
         }
-    }
+    };
 
-    function handleAnchorClick() {
+    const handleAnchorClick = () => {
         if (isOpen) {
             close();
         } else {
             open();
         }
-    }
+    };
 
-    function handleAnchorKeydown(e: React.KeyboardEvent<HTMLButtonElement>) {
+    const handleAnchorKeydown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
         switch (e.key) {
             case ' ': {
                 open();
@@ -145,13 +145,13 @@ const Select = <V extends any>({
 
             default:
         }
-    }
+    };
 
-    function handleChange(event: FakeSelectChangeEvent<V>) {
+    const handleChange = (event: FakeSelectChangeEvent<V>) => {
         onChangeProp?.(event);
-    }
+    };
 
-    function handleMenuKeydown(e: React.KeyboardEvent<HTMLUListElement>) {
+    const handleMenuKeydown = (e: React.KeyboardEvent<HTMLUListElement>) => {
         switch (e.key) {
             case 'ArrowUp': {
                 e.preventDefault();
@@ -188,13 +188,11 @@ const Select = <V extends any>({
 
             setSearch((s) => s + key);
         }
-    }
+    };
 
-    function handleChildChange(index: number) {
-        return (value: V) => {
-            handleChange({ value, selectedIndex: index });
-        };
-    }
+    const handleChildChange = (index: number) => (value: V) => {
+        handleChange({ value, selectedIndex: index });
+    };
 
     const items = React.Children.map(children, (child, index) => {
         const childValue = children[index].props.value;
@@ -214,7 +212,7 @@ const Select = <V extends any>({
     return (
         <>
             <DropdownButton
-                className="alignleft w100 ellipsis no-outline pm-select"
+                className="alignleft w100 ellipsis no-outline pm-select pm-button"
                 isOpen={isOpen}
                 hasCaret
                 buttonRef={anchorRef}
