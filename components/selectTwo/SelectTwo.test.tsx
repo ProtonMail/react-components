@@ -236,7 +236,7 @@ describe('SelectTwo component', () => {
         const getSearchableValue = ({ label }: V) => label;
 
         const output = render(
-            <SelectTwo aria-label="label" getSearchableValue={getSearchableValue as any}>
+            <SelectTwo aria-label="label" getSearchableValue={getSearchableValue}>
                 <Option value={{ label: 'one' }}>one</Option>
                 <Option value={{ label: 'two' }}>two</Option>
                 <Option value={{ label: 'three' }}>three</Option>
