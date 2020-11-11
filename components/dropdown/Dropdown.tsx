@@ -187,7 +187,13 @@ const Dropdown = ({
                 {...rest}
             >
                 {/* Backdrop button, meant to override 'autoClose' option on mobile */}
-                <button type="button" className="dropDown-backdrop" title={c('Action').t`Close`} onClick={onClose}>
+                <button
+                    type="button"
+                    className="dropDown-backdrop"
+                    title={c('Action').t`Close`}
+                    onClick={onClose}
+                    data-focus-fallback={-1}
+                >
                     <span className="sr-only">{c('Action').t`Close`}</span>
                 </button>
                 <div ref={contentRef} className={classnames(['dropDown-content'])} {...contentProps}>
