@@ -6,7 +6,7 @@ import { Option } from '../option';
 
 function renderBasicSelect() {
     return render(
-        <SelectTwo>
+        <SelectTwo aria-label="label">
             <Option value="one">one</Option>
             <Option value="two">two</Option>
             <Option value="three">three</Option>
@@ -16,7 +16,7 @@ function renderBasicSelect() {
 
 function renderSelectWithSelectedOption() {
     return render(
-        <SelectTwo value="two">
+        <SelectTwo aria-label="label" value="two">
             <Option value="one">one</Option>
             <Option value="two">two</Option>
             <Option value="three">three</Option>
@@ -49,7 +49,7 @@ describe('SelectTwo component', () => {
         const spy = jest.fn();
 
         const output = render(
-            <SelectTwo onChange={spy}>
+            <SelectTwo aria-label="label" onChange={spy}>
                 <Option value="one">Option One</Option>
                 <Option value="two">Option Two</Option>
             </SelectTwo>
@@ -68,7 +68,7 @@ describe('SelectTwo component', () => {
 
     it('should render a placeholer if no value is selected', () => {
         const { getByText } = render(
-            <SelectTwo placeholder="Placeholder">
+            <SelectTwo aria-label="label" placeholder="Placeholder">
                 <Option value="one">Option One</Option>
                 <Option value="two">Option Two</Option>
             </SelectTwo>
@@ -188,7 +188,7 @@ describe('SelectTwo component', () => {
 
     it('should clear the current typed input after a given amount of ms and match the new input after the delay', async () => {
         const output = render(
-            <SelectTwo clearSearchAfter={800}>
+            <SelectTwo aria-label="label" clearSearchAfter={800}>
                 <Option value="one">one</Option>
                 <Option value="two">two</Option>
                 <Option value="three">three</Option>
@@ -236,7 +236,7 @@ describe('SelectTwo component', () => {
         const getSearchableValue = ({ label }: V) => label;
 
         const output = render(
-            <SelectTwo getSearchableValue={getSearchableValue as any}>
+            <SelectTwo aria-label="label" getSearchableValue={getSearchableValue as any}>
                 <Option value={{ label: 'one' }}>one</Option>
                 <Option value={{ label: 'two' }}>two</Option>
                 <Option value={{ label: 'three' }}>three</Option>
