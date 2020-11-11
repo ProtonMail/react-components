@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import isDeepEqual from 'proton-shared/lib/helpers/isDeepEqual';
 
 import { Dropdown, DropdownButton } from '../dropdown';
@@ -61,13 +61,11 @@ const Select = <V extends any>({
 
     const isSearchable = isNaturallySearchable || Boolean(getSearchableValue);
 
-    let selectedIndex: number | null = null;
+    const selectedIndex = useMemo(() => {
+        const index = children.findIndex((child) => child.props.value === value);
 
-    React.Children.forEach(children, (child, index) => {
-        if (isDeepEqual(child.props.value, value)) {
-            selectedIndex = index;
-        }
-    });
+        return index !== -1 ? index : null;
+    }, [children, value]);
 
     useEffect(() => {
         if (!search) {
