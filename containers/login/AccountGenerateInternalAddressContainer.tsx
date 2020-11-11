@@ -7,10 +7,10 @@ import { queryAvailableDomains } from 'proton-shared/lib/api/domains';
 import { updateUsername } from 'proton-shared/lib/api/settings';
 import { generateAddressKey } from 'proton-shared/lib/keys/keys';
 import { Api } from 'proton-shared/lib/interfaces';
+import createKeyHelper from 'proton-shared/lib/keys/createAddressKeyHelper';
 
 import { useErrorHandler } from '../../hooks';
 
-import createKeyHelper from '../keys/addKey/createKeyHelper';
 import handleSetupAddress from '../signup/helpers/handleSetupAddress';
 import AccountGenerateInternalAddressForm from './components/AccountGenerateInternalAddressForm';
 
@@ -19,6 +19,7 @@ interface Props {
     api: Api;
     keyPassword: string;
 }
+
 const AccountGenerateInternalAddressContainer = ({ onDone, api, keyPassword }: Props) => {
     const [username, setUsername] = useState('');
     const [usernameError, setUsernameError] = useState('');

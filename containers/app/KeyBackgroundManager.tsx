@@ -1,11 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { UserModel as tsUserModel, Address } from 'proton-shared/lib/interfaces';
+import React, { useEffect } from 'react';
 import { noop } from 'proton-shared/lib/helpers/function';
+import {
+    activateMemberAddressKeys,
+    getAddressesWithKeysToActivate,
+} from 'proton-shared/lib/keys/activateMemberAddressKeys';
+import {
+    generatePrivateMemberKeys,
+    getAddressesWithKeysToGenerate,
+} from 'proton-shared/lib/keys/generatePrivateMemberKeys';
+import { traceError } from 'proton-shared/lib/helpers/sentry';
 
-import { useGetAddresses, useGetUser } from '../../hooks';
+import { useAuthentication, useEventManager, useGetAddresses, useGetAddressKeys, useGetUser } from '../../hooks';
 
-import PrivateMemberKeyGeneration from './PrivateMemberKeyGeneration';
-import ReadableMemberKeyActivation from './ReadableMemberKeyActivation';
+import useApi from '../../hooks/useApi';
 
 interface Props {
     hasPrivateMemberKeyGeneration?: boolean;
@@ -16,26 +23,58 @@ const KeyBackgroundManager = ({
     hasPrivateMemberKeyGeneration = false,
     hasReadableMemberKeyActivation = false,
 }: Props) => {
-    const [once, setOnce] = useState<{ user?: tsUserModel; addresses?: Address[] }>({});
     const getUser = useGetUser();
     const getAddresses = useGetAddresses();
+    const getAddressKeys = useGetAddressKeys();
+    const authentication = useAuthentication();
+    const { call } = useEventManager();
+    const normalApi = useApi();
+    const silentApi = <T,>(config: any) => normalApi<T>({ ...config, silence: true });
 
     useEffect(() => {
         const run = async () => {
             const [user, addresses] = await Promise.all([getUser(), getAddresses()]);
-            setOnce({ user, addresses });
+            const keyPassword = authentication.getPassword();
+
+            const addressesWithKeysToActivate = hasReadableMemberKeyActivation
+                ? getAddressesWithKeysToActivate(user, addresses)
+                : [];
+            if (addressesWithKeysToActivate.length) {
+                Promise.all(
+                    addressesWithKeysToActivate.map(async (address) => {
+                        const addressKeys = await getAddressKeys(address.ID);
+                        return activateMemberAddressKeys({
+                            addressKeys,
+                            keyPassword,
+                            api: silentApi,
+                        });
+                    })
+                )
+                    .then(call)
+                    .catch(traceError);
+            }
+
+            const addressesWithKeysToGenerate = hasPrivateMemberKeyGeneration
+                ? getAddressesWithKeysToGenerate(user, addresses)
+                : [];
+            if (addressesWithKeysToGenerate.length) {
+                Promise.all(
+                    addressesWithKeysToGenerate.map((address) => {
+                        return generatePrivateMemberKeys({
+                            address,
+                            keyPassword,
+                            api: silentApi,
+                        });
+                    })
+                )
+                    .then(call)
+                    .catch(traceError);
+            }
         };
         run().catch(noop);
     }, []);
 
-    const { addresses, user } = once || {};
-
-    return (
-        <>
-            {hasPrivateMemberKeyGeneration ? <PrivateMemberKeyGeneration addresses={addresses} user={user} /> : null}
-            {hasReadableMemberKeyActivation ? <ReadableMemberKeyActivation addresses={addresses} user={user} /> : null}
-        </>
-    );
+    return <>{null}</>;
 };
 
 export default KeyBackgroundManager;

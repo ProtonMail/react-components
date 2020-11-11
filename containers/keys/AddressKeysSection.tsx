@@ -10,6 +10,7 @@ import getCachedKeyByID from 'proton-shared/lib/keys/getCachedKeyByID';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 import { EncryptionConfig } from 'proton-shared/lib/interfaces';
 import getParsedKeys from 'proton-shared/lib/keys/getParsedKeys';
+import createKeyHelper from 'proton-shared/lib/keys/createAddressKeyHelper';
 
 import { Alert, Block, Loader, PrimaryButton, Select } from '../../components';
 import {
@@ -32,7 +33,6 @@ import ExportPrivateKeyModal from './exportKey/ExportPrivateKeyModal';
 import DeleteKeyModal from './deleteKey/DeleteKeyModal';
 import useDisplayKeys from './shared/useDisplayKeys';
 import AddKeyModal from './addKey/AddKeyModal';
-import createKeyHelper from './addKey/createKeyHelper';
 import importKeysProcess from './importKeys/importKeysProcess';
 import ImportKeyModal from './importKeys/ImportKeyModal';
 import { OnProcessArguments as ImportProcessArguments } from './importKeys/interface';

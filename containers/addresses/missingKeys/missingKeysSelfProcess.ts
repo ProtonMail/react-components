@@ -1,8 +1,8 @@
 import { Api, Address, EncryptionConfig } from 'proton-shared/lib/interfaces';
 import { generateAddressKey } from 'proton-shared/lib/keys/keys';
+import createKeyHelper from 'proton-shared/lib/keys/createAddressKeyHelper';
 import { updateAddress } from './state';
 import { Status, SetFormattedAddresses } from './interface';
-import createKeyHelper from '../../keys/addKey/createKeyHelper';
 
 interface MissingKeysSelfProcessArguments {
     api: Api;
