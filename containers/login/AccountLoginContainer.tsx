@@ -71,9 +71,11 @@ const AccountLoginContainer = ({ onLogin, onBack, ignoreUnlock = false, Layout, 
         };
 
         if (toApp && REQUIRES_INTERNAL_EMAIL_ADDRESS.includes(toApp)) {
+            const Addresses =
+                args.Addresses ||
+                (await uidApi<{ Addresses: Address[] }>(queryAddresses()).then(({ Addresses }) => Addresses));
             // Since the address route is slow, and in order to make the external check more efficient, query for a smaller number of addresses
             // A user signed up with an external address should only have 1 address
-            const { Addresses } = await uidApi<{ Addresses: Address[] }>(queryAddresses({ PageSize: 5, Page: 0 }));
             if (Addresses?.length && keyPassword && getHasOnlyExternalAddresses(Addresses)) {
                 return setGenerateInternalAddress({
                     externalEmailAddress: Addresses[0],
@@ -180,7 +182,7 @@ const AccountLoginContainer = ({ onLogin, onBack, ignoreUnlock = false, Layout, 
 
         return (
             <Layout title={c('Title').t`Unlock your mailbox`} left={<BackButton onClick={handleCancel} />}>
-                <AccountUnlockForm state={state} setters={setters} onSubmit={handleSubmit} />
+                <AccountUnlockForm state={state} setters={setters} errors={errors} onSubmit={handleSubmit} />
             </Layout>
         );
     }

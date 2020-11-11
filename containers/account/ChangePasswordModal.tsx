@@ -69,7 +69,7 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }: Props) => {
     const { call, stop, start } = useEventManager();
     const authentication = useAuthentication();
     const { createNotification } = useNotifications();
-    const getOrganizationKey = useGetOrganizationKeyRaw();
+    const getOrganizationKeyRaw = useGetOrganizationKeyRaw();
     const getUserKeys = useGetUserKeys();
     const getAddressesKeys = useGetAddressesKeys();
     const getAddresses = useGetAddresses();
@@ -257,7 +257,7 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }: Props) => {
                             getAddresses(),
                             getUserKeys(),
                             getAddressesKeys(),
-                            isAdmin ? getOrganizationKey() : undefined,
+                            isAdmin ? getOrganizationKeyRaw() : undefined,
                         ]);
 
                         validateConfirmPassword();
@@ -299,7 +299,7 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }: Props) => {
                     getAddresses(),
                     getUserKeys(),
                     getAddressesKeys(),
-                    isAdmin ? getOrganizationKey() : undefined,
+                    isAdmin ? getOrganizationKeyRaw() : undefined,
                 ]);
                 /**
                  * This is the case for a user who does not have any keys set-up.

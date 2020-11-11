@@ -1,6 +1,5 @@
 import { ADDRESS_STATUS, ADDRESS_TYPE, MEMBER_PRIVATE, RECEIVE_ADDRESS } from 'proton-shared/lib/constants';
-import { Address, Member, UserModel } from 'proton-shared/lib/interfaces';
-import { OrganizationKey } from '../../hooks/useGetOrganizationKeyRaw';
+import { Address, Member, UserModel, CachedOrganizationKey } from 'proton-shared/lib/interfaces';
 
 const { TYPE_ORIGINAL, TYPE_CUSTOM_DOMAIN, TYPE_PREMIUM } = ADDRESS_TYPE;
 const { READABLE } = MEMBER_PRIVATE;
@@ -31,7 +30,7 @@ export const getPermissions = ({
     member?: Member;
     address: Address;
     user: UserModel;
-    organizationKey?: OrganizationKey;
+    organizationKey?: CachedOrganizationKey;
 }) => {
     const isSpecialAddress = Type === TYPE_ORIGINAL || Type === TYPE_PREMIUM;
     const isPrimaryAddress = Order === 1;

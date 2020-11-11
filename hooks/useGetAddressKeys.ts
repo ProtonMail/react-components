@@ -1,9 +1,7 @@
 import { useCallback } from 'react';
-import { decryptPrivateKey } from 'pmcrypto';
-import { getAddressKeyToken, splitKeys } from 'proton-shared/lib/keys/keys';
-import { CachedKey, Key as tsKey } from 'proton-shared/lib/interfaces';
-import { decryptMemberToken } from 'proton-shared/lib/keys/memberToken';
+import { CachedKey } from 'proton-shared/lib/interfaces';
 import { MEMBER_PRIVATE } from 'proton-shared/lib/constants';
+import { getDecryptedAddressKeys } from 'proton-shared/lib/keys/getDecryptedAddressKeys';
 
 import useAuthentication from './useAuthentication';
 import useCache from './useCache';
@@ -27,68 +25,17 @@ export const useGetAddressKeysRaw = (): ((id: string) => Promise<CachedKey[]>) =
                 getAddresses(),
                 getUserKeys(),
             ]);
-
             const Address = Addresses.find(({ ID: AddressID }) => AddressID === addressID);
             if (!Address) {
                 return [];
             }
-
-            const mailboxPassword = authentication.getPassword();
-
-            const organizationKey = OrganizationPrivateKey
-                ? await decryptPrivateKey(OrganizationPrivateKey, mailboxPassword).catch(() => undefined)
-                : undefined;
-
-            const { privateKeys, publicKeys } = splitKeys(userKeys);
-
-            const primaryUserKey = privateKeys[0];
-
-            const getKeyPassword = ({ Activation, Token, Signature }: tsKey) => {
-                if (!OrganizationPrivateKey && Private === MEMBER_PRIVATE.READABLE && primaryUserKey) {
-                    // Since the activation process is asynchronous, allow the private key to get decrypted already here so that it can be used
-                    if (Activation) {
-                        return decryptMemberToken(Activation, primaryUserKey);
-                    }
-                }
-                if (Token) {
-                    return getAddressKeyToken({ Token, Signature, organizationKey, privateKeys, publicKeys });
-                }
-                return mailboxPassword;
-            };
-
-            const process = async (Key: tsKey) => {
-                try {
-                    const { PrivateKey } = Key;
-
-                    const keyPassword = await getKeyPassword(Key);
-                    const privateKey = await decryptPrivateKey(PrivateKey, keyPassword);
-                    return {
-                        Key,
-                        privateKey,
-                        publicKey: privateKey.toPublic(),
-                    };
-                } catch (e) {
-                    return {
-                        Key,
-                        error: e,
-                    };
-                }
-            };
-
-            const { Keys } = Address;
-            if (!Keys.length) {
-                return [];
-            }
-
-            const [primaryKey, ...restKeys] = Keys;
-
-            const primaryKeyResult = await process(primaryKey);
-            // In case the primary key fails to decrypt, something is broken, so don't even try to decrypt the rest of the keys.
-            if (primaryKeyResult.error) {
-                return [primaryKeyResult, ...restKeys.map((Key) => ({ Key, error: primaryKeyResult.error }))];
-            }
-            const restKeysResult = await Promise.all(restKeys.map(process));
-            return [primaryKeyResult, ...restKeysResult];
+            return getDecryptedAddressKeys({
+                addressKeys: Address.Keys,
+                userKeys,
+                OrganizationPrivateKey,
+                isReadableMember: Private === MEMBER_PRIVATE.READABLE,
+                keyPassword: authentication.getPassword(),
+            });
         },
         [getUser, getAddresses, getUserKeys]
     );
