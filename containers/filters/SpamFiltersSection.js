@@ -105,12 +105,12 @@ function SpamFiltersSection() {
         <>
             <Alert learnMore="https://protonmail.com/support/knowledge-base/spam-filtering/">
                 {c('FilterSettings')
-                    .t`Sender specific spam rules can be applied here. Whitelist addresses always go to Inbox while Blacklist addresses always go to Spam. Marking a message as spam adds the address to the Blacklist. Marking a message as not spam adds it to the Whitelist.`}
+                    .t`Sender specific spam rules can be applied here. Allow list addresses always go to Inbox while Block list addresses always go to Spam. Marking a message as spam adds the address to the Block list. Marking a message as not spam adds it to the Allow list.`}
             </Alert>
             <div className="mb1">
                 <SearchInput
                     onChange={handleSearchChange}
-                    placeholder={c('FilterSettings').t`Search in Whitelist and Blacklist`}
+                    placeholder={c('FilterSettings').t`Search in Allow list and Block list`}
                 />
             </div>
 

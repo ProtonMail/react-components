@@ -22,17 +22,17 @@ interface Props {
 
 function SpamListItem({ list, type, onCreate, onEdit, onMove, onRemove, className, loading }: Props) {
     const I18N = {
-        [WHITELIST_LOCATION]: c('Title').t`Whitelist`,
-        [BLACKLIST_LOCATION]: c('Title').t`Blacklist`,
+        [WHITELIST_LOCATION]: c('Title').t`Allow list`,
+        [BLACKLIST_LOCATION]: c('Title').t`Block list`,
         empty(mode: WHITE_OR_BLACK_LOCATION) {
             // we do not use the variable for both mode because of declension issues with ex: Polish
             if (mode === WHITELIST_LOCATION) {
                 return c('Info')
-                    .t`No emails or domains in the Whitelist, click Add to add addresses or domains to the Whitelist`;
+                    .t`No emails or domains in the Allow list, click Add to add addresses or domains to the Allow list`;
             }
 
             return c('Info')
-                .t`No emails or domains in the Blacklist, click Add to add addresses or domains to the Blacklist`;
+                .t`No emails or domains in the Block list, click Add to add addresses or domains to the Block list`;
         },
     };
 
@@ -67,8 +67,8 @@ function SpamListItem({ list, type, onCreate, onEdit, onMove, onRemove, classNam
                                         {
                                             text:
                                                 type === WHITELIST_LOCATION
-                                                    ? c('Action').t`Move to blacklist`
-                                                    : c('Action').t`Move to whitelist`,
+                                                    ? c('Action').t`Move to block list`
+                                                    : c('Action').t`Move to allow list`,
                                             onClick() {
                                                 onMove(item);
                                             },
