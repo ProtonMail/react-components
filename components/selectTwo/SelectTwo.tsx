@@ -16,7 +16,6 @@ export interface Props<V>
     isOpen?: boolean;
     children: React.ReactElement<OptionProps<V>>[];
     clearSearchAfter?: number;
-    'aria-label': string | undefined;
     getSearchableValue?: (value: V) => string;
     onChange?: (e: FakeSelectChangeEvent<V>) => void;
     onClose?: () => void;
@@ -33,7 +32,6 @@ const Select = <V extends any>({
     onChange: onChangeProp,
     clearSearchAfter = 500,
     getSearchableValue,
-    'aria-label': ariaLabel,
     ...rest
 }: Props<V>) => {
     const anchorRef = useRef<HTMLButtonElement | null>(null);
@@ -204,8 +202,11 @@ const Select = <V extends any>({
         });
     });
 
-    const displayedValue: React.ReactNode =
-        selectedIndex || selectedIndex === 0 ? children[selectedIndex].props.children : placeholder;
+    const selectedChild = selectedIndex || selectedIndex === 0 ? children[selectedIndex] : null;
+
+    const displayedValue = selectedChild?.props?.children || placeholder;
+
+    const ariaLabel = selectedChild?.props?.title;
 
     return (
         <>

@@ -6,20 +6,32 @@ import { Option } from '../option';
 
 function renderBasicSelect() {
     return render(
-        <SelectTwo aria-label="label">
-            <Option value="one">one</Option>
-            <Option value="two">two</Option>
-            <Option value="three">three</Option>
+        <SelectTwo>
+            <Option title="one" value="one">
+                one
+            </Option>
+            <Option title="two" value="two">
+                two
+            </Option>
+            <Option title="three" value="three">
+                three
+            </Option>
         </SelectTwo>
     );
 }
 
 function renderSelectWithSelectedOption() {
     return render(
-        <SelectTwo aria-label="label" value="two">
-            <Option value="one">one</Option>
-            <Option value="two">two</Option>
-            <Option value="three">three</Option>
+        <SelectTwo value="two">
+            <Option title="one" value="one">
+                one
+            </Option>
+            <Option title="two" value="two">
+                two
+            </Option>
+            <Option title="three" value="three">
+                three
+            </Option>
         </SelectTwo>
     );
 }
@@ -49,9 +61,13 @@ describe('SelectTwo component', () => {
         const spy = jest.fn();
 
         const output = render(
-            <SelectTwo aria-label="label" onChange={spy}>
-                <Option value="one">Option One</Option>
-                <Option value="two">Option Two</Option>
+            <SelectTwo onChange={spy}>
+                <Option title="one" value="one">
+                    Option One
+                </Option>
+                <Option title="two" value="two">
+                    Option Two
+                </Option>
             </SelectTwo>
         );
 
@@ -68,9 +84,13 @@ describe('SelectTwo component', () => {
 
     it('should render a placeholer if no value is selected', () => {
         const { getByText } = render(
-            <SelectTwo aria-label="label" placeholder="Placeholder">
-                <Option value="one">Option One</Option>
-                <Option value="two">Option Two</Option>
+            <SelectTwo placeholder="Placeholder">
+                <Option title="one" value="one">
+                    Option One
+                </Option>
+                <Option title="two" value="two">
+                    Option Two
+                </Option>
             </SelectTwo>
         );
 
@@ -188,10 +208,16 @@ describe('SelectTwo component', () => {
 
     it('should clear the current typed input after a given amount of ms and match the new input after the delay', async () => {
         const output = render(
-            <SelectTwo aria-label="label" clearSearchAfter={800}>
-                <Option value="one">one</Option>
-                <Option value="two">two</Option>
-                <Option value="three">three</Option>
+            <SelectTwo clearSearchAfter={800}>
+                <Option title="one" value="one">
+                    one
+                </Option>
+                <Option title="two" value="two">
+                    two
+                </Option>
+                <Option title="three" value="three">
+                    three
+                </Option>
             </SelectTwo>
         );
 
@@ -236,10 +262,16 @@ describe('SelectTwo component', () => {
         const getSearchableValue = ({ label }: V) => label;
 
         const output = render(
-            <SelectTwo aria-label="label" getSearchableValue={getSearchableValue}>
-                <Option value={{ label: 'one' }}>one</Option>
-                <Option value={{ label: 'two' }}>two</Option>
-                <Option value={{ label: 'three' }}>three</Option>
+            <SelectTwo getSearchableValue={getSearchableValue}>
+                <Option title="one" value={{ label: 'one' }}>
+                    one
+                </Option>
+                <Option title="two" value={{ label: 'two' }}>
+                    two
+                </Option>
+                <Option title="three" value={{ label: 'three' }}>
+                    three
+                </Option>
             </SelectTwo>
         );
 
