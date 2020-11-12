@@ -10,7 +10,16 @@ export interface Props<V> extends Omit<React.ComponentPropsWithoutRef<'button'>,
     title: string;
 }
 
-const Option = <V extends any>({ type = 'button', value, selected, active, onChange, title, ...rest }: Props<V>) => {
+const Option = <V extends any>({
+    type = 'button',
+    value,
+    selected,
+    active,
+    onChange,
+    title,
+    children = title,
+    ...rest
+}: Props<V>) => {
     function handleClick() {
         onChange?.(value);
     }
@@ -38,7 +47,9 @@ const Option = <V extends any>({ type = 'button', value, selected, active, onCha
                 title={title}
                 className="bl w100 ellipsis alignleft no-outline"
                 {...rest}
-            />
+            >
+                {children}
+            </DropdownMenuButton>
         </li>
     );
 };

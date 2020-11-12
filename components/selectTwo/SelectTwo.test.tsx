@@ -7,15 +7,9 @@ import { Option } from '../option';
 function renderBasicSelect() {
     return render(
         <SelectTwo>
-            <Option title="one" value="one">
-                one
-            </Option>
-            <Option title="two" value="two">
-                two
-            </Option>
-            <Option title="three" value="three">
-                three
-            </Option>
+            <Option title="one" value="one" />
+            <Option title="two" value="two" />
+            <Option title="three" value="three" />
         </SelectTwo>
     );
 }
@@ -23,15 +17,9 @@ function renderBasicSelect() {
 function renderSelectWithSelectedOption() {
     return render(
         <SelectTwo value="two">
-            <Option title="one" value="one">
-                one
-            </Option>
-            <Option title="two" value="two">
-                two
-            </Option>
-            <Option title="three" value="three">
-                three
-            </Option>
+            <Option title="one" value="one" />
+            <Option title="two" value="two" />
+            <Option title="three" value="three" />
         </SelectTwo>
     );
 }
@@ -62,12 +50,8 @@ describe('SelectTwo component', () => {
 
         const output = render(
             <SelectTwo onChange={spy}>
-                <Option title="one" value="one">
-                    Option One
-                </Option>
-                <Option title="two" value="two">
-                    Option Two
-                </Option>
+                <Option title="one" value="one" />
+                <Option title="two" value="two" />
             </SelectTwo>
         );
 
@@ -75,7 +59,7 @@ describe('SelectTwo component', () => {
 
         const { getByText } = output;
 
-        fireEvent.click(getByText('Option One'));
+        fireEvent.click(getByText('one'));
 
         const [[{ value }]] = spy.mock.calls;
 
@@ -85,12 +69,8 @@ describe('SelectTwo component', () => {
     it('should render a placeholer if no value is selected', () => {
         const { getByText } = render(
             <SelectTwo placeholder="Placeholder">
-                <Option title="one" value="one">
-                    Option One
-                </Option>
-                <Option title="two" value="two">
-                    Option Two
-                </Option>
+                <Option title="one" value="one" />
+                <Option title="two" value="two" />
             </SelectTwo>
         );
 
@@ -209,15 +189,9 @@ describe('SelectTwo component', () => {
     it('should clear the current typed input after a given amount of ms and match the new input after the delay', async () => {
         const output = render(
             <SelectTwo clearSearchAfter={800}>
-                <Option title="one" value="one">
-                    one
-                </Option>
-                <Option title="two" value="two">
-                    two
-                </Option>
-                <Option title="three" value="three">
-                    three
-                </Option>
+                <Option title="one" value="one" />
+                <Option title="two" value="two" />
+                <Option title="three" value="three" />
             </SelectTwo>
         );
 
@@ -263,15 +237,9 @@ describe('SelectTwo component', () => {
 
         const output = render(
             <SelectTwo getSearchableValue={getSearchableValue}>
-                <Option title="one" value={{ label: 'one' }}>
-                    one
-                </Option>
-                <Option title="two" value={{ label: 'two' }}>
-                    two
-                </Option>
-                <Option title="three" value={{ label: 'three' }}>
-                    three
-                </Option>
+                <Option title="one" value={{ label: 'one' }} />
+                <Option title="two" value={{ label: 'two' }} />
+                <Option title="three" value={{ label: 'three' }} />
             </SelectTwo>
         );
 

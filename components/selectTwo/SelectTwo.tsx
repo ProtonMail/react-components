@@ -204,7 +204,7 @@ const Select = <V extends any>({
 
     const selectedChild = selectedIndex || selectedIndex === 0 ? children[selectedIndex] : null;
 
-    const displayedValue = selectedChild?.props?.children || placeholder;
+    const displayedValue = selectedChild?.props?.children || selectedChild?.props?.title || placeholder;
 
     const ariaLabel = selectedChild?.props?.title;
 
