@@ -112,6 +112,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
     const changeProvider = (provider: PROVIDER_INSTRUCTIONS) => setProviderInstructions(provider);
 
     const needAppPassword = useMemo(() => modalModel.imap === IMAPS.YAHOO, [modalModel.imap]);
+    const invalidPortError = useMemo(() => !/^\d+$/g.test(modalModel.port), [modalModel.port]);
 
     const title = useMemo(() => {
         switch (modalModel.step) {
@@ -152,7 +153,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
 
     useEffect(() => {
         if (debouncedEmail && validateEmailAddress(debouncedEmail)) {
-            withLoading(checkAuth());
+            void withLoading(checkAuth());
         } else {
             setShowPassword(false);
         }
@@ -301,10 +302,10 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
         switch (modalModel.step) {
             case Step.START:
                 if (isReconnectMode) {
-                    withLoading(resumeImport());
+                    void withLoading(resumeImport());
                     return;
                 }
-                withLoading(submitAuthentication(modalModel.needIMAPDetails));
+                void withLoading(submitAuthentication(modalModel.needIMAPDetails));
                 break;
             case Step.INSTRUCTIONS:
                 if (providerInstructions === PROVIDER_INSTRUCTIONS.GMAIL) {
@@ -324,7 +325,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
                 });
                 break;
             case Step.PREPARE:
-                withLoading(launchImport());
+                void withLoading(launchImport());
                 break;
             case Step.STARTED:
                 onClose();
@@ -363,7 +364,9 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
     const submitRenderer = useMemo(() => {
         const { email, password, needIMAPDetails, imap, port, isPayloadValid, step } = modalModel;
 
-        const disabledStartStep = needIMAPDetails ? !email || !password || !imap || !port : !email || !password;
+        const disabledStartStep = needIMAPDetails
+            ? !email || !password || !imap || !port || invalidPortError
+            : !email || !password;
 
         switch (step) {
             case Step.INSTRUCTIONS:
@@ -437,6 +440,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
                     needAppPassword={needAppPassword}
                     showPassword={showPassword}
                     currentImport={currentImport}
+                    invalidPortError={invalidPortError}
                 />
             )}
             {modalModel.step === Step.PREPARE && (
