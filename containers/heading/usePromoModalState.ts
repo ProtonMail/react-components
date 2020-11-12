@@ -63,7 +63,7 @@ const usePromoModalState = () => {
         }
     };
 
-    return [state, onChange];
+    return [state, onChange] as const;
 };
 
 export default usePromoModalState;
