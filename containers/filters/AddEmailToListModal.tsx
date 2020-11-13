@@ -25,12 +25,12 @@ interface Props {
 function AddEmailToListModal({ type, incomingDefault, onAdd = noop, onClose, ...rest }: Props) {
     const I18N = {
         ADD: {
-            [BLACKLIST_LOCATION]: c('Title').t`Add to block list`,
-            [WHITELIST_LOCATION]: c('Title').t`Add to allow list`,
+            [BLACKLIST_LOCATION]: c('Title').t`Add to Block List`,
+            [WHITELIST_LOCATION]: c('Title').t`Add to Allow List`,
         },
         EDIT: {
-            [BLACKLIST_LOCATION]: c('Title').t`Edit block list`,
-            [WHITELIST_LOCATION]: c('Title').t`Edit allow list`,
+            [BLACKLIST_LOCATION]: c('Title').t`Edit Block List`,
+            [WHITELIST_LOCATION]: c('Title').t`Edit Allow List`,
         },
     };
 
