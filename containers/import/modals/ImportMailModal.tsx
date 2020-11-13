@@ -12,6 +12,7 @@ import {
 } from 'proton-shared/lib/api/mailImport';
 import { noop } from 'proton-shared/lib/helpers/function';
 import { validateEmailAddress } from 'proton-shared/lib/helpers/email';
+import { isNumber } from 'proton-shared/lib/helpers/validators';
 
 import { useLoading, useAddresses, useModals, useApi, useEventManager } from '../../../hooks';
 import {
@@ -112,7 +113,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
     const changeProvider = (provider: PROVIDER_INSTRUCTIONS) => setProviderInstructions(provider);
 
     const needAppPassword = useMemo(() => modalModel.imap === IMAPS.YAHOO, [modalModel.imap]);
-    const invalidPortError = useMemo(() => !/^\d+$/g.test(modalModel.port), [modalModel.port]);
+    const invalidPortError = useMemo(() => !isNumber(modalModel.port), [modalModel.port]);
 
     const title = useMemo(() => {
         switch (modalModel.step) {
