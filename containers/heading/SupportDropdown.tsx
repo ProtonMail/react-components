@@ -58,11 +58,7 @@ const SupportDropdown = ({ className, content, hasButtonCaret = false }: Props) 
                         <Icon className="mt0-25 mr0-5" name="what-is-this" />
                         {c('Action').t`I have a question`}
                     </DropdownMenuLink>
-                    <DropdownMenuLink
-                        href="https://protonmail.uservoice.com/"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
+                    <DropdownMenuLink href="https://protonmail.uservoice.com/" target="_blank">
                         <Icon className="mt0-25 mr0-5" name="help-answer" />
                         {c('Action').t`Request a feature`}
                     </DropdownMenuLink>
