@@ -6,6 +6,7 @@ interface Props extends React.HTMLAttributes<HTMLAnchorElement> {
     children?: React.ReactNode;
     href?: string;
     target?: string;
+    rel?: string;
 }
 
 const DropdownMenuLink = ({ className = '', children, ...rest }: Props) => {
