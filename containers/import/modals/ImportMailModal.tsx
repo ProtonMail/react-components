@@ -153,7 +153,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
 
     useEffect(() => {
         if (debouncedEmail && validateEmailAddress(debouncedEmail)) {
-            void withLoading(checkAuth());
+            withLoading(checkAuth());
         } else {
             setShowPassword(false);
         }
@@ -302,10 +302,10 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
         switch (modalModel.step) {
             case Step.START:
                 if (isReconnectMode) {
-                    void withLoading(resumeImport());
+                    withLoading(resumeImport());
                     return;
                 }
-                void withLoading(submitAuthentication(modalModel.needIMAPDetails));
+                withLoading(submitAuthentication(modalModel.needIMAPDetails));
                 break;
             case Step.INSTRUCTIONS:
                 if (providerInstructions === PROVIDER_INSTRUCTIONS.GMAIL) {
@@ -325,7 +325,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
                 });
                 break;
             case Step.PREPARE:
-                void withLoading(launchImport());
+                withLoading(launchImport());
                 break;
             case Step.STARTED:
                 onClose();
