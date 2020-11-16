@@ -174,7 +174,7 @@ const ImportManageFolders = ({ modalModel, address, payload, toggleEditing, onCh
     };
 
     useEffect(() => {
-        const isEditing = Object.values(editModeMap).filter(Boolean).length > 0;
+        const isEditing = Object.values(editModeMap).some(Boolean);
         toggleEditing(isEditing);
     }, [editModeMap]);
 
