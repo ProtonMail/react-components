@@ -16,9 +16,10 @@ interface Props {
     contact: Contact;
 }
 
-const useContactProperties = ({ contact, userKeysList }: Props) => {
+const useContactProperties = ({ contact, userKeysList }: Props): [ContactPropertiesModel, () => void] => {
     const ref = useRef('');
     const [model, setModel] = useState<ContactPropertiesModel>({});
+    const [forceRefresh, setForceRefresh] = useState({});
 
     useEffect(() => {
         if (contact && userKeysList.length) {
@@ -32,9 +33,14 @@ const useContactProperties = ({ contact, userKeysList }: Props) => {
                 setModel({ ID: contact.ID, properties, errors });
             });
         }
-    }, [contact, userKeysList]);
+    }, [contact, userKeysList, forceRefresh]);
 
-    return model;
+    const handleForceRefresh = () => {
+        setModel({});
+        setForceRefresh({});
+    };
+
+    return [model, handleForceRefresh];
 };
 
 export default useContactProperties;

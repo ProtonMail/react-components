@@ -28,7 +28,7 @@ const Contact = ({
     onDelete,
 }: Props) => {
     const [contact, contactLoading] = useContact(contactID);
-    const { properties, errors, ID } = useContactProperties({ contact, userKeysList });
+    const [{ properties, errors, ID }, onReload] = useContactProperties({ contact, userKeysList });
 
     if (contactLoading || !properties || ID !== contactID) {
         return <Loader />;
@@ -45,6 +45,7 @@ const Contact = ({
             errors={errors}
             isModal={isModal}
             onDelete={onDelete}
+            onReload={onReload}
         />
     );
 };

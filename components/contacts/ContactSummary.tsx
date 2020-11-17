@@ -1,10 +1,8 @@
 import React from 'react';
 import { c } from 'ttag';
-
 import { getPreferredValue } from 'proton-shared/lib/contacts/properties';
 import { formatAdr } from 'proton-shared/lib/contacts/property';
 import { ContactProperties } from 'proton-shared/lib/interfaces/contacts';
-
 import ContactImageSummary from './ContactImageSummary';
 import './ContactSummary.scss';
 import Tooltip from '../tooltip/Tooltip';
@@ -15,21 +13,14 @@ import useActiveBreakpoint from '../../hooks/useActiveBreakpoint';
 
 interface Props {
     properties: ContactProperties;
-    handleExport: () => void;
-    handleDelete: () => void;
-    handleEdit: (field?: string) => void;
+    onExport: () => void;
+    onDelete: () => void;
+    onEdit: (field?: string) => void;
     leftBlockWidth?: string;
     isPreview?: boolean;
 }
 
-const ContactSummary = ({
-    properties,
-    handleEdit,
-    handleDelete,
-    handleExport,
-    isPreview,
-    leftBlockWidth = 'w30',
-}: Props) => {
+const ContactSummary = ({ properties, onEdit, onDelete, onExport, isPreview, leftBlockWidth = 'w30' }: Props) => {
     const { isNarrow } = useActiveBreakpoint();
 
     const photo = getPreferredValue(properties, 'photo') as string;
@@ -47,7 +38,7 @@ const ContactSummary = ({
                 </a>
             ) : (
                 !isPreview && (
-                    <LinkButton className="p0" onClick={() => handleEdit('email')}>
+                    <LinkButton className="p0" onClick={() => onEdit('email')}>
                         {c('Action').t`Add email`}
                     </LinkButton>
                 )
@@ -59,7 +50,7 @@ const ContactSummary = ({
                 <a href={`tel:${tel}`}>{tel}</a>
             ) : (
                 !isPreview && (
-                    <LinkButton className="p0" onClick={() => handleEdit('tel')}>
+                    <LinkButton className="p0" onClick={() => onEdit('tel')}>
                         {c('Action').t`Add phone number`}
                     </LinkButton>
                 )
@@ -70,7 +61,7 @@ const ContactSummary = ({
             component: adr
                 ? formatAdr(adr)
                 : !isPreview && (
-                      <LinkButton className="p0" onClick={() => handleEdit('adr')}>
+                      <LinkButton className="p0" onClick={() => onEdit('adr')}>
                           {c('Action').t`Add address`}
                       </LinkButton>
                   ),
@@ -108,19 +99,19 @@ const ContactSummary = ({
             {!isPreview && (
                 <div className="flex-item-noshrink pt0-5 on-mobile-text-center mb1">
                     <Tooltip title={c('Action').t`Edit`} className="ml0-5">
-                        <Button onClick={() => handleEdit()} className="button--for-icon inline-flex">
+                        <Button onClick={() => onEdit()} className="button--for-icon inline-flex">
                             <Icon className="color-primary mt0-25 mb0-1" name="pen" alt={c('Action').t`Edit`} />
                         </Button>
                     </Tooltip>
 
                     <Tooltip title={c('Action').t`Export`} className="ml0-5">
-                        <Button onClick={handleExport} className="button--for-icon inline-flex">
+                        <Button onClick={onExport} className="button--for-icon inline-flex">
                             <Icon className="mt0-25 mb0-1" name="export" alt={c('Action').t`Export`} />
                         </Button>
                     </Tooltip>
 
                     <Tooltip title={c('Action').t`Delete`} className="ml0-5">
-                        <Button onClick={handleDelete} className="button--for-icon inline-flex">
+                        <Button onClick={onDelete} className="button--for-icon inline-flex">
                             <Icon
                                 className="color-global-warning mt0-25 mb0-1"
                                 name="trash"
