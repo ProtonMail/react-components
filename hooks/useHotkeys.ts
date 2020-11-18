@@ -39,6 +39,7 @@ type KeyEventType = 'keyup' | 'keydown' | 'keypress';
 type HotKeysOptions = {
     keyEventType?: KeyEventType;
     sequenceResetTime?: number;
+    dependencies?: React.DependencyList;
 };
 
 const MODIFIER_KEYS = {
@@ -53,7 +54,7 @@ const useHotkeys = (
     hotkeyTupleArray: HotkeyTuple[],
     options?: HotKeysOptions
 ) => {
-    const { keyEventType = 'keydown', sequenceResetTime = 1000 } = options || {};
+    const { keyEventType = 'keydown', sequenceResetTime = 1000, dependencies = [] } = options || {};
     const msSinceLastEvent = useRef(0);
 
     const sequence = useRef<Hotkey[]>([]);
@@ -107,16 +108,15 @@ const useHotkeys = (
     };
 
     useEffect(() => {
-        if (ref && ref.current) {
-            ref.current.addEventListener(keyEventType, handleKeyDown as EventListener);
+        const el = ref.current;
+        if (!el) {
+            return;
         }
-
+        el.addEventListener(keyEventType, handleKeyDown as EventListener);
         return () => {
-            if (ref && ref.current) {
-                ref.current.removeEventListener(keyEventType, handleKeyDown as EventListener);
-            }
+            el.removeEventListener(keyEventType, handleKeyDown as EventListener);
         };
-    }, []);
+    }, [ref.current, handleKeyDown, ...dependencies]);
 };
 
 export default useHotkeys;
