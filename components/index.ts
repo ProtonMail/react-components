@@ -1,6 +1,7 @@
 export * from './alert';
 export * from './attachedFile';
 export * from './autocomplete';
+export * from './autocompleteTwo';
 export * from './badge';
 export * from './breadcrumb';
 export * from './button';
