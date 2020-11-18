@@ -332,9 +332,12 @@ export const initSquire = async (document: Document, onEllipseClick: () => void)
     wrapInsertHTML(squire);
 
     ellipsisButton?.addEventListener('click', onEllipseClick);
+    const fallbackElements = [document.documentElement, document.body, ellipsisContainer];
     document.addEventListener('click', (event) => {
-        if (event.target === document.documentElement || event.target === ellipsisContainer) {
+        if (fallbackElements.includes(event.target as Element | null)) {
+            squire.moveCursorToEnd();
             squire.focus();
+            squire.insertHTML(''); // Needed for FF to show the cursor
         }
     });
 
