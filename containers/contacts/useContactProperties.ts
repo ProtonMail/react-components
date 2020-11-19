@@ -26,7 +26,7 @@ const useContactProperties = ({ contact, userKeysList }: Props): [ContactPropert
             ref.current = contact.ID;
             const { publicKeys, privateKeys } = splitKeys(userKeysList);
 
-            prepareContact(contact, { publicKeys, privateKeys }).then(({ properties, errors }) => {
+            void prepareContact(contact, { publicKeys, privateKeys }).then(({ properties, errors }) => {
                 if (ref.current !== contact.ID) {
                     return;
                 }
