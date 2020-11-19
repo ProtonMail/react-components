@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { traceError } from 'proton-shared/lib/helpers/sentry';
+import { PRODUCTION } from 'proton-shared/lib/constants';
 
 import { useConfig } from '../../hooks';
 import NewVersionTopBannerView from './NewVersionTopBannerView';
@@ -13,16 +14,20 @@ const NewVersionTopBanner = () => {
     const [newVersionAvailable, setNewVersionAvailable] = useState(false);
     const { appVersionBad } = useApiStatus();
 
-    const isNewVersionAvailable = async () => {
-        try {
-            const { commit } = await fetch(VERSION_PATH).then((response) => response.json());
-            setNewVersionAvailable(isDifferent(commit, COMMIT_RELEASE));
-        } catch (error) {
-            traceError(error);
-        }
-    };
-
     useEffect(() => {
+        if (!PRODUCTION) {
+            return;
+        }
+
+        const isNewVersionAvailable = async () => {
+            try {
+                const { commit } = await fetch(VERSION_PATH).then((response) => response.json());
+                setNewVersionAvailable(isDifferent(commit, COMMIT_RELEASE));
+            } catch (error) {
+                traceError(error);
+            }
+        };
+
         isNewVersionAvailable();
         const intervalID = setInterval(() => {
             isNewVersionAvailable();
