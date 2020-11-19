@@ -49,7 +49,6 @@
     "@types/react-router-dom": "^5.1.5",
     "@types/react-virtualized": "^9.21.10",
     "awesomplete": "^1.1.4",
-    "blueimp-load-image": "^5.13.0",
     "card-validator": "^6.1.0",
     "codemirror": "^5.46.0",
     "date-fns": "^2.6.0",
