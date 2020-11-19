@@ -70,7 +70,9 @@ const AccountResetPasswordContainer = ({ onLogin, Layout, onBack }: Props) => {
                 >
                     <SignupLabelInputRow
                         label={<Label htmlFor="username">{c('Label').t`Email or username`}</Label>}
-                        input={<ResetUsernameInput id="username" value={username} setValue={setUsername} />}
+                        input={
+                            <ResetUsernameInput id="username" value={username} setValue={setUsername} placeholder="" />
+                        }
                     />
                     <SignupSubmitRow>
                         <PrimaryButton
@@ -119,7 +121,7 @@ const AccountResetPasswordContainer = ({ onLogin, Layout, onBack }: Props) => {
                 content: (
                     <SignupLabelInputRow
                         label={<Label htmlFor="email">{c('Label').t`Recovery email`}</Label>}
-                        input={<ResetPasswordEmailInput value={email} setValue={setEmail} id="email" />}
+                        input={<ResetPasswordEmailInput value={email} setValue={setEmail} id="email" placeholder="" />}
                     />
                 ),
             },
@@ -129,7 +131,7 @@ const AccountResetPasswordContainer = ({ onLogin, Layout, onBack }: Props) => {
                 content: (
                     <SignupLabelInputRow
                         label={<Label htmlFor="phone">{c('Label').t`Recovery phone`}</Label>}
-                        input={<ResetPasswordPhoneInput value={phone} setValue={setPhone} id="phone" />}
+                        input={<ResetPasswordPhoneInput value={phone} setValue={setPhone} id="phone" placeholder="" />}
                     />
                 ),
             },
@@ -164,11 +166,7 @@ const AccountResetPasswordContainer = ({ onLogin, Layout, onBack }: Props) => {
                         handleRequest();
                     }}
                 >
-                    {tabs.length === 1 ? (
-                        tabs[0].content
-                    ) : (
-                        <Tabs tabs={tabs} value={tabIndex} onChange={handleChangeIndex} />
-                    )}
+                    <Tabs tabs={tabs} value={tabIndex} onChange={handleChangeIndex} />
                     <SignupSubmitRow>
                         <PrimaryButton
                             className="pm-button--large onmobile-w100"
@@ -236,7 +234,7 @@ const AccountResetPasswordContainer = ({ onLogin, Layout, onBack }: Props) => {
                 >
                     <SignupLabelInputRow
                         label={<Label htmlFor="reset-token">{c('Label').t`Code`}</Label>}
-                        input={<ResetTokenInput id="reset-token" value={token} setValue={setToken} />}
+                        input={<ResetTokenInput id="reset-token" value={token} setValue={setToken} placeholder="" />}
                     />
                     {email || phone ? (
                         <InlineLinkButton
