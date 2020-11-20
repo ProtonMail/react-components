@@ -6,6 +6,8 @@ import { Alert, Icon, Table, TableBody, TableHeader, TableRow, Time } from '../.
 import { AUTH_LOG_EVENTS, AuthLog } from './interface';
 import { getEventsI18N } from './helper';
 
+const { ADVANCED, DISABLE } = SETTINGS_LOG_AUTH_STATE;
+
 const getIcon = (event: AUTH_LOG_EVENTS) => {
     if (
         [
@@ -30,7 +32,7 @@ interface Props {
 const LogsTable = ({ logs, logAuth, loading, error }: Props) => {
     const i18n = getEventsI18N();
 
-    if (logAuth === SETTINGS_LOG_AUTH_STATE.DISABLE) {
+    if (logAuth === DISABLE) {
         return (
             <Alert>{c('Info')
                 .t`You can enable authentication logging to see when your account is accessed, and from which IP. We will record the IP address that accesses the account and the time, as well as failed attempts.`}</Alert>
@@ -47,13 +49,7 @@ const LogsTable = ({ logs, logAuth, loading, error }: Props) => {
 
     return (
         <Table>
-            <TableHeader
-                cells={[
-                    c('Header').t`Event`,
-                    logAuth === SETTINGS_LOG_AUTH_STATE.ADVANCED ? 'IP' : '',
-                    c('Header').t`Time`,
-                ]}
-            />
+            <TableHeader cells={[c('Header').t`Event`, logAuth === ADVANCED ? 'IP' : '', c('Header').t`Time`]} />
             <TableBody loading={loading} colSpan={3}>
                 {logs.map(({ Time: time, Event, IP }, index) => {
                     const key = index.toString();
@@ -65,7 +61,7 @@ const LogsTable = ({ logs, logAuth, loading, error }: Props) => {
                                 <>
                                     {getIcon(Event)} {i18n[Event]}
                                 </>,
-                                logAuth === SETTINGS_LOG_AUTH_STATE.ADVANCED ? <code>{IP || '-'}</code> : '',
+                                logAuth === ADVANCED ? <code>{IP || '-'}</code> : '',
                                 <Time key={key} format="PPp">
                                     {time}
                                 </Time>,

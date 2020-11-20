@@ -23,6 +23,8 @@ import LogsTable from './LogsTable';
 import WipeLogsButton from './WipeLogsButton';
 import { getAllAuthenticationLogs, getEventsI18N } from './helper';
 
+const { BASIC, DISABLE, ADVANCED } = SETTINGS_LOG_AUTH_STATE;
+
 const INITIAL_STATE = {
     logs: [],
     total: 0,
@@ -77,12 +79,12 @@ const LogsSection = () => {
     };
 
     const handleLogAuth = (newLogAuthState: SETTINGS_LOG_AUTH_STATE) => async () => {
-        if (state.total > 0 && newLogAuthState === SETTINGS_LOG_AUTH_STATE.DISABLE) {
+        if (state.total > 0 && newLogAuthState === DISABLE) {
             await confirmDisable();
         }
         await api(updateLogAuth(newLogAuthState));
         setLogAuth(newLogAuthState);
-        if (newLogAuthState === SETTINGS_LOG_AUTH_STATE.DISABLE) {
+        if (newLogAuthState === DISABLE) {
             setState(INITIAL_STATE);
         }
     };
@@ -130,16 +132,15 @@ const LogsSection = () => {
                 <div className="flex flex-items-center">
                     <Group className="mr1 mb0-5">
                         <ButtonGroup
-                            className={logAuth === SETTINGS_LOG_AUTH_STATE.DISABLE ? 'is-active' : ''}
-                            onClick={handleLogAuth(SETTINGS_LOG_AUTH_STATE.DISABLE)}
+                            className={logAuth === DISABLE ? 'is-active' : ''}
+                            onClick={handleLogAuth(DISABLE)}
                         >{c('Log preference').t`Disabled`}</ButtonGroup>
+                        <ButtonGroup className={logAuth === BASIC ? 'is-active' : ''} onClick={handleLogAuth(BASIC)}>{c(
+                            'Log preference'
+                        ).t`Basic`}</ButtonGroup>
                         <ButtonGroup
-                            className={logAuth === SETTINGS_LOG_AUTH_STATE.BASIC ? 'is-active' : ''}
-                            onClick={handleLogAuth(SETTINGS_LOG_AUTH_STATE.BASIC)}
-                        >{c('Log preference').t`Basic`}</ButtonGroup>
-                        <ButtonGroup
-                            className={logAuth === SETTINGS_LOG_AUTH_STATE.ADVANCED ? 'is-active' : ''}
-                            onClick={handleLogAuth(SETTINGS_LOG_AUTH_STATE.ADVANCED)}
+                            className={logAuth === ADVANCED ? 'is-active' : ''}
+                            onClick={handleLogAuth(ADVANCED)}
                         >{c('Log preference').t`Advanced`}</ButtonGroup>
                     </Group>
                     <span className="flex-item-noshrink">
