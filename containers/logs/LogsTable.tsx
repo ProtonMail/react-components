@@ -24,9 +24,10 @@ interface Props {
     logs: AuthLog[];
     logAuth: SETTINGS_LOG_AUTH_STATE;
     loading: boolean;
+    error: boolean;
 }
 
-const LogsTable = ({ logs, logAuth, loading }: Props) => {
+const LogsTable = ({ logs, logAuth, loading, error }: Props) => {
     const i18n = getEventsI18N();
 
     if (logAuth === SETTINGS_LOG_AUTH_STATE.DISABLE) {
@@ -38,6 +39,10 @@ const LogsTable = ({ logs, logAuth, loading }: Props) => {
 
     if (!loading && !logs.length) {
         return <Alert>{c('Info').t`No logs yet.`}</Alert>;
+    }
+
+    if (!loading && error) {
+        return <Alert type="error">{c('Info').t`Failed to fetch logs.`}</Alert>;
     }
 
     return (

@@ -1,14 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { c } from 'ttag';
 import { fromUnixTime } from 'date-fns';
-import { clearLogs } from 'proton-shared/lib/api/logs';
+import { clearLogs, queryLogs } from 'proton-shared/lib/api/logs';
 import { updateLogAuth } from 'proton-shared/lib/api/settings';
 import downloadFile from 'proton-shared/lib/helpers/downloadFile';
-import { ELEMENTS_PER_PAGE } from 'proton-shared/lib/constants';
 import { SETTINGS_LOG_AUTH_STATE } from 'proton-shared/lib/interfaces';
 import { wait } from 'proton-shared/lib/helpers/promise';
 import { AuthLog } from './interface';
-import { Alert, Block, Button, ButtonGroup, ConfirmModal, Group, Pagination, usePagination } from '../../components';
+import {
+    Alert,
+    Block,
+    Button,
+    ButtonGroup,
+    ConfirmModal,
+    Group,
+    Pagination,
+    usePaginationAsync,
+} from '../../components';
 import { useApi, useLoading, useModals, useUserSettings } from '../../hooks';
 
 import LogsTable from './LogsTable';
@@ -19,6 +27,7 @@ const INITIAL_STATE = {
     logs: [],
     total: 0,
 };
+const PAGE_SIZE = 10;
 
 const LogsSection = () => {
     const i18n = getEventsI18N();
@@ -27,10 +36,11 @@ const LogsSection = () => {
     const [logAuth, setLogAuth] = useState(settings.LogAuth);
     const api = useApi();
     const [state, setState] = useState<{ logs: AuthLog[]; total: number }>(INITIAL_STATE);
-    const { page, list, onNext, onPrevious, onSelect } = usePagination(state.logs);
+    const { page, onNext, onPrevious, onSelect } = usePaginationAsync(1);
     const [loading, withLoading] = useLoading();
     const [loadingRefresh, withLoadingRefresh] = useLoading();
     const [loadingDownload, withLoadingDownload] = useLoading();
+    const [error, setError] = useState(false);
 
     const handleWipe = async () => {
         await api(clearLogs());
@@ -82,14 +92,35 @@ const LogsSection = () => {
         setLogAuth(settings.LogAuth);
     }, [settings.LogAuth]);
 
+    const latestRef = useRef<any>();
+
     const fetchAndSetState = async () => {
-        const Logs = await getAllAuthenticationLogs(api);
-        setState({ logs: Logs.sort((a, b) => b.Time - a.Time), total: Logs.length });
+        const latest = {};
+        latestRef.current = latest;
+
+        setError(false);
+        try {
+            const { Logs, Total } = await api<{ Logs: AuthLog[]; Total: number }>(
+                queryLogs({
+                    Page: page - 1,
+                    PageSize: 10,
+                })
+            );
+            if (latestRef.current !== latest) {
+                return;
+            }
+            setState({ logs: Logs, total: Total });
+        } catch (e) {
+            if (latestRef.current !== latest) {
+                return;
+            }
+            setError(true);
+        }
     };
 
     useEffect(() => {
         withLoading(fetchAndSetState());
-    }, []);
+    }, [page]);
 
     return (
         <>
@@ -136,11 +167,11 @@ const LogsSection = () => {
                         onSelect={onSelect}
                         total={state.total}
                         page={page}
-                        limit={ELEMENTS_PER_PAGE}
+                        limit={PAGE_SIZE}
                     />
                 </div>
             </Block>
-            <LogsTable logs={list} logAuth={logAuth} loading={loading} />
+            <LogsTable logs={state.logs} logAuth={logAuth} loading={loading} error={error} />
         </>
     );
 };
