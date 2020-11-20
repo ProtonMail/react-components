@@ -8,9 +8,9 @@ export interface AutocompleteChangeEvent<V> {
     value: V;
 }
 
-interface RenderProps<V> {
-    value: V;
-    input: string;
+export interface AutocompleteRenderProps<V> {
+    autocompleteValue: V;
+    inputValue: string;
     'aria-owns': AriaAttributes['aria-owns'];
     'aria-activedescendant': AriaAttributes['aria-activedescendant'];
     'aria-autocomplete': AriaAttributes['aria-autocomplete'];
@@ -126,7 +126,15 @@ const AutocompleteTwo = <V, Multiple extends boolean | undefined = undefined>({
 
     const [highlightedIndex, setHighlightedIndex] = useState(0);
 
-    const [input, setInput] = useState('');
+    let initialInput: string;
+
+    if (multiple) {
+        initialInput = '';
+    } else {
+        initialInput = valueProp ? getOptionLabel(valueProp as V) : '';
+    }
+
+    const [input, setInput] = useState(initialInput);
 
     const [isOpen, setIsOpen] = useControlled(isOpenProp, false);
 
@@ -307,8 +315,8 @@ const AutocompleteTwo = <V, Multiple extends boolean | undefined = undefined>({
     };
 
     const renderProps: RenderProps<ValueOrValueArray> = {
-        input,
-        value,
+        inputValue: input,
+        autocompleteValue: value,
         'aria-owns': id,
         'aria-activedescendant': `${id}-${highlightedIndex}`,
         'aria-autocomplete': 'list',
