@@ -36,8 +36,9 @@ const useGetEncryptionPreferences = () => {
     const getEncryptionPreferences = useCallback(
         async (emailAddress: string, lifetime?: number) => {
             const [addresses, mailSettings] = await Promise.all([getAddresses(), getMailSettings()]);
+            const normalizedInternalEmail = normalizeInternalEmail(emailAddress);
             const selfAddress = addresses.find(
-                ({ Email }) => normalizeInternalEmail(Email) === normalizeInternalEmail(emailAddress)
+                ({ Email }) => normalizeInternalEmail(Email) === normalizedInternalEmail
             );
             let selfSend;
             let apiKeysConfig;
@@ -71,6 +72,9 @@ const useGetEncryptionPreferences = () => {
                 cache.set(CACHE_KEY, new Map());
             }
             const subCache = cache.get(CACHE_KEY);
+            // By normalizing email here, we consider that it could not exists different encryption preferences
+            // For 2 addresses identical but for the cases.
+            // If a provider does different one day, this would have to evolve.
             const normalizedEmail = normalizeEmail(email);
             const miss = () => getEncryptionPreferences(normalizedEmail, lifetime);
             return getPromiseValue(subCache, normalizedEmail, miss, lifetime);
