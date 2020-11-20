@@ -15,13 +15,18 @@ import LogsTable from './LogsTable';
 import WipeLogsButton from './WipeLogsButton';
 import { getAllAuthenticationLogs, getEventsI18N } from './helper';
 
+const INITIAL_STATE = {
+    logs: [],
+    total: 0,
+};
+
 const LogsSection = () => {
     const i18n = getEventsI18N();
     const [settings] = useUserSettings();
     const { createModal } = useModals();
     const [logAuth, setLogAuth] = useState(settings.LogAuth);
     const api = useApi();
-    const [state, setState] = useState<{ logs: AuthLog[]; total: number }>({ logs: [], total: 0 });
+    const [state, setState] = useState<{ logs: AuthLog[]; total: number }>(INITIAL_STATE);
     const { page, list, onNext, onPrevious, onSelect } = usePagination(state.logs);
     const [loading, withLoading] = useLoading();
     const [loadingRefresh, withLoadingRefresh] = useLoading();
@@ -29,7 +34,7 @@ const LogsSection = () => {
 
     const handleWipe = async () => {
         await api(clearLogs());
-        setState({ logs: [], total: 0 });
+        setState(INITIAL_STATE);
     };
 
     const handleDownload = async () => {
@@ -67,6 +72,9 @@ const LogsSection = () => {
         }
         await api(updateLogAuth(newLogAuthState));
         setLogAuth(newLogAuthState);
+        if (newLogAuthState === SETTINGS_LOG_AUTH_STATE.DISABLE) {
+            setState(INITIAL_STATE);
+        }
     };
 
     // Handle updates from the event manager
