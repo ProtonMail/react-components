@@ -14,6 +14,7 @@ interface RenderProps<V> {
     'aria-owns': AriaAttributes['aria-owns'];
     'aria-activedescendant': AriaAttributes['aria-activedescendant'];
     'aria-autocomplete': AriaAttributes['aria-autocomplete'];
+    'aria-describedby': AriaAttributes['aria-describedby'];
     ref: React.RefObject<any>;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onFocus: () => void;
@@ -311,6 +312,7 @@ const AutocompleteTwo = <V, Multiple extends boolean | undefined = undefined>({
         'aria-owns': id,
         'aria-activedescendant': `${id}-${highlightedIndex}`,
         'aria-autocomplete': 'list',
+        'aria-describedby': `${id}-autocomplete-suggest-text`,
         ref: anchorRef,
         onChange: handleInputChange,
         onFocus: handleInputFocus,
@@ -320,6 +322,15 @@ const AutocompleteTwo = <V, Multiple extends boolean | undefined = undefined>({
     return (
         <>
             {children(renderProps)}
+
+            <span className="sr-only" id={`${id}-autocomplete-suggest-text`}>
+                Use Up and Down keys to access and browse suggestions after input. Press Enter to confirm your choice,
+                or Escape to close the suggestions box.
+            </span>
+
+            <div className="sr-only" aria-atomic="true" aria-live="assertive">
+                Found {filteredOptions.length} suggestions, use keyboard to navigate.
+            </div>
 
             <Dropdown
                 autoClose={false}
