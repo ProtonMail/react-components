@@ -7,7 +7,14 @@ import { AUTH_LOG_EVENTS, AuthLog } from './interface';
 import { getEventsI18N } from './helper';
 
 const getIcon = (event: AUTH_LOG_EVENTS) => {
-    if ([AUTH_LOG_EVENTS.LOGIN_FAILURE_PASSWORD, AUTH_LOG_EVENTS.LOGIN_FAILURE_2FA].includes(event)) {
+    if (
+        [
+            AUTH_LOG_EVENTS.LOGIN_FAILURE_PASSWORD,
+            AUTH_LOG_EVENTS.LOGIN_FAILURE_2FA,
+            AUTH_LOG_EVENTS.REAUTH_FAILURE_2FA,
+            AUTH_LOG_EVENTS.REAUTH_FAILURE_PASSWORD,
+        ].includes(event)
+    ) {
         return <Icon name="off" />;
     }
     return <Icon name="on" />;
