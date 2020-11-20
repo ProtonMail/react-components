@@ -30,11 +30,9 @@ const ShortcutsSection = () => {
                 <div>
                     <ShortcutsToggle className="mr1" id="hotkeysToggle" hotkeys={hotkeys} onChange={handleChange} />
                 </div>
-                {hotkeys ? (
-                    <div className="mt1">
-                        <SmallButton onClick={handleOpenModal}>{c('Action').t`View keyboard shortcuts`}</SmallButton>
-                    </div>
-                ) : null}
+                <div className="mt1">
+                    <SmallButton onClick={handleOpenModal}>{c('Action').t`View keyboard shortcuts`}</SmallButton>
+                </div>
             </Field>
         </Row>
     );

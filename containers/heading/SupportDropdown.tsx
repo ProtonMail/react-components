@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { c } from 'ttag';
 import { APPS, BRAND_NAME } from 'proton-shared/lib/constants';
 import { Icon, Dropdown, DropdownMenu, DropdownMenuButton, DropdownMenuLink, usePopperAnchor } from '../../components';
-import { useModals, useAuthentication, useConfig, useMailSettings } from '../../hooks';
+import { useModals, useAuthentication, useConfig } from '../../hooks';
 
 import BugModal from '../support/BugModal';
 import AuthenticatedBugModal from '../support/AuthenticatedBugModal';
@@ -24,8 +24,6 @@ const SupportDropdown = ({ className, content, hasButtonCaret = false }: Props) 
     const [uid] = useState(generateUID('dropdown'));
     const { anchorRef, isOpen, toggle, close } = usePopperAnchor<HTMLButtonElement>();
     const isAuthenticated = !!UID;
-
-    const [{ Hotkeys } = { Hotkeys: 0 }] = useMailSettings();
 
     const handleBugReportClick = () => {
         createModal(isAuthenticated ? <AuthenticatedBugModal /> : <BugModal />);
@@ -73,12 +71,10 @@ const SupportDropdown = ({ className, content, hasButtonCaret = false }: Props) 
                         <Icon className="mt0-25 mr0-5" name="report-bug" />
                         {c('Action').t`Report bug`}
                     </DropdownMenuButton>
-                    {Hotkeys && (
-                        <DropdownMenuButton className="flex flex-nowrap alignleft" onClick={handleShortcutsClick}>
-                            <Icon className="mt0-25 mr0-5" name="info" />
-                            {c('Action').t`Display shortcuts`}
-                        </DropdownMenuButton>
-                    )}
+                    <DropdownMenuButton className="flex flex-nowrap alignleft" onClick={handleShortcutsClick}>
+                        <Icon className="mt0-25 mr0-5" name="info" />
+                        {c('Action').t`Display shortcuts`}
+                    </DropdownMenuButton>
                     {APP_NAME !== APPS.PROTONVPN_SETTINGS && (
                         <DropdownMenuButton className="flex flex-nowrap alignleft" onClick={handleTourClick}>
                             <Icon className="mt0-25 mr0-5" name="tour" />
