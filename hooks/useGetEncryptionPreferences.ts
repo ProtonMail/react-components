@@ -1,5 +1,5 @@
 import { MINUTE, RECIPIENT_TYPES } from 'proton-shared/lib/constants';
-import { normalizeInternalEmail } from 'proton-shared/lib/helpers/email';
+import { normalizeEmail, normalizeInternalEmail } from 'proton-shared/lib/helpers/email';
 import { useCallback } from 'react';
 import getPublicKeysVcardHelper from 'proton-shared/lib/api/helpers/getPublicKeysVcardHelper';
 import { getContactPublicKeyModel } from 'proton-shared/lib/keys/publicKeys';
@@ -71,8 +71,9 @@ const useGetEncryptionPreferences = () => {
                 cache.set(CACHE_KEY, new Map());
             }
             const subCache = cache.get(CACHE_KEY);
-            const miss = () => getEncryptionPreferences(email, lifetime);
-            return getPromiseValue(subCache, email, miss, lifetime);
+            const normalizedEmail = normalizeEmail(email);
+            const miss = () => getEncryptionPreferences(normalizedEmail, lifetime);
+            return getPromiseValue(subCache, normalizedEmail, miss, lifetime);
         },
         [cache, getEncryptionPreferences]
     );
