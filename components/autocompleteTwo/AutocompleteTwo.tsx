@@ -309,7 +309,7 @@ const AutocompleteTwo = <V, Multiple extends boolean | undefined = undefined>({
         input,
         value,
         'aria-owns': id,
-        'aria-activedescendant': `${id}-${0}`,
+        'aria-activedescendant': `${id}-${highlightedIndex}`,
         'aria-autocomplete': 'list',
         ref: anchorRef,
         onChange: handleInputChange,
