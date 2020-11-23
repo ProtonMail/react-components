@@ -54,7 +54,6 @@ const MemberActions = ({ member, addresses = [], organization }: Props) => {
         }
         await api(removeMember(member.ID));
         await call();
-        createNotification({ text: c('Success message').t`User deleted` });
     };
 
     const login = async () => {
@@ -147,10 +146,12 @@ const MemberActions = ({ member, addresses = [], organization }: Props) => {
         createModal(<EditMemberModal member={member} onClose={noop} />);
     };
 
-    const openDelete = () => {
-        createModal(
-            <DeleteMemberModal member={member} loading={loading} onConfirm={() => withLoading(handleConfirmDelete())} />
-        );
+    const openDelete = async () => {
+        await new Promise((resolve, reject) => {
+            createModal(<DeleteMemberModal member={member} onConfirm={resolve} onClose={reject} />);
+        });
+        await handleConfirmDelete();
+        createNotification({ text: c('Success message').t`User deleted` });
     };
 
     const list = [
@@ -162,7 +163,7 @@ const MemberActions = ({ member, addresses = [], organization }: Props) => {
             ({
                 text: c('Member action').t`Delete`,
                 actionType: 'delete',
-                onClick: openDelete,
+                onClick: () => withLoading(openDelete()),
             } as const),
         canMakeAdmin && {
             text: c('Member action').t`Make admin`,

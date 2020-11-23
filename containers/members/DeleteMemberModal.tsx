@@ -2,15 +2,15 @@ import React, { useState } from 'react';
 import { c } from 'ttag';
 import { Member } from 'proton-shared/lib/interfaces/Member';
 
-import { FormModal, Alert, Input, Label, ErrorButton } from '../../components';
+import { Alert, Input, ErrorButton, DeleteModal } from '../../components';
 
 interface Props {
     member: Member;
-    loading: boolean;
-    onConfirm: () => Promise<void>;
+    onConfirm: () => void;
+    onClose: () => void;
 }
 
-const DeleteMemberModal = ({ member, loading, onConfirm }: Props) => {
+const DeleteMemberModal = ({ member, onConfirm, onClose }: Props) => {
     const [username, setUsername] = useState('');
     const title = c('Title').t`Delete "${member.Name}"?`;
     const isValid = username === member.Name;
@@ -23,24 +23,23 @@ const DeleteMemberModal = ({ member, loading, onConfirm }: Props) => {
     };
 
     return (
-        <FormModal
+        <DeleteModal
             title={title}
-            loading={loading}
-            onSubmit={handleSubmit}
+            onConfirm={handleSubmit}
+            onClose={onClose}
             confirm={<ErrorButton disabled={!isValid} type="submit">{c('Action').t`Delete`}</ErrorButton>}
         >
             <Alert>{c('Info')
                 .t`This will permanently delete the data and all email addresses associated with this user.`}</Alert>
-            <Alert type="warning">{c('Info')
-                .t`To confirm, please enter the name of the user you wish to delete.`}</Alert>
-            <Label htmlFor="username-member">{c('Label').t`Username member`}</Label>
+            <Alert type="error">{c('Info').t`To confirm, please enter the name of the user you wish to delete.`}</Alert>
             <Input
                 id="username-member"
                 value={username}
                 onChange={({ target }) => setUsername(target.value)}
                 placeholder={c('Placeholder').t`Username`}
+                autoFocus
             />
-        </FormModal>
+        </DeleteModal>
     );
 };
 
