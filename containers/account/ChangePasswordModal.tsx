@@ -7,7 +7,7 @@ import { generateKeySaltAndPassphrase } from 'proton-shared/lib/keys/keys';
 import { isSSOMode } from 'proton-shared/lib/constants';
 import { persistSessionWithPassword } from 'proton-shared/lib/authentication/persistedSessionHelper';
 import { PASSWORD_CHANGE_MESSAGE_TYPE, sendMessageToTabs } from 'proton-shared/lib/helpers/crossTab';
-import { getHasTOTPEnabled } from 'proton-shared/lib/settings/twoFactor';
+import { getHasTOTPEnabled, getHasTOTPSettingEnabled } from 'proton-shared/lib/settings/twoFactor';
 
 import {
     handleUnlock,
@@ -76,7 +76,7 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }: Props) => {
     const getAddresses = useGetAddresses();
 
     const [User] = useUser();
-    const [{ '2FA': userAuth2FA }, loadingUserSettings] = useUserSettings();
+    const [userSettings, loadingUserSettings] = useUserSettings();
 
     const { isSubUser, isAdmin } = User;
     const [adminAuthTwoFA, setAdminAuthTwoFA] = useState<TwoFaResponse>();
@@ -427,8 +427,9 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }: Props) => {
         </>
     );
 
-    const twoFAEnabledFlag = isSubUser ? adminAuthTwoFA?.Enabled : userAuth2FA?.Enabled;
-    const hasTotp = getHasTOTPEnabled(twoFAEnabledFlag);
+    const hasTOTPEnabled = isSubUser
+        ? getHasTOTPEnabled(adminAuthTwoFA?.Enabled)
+        : getHasTOTPSettingEnabled(userSettings);
 
     const children = isLoading ? (
         <Loader />
@@ -454,7 +455,7 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }: Props) => {
                     </Field>
                 </Row>
             )}
-            {!isSecondPhase && hasTotp && (
+            {!isSecondPhase && hasTOTPEnabled && (
                 <Row>
                     <Label htmlFor="totp">{c('Label').t`Two-factor code`}</Label>
                     <Field>
