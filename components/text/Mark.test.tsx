@@ -28,4 +28,23 @@ describe('Mark component', () => {
     it('should highlight print result properly', () => {
         expect(container?.innerHTML).toBe(`<mark>E</mark>h, toi, l'ours mal l<mark>é</mark>ch<mark>é</mark>`);
     });
+
+    it('should return original children if no match', () => {
+        const { container } = render(<Mark value="orage">{input}</Mark>);
+        expect(container?.innerHTML).toBe(input);
+    });
+
+    it('should return original children if value empty', () => {
+        const { container } = render(<Mark value="">{input}</Mark>);
+        expect(container?.innerHTML).toBe(input);
+    });
+
+    it('should return original children if children not a string', () => {
+        const { container } = render(
+            <Mark value="orage">
+                <input />
+            </Mark>
+        );
+        expect(container?.innerHTML).toBe('<input>');
+    });
 });

@@ -1,8 +1,8 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useMemo } from 'react';
 import { normalize } from 'proton-shared/lib/helpers/string';
 
 interface Props {
-    children: ReactNode;
+    children?: ReactNode;
     value?: string;
 }
 
@@ -90,21 +90,23 @@ const fillInChunks = (chunksToHighlight: Chunk[], totalLength: number) => {
 };
 
 const Mark = ({ children: textToHighlight, value: searchWord }: Props) => {
-    if (!searchWord || typeof textToHighlight !== 'string') {
+    const allChunks = useMemo(() => {
+        if (!searchWord || typeof textToHighlight !== 'string') {
+            return [];
+        }
+        const normalizedSearchWord = normalize(searchWord, true);
+        const normalizedTextToHighlight = normalize(textToHighlight, true);
+        const chunks = findChunks(normalizedSearchWord, normalizedTextToHighlight);
+        if (!chunks.length) {
+            return [];
+        }
+        const combinedChunks = combineChunks(chunks);
+        return fillInChunks(combinedChunks, textToHighlight.length);
+    }, [textToHighlight, searchWord]);
+
+    if (!allChunks.length || typeof textToHighlight !== 'string') {
         return <>{textToHighlight}</>;
     }
-
-    const normalizedSearchWord = normalize(searchWord, true);
-    const normalizedTextToHighlight = normalize(textToHighlight, true);
-    const chunks = findChunks(normalizedSearchWord, normalizedTextToHighlight);
-
-    if (!chunks.length) {
-        // Not found
-        return <>{textToHighlight}</>;
-    }
-
-    const combinedChunks = combineChunks(chunks);
-    const allChunks = fillInChunks(combinedChunks, textToHighlight.length);
 
     return (
         <>
