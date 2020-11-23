@@ -11,7 +11,6 @@ const usePromoModalState = () => {
     const api = useApi();
 
     const fetchFeature = async () => {
-        // Otherwise check API state
         const { Feature } = await api(getFeature(FEATURE_ID));
         const { Value, DefaultValue } = Feature;
         setState(typeof Value === 'undefined' ? DefaultValue : Value);
