@@ -33,7 +33,7 @@ const DeleteMemberModal = ({ member, onConfirm, onClose }: Props) => {
                 .t`This will permanently delete the data and all email addresses associated with this user.`}</Alert>
             <Alert type="error">{c('Info').t`To confirm, please enter the name of the user you wish to delete.`}</Alert>
             <Input
-                id="username-member"
+                autoComplete="false"
                 value={username}
                 onChange={({ target }) => setUsername(target.value)}
                 placeholder={c('Placeholder').t`Username`}
