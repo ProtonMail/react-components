@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
+import { getHasTOTPSettingEnabled } from 'proton-shared/lib/settings/twoFactor';
 import { FormModal } from '../../components';
 import { useUserSettings } from '../../hooks';
 import PasswordTotpInputs from './PasswordTotpInputs';
@@ -8,15 +9,16 @@ interface Props {
     onClose?: () => void;
     onSubmit: (data: { password: string; totp: string }) => void;
     error: string;
-    hideTotp?: boolean;
+
     [key: string]: any;
 }
-const AskAuthModal = ({ onClose, onSubmit, error, hideTotp, ...rest }: Props) => {
+
+const AskAuthModal = ({ onClose, onSubmit, error, ...rest }: Props) => {
     const [password, setPassword] = useState('');
     const [totp, setTotp] = useState('');
-    const [{ '2FA': { Enabled } } = { '2FA': { Enabled: 0 } }] = useUserSettings();
+    const [userSettings] = useUserSettings();
 
-    const showTotp = !hideTotp && !!Enabled;
+    const hasTOTPEnabled = getHasTOTPSettingEnabled(userSettings);
 
     return (
         <FormModal
@@ -36,7 +38,7 @@ const AskAuthModal = ({ onClose, onSubmit, error, hideTotp, ...rest }: Props) =>
                 totp={totp}
                 setTotp={setTotp}
                 totpError={error}
-                showTotp={showTotp}
+                showTotp={hasTOTPEnabled}
             />
         </FormModal>
     );
