@@ -138,7 +138,7 @@ $MAX_INDENT: 9 !default;
 			li.ql-indent-#{$num} {
 				counter-increment: #{'list-' + $num};
 				&:before {
-					content: counter(#{'list-' + $num + ', ' + nth($LIST_STYLE, ($num%3)+1))}) ". ";
+					content: counter(#{'list-' + $num + ', ' + nth($LIST_STYLE, ($num%3)+1)}) '. ';
 				}
 			}
 
