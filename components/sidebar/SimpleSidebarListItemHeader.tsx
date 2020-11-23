@@ -1,24 +1,45 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import Icon from '../icon/Icon';
 import { classnames } from '../../helpers';
 import SidebarListItem from './SidebarListItem';
+import { useHotkeys } from '../../hooks';
 
 interface Props {
     toggle: boolean;
-    onToggle: () => void;
+    onToggle: (display: boolean) => void;
     hasCaret?: boolean;
     right?: React.ReactNode;
     text: string;
     title?: string;
 }
+
 const SimpleSidebarListItemHeader = ({ toggle, onToggle, hasCaret = true, right, text, title }: Props) => {
+    const buttonRef = useRef<HTMLButtonElement>(null);
+
+    useHotkeys(buttonRef, [
+        [
+            'ArrowRight',
+            (e) => {
+                e.stopPropagation();
+                onToggle(true);
+            },
+        ],
+        [
+            'ArrowLeft',
+            () => {
+                onToggle(false);
+            },
+        ],
+    ]);
+
     return (
         <SidebarListItem className="navigation__link--groupHeader">
             <div className="flex flex-nowrap">
                 <button
+                    ref={buttonRef}
                     className="uppercase flex-item-fluid alignleft navigation__link--groupHeader-link"
                     type="button"
-                    onClick={onToggle}
+                    onClick={() => onToggle(!toggle)}
                     title={title}
                     aria-expanded={toggle}
                 >
