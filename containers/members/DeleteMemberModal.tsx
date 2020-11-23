@@ -19,7 +19,7 @@ const DeleteMemberModal = ({ member, onConfirm, onClose }: Props) => {
         if (!isValid) {
             return;
         }
-        await onConfirm();
+        onConfirm();
     };
 
     return (
