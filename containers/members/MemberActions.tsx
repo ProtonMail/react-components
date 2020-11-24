@@ -150,7 +150,7 @@ const MemberActions = ({ member, addresses = [], organization }: Props) => {
         await new Promise((resolve, reject) => {
             createModal(<DeleteMemberModal member={member} onConfirm={resolve} onClose={reject} />);
         });
-        await handleConfirmDelete();
+        await withLoading(handleConfirmDelete());
         createNotification({ text: c('Success message').t`User deleted` });
     };
 
@@ -163,7 +163,7 @@ const MemberActions = ({ member, addresses = [], organization }: Props) => {
             ({
                 text: c('Member action').t`Delete`,
                 actionType: 'delete',
-                onClick: () => withLoading(openDelete()),
+                onClick: openDelete,
             } as const),
         canMakeAdmin && {
             text: c('Member action').t`Make admin`,
