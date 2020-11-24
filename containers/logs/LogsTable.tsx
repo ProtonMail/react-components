@@ -1,32 +1,34 @@
 import React from 'react';
 import { c } from 'ttag';
-import PropTypes from 'prop-types';
-import { LOGS_STATE, AUTH_LOG_EVENTS } from 'proton-shared/lib/constants';
+import { SETTINGS_LOG_AUTH_STATE } from 'proton-shared/lib/interfaces';
+import { getAuthLogEventsI18N, AuthLog, AUTH_LOG_EVENTS } from 'proton-shared/lib/authlog';
 
-import { Table, TableHeader, TableBody, TableRow, Time, Alert, Icon } from '../../components';
+import { Alert, Icon, Table, TableBody, TableHeader, TableRow, Time } from '../../components';
 
-const { DISABLE, ADVANCED } = LOGS_STATE;
-const { LOGIN_FAILURE_PASSWORD, LOGIN_SUCCESS, LOGOUT, LOGIN_FAILURE_2FA, LOGIN_SUCCESS_AWAIT_2FA } = AUTH_LOG_EVENTS;
+const { ADVANCED, DISABLE } = SETTINGS_LOG_AUTH_STATE;
 
-const ICONS = {
-    [LOGIN_FAILURE_PASSWORD]: <Icon name="off" />,
-    [LOGIN_SUCCESS]: <Icon name="on" />,
-    [LOGOUT]: <Icon name="on" />,
-    [LOGIN_FAILURE_2FA]: <Icon name="off" />,
-    [LOGIN_SUCCESS_AWAIT_2FA]: <Icon name="on" />,
+const getIcon = (event: AUTH_LOG_EVENTS) => {
+    if (
+        [
+            AUTH_LOG_EVENTS.LOGIN_FAILURE_PASSWORD,
+            AUTH_LOG_EVENTS.LOGIN_FAILURE_2FA,
+            AUTH_LOG_EVENTS.REAUTH_FAILURE_2FA,
+            AUTH_LOG_EVENTS.REAUTH_FAILURE_PASSWORD,
+        ].includes(event)
+    ) {
+        return <Icon name="off" />;
+    }
+    return <Icon name="on" />;
 };
 
-const getEventsI18N = () => ({
-    [LOGIN_FAILURE_PASSWORD]: c('Log event').t`Sign in failure (password)`,
-    [LOGIN_SUCCESS]: c('Log event').t`Sign in success`,
-    [LOGOUT]: c('Log event').t`Sign out`,
-    [LOGIN_FAILURE_2FA]: c('Log event').t`Sign in failure (2FA)`,
-    [LOGIN_SUCCESS_AWAIT_2FA]: c('Log event').t`Sign in success (2FA)`,
-});
+interface Props {
+    logs: AuthLog[];
+    logAuth: SETTINGS_LOG_AUTH_STATE;
+    loading: boolean;
+    error: boolean;
+}
 
-const LogsTable = ({ logs, logAuth, loading }) => {
-    const i18n = getEventsI18N();
-
+const LogsTable = ({ logs, logAuth, loading, error }: Props) => {
     if (logAuth === DISABLE) {
         return (
             <Alert>{c('Info')
@@ -36,6 +38,10 @@ const LogsTable = ({ logs, logAuth, loading }) => {
 
     if (!loading && !logs.length) {
         return <Alert>{c('Info').t`No logs yet.`}</Alert>;
+    }
+
+    if (!loading && error) {
+        return <Alert type="error">{c('Info').t`Failed to fetch logs.`}</Alert>;
     }
 
     return (
@@ -50,9 +56,9 @@ const LogsTable = ({ logs, logAuth, loading }) => {
                             key={key}
                             cells={[
                                 <>
-                                    {ICONS[Event]} {i18n[Event]}
+                                    {getIcon(Event)} {getAuthLogEventsI18N(Event)}
                                 </>,
-                                logAuth === ADVANCED ? IP : '',
+                                logAuth === ADVANCED ? <code>{IP || '-'}</code> : '',
                                 <Time key={key} format="PPp">
                                     {time}
                                 </Time>,
@@ -63,12 +69,6 @@ const LogsTable = ({ logs, logAuth, loading }) => {
             </TableBody>
         </Table>
     );
-};
-
-LogsTable.propTypes = {
-    logs: PropTypes.array.isRequired,
-    logAuth: PropTypes.number.isRequired,
-    loading: PropTypes.bool.isRequired,
 };
 
 export default LogsTable;

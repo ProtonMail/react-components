@@ -17,6 +17,7 @@ export * from './dropdown';
 export * from './editableText';
 export * from './editor';
 export * from './fileIcon';
+export * from './focus';
 export * from './globalLoader';
 export * from './icon';
 export * from './image';

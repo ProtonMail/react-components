@@ -49,7 +49,6 @@
     "@types/react-router-dom": "^5.1.5",
     "@types/react-virtualized": "^9.21.10",
     "awesomplete": "^1.1.4",
-    "blueimp-load-image": "^5.13.0",
     "card-validator": "^6.1.0",
     "codemirror": "^5.46.0",
     "date-fns": "^2.6.0",
@@ -71,6 +70,7 @@
     "react-sortable-hoc": "^1.9.1",
     "react-virtualized": "^9.21.2",
     "squire-rte": "github:ProtonMail/Squire#hotfix",
+    "tabbable": "^5.1.3",
     "tinycolor2": "^1.4.1"
   },
   "devDependencies": {
@@ -87,7 +87,7 @@
     "babel-plugin-transform-require-context": "^0.1.1",
     "date-fns": "^2.0.0",
     "eslint": "^7.9.0",
-    "eslint-config-proton-lint": "github:ProtonMail/proton-lint#semver:^0.0.6",
+    "eslint-config-proton-lint": "github:ProtonMail/proton-lint#semver:^0.0.7",
     "execa": "^1.0.0",
     "husky": "^4.2.5",
     "jest": "^24.9.0",

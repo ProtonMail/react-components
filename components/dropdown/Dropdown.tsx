@@ -2,10 +2,12 @@ import React, { useEffect, useState, useRef, CSSProperties, useLayoutEffect } fr
 import { c } from 'ttag';
 import { noop } from 'proton-shared/lib/helpers/function';
 import { classnames } from '../../helpers';
-import { usePopper } from '../popper';
 import useRightToLeft from '../../containers/rightToLeft/useRightToLeft';
+import { usePopper } from '../popper';
 import { ALL_PLACEMENTS, Position } from '../popper/utils';
 import Portal from '../portal/Portal';
+import { useCombinedRefs } from '../../hooks';
+import { useFocusTrap } from '../focus';
 import useIsClosing from './useIsClosing';
 
 interface ContentProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -20,6 +22,7 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
     onClose?: () => void;
     onContextMenu?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
     originalPlacement?: string;
+    disableFocusTrap?: boolean;
     isOpen?: boolean;
     noMaxWidth?: boolean;
     noMaxHeight?: boolean;
@@ -52,6 +55,7 @@ const Dropdown = ({
     noMaxHeight = false,
     noMaxSize = false,
     noCaret = false,
+    disableFocusTrap = false,
     sameAnchorWidth = false,
     autoClose = true,
     autoCloseOutside = true,
@@ -82,10 +86,15 @@ const Dropdown = ({
         }
     };
 
+    const rootRef = useRef<HTMLDivElement>(null);
+    const combinedContainerRef = useCombinedRefs<HTMLDivElement>(rootRef, setPopperEl);
+
     const contentRef = useRef<HTMLDivElement>(null);
 
     const anchorRectRef = useRef<DOMRect | undefined>();
     const [contentRect, setContentRect] = useState<DOMRect | undefined>();
+
+    const focusTrapProps = useFocusTrap({ rootRef, active: isOpen && !disableFocusTrap });
 
     useLayoutEffect(() => {
         if (!isOpen) {
@@ -142,7 +151,7 @@ const Dropdown = ({
         className,
     ]);
 
-    if (isClosed) {
+    if (isClosed && !isOpen) {
         return null;
     }
 
@@ -183,8 +192,8 @@ const Dropdown = ({
     return (
         <Portal>
             <div
-                ref={setPopperEl}
-                style={rootStyle}
+                ref={combinedContainerRef}
+                style={{ ...rootStyle, ...style, ...varPosition, ...varSize }}
                 role="dialog"
                 className={popperClassName}
                 onClick={handleClickContent}
@@ -192,9 +201,16 @@ const Dropdown = ({
                 onContextMenu={onContextMenu}
                 data-testid="dropdown-button"
                 {...rest}
+                {...focusTrapProps}
             >
                 {/* Backdrop button, meant to override 'autoClose' option on mobile */}
-                <button type="button" className="dropDown-backdrop" title={c('Action').t`Close`} onClick={onClose}>
+                <button
+                    type="button"
+                    className="dropDown-backdrop"
+                    title={c('Action').t`Close`}
+                    onClick={onClose}
+                    data-focus-fallback={-1}
+                >
                     <span className="sr-only">{c('Action').t`Close`}</span>
                 </button>
                 <div
