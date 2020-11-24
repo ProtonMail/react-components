@@ -75,13 +75,16 @@ const ShortcutsModal = ({ app, onClose = noop, ...rest }: Props) => {
             <Alert className="mb1">{c('Info')
                 .t`Basic navigation and actions remain available regardless of shortcuts being active or not in the settings.`}</Alert>
             <div
-                className="list-2columns onmobile-list-1column border-bottom mb1"
+                className="list-2columns onmobile-list-1column"
                 // to compensate the pr2 of the sections in the right column
                 style={{ marginRight: '-2em' }}
             >
                 {alwaysOnSections.map(sectionRenderer)}
             </div>
-            <Alert className="mb1">
+
+            <hr className="mt2 mb2 border-bottom" />
+
+            <Alert>
                 {Hotkeys
                     ? c('Info').t`Your keyboard shortcuts are active`
                     : c('Info').jt`To activate your keyboard shortcuts, go to ${settingsLink}`}
