@@ -8,6 +8,8 @@ import { classnames } from '../../helpers';
 import { Alert, FormModal, AppLink } from '../../components';
 import { useMailSettings } from '../../hooks';
 
+import './ShortcutsModal.scss';
+
 interface Shortcut {
     name: string;
     keys: string | string[];
@@ -70,6 +72,7 @@ const ShortcutsModal = ({ app, onClose = noop, ...rest }: Props) => {
             close={c('Action').t`Close`}
             hasSubmit={false}
             onClose={onClose}
+            className="shortcut-modal"
             {...rest}
         >
             <Alert className="mb1">{c('Info')
