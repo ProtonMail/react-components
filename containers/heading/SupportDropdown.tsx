@@ -34,7 +34,7 @@ const SupportDropdown = ({ className, content, hasButtonCaret = false }: Props) 
     };
 
     const handleShortcutsClick = () => {
-        createModal(<ShortcutsModal app={APPS.PROTONMAIL_SETTINGS} />, 'shortcuts-modal');
+        createModal(<ShortcutsModal app={APPS.PROTONMAIL} />, 'shortcuts-modal');
     };
 
     return (

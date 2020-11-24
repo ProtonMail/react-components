@@ -1,6 +1,6 @@
 import React from 'react';
 import { c } from 'ttag';
-import { APPS, APP_NAMES, APPS_CONFIGURATION } from 'proton-shared/lib/constants';
+import { APP_NAMES, APPS_CONFIGURATION } from 'proton-shared/lib/constants';
 import { noop } from 'proton-shared/lib/helpers/function';
 import { getShortcutsForApp } from 'proton-shared/lib/shortcuts/constants';
 
@@ -59,7 +59,7 @@ const ShortcutsModal = ({ app, onClose = noop, ...rest }: Props) => {
     );
 
     const settingsLink = (
-        <AppLink to="/general#shortcuts" toApp={APPS.PROTONMAIL_SETTINGS} key="settings-link">
+        <AppLink to="/settings/general#shortcuts" key="settings-link" onClick={onClose}>
             {c('Link').t`general settings.`}
         </AppLink>
     );

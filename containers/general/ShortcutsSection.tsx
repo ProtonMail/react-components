@@ -21,7 +21,7 @@ const ShortcutsSection = () => {
 
     const handleChange = (newValue: number) => setHotkeys(newValue);
 
-    const handleOpenModal = () => createModal(<ShortcutsModal app={APPS.PROTONMAIL_SETTINGS} />, 'shortcuts-modal');
+    const handleOpenModal = () => createModal(<ShortcutsModal app={APPS.PROTONMAIL} />, 'shortcuts-modal');
 
     return (
         <Row>
