@@ -53,6 +53,7 @@ const BlackFridayButton = ({ plans, subscription }: Props) => {
         <span>
             <button
                 type="button"
+                className="TODO"
                 onClick={() => {
                     if (APP_NAME === APPS.PROTONVPN_SETTINGS) {
                         createModal(
