@@ -51,10 +51,10 @@ const BlackFridayButton = ({ plans, subscription }: Props) => {
 
     // span is required because TopNavbarItem erase className prop
     return (
-        <span>
+        <span className="flex flex-items-center relative">
             <button
                 type="button"
-                className="TODO"
+                className="topnav-link inline-flex flex-nowrap nodecoration topnav-link--blackfriday"
                 onClick={() => {
                     if (APP_NAME === APPS.PROTONVPN_SETTINGS) {
                         createModal(
