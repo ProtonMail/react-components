@@ -10,7 +10,7 @@ interface Props {
     onClose: () => void;
 }
 
-const DeleteMemberModal = ({ member, onConfirm, onClose }: Props) => {
+const DeleteMemberModal = ({ member, onConfirm, onClose, ...rest }: Props) => {
     const [username, setUsername] = useState('');
     const title = c('Title').t`Delete "${member.Name}"?`;
     const isValid = username === member.Name;
@@ -28,6 +28,7 @@ const DeleteMemberModal = ({ member, onConfirm, onClose }: Props) => {
             onConfirm={handleSubmit}
             onClose={onClose}
             confirm={<ErrorButton disabled={!isValid} type="submit">{c('Action').t`Delete`}</ErrorButton>}
+            {...rest}
         >
             <Alert>{c('Info')
                 .t`This will permanently delete the data and all email addresses associated with this user.`}</Alert>
