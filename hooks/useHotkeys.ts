@@ -72,7 +72,7 @@ const useHotkeys = (
             return;
         }
 
-        const isAlphaNumerical = key.match(/[a-zA-Z1-9]/gi);
+        const isAlphaNumericalOrSpace = key.match(/[a-zA-Z1-9 ]/gi);
 
         const modifiedKey = [
             key,
@@ -80,8 +80,8 @@ const useHotkeys = (
             e.ctrlKey && MODIFIER_KEYS.CONTROL,
             // Some non-alphanumerical keys need
             // Shift or Alt to be used (e.g. "?"" or "/")
-            isAlphaNumerical && e.shiftKey && MODIFIER_KEYS.SHIFT,
-            isAlphaNumerical && e.altKey && MODIFIER_KEYS.ALT,
+            isAlphaNumericalOrSpace && e.shiftKey && MODIFIER_KEYS.SHIFT,
+            isAlphaNumericalOrSpace && e.altKey && MODIFIER_KEYS.ALT,
         ].filter(isTruthy);
 
         sequence.current.push(modifiedKey);
