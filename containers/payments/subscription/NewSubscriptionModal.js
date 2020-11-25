@@ -13,6 +13,7 @@ import { checkSubscription, subscribe, deleteSubscription } from 'proton-shared/
 import { hasBonuses } from 'proton-shared/lib/helpers/organization';
 import { clearPlanIDs, getPlanIDs } from 'proton-shared/lib/helpers/subscription';
 import { API_CUSTOM_ERROR_CODES } from 'proton-shared/lib/errors';
+import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 
 import { Alert, FormModal } from '../../../components';
 import {
@@ -105,17 +106,11 @@ const NewSubscriptionModal = ({
         Credit: 0,
     };
 
-    const getCodes = ({ gift, coupon }) => {
-        const codes = [gift, coupon].filter(Boolean);
-
-        if (!codes.length) {
-            if (isBlackFridayPeriod || isProductPayerPeriod) {
-                return [BLACK_FRIDAY.COUPON_CODE];
-            }
-            return [];
-        }
-
-        return codes;
+    const getCodes = ({
+        gift,
+        coupon = isBlackFridayPeriod || isProductPayerPeriod ? BLACK_FRIDAY.COUPON_CODE : '',
+    }) => {
+        return [gift, coupon].filter(isTruthy);
     };
 
     const handleUnsubscribe = async () => {
