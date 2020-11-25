@@ -26,6 +26,8 @@ import {
     useOrganization,
     useSubscription,
     useModals,
+    useBlackFridayPeriod,
+    useProductPayerPeriod,
 } from '../../../hooks';
 
 import { classnames } from '../../../helpers';
@@ -45,7 +47,6 @@ import PaymentGiftCode from '../PaymentGiftCode';
 
 import './NewSubscriptionModal.scss';
 import { handlePaymentToken } from '../paymentTokenHelper';
-import useBlackFriday from '../../heading/useBlackFriday';
 
 const hasPlans = (planIDs = {}) => Object.keys(clearPlanIDs(planIDs)).length;
 
@@ -69,7 +70,8 @@ const NewSubscriptionModal = ({
     };
 
     const api = useApi();
-    const isBlackFriday = useBlackFriday();
+    const isBlackFridayPeriod = useBlackFridayPeriod();
+    const isProductPayerPeriod = useProductPayerPeriod();
     const [user] = useUser();
     const [subscription, loadingSubscription] = useSubscription();
     const { call } = useEventManager();
@@ -107,7 +109,7 @@ const NewSubscriptionModal = ({
         const codes = [gift, coupon].filter(Boolean);
 
         if (!codes.length) {
-            if (isBlackFriday) {
+            if (isBlackFridayPeriod || isProductPayerPeriod) {
                 return [BLACK_FRIDAY.COUPON_CODE];
             }
             return [];
