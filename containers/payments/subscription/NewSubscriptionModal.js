@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { DEFAULT_CURRENCY, DEFAULT_CYCLE, CYCLE, CURRENCIES, PAYMENT_METHOD_TYPES } from 'proton-shared/lib/constants';
+import {
+    DEFAULT_CURRENCY,
+    DEFAULT_CYCLE,
+    CYCLE,
+    CURRENCIES,
+    PAYMENT_METHOD_TYPES,
+    BLACK_FRIDAY,
+} from 'proton-shared/lib/constants';
 import { checkSubscription, subscribe, deleteSubscription } from 'proton-shared/lib/api/payments';
 import { hasBonuses } from 'proton-shared/lib/helpers/organization';
 import { clearPlanIDs, getPlanIDs } from 'proton-shared/lib/helpers/subscription';
@@ -45,7 +52,7 @@ const getCodes = ({ gift, coupon }) => {
     const codes = [gift, coupon].filter(Boolean);
 
     if (!codes.length) {
-        return;
+        return [BLACK_FRIDAY.COUPON_CODE];
     }
 
     return codes;
@@ -153,7 +160,7 @@ const NewSubscriptionModal = ({
         },
     });
 
-    const check = async (newModel = model) => {
+    const check = async (newModel = model, applyGiftCode = false) => {
         if (!hasPlans(newModel.planIDs)) {
             setCheckResult(TOTAL_ZERO);
             return;
@@ -173,7 +180,7 @@ const NewSubscriptionModal = ({
             const { Code = '' } = result.Coupon || {}; // Coupon can equal null
             const copyNewModel = { ...newModel };
 
-            if (newModel.gift && newModel.gift !== Code && !Gift) {
+            if (applyGiftCode && newModel.gift && newModel.gift !== Code && !Gift) {
                 createNotification({ text: c('Error').t`Invalid code`, type: 'error' });
             }
 
@@ -234,7 +241,7 @@ const NewSubscriptionModal = ({
             delete withoutGift.gift;
             return withLoadingCheck(check(withoutGift));
         }
-        withLoadingCheck(check({ ...model, gift }));
+        withLoadingCheck(check({ ...model, gift }, true));
     };
 
     useEffect(() => {
