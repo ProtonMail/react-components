@@ -45,18 +45,9 @@ import PaymentGiftCode from '../PaymentGiftCode';
 
 import './NewSubscriptionModal.scss';
 import { handlePaymentToken } from '../paymentTokenHelper';
+import useBlackFriday from '../../heading/useBlackFriday';
 
 const hasPlans = (planIDs = {}) => Object.keys(clearPlanIDs(planIDs)).length;
-
-const getCodes = ({ gift, coupon }) => {
-    const codes = [gift, coupon].filter(Boolean);
-
-    if (!codes.length) {
-        return [BLACK_FRIDAY.COUPON_CODE];
-    }
-
-    return codes;
-};
 
 /** @type any */
 const NewSubscriptionModal = ({
@@ -78,6 +69,7 @@ const NewSubscriptionModal = ({
     };
 
     const api = useApi();
+    const isBlackFriday = useBlackFriday();
     const [user] = useUser();
     const [subscription, loadingSubscription] = useSubscription();
     const { call } = useEventManager();
@@ -109,6 +101,19 @@ const NewSubscriptionModal = ({
         Proration: 0,
         Gift: 0,
         Credit: 0,
+    };
+
+    const getCodes = ({ gift, coupon }) => {
+        const codes = [gift, coupon].filter(Boolean);
+
+        if (!codes.length) {
+            if (isBlackFriday) {
+                return [BLACK_FRIDAY.COUPON_CODE];
+            }
+            return [];
+        }
+
+        return codes;
     };
 
     const handleUnsubscribe = async () => {
