@@ -167,7 +167,7 @@ const NewSubscriptionModal = ({
         },
     });
 
-    const check = async (newModel = model, applyGiftCode = false) => {
+    const check = async (newModel = model, wantToApplyNewGiftCode = false) => {
         if (!hasPlans(newModel.planIDs)) {
             setCheckResult(TOTAL_ZERO);
             return;
@@ -187,7 +187,7 @@ const NewSubscriptionModal = ({
             const { Code = '' } = result.Coupon || {}; // Coupon can equal null
             const copyNewModel = { ...newModel };
 
-            if (applyGiftCode && newModel.gift && newModel.gift !== Code && !Gift) {
+            if (wantToApplyNewGiftCode && newModel.gift && newModel.gift !== Code && !Gift) {
                 createNotification({ text: c('Error').t`Invalid code`, type: 'error' });
             }
 
