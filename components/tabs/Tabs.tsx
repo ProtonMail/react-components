@@ -1,3 +1,4 @@
+import { clamp } from 'proton-shared/lib/helpers/math';
 import React from 'react';
 import { useIndicator } from './useIndicator';
 import { Tab } from './index.d';
@@ -13,15 +14,16 @@ interface Props {
     stickyTabs?: boolean;
 }
 
-export const Tabs = ({ value, onChange, tabs, children, stickyTabs }: Props) => {
-    const key = toKey(value, 'key_');
-    const label = toKey(value, 'label_');
+export const Tabs = ({ value, onChange, tabs = [], children, stickyTabs }: Props) => {
+    const safeValue = clamp(value, 0, Math.max(tabs.length - 1, 0));
+    const key = toKey(safeValue, 'key_');
+    const label = toKey(safeValue, 'label_');
     const tabList = tabs || children || [];
-    const content = tabList[value]?.content;
+    const content = tabList[safeValue]?.content;
 
-    const { ref: containerRef, scale, translate } = useIndicator(tabList, value);
+    const { ref: containerRef, scale, translate } = useIndicator(tabList, safeValue);
 
-    if (tabs?.length === 1) {
+    if (tabs.length === 1) {
         return <>{content}</>;
     }
 
@@ -50,7 +52,7 @@ export const Tabs = ({ value, onChange, tabs, children, stickyTabs }: Props) => 
                                     role="tab"
                                     aria-controls={key}
                                     tabIndex={0}
-                                    aria-selected={value === index}
+                                    aria-selected={safeValue === index}
                                 >
                                     {title}
                                 </button>
