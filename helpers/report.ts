@@ -10,7 +10,7 @@ export const collectInfo = () => {
     const browser = getBrowser();
     const device = getDevice();
 
-    return {
+    const info = {
         OS: os.name,
         OSVersion: os.version || '',
         Browser: browser.name,
@@ -19,4 +19,18 @@ export const collectInfo = () => {
         DeviceName: device.vendor,
         DeviceModel: device.model,
     };
+
+    const isTouchDevice = navigator.maxTouchPoints > 1;
+
+    if (info.OS === 'Mac OS' && isTouchDevice) {
+        info.OS = 'iOS';
+        info.OSVersion = '';
+    }
+
+    if (info.OS === 'Linux' && isTouchDevice) {
+        info.OS = 'Android';
+        info.OSVersion = '';
+    }
+
+    return info;
 };
