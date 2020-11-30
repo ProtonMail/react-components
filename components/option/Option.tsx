@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import usePrevious from '../../hooks/usePrevious';
 import { DropdownMenuButton } from '../dropdown';
+import { classnames } from '../../helpers';
 
 export interface Props<V> extends Omit<React.ComponentPropsWithoutRef<'button'>, 'value' | 'onChange' | 'title'> {
     value: V;
@@ -8,6 +9,7 @@ export interface Props<V> extends Omit<React.ComponentPropsWithoutRef<'button'>,
     selected?: boolean;
     active?: boolean;
     title: string;
+    focusOnActive?: boolean;
 }
 
 const Option = <V extends any>({
@@ -18,6 +20,7 @@ const Option = <V extends any>({
     onChange,
     title,
     children = title,
+    focusOnActive = true,
     ...rest
 }: Props<V>) => {
     function handleClick() {
@@ -30,7 +33,7 @@ const Option = <V extends any>({
 
     useEffect(
         function () {
-            if (!previousActive && active) {
+            if (!previousActive && active && focusOnActive) {
                 ref.current?.focus();
             }
         },
@@ -45,7 +48,7 @@ const Option = <V extends any>({
                 isSelected={selected}
                 onClick={handleClick}
                 title={title}
-                className="bl w100 ellipsis alignleft no-outline"
+                className={classnames(['bl w100 ellipsis alignleft no-outline', active && 'active'])}
                 {...rest}
             >
                 {children}
