@@ -18,6 +18,7 @@ export interface AutocompleteRenderProps<V> {
     ref: React.RefObject<any>;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onFocus: () => void;
+    onBlur: () => void;
     onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
@@ -249,6 +250,10 @@ const AutocompleteTwo = <V, Multiple extends boolean | undefined = undefined>({
         open();
     };
 
+    const handleInputBlur = () => {
+        close();
+    };
+
     const handleClose = () => {
         close();
     };
@@ -326,6 +331,7 @@ const AutocompleteTwo = <V, Multiple extends boolean | undefined = undefined>({
         ref: anchorRef,
         onChange: handleInputChange,
         onFocus: handleInputFocus,
+        onBlur: handleInputBlur,
         onKeyDown: handleInputKeyDown,
     };
 
