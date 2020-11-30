@@ -145,6 +145,26 @@ const AutocompleteTwo = <V, Multiple extends boolean | undefined = undefined>({
 
     const anchorRef = useRef<HTMLElement>(null);
 
+    const mouseIsDown = useRef<boolean>(false);
+
+    useEffect(() => {
+        const handleWindowMouseDown = () => {
+            mouseIsDown.current = true;
+        };
+
+        const handleWindowMouseUp = () => {
+            mouseIsDown.current = false;
+        };
+
+        window.addEventListener('mousedown', handleWindowMouseDown);
+        window.addEventListener('mouseup', handleWindowMouseUp);
+
+        return () => {
+            window.removeEventListener('mousedown', handleWindowMouseDown);
+            window.removeEventListener('mouseup', handleWindowMouseUp);
+        };
+    }, []);
+
     useEffect(() => {
         /*
          * The number of items displayed in the
@@ -206,7 +226,7 @@ const AutocompleteTwo = <V, Multiple extends boolean | undefined = undefined>({
             return [...(value as V[]), option] as ValueOrValueArray;
         }
 
-        return value as ValueOrValueArray;
+        return option as ValueOrValueArray;
     };
 
     const selectCurrentlyHighlightedOption = () => {
@@ -251,7 +271,17 @@ const AutocompleteTwo = <V, Multiple extends boolean | undefined = undefined>({
     };
 
     const handleInputBlur = () => {
-        close();
+        if (mouseIsDown.current) {
+            const handleGlobalMouseUpAfterBlur = () => {
+                close();
+
+                window.removeEventListener('mouseup', handleGlobalMouseUpAfterBlur);
+            };
+
+            window.addEventListener('mouseup', handleGlobalMouseUpAfterBlur);
+        } else {
+            close();
+        }
     };
 
     const handleClose = () => {
