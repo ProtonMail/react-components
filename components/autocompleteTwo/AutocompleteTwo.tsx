@@ -98,7 +98,9 @@ interface Props<V, Multiple extends undefined | boolean = undefined> {
     /**
      * Render props children responsible for rendering the anchor element.
      */
-    children: (props: RenderProps<Multiple extends undefined | false ? V | null : V[]>) => React.ReactElement;
+    children: (
+        props: AutocompleteRenderProps<Multiple extends undefined | false ? V | null : V[]>
+    ) => React.ReactElement;
     /**
      * Fired when the autocomplete dropdown is closed.
      */
@@ -314,7 +316,7 @@ const AutocompleteTwo = <V, Multiple extends boolean | undefined = undefined>({
         );
     };
 
-    const renderProps: RenderProps<ValueOrValueArray> = {
+    const renderProps: AutocompleteRenderProps<ValueOrValueArray> = {
         inputValue: input,
         autocompleteValue: value,
         'aria-owns': id,
