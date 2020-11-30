@@ -21,16 +21,26 @@ const AppVersion = ({ appVersion: maybeAppVersion, appName: maybeAppName, change
 
     const appName = maybeAppName || APPS_CONFIGURATION[APP_NAME]?.name;
     const appVersion = getAppVersion(maybeAppVersion || APP_VERSION_DISPLAY || APP_VERSION);
+    const className = 'smallest aligncenter opacity-50 mt0 mb0-5';
+    const title = DATE_VERSION;
+    const children = (
+        <>
+            {appName} {appVersion}
+        </>
+    );
 
     return (
-        <button
-            onClick={handleModal}
-            disabled={!changelog}
-            title={DATE_VERSION}
-            className="smallest aligncenter opacity-50 mt0 mb0-5"
-        >
-            {appName} {appVersion}
-        </button>
+        <>
+            {!changelog ? (
+                <span title={title} className={className}>
+                    {children}
+                </span>
+            ) : (
+                <button type="button" onClick={handleModal} disabled={!changelog} title={title} className={className}>
+                    {children}
+                </button>
+            )}
+        </>
     );
 };
 
