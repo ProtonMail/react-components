@@ -129,12 +129,12 @@ const AutocompleteTwo = <V, Multiple extends boolean | undefined = undefined>({
 
     const [highlightedIndex, setHighlightedIndex] = useState(0);
 
-    let initialInput: string;
+    let initialInput: string | null;
 
     if (multiple) {
-        initialInput = '';
+        initialInput = null;
     } else {
-        initialInput = valueProp ? getOptionLabel(valueProp as V) : '';
+        initialInput = valueProp ? getOptionLabel(valueProp as V) : null;
     }
 
     const [input, setInput] = useState(initialInput);
@@ -146,6 +146,12 @@ const AutocompleteTwo = <V, Multiple extends boolean | undefined = undefined>({
     const anchorRef = useRef<HTMLElement>(null);
 
     const mouseIsDown = useRef<boolean>(false);
+
+    let displayedInput: string = input || '';
+
+    if (input === null) {
+        displayedInput = multiple ? '' : getOptionLabel(value as V);
+    }
 
     useEffect(() => {
         const handleWindowMouseDown = () => {
@@ -181,13 +187,13 @@ const AutocompleteTwo = <V, Multiple extends boolean | undefined = undefined>({
     }, [input]);
 
     const filteredOptions = filterOptions({
-        input,
+        input: displayedInput,
         options,
         getOptionLabel,
     });
 
     const matches = filteredOptions.map((option) =>
-        Array.from(getOptionLabel(option).matchAll(new RegExp(input, 'g')))
+        Array.from(getOptionLabel(option).matchAll(new RegExp(displayedInput, 'g')))
     );
 
     const open = () => {
@@ -195,8 +201,9 @@ const AutocompleteTwo = <V, Multiple extends boolean | undefined = undefined>({
     };
 
     const close = () => {
-        setIsOpen(false);
         onClose?.();
+        setIsOpen(false);
+        setInput(null);
     };
 
     const goToPreviousOption = () => {
@@ -251,6 +258,7 @@ const AutocompleteTwo = <V, Multiple extends boolean | undefined = undefined>({
         const nextValue = getNextValue(option);
 
         onChange?.({ value: nextValue });
+
         setValue(nextValue);
 
         if (!multiple) {
@@ -271,14 +279,35 @@ const AutocompleteTwo = <V, Multiple extends boolean | undefined = undefined>({
     };
 
     const handleInputBlur = () => {
+        if (multiple) {
+            return;
+        }
+
+        /*
+         * in the case of blur being triggered from a click it is triggered on mousedown
+         *
+         * we register a click listener in that case to make sure that the autocomplete
+         * doesn't close before completion of a click on an option should that be
+         * what triggered the blur
+         *
+         * the reason we register a click listener and not a mousedown listener is that
+         * we don't want any race conditions between the Option's handleChange (which
+         * is triggered by a click event) and the mousedown event, this was causing some
+         * issues with the open state being in a race condition with the click on the Option
+         * and the Autocomplete sometimes closing before the click event would register and
+         * then it wouldn't fire any more
+         *
+         * the else clause covers use-cases where blur was triggered differently
+         * (e.g. a blur from leaving the window or from tabbing)
+         */
         if (mouseIsDown.current) {
             const handleGlobalMouseUpAfterBlur = () => {
                 close();
 
-                window.removeEventListener('mouseup', handleGlobalMouseUpAfterBlur);
+                window.removeEventListener('click', handleGlobalMouseUpAfterBlur);
             };
 
-            window.addEventListener('mouseup', handleGlobalMouseUpAfterBlur);
+            window.addEventListener('click', handleGlobalMouseUpAfterBlur);
         } else {
             close();
         }
@@ -352,7 +381,7 @@ const AutocompleteTwo = <V, Multiple extends boolean | undefined = undefined>({
     };
 
     const renderProps: AutocompleteRenderProps<ValueOrValueArray> = {
-        inputValue: input,
+        inputValue: displayedInput,
         autocompleteValue: value,
         'aria-owns': id,
         'aria-activedescendant': `${id}-${highlightedIndex}`,
