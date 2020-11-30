@@ -349,6 +349,7 @@ const AutocompleteTwo = <V, Multiple extends boolean | undefined = undefined>({
                 noCaret
                 noMaxWidth
                 sameAnchorWidth
+                disableFocusTrap
                 UNSTABLE_AUTO_HEIGHT
             >
                 <ul id={id} className="unstyled m0 p0">
