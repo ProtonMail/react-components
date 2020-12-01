@@ -253,3 +253,22 @@ export const pasteFileHandler = (onAddImages: (files: File[]) => void) => (event
         onAddImages(files);
     }
 };
+
+export const scrollIntoViewIfNeeded = (squire: SquireType) => {
+    const document = squire.getDocument();
+    const container = document.querySelector('html');
+    const containerRect = container?.getBoundingClientRect();
+    const scrollable = document.body;
+    const cursorRect = squire.getCursorPosition();
+
+    if (!container || !containerRect || !scrollable || !cursorRect) {
+        return;
+    }
+
+    // cursorRect is relative to current scroll position
+    if (cursorRect.bottom > containerRect.height) {
+        const paddingValue = window.getComputedStyle(scrollable).getPropertyValue('paddingBottom');
+        const paddingPx = parseInt(/(\d+)px/.exec(paddingValue)?.[1] || '16', 10);
+        scrollable.scroll({ top: scrollable.scrollTop + cursorRect.bottom - containerRect.height + paddingPx });
+    }
+};
