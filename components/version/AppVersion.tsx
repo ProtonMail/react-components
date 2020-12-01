@@ -29,18 +29,18 @@ const AppVersion = ({ appVersion: maybeAppVersion, appName: maybeAppName, change
         </>
     );
 
+    if (!changelog) {
+        return (
+            <span title={title} className={className}>
+                {children}
+            </span>
+        );
+    }
+
     return (
-        <>
-            {!changelog ? (
-                <span title={title} className={className}>
-                    {children}
-                </span>
-            ) : (
-                <button type="button" onClick={handleModal} disabled={!changelog} title={title} className={className}>
-                    {children}
-                </button>
-            )}
-        </>
+        <button type="button" onClick={handleModal} title={title} className={className}>
+            {children}
+        </button>
     );
 };
 
