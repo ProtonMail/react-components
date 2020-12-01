@@ -20,17 +20,5 @@ export const collectInfo = () => {
         DeviceModel: device.model,
     };
 
-    const isTouchDevice = navigator.maxTouchPoints > 1;
-
-    if (info.OS === 'Mac OS' && isTouchDevice) {
-        info.OS = 'iOS';
-        info.OSVersion = '';
-    }
-
-    if (info.OS === 'Linux' && isTouchDevice) {
-        info.OS = 'Android';
-        info.OSVersion = '';
-    }
-
     return info;
 };

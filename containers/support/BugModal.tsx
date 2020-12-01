@@ -99,8 +99,27 @@ const BugModal = ({ onClose = noop, username: Username = '', addresses = [], ...
         },
         [{ text: c('Action to select a title for the bug report modal').t`Select`, value: '', disabled: true }]
     );
+
+    const info = collectInfo();
+
+    const isTouchDevice = navigator.maxTouchPoints > 1;
+
+    let isArtificialDesktop = false;
+
+    if (info.OS === 'Mac OS' && isTouchDevice) {
+        info.OS = 'iOS';
+        info.OSVersion = '';
+        isArtificialDesktop = true;
+    }
+
+    if (info.OS === 'Linux' && isTouchDevice) {
+        info.OS = 'Android';
+        info.OSVersion = '';
+        isArtificialDesktop = true;
+    }
+
     const [model, update] = useState({
-        ...collectInfo(),
+        ...info,
         Title: '',
         Description: '',
         Email,
@@ -147,6 +166,33 @@ const BugModal = ({ onClose = noop, username: Username = '', addresses = [], ...
             update({ ...model, Email });
         }
     }, [addresses]);
+
+    const OSAndOSVersionFields = (
+        <>
+            <Row>
+                <Label htmlFor="OS">{c('Label').t`Operating system`}</Label>
+                <Field>
+                    <Input
+                        id="OS"
+                        value={model.OS}
+                        onChange={handleChange('OS')}
+                        placeholder={c('Placeholder').t`OS name`}
+                    />
+                </Field>
+            </Row>
+            <Row>
+                <Label htmlFor="OSVersion">{c('Label').t`Operating system version`}</Label>
+                <Field>
+                    <Input
+                        id="OSVersion"
+                        value={model.OSVersion}
+                        onChange={handleChange('OSVersion')}
+                        placeholder={c('Placeholder').t`OS version`}
+                    />
+                </Field>
+            </Row>
+        </>
+    );
 
     return (
         <FormModal
@@ -220,6 +266,9 @@ const BugModal = ({ onClose = noop, username: Username = '', addresses = [], ...
                     <AttachScreenshot id="Attachments" onUpload={setImages} onReset={() => setImages([])} />
                 </Field>
             </Row>
+
+            {isArtificialDesktop && OSAndOSVersionFields}
+
             <Row>
                 <Label>{c('Label').t`System information`}</Label>
                 <Field className="inline-flex">
@@ -230,28 +279,8 @@ const BugModal = ({ onClose = noop, username: Username = '', addresses = [], ...
             </Row>
             {showDetails ? (
                 <>
-                    <Row>
-                        <Label htmlFor="OS">{c('Label').t`Operating system`}</Label>
-                        <Field>
-                            <Input
-                                id="OS"
-                                value={model.OS}
-                                onChange={handleChange('OS')}
-                                placeholder={c('Placeholder').t`OS name`}
-                            />
-                        </Field>
-                    </Row>
-                    <Row>
-                        <Label htmlFor="OSVersion">{c('Label').t`Operating system version`}</Label>
-                        <Field>
-                            <Input
-                                id="OSVersion"
-                                value={model.OSVersion}
-                                onChange={handleChange('OSVersion')}
-                                placeholder={c('Placeholder').t`OS version`}
-                            />
-                        </Field>
-                    </Row>
+                    {!isArtificialDesktop && OSAndOSVersionFields}
+
                     <Row>
                         <Label htmlFor="Browser">{c('Label').t`Browser`}</Label>
                         <Field>
