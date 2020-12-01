@@ -267,6 +267,7 @@ export const scrollIntoViewIfNeeded = (squire: SquireType) => {
 
     // cursorRect is relative to current scroll position
     if (cursorRect.bottom > containerRect.height) {
+        // Computing current scroll view padding bottom to add it to the scroll and having some space around the cursor
         const paddingValue = window.getComputedStyle(scrollable).getPropertyValue('paddingBottom');
         const paddingPx = parseInt(/(\d+)px/.exec(paddingValue)?.[1] || '16', 10);
         scrollable.scroll({ top: scrollable.scrollTop + cursorRect.bottom - containerRect.height + paddingPx });
