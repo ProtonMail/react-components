@@ -10,7 +10,7 @@ export const collectInfo = () => {
     const browser = getBrowser();
     const device = getDevice();
 
-    const info = {
+    return {
         OS: os.name,
         OSVersion: os.version || '',
         Browser: browser.name,
@@ -19,6 +19,4 @@ export const collectInfo = () => {
         DeviceName: device.vendor,
         DeviceModel: device.model,
     };
-
-    return info;
 };
