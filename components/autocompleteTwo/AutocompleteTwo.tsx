@@ -145,31 +145,11 @@ const AutocompleteTwo = <V, Multiple extends boolean | undefined = undefined>({
 
     const anchorRef = useRef<HTMLElement>(null);
 
-    const mouseIsDown = useRef<boolean>(false);
-
     let displayedInput: string = input || '';
 
     if (input === null) {
         displayedInput = multiple ? '' : getOptionLabel(value as V);
     }
-
-    useEffect(() => {
-        const handleWindowMouseDown = () => {
-            mouseIsDown.current = true;
-        };
-
-        const handleWindowMouseUp = () => {
-            mouseIsDown.current = false;
-        };
-
-        window.addEventListener('mousedown', handleWindowMouseDown);
-        window.addEventListener('mouseup', handleWindowMouseUp);
-
-        return () => {
-            window.removeEventListener('mousedown', handleWindowMouseDown);
-            window.removeEventListener('mouseup', handleWindowMouseUp);
-        };
-    }, []);
 
     useEffect(() => {
         /*
@@ -266,6 +246,15 @@ const AutocompleteTwo = <V, Multiple extends boolean | undefined = undefined>({
         }
     };
 
+    const handleListMouseDown = (e: React.MouseEvent<HTMLUListElement>) => {
+        /*
+         * prevent blurs on the input field triggered by a mousedown
+         * since otherwise you can't select an option from the list
+         * before blur is triggered
+         */
+        e.preventDefault();
+    };
+
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setInput(e.target.value);
 
@@ -283,34 +272,7 @@ const AutocompleteTwo = <V, Multiple extends boolean | undefined = undefined>({
             return;
         }
 
-        /*
-         * in the case of blur being triggered from a click it is triggered on mousedown
-         *
-         * we register a click listener in that case to make sure that the autocomplete
-         * doesn't close before completion of a click on an option should that be
-         * what triggered the blur
-         *
-         * the reason we register a click listener and not a mousedown listener is that
-         * we don't want any race conditions between the Option's handleChange (which
-         * is triggered by a click event) and the mousedown event, this was causing some
-         * issues with the open state being in a race condition with the click on the Option
-         * and the Autocomplete sometimes closing before the click event would register and
-         * then it wouldn't fire any more
-         *
-         * the else clause covers use-cases where blur was triggered differently
-         * (e.g. a blur from leaving the window or from tabbing)
-         */
-        if (mouseIsDown.current) {
-            const handleGlobalMouseUpAfterBlur = () => {
-                close();
-
-                window.removeEventListener('click', handleGlobalMouseUpAfterBlur);
-            };
-
-            window.addEventListener('click', handleGlobalMouseUpAfterBlur);
-        } else {
-            close();
-        }
+        close();
     };
 
     const handleClose = () => {
@@ -419,7 +381,7 @@ const AutocompleteTwo = <V, Multiple extends boolean | undefined = undefined>({
                 disableFocusTrap
                 UNSTABLE_AUTO_HEIGHT
             >
-                <ul id={id} className="unstyled m0 p0">
+                <ul id={id} className="unstyled m0 p0" onMouseDown={handleListMouseDown}>
                     {filteredOptions.map(renderOption)}
                 </ul>
             </Dropdown>
