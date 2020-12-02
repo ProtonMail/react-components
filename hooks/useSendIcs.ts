@@ -18,7 +18,7 @@ import { useCallback } from 'react';
 import { useApi, useGetAddressKeys, useGetEncryptionPreferences, useGetMailSettings } from './index';
 import { generateUID } from '../helpers/component';
 
-interface Params {
+export interface SendIcsParams {
     method: ICAL_METHOD;
     ics: string;
     from: RequireSome<Recipient, 'Address' | 'Name'>;
@@ -35,7 +35,7 @@ export const useSendIcs = () => {
     const getEncryptionPreferences = useGetEncryptionPreferences();
 
     const send = useCallback(
-        async ({ method, ics, from, addressID, to, subject, plainTextBody = '' }: Params) => {
+        async ({ method, ics, from, addressID, to, subject, plainTextBody = '' }: SendIcsParams) => {
             if (!addressID) {
                 throw new Error('Missing addressID');
             }
