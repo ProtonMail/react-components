@@ -1,7 +1,11 @@
 import { useCallback } from 'react';
-import { splitKeys } from 'proton-shared/lib/keys/keys';
+import { splitKeys } from 'proton-shared/lib/keys';
 import { noop } from 'proton-shared/lib/helpers/function';
-import { decryptCalendarKeys, decryptPassphrase, getAddressesMembersMap } from 'proton-shared/lib/keys/calendarKeys';
+import {
+    decryptPassphrase,
+    getAddressesMembersMap,
+    getDecryptedCalendarKeys,
+} from 'proton-shared/lib/keys/calendarKeys';
 import { Address } from 'proton-shared/lib/interfaces';
 import { MemberPassphrase } from 'proton-shared/lib/interfaces/calendar';
 import useCache from './useCache';
@@ -50,7 +54,7 @@ const useGetCalendarKeysRaw = () => {
             const { ID: PassphraseID, MemberPassphrases } = Passphrase;
             const addressesMembersMap = getAddressesMembersMap(Members, Addresses);
             const passphrase = await getCalendarKeyPassphrase(MemberPassphrases, addressesMembersMap);
-            return decryptCalendarKeys(Keys, { [PassphraseID]: passphrase });
+            return getDecryptedCalendarKeys(Keys, { [PassphraseID]: passphrase });
         },
         [getAddresses, getAddressKeys, getCalendarBootstrap]
     );

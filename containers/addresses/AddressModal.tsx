@@ -68,7 +68,7 @@ const AddressModal = ({ onClose, member, organizationKey, ...rest }: Props) => {
                 <CreateMissingKeysAddressModal
                     organizationKey={organizationKey}
                     member={member}
-                    addresses={[Address]}
+                    addressesToGenerate={[Address]}
                 />
             );
         }

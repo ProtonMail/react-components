@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
 import { algorithmInfo } from 'pmcrypto';
-import { getAlgorithmExists } from 'proton-shared/lib/keys/keysAlgorithm';
+import { getAlgorithmExists } from 'proton-shared/lib/keys';
 import { DEFAULT_ENCRYPTION_CONFIG, ENCRYPTION_CONFIGS, ENCRYPTION_TYPES } from 'proton-shared/lib/constants';
 import { EncryptionConfig } from 'proton-shared/lib/interfaces';
 import { Alert, FormModal } from '../../../components';
@@ -22,6 +22,7 @@ interface Props {
     existingAlgorithms: algorithmInfo[];
     onAdd: (config: EncryptionConfig) => Promise<string>;
 }
+
 const AddKeyModal = ({ onClose, existingAlgorithms, onAdd, ...rest }: Props) => {
     const [step, setStep] = useState(STEPS.SELECT_ENCRYPTION);
     const [encryptionType, setEncryptionType] = useState<ENCRYPTION_TYPES>(DEFAULT_ENCRYPTION_CONFIG);

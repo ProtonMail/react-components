@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
-import { CachedKey } from 'proton-shared/lib/interfaces';
-import { MEMBER_PRIVATE } from 'proton-shared/lib/constants';
-import { getDecryptedAddressKeys } from 'proton-shared/lib/keys/getDecryptedAddressKeys';
+import { DecryptedKey } from 'proton-shared/lib/interfaces';
+import { getDecryptedAddressKeys } from 'proton-shared/lib/keys';
 
 import useAuthentication from './useAuthentication';
 import useCache from './useCache';
@@ -12,7 +11,7 @@ import { useGetUser } from './useUser';
 
 export const CACHE_KEY = 'ADDRESS_KEYS';
 
-export const useGetAddressKeysRaw = (): ((id: string) => Promise<CachedKey[]>) => {
+export const useGetAddressKeysRaw = (): ((id: string) => Promise<DecryptedKey[]>) => {
     const authentication = useAuthentication();
     const getUser = useGetUser();
     const getAddresses = useGetAddresses();
@@ -20,20 +19,16 @@ export const useGetAddressKeysRaw = (): ((id: string) => Promise<CachedKey[]>) =
 
     return useCallback(
         async (addressID) => {
-            const [{ OrganizationPrivateKey, Private }, Addresses, userKeys] = await Promise.all([
-                getUser(),
-                getAddresses(),
-                getUserKeys(),
-            ]);
-            const Address = Addresses.find(({ ID: AddressID }) => AddressID === addressID);
-            if (!Address) {
+            const [user, userKeys, addresses] = await Promise.all([getUser(), getUserKeys(), getAddresses()]);
+            const address = addresses.find(({ ID: AddressID }) => AddressID === addressID);
+            if (!address) {
                 return [];
             }
             return getDecryptedAddressKeys({
-                addressKeys: Address.Keys,
+                address,
+                addressKeys: address.Keys,
+                user,
                 userKeys,
-                OrganizationPrivateKey,
-                isReadableMember: Private === MEMBER_PRIVATE.READABLE,
                 keyPassword: authentication.getPassword(),
             });
         },
@@ -41,7 +36,7 @@ export const useGetAddressKeysRaw = (): ((id: string) => Promise<CachedKey[]>) =
     );
 };
 
-export const useGetAddressKeys = (): ((id: string) => Promise<CachedKey[]>) => {
+export const useGetAddressKeys = (): ((id: string) => Promise<DecryptedKey[]>) => {
     const cache = useCache();
     const miss = useGetAddressKeysRaw();
 

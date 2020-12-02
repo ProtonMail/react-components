@@ -125,8 +125,8 @@ const useLogin = ({ api, onLogin, ignoreUnlock, hasGenerateKeys = false }: Props
 
         if (Addresses && getHasV2KeysToUpgrade(User, Addresses)) {
             const newKeyPassword = await upgradeV2KeysHelper({
-                User,
-                Addresses,
+                user: User,
+                addresses: Addresses,
                 loginPassword,
                 keyPassword,
                 clearKeyPassword,

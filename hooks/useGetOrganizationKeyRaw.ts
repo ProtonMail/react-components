@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { OrganizationKey } from 'proton-shared/lib/interfaces';
-import { getDecryptedOrganizationKey } from 'proton-shared/lib/keys/getDecryptedOrganizationKey';
+import { getDecryptedOrganizationKey } from 'proton-shared/lib/keys';
 import { getOrganizationKeys } from 'proton-shared/lib/api/organization';
 
 import useApi from './useApi';

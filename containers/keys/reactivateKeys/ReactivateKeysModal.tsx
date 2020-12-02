@@ -1,14 +1,30 @@
-import React, { useState, useEffect, ChangeEvent } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { c } from 'ttag';
 import { OpenPGPKey } from 'pmcrypto';
-import { Alert, Field, Label, PasswordInput, InlineLinkButton, FormModal, Loader } from '../../../components';
-import { useNotifications, useModals } from '../../../hooks';
+import {
+    KeyReactivationData,
+    KeyReactivationRecord,
+    OnKeyReactivationCallback,
+    decryptPrivateKeyWithSalt,
+    getHasMigratedAddressKey,
+} from 'proton-shared/lib/keys';
+import { KeySalt } from 'proton-shared/lib/interfaces';
+import { getKeySalts } from 'proton-shared/lib/api/keys';
+import isTruthy from 'proton-shared/lib/helpers/isTruthy';
+
+import { Alert, Field, FormModal, InlineLinkButton, Label, Loader, PasswordInput } from '../../../components';
+import { useApi, useModals, useNotifications } from '../../../hooks';
 import GenericError from '../../error/GenericError';
 
 import ReactivateKeysList from './ReactivateKeysList';
 import DecryptFileKeyModal from '../shared/DecryptFileKeyModal';
-import { KeyReactivation, OnProcessArguments, ReactivateKey, ReactivateKeys } from './interface';
-import { getInitialState, getUploadedKeys, updateKey } from './state';
+import { getInitialStates, getUploadedPrivateKeys, updateKey } from './state';
+import {
+    KeyReactivationRequest,
+    KeyReactivationRequestState,
+    KeyReactivationRequestStateData,
+    Status,
+} from './interface';
 
 enum STEPS {
     LOADING,
@@ -22,19 +38,106 @@ enum STEPS {
 
 interface Props {
     onClose?: () => void;
-    allKeys: KeyReactivation[];
-    onProcess: (args: OnProcessArguments) => Promise<void>;
+    keyReactivationRequests: KeyReactivationRequest[];
+    onProcess: (
+        keysToReactivate: KeyReactivationRecord[],
+        oldPassword: string,
+        onReactivation: OnKeyReactivationCallback
+    ) => Promise<void>;
 }
-const ReactivateKeysModal = ({ allKeys: initialAllKeys, onProcess, onClose, ...rest }: Props) => {
+
+interface KeyReactivationError {
+    id: string;
+    error: Error;
+}
+
+const getKey = async (
+    { id, Key }: KeyReactivationRequestStateData,
+    oldPassword: string,
+    keySalts: KeySalt[]
+): Promise<KeyReactivationData | KeyReactivationError> => {
+    if (getHasMigratedAddressKey(Key)) {
+        return {
+            id,
+            Key,
+            // Force the type here. Migrated address keys are not reactivated by a password.
+        } as KeyReactivationData;
+    }
+    try {
+        const { KeySalt } = keySalts.find(({ ID: keySaltID }) => Key.ID === keySaltID) || {};
+
+        const privateKey = await decryptPrivateKeyWithSalt({
+            PrivateKey: Key.PrivateKey,
+            keySalt: KeySalt,
+            password: oldPassword,
+        });
+
+        return {
+            id,
+            Key,
+            privateKey,
+        };
+    } catch (e) {
+        return {
+            id,
+            Key,
+            error: new Error(c('Error').t`Incorrect password`),
+        };
+    }
+};
+
+const getReactivatedKeys = async (
+    keysToReactivate: KeyReactivationRequestStateData[],
+    oldPassword: string,
+    keySalts: KeySalt[]
+) => {
+    const reactivatedKeys = await Promise.all(
+        keysToReactivate.map(async (keyData) => {
+            return getKey(keyData, oldPassword, keySalts);
+        })
+    );
+    const errors = reactivatedKeys.filter((reactivatedKey): reactivatedKey is KeyReactivationError => {
+        return 'error' in reactivatedKey;
+    });
+    const process = reactivatedKeys.filter((reactivatedKey): reactivatedKey is KeyReactivationData => {
+        return !('error' in reactivatedKey);
+    });
+    return { process, errors };
+};
+
+const ReactivateKeysModal = ({ keyReactivationRequests, onProcess, onClose, ...rest }: Props) => {
     const { createNotification } = useNotifications();
     const { createModal } = useModals();
+    const api = useApi();
 
     const [step, setStep] = useState<STEPS>(STEPS.LOADING);
     const [oldPassword, setOldPassword] = useState<string>('');
-    const [allKeys, setAllKeys] = useState<ReactivateKeys[]>([]);
+    const [states, setStates] = useState<KeyReactivationRequestState[]>([]);
 
     const notifyError = (error: string) => {
         createNotification({ type: 'error', text: error });
+    };
+
+    const onReactivation = (id: string, result: 'ok' | Error) => {
+        const newResult = {
+            status: result === 'ok' ? Status.SUCCESS : Status.ERROR,
+            result,
+        };
+        setStates((oldKeys) => {
+            return updateKey(oldKeys, id, newResult);
+        });
+    };
+
+    const getKeyByID = (id: string): KeyReactivationRequestStateData => {
+        for (const state of states) {
+            const keyState = state.keysToReactivate.find((keyState) => {
+                return keyState.id === id;
+            });
+            if (keyState) {
+                return keyState;
+            }
+        }
+        throw new Error('Key ID not found');
     };
 
     const handleProcess = (promise: Promise<void>) => {
@@ -50,8 +153,8 @@ const ReactivateKeysModal = ({ allKeys: initialAllKeys, onProcess, onClose, ...r
 
     useEffect(() => {
         const run = async () => {
-            const initialKeysState = await getInitialState(initialAllKeys);
-            setAllKeys(initialKeysState);
+            const initialStates = await getInitialStates(keyReactivationRequests);
+            setStates(initialStates);
             setStep(STEPS.INFO);
         };
         run();
@@ -81,7 +184,7 @@ const ReactivateKeysModal = ({ allKeys: initialAllKeys, onProcess, onClose, ...r
                             {c('Info')
                                 .t`To reactivate keys, you will be prompted to enter your previous login password from before your account was reset`}
                         </Alert>
-                        <ReactivateKeysList allKeys={allKeys} />
+                        <ReactivateKeysList states={states} />
                         <Alert>{c('Info').jt`You can also reactivate your keys by ${uploadButton}`}</Alert>
                     </>
                 ),
@@ -89,13 +192,14 @@ const ReactivateKeysModal = ({ allKeys: initialAllKeys, onProcess, onClose, ...r
         }
 
         if (step === STEPS.OR_UPLOAD) {
-            const handleUpload = (inactiveKey: ReactivateKey, keys: OpenPGPKey[]) => {
+            const handleUpload = (ID: string, keys: OpenPGPKey[]) => {
                 const privateKeys = keys.filter((key) => key.isPrivate());
                 if (privateKeys.length === 0) {
                     return notifyError(c('Error').t`Invalid private key file`);
                 }
+                const keyState = getKeyByID(ID);
 
-                const matchingKeys = privateKeys.filter((key) => key.getFingerprint() === inactiveKey.fingerprint);
+                const matchingKeys = privateKeys.filter((key) => key.getFingerprint() === keyState.fingerprint);
                 if (matchingKeys.length === 0) {
                     return notifyError(c('Error').t`Uploaded key does not match fingerprint`);
                 }
@@ -108,8 +212,8 @@ const ReactivateKeysModal = ({ allKeys: initialAllKeys, onProcess, onClose, ...r
                         // @ts-ignore - validate does not exist in the openpgp typings, todo
                         .validate()
                         .then(() => {
-                            return setAllKeys((oldKeys) => {
-                                return updateKey(oldKeys, inactiveKey, { uploadedPrivateKey });
+                            return setStates((oldKeys) => {
+                                return updateKey(oldKeys, ID, { uploadedPrivateKey });
                             });
                         })
                         .catch((e: Error) => {
@@ -122,9 +226,7 @@ const ReactivateKeysModal = ({ allKeys: initialAllKeys, onProcess, onClose, ...r
                     <DecryptFileKeyModal
                         privateKey={uploadedPrivateKey}
                         onSuccess={(privateKey) => {
-                            setAllKeys((oldKeys) =>
-                                updateKey(oldKeys, inactiveKey, { uploadedPrivateKey: privateKey })
-                            );
+                            setStates((oldKeys) => updateKey(oldKeys, ID, { uploadedPrivateKey: privateKey }));
                         }}
                     />
                 );
@@ -139,18 +241,26 @@ const ReactivateKeysModal = ({ allKeys: initialAllKeys, onProcess, onClose, ...r
             return {
                 submit: c('Action').t`Re-activate`,
                 onSubmit: () => {
-                    const onlyUploadedKeys = getUploadedKeys(allKeys);
-                    if (!onlyUploadedKeys.length) {
+                    const onlyUploadedPrivateKeys = getUploadedPrivateKeys(states);
+                    if (!onlyUploadedPrivateKeys.length) {
                         return onClose?.();
                     }
-                    setAllKeys(onlyUploadedKeys);
-                    handleProcess(
-                        onProcess({
-                            keysToReactivate: onlyUploadedKeys,
-                            setKeysToReactivate: setAllKeys,
-                            isUploadMode: true,
-                        })
-                    );
+                    setStates(onlyUploadedPrivateKeys);
+                    const records = onlyUploadedPrivateKeys.map((keyReactivationRecordState) => {
+                        return {
+                            ...keyReactivationRecordState,
+                            keysToReactivate: keyReactivationRecordState.keysToReactivate.map(
+                                ({ id, Key, uploadedPrivateKey }) => {
+                                    return {
+                                        id,
+                                        Key,
+                                        privateKey: uploadedPrivateKey,
+                                    };
+                                }
+                            ),
+                        };
+                    });
+                    handleProcess(onProcess(records, '', onReactivation));
                 },
                 children: (
                     <>
@@ -158,7 +268,7 @@ const ReactivateKeysModal = ({ allKeys: initialAllKeys, onProcess, onClose, ...r
                             {c('Info')
                                 .t`If the backup key has been encrypted, you will be prompted to enter the password to decrypt it`}
                         </Alert>
-                        <ReactivateKeysList allKeys={allKeys} onUpload={handleUpload} />
+                        <ReactivateKeysList states={states} onUpload={handleUpload} />
                         <Alert>{c('Info').jt`You can also reactivate your keys by ${passwordButton}`}</Alert>
                     </>
                 ),
@@ -168,14 +278,34 @@ const ReactivateKeysModal = ({ allKeys: initialAllKeys, onProcess, onClose, ...r
         if (step === STEPS.OR_PASSWORD) {
             return {
                 onSubmit: async () => {
-                    handleProcess(
-                        onProcess({
-                            setKeysToReactivate: setAllKeys,
-                            keysToReactivate: allKeys,
-                            isUploadMode: false,
-                            oldPassword,
+                    const keySalts = await api<{ KeySalts: KeySalt[] }>(getKeySalts())
+                        .then(({ KeySalts }) => KeySalts)
+                        .catch(() => []);
+
+                    const result = await Promise.all(
+                        states.map(async (keyReactivationRecordState) => {
+                            const { process, errors } = await getReactivatedKeys(
+                                keyReactivationRecordState.keysToReactivate,
+                                oldPassword,
+                                keySalts
+                            );
+                            errors.forEach(({ id, error }) => {
+                                onReactivation(id, error);
+                            });
+                            if (!process.length) {
+                                return;
+                            }
+                            return {
+                                ...keyReactivationRecordState,
+                                keysToReactivate: process,
+                            };
                         })
                     );
+                    const records = result.filter(isTruthy);
+                    if (!records.length) {
+                        return;
+                    }
+                    handleProcess(onProcess(records, oldPassword, onReactivation));
                 },
                 children: (
                     <>
@@ -204,7 +334,7 @@ const ReactivateKeysModal = ({ allKeys: initialAllKeys, onProcess, onClose, ...r
                 submit: c('Action').t`Done`,
                 children: (
                     <>
-                        <ReactivateKeysList loading allKeys={allKeys} />
+                        <ReactivateKeysList loading states={states} />
                         <Alert>
                             {c('Info')
                                 .t`If a key remains inactive, it means that the decryption password provided does not apply to the key.`}
@@ -219,7 +349,7 @@ const ReactivateKeysModal = ({ allKeys: initialAllKeys, onProcess, onClose, ...r
                 submit: c('Action').t`Done`,
                 children: (
                     <>
-                        <ReactivateKeysList allKeys={allKeys} />
+                        <ReactivateKeysList states={states} />
                         <Alert>
                             {c('Info')
                                 .t`If a key remains inactive, it means that the decryption password provided does not apply to the key.`}

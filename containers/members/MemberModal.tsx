@@ -4,12 +4,12 @@ import { DEFAULT_ENCRYPTION_CONFIG, ENCRYPTION_CONFIGS, GIGA } from 'proton-shar
 import { createMember, createMemberAddress } from 'proton-shared/lib/api/members';
 import { srpVerify } from 'proton-shared/lib/srp';
 import { Domain, Organization, Address, CachedOrganizationKey } from 'proton-shared/lib/interfaces';
+import { setupMemberKey } from 'proton-shared/lib/keys';
 import { useApi, useNotifications, useEventManager } from '../../hooks';
 import { FormModal, Row, Field, Label, PasswordInput, Input, Checkbox, Select } from '../../components';
 
 import MemberStorageSelector, { getStorageRange } from './MemberStorageSelector';
 import MemberVPNSelector, { getVPNRange } from './MemberVPNSelector';
-import { setupMemberKey } from './actionHelper';
 import SelectEncryption from '../keys/addKey/SelectEncryption';
 
 const FIVE_GIGA = 5 * GIGA;
@@ -78,8 +78,8 @@ const MemberModal = ({ onClose, organization, organizationKey, domains, domainsA
             }
             await setupMemberKey({
                 api,
-                Member,
-                Address,
+                member: Member,
+                address: Address,
                 organizationKey: organizationKey.privateKey,
                 encryptionConfig: ENCRYPTION_CONFIGS[encryptionType],
                 password: model.password,

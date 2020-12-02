@@ -3,14 +3,19 @@ import { noop } from 'proton-shared/lib/helpers/function';
 import {
     activateMemberAddressKeys,
     getAddressesWithKeysToActivate,
-} from 'proton-shared/lib/keys/activateMemberAddressKeys';
-import {
-    generatePrivateMemberKeys,
+    generateAllPrivateMemberKeys,
     getAddressesWithKeysToGenerate,
-} from 'proton-shared/lib/keys/generatePrivateMemberKeys';
+} from 'proton-shared/lib/keys';
 import { traceError } from 'proton-shared/lib/helpers/sentry';
 
-import { useAuthentication, useEventManager, useGetAddresses, useGetAddressKeys, useGetUser } from '../../hooks';
+import {
+    useAuthentication,
+    useEventManager,
+    useGetAddresses,
+    useGetAddressKeys,
+    useGetUser,
+    useGetUserKeys,
+} from '../../hooks';
 
 import useApi from '../../hooks/useApi';
 
@@ -24,6 +29,7 @@ const KeyBackgroundManager = ({
     hasReadableMemberKeyActivation = false,
 }: Props) => {
     const getUser = useGetUser();
+    const getUserKeys = useGetUserKeys();
     const getAddresses = useGetAddresses();
     const getAddressKeys = useGetAddressKeys();
     const authentication = useAuthentication();
@@ -33,7 +39,7 @@ const KeyBackgroundManager = ({
 
     useEffect(() => {
         const run = async () => {
-            const [user, addresses] = await Promise.all([getUser(), getAddresses()]);
+            const [user, userKeys, addresses] = await Promise.all([getUser(), getUserKeys(), getAddresses()]);
             const keyPassword = authentication.getPassword();
 
             const addressesWithKeysToActivate = hasReadableMemberKeyActivation
@@ -44,6 +50,7 @@ const KeyBackgroundManager = ({
                     addressesWithKeysToActivate.map(async (address) => {
                         const addressKeys = await getAddressKeys(address.ID);
                         return activateMemberAddressKeys({
+                            address,
                             addressKeys,
                             keyPassword,
                             api: silentApi,
@@ -58,15 +65,13 @@ const KeyBackgroundManager = ({
                 ? getAddressesWithKeysToGenerate(user, addresses)
                 : [];
             if (addressesWithKeysToGenerate.length) {
-                Promise.all(
-                    addressesWithKeysToGenerate.map((address) => {
-                        return generatePrivateMemberKeys({
-                            address,
-                            keyPassword,
-                            api: silentApi,
-                        });
-                    })
-                )
+                generateAllPrivateMemberKeys({
+                    addressesToGenerate: addressesWithKeysToGenerate,
+                    userKeys,
+                    addresses,
+                    keyPassword,
+                    api: silentApi,
+                })
                     .then(call)
                     .catch(traceError);
             }

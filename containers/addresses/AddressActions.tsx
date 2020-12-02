@@ -78,7 +78,11 @@ const AddressActions = ({ address, member, user, organizationKey }: Props) => {
 
     const handleGenerate = async () => {
         createModal(
-            <CreateMissingKeysAddressModal member={member} addresses={[address]} organizationKey={organizationKey} />
+            <CreateMissingKeysAddressModal
+                member={member}
+                addressesToGenerate={[address]}
+                organizationKey={organizationKey}
+            />
         );
     };
 

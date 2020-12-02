@@ -1,18 +1,17 @@
 import { useCallback } from 'react';
-import { CachedKey } from 'proton-shared/lib/interfaces';
-import { getDecryptedUserKeys } from 'proton-shared/lib/keys/getDecryptedUserKeys';
+import { getDecryptedUserKeys } from 'proton-shared/lib/keys';
+
 import useAuthentication from './useAuthentication';
 import { useGetUser } from './useUser';
 
-export const useGetUserKeysRaw = (): (() => Promise<CachedKey[]>) => {
+export const useGetUserKeysRaw = (): (() => ReturnType<typeof getDecryptedUserKeys>) => {
     const authentication = useAuthentication();
     const getUser = useGetUser();
-
     return useCallback(async () => {
-        const { OrganizationPrivateKey, Keys = [] } = await getUser();
+        const user = await getUser();
         return getDecryptedUserKeys({
-            userKeys: Keys,
-            OrganizationPrivateKey,
+            user,
+            userKeys: user.Keys,
             keyPassword: authentication.getPassword(),
         });
     }, [getUser]);
