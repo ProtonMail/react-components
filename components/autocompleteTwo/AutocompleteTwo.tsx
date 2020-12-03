@@ -37,7 +37,7 @@ function arrayRemove<T>(array: T[], item: T) {
 const defaultFilterOptions = <V extends any>({ input, options, getOptionLabel }: FilterOptionsParameters<V>) =>
     options.filter((option) => input && new RegExp(input).test(getOptionLabel(option)));
 
-interface Props<V, Multiple extends undefined | boolean = undefined> {
+export interface Props<V, Multiple extends undefined | boolean = undefined> {
     /**
      * Required for accessibility, namely linking
      * aria-owns & aria-activedescendant correctly.
@@ -80,6 +80,10 @@ interface Props<V, Multiple extends undefined | boolean = undefined> {
      */
     isOpen?: boolean;
     /**
+     * Limits the number of items that can be rendered in the Autocomplete list
+     */
+    limit?: number;
+    /**
      * Filtering function that decided which options from the
      * options array should be rendered.
      */
@@ -118,6 +122,7 @@ const AutocompleteTwo = <V, Multiple extends boolean | undefined = undefined>({
     value: valueProp,
     multiple,
     isOpen: isOpenProp,
+    limit,
     getOptionLabel = (v: any) => v.label,
     getOptionKey = (v: any) => v.key,
     filterOptions = defaultFilterOptions,
@@ -166,11 +171,15 @@ const AutocompleteTwo = <V, Multiple extends boolean | undefined = undefined>({
         }
     }, [input]);
 
-    const filteredOptions = filterOptions({
+    let filteredOptions = filterOptions({
         input: displayedInput,
         options,
         getOptionLabel,
     });
+
+    if (limit !== undefined) {
+        filteredOptions = filteredOptions.slice(0, limit);
+    }
 
     const matches = filteredOptions.map((option) =>
         Array.from(getOptionLabel(option).matchAll(new RegExp(displayedInput, 'g')))
