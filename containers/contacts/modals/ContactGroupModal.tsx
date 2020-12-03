@@ -163,7 +163,7 @@ const ContactGroupModal = ({ contactGroupID, onClose = noop, selectedContactEmai
                         >
                             {({ ref, inputProps }) => (
                                 <Input
-                                    ref={ref}
+                                    containerRef={ref}
                                     icon={<Icon name="search" />}
                                     placeholder={c('Placeholder').t`Start typing an email address`}
                                     {...inputProps}
