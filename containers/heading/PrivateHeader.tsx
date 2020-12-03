@@ -28,6 +28,7 @@ import UpgradeButton from './UpgradeButton';
 import UpgradeVPNButton from './UpgradeVPNButton';
 import BlackFridayButton from './BlackFridayButton';
 import { MailBlackFridayModal, NewSubscriptionModal, VPNBlackFridayModal } from '../payments';
+import { SUBSCRIPTION_STEPS } from '../payments/subscription/constants';
 
 interface Props extends HeaderProps {
     logo?: React.ReactNode;
@@ -83,7 +84,15 @@ const PrivateHeader = ({
         currency: Currency;
         couponCode?: string | null;
     }) => {
-        createModal(<NewSubscriptionModal planIDs={planIDs} cycle={cycle} currency={currency} coupon={couponCode} />);
+        createModal(
+            <NewSubscriptionModal
+                planIDs={planIDs}
+                cycle={cycle}
+                currency={currency}
+                coupon={couponCode}
+                step={SUBSCRIPTION_STEPS.PAYMENT}
+            />
+        );
     };
 
     useEffect(() => {

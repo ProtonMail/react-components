@@ -9,6 +9,7 @@ import NewSubscriptionModal from '../payments/subscription/NewSubscriptionModal'
 import VPNBlackFridayModal from '../payments/subscription/VPNBlackFridayModal';
 import MailBlackFridayModal from '../payments/subscription/MailBlackFridayModal';
 import { TopNavbarItem } from '../app/TopNavbar';
+import { SUBSCRIPTION_STEPS } from '../payments/subscription/constants';
 
 interface Props {
     plans: Plan[];
@@ -32,7 +33,15 @@ const BlackFridayButton = ({ plans, subscription, ...rest }: Props) => {
         currency: Currency;
         couponCode?: string | null;
     }) => {
-        createModal(<NewSubscriptionModal planIDs={planIDs} cycle={cycle} currency={currency} coupon={couponCode} />);
+        createModal(
+            <NewSubscriptionModal
+                planIDs={planIDs}
+                cycle={cycle}
+                currency={currency}
+                coupon={couponCode}
+                step={SUBSCRIPTION_STEPS.PAYMENT}
+            />
+        );
     };
 
     if (APP_NAME === APPS.PROTONVPN_SETTINGS) {
