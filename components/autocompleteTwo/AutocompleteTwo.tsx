@@ -37,7 +37,7 @@ function arrayRemove<T>(array: T[], item: T) {
 const defaultFilterOptions = <V extends any>({ input, options, getOptionLabel }: FilterOptionsParameters<V>) =>
     options.filter((option) => input && new RegExp(input).test(getOptionLabel(option)));
 
-export interface Props<V, Multiple extends undefined | boolean = undefined> {
+export interface AutocompleteProps<V, Multiple extends undefined | boolean = undefined> {
     /**
      * Required for accessibility, namely linking
      * aria-owns & aria-activedescendant correctly.
@@ -129,7 +129,7 @@ const AutocompleteTwo = <V, Multiple extends boolean | undefined = undefined>({
     children,
     onClose,
     onChange,
-}: Props<V, Multiple>) => {
+}: AutocompleteProps<V, Multiple>) => {
     type ValueOrValueArray = Multiple extends undefined | false ? V : V[];
 
     const [highlightedIndex, setHighlightedIndex] = useState(0);
