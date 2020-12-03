@@ -77,7 +77,7 @@ export interface AutocompleteProps<V, Multiple extends undefined | boolean = und
      */
     options: V[];
     /**
-     * Let's the consumer optionally control the open
+     * Lets the consumer optionally control the open
      * state of the dropdown component
      */
     isOpen?: boolean;
@@ -124,7 +124,7 @@ const AutocompleteTwo = <V, Multiple extends boolean | undefined = undefined>({
     value: valueProp,
     multiple,
     isOpen: isOpenProp,
-    limit,
+    limit = 20,
     getOptionLabel = (v: any) => v.label,
     getOptionKey = (v: any) => v.key,
     filterOptions = defaultFilterOptions,
@@ -173,15 +173,11 @@ const AutocompleteTwo = <V, Multiple extends boolean | undefined = undefined>({
         }
     }, [input]);
 
-    let filteredOptions = filterOptions({
+    const filteredOptions = filterOptions({
         input: displayedInput,
         options,
         getOptionLabel,
-    });
-
-    if (limit !== undefined) {
-        filteredOptions = filteredOptions.slice(0, limit);
-    }
+    }).slice(0, limit);
 
     const matches = filteredOptions.map((option) =>
         Array.from(getOptionLabel(option).matchAll(new RegExp(displayedInput, 'g')))
@@ -227,24 +223,6 @@ const AutocompleteTwo = <V, Multiple extends boolean | undefined = undefined>({
         return option as ValueOrValueArray;
     };
 
-    const selectCurrentlyHighlightedOption = () => {
-        const option = filteredOptions[highlightedIndex];
-
-        if (!option) {
-            return;
-        }
-
-        const nextValue = getNextValue(option);
-
-        onChange?.({ value: nextValue });
-        setValue(nextValue);
-
-        if (!multiple) {
-            setInput(getOptionLabel(option));
-            close();
-        }
-    };
-
     const handleChange = (option: V) => {
         const nextValue = getNextValue(option);
 
@@ -256,6 +234,16 @@ const AutocompleteTwo = <V, Multiple extends boolean | undefined = undefined>({
             setInput(getOptionLabel(option));
             close();
         }
+    };
+
+    const selectCurrentlyHighlightedOption = () => {
+        const option = filteredOptions[highlightedIndex];
+
+        if (!option) {
+            return;
+        }
+
+        handleChange(option);
     };
 
     const handleListMouseDown = (e: React.MouseEvent<HTMLUListElement>) => {
@@ -280,10 +268,6 @@ const AutocompleteTwo = <V, Multiple extends boolean | undefined = undefined>({
     };
 
     const handleInputBlur = () => {
-        if (multiple) {
-            return;
-        }
-
         close();
     };
 
