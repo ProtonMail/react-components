@@ -9,7 +9,7 @@ import { labelContactEmails, unLabelContactEmails } from 'proton-shared/lib/api/
 import { ContactEmail } from 'proton-shared/lib/interfaces/contacts/Contact';
 
 import {
-    Autocomplete,
+    AutocompleteTwo,
     FormModal,
     Input,
     Row,
@@ -18,8 +18,7 @@ import {
     ColorPicker,
     ContactGroupTable,
     Icon,
-    useAutocomplete,
-    useAutocompleteRecipient,
+    AutocompleteChangeEvent,
 } from '../../../components';
 import { useContactEmails, useNotifications, useContactGroups, useApi, useEventManager } from '../../../hooks';
 
@@ -34,18 +33,12 @@ interface Props {
 }
 
 const ContactGroupModal = ({ contactGroupID, onClose = noop, selectedContactEmails = [], ...rest }: Props) => {
-    const { changeInputValue, inputValue } = useAutocomplete({
-        multiple: false,
-    });
-
     const [loading, setLoading] = useState(false);
     const { call } = useEventManager();
     const api = useApi();
     const { createNotification } = useNotifications();
     const [contactGroups = []] = useContactGroups();
     const [contactEmails] = useContactEmails();
-
-    const recipientItem = useAutocompleteRecipient();
 
     const contactGroup = contactGroupID && contactGroups.find(({ ID }) => ID === contactGroupID);
     const existingContactEmails =
@@ -63,23 +56,17 @@ const ContactGroupModal = ({ contactGroupID, onClose = noop, selectedContactEmai
     });
     const contactEmailIDs = model.contactEmails.map(({ ID }: ContactEmail) => ID);
 
-    const options = orderBy(contactEmails as ContactEmail[], 'Email')
-        .filter(({ ID }: ContactEmail) => !contactEmailIDs.includes(ID))
-        .map(({ ID, Email, Name }: ContactEmail) => ({
-            label: Email === Name ? `<${Email}>` : `${Name} <${Email}>`,
-            value: ID,
-        }));
+    const options = orderBy(contactEmails as ContactEmail[], 'Email').filter(
+        ({ ID }: ContactEmail) => !contactEmailIDs.includes(ID)
+    );
 
     const handleChangeName = ({ target }: ChangeEvent<HTMLInputElement>) => setModel({ ...model, name: target.value });
     const handleChangeColor = (color: string) => setModel({ ...model, color });
 
-    const handleAddEmail = (contactEmailID: string) => {
-        const contactEmail = contactEmails.find(({ ID }: ContactEmail) => ID === contactEmailID);
-        const alreadyExist = model.contactEmails.find(({ ID }: ContactEmail) => ID === contactEmailID);
-        if (contactEmail && !alreadyExist) {
-            setModel((model) => ({ ...model, contactEmails: [contactEmail, ...model.contactEmails] }));
-            changeInputValue('');
-        }
+    const handleAutocompleteChange = (e: AutocompleteChangeEvent<ContactEmail[]>) => {
+        const { value } = e;
+
+        setModel((model) => ({ ...model, contactEmails: value }));
     };
 
     const handleDeleteEmail = (contactEmailID: string) => {
@@ -159,25 +146,30 @@ const ContactGroupModal = ({ contactGroupID, onClose = noop, selectedContactEmai
                 <Icon className="mr0-5" name="contacts-groups" />
                 <span>{c('Title').t`Group members`}</span>
             </h4>
+
             {options.length ? (
                 <Row>
                     <Label htmlFor="contactGroupEmail">{c('Label').t`Add email address`}</Label>
                     <Field>
-                        <Autocomplete
-                            inputValue={inputValue}
-                            onSelect={handleAddEmail}
-                            onInputValueChange={changeInputValue}
-                            placeholder={c('Placeholder').t`Start typing an email address`}
-                            list={options}
-                            fieldClassName="flex-items-center"
-                            className="contact-group-emails-autocomplete"
-                            item={recipientItem}
-                            minChars={1}
-                            maxItems={6}
-                            autoFirst
+                        <AutocompleteTwo
+                            id="contact-group"
+                            multiple
+                            limit={6}
+                            value={model.contactEmails as ContactEmail[]}
+                            options={options}
+                            onChange={handleAutocompleteChange}
+                            getOptionLabel={({ Email, Name }) => (Email === Name ? `<${Email}>` : `${Name} <${Email}>`)}
+                            getOptionKey={({ ID }) => ID}
                         >
-                            <Icon className="mr0-5" name="search" />
-                        </Autocomplete>
+                            {({ ref, inputProps }) => (
+                                <Input
+                                    ref={ref}
+                                    icon={<Icon name="search" />}
+                                    placeholder={c('Placeholder').t`Start typing an email address`}
+                                    {...inputProps}
+                                />
+                            )}
+                        </AutocompleteTwo>
                     </Field>
                 </Row>
             ) : null}

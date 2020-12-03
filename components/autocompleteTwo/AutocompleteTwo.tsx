@@ -232,8 +232,9 @@ const AutocompleteTwo = <V, Multiple extends boolean | undefined = undefined>({
 
         if (!multiple) {
             setInput(getOptionLabel(option));
-            close();
         }
+
+        close();
     };
 
     const selectCurrentlyHighlightedOption = () => {
