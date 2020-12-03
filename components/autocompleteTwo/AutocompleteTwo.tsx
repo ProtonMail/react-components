@@ -9,17 +9,19 @@ export interface AutocompleteChangeEvent<V> {
 }
 
 export interface AutocompleteRenderProps<V> {
-    autocompleteValue: V;
-    inputValue: string;
-    'aria-owns': AriaAttributes['aria-owns'];
-    'aria-activedescendant': AriaAttributes['aria-activedescendant'];
-    'aria-autocomplete': AriaAttributes['aria-autocomplete'];
-    'aria-describedby': AriaAttributes['aria-describedby'];
     ref: React.RefObject<any>;
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    onFocus: () => void;
-    onBlur: () => void;
-    onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+    autocompleteValue: V;
+    inputProps: {
+        value: string;
+        'aria-owns': AriaAttributes['aria-owns'];
+        'aria-activedescendant': AriaAttributes['aria-activedescendant'];
+        'aria-autocomplete': AriaAttributes['aria-autocomplete'];
+        'aria-describedby': AriaAttributes['aria-describedby'];
+        onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+        onFocus: () => void;
+        onBlur: () => void;
+        onKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+    };
 }
 
 interface FilterOptionsParameters<V> {
@@ -252,6 +254,7 @@ const AutocompleteTwo = <V, Multiple extends boolean | undefined = undefined>({
 
         if (!multiple) {
             setInput(getOptionLabel(option));
+            close();
         }
     };
 
@@ -352,17 +355,19 @@ const AutocompleteTwo = <V, Multiple extends boolean | undefined = undefined>({
     };
 
     const renderProps: AutocompleteRenderProps<ValueOrValueArray> = {
-        inputValue: displayedInput,
         autocompleteValue: value,
-        'aria-owns': id,
-        'aria-activedescendant': `${id}-${highlightedIndex}`,
-        'aria-autocomplete': 'list',
-        'aria-describedby': `${id}-autocomplete-suggest-text`,
         ref: anchorRef,
-        onChange: handleInputChange,
-        onFocus: handleInputFocus,
-        onBlur: handleInputBlur,
-        onKeyDown: handleInputKeyDown,
+        inputProps: {
+            value: displayedInput,
+            'aria-owns': id,
+            'aria-activedescendant': `${id}-${highlightedIndex}`,
+            'aria-autocomplete': 'list',
+            'aria-describedby': `${id}-autocomplete-suggest-text`,
+            onChange: handleInputChange,
+            onFocus: handleInputFocus,
+            onBlur: handleInputBlur,
+            onKeyDown: handleInputKeyDown,
+        },
     };
 
     return (
