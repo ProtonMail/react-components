@@ -102,10 +102,9 @@ const AddressKeysSection = () => {
         if (isLoadingKey || !addressKeys) {
             return;
         }
-        const addressKey = getKeyByID(addressKeys, ID);
         const addressDisplayKey = getKeyByID(addressKeysDisplay, ID);
 
-        if (!addressDisplayKey || !addressKey || !Address) {
+        if (!addressDisplayKey || !Address) {
             throw new Error('Key not found');
         }
 
