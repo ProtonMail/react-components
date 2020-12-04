@@ -124,7 +124,7 @@ const ImportKeyModal = ({ onClose, onProcess, ...rest }: Props) => {
     const { children, ...stepProps } = (() => {
         if (step === STEPS.WARNING) {
             return {
-                submit: c('Action').t`Yes`,
+                submit: c('Action').t`Import`,
                 onSubmit: () => {
                     setStep(STEPS.SELECT_FILES);
                 },
@@ -152,7 +152,7 @@ const ImportKeyModal = ({ onClose, onProcess, ...rest }: Props) => {
 
         if (step === STEPS.PROCESS) {
             return {
-                submit: c('Action').t`Done`,
+                submit: c('Action').t`Select files`,
                 loading: true,
                 children: <ImportKeysList keys={state} />,
             };
@@ -160,14 +160,14 @@ const ImportKeyModal = ({ onClose, onProcess, ...rest }: Props) => {
 
         if (step === STEPS.DONE) {
             return {
-                submit: c('Action').t`Done`,
+                submit: null,
                 children: <ImportKeysList keys={state} />,
             };
         }
 
         if (step === STEPS.FAILURE) {
             return {
-                submit: c('Action').t`Ok`,
+                submit: null,
                 children: <GenericError />,
             };
         }

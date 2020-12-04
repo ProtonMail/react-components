@@ -163,7 +163,7 @@ const ReactivateKeysModal = ({ keyReactivationRequests, onProcess, onClose, ...r
     const { children, ...stepProps } = (() => {
         if (step === STEPS.LOADING) {
             return {
-                submit: null,
+                submit: c('Action').t`Continue`,
                 children: <Loader />,
             };
         }
@@ -176,7 +176,7 @@ const ReactivateKeysModal = ({ keyReactivationRequests, onProcess, onClose, ...r
             );
 
             return {
-                submit: c('Action').t`Re-activate`,
+                submit: c('Action').t`Continue`,
                 onSubmit: () => setStep(STEPS.OR_PASSWORD),
                 children: (
                     <>
@@ -239,7 +239,6 @@ const ReactivateKeysModal = ({ keyReactivationRequests, onProcess, onClose, ...r
             );
 
             return {
-                submit: c('Action').t`Re-activate`,
                 onSubmit: () => {
                     const onlyUploadedPrivateKeys = getUploadedPrivateKeys(states);
                     if (!onlyUploadedPrivateKeys.length) {
@@ -277,6 +276,10 @@ const ReactivateKeysModal = ({ keyReactivationRequests, onProcess, onClose, ...r
 
         if (step === STEPS.OR_PASSWORD) {
             return {
+                close: c('Action').t`Back`,
+                onClose: () => {
+                    setStep(STEPS.INFO);
+                },
                 onSubmit: async () => {
                     const keySalts = await api<{ KeySalts: KeySalt[] }>(getKeySalts())
                         .then(({ KeySalts }) => KeySalts)
@@ -302,9 +305,6 @@ const ReactivateKeysModal = ({ keyReactivationRequests, onProcess, onClose, ...r
                         })
                     );
                     const records = result.filter(isTruthy);
-                    if (!records.length) {
-                        return;
-                    }
                     handleProcess(onProcess(records, oldPassword, onReactivation));
                 },
                 children: (
@@ -331,7 +331,7 @@ const ReactivateKeysModal = ({ keyReactivationRequests, onProcess, onClose, ...r
         if (step === STEPS.PROCESS) {
             return {
                 loading: true,
-                submit: c('Action').t`Done`,
+                submit: c('Action').t`Submit`,
                 children: (
                     <>
                         <ReactivateKeysList loading states={states} />
@@ -346,7 +346,7 @@ const ReactivateKeysModal = ({ keyReactivationRequests, onProcess, onClose, ...r
 
         if (step === STEPS.DONE) {
             return {
-                submit: c('Action').t`Done`,
+                submit: null,
                 children: (
                     <>
                         <ReactivateKeysList states={states} />
@@ -361,7 +361,7 @@ const ReactivateKeysModal = ({ keyReactivationRequests, onProcess, onClose, ...r
 
         if (step === STEPS.FAILURE) {
             return {
-                submit: c('Action').t`Ok`,
+                submit: null,
                 children: <GenericError />,
             };
         }
