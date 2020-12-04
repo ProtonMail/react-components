@@ -4,7 +4,7 @@ import { c } from 'ttag';
 import { srpVerify } from 'proton-shared/lib/srp';
 import { upgradePassword } from 'proton-shared/lib/api/settings';
 import { auth2FA, getInfo, revoke } from 'proton-shared/lib/api/auth';
-import { Api, KeySalt as tsKeySalt, User as tsUser, Address as tsAddress } from 'proton-shared/lib/interfaces';
+import { Address as tsAddress, Api, KeySalt as tsKeySalt, User as tsUser } from 'proton-shared/lib/interfaces';
 import { getUser } from 'proton-shared/lib/api/user';
 import { getKeySalts } from 'proton-shared/lib/api/keys';
 import { HTTP_ERROR_CODES } from 'proton-shared/lib/errors';
@@ -237,7 +237,10 @@ const useLogin = ({ api, onLogin, ignoreUnlock, hasGenerateKeys = false }: Props
 
         if (User.Keys.length === 0) {
             if (hasGenerateKeys) {
-                if (User.Role === USER_ROLES.MEMBER_ROLE && User.Private === MEMBER_PRIVATE.UNREADABLE) {
+                if (
+                    (User.Role === USER_ROLES.ADMIN_ROLE || User.Role === USER_ROLES.MEMBER_ROLE) &&
+                    User.Private === MEMBER_PRIVATE.UNREADABLE
+                ) {
                     return gotoForm(FORM.NEW_PASSWORD);
                 }
                 return handleSetupPassword(loginPassword);
