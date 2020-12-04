@@ -27,6 +27,8 @@ const PasswordInput = ({ disabled = false, ...rest }: Props) => {
             }
             {...rest}
             autocapitalize="off"
+            autocorrect="off"
+            spellcheck="false"
         />
     );
 };
