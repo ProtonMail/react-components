@@ -8,7 +8,27 @@ import { Button } from '../../components';
 import { classnames } from '../../helpers';
 import { useLoading } from '../../hooks';
 
-const { SIGNATURE_NOT_VERIFIED } = CRYPTO_PROCESSING_TYPES;
+const { SIGNATURE_NOT_VERIFIED, FAIL_TO_READ, FAIL_TO_LOAD, FAIL_TO_DECRYPT } = CRYPTO_PROCESSING_TYPES;
+
+const importanceOrder = [FAIL_TO_LOAD, FAIL_TO_READ, FAIL_TO_DECRYPT, SIGNATURE_NOT_VERIFIED];
+
+const matchType = (errors: CryptoProcessingError[], type: CRYPTO_PROCESSING_TYPES) =>
+    errors.find((error) => error.type === type);
+
+const selectError = (errors: CryptoProcessingError[]) =>
+    importanceOrder.map((type) => matchType(errors, type)).filter(Boolean)[0];
+
+const getText = (errorType: CRYPTO_PROCESSING_TYPES) => {
+    switch (errorType) {
+        case FAIL_TO_DECRYPT:
+            return c('Warning').t`Error: the encrypted content failed decryption and cannot be read.`;
+        case SIGNATURE_NOT_VERIFIED:
+            return c('Warning')
+                .t`Warning: the signature verification failed. Some of your contact's content cannot be displayed.`;
+        default:
+            return c('Warning').t`Error: the contact failed loading.`;
+    }
+};
 
 interface Props {
     errors?: CryptoProcessingError[];
@@ -23,19 +43,23 @@ const ContactViewErrors = ({ errors, onReload, onResign }: Props) => {
         return null;
     }
 
-    const errorTypes = errors.map(({ type }) => type);
-    const isSignature = errorTypes.includes(SIGNATURE_NOT_VERIFIED);
-    const bgColor = isSignature ? 'bg-global-attention' : 'bg-global-warning';
-    const textColor = isSignature ? 'color-black' : 'color-white';
-    const text = isSignature
-        ? c('Warning')
-              .t`Warning: the signature verification failed. Some of your contact's content cannot be displayed.`
-        : c('Warning').t`Error: the encrypted content failed decryption and cannot be read.`;
-    const showButton = isSignature ? !!onResign : !!onReload;
-    const buttonText = isSignature ? c('Action').t`Resign` : c('Action').t`Try again`;
+    const error = selectError(errors);
+
+    // Should not happen
+    if (!error) {
+        return null;
+    }
+    const isWarning = error.type === SIGNATURE_NOT_VERIFIED;
+
+    const bgColor = isWarning ? 'bg-global-attention' : 'bg-global-warning';
+    const textColor = isWarning ? 'color-black' : 'color-white';
+    const text = getText(error.type);
+
+    const showButton = isWarning ? !!onReload : !!onResign;
+    const buttonText = isWarning ? c('Action').t`Resign` : c('Action').t`Try again`;
 
     const handleAction = () => {
-        const action = async () => (isSignature ? onResign?.() : onReload?.());
+        const action = async () => (isWarning ? onResign?.() : onReload?.());
         void withLoading(action());
     };
 
