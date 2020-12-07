@@ -73,7 +73,7 @@ const SupportDropdown = ({ className, content, hasButtonCaret = false }: Props) 
                     </DropdownMenuButton>
                     <DropdownMenuButton className="flex flex-nowrap alignleft" onClick={handleShortcutsClick}>
                         <Icon className="mt0-25 mr0-5" name="info" />
-                        {c('Action').t`Display shortcuts`}
+                        {c('Action').t`Display keyboard shortcuts`}
                     </DropdownMenuButton>
                     {APP_NAME !== APPS.PROTONVPN_SETTINGS && (
                         <DropdownMenuButton className="flex flex-nowrap alignleft" onClick={handleTourClick}>

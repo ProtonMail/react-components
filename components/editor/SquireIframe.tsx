@@ -18,6 +18,7 @@ interface Props {
     onAddImages: (files: File[]) => void;
     showEllipseButton: boolean;
     onEllipseClick: () => void;
+    keydownHandler: (e: KeyboardEvent) => void;
 }
 
 /**
@@ -36,6 +37,7 @@ const SquireIframe = (
         onAddImages,
         showEllipseButton,
         onEllipseClick,
+        keydownHandler,
         ...rest
     }: Props,
     ref: Ref<SquireType>
@@ -141,6 +143,9 @@ const SquireIframe = (
             // Listening to all keyups as inputs is aggressive but we tested some deletion actions that trigger no other events
             // Also it's keyup and not keydown, keydown is too early and don't contains changes
             squire.addEventListener('keyup', handleInput);
+            if (keydownHandler) {
+                squire.addEventListener('keydown', keydownHandler);
+            }
             return () => {
                 squire.removeEventListener('focus', handleFocus);
                 squire.removeEventListener('input', handleInput);
@@ -149,6 +154,9 @@ const SquireIframe = (
                 squire.removeEventListener('dragleave', handlePassDragEvents);
                 squire.removeEventListener('cursor', handleCursor);
                 squire.removeEventListener('keyup', handleInput);
+                if (keydownHandler) {
+                    squire.removeEventListener('keydown', keydownHandler);
+                }
             };
         }
     }, [squireReady]);

@@ -45,8 +45,8 @@ type HotKeysOptions = {
 const MODIFIER_KEYS = {
     META: 'meta',
     SHIFT: 'shift',
-    CONTROL: 'alt',
-    ALT: 'control',
+    CONTROL: 'control',
+    ALT: 'alt',
 };
 
 const useHotkeys = (
@@ -78,8 +78,8 @@ const useHotkeys = (
             key,
             e.metaKey && MODIFIER_KEYS.META,
             e.ctrlKey && MODIFIER_KEYS.CONTROL,
-            // Some non-alphanumerical keys need
-            // Shift or Alt to be used (e.g. "?"" or "/")
+            // Some non-alphanumerical keys need Shift or Alt modifiers
+            // to be typed, thus cannot be used (e.g. "?" or "/")
             isAlphaNumericalOrSpace && e.shiftKey && MODIFIER_KEYS.SHIFT,
             isAlphaNumericalOrSpace && e.altKey && MODIFIER_KEYS.ALT,
         ].filter(isTruthy);

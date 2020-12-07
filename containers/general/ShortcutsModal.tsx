@@ -68,7 +68,7 @@ const ShortcutsModal = ({ app, onClose = noop, ...rest }: Props) => {
 
     return (
         <FormModal
-            title={c('Title').t`${APPS_CONFIGURATION[app].name} Shortcuts`}
+            title={c('Title').t`${APPS_CONFIGURATION[app].name} Keyboard Shortcuts`}
             close={c('Action').t`Close`}
             hasSubmit={false}
             onClose={onClose}
@@ -76,7 +76,7 @@ const ShortcutsModal = ({ app, onClose = noop, ...rest }: Props) => {
             {...rest}
         >
             <Alert className="mb1">{c('Info')
-                .t`Basic navigation and actions remain available regardless of shortcuts being active or not in the settings.`}</Alert>
+                .t`Basic navigation and actions remain available regardless of keyboard shortcuts being active or not in the settings.`}</Alert>
             <div
                 className="list-2columns onmobile-list-1column"
                 // to compensate the pr2 of the sections in the right column
