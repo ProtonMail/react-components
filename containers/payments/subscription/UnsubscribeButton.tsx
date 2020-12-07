@@ -15,31 +15,35 @@ import {
 } from '../../../hooks';
 import LossLoyaltyModal from '../LossLoyaltyModal';
 import DowngradeModal from '../DowngradeModal';
+import SubscriptionCancelModal, { SubscriptionCancelModel } from './SubscriptionCancelModal';
 
-const DOWNGRADING_ID = 'downgrading-notification';
+interface Props {
+    className: string;
+    children: React.ReactNode;
+}
 
-const UnsubscribeButton = ({ className, children }) => {
+const UnsubscribeButton = ({ className, children }: Props) => {
     const [user] = useUser();
     const [organization] = useOrganization();
     const { createNotification, hideNotification } = useNotifications();
-    const { createModal } = useModals();
+    const { createModal, removeModal } = useModals();
     const api = useApi();
     const { call } = useEventManager();
     const [loading, withLoading] = useLoading();
 
-    const handleUnsubscribe = async () => {
-        createNotification({
+    const handleUnsubscribe = async (subscriptionCancelData: SubscriptionCancelModel) => {
+        const downgradeNotificationId = createNotification({
             type: 'info',
             text: c('State').t`Downgrading your account, please wait`,
-            id: DOWNGRADING_ID,
             expiration: 99999,
         });
+
         try {
-            await api(deleteSubscription());
+            await api(deleteSubscription(subscriptionCancelData));
             await call();
             createNotification({ text: c('Success').t`You have successfully unsubscribed` });
         } finally {
-            hideNotification(DOWNGRADING_ID);
+            hideNotification(downgradeNotificationId);
         }
     };
 
@@ -47,6 +51,14 @@ const UnsubscribeButton = ({ className, children }) => {
         if (user.isFree) {
             return createNotification({ type: 'error', text: c('Info').t`You already have a free account` });
         }
+
+        let subscriptionCancelModalId;
+
+        const subscriptionCancelData = await new Promise<SubscriptionCancelModel>((resolve, reject) => {
+            subscriptionCancelModalId = createModal(<SubscriptionCancelModal onSubmit={resolve} onClose={reject} />);
+        });
+
+        removeModal(subscriptionCancelModalId);
 
         await new Promise((resolve, reject) => {
             createModal(<DowngradeModal user={user} onConfirm={resolve} onClose={reject} />);
@@ -58,7 +70,7 @@ const UnsubscribeButton = ({ className, children }) => {
             });
         }
 
-        return handleUnsubscribe();
+        return handleUnsubscribe(subscriptionCancelData);
     };
 
     return (
