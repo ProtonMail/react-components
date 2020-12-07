@@ -10,7 +10,7 @@ export interface AutocompleteChangeEvent<V> {
 
 export interface AutocompleteRenderProps<V> {
     ref: React.RefObject<any>;
-    autocompleteValue: V;
+    autocompleteValue?: V;
     inputProps: {
         value: string;
         'aria-owns': AriaAttributes['aria-owns'];
@@ -53,7 +53,11 @@ export interface AutocompleteProps<V, Multiple extends undefined | boolean = und
      * the options Array to determine which option
      * is currently selected.
      */
-    value: Multiple extends undefined | false ? V : V[];
+    value?: Multiple extends undefined | false ? V : V[];
+    /**
+     * The optionally controlled value of the input field.
+     */
+    inputValue?: string;
     /**
      * Puts your Autocomplete instance in 'multiple' mode
      * where the value emitted will be an array of values.
@@ -122,6 +126,7 @@ const AutocompleteTwo = <V, Multiple extends boolean | undefined = undefined>({
     id,
     options,
     value: valueProp,
+    inputValue,
     multiple,
     isOpen: isOpenProp,
     limit = 20,
@@ -144,7 +149,7 @@ const AutocompleteTwo = <V, Multiple extends boolean | undefined = undefined>({
         initialInput = valueProp ? getOptionLabel(valueProp as V) : null;
     }
 
-    const [input, setInput] = useState(initialInput);
+    const [input, setInput] = useControlled(inputValue, initialInput);
 
     const [isOpen, setIsOpen] = useControlled(isOpenProp, false);
 
