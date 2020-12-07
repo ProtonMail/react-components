@@ -78,7 +78,7 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }: Props) => {
     const [User] = useUser();
     const [userSettings, loadingUserSettings] = useUserSettings();
 
-    const { isSubUser, isAdmin } = User;
+    const { isSubUser, isAdmin, Name, Email } = User;
     const [adminAuthTwoFA, setAdminAuthTwoFA] = useState<TwoFaResponse>();
 
     const [inputs, setInputs] = useState<Inputs>({
@@ -174,8 +174,26 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }: Props) => {
         }
     };
 
-    const { labels, extraAlert, ...modalProps } = (() => {
+    const getModalProperties = (mode: MODES) => {
         if (mode === MODES.CHANGE_TWO_PASSWORD_LOGIN_MODE) {
+            if (isSubUser) {
+                return {
+                    title: c('Title').t`Change password for ${Name} (${Email})`,
+                    extraAlert: (
+                        <Alert>
+                            {c('Info').t`Enter your own password (as organization admin) and this user's new password.`}
+                        </Alert>
+                    ),
+                    labels: {
+                        oldPassword: c('Label').t`Your password (admin)`,
+                        newPassword: c('Label').t`User's new password`,
+                        confirmPassword: c('Label').t`Confirm new password`,
+                    },
+                    close: c('Action').t`Cancel`,
+                    submit: c('Action').t`Change password`,
+                };
+            }
+
             return {
                 title: c('Title').t`Change login password`,
                 labels: {
@@ -183,6 +201,14 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }: Props) => {
                     newPassword: c('Label').t`New login password`,
                     confirmPassword: c('Label').t`Confirm login password`,
                 },
+            };
+        }
+    };
+
+    const { labels, extraAlert, ...modalProps } = (() => {
+        if (mode === MODES.CHANGE_TWO_PASSWORD_LOGIN_MODE) {
+            return {
+                ...getModalProperties(mode),
                 async onSubmit() {
                     try {
                         validateConfirmPassword();
