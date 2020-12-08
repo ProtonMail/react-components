@@ -43,11 +43,12 @@ const getButtonText = (errorType: CRYPTO_PROCESSING_TYPES) => {
 };
 
 interface Props {
+    contactID: string;
     errors?: CryptoProcessingError[];
     onReload: () => void;
 }
 
-const ContactViewErrors = ({ errors, onReload }: Props) => {
+const ContactViewErrors = ({ contactID, errors, onReload }: Props) => {
     const { createModal } = useModals();
 
     if (!errors || !errors.length) {
@@ -69,7 +70,7 @@ const ContactViewErrors = ({ errors, onReload }: Props) => {
     const buttonText = getButtonText(error.type);
 
     const handleDescriptionErrorAction = () => {
-        createModal(<ContactDecryptionErrorModal />);
+        createModal(<ContactDecryptionErrorModal contactID={contactID} />);
     };
 
     const handleAction = () => {

@@ -1,18 +1,37 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { c } from 'ttag';
 import { noop } from 'proton-shared/lib/helpers/function';
 import { useHistory } from 'react-router';
+import { Contact } from 'proton-shared/lib/interfaces/contacts';
+import { getKeyUsedForContact } from 'proton-shared/lib/contacts/keyVerifications';
+import { CachedKey } from 'proton-shared/lib/interfaces';
 import { Alert, FormModal, LinkButton } from '../../../components';
-import { useModals } from '../../../hooks';
+import { useModals, useUserKeys } from '../../../hooks';
 import ContactClearDataConfirmModal from './ContactClearDataConfirmModal';
+import useContact from '../useContact';
 
 interface Props {
+    contactID: string;
     onClose?: () => void;
 }
 
-const ContactDecryptionErrorModal = ({ onClose = noop, ...rest }: Props) => {
+const ContactDecryptionErrorModal = ({ onClose = noop, contactID, ...rest }: Props) => {
     const { createModal } = useModals();
     const history = useHistory();
+    const [userKeys] = useUserKeys();
+    const [contact] = useContact(contactID) as [Contact | undefined, boolean, Error];
+    const [errorKey, setErrorKey] = useState<CachedKey>();
+
+    useEffect(() => {
+        const findKey = async () => {
+            const key = await getKeyUsedForContact(contact as Contact, userKeys);
+            setErrorKey(key);
+        };
+
+        if (userKeys && userKeys.length > 0 && contact) {
+            void findKey();
+        }
+    }, [userKeys, contact]);
 
     const handleRecover = () => {
         history.push('/settings/security');
@@ -20,7 +39,7 @@ const ContactDecryptionErrorModal = ({ onClose = noop, ...rest }: Props) => {
     };
 
     const handleClear = () => {
-        createModal(<ContactClearDataConfirmModal />);
+        createModal(<ContactClearDataConfirmModal errorKey={errorKey as CachedKey} />);
         onClose();
     };
 
