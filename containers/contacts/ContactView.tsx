@@ -22,8 +22,7 @@ interface Props {
     errors?: CryptoProcessingError[];
     isModal: boolean;
     onDelete: () => void;
-    onReload?: () => void;
-    onResign?: () => Promise<void>;
+    onReload: () => void;
     isPreview?: boolean;
 }
 
@@ -38,7 +37,6 @@ const ContactView = ({
     isModal,
     onDelete,
     onReload,
-    onResign,
     isPreview = false,
 }: Props) => {
     const { createModal } = useModals();
@@ -78,7 +76,7 @@ const ContactView = ({
                 isPreview={isPreview}
                 hasError={hasError}
             />
-            <ContactViewErrors errors={errors} onReload={onReload} onResign={onResign} />
+            <ContactViewErrors errors={errors} onReload={onReload} />
             <div className="pl1 pr1">
                 <ContactViewProperties field="fn" {...contactViewPropertiesProps} />
                 <ContactViewProperties field="email" {...contactViewPropertiesProps} isPreview={isPreview} />

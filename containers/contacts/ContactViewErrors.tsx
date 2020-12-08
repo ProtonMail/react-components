@@ -6,7 +6,8 @@ import Icon from '../../components/icon/Icon';
 import Href from '../../components/link/Href';
 import { Button } from '../../components';
 import { classnames } from '../../helpers';
-import { useLoading } from '../../hooks';
+import { useModals } from '../../hooks';
+import ContactDecryptionErrorModal from './modals/ContactDecryptionErrorModal';
 
 const { SIGNATURE_NOT_VERIFIED, FAIL_TO_READ, FAIL_TO_LOAD, FAIL_TO_DECRYPT } = CRYPTO_PROCESSING_TYPES;
 
@@ -30,14 +31,24 @@ const getText = (errorType: CRYPTO_PROCESSING_TYPES) => {
     }
 };
 
+const getButtonText = (errorType: CRYPTO_PROCESSING_TYPES) => {
+    switch (errorType) {
+        case FAIL_TO_DECRYPT:
+            return c('Action').t`Recover data`;
+        case SIGNATURE_NOT_VERIFIED:
+            return c('Action').t`Todo`;
+        default:
+            return null;
+    }
+};
+
 interface Props {
     errors?: CryptoProcessingError[];
-    onReload?: () => void;
-    onResign?: () => Promise<void>;
+    onReload: () => void;
 }
 
-const ContactViewErrors = ({ errors, onReload, onResign }: Props) => {
-    const [loading, withLoading] = useLoading();
+const ContactViewErrors = ({ errors, onReload }: Props) => {
+    const { createModal } = useModals();
 
     if (!errors || !errors.length) {
         return null;
@@ -55,12 +66,17 @@ const ContactViewErrors = ({ errors, onReload, onResign }: Props) => {
     const textColor = isWarning ? 'color-black' : 'color-white';
     const text = getText(error.type);
 
-    const showButton = isWarning ? !!onReload : !!onResign;
-    const buttonText = isWarning ? c('Action').t`Resign` : c('Action').t`Try again`;
+    const buttonText = getButtonText(error.type);
+
+    const handleDescriptionErrorAction = () => {
+        createModal(<ContactDecryptionErrorModal />);
+    };
 
     const handleAction = () => {
-        const action = async () => (isWarning ? onResign?.() : onReload?.());
-        void withLoading(action());
+        if (error.type === FAIL_TO_DECRYPT) {
+            return handleDescriptionErrorAction();
+        }
+        onReload();
     };
 
     return (
@@ -73,13 +89,12 @@ const ContactViewErrors = ({ errors, onReload, onResign }: Props) => {
                     url="https://protonmail.com/support/knowledge-base/encrypted-contacts/"
                 >{c('Link').t`Learn more`}</Href>
             </span>
-            {showButton && (
-                <span className="flex-item-noshrink flex">
-                    <Button onClick={handleAction} disabled={loading} className="pm-button--small">
-                        {buttonText}
-                    </Button>
-                </span>
-            )}
+
+            <span className="flex-item-noshrink flex">
+                <Button onClick={handleAction} className="pm-button--small">
+                    {buttonText}
+                </Button>
+            </span>
         </div>
     );
 };
