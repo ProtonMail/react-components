@@ -1,11 +1,13 @@
 import React, { useRef, useState, useEffect, forwardRef, Ref } from 'react';
 import { c } from 'ttag';
 
-import { useHandler, useNotifications } from '../../hooks';
+import { useHandler, useModals, useNotifications } from '../../hooks';
 import { SquireType, getSquireRef, setSquireRef, initSquire, toggleEllipsisButton } from './squireConfig';
-import { pasteFileHandler, scrollIntoViewIfNeeded } from './squireActions';
+import { getLinkAtCursor, makeLink, pasteFileHandler, scrollIntoViewIfNeeded } from './squireActions';
 import { SquireEditorMetadata } from './interface';
 import { LinkButton } from '../button';
+
+import InsertLinkModal from './modals/InsertLinkModal';
 
 const isHTMLEmpty = (html: string) => !html || html === '<div><br /></div>' || html === '<div><br></div>';
 
@@ -130,6 +132,22 @@ const SquireIframe = (
         iframeRef.current?.dispatchEvent(newEvent);
     });
 
+    const { createModal } = useModals();
+
+    const handleLink = (squire: SquireType) => {
+        const link = getLinkAtCursor(squire);
+        createModal(<InsertLinkModal inputLink={link} onSubmit={() => makeLink(squire, link)} />);
+    };
+
+    const handleKeyDown = (e: KeyboardEvent, squire: SquireType) => {
+        if (e.key === 'k' && e.metaKey) {
+            handleLink(squire);
+            return;
+        }
+
+        keydownHandler(e);
+    };
+
     useEffect(() => {
         if (squireReady) {
             const squire = getSquireRef(ref);
@@ -146,6 +164,7 @@ const SquireIframe = (
             if (keydownHandler) {
                 squire.addEventListener('keydown', keydownHandler);
             }
+            squire.addEventListener('keydown', (e: KeyboardEvent) => handleKeyDown(e, squire));
             return () => {
                 squire.removeEventListener('focus', handleFocus);
                 squire.removeEventListener('input', handleInput);
@@ -157,6 +176,7 @@ const SquireIframe = (
                 if (keydownHandler) {
                     squire.removeEventListener('keydown', keydownHandler);
                 }
+                squire.removeEventListener('keydown', (e: KeyboardEvent) => handleKeyDown(e, squire));
             };
         }
     }, [squireReady]);
