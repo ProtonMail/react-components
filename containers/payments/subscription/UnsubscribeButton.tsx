@@ -35,7 +35,7 @@ const UnsubscribeButton = ({ className, children }: Props) => {
      * subscriptionCancelData is undefined if the user skipped
      * the cancel-subscription-form step
      */
-    const handleUnsubscribe = async (subscriptionCancelData: SubscriptionCancelModel | undefined) => {
+    const handleUnsubscribe = async (subscriptionCancelData: SubscriptionCancelModel | void) => {
         const downgradeNotificationId = createNotification({
             type: 'info',
             text: c('State').t`Downgrading your account, please wait`,
@@ -58,18 +58,18 @@ const UnsubscribeButton = ({ className, children }: Props) => {
 
         let subscriptionCancelModalId;
 
-        const subscriptionCancelData = await new Promise<SubscriptionCancelModel | undefined>((resolve) => {
+        const subscriptionCancelData = await new Promise<SubscriptionCancelModel | void>((resolve) => {
             subscriptionCancelModalId = createModal(<SubscriptionCancelModal onSubmit={resolve} onClose={resolve} />);
         });
 
         removeModal(subscriptionCancelModalId);
 
-        await new Promise((resolve, reject) => {
+        await new Promise<void>((resolve, reject) => {
             createModal(<DowngradeModal user={user} onConfirm={resolve} onClose={reject} />);
         });
 
         if (hasBonuses(organization)) {
-            await new Promise((resolve, reject) => {
+            await new Promise<void>((resolve, reject) => {
                 createModal(<LossLoyaltyModal organization={organization} onConfirm={resolve} onClose={reject} />);
             });
         }
