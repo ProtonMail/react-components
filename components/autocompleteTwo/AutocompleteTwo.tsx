@@ -1,4 +1,5 @@
 import React, { AriaAttributes, useEffect, useRef, useState } from 'react';
+import { c, msgid } from 'ttag';
 
 import useControlled from '../../hooks/useControlled';
 import { Dropdown } from '../dropdown';
@@ -365,12 +366,16 @@ const AutocompleteTwo = <V, Multiple extends boolean | undefined = undefined>({
             {children(renderProps)}
 
             <span className="sr-only" id={`${id}-autocomplete-suggest-text`}>
-                Use Up and Down keys to access and browse suggestions after input. Press Enter to confirm your choice,
-                or Escape to close the suggestions box.
+                {c('Hint')
+                    .t`Use Up and Down keys to access and browse suggestions after input. Press Enter to confirm your choice, or Escape to close the suggestions box.`}
             </span>
 
             <div className="sr-only" aria-atomic="true" aria-live="assertive">
-                Found {filteredOptions.length} suggestions, use keyboard to navigate.
+                {c('Hint').ngettext(
+                    msgid`Found ${filteredOptions.length} suggestion, use keyboard to navigate.`,
+                    `Found ${filteredOptions.length} suggestions, use keyboard to navigate.`,
+                    filteredOptions.length
+                )}
             </div>
 
             <Dropdown
