@@ -186,7 +186,6 @@ export const insertCustomStyle = (document: Document) => {
 
         body {
             box-sizing: border-box;
-            padding: 1.6rem 1rem;
             font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
             font-size: 1.4rem;
             line-height: 1.65;
@@ -203,6 +202,7 @@ export const insertCustomStyle = (document: Document) => {
 
         [id="squire"] {
             outline: none;
+            padding: 1.6rem 1rem;
         }
 
         [id="ellipsis"] {
@@ -214,6 +214,7 @@ export const insertCustomStyle = (document: Document) => {
             cursor: pointer;
             font-size: 1.2em;
             padding: 0 .5em;
+            margin: 0 1rem 1.6rem 1rem;
         }
 
         [id="ellipsis"]:hover,
