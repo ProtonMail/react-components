@@ -202,7 +202,7 @@ export const insertCustomStyle = (document: Document) => {
 
         [id="squire"] {
             outline: none;
-            padding: 1.6rem 1rem;
+            padding: 0.8rem;
         }
 
         [id="ellipsis"] {
@@ -214,7 +214,7 @@ export const insertCustomStyle = (document: Document) => {
             cursor: pointer;
             font-size: 1.2em;
             padding: 0 .5em;
-            margin: 0 1rem 1.6rem 1rem;
+            margin: 0 0.8rem 0.8rem 0.8rem;
         }
 
         [id="ellipsis"]:hover,
