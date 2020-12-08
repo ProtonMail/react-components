@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
-import { ACCOUNT_DELETION_REASONS } from 'proton-shared/lib/constants';
+import { SUBSCRIPTION_CANCELLATION_REASONS } from 'proton-shared/lib/constants';
 import { FormModal, Row, Field, Label, SelectTwo, TextArea, Option, InputButton } from '../../../components';
-// import { useUser } from '../../../hooks';
 
 export interface SubscriptionCancelModel {
     Reason?: string;
@@ -37,8 +36,6 @@ const SubscriptionCancellationModal = ({ onSubmit, ...rest }: Props) => {
         setModel({ ...model, Score: Number(e.target.value) });
     };
 
-    // const [ { isAdmin } ] = useUser();
-
     return (
         <FormModal
             title={c('Title').t`Cancel Subscription`}
@@ -47,11 +44,6 @@ const SubscriptionCancellationModal = ({ onSubmit, ...rest }: Props) => {
             onSubmit={handleSubmit}
             {...rest}
         >
-            {/* <Alert type="warning">
-                <div className="bold uppercase">{c('Info').t`Warning: This will *<WARNING>*`}</div>
-                <div>{c('Info').t`Example: ProtonMail, ProtonContacts, ProtonVPN, ProtonDrive, ProtonCalendar`}</div>
-            </Alert> */}
-
             <Row>
                 <Label htmlFor="reason">{c('Label').t`What is the main reason you are cancelling?`}</Label>
                 <Field>
@@ -63,24 +55,34 @@ const SubscriptionCancellationModal = ({ onSubmit, ...rest }: Props) => {
                     >
                         <Option title={c('Option').t`Select a reason`} value="" />
                         <Option
-                            title={c('Option').t`I use a different Proton account`}
-                            value={ACCOUNT_DELETION_REASONS.DIFFERENT_ACCOUNT}
-                        />
-                        {/* {isAdmin ? (
-                            <Option
-                                title={c('Option').t`It's too expensive`}
-                                value={ACCOUNT_DELETION_REASONS.TOO_EXPENSIVE}
-                            />
-                        ) : null} */}
-                        <Option
-                            title={c('Option').t`It's missing a key feature that I need`}
-                            value={ACCOUNT_DELETION_REASONS.MISSING_FEATURE}
+                            title={c('Option').t`It’s temporary, I’ll be back`}
+                            value={SUBSCRIPTION_CANCELLATION_REASONS.TEMPORARY}
                         />
                         <Option
-                            title={c('Option').t`I found another service that I like better`}
-                            value={ACCOUNT_DELETION_REASONS.USE_OTHER_SERVICE}
+                            title={c('Option').t`I didn’t understand what I was signing up for`}
+                            value={SUBSCRIPTION_CANCELLATION_REASONS.SUBSCRIPTION_MISUNDERSTANDING}
                         />
-                        <Option title={c('Option').t`My reason isn't listed`} value={ACCOUNT_DELETION_REASONS.OTHER} />
+                        <Option
+                            title={c('Option').t`It’s too expensive`}
+                            value={SUBSCRIPTION_CANCELLATION_REASONS.TOO_EXPENSIVE}
+                        />
+                        <Option
+                            title={c('Option').t`I’m unhappy with customer service`}
+                            value={SUBSCRIPTION_CANCELLATION_REASONS.UNHAPPY_WITH_CS}
+                        />
+                        <Option
+                            title={c('Option').t`Using Proton is too complicated`}
+                            value={SUBSCRIPTION_CANCELLATION_REASONS.TOO_COMPLICATED}
+                        />
+                        <Option
+                            title={c('Option').t`I'm switching to a different service`}
+                            value={SUBSCRIPTION_CANCELLATION_REASONS.SWITCHING_TO_DIFFERENT_SERVICE}
+                        />
+                        <Option
+                            title={c('Option').t`The quality didn't live up to my expectations`}
+                            value={SUBSCRIPTION_CANCELLATION_REASONS.QUALITY_BELOW_EXPECTATIONS}
+                        />
+                        <Option title={c('Option').t`Other`} value={SUBSCRIPTION_CANCELLATION_REASONS.OTHER} />
                     </SelectTwo>
                 </Field>
             </Row>
