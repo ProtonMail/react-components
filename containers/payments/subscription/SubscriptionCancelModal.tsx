@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
 import { SUBSCRIPTION_CANCELLATION_REASONS } from 'proton-shared/lib/constants';
-import { FormModal, Row, Field, Label, SelectTwo, TextArea, Option, InputButton } from '../../../components';
+import { FormModal, SelectTwo, TextArea, Option, Scale } from '../../../components';
 
 export interface SubscriptionCancelModel {
     Reason?: string;
@@ -32,9 +32,11 @@ const SubscriptionCancellationModal = ({ onSubmit, ...rest }: Props) => {
         onSubmit(model);
     };
 
-    const handleScoreChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setModel({ ...model, Score: Number(e.target.value) });
+    const handleScoreChange = (Score: number) => {
+        setModel({ ...model, Score });
     };
+
+    console.log(model.Score);
 
     return (
         <FormModal
@@ -44,9 +46,10 @@ const SubscriptionCancellationModal = ({ onSubmit, ...rest }: Props) => {
             onSubmit={handleSubmit}
             {...rest}
         >
-            <Row>
-                <Label htmlFor="reason">{c('Label').t`What is the main reason you are cancelling?`}</Label>
-                <Field>
+            <div className="w75">
+                <div className="mb2">
+                    <label className="mb1 bl" htmlFor="reason">{c('Label')
+                        .t`What is the main reason you are cancelling?`}</label>
                     <SelectTwo
                         id="reason"
                         autoFocus
@@ -84,42 +87,32 @@ const SubscriptionCancellationModal = ({ onSubmit, ...rest }: Props) => {
                         />
                         <Option title={c('Option').t`Other`} value={SUBSCRIPTION_CANCELLATION_REASONS.OTHER} />
                     </SelectTwo>
-                </Field>
-            </Row>
+                </div>
 
-            <Label>{c('Label').t`How likely are you to recommend ProtonMail to others?`}</Label>
-
-            <div className="mb2">
-                {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
-                    <InputButton
-                        key={n}
-                        id={`score-${n}`}
-                        name="score"
-                        type="radio"
-                        value={n}
-                        title={String(n)}
-                        checked={model.Score === n}
-                        labelProps={{ className: 'mr1 mt1' }}
+                <div className="mb2">
+                    <label className="mb1 bl">{c('Label')
+                        .t`How likely are you to recommend ProtonMail to others?`}</label>
+                    <Scale
+                        from={0}
+                        to={10}
+                        startLabel={c('Label').t`Not at all likely`}
+                        endLabel={c('Label').t`Extremely likely`}
+                        value={model.Score}
                         onChange={handleScoreChange}
-                    >
-                        {n}
-                    </InputButton>
-                ))}
-            </div>
+                    />
+                </div>
 
-            <Row>
-                <Label htmlFor="feedback">
-                    {c('Label').t`How do you think we could improve our products or service in the future?`}
-                </Label>
-                <Field>
+                <div>
+                    <label className="mb1 bl" htmlFor="feedback">{c('Label')
+                        .t`How do you think we could improve our products or service in the future?`}</label>
                     <TextArea
                         id="feedback"
                         value={model.Feedback}
                         placeholder={c('Placeholder').t`Feedback`}
                         onChange={handleChange('Feedback')}
                     />
-                </Field>
-            </Row>
+                </div>
+            </div>
         </FormModal>
     );
 };

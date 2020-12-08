@@ -15,6 +15,7 @@ export { default as RadioCards } from './RadioCards';
 export { default as RadioGroup } from './RadioGroup';
 export { default as RichTextEditor } from './LazyRichTextEditor';
 export { default as SearchInput } from './SearchInput';
+export { default as Scale } from './Scale';
 export { default as TelInput } from './TelInput';
 export { default as TextArea } from './TextArea';
 export { default as TimeInput } from './TimeInput';
