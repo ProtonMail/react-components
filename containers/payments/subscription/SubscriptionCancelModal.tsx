@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
 import { ACCOUNT_DELETION_REASONS } from 'proton-shared/lib/constants';
-import { Alert, FormModal, Row, Field, Label, SelectTwo, TextArea, Option, ErrorButton } from '../../../components';
+import { FormModal, Row, Field, Label, SelectTwo, TextArea, Option, InputButton } from '../../../components';
 // import { useUser } from '../../../hooks';
 
 export interface SubscriptionCancelModel {
@@ -16,9 +16,6 @@ interface Props {
 }
 
 const SubscriptionCancellationModal = ({ onSubmit, ...rest }: Props) => {
-    const title = c('Title').t`Cancel Subscription`;
-    const submit = c('Action').t`Submit`;
-
     const [model, setModel] = useState<SubscriptionCancelModel>({
         Reason: '',
         Score: undefined,
@@ -36,20 +33,24 @@ const SubscriptionCancellationModal = ({ onSubmit, ...rest }: Props) => {
         onSubmit(model);
     };
 
+    const handleScoreChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setModel({ ...model, Score: Number(e.target.value) });
+    };
+
     // const [ { isAdmin } ] = useUser();
 
     return (
         <FormModal
-            title={title}
-            submit={<ErrorButton type="submit">{submit}</ErrorButton>}
+            title={c('Title').t`Cancel Subscription`}
+            submit={c('Action').t`Submit`}
+            close={c('Action').t`Skip`}
             onSubmit={handleSubmit}
-            close={null}
             {...rest}
         >
-            <Alert type="warning">
+            {/* <Alert type="warning">
                 <div className="bold uppercase">{c('Info').t`Warning: This will *<WARNING>*`}</div>
                 <div>{c('Info').t`Example: ProtonMail, ProtonContacts, ProtonVPN, ProtonDrive, ProtonCalendar`}</div>
-            </Alert>
+            </Alert> */}
 
             <Row>
                 <Label htmlFor="reason">{c('Label').t`What is the main reason you are cancelling?`}</Label>
@@ -84,14 +85,25 @@ const SubscriptionCancellationModal = ({ onSubmit, ...rest }: Props) => {
                 </Field>
             </Row>
 
-            <Row>
-                <Label htmlFor="email">{c('Label').t`How likely are you to recommend ProtonMail to others?`}</Label>
-                <Field>
-                    <div className="mb0-5">
-                        <input type="range" min="0" max="10" value={model.Score} onChange={handleChange('Score')} />
-                    </div>
-                </Field>
-            </Row>
+            <Label>{c('Label').t`How likely are you to recommend ProtonMail to others?`}</Label>
+
+            <div className="mb2">
+                {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
+                    <InputButton
+                        key={n}
+                        id={`score-${n}`}
+                        name="score"
+                        type="radio"
+                        value={n}
+                        title={String(n)}
+                        checked={model.Score === n}
+                        labelProps={{ className: 'mr1 mt1' }}
+                        onChange={handleScoreChange}
+                    >
+                        {n}
+                    </InputButton>
+                ))}
+            </div>
 
             <Row>
                 <Label htmlFor="feedback">

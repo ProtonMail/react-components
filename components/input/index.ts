@@ -6,6 +6,8 @@ export { default as useInput } from './useInput';
 export { default as SearchInput } from './SearchInput';
 export { default as TextArea } from './TextArea';
 export { default as Input } from './Input';
+export { default as InputButton } from './InputButton';
+export * from './InputButton';
 export { default as VerificationCodeInput } from './VerificationCodeInput';
 export { default as DateInput } from './DateInput';
 export { default as IntegerInput } from './IntegerInput';
