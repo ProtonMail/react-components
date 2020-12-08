@@ -58,8 +58,10 @@ const UnsubscribeButton = ({ className, children }: Props) => {
 
         let subscriptionCancelModalId;
 
-        const subscriptionCancelData = await new Promise<SubscriptionCancelModel | void>((resolve) => {
-            subscriptionCancelModalId = createModal(<SubscriptionCancelModal onSubmit={resolve} onClose={resolve} />);
+        const subscriptionCancelData = await new Promise<SubscriptionCancelModel | void>((resolve, reject) => {
+            subscriptionCancelModalId = createModal(
+                <SubscriptionCancelModal onSubmit={resolve} onSkip={resolve} onClose={reject} />
+            );
         });
 
         removeModal(subscriptionCancelModalId);

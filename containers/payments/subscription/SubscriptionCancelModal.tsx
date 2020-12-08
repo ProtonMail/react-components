@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
 import { SUBSCRIPTION_CANCELLATION_REASONS } from 'proton-shared/lib/constants';
-import { FormModal, SelectTwo, TextArea, Option, Scale } from '../../../components';
+import { FormModal, SelectTwo, TextArea, Option, Scale, Button } from '../../../components';
 
 export interface SubscriptionCancelModel {
     Reason?: string;
@@ -11,10 +11,11 @@ export interface SubscriptionCancelModel {
 
 interface Props {
     onClose: () => void;
+    onSkip: () => void;
     onSubmit: (model: SubscriptionCancelModel) => void;
 }
 
-const SubscriptionCancellationModal = ({ onSubmit, ...rest }: Props) => {
+const SubscriptionCancellationModal = ({ onSubmit, onSkip, ...rest }: Props) => {
     const [model, setModel] = useState<SubscriptionCancelModel>({
         Reason: '',
         Score: undefined,
@@ -36,13 +37,11 @@ const SubscriptionCancellationModal = ({ onSubmit, ...rest }: Props) => {
         setModel({ ...model, Score });
     };
 
-    console.log(model.Score);
-
     return (
         <FormModal
             title={c('Title').t`Cancel Subscription`}
             submit={c('Action').t`Submit`}
-            close={c('Action').t`Skip`}
+            close={<Button onClick={onSkip}>{c('Action').t`Skip`}</Button>}
             onSubmit={handleSubmit}
             {...rest}
         >
