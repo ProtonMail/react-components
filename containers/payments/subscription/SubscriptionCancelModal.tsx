@@ -94,8 +94,8 @@ const SubscriptionCancellationModal = ({ onSubmit, onSkip, ...rest }: Props) => 
                     <Scale
                         from={0}
                         to={10}
-                        startLabel={c('Label').t`0 - Not at all likely`}
-                        endLabel={c('Label').t`10 - Extremely likely`}
+                        fromLabel={c('Label').t`0 - Not at all likely`}
+                        toLabel={c('Label').t`10 - Extremely likely`}
                         value={model.Score}
                         onChange={handleScoreChange}
                     />
