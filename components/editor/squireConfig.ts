@@ -335,7 +335,11 @@ export const initSquire = async (document: Document, onEllipseClick: () => void)
     ellipsisButton?.addEventListener('click', onEllipseClick);
     const fallbackElements = [document.documentElement, document.body, ellipsisContainer];
     document.addEventListener('click', (event) => {
-        if (fallbackElements.includes(event.target as Element | null)) {
+        if (
+            fallbackElements.includes(event.target as Element | null) &&
+            // Prevent to deselect an ongoing selection
+            !document.defaultView?.getSelection()?.toString().length
+        ) {
             squire.moveCursorToEnd();
             squire.focus();
             squire.insertHTML(''); // Needed for FF to show the cursor
