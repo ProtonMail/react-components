@@ -9,11 +9,21 @@ export interface InputButtonProps extends React.ComponentPropsWithoutRef<'input'
     labelProps?: React.ComponentPropsWithoutRef<'label'>;
 }
 
-const InputButton = ({ id, title, labelProps, checked, children, type = 'checkbox', ...rest }: InputButtonProps) => {
-    const labelClassName = classnames(['inline-flex relative', labelProps?.className]);
+const InputButton = ({
+    id,
+    title,
+    checked,
+    children,
+    type = 'checkbox',
+    labelProps = {},
+    ...rest
+}: InputButtonProps) => {
+    const { className: labelClassNameProp, ...labelPropsRest } = labelProps;
+
+    const labelClassName = classnames(['inline-flex relative', labelClassNameProp]);
 
     return (
-        <label htmlFor={id} title={title} className={labelClassName}>
+        <label htmlFor={id} title={title} className={labelClassName} {...labelPropsRest}>
             <input id={id} type={type} className="input-button-input sr-only" checked={checked} {...rest} />
 
             <span className="pm-button input-button flex flex-justify-center flex-item-noshrink rounded50">
