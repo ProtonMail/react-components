@@ -24,7 +24,7 @@ const ContactDecryptionErrorModal = ({ onClose = noop, contactID, ...rest }: Pro
 
     useEffect(() => {
         const findKey = async () => {
-            const key = await getKeyUsedForContact(contact as Contact, userKeys);
+            const key = await getKeyUsedForContact(contact as Contact, userKeys, true);
             setErrorKey(key);
         };
 

@@ -8,6 +8,7 @@ import { Button } from '../../components';
 import { classnames } from '../../helpers';
 import { useModals } from '../../hooks';
 import ContactDecryptionErrorModal from './modals/ContactDecryptionErrorModal';
+import ContactSignatureErrorModal from './modals/ContactSignatureErrorModal';
 
 const { SIGNATURE_NOT_VERIFIED, FAIL_TO_READ, FAIL_TO_LOAD, FAIL_TO_DECRYPT } = CRYPTO_PROCESSING_TYPES;
 
@@ -36,7 +37,7 @@ const getButtonText = (errorType: CRYPTO_PROCESSING_TYPES) => {
         case FAIL_TO_DECRYPT:
             return c('Action').t`Recover data`;
         case SIGNATURE_NOT_VERIFIED:
-            return c('Action').t`Todo`;
+            return c('Action').t`Re-sign`;
         default:
             return null;
     }
@@ -73,13 +74,16 @@ const ContactViewErrors = ({ contactID, errors, onReload }: Props) => {
         createModal(<ContactDecryptionErrorModal contactID={contactID} />);
     };
 
+    const handleSignatureErrorAction = () => {
+        createModal(<ContactSignatureErrorModal contactID={contactID} />);
+    };
+
     const handleAction = () => {
         if (error.type === FAIL_TO_DECRYPT) {
             return handleDescriptionErrorAction();
         }
         if (error.type === SIGNATURE_NOT_VERIFIED) {
-            // TODO
-            return handleDescriptionErrorAction();
+            return handleSignatureErrorAction();
         }
         onReload();
     };
