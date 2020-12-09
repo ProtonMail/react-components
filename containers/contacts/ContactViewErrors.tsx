@@ -77,6 +77,10 @@ const ContactViewErrors = ({ contactID, errors, onReload }: Props) => {
         if (error.type === FAIL_TO_DECRYPT) {
             return handleDescriptionErrorAction();
         }
+        if (error.type === SIGNATURE_NOT_VERIFIED) {
+            // TODO
+            return handleDescriptionErrorAction();
+        }
         onReload();
     };
 
