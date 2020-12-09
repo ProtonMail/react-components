@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { checkSubscription } from 'proton-shared/lib/api/payments';
 import { CYCLE, DEFAULT_CURRENCY, DEFAULT_CYCLE, BLACK_FRIDAY, SECOND } from 'proton-shared/lib/constants';
 import { c } from 'ttag';
 import { isAfter } from 'date-fns';
+import { Cycle, PlanIDs } from 'proton-shared/lib/interfaces';
+
 import { FormModal, Loader, Countdown, Button, Price } from '../../../components';
 import { useLoading, useApi } from '../../../hooks';
 import { classnames } from '../../../helpers';
@@ -12,13 +13,28 @@ import CurrencySelector from '../CurrencySelector';
 const { MONTHLY, YEARLY, TWO_YEARS } = CYCLE;
 const EVERY_SECOND = SECOND;
 
-const NOTICES = {
-    1: '*',
-    2: '**',
-    3: '***',
-};
+enum Notices {
+    '*',
+    '**',
+    '***',
+}
 
-const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
+export interface Bundle {
+    planIDs: PlanIDs;
+    name: string;
+    cycle: Cycle;
+    couponCode?: string;
+    percentage?: number;
+    popular?: boolean;
+}
+
+interface Props<T> {
+    onSelect: (bundle: Bundle) => void;
+    bundles: Bundle[];
+    className?: string;
+}
+
+const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => {
     const api = useApi();
     const [loading, withLoading] = useLoading();
     const [currency, updateCurrency] = useState(DEFAULT_CURRENCY);
@@ -31,21 +47,21 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
         [TWO_YEARS]: c('Title').t`2 year deal`,
     };
 
-    const BILLED_DESCRIPTION = ({ cycle, amount, notice }) =>
+    const BILLED_DESCRIPTION = ({ cycle, amount, notice }: { cycle: Cycle; amount: number; notice: Notices }) =>
         ({
-            [MONTHLY]: c('Title').jt`Billed as ${amount} for 1 month ${NOTICES[notice]}`,
-            [YEARLY]: c('Title').jt`Billed as ${amount} for 1 year ${NOTICES[notice]}`,
-            [TWO_YEARS]: c('Title').jt`Billed as ${amount} for 2 years ${NOTICES[notice]}`,
+            [MONTHLY]: c('Title').jt`Billed as ${amount} for 1 month ${Notices[notice]}`,
+            [YEARLY]: c('Title').jt`Billed as ${amount} for 1 year ${Notices[notice]}`,
+            [TWO_YEARS]: c('Title').jt`Billed as ${amount} for 2 years ${Notices[notice]}`,
         }[cycle]);
 
-    const AFTER_INFO = ({ amount, notice }) =>
+    const AFTER_INFO = ({ amount, notice }: { amount: number; notice: Notices }) =>
         ({
             1: c('Title')
-                .jt`${NOTICES[notice]} Renews after 1 year at a discounted annual price of ${amount} per year (20% discount).`,
+                .jt`${Notices[notice]} Renews after 1 year at a discounted annual price of ${amount} per year (20% discount).`,
             2: c('Title')
-                .jt`${NOTICES[notice]} Renews after 2 years at a discounted 2-year price of ${amount} every 2 years (33% discount).`,
+                .jt`${Notices[notice]} Renews after 2 years at a discounted 2-year price of ${amount} every 2 years (33% discount).`,
             3: c('Title')
-                .jt`${NOTICES[notice]} Renews after 2 years at a discounted 2-year & bundle price of ${amount} every 2 years (47% discount).`,
+                .jt`${Notices[notice]} Renews after 2 years at a discounted 2-year & bundle price of ${amount} every 2 years (47% discount).`,
         }[notice]);
 
     const getBundlePrices = async () => {
@@ -115,7 +131,7 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
                 <>
                     <div className="bold big aligncenter mt0 blackfriday-countdown-container">
                         <Countdown
-                            end={isAfter(now, BLACK_FRIDAY.FIRST_END) ? BLACK_FRIDAY.END : BLACK_FRIDAY.FIRST_END}
+                            end={isAfter(now, BLACK_FRIDAY.CYBER_START) ? BLACK_FRIDAY.END : BLACK_FRIDAY.CYBER_START}
                         />
                     </div>
                     <div className="flex-autogrid onmobile-flex-column flex-items-end">
@@ -177,7 +193,7 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
                                                 popular ? 'pm-button--primary' : 'pm-button--primaryborder',
                                             ])}
                                             onClick={() => {
-                                                rest.onClose();
+                                                rest.onClose?.();
                                                 onSelect({ planIDs, cycle, currency, couponCode });
                                             }}
                                         >{c('Action').t`Get the deal`}</Button>
@@ -215,21 +231,6 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }) => {
             )}
         </FormModal>
     );
-};
-
-BlackFridayModal.propTypes = {
-    onClose: PropTypes.func.isRequired,
-    onSelect: PropTypes.func.isRequired,
-    bundles: PropTypes.arrayOf(
-        PropTypes.shape({
-            planIDs: PropTypes.arrayOf(PropTypes.string).isRequired,
-            name: PropTypes.string.isRequired,
-            cycle: PropTypes.oneOf([MONTHLY, YEARLY, TWO_YEARS]).isRequired,
-            couponCode: PropTypes.string,
-            percentage: PropTypes.number,
-            popular: PropTypes.bool,
-        })
-    ),
 };
 
 export default BlackFridayModal;

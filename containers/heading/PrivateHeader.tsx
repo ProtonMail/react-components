@@ -61,7 +61,7 @@ const PrivateHeader = ({
         `${ID}${BLACK_FRIDAY.COUPON_CODE}-black-friday-modal`
     );
     const [productPayerModalState, setProductPayerModalState] = useLocalState(false, `${ID}-product-payer-modal`);
-    const [plans] = usePlans();
+    const [plans = []] = usePlans();
     const [subscription] = useSubscription();
     const { APP_NAME } = useConfig();
     const isBlackFridayPeriod = useBlackFridayPeriod();
@@ -93,7 +93,7 @@ const PrivateHeader = ({
     }, [isBlackFridayPeriod, isFree]);
 
     useEffect(() => {
-        if (isBlackFridayPeriod && isEligible && !blackFridayModalState) {
+        if (plans.length && isBlackFridayPeriod && isEligible && !blackFridayModalState) {
             setBlackFridayModalState(true);
             if (APP_NAME === APPS.PROTONVPN_SETTINGS) {
                 return createModal(
@@ -102,10 +102,10 @@ const PrivateHeader = ({
             }
             createModal(<MailBlackFridayModal plans={plans} subscription={subscription} onSelect={onSelect} />);
         }
-    }, [isBlackFridayPeriod, isEligible]);
+    }, [isBlackFridayPeriod, isEligible, plans]);
 
     useEffect(() => {
-        if (isProductPayerPeriod && isProductPayer(subscription) && !productPayerModalState) {
+        if (plans.length && isProductPayerPeriod && isProductPayer(subscription) && !productPayerModalState) {
             setProductPayerModalState(true);
             if (APP_NAME === APPS.PROTONVPN_SETTINGS) {
                 return createModal(
@@ -114,7 +114,7 @@ const PrivateHeader = ({
             }
             createModal(<MailBlackFridayModal plans={plans} subscription={subscription} onSelect={onSelect} />);
         }
-    }, [isProductPayerPeriod, subscription]);
+    }, [isProductPayerPeriod, subscription, plans]);
 
     if (backUrl) {
         return (

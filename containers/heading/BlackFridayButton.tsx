@@ -35,10 +35,6 @@ const BlackFridayButton = ({ plans, subscription, ...rest }: Props) => {
         createModal(<NewSubscriptionModal planIDs={planIDs} cycle={cycle} currency={currency} coupon={couponCode} />);
     };
 
-    if (loading) {
-        return null;
-    }
-
     if (APP_NAME === APPS.PROTONVPN_SETTINGS) {
         return (
             <TopNavbarLink
