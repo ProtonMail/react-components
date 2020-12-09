@@ -45,7 +45,7 @@ const SubscriptionCancellationModal = ({ onSubmit, onSkip, ...rest }: Props) => 
             onSubmit={handleSubmit}
             {...rest}
         >
-            <div className="w75">
+            <div className="w75 onmobile-w100">
                 <div className="mb2">
                     <label className="mb1 bl" htmlFor="reason">{c('Label')
                         .t`What is the main reason you are cancelling?`}</label>
@@ -94,8 +94,8 @@ const SubscriptionCancellationModal = ({ onSubmit, onSkip, ...rest }: Props) => 
                     <Scale
                         from={0}
                         to={10}
-                        startLabel={c('Label').t`Not at all likely`}
-                        endLabel={c('Label').t`Extremely likely`}
+                        startLabel={c('Label').t`0 - Not at all likely`}
+                        endLabel={c('Label').t`10 - Extremely likely`}
                         value={model.Score}
                         onChange={handleScoreChange}
                     />

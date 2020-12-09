@@ -21,8 +21,8 @@ const Scale = ({ from, to, startLabel, endLabel, value, onChange, ...rest }: Sca
 
     return (
         <div {...rest}>
-            <div className="flex flex-spacebetween">
-                {scale.map((n, index) => (
+            <div className="scale-buttons-container">
+                {scale.map((n) => (
                     <InputButton
                         key={n}
                         id={`score-${n}`}
@@ -31,7 +31,6 @@ const Scale = ({ from, to, startLabel, endLabel, value, onChange, ...rest }: Sca
                         value={n}
                         title={String(n)}
                         checked={value === n}
-                        labelProps={{ className: index !== scale.length - 1 ? 'mr0-5' : undefined }}
                         onChange={handleChange}
                     >
                         {n}
@@ -39,8 +38,8 @@ const Scale = ({ from, to, startLabel, endLabel, value, onChange, ...rest }: Sca
                 ))}
             </div>
             <div className="flex flex-spacebetween mt0-5">
-                <span className="small m0 color-global-altgrey">{startLabel}</span>
-                <span className="small m0 color-global-altgrey">{endLabel}</span>
+                <span className="small m0">{startLabel}</span>
+                <span className="small m0">{endLabel}</span>
             </div>
         </div>
     );
