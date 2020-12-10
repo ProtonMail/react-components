@@ -15,7 +15,7 @@ interface Props {
     onSubmit: (model: SubscriptionCancelModel) => void;
 }
 
-const SubscriptionCancellationModal = ({ onSubmit, onSkip, ...rest }: Props) => {
+const SubscriptionCancellationModal = ({ onSubmit, onClose, onSkip, ...rest }: Props) => {
     const [model, setModel] = useState<SubscriptionCancelModel>({
         Reason: '',
         Score: undefined,
@@ -31,6 +31,12 @@ const SubscriptionCancellationModal = ({ onSubmit, onSkip, ...rest }: Props) => 
 
     const handleSubmit = () => {
         onSubmit(model);
+        onClose();
+    };
+
+    const handleSkip = () => {
+        onSkip();
+        onClose();
     };
 
     const handleScoreChange = (Score: number) => {
@@ -41,8 +47,9 @@ const SubscriptionCancellationModal = ({ onSubmit, onSkip, ...rest }: Props) => 
         <FormModal
             title={c('Title').t`Cancel Subscription`}
             submit={c('Action').t`Submit`}
-            close={<Button onClick={onSkip}>{c('Action').t`Skip`}</Button>}
+            close={<Button onClick={handleSkip}>{c('Action').t`Skip`}</Button>}
             onSubmit={handleSubmit}
+            onClose={onClose}
             {...rest}
         >
             <div className="w75 onmobile-w100">

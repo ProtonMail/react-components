@@ -26,7 +26,7 @@ const UnsubscribeButton = ({ className, children }: Props) => {
     const [user] = useUser();
     const [organization] = useOrganization();
     const { createNotification, hideNotification } = useNotifications();
-    const { createModal, removeModal } = useModals();
+    const { createModal } = useModals();
     const api = useApi();
     const { call } = useEventManager();
     const [loading, withLoading] = useLoading();
@@ -56,15 +56,9 @@ const UnsubscribeButton = ({ className, children }: Props) => {
             return createNotification({ type: 'error', text: c('Info').t`You already have a free account` });
         }
 
-        let subscriptionCancelModalId;
-
         const subscriptionCancelData = await new Promise<SubscriptionCancelModel | void>((resolve, reject) => {
-            subscriptionCancelModalId = createModal(
-                <SubscriptionCancelModal onSubmit={resolve} onSkip={resolve} onClose={reject} />
-            );
+            createModal(<SubscriptionCancelModal onSubmit={resolve} onSkip={resolve} onClose={reject} />);
         });
-
-        removeModal(subscriptionCancelModalId);
 
         await new Promise<void>((resolve, reject) => {
             createModal(<DowngradeModal user={user} onConfirm={resolve} onClose={reject} />);
