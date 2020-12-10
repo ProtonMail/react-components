@@ -96,7 +96,7 @@ const SubscriptionCancellationModal = ({ onSubmit, onClose, onSkip, ...rest }: P
                 </div>
 
                 <div className="mb2">
-                    <label className="mb1 bl">{c('Label')
+                    <label className="mb1 bl" id="score-label">{c('Label')
                         .t`How likely are you to recommend ProtonMail to others?`}</label>
                     <Scale
                         from={0}
@@ -104,6 +104,7 @@ const SubscriptionCancellationModal = ({ onSubmit, onClose, onSkip, ...rest }: P
                         fromLabel={c('Label').t`0 - Not at all likely`}
                         toLabel={c('Label').t`10 - Extremely likely`}
                         value={model.Score}
+                        InputButtonProps={{ 'aria-labelledby': 'score-label' }}
                         onChange={handleScoreChange}
                     />
                 </div>

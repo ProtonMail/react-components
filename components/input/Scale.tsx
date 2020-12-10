@@ -1,7 +1,7 @@
 import React from 'react';
 import { range } from 'proton-shared/lib/helpers/array';
 
-import InputButton from './InputButton';
+import InputButton, { InputButtonProps } from './InputButton';
 
 interface ScaleProps extends Omit<React.ComponentPropsWithoutRef<'div'>, 'onChange'> {
     from: number;
@@ -9,10 +9,11 @@ interface ScaleProps extends Omit<React.ComponentPropsWithoutRef<'div'>, 'onChan
     fromLabel: string;
     toLabel: string;
     value?: number;
+    InputButtonProps: Partial<InputButtonProps>;
     onChange: (value: number) => void;
 }
 
-const Scale = ({ from, to, fromLabel, toLabel, value, onChange, ...rest }: ScaleProps) => {
+const Scale = ({ from, to, fromLabel, toLabel, value, InputButtonProps, onChange, ...rest }: ScaleProps) => {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         onChange(Number(e.target.value));
     };
@@ -32,6 +33,7 @@ const Scale = ({ from, to, fromLabel, toLabel, value, onChange, ...rest }: Scale
                         title={String(n)}
                         checked={value === n}
                         onChange={handleChange}
+                        {...InputButtonProps}
                     >
                         {n}
                     </InputButton>
