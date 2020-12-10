@@ -104,7 +104,7 @@ const SubscriptionCancellationModal = ({ onSubmit, onClose, onSkip, ...rest }: P
                         fromLabel={c('Label').t`0 - Not at all likely`}
                         toLabel={c('Label').t`10 - Extremely likely`}
                         value={model.Score}
-                        InputButtonProps={{ 'aria-labelledby': 'score-label' }}
+                        InputButtonProps={{ 'aria-describedby': 'score-label' }}
                         onChange={handleScoreChange}
                     />
                 </div>

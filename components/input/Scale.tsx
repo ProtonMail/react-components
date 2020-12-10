@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { range } from 'proton-shared/lib/helpers/array';
 
 import InputButton, { InputButtonProps } from './InputButton';
+import { concatStringProp, generateUID } from '../../helpers';
 
 interface ScaleProps extends Omit<React.ComponentPropsWithoutRef<'div'>, 'onChange'> {
     from: number;
@@ -9,7 +10,7 @@ interface ScaleProps extends Omit<React.ComponentPropsWithoutRef<'div'>, 'onChan
     fromLabel: string;
     toLabel: string;
     value?: number;
-    InputButtonProps: Partial<InputButtonProps>;
+    InputButtonProps?: Partial<InputButtonProps>;
     onChange: (value: number) => void;
 }
 
@@ -19,6 +20,10 @@ const Scale = ({ from, to, fromLabel, toLabel, value, InputButtonProps, onChange
     };
 
     const scale = range(from, to + 1);
+
+    const { current: scaleFromToId } = useRef(generateUID('scale-from-to'));
+
+    const ariaDescribedBy = concatStringProp([InputButtonProps?.['aria-describedby'], scaleFromToId]);
 
     return (
         <div {...rest}>
@@ -34,12 +39,13 @@ const Scale = ({ from, to, fromLabel, toLabel, value, InputButtonProps, onChange
                         checked={value === n}
                         onChange={handleChange}
                         {...InputButtonProps}
+                        aria-describedby={ariaDescribedBy}
                     >
                         {n}
                     </InputButton>
                 ))}
             </div>
-            <div className="flex flex-spacebetween mt0-5">
+            <div id={scaleFromToId} className="flex flex-spacebetween mt0-5">
                 <span className="small m0">{fromLabel}</span>
                 <span className="small m0">{toLabel}</span>
             </div>
