@@ -65,8 +65,9 @@ const Dialog = ({
     useHotkeys(rootRef, [
         [
             'Escape',
-            () => {
+            (e) => {
                 if (!disableCloseOnOnEscape) {
+                    e.stopPropagation();
                     rest?.onClose();
                 }
             },
