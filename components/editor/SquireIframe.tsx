@@ -20,7 +20,7 @@ interface Props {
     onAddImages: (files: File[]) => void;
     showEllipseButton: boolean;
     onEllipseClick: () => void;
-    keydownHandler: (e: KeyboardEvent) => void;
+    keydownHandler?: (e: KeyboardEvent) => void;
 }
 
 /**
@@ -147,7 +147,7 @@ const SquireIframe = (
             return;
         }
 
-        keydownHandler(e);
+        keydownHandler?.(e);
     };
 
     useEffect(() => {

@@ -51,7 +51,7 @@ interface Props {
     onFocus?: () => void;
     onAddImages?: (files: File[]) => void;
     toolbarMoreDropdownExtension?: ReactNode;
-    keydownHandler: (e: KeyboardEvent) => void;
+    keydownHandler?: (e: KeyboardEvent) => void;
 }
 
 /**
