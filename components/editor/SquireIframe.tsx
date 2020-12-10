@@ -141,6 +141,8 @@ const SquireIframe = (
 
     const handleKeyDown = (e: KeyboardEvent, squire: SquireType) => {
         if (e.key === 'k' && e.metaKey) {
+            e.preventDefault();
+            e.stopPropagation();
             handleLink(squire);
             return;
         }
