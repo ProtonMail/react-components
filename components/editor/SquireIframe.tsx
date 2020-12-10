@@ -152,7 +152,7 @@ const SquireIframe = (
                 ref={iframeRef}
                 frameBorder="0"
                 className="w100 h100 squireIframe"
-                data-testid="composer-iframe"
+                data-testid="squire-iframe"
                 {...rest}
             />
         </div>

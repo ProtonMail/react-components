@@ -47,7 +47,7 @@ const FileButton = ({ onAddFiles, icon = 'attach', disabled, className, children
                     type="file"
                     multiple
                     onChange={handleChange}
-                    data-testid="composer-attachments-button"
+                    data-testid="squire-attachments-button"
                 />
             </label>
         </div>

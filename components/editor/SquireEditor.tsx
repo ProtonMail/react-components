@@ -158,7 +158,7 @@ const SquireEditor = (
                         onChange={handlePlainTextChange}
                         placeholder={placeholder}
                         data-test-id="composer:body"
-                        data-testid="composer-textarea"
+                        data-testid="squire-textarea"
                     />
                 </div>
             ) : (
