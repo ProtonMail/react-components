@@ -2,6 +2,7 @@ import { concatArrays } from 'pmcrypto';
 import { MIME_TYPES } from 'proton-shared/lib/constants';
 import { uint8ArrayToBase64String } from 'proton-shared/lib/helpers/encoding';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
+import { pick } from 'proton-shared/lib/helpers/object';
 import { Recipient } from 'proton-shared/lib/interfaces';
 import { SendPreferences } from 'proton-shared/lib/interfaces/mail/crypto';
 import { RequireSome, SimpleMap } from 'proton-shared/lib/interfaces/utils';
@@ -89,6 +90,7 @@ export const useSendIcs = () => {
                 Contents: uint8ArrayToBase64String(concatenatedPackets),
                 ContentID: 'reply-ics',
                 KeyPackets: uint8ArrayToBase64String(packets.keys),
+                Signature: packets.signature ? uint8ArrayToBase64String(packets.signature) : undefined,
             };
             const attachmentData = {
                 attachment,
@@ -102,7 +104,7 @@ export const useSendIcs = () => {
                 Sender: from,
                 Body: plainTextBody,
                 MIMEType: MIME_TYPES.PLAINTEXT,
-                Attachments: [attachment],
+                Attachments: [pick(attachment, ['Filename', 'MIMEType', 'ContentID', 'Contents'])],
                 Flags: Sign ? MESSAGE_FLAGS.FLAG_SIGN : undefined,
             };
             const mapSendPrefs: SimpleMap<SendPreferences> = {};
