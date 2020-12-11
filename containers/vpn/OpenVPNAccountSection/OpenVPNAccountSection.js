@@ -1,19 +1,30 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
 
+import { resetVPNSettings } from 'proton-shared/lib/api/vpn';
 import { Button, Alert, Row, Field, Label, Copy, PrimaryButton } from '../../../components';
-import { useUserVPN, useModals } from '../../../hooks';
-import OpenVPNCredentialsModal from './OpenVPNCredentialsModal';
+import { useUserVPN, useApi, useNotifications } from '../../../hooks';
 
 const OpenVPNAccountSection = () => {
-    const { createModal } = useModals();
     const { result = {}, fetch: fetchUserVPN } = useUserVPN();
     const { VPN = {} } = result;
     const { Name = '', Password = '' } = VPN;
     const [show, setShow] = useState(false);
+    const api = useApi();
+    const { createNotification } = useNotifications();
+    let updating = false;
 
-    const handleEditCredentials = () => {
-        createModal(<OpenVPNCredentialsModal username={Name} password={Password} fetchUserVPN={fetchUserVPN} />);
+    const handleResetCredentials = async () => {
+        updating = true;
+
+        try {
+            await api(resetVPNSettings());
+            await fetchUserVPN();
+
+            createNotification({ text: c('Notification').t`OpenVPN / IKEv2 credentials regenerated` });
+        } finally {
+            updating = false;
+        }
     };
 
     return (
@@ -40,8 +51,11 @@ const OpenVPNAccountSection = () => {
                     <div className="mb1 pt0-5 ellipsis mw100">
                         <code>{show ? Password : '••••••••••••••••••••'}</code>
                     </div>
-                    <PrimaryButton disabled={!Name || !Password} onClick={handleEditCredentials}>{c('Action')
-                        .t`Edit credentials`}</PrimaryButton>
+                    <PrimaryButton
+                        disabled={!Name || !Password || updating}
+                        loading={updating}
+                        onClick={handleResetCredentials}
+                    >{c('Action').t`Reset credentials`}</PrimaryButton>
                 </Field>
                 <div className="ml1 flex-item-noshrink onmobile-ml0 onmobile-mt0-5">
                     <Copy className="mr1" value={Password} />
