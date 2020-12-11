@@ -6,16 +6,16 @@ import { Button, Alert, Row, Field, Label, Copy, PrimaryButton } from '../../../
 import { useUserVPN, useApi, useNotifications } from '../../../hooks';
 
 const OpenVPNAccountSection = () => {
+    const [updating, update] = useState(false);
     const { result = {}, fetch: fetchUserVPN } = useUserVPN();
     const { VPN = {} } = result;
     const { Name = '', Password = '' } = VPN;
     const [show, setShow] = useState(false);
     const api = useApi();
     const { createNotification } = useNotifications();
-    let updating = false;
 
     const handleResetCredentials = async () => {
-        updating = true;
+        update(true);
 
         try {
             await api(resetVPNSettings());
@@ -23,7 +23,7 @@ const OpenVPNAccountSection = () => {
 
             createNotification({ text: c('Notification').t`OpenVPN / IKEv2 credentials regenerated` });
         } finally {
-            updating = false;
+            update(false);
         }
     };
 
