@@ -3,10 +3,10 @@ import { c } from 'ttag';
 
 import { resetVPNSettings } from 'proton-shared/lib/api/vpn';
 import { Button, Alert, Row, Field, Label, Copy, PrimaryButton } from '../../../components';
-import { useUserVPN, useApi, useNotifications } from '../../../hooks';
+import { useUserVPN, useApi, useNotifications, useLoading } from '../../../hooks';
 
 const OpenVPNAccountSection = () => {
-    const [updating, update] = useState(false);
+    const [updating, withUpdating] = useLoading();
     const { result = {}, fetch: fetchUserVPN } = useUserVPN();
     const { VPN = {} } = result;
     const { Name = '', Password = '' } = VPN;
@@ -15,16 +15,10 @@ const OpenVPNAccountSection = () => {
     const { createNotification } = useNotifications();
 
     const handleResetCredentials = async () => {
-        update(true);
+        await api(resetVPNSettings());
+        await fetchUserVPN();
 
-        try {
-            await api(resetVPNSettings());
-            await fetchUserVPN();
-
-            createNotification({ text: c('Notification').t`OpenVPN / IKEv2 credentials regenerated` });
-        } finally {
-            update(false);
-        }
+        createNotification({ text: c('Notification').t`OpenVPN / IKEv2 credentials regenerated` });
     };
 
     return (
@@ -51,9 +45,11 @@ const OpenVPNAccountSection = () => {
                     <div className="mb1 pt0-5 ellipsis mw100">
                         <code>{show ? Password : '••••••••••••••••••••'}</code>
                     </div>
-                    <PrimaryButton disabled={!Name || !Password} loading={updating} onClick={handleResetCredentials}>{c(
-                        'Action'
-                    ).t`Reset credentials`}</PrimaryButton>
+                    <PrimaryButton
+                        disabled={!Name || !Password}
+                        loading={updating}
+                        onClick={() => withUpdating(handleResetCredentials())}
+                    >{c('Action').t`Reset credentials`}</PrimaryButton>
                 </Field>
                 <div className="ml1 flex-item-noshrink onmobile-ml0 onmobile-mt0-5">
                     <Copy className="mr1" value={Password} />
