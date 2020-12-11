@@ -5,6 +5,10 @@ import { updateVPNName, updateVPNPassword } from 'proton-shared/lib/api/vpn';
 import { FormModal, Row, Label, Field, Input, PasswordInput } from '../../../components';
 import { useLoading, useNotifications, useApi } from '../../../hooks';
 
+/**
+ * @deprecated Updating manually name and password will be removed in a next version,
+ * use credentials re-generation instead.
+ */
 const OpenVPNCredentialsModal = ({ username = '', password = '', fetchUserVPN, ...rest }) => {
     const [loading, withLoading] = useLoading();
     const api = useApi();
