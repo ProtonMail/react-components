@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import Icon from '../icon/Icon';
 import { classnames } from '../../helpers';
 import SidebarListItem from './SidebarListItem';
-import { useHotkeys } from '../../hooks';
+import { HotkeyTuple, useHotkeys } from '../../hooks';
 
 interface Props {
     toggle: boolean;
@@ -15,8 +15,9 @@ interface Props {
 
 const SimpleSidebarListItemHeader = ({ toggle, onToggle, hasCaret = true, right, text, title }: Props) => {
     const buttonRef = useRef<HTMLButtonElement>(null);
+    const handlersRef = useRef<HotkeyTuple[]>([]);
 
-    useHotkeys(buttonRef, [
+    handlersRef.current = [
         [
             'ArrowRight',
             (e) => {
@@ -30,7 +31,9 @@ const SimpleSidebarListItemHeader = ({ toggle, onToggle, hasCaret = true, right,
                 onToggle(false);
             },
         ],
-    ]);
+    ];
+
+    useHotkeys(buttonRef, handlersRef.current);
 
     return (
         <SidebarListItem className="navigation__link--groupHeader">

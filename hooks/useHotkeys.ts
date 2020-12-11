@@ -1,6 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React, { /* useEffect, */ useRef } from 'react';
 import isDeepEqual from 'proton-shared/lib/helpers/isDeepEqual';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
+import { useEventListener } from './useHandler';
 
 /*
  * A Hotkey being an array means we have a "modifier" combination
@@ -21,7 +22,7 @@ type HotKeyCallback = (e: KeyboardEvent) => void;
  * if ever someone wants to do implement it somewhere ¯\_(ツ)_/¯
  * */
 // @todo try to find a way to have an infinity of hotkeys if wanted
-type HotkeyTuple =
+export type HotkeyTuple =
     | [Hotkey, HotKeyCallback]
     | [Hotkey, Hotkey, HotKeyCallback]
     | [Hotkey, Hotkey, Hotkey, HotKeyCallback]
@@ -49,7 +50,7 @@ const MODIFIER_KEYS = {
     ALT: 'alt',
 };
 
-const useHotkeys = (
+export const useHotkeys = (
     ref: React.RefObject<HTMLElement | Document | undefined>,
     hotkeyTupleArray: HotkeyTuple[],
     options?: HotKeysOptions
@@ -107,16 +108,5 @@ const useHotkeys = (
         });
     };
 
-    useEffect(() => {
-        const el = ref.current;
-        if (!el) {
-            return;
-        }
-        el.addEventListener(keyEventType, handleKeyDown as EventListener);
-        return () => {
-            el.removeEventListener(keyEventType, handleKeyDown as EventListener);
-        };
-    }, [ref.current, handleKeyDown, ...dependencies]);
+    useEventListener(ref, keyEventType, handleKeyDown, dependencies);
 };
-
-export default useHotkeys;
