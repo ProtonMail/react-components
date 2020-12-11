@@ -60,15 +60,16 @@ const PrivateHeader = ({
     const secondLevelDomain = hostname.substr(hostname.indexOf('.') + 1);
     const cookieDomain = `.${secondLevelDomain}`;
     const [{ hasPaidMail, hasPaidVpn, isFree, ID }] = useUser();
+    const clearUserID = ID.replace(/=/g, ''); // '=' is causing issue when stored in cookie
     const [blackFridayModalState, setBlackFridayModalState] = useCookieState(
         'false',
-        `${ID}${BLACK_FRIDAY.COUPON_CODE}-black-friday-modal`,
+        `${clearUserID}${BLACK_FRIDAY.COUPON_CODE}-black-friday-modal`,
         BLACK_FRIDAY.END.toUTCString(),
         cookieDomain
     );
     const [productPayerModalState, setProductPayerModalState] = useCookieState(
         'false',
-        `${ID}-product-payer-modal`,
+        `${clearUserID}-product-payer-modal`,
         BLACK_FRIDAY.END.toUTCString(),
         cookieDomain
     );
