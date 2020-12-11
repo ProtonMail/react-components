@@ -42,6 +42,7 @@ const Searchbox = ({ delay, className = '', advanced, placeholder = '', value = 
                     id="global_search"
                     placeholder={placeholder}
                     className="searchbox-field"
+                    data-shorcut-target="searchbox-field"
                 />
             </label>
             <button type="submit" className="searchbox-search-button flex">
