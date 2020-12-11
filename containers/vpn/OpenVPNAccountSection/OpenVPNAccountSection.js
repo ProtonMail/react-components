@@ -51,11 +51,9 @@ const OpenVPNAccountSection = () => {
                     <div className="mb1 pt0-5 ellipsis mw100">
                         <code>{show ? Password : '••••••••••••••••••••'}</code>
                     </div>
-                    <PrimaryButton
-                        disabled={!Name || !Password || updating}
-                        loading={updating}
-                        onClick={handleResetCredentials}
-                    >{c('Action').t`Reset credentials`}</PrimaryButton>
+                    <PrimaryButton disabled={!Name || !Password} loading={updating} onClick={handleResetCredentials}>{c(
+                        'Action'
+                    ).t`Reset credentials`}</PrimaryButton>
                 </Field>
                 <div className="ml1 flex-item-noshrink onmobile-ml0 onmobile-mt0-5">
                     <Copy className="mr1" value={Password} />
