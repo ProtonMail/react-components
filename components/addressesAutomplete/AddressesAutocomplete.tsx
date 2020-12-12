@@ -89,13 +89,13 @@ const AddressesAutocomplete = React.forwardRef<HTMLInputElement, Props>(
 
         const options = [...contactsAutocompleteItems, ...majorList];
 
-        const getIsValidEmail = (input: string) => {
+        const getIsValidEmail = (input = '') => {
             return !hasEmailValidation ? true : validateEmailAddress(input);
         };
 
         const safeAddRecipients = (newRecipients: Recipient[]) => {
             const uniqueNewRecipients = newRecipients.filter(({ Address }) => {
-                return Address && !recipientsByAddress.has(normalizeEmail(Address)) && getIsValidEmail(Address);
+                return getIsValidEmail(Address);
             });
             if (!uniqueNewRecipients.length) {
                 return;
@@ -110,6 +110,10 @@ const AddressesAutocomplete = React.forwardRef<HTMLInputElement, Props>(
 
         const handleAddRecipientFromInput = (input: string) => {
             const trimmedInput = input.trim();
+            if (!trimmedInput.length) {
+                setInput('');
+                return;
+            }
             const newRecipient = inputToRecipient(trimmedInput);
             const isValidEmail = getIsValidEmail(newRecipient.Address || '');
             if (isValidEmail) {
