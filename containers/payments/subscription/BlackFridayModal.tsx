@@ -4,20 +4,15 @@ import { CYCLE, DEFAULT_CURRENCY, DEFAULT_CYCLE, BLACK_FRIDAY, SECOND } from 'pr
 import { c } from 'ttag';
 import { isAfter } from 'date-fns';
 import { Cycle, PlanIDs } from 'proton-shared/lib/interfaces';
+import { isProductPayer } from 'proton-shared/lib/helpers/blackfriday';
 
 import { FormModal, Loader, Countdown, Button, Price } from '../../../components';
-import { useLoading, useApi } from '../../../hooks';
+import { useLoading, useApi, useSubscription } from '../../../hooks';
 import { classnames } from '../../../helpers';
 import CurrencySelector from '../CurrencySelector';
 
 const { MONTHLY, YEARLY, TWO_YEARS } = CYCLE;
 const EVERY_SECOND = SECOND;
-
-enum Notices {
-    '*',
-    '**',
-    '***',
-}
 
 export interface Bundle {
     planIDs: PlanIDs;
@@ -34,35 +29,63 @@ interface Props<T> {
     className?: string;
 }
 
+interface Pricing {
+    [index: number]: {
+        withCoupon: number;
+        withoutCoupon: number;
+        withoutCouponMonthly: number;
+    };
+}
+
 const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => {
     const api = useApi();
+    const [subscription] = useSubscription();
+    const productPayer = isProductPayer(subscription);
     const [loading, withLoading] = useLoading();
     const [currency, updateCurrency] = useState(DEFAULT_CURRENCY);
-    const [pricing, updatePricing] = useState({});
+    const [pricing, updatePricing] = useState<Pricing>({});
     const [now, setNow] = useState(new Date());
 
     const DEAL_TITLE = {
-        [MONTHLY]: c('Title').t`1 month deal`,
-        [YEARLY]: c('Title').t`1 year deal`,
-        [TWO_YEARS]: c('Title').t`2 year deal`,
+        [MONTHLY]: c('Title').t`for 1 month`,
+        [YEARLY]: c('Title').t`for 1 year`,
+        [TWO_YEARS]: c('Title').t`for 2 years`,
     };
 
-    const BILLED_DESCRIPTION = ({ cycle, amount, notice }: { cycle: Cycle; amount: number; notice: Notices }) =>
+    const BILLED_DESCRIPTION = ({ cycle, amount }: { cycle: Cycle; amount: React.ReactNode }) =>
         ({
-            [MONTHLY]: c('Title').jt`Billed as ${amount} for 1 month ${Notices[notice]}`,
-            [YEARLY]: c('Title').jt`Billed as ${amount} for 1 year ${Notices[notice]}`,
-            [TWO_YEARS]: c('Title').jt`Billed as ${amount} for 2 years ${Notices[notice]}`,
+            [MONTHLY]: c('Title').jt`Billed as ${amount}`,
+            [YEARLY]: c('Title').jt`Billed as ${amount}`,
+            [TWO_YEARS]: c('Title').jt`Billed as ${amount}`,
         }[cycle]);
 
-    const AFTER_INFO = ({ amount, notice }: { amount: number; notice: Notices }) =>
-        ({
-            1: c('Title')
-                .jt`${Notices[notice]} Renews after 1 year at a discounted annual price of ${amount} per year (20% discount).`,
-            2: c('Title')
-                .jt`${Notices[notice]} Renews after 2 years at a discounted 2-year price of ${amount} every 2 years (33% discount).`,
-            3: c('Title')
-                .jt`${Notices[notice]} Renews after 2 years at a discounted 2-year & bundle price of ${amount} every 2 years (47% discount).`,
-        }[notice]);
+    const getTitle = () => {
+        if (productPayer) {
+            return c('Title').t`ProtonDrive early access offer`;
+        }
+        return c('Title').t`Black Friday Sale`;
+    };
+
+    const getCTA = () => {
+        if (productPayer) {
+            return c('Action').t`Upgrade`;
+        }
+        return c('Action').t`Get limited-time deal`;
+    };
+
+    const getDescription = () => {
+        if (productPayer) {
+            return (
+                <p>{c('Info')
+                    .t`Get early access to our new encrypted drive for FREE by upgrading to a Plus bundle now.`}</p>
+            );
+        }
+        return (
+            <div className="bold big aligncenter mt0 blackfriday-countdown-container">
+                <Countdown end={isAfter(now, BLACK_FRIDAY.CYBER_START) ? BLACK_FRIDAY.END : BLACK_FRIDAY.CYBER_START} />
+            </div>
+        );
+    };
 
     const getBundlePrices = async () => {
         const result = await Promise.all(
@@ -95,14 +118,11 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
         );
 
         updatePricing(
-            result.reduce((acc, [withCoupon, withoutCoupon, withoutCouponMonthly], index) => {
+            result.reduce<Pricing>((acc, [withCoupon, withoutCoupon, withoutCouponMonthly], index) => {
                 acc[index] = {
                     withCoupon: withCoupon.Amount + withCoupon.CouponDiscount,
                     withoutCoupon: withoutCoupon.Amount + withoutCoupon.CouponDiscount, // BUNDLE discount can be applied
                     withoutCouponMonthly: withoutCouponMonthly.Amount,
-                    save:
-                        withoutCouponMonthly.Amount * withCoupon.Cycle -
-                        (withCoupon.Amount + withCoupon.CouponDiscount),
                 };
                 return acc;
             }, {})
@@ -124,20 +144,16 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
     }, []);
 
     return (
-        <FormModal title={c('Title').t`Black Friday sale`} loading={loading} footer={null} {...rest}>
+        <FormModal title={getTitle()} loading={loading} footer={null} {...rest}>
             {loading ? (
                 <Loader />
             ) : (
                 <>
-                    <div className="bold big aligncenter mt0 blackfriday-countdown-container">
-                        <Countdown
-                            end={isAfter(now, BLACK_FRIDAY.CYBER_START) ? BLACK_FRIDAY.END : BLACK_FRIDAY.CYBER_START}
-                        />
-                    </div>
+                    {getDescription()}
                     <div className="flex-autogrid onmobile-flex-column flex-items-end">
                         {bundles.map(({ name, cycle, planIDs, popular, couponCode }, index) => {
                             const key = `${index}`;
-                            const { withCoupon = 0, withoutCouponMonthly = 0, save = 0 } = pricing[index] || {};
+                            const { withCoupon = 0, withoutCouponMonthly = 0 } = pricing[index] || {};
                             const withCouponMonthly = withCoupon / cycle;
                             const percentage = 100 - Math.round((withCouponMonthly * 100) / withoutCouponMonthly);
                             const monthlyPrice = (
@@ -152,15 +168,8 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
                             );
                             const regularPrice = (
                                 <del key={key}>
-                                    <Price currency={currency} suffix="/mo">
-                                        {withoutCouponMonthly}
-                                    </Price>
+                                    <Price currency={currency}>{withoutCouponMonthly * cycle}</Price>
                                 </del>
-                            );
-                            const savePrice = (
-                                <Price key={key} currency={currency}>
-                                    {save}
-                                </Price>
                             );
 
                             return (
@@ -181,12 +190,6 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
                                         <div className={classnames(['h2 mb0', popular && 'color-primary bold'])}>
                                             {monthlyPrice}
                                         </div>
-                                        <small className="mb1">{c('Info').jt`Regular price: ${regularPrice}`}</small>
-                                        {popular ? (
-                                            <small className="mb1 mt0 bold big uppercase color-primary">
-                                                {c('Text').t`Save`} {savePrice}
-                                            </small>
-                                        ) : null}
                                         <Button
                                             className={classnames([
                                                 'mb1',
@@ -196,10 +199,11 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
                                                 rest.onClose?.();
                                                 onSelect({ planIDs, cycle, currency, couponCode });
                                             }}
-                                        >{c('Action').t`Get the deal`}</Button>
-                                        <small>
-                                            {BILLED_DESCRIPTION({ cycle, amount: amountDue, notice: index + 1 })}
-                                        </small>
+                                        >
+                                            {getCTA()}
+                                        </Button>
+                                        <small>{BILLED_DESCRIPTION({ cycle, amount: amountDue })}</small>
+                                        <small className="mb1">{c('Info').jt`Standard price: ${regularPrice}`}</small>
                                     </div>
                                 </div>
                             );
@@ -213,20 +217,14 @@ const BlackFridayModal = <T,>({ bundles = [], onSelect, ...rest }: Props<T>) => 
                             onSelect={updateCurrency}
                         />
                     </div>
-                    {bundles.map((b, index) => {
-                        const key = `${index}`;
-                        const { withoutCoupon = 0 } = pricing[index] || {};
-                        const amount = (
-                            <Price key={key} currency={currency}>
-                                {withoutCoupon}
-                            </Price>
-                        );
-                        return (
-                            <p key={key} className="smaller mt0 mb0 opacity-50 aligncenter">
-                                {AFTER_INFO({ notice: index + 1, amount })}
-                            </p>
-                        );
-                    })}
+                    <p className="smaller opacity-50 aligncenter">{c('Info')
+                        .t`Offer valid only for first-time paid subscriptions.`}</p>
+                    <p className="smaller mt0 mb0 opacity-50 aligncenter">{c('Info')
+                        .t`Subscriptions automatically renew at the same rate until cancelled.`}</p>
+                    <p className="smaller mt0 mb0 opacity-50 aligncenter">{c('Info')
+                        .t`Discounts are calculated based off of monthly subscriptions prices.`}</p>
+                    <p className="smaller mt0 mb0 opacity-50 aligncenter">{c('Info')
+                        .t`The Plus Bundle subscription includes 5 GB of storage shared between your ProtonMail and ProtonDrive accounts.`}</p>
                 </>
             )}
         </FormModal>
