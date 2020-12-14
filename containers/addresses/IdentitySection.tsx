@@ -40,36 +40,38 @@ const IdentitySection = () => {
                 <Field>
                     <Select id="addressSelector" options={options} onChange={handleChange} />
                 </Field>
+                <span className="ml1 onmobile-ml0 onmobile-mt0-5">
+                    <Button className="pm-button--primary" onClick={handleOpenModal}>{c('Action').t`Edit`}</Button>
+                </span>
             </Row>
             <Row>
                 <Label>
                     <span className="mr0-5">{c('Label').t`Display name`}</span>
                     <Info url="https://protonmail.com/support/knowledge-base/display-name-and-signature/" />
                 </Label>
-                <Field className="bordered-container">
-                    <div className="pl1 pr1 pt0-5 pb0-5 ellipsis" title={address.DisplayName}>
+                <Field className="bordered-container bg-global-muted-dm">
+                    <div
+                        className="pl1 pr1 pt0-5 pb0-5 ellipsis cursor-pointer"
+                        title={address.DisplayName}
+                        onClick={handleOpenModal}
+                    >
                         {address.DisplayName}
                     </div>
                 </Field>
-                <span className="ml1 onmobile-ml0 onmobile-mt0-5">
-                    <Button className="pm-button--primary" onClick={handleOpenModal}>{c('Action').t`Edit`}</Button>
-                </span>
             </Row>
             <Row>
                 <Label>{c('Label').t`Signature`}</Label>
-                <Field className="bordered-container">
+                <Field className="bordered-container bg-global-muted-dm auto mt0-5">
                     {address.Signature ? (
                         <div
-                            className="break pl1 pr1 pt0-5 pb0-5"
+                            className="break pl1 pr1 pt0-5 pb0-5 cursor-pointer"
                             dangerouslySetInnerHTML={{ __html: address.Signature }}
+                            onClick={handleOpenModal}
                         />
                     ) : (
                         <div className="pl1 pr1 pt0-5 pb0-5">{c('Info').t`Not set`}</div>
                     )}
                 </Field>
-                <span className="ml1 onmobile-ml0 onmobile-mt0-5">
-                    <Button className="pm-button--primary" onClick={handleOpenModal}>{c('Action').t`Edit`}</Button>
-                </span>
             </Row>
         </>
     );
