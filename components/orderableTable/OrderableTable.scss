@@ -20,5 +20,19 @@
 			flex-grow: 0;
 			flex-basis: 3.5rem;
 		}
+		&:nth-last-child(2) {
+			width: 10%;
+			flex: 0;
+		}
+		&:last-child {
+			min-width: 10em;
+			flex: 0;
+			display: flex;
+			> * {
+				margin-top: auto;
+				margin-bottom: auto;
+				margin-left: auto;
+			}
+		}
 	}
 }
