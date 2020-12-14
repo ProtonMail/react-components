@@ -22,11 +22,7 @@ const UnsupportedPreview = ({ onSave, type = 'file' }: Props) => {
                 alt={c('Info').t`Unsupported file`}
             />
 
-            {isNarrow ? (
-                <h3 className="p0-25 bold">{c('Info').t`No preview available`}</h3>
-            ) : (
-                <h2 className="p0-25 bold">{c('Info').t`No preview available`}</h2>
-            )}
+            <h2 className={classnames(['p0-25 bold', isNarrow && 'h3'])}>{c('Info').t`No preview available`}</h2>
 
             {onSave && (
                 <PrimaryButton
