@@ -181,7 +181,7 @@ const CurrentImportsSection = () => {
                     {c('Info').t`Your import from ${delayedImport.Email} is temporarily delayed.`}
                     <br />
                     {c('Info')
-                        .t`Proton will try to resume the import as soon as your email provider resets your account’s ${bandwithLimitLink}. You don’t need to do anything. If you cancel your import, you won't be able to resume it and you will need to start over.`}
+                        .jt`Proton will try to resume the import as soon as your email provider resets your account’s ${bandwithLimitLink}. You don’t need to do anything. If you cancel your import, you won't be able to resume it and you will need to start over.`}
                 </Alert>
             )}
             <Table className="onmobile-hideTd3 onmobile-hideTd4 pm-simple-table--has-actions">
