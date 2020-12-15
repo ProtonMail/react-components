@@ -129,7 +129,6 @@ const CurrentImportsSection = () => {
         return Active
             && Active.State === ImportMailStatus.PAUSED
             && Active.ErrorCode === ImportMailError.ERROR_CODE_IMAP_CONNECTION;
-
     });
 
     const delayedImport = importsToDisplay.find(({ Active }) => {
