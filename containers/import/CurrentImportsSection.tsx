@@ -121,8 +121,8 @@ const CurrentImportsSection = () => {
 
     const hasStoragePausedImports = importsToDisplay.some(({ Active }) => {
         return Active
-            ? Active.State === ImportMailStatus.PAUSED && Active.ErrorCode === ImportMailError.ERROR_CODE_QUOTA_LIMIT
-            : false;
+            && Active.State === ImportMailStatus.PAUSED
+            && Active.ErrorCode === ImportMailError.ERROR_CODE_QUOTA_LIMIT;
     });
 
     const hasAuthPausedImports = importsToDisplay.some(({ Active }) => {
