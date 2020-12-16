@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useState } from 'react';
 import { c } from 'ttag';
 import { ADDRESS_STATUS, RECEIVE_ADDRESS, SEND_ADDRESS } from 'proton-shared/lib/constants';
-import { Alert, Button, Label, Select, Info, Field, Loader } from '../../components';
+import { Alert, Button, Label, Select, Info, Field, Loader, EditableSection } from '../../components';
 import { useAddresses, useModals } from '../../hooks';
 
 import EditAddressModal from './EditAddressModal';
@@ -35,7 +35,7 @@ const IdentitySection = () => {
         <>
             <Alert learnMore="https://protonmail.com/support/knowledge-base/display-name-and-signature/">{c('Info')
                 .t`Click the Edit button to personalize your email address. Your Display Name appears in the From field when people receive an email from you. Your Signature is appended at the bottom of your messages. Or leave each field empty for more privacy.`}</Alert>
-            <div className="inline-grid-container onmobile-w100 editableSection-container">
+            <EditableSection>
                 <Label className="border-bottom onmobile-pb0 onmobile-no-border" htmlFor="addressSelector">{c('Label')
                     .t`Select an address`}</Label>
                 <Field className="auto border-bottom onmobile-pb0 onmobile-no-border flex flex-row flex-nowrap">
@@ -72,7 +72,7 @@ const IdentitySection = () => {
                         <div className="pl1 pr1 pt0-5 pb0-5">{c('Info').t`Not set`}</div>
                     )}
                 </Field>
-            </div>
+            </EditableSection>
         </>
     );
 };

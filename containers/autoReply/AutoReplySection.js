@@ -3,9 +3,10 @@ import { updateAutoresponder } from 'proton-shared/lib/api/mailSettings';
 import { c } from 'ttag';
 
 import { useModals, useMailSettings, useLoading, useApi, useEventManager } from '../../hooks';
-import { Toggle, Button, Field, Label, Alert } from '../../components';
+import { Toggle, Button, Field, Label, Alert, EditableSection } from '../../components';
 import AutoReplyModal from './AutoReplyModal';
 import AutoReplyTemplate from './AutoReplyTemplate';
+import { classnames } from '../../helpers';
 
 const AutoReplySection = () => {
     const { createModal } = useModals();
@@ -33,7 +34,7 @@ const AutoReplySection = () => {
                     .t`Automatic replies can respond automatically to incoming messages (such as when you are on vacation and can't respond).`}
             </Alert>
 
-            <div className="inline-grid-container onmobile-w100 editableSection-container editableSection-container--sizeTablet">
+            <EditableSection className="editableSection-container--sizeTablet">
                 <Label htmlFor="autoReplyToggle" className="border-bottom onmobile-pb0 onmobile-no-border">{c('Label')
                     .t`Auto-reply`}</Label>
                 <Field className="auto border-bottom onmobile-pb0 onmobile-no-border flex flex-nowrap">
@@ -45,7 +46,12 @@ const AutoReplySection = () => {
                             onChange={({ target: { checked } }) => withLoading(handleToggle(checked))}
                         />
                     </span>
-                    <span className="onmobile-pb0 onmobile-no-border mlauto">
+                    <span
+                        className={classnames([
+                            'onmobile-pb0 onmobile-no-border',
+                            AutoResponder.IsEnabled ? 'mlauto' : 'ml2',
+                        ])}
+                    >
                         <Button className="pm-button--primary mt0-25" onClick={handleOpenModal}>{c('Action')
                             .t`Edit`}</Button>
                     </span>
@@ -53,7 +59,7 @@ const AutoReplySection = () => {
                 {AutoResponder.IsEnabled && (
                     <AutoReplyTemplate autoresponder={AutoResponder} onEdit={handleOpenModal} />
                 )}
-            </div>
+            </EditableSection>
         </>
     );
 };
