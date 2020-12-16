@@ -27,8 +27,12 @@ const Option = <V,>({
     const previousActive = usePrevious(active);
 
     useEffect(() => {
-        if (!previousActive && active && focusOnActive) {
-            ref.current?.focus();
+        if (!previousActive && active) {
+            if (focusOnActive) {
+                ref.current?.focus();
+            } else {
+                ref.current?.scrollIntoView({ block: 'center' });
+            }
         }
     }, [active]);
 
