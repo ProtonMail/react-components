@@ -59,6 +59,21 @@ const update = (cache, key, promise) => {
     return record;
 };
 
+const updateArray = (cache, keys, promise) => {
+    const record = getRecordPending(promise);
+    keys.forEach((key) => {
+        cache.set(key, record);
+    });
+    getRecordThen(promise).then((newRecord) => {
+        keys.forEach((key) => {
+            if (cache.get(key) === record) {
+                cache.set(key, newRecord[key]);
+            }
+        });
+    });
+    return record;
+};
+
 export const getPromiseValue = (cache, key, miss, lifetime = Number.MAX_SAFE_INTEGER) => {
     const oldRecord = cache.get(key);
     if (
@@ -70,6 +85,29 @@ export const getPromiseValue = (cache, key, miss, lifetime = Number.MAX_SAFE_INT
         return record.promise;
     }
     return oldRecord.promise || Promise.resolve(oldRecord.value);
+};
+
+export const getPromiseObjectValue = (cache, keys, miss, lifetime = Number.MAX_SAFE_INTEGER) => {
+    const { keysToUpdate, promisesToKeep } = keys.reduce(
+        (acc, key) => {
+            const oldRecord = cache.get(key);
+            if (
+                !oldRecord ||
+                oldRecord.status === STATUS.REJECTED ||
+                (oldRecord.status === STATUS.RESOLVED && Date.now() - oldRecord.timestamp > lifetime)
+            ) {
+                acc.keysToUpdate.push(key);
+            } else {
+                const promise = oldRecord.promise || Promise.resolve(oldRecord.value);
+                acc.promisesToKeep.push(promise);
+            }
+            return acc;
+        },
+        { keysToUpdate: [], promisesToKeep: [] }
+    );
+    const promiseUpdate = updateArray(cache, keysToUpdate, miss(keysToUpdate));
+
+    return Promise.all([promiseUpdate, ...promisesToKeep]);
 };
 
 /**
