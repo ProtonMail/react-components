@@ -5,7 +5,9 @@ import { useHistory } from 'react-router';
 import { Contact } from 'proton-shared/lib/interfaces/contacts';
 import { getKeyUsedForContact } from 'proton-shared/lib/contacts/keyVerifications';
 import { CachedKey } from 'proton-shared/lib/interfaces';
-import { Alert, FormModal, LinkButton } from '../../../components';
+import { getAppHref } from 'proton-shared/lib/apps/helper';
+import { APPS } from 'proton-shared/lib/constants';
+import { Alert, FormModal, LinkButton, PrimaryButton, Table, TableBody, TableRow } from '../../../components';
 import { useModals, useUserKeys } from '../../../hooks';
 import ContactClearDataConfirmModal from './ContactClearDataConfirmModal';
 import useContact from '../useContact';
@@ -34,7 +36,7 @@ const ContactDecryptionErrorModal = ({ onClose = noop, contactID, ...rest }: Pro
     }, [userKeys, contact]);
 
     const handleRecover = () => {
-        history.push('/settings/security');
+        history.push(getAppHref('/settings/security', APPS.PROTONMAIL));
         onClose();
     };
 
@@ -48,16 +50,44 @@ const ContactDecryptionErrorModal = ({ onClose = noop, contactID, ...rest }: Pro
             title={c('Title').t`Recover data`}
             onSubmit={() => handleRecover()}
             onClose={onClose}
-            submit={c('Action').t`Recover data`}
-            className="pm-modal--smaller"
+            submit={
+                <PrimaryButton type="submit" disabled={!errorKey}>
+                    {c('Action').t`Recover data`}
+                </PrimaryButton>
+            }
             {...rest}
         >
-            <Alert type="info">{c('Info')
-                .t`To recover your data, you need to re-activate the contact encryption key used at the time when the data was created. This will require you to remember the password used when the key was generated.`}</Alert>
+            <Alert type="info">
+                {c('Info')
+                    .t`To recover your data, you need to re-activate the contact encryption key used at the time when the data was created. This will require you to remember the password used when the key was generated.`}
+            </Alert>
+            {errorKey && (
+                <Table className="pm-simple-table">
+                    <thead>
+                        <tr>
+                            <th scope="col" className="ellipsis">{c('Table header').t`Fingerprint`}</th>
+                        </tr>
+                    </thead>
+                    <TableBody>
+                        <TableRow
+                            key={errorKey.Key.Fingerprint}
+                            cells={[
+                                <div key="fingerprint" title={errorKey.Key.Fingerprint} className="flex flex-nowrap">
+                                    <span className="flex-item-fluid ellipsis aligncenter">
+                                        {errorKey.Key.Fingerprint}
+                                    </span>
+                                </div>,
+                            ]}
+                        />
+                    </TableBody>
+                </Table>
+            )}
             <Alert type="info">
                 {c('Info')
                     .t`Cannot remember your password? We can help you clear the encrypted data and in the process dismiss the alert.`}
-                <LinkButton onClick={handleClear}>{c('Action').t`Click here.`}</LinkButton>
+                <LinkButton className="ml0-5" onClick={handleClear} disabled={!errorKey}>
+                    {c('Action').t`Click here.`}
+                </LinkButton>
             </Alert>
         </FormModal>
     );

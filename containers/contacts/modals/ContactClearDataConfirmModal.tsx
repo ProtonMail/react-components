@@ -28,7 +28,6 @@ const ContactClearDataConfirmModal = ({ onClose = noop, errorKey, ...rest }: Pro
             submit={
                 <ErrorButton disabled={dangerInput !== 'DANGER'} type="submit">{c('Action').t`Clear data`}</ErrorButton>
             }
-            className="pm-modal--smaller"
             {...rest}
         >
             <Alert type="warning">{c('Warning')

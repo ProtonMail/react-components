@@ -2,21 +2,19 @@ import React, { useEffect, useRef, useState } from 'react';
 import { c } from 'ttag';
 import { noop } from 'proton-shared/lib/helpers/function';
 import { Contact } from 'proton-shared/lib/interfaces/contacts';
-import { CachedKey } from 'proton-shared/lib/interfaces';
-import { dropDataEncryptedWithAKey } from 'proton-shared/lib/contacts/globalOperations';
+import { resignAllContacts } from 'proton-shared/lib/contacts/globalOperations';
 import { Alert, DynamicProgress, FormModal, PrimaryButton } from '../../../components';
 import { useApi, useContacts, useEventManager, useUserKeys } from '../../../hooks';
 
 interface Props {
-    errorKey: CachedKey;
     onClose?: () => void;
 }
 
-const ContactClearDataExecutionModal = ({ onClose = noop, errorKey, ...rest }: Props) => {
+const ContactResignExecutionModal = ({ onClose = noop, ...rest }: Props) => {
     const [contacts = [], loadingContacts] = useContacts() as [Contact[] | undefined, boolean, Error];
+    const [userKeys] = useUserKeys();
     const api = useApi();
     const { call } = useEventManager();
-    const [userKeys] = useUserKeys();
 
     const [progress, setProgress] = useState(0);
     const [updated, setUpdated] = useState(0);
@@ -32,14 +30,13 @@ const ContactClearDataExecutionModal = ({ onClose = noop, errorKey, ...rest }: P
         }
 
         const execute = async () => {
-            await dropDataEncryptedWithAKey(
+            await resignAllContacts(
                 contacts,
-                errorKey,
                 userKeys,
                 api,
-                (progress, updated) => {
+                (progress, update) => {
                     setProgress(progress);
-                    setUpdated(updated);
+                    setUpdated(update);
                 },
                 exitRef
             );
@@ -64,7 +61,7 @@ const ContactClearDataExecutionModal = ({ onClose = noop, errorKey, ...rest }: P
 
     return (
         <FormModal
-            title={c('Title').t`Clearing data`}
+            title={c('Title').t`Resigning contacts`}
             onSubmit={onClose}
             onClose={handleClose}
             submit={
@@ -81,8 +78,8 @@ const ContactClearDataExecutionModal = ({ onClose = noop, errorKey, ...rest }: P
                 value={progress}
                 display={
                     execution
-                        ? c('Info').t`Clearing data from ${progress}/${max}. ${updated} updated. Please wait...`
-                        : c('Info').t`All your contacts have been processed.`
+                        ? c('Info').t`Resigning contact ${progress}/${max}. ${updated} updated. Please wait...`
+                        : c('Info').t`All your contacts have been resigned.`
                 }
                 max={max}
                 loading={execution}
@@ -91,4 +88,4 @@ const ContactClearDataExecutionModal = ({ onClose = noop, errorKey, ...rest }: P
     );
 };
 
-export default ContactClearDataExecutionModal;
+export default ContactResignExecutionModal;

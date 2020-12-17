@@ -58,10 +58,11 @@ const ContactViewErrors = ({ contactID, errors, onReload }: Props) => {
 
     const error = selectError(errors);
 
-    // Should not happen
+    // Should not happen but satisfy type checking
     if (!error) {
         return null;
     }
+
     const isWarning = error.type === SIGNATURE_NOT_VERIFIED;
 
     const bgColor = isWarning ? 'bg-global-attention' : 'bg-global-warning';
@@ -89,7 +90,7 @@ const ContactViewErrors = ({ contactID, errors, onReload }: Props) => {
     };
 
     return (
-        <div className={classnames([bgColor, textColor, 'rounded p0-5 mb0-5 flex flex-nowrap'])}>
+        <div className={classnames([bgColor, textColor, 'rounded p0-5 mt1 flex flex-nowrap flex-items-center'])}>
             <Icon name="attention" className="flex-item-noshrink mtauto mbauto" />
             <span className="pl0-5 pr0-5">{text}</span>
             <span className="flex-item-fluid flex">
