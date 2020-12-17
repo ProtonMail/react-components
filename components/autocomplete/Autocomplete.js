@@ -47,7 +47,7 @@ const Autocomplete = ({
     };
 
     const childrenCount = React.Children.count(children);
-    const inputStyleModifier = childrenCount > 0 ? 'pm-field--tiny' : '';
+    const inputStyleModifier = childrenCount > 0 ? 'field--tiny' : '';
     const dropdownListClasses = 'bg-white-dm w100 bordered-container m0 p0';
 
     useEffect(() => {
@@ -88,7 +88,7 @@ const Autocomplete = ({
     return (
         <div className={classnames(['autocomplete awesomplete w100', className])} onSubmit={handleSubmit}>
             <div className="autocomplete-container" ref={containerRef}>
-                <div className={classnames(['flex pm-field', inputStyleModifier, fieldClassName])}>
+                <div className={classnames(['flex field', inputStyleModifier, fieldClassName])}>
                     {childrenCount > 0 && <div className="flex">{children}</div>}
 
                     <input

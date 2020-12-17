@@ -24,21 +24,21 @@ $default-height-fields: 4.1rem;
 		}
 	}
 
-	.pm-field-icon-container:not(textarea) {
+	.field-icon-container:not(textarea) {
 		height: auto;
 	}
-	.pm-field {
+	.field {
 		padding: em(10) em(16); // design want 42px height (actually 42 to avoid .5px)
 	}
-	.pm-field-icon-container:focus-within,
-	.pm-field:focus {
+	.field-icon-container:focus-within,
+	.field:focus {
 		box-shadow: none;
 		border-color: $pm-primary;
 	}
 	.right-icon,
 	.right-text,
-	select.pm-field,
-	.pm-field:not(textarea) {
+	select.field,
+	.field:not(textarea) {
 		height: $default-height-fields;
 	}
 	.right-text-inner {
@@ -142,7 +142,7 @@ $default-height-fields: 4.1rem;
 	@include respond-to(1100) {
 		&.flex-nowrap {
 			flex-wrap: wrap;
-			.pm-field {
+			.field {
 				width: 100%;
 				margin-right: 0;
 				margin-bottom: 0.25em;

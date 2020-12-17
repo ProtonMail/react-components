@@ -53,7 +53,7 @@ const AccountGenerateInternalAddressForm = ({
                                 }}
                                 error={usernameError}
                                 placeholder={USERNAME_PLACEHOLDER}
-                                className="pm-field--username"
+                                className="field--username"
                                 required
                             />
                         </div>
