@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import Icon from '../icon/Icon';
 import { classnames } from '../../helpers';
 import SidebarListItem from './SidebarListItem';
@@ -11,9 +11,20 @@ interface Props {
     right?: React.ReactNode;
     text: string;
     title?: string;
+    onFocus: () => void;
+    isFocused: boolean;
 }
 
-const SimpleSidebarListItemHeader = ({ toggle, onToggle, hasCaret = true, right, text, title }: Props) => {
+const SimpleSidebarListItemHeader = ({
+    toggle,
+    onToggle,
+    hasCaret = true,
+    right,
+    text,
+    title,
+    onFocus,
+    isFocused,
+}: Props) => {
     const buttonRef = useRef<HTMLButtonElement>(null);
     const handlersRef = useRef<HotkeyTuple[]>([]);
 
@@ -35,6 +46,13 @@ const SimpleSidebarListItemHeader = ({ toggle, onToggle, hasCaret = true, right,
 
     useHotkeys(buttonRef, handlersRef.current);
 
+    useEffect(() => {
+        if (isFocused) {
+            buttonRef.current?.focus();
+            buttonRef.current?.scrollIntoView({ block: 'nearest' });
+        }
+    }, [isFocused]);
+
     return (
         <SidebarListItem className="navigation__link--groupHeader">
             <div className="flex flex-nowrap">
@@ -45,6 +63,7 @@ const SimpleSidebarListItemHeader = ({ toggle, onToggle, hasCaret = true, right,
                     onClick={() => onToggle(!toggle)}
                     title={title}
                     aria-expanded={toggle}
+                    onFocus={onFocus}
                 >
                     <span className="mr0-5 small">{text}</span>
                     {hasCaret && (
