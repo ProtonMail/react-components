@@ -4,7 +4,7 @@ import { c } from 'ttag';
 import { generateProtonWebUID } from 'proton-shared/lib/helpers/uid';
 
 import { useModals } from '../../hooks';
-import { PrimaryButton, Alert } from '../../components';
+import { PrimaryButton, Alert, Icon } from '../../components';
 
 import { OAUTH_PROVIDER } from './interfaces';
 import { GOOGLE_OAUTH_CLIENT_ID, GOOGLE_OAUTH_REDIRECT_URL, GOOGLE_OAUTH_SCOPE } from './constants';
@@ -104,10 +104,18 @@ const StartImportSection = () => {
             </Alert>
 
             <div className="flex flex-align-items">
-                <PrimaryButton className="mt0-5 mr1" onClick={() => handleOauthClick(OAUTH_PROVIDER.GMAIL)}>
+                <PrimaryButton
+                    className="inline-flex flex-items-center flex-justify-center mt0-5 mr1"
+                    onClick={() => handleOauthClick(OAUTH_PROVIDER.GMAIL)}
+                >
+                    <Icon name="gmail" className="mr0-5" />
                     {c('Action').t`Continue with Google`}
                 </PrimaryButton>
-                <PrimaryButton className="mt0-5" onClick={handleClick}>
+                <PrimaryButton
+                    className="inline-flex flex-items-center flex-justify-center mt0-5"
+                    onClick={handleClick}
+                >
+                    <Icon name="imap-smtp" className="mr0-5" />
                     {c('Action').t`Continue with IMAP`}
                 </PrimaryButton>
             </div>
