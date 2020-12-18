@@ -38,8 +38,8 @@ const StartImportSection = () => {
         const authWindow = window.open(
             `${getAuthorizationUrl()}&state=${uid}`,
             'googleAuth',
-            `height=${WINDOW_HEIGHT},width=${WINDOW_WIDTH},top=${screen.height / 2 - WINDOW_HEIGHT / 2},left=${
-                screen.width / 2 - WINDOW_WIDTH / 2
+            `height=${WINDOW_HEIGHT},width=${WINDOW_WIDTH},top=${window.screen.height / 2 - WINDOW_HEIGHT / 2},left=${
+                window.screen.width / 2 - WINDOW_WIDTH / 2
             }`
         );
 
@@ -103,10 +103,10 @@ const StartImportSection = () => {
 
             <div className="flex flex-align-items">
                 <PrimaryButton className="mt0-5 mr1" onClick={() => handleOauthClick(OAUTH_PROVIDER.GMAIL)}>
-                    {c('Action').t`Import your gmail inbox`}
+                    {c('Action').t`Continue with Google`}
                 </PrimaryButton>
                 <PrimaryButton className="mt0-5" onClick={handleClick}>
-                    {c('Action').t`Start IMAP import`}
+                    {c('Action').t`Continue with IMAP`}
                 </PrimaryButton>
             </div>
         </>
