@@ -11,13 +11,15 @@ import { GOOGLE_OAUTH_CLIENT_ID, GOOGLE_OAUTH_REDIRECT_URL, GOOGLE_OAUTH_SCOPE }
 import ImportMailModal from './modals/ImportMailModal';
 
 const getAuthorizationUrl = () => {
-    return `https://accounts.google.com/o/oauth2/v2/auth?
-            redirect_uri=${GOOGLE_OAUTH_REDIRECT_URL}&
-            response_type=code&
-            access_type=offline&
-            client_id=${GOOGLE_OAUTH_CLIENT_ID}&
-            scope=${GOOGLE_OAUTH_SCOPE}&
-            prompt=consent`.replace(/\s/g, '');
+    const params = new URLSearchParams();
+    params.append('redirect_uri', GOOGLE_OAUTH_REDIRECT_URL);
+    params.append('response_type', 'code');
+    params.append('access_type', 'offline');
+    params.append('client_id', GOOGLE_OAUTH_CLIENT_ID);
+    params.append('scope', GOOGLE_OAUTH_SCOPE);
+    params.append('prompt', 'consent');
+
+    return `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
 };
 
 const WINDOW_WIDTH = 500;
