@@ -95,7 +95,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps, ...rest }:
     const [showPassword, setShowPassword] = useState(false);
 
     const [modalModel, setModalModel] = useState<ImportModalModel>({
-        step: isReconnectMode ? Step.START : Step.INSTRUCTIONS,
+        step: isReconnectMode || oauthProps ? Step.START : Step.INSTRUCTIONS,
         importID: currentImport?.ID || '',
         email: currentImport?.Email || '',
         password: '',
@@ -437,7 +437,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps, ...rest }:
         if (oauthProps) {
             submitOAuth();
         }
-    }, []);
+    }, [oauthProps]);
 
     useEffect(() => {
         if (debouncedEmail && validateEmailAddress(debouncedEmail)) {
