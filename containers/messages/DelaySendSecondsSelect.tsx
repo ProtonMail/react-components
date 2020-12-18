@@ -17,7 +17,7 @@ const DelaySendSecondsSelect = ({ id, delaySendSeconds }: Props) => {
     const api = useApi();
     const [delay, setDelay] = useState(delaySendSeconds);
     const options = [
-        { text: c('Option delay send seconds').t`0 seconds`, value: 0 },
+        { text: c('Option delay send seconds').t`0 second`, value: 0 },
         { text: c('Option delay send seconds').t`5 seconds`, value: 5 },
         { text: c('Option delay send seconds').t`10 seconds`, value: 10 },
         { text: c('Option delay send seconds').t`20 seconds`, value: 20 },
