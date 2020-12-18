@@ -71,6 +71,17 @@ const destinationFoldersFirst = (a: MailImportFolder, b: MailImportFolder) => {
     return 0;
 };
 
+interface ImporterFromServer {
+    Email: string;
+    ID: string;
+    ImapHost: string;
+    ImapPort: number;
+    MailboxSize: {
+        [key: string]: number;
+    };
+    Sasl: 'PLAIN' | 'XOAUTH2';
+}
+
 interface Props {
     currentImport?: Importer;
     onClose?: () => void;
@@ -161,11 +172,14 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps, ...rest }:
         setShowPassword(true);
     };
 
-    const moveToPrepareStep = (importID: string, providerFolders: MailImportFolder[]) => {
+    const moveToPrepareStep = (Importer: ImporterFromServer, providerFolders: MailImportFolder[]) => {
         setModalModel({
             ...modalModel,
             providerFolders: providerFolders.sort(destinationFoldersFirst),
-            importID,
+            importID: Importer.ID,
+            email: Importer.Email,
+            imap: Importer.ImapHost,
+            port: `${Importer.ImapPort}`,
             step: Step.PREPARE,
         });
     };
@@ -197,7 +211,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps, ...rest }:
                     */
                     silence: true,
                 });
-                moveToPrepareStep(Importer.ID, Folders);
+                moveToPrepareStep(Importer, Folders);
             } catch (error) {
                 handleSubmitStartError(error);
             }
@@ -224,7 +238,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps, ...rest }:
                 await call();
 
                 const { Folders = [] } = await api(getMailImportFolders(Importer.ID, { Code: modalModel.password }));
-                moveToPrepareStep(Importer.ID, Folders);
+                moveToPrepareStep(Importer, Folders);
             } catch (error) {
                 handleSubmitStartError(error);
             }
@@ -252,7 +266,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps, ...rest }:
             await call();
 
             const { Folders = [] } = await api(getMailImportFolders(Importer.ID));
-            moveToPrepareStep(Importer.ID, Folders);
+            moveToPrepareStep(Importer, Folders);
         } catch (error) {
             // @todo
             onClose();
@@ -437,7 +451,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps, ...rest }:
         if (oauthProps) {
             submitOAuth();
         }
-    }, [oauthProps]);
+    }, []);
 
     useEffect(() => {
         if (debouncedEmail && validateEmailAddress(debouncedEmail)) {
@@ -465,21 +479,21 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps, ...rest }:
             className={classnames([modalModel.step === Step.INSTRUCTIONS && providerInstructions && 'import-modal'])}
             {...rest}
         >
-            {oauthProps ? (
-                <Loader />
-            ) : (
+            {!isReconnectMode && modalModel.step !== Step.INSTRUCTIONS && (
+                <ImportMailWizard step={modalModel.step} steps={wizardSteps} />
+            )}
+            {modalModel.step === Step.INSTRUCTIONS && (
+                <ImportInstructionsStep
+                    provider={providerInstructions}
+                    changeProvider={changeProvider}
+                    gmailInstructionsStep={gmailInstructionsStep}
+                />
+            )}
+            {modalModel.step === Step.START && (
                 <>
-                    {!isReconnectMode && modalModel.step !== Step.INSTRUCTIONS && (
-                        <ImportMailWizard step={modalModel.step} steps={wizardSteps} />
-                    )}
-                    {modalModel.step === Step.INSTRUCTIONS && (
-                        <ImportInstructionsStep
-                            provider={providerInstructions}
-                            changeProvider={changeProvider}
-                            gmailInstructionsStep={gmailInstructionsStep}
-                        />
-                    )}
-                    {modalModel.step === Step.START && (
+                    {oauthProps ? (
+                        <Loader />
+                    ) : (
                         <ImportStartStep
                             modalModel={modalModel}
                             updateModalModel={(newModel: ImportModalModel) => setModalModel(newModel)}
@@ -489,17 +503,17 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps, ...rest }:
                             invalidPortError={invalidPortError}
                         />
                     )}
-                    {modalModel.step === Step.PREPARE && (
-                        <ImportPrepareStep
-                            address={address}
-                            modalModel={modalModel}
-                            updateModalModel={(newModel: ImportModalModel) => setModalModel(newModel)}
-                        />
-                    )}
-                    {modalModel.step === Step.STARTED && !loadingAddresses && address && (
-                        <ImportStartedStep address={address} modalModel={modalModel} />
-                    )}
                 </>
+            )}
+            {modalModel.step === Step.PREPARE && (
+                <ImportPrepareStep
+                    address={address}
+                    modalModel={modalModel}
+                    updateModalModel={(newModel: ImportModalModel) => setModalModel(newModel)}
+                />
+            )}
+            {modalModel.step === Step.STARTED && !loadingAddresses && address && (
+                <ImportStartedStep address={address} modalModel={modalModel} />
             )}
         </FormModal>
     );
