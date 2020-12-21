@@ -73,6 +73,7 @@ interface Props {
     editModeMap: EditModeMap;
     updateEditModeMapping: (key: string, editMode: boolean) => void;
     getParent: (folderName: string) => string | undefined;
+    isSystemSubfolder?: boolean;
 }
 
 const ImportManageFoldersRow = ({
@@ -89,6 +90,7 @@ const ImportManageFoldersRow = ({
     updateEditModeMapping,
     getParent,
     editModeMap,
+    isSystemSubfolder = false,
 }: Props) => {
     const { Source, Separator, DestinationFolder } = folder;
 
@@ -340,6 +342,19 @@ const ImportManageFoldersRow = ({
                                                 />
                                             </Tooltip>
                                         )}
+                                        {isSystemSubfolder && (
+                                            <Tooltip
+                                                title={c('Tooltip')
+                                                    .t`System subfolders will show up as separate folders in ProtonMail`}
+                                                className="flex-item-noshrink"
+                                            >
+                                                <Icon
+                                                    tabIndex={-1}
+                                                    name="info"
+                                                    className="inline-flex flex-self-vcenter flex-item-noshrink"
+                                                />
+                                            </Tooltip>
+                                        )}
                                     </>
                                 )}
                             </div>
@@ -401,6 +416,7 @@ const ImportManageFoldersRow = ({
                             updateEditModeMapping={updateEditModeMapping}
                             getParent={getParent}
                             editModeMap={editModeMap}
+                            isSystemSubfolder={!!DestinationFolder || isSystemSubfolder}
                         />
                     ))}
                 </ul>
