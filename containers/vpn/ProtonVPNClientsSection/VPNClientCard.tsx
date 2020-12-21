@@ -1,6 +1,6 @@
 import React from 'react';
 import { c } from 'ttag';
-import { Bordered, Icon, Block, Href, Tooltip } from '../../../components';
+import { Bordered, Icon, Block, Href, Info } from '../../../components';
 
 interface Props {
     title: string;
@@ -18,9 +18,9 @@ const VPNClientCard = ({ title, link, icon, tooltip }: Props) => {
             <div className="flex flex-justify-center">
                 <Block>{title}</Block>
                 {tooltip ? (
-                    <Tooltip className="relative z667" title={tooltip}>
-                        <Icon name="info" alt={tooltip} size={12} className="ml0-25" />
-                    </Tooltip>
+                    <span className="ml0-25">
+                        <Info className="relative z667" title={tooltip} />
+                    </span>
                 ) : null}
             </div>
             <Href url={link} className="pm-button increase-surface-click">
