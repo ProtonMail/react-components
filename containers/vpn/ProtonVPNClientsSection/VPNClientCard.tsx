@@ -17,11 +17,7 @@ const VPNClientCard = ({ title, link, icon, tooltip }: Props) => {
             </div>
             <div className="flex flex-justify-center">
                 <Block>{title}</Block>
-                {tooltip ? (
-                    <span className="ml0-25">
-                        <Info className="relative z667" title={tooltip} />
-                    </span>
-                ) : null}
+                {tooltip ? <Info buttonClass="ml0-25 mb1 relative z667" title={tooltip} /> : null}
             </div>
             <Href url={link} className="pm-button increase-surface-click">
                 {c('Action').t`Download`}
