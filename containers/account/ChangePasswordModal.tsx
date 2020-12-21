@@ -175,7 +175,7 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }: Props) => {
     };
 
     const getModalProperties = (mode: MODES) => {
-        if (mode === MODES.CHANGE_TWO_PASSWORD_LOGIN_MODE) {
+        if (mode === MODES.CHANGE_TWO_PASSWORD_LOGIN_MODE || mode === MODES.CHANGE_ONE_PASSWORD_MODE) {
             if (isSubUser) {
                 return {
                     title: c('Title').t`Change password for ${Name} (${Email})`,
@@ -191,6 +191,17 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }: Props) => {
                     },
                     close: c('Action').t`Cancel`,
                     submit: c('Action').t`Change password`,
+                };
+            }
+
+            if (mode === MODES.CHANGE_ONE_PASSWORD_MODE) {
+                return {
+                    title: c('Title').t`Change password`,
+                    labels: {
+                        oldPassword: c('Label').t`Old password`,
+                        newPassword: c('Label').t`New password`,
+                        confirmPassword: c('Label').t`Confirm password`,
+                    },
                 };
             }
 
@@ -408,12 +419,7 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }: Props) => {
 
         if (mode === MODES.CHANGE_ONE_PASSWORD_MODE) {
             return {
-                title: c('Title').t`Change password`,
-                labels: {
-                    oldPassword: c('Label').t`Old password`,
-                    newPassword: c('Label').t`New password`,
-                    confirmPassword: c('Label').t`Confirm password`,
-                },
+                ...getModalProperties(mode),
                 onSubmit,
             };
         }
