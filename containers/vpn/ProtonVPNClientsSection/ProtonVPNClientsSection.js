@@ -27,6 +27,14 @@ const ProtonVPNClientsSection = () => {
                 icon="chrome"
                 link="https://play.google.com/store/apps/details?id=ch.protonvpn.android&utm_source=protonvpn.com&utm_content=dashboard"
             />
+            <VPNClientCard
+                title={c('VPNClient').t`Android TV`}
+                icon="chrome"
+                link="https://play.google.com/apps/testing/ch.protonvpn.android"
+                tooltip={c('here').t(
+                    'The app is currently available to anyone who wants to beta test ProtonVPN products.'
+                )}
+            />
         </div>
     );
 };
