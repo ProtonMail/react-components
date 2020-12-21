@@ -465,7 +465,7 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }: Props) => {
             {alert}
             {!isSecondPhase && (
                 <Row>
-                    <Label htmlFor="oldPassword">{labels.oldPassword}</Label>
+                    <Label htmlFor="oldPassword">{labels?.oldPassword}</Label>
                     <Field>
                         <PasswordInput
                             id="oldPassword"
@@ -499,11 +499,11 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }: Props) => {
                 </Row>
             )}
             <Row>
-                <Label htmlFor="newPassword">{labels.newPassword}</Label>
+                <Label htmlFor="newPassword">{labels?.newPassword}</Label>
                 <Field>
                     <PasswordInput
                         id="newPassword"
-                        key={`${isSecondPhase}${labels.newPassword}`}
+                        key={`${isSecondPhase}${labels?.newPassword}`}
                         value={inputs.newPassword}
                         onChange={({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
                             setPartialInput({ newPassword: value })
@@ -516,11 +516,11 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }: Props) => {
                 </Field>
             </Row>
             <Row>
-                <Label htmlFor="confirmPassword">{labels.confirmPassword}</Label>
+                <Label htmlFor="confirmPassword">{labels?.confirmPassword}</Label>
                 <Field>
                     <PasswordInput
                         id="confirmPassword"
-                        key={`${isSecondPhase}${labels.confirmPassword}`}
+                        key={`${isSecondPhase}${labels?.confirmPassword}`}
                         value={inputs.confirmPassword}
                         onChange={({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
                             setPartialInput({ confirmPassword: value })
