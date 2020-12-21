@@ -12,8 +12,8 @@ const VPNClientCard = ({ title, link, icon, tooltip }) => {
             <div className="flex flex-justify-center">
                 <Block>{title}</Block>
                 {tooltip ? (
-                    <Tooltip title={tooltip}>
-                        <Icon name="info" size={12} className="ml0-25" />
+                    <Tooltip className="relative z667" title={tooltip}>
+                        <Icon name="info" alt={tooltip} size={12} className="ml0-25" />
                     </Tooltip>
                 ) : null}
             </div>

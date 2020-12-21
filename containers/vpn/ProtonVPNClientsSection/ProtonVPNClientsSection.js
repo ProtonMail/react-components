@@ -31,7 +31,7 @@ const ProtonVPNClientsSection = () => {
                 title={c('VPNClient').t`Android TV`}
                 icon="chrome"
                 link="https://play.google.com/apps/testing/ch.protonvpn.android"
-                tooltip={c('here').t(
+                tooltip={c('Tooltip').t(
                     'The app is currently available to anyone who wants to beta test ProtonVPN products.'
                 )}
             />
