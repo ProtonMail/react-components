@@ -175,7 +175,7 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }: Props) => {
     };
 
     const getModalProperties = (mode: MODES) => {
-        if (mode === MODES.CHANGE_TWO_PASSWORD_LOGIN_MODE || mode === MODES.CHANGE_ONE_PASSWORD_MODE) {
+        if ([MODES.CHANGE_TWO_PASSWORD_LOGIN_MODE, MODES.CHANGE_ONE_PASSWORD_MODE].includes(mode)) {
             if (isSubUser) {
                 return {
                     title: c('Title').t`Change password for ${Name} (${Email})`,
@@ -214,6 +214,8 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }: Props) => {
                 },
             };
         }
+
+        throw new Error('mode not supported');
     };
 
     const { labels, extraAlert, ...modalProps } = (() => {
@@ -250,7 +252,7 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }: Props) => {
                     </Alert>
                 ),
                 labels: {
-                    oldPassword: c('Label').t`Old password`,
+                    oldPassword: isSubUser ? c('Label').t`Your password (admin)` : c('Label').t`Old password`,
                     newPassword: c('Label').t`New login password`,
                     confirmPassword: c('Label').t`Confirm login password`,
                 },
@@ -403,7 +405,7 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }: Props) => {
             return {
                 title: c('Title').t`Switch to one-password mode`,
                 labels: {
-                    oldPassword: c('Label').t`Old login password`,
+                    oldPassword: isSubUser ? c('Label').t`Your password (admin)` : c('Label').t`Old login password`,
                     newPassword: c('Label').t`New password`,
                     confirmPassword: c('Label').t`Confirm password`,
                 },
@@ -428,7 +430,7 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }: Props) => {
             return {
                 title: c('Title').t`Change mailbox password`,
                 labels: {
-                    oldPassword: c('Label').t`Old login password`,
+                    oldPassword: isSubUser ? c('Label').t`Your password (admin)` : c('Label').t`Old login password`,
                     newPassword: c('Label').t`New mailbox password`,
                     confirmPassword: c('Label').t`Confirm mailbox password`,
                 },
@@ -471,7 +473,7 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }: Props) => {
             {alert}
             {!isSecondPhase && (
                 <Row>
-                    <Label htmlFor="oldPassword">{labels?.oldPassword}</Label>
+                    <Label htmlFor="oldPassword">{labels.oldPassword}</Label>
                     <Field>
                         <PasswordInput
                             id="oldPassword"
@@ -505,11 +507,11 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }: Props) => {
                 </Row>
             )}
             <Row>
-                <Label htmlFor="newPassword">{labels?.newPassword}</Label>
+                <Label htmlFor="newPassword">{labels.newPassword}</Label>
                 <Field>
                     <PasswordInput
                         id="newPassword"
-                        key={`${isSecondPhase}${labels?.newPassword}`}
+                        key={`${isSecondPhase}${labels.newPassword}`}
                         value={inputs.newPassword}
                         onChange={({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
                             setPartialInput({ newPassword: value })
@@ -522,11 +524,11 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }: Props) => {
                 </Field>
             </Row>
             <Row>
-                <Label htmlFor="confirmPassword">{labels?.confirmPassword}</Label>
+                <Label htmlFor="confirmPassword">{labels.confirmPassword}</Label>
                 <Field>
                     <PasswordInput
                         id="confirmPassword"
-                        key={`${isSecondPhase}${labels?.confirmPassword}`}
+                        key={`${isSecondPhase}${labels.confirmPassword}`}
                         value={inputs.confirmPassword}
                         onChange={({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
                             setPartialInput({ confirmPassword: value })
