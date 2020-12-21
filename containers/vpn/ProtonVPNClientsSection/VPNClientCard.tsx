@@ -1,9 +1,15 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import { Bordered, Icon, Block, Href, Tooltip } from '../../../components';
 
-const VPNClientCard = ({ title, link, icon, tooltip }) => {
+interface Props {
+    title: string;
+    link: string;
+    icon: string;
+    tooltip?: string;
+}
+
+const VPNClientCard = ({ title, link, icon, tooltip }: Props) => {
     return (
         <Bordered className="mr1 aligncenter relative">
             <div>
@@ -23,13 +29,6 @@ const VPNClientCard = ({ title, link, icon, tooltip }) => {
             </Href>
         </Bordered>
     );
-};
-
-VPNClientCard.propTypes = {
-    title: PropTypes.string.isRequired,
-    link: PropTypes.string.isRequired,
-    icon: PropTypes.string.isRequired,
-    tooltip: PropTypes.string,
 };
 
 export default VPNClientCard;
