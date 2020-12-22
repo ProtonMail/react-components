@@ -155,7 +155,7 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
         const systemFolders = Object.values(DestinationFolder) as string[];
 
         let parentSource = getParentSource(Source, Separator);
-        const pathParts = [systemFolders.includes(parentSource) ? `[${parentSource}]${folderName}` : folderName];
+        let pathParts = [folderName];
 
         while (parentSource) {
             if (!systemFolders.includes(parentSource)) {
