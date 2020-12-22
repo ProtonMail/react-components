@@ -163,9 +163,6 @@ const SquireIframe = (
             // Listening to all keyups as inputs is aggressive but we tested some deletion actions that trigger no other events
             // Also it's keyup and not keydown, keydown is too early and don't contains changes
             squire.addEventListener('keyup', handleInput);
-            if (keydownHandler) {
-                squire.addEventListener('keydown', keydownHandler);
-            }
             squire.addEventListener('keydown', (e: KeyboardEvent) => handleKeyDown(e, squire));
             return () => {
                 squire.removeEventListener('focus', handleFocus);
@@ -175,9 +172,6 @@ const SquireIframe = (
                 squire.removeEventListener('dragleave', handlePassDragEvents);
                 squire.removeEventListener('cursor', handleCursor);
                 squire.removeEventListener('keyup', handleInput);
-                if (keydownHandler) {
-                    squire.removeEventListener('keydown', keydownHandler);
-                }
                 squire.removeEventListener('keydown', (e: KeyboardEvent) => handleKeyDown(e, squire));
             };
         }
