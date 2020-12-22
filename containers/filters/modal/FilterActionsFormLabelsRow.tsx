@@ -118,7 +118,6 @@ const FilterActionsFormLabelsRow = ({ actions, isNarrow, handleUpdateActions, la
                                         >
                                             <span className="inline-flex alignmiddle">
                                                 <LabelStack
-                                                    className="label-stack--noMargin"
                                                     labels={[
                                                         {
                                                             name: label.Name,
