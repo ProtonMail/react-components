@@ -158,11 +158,11 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
         const pathParts = [systemFolders.includes(parentSource) ? `[${parentSource}]${folderName}` : folderName];
 
         while (parentSource) {
-            pathParts.unshift(
-                systemFolders.includes(parentSource)
-                    ? `[${parentSource}]${getFolderName(parentSource, Separator)}`
-                    : getFolderName(parentSource, Separator)
-            );
+            if (!systemFolders.includes(parentSource)) {
+                pathParts = [getFolderName(parentSource, Separator), ...pathParts];
+            } else {
+                pathParts[0] = `[${parentSource}]${pathParts[0]}`;
+            }
 
             parentSource = getParentSource(parentSource, Separator);
         }
