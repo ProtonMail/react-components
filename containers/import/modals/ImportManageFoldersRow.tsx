@@ -17,6 +17,8 @@ import {
 
 import { escapeSlashes, unescapeSlashes, splitEscaped } from '../helpers';
 
+const SYSTEM_FOLDERS = Object.values(DestinationFolder) as string[];
+
 const FOLDER_ICONS = {
     [DestinationFolder.INBOX]: 'inbox',
     [DestinationFolder.ALL_DRAFTS]: 'drafts',
@@ -249,6 +251,12 @@ const ImportManageFoldersRow = ({
         updateEditModeMapping(Source, editMode);
     }, [editMode]);
 
+    const preventLevelIncrease = useMemo(() => {
+        const split = splitEscaped(Source, Separator);
+        console.log(split);
+        return split.length === 1 && SYSTEM_FOLDERS.includes(split[0]);
+    }, [Source, Separator]);
+
     return (
         <li>
             <div className="border-bottom">
@@ -342,7 +350,7 @@ const ImportManageFoldersRow = ({
                                                 />
                                             </Tooltip>
                                         )}
-                                        {isSystemSubfolder && (
+                                        {isSystemSubfolder && !mergeWarning && (
                                             <Tooltip
                                                 title={c('Tooltip')
                                                     .t`System subfolders will show up as separate folders in ProtonMail`}
@@ -405,7 +413,7 @@ const ImportManageFoldersRow = ({
                             onToggleCheck={onToggleCheck}
                             key={f.Source}
                             folder={f}
-                            level={level + 1}
+                            level={preventLevelIncrease ? level : level + 1}
                             checkedFoldersMap={checkedFoldersMap}
                             disabledFoldersMap={disabledFoldersMap}
                             folderRelationshipsMap={folderRelationshipsMap}
