@@ -59,55 +59,21 @@ const update = (cache, key, promise) => {
     return record;
 };
 
-const updateArray = (cache, keys, promise) => {
-    const record = getRecordPending(promise);
-    keys.forEach((key) => {
-        cache.set(key, record);
-    });
-    getRecordThen(promise).then((newRecord) => {
-        keys.forEach((key) => {
-            if (cache.get(key) === record) {
-                cache.set(key, newRecord[key]);
-            }
-        });
-    });
-    return record;
+export const getIsRecordInvalid = (record, lifetime = Number.MAX_SAFE_INTEGER) => {
+    return (
+        !record ||
+        record.status === STATUS.REJECTED ||
+        (record.status === STATUS.RESOLVED && Date.now() - record.timestamp > lifetime)
+    );
 };
 
-export const getPromiseValue = (cache, key, miss, lifetime = Number.MAX_SAFE_INTEGER) => {
+export const getPromiseValue = (cache, key, miss, lifetime) => {
     const oldRecord = cache.get(key);
-    if (
-        !oldRecord ||
-        oldRecord.status === STATUS.REJECTED ||
-        (oldRecord.status === STATUS.RESOLVED && Date.now() - oldRecord.timestamp > lifetime)
-    ) {
+    if (getIsRecordInvalid(oldRecord, lifetime)) {
         const record = update(cache, key, miss(key));
         return record.promise;
     }
     return oldRecord.promise || Promise.resolve(oldRecord.value);
-};
-
-export const getPromiseObjectValue = (cache, keys, miss, lifetime = Number.MAX_SAFE_INTEGER) => {
-    const { keysToUpdate, promisesToKeep } = keys.reduce(
-        (acc, key) => {
-            const oldRecord = cache.get(key);
-            if (
-                !oldRecord ||
-                oldRecord.status === STATUS.REJECTED ||
-                (oldRecord.status === STATUS.RESOLVED && Date.now() - oldRecord.timestamp > lifetime)
-            ) {
-                acc.keysToUpdate.push(key);
-            } else {
-                const promise = oldRecord.promise || Promise.resolve(oldRecord.value);
-                acc.promisesToKeep.push(promise);
-            }
-            return acc;
-        },
-        { keysToUpdate: [], promisesToKeep: [] }
-    );
-    const promiseUpdate = updateArray(cache, keysToUpdate, miss(keysToUpdate));
-
-    return Promise.all([promiseUpdate, ...promisesToKeep]);
 };
 
 /**

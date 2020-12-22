@@ -6,7 +6,7 @@ import { SimpleMap } from 'proton-shared/lib/interfaces/utils';
 import { useCallback } from 'react';
 import useApi from './useApi';
 import useCache from './useCache';
-import { getPromiseObjectValue } from './useCachedModelResult';
+import { getIsRecordInvalid, getPromiseValue } from './useCachedModelResult';
 
 const CACHE_KEY = 'VTIMEZONES';
 
@@ -49,8 +49,28 @@ export const useGetVTimezones = () => {
                 cache.set(CACHE_KEY, new Map());
             }
             const subCache = cache.get(CACHE_KEY);
-            const miss = () => getVTimezones(tzids);
-            return getPromiseObjectValue(subCache, tzids, miss);
+            const missing = tzids.filter((tzid) => {
+                return getIsRecordInvalid(subCache.get(tzid));
+            });
+            const promise = getVTimezones(missing);
+            const miss = async (tzid: string) => {
+                const map = await promise;
+                return map[tzid];
+            };
+            return Promise.all(
+                tzids.map(async (tzid) => {
+                    const result = await getPromiseValue(subCache, tzid, miss);
+                    return {
+                        tzid,
+                        result: result as VTimezoneObject,
+                    };
+                })
+            ).then((result) => {
+                return result.reduce<SimpleMap<VTimezoneObject>>((acc, { tzid, result }) => {
+                    acc[tzid] = result;
+                    return acc;
+                }, {});
+            });
         },
         [cache, getVTimezones]
     );
