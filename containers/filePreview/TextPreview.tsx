@@ -2,11 +2,11 @@ import React from 'react';
 import { mergeUint8Arrays } from 'proton-shared/lib/helpers/array';
 
 interface Props {
-    contents?: Uint8Array[];
+    contents?: Uint8Array | Uint8Array[];
 }
 
 const TextPreview = ({ contents = [] }: Props) => {
-    const string = new TextDecoder().decode(mergeUint8Arrays(contents));
+    const string = new TextDecoder().decode(Array.isArray(contents) ? mergeUint8Arrays(contents) : contents);
 
     return (
         <div className="pd-file-preview-container">

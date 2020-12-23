@@ -7,7 +7,7 @@ import UnsupportedPreview from './UnsupportedPreview';
 interface Props {
     mimeType: string;
     onSave?: () => void;
-    contents?: Uint8Array[];
+    contents?: Uint8Array | Uint8Array[];
 }
 
 const ImagePreview = ({ mimeType, contents, onSave }: Props) => {
@@ -27,7 +27,11 @@ const ImagePreview = ({ mimeType, contents, onSave }: Props) => {
             setError(false);
         }
 
-        const blob = new Blob(contents, { type: mimeType });
+        if (!contents) {
+            return;
+        }
+
+        const blob = new Blob(Array.isArray(contents) ? contents : [contents], { type: mimeType });
         setImageData({
             src: URL.createObjectURL(blob),
         });

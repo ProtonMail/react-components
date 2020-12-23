@@ -2,13 +2,20 @@ import React, { useState, useEffect } from 'react';
 
 interface Props {
     filename?: string;
-    contents?: Uint8Array[];
+    contents?: Uint8Array | Uint8Array[];
 }
 const PDFPreview = ({ filename = 'preview.pdf', contents }: Props) => {
     const [url, setUrl] = useState<string>();
 
     useEffect(() => {
-        const newUrl = URL.createObjectURL(new Blob(contents, { type: 'application/pdf' }));
+        if (!contents) {
+            return;
+        }
+
+        const blob = new Blob(Array.isArray(contents) ? contents : [contents], {
+            type: 'application/pdf',
+        });
+        const newUrl = URL.createObjectURL(blob);
         setUrl(newUrl);
         return () => {
             if (newUrl) {
