@@ -6,7 +6,6 @@ import { useModals, useMailSettings, useLoading, useApi, useEventManager } from 
 import { Toggle, Button, Field, Label, Alert, EditableSection } from '../../components';
 import AutoReplyModal from './AutoReplyModal';
 import AutoReplyTemplate from './AutoReplyTemplate';
-import { classnames } from '../../helpers';
 
 const AutoReplySection = () => {
     const { createModal } = useModals();
@@ -46,15 +45,12 @@ const AutoReplySection = () => {
                             onChange={({ target: { checked } }) => withLoading(handleToggle(checked))}
                         />
                     </span>
-                    <span
-                        className={classnames([
-                            'onmobile-pb0 onmobile-no-border',
-                            AutoResponder.IsEnabled ? 'mlauto' : 'ml2',
-                        ])}
-                    >
-                        <Button className="pm-button--primary mt0-25" onClick={handleOpenModal}>{c('Action')
-                            .t`Edit`}</Button>
-                    </span>
+                    {AutoResponder.IsEnabled && (
+                        <span className="onmobile-pb0 onmobile-no-border mlauto pl2">
+                            <Button className="pm-button--primary mt0-25" onClick={handleOpenModal}>{c('Action')
+                                .t`Edit`}</Button>
+                        </span>
+                    )}
                 </Field>
                 {AutoResponder.IsEnabled && (
                     <AutoReplyTemplate autoresponder={AutoResponder} onEdit={handleOpenModal} />
