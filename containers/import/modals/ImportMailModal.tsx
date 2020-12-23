@@ -100,6 +100,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
         selectedPeriod: TIME_UNIT.BIG_BANG,
         payload: {
             Mapping: [],
+            CustomFields: 0,
         },
         isPayloadValid: false,
     });
@@ -302,16 +303,16 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
         );
     };
 
-    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         switch (modalModel.step) {
             case Step.START:
                 if (isReconnectMode) {
-                    withLoading(resumeImport());
+                    await withLoading(resumeImport());
                     return;
                 }
-                withLoading(submitAuthentication(modalModel.needIMAPDetails));
+                await withLoading(submitAuthentication(modalModel.needIMAPDetails));
                 break;
             case Step.INSTRUCTIONS:
                 if (providerInstructions === PROVIDER_INSTRUCTIONS.GMAIL) {
@@ -331,7 +332,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
                 });
                 break;
             case Step.PREPARE:
-                withLoading(launchImport());
+                await withLoading(launchImport());
                 break;
             case Step.STARTED:
                 onClose();

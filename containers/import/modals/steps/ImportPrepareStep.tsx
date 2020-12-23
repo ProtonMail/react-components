@@ -84,16 +84,44 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
         updateModalModel(initialModel.current);
     };
 
-    const isCustom = useMemo(() => {
-        const { ImportLabel, StartTime, EndTime, Mapping } = initialModel.current.payload;
-
-        return (
-            StartTime !== payload.StartTime ||
-            EndTime !== payload.EndTime ||
-            !isDeepEqual(ImportLabel, payload.ImportLabel) ||
-            !isDeepEqual(Mapping, payload.Mapping)
-        );
+    const isCustomPeriod = useMemo(() => {
+        const { StartTime, EndTime } = initialModel.current.payload;
+        return StartTime !== payload.StartTime || EndTime !== payload.EndTime;
     }, [initialModel.current.payload, payload]);
+
+    const isCustomLabel = useMemo(() => {
+        const { ImportLabel } = initialModel.current.payload;
+        return !isDeepEqual(ImportLabel, payload.ImportLabel);
+    }, [initialModel.current.payload, payload]);
+
+    const isCustomMapping = useMemo(() => {
+        const { Mapping } = initialModel.current.payload;
+        return !isDeepEqual(Mapping, payload.Mapping);
+    }, [initialModel.current.payload, payload]);
+
+    const isCustom = isCustomPeriod || isCustomLabel || isCustomMapping;
+
+    useEffect(() => {
+        let CustomFields = 0;
+
+        if (isCustomMapping) {
+            CustomFields += 1;
+        }
+        if (isCustomLabel) {
+            CustomFields += 2;
+        }
+        if (isCustomPeriod) {
+            CustomFields += 4;
+        }
+
+        updateModalModel({
+            ...modalModel,
+            payload: {
+                ...modalModel.payload,
+                CustomFields,
+            },
+        });
+    }, [isCustomPeriod, isCustomLabel, isCustomMapping]);
 
     useEffect(() => {
         updateModalModel({ ...modalModel, isPayloadValid: showFoldersNumError || showFoldersNameError });

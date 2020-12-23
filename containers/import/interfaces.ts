@@ -78,6 +78,7 @@ export interface ImportPayloadModel {
     StartTime?: Date;
     EndTime?: Date;
     Mapping: FolderMapping[];
+    CustomFields?: number;
 }
 
 export enum ImportMailStatus {
