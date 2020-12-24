@@ -1,8 +1,6 @@
 import { FocusableElement, isFocusable, tabbable } from 'tabbable';
 import { MutableRefObject, useEffect, useRef, useState } from 'react';
 
-const CLICK_GRACE_TIME_MS = 150;
-
 const findParentElement = (el: Element | null | undefined, cb: (el: Element) => boolean) => {
     let nextEl = el;
     while (nextEl) {
@@ -47,7 +45,7 @@ interface Props {
     active?: boolean;
     restoreFocus?: boolean;
     preventScroll?: boolean;
-    disableRestoreByClick?: boolean;
+    disableRestoreByPointer?: boolean;
     enableInitialFocus?: boolean;
 }
 
@@ -56,7 +54,7 @@ const useFocusTrap = ({
     enableInitialFocus = true,
     restoreFocus = true,
     preventScroll = true,
-    disableRestoreByClick = true,
+    disableRestoreByPointer = true,
     rootRef,
 }: Props) => {
     const [id] = useState({});
@@ -88,6 +86,8 @@ const useFocusTrap = ({
         rootRef.current.removeAttribute('data-focus-pending');
         pendingRef.current = '';
         let isMouseDownFocusIn = false;
+        let mouseUpTime: number | undefined;
+        let keyDownTime: number | undefined;
 
         const focusElement = (node?: FocusableElement | HTMLElement | null, fallback?: HTMLElement) => {
             if (node === document.activeElement) {
@@ -136,6 +136,7 @@ const useFocusTrap = ({
         };
 
         const handleKeyDown = (event: KeyboardEvent) => {
+            keyDownTime = Date.now();
             if (!isLastFocusTrap() || event.key !== 'Tab' || !rootRef.current) {
                 return;
             }
@@ -171,7 +172,6 @@ const useFocusTrap = ({
             isMouseDownFocusIn = true;
         };
 
-        let mouseUpTime: number | undefined;
         const handleMouseUp = () => {
             isMouseDownFocusIn = false;
             mouseUpTime = Date.now();
@@ -197,14 +197,14 @@ const useFocusTrap = ({
             const isFocusInThisRoot = targetRootElement && targetRootElement === rootRef.current;
             const isCurrentActiveElementFocusable = currentActiveElement && isFocusable(currentActiveElement);
 
-            const isClosedByClick =
-                disableRestoreByClick && mouseUpTime !== undefined && Date.now() - mouseUpTime < CLICK_GRACE_TIME_MS;
+            // Determine if this focus trap became inactive because of a pointer action, or if it was closed by 'esc'
+            const isClosedByPointer = (mouseUpTime || 0) > (keyDownTime || 0);
 
             const nodeToRestore = nodeToRestoreRef.current as HTMLElement | undefined;
             nodeToRestoreRef.current = null;
             if (
                 !restoreFocus ||
-                isClosedByClick ||
+                (disableRestoreByPointer && isClosedByPointer) ||
                 !nodeToRestore ||
                 isFocusInAnotherRoot ||
                 (!isFocusInThisRoot && isCurrentActiveElementFocusable)
