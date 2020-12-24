@@ -1,6 +1,8 @@
 import { FocusableElement, isFocusable, tabbable } from 'tabbable';
 import { MutableRefObject, useEffect, useRef, useState } from 'react';
 
+const CLICK_GRACE_TIME_MS = 150;
+
 const findParentElement = (el: Element | null | undefined, cb: (el: Element) => boolean) => {
     let nextEl = el;
     while (nextEl) {
@@ -45,6 +47,7 @@ interface Props {
     active?: boolean;
     restoreFocus?: boolean;
     preventScroll?: boolean;
+    disableRestoreByClick?: boolean;
     enableInitialFocus?: boolean;
 }
 
@@ -53,6 +56,7 @@ const useFocusTrap = ({
     enableInitialFocus = true,
     restoreFocus = true,
     preventScroll = true,
+    disableRestoreByClick = true,
     rootRef,
 }: Props) => {
     const [id] = useState({});
@@ -60,7 +64,6 @@ const useFocusTrap = ({
     const nodeToRestoreRef = useRef<Element | null>(null);
     const prevOpenRef = useRef(false);
     const pendingRef = useRef('');
-    const mouseDownRef = useRef(false);
 
     useEffect(() => {
         prevOpenRef.current = active;
@@ -84,6 +87,7 @@ const useFocusTrap = ({
 
         rootRef.current.removeAttribute('data-focus-pending');
         pendingRef.current = '';
+        let isMouseDownFocusIn = false;
 
         const focusElement = (node?: FocusableElement | HTMLElement | null, fallback?: HTMLElement) => {
             if (node === document.activeElement) {
@@ -123,8 +127,8 @@ const useFocusTrap = ({
             if (targetRootElement === rootElement) {
                 return;
             }
-            if (mouseDownRef.current) {
-                mouseDownRef.current = false;
+            if (isMouseDownFocusIn) {
+                isMouseDownFocusIn = false;
                 return;
             }
             event.stopImmediatePropagation();
@@ -164,10 +168,13 @@ const useFocusTrap = ({
         }
 
         const handleMouseDown = () => {
-            mouseDownRef.current = true;
+            isMouseDownFocusIn = true;
         };
+
+        let mouseUpTime: number | undefined;
         const handleMouseUp = () => {
-            mouseDownRef.current = false;
+            isMouseDownFocusIn = false;
+            mouseUpTime = Date.now();
         };
 
         document.addEventListener('mousedown', handleMouseDown, true);
@@ -190,10 +197,14 @@ const useFocusTrap = ({
             const isFocusInThisRoot = targetRootElement && targetRootElement === rootRef.current;
             const isCurrentActiveElementFocusable = currentActiveElement && isFocusable(currentActiveElement);
 
+            const isClosedByClick =
+                disableRestoreByClick && mouseUpTime !== undefined && Date.now() - mouseUpTime < CLICK_GRACE_TIME_MS;
+
             const nodeToRestore = nodeToRestoreRef.current as HTMLElement | undefined;
             nodeToRestoreRef.current = null;
             if (
                 !restoreFocus ||
+                isClosedByClick ||
                 !nodeToRestore ||
                 isFocusInAnotherRoot ||
                 (!isFocusInThisRoot && isCurrentActiveElementFocusable)
