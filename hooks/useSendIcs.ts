@@ -44,6 +44,9 @@ const useSendIcs = () => {
             plainTextBody = '',
             sendPreferencesMap = {},
         }: SendIcsParams) => {
+            if (!to.length) {
+                return;
+            }
             if (!addressID) {
                 throw new Error('Missing addressID');
             }
