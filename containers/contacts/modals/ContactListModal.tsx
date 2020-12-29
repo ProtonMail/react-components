@@ -7,7 +7,7 @@ import { toMap } from 'proton-shared/lib/helpers/object';
 import { Recipient } from 'proton-shared/lib/interfaces/Address';
 
 import { Checkbox, SearchInput, PrimaryButton, FormModal } from '../../../components';
-import { useActiveBreakpoint, useContactEmails, useUserSettings } from '../../../hooks';
+import { useActiveBreakpoint, useUserSettings, useContactEmailsSortedByName } from '../../../hooks';
 import ContactList from '../ContactList';
 import ContactListModalRow from '../../../components/contacts/ContactListModalRow';
 import EmptyContacts from '../../../components/contacts/EmptyContacts';
@@ -30,31 +30,18 @@ interface Props {
     onClose?: () => void;
 }
 
-const compareContactEmailByName = (a: ContactEmail, b: ContactEmail) => {
-    if (a.Name > b.Name) {
-        return 1;
-    }
-
-    if (a.Name < b.Name) {
-        return -1;
-    }
-
-    return 0;
-};
-
 const ContactListModal = ({ onSubmit, onClose, inputValue, ...rest }: Props) => {
     const { isNarrow } = useActiveBreakpoint();
 
     const searchInputRef: RefObject<HTMLInputElement> = createRef();
-    const [contactEmails, loadingContactEmails] = useContactEmails();
-    const contactEmailsSortedByName = [...contactEmails].sort(compareContactEmailByName);
+    const [contactEmails, loadingContactEmails] = useContactEmailsSortedByName();
     const [userSettings, loadingUserSettings] = useUserSettings();
     const [contactGroups = [], loadingContactGroups] = useContactGroups();
 
     const emailsFromInput = inputValue.map((e: any) => e.Address);
     const contactGroupsMap = toMap(contactGroups);
 
-    const initialCheckedContactEmailsMap = contactEmailsSortedByName.reduce(
+    const initialCheckedContactEmailsMap = contactEmails.reduce(
         (acc: { [key: string]: boolean }, contactEmail: ContactEmail) => {
             acc[contactEmail.ID] = emailsFromInput.includes(contactEmail.Email);
             return acc;
@@ -66,7 +53,7 @@ const ContactListModal = ({ onSubmit, onClose, inputValue, ...rest }: Props) => 
     const [lastCheckedID, setLastCheckedID] = useState('');
     const [isAllChecked, setIsAllChecked] = useState(false);
 
-    const [filteredContactEmails, setFilteredContactEmails] = useState(contactEmailsSortedByName);
+    const [filteredContactEmails, setFilteredContactEmails] = useState(contactEmails);
     const [checkedContactEmailMap, setCheckedContactEmailMap] = useState<{ [key: string]: boolean }>(
         initialCheckedContactEmailsMap
     );
@@ -143,11 +130,11 @@ const ContactListModal = ({ onSubmit, onClose, inputValue, ...rest }: Props) => 
 
     useEffect(() => {
         setLastCheckedID('');
-        setFilteredContactEmails(contactEmailsSortedByName.filter(searchFilter));
+        setFilteredContactEmails(contactEmails.filter(searchFilter));
     }, [searchValue]);
 
     useEffect(() => {
-        setCheckedContactEmails(contactEmailsSortedByName.filter((c: ContactEmail) => !!checkedContactEmailMap[c.ID]));
+        setCheckedContactEmails(contactEmails.filter((c: ContactEmail) => !!checkedContactEmailMap[c.ID]));
     }, [checkedContactEmailMap]);
 
     useEffect(() => {
@@ -179,7 +166,7 @@ const ContactListModal = ({ onSubmit, onClose, inputValue, ...rest }: Props) => 
             loading={loading}
             onSubmit={handleSubmit}
             submit={
-                contactEmailsSortedByName.length ? (
+                contactEmails.length ? (
                     <PrimaryButton loading={loading} type="submit" disabled={!totalChecked}>
                         {actionText}
                     </PrimaryButton>
@@ -188,7 +175,7 @@ const ContactListModal = ({ onSubmit, onClose, inputValue, ...rest }: Props) => 
             onClose={onClose}
             {...rest}
         >
-            {!contactEmailsSortedByName.length ? (
+            {!contactEmails.length ? (
                 <EmptyContacts onClose={onClose} />
             ) : (
                 <>
