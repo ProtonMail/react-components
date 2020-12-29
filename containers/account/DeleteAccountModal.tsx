@@ -98,13 +98,13 @@ const DeleteAccountModal = ({ onClose, ...rest }: Props) => {
         try {
             eventManager.stop();
 
-            await api(canDelete());
-
             await srpAuth({
                 api,
                 credentials: { password: model.password, totp: model.twoFa },
                 config: unlockPasswordChanges(),
             });
+
+            await api(canDelete());
 
             if (isAdmin) {
                 await api(
