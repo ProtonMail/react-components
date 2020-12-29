@@ -1,7 +1,7 @@
 import React, { useState, useMemo, ChangeEvent } from 'react';
 import { c } from 'ttag';
 import { ACCOUNT_DELETION_REASONS } from 'proton-shared/lib/constants';
-import { deleteUser, unlockPasswordChanges } from 'proton-shared/lib/api/user';
+import { deleteUser, canDelete, unlockPasswordChanges } from 'proton-shared/lib/api/user';
 import { reportBug } from 'proton-shared/lib/api/reports';
 import { srpAuth } from 'proton-shared/lib/srp';
 import { wait } from 'proton-shared/lib/helpers/promise';
@@ -97,6 +97,8 @@ const DeleteAccountModal = ({ onClose, ...rest }: Props) => {
     const handleSubmit = async () => {
         try {
             eventManager.stop();
+
+            await api(canDelete());
 
             await srpAuth({
                 api,
