@@ -30,18 +30,31 @@ interface Props {
     onClose?: () => void;
 }
 
+const compareContactEmailByName = (a: ContactEmail, b: ContactEmail) => {
+    if (a.Name > b.Name) {
+        return 1;
+    }
+
+    if (a.Name < b.Name) {
+        return -1;
+    }
+
+    return 0;
+};
+
 const ContactListModal = ({ onSubmit, onClose, inputValue, ...rest }: Props) => {
     const { isNarrow } = useActiveBreakpoint();
 
     const searchInputRef: RefObject<HTMLInputElement> = createRef();
     const [contactEmails, loadingContactEmails] = useContactEmails();
+    const contactEmailsSortedByName = [...contactEmails].sort(compareContactEmailByName);
     const [userSettings, loadingUserSettings] = useUserSettings();
     const [contactGroups = [], loadingContactGroups] = useContactGroups();
 
     const emailsFromInput = inputValue.map((e: any) => e.Address);
     const contactGroupsMap = toMap(contactGroups);
 
-    const initialCheckedContactEmailsMap = contactEmails.reduce(
+    const initialCheckedContactEmailsMap = contactEmailsSortedByName.reduce(
         (acc: { [key: string]: boolean }, contactEmail: ContactEmail) => {
             acc[contactEmail.ID] = emailsFromInput.includes(contactEmail.Email);
             return acc;
@@ -53,7 +66,7 @@ const ContactListModal = ({ onSubmit, onClose, inputValue, ...rest }: Props) => 
     const [lastCheckedID, setLastCheckedID] = useState('');
     const [isAllChecked, setIsAllChecked] = useState(false);
 
-    const [filteredContactEmails, setFilteredContactEmails] = useState(contactEmails);
+    const [filteredContactEmails, setFilteredContactEmails] = useState(contactEmailsSortedByName);
     const [checkedContactEmailMap, setCheckedContactEmailMap] = useState<{ [key: string]: boolean }>(
         initialCheckedContactEmailsMap
     );
@@ -130,16 +143,16 @@ const ContactListModal = ({ onSubmit, onClose, inputValue, ...rest }: Props) => 
 
     useEffect(() => {
         setLastCheckedID('');
-        setFilteredContactEmails(contactEmails.filter(searchFilter));
+        setFilteredContactEmails(contactEmailsSortedByName.filter(searchFilter));
     }, [searchValue]);
 
     useEffect(() => {
-        setCheckedContactEmails(contactEmails.filter((c: ContactEmail) => !!checkedContactEmailMap[c.ID]));
+        setCheckedContactEmails(contactEmailsSortedByName.filter((c: ContactEmail) => !!checkedContactEmailMap[c.ID]));
     }, [checkedContactEmailMap]);
 
     useEffect(() => {
         setIsAllChecked(
-            filteredContactEmails.length &&
+            !!filteredContactEmails.length &&
                 filteredContactEmails.every((c: ContactEmail) => !!checkedContactEmailMap[c.ID])
         );
     }, [filteredContactEmails, checkedContactEmailMap]);
@@ -166,7 +179,7 @@ const ContactListModal = ({ onSubmit, onClose, inputValue, ...rest }: Props) => 
             loading={loading}
             onSubmit={handleSubmit}
             submit={
-                contactEmails.length ? (
+                contactEmailsSortedByName.length ? (
                     <PrimaryButton loading={loading} type="submit" disabled={!totalChecked}>
                         {actionText}
                     </PrimaryButton>
@@ -175,7 +188,7 @@ const ContactListModal = ({ onSubmit, onClose, inputValue, ...rest }: Props) => 
             onClose={onClose}
             {...rest}
         >
-            {!contactEmails.length ? (
+            {!contactEmailsSortedByName.length ? (
                 <EmptyContacts onClose={onClose} />
             ) : (
                 <>
