@@ -106,6 +106,21 @@ const DeleteAccountModal = ({ onClose, ...rest }: Props) => {
                 config: unlockPasswordChanges(),
             });
 
+            if (isAdmin) {
+                await api(
+                    reportBug({
+                        ...omit(getReportInfo(), ['OSArtificial']),
+                        Client,
+                        ClientVersion: APP_VERSION,
+                        ClientType: CLIENT_TYPE,
+                        Title: `[DELETION FEEDBACK] ${Name}`,
+                        Username: Name,
+                        Email: model.email,
+                        Description: model.feedback,
+                    })
+                );
+            }
+
             await api(
                 deleteUser({
                     Reason: model.reason,
@@ -116,24 +131,8 @@ const DeleteAccountModal = ({ onClose, ...rest }: Props) => {
 
             createNotification({ text: c('Success').t`Account deleted. Logging out...` });
 
-            await Promise.all(
-                [
-                    wait(2500), // Add an artificial delay to show the notification.
-                    isAdmin &&
-                        api(
-                            reportBug({
-                                ...omit(getReportInfo(), ['OSArtificial']),
-                                Client,
-                                ClientVersion: APP_VERSION,
-                                ClientType: CLIENT_TYPE,
-                                Title: `[DELETION FEEDBACK] ${Name}`,
-                                Username: Name,
-                                Email: model.email,
-                                Description: model.feedback,
-                            })
-                        ),
-                ].filter(isTruthy)
-            );
+            // Add an artificial delay to show the notification.
+            await wait(2500);
 
             onClose?.();
             authentication.logout();
