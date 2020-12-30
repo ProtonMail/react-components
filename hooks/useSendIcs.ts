@@ -5,6 +5,7 @@ import { uint8ArrayToBase64String } from 'proton-shared/lib/helpers/encoding';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 import { pick } from 'proton-shared/lib/helpers/object';
 import { Recipient } from 'proton-shared/lib/interfaces';
+import { ContactEmail } from 'proton-shared/lib/interfaces/contacts';
 import { SendPreferences } from 'proton-shared/lib/interfaces/mail/crypto';
 import { RequireSome, SimpleMap } from 'proton-shared/lib/interfaces/utils';
 import { sendMessageDirect } from 'proton-shared/lib/api/messages';
@@ -25,6 +26,7 @@ export interface SendIcsParams {
     subject: string;
     plainTextBody?: string;
     sendPreferencesMap?: SimpleMap<SendPreferences>;
+    contactEmailsMap?: SimpleMap<ContactEmail>;
 }
 
 const useSendIcs = () => {
@@ -43,6 +45,7 @@ const useSendIcs = () => {
             subject,
             plainTextBody = '',
             sendPreferencesMap = {},
+            contactEmailsMap,
         }: SendIcsParams) => {
             if (!to.length) {
                 return;
@@ -90,7 +93,7 @@ const useSendIcs = () => {
                     if (sendPrefsMap[email]) {
                         return;
                     }
-                    const encryptionPreferences = await getEncryptionPreferences(email);
+                    const encryptionPreferences = await getEncryptionPreferences(email, 0, contactEmailsMap);
                     const sendPreferences = getSendPreferences(encryptionPreferences, directMessage);
                     sendPrefsMap[email] = sendPreferences;
                 })
