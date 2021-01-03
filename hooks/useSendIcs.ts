@@ -98,6 +98,13 @@ const useSendIcs = () => {
                     sendPrefsMap[email] = sendPreferences;
                 })
             );
+            // throw if trying to send a reply to an organizer with send preferences error
+            if (method === ICAL_METHOD.REPLY) {
+                const sendPrefError = sendPrefsMap[to[0].Address]?.error;
+                if (sendPrefError) {
+                    throw sendPrefError;
+                }
+            }
             const packages = await generatePackages({
                 message: directMessage,
                 sendPreferencesMap: sendPrefsMap,
