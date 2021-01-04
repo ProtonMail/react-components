@@ -15,6 +15,8 @@ import { KEY as ADDRESSES_KEYS_CACHE } from '../../hooks/useAddressesKeys';
 import { KEY as CALENDAR_BOOTSTRAP_CACHE } from '../../hooks/useGetCalendarBootstrap';
 import { CACHE_KEY as CALENDAR_KEYS_CACHE } from '../../hooks/useGetCalendarKeys';
 import { useEventManager, useCache } from '../../hooks';
+import { CACHE_KEY as ENCRYPTION_CACHE } from '../../hooks/useGetEncryptionPreferences';
+import { updateEncryptionCache } from './updateEncryptionCache';
 
 const EventModelListener = ({ models }) => {
     const { subscribe } = useEventManager();
@@ -85,6 +87,8 @@ const EventModelListener = ({ models }) => {
             if (data) {
                 updateCalendarObject(data, cache.get(CALENDAR_BOOTSTRAP_CACHE), cache.get(CALENDAR_KEYS_CACHE));
             }
+
+            updateEncryptionCache(data, cache.get(ENCRYPTION_CACHE));
         });
     }, []);
 
