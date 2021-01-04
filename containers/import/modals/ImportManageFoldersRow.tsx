@@ -251,10 +251,9 @@ const ImportManageFoldersRow = ({
         updateEditModeMapping(Source, editMode);
     }, [editMode]);
 
-    const preventLevelIncrease = useMemo(() => {
+    const isParentSystemFolder = useMemo(() => {
         const split = splitEscaped(Source, Separator);
-        console.log(split);
-        return split.length === 1 && SYSTEM_FOLDERS.includes(split[0]);
+        return SYSTEM_FOLDERS.includes(split[0]);
     }, [Source, Separator]);
 
     return (
@@ -294,7 +293,17 @@ const ImportManageFoldersRow = ({
                     <div className="flex w40 pr1">
                         <div
                             className="flex flex-nowrap flex-items-center flex-item-fluid-auto"
-                            style={DestinationFolder ? undefined : { marginLeft: `${levelDestination}em` }}
+                            style={
+                                DestinationFolder
+                                    ? undefined
+                                    : {
+                                          marginLeft: `${
+                                              isParentSystemFolder
+                                                  ? Math.max(0, levelDestination - 1)
+                                                  : levelDestination
+                                          }em`,
+                                      }
+                            }
                         >
                             <Icon
                                 name={DestinationFolder ? FOLDER_ICONS[DestinationFolder] : 'folder'}
@@ -413,7 +422,7 @@ const ImportManageFoldersRow = ({
                             onToggleCheck={onToggleCheck}
                             key={f.Source}
                             folder={f}
-                            level={preventLevelIncrease ? level : level + 1}
+                            level={level + 1}
                             checkedFoldersMap={checkedFoldersMap}
                             disabledFoldersMap={disabledFoldersMap}
                             folderRelationshipsMap={folderRelationshipsMap}

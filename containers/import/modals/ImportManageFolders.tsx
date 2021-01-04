@@ -47,13 +47,17 @@ const ImportManageFolders = ({ modalModel, address, payload, toggleEditing, onCh
         return level;
     };
 
+    // Here we map folders with their direct children
     const folderRelationshipsMap = providerFolders.reduce((acc: FolderRelationshipsMap, folder) => {
         const currentLevel = getLevel(folder.Source, folder.Separator);
 
         acc[folder.Source] = providerFolders
             .filter((f) => {
                 const level = getLevel(f.Source, f.Separator);
-                return currentLevel + 1 === level && f.Source.startsWith(folder.Source);
+                return (
+                    currentLevel + 1 === level &&
+                    f.Source.split(f.Separator).slice(0, -1).join(f.Separator) === folder.Source
+                );
             })
             .map((f) => f.Source);
 
