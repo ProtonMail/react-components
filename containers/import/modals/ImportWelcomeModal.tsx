@@ -3,7 +3,7 @@ import { c } from 'ttag';
 
 import { noop } from 'proton-shared/lib/helpers/function';
 
-// import importStartedSvg from 'design-system/assets/img/shared/import-started.svg';
+import importWelcomeSvg from 'design-system/assets/img/shared/import-welcome.svg';
 
 import { FormModal, Href, PrimaryButton } from '../../../components';
 
@@ -46,10 +46,9 @@ const ImportWelcomeModal = ({ onClose = noop, ...rest }: Props) => {
             {...rest}
         >
             <div className="aligncenter">
-                <div className="mt1">{c('Info')
+                <div className="mt1 mb1">{c('Info')
                     .t`Shelter your data behind Proton encryption with our email transfer feature Import Assistant.`}</div>
-                {/* @todo change image */}
-                {/* <img src={importStartedSvg} alt="" className="mb1" /> */}
+                <img src={importWelcomeSvg} alt="" className="mb1" />
                 <div className="mb1">{c('Info')
                     .jt`Our guides for ${gmailLink}, ${yahooLink}, and ${outlookLink} show you the next steps as you switch to Proton.`}</div>
             </div>
