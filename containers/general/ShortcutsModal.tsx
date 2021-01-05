@@ -75,8 +75,10 @@ const ShortcutsModal = ({ app, onClose = noop, ...rest }: Props) => {
             className="shortcut-modal"
             {...rest}
         >
-            <Alert className="mb1">{c('Info')
-                .t`Basic navigation and actions remain available regardless of keyboard shortcuts being active or not in the settings.`}</Alert>
+            <Alert className="mb1">
+                {c('Info')
+                    .t`Basic navigation and actions remain available regardless of keyboard shortcuts being active or not in the settings.`}
+            </Alert>
             <div
                 className="list-2columns onmobile-list-1column"
                 // to compensate the pr2 of the sections in the right column

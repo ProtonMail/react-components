@@ -68,7 +68,7 @@ const Dialog = ({
             (e) => {
                 if (!disableCloseOnOnEscape) {
                     e.stopPropagation();
-                    rest?.onClose();
+                    onClose?.();
                 }
             },
         ],
