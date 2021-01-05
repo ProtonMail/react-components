@@ -37,16 +37,15 @@ const FooterFilterModal = ({ model, errors, onClose, onChange, loading }: Props)
         onChange({ ...model, step: BACK_STEP[step] });
     };
 
-    const isButtonDisabled = () => {
-        if (loading || !!errors.name) {
-            return true;
-        }
-
+    const isNextButtonDisabled = () => {
         if (step === Step.CONDITIONS) {
             return !!errors.conditions;
         }
+        if ([Step.ACTIONS, Step.PREVIEW].includes(step)) {
+            return !!errors.conditions || !!errors.actions;
+        }
 
-        return !!errors.conditions || !!errors.actions;
+        return loading || !!errors.name;
     };
 
     return (
@@ -59,7 +58,7 @@ const FooterFilterModal = ({ model, errors, onClose, onChange, loading }: Props)
             <div>
                 {step !== Step.PREVIEW && (
                     <Button
-                        disabled={isButtonDisabled()}
+                        disabled={isNextButtonDisabled()}
                         onClick={handleNext}
                         className={classnames([step === Step.ACTIONS && 'mr1'])}
                     >
