@@ -87,11 +87,12 @@ export const useHotkeys = (
 
         sequence.current.push(modifiedKey);
 
-        hotkeyTupleArray.forEach((hotKeyTuple) => {
+        for (let i = 0; i < hotkeyTupleArray.length; i++) {
+            const hotKeyTuple = hotkeyTupleArray[i];
+
             const hotkeySequence = (hotKeyTuple.slice(0, -1) as Sequence).map((a) =>
                 Array.isArray(a) ? a.sort().map((k) => k.toLowerCase()) : [a.toLowerCase()]
             );
-
             /*
              * take the number of items from the sequence as the number of items in
              * the hotkey sequence, starting from the end, so that even if the sequences
@@ -100,12 +101,12 @@ export const useHotkeys = (
             const tailSequence = sequence.current
                 .slice(-hotkeySequence.length)
                 .map((a) => (Array.isArray(a) ? a.sort().map((k) => k.toLowerCase()) : [a.toLowerCase()]));
-
             if (isDeepEqual(hotkeySequence, tailSequence)) {
                 const callback = hotKeyTuple[hotKeyTuple.length - 1] as HotKeyCallback;
                 callback(e);
+                break;
             }
-        });
+        }
     };
 
     useEventListener(ref, keyEventType, handleKeyDown, dependencies);
