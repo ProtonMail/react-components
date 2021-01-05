@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { c } from 'ttag';
 
 import { SimpleFilterModalModel, Step, Errors } from 'proton-shared/lib/filters/interfaces';
@@ -37,16 +37,17 @@ const FooterFilterModal = ({ model, errors, onClose, onChange, loading }: Props)
         onChange({ ...model, step: BACK_STEP[step] });
     };
 
-    const disabled = useMemo(() => {
-        if (step === Step.NAME) {
-            return loading || !!errors.name;
-        }
-        if (step === Step.CONDITIONS) {
-            return loading || !!errors.name || !!errors.conditions;
+    const isButtonDisabled = () => {
+        if (loading || !!errors.name) {
+            return true;
         }
 
-        return loading || !!errors.name || !!errors.conditions || !!errors.actions;
-    }, [step, loading, errors.name, errors.conditions, errors.actions]);
+        if (step === Step.CONDITIONS) {
+            return !!errors.conditions;
+        }
+
+        return !!errors.conditions || !!errors.actions;
+    };
 
     return (
         <>
@@ -58,7 +59,7 @@ const FooterFilterModal = ({ model, errors, onClose, onChange, loading }: Props)
             <div>
                 {step !== Step.PREVIEW && (
                     <Button
-                        disabled={disabled}
+                        disabled={isButtonDisabled()}
                         onClick={handleNext}
                         className={classnames([step === Step.ACTIONS && 'mr1'])}
                     >
