@@ -6,7 +6,7 @@ import { getShortcutsForApp } from 'proton-shared/lib/shortcuts/constants';
 
 import { classnames } from '../../helpers';
 import { Alert, FormModal, AppLink } from '../../components';
-import { useMailSettings } from '../../hooks';
+import { useMailSettings, useActiveBreakpoint } from '../../hooks';
 
 import './ShortcutsModal.scss';
 
@@ -27,6 +27,7 @@ interface Props {
 }
 
 const ShortcutsModal = ({ app, onClose = noop, ...rest }: Props) => {
+    const { isNarrow } = useActiveBreakpoint();
     const [{ Hotkeys } = { Hotkeys: 0 }] = useMailSettings();
 
     const shortcutSections: ShortcutSection[] = getShortcutsForApp(app);
@@ -81,8 +82,8 @@ const ShortcutsModal = ({ app, onClose = noop, ...rest }: Props) => {
             </Alert>
             <div
                 className="list-2columns onmobile-list-1column"
-                // to compensate the pr2 of the sections in the right column
-                style={{ marginRight: '-2em' }}
+                // to compensate for the right padding of the right column sections
+                style={!isNarrow ? { marginRight: '-2em' } : undefined}
             >
                 {alwaysOnSections.map(sectionRenderer)}
             </div>
@@ -96,8 +97,8 @@ const ShortcutsModal = ({ app, onClose = noop, ...rest }: Props) => {
             </Alert>
             <div
                 className={classnames(['list-2columns onmobile-list-1column', !Hotkeys && 'opacity-50'])}
-                // to compensate the pr2 of the sections in the right column
-                style={{ marginRight: '-2em' }}
+                // to compensate for the right padding of the right column sections
+                style={!isNarrow ? { marginRight: '-2em' } : undefined}
             >
                 {shortcutEnabledSections.map(sectionRenderer)}
             </div>
