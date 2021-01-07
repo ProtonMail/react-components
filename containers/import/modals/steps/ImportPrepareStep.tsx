@@ -120,7 +120,7 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
                 CustomFields,
             },
         });
-    }, [initialModel.current.payload, payload]);
+    }, [payload.StartTime, payload.EndTime, payload.ImportLabel, payload.Mapping]);
 
     useEffect(() => {
         updateModalModel({ ...modalModel, isPayloadInvalid: showFoldersNumError || showFoldersNameError });
