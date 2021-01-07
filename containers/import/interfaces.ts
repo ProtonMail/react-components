@@ -55,7 +55,7 @@ export interface ImportModalModel {
     errorLabel: string;
     selectedPeriod: TIME_UNIT;
     payload: ImportPayloadModel;
-    isPayloadValid: boolean;
+    isPayloadInvalid: boolean;
 }
 
 export interface FolderMapping {

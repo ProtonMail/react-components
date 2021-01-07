@@ -102,7 +102,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
             Mapping: [],
             CustomFields: 0,
         },
-        isPayloadValid: false,
+        isPayloadInvalid: false,
     });
     const api = useApi();
     const { call } = useEventManager();
@@ -369,7 +369,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
     }, [modalModel.step, providerInstructions, gmailInstructionsStep, loading]);
 
     const submitRenderer = useMemo(() => {
-        const { email, password, needIMAPDetails, imap, port, isPayloadValid, step } = modalModel;
+        const { email, password, needIMAPDetails, imap, port, isPayloadInvalid, step } = modalModel;
 
         const disabledStartStep = needIMAPDetails
             ? !email || !password || !imap || !port || invalidPortError
@@ -397,7 +397,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
                 );
             case Step.PREPARE:
                 return (
-                    <PrimaryButton loading={loading} disabled={isPayloadValid} type="submit">
+                    <PrimaryButton loading={loading} disabled={isPayloadInvalid} type="submit">
                         {c('Action').t`Start import`}
                     </PrimaryButton>
                 );
@@ -415,7 +415,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, ...rest }: Props) => {
         modalModel.needIMAPDetails,
         modalModel.imap,
         modalModel.port,
-        modalModel.isPayloadValid,
+        modalModel.isPayloadInvalid,
         loading,
     ]);
 

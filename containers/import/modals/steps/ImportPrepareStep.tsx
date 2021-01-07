@@ -22,6 +22,12 @@ interface Props {
     address: Address;
 }
 
+enum CustomFieldsBitmap {
+    Mapping = 1,
+    Label = 2,
+    Period = 4,
+}
+
 const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => {
     const initialModel = useRef<ImportModalModel>(modalModel);
     const [user, userLoading] = useUser();
@@ -84,35 +90,28 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
         updateModalModel(initialModel.current);
     };
 
-    const isCustomPeriod = useMemo(() => {
-        const { StartTime, EndTime } = initialModel.current.payload;
-        return StartTime !== payload.StartTime || EndTime !== payload.EndTime;
-    }, [initialModel.current.payload, payload]);
-
-    const isCustomLabel = useMemo(() => {
-        const { ImportLabel } = initialModel.current.payload;
-        return !isDeepEqual(ImportLabel, payload.ImportLabel);
-    }, [initialModel.current.payload, payload]);
-
-    const isCustomMapping = useMemo(() => {
-        const { Mapping } = initialModel.current.payload;
-        return !isDeepEqual(Mapping, payload.Mapping);
-    }, [initialModel.current.payload, payload]);
-
-    const isCustom = isCustomPeriod || isCustomLabel || isCustomMapping;
+    const isCustom = useRef(false);
 
     useEffect(() => {
+        const { StartTime, EndTime, ImportLabel, Mapping } = initialModel.current.payload;
+
+        const isCustomPeriod = StartTime !== payload.StartTime || EndTime !== payload.EndTime;
+        const isCustomLabel = !isDeepEqual(ImportLabel, payload.ImportLabel);
+        const isCustomMapping = !isDeepEqual(Mapping, payload.Mapping);
+
         let CustomFields = 0;
 
         if (isCustomMapping) {
-            CustomFields += 1;
+            CustomFields += CustomFieldsBitmap.Mapping;
         }
         if (isCustomLabel) {
-            CustomFields += 2;
+            CustomFields += CustomFieldsBitmap.Label;
         }
         if (isCustomPeriod) {
-            CustomFields += 4;
+            CustomFields += CustomFieldsBitmap.Period;
         }
+
+        isCustom.current = isCustomPeriod || isCustomLabel || isCustomMapping;
 
         updateModalModel({
             ...modalModel,
@@ -121,10 +120,10 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
                 CustomFields,
             },
         });
-    }, [isCustomPeriod, isCustomLabel, isCustomMapping]);
+    }, [initialModel.current.payload, payload]);
 
     useEffect(() => {
-        updateModalModel({ ...modalModel, isPayloadValid: showFoldersNumError || showFoldersNameError });
+        updateModalModel({ ...modalModel, isPayloadInvalid: showFoldersNumError || showFoldersNameError });
     }, [showFoldersNumError, showFoldersNameError]);
 
     const getParentSource = (folderPath: string, separator: string) => {
@@ -322,7 +321,7 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
                             <Icon name="attention-plain" size={20} />
                         </Tooltip>
                     )}
-                    {isCustom && isValid && (
+                    {isCustom.current && isValid && (
                         <InlineLinkButton className="ml1" onClick={handleReset}>
                             {c('Action').t`Reset to default`}
                         </InlineLinkButton>
