@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { getFeature, updateFeatureValue } from 'proton-shared/lib/api/features';
 
-import { useApi, useLoading } from '../../hooks';
+import useApi from './useApi';
+import useLoading from './useLoading';
 
 const usePromoModalState = (featureID: string) => {
     const [loading, withLoading] = useLoading(true);
