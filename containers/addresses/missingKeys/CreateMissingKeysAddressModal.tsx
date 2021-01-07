@@ -76,9 +76,12 @@ const CreateMissingKeysAddressModal = ({ onClose, member, addressesToGenerate, o
             ({ Addresses }) => Addresses
         );
         try {
+            const addresses = await getAddresses();
+
             await missingKeysMemberProcess({
                 api,
                 encryptionConfig: ENCRYPTION_CONFIGS[encryptionType],
+                ownerAddresses: addresses,
                 memberAddressesToGenerate: addressesToGenerate,
                 member,
                 memberAddresses,

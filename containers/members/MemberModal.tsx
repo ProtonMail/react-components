@@ -5,7 +5,7 @@ import { createMember, createMemberAddress } from 'proton-shared/lib/api/members
 import { srpVerify } from 'proton-shared/lib/srp';
 import { Domain, Organization, Address, CachedOrganizationKey } from 'proton-shared/lib/interfaces';
 import { setupMemberKey } from 'proton-shared/lib/keys';
-import { useApi, useNotifications, useEventManager } from '../../hooks';
+import { useApi, useNotifications, useEventManager, useGetAddresses } from '../../hooks';
 import { FormModal, Row, Field, Label, PasswordInput, Input, Checkbox, Select } from '../../components';
 
 import MemberStorageSelector, { getStorageRange } from './MemberStorageSelector';
@@ -26,6 +26,7 @@ const MemberModal = ({ onClose, organization, organizationKey, domains, domainsA
     const { createNotification } = useNotifications();
     const { call } = useEventManager();
     const api = useApi();
+    const getAddresses = useGetAddresses();
     const storageRange = getStorageRange({}, organization);
     const vpnRange = getVPNRange({}, organization);
     const [model, updateModel] = useState({
@@ -76,8 +77,10 @@ const MemberModal = ({ onClose, organization, organizationKey, domains, domainsA
             if (!organizationKey.privateKey) {
                 throw new Error('Organization key is not decrypted');
             }
+            const ownerAddresses = await getAddresses();
             await setupMemberKey({
                 api,
+                ownerAddresses,
                 member: Member,
                 address: Address,
                 organizationKey: organizationKey.privateKey,
