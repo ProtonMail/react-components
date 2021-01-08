@@ -16,7 +16,7 @@ const VPNClientCard = ({ title, link, icon, moreOption }: Props) => {
                 <Icon size={24} name={icon} />
             </div>
             <Block>{title}</Block>
-            <div className="flex mt1 flex-justify-center">
+            <div className={moreOption ? 'flex mt1 flex-justify-center' : 'pl1-25 pr1-25 flex mt1 flex-justify-center'}>
                 <Href url={link} className="pm-button increase-surface-click">
                     {c('Action').t`Download`}
                     <span className="sr-only">{title}</span>
