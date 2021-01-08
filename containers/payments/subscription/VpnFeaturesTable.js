@@ -69,6 +69,14 @@ const VpnFeaturesTable = ({ cycle, currency }) => {
                     </tr>
                     <tr>
                         <td>
+                            <del>{c('Feature').t`NetShield`}</del>
+                        </td>
+                        <td>{c('Feature').t`NetShield`}</td>
+                        <td>{c('Feature').t`NetShield`}</td>
+                        <td>{c('Feature').t`NetShield`}</td>
+                    </tr>
+                    <tr>
+                        <td>
                             <del>{c('Feature').t`Secure Core and Tor VPN`}</del>
                         </td>
                         <td>
