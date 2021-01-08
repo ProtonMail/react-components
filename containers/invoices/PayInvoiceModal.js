@@ -83,7 +83,7 @@ const PayInvoiceModal = ({ invoice, fetchInvoices, ...rest }) => {
                         <Label>{c('Label').t`Amount due`}</Label>
                         <Field>
                             <Input
-                                className="pm-field--highlight no-pointer-events strong alignright"
+                                className="field--highlight no-pointer-events strong alignright"
                                 readOnly
                                 value={toPrice(AmountDue, Currency)}
                             />

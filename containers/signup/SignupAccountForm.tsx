@@ -90,7 +90,7 @@ const SignupAccountForm = ({ model, onChange, onSubmit, errors, loading, hasExte
                                     }}
                                     error={errors.username}
                                     placeholder={USERNAME_PLACEHOLDER}
-                                    className="pm-field--username"
+                                    className="field--username"
                                     required
                                 />
                             </div>
