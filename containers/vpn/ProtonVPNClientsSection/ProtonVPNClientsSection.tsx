@@ -9,6 +9,7 @@ const ProtonVPNClientsSection = () => {
                 title={c('VPNClient').t`Android`}
                 icon="android"
                 link="https://play.google.com/store/apps/details?id=ch.protonvpn.android&utm_source=protonvpn.com&utm_content=dashboard"
+                moreOption
             />
             <VPNClientCard
                 title={c('VPNClient').t`iOS`}
@@ -26,11 +27,13 @@ const ProtonVPNClientsSection = () => {
                 title={c('VPNClient').t`ChromeBook`}
                 icon="chrome"
                 link="https://play.google.com/store/apps/details?id=ch.protonvpn.android&utm_source=protonvpn.com&utm_content=dashboard"
+                moreOption
             />
             <VPNClientCard
                 title={c('VPNClient').t`Android TV`}
                 icon="tv"
                 link="https://play.google.com/store/apps/details?id=ch.protonvpn.android&utm_source=protonvpn.com&utm_content=dashboard"
+                moreOption
             />
         </div>
     );
