@@ -23,29 +23,52 @@ const VpnFeaturesTable = ({ cycle, currency }) => {
                 <thead>
                     <tr>
                         <th className="aligncenter aligntop pm-simple-table-row-th pt1">
-                            <div className="uppercase">Free</div>
+                            <div className="uppercase ellipsis" title="Free">
+                                Free
+                            </div>
                             <SubscriptionPrices cycle={cycle} currency={currency} />
                         </th>
                         <th className="aligncenter aligntop pm-simple-table-row-th pt1">
-                            <div className="uppercase">Basic</div>
+                            <div className="uppercase ellipsis" title="Basic">
+                                Basic
+                            </div>
                             <SubscriptionPrices cycle={cycle} currency={currency} plan={plansMap[PLANS.VPNBASIC]} />
                         </th>
                         <th className="aligncenter aligntop pm-simple-table-row-th pt1">
-                            <div className="uppercase">Plus</div>
+                            <div className="uppercase ellipsis" title="Plus">
+                                Plus
+                            </div>
                             <SubscriptionPrices cycle={cycle} currency={currency} plan={plansMap[PLANS.VPNPLUS]} />
                         </th>
                         <th className="aligncenter aligntop pm-simple-table-row-th pt1">
-                            <div className="uppercase">Visionary</div>
+                            <div className="uppercase ellipsis" title="Visionary">
+                                Visionary
+                            </div>
                             <SubscriptionPrices cycle={cycle} currency={currency} plan={plansMap[PLANS.VISIONARY]} />
                         </th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>{c('Feature').t`1 VPN connection`}</td>
-                        <td>{c('Feature').t`2 VPN connections`}</td>
-                        <td>{c('Feature').t`5 VPN connections`}</td>
-                        <td>{c('Feature').t`10 VPN connections`}</td>
+                        <td>
+                            <span className="inbl ellipsis mw100" title={c('Feature').t`1 VPN connection`}>{c('Feature')
+                                .t`1 VPN connection`}</span>
+                        </td>
+                        <td>
+                            <span className="inbl ellipsis mw100" title={c('Feature').t`2 VPN connections`}>{c(
+                                'Feature'
+                            ).t`2 VPN connections`}</span>
+                        </td>
+                        <td>
+                            <span className="inbl ellipsis mw100" title={c('Feature').t`5 VPN connections`}>{c(
+                                'Feature'
+                            ).t`5 VPN connections`}</span>
+                        </td>
+                        <td>
+                            <span className="inbl ellipsis mw100" title={c('Feature').t`10 VPN connections`}>{c(
+                                'Feature'
+                            ).t`10 VPN connections`}</span>
+                        </td>
                     </tr>
                     <tr>
                         <td>{c('Feature').t`Servers in ${vpnCountries.free.length} countries`}</td>
