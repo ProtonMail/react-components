@@ -1,4 +1,5 @@
 import React, { /* useEffect, */ useRef } from 'react';
+import { KeyboardKey, KeyboardKeyType } from 'proton-shared/lib/interfaces';
 import isDeepEqual from 'proton-shared/lib/helpers/isDeepEqual';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 import { useEventListener } from './useHandler';
@@ -7,7 +8,7 @@ import { useEventListener } from './useHandler';
  * A Hotkey being an array means we have a "modifier" combination
  * of keys (e.g. "Cmd + K" would translate to ['Meta', 'K'])
  * */
-type Hotkey = String | String[];
+type Hotkey = KeyboardKeyType | KeyboardKeyType[];
 
 /*
  * A Sequence is a suite of Hotkeys
@@ -44,10 +45,10 @@ type HotKeysOptions = {
 };
 
 const MODIFIER_KEYS = {
-    META: 'meta',
-    SHIFT: 'shift',
-    CONTROL: 'control',
-    ALT: 'alt',
+    META: KeyboardKey.Meta.toLowerCase(),
+    SHIFT: KeyboardKey.Shift.toLowerCase(),
+    CONTROL: KeyboardKey.Control.toLowerCase(),
+    ALT: KeyboardKey.Alt.toLowerCase(),
 };
 
 export const useHotkeys = (
@@ -61,7 +62,7 @@ export const useHotkeys = (
     const sequence = useRef<Hotkey[]>([]);
 
     const handleKeyDown = (e: KeyboardEvent) => {
-        const key = e.key.toLowerCase();
+        const key = e.key.toLowerCase() as KeyboardKey;
 
         if (Date.now() - msSinceLastEvent.current > sequenceResetTime) {
             sequence.current = [];
@@ -83,7 +84,7 @@ export const useHotkeys = (
             // to be typed, thus cannot be used (e.g. "?" or "/")
             isAlphaNumericalOrSpace && e.shiftKey && MODIFIER_KEYS.SHIFT,
             isAlphaNumericalOrSpace && e.altKey && MODIFIER_KEYS.ALT,
-        ].filter(isTruthy);
+        ].filter(isTruthy) as Hotkey;
 
         sequence.current.push(modifiedKey);
 
