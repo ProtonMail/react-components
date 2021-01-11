@@ -1,7 +1,7 @@
 import React from 'react';
 import { c } from 'ttag';
 import VPNClientCard from './VPNClientCard';
-import { DropdownMenuLink } from '../../../components';
+import { DropdownMenuLink, Copy, Group } from '../../../components';
 
 const ProtonVPNClientsSection = () => {
     const androidLinks = [
@@ -18,7 +18,12 @@ const ProtonVPNClientsSection = () => {
             children: 'F-droid',
         },
     ].map(({ href, children }) => {
-        return <DropdownMenuLink href={href}>{children}</DropdownMenuLink>;
+        return (
+            <Group className="flex">
+                <DropdownMenuLink href={href}>{children}</DropdownMenuLink>
+                <Copy value={href} />
+            </Group>
+        );
     });
 
     return (
