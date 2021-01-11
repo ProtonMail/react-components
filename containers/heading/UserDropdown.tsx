@@ -178,7 +178,7 @@ const UserDropdown = ({ ...rest }) => {
                             <label htmlFor="theme-toggle" className="mr1">{c('Action').t`Display mode`}</label>
                             <Toggle
                                 id="theme-toggle"
-                                className="pm-toggle-label--theme-toggle"
+                                className="toggle-label--theme-toggle"
                                 title={c('Title').t`Toggle display mode`}
                                 checked={userSettings.ThemeType === ThemeTypes.Dark}
                                 loading={loading}
@@ -189,11 +189,11 @@ const UserDropdown = ({ ...rest }) => {
                                             ? c('Toggle button').t`Normal`
                                             : c('Toggle button').t`Dark`;
                                     return (
-                                        <span className="pm-toggle-label-text">
+                                        <span className="toggle-label-text">
                                             <Icon
                                                 name={key === ToggleState.on ? 'crescent-moon' : 'half-moon'}
                                                 alt={alt}
-                                                className="pm-toggle-label-img"
+                                                className="toggle-label-img"
                                             />
                                         </span>
                                     );
