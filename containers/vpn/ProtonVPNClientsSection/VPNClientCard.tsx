@@ -1,59 +1,45 @@
 import React from 'react';
 import { c } from 'ttag';
-import { Bordered, Icon, Block, Href, SimpleDropdown, DropdownMenu } from '../../../components';
+import { Bordered, Icon, Block, Href, SimpleDropdown, DropdownMenu, Group } from '../../../components';
 
 interface Props {
     title: string;
     link: string;
     icon: string;
-    moreOption?: boolean;
+    items?: React.ReactNode[];
 }
-
-const VPNClientCard = ({ title, link, icon, moreOption }: Props) => {
+const VPNClientCard = ({ title, link, items, icon }: Props) => {
     return (
         <Bordered className="mr1 aligncenter relative">
             <div>
                 <Icon size={24} name={icon} />
             </div>
             <Block>{title}</Block>
-            <div className={moreOption ? 'flex mt1 flex-justify-center' : 'pl1-25 pr1-25 flex mt1 flex-justify-center'}>
-                <Href url={link} className="pm-button increase-surface-click">
-                    {c('Action').t`Download`}
-                    <span className="sr-only">{title}</span>
-                </Href>
-                {moreOption ? (
+            {!items ? (
+                <div className="pl1-25 pr1-25 flex mt1 flex-justify-center">
+                    <Href url={link} className="pm-button">
+                        {c('Action').t`Download`}
+                        <span className="sr-only">{title}</span>
+                    </Href>
+                </div>
+            ) : (
+                <Group className="flex mt1 flex-justify-center">
+                    <Href url={link} className="pm-button pm-group-button">
+                        {c('Action').t`Download`}
+                        <span className="sr-only">{title}</span>
+                    </Href>
                     <SimpleDropdown
-                        className="pm-button pm-button--for-icon relative"
-                        title={c('Title').t`More download options`}
-                        content={null}
+                        originalPlacement="bottom-right"
+                        className="pm-button pm-group-button pm-button--for-icon"
+                        title={c('Title').t`Open actions dropdown`}
+                        content=""
+                        data-test-id="dropdown:open"
                     >
-                        <DropdownMenu className="p1">
-                            <p>More download options:</p>
-                            <p>
-                                Direct APK link:
-                                <a href="https://protonvpn.com/download/ProtonVPN.apk">
-                                    https://protonvpn.com/download/ProtonVPN.apk
-                                </a>
-                            </p>
-
-                            <p>
-                                GitHub:
-                                <a href="https://github.com/ProtonVPN/android-app/releases">
-                                    https://github.com/ProtonVPN/android-app/releases
-                                </a>
-                            </p>
-                            <p>
-                                F-Droid:
-                                <a href="https://f-droid.org/en/packages/ch.protonvpn.android/">
-                                    https://f-droid.org/en/packages/ch.protonvpn.android/
-                                </a>
-                            </p>
-                        </DropdownMenu>
+                        <DropdownMenu>{items}</DropdownMenu>
                     </SimpleDropdown>
-                ) : null}
-            </div>
+                </Group>
+            )}
         </Bordered>
     );
 };
-
 export default VPNClientCard;
