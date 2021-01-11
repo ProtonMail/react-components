@@ -7,7 +7,7 @@ const ProtonVPNClientsSection = () => {
     const androidLinks = [
         {
             href: 'https://protonvpn.com/download/ProtonVPN.apk',
-            children: 'Direct APK link',
+            children: 'APK',
         },
         {
             href: 'https://github.com/ProtonVPN/android-app/releases',
@@ -15,7 +15,7 @@ const ProtonVPNClientsSection = () => {
         },
         {
             href: 'https://f-droid.org/en/packages/ch.protonvpn.android/',
-            children: 'F-droid',
+            children: 'F-Droid',
         },
     ].map(({ href, children }) => {
         return (
