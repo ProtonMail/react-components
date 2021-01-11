@@ -64,7 +64,7 @@ const PayInvoiceModal = ({ invoice, fetchInvoices, ...rest }) => {
                     <Row>
                         <Label>{c('Label').t`Amount`}</Label>
                         <Field className="alignright">
-                            <Price className="pm-label" currency={Currency}>
+                            <Price className="label" currency={Currency}>
                                 {Amount}
                             </Price>
                         </Field>
@@ -73,7 +73,7 @@ const PayInvoiceModal = ({ invoice, fetchInvoices, ...rest }) => {
                         <Row>
                             <Label>{c('Label').t`Credits used`}</Label>
                             <Field className="alignright">
-                                <Price className="pm-label" currency={Currency}>
+                                <Price className="label" currency={Currency}>
                                     {Credit}
                                 </Price>
                             </Field>

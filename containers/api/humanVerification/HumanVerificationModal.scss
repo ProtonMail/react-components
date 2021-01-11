@@ -12,7 +12,7 @@
 
 @include respond-to($breakpoint-small) {
 	.human-verification-modal {
-		.pm-label.payment-left,
+		.label.payment-left,
 		.field-container.payment-right {
 			width: 100%;
 		}
