@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect, useRef } from 'react';
+import React, { useMemo, useEffect, useRef, useState } from 'react';
 import { format, isValid } from 'date-fns';
 import { c, msgid } from 'ttag';
 
@@ -90,7 +90,7 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
         updateModalModel(initialModel.current);
     };
 
-    const isCustom = useRef(false);
+    const [isCustom, setIsCustom] = useState(false);
 
     useEffect(() => {
         const { StartTime, EndTime, ImportLabel, Mapping } = initialModel.current.payload;
@@ -111,7 +111,7 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
             CustomFields += CustomFieldsBitmap.Period;
         }
 
-        isCustom.current = isCustomPeriod || isCustomLabel || isCustomMapping;
+        setIsCustom(isCustomPeriod || isCustomLabel || isCustomMapping);
 
         updateModalModel({
             ...modalModel,
@@ -321,7 +321,7 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
                             <Icon name="attention-plain" size={20} />
                         </Tooltip>
                     )}
-                    {isCustom.current && isValid && (
+                    {isCustom && isValid && (
                         <InlineLinkButton className="ml1" onClick={handleReset}>
                             {c('Action').t`Reset to default`}
                         </InlineLinkButton>
