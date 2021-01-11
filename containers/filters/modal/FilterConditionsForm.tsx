@@ -64,7 +64,7 @@ const FilterConditionsForm = ({ isNarrow, model, isDark, onChange }: Props) => {
                     <Radio
                         id="statement-all"
                         name="filterConditionStatement"
-                        className="flex flex-nowrap mb1 pm-radio--onTop"
+                        className="flex flex-nowrap mb1 radio--onTop"
                         checked={model.statement === FilterStatement.ALL}
                         onChange={() =>
                             onChange({
@@ -81,7 +81,7 @@ const FilterConditionsForm = ({ isNarrow, model, isDark, onChange }: Props) => {
                     <Radio
                         id="statement-any"
                         name="filterConditionStatement"
-                        className="flex flex-nowrap mb1 pm-radio--onTop"
+                        className="flex flex-nowrap mb1 radio--onTop"
                         checked={model.statement === FilterStatement.ANY}
                         onChange={() =>
                             onChange({

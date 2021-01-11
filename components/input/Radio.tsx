@@ -12,8 +12,8 @@ const Radio = ({ id, children, className = 'inline-flex', name, ...rest }: Props
         htmlFor={id}
         className={classnames([!className?.includes('increase-surface-click') && 'relative', className])}
     >
-        <input id={id} type="radio" className="pm-radio" name={name} {...rest} />
-        <span className="pm-radio-fakeradio" />
+        <input id={id} type="radio" className="radio" name={name} {...rest} />
+        <span className="radio-fakeradio" />
         {children}
     </label>
 );
