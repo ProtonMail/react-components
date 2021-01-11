@@ -50,12 +50,12 @@ const Checkbox = ({
                 disabled={disabled || loading}
                 id={id}
                 type="checkbox"
-                className="pm-checkbox"
+                className="checkbox"
                 checked={checked}
                 {...rest}
             />
-            <span className="pm-checkbox-fakecheck" style={{ borderColor, background: backgroundColor, color }}>
-                <Icon className="pm-checkbox-fakecheck-img" size={12} name="on" color={color} />
+            <span className="checkbox-fakecheck" style={{ borderColor, background: backgroundColor, color }}>
+                <Icon className="checkbox-fakecheck-img" size={12} name="on" color={color} />
             </span>
             {children}
         </label>
