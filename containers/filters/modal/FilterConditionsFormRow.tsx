@@ -107,7 +107,7 @@ const FilterConditionsRow = ({
                 <Radio
                     id={`condition-${conditionIndex}-with-attachment`}
                     name={`attachment-condition-${conditionIndex}`}
-                    className="flex flex-nowrap radio--onTop mr1"
+                    className="flex flex-nowrap radio--ontop mr1"
                     checked={withAttachment}
                     onChange={toggleAttachment}
                 >
@@ -116,7 +116,7 @@ const FilterConditionsRow = ({
                 <Radio
                     id={`condition-${conditionIndex}-without-attachment`}
                     name={`attachment-condition-${conditionIndex}`}
-                    className="flex flex-nowrap radio--onTop"
+                    className="flex flex-nowrap radio--ontop"
                     checked={!withAttachment}
                     onChange={toggleAttachment}
                 >
