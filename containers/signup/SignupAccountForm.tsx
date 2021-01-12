@@ -63,7 +63,7 @@ const SignupAccountForm = ({ model, onChange, onSubmit, errors, loading, hasExte
             const challenge = (
                 <>
                     <Challenge
-                        bodyClassName="signLayout-container"
+                        bodyClassName="sign-layout-container"
                         challengeRef={challengeRefLogin}
                         type={0}
                         onLoaded={handleChallengeLoaded}
@@ -121,7 +121,7 @@ const SignupAccountForm = ({ model, onChange, onSubmit, errors, loading, hasExte
                 <>
                     <div className="flex-item-fluid">
                         <Challenge
-                            bodyClassName="signLayout-container"
+                            bodyClassName="sign-layout-container"
                             challengeRef={challengeRefLogin}
                             type={0}
                             onLoad={handleChallengeLoaded}

@@ -42,8 +42,8 @@ const AccountPublicLayout = ({ children, title, subtitle, aside, larger, left, c
     return (
         <div className="scroll-if-needed h100v">
             <PublicTopBanners />
-            <div className="pt1 pb1 pl2 pr2 onmobile-p0 signLayout-container flex flex-nowrap flex-column flex-spacebetween">
-                <div className="flex-item-fluid-auto signLayout flex-item-noshrink flex flex-column flex-nowrap">
+            <div className="pt1 pb1 pl2 pr2 onmobile-p0 sign-layout-container flex flex-nowrap flex-column flex-spacebetween">
+                <div className="flex-item-fluid-auto sign-layout flex-item-noshrink flex flex-column flex-nowrap">
                     <div className="flex flex-column flex-nowrap flex-item-noshrink onmobile-flex-item-fluid-auto">
                         <div
                             className={classnames([
@@ -51,13 +51,13 @@ const AccountPublicLayout = ({ children, title, subtitle, aside, larger, left, c
                                 larger ? '' : 'mw50e',
                             ])}
                         >
-                            <main className="onmobile-p1 flex-item-fluid signLayout-main flex-noMinChildren flex-column flex-nowrap">
+                            <main className="onmobile-p1 flex-item-fluid sign-layout-main flex-noMinChildren flex-column flex-nowrap">
                                 <header className="flex flex-items-center flex-nowrap mb2">
                                     <span className="flex-item-fluid flex">{left}</span>
                                     <span className="aligncenter flex w70p">{center}</span>
                                     <span className="flex-item-fluid flex alignright" />
                                 </header>
-                                <div className="mb2 flex-item-fluid signLayout-main-content">
+                                <div className="mb2 flex-item-fluid sign-layout-main-content">
                                     {title ? (
                                         <h1 className={classnames(['h4 bold mt0', subtitle ? 'mb0-25' : 'mb1'])}>
                                             {title}
@@ -79,7 +79,7 @@ const AccountPublicLayout = ({ children, title, subtitle, aside, larger, left, c
                                 </footer>
                             </main>
                             {aside ? (
-                                <aside className="nomobile bg-global-highlight w33 p2 flex flex-items-center flex-justify-center small m0 signLayout-aside">
+                                <aside className="nomobile bg-global-highlight w33 p2 flex flex-items-center flex-justify-center small m0 sign-layout-aside">
                                     {aside}
                                 </aside>
                             ) : null}

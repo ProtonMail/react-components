@@ -85,7 +85,7 @@ const SignupRecoveryForm = ({ model, onChange, onSubmit, onSkip, errors, loading
         if (model.step === RECOVERY_EMAIL) {
             const challenge = (
                 <Challenge
-                    bodyClassName="signLayout-container"
+                    bodyClassName="sign-layout-container"
                     challengeRef={challengeRefRecovery}
                     type={1}
                     onLoaded={handleChallengeLoaded}

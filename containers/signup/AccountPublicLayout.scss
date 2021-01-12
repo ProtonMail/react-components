@@ -6,7 +6,7 @@ $default-height-fields: 4.1rem;
 
 /* fields */
 .signup-container,
-.signLayout-container {
+.sign-layout-container {
 	.label {
 		font-weight: 600;
 		font-size: 1.2rem;
@@ -15,7 +15,7 @@ $default-height-fields: 4.1rem;
 	}
 }
 
-.signLayout-container {
+.sign-layout-container {
 	// selector to improve
 	.signup-label-field-container {
 		flex-direction: column;
@@ -120,7 +120,7 @@ $default-height-fields: 4.1rem;
 	}
 }
 
-.signLayout-main {
+.sign-layout-main {
 	padding: em(24) em(48);
 }
 
@@ -152,7 +152,7 @@ $default-height-fields: 4.1rem;
 }
 
 // Hide icons (caret, support1) in <SupportDropdown>
-.signLayout-container {
+.sign-layout-container {
 	.subscriptionTable-customize-button {
 		display: none;
 	}
