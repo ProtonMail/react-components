@@ -51,6 +51,9 @@ const MODIFIER_KEYS = {
     ALT: KeyboardKey.Alt.toLowerCase(),
 };
 
+const normalizeHotkeySequence = (a: string | string[]) =>
+    Array.isArray(a) ? a.sort().map((k) => k.toLowerCase()) : [a.toLowerCase()];
+
 export const useHotkeys = (
     ref: React.RefObject<HTMLElement | Document | undefined>,
     hotkeyTupleArray: HotkeyTuple[],
@@ -91,17 +94,14 @@ export const useHotkeys = (
         for (let i = 0; i < hotkeyTupleArray.length; i++) {
             const hotKeyTuple = hotkeyTupleArray[i];
 
-            const hotkeySequence = (hotKeyTuple.slice(0, -1) as Sequence).map((a) =>
-                Array.isArray(a) ? a.sort().map((k) => k.toLowerCase()) : [a.toLowerCase()]
-            );
+            const hotkeySequence = (hotKeyTuple.slice(0, -1) as Sequence).map(normalizeHotkeySequence);
             /*
              * take the number of items from the sequence as the number of items in
              * the hotkey sequence, starting from the end, so that even if the sequences
              * are not identical, a match is still found should the tails be identical
              * */
-            const tailSequence = sequence.current
-                .slice(-hotkeySequence.length)
-                .map((a) => (Array.isArray(a) ? a.sort().map((k) => k.toLowerCase()) : [a.toLowerCase()]));
+            const tailSequence = sequence.current.slice(-hotkeySequence.length).map(normalizeHotkeySequence);
+
             if (isDeepEqual(hotkeySequence, tailSequence)) {
                 const callback = hotKeyTuple[hotKeyTuple.length - 1] as HotKeyCallback;
                 callback(e);
