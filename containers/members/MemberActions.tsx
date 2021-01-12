@@ -122,20 +122,18 @@ const MemberActions = ({ member, addresses = [], organization }: Props) => {
     };
 
     const revokeAdmin = async () => {
-        if (member.Subscriber === MEMBER_SUBSCRIBER.PAYER) {
-            await new Promise((resolve, reject) => {
-                createModal(
-                    <ConfirmModal
-                        onClose={reject}
-                        onConfirm={() => resolve(undefined)}
-                        title={c('Title').t`Change role`}
-                    >
-                        <Alert>{c('Info')
-                            .t`This user is currently responsible for payments for your organization. By demoting this member, you will become responsible for payments for your organization.`}</Alert>
-                    </ConfirmModal>
-                );
-            });
-        }
+        await new Promise((resolve, reject) => {
+            createModal(
+                <ConfirmModal onClose={reject} onConfirm={() => resolve(undefined)} title={c('Title').t`Change role`}>
+                    <Alert>
+                        {member.Subscriber === MEMBER_SUBSCRIBER.PAYER
+                            ? c('Info')
+                                  .t`This user is currently responsible for payments for your organization. By demoting this member, you will become responsible for payments for your organization.`
+                            : c('Info').t`Are you sure you want to remove administrative privileges from this user?`}
+                    </Alert>
+                </ConfirmModal>
+            );
+        });
         await api(updateRole(member.ID, MEMBER_ROLE.ORGANIZATION_MEMBER));
         await call();
         createNotification({ text: c('Success message').t`Role updated` });
