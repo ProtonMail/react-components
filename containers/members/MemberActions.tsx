@@ -2,7 +2,14 @@ import React from 'react';
 import { c } from 'ttag';
 import { authMember, privatizeMember, removeMember, updateRole } from 'proton-shared/lib/api/members';
 import { revokeSessions } from 'proton-shared/lib/api/memberSessions';
-import { APPS, isSSOMode, isStandaloneMode, MEMBER_PRIVATE, MEMBER_ROLE } from 'proton-shared/lib/constants';
+import {
+    APPS,
+    isSSOMode,
+    isStandaloneMode,
+    MEMBER_PRIVATE,
+    MEMBER_ROLE,
+    MEMBER_SUBSCRIBER,
+} from 'proton-shared/lib/constants';
 import memberLogin from 'proton-shared/lib/authentication/memberLogin';
 import { Address, Member, Organization, User as tsUser } from 'proton-shared/lib/interfaces';
 import { noop } from 'proton-shared/lib/helpers/function';
@@ -115,7 +122,7 @@ const MemberActions = ({ member, addresses = [], organization }: Props) => {
     };
 
     const revokeAdmin = async () => {
-        if (member.Subscriber === 1) {
+        if (member.Subscriber === MEMBER_SUBSCRIBER.PAYER) {
             await new Promise((resolve, reject) => {
                 createModal(
                     <ConfirmModal
