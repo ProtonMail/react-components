@@ -18,7 +18,7 @@ import { getUser } from 'proton-shared/lib/api/user';
 import { MemberAuthResponse } from 'proton-shared/lib/authentication/interface';
 import { LoginTypes } from 'proton-shared/lib/authentication/LoginInterface';
 
-import { DropdownActions } from '../../components';
+import { DropdownActions, ConfirmModal, Alert } from '../../components';
 import {
     useApi,
     useAuthentication,
@@ -115,6 +115,20 @@ const MemberActions = ({ member, addresses = [], organization }: Props) => {
     };
 
     const revokeAdmin = async () => {
+        if (member.Subscriber === 1) {
+            await new Promise((resolve, reject) => {
+                createModal(
+                    <ConfirmModal
+                        onClose={reject}
+                        onConfirm={() => resolve(undefined)}
+                        title={c('Title').t`Change role`}
+                    >
+                        <Alert>{c('Info')
+                            .t`This user is currently responsible for payments for your organization. By demoting this member, you will become responsible for payments for your organization.`}</Alert>
+                    </ConfirmModal>
+                );
+            });
+        }
         await api(updateRole(member.ID, MEMBER_ROLE.ORGANIZATION_MEMBER));
         await call();
         createNotification({ text: c('Success message').t`Role updated` });
