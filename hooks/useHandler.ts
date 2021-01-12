@@ -55,7 +55,7 @@ export const useEventListener = (
     useEffect(() => {
         ref.current?.addEventListener(eventName, actualHandler);
         return () => ref.current?.removeEventListener(eventName, actualHandler);
-    }, [...dependencies]);
+    }, dependencies);
 };
 
 /**
