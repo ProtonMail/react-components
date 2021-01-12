@@ -33,7 +33,6 @@ const VPNClientCard = ({ title, link, items, icon }: Props) => {
                         className="pm-button pm-group-button pm-button--for-icon"
                         title={c('Title').t`Open actions dropdown`}
                         content=""
-                        data-test-id="dropdown:open"
                     >
                         <DropdownMenu>{items}</DropdownMenu>
                     </SimpleDropdown>
