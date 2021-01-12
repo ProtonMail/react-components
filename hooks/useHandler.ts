@@ -48,7 +48,7 @@ export const useEventListener = (
     ref: RefObject<Document | Element | null | undefined>,
     eventName: string,
     handler: Handler,
-    dependencies: React.DependencyList = []
+    dependencies: React.DependencyList
 ) => {
     const actualHandler = useHandler(handler);
 
