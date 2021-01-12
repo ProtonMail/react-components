@@ -50,74 +50,78 @@ const VpnFeaturesTable = ({ cycle, currency }) => {
                 </thead>
                 <tbody>
                     <tr>
-                        <td className="mod">{c('Feature').t`1 VPN connection`}</td>
-                        <td className="mod">{c('Feature').t`2 VPN connections`}</td>
-                        <td className="mod">{c('Feature').t`5 VPN connections`}</td>
-                        <td className="mod">{c('Feature').t`10 VPN connections`}</td>
+                        <td className="scroll-if-needed">{c('Feature').t`1 VPN connection`}</td>
+                        <td className="scroll-if-needed">{c('Feature').t`2 VPN connections`}</td>
+                        <td className="scroll-if-needed">{c('Feature').t`5 VPN connections`}</td>
+                        <td className="scroll-if-needed">{c('Feature').t`10 VPN connections`}</td>
                     </tr>
                     <tr>
-                        <td className="mod">{c('Feature').t`Servers in ${vpnCountries.free.length} countries`}</td>
-                        <td className="mod">{c('Feature').t`Servers in ${vpnCountries.basic.length} countries`}</td>
-                        <td className="mod">{c('Feature').t`Servers in ${vpnCountries.all.length} countries`}</td>
-                        <td className="mod">{c('Feature').t`Servers in ${vpnCountries.all.length} countries`}</td>
+                        <td className="scroll-if-needed">{c('Feature')
+                            .t`Servers in ${vpnCountries.free.length} countries`}</td>
+                        <td className="scroll-if-needed">{c('Feature')
+                            .t`Servers in ${vpnCountries.basic.length} countries`}</td>
+                        <td className="scroll-if-needed">{c('Feature')
+                            .t`Servers in ${vpnCountries.all.length} countries`}</td>
+                        <td className="scroll-if-needed">{c('Feature')
+                            .t`Servers in ${vpnCountries.all.length} countries`}</td>
                     </tr>
                     <tr>
-                        <td className="mod">{c('Feature').t`Medium speed`}</td>
-                        <td className="mod">{c('Feature').t`High speed`}</td>
-                        <td className="mod">{c('Feature').t`Highest speed (up to 10Gbps)`}</td>
-                        <td className="mod">{c('Feature').t`Highest speed (10Gbps)`}</td>
+                        <td className="scroll-if-needed">{c('Feature').t`Medium speed`}</td>
+                        <td className="scroll-if-needed">{c('Feature').t`High speed`}</td>
+                        <td className="scroll-if-needed">{c('Feature').t`Highest speed (up to 10Gbps)`}</td>
+                        <td className="scroll-if-needed">{c('Feature').t`Highest speed (10Gbps)`}</td>
                     </tr>
                     <tr>
-                        <td className="mod">
+                        <td className="scroll-if-needed">
                             <del>{c('Feature').t`Filesharing / P2P`}</del>
                         </td>
-                        <td className="mod">{c('Feature').t`Filesharing / P2P`}</td>
-                        <td className="mod">{c('Feature').t`Filesharing / P2P`}</td>
-                        <td className="mod">{c('Feature').t`Filesharing / P2P`}</td>
+                        <td className="scroll-if-needed">{c('Feature').t`Filesharing / P2P`}</td>
+                        <td className="scroll-if-needed">{c('Feature').t`Filesharing / P2P`}</td>
+                        <td className="scroll-if-needed">{c('Feature').t`Filesharing / P2P`}</td>
                     </tr>
                     <tr>
-                        <td className="mod">
+                        <td className="scroll-if-needed">
                             <del>{c('Feature').t`NetShield`}</del>
                         </td>
-                        <td className="mod">{c('Feature').t`NetShield`}</td>
-                        <td className="mod">{c('Feature').t`NetShield`}</td>
-                        <td className="mod">{c('Feature').t`NetShield`}</td>
+                        <td className="scroll-if-needed">{c('Feature').t`NetShield`}</td>
+                        <td className="scroll-if-needed">{c('Feature').t`NetShield`}</td>
+                        <td className="scroll-if-needed">{c('Feature').t`NetShield`}</td>
                     </tr>
                     <tr>
-                        <td className="mod">
+                        <td className="scroll-if-needed">
                             <del>{c('Feature').t`Secure Core and Tor VPN`}</del>
                         </td>
-                        <td className="mod">
+                        <td className="scroll-if-needed">
                             <del>{c('Feature').t`Secure Core and Tor VPN`}</del>
                         </td>
-                        <td className="mod">{c('Feature').t`Secure Core and Tor VPN`}</td>
-                        <td className="mod">{c('Feature').t`Secure Core and Tor VPN`}</td>
+                        <td className="scroll-if-needed">{c('Feature').t`Secure Core and Tor VPN`}</td>
+                        <td className="scroll-if-needed">{c('Feature').t`Secure Core and Tor VPN`}</td>
                     </tr>
                     <tr>
-                        <td className="mod">
+                        <td className="scroll-if-needed">
                             <del>{c('Feature').t`Advanced privacy features`}</del>
                         </td>
-                        <td className="mod">
+                        <td className="scroll-if-needed">
                             <del>{c('Feature').t`Advanced privacy features`}</del>
                         </td>
-                        <td className="mod">{c('Feature').t`Advanced privacy features`}</td>
-                        <td className="mod">{c('Feature').t`Advanced privacy features`}</td>
+                        <td className="scroll-if-needed">{c('Feature').t`Advanced privacy features`}</td>
+                        <td className="scroll-if-needed">{c('Feature').t`Advanced privacy features`}</td>
                     </tr>
                     <tr>
-                        <td className="mod">
+                        <td className="scroll-if-needed">
                             <del>{c('Feature').t`Access blocked content`}</del>
                         </td>
-                        <td className="mod">
+                        <td className="scroll-if-needed">
                             <del>{c('Feature').t`Access blocked content`}</del>
                         </td>
-                        <td className="mod">{c('Feature').t`Access blocked content`}</td>
-                        <td className="mod">{c('Feature').t`Access blocked content`}</td>
+                        <td className="scroll-if-needed">{c('Feature').t`Access blocked content`}</td>
+                        <td className="scroll-if-needed">{c('Feature').t`Access blocked content`}</td>
                     </tr>
                     <tr>
-                        <td className="mod">{c('Feature').t`ProtonMail (optional)*`}</td>
-                        <td className="mod">{c('Feature').t`ProtonMail (optional)*`}</td>
-                        <td className="mod">{c('Feature').t`ProtonMail (optional)*`}</td>
-                        <td className="mod">{c('Feature').t`ProtonMail included`}</td>
+                        <td className="scroll-if-needed">{c('Feature').t`ProtonMail (optional)*`}</td>
+                        <td className="scroll-if-needed">{c('Feature').t`ProtonMail (optional)*`}</td>
+                        <td className="scroll-if-needed">{c('Feature').t`ProtonMail (optional)*`}</td>
+                        <td className="scroll-if-needed">{c('Feature').t`ProtonMail included`}</td>
                     </tr>
                     <tr>
                         <td colSpan={4}>{c('Feature').t`No logs / no ads`}</td>
