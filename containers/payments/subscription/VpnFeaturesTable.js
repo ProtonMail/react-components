@@ -50,89 +50,74 @@ const VpnFeaturesTable = ({ cycle, currency }) => {
                 </thead>
                 <tbody>
                     <tr>
-                        <td>
-                            <span className="inbl ellipsis mw100" title={c('Feature').t`1 VPN connection`}>{c('Feature')
-                                .t`1 VPN connection`}</span>
-                        </td>
-                        <td>
-                            <span className="inbl ellipsis mw100" title={c('Feature').t`2 VPN connections`}>{c(
-                                'Feature'
-                            ).t`2 VPN connections`}</span>
-                        </td>
-                        <td>
-                            <span className="inbl ellipsis mw100" title={c('Feature').t`5 VPN connections`}>{c(
-                                'Feature'
-                            ).t`5 VPN connections`}</span>
-                        </td>
-                        <td>
-                            <span className="inbl ellipsis mw100" title={c('Feature').t`10 VPN connections`}>{c(
-                                'Feature'
-                            ).t`10 VPN connections`}</span>
-                        </td>
+                        <td className="mod">{c('Feature').t`1 VPN connection`}</td>
+                        <td className="mod">{c('Feature').t`2 VPN connections`}</td>
+                        <td className="mod">{c('Feature').t`5 VPN connections`}</td>
+                        <td className="mod">{c('Feature').t`10 VPN connections`}</td>
                     </tr>
                     <tr>
-                        <td>{c('Feature').t`Servers in ${vpnCountries.free.length} countries`}</td>
-                        <td>{c('Feature').t`Servers in ${vpnCountries.basic.length} countries`}</td>
-                        <td>{c('Feature').t`Servers in ${vpnCountries.all.length} countries`}</td>
-                        <td>{c('Feature').t`Servers in ${vpnCountries.all.length} countries`}</td>
+                        <td className="mod">{c('Feature').t`Servers in ${vpnCountries.free.length} countries`}</td>
+                        <td className="mod">{c('Feature').t`Servers in ${vpnCountries.basic.length} countries`}</td>
+                        <td className="mod">{c('Feature').t`Servers in ${vpnCountries.all.length} countries`}</td>
+                        <td className="mod">{c('Feature').t`Servers in ${vpnCountries.all.length} countries`}</td>
                     </tr>
                     <tr>
-                        <td>{c('Feature').t`Medium speed`}</td>
-                        <td>{c('Feature').t`High speed`}</td>
-                        <td>{c('Feature').t`Highest speed (up to 10Gbps)`}</td>
-                        <td>{c('Feature').t`Highest speed (10Gbps)`}</td>
+                        <td className="mod">{c('Feature').t`Medium speed`}</td>
+                        <td className="mod">{c('Feature').t`High speed`}</td>
+                        <td className="mod">{c('Feature').t`Highest speed (up to 10Gbps)`}</td>
+                        <td className="mod">{c('Feature').t`Highest speed (10Gbps)`}</td>
                     </tr>
                     <tr>
-                        <td>
+                        <td className="mod">
                             <del>{c('Feature').t`Filesharing / P2P`}</del>
                         </td>
-                        <td>{c('Feature').t`Filesharing / P2P`}</td>
-                        <td>{c('Feature').t`Filesharing / P2P`}</td>
-                        <td>{c('Feature').t`Filesharing / P2P`}</td>
+                        <td className="mod">{c('Feature').t`Filesharing / P2P`}</td>
+                        <td className="mod">{c('Feature').t`Filesharing / P2P`}</td>
+                        <td className="mod">{c('Feature').t`Filesharing / P2P`}</td>
                     </tr>
                     <tr>
-                        <td>
+                        <td className="mod">
                             <del>{c('Feature').t`NetShield`}</del>
                         </td>
-                        <td>{c('Feature').t`NetShield`}</td>
-                        <td>{c('Feature').t`NetShield`}</td>
-                        <td>{c('Feature').t`NetShield`}</td>
+                        <td className="mod">{c('Feature').t`NetShield`}</td>
+                        <td className="mod">{c('Feature').t`NetShield`}</td>
+                        <td className="mod">{c('Feature').t`NetShield`}</td>
                     </tr>
                     <tr>
-                        <td>
+                        <td className="mod">
                             <del>{c('Feature').t`Secure Core and Tor VPN`}</del>
                         </td>
-                        <td>
+                        <td className="mod">
                             <del>{c('Feature').t`Secure Core and Tor VPN`}</del>
                         </td>
-                        <td>{c('Feature').t`Secure Core and Tor VPN`}</td>
-                        <td>{c('Feature').t`Secure Core and Tor VPN`}</td>
+                        <td className="mod">{c('Feature').t`Secure Core and Tor VPN`}</td>
+                        <td className="mod">{c('Feature').t`Secure Core and Tor VPN`}</td>
                     </tr>
                     <tr>
-                        <td>
+                        <td className="mod">
                             <del>{c('Feature').t`Advanced privacy features`}</del>
                         </td>
-                        <td>
+                        <td className="mod">
                             <del>{c('Feature').t`Advanced privacy features`}</del>
                         </td>
-                        <td>{c('Feature').t`Advanced privacy features`}</td>
-                        <td>{c('Feature').t`Advanced privacy features`}</td>
+                        <td className="mod">{c('Feature').t`Advanced privacy features`}</td>
+                        <td className="mod">{c('Feature').t`Advanced privacy features`}</td>
                     </tr>
                     <tr>
-                        <td>
+                        <td className="mod">
                             <del>{c('Feature').t`Access blocked content`}</del>
                         </td>
-                        <td>
+                        <td className="mod">
                             <del>{c('Feature').t`Access blocked content`}</del>
                         </td>
-                        <td>{c('Feature').t`Access blocked content`}</td>
-                        <td>{c('Feature').t`Access blocked content`}</td>
+                        <td className="mod">{c('Feature').t`Access blocked content`}</td>
+                        <td className="mod">{c('Feature').t`Access blocked content`}</td>
                     </tr>
                     <tr>
-                        <td>{c('Feature').t`ProtonMail (optional)*`}</td>
-                        <td>{c('Feature').t`ProtonMail (optional)*`}</td>
-                        <td>{c('Feature').t`ProtonMail (optional)*`}</td>
-                        <td>{c('Feature').t`ProtonMail included`}</td>
+                        <td className="mod">{c('Feature').t`ProtonMail (optional)*`}</td>
+                        <td className="mod">{c('Feature').t`ProtonMail (optional)*`}</td>
+                        <td className="mod">{c('Feature').t`ProtonMail (optional)*`}</td>
+                        <td className="mod">{c('Feature').t`ProtonMail included`}</td>
                     </tr>
                     <tr>
                         <td colSpan={4}>{c('Feature').t`No logs / no ads`}</td>
