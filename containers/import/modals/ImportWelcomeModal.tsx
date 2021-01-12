@@ -38,7 +38,7 @@ const ImportWelcomeModal = ({ onClose = noop, ...rest }: Props) => {
     return (
         <FormModal
             title={
-                <h1 className="pm-modalTitle aligncenter">{c('Title').t`Your smooth transition to digital privacy`}</h1>
+                <h1 className="modal-title aligncenter">{c('Title').t`Your smooth transition to digital privacy`}</h1>
             }
             submit={
                 <PrimaryButton type="submit" data-focus-fallback={1}>{c('Action')

@@ -4,8 +4,8 @@ import Portal from '../portal/Portal';
 import { classnames } from '../../helpers';
 
 const CLASSES = {
-    OVERLAY: 'pm-modalOverlay',
-    OVERLAY_OUT: 'pm-modalOverlayOut',
+    OVERLAY: 'modal-overlay',
+    OVERLAY_OUT: 'modal-overlay--out',
 };
 
 const Overlay = ({ isClosing = false, className: extraClassName = '', onExit, ...rest }) => {

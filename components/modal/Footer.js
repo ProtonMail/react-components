@@ -4,7 +4,7 @@ import { classnames } from '../../helpers';
 
 const Footer = ({ children, className = 'flex flex-spacebetween flex-items-center flex-nowrap', ...rest }) => {
     return (
-        <footer className={classnames(['pm-modalFooter', className])} {...rest}>
+        <footer className={classnames(['modal-footer', className])} {...rest}>
             {children}
         </footer>
     );

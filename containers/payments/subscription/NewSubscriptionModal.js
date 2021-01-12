@@ -262,7 +262,7 @@ const NewSubscriptionModal = ({
             }
             className={classnames([
                 'subscription-modal',
-                [SUBSCRIPTION_STEPS.CUSTOMIZATION, SUBSCRIPTION_STEPS.PAYMENT].includes(step) && 'pm-modal--full',
+                [SUBSCRIPTION_STEPS.CUSTOMIZATION, SUBSCRIPTION_STEPS.PAYMENT].includes(step) && 'modal--full',
                 user.isFree && 'is-free-user',
             ])}
             title={TITLE[step]}
