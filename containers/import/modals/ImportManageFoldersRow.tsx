@@ -107,8 +107,6 @@ const ImportManageFoldersRow = ({
         return acc;
     }, []);
 
-    const levelDestination = Math.min(level, 2);
-
     const destinationName = folderNamesMap[Source];
 
     const inputRef = useRef<HTMLInputElement>(null);
@@ -299,8 +297,8 @@ const ImportManageFoldersRow = ({
                                     : {
                                           marginLeft: `${
                                               isParentSystemFolder
-                                                  ? Math.max(0, levelDestination - 1)
-                                                  : levelDestination
+                                                  ? Math.max(0, Math.min(level - 1, 2))
+                                                  : Math.min(level, 2)
                                           }em`,
                                       }
                             }
