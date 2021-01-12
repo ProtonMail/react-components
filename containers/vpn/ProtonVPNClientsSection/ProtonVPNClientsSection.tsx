@@ -20,7 +20,9 @@ const ProtonVPNClientsSection = () => {
     ].map(({ href, children }) => {
         return (
             <Group className="flex">
-                <DropdownMenuLink href={href}>{children}</DropdownMenuLink>
+                <DropdownMenuLink href={href} target="_blank">
+                    {children}
+                </DropdownMenuLink>
                 <Copy value={href} />
             </Group>
         );
