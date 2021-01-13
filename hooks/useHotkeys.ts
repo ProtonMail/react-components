@@ -2,6 +2,8 @@ import React, { /* useEffect, */ useRef } from 'react';
 import { KeyboardKey, KeyboardKeyType } from 'proton-shared/lib/interfaces';
 import isDeepEqual from 'proton-shared/lib/helpers/isDeepEqual';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
+import { isMac } from 'proton-shared/lib/helpers/browser';
+
 import { useEventListener } from './useHandler';
 
 /*
@@ -51,8 +53,28 @@ const MODIFIER_KEYS = {
     ALT: KeyboardKey.Alt.toLowerCase(),
 };
 
+const isMacOS = isMac();
+
 const normalizeHotkeySequence = (a: string | string[]) =>
     Array.isArray(a) ? a.sort().map((k) => k.toLowerCase()) : [a.toLowerCase()];
+
+/* Here we normalize Meta / Ctrl for Mac / PC & Linux users */
+const normalizeMetaControl = (initalTuple: HotkeyTuple) => {
+    const sequence = initalTuple.slice(0, -1) as Sequence;
+    const callback = initalTuple[initalTuple.length - 1];
+
+    const keys = sequence.reduce<Sequence>((acc, hotkey) => {
+        if (Array.isArray(hotkey)) {
+            acc.push(hotkey.map((k) => (!isMacOS && k === KeyboardKey.Meta ? KeyboardKey.Control : k)));
+        } else {
+            acc.push(!isMacOS && hotkey === KeyboardKey.Meta ? KeyboardKey.Control : hotkey);
+        }
+
+        return acc;
+    }, []);
+
+    return [...keys, callback];
+};
 
 export const useHotkeys = (
     ref: React.RefObject<HTMLElement | Document | undefined>,
@@ -62,7 +84,7 @@ export const useHotkeys = (
     const { keyEventType = 'keydown', sequenceResetTime = 1000, dependencies = [] } = options || {};
     const msSinceLastEvent = useRef(0);
 
-    const sequence = useRef<Hotkey[]>([]);
+    const sequence = useRef<Sequence>([]);
 
     const handleKeyDown = (e: KeyboardEvent) => {
         const key = e.key.toLowerCase() as KeyboardKey;
@@ -91,8 +113,10 @@ export const useHotkeys = (
 
         sequence.current.push(modifiedKey);
 
-        for (let i = 0; i < hotkeyTupleArray.length; i++) {
-            const hotKeyTuple = hotkeyTupleArray[i];
+        const normalizedHotkeyTupleArray = hotkeyTupleArray.map(normalizeMetaControl);
+
+        for (let i = 0; i < normalizedHotkeyTupleArray.length; i++) {
+            const hotKeyTuple = normalizedHotkeyTupleArray[i];
 
             const hotkeySequence = (hotKeyTuple.slice(0, -1) as Sequence).map(normalizeHotkeySequence);
             /*
