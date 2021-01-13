@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect, forwardRef, Ref } from 'react';
 import { c } from 'ttag';
+import { isMac } from 'proton-shared/lib/helpers/browser';
 
 import { useHandler, useModals, useNotifications } from '../../hooks';
 import { SquireType, getSquireRef, setSquireRef, initSquire, toggleEllipsisButton } from './squireConfig';
@@ -140,7 +141,9 @@ const SquireIframe = (
     };
 
     const handleKeyDown = (e: KeyboardEvent, squire: SquireType) => {
-        if (e.key === 'k' && e.metaKey) {
+        const ctrlOrMetaKey = isMac() ? e.metaKey : e.ctrlKey;
+
+        if (e.key === 'k' && ctrlOrMetaKey) {
             e.preventDefault();
             e.stopPropagation();
             handleLink(squire);
