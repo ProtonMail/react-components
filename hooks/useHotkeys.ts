@@ -58,7 +58,10 @@ const isMacOS = isMac();
 const normalizeHotkeySequence = (a: string | string[]) =>
     Array.isArray(a) ? a.sort().map((k) => k.toLowerCase()) : [a.toLowerCase()];
 
-/* Here we normalize Meta / Ctrl for Mac / PC & Linux users */
+/*
+ * Here we normalize Meta / Ctrl for Mac / PC & Linux users
+ * E.g. ['Meta', 'A'] will translate `Cmd + A` for Mac users and `Ctrl + A` for PC/Linux users
+ * */
 const normalizeMetaControl = (initalTuple: HotkeyTuple) => {
     const sequence = initalTuple.slice(0, -1) as Sequence;
     const callback = initalTuple[initalTuple.length - 1];
