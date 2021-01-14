@@ -1,5 +1,6 @@
 import { getCanonicalAddresses } from 'proton-shared/lib/api/addresses';
 import { API_CODES } from 'proton-shared/lib/constants';
+import { GetCanonicalEmails } from 'proton-shared/lib/interfaces';
 import { GetCanonicalAddressesApiResponse } from 'proton-shared/lib/interfaces/calendar';
 import { SimpleMap } from 'proton-shared/lib/interfaces/utils';
 import { useCallback } from 'react';
@@ -8,8 +9,6 @@ import useCache from './useCache';
 import { getIsRecordInvalid, getPromiseValue } from './useCachedModelResult';
 
 const CACHE_KEY = 'CANONICAL_EMAILS';
-
-export type GetCanonicalEmails = (emails: string[]) => Promise<SimpleMap<string>>;
 
 export const useGetCanonicalEmails = () => {
     const api = useApi();
