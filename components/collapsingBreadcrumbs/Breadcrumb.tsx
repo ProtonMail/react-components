@@ -15,9 +15,9 @@ const Breadcrumb = ({ children, onClick, active, noShrink, className, ...rest }:
             {...rest}
             ref={ref}
             className={classnames([
-                'pd-collapsing-breadcrumb',
+                'collapsing-breadcrumb',
                 active && 'flex-item-fluid-auto',
-                noShrink && 'pd-collapsing-breadcrumb--noShrink',
+                noShrink && 'collapsing-breadcrumb--no-shrink',
                 className,
             ])}
         >
