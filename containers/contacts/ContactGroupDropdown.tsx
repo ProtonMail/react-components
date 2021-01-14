@@ -213,7 +213,7 @@ const ContactGroupDropdown = ({ children, className, contactEmails, disabled = f
                                 return (
                                     <li
                                         key={ID}
-                                        className="dropDown-item w100 flex flex-nowrap flex-items-center pt0-5 pb0-5 pl1 pr1"
+                                        className="dropdown-item w100 flex flex-nowrap flex-items-center pt0-5 pb0-5 pl1 pr1"
                                     >
                                         <Checkbox
                                             className="flex-item-noshrink"

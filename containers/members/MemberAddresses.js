@@ -28,7 +28,7 @@ const MemberAddresses = ({ member, addresses }) => {
     return (
         <>
             <SimpleDropdown className="pm-button--link" content={contentDropDown}>
-                <div className="dropDown-item pt0-5 pb0-5 pl1 pr1 flex">
+                <div className="dropdown-item pt0-5 pb0-5 pl1 pr1 flex">
                     <AppLink
                         className="pm-button w100 aligncenter"
                         to={`/organization/${member.ID}#addresses`}

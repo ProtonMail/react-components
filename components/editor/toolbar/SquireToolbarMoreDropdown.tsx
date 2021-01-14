@@ -89,7 +89,7 @@ const SquireToolbarMoreDropdown = ({
                     </DropdownMenuButton>,
                     <DropdownMenuButton
                         key={13}
-                        liClassName="dropDown-item--no-separator"
+                        liClassName="dropdown-item--no-separator"
                         className="alignleft flex flex-nowrap"
                         onClick={squireActions.handleOrderedList}
                     >
@@ -108,7 +108,7 @@ const SquireToolbarMoreDropdown = ({
                     </DropdownMenuButton>,
                     <DropdownMenuButton
                         key={9}
-                        liClassName="dropDown-item--no-separator"
+                        liClassName="dropdown-item--no-separator"
                         className="alignleft flex flex-nowrap"
                         onClick={squireActions.handleAlignment(ALIGNMENT.Center)}
                     >
@@ -118,7 +118,7 @@ const SquireToolbarMoreDropdown = ({
                     </DropdownMenuButton>,
                     <DropdownMenuButton
                         key={10}
-                        liClassName="dropDown-item--no-separator"
+                        liClassName="dropdown-item--no-separator"
                         className="alignleft flex flex-nowrap"
                         onClick={squireActions.handleAlignment(ALIGNMENT.Right)}
                     >
@@ -128,7 +128,7 @@ const SquireToolbarMoreDropdown = ({
                     </DropdownMenuButton>,
                     <DropdownMenuButton
                         key={11}
-                        liClassName="dropDown-item--no-separator"
+                        liClassName="dropdown-item--no-separator"
                         className="alignleft flex flex-nowrap"
                         onClick={squireActions.handleAlignment(ALIGNMENT.Justify)}
                     >
@@ -147,7 +147,7 @@ const SquireToolbarMoreDropdown = ({
                     </DropdownMenuButton>,
                     <DropdownMenuButton
                         key={15}
-                        liClassName="dropDown-item--no-separator"
+                        liClassName="dropdown-item--no-separator"
                         className="alignleft flex flex-nowrap"
                         onClick={squireActions.handleLink}
                     >
@@ -157,7 +157,7 @@ const SquireToolbarMoreDropdown = ({
                     </DropdownMenuButton>,
                     <DropdownMenuButton
                         key={16}
-                        liClassName="dropDown-item--no-separator"
+                        liClassName="dropdown-item--no-separator"
                         className="alignleft flex flex-nowrap"
                         onClick={squireActions.handleClearFormatting}
                     >
@@ -190,7 +190,7 @@ const SquireToolbarMoreDropdown = ({
                         </DropdownMenuButton>,
                         <DropdownMenuButton
                             key={2}
-                            liClassName="dropDown-item--no-separator"
+                            liClassName="dropdown-item--no-separator"
                             className="alignleft flex flex-nowrap"
                             onClick={handleChangeDirection(RIGHT_TO_LEFT.ON)}
                         >
@@ -210,7 +210,7 @@ const SquireToolbarMoreDropdown = ({
                     </DropdownMenuButton>,
                     <DropdownMenuButton
                         key={4}
-                        liClassName="dropDown-item--no-separator"
+                        liClassName="dropdown-item--no-separator"
                         className="alignleft flex flex-nowrap"
                         onClick={handleChangePlainText(true)}
                         data-testid="squire-to-plaintext"

@@ -21,22 +21,22 @@ const UserDropdownButton = ({ user, isOpen, buttonRef, ...rest }: Props) => {
             aria-expanded={isOpen}
             ref={buttonRef}
             {...rest}
-            className="flex flex-items-center flex-nowrap p0-5 dropDown-logout-button"
+            className="flex flex-items-center flex-nowrap p0-5 dropdown-logout-button"
         >
             {nameToDisplay ? (
                 <span className="alignright flex flex-column mr0-75 lh130 nomobile">
-                    <span className="inbl mw100 ellipsis dropDown-logout-displayName">{nameToDisplay}</span>
+                    <span className="inbl mw100 ellipsis dropdown-logout-displayName">{nameToDisplay}</span>
                     {Email ? (
-                        <span className="inbl mw100 ellipsis m0 opacity-30 dropDown-logout-email">{Email}</span>
+                        <span className="inbl mw100 ellipsis m0 opacity-30 dropdown-logout-email">{Email}</span>
                     ) : null}
                 </span>
             ) : (
                 <span className="alignright flex flex-column mr0-75 lh130 nomobile">
-                    <span className="inbl mw100 ellipsis dropDown-logout-displayName">{Email}</span>
+                    <span className="inbl mw100 ellipsis dropdown-logout-displayName">{Email}</span>
                 </span>
             )}
-            <span className="mtauto mbauto semibold rounded p0-25 inbl dropDown-logout-initials relative flex flex-item-noshrink">
-                <span className="dropDown-logout-text center">{initials}</span>
+            <span className="mtauto mbauto semibold rounded p0-25 inbl dropdown-logout-initials relative flex flex-item-noshrink">
+                <span className="dropdown-logout-text center">{initials}</span>
             </span>
         </button>
     );
