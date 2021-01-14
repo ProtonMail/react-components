@@ -9,15 +9,15 @@ import AuthenticatedBugModal from '../support/AuthenticatedBugModal';
 import SupportDropdownButton from './SupportDropdownButton';
 import { generateUID } from '../../helpers';
 import { OnboardingModal } from '../onboarding';
-import ShortcutsModal from '../general/ShortcutsModal';
 
 interface Props {
     className?: string;
     content?: string;
     hasButtonCaret?: boolean;
+    onOpenShortcutsModal?: () => void;
 }
 
-const SupportDropdown = ({ className, content, hasButtonCaret = false }: Props) => {
+const SupportDropdown = ({ className, content, hasButtonCaret = false, onOpenShortcutsModal }: Props) => {
     const { UID } = useAuthentication();
     const { APP_NAME } = useConfig();
     const { createModal } = useModals();
@@ -31,10 +31,6 @@ const SupportDropdown = ({ className, content, hasButtonCaret = false }: Props) 
 
     const handleTourClick = () => {
         createModal(<OnboardingModal showGenericSteps allowClose hideDisplayName />);
-    };
-
-    const handleShortcutsClick = () => {
-        createModal(<ShortcutsModal app={APPS.PROTONMAIL} />, 'shortcuts-modal');
     };
 
     return (
@@ -71,10 +67,12 @@ const SupportDropdown = ({ className, content, hasButtonCaret = false }: Props) 
                         <Icon className="mt0-25 mr0-5" name="report-bug" />
                         {c('Action').t`Report bug`}
                     </DropdownMenuButton>
-                    <DropdownMenuButton className="flex flex-nowrap alignleft" onClick={handleShortcutsClick}>
-                        <Icon className="mt0-25 mr0-5" name="info" />
-                        {c('Action').t`Display keyboard shortcuts`}
-                    </DropdownMenuButton>
+                    {onOpenShortcutsModal && (
+                        <DropdownMenuButton className="flex flex-nowrap alignleft" onClick={onOpenShortcutsModal}>
+                            <Icon className="mt0-25 mr0-5" name="info" />
+                            {c('Action').t`Display keyboard shortcuts`}
+                        </DropdownMenuButton>
+                    )}
                     {APP_NAME !== APPS.PROTONVPN_SETTINGS && (
                         <DropdownMenuButton className="flex flex-nowrap alignleft" onClick={handleTourClick}>
                             <Icon className="mt0-25 mr0-5" name="tour" />

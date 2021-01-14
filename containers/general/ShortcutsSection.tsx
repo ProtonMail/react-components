@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { c } from 'ttag';
 
-import { APPS } from 'proton-shared/lib/constants';
-
 import { Row, Label, Field, SmallButton } from '../../components';
-import { useMailSettings, useModals } from '../../hooks';
+import { useMailSettings } from '../../hooks';
 
-import ShortcutsModal from './ShortcutsModal';
 import ShortcutsToggle from './ShortcutsToggle';
 
-const ShortcutsSection = () => {
+interface Props {
+    onOpenShortcutsModal: () => void;
+}
+
+const ShortcutsSection = ({ onOpenShortcutsModal }: Props) => {
     const [{ Hotkeys } = { Hotkeys: 0 }] = useMailSettings();
     const [hotkeys, setHotkeys] = useState(Hotkeys);
-    const { createModal } = useModals();
 
     // Handle updates from the Event Manager.
     useEffect(() => {
@@ -20,8 +20,6 @@ const ShortcutsSection = () => {
     }, [Hotkeys]);
 
     const handleChange = (newValue: number) => setHotkeys(newValue);
-
-    const handleOpenModal = () => createModal(<ShortcutsModal app={APPS.PROTONMAIL} />, 'shortcuts-modal');
 
     return (
         <Row>
@@ -31,7 +29,7 @@ const ShortcutsSection = () => {
                     <ShortcutsToggle className="mr1" id="hotkeysToggle" hotkeys={hotkeys} onChange={handleChange} />
                 </div>
                 <div className="mt1">
-                    <SmallButton onClick={handleOpenModal}>{c('Action').t`View keyboard shortcuts`}</SmallButton>
+                    <SmallButton onClick={onOpenShortcutsModal}>{c('Action').t`View keyboard shortcuts`}</SmallButton>
                 </div>
             </Field>
         </Row>
