@@ -26,9 +26,7 @@ const SimpleSidebarListItemHeader = ({
     isFocused,
 }: Props) => {
     const buttonRef = useRef<HTMLButtonElement>(null);
-    const handlersRef = useRef<HotkeyTuple[]>([]);
-
-    handlersRef.current = [
+    const shortcutHandlers: HotkeyTuple[] = [
         [
             'ArrowRight',
             (e) => {
@@ -44,7 +42,7 @@ const SimpleSidebarListItemHeader = ({
         ],
     ];
 
-    useHotkeys(buttonRef, handlersRef.current);
+    useHotkeys(buttonRef, shortcutHandlers);
 
     useEffect(() => {
         if (isFocused) {
