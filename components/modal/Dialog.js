@@ -13,6 +13,11 @@ const CLASSES = {
     MODAL_SMALL: 'modal--smaller',
 };
 
+const ANIMATIONS = {
+    MODAL_IN: 'anime-modal-in',
+    MODAL_OUT: 'anime-modal-out',
+};
+
 /** @type any */
 const Dialog = ({
     onClose,
@@ -37,11 +42,11 @@ const Dialog = ({
     const focusTrapProps = useFocusTrap({ rootRef });
 
     const handleAnimationEnd = ({ animationName }) => {
-        if (animationName === CLASSES.MODAL_OUT && isClosing) {
+        if (animationName === ANIMATIONS.MODAL_OUT && isClosing) {
             hasCalledExit.current = true;
             onExit?.();
         }
-        if (animationName === CLASSES.MODAL_IN && !isClosing) {
+        if (animationName === ANIMATIONS.MODAL_IN && !isClosing) {
             onEnter?.();
         }
     };

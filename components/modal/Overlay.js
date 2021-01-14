@@ -8,9 +8,13 @@ const CLASSES = {
     OVERLAY_OUT: 'modal-overlay--out',
 };
 
+const ANIMATIONS = {
+    OVERLAY_OUT: 'anime-modal-overlay-out',
+};
+
 const Overlay = ({ isClosing = false, className: extraClassName = '', onExit, ...rest }) => {
     const handleAnimationEnd = ({ animationName }) => {
-        if (animationName === CLASSES.OVERLAY_OUT && isClosing && onExit) {
+        if (animationName === ANIMATIONS.OVERLAY_OUT && isClosing && onExit) {
             onExit();
         }
     };
