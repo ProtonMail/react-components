@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import Icon from '../icon/Icon';
 import { classnames } from '../../helpers';
 import SidebarListItem from './SidebarListItem';
@@ -12,19 +12,10 @@ interface Props {
     text: string;
     title?: string;
     onFocus: () => void;
-    isFocused: boolean;
+    id: string;
 }
 
-const SimpleSidebarListItemHeader = ({
-    toggle,
-    onToggle,
-    hasCaret = true,
-    right,
-    text,
-    title,
-    onFocus,
-    isFocused,
-}: Props) => {
+const SimpleSidebarListItemHeader = ({ toggle, onToggle, hasCaret = true, right, text, id, title, onFocus }: Props) => {
     const buttonRef = useRef<HTMLButtonElement>(null);
     const shortcutHandlers: HotkeyTuple[] = [
         [
@@ -44,13 +35,6 @@ const SimpleSidebarListItemHeader = ({
 
     useHotkeys(buttonRef, shortcutHandlers);
 
-    useEffect(() => {
-        if (isFocused) {
-            buttonRef.current?.focus();
-            buttonRef.current?.scrollIntoView({ block: 'nearest' });
-        }
-    }, [isFocused]);
-
     return (
         <SidebarListItem className="navigation__link--groupHeader">
             <div className="flex flex-nowrap">
@@ -62,6 +46,7 @@ const SimpleSidebarListItemHeader = ({
                     title={title}
                     aria-expanded={toggle}
                     onFocus={onFocus}
+                    data-shortcut-target={id}
                 >
                     <span className="mr0-5 small">{text}</span>
                     {hasCaret && (
