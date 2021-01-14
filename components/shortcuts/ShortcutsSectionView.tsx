@@ -16,7 +16,7 @@ const ShortcutsSectionView = ({ name, shortcuts }: Props) => {
         <div key={name} className="pr2 onmobile-pr0 mb2">
             <h2 className="h5 mb0-5">{name}</h2>
             {shortcuts.length > 0 && (
-                <ul className="unstyled mt1 onmobile-pr0">
+                <ul className="unstyled mt1 onmobile-pr0 list-2columns-nobreak">
                     {shortcuts.map(({ name, keys }) => (
                         <li key={name} className="flex flex-items-center flex-spacebetween mb0-5">
                             <span>{name}</span>
