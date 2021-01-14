@@ -88,7 +88,7 @@ function DemoModal({ onAdd, ...rest }) {
         <DialogModal
             onClose={onClose}
             modalTitleID={modalTitleID}
-            disableCloseOnOnEscape={disableCloseOnOnEscape}
+            disableCloseOnOnEscape={disableCloseOnOnEscape || loading}
             {...rest}
         >
             <HeaderModal hasClose={hasClose} displayTitle={displayTitle} modalTitleID={modalTitleID} onClose={onClose}>
