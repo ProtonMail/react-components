@@ -194,7 +194,7 @@ const MembersSection = () => {
                     />
                 </div>
             </Block>
-            <Table className="pm-simple-table--has-actions">
+            <Table className="simple-table--has-actions">
                 <thead>
                     <tr>{headerCells}</tr>
                 </thead>

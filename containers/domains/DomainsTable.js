@@ -10,7 +10,7 @@ import DomainAddresses from './DomainAddresses';
 
 const DomainsTable = ({ domains = [], domainsAddressesMap = {}, loading = false }) => {
     return (
-        <Table className="pm-simple-table--has-actions">
+        <Table className="simple-table--has-actions">
             <TableHeader
                 cells={[
                     c('Header for addresses table').t`Domain`,

@@ -107,7 +107,7 @@ const InvoicesSection = () => {
                     onSelect={onSelect}
                 />
             </Block>
-            <Table className="pm-simple-table--has-actions">
+            <Table className="simple-table--has-actions">
                 <thead>
                     <tr>{headerCells}</tr>
                 </thead>

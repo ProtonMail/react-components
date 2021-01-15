@@ -146,7 +146,7 @@ const AddressesWithMembers = ({ user, organization, isOnlySelf }: Props) => {
             {isSelfSelected ? (
                 <AddressesWithUser user={user} />
             ) : (
-                <Table className="pm-simple-table--has-actions">
+                <Table className="simple-table--has-actions">
                     <TableHeader
                         cells={[
                             c('Header for addresses table').t`Address`,

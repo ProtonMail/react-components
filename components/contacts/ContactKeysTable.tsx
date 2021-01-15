@@ -103,7 +103,7 @@ const ContactKeysTable = ({ model, setModel }: Props) => {
     }, [model.publicKeys, model.trustedFingerprints, model.encrypt]);
 
     return (
-        <Table className="pm-simple-table--has-actions">
+        <Table className="simple-table--has-actions">
             <thead>
                 <tr>
                     <th scope="col" className="ellipsis">{c('Table header').t`Fingerprint`}</th>

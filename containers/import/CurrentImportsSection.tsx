@@ -190,7 +190,7 @@ const CurrentImportsSection = () => {
                     {bandwidthMessage}
                 </Alert>
             )}
-            <Table className="onmobile-hideTd3 onmobile-hideTd4 pm-simple-table--has-actions">
+            <Table className="onmobile-hideTd3 onmobile-hideTd4 simple-table--has-actions">
                 <thead>
                     <tr>{headerCells}</tr>
                 </thead>

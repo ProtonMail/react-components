@@ -97,7 +97,7 @@ const ReactivateKeysList = ({ loading = false, states, onUpload }: Props) => {
                     autoClick={false}
                 />
             ) : null}
-            <Table className="pm-simple-table--has-actions">
+            <Table className="simple-table--has-actions">
                 <TableHeader
                     cells={[
                         c('Title header for keys table').t`Email`,

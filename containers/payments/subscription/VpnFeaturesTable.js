@@ -19,28 +19,28 @@ const VpnFeaturesTable = ({ cycle, currency }) => {
 
     return (
         <>
-            <table className="pm-simple-table pm-simple-table--alternate-bg-row pm-simple-table--bordered w100">
+            <table className="simple-table simple-table--alternate-bg-row simple-table--bordered w100">
                 <thead>
                     <tr>
-                        <th className="aligncenter aligntop pm-simple-table-row-th pt1">
+                        <th className="aligncenter aligntop simple-table-row-th pt1">
                             <div className="uppercase ellipsis" title="Free">
                                 Free
                             </div>
                             <SubscriptionPrices cycle={cycle} currency={currency} />
                         </th>
-                        <th className="aligncenter aligntop pm-simple-table-row-th pt1">
+                        <th className="aligncenter aligntop simple-table-row-th pt1">
                             <div className="uppercase ellipsis" title="Basic">
                                 Basic
                             </div>
                             <SubscriptionPrices cycle={cycle} currency={currency} plan={plansMap[PLANS.VPNBASIC]} />
                         </th>
-                        <th className="aligncenter aligntop pm-simple-table-row-th pt1">
+                        <th className="aligncenter aligntop simple-table-row-th pt1">
                             <div className="uppercase ellipsis" title="Plus">
                                 Plus
                             </div>
                             <SubscriptionPrices cycle={cycle} currency={currency} plan={plansMap[PLANS.VPNPLUS]} />
                         </th>
-                        <th className="aligncenter aligntop pm-simple-table-row-th pt1">
+                        <th className="aligncenter aligntop simple-table-row-th pt1">
                             <div className="uppercase ellipsis" title="Visionary">
                                 Visionary
                             </div>

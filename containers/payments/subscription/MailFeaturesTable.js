@@ -18,10 +18,10 @@ const MailFeaturesTable = ({ cycle, currency }) => {
 
     return (
         <>
-            <table className="pm-simple-table cut pm-simple-table--alternate-bg-row pm-simple-table--bordered w100">
+            <table className="simple-table cut simple-table--alternate-bg-row simple-table--bordered w100">
                 <thead>
                     <tr>
-                        <th scope="col" className="aligncenter aligntop pm-simple-table-row-th pt1">
+                        <th scope="col" className="aligncenter aligntop simple-table-row-th pt1">
                             <strong className="uppercase ellipsis inbl mw100" title="Free">
                                 Free
                             </strong>
@@ -29,7 +29,7 @@ const MailFeaturesTable = ({ cycle, currency }) => {
                                 <SubscriptionPrices cycle={cycle} currency={currency} />
                             </div>
                         </th>
-                        <th scope="col" className="aligncenter aligntop pm-simple-table-row-th pt1">
+                        <th scope="col" className="aligncenter aligntop simple-table-row-th pt1">
                             <strong className="uppercase ellipsis inbl mw100" title="Plus">
                                 Plus
                             </strong>
@@ -37,7 +37,7 @@ const MailFeaturesTable = ({ cycle, currency }) => {
                                 <SubscriptionPrices cycle={cycle} currency={currency} plan={plansMap[PLANS.PLUS]} />
                             </div>
                         </th>
-                        <th scope="col" className="aligncenter aligntop pm-simple-table-row-th pt1">
+                        <th scope="col" className="aligncenter aligntop simple-table-row-th pt1">
                             <strong className="uppercase ellipsis inbl mw100" title="Professional">
                                 Professional
                             </strong>
@@ -49,7 +49,7 @@ const MailFeaturesTable = ({ cycle, currency }) => {
                                 />
                             </div>
                         </th>
-                        <th scope="col" className="aligncenter aligntop pm-simple-table-row-th pt1">
+                        <th scope="col" className="aligncenter aligntop simple-table-row-th pt1">
                             <strong className="uppercase ellipsis inbl mw100" title="Visionary">
                                 Visionary
                             </strong>

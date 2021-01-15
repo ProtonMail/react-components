@@ -61,7 +61,7 @@ const ImportExportSection = () => {
                 {c('Info').t`Import and export your messages for local backups with Proton's dedicated desktop app.`}
             </Alert>
 
-            <Table className="pm-simple-table--has-actions">
+            <Table className="simple-table--has-actions">
                 <TableHeader
                     cells={[
                         c('Title for downloads section').t`Platform`,
