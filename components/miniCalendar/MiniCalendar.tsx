@@ -97,8 +97,8 @@ const MiniCalendar = ({
         setTemporaryDate(undefined);
     }, [selectedDate]);
 
-    const classWeekNumber = displayWeekNumbers ? 'minicalendar-grid--displayWeekNumber' : '';
-    const classDark = displayedOnDarkBackground ? 'minicalendar--onDarkBackground' : '';
+    const classWeekNumber = displayWeekNumbers ? 'minicalendar-grid--display-week-number' : '';
+    const classDark = displayedOnDarkBackground ? 'minicalendar--on-dark-background' : '';
 
     const preventLeaveFocus = (e: FormEvent<HTMLElement>) => e.preventDefault();
 
