@@ -34,7 +34,7 @@ const DynamicProgress = ({
                       <Icon name="on" color="white" size={24} />
                   </span>
               ),
-              progressClassname: 'progressbar--success',
+              progressClassname: 'progress-bar--success',
           }
         : partialSuccess
         ? {
@@ -43,7 +43,7 @@ const DynamicProgress = ({
                       <Icon name="off" color="white" size={24} />
                   </span>
               ),
-              progressClassname: 'progressbar--warning',
+              progressClassname: 'progress-bar--warning',
           }
         : {
               icon: (
@@ -51,7 +51,7 @@ const DynamicProgress = ({
                       <Icon name="off" color="white" size={24} />
                   </span>
               ),
-              progressClassname: 'progressbar--error',
+              progressClassname: 'progress-bar--error',
           };
 
     return (
