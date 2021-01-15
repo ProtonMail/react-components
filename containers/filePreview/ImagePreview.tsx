@@ -67,7 +67,7 @@ const ImagePreview = ({ mimeType, contents, onSave }: Props) => {
 
     return (
         <>
-            <div ref={containerRef} className="pd-file-preview-container">
+            <div ref={containerRef} className="file-preview-container">
                 {error ? (
                     <UnsupportedPreview onSave={onSave} type="image" />
                 ) : (
@@ -77,7 +77,7 @@ const ImagePreview = ({ mimeType, contents, onSave }: Props) => {
                                 ref={imageRef}
                                 onLoad={() => fitToContainer()}
                                 onError={handleBrokenImage}
-                                className="pd-file-preview-image"
+                                className="file-preview-image"
                                 style={dimensions}
                                 src={imageData.src}
                                 alt={c('Info').t`Preview`}

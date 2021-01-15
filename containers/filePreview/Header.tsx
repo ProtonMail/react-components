@@ -13,7 +13,7 @@ interface Props {
 const Header = ({ mimeType, name, onClose, onSave, children }: Props) => {
     return (
         <div className="flex flex-spacebetween flex-items-center p2 relative">
-            <div title={name} className="pd-file-preview-filename flex flex-items-center flex-nowrap">
+            <div title={name} className="file-preview-filename flex flex-items-center flex-nowrap">
                 {mimeType && <FileIcon mimeType={mimeType} />}
                 <span className="ellipsis">
                     <span className="pre">{name}</span>
