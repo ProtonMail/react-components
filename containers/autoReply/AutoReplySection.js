@@ -33,7 +33,7 @@ const AutoReplySection = () => {
                     .t`Automatic replies can respond automatically to incoming messages (such as when you are on vacation and can't respond).`}
             </Alert>
 
-            <EditableSection className="editableSection-container--sizeTablet">
+            <EditableSection className="editable-section-container--size-tablet">
                 <Label htmlFor="autoReplyToggle" className="border-bottom onmobile-pb0 onmobile-no-border">{c('Label')
                     .t`Auto-reply`}</Label>
                 <Field className="auto border-bottom onmobile-pb0 onmobile-no-border flex flex-nowrap">
