@@ -22,4 +22,4 @@ export const GOOGLE_OAUTH_SCOPE = ['email', 'openid', 'https://mail.google.com/'
 // local
 // export const GOOGLE_OAUTH_REDIRECT_URL = 'http://localhost:8080/settings/import';
 // blue deployment
-export const GOOGLE_OAUTH_REDIRECT_URL = 'https://ronflex.protonmail.blue/settings/import';
+export const GOOGLE_OAUTH_REDIRECT_URL = 'https://beta.salk.proton.black/u/0/settings/import';
