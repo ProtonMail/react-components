@@ -19,7 +19,7 @@ const SidebarItemContent = ({ icon, iconColor, iconSize = 16, title, text, aside
                     color={iconColor}
                     name={icon}
                     size={iconSize}
-                    className="navigation__icon flex-item-noshrink mr0-5 flex-item-centered-vert"
+                    className="navigation-icon flex-item-noshrink mr0-5 flex-item-centered-vert"
                 />
             )}
             <span className="flex-item-fluid ellipsis mw100">{text}</span>
