@@ -254,7 +254,7 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }: Props) => {
                                     <div
                                         className={classnames([
                                             'blackfriday-plan w100 bordered-container p1 mb1 flex flex-column flex-align-items-center flex-justify-end',
-                                            popular && 'borderColor-primary',
+                                            popular && 'border-color-primary',
                                         ])}
                                     >
                                         <div className="blackfriday-plan-namePeriod">
