@@ -146,7 +146,7 @@ const MembersSection = () => {
             node: (
                 <>
                     <span
-                        className="ellipsis inbl alignbottom mw100"
+                        className="ellipsis inline-block alignbottom mw100"
                         title={c('Title header for members table').t`Addresses`}
                     >{c('Title header for members table').t`Addresses`}</span>
                 </>
@@ -156,7 +156,7 @@ const MembersSection = () => {
             node: (
                 <>
                     <span
-                        className="ellipsis inbl alignbottom mw100"
+                        className="ellipsis inline-block alignbottom mw100"
                         title={c('Title header for members table').t`Features`}
                     >{c('Title header for members table').t`Features`}</span>
                 </>
@@ -206,7 +206,7 @@ const MembersSection = () => {
                             <TableRow
                                 key={key}
                                 cells={[
-                                    <span className="ellipsis mw100 inbl" key={key} title={member.Name}>
+                                    <span className="ellipsis mw100 inline-block" key={key} title={member.Name}>
                                         {member.Name}
                                     </span>,
                                     <MemberRole key={key} member={member} />,

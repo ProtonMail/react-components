@@ -86,7 +86,7 @@ const CodeVerification = ({ email: defaultEmail = '', mode, method, onSubmit }: 
         };
         return (
             <>
-                <Label htmlFor="email" className={classnames(['bl', mode !== 'signup' && 'mb0-5'])}>{c('Label')
+                <Label htmlFor="email" className={classnames(['block', mode !== 'signup' && 'mb0-5'])}>{c('Label')
                     .t`Email address`}</Label>
                 <div className="mb1">
                     <EmailInput
@@ -120,7 +120,7 @@ const CodeVerification = ({ email: defaultEmail = '', mode, method, onSubmit }: 
         const handleChangePhone = (status: any, value: any, countryData: any, number: string) => setPhone(number);
         return (
             <>
-                <Label htmlFor="phone" className={classnames(['bl', mode !== 'signup' && 'mb0-5'])}>{c('Label')
+                <Label htmlFor="phone" className={classnames(['block', mode !== 'signup' && 'mb0-5'])}>{c('Label')
                     .t`Phone number`}</Label>
                 <div className="mb1">
                     <IntlTelInput
@@ -166,7 +166,7 @@ const CodeVerification = ({ email: defaultEmail = '', mode, method, onSubmit }: 
                         ) : null}
                     </div>
                 ) : null}
-                <Label htmlFor="code" className={classnames(['bl', mode !== 'signup' && 'mb0-5'])}>{c('Label')
+                <Label htmlFor="code" className={classnames(['block', mode !== 'signup' && 'mb0-5'])}>{c('Label')
                     .t`Verification code`}</Label>
                 <div className="mb0-5">
                     <Input

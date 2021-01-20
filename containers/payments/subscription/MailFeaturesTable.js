@@ -22,7 +22,7 @@ const MailFeaturesTable = ({ cycle, currency }) => {
                 <thead>
                     <tr>
                         <th scope="col" className="aligncenter aligntop simple-table-row-th pt1">
-                            <strong className="uppercase ellipsis inbl mw100" title="Free">
+                            <strong className="uppercase ellipsis inline-block mw100" title="Free">
                                 Free
                             </strong>
                             <div>
@@ -30,7 +30,7 @@ const MailFeaturesTable = ({ cycle, currency }) => {
                             </div>
                         </th>
                         <th scope="col" className="aligncenter aligntop simple-table-row-th pt1">
-                            <strong className="uppercase ellipsis inbl mw100" title="Plus">
+                            <strong className="uppercase ellipsis inline-block mw100" title="Plus">
                                 Plus
                             </strong>
                             <div>
@@ -38,7 +38,7 @@ const MailFeaturesTable = ({ cycle, currency }) => {
                             </div>
                         </th>
                         <th scope="col" className="aligncenter aligntop simple-table-row-th pt1">
-                            <strong className="uppercase ellipsis inbl mw100" title="Professional">
+                            <strong className="uppercase ellipsis inline-block mw100" title="Professional">
                                 Professional
                             </strong>
                             <div>
@@ -50,7 +50,7 @@ const MailFeaturesTable = ({ cycle, currency }) => {
                             </div>
                         </th>
                         <th scope="col" className="aligncenter aligntop simple-table-row-th pt1">
-                            <strong className="uppercase ellipsis inbl mw100" title="Visionary">
+                            <strong className="uppercase ellipsis inline-block mw100" title="Visionary">
                                 Visionary
                             </strong>
                             <div>
@@ -140,7 +140,7 @@ const MailFeaturesTable = ({ cycle, currency }) => {
                     </tr>
                     <tr>
                         <td>
-                            <del className="opacity-50 ellipsis bl">{c('Feature').t`Autoresponder`}</del>
+                            <del className="opacity-50 ellipsis block">{c('Feature').t`Autoresponder`}</del>
                         </td>
                         <td className="ellipsis">{c('Feature').t`Autoresponder`}</td>
                         <td className="ellipsis">{c('Feature').t`Autoresponder`}</td>

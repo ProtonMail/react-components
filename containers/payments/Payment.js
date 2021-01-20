@@ -81,7 +81,7 @@ const Payment = ({
         <>
             <Row className="payment-container">
                 <div className="label payment-left mr1 onmobile-mr0">
-                    <label className="mb0-5 bl">{c('Label').t`Select a method`}</label>
+                    <label className="mb0-5 block">{c('Label').t`Select a method`}</label>
                     {options.map(({ text, value, disabled, icon }) => {
                         return (
                             <label

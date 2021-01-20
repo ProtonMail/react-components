@@ -13,7 +13,7 @@ const FeaturesList = ({ features = [] }) => {
                 return (
                     <li key={key} className="aligncenter flex-item-fluid pl1 pr1">
                         <Icon name="check-circle" size={24} className="color-primary" />
-                        <span className="bl">{text}</span>
+                        <span className="block">{text}</span>
                     </li>
                 );
             })}

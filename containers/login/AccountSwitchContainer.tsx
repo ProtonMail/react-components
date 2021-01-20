@@ -130,14 +130,14 @@ const AccountSwitchContainer = ({ Layout, toApp, onLogin, activeSessions, onAddA
                         </span>
                     </span>
                     <span className="flex-item-fluid flex flex-column pl1 pr1">
-                        <span className="semibold ellipsis inbl mw100" title={nameToDisplay}>
+                        <span className="semibold ellipsis inline-block mw100" title={nameToDisplay}>
                             {nameToDisplay}
                         </span>
-                        <span className="ellipsis inbl mw100" title={PrimaryEmail}>
+                        <span className="ellipsis inline-block mw100" title={PrimaryEmail}>
                             {PrimaryEmail}
                         </span>
                     </span>
-                    <span className="nonvisible bl no-scroll button-showOnHover-element button-account-login semibold small m0">
+                    <span className="nonvisible block no-scroll button-showOnHover-element button-account-login semibold small m0">
                         {loadingMap[LocalID] ? <LoaderIcon /> : c('Action').t`Sign in`}
                     </span>
                 </button>

@@ -48,7 +48,7 @@ const Option = <V,>({
                 isSelected={selected}
                 onClick={handleClick}
                 title={title}
-                className={classnames(['bl w100 ellipsis alignleft no-outline', active && 'active'])}
+                className={classnames(['block w100 ellipsis alignleft no-outline', active && 'active'])}
                 {...rest}
             >
                 {children}

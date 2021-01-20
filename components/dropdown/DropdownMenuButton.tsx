@@ -38,7 +38,7 @@ const DropdownMenuButton = React.forwardRef<HTMLButtonElement, Props>(
                 aria-busy={loading}
                 {...rest}
             >
-                {loading ? <span className="bl ellipsis">{children}</span> : children}
+                {loading ? <span className="block ellipsis">{children}</span> : children}
             </button>
         );
     }

@@ -87,7 +87,7 @@ const ContactSummary = ({
                     {name}
                 </h2>
                 <div className="onmobile-aligncenter">
-                    <ul className="unstyled mt0-5 inbl">
+                    <ul className="unstyled mt0-5 inline-block">
                         {summary.map(({ icon, component }) => {
                             if (!component) {
                                 return null;

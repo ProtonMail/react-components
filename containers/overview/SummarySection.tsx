@@ -61,7 +61,7 @@ const SummarySection = ({ user, userSettings, organization, subscription }: Prop
             </div>
             {canPay ? (
                 <div className="mb1">
-                    <strong className="bl mb0-5">{c('Title').t`Plans`}</strong>
+                    <strong className="block mb0-5">{c('Title').t`Plans`}</strong>
                     {!subscription ? (
                         <Loader />
                     ) : (
@@ -80,7 +80,7 @@ const SummarySection = ({ user, userSettings, organization, subscription }: Prop
             ) : null}
             {languageText ? (
                 <div className="mb1">
-                    <strong className="bl mb0-5">{c('Title').t`Default language`}</strong>
+                    <strong className="block mb0-5">{c('Title').t`Default language`}</strong>
                     <ul className="unstyled mt0 mb0">
                         <li className="flex flex-nowrap flex-align-items-center">
                             <Icon name="globe" className="mr0-5 flex-item-noshrink" />
@@ -91,7 +91,7 @@ const SummarySection = ({ user, userSettings, organization, subscription }: Prop
             ) : null}
             {isAdmin ? (
                 <div className="mb1">
-                    <strong className="bl mb0-5">{c('Title').t`Your organization`}</strong>
+                    <strong className="block mb0-5">{c('Title').t`Your organization`}</strong>
                     {!organization ? (
                         <Loader />
                     ) : (
@@ -116,7 +116,7 @@ const SummarySection = ({ user, userSettings, organization, subscription }: Prop
             ) : null}
             {APP_NAME === APPS.PROTONACCOUNT ? (
                 <div className="mb1">
-                    <strong className="bl mb0-5">{c('Title').t`Application settings`}</strong>
+                    <strong className="block mb0-5">{c('Title').t`Application settings`}</strong>
                     <ul className="unstyled mt0 mb0">
                         <li className="flex flex-nowrap flex-align-items-center">
                             <Icon name="protonmail" className="mr0-5 flex-item-noshrink" />

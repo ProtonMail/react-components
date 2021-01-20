@@ -151,7 +151,7 @@ const OpenVPNConfigurationSection = () => {
                             >
                                 {label}
                             </Radio>
-                            <Href url={link} className="small m0 bl" style={{ paddingLeft: '2.1rem' }}>{c('Link')
+                            <Href url={link} className="small m0 block" style={{ paddingLeft: '2.1rem' }}>{c('Link')
                                 .t`View guide`}</Href>
                         </div>
                     );

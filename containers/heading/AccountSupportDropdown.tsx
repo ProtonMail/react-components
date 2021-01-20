@@ -50,13 +50,13 @@ const AccountSupportDropdown = ({ className, children, noCaret = false }: Props)
                         <>
                             <Link
                                 to="/reset-password"
-                                className="dropdown-item-link w100 pr1 pl1 pt0-5 pb0-5 bl nodecoration flex flex-nowrap alignleft"
+                                className="dropdown-item-link w100 pr1 pl1 pt0-5 pb0-5 block nodecoration flex flex-nowrap alignleft"
                             >
                                 {c('Link').t`Reset password`}
                             </Link>
                             <Link
                                 to="/forgot-username"
-                                className="dropdown-item-link w100 pr1 pl1 pt0-5 pb0-5 bl nodecoration flex flex-nowrap alignleft"
+                                className="dropdown-item-link w100 pr1 pl1 pt0-5 pb0-5 block nodecoration flex flex-nowrap alignleft"
                             >
                                 {c('Link').t`Forgot username?`}
                             </Link>

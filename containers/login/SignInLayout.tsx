@@ -29,7 +29,11 @@ const SignInLayout = ({ children, title = '' }: Props) => {
                 left={
                     <>
                         <span className="opacity-50 mr1">{c('Label').t`Back to:`}</span>
-                        <Href url={staticURL} className="inbl color-white nodecoration hover-same-color" target="_self">
+                        <Href
+                            url={staticURL}
+                            className="inline-block color-white nodecoration hover-same-color"
+                            target="_self"
+                        >
                             {domain}
                         </Href>
                     </>

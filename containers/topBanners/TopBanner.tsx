@@ -14,7 +14,7 @@ const TopBanner = ({ children, className, onClose }: Props) => {
         <div className={classnames(['aligncenter p0-5 relative bold', className])}>
             {children}
             {onClose ? (
-                <button type="button" className="right" onClick={onClose}>
+                <button type="button" className="float-right" onClick={onClose}>
                     <Icon name="off" />
                 </button>
             ) : null}

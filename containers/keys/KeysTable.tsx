@@ -51,7 +51,7 @@ const KeysTable = ({
                                         value={fingerprint}
                                         className="pm-button--small flex-item-noshrink notinymobile mr1 onmobile-mr0-5 ontinymobile-m0"
                                     />
-                                    <code className="mw100 inbl ellipsis" title={fingerprint}>
+                                    <code className="mw100 inline-block ellipsis" title={fingerprint}>
                                         {fingerprint}
                                     </code>
                                 </div>,

@@ -101,7 +101,7 @@ const FilterActionsFormLabelsRow = ({ actions, isNarrow, handleUpdateActions, la
                         <div className="w100">
                             {labels.length ? (
                                 labels.map((label: Label) => (
-                                    <div className="mb0-5 inbl ellipsis" key={label.Name}>
+                                    <div className="mb0-5 inline-block ellipsis" key={label.Name}>
                                         <Checkbox
                                             className="mr1 flex-nowrap"
                                             checked={labelAs.labels.includes(label.Name)}

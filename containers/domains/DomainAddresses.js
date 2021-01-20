@@ -7,7 +7,7 @@ import { AppLink, SimpleDropdown, DropdownMenu } from '../../components';
 
 const DomainAddresses = ({ domainAddresses }) => {
     const list = domainAddresses.map(({ ID, Email }) => (
-        <div key={ID} className="inbl w100 pt0-5 pb0-5 pl1 pr1 ellipsis">
+        <div key={ID} className="inline-block w100 pt0-5 pb0-5 pl1 pr1 ellipsis">
             {Email}
         </div>
     ));
