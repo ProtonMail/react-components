@@ -137,7 +137,7 @@ const AccountSwitchContainer = ({ Layout, toApp, onLogin, activeSessions, onAddA
                             {PrimaryEmail}
                         </span>
                     </span>
-                    <span className="nonvisible block no-scroll button-showOnHover-element button-account-login semibold small m0">
+                    <span className="visibility-hidden block no-scroll button-showOnHover-element button-account-login semibold small m0">
                         {loadingMap[LocalID] ? <LoaderIcon /> : c('Action').t`Sign in`}
                     </span>
                 </button>
@@ -157,7 +157,7 @@ const AccountSwitchContainer = ({ Layout, toApp, onLogin, activeSessions, onAddA
                 <div className="button-account-container-inner">
                     {inner()}
                     <div className="relative p1">
-                        <LinkButton className="semibold increase-surface-click" onClick={onAddAccount}>{c('Action')
+                        <LinkButton className="semibold increase-click-surface" onClick={onAddAccount}>{c('Action')
                             .t`Add account`}</LinkButton>
                     </div>
                 </div>

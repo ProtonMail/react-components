@@ -45,7 +45,7 @@ const PaginationRow = ({
                 ])}
                 onClick={() => onStart()}
             >
-                <Tooltip title={c('Action').t`Go to first page`} className="flex increase-surface-click">
+                <Tooltip title={c('Action').t`Go to first page`} className="flex increase-click-surface">
                     <Icon
                         name="caret-double-left"
                         className={classnames([(disabled || disablePrevious) && 'opacity-50'])}
@@ -60,7 +60,7 @@ const PaginationRow = ({
                 ])}
                 onClick={() => onPrevious()}
             >
-                <Tooltip title={c('Action').t`Go to previous page`} className="flex increase-surface-click">
+                <Tooltip title={c('Action').t`Go to previous page`} className="flex increase-click-surface">
                     <Icon
                         name="caret"
                         className={classnames(['rotateZ-90', (disabled || disablePrevious) && 'opacity-50'])}
@@ -81,7 +81,7 @@ const PaginationRow = ({
                         key={pageNumber}
                         onClick={() => onPage(pageNumber)}
                     >
-                        <Tooltip title={goToPageTitle(pageNumber)} className="flex increase-surface-click">
+                        <Tooltip title={goToPageTitle(pageNumber)} className="flex increase-click-surface">
                             <span className="sr-only">{goToPageTitle(pageNumber)}</span>
                             <span aria-hidden="true">{pageNumber}</span>
                         </Tooltip>
@@ -95,7 +95,7 @@ const PaginationRow = ({
                 ])}
                 onClick={() => onNext()}
             >
-                <Tooltip title={c('Action').t`Go to next page`} className="flex increase-surface-click">
+                <Tooltip title={c('Action').t`Go to next page`} className="flex increase-click-surface">
                     <Icon
                         name="caret"
                         className={classnames(['rotateZ-270', (disabled || disableNext) && 'opacity-50'])}
@@ -110,7 +110,7 @@ const PaginationRow = ({
                 ])}
                 onClick={() => onEnd()}
             >
-                <Tooltip title={c('Action').t`Go to last page`} className="flex increase-surface-click">
+                <Tooltip title={c('Action').t`Go to last page`} className="flex increase-click-surface">
                     <Icon
                         name="caret-double-left"
                         className={classnames(['mirror', (disabled || disableNext) && 'opacity-50'])}

@@ -39,7 +39,7 @@ const Checkbox = ({
             htmlFor={id}
             className={classnames([
                 'inline-flex',
-                !className?.includes('increase-surface-click') && 'relative',
+                !className?.includes('increase-click-surface') && 'relative',
                 className,
             ])}
             title={title}

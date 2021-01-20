@@ -14,7 +14,7 @@ const ContactGroupTable = ({ contactEmails, onDelete }: Props) => {
     return (
         <>
             <div className="flex flex-column" style={{ minHeight: 180 }}>
-                <Table className="noborder">
+                <Table className="no-border">
                     <TableHeader>
                         <tr>
                             <TableCell type="header">{c('Table header').t`Name`}</TableCell>

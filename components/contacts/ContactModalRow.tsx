@@ -71,7 +71,7 @@ const ContactModalRow = forwardRef<HTMLInputElement, Props>(
                     </OrderableHandle>
                 ) : (
                     <div className="mr0-5 flex flex-align-items-center flex-item-noshrink">
-                        <Icon name="text-justify nonvisible" />
+                        <Icon name="text-justify visibility-hidden" />
                     </div>
                 )}
                 <div className="flex flex-nowrap onmobile-flex-column w95 flex-align-items-start">

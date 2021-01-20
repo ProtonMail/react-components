@@ -12,7 +12,7 @@ import { SquireType } from '../squireConfig';
 import { setTextDirection } from '../squireActions';
 import { SquireEditorMetadata, ALIGNMENT } from '../interface';
 
-const getClassname = (status: boolean) => (status ? undefined : 'nonvisible');
+const getClassname = (status: boolean) => (status ? undefined : 'visibility-hidden');
 
 interface Props {
     metadata: SquireEditorMetadata;
@@ -151,7 +151,7 @@ const SquireToolbarMoreDropdown = ({
                         className="alignleft flex flex-nowrap"
                         onClick={squireActions.handleLink}
                     >
-                        <Icon name="on" className={classnames(['mt0-25', 'nonvisible'])} />
+                        <Icon name="on" className={classnames(['mt0-25', 'visibility-hidden'])} />
                         <span className="ml0-5 mtauto mbauto flex-item-fluid">{c('Action').t`Insert link`}</span>
                         <Icon name="link" className="mt0-25 mr0-5" />
                     </DropdownMenuButton>,
@@ -161,7 +161,7 @@ const SquireToolbarMoreDropdown = ({
                         className="alignleft flex flex-nowrap"
                         onClick={squireActions.handleClearFormatting}
                     >
-                        <Icon name="on" className={classnames(['mt0-25', 'nonvisible'])} />
+                        <Icon name="on" className={classnames(['mt0-25', 'visibility-hidden'])} />
                         <span className="ml0-5 mtauto mbauto flex-item-fluid">{c('Action')
                             .t`Clear all formatting`}</span>
                         <Icon name="remove-text-formatting" className="mt0-25 mr0-5" />
@@ -172,7 +172,7 @@ const SquireToolbarMoreDropdown = ({
                             className="alignleft flex flex-nowrap"
                             onClick={squireActions.handleImage}
                         >
-                            <Icon name="on" className={classnames(['mt0-25', 'nonvisible'])} />
+                            <Icon name="on" className={classnames(['mt0-25', 'visibility-hidden'])} />
                             <span className="ml0-5 mtauto mbauto flex-item-fluid">{c('Action').t`Insert image`}</span>
                             <Icon name="file-image" className="mt0-25 mr0-5" />
                         </DropdownMenuButton>
@@ -201,7 +201,7 @@ const SquireToolbarMoreDropdown = ({
                 {metadata.supportPlainText && [
                     <DropdownMenuButton
                         key={3}
-                        className="alignleft flex flex-nowrap noborder-bottom"
+                        className="alignleft flex flex-nowrap no-border-bottom"
                         onClick={handleChangePlainText(false)}
                         data-testid="squire-to-html"
                     >
