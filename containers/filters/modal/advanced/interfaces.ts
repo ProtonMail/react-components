@@ -1,4 +1,5 @@
 import { Annotation } from 'codemirror';
+import { FilterModalModelBase } from 'proton-shared/lib/filters/interfaces';
 
 export enum StepSieve {
     NAME,
@@ -10,12 +11,8 @@ export interface ErrorsSieve {
     sieve: string;
 }
 
-export interface AdvancedSimpleFilterModalModel {
-    id?: string;
-    status?: number;
-    version?: 1 | 2;
+export interface AdvancedSimpleFilterModalModel extends FilterModalModelBase {
     step: StepSieve;
-    name: string;
     sieve: string;
     issues: Annotation[];
 }
