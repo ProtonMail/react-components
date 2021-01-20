@@ -93,7 +93,10 @@ const ContactSummary = ({
                                 return null;
                             }
                             return (
-                                <li key={icon} className="contactsummary-list-item flex flex-nowrap flex-items-center">
+                                <li
+                                    key={icon}
+                                    className="contactsummary-list-item flex flex-nowrap flex-align-items-center"
+                                >
                                     <Icon name={icon} className="mr0-5 flex-item-noshrink" />
                                     <span className="ellipsis">{component}</span>
                                 </li>

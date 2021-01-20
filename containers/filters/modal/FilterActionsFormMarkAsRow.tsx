@@ -50,13 +50,13 @@ const FilterActionsFormMarkAsRow = ({ isNarrow, actions, handleUpdateActions, is
         return (
             <div className="pt0-5">
                 {markAs?.read && (
-                    <span className="inline-flex flex-items-center mr2">
+                    <span className="inline-flex flex-align-items-center mr2">
                         <Icon name="read" className="mr0-5" />
                         {c('Label').t`Read`}
                     </span>
                 )}
                 {markAs?.starred && (
-                    <span className="inline-flex flex-items-center">
+                    <span className="inline-flex flex-align-items-center">
                         <Icon name="star" className="mr0-5" />
                         {c('Label').t`Starred`}
                     </span>

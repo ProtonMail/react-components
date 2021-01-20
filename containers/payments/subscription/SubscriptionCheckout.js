@@ -20,14 +20,14 @@ import DiscountBadge from '../DiscountBadge';
 const CheckoutRow = ({ title, amount = 0, currency, className = '' }) => {
     if (amount === 0 && !currency) {
         return (
-            <div className={classnames(['flex flex-nowrap flex-spacebetween mb0-5', className])}>
+            <div className={classnames(['flex flex-nowrap flex-justify-space-between mb0-5', className])}>
                 <div className="pr0-5">{title}</div>
                 <span className="color-global-success uppercase">{c('Price').t`Free`}</span>
             </div>
         );
     }
     return (
-        <div className={classnames(['flex flex-nowrap flex-spacebetween mb0-5', className])}>
+        <div className={classnames(['flex flex-nowrap flex-justify-space-between mb0-5', className])}>
             <div className="pr0-5">{title}</div>
             <Price className={amount < 0 ? 'color-global-success' : ''} currency={currency}>
                 {amount}

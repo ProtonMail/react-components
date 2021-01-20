@@ -68,7 +68,7 @@ const SignupAccountForm = ({ model, onChange, onSubmit, errors, loading, hasExte
                         type={0}
                         onLoaded={handleChallengeLoaded}
                     >
-                        <div className="flex flex-nowrap flex-items-center flex-item-fluid relative mb0-5">
+                        <div className="flex flex-nowrap flex-align-items-center flex-item-fluid relative mb0-5">
                             <div className="flex-item-fluid">
                                 <Input
                                     id="login"

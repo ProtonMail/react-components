@@ -8,7 +8,7 @@ const BitcoinDetails = ({ amount, address }) => {
         <figcaption>
             {amount ? (
                 <>
-                    <div className="flex flex-nowrap flex-items-center p1 border-bottom">
+                    <div className="flex flex-nowrap flex-align-items-center p1 border-bottom">
                         <span className="flex-item-noshrink">{c('Label').t`BTC amount:`}</span>
                         <strong className="ml0-25 mr1 ellipsis" title={amount}>
                             {amount}
@@ -17,7 +17,7 @@ const BitcoinDetails = ({ amount, address }) => {
                     </div>
                 </>
             ) : null}
-            <div className="flex mw100 flex-nowrap flex-items-center p1 border-bottom">
+            <div className="flex mw100 flex-nowrap flex-align-items-center p1 border-bottom">
                 <span className="flex-item-noshrink">{c('Label').t`BTC address:`}</span>
                 <strong className="ml0-25 mr1 ellipsis" title={address}>
                     {address}

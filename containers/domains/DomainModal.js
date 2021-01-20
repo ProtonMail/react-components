@@ -255,7 +255,7 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], ...rest }) =>
                     <ButtonGroup
                         key={index}
                         className={classnames([
-                            'flex flex-nowrap flex-items-center pm-button--for-icon onmobile-pl0-25 onmobile-pr0-25',
+                            'flex flex-nowrap flex-align-items-center pm-button--for-icon onmobile-pl0-25 onmobile-pr0-25',
                             index === step && 'is-active',
                         ])}
                         disabled={

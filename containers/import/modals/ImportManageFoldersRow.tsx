@@ -191,7 +191,7 @@ const ImportManageFoldersRow = ({
                     <Icon
                         tabIndex={-1}
                         name="info"
-                        className="color-global-warning inline-flex flex-self-vcenter flex-item-noshrink"
+                        className="color-global-warning inline-flex flex-align-self-center flex-item-noshrink"
                     />
                 </Tooltip>
             );
@@ -272,12 +272,12 @@ const ImportManageFoldersRow = ({
                     isLabel={!editMode}
                     checkboxId={Source}
                     className={classnames([
-                        'flex flex-nowrap flex-items-center pt1 pb1',
+                        'flex flex-nowrap flex-align-items-center pt1 pb1',
                         !checked && DIMMED_OPACITY_CLASSNAME,
                         (disabled || editMode) && 'cursor-default',
                     ])}
                 >
-                    <div className="flex w40 flex-nowrap flex-items-center flex-item-noshrink pr1">
+                    <div className="flex w40 flex-nowrap flex-align-items-center flex-item-noshrink pr1">
                         <div className="flex-item-noshrink" style={DestinationFolder ? undefined : sourceIndentStyles}>
                             <Checkbox
                                 onChange={({ target: { checked } }: ChangeEvent<HTMLInputElement>) => {
@@ -298,7 +298,7 @@ const ImportManageFoldersRow = ({
 
                     <div className="flex w40 pr1">
                         <div
-                            className="flex flex-nowrap flex-items-center flex-item-fluid-auto"
+                            className="flex flex-nowrap flex-align-items-center flex-item-fluid-auto"
                             style={DestinationFolder ? undefined : destinationIndentStyles}
                         >
                             <Icon
@@ -338,7 +338,7 @@ const ImportManageFoldersRow = ({
                                                 <Icon
                                                     tabIndex={-1}
                                                     name="info"
-                                                    className="color-global-warning inline-flex flex-self-vcenter flex-item-noshrink"
+                                                    className="color-global-warning inline-flex flex-align-self-center flex-item-noshrink"
                                                 />
                                             </Tooltip>
                                         )}
@@ -351,7 +351,7 @@ const ImportManageFoldersRow = ({
                                                 <Icon
                                                     tabIndex={-1}
                                                     name="info"
-                                                    className="color-global-attention inline-flex flex-self-vcenter flex-item-noshrink"
+                                                    className="color-global-attention inline-flex flex-align-self-center flex-item-noshrink"
                                                 />
                                             </Tooltip>
                                         )}
@@ -364,7 +364,7 @@ const ImportManageFoldersRow = ({
                                                 <Icon
                                                     tabIndex={-1}
                                                     name="info"
-                                                    className="inline-flex flex-self-vcenter flex-item-noshrink"
+                                                    className="inline-flex flex-align-self-center flex-item-noshrink"
                                                 />
                                             </Tooltip>
                                         )}
@@ -375,7 +375,7 @@ const ImportManageFoldersRow = ({
                     </div>
                     {!DestinationFolder && (
                         <div
-                            className="flex w20 flex-items-center"
+                            className="flex w20 flex-align-items-center"
                             onClick={(e) => {
                                 if (disabled) {
                                     preventDefaultAndStopPropagation(e);

@@ -88,7 +88,7 @@ const Payment = ({
                                 htmlFor={value}
                                 key={value}
                                 className={classnames([
-                                    'pt0-5 pb0-5 flex flex-nowrap flex-items-center',
+                                    'pt0-5 pb0-5 flex flex-nowrap flex-align-items-center',
                                     lastCustomMethod && lastCustomMethod.value === value && 'border-bottom',
                                 ])}
                             >

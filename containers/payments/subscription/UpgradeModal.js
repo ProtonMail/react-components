@@ -30,7 +30,7 @@ const UpgradeModal = ({ plans, onUpgrade, ...rest }) => {
                 </div>
                 <div className="pl2 pr2 pb2">
                     <div className="flex-autogrid onmobile-flex-column">
-                        <div className="flex-autogrid-item flex flex-column flex-spacebetween">
+                        <div className="flex-autogrid-item flex flex-column flex-justify-space-between">
                             <h3 className="bold">{c('Title').t`Upgrade now!`}</h3>
                             <div className="mb2">
                                 <div>{c('Info').t`Unlock additional features with`}</div>
@@ -60,7 +60,7 @@ const UpgradeModal = ({ plans, onUpgrade, ...rest }) => {
                                 >{c('Action').t`Compare all plans`}</LinkButton>
                             </div>
                         </div>
-                        <div className="flex-autogrid-item flex flex-column flex-items-end">
+                        <div className="flex-autogrid-item flex flex-column flex-align-items-end">
                             <img className="center" src={upgradeSvg} alt={c('Info').t`Upgrade`} />
                         </div>
                     </div>

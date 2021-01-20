@@ -11,7 +11,12 @@ interface Props {
 
 const IllustrationPlaceholder = ({ className, title, url, uppercase, children }: Props) => {
     return (
-        <div className={classnames(['flex-noMinChildren flex-column flex-nowrap flex-items-center w100', className])}>
+        <div
+            className={classnames([
+                'flex-no-min-children flex-column flex-nowrap flex-align-items-center w100',
+                className,
+            ])}
+        >
             <img src={url} alt={title} className="p1 mb1" />
             <h2 className={classnames(['bold', uppercase && 'uppercase'])}>{title}</h2>
             {children}

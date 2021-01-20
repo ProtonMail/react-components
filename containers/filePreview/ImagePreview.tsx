@@ -72,7 +72,7 @@ const ImagePreview = ({ mimeType, contents, onSave }: Props) => {
                     <UnsupportedPreview onSave={onSave} type="image" />
                 ) : (
                     imageData.src && (
-                        <div className="flex-noMinChildren mauto relative" style={dimensions}>
+                        <div className="flex-no-min-children mauto relative" style={dimensions}>
                             <img
                                 ref={imageRef}
                                 onLoad={() => fitToContainer()}

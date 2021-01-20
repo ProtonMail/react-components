@@ -177,7 +177,7 @@ const MembersSection = () => {
             <RestoreAdministratorPrivileges />
             <Alert learnMore="https://protonmail.com/support/knowledge-base/user-roles/">{c('Info for members section')
                 .t`Add, remove, and manage users within your organization. Here you can adjust their allocated storage space, grant admin rights, and more.`}</Alert>
-            <Block className="flex flex-spacebetween">
+            <Block className="flex flex-justify-space-between">
                 <PrimaryButton
                     disabled={loadingOrganization || loadingDomains || loadingDomainAddresses || loadingOrganizationKey}
                     onClick={handleAddUser}

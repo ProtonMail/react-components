@@ -123,7 +123,7 @@ const ContactGroupModal = ({ contactGroupID, onClose = noop, selectedContactEmai
             onClose={onClose}
             {...rest}
         >
-            <h4 className="mb1 flex flex-items-center">
+            <h4 className="mb1 flex flex-align-items-center">
                 <Icon className="mr0-5" name="info" />
                 <span>{c('Title').t`Group information`}</span>
             </h4>
@@ -144,7 +144,7 @@ const ContactGroupModal = ({ contactGroupID, onClose = noop, selectedContactEmai
                     <ColorPicker color={model.color} onChange={handleChangeColor} />
                 </Field>
             </Row>
-            <h4 className="mb1 flex flex-items-center">
+            <h4 className="mb1 flex flex-align-items-center">
                 <Icon className="mr0-5" name="contacts-groups" />
                 <span>{c('Title').t`Group members`}</span>
             </h4>

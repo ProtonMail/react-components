@@ -100,7 +100,7 @@ const BillingSection = ({ permission }) => {
                 {hasPaidMail ? (
                     <div className="border-bottom pt1 pl1 pr1 onmobile-pb1">
                         {mailPlan ? (
-                            <div className="flex-autogrid flex-items-center w100 mb1">
+                            <div className="flex-autogrid flex-align-items-center w100 mb1">
                                 <div className="flex-autogrid-item">
                                     {c('Label').t`ProtonMail plan`}
                                     <div className="hidden automobile bold">{PLAN_NAMES[mailPlan.Name]}</div>
@@ -116,7 +116,7 @@ const BillingSection = ({ permission }) => {
                             </div>
                         ) : null}
                         {memberAddon ? (
-                            <div className="flex-autogrid flex-items-center w100 mb1">
+                            <div className="flex-autogrid flex-align-items-center w100 mb1">
                                 <div className="flex-autogrid-item">
                                     {c('Label').t`Extra users`}
                                     <div className="hidden automobile bold">

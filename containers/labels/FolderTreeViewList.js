@@ -124,14 +124,14 @@ const FolderTreeViewList = ({ items = [] }) => {
                             content={
                                 <div
                                     className={classnames([
-                                        'flex flex-nowrap flex-items-center flex-spacebetween w100 pt0-5 pb0-5 treeview-item relative',
+                                        'flex flex-nowrap flex-align-items-center flex-justify-space-between w100 pt0-5 pb0-5 treeview-item relative',
                                         isOverred && position === BEFORE && 'treeview-item--move-top',
                                         isOverred && position === AFTER && 'treeview-item--move-bottom',
                                         isOverred && position === INSIDE && 'treeview-item--move-inside',
                                         grabbed && grabbed.ID === item.ID && 'treeview-item--self-grabbed',
                                     ])}
                                 >
-                                    <div className="treeview-item-name flex flex-nowrap flex-items-center flex-item-fluid">
+                                    <div className="treeview-item-name flex flex-nowrap flex-align-items-center flex-item-fluid">
                                         {isNarrow ? null : (
                                             <Icon
                                                 name="text-justify"
@@ -149,7 +149,7 @@ const FolderTreeViewList = ({ items = [] }) => {
                                     <div className="treeview-toggle w10e nomobile">
                                         <ToggleNotify label={item} />
                                     </div>
-                                    <div className="treeview-actions w10e flex flex-column flex-items-end">
+                                    <div className="treeview-actions w10e flex flex-column flex-align-items-end">
                                         <div className="mtauto mbauto">
                                             <ActionsLabel label={item} />
                                         </div>

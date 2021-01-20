@@ -31,7 +31,7 @@ const FilterPreviewConditions = ({ isOpen, isNarrow, toggleOpen, model }: Props)
                 const attachment = isOpen ? (
                     <span
                         key={`filter_preview_${label}`}
-                        className="inline-flex flex-row flex-items-center condition-token mb0-5"
+                        className="inline-flex flex-row flex-align-items-center condition-token mb0-5"
                         role="listitem"
                     >
                         <span className="ellipsis nodecoration" title={label}>
@@ -59,7 +59,7 @@ const FilterPreviewConditions = ({ isOpen, isNarrow, toggleOpen, model }: Props)
                 const value = isOpen ? (
                     <span
                         key={`${v}${i}`}
-                        className="inline-flex flex-row flex-items-center condition-token mb0-5"
+                        className="inline-flex flex-row flex-align-items-center condition-token mb0-5"
                         role="listitem"
                     >
                         <span className="ellipsis nodecoration" title={v}>

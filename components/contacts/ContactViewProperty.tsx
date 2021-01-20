@@ -187,10 +187,10 @@ const ContactViewProperty = ({
 
     return (
         <Row>
-            <div className={classnames(['flex flex-items-center', leftBlockWidth])}>
+            <div className={classnames(['flex flex-align-items-center', leftBlockWidth])}>
                 <ContactLabelProperty field={field} type={type} />
             </div>
-            <div className={classnames(['flex flex-nowrap flex-items-center pl1 onmobile-pl0', rightBlockWidth])}>
+            <div className={classnames(['flex flex-nowrap flex-align-items-center pl1 onmobile-pl0', rightBlockWidth])}>
                 <span className={classnames(['mr0-5 flex-item-fluid', !['note'].includes(field) && 'ellipsis'])}>
                     {getContent()}
                 </span>

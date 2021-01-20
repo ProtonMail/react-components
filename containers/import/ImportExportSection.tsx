@@ -76,7 +76,7 @@ const ImportExportSection = () => {
                             <TableRow
                                 key={key}
                                 cells={[
-                                    <span key="platform" className="inline-flex flex-items-center">
+                                    <span key="platform" className="inline-flex flex-align-items-center">
                                         <Icon name={icon} className="mr0-5" />
                                         <span>{platform}</span>
                                     </span>,

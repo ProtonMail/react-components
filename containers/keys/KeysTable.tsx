@@ -46,7 +46,7 @@ const KeysTable = ({
                         <TableRow
                             key={ID}
                             cells={[
-                                <div key={1} className="flex flex-row flex-nowrap flex-items-center">
+                                <div key={1} className="flex flex-row flex-nowrap flex-align-items-center">
                                     <Copy
                                         value={fingerprint}
                                         className="pm-button--small flex-item-noshrink notinymobile mr1 onmobile-mr0-5 ontinymobile-m0"

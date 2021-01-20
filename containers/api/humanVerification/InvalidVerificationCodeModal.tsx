@@ -21,9 +21,10 @@ const InvalidVerificationCodeModal = ({
             title={c('Title').t`Invalid verification code`}
             footer={
                 <>
-                    <div className="flex flex-spacebetween flex-nowrap ontinymobile-flex-wrap w100 ontinymobile-flex-column">
-                        <ResetButton className="onmobile-flex-self-end onmobile-mt3-5 ontinymobile-mb1">{c('Action')
-                            .t`Cancel`}</ResetButton>
+                    <div className="flex flex-justify-space-between flex-nowrap ontinymobile-flex-wrap w100 ontinymobile-flex-column">
+                        <ResetButton className="onmobile-flex-align-self-end onmobile-mt3-5 ontinymobile-mb1">{c(
+                            'Action'
+                        ).t`Cancel`}</ResetButton>
                         <div className="flex onmobile-flex-column onmobile-ml1 ontinymobile-ml0">
                             <Button
                                 className="mr1 onmobile-mb1"

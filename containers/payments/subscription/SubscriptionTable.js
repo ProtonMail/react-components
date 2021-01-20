@@ -23,7 +23,7 @@ const SubscriptionTable = ({
                     return (
                         <div key={title} className="flex-autogrid-item flex" data-plan-name={name}>
                             <div
-                                className="bordered-container subscriptionTable-plan onmobile-mb2 pt2 pb2 pl0-75 pr0-75 flex-noMinChildren flex-column relative w100"
+                                className="bordered-container subscriptionTable-plan onmobile-mb2 pt2 pb2 pl0-75 pr0-75 flex-no-min-children flex-column relative w100"
                                 data-current-plan={index === currentPlanIndex}
                                 data-most-popular={index === mostPopularIndex}
                             >
@@ -40,7 +40,7 @@ const SubscriptionTable = ({
                                     ) : null}
                                     <div className="bold aligncenter mb0-5 uppercase">{title}</div>
                                     <div className="aligncenter mb0-5">{price}</div>
-                                    <div className="flex flex-items-center flex-justify-center subscriptionTable-image-container">
+                                    <div className="flex flex-align-items-center flex-justify-center subscriptionTable-image-container">
                                         <img src={imageSrc} alt={title} />
                                     </div>
                                 </header>

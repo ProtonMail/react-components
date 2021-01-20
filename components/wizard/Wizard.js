@@ -5,7 +5,7 @@ import { classnames } from '../../helpers';
 const Wizard = ({ step = 0, steps = [], hideText = false }) => {
     return (
         <div className={classnames(['wizard-container', hideText && 'wizard-container--no-text-displayed'])}>
-            <ul className="wizard unstyled flex flex-nowrap flex-spacebetween">
+            <ul className="wizard unstyled flex flex-nowrap flex-justify-space-between">
                 {steps.map((text = '', index) => {
                     return (
                         <li

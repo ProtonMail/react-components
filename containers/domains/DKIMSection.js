@@ -56,7 +56,7 @@ const DKIMSection = ({ domain }) => {
                                 <code>{row.Hostname}</code>
                             </TableCell>
                             <TableCell>
-                                <div className="flex flex-nowrap flex-items-center">
+                                <div className="flex flex-nowrap flex-align-items-center">
                                     <Copy
                                         onCopy={handleCopy}
                                         className="flex-item-noshrink pm-button--small mr0-5"

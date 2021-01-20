@@ -108,7 +108,7 @@ const MiniCalendar = ({
             onMouseDown={preventLeaveFocus}
             aria-label={monthLabel}
         >
-            <div className="flex flex-items-center p1">
+            <div className="flex flex-align-items-center p1">
                 {hasCursors ? (
                     <>
                         <button

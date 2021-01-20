@@ -273,7 +273,7 @@ const NewSubscriptionModal = ({
         >
             {step === SUBSCRIPTION_STEPS.NETWORK_ERROR && <GenericError />}
             {step === SUBSCRIPTION_STEPS.CUSTOMIZATION && (
-                <div className="flex flex-spacebetween onmobile-flex-column">
+                <div className="flex flex-justify-space-between onmobile-flex-column">
                     <div className="w75 onmobile-w100 pr4 ontablet-landscape-pr1 onmobile-pr0">
                         <SubscriptionCustomization
                             organization={organization}
@@ -313,7 +313,7 @@ const NewSubscriptionModal = ({
                 </div>
             )}
             {step === SUBSCRIPTION_STEPS.PAYMENT && (
-                <div className="flex flex-spacebetween onmobile-flex-column">
+                <div className="flex flex-justify-space-between onmobile-flex-column">
                     <div className="w75 onmobile-w100 ontablet-landscape-pr1 pr4 onmobile-pr0">
                         <h3>{c('Title').t`Payment method`}</h3>
                         {checkResult.AmountDue ? (

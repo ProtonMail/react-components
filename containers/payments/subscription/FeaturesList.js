@@ -7,7 +7,7 @@ const FeaturesList = ({ features = [] }) => {
         return null;
     }
     return (
-        <ul className="unstyled mt0-5 mb0-5 flex flex-nowrap flex-spacebetween">
+        <ul className="unstyled mt0-5 mb0-5 flex flex-nowrap flex-justify-space-between">
             {features.map((text, index) => {
                 const key = `${index}`;
                 return (

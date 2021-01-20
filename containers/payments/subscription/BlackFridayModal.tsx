@@ -198,7 +198,7 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }: Props) => {
                     <BlackFridayModalDescription isProductPayer={productPayer} />
                     <div
                         className={classnames([
-                            'flex flex-nowrap flex-spacearound onmobile-flex-column',
+                            'flex flex-nowrap flex-justify-space-around onmobile-flex-column',
                             productPayer ? 'mt2' : 'mt4',
                         ])}
                     >
@@ -253,7 +253,7 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }: Props) => {
                                     ) : null}
                                     <div
                                         className={classnames([
-                                            'blackfriday-plan w100 bordered-container p1 mb1 flex flex-column flex-items-center flex-justify-end',
+                                            'blackfriday-plan w100 bordered-container p1 mb1 flex flex-column flex-align-items-center flex-justify-end',
                                             popular && 'borderColor-primary',
                                         ])}
                                     >

@@ -100,7 +100,7 @@ const AccountSwitchContainer = ({ Layout, toApp, onLogin, activeSessions, onAddA
         }
     };
 
-    const listItemClassName = 'flex flex-items-center w100 pl1 pr1 pt0-75 pb0-75 border-bottom alignleft';
+    const listItemClassName = 'flex flex-align-items-center w100 pl1 pr1 pt0-75 pb0-75 border-bottom alignleft';
 
     const inner = () => {
         if (error) {

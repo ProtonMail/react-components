@@ -131,7 +131,7 @@ const FilterConditionsRow = ({
             {i > 0 && <span className="ml0-5 mr0-5">{c('Label').t`or`}</span>}
             <span
                 key={`condition-${conditionIndex}-token-${i}`}
-                className="inline-flex flex-row flex-items-center mb0-5 condition-token"
+                className="inline-flex flex-row flex-align-items-center mb0-5 condition-token"
                 role="listitem"
             >
                 <span className="ellipsis nodecoration" title={token}>

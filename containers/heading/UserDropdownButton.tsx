@@ -21,7 +21,7 @@ const UserDropdownButton = ({ user, isOpen, buttonRef, ...rest }: Props) => {
             aria-expanded={isOpen}
             ref={buttonRef}
             {...rest}
-            className="flex flex-items-center flex-nowrap p0-5 dropdown-logout-button"
+            className="flex flex-align-items-center flex-nowrap p0-5 dropdown-logout-button"
         >
             {nameToDisplay ? (
                 <span className="alignright flex flex-column mr0-75 lh130 nomobile">

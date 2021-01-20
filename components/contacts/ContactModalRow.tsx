@@ -70,22 +70,22 @@ const ContactModalRow = forwardRef<HTMLInputElement, Props>(
                         </div>
                     </OrderableHandle>
                 ) : (
-                    <div className="mr0-5 flex flex-items-center flex-item-noshrink">
+                    <div className="mr0-5 flex flex-align-items-center flex-item-noshrink">
                         <Icon name="text-justify nonvisible" />
                     </div>
                 )}
-                <div className="flex flex-nowrap onmobile-flex-column w95 flex-items-start">
+                <div className="flex flex-nowrap onmobile-flex-column w95 flex-align-items-start">
                     {field && !(isNarrow && field === 'fn') && (
                         <span
                             className={classnames([
-                                'w30 contact-modal-select flex flex-nowrap mb1 flex-items-start onmobile-mb0-5 onmobile-flex-self-start',
+                                'w30 contact-modal-select flex flex-nowrap mb1 flex-align-items-start onmobile-mb0-5 onmobile-flex-align-self-start',
                                 field === 'fn' && 'pt0-5',
                             ])}
                         >
                             <ContactModalLabel field={field} type={type} uid={property.uid} onChange={onChange} />
                         </span>
                     )}
-                    <div className="flex flex-nowrap flex-items-start flex-item-noshrink">
+                    <div className="flex flex-nowrap flex-align-items-start flex-item-noshrink">
                         <span className="flex-item-fluid mb1">
                             <div className="pr1 w100 onmobile-pr0-5">
                                 <ContactFieldProperty
@@ -101,7 +101,7 @@ const ContactModalRow = forwardRef<HTMLInputElement, Props>(
                         <span className="mb1">
                             <div className="min-w3e">
                                 {list.length > 0 && (
-                                    <div className="flex flex-item-noshrink flex-items-start">
+                                    <div className="flex flex-item-noshrink flex-align-items-start">
                                         <DropdownActions className="pm-button--for-icon" list={list} />
                                     </div>
                                 )}

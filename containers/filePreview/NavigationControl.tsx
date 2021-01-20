@@ -15,7 +15,7 @@ const NavigationControl = ({ current, total, onNext, onPrev }: Props) => {
     const isNextDisabled = current === total;
 
     return (
-        <div className="flex flex-items-center centered-absolute">
+        <div className="flex flex-align-items-center centered-absolute">
             <button
                 type="button"
                 disabled={isPrevDisabled}

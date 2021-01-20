@@ -13,7 +13,7 @@ interface Props {
 
 const SidebarItemContent = ({ icon, iconColor, iconSize = 16, title, text, aside }: Props) => {
     return (
-        <span className="flex flex-nowrap w100 flex-items-center" title={title}>
+        <span className="flex flex-nowrap w100 flex-align-items-center" title={title}>
             {icon && (
                 <Icon
                     color={iconColor}
@@ -23,7 +23,7 @@ const SidebarItemContent = ({ icon, iconColor, iconSize = 16, title, text, aside
                 />
             )}
             <span className="flex-item-fluid ellipsis mw100">{text}</span>
-            {aside && <span className="flex flex-items-center">{aside}</span>}
+            {aside && <span className="flex flex-align-items-center">{aside}</span>}
         </span>
     );
 };

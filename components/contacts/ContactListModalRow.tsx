@@ -33,7 +33,12 @@ const ContactModalRow = ({ style, onCheck, contact, checked, contactGroupsMap = 
                     aria-describedby={contact.ID}
                     id={contact.ID}
                 >
-                    <div className={classnames(['flex-item-fluid flex-items-center mw100 h100', !isNarrow && 'flex'])}>
+                    <div
+                        className={classnames([
+                            'flex-item-fluid flex-align-items-center mw100 h100',
+                            !isNarrow && 'flex',
+                        ])}
+                    >
                         <div className={classnames(['pl1 flex', !isNarrow && 'w33'])}>
                             <span className="inbl ellipsis mw100 pr1">{contact.Name}</span>
                         </div>

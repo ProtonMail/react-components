@@ -198,7 +198,7 @@ const MemberModal = ({ onClose, organization, organizationKey, domains, domainsA
                         required
                     />
                 </Field>
-                <div className="ml1 onmobile-ml0 flex flex-nowrap flex-items-center">
+                <div className="ml1 onmobile-ml0 flex flex-nowrap flex-align-items-center">
                     {domainOptions.length === 1 ? (
                         <span className="ellipsis" title={`@${domainOptions[0].value}`}>
                             @{domainOptions[0].value}

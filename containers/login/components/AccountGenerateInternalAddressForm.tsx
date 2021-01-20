@@ -37,7 +37,7 @@ const AccountGenerateInternalAddressForm = ({
             <SignupLabelInputRow
                 label={<Label htmlFor="login">{c('Label').t`Username`}</Label>}
                 input={
-                    <div className="flex flex-nowrap flex-items-center flex-item-fluid relative mb0-5">
+                    <div className="flex flex-nowrap flex-align-items-center flex-item-fluid relative mb0-5">
                         <div className="flex-item-fluid">
                             <Input
                                 id="username"

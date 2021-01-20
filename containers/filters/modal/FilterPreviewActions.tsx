@@ -78,7 +78,7 @@ const FilterPreviewActions = ({ isOpen, isNarrow, toggleOpen, labels, folders, m
                 : folders.find((f) => f.Path === actions.moveTo.folder)?.Name;
 
             const folderElement = isOpen ? (
-                <span className="inline-flex flex-row flex-items-center condition-token mb0-5" role="listitem">
+                <span className="inline-flex flex-row flex-align-items-center condition-token mb0-5" role="listitem">
                     <span className="ellipsis nodecoration" title={selectedFolder}>
                         {selectedFolder}
                     </span>
@@ -101,14 +101,14 @@ const FilterPreviewActions = ({ isOpen, isNarrow, toggleOpen, labels, folders, m
 
         if (actions.markAs.read || actions.markAs.starred) {
             const readElement = isOpen ? (
-                <span className="inline-flex flex-row flex-items-center condition-token mb0-5" role="listitem">
+                <span className="inline-flex flex-row flex-align-items-center condition-token mb0-5" role="listitem">
                     <span className="ellipsis nodecoration">{c('Filter preview').t`read`}</span>
                 </span>
             ) : (
                 <strong>{c('Filter preview').t`read`}</strong>
             );
             const starredElement = isOpen ? (
-                <span className="inline-flex flex-row flex-items-center condition-token mb0-5" role="listitem">
+                <span className="inline-flex flex-row flex-align-items-center condition-token mb0-5" role="listitem">
                     <span className="ellipsis nodecoration">{c('Filter preview').t`starred`}</span>
                 </span>
             ) : (
@@ -141,7 +141,7 @@ const FilterPreviewActions = ({ isOpen, isNarrow, toggleOpen, labels, folders, m
 
         if (actions.autoReply) {
             const label = isOpen ? (
-                <span className="inline-flex flex-row flex-items-center condition-token mb0-5" role="listitem">
+                <span className="inline-flex flex-row flex-align-items-center condition-token mb0-5" role="listitem">
                     <span className="nodecoration" style={{ maxWidth: 'inherit' }}>
                         {LABELS_ACTION.autoReply}
                     </span>

@@ -273,27 +273,27 @@ const OpenVPNConfigurationSection = () => {
                         <h3 className="color-pv-green mt0 mb1">{c('Title')
                             .t`Get ProtonVPN Plus to access all servers`}</h3>
                         <ul className="unstyled inline-flex mt0 mb2 onmobile-flex-column">
-                            <li className="flex flex-nowrap flex-items-center mr1">
+                            <li className="flex flex-nowrap flex-align-items-center mr1">
                                 <Icon name="on" className="color-global-success mr0-5" />
                                 <span className="bold">{c('Feature').t`Access to all countries`}</span>
                             </li>
-                            <li className="flex flex-nowrap flex-items-center mr1">
+                            <li className="flex flex-nowrap flex-align-items-center mr1">
                                 <Icon name="on" className="color-global-success mr0-5" />
                                 <span className="bold">{c('Feature').t`Secure Core servers`}</span>
                             </li>
-                            <li className="flex flex-nowrap flex-items-center mr1">
+                            <li className="flex flex-nowrap flex-align-items-center mr1">
                                 <Icon name="on" className="color-global-success mr0-5" />
                                 <span className="bold">{c('Feature').t`Fastest VPN servers`}</span>
                             </li>
-                            <li className="flex flex-nowrap flex-items-center mr1">
+                            <li className="flex flex-nowrap flex-align-items-center mr1">
                                 <Icon name="on" className="color-global-success mr0-5" />
                                 <span className="bold">{c('Feature').t`Torrenting support (P2P)`}</span>
                             </li>
-                            <li className="flex flex-nowrap flex-items-center mr1">
+                            <li className="flex flex-nowrap flex-align-items-center mr1">
                                 <Icon name="on" className="color-global-success mr0-5" />
                                 <span className="bold">{c('Feature').t`Connection for up to 5 devices`}</span>
                             </li>
-                            <li className="flex flex-nowrap flex-items-center ">
+                            <li className="flex flex-nowrap flex-align-items-center ">
                                 <Icon name="on" className="color-global-success mr0-5" />
                                 <span className="bold mr0-5">{c('Feature').t`Secure streaming support`}</span>
                                 <Info

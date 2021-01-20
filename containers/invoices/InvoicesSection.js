@@ -83,7 +83,7 @@ const InvoicesSection = () => {
                 <Alert type="error">{c('Error')
                     .t`Your account or organization currently has an overdue invoice. Please pay all unpaid invoices.`}</Alert>
             ) : null}
-            <Block className="flex flex-spacebetween">
+            <Block className="flex flex-justify-space-between">
                 <div>
                     {user.isPaid ? (
                         <Group className="mr1">

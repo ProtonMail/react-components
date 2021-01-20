@@ -189,7 +189,7 @@ const ContactGroupDropdown = ({ children, className, contactEmails, disabled = f
                 autoClose={false}
                 noMaxSize
             >
-                <div className="flex flex-spacebetween flex-items-center m1 mb0">
+                <div className="flex flex-justify-space-between flex-align-items-center m1 mb0">
                     <strong>{c('Label').t`Add to group`}</strong>
                     <Tooltip title={c('Info').t`Create a new contact group`}>
                         <SmallButton className="pm-button--primary pm-button--for-icon" onClick={handleAdd}>
@@ -213,7 +213,7 @@ const ContactGroupDropdown = ({ children, className, contactEmails, disabled = f
                                 return (
                                     <li
                                         key={ID}
-                                        className="dropdown-item w100 flex flex-nowrap flex-items-center pt0-5 pb0-5 pl1 pr1"
+                                        className="dropdown-item w100 flex flex-nowrap flex-align-items-center pt0-5 pb0-5 pl1 pr1"
                                     >
                                         <Checkbox
                                             className="flex-item-noshrink"
@@ -224,7 +224,7 @@ const ContactGroupDropdown = ({ children, className, contactEmails, disabled = f
                                         />
                                         <label
                                             htmlFor={checkboxId}
-                                            className="flex flex-items-center flex-item-fluid flex-nowrap"
+                                            className="flex flex-align-items-center flex-item-fluid flex-nowrap"
                                         >
                                             <Icon
                                                 name="circle"
@@ -241,7 +241,7 @@ const ContactGroupDropdown = ({ children, className, contactEmails, disabled = f
                             })}
                         </ul>
                     ) : keyword ? (
-                        <div className="w100 flex flex-nowrap flex-items-center pt0-5 pb0-5 pl1 pr1">
+                        <div className="w100 flex flex-nowrap flex-align-items-center pt0-5 pb0-5 pl1 pr1">
                             <Icon name="attention" className="mr0-5" />
                             {c('Info').t`No group found`}
                         </div>

@@ -29,7 +29,7 @@ const TopNavbar = ({ children, className = '' }: Props) => {
         >
             <ul
                 className={classnames([
-                    'topnav-list unstyled mt0 mb0 ml1 flex flex-nowrap flex-items-center',
+                    'topnav-list unstyled mt0 mb0 ml1 flex flex-nowrap flex-align-items-center',
                     navIconsLength >= 4 && 'topnav-list--four-elements',
                 ])}
             >

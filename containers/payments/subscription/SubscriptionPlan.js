@@ -33,7 +33,7 @@ const SubscriptionPlan = ({
                 </div>
                 {canCustomize && state ? (
                     <div className="bordered-container p1 mb1 subscriptionPlan-customize">
-                        <div className="flex flex-nowrap flex-items-center flex-spacebetween mb1">
+                        <div className="flex flex-nowrap flex-align-items-center flex-justify-space-between mb1">
                             <div className="bold">{c('Title').t`Configure plan`}</div>
                             <Price className="big mt0 mb0" currency={currency} suffix={c('Suffix').t`/month`}>
                                 {plan.Pricing[CYCLE.MONTHLY]}
@@ -48,7 +48,7 @@ const SubscriptionPlan = ({
             </div>
             {canCustomize ? (
                 <div className="mb1">
-                    <LinkButton className="flex flex-nowrap flex-items-center" onClick={toggle}>
+                    <LinkButton className="flex flex-nowrap flex-align-items-center" onClick={toggle}>
                         <Icon name="caret" className={state ? 'rotateZ-90' : 'rotateZ-270'} />
                         <span>
                             {state

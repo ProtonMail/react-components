@@ -55,7 +55,7 @@ const BlackFridayButton = ({ plans, subscription }: Props) => {
 
     // span is required because TopNavbarItem erase className prop
     return (
-        <span className="flex flex-items-center relative">
+        <span className="flex flex-align-items-center relative">
             <button
                 type="button"
                 title={text}

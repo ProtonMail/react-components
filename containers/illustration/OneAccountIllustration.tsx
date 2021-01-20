@@ -9,7 +9,7 @@ const OneAccountIllustration = () => {
     const driveAppName = getAppName(APPS.PROTONDRIVE);
 
     return (
-        <div className="center flex flex-column flex-items-center">
+        <div className="center flex flex-column flex-align-items-center">
             <div className="inline-flex">
                 <span className="bg-global-altgrey icon-28p rounded50 flex">
                     <Icon name="protondrive" className="color-global-light mauto" alt={driveAppName} />

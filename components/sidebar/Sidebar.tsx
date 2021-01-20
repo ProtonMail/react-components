@@ -28,7 +28,7 @@ const Sidebar = ({ expanded = false, onToggleExpand, hasAppLinks = true, logo, p
             {...focusTrapProps}
         >
             <div className="nodesktop notablet flex-item-noshrink">
-                <div className="flex flex-spacebetween flex-items-center pl1 pr1">
+                <div className="flex flex-justify-space-between flex-align-items-center pl1 pr1">
                     {logo}
                     <Hamburger expanded={expanded} onToggle={onToggleExpand} data-focus-fallback={1} />
                 </div>

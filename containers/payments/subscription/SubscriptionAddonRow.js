@@ -25,7 +25,7 @@ const SubscriptionAddonRow = ({
     }));
 
     return (
-        <div className="flex flex-nowrap flex-spacebetween flex-items-center ontablet-w100 mb1">
+        <div className="flex flex-nowrap flex-justify-space-between flex-align-items-center ontablet-w100 mb1">
             <label htmlFor={idRef} className="w10e onmobile-w25 pr1">
                 {label}
             </label>

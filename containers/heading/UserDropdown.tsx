@@ -108,7 +108,7 @@ const UserDropdown = ({ ...rest }) => {
                                     </>
                                 ) : null}
                                 <div className="opacity-50 small m0">{c('Label').t`Storage space`}</div>
-                                <div className="flex flex-items-baseline flex-nowrap flex-spacebetween">
+                                <div className="flex flex-align-items-baseline flex-nowrap flex-justify-space-between">
                                     <span>
                                         <span className="semibold">{humanSize(UsedSpace)} </span>
                                         /&nbsp;{humanSize(MaxSpace)}
@@ -174,7 +174,7 @@ const UserDropdown = ({ ...rest }) => {
                     ) : null}
                     <li className="dropdown-item-hr mt0-5" aria-hidden="false" />
                     <li>
-                        <div className="pl1 pr1 pt0-5 pb0-5 w100 flex flex-nowrap flex-spacebetween flex-items-center">
+                        <div className="pl1 pr1 pt0-5 pb0-5 w100 flex flex-nowrap flex-justify-space-between flex-align-items-center">
                             <label htmlFor="theme-toggle" className="mr1">{c('Action').t`Display mode`}</label>
                             <Toggle
                                 id="theme-toggle"

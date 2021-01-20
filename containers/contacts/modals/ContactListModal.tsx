@@ -198,7 +198,7 @@ const ContactListModal = ({ onSubmit, onClose, inputValue, ...rest }: Props) => 
                                             onChange={handleCheckAll}
                                         />
                                     </div>
-                                    <div className="flex flex-item-fluid flex-self-vcenter">
+                                    <div className="flex flex-item-fluid flex-align-self-center">
                                         <div className="w33 pl1">
                                             <strong className="uppercase">{c('Label').t`Name`}</strong>
                                         </div>
