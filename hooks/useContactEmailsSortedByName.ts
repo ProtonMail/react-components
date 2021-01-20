@@ -8,7 +8,7 @@ const compareContactEmailByName = (a: ContactEmail, b: ContactEmail) => {
 };
 
 const useContactEmailsSortedByName = () => {
-    const [contactEmails = [], loading] = useContactEmails();
+    const [contactEmails, loading] = useContactEmails();
     return useMemo(() => {
         return [[...(contactEmails || [])].sort(compareContactEmailByName), loading] as const;
     }, [contactEmails]);
