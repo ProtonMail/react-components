@@ -106,7 +106,7 @@ const Payment = ({
                     })}
                 </div>
                 <div className="payment-right mr0-25">
-                    <div className="mw37e on-mobile-mw100">
+                    <div className="max-w37e on-mobile-max-w100">
                         <Method
                             loading={loading}
                             paypal={paypal}

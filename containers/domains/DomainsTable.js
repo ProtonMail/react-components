@@ -17,7 +17,7 @@ const DomainsTable = ({ domains = [], domainsAddressesMap = {}, loading = false 
                     c('Header for addresses table').t`Status`,
                     <span
                         key="addresses"
-                        className="ellipsis inline-block alignbottom mw100"
+                        className="ellipsis inline-block alignbottom max-w100"
                         title={c('Header for addresses table').t`Addresses`}
                     >{c('Header for addresses table').t`Addresses`}</span>,
                     c('Header for addresses table').t`Actions`,

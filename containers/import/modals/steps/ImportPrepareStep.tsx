@@ -314,7 +314,7 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
                                         title: payload.ImportLabel.Name,
                                     },
                                 ]}
-                                className="mw100"
+                                className="max-w100"
                             />
                         </span>
                     )}

@@ -172,7 +172,7 @@ const FilterPreviewActions = ({ isOpen, isNarrow, toggleOpen, labels, folders, m
                 ))}
             </div>
         ) : (
-            <div className="pt0-5 mw100 ellipsis" title={title}>
+            <div className="pt0-5 max-w100 ellipsis" title={title}>
                 {actionsRows.map((action, i) => (
                     <span key={`preview-action-${i}`}>
                         {i === 0 ? c('Label').t`Then` : ` ${c('Label').t`and`}`}

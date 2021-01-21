@@ -50,13 +50,13 @@ $default-height-fields: 4.1rem;
 		min-height: 35em;
 
 		// fix for plans, same as in subscription flow
-		&:not(.mw50e) {
+		&:not(.max-w50e) {
 			max-width: 150rem;
 		}
 
 		@include respond-to($breakpoint-medium-landscape, 'min') {
 			@include respond-to(800, 'min-height') {
-				&.mw50e {
+				&.max-w50e {
 					margin-top: 10em;
 				}
 			}

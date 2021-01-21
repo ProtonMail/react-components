@@ -130,10 +130,10 @@ const AccountSwitchContainer = ({ Layout, toApp, onLogin, activeSessions, onAddA
                         </span>
                     </span>
                     <span className="flex-item-fluid flex flex-column pl1 pr1">
-                        <span className="semibold ellipsis inline-block mw100" title={nameToDisplay}>
+                        <span className="semibold ellipsis inline-block max-w100" title={nameToDisplay}>
                             {nameToDisplay}
                         </span>
-                        <span className="ellipsis inline-block mw100" title={PrimaryEmail}>
+                        <span className="ellipsis inline-block max-w100" title={PrimaryEmail}>
                             {PrimaryEmail}
                         </span>
                     </span>

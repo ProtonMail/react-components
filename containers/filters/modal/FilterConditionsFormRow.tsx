@@ -219,7 +219,7 @@ const FilterConditionsRow = ({
         }
 
         return (
-            <span className="mw100 pt0-5 ellipsis" title={title}>
+            <span className="max-w100 pt0-5 ellipsis" title={title}>
                 {label}
             </span>
         );

@@ -266,7 +266,7 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], ...rest }) =>
                         title={label}
                     >
                         {breadcrumbIcons[index]}
-                        <span className="ellipsis mw100">{label}</span>
+                        <span className="ellipsis max-w100">{label}</span>
                     </ButtonGroup>
                 ))}
             </Group>

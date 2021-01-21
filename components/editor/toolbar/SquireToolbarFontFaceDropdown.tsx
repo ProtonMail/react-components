@@ -34,7 +34,7 @@ const SquireToolbarFontFaceDropdown = ({ squireRef, editorReady }: Props) => {
             className="composer-toolbar-fontDropDown alignright flex no-scroll"
             title={c('Action').t`Font`}
             content={
-                <span className="ellipsis mw100" style={{ fontFamily: value.toString() }}>
+                <span className="ellipsis max-w100" style={{ fontFamily: value.toString() }}>
                     {getFontLabel(value)}
                 </span>
             }

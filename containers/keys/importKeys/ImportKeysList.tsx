@@ -25,7 +25,7 @@ const ImportKeysList = ({ keys }: Props) => {
             <TableRow
                 key={i}
                 cells={[
-                    <span key={0} className="mw100 inline-block ellipsis">
+                    <span key={0} className="max-w100 inline-block ellipsis">
                         {fingerprint}
                     </span>,
                     keyStatus,

@@ -119,7 +119,7 @@ const OrganizationSection = () => {
                     <TableBody colSpan={2}>
                         <TableRow
                             cells={[
-                                <code key={1} className="mw100 inline-block ellipsis">
+                                <code key={1} className="max-w100 inline-block ellipsis">
                                     {displayOrganizationKey.fingerprint}
                                 </code>,
                                 displayOrganizationKey.algorithm,

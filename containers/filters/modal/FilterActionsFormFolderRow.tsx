@@ -145,7 +145,7 @@ const FilterActionsFormFolderRow = ({ folders, isNarrow, actions, handleUpdateAc
                     )}
                     <span
                         className={classnames([
-                            'mw100 flex-nowrap inline-flex flex-align-items-center',
+                            'max-w100 flex-nowrap inline-flex flex-align-items-center',
                             i !== 0 && 'ml0-5',
                         ])}
                     >
@@ -158,7 +158,7 @@ const FilterActionsFormFolderRow = ({ folders, isNarrow, actions, handleUpdateAc
             ));
         }
 
-        return <div className="pt0-5 flex flex-align-items-center mw100">{selectedFolder}</div>;
+        return <div className="pt0-5 flex flex-align-items-center max-w100">{selectedFolder}</div>;
     };
 
     return (

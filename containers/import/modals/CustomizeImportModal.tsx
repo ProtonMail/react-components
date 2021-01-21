@@ -200,7 +200,7 @@ const CustomizeImportModal = ({
                                         title: customizedPayload.ImportLabel.Name,
                                     },
                                 ]}
-                                className="mw100"
+                                className="max-w100"
                             />
                         )}
                         <Button className="flex-item-noshrink ml1" onClick={handleEditLabel}>
