@@ -190,7 +190,7 @@ const CustomizeImportModal = ({
                             <Icon name="info" className="ml0-5" />
                         </Tooltip>
                     </FormLabel>
-                    <Field className="auto flex flex-align-items-center flex-nowrap">
+                    <Field className="wauto flex flex-align-items-center flex-nowrap">
                         {customizedPayload.ImportLabel && customizedPayload.ImportLabel.Name && (
                             <LabelStack
                                 labels={[

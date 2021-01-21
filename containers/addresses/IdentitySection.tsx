@@ -38,7 +38,7 @@ const IdentitySection = () => {
             <EditableSection>
                 <Label className="border-bottom on-mobile-pb0 on-mobile-no-border" htmlFor="addressSelector">{c('Label')
                     .t`Select an address`}</Label>
-                <Field className="auto border-bottom on-mobile-pb0 on-mobile-no-border flex flex-row flex-nowrap">
+                <Field className="wauto border-bottom on-mobile-pb0 on-mobile-no-border flex flex-row flex-nowrap">
                     <Select id="addressSelector" options={options} onChange={handleChange} />
                     <span className="flex-item-noshrink">
                         <Button className="pm-button--primary ml1" onClick={handleOpenModal}>{c('Action')
