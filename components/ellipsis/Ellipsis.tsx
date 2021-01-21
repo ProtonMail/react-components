@@ -15,7 +15,7 @@ const Ellipsis = ({ filename, className = '', displayTitle = true, caractersOnRi
     return (
         <span
             aria-label={filename}
-            title={displayTitle ? filename : null}
+            title={displayTitle ? filename : undefined}
             className={classnames(['inline-flex flex-nowrap mw100', className])}
         >
             <span className="ellipsis" aria-hidden="true">
