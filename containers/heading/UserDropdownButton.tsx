@@ -24,14 +24,14 @@ const UserDropdownButton = ({ user, isOpen, buttonRef, ...rest }: Props) => {
             className="flex flex-align-items-center flex-nowrap p0-5 dropdown-logout-button"
         >
             {nameToDisplay ? (
-                <span className="alignright flex flex-column mr0-75 lh130 nomobile">
+                <span className="alignright flex flex-column mr0-75 lh130 no-mobile">
                     <span className="inline-block mw100 ellipsis dropdown-logout-displayName">{nameToDisplay}</span>
                     {Email ? (
                         <span className="inline-block mw100 ellipsis m0 opacity-30 dropdown-logout-email">{Email}</span>
                     ) : null}
                 </span>
             ) : (
-                <span className="alignright flex flex-column mr0-75 lh130 nomobile">
+                <span className="alignright flex flex-column mr0-75 lh130 no-mobile">
                     <span className="inline-block mw100 ellipsis dropdown-logout-displayName">{Email}</span>
                 </span>
             )}

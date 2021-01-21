@@ -18,7 +18,7 @@ const SubscriptionPlan = ({
 
     return (
         <>
-            <div className="flex flex-wrap onmobile-flex-column">
+            <div className="flex flex-wrap on-mobile-flex-column">
                 <div className="bordered-container p1 mr1 mb1">
                     <div className="bold mb1">{c('Title').t`Plan summary`}</div>
                     <ul className="unstyled mb1">

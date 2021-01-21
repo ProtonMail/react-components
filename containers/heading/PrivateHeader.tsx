@@ -73,7 +73,7 @@ const PrivateHeader = ({
 
     return (
         <Header>
-            <div className="logo-container flex flex-justify-space-between flex-align-items-center flex-nowrap nomobile">
+            <div className="logo-container flex flex-justify-space-between flex-align-items-center flex-nowrap no-mobile">
                 {logo}
                 {hasAppsDropdown ? <AppsDropdown /> : null}
             </div>

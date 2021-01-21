@@ -186,7 +186,7 @@ const SignupAccountForm = ({ model, onChange, onSubmit, errors, loading, hasExte
                 method="post"
             >
                 {inner}
-                <div className="flex flex-nowrap onmobile-flex-column mb2">
+                <div className="flex flex-nowrap on-mobile-flex-column mb2">
                     <SignupLabelInputRow
                         className="mr0-5"
                         label={<Label htmlFor="password">{c('Signup label').t`Password`}</Label>}
@@ -207,7 +207,7 @@ const SignupAccountForm = ({ model, onChange, onSubmit, errors, loading, hasExte
                         }
                     />
                     <SignupLabelInputRow
-                        className="ml0-5 onmobile-ml0"
+                        className="ml0-5 on-mobile-ml0"
                         label={<Label htmlFor="password-repeat">{c('Signup label').t`Confirm`}</Label>}
                         input={
                             <PasswordInput
@@ -228,7 +228,7 @@ const SignupAccountForm = ({ model, onChange, onSubmit, errors, loading, hasExte
                 </div>
                 <SignupSubmitRow>
                     <PrimaryButton
-                        className="pm-button--large flex-item-noshrink onmobile-w100"
+                        className="pm-button--large flex-item-noshrink on-mobile-w100"
                         loading={loading || loadingChallenge}
                         disabled={disableSubmit}
                         type="submit"

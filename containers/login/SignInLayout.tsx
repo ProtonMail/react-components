@@ -47,7 +47,7 @@ const SignInLayout = ({ children, title = '' }: Props) => {
                     <>
                         <div className="flex flex-justify-end">
                             <SupportDropdown className="pm-button--primaryborder-dark inline-flex flex-align-items-center" />
-                            <Link className="ml1 nomobile notablet pm-button--primary" to="/signup">{c('Link')
+                            <Link className="ml1 no-mobile no-tablet pm-button--primary" to="/signup">{c('Link')
                                 .t`Sign up for free`}</Link>
                         </div>
                     </>

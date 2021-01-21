@@ -273,8 +273,8 @@ const NewSubscriptionModal = ({
         >
             {step === SUBSCRIPTION_STEPS.NETWORK_ERROR && <GenericError />}
             {step === SUBSCRIPTION_STEPS.CUSTOMIZATION && (
-                <div className="flex flex-justify-space-between onmobile-flex-column">
-                    <div className="w75 onmobile-w100 pr4 ontablet-landscape-pr1 onmobile-pr0">
+                <div className="flex flex-justify-space-between on-mobile-flex-column">
+                    <div className="w75 on-mobile-w100 pr4 on-tablet-landscape-pr1 on-mobile-pr0">
                         <SubscriptionCustomization
                             organization={organization}
                             vpnCountries={vpnCountries}
@@ -285,7 +285,7 @@ const NewSubscriptionModal = ({
                             setModel={setModel}
                         />
                     </div>
-                    <div className="w25 onmobile-w100">
+                    <div className="w25 on-mobile-w100">
                         <div className="subscriptionCheckout-container">
                             <SubscriptionCheckout
                                 submit={
@@ -313,8 +313,8 @@ const NewSubscriptionModal = ({
                 </div>
             )}
             {step === SUBSCRIPTION_STEPS.PAYMENT && (
-                <div className="flex flex-justify-space-between onmobile-flex-column">
-                    <div className="w75 onmobile-w100 ontablet-landscape-pr1 pr4 onmobile-pr0">
+                <div className="flex flex-justify-space-between on-mobile-flex-column">
+                    <div className="w75 on-mobile-w100 on-tablet-landscape-pr1 pr4 on-mobile-pr0">
                         <h3>{c('Title').t`Payment method`}</h3>
                         {checkResult.AmountDue ? (
                             <>
@@ -348,7 +348,7 @@ const NewSubscriptionModal = ({
                             </>
                         )}
                     </div>
-                    <div className="w25 onmobile-w100">
+                    <div className="w25 on-mobile-w100">
                         <SubscriptionCheckout
                             method={method}
                             submit={

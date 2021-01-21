@@ -83,10 +83,10 @@ const ContactSummary = ({
                 <ContactImageSummary photo={photo} name={name} />
             </div>
             <div className="pl1 flex-item-fluid">
-                <h2 className="onmobile-aligncenter mb0 ellipsis" title={name}>
+                <h2 className="on-mobile-aligncenter mb0 ellipsis" title={name}>
                     {name}
                 </h2>
-                <div className="onmobile-aligncenter">
+                <div className="on-mobile-aligncenter">
                     <ul className="unstyled mt0-5 inline-block">
                         {summary.map(({ icon, component }) => {
                             if (!component) {
@@ -106,7 +106,7 @@ const ContactSummary = ({
                 </div>
             </div>
             {!isPreview && (
-                <div className="flex-item-noshrink pt0-5 onmobile-aligncenter mb1">
+                <div className="flex-item-noshrink pt0-5 on-mobile-aligncenter mb1">
                     <Tooltip title={c('Action').t`Edit`} className="ml0-5">
                         <Button onClick={() => handleEdit()} className="pm-button--for-icon inline-flex">
                             <Icon className="color-primary mt0-25 mb0-1" name="pen" alt={c('Action').t`Edit`} />

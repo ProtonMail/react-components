@@ -108,7 +108,7 @@ const OpenVPNConfigurationSection = () => {
             </Alert>
 
             <h3 className="mt2">{c('Title').t`1. Select platform`}</h3>
-            <div className="flex onmobile-flex-column mb1">
+            <div className="flex on-mobile-flex-column mb1">
                 {[
                     {
                         value: PLATFORM.ANDROID,
@@ -159,7 +159,7 @@ const OpenVPNConfigurationSection = () => {
             </div>
 
             <h3 className="mt2">{c('Title').t`2. Select protocol`}</h3>
-            <div className="flex onmobile-flex-column mb0-5">
+            <div className="flex on-mobile-flex-column mb0-5">
                 <RadioGroup
                     name="protocol"
                     value={protocol}
@@ -176,7 +176,7 @@ const OpenVPNConfigurationSection = () => {
             </div>
 
             <h3 className="mt2">{c('Title').t`3. Select config file and download`}</h3>
-            <div className="flex onmobile-flex-column mb1-5">
+            <div className="flex on-mobile-flex-column mb1-5">
                 <RadioGroup
                     name="category"
                     value={category}
@@ -272,7 +272,7 @@ const OpenVPNConfigurationSection = () => {
                     <div className="bordered-container p2 aligncenter">
                         <h3 className="color-pv-green mt0 mb1">{c('Title')
                             .t`Get ProtonVPN Plus to access all servers`}</h3>
-                        <ul className="unstyled inline-flex mt0 mb2 onmobile-flex-column">
+                        <ul className="unstyled inline-flex mt0 mb2 on-mobile-flex-column">
                             <li className="flex flex-nowrap flex-align-items-center mr1">
                                 <Icon name="on" className="color-global-success mr0-5" />
                                 <span className="bold">{c('Feature').t`Access to all countries`}</span>

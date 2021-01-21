@@ -14,7 +14,7 @@ const FilterSortableList = ({ items, ...rest }) => (
                     <span className="sr-only">{c('Settings/filters - table').t`Order`}</span>
                 </th>
                 <th scope="col">{c('Settings/filters - table').t`Name`}</th>
-                <th scope="col" className="w8e nomobile">
+                <th scope="col" className="w8e no-mobile">
                     {c('Settings/filters - table').t`Status`}
                 </th>
                 <th scope="col" className="w10e">

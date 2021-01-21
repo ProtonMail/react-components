@@ -127,7 +127,7 @@ const MembersSection = () => {
             node: (
                 <>
                     <span className="mr0-5">{c('Title header for members table').t`Role`}</span>
-                    <span className="nomobile">
+                    <span className="no-mobile">
                         <Info url="https://protonmail.com/support/knowledge-base/member-roles/" />
                     </span>
                 </>
@@ -140,7 +140,7 @@ const MembersSection = () => {
                     <Info url="https://protonmail.com/support/knowledge-base/private-members/" />
                 </>
             ),
-            className: 'notablet nomobile',
+            className: 'no-tablet no-mobile',
         },
         {
             node: (
@@ -161,7 +161,7 @@ const MembersSection = () => {
                     >{c('Title header for members table').t`Features`}</span>
                 </>
             ),
-            className: 'nomobile',
+            className: 'no-mobile',
         },
         { node: c('Title').t`Action` },
     ].map(({ node, className = '' }, i) => {
@@ -181,7 +181,7 @@ const MembersSection = () => {
                 <PrimaryButton
                     disabled={loadingOrganization || loadingDomains || loadingDomainAddresses || loadingOrganizationKey}
                     onClick={handleAddUser}
-                    className="onmobile-mb0-5"
+                    className="on-mobile-mb0-5"
                 >
                     {c('Action').t`Add user`}
                 </PrimaryButton>
@@ -221,7 +221,7 @@ const MembersSection = () => {
                                         organizationKey={organizationKey}
                                     />,
                                 ]}
-                                className="ontablet-hideTd3 onmobile-hideTd5"
+                                className="on-tablet-hide-td3 on-mobile-hide-td5"
                             />
                         );
                     })}

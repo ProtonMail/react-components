@@ -136,7 +136,7 @@ const PlansSection = () => {
 
     return (
         <>
-            <div className="flex flew-nowrap onmobile-flex-column">
+            <div className="flex flew-nowrap on-mobile-flex-column">
                 <Alert
                     className="flex-item-fluid"
                     learnMore="https://protonmail.com/support/knowledge-base/paid-plans/"

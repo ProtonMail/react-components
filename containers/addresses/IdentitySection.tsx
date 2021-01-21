@@ -36,9 +36,9 @@ const IdentitySection = () => {
             <Alert learnMore="https://protonmail.com/support/knowledge-base/display-name-and-signature/">{c('Info')
                 .t`Click the Edit button to personalize your email address. Your Display Name appears in the From field when people receive an email from you. Your Signature is appended at the bottom of your messages. Or leave each field empty for more privacy.`}</Alert>
             <EditableSection>
-                <Label className="border-bottom onmobile-pb0 onmobile-no-border" htmlFor="addressSelector">{c('Label')
+                <Label className="border-bottom on-mobile-pb0 on-mobile-no-border" htmlFor="addressSelector">{c('Label')
                     .t`Select an address`}</Label>
-                <Field className="auto border-bottom onmobile-pb0 onmobile-no-border flex flex-row flex-nowrap">
+                <Field className="auto border-bottom on-mobile-pb0 on-mobile-no-border flex flex-row flex-nowrap">
                     <Select id="addressSelector" options={options} onChange={handleChange} />
                     <span className="flex-item-noshrink">
                         <Button className="pm-button--primary ml1" onClick={handleOpenModal}>{c('Action')

@@ -40,7 +40,7 @@ const OrganizationSection = ({ organization }: Props) => {
                 <Field className="pt0-5">
                     <div className="bold ellipsis">{organizationName}</div>
                 </Field>
-                <div className="ml1 onmobile-ml0">
+                <div className="ml1 on-mobile-ml0">
                     <PrimaryButton
                         onClick={() => createModal(<OrganizationNameModal organizationName={organizationName} />)}
                     >{c('Action').t`Edit`}</PrimaryButton>

@@ -34,9 +34,9 @@ const AutoReplySection = () => {
             </Alert>
 
             <EditableSection className="editable-section-container--size-tablet">
-                <Label htmlFor="autoReplyToggle" className="border-bottom onmobile-pb0 onmobile-no-border">{c('Label')
+                <Label htmlFor="autoReplyToggle" className="border-bottom on-mobile-pb0 on-mobile-no-border">{c('Label')
                     .t`Auto-reply`}</Label>
-                <Field className="auto border-bottom onmobile-pb0 onmobile-no-border flex flex-nowrap">
+                <Field className="auto border-bottom on-mobile-pb0 on-mobile-no-border flex flex-nowrap">
                     <span className="flex-item-noshrink">
                         <Toggle
                             id="autoReplyToggle"
@@ -46,7 +46,7 @@ const AutoReplySection = () => {
                         />
                     </span>
                     {AutoResponder.IsEnabled && (
-                        <span className="onmobile-pb0 onmobile-no-border mlauto pl2">
+                        <span className="on-mobile-pb0 on-mobile-no-border mlauto pl2">
                             <Button className="pm-button--primary mt0-25" onClick={handleOpenModal}>{c('Action')
                                 .t`Edit`}</Button>
                         </span>

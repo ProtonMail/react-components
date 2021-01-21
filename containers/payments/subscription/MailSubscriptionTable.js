@@ -186,7 +186,7 @@ const MailSubscriptionTable = ({
                 {c('Info concerning plan features')
                     .t`ProtonMail cannot be used for mass emailing or spamming. Legitimate emails are unlimited.`}
             </p>
-            <div className="aligncenter pb1 onmobile-pb2 subscriptionTable-show-features-container">
+            <div className="aligncenter pb1 on-mobile-pb2 subscriptionTable-show-features-container">
                 <LinkButton
                     className="pm-button--small"
                     onClick={() => createModal(<SubscriptionFeaturesModal currency={currency} cycle={cycle} />)}

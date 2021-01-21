@@ -27,7 +27,7 @@ const ProtonVPNClientsSection = () => {
     });
 
     return (
-        <div className="flex onmobile-flex-column">
+        <div className="flex on-mobile-flex-column">
             <VPNClientCard
                 title={c('VPNClient').t`Android`}
                 icon="android"

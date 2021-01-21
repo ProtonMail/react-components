@@ -29,7 +29,7 @@ const UpgradeModal = ({ plans, onUpgrade, ...rest }) => {
                     </button>
                 </div>
                 <div className="pl2 pr2 pb2">
-                    <div className="flex-autogrid onmobile-flex-column">
+                    <div className="flex-autogrid on-mobile-flex-column">
                         <div className="flex-autogrid-item flex flex-column flex-justify-space-between">
                             <h3 className="bold">{c('Title').t`Upgrade now!`}</h3>
                             <div className="mb2">

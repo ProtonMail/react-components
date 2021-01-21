@@ -198,7 +198,7 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }: Props) => {
                     <BlackFridayModalDescription isProductPayer={productPayer} />
                     <div
                         className={classnames([
-                            'flex flex-nowrap flex-justify-space-around onmobile-flex-column',
+                            'flex flex-nowrap flex-justify-space-around on-mobile-flex-column',
                             productPayer ? 'mt2' : 'mt4',
                         ])}
                     >

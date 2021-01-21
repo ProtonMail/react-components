@@ -127,7 +127,7 @@ const FilterPreviewConditions = ({ isOpen, isNarrow, toggleOpen, model }: Props)
 
     return (
         <div className="border-bottom">
-            <div className="flex flex-nowrap onmobile-flex-column align-items-center pt1 pb1">
+            <div className="flex flex-nowrap on-mobile-flex-column align-items-center pt1 pb1">
                 <button type="button" className={classnames(['w20 alignleft', isNarrow && 'mb1'])} onClick={toggleOpen}>
                     <Icon name="caret" className={classnames([isOpen && 'rotateX-180'])} />
                     <span className="ml0-5">{c('Label').t`Conditions`}</span>

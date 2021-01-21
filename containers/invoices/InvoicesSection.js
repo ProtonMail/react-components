@@ -64,9 +64,9 @@ const InvoicesSection = () => {
     const headerCells = [
         { node: 'ID', className: 'ellipsis' },
         { node: c('Title').t`Amount` },
-        { node: c('Title').t`Type`, className: 'notablet nomobile' },
-        { node: c('Title').t`Status`, className: 'nomobile' },
-        { node: c('Title').t`Date`, className: 'nomobile' },
+        { node: c('Title').t`Type`, className: 'no-tablet no-mobile' },
+        { node: c('Title').t`Status`, className: 'no-mobile' },
+        { node: c('Title').t`Date`, className: 'no-mobile' },
         { node: c('Title').t`Action` },
     ].map(({ node, className = '' }, i) => {
         return (
@@ -125,7 +125,7 @@ const InvoicesSection = () => {
                                     <Time key={key}>{invoice.CreateTime}</Time>,
                                     <InvoiceActions key={key} invoice={invoice} fetchInvoices={request} />,
                                 ]}
-                                className="ontablet-hideTd3 onmobile-hideTd4 onmobile-hideTd5"
+                                className="on-tablet-hide-td3 on-mobile-hide-td4 on-mobile-hide-td5"
                             />
                         );
                     })}

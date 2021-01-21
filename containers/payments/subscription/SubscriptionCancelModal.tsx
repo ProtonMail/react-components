@@ -52,7 +52,7 @@ const SubscriptionCancellationModal = ({ onSubmit, onClose, onSkip, ...rest }: P
             onClose={onClose}
             {...rest}
         >
-            <div className="w75 onmobile-w100">
+            <div className="w75 on-mobile-w100">
                 <div className="mb2">
                     <label className="mb1 block" htmlFor="reason">{c('Label')
                         .t`What is the main reason you are cancelling?`}</label>

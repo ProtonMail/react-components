@@ -91,7 +91,7 @@ function FilterItemRow({ filter, ...rest }) {
                 <DropdownActions key="dropdown" className="pm-button--small" list={list} />,
             ]}
             {...rest}
-            className="onmobile-hideTd3"
+            className="on-mobile-hide-td3"
         />
     );
 }

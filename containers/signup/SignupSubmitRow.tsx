@@ -5,7 +5,7 @@ interface Props {
 }
 const SignupSubmitRow = ({ children }: Props) => {
     return (
-        <div className="flex flex-nowrap flex-justify-end flex-align-items-center mb2 onmobile-flex-column">
+        <div className="flex flex-nowrap flex-justify-end flex-align-items-center mb2 on-mobile-flex-column">
             {children}
         </div>
     );

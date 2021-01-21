@@ -35,7 +35,7 @@ const OpenVPNAccountSection = () => {
                         <code title={Name}>{Name}</code>
                     </div>
                 </Field>
-                <div className="ml1 flex-item-noshrink onmobile-ml0 onmobile-mt0-5">
+                <div className="ml1 flex-item-noshrink on-mobile-ml0 on-mobile-mt0-5">
                     <Copy value={Name} />
                 </div>
             </Row>
@@ -51,7 +51,7 @@ const OpenVPNAccountSection = () => {
                         onClick={() => withUpdating(handleResetCredentials())}
                     >{c('Action').t`Reset credentials`}</PrimaryButton>
                 </Field>
-                <div className="ml1 flex-item-noshrink onmobile-ml0 onmobile-mt0-5">
+                <div className="ml1 flex-item-noshrink on-mobile-ml0 on-mobile-mt0-5">
                     <Copy className="mr1" value={Password} />
                     <Button
                         icon={show ? 'unread' : 'read'}

@@ -24,8 +24,8 @@ const KeysTable = ({
 }: Props) => {
     const headerCells = [
         { node: c('Title header for keys table').t`Fingerprint`, className: 'ellipsis' },
-        { node: c('Title header for keys table').t`Key type`, className: 'w15 nomobile' },
-        { node: c('Title header for keys table').t`Status`, className: 'w10e notinymobile' },
+        { node: c('Title header for keys table').t`Key type`, className: 'w15 no-mobile' },
+        { node: c('Title header for keys table').t`Status`, className: 'w10e no-tiny-mobile' },
         { node: c('Title header for keys table').t`Actions`, className: 'w10e' },
     ].map(({ node, className = '' }, i) => {
         return (
@@ -49,7 +49,7 @@ const KeysTable = ({
                                 <div key={1} className="flex flex-row flex-nowrap flex-align-items-center">
                                     <Copy
                                         value={fingerprint}
-                                        className="pm-button--small flex-item-noshrink notinymobile mr1 onmobile-mr0-5 ontinymobile-m0"
+                                        className="pm-button--small flex-item-noshrink no-tiny-mobile mr1 on-mobile-mr0-5 on-tiny-mobile-m0"
                                     />
                                     <code className="mw100 inline-block ellipsis" title={fingerprint}>
                                         {fingerprint}
@@ -76,7 +76,7 @@ const KeysTable = ({
                                     onSetNotObsolete={permissions.canSetNotObsolete ? onSetNotObsolete : undefined}
                                 />,
                             ]}
-                            className="onmobile-hideTd2 ontinymobile-hideTd3"
+                            className="on-mobile-hide-td2 on-tiny-mobile-hide-td3"
                         />
                     );
                 })}

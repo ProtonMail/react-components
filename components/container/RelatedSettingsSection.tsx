@@ -19,9 +19,9 @@ const RelatedSettingsSection = ({ list = [] }: Props) => {
         throw new Error('You can only display 2 blocks in RelatedSettingsSection');
     }
     return (
-        <div className="flex flex-justify-space-between ontablet-flex-column">
+        <div className="flex flex-justify-space-between on-tablet-flex-column">
             {list.map(({ icon, text, to = '/', link }, index) => (
-                <div key={index.toString()} className="w45 flex ontablet-mb1">
+                <div key={index.toString()} className="w45 flex on-tablet-mb1">
                     <Information icon={icon}>
                         <Paragraph>{text}</Paragraph>
                         <Paragraph className="aligncenter mtauto">

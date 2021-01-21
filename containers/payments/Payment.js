@@ -80,7 +80,7 @@ const Payment = ({
     return (
         <>
             <Row className="payment-container">
-                <div className="label payment-left mr1 onmobile-mr0">
+                <div className="label payment-left mr1 on-mobile-mr0">
                     <label className="mb0-5 block">{c('Label').t`Select a method`}</label>
                     {options.map(({ text, value, disabled, icon }) => {
                         return (
@@ -106,7 +106,7 @@ const Payment = ({
                     })}
                 </div>
                 <div className="payment-right mr0-25">
-                    <div className="mw37e onmobile-mw100">
+                    <div className="mw37e on-mobile-mw100">
                         <Method
                             loading={loading}
                             paypal={paypal}

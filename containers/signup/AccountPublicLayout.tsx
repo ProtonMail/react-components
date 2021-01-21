@@ -42,16 +42,16 @@ const AccountPublicLayout = ({ children, title, subtitle, aside, larger, left, c
     return (
         <div className="scroll-if-needed h100v">
             <PublicTopBanners />
-            <div className="pt1 pb1 pl2 pr2 onmobile-p0 sign-layout-container flex flex-nowrap flex-column flex-justify-space-between">
+            <div className="pt1 pb1 pl2 pr2 on-mobile-p0 sign-layout-container flex flex-nowrap flex-column flex-justify-space-between">
                 <div className="flex-item-fluid-auto sign-layout flex-item-noshrink flex flex-column flex-nowrap">
-                    <div className="flex flex-column flex-nowrap flex-item-noshrink onmobile-flex-item-fluid-auto">
+                    <div className="flex flex-column flex-nowrap flex-item-noshrink on-mobile-flex-item-fluid-auto">
                         <div
                             className={classnames([
-                                'center bg-white-dm color-global-grey-dm mt2 mb2 onmobile-mt0 onmobile-mb0 onmobile-pb1 w100 mw100 bordered-container flex-item-noshrink flex flex-nowrap signup-container',
+                                'center bg-white-dm color-global-grey-dm mt2 mb2 on-mobile-mt0 on-mobile-mb0 on-mobile-pb1 w100 mw100 bordered-container flex-item-noshrink flex flex-nowrap signup-container',
                                 larger ? '' : 'mw50e',
                             ])}
                         >
-                            <main className="onmobile-p1 flex-item-fluid sign-layout-main flex-no-min-children flex-column flex-nowrap">
+                            <main className="on-mobile-p1 flex-item-fluid sign-layout-main flex-no-min-children flex-column flex-nowrap">
                                 <header className="flex flex-align-items-center flex-nowrap mb2">
                                     <span className="flex-item-fluid flex">{left}</span>
                                     <span className="aligncenter flex w70p">{center}</span>
@@ -79,7 +79,7 @@ const AccountPublicLayout = ({ children, title, subtitle, aside, larger, left, c
                                 </footer>
                             </main>
                             {aside ? (
-                                <aside className="nomobile bg-global-highlight w33 p2 flex flex-align-items-center flex-justify-center small m0 sign-layout-aside">
+                                <aside className="no-mobile bg-global-highlight w33 p2 flex flex-align-items-center flex-justify-center small m0 sign-layout-aside">
                                     {aside}
                                 </aside>
                             ) : null}
@@ -87,19 +87,19 @@ const AccountPublicLayout = ({ children, title, subtitle, aside, larger, left, c
                     </div>
                 </div>
                 <footer className="aligncenter small m0 pt0-5 pb0-5 flex-item-noshrink">
-                    <span className="opacity-50 automobile">{c('Info').t`Made globally - Hosted in Switzerland`}</span>
-                    <span className="opacity-50 pl0-75 pr0-75 nomobile" aria-hidden="true">
+                    <span className="opacity-50 auto-mobile">{c('Info').t`Made globally - Hosted in Switzerland`}</span>
+                    <span className="opacity-50 pl0-75 pr0-75 no-mobile" aria-hidden="true">
                         |
                     </span>
-                    <span className="automobile">{termsLink}</span>
-                    <span className="opacity-50 pl0-75 pr0-75 nomobile" aria-hidden="true">
+                    <span className="auto-mobile">{termsLink}</span>
+                    <span className="opacity-50 pl0-75 pr0-75 no-mobile" aria-hidden="true">
                         |
                     </span>
-                    <span className="automobile">{privacyLink}</span>
-                    <span className="opacity-50 pl0-75 pr0-75 nomobile" aria-hidden="true">
+                    <span className="auto-mobile">{privacyLink}</span>
+                    <span className="opacity-50 pl0-75 pr0-75 no-mobile" aria-hidden="true">
                         |
                     </span>
-                    <span className="opacity-50 automobile">{c('Info').jt`Version ${appVersion}`}</span>
+                    <span className="opacity-50 auto-mobile">{c('Info').jt`Version ${appVersion}`}</span>
                 </footer>
             </div>
         </div>
