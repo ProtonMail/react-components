@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { classnames } from '../../helpers';
 
 interface Props extends React.HTMLProps<HTMLSpanElement> {
@@ -9,8 +9,9 @@ interface Props extends React.HTMLProps<HTMLSpanElement> {
 }
 
 const MiddleEllipsis = ({ text, className = '', displayTitle = true, charsToDisplayEnd = 6, ...rest }: Props) => {
-    const start = text.slice(0, -charsToDisplayEnd);
-    const end = text.slice(-charsToDisplayEnd);
+    const [start, end] = useMemo(() => {
+        return [text.slice(0, -charsToDisplayEnd), text.slice(-charsToDisplayEnd)];
+    }, [text]);
 
     return (
         <span
