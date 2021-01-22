@@ -1,31 +1,32 @@
 import React from 'react';
 import { classnames } from '../../helpers';
 
-interface Props {
-    filename: string;
-    caractersOnRight?: number;
+interface Props extends React.HTMLProps<HTMLSpanElement> {
+    text: string;
+    charsToDisplayEnd?: number;
     className?: string;
     displayTitle?: Boolean; // when you embed it into something with title/tooltip, you might not want to display it
 }
 
-const Ellipsis = ({ filename, className = '', displayTitle = true, caractersOnRight = 6 }: Props) => {
-    const filenameStart = filename.slice(0, -caractersOnRight);
-    const filenameEnd = filename.slice(-caractersOnRight);
+const MiddleEllipsis = ({ text, className = '', displayTitle = true, charsToDisplayEnd = 6, ...rest }: Props) => {
+    const start = text.slice(0, -charsToDisplayEnd);
+    const end = text.slice(-charsToDisplayEnd);
 
     return (
         <span
-            aria-label={filename}
-            title={displayTitle ? filename : undefined}
+            aria-label={text}
+            title={displayTitle ? text : undefined}
             className={classnames(['inline-flex flex-nowrap mw100', className])}
+            {...rest}
         >
             <span className="ellipsis" aria-hidden="true">
-                {filenameStart}
+                {start}
             </span>
             <span className="flex-item-noshrink" aria-hidden="true">
-                {filenameEnd}
+                {end}
             </span>
         </span>
     );
 };
 
-export default Ellipsis;
+export default MiddleEllipsis;
