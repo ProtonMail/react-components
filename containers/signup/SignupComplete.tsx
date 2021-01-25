@@ -12,7 +12,7 @@ const SignupComplete = ({ model }: Props) => {
     const [domain = ''] = model.domains;
     const email = model.email ? model.email : `${model.username}@${domain}`;
     return (
-        <div className="aligncenter">
+        <div className="text-center">
             <h2>{c('Signup title').t`Congratulations, your Proton Account ${email} has been created!`}</h2>
             <p>{c('Info')
                 .t`Keep your password safe and secure, as it is the key to unlocking all your emails, documents and any other private data on Proton.`}</p>

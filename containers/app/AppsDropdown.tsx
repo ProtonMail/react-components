@@ -30,7 +30,7 @@ const AppsDropdown = () => {
                             <AppLink
                                 to="/"
                                 toApp={toApp}
-                                className="apps-dropdown-link big m0 p1 pt0-75 pb0-75 flex flex-nowrap flex-align-items-center"
+                                className="apps-dropdown-link text-lg m0 p1 pt0-75 pb0-75 flex flex-nowrap flex-align-items-center"
                                 title={c('Apps dropdown').t`Go to ${title}`}
                             >
                                 <Icon name={icon} size={20} className="mr0-5" />
@@ -42,7 +42,7 @@ const AppsDropdown = () => {
                 <li>
                     <Href
                         url="https://account.protonvpn.com/login"
-                        className="apps-dropdown-link big m0 p1 pt0-75 pb0-75 flex flex-nowrap flex-align-items-center"
+                        className="apps-dropdown-link text-lg m0 p1 pt0-75 pb0-75 flex flex-nowrap flex-align-items-center"
                         title={c('Apps dropdown').t`Go to ProtonVPN`}
                     >
                         <Icon name="protonvpn" size={20} className="mr0-5" />

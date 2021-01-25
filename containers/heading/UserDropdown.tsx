@@ -103,21 +103,21 @@ const UserDropdown = ({ ...rest }) => {
                             <li className="pl1 pr1">
                                 {organizationName ? (
                                     <>
-                                        <div className="opacity-50 small m0">{c('Label').t`Organization`}</div>
+                                        <div className="opacity-50 text-sm m0">{c('Label').t`Organization`}</div>
                                         <div className="mb1">{organizationName}</div>
                                     </>
                                 ) : null}
-                                <div className="opacity-50 small m0">{c('Label').t`Storage space`}</div>
+                                <div className="opacity-50 text-sm m0">{c('Label').t`Storage space`}</div>
                                 <div className="flex flex-align-items-baseline flex-nowrap flex-justify-space-between">
                                     <span>
-                                        <span className="semibold">{humanSize(UsedSpace)} </span>
+                                        <span className="text-semibold">{humanSize(UsedSpace)} </span>
                                         /&nbsp;{humanSize(MaxSpace)}
                                     </span>
                                     {canAddStorage ? (
                                         <AppLink
                                             to="/subscription"
                                             toApp={getAccountSettingsApp()}
-                                            className="small link m0 ml0-5"
+                                            className="text-sm link m0 ml0-5"
                                             title={c('Apps dropdown').t`Add storage space`}
                                             onClick={() => close()}
                                         >
@@ -128,7 +128,7 @@ const UserDropdown = ({ ...rest }) => {
                                 <Meter className="is-thin block mt0-5 mb1" value={spacePercentage} />
                                 <AppLink
                                     to="/"
-                                    className="block w100 mt1-5 mb1-5 aligncenter pm-button pm-button--primaryborder"
+                                    className="block w100 mt1-5 mb1-5 text-center pm-button pm-button--primaryborder"
                                     toApp={getAccountSettingsApp()}
                                     onClick={() => close()}
                                 >
@@ -142,7 +142,7 @@ const UserDropdown = ({ ...rest }) => {
                         <li>
                             <button
                                 type="button"
-                                className="w100 flex dropdown-item-link pl1 pr1 pt0-5 pb0-5 alignleft"
+                                className="w100 flex dropdown-item-link pl1 pr1 pt0-5 pb0-5 text-left"
                                 onClick={handleSwitchAccount}
                             >
                                 <Icon className="mt0-25 mr0-5" name="organization-users" />
@@ -152,7 +152,7 @@ const UserDropdown = ({ ...rest }) => {
                     ) : null}
                     <li>
                         <Href
-                            className="w100 flex flex-nowrap dropdown-item-link nodecoration pl1 pr1 pt0-5 pb0-5"
+                            className="w100 flex flex-nowrap dropdown-item-link text-no-decoration pl1 pr1 pt0-5 pb0-5"
                             url="https://shop.protonmail.com"
                             onClick={() => close()}
                         >
@@ -164,7 +164,7 @@ const UserDropdown = ({ ...rest }) => {
                         <li>
                             <button
                                 type="button"
-                                className="w100 flex dropdown-item-link pl1 pr1 pt0-5 pb0-5 alignleft"
+                                className="w100 flex dropdown-item-link pl1 pr1 pt0-5 pb0-5 text-left"
                                 onClick={handleSupportUsClick}
                             >
                                 <Icon className="mt0-25 mr0-5" name="donate" />
@@ -204,7 +204,7 @@ const UserDropdown = ({ ...rest }) => {
                     <li className="dropdown-item-hr mb0-5" aria-hidden="false" />
                     <li className="pt0-5 pb0-5 pl1 pr1 flex">
                         <PrimaryButton
-                            className="w100 aligncenter navigationUser-logout"
+                            className="w100 text-center navigationUser-logout"
                             onClick={handleLogout}
                             data-cy-header-user-dropdown="logout"
                         >

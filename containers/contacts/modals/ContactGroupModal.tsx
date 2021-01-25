@@ -171,7 +171,7 @@ const ContactGroupModal = ({ contactGroupID, onClose = noop, selectedContactEmai
             <ContactGroupTable contactEmails={model.contactEmails} onDelete={handleDeleteEmail} />
 
             {contactEmailsLength ? (
-                <div className="aligncenter opacity-50">
+                <div className="text-center opacity-50">
                     {c('Info').ngettext(
                         msgid`${contactEmailsLength} Member`,
                         `${contactEmailsLength} Members`,

@@ -20,7 +20,7 @@ const SubscriptionPlan = ({
         <>
             <div className="flex flex-wrap on-mobile-flex-column">
                 <div className="bordered-container p1 mr1 mb1">
-                    <div className="bold mb1">{c('Title').t`Plan summary`}</div>
+                    <div className="text-bold mb1">{c('Title').t`Plan summary`}</div>
                     <ul className="unstyled mb1">
                         {features.map((feature, index) => {
                             return (
@@ -34,8 +34,8 @@ const SubscriptionPlan = ({
                 {canCustomize && state ? (
                     <div className="bordered-container p1 mb1 subscriptionPlan-customize">
                         <div className="flex flex-nowrap flex-align-items-center flex-justify-space-between mb1">
-                            <div className="bold">{c('Title').t`Configure plan`}</div>
-                            <Price className="big mt0 mb0" currency={currency} suffix={c('Suffix').t`/month`}>
+                            <div className="text-bold">{c('Title').t`Configure plan`}</div>
+                            <Price className="text-lg mt0 mb0" currency={currency} suffix={c('Suffix').t`/month`}>
                                 {plan.Pricing[CYCLE.MONTHLY]}
                             </Price>
                         </div>

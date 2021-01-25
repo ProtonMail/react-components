@@ -55,7 +55,7 @@ const DynamicProgress = ({
           };
 
     return (
-        <div className="aligncenter">
+        <div className="text-center">
             {icon}
             <Progress
                 className={classnames(['mt1', progressClassname])}

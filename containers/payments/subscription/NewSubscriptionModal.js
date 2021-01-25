@@ -57,8 +57,8 @@ const NewSubscriptionModal = ({
         [SUBSCRIPTION_STEPS.NETWORK_ERROR]: c('Title').t`Network error`,
         [SUBSCRIPTION_STEPS.CUSTOMIZATION]: c('Title').t`Plan customization`,
         [SUBSCRIPTION_STEPS.PAYMENT]: c('Title').t`Checkout`,
-        [SUBSCRIPTION_STEPS.UPGRADE]: <div className="aligncenter">{c('Title').t`Processing...`}</div>,
-        [SUBSCRIPTION_STEPS.THANKS]: <div className="aligncenter">{c('Title').t`Thank you!`}</div>,
+        [SUBSCRIPTION_STEPS.UPGRADE]: <div className="text-center">{c('Title').t`Processing...`}</div>,
+        [SUBSCRIPTION_STEPS.THANKS]: <div className="text-center">{c('Title').t`Thank you!`}</div>,
     };
 
     const api = useApi();
@@ -377,7 +377,7 @@ const NewSubscriptionModal = ({
                 </div>
             )}
             {step === SUBSCRIPTION_STEPS.UPGRADE && (
-                <div className="aligncenter">
+                <div className="text-center">
                     <SubscriptionUpgrade />
                 </div>
             )}

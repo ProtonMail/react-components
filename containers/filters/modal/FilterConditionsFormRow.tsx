@@ -134,7 +134,7 @@ const FilterConditionsRow = ({
                 className="inline-flex flex-row flex-align-items-center mb0-5 condition-token"
                 role="listitem"
             >
-                <span className="ellipsis nodecoration" title={token}>
+                <span className="text-ellipsis text-no-decoration" title={token}>
                     {token}
                 </span>
                 <button type="button" className="flex flex-item-noshrink ml0-5" onClick={() => onRemoveToken(i)}>
@@ -219,7 +219,7 @@ const FilterConditionsRow = ({
         }
 
         return (
-            <span className="max-w100 pt0-5 ellipsis" title={title}>
+            <span className="max-w100 pt0-5 text-ellipsis" title={title}>
                 {label}
             </span>
         );
@@ -232,7 +232,7 @@ const FilterConditionsRow = ({
             <div className="flex flex-nowrap on-mobile-flex-column align-items-center pt1 pb1">
                 <button
                     type="button"
-                    className={classnames(['w20 alignleft', isNarrow && 'mb1'])}
+                    className={classnames(['w20 text-left', isNarrow && 'mb1'])}
                     onClick={toggleSection}
                 >
                     <Icon name="caret" className={classnames([isOpen && 'rotateX-180'])} />

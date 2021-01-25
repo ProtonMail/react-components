@@ -36,7 +36,7 @@ const SPFSection = () => {
                                     className="flex-item-noshrink pm-button--small mr0-5"
                                     value={valueToCopy}
                                 />{' '}
-                                <code className="ellipsis" title={valueToCopy}>
+                                <code className="text-ellipsis" title={valueToCopy}>
                                     {valueToCopy}
                                 </code>
                             </div>,

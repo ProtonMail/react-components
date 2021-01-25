@@ -18,12 +18,12 @@ const BEFORE = 'before';
 const Header = ({ isNarrow }) => {
     return (
         <div className="flex flex-nowrap w100 border-bottom pb0-5">
-            <span className="bold uppercase flex-item-fluid">
+            <span className="text-bold text-uppercase flex-item-fluid">
                 {isNarrow ? null : <Icon name="arrow-cross" className="mr1" />}
                 {c('Header').t`Name`}
             </span>
-            <span className="bold uppercase w10e no-mobile">{c('Header').t`Notification`}</span>
-            <span className="bold uppercase w10e alignright">{c('Header').t`Actions`}</span>
+            <span className="text-bold text-uppercase w10e no-mobile">{c('Header').t`Notification`}</span>
+            <span className="text-bold text-uppercase w10e text-right">{c('Header').t`Actions`}</span>
         </div>
     );
 };
@@ -142,7 +142,7 @@ const FolderTreeViewList = ({ items = [] }) => {
                                             name={hasSubFolders ? 'parent-folder' : 'folder'}
                                             className="mr0-5 flex-item-noshrink"
                                         />
-                                        <span className="ellipsis" title={item.Name}>
+                                        <span className="text-ellipsis" title={item.Name}>
                                             {item.Name}
                                         </span>
                                     </div>

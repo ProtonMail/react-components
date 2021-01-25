@@ -50,7 +50,7 @@ const SimpleSidebarListItemHeader = ({
             <div className="flex flex-nowrap">
                 <button
                     ref={buttonRef}
-                    className="uppercase flex-item-fluid alignleft navigation-link-header-group-link"
+                    className="text-uppercase flex-item-fluid text-left navigation-link-header-group-link"
                     type="button"
                     onClick={() => onToggle(!toggle)}
                     title={title}
@@ -58,7 +58,7 @@ const SimpleSidebarListItemHeader = ({
                     onFocus={onFocus}
                     data-shortcut-target={id}
                 >
-                    <span className="mr0-5 small">{text}</span>
+                    <span className="mr0-5 text-sm">{text}</span>
                     {hasCaret && (
                         <Icon
                             name="caret"

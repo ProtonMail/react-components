@@ -10,7 +10,7 @@ interface Props {
 }
 const VPNClientCard = ({ title, link, items, icon }: Props) => {
     return (
-        <Bordered className="mr1 aligncenter relative">
+        <Bordered className="mr1 text-center relative">
             <div>
                 <Icon size={24} name={icon} />
             </div>

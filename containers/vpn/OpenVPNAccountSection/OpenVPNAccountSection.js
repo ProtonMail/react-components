@@ -31,7 +31,7 @@ const OpenVPNAccountSection = () => {
             <Row>
                 <Label>{c('Label').t`OpenVPN / IKEv2 username`}</Label>
                 <Field>
-                    <div className="pt0-5 ellipsis max-w100">
+                    <div className="pt0-5 text-ellipsis max-w100">
                         <code title={Name}>{Name}</code>
                     </div>
                 </Field>
@@ -42,7 +42,7 @@ const OpenVPNAccountSection = () => {
             <Row>
                 <Label>{c('Label').t`OpenVPN / IKEv2 password`}</Label>
                 <Field>
-                    <div className="mb1 pt0-5 ellipsis max-w100">
+                    <div className="mb1 pt0-5 text-ellipsis max-w100">
                         <code>{show ? Password : '••••••••••••••••••••'}</code>
                     </div>
                     <PrimaryButton

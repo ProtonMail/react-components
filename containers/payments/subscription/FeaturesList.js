@@ -11,7 +11,7 @@ const FeaturesList = ({ features = [] }) => {
             {features.map((text, index) => {
                 const key = `${index}`;
                 return (
-                    <li key={key} className="aligncenter flex-item-fluid pl1 pr1">
+                    <li key={key} className="text-center flex-item-fluid pl1 pr1">
                         <Icon name="check-circle" size={24} className="color-primary" />
                         <span className="block">{text}</span>
                     </li>

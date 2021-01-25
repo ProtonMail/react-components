@@ -60,7 +60,7 @@ const BlackFridayButton = ({ plans, subscription }: Props) => {
                 type="button"
                 title={text}
                 className={classnames([
-                    'topnav-link inline-flex flex-nowrap nodecoration',
+                    'topnav-link inline-flex flex-nowrap text-no-decoration',
                     hasRedDot && 'topnav-link--blackfriday',
                 ])}
                 onClick={() => {

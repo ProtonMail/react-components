@@ -82,7 +82,7 @@ const AddressesUser = ({ user }: Props) => {
                             index={i}
                             key={address.ID}
                             cells={[
-                                <div key={0} className="ellipsis" title={address.Email}>
+                                <div key={0} className="text-ellipsis" title={address.Email}>
                                     {address.Email}
                                 </div>,
                                 <AddressStatus key={1} {...getStatus(address, i)} />,

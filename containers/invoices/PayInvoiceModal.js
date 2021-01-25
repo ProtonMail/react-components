@@ -63,7 +63,7 @@ const PayInvoiceModal = ({ invoice, fetchInvoices, ...rest }) => {
                 <>
                     <Row>
                         <Label>{c('Label').t`Amount`}</Label>
-                        <Field className="alignright">
+                        <Field className="text-right">
                             <Price className="label" currency={Currency}>
                                 {Amount}
                             </Price>
@@ -72,7 +72,7 @@ const PayInvoiceModal = ({ invoice, fetchInvoices, ...rest }) => {
                     {Credit ? (
                         <Row>
                             <Label>{c('Label').t`Credits used`}</Label>
-                            <Field className="alignright">
+                            <Field className="text-right">
                                 <Price className="label" currency={Currency}>
                                     {Credit}
                                 </Price>
@@ -83,7 +83,7 @@ const PayInvoiceModal = ({ invoice, fetchInvoices, ...rest }) => {
                         <Label>{c('Label').t`Amount due`}</Label>
                         <Field>
                             <Input
-                                className="field--highlight no-pointer-events strong alignright"
+                                className="field--highlight no-pointer-events text-strong text-right"
                                 readOnly
                                 value={toPrice(AmountDue, Currency)}
                             />

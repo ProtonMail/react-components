@@ -62,7 +62,7 @@ const InvoicesSection = () => {
         return <Alert>{c('Error').t`You have no invoices.`}</Alert>;
     }
     const headerCells = [
-        { node: 'ID', className: 'ellipsis' },
+        { node: 'ID', className: 'text-ellipsis' },
         { node: c('Title').t`Amount` },
         { node: c('Title').t`Type`, className: 'no-tablet no-mobile' },
         { node: c('Title').t`Status`, className: 'no-mobile' },

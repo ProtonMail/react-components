@@ -104,7 +104,7 @@ const CodeVerification = ({ email: defaultEmail = '', mode, method, onSubmit }: 
                         required
                     />
                 </div>
-                <div className="alignright mt2">
+                <div className="text-right mt2">
                     <PrimaryButton
                         className="pm-button--large"
                         disabled={!email || !validateEmailAddress(email)}
@@ -134,7 +134,7 @@ const CodeVerification = ({ email: defaultEmail = '', mode, method, onSubmit }: 
                         required
                     />
                 </div>
-                <div className="alignright mt2">
+                <div className="text-right mt2">
                     <PrimaryButton
                         className="pm-button--large"
                         disabled={!phone}
@@ -201,7 +201,7 @@ const CodeVerification = ({ email: defaultEmail = '', mode, method, onSubmit }: 
                         }
                     >{c('Action').t`Did not receive the code?`}</InlineLinkButton>
                 </div>
-                <div className="alignright mt2">
+                <div className="text-right mt2">
                     <InlineLinkButton onClick={editDestination} className="mr1">{c('Action')
                         .t`Change verification`}</InlineLinkButton>
                     <PrimaryButton

@@ -7,7 +7,7 @@ import { AppLink, SimpleDropdown, DropdownMenu } from '../../components';
 const MemberAddresses = ({ member, addresses }) => {
     const list = addresses.map(({ ID, Email }) => (
         <div key={ID} className="w100 flex flex-nowrap pl1 pr1 pt0-5 pb0-5">
-            <span className="ellipsis" title={Email}>
+            <span className="text-ellipsis" title={Email}>
                 {Email}
             </span>
         </div>
@@ -30,7 +30,7 @@ const MemberAddresses = ({ member, addresses }) => {
             <SimpleDropdown className="pm-button--link" content={contentDropDown}>
                 <div className="dropdown-item pt0-5 pb0-5 pl1 pr1 flex">
                     <AppLink
-                        className="pm-button w100 aligncenter"
+                        className="pm-button w100 text-center"
                         to={`/organization/${member.ID}#addresses`}
                         toApp={APPS.PROTONACCOUNT}
                     >{c('Link').t`Manage`}</AppLink>

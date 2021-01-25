@@ -21,7 +21,7 @@ const PaymentMethodsTable = ({ methods, loading }) => {
                 return (
                     <>
                         <span className="mr0-5">PayPal</span>
-                        <span className="auto-tablet ellipsis max-w100" title={method.Details.Payer}>
+                        <span className="auto-tablet text-ellipsis max-w100" title={method.Details.Payer}>
                             {method.Details.Payer}
                         </span>
                     </>

@@ -161,7 +161,7 @@ const SignupRecoveryForm = ({ model, onChange, onSubmit, onSkip, errors, loading
     return (
         <>
             {model.step === RECOVERY_EMAIL && challengeLoading ? (
-                <div className="aligncenter">
+                <div className="text-center">
                     <FullLoader className="color-primary" size={200} />
                 </div>
             ) : null}

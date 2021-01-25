@@ -55,7 +55,7 @@ function SpamListItem({ list, type, onCreate, onEdit, onMove, onRemove, classNam
                                 className="flex flex-nowrap flex-align-items-center flex-justify-space-between mb0-5"
                                 key={item.ID}
                             >
-                                <span className="flex-item-fluid ellipsis mr0-5" title={item.Email || item.Domain}>
+                                <span className="flex-item-fluid text-ellipsis mr0-5" title={item.Email || item.Domain}>
                                     {item.Email || item.Domain}
                                 </span>
                                 <DropdownActions

@@ -50,14 +50,14 @@ const PaymentMethodDetails = ({ type, details = {} }) => {
             <Bordered className="bg-global-highlight inline-flex flex-column w100 pl2 pr2 pb2">
                 {bankIcon ? <img width="70" src={bankIcon} alt={Brand} className="mb1" /> : null}
                 <span className="color-global-grey-dm block mb1 opacity-40">{c('Label').t`Card number`}</span>
-                <div className="ratio-container-5-1 aligncenter">
+                <div className="ratio-container-5-1 text-center">
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="inner-ratio-container fill-currentColor"
                         viewBox={`0 0 ${textWidth} 50`}
                         xmlSpace="preserve"
                     >
-                        <text x="0px" y="40px" className="size-40 strong" ref={textRef}>
+                        <text x="0px" y="40px" className="text-40 text-strong" ref={textRef}>
                             {cardNumberText}
                         </text>
                     </svg>
@@ -65,11 +65,11 @@ const PaymentMethodDetails = ({ type, details = {} }) => {
                 <div className="flex flex-nowrap max-w100">
                     <div className="flex-item-fluid">
                         <span className="color-global-grey-dm block mb0-5 opacity-40">{c('Label').t`Card holder`}</span>
-                        <span className="bigger mt0 mb0 inline-block ellipsis max-w100">{Name}</span>
+                        <span className="text-xl mt0 mb0 inline-block text-ellipsis max-w100">{Name}</span>
                     </div>
-                    <div className="alignright flex-item-noshrink pl1">
+                    <div className="text-right flex-item-noshrink pl1">
                         <span className="color-global-grey-dm block mb0-5 opacity-40">{c('Label').t`Expires`}</span>
-                        <span className="bigger mt0 mb0">
+                        <span className="text-xl mt0 mb0">
                             {ExpMonth}/{ExpYear}
                         </span>
                     </div>
@@ -88,7 +88,7 @@ const PaymentMethodDetails = ({ type, details = {} }) => {
                 <div className="flex flex-wrap flex-align-items-center">
                     <label className="color-global-grey-dm flex-item-noshrink mr1" htmlFor="paypal-payer">{c('Label')
                         .t`Payer`}</label>
-                    <code id="paypal-payer" className="block bigger mb0 mb1 ellipsis" title={Payer}>
+                    <code id="paypal-payer" className="block text-xl mb0 mb1 text-ellipsis" title={Payer}>
                         {Payer}
                     </code>
                 </div>

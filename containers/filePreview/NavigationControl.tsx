@@ -27,7 +27,7 @@ const NavigationControl = ({ current, total, onNext, onPrev }: Props) => {
             </button>
             <span className="ml0-5 mr0-5">
                 <span>{current}</span>
-                <span className="ml0-25 mr0-25 opacity-50 small">{c('Info').t`of`}</span>
+                <span className="ml0-25 mr0-25 opacity-50 text-sm">{c('Info').t`of`}</span>
                 <span>{total}</span>
             </span>
             <button

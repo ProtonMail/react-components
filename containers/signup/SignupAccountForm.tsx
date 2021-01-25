@@ -101,7 +101,7 @@ const SignupAccountForm = ({ model, onChange, onSubmit, errors, loading, hasExte
                     </Challenge>
                     {hasExternalSignup ? (
                         <InlineLinkButton
-                            className="nodecoration mt0-25"
+                            className="text-no-decoration mt0-25"
                             id="existing-email-button"
                             onClick={() => onChange({ ...model, username: '', step: ACCOUNT_CREATION_EMAIL })}
                         >{c('Action').t`Use your current email address instead`}</InlineLinkButton>
@@ -151,7 +151,7 @@ const SignupAccountForm = ({ model, onChange, onSubmit, errors, loading, hasExte
                     <InsecureEmailInfo email={model.email} />
                     <InlineLinkButton
                         id="proton-email-button"
-                        className="nodecoration mt0-25"
+                        className="text-no-decoration mt0-25"
                         onClick={() => onChange({ ...model, email: '', step: ACCOUNT_CREATION_USERNAME })}
                     >{c('Action').t`Create a secure ProtonMail address instead`}</InlineLinkButton>
                 </>
@@ -170,7 +170,7 @@ const SignupAccountForm = ({ model, onChange, onSubmit, errors, loading, hasExte
     return (
         <>
             {challengeLoading ? (
-                <div className="aligncenter">
+                <div className="text-center">
                     <FullLoader className="color-primary" size={200} />
                 </div>
             ) : null}
@@ -234,7 +234,7 @@ const SignupAccountForm = ({ model, onChange, onSubmit, errors, loading, hasExte
                         type="submit"
                     >{c('Action').t`Create account`}</PrimaryButton>
                 </SignupSubmitRow>
-                <div className="alignright">
+                <div className="text-right">
                     <span>{c('Info').jt`Already have an account? ${loginLink}`}</span>
                 </div>
             </form>

@@ -18,7 +18,7 @@ const IllustrationPlaceholder = ({ className, title, url, uppercase, children }:
             ])}
         >
             <img src={url} alt={title} className="p1 mb1" />
-            <h2 className={classnames(['bold', uppercase && 'uppercase'])}>{title}</h2>
+            <h2 className={classnames(['text-bold', uppercase && 'text-uppercase'])}>{title}</h2>
             {children}
         </div>
     );

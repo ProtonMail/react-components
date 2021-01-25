@@ -31,7 +31,7 @@ const FilterPreview = ({ isNarrow, labels, folders, model }: Props) => {
                         title={model.name}
                         className={classnames(['pt0-5 flex flex-column flex-item-fluid max-w100', !isNarrow && 'ml1'])}
                     >
-                        <span className="max-w100 ellipsis">{model.name}</span>
+                        <span className="max-w100 text-ellipsis">{model.name}</span>
                     </div>
                 </div>
             </div>

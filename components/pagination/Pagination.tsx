@@ -43,7 +43,7 @@ const Pagination = ({
                 key={index}
                 onClick={() => onSelect(index)}
                 disabled={index === page}
-                className={index === page ? 'is-active aligncenter' : 'aligncenter'}
+                className={index === page ? 'is-active text-center' : 'text-center'}
             >
                 {index.toString()}
             </DropdownMenuButton>

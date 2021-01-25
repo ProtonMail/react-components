@@ -95,7 +95,7 @@ const InviteButtons = ({ actions, partstat = ICAL_ATTENDEE_STATUS.NEEDS_ACTION, 
             <DropdownMenu>
                 {restList.map(({ text, ...restProps }, index) => {
                     return (
-                        <DropdownMenuButton className="alignleft" key={index} {...restProps}>
+                        <DropdownMenuButton className="text-left" key={index} {...restProps}>
                             {text}
                         </DropdownMenuButton>
                     );

@@ -100,7 +100,7 @@ const Payment = ({
                                     onChange={() => onMethod(value)}
                                 />
                                 <Icon className="mr0-5" name={icon} />
-                                <span className="cut">{text}</span>
+                                <span className="text-cut">{text}</span>
                             </label>
                         );
                     })}

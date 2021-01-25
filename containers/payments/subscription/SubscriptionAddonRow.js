@@ -61,7 +61,7 @@ const SubscriptionAddonRow = ({
                     </Button>
                 </div>
             </div>
-            <div className="w8e on-tablet-w25 big mb0 mt0 alignright">
+            <div className="w8e on-tablet-w25 text-lg mb0 mt0 text-right">
                 {quantity ? (
                     price
                 ) : (

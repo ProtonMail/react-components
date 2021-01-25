@@ -38,7 +38,7 @@ const OrganizationSection = ({ organization }: Props) => {
             <Row>
                 <Label>{c('Label').t`Organization name`}</Label>
                 <Field className="pt0-5">
-                    <div className="bold ellipsis">{organizationName}</div>
+                    <div className="text-bold text-ellipsis">{organizationName}</div>
                 </Field>
                 <div className="ml1 on-mobile-ml0">
                     <PrimaryButton

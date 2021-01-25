@@ -24,7 +24,7 @@ const PaymentGiftCode = ({ gift = '', onApply, loading }) => {
 
     if (gift) {
         return (
-            <div className="aligncenter">
+            <div className="text-center">
                 <div className="inline-flex flex-nowrap flex-align-items-center">
                     <span className="mr1 flex flex-nowrap flex-align-items-center">
                         <Icon name="gift" className="mr0-5 mb0-25" />
@@ -70,7 +70,7 @@ const PaymentGiftCode = ({ gift = '', onApply, loading }) => {
     }
 
     return (
-        <div className="aligncenter">
+        <div className="text-center">
             <LinkButton onClick={toggle} icon={gift}>{c('Link').t`Add a gift code`}</LinkButton>
         </div>
     );

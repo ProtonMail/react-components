@@ -75,7 +75,7 @@ const PaginationRow = ({
                         aria-current={isActive}
                         className={classnames([
                             'pm-button--for-icon no-outline relative',
-                            isActive && 'bold',
+                            isActive && 'text-bold',
                             (disabled || isActive) && 'no-pointer-events no-pointer-events-children',
                         ])}
                         key={pageNumber}

@@ -79,14 +79,14 @@ const ContactSummary = ({
 
     return (
         <div className={classnames(['contactsummary-container border-bottom m1', !isNarrow && 'flex flex-nowrap'])}>
-            <div className={classnames(['aligncenter contactsummary-photo-container pt0-5', leftBlockWidth])}>
+            <div className={classnames(['text-center contactsummary-photo-container pt0-5', leftBlockWidth])}>
                 <ContactImageSummary photo={photo} name={name} />
             </div>
             <div className="pl1 flex-item-fluid">
-                <h2 className="on-mobile-aligncenter mb0 ellipsis" title={name}>
+                <h2 className="on-mobile-text-center mb0 text-ellipsis" title={name}>
                     {name}
                 </h2>
-                <div className="on-mobile-aligncenter">
+                <div className="on-mobile-text-center">
                     <ul className="unstyled mt0-5 inline-block">
                         {summary.map(({ icon, component }) => {
                             if (!component) {
@@ -98,7 +98,7 @@ const ContactSummary = ({
                                     className="contactsummary-list-item flex flex-nowrap flex-align-items-center"
                                 >
                                     <Icon name={icon} className="mr0-5 flex-item-noshrink" />
-                                    <span className="ellipsis">{component}</span>
+                                    <span className="text-ellipsis">{component}</span>
                                 </li>
                             );
                         })}
@@ -106,7 +106,7 @@ const ContactSummary = ({
                 </div>
             </div>
             {!isPreview && (
-                <div className="flex-item-noshrink pt0-5 on-mobile-aligncenter mb1">
+                <div className="flex-item-noshrink pt0-5 on-mobile-text-center mb1">
                     <Tooltip title={c('Action').t`Edit`} className="ml0-5">
                         <Button onClick={() => handleEdit()} className="pm-button--for-icon inline-flex">
                             <Icon className="color-primary mt0-25 mb0-1" name="pen" alt={c('Action').t`Edit`} />

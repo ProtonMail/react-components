@@ -51,7 +51,7 @@ const IdentitySection = () => {
                 </Label>
                 <Field className="bordered-container bg-global-muted-dm auto">
                     <div
-                        className="pl1 pr1 pt0-5 pb0-5 ellipsis cursor-pointer"
+                        className="pl1 pr1 pt0-5 pb0-5 text-ellipsis cursor-pointer"
                         title={address.DisplayName}
                         onClick={handleOpenModal}
                     >
@@ -63,7 +63,7 @@ const IdentitySection = () => {
                 <Field className="bordered-container bg-global-muted-dm auto">
                     {address.Signature ? (
                         <div
-                            className="break pl1 pr1 pt0-5 pb0-5 cursor-pointer"
+                            className="text-break pl1 pr1 pt0-5 pb0-5 cursor-pointer"
                             dangerouslySetInnerHTML={{ __html: address.Signature }}
                             onClick={handleOpenModal}
                             title={c('Action').t`Edit`}

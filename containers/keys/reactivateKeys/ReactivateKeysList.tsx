@@ -71,10 +71,10 @@ const ReactivateKeysList = ({ loading = false, states, onUpload }: Props) => {
                     <TableRow
                         key={Key.ID}
                         cells={[
-                            <span key={0} className="max-w100 inline-block ellipsis">
+                            <span key={0} className="max-w100 inline-block text-ellipsis">
                                 {email}
                             </span>,
-                            <code key={1} className="max-w100 inline-block ellipsis">
+                            <code key={1} className="max-w100 inline-block text-ellipsis">
                                 {fingerprint}
                             </code>,
                             keyStatus,

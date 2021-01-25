@@ -15,7 +15,7 @@ const EmptyResults = ({ query = '', onClearSearch }: Props) => {
     const title = c('Error message').t`No results found for "${query}"`;
     const image = getLightOrDark(noResultsImgLight, noResultsImgDark);
     const button = (
-        <LinkButton key="button" className="bold p0" onClick={onClearSearch}>
+        <LinkButton key="button" className="text-bold p0" onClick={onClearSearch}>
             {c('Action').t`clear it`}
         </LinkButton>
     );

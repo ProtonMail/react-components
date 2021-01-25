@@ -88,7 +88,7 @@ const PastImportsSection = () => {
 
     const headerCells = [
         { node: c('Title header').t`Import` },
-        { node: c('Title header').t`Status`, className: 'on-mobile-w33 on-mobile-aligncenter' },
+        { node: c('Title header').t`Status`, className: 'on-mobile-w33 on-mobile-text-center' },
         { node: c('Title header').t`Date`, className: 'no-mobile' },
         { node: c('Title header').t`Size`, className: 'no-mobile' },
         { node: c('Title header').t`Actions`, className: 'no-mobile' },
@@ -114,14 +114,14 @@ const PastImportsSection = () => {
                                 key={ID}
                                 cells={[
                                     <>
-                                        <div key="email" className="w100 ellipsis">
+                                        <div key="email" className="w100 text-ellipsis">
                                             {Email}
                                         </div>
                                         <time key="importDate" className="no-desktop no-tablet">
                                             {format(EndTime * 1000, 'PPp')}
                                         </time>
                                     </>,
-                                    <div className="on-mobile-aligncenter">
+                                    <div className="on-mobile-text-center">
                                         <ImportStatus key="status" status={State} />
                                     </div>,
                                     <time key="importDate">{format(EndTime * 1000, 'PPp')}</time>,

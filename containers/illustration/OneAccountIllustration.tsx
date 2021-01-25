@@ -34,7 +34,7 @@ const OneAccountIllustration = () => {
                 </span>
             </div>
 
-            <div className="max-w60 mt1 aligncenter">{c('Info').t`One account for all Proton services`}</div>
+            <div className="max-w60 mt1 text-center">{c('Info').t`One account for all Proton services`}</div>
         </div>
     );
 };

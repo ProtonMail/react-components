@@ -38,7 +38,13 @@ interface Props {
     autoFocus?: boolean;
 }
 
-const DropdownActions = ({ loading = false, disabled = false, list = [], className = '', autoFocus = false }: Props) => {
+const DropdownActions = ({
+    loading = false,
+    disabled = false,
+    list = [],
+    className = '',
+    autoFocus = false,
+}: Props) => {
     if (!list.length) {
         return null;
     }
@@ -71,7 +77,7 @@ const DropdownActions = ({ loading = false, disabled = false, list = [], classNa
                 <DropdownMenu>
                     {restList.map(({ text, tooltip, ...restProps }, index) => {
                         return (
-                            <DropdownMenuButton className="alignleft" key={index} {...restProps}>
+                            <DropdownMenuButton className="text-left" key={index} {...restProps}>
                                 {wrapTooltip(text, tooltip)}
                             </DropdownMenuButton>
                         );

@@ -97,13 +97,13 @@ const AccountResetPasswordContainer = ({ onLogin, Layout, onBack }: Props) => {
                 <form className="signup-form">
                     <SignupSubmitRow>
                         <Href
-                            className="mr2 nodecoration on-mobile-aligncenter on-mobile-p1 on-mobile-mr0"
+                            className="mr2 text-no-decoration on-mobile-text-center on-mobile-p1 on-mobile-mr0"
                             url="https://protonmail.com/support-form"
                             target="_self"
                         >{c('Action').t`Contact support`}</Href>
                         <Link
                             to="/login"
-                            className="pm-button--primary pm-button--large flex-item-noshrink on-mobile-w100 on-mobile-aligncenter"
+                            className="pm-button--primary pm-button--large flex-item-noshrink on-mobile-w100 on-mobile-text-center"
                         >{c('Action').t`Return to login`}</Link>
                     </SignupSubmitRow>
                 </form>
@@ -192,7 +192,7 @@ const AccountResetPasswordContainer = ({ onLogin, Layout, onBack }: Props) => {
         const handleSubmit = async () => {
             await new Promise<void>((resolve, reject) => {
                 const loseAllData = (
-                    <span className="bold">{c('Info').t`lose access to all current encrypted data`}</span>
+                    <span className="text-bold">{c('Info').t`lose access to all current encrypted data`}</span>
                 );
                 createModal(
                     <ConfirmModal
@@ -327,13 +327,13 @@ const AccountResetPasswordContainer = ({ onLogin, Layout, onBack }: Props) => {
                     <Alert type="error">{error}</Alert>
                     <SignupSubmitRow>
                         <Href
-                            className="mr2 nodecoration on-mobile-aligncenter on-mobile-p1 on-mobile-mr0"
+                            className="mr2 text-no-decoration on-mobile-text-center on-mobile-p1 on-mobile-mr0"
                             url="https://protonmail.com/support-form"
                             target="_self"
                         >{c('Action').t`Contact support`}</Href>
                         <Link
                             to="/login"
-                            className="pm-button--primary pm-button--large flex-item-noshrink on-mobile-w100 on-mobile-aligncenter"
+                            className="pm-button--primary pm-button--large flex-item-noshrink on-mobile-w100 on-mobile-text-center"
                         >{c('Action').t`Return to login`}</Link>
                     </SignupSubmitRow>
                 </Layout>

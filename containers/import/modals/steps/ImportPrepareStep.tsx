@@ -239,12 +239,12 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
             )}
 
             <div className="flex pb1 mb1 border-bottom">
-                <div className="flex-item-fluid ellipsis mr0-5">
+                <div className="flex-item-fluid text-ellipsis mr0-5">
                     <span>{c('Label').t`From`}</span>
                     {`: `}
                     <strong>{modalModel.email}</strong>
                 </div>
-                <div className="flex-item-fluid ellipsis ml0-5 alignright">
+                <div className="flex-item-fluid text-ellipsis ml0-5 text-right">
                     <span>{c('Label').t`To`}</span>
                     {`: `}
                     <strong>{address.Email}</strong>

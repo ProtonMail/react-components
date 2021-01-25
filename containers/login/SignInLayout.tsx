@@ -31,7 +31,7 @@ const SignInLayout = ({ children, title = '' }: Props) => {
                         <span className="opacity-50 mr1">{c('Label').t`Back to:`}</span>
                         <Href
                             url={staticURL}
-                            className="inline-block color-white nodecoration hover-same-color"
+                            className="inline-block color-white text-no-decoration hover-same-color"
                             target="_self"
                         >
                             {domain}
@@ -53,20 +53,20 @@ const SignInLayout = ({ children, title = '' }: Props) => {
                     </>
                 }
             />
-            <Title className="flex-item-noshrink aligncenter color-primary">{title}</Title>
+            <Title className="flex-item-noshrink text-center color-primary">{title}</Title>
             <div className="flex-item-fluid flex-item-noshrink flex flex-column flex-nowrap">
                 <div className="flex flex-column flex-nowrap flex-item-noshrink">
                     <div className="center bg-white color-global-grey mt2 max-w40e w100 p2 bordered-container flex-item-noshrink">
                         {children}
                         <div className="w100 flex flex-justify-center flex-align-items-center flex-column mt1">
                             <span className="flex-item-noshrink">
-                                <p className="bold">{c('Link').t`Don't have an account yet? Sign up for free!`}</p>
+                                <p className="text-bold">{c('Link').t`Don't have an account yet? Sign up for free!`}</p>
                             </span>
                             <Link className="ml1 pm-button--primary" to="/signup">{c('Link').t`Sign up for free`}</Link>
                         </div>
                     </div>
                 </div>
-                <footer className="opacity-50 flex-item-noshrink aligncenter pb1 mt1">
+                <footer className="opacity-50 flex-item-noshrink text-center pb1 mt1">
                     <FooterDetails link={<a href={staticURL}>{isVPN ? 'ProtonVPN.com' : 'ProtonMail.com'}</a>} />
                 </footer>
             </div>

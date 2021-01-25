@@ -31,13 +31,13 @@ const UpgradeModal = ({ plans, onUpgrade, ...rest }) => {
                 <div className="pl2 pr2 pb2">
                     <div className="flex-autogrid on-mobile-flex-column">
                         <div className="flex-autogrid-item flex flex-column flex-justify-space-between">
-                            <h3 className="bold">{c('Title').t`Upgrade now!`}</h3>
+                            <h3 className="text-bold">{c('Title').t`Upgrade now!`}</h3>
                             <div className="mb2">
                                 <div>{c('Info').t`Unlock additional features with`}</div>
                                 <div>
                                     {c('Info').t`ProtonMail Plus for as low as`}{' '}
                                     <PlanPrice
-                                        className="bold color-primary"
+                                        className="text-bold color-primary"
                                         amount={Pricing[DEFAULT_CYCLE]}
                                         cycle={DEFAULT_CYCLE}
                                         currency={DEFAULT_CURRENCY}

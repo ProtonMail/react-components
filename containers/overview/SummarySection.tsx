@@ -43,19 +43,19 @@ const SummarySection = ({ user, userSettings, organization, subscription }: Prop
 
     return (
         <div className="bordered-container bg-white-dm tiny-shadow-container p2">
-            <div className="mb2 aligncenter">
-                <span className="dropdown-logout-initials rounded semibold p0-25 mb0-5 inline-flex bg-global-grey color-white">
+            <div className="mb2 text-center">
+                <span className="dropdown-logout-initials rounded text-semibold p0-25 mb0-5 inline-flex bg-global-grey color-white">
                     <span className="dropdown-logout-text center">{initials}</span>
                 </span>
-                <h3 className="mb0-5 lh-standard ellipsis" title={DisplayName || Name}>
+                <h3 className="mb0-5 lh-rg text-ellipsis" title={DisplayName || Name}>
                     {DisplayName || Name}
                 </h3>
                 {organization?.Name ? (
-                    <p className="mt0 mb0-5 ellipsis" title={organization.Name}>
+                    <p className="mt0 mb0-5 text-ellipsis" title={organization.Name}>
                         {organization.Name}
                     </p>
                 ) : null}
-                <p className="mt0 mb0 ellipsis" title={Email}>
+                <p className="mt0 mb0 text-ellipsis" title={Email}>
                     {Email}
                 </p>
             </div>

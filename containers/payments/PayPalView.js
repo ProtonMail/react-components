@@ -49,7 +49,7 @@ const PayPalView = ({ type, amount, currency, paypal, paypalCredit }) => {
                         {c('Info')
                             .t`We will redirect you to PayPal in a new browser tab to complete this transaction. If you use any pop-up blockers, please disable them to continue.`}
                     </Alert>
-                    <div className="aligncenter mb1">
+                    <div className="text-center mb1">
                         <img src={paypalSvg} alt="PayPal" width="250" />
                     </div>
                     <Alert>{c('Info')
@@ -62,7 +62,7 @@ const PayPalView = ({ type, amount, currency, paypal, paypalCredit }) => {
                         {c('Info')
                             .t`This will enable PayPal to be used to pay for your Proton subscription. We will redirect you to PayPal in a new browser tab. If you use any pop-up blockers, please disable them to continue.`}
                     </Alert>
-                    <div className="aligncenter mb1">
+                    <div className="text-center mb1">
                         <img src={paypalSvg} alt="PayPal" width="250" />
                     </div>
                     <Alert>{c('Info')
@@ -75,7 +75,7 @@ const PayPalView = ({ type, amount, currency, paypal, paypalCredit }) => {
                         {c('Info')
                             .t`We will redirect you to PayPal in a new browser tab to complete this transaction. If you use any pop-up blockers, please disable them to continue.`}
                     </Alert>
-                    <div className="aligncenter">
+                    <div className="text-center">
                         <img src={paypalSvg} alt="PayPal" width="250" />
                     </div>
                 </>

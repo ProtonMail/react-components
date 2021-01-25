@@ -291,7 +291,7 @@ const ImportManageFoldersRow = ({
                                 disabled={disabled}
                             />
                         </div>
-                        <div className="ml0-5 flex-item-fluid-auto ellipsis" title={getSourceDisplayName()}>
+                        <div className="ml0-5 flex-item-fluid-auto text-ellipsis" title={getSourceDisplayName()}>
                             {getSourceDisplayName()}
                         </div>
                     </div>
@@ -322,8 +322,8 @@ const ImportManageFoldersRow = ({
                                     <>
                                         <span
                                             className={classnames([
-                                                'flex-item-fluid-auto ellipsis',
-                                                (nameTooLongError || mergeWarning) && 'bold',
+                                                'flex-item-fluid-auto text-ellipsis',
+                                                (nameTooLongError || mergeWarning) && 'text-bold',
                                             ])}
                                             title={unescapeSlashes(destinationName)}
                                         >

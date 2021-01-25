@@ -34,7 +34,7 @@ const FilterPreviewConditions = ({ isOpen, isNarrow, toggleOpen, model }: Props)
                         className="inline-flex flex-row flex-align-items-center condition-token mb0-5"
                         role="listitem"
                     >
-                        <span className="ellipsis nodecoration" title={label}>
+                        <span className="text-ellipsis text-no-decoration" title={label}>
                             {label}
                         </span>
                     </span>
@@ -62,7 +62,7 @@ const FilterPreviewConditions = ({ isOpen, isNarrow, toggleOpen, model }: Props)
                         className="inline-flex flex-row flex-align-items-center condition-token mb0-5"
                         role="listitem"
                     >
-                        <span className="ellipsis nodecoration" title={v}>
+                        <span className="text-ellipsis text-no-decoration" title={v}>
                             {v}
                         </span>
                     </span>
@@ -113,7 +113,7 @@ const FilterPreviewConditions = ({ isOpen, isNarrow, toggleOpen, model }: Props)
                 ))}
             </div>
         ) : (
-            <div className="pt0-5 max-w100 ellipsis" title={title}>
+            <div className="pt0-5 max-w100 text-ellipsis" title={title}>
                 {conditionsRows.map((cond, i) => (
                     <span key={`preview-condition-${i}`}>
                         {i === 0 ? ifLabel : operator.toLowerCase()}
@@ -128,7 +128,7 @@ const FilterPreviewConditions = ({ isOpen, isNarrow, toggleOpen, model }: Props)
     return (
         <div className="border-bottom">
             <div className="flex flex-nowrap on-mobile-flex-column align-items-center pt1 pb1">
-                <button type="button" className={classnames(['w20 alignleft', isNarrow && 'mb1'])} onClick={toggleOpen}>
+                <button type="button" className={classnames(['w20 text-left', isNarrow && 'mb1'])} onClick={toggleOpen}>
                     <Icon name="caret" className={classnames([isOpen && 'rotateX-180'])} />
                     <span className="ml0-5">{c('Label').t`Conditions`}</span>
                 </button>

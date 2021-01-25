@@ -122,7 +122,7 @@ const MiniCalendar = ({
                         </button>
                     </>
                 ) : null}
-                <span className="bold flex-item-fluid aligncenter ellipsis">{monthLabel}</span>
+                <span className="text-bold flex-item-fluid text-center text-ellipsis">{monthLabel}</span>
                 {hasCursors ? (
                     <>
                         <button

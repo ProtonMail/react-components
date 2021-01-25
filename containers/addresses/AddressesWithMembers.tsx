@@ -164,7 +164,7 @@ const AddressesWithMembers = ({ user, organization, isOnlySelf }: Props) => {
                                 <TableRow
                                     key={address.ID}
                                     cells={[
-                                        <div className="ellipsis" title={address.Email}>
+                                        <div className="text-ellipsis" title={address.Email}>
                                             {address.Email}
                                         </div>,
                                         hasUsernameDisplay && member.Name,

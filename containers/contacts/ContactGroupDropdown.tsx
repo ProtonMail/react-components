@@ -232,7 +232,7 @@ const ContactGroupDropdown = ({ children, className, contactEmails, disabled = f
                                                 size={12}
                                                 color={Color}
                                             />
-                                            <span className="flex-item-fluid ellipsis" title={Name}>
+                                            <span className="flex-item-fluid text-ellipsis" title={Name}>
                                                 <Mark value={keyword}>{Name}</Mark>
                                             </span>
                                         </label>

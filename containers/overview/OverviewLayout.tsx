@@ -64,7 +64,7 @@ const OverviewLayout = ({ title, pages, children, limit }: Props) => {
                     organization={organization}
                 />
                 {subscription && hasMailPlus(subscription) ? (
-                    <div className="bg-pm-blue-gradient color-white rounded aligncenter p1 mt2 relative">
+                    <div className="bg-pm-blue-gradient color-white rounded text-center p1 mt2 relative">
                         <p className="mt0 mb1">
                             {c('Info')
                                 .t`Upgrade to a paid plan with multi-user support to add more users to your organization.`}
@@ -81,7 +81,7 @@ const OverviewLayout = ({ title, pages, children, limit }: Props) => {
                     </div>
                 ) : null}
                 {hasPaidMail ? null : (
-                    <div className="bg-pm-blue-gradient color-white rounded aligncenter p1 mt2 relative">
+                    <div className="bg-pm-blue-gradient color-white rounded text-center p1 mt2 relative">
                         <p className="mt0 mb1">
                             {c('Info')
                                 .t`Upgrade to a paid plan to unlock premium features and increase your storage space.`}

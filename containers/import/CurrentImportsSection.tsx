@@ -141,7 +141,7 @@ const CurrentImportsSection = () => {
 
     const headerCells = [
         { node: c('Title header').t`Import` },
-        { node: c('Title header').t`Progress`, className: 'on-mobile-w33 on-mobile-aligncenter' },
+        { node: c('Title header').t`Progress`, className: 'on-mobile-w33 on-mobile-text-center' },
         { node: c('Title header').t`Started`, className: 'no-mobile' },
         { node: c('Title header').t`Actions`, className: 'no-mobile' },
     ].map(({ node, className = '' }, i) => {
@@ -255,7 +255,7 @@ const CurrentImportsSection = () => {
                                 );
                             }
 
-                            return <div className="on-mobile-aligncenter">{badge}</div>;
+                            return <div className="on-mobile-text-center">{badge}</div>;
                         };
 
                         return (
@@ -263,7 +263,7 @@ const CurrentImportsSection = () => {
                                 key={ID}
                                 cells={[
                                     <>
-                                        <div key="email" className="w100 ellipsis">
+                                        <div key="email" className="w100 text-ellipsis">
                                             {Email}
                                         </div>
                                         <time key="importDate" className="no-desktop no-tablet">

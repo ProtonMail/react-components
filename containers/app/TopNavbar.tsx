@@ -12,7 +12,7 @@ export const TopNavbarItem = ({ className = 'flex-item-noshrink', children }: Pr
         return null;
     }
     const clonedElement = React.cloneElement(children, {
-        className: 'topnav-link inline-flex flex-nowrap nodecoration',
+        className: 'topnav-link inline-flex flex-nowrap text-no-decoration',
     });
     return <li className={className}>{clonedElement}</li>;
 };

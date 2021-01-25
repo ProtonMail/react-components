@@ -54,12 +54,12 @@ const AccountPublicLayout = ({ children, title, subtitle, aside, larger, left, c
                             <main className="on-mobile-p1 flex-item-fluid sign-layout-main flex-no-min-children flex-column flex-nowrap">
                                 <header className="flex flex-align-items-center flex-nowrap mb2">
                                     <span className="flex-item-fluid flex">{left}</span>
-                                    <span className="aligncenter flex w70p">{center}</span>
-                                    <span className="flex-item-fluid flex alignright" />
+                                    <span className="text-center flex w70p">{center}</span>
+                                    <span className="flex-item-fluid flex text-right" />
                                 </header>
                                 <div className="mb2 flex-item-fluid sign-layout-main-content">
                                     {title ? (
-                                        <h1 className={classnames(['h4 bold mt0', subtitle ? 'mb0-25' : 'mb1'])}>
+                                        <h1 className={classnames(['h4 text-bold mt0', subtitle ? 'mb0-25' : 'mb1'])}>
                                             {title}
                                         </h1>
                                     ) : null}
@@ -75,18 +75,18 @@ const AccountPublicLayout = ({ children, title, subtitle, aside, larger, left, c
                                             />
                                         ) : null}
                                     </span>
-                                    <span className="flex-item-fluid alignright">{right}</span>
+                                    <span className="flex-item-fluid text-right">{right}</span>
                                 </footer>
                             </main>
                             {aside ? (
-                                <aside className="no-mobile bg-global-highlight w33 p2 flex flex-align-items-center flex-justify-center small m0 sign-layout-aside">
+                                <aside className="no-mobile bg-global-highlight w33 p2 flex flex-align-items-center flex-justify-center text-sm m0 sign-layout-aside">
                                     {aside}
                                 </aside>
                             ) : null}
                         </div>
                     </div>
                 </div>
-                <footer className="aligncenter small m0 pt0-5 pb0-5 flex-item-noshrink">
+                <footer className="text-center text-sm m0 pt0-5 pb0-5 flex-item-noshrink">
                     <span className="opacity-50 auto-mobile">{c('Info').t`Made globally - Hosted in Switzerland`}</span>
                     <span className="opacity-50 pl0-75 pr0-75 no-mobile" aria-hidden="true">
                         |

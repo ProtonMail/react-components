@@ -79,7 +79,7 @@ const FilterPreviewActions = ({ isOpen, isNarrow, toggleOpen, labels, folders, m
 
             const folderElement = isOpen ? (
                 <span className="inline-flex flex-row flex-align-items-center condition-token mb0-5" role="listitem">
-                    <span className="ellipsis nodecoration" title={selectedFolder}>
+                    <span className="text-ellipsis text-no-decoration" title={selectedFolder}>
                         {selectedFolder}
                     </span>
                 </span>
@@ -102,14 +102,14 @@ const FilterPreviewActions = ({ isOpen, isNarrow, toggleOpen, labels, folders, m
         if (actions.markAs.read || actions.markAs.starred) {
             const readElement = isOpen ? (
                 <span className="inline-flex flex-row flex-align-items-center condition-token mb0-5" role="listitem">
-                    <span className="ellipsis nodecoration">{c('Filter preview').t`read`}</span>
+                    <span className="text-ellipsis text-no-decoration">{c('Filter preview').t`read`}</span>
                 </span>
             ) : (
                 <strong>{c('Filter preview').t`read`}</strong>
             );
             const starredElement = isOpen ? (
                 <span className="inline-flex flex-row flex-align-items-center condition-token mb0-5" role="listitem">
-                    <span className="ellipsis nodecoration">{c('Filter preview').t`starred`}</span>
+                    <span className="text-ellipsis text-no-decoration">{c('Filter preview').t`starred`}</span>
                 </span>
             ) : (
                 <strong>{c('Filter preview').t`starred`}</strong>
@@ -142,7 +142,7 @@ const FilterPreviewActions = ({ isOpen, isNarrow, toggleOpen, labels, folders, m
         if (actions.autoReply) {
             const label = isOpen ? (
                 <span className="inline-flex flex-row flex-align-items-center condition-token mb0-5" role="listitem">
-                    <span className="nodecoration" style={{ maxWidth: 'inherit' }}>
+                    <span className="text-no-decoration" style={{ maxWidth: 'inherit' }}>
                         {LABELS_ACTION.autoReply}
                     </span>
                 </span>
@@ -172,7 +172,7 @@ const FilterPreviewActions = ({ isOpen, isNarrow, toggleOpen, labels, folders, m
                 ))}
             </div>
         ) : (
-            <div className="pt0-5 max-w100 ellipsis" title={title}>
+            <div className="pt0-5 max-w100 text-ellipsis" title={title}>
                 {actionsRows.map((action, i) => (
                     <span key={`preview-action-${i}`}>
                         {i === 0 ? c('Label').t`Then` : ` ${c('Label').t`and`}`}
@@ -187,7 +187,7 @@ const FilterPreviewActions = ({ isOpen, isNarrow, toggleOpen, labels, folders, m
     return (
         <div className="border-bottom mb2">
             <div className="flex flex-nowrap on-mobile-flex-column align-items-center pt1 pb1">
-                <button type="button" className={classnames(['w20 alignleft', isNarrow && 'mb1'])} onClick={toggleOpen}>
+                <button type="button" className={classnames(['w20 text-left', isNarrow && 'mb1'])} onClick={toggleOpen}>
                     <Icon name="caret" className={classnames([isOpen && 'rotateX-180'])} />
                     <span className="ml0-5">{c('Label').t`Actions`}</span>
                 </button>

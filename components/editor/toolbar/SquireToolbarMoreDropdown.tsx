@@ -80,7 +80,7 @@ const SquireToolbarMoreDropdown = ({
                 {isNarrow && [
                     <DropdownMenuButton
                         key={12}
-                        className="alignleft flex flex-nowrap"
+                        className="text-left flex flex-nowrap"
                         onClick={squireActions.handleUnorderedList}
                     >
                         <Icon name="on" className={classnames(['mt0-25', getClassname(squireInfos.unorderedList)])} />
@@ -90,7 +90,7 @@ const SquireToolbarMoreDropdown = ({
                     <DropdownMenuButton
                         key={13}
                         liClassName="dropdown-item--no-separator"
-                        className="alignleft flex flex-nowrap"
+                        className="text-left flex flex-nowrap"
                         onClick={squireActions.handleOrderedList}
                     >
                         <Icon name="on" className={classnames(['mt0-25', getClassname(squireInfos.orderedList)])} />
@@ -99,7 +99,7 @@ const SquireToolbarMoreDropdown = ({
                     </DropdownMenuButton>,
                     <DropdownMenuButton
                         key={8}
-                        className="alignleft flex flex-nowrap"
+                        className="text-left flex flex-nowrap"
                         onClick={squireActions.handleAlignment(ALIGNMENT.Left)}
                     >
                         <Icon name="on" className={classnames(['mt0-25', getClassname(squireInfos.alignLeft)])} />
@@ -109,7 +109,7 @@ const SquireToolbarMoreDropdown = ({
                     <DropdownMenuButton
                         key={9}
                         liClassName="dropdown-item--no-separator"
-                        className="alignleft flex flex-nowrap"
+                        className="text-left flex flex-nowrap"
                         onClick={squireActions.handleAlignment(ALIGNMENT.Center)}
                     >
                         <Icon name="on" className={classnames(['mt0-25', getClassname(squireInfos.alignCenter)])} />
@@ -119,7 +119,7 @@ const SquireToolbarMoreDropdown = ({
                     <DropdownMenuButton
                         key={10}
                         liClassName="dropdown-item--no-separator"
-                        className="alignleft flex flex-nowrap"
+                        className="text-left flex flex-nowrap"
                         onClick={squireActions.handleAlignment(ALIGNMENT.Right)}
                     >
                         <Icon name="on" className={classnames(['mt0-25', getClassname(squireInfos.alignRight)])} />
@@ -129,7 +129,7 @@ const SquireToolbarMoreDropdown = ({
                     <DropdownMenuButton
                         key={11}
                         liClassName="dropdown-item--no-separator"
-                        className="alignleft flex flex-nowrap"
+                        className="text-left flex flex-nowrap"
                         onClick={squireActions.handleAlignment(ALIGNMENT.Justify)}
                     >
                         <Icon name="on" className={classnames(['mt0-25', getClassname(squireInfos.alignJustify)])} />
@@ -138,7 +138,7 @@ const SquireToolbarMoreDropdown = ({
                     </DropdownMenuButton>,
                     <DropdownMenuButton
                         key={14}
-                        className="alignleft flex flex-nowrap"
+                        className="text-left flex flex-nowrap"
                         onClick={squireActions.handleBlockquote}
                     >
                         <Icon name="on" className={classnames(['mt0-25', getClassname(squireInfos.blockquote)])} />
@@ -148,7 +148,7 @@ const SquireToolbarMoreDropdown = ({
                     <DropdownMenuButton
                         key={15}
                         liClassName="dropdown-item--no-separator"
-                        className="alignleft flex flex-nowrap"
+                        className="text-left flex flex-nowrap"
                         onClick={squireActions.handleLink}
                     >
                         <Icon name="on" className={classnames(['mt0-25', 'visibility-hidden'])} />
@@ -158,7 +158,7 @@ const SquireToolbarMoreDropdown = ({
                     <DropdownMenuButton
                         key={16}
                         liClassName="dropdown-item--no-separator"
-                        className="alignleft flex flex-nowrap"
+                        className="text-left flex flex-nowrap"
                         onClick={squireActions.handleClearFormatting}
                     >
                         <Icon name="on" className={classnames(['mt0-25', 'visibility-hidden'])} />
@@ -169,7 +169,7 @@ const SquireToolbarMoreDropdown = ({
                     metadata.supportImages && (
                         <DropdownMenuButton
                             key={17}
-                            className="alignleft flex flex-nowrap"
+                            className="text-left flex flex-nowrap"
                             onClick={squireActions.handleImage}
                         >
                             <Icon name="on" className={classnames(['mt0-25', 'visibility-hidden'])} />
@@ -182,7 +182,7 @@ const SquireToolbarMoreDropdown = ({
                     !metadata.isPlainText && [
                         <DropdownMenuButton
                             key={1}
-                            className="alignleft flex flex-nowrap"
+                            className="text-left flex flex-nowrap"
                             onClick={handleChangeDirection(RIGHT_TO_LEFT.OFF)}
                         >
                             <Icon name="on" className={classnames(['mt0-25', getClassname(!isRTL)])} />
@@ -191,7 +191,7 @@ const SquireToolbarMoreDropdown = ({
                         <DropdownMenuButton
                             key={2}
                             liClassName="dropdown-item--no-separator"
-                            className="alignleft flex flex-nowrap"
+                            className="text-left flex flex-nowrap"
                             onClick={handleChangeDirection(RIGHT_TO_LEFT.ON)}
                         >
                             <Icon name="on" className={classnames(['mt0-25', getClassname(isRTL)])} />
@@ -201,7 +201,7 @@ const SquireToolbarMoreDropdown = ({
                 {metadata.supportPlainText && [
                     <DropdownMenuButton
                         key={3}
-                        className="alignleft flex flex-nowrap no-border-bottom"
+                        className="text-left flex flex-nowrap no-border-bottom"
                         onClick={handleChangePlainText(false)}
                         data-testid="squire-to-html"
                     >
@@ -211,7 +211,7 @@ const SquireToolbarMoreDropdown = ({
                     <DropdownMenuButton
                         key={4}
                         liClassName="dropdown-item--no-separator"
-                        className="alignleft flex flex-nowrap"
+                        className="text-left flex flex-nowrap"
                         onClick={handleChangePlainText(true)}
                         data-testid="squire-to-plaintext"
                     >

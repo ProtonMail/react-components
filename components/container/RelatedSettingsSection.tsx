@@ -24,7 +24,7 @@ const RelatedSettingsSection = ({ list = [] }: Props) => {
                 <div key={index.toString()} className="w45 flex on-tablet-mb1">
                     <Information icon={icon}>
                         <Paragraph>{text}</Paragraph>
-                        <Paragraph className="aligncenter mtauto">
+                        <Paragraph className="text-center mtauto">
                             {typeof link === 'string' ? (
                                 <Link className="pm-button pm-button--primary" to={to}>
                                     {link}

@@ -14,7 +14,7 @@ const Card = ({ card, errors, onChange, loading = false }) => {
     return (
         <>
             <Block>
-                <Label className="mb0-5 block cut" htmlFor="ccname">{c('Label').t`Name on card`}</Label>
+                <Label className="mb0-5 block text-cut" htmlFor="ccname">{c('Label').t`Name on card`}</Label>
                 <Input
                     autoComplete="cc-name"
                     id="ccname"
@@ -28,7 +28,7 @@ const Card = ({ card, errors, onChange, loading = false }) => {
                 />
             </Block>
             <Block>
-                <Label className="mb0-5 block cut" htmlFor="ccnumber">{c('Label').t`Card number`}</Label>
+                <Label className="mb0-5 block text-cut" htmlFor="ccnumber">{c('Label').t`Card number`}</Label>
                 <CardNumberInput
                     id="ccnumber"
                     value={card.number}
@@ -55,7 +55,7 @@ const Card = ({ card, errors, onChange, loading = false }) => {
                     />
                 </div>
                 <div>
-                    <Label className="mb0-5 block flex flex-align-items-center cut" htmlFor="cvc">
+                    <Label className="mb0-5 block flex flex-align-items-center text-cut" htmlFor="cvc">
                         <span className="mr0-25">{c('Label').t`Security code`}</span>
                         <Info
                             title={c('Info')
