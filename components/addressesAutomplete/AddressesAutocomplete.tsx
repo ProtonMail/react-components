@@ -32,6 +32,7 @@ interface Props extends Omit<InputProps, 'value' | 'onChange'> {
     hasAddOnBlur?: boolean;
     limit?: number;
     onAddInvalidEmail?: () => void;
+    onChange?: (value: string) => void;
 }
 
 const AddressesAutocomplete = React.forwardRef<HTMLInputElement, Props>(
@@ -50,6 +51,7 @@ const AddressesAutocomplete = React.forwardRef<HTMLInputElement, Props>(
             hasAddOnBlur = false,
             limit = 20,
             onAddInvalidEmail,
+            onChange,
             ...rest
         }: Props,
         ref
@@ -171,7 +173,9 @@ const AddressesAutocomplete = React.forwardRef<HTMLInputElement, Props>(
                     ref={ref}
                     value={input}
                     onChange={(event) => {
-                        handleInputChange(event.currentTarget.value.trimStart());
+                        const trimmedValue = event.currentTarget.value.trimStart();
+                        handleInputChange(trimmedValue);
+                        onChange?.(trimmedValue);
                     }}
                     onKeyDown={(event) => {
                         setEmailError('');
