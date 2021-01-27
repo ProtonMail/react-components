@@ -1,0 +1,16 @@
+@import '~design-system/scss/config/';
+
+.dropzone {
+	border: 5px dashed var(--bordercolor-input, $pm-global-border);
+	background: var(--bgcolor-main-area, $white);
+	opacity: 0.85;
+
+	&-content {
+		min-height: 100px;
+	}
+
+	&-text {
+		font-size: 2em;
+		opacity: 0.75;
+	}
+}
