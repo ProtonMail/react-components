@@ -17,7 +17,7 @@ import {
     getMajorListAutocompleteItems,
 } from './helper';
 
-interface Props extends Omit<InputProps, 'value' | 'onChange'> {
+interface Props extends Omit<InputProps, 'value'> {
     id: string;
     onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
     onAddRecipients: (recipients: Recipient[]) => void;
@@ -30,7 +30,6 @@ interface Props extends Omit<InputProps, 'value' | 'onChange'> {
     hasAddOnBlur?: boolean;
     limit?: number;
     onAddInvalidEmail?: () => void;
-    onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
     validate: (email: string) => string | void;
 }
 
