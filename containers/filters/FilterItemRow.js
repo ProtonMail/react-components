@@ -88,7 +88,7 @@ function FilterItemRow({ filter, ...rest }) {
                         onChange={(e) => withLoading(handleChangeStatus(e))}
                     />
                 </div>,
-                <DropdownActions key="dropdown" className="pm-button--small" list={list} />,
+                <DropdownActions key="dropdown" className="button--small" list={list} />,
             ]}
             {...rest}
             className="on-mobile-hide-td3"

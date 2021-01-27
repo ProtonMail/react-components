@@ -330,7 +330,7 @@ const VpnSubscriptionTable = ({
             />
             <div className="text-center pb1 on-mobile-pb2 subscriptionTable-show-features-container">
                 <LinkButton
-                    className="pm-button--small"
+                    className="button--small"
                     onClick={() => createModal(<SubscriptionFeaturesModal currency={currency} cycle={cycle} />)}
                 >
                     {c('Action').t`Show all features`}

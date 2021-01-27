@@ -27,10 +27,10 @@ const DomainAddresses = ({ domainAddresses }) => {
 
     return (
         <>
-            <SimpleDropdown className="pm-button--link" content={contentDropDown}>
+            <SimpleDropdown className="button--link" content={contentDropDown}>
                 <DropdownMenu>{list}</DropdownMenu>
                 <div className="text-right p1">
-                    <AppLink className="pm-button" to="/organization#addresses" toApp={APPS.PROTONACCOUNT}>{c('Link')
+                    <AppLink className="button" to="/organization#addresses" toApp={APPS.PROTONACCOUNT}>{c('Link')
                         .t`Manage`}</AppLink>
                 </div>
             </SimpleDropdown>

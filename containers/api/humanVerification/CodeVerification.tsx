@@ -106,7 +106,7 @@ const CodeVerification = ({ email: defaultEmail = '', mode, method, onSubmit }: 
                 </div>
                 <div className="text-right mt2">
                     <PrimaryButton
-                        className="pm-button--large"
+                        className="button--large"
                         disabled={!email || !validateEmailAddress(email)}
                         loading={loadingCode}
                         onClick={() => withLoadingCode(sendCode())}
@@ -136,7 +136,7 @@ const CodeVerification = ({ email: defaultEmail = '', mode, method, onSubmit }: 
                 </div>
                 <div className="text-right mt2">
                     <PrimaryButton
-                        className="pm-button--large"
+                        className="button--large"
                         disabled={!phone}
                         loading={loadingCode}
                         onClick={() => withLoadingCode(sendCode())}
@@ -205,7 +205,7 @@ const CodeVerification = ({ email: defaultEmail = '', mode, method, onSubmit }: 
                     <InlineLinkButton onClick={editDestination} className="mr1">{c('Action')
                         .t`Change verification`}</InlineLinkButton>
                     <PrimaryButton
-                        className="pm-button--large"
+                        className="button--large"
                         disabled={!!codeError}
                         loading={loadingVerification}
                         onClick={() => withLoadingVerification(verifyCode())}

@@ -164,9 +164,8 @@ const FilterConditionsRow = ({
                             }}
                         />
                     </span>
-                    <Button disabled={!inputValue.trim()} onClick={onAddNewToken} className="pm-button-blue">{c(
-                        'Action'
-                    ).t`Insert`}</Button>
+                    <Button disabled={!inputValue.trim()} onClick={onAddNewToken} className="button-blue">{c('Action')
+                        .t`Insert`}</Button>
                 </div>
             </div>
         );
@@ -286,7 +285,7 @@ const FilterConditionsRow = ({
                     <div>
                         <Button
                             onClick={() => handleDelete(conditionIndex)}
-                            className={classnames(['pm-button--for-icon', isNarrow ? 'mt1' : 'ml1'])}
+                            className={classnames(['button--for-icon', isNarrow ? 'mt1' : 'ml1'])}
                         >
                             <Tooltip title={c('Action').t`Delete`} className="color-global-warning">
                                 <Icon name="trash" />

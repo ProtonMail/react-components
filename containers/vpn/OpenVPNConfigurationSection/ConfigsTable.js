@@ -133,14 +133,14 @@ const ConfigsTable = ({ loading, servers = [], platform, protocol, category, isU
                                     }
                                 >
                                     <Link
-                                        className="pm-button--primary pm-button--small"
+                                        className="button--primary button--small"
                                         to={`/dashboard${hasPaidVpn ? '?plan=vpnplus' : ''}`}
                                     >{c('Action').t`Upgrade`}</Link>
                                 </Tooltip>
                             ) : (
                                 <DropdownActions
                                     key="dropdown"
-                                    className="pm-button--small"
+                                    className="button--small"
                                     list={[
                                         {
                                             text: c('Action').t`Download`,

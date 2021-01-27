@@ -128,7 +128,7 @@ const UserDropdown = ({ ...rest }) => {
                                 <Meter className="is-thin block mt0-5 mb1" value={spacePercentage} />
                                 <AppLink
                                     to="/"
-                                    className="block w100 mt1-5 mb1-5 text-center pm-button pm-button--primaryborder"
+                                    className="block w100 mt1-5 mb1-5 text-center button button--primaryborder"
                                     toApp={getAccountSettingsApp()}
                                     onClick={() => close()}
                                 >

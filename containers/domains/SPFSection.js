@@ -33,7 +33,7 @@ const SPFSection = () => {
                             <div className="flex flex-nowrap flex-align-items-center" key="value">
                                 <Copy
                                     onCopy={handleCopy}
-                                    className="flex-item-noshrink pm-button--small mr0-5"
+                                    className="flex-item-noshrink button--small mr0-5"
                                     value={valueToCopy}
                                 />{' '}
                                 <code className="text-ellipsis" title={valueToCopy}>

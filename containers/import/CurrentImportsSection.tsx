@@ -95,7 +95,7 @@ const RowActions = ({ currentImport }: RowActionsProps) => {
         disabled: State === ImportMailStatus.CANCELED,
     });
 
-    return <DropdownActions key="actions" className="pm-button--small" list={list} />;
+    return <DropdownActions key="actions" className="button--small" list={list} />;
 };
 
 const sortByDate = (a: Importer, b: Importer) => {

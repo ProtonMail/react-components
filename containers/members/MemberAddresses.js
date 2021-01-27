@@ -27,10 +27,10 @@ const MemberAddresses = ({ member, addresses }) => {
 
     return (
         <>
-            <SimpleDropdown className="pm-button--link" content={contentDropDown}>
+            <SimpleDropdown className="button--link" content={contentDropDown}>
                 <div className="dropdown-item pt0-5 pb0-5 pl1 pr1 flex">
                     <AppLink
-                        className="pm-button w100 text-center"
+                        className="button w100 text-center"
                         to={`/organization/${member.ID}#addresses`}
                         toApp={APPS.PROTONACCOUNT}
                     >{c('Link').t`Manage`}</AppLink>

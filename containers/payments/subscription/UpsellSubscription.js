@@ -35,7 +35,7 @@ const UpsellSubscription = () => {
                     .t`Upgrade to ProtonMail Plus to get more storage, more email addresses and more ways to customize your mailbox with folders, labels and filters. Upgrading to a paid plan also allows you to get early access to new products.`,
                 upgradeButton: (
                     <PrimaryButton
-                        className="pm-button--small flex-item-noshrink"
+                        className="button--small flex-item-noshrink"
                         onClick={() => {
                             createModal(
                                 <NewSubscriptionModal
@@ -61,7 +61,7 @@ const UpsellSubscription = () => {
                     .t`Upgrade to ProtonMail Professional to get multi-user support. This allows you to use ProtonMail host email for your organization and provide separate logins for each user. Professional also comes with priority support.`,
                 upgradeButton: (
                     <PrimaryButton
-                        className="pm-button--small flex-item-noshrink"
+                        className="button--small flex-item-noshrink"
                         onClick={() => {
                             createModal(
                                 <NewSubscriptionModal
@@ -86,7 +86,7 @@ const UpsellSubscription = () => {
                 .t`Upgrade to ProtonVPN Plus to get access to higher speed servers (up to 10 Gbps) and unlock advanced features such as Secure Core VPN, Tor over VPN, and access geo-blocked content (such as Netflix, Youtube, Amazon Prime, etc...).`,
             upgradeButton: (
                 <PrimaryButton
-                    className="pm-button--small flex-item-noshrink"
+                    className="button--small flex-item-noshrink"
                     onClick={() => {
                         createModal(
                             <NewSubscriptionModal

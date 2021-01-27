@@ -40,7 +40,7 @@ const PaginationRow = ({
         <Group className={className}>
             <ButtonGroup
                 className={classnames([
-                    'pm-button--for-icon no-outline relative',
+                    'button--for-icon no-outline relative',
                     (disabled || disablePrevious) && 'no-pointer-events no-pointer-events-children',
                 ])}
                 onClick={() => onStart()}
@@ -55,7 +55,7 @@ const PaginationRow = ({
             </ButtonGroup>
             <ButtonGroup
                 className={classnames([
-                    'pm-button--for-icon no-outline relative',
+                    'button--for-icon no-outline relative',
                     (disabled || disablePrevious) && 'no-pointer-events no-pointer-events-children',
                 ])}
                 onClick={() => onPrevious()}
@@ -74,7 +74,7 @@ const PaginationRow = ({
                     <ButtonGroup
                         aria-current={isActive}
                         className={classnames([
-                            'pm-button--for-icon no-outline relative',
+                            'button--for-icon no-outline relative',
                             isActive && 'text-bold',
                             (disabled || isActive) && 'no-pointer-events no-pointer-events-children',
                         ])}
@@ -90,7 +90,7 @@ const PaginationRow = ({
             })}
             <ButtonGroup
                 className={classnames([
-                    'pm-button--for-icon no-outline relative',
+                    'button--for-icon no-outline relative',
                     (disabled || disableNext) && 'no-pointer-events no-pointer-events-children',
                 ])}
                 onClick={() => onNext()}
@@ -105,7 +105,7 @@ const PaginationRow = ({
             </ButtonGroup>
             <ButtonGroup
                 className={classnames([
-                    'pm-button--for-icon no-outline relative',
+                    'button--for-icon no-outline relative',
                     (disabled || disableNext) && 'no-pointer-events no-pointer-events-children',
                 ])}
                 onClick={() => onEnd()}

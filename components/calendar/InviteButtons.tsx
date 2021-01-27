@@ -87,7 +87,7 @@ const InviteButtons = ({ actions, partstat = ICAL_ATTENDEE_STATUS.NEEDS_ACTION, 
             originalPlacement="top-right"
             disabled={disabled}
             loading={loadingAnswer}
-            className={classnames(['pm-button', className])}
+            className={classnames(['button', className])}
             title={c('Title').t`Change my answer`}
             content={text}
             data-test-id="dropdown:open"

@@ -295,8 +295,8 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }: Props) => {
                                             className={classnames([
                                                 'mb1 text-uppercase',
                                                 popular || productPayer
-                                                    ? 'pm-button--primary'
-                                                    : 'pm-button--primaryborderEvenInDarkMode',
+                                                    ? 'button--primary'
+                                                    : 'button--primaryborderEvenInDarkMode',
                                             ])}
                                             onClick={() => {
                                                 rest.onClose?.();

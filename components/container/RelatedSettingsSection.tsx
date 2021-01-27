@@ -26,7 +26,7 @@ const RelatedSettingsSection = ({ list = [] }: Props) => {
                         <Paragraph>{text}</Paragraph>
                         <Paragraph className="text-center mtauto">
                             {typeof link === 'string' ? (
-                                <Link className="pm-button pm-button--primary" to={to}>
+                                <Link className="button button--primary" to={to}>
                                     {link}
                                 </Link>
                             ) : (

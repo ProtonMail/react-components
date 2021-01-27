@@ -146,7 +146,7 @@ const FilterActionsFormLabelsRow = ({ actions, isNarrow, handleUpdateActions, la
                 <Button
                     disabled={!labelAs?.labels.length}
                     onClick={handleClear}
-                    className={classnames(['pm-button--for-icon', isNarrow ? 'mt1' : 'ml1'])}
+                    className={classnames(['button--for-icon', isNarrow ? 'mt1' : 'ml1'])}
                 >
                     <Tooltip
                         title={c('Action').t`Reset`}

@@ -76,7 +76,7 @@ const AccountResetPasswordContainer = ({ onLogin, Layout, onBack }: Props) => {
                     />
                     <SignupSubmitRow>
                         <PrimaryButton
-                            className="pm-button--large flex-item-noshrink on-mobile-w100"
+                            className="button--large flex-item-noshrink on-mobile-w100"
                             disabled={!username}
                             loading={loading}
                             type="submit"
@@ -103,7 +103,7 @@ const AccountResetPasswordContainer = ({ onLogin, Layout, onBack }: Props) => {
                         >{c('Action').t`Contact support`}</Href>
                         <Link
                             to="/login"
-                            className="pm-button--primary pm-button--large flex-item-noshrink on-mobile-w100 on-mobile-text-center"
+                            className="button--primary button--large flex-item-noshrink on-mobile-w100 on-mobile-text-center"
                         >{c('Action').t`Return to login`}</Link>
                     </SignupSubmitRow>
                 </form>
@@ -169,7 +169,7 @@ const AccountResetPasswordContainer = ({ onLogin, Layout, onBack }: Props) => {
                     <Tabs tabs={tabs} value={tabIndex} onChange={handleChangeIndex} />
                     <SignupSubmitRow>
                         <PrimaryButton
-                            className="pm-button--large on-mobile-w100"
+                            className="button--large on-mobile-w100"
                             disabled={!email && !phone}
                             loading={loading}
                             type="submit"
@@ -253,7 +253,7 @@ const AccountResetPasswordContainer = ({ onLogin, Layout, onBack }: Props) => {
                     ) : null}
                     <SignupSubmitRow>
                         <PrimaryButton
-                            className="pm-button--large on-mobile-w100"
+                            className="button--large on-mobile-w100"
                             disabled={!token}
                             loading={loading}
                             type="submit"
@@ -308,7 +308,7 @@ const AccountResetPasswordContainer = ({ onLogin, Layout, onBack }: Props) => {
                     </div>
                     <SignupSubmitRow>
                         <PrimaryButton
-                            className="pm-button--large on-mobile-w100"
+                            className="button--large on-mobile-w100"
                             disabled={!password || password !== confirmPassword}
                             loading={loading}
                             type="submit"
@@ -333,7 +333,7 @@ const AccountResetPasswordContainer = ({ onLogin, Layout, onBack }: Props) => {
                         >{c('Action').t`Contact support`}</Href>
                         <Link
                             to="/login"
-                            className="pm-button--primary pm-button--large flex-item-noshrink on-mobile-w100 on-mobile-text-center"
+                            className="button--primary button--large flex-item-noshrink on-mobile-w100 on-mobile-text-center"
                         >{c('Action').t`Return to login`}</Link>
                     </SignupSubmitRow>
                 </Layout>

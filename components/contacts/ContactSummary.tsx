@@ -108,19 +108,19 @@ const ContactSummary = ({
             {!isPreview && (
                 <div className="flex-item-noshrink pt0-5 on-mobile-text-center mb1">
                     <Tooltip title={c('Action').t`Edit`} className="ml0-5">
-                        <Button onClick={() => handleEdit()} className="pm-button--for-icon inline-flex">
+                        <Button onClick={() => handleEdit()} className="button--for-icon inline-flex">
                             <Icon className="color-primary mt0-25 mb0-1" name="pen" alt={c('Action').t`Edit`} />
                         </Button>
                     </Tooltip>
 
                     <Tooltip title={c('Action').t`Export`} className="ml0-5">
-                        <Button onClick={handleExport} className="pm-button--for-icon inline-flex">
+                        <Button onClick={handleExport} className="button--for-icon inline-flex">
                             <Icon className="mt0-25 mb0-1" name="export" alt={c('Action').t`Export`} />
                         </Button>
                     </Tooltip>
 
                     <Tooltip title={c('Action').t`Delete`} className="ml0-5">
-                        <Button onClick={handleDelete} className="pm-button--for-icon inline-flex">
+                        <Button onClick={handleDelete} className="button--for-icon inline-flex">
                             <Icon
                                 className="color-global-warning mt0-25 mb0-1"
                                 name="trash"

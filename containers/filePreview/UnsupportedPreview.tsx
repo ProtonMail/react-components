@@ -26,7 +26,7 @@ const UnsupportedPreview = ({ onSave, type = 'file' }: Props) => {
 
             {onSave && (
                 <PrimaryButton
-                    className={classnames(['text-bold', !isNarrow && 'pm-button--large w150p'])}
+                    className={classnames(['text-bold', !isNarrow && 'button--large w150p'])}
                     onClick={onSave}
                 >{c('Action').t`Download`}</PrimaryButton>
             )}

@@ -46,8 +46,8 @@ const SignInLayout = ({ children, title = '' }: Props) => {
                 right={
                     <>
                         <div className="flex flex-justify-end">
-                            <SupportDropdown className="pm-button--primaryborder-dark inline-flex flex-align-items-center" />
-                            <Link className="ml1 no-mobile no-tablet pm-button--primary" to="/signup">{c('Link')
+                            <SupportDropdown className="button--primaryborder-dark inline-flex flex-align-items-center" />
+                            <Link className="ml1 no-mobile no-tablet button--primary" to="/signup">{c('Link')
                                 .t`Sign up for free`}</Link>
                         </div>
                     </>
@@ -62,7 +62,7 @@ const SignInLayout = ({ children, title = '' }: Props) => {
                             <span className="flex-item-noshrink">
                                 <p className="text-bold">{c('Link').t`Don't have an account yet? Sign up for free!`}</p>
                             </span>
-                            <Link className="ml1 pm-button--primary" to="/signup">{c('Link').t`Sign up for free`}</Link>
+                            <Link className="ml1 button--primary" to="/signup">{c('Link').t`Sign up for free`}</Link>
                         </div>
                     </div>
                 </div>

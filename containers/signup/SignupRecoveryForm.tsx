@@ -176,12 +176,12 @@ const SignupRecoveryForm = ({ model, onChange, onSubmit, onSkip, errors, loading
                 {inner}
                 <SignupSubmitRow>
                     <LinkButton
-                        className="mr2 on-mobile-mr0 pm-button--large"
+                        className="mr2 on-mobile-mr0 button--large"
                         disabled={loading || loadingChallenge}
                         onClick={handleSkip}
                     >{c('Action').t`Skip`}</LinkButton>
                     <PrimaryButton
-                        className="pm-button--large"
+                        className="button--large"
                         loading={loading || loadingChallenge}
                         disabled={disableSubmit}
                         type="submit"

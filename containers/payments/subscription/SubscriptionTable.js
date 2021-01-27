@@ -63,14 +63,14 @@ const SubscriptionTable = ({
                                     {mode === 'radio' ? (
                                         <Button
                                             disabled={disabled || index === currentPlanIndex}
-                                            className={classnames([index !== currentPlanIndex && 'pm-button--primary'])}
+                                            className={classnames([index !== currentPlanIndex && 'button--primary'])}
                                             onClick={() => onSelect(index)}
                                         >
                                             {index === currentPlanIndex ? selected : select}
                                         </Button>
                                     ) : null}
                                     {mode === 'button' ? (
-                                        <Button className="pm-button--primary" onClick={() => onSelect(index)}>
+                                        <Button className="button--primary" onClick={() => onSelect(index)}>
                                             {select}
                                         </Button>
                                     ) : null}
