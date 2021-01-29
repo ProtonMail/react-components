@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { DragEvent, useEffect, useState } from 'react';
 import { c } from 'ttag';
 import { classnames } from '../../helpers';
 
 import './Dropzone.scss';
 
-interface Props extends React.HTMLAttributes<HTMLDivElement> {
+interface Props extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onDrop' | 'onDragEnter' | 'onDragLeave'> {
     /**
      * When true, reveals the overlay and content
      */
@@ -13,6 +13,9 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
      * The content to show when dragging over the dropzone
      */
     content?: React.ReactNode;
+    onDrop: (event: DragEvent) => void;
+    onDragEnter: (event: DragEvent) => void;
+    onDragLeave: (event: DragEvent) => void;
 }
 
 const Dropzone = ({
@@ -25,18 +28,44 @@ const Dropzone = ({
     content = c('Info').t`Drop the file here to upload`,
     ...rest
 }: Props) => {
+    const [allowHover, setAllowHover] = useState(true);
+
+    useEffect(() => {
+        // When dragging over quickly and accidentally dropping the file in thr browser window,
+        // the browser prompts to handle it and you remain in the hovered state
+        const onBlur = () => {
+            setAllowHover(false);
+        };
+        // In case the UI bugs out
+        const timeout = setTimeout(() => {
+            if (isHovered) {
+                setAllowHover(false);
+            }
+        }, 5000);
+
+        window.addEventListener('blur', onBlur);
+
+        return () => {
+            window.removeEventListener('blur', onBlur);
+            clearTimeout(timeout);
+        };
+    }, [isHovered]);
+
     return (
         <div
             className={className}
             onDrop={onDrop}
-            onDragEnter={onDragEnter}
+            onDragEnter={(event) => {
+                setAllowHover(true);
+                onDragEnter(event);
+            }}
             onDragOver={(event) => event.preventDefault()}
             {...rest}
         >
             <div
                 className={classnames([
                     'dropzone covered-absolute flex flex-justify-center flex-items-center',
-                    isHovered && 'is-hovered',
+                    allowHover && isHovered && 'is-hovered',
                 ])}
                 onDragLeave={onDragLeave}
             >
