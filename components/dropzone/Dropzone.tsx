@@ -1,6 +1,6 @@
 import React from 'react';
 import { c } from 'ttag';
-import clsx from 'clsx';
+import { classnames } from '../../helpers';
 
 import './Dropzone.scss';
 
@@ -34,11 +34,9 @@ const Dropzone = ({
             {...rest}
         >
             <div
-                className={clsx([
+                className={classnames([
                     'dropzone covered-absolute flex flex-justify-center flex-items-center',
-                    {
-                        'is-hovered': isHovered,
-                    },
+                    isHovered && 'is-hovered',
                 ])}
                 onDragLeave={onDragLeave}
             >
