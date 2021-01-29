@@ -12,7 +12,7 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
     /**
      * The content to show when dragging over the dropzone
      */
-    content: React.ReactNode;
+    content?: React.ReactNode;
 }
 
 const Dropzone = ({
