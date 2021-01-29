@@ -3,13 +3,8 @@ import { c } from 'ttag';
 
 import './Dropzone.scss';
 
-interface Props {
-    children: JSX.Element;
-    isHovered: boolean;
-    onDrop: (event: DragEvent) => void;
-    onDragEnter: (event: DragEvent) => void;
-    onDragLeave: (event: DragEvent) => void;
-    className?: string;
+interface Props extends React.HTMLAttributes<HTMLDivElement> {
+   isHovered: boolean;
 }
 
 const Dropzone = ({ children, isHovered, onDrop, onDragEnter, onDragLeave, className }: Props) => {
