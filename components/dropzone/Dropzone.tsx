@@ -1,10 +1,11 @@
-import React, { DragEvent, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { c } from 'ttag';
 import { classnames } from '../../helpers';
 
 import './Dropzone.scss';
 
-interface Props extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onDrop' | 'onDragEnter' | 'onDragLeave'> {
+type Props = (React.HTMLAttributes<HTMLDivElement> &
+    Required<Pick<React.HTMLAttributes<HTMLDivElement>, 'onDrop' | 'onDragEnter' | 'onDragLeave'>>) & {
     /**
      * When true, reveals the overlay and content
      */
@@ -13,10 +14,7 @@ interface Props extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onDrop' | 'o
      * The content to show when dragging over the dropzone
      */
     content?: React.ReactNode;
-    onDrop: (event: DragEvent) => void;
-    onDragEnter: (event: DragEvent) => void;
-    onDragLeave: (event: DragEvent) => void;
-}
+};
 
 const Dropzone = ({
     children,
