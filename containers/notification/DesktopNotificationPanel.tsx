@@ -16,6 +16,9 @@ const testDefaultNotification = () => {
 
 export interface Props {
     onTest?: () => Promise<PushNotification | undefined>;
+    infoURL?:
+        | 'https://protonmail.com/support/knowledge-base/desktop-notifications/'
+        | 'https://protonmail.com/support/knowledge-base/calendar-notifications/';
 }
 const DesktopNotificationPanel = ({ onTest = testDefaultNotification }: Props) => {
     const [status, setStatus] = useState<Status>(getStatus());
