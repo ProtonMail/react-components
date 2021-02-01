@@ -4,6 +4,7 @@ import { Recipient } from 'proton-shared/lib/interfaces';
 import { inputToRecipient } from 'proton-shared/lib/mail/recipient';
 import { normalizeEmail } from 'proton-shared/lib/helpers/email';
 import { SimpleMap } from 'proton-shared/lib/interfaces/utils';
+import { noop } from 'proton-shared/lib/helpers/function';
 
 import Input, { Props as InputProps } from '../input/Input';
 import { Option } from '../option';
@@ -49,7 +50,7 @@ const AddressesAutocomplete = React.forwardRef<HTMLInputElement, Props>(
             limit = 20,
             onAddInvalidEmail,
             onChange,
-            validate,
+            validate = noop,
             ...rest
         }: Props,
         ref
