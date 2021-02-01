@@ -292,8 +292,8 @@ const SubscriptionCustomization = ({
             />,
             <SubscriptionFeatureRow key="bandwidth" icon="p2p" feature={c('Feature').t`Unlimited bandwidth`} />,
             <SubscriptionFeatureRow
-                key=""
-                icon=""
+                key="nologs"
+                icon="nologs"
                 info={c('Info')
                     .t`"ProtonVPN keeps no logs about your internet activity that can compromise your privacy. We don’t store your IP address, physical location, or any other identifiable data."`}
                 feature={c('Feature').t`Strict no-logs policy`}
@@ -312,8 +312,8 @@ const SubscriptionCustomization = ({
                 )}
             />,
             <SubscriptionFeatureRow
-                key="speed"
-                icon=""
+                key="netshield"
+                icon="netshield"
                 feature={c('Feature').t`Adblocker (NetShield)`}
                 url="https://protonvpn.com/support/netshield/"
                 info={c('Info')
@@ -327,8 +327,8 @@ const SubscriptionCustomization = ({
                 feature={c('Feature').t`P2P/BitTorrent support`}
             />,
             <SubscriptionFeatureRow
-                key=""
-                icon=""
+                key="nologs"
+                icon="nologs"
                 info={c('Info')
                     .t`"ProtonVPN keeps no logs about your internet activity that can compromise your privacy. We don’t store your IP address, physical location, or any other identifiable data."`}
                 feature={c('Feature').t`Strict no-logs policy`}
@@ -351,15 +351,15 @@ const SubscriptionCustomization = ({
                 feature={c('Feature').t`Plus-exclusive servers`}
             />,
             <SubscriptionFeatureRow
-                key="speed"
-                icon=""
+                key="netshield"
+                icon="netshield"
                 feature={c('Feature').t`Adblocker (NetShield)`}
                 url="https://protonvpn.com/support/netshield/"
                 info={c('Info')
                     .t`NetShield protects your device and speeds up your browsing by blocking ads, trackers, and malware.`}
             />,
             <SubscriptionFeatureRow
-                key=""
+                key="secure"
                 url="https://protonvpn.com/support/secure-core-vpn/"
                 info={c('Info')
                     .t`Defends against threats to VPN privacy by passing your Internet traffic through multiple servers.`}
