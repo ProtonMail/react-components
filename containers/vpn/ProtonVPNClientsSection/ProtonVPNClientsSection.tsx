@@ -21,7 +21,7 @@ const ProtonVPNClientsSection = () => {
         return (
             <Group className="flex flex-items-center">
                 <DropdownMenuLink href={href}>{children}</DropdownMenuLink>
-                <Copy value={href} className="p0-25 mr0-5" />
+                <Copy value={href} className="pt0-25 pb0-25 pl0-5 pr0-5 mr0-5" />
             </Group>
         );
     });
