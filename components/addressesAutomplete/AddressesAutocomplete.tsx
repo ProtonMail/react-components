@@ -76,7 +76,7 @@ const AddressesAutocomplete = React.forwardRef<HTMLInputElement, Props>(
             return [
                 ...getContactsAutocompleteItems(
                     contactEmails,
-                    ({ Email }) => !recipientsByAddress.has(normalizeEmail(Email))
+                    ({ Email }) => !recipientsByAddress.has(normalizeEmail(Email)) && !validate(Email)
                 ),
                 ...getContactGroupsAutocompleteItems(contactGroups, ({ Path }) => !recipientsByGroup.has(Path)),
             ];
@@ -85,7 +85,11 @@ const AddressesAutocomplete = React.forwardRef<HTMLInputElement, Props>(
         const majorList = useMemo(() => {
             return getMajorListAutocompleteItems(input, (email) => {
                 const normalizedEmail = normalizeEmail(email);
-                return !recipientsByAddress.has(normalizedEmail) && !contactEmailsMap?.[normalizedEmail];
+                return (
+                    !recipientsByAddress.has(normalizedEmail) &&
+                    !contactEmailsMap?.[normalizedEmail] &&
+                    !validate(normalizedEmail)
+                );
             });
         }, [input, contactEmailsMap, recipientsByAddress]);
 
