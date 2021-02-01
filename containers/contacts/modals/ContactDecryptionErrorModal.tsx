@@ -4,11 +4,11 @@ import { noop } from 'proton-shared/lib/helpers/function';
 import { useHistory } from 'react-router';
 import { Contact } from 'proton-shared/lib/interfaces/contacts';
 import { getKeyUsedForContact } from 'proton-shared/lib/contacts/keyVerifications';
-import { CachedKey } from 'proton-shared/lib/interfaces';
+import { Key } from 'proton-shared/lib/interfaces';
 import { getAppHref } from 'proton-shared/lib/apps/helper';
 import { APPS } from 'proton-shared/lib/constants';
 import { Alert, FormModal, LinkButton, PrimaryButton, Table, TableBody, TableRow } from '../../../components';
-import { useModals, useUserKeys } from '../../../hooks';
+import { useModals, useUser } from '../../../hooks';
 import ContactClearDataConfirmModal from './ContactClearDataConfirmModal';
 import useContact from '../useContact';
 
@@ -20,20 +20,20 @@ interface Props {
 const ContactDecryptionErrorModal = ({ onClose = noop, contactID, ...rest }: Props) => {
     const { createModal } = useModals();
     const history = useHistory();
-    const [userKeys] = useUserKeys();
+    const [user] = useUser();
     const [contact] = useContact(contactID) as [Contact | undefined, boolean, Error];
-    const [errorKey, setErrorKey] = useState<CachedKey>();
+    const [errorKey, setErrorKey] = useState<Key>();
 
     useEffect(() => {
         const findKey = async () => {
-            const key = await getKeyUsedForContact(contact as Contact, userKeys, true);
+            const key = await getKeyUsedForContact(contact as Contact, user.Keys, true);
             setErrorKey(key);
         };
 
-        if (userKeys && userKeys.length > 0 && contact) {
+        if (user && contact) {
             void findKey();
         }
-    }, [userKeys, contact]);
+    }, [user, contact]);
 
     const handleRecover = () => {
         history.push(getAppHref('/settings/security', APPS.PROTONMAIL));
@@ -41,7 +41,7 @@ const ContactDecryptionErrorModal = ({ onClose = noop, contactID, ...rest }: Pro
     };
 
     const handleClear = () => {
-        createModal(<ContactClearDataConfirmModal errorKey={errorKey as CachedKey} />);
+        createModal(<ContactClearDataConfirmModal errorKey={errorKey as Key} />);
         onClose();
     };
 
@@ -70,12 +70,10 @@ const ContactDecryptionErrorModal = ({ onClose = noop, contactID, ...rest }: Pro
                     </thead>
                     <TableBody>
                         <TableRow
-                            key={errorKey.Key.Fingerprint}
+                            key={errorKey.Fingerprint}
                             cells={[
-                                <div key="fingerprint" title={errorKey.Key.Fingerprint} className="flex flex-nowrap">
-                                    <span className="flex-item-fluid ellipsis aligncenter">
-                                        {errorKey.Key.Fingerprint}
-                                    </span>
+                                <div key="fingerprint" title={errorKey.Fingerprint} className="flex flex-nowrap">
+                                    <span className="flex-item-fluid ellipsis aligncenter">{errorKey.Fingerprint}</span>
                                 </div>,
                             ]}
                         />

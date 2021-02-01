@@ -2,13 +2,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import { c } from 'ttag';
 import { noop } from 'proton-shared/lib/helpers/function';
 import { Contact } from 'proton-shared/lib/interfaces/contacts';
-import { CachedKey } from 'proton-shared/lib/interfaces';
+import { Key } from 'proton-shared/lib/interfaces';
 import { dropDataEncryptedWithAKey } from 'proton-shared/lib/contacts/globalOperations';
 import { Alert, DynamicProgress, FormModal, PrimaryButton } from '../../../components';
 import { useApi, useContacts, useEventManager, useUserKeys } from '../../../hooks';
 
 interface Props {
-    errorKey: CachedKey;
+    errorKey: Key;
     onClose?: () => void;
 }
 

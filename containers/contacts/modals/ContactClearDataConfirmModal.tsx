@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
 import { noop } from 'proton-shared/lib/helpers/function';
-import { CachedKey } from 'proton-shared/lib/interfaces';
+import { Key } from 'proton-shared/lib/interfaces';
 import { Alert, ErrorButton, FormModal, Input, Row } from '../../../components';
 import { useModals } from '../../../hooks';
 import ContactClearDataExecutionModal from './ContactClearDataExecutionModal';
 
 interface Props {
-    errorKey: CachedKey;
+    errorKey: Key;
     onClose?: () => void;
 }
 
