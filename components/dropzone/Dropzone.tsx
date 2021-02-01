@@ -29,7 +29,7 @@ const Dropzone = ({
     const [allowHover, setAllowHover] = useState(true);
 
     useEffect(() => {
-        // When dragging over quickly and accidentally dropping the file in thr browser window,
+        // When dragging over quickly and accidentally dropping the file in the browser window,
         // the browser prompts to handle it and you remain in the hovered state
         const onBlur = () => {
             setAllowHover(false);
