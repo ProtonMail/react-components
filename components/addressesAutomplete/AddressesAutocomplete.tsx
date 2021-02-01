@@ -31,7 +31,7 @@ interface Props extends Omit<InputProps, 'value'> {
     hasAddOnBlur?: boolean;
     limit?: number;
     onAddInvalidEmail?: () => void;
-    validate: (email: string) => string | void;
+    validate?: (email: string) => string | void;
 }
 
 const AddressesAutocomplete = React.forwardRef<HTMLInputElement, Props>(
