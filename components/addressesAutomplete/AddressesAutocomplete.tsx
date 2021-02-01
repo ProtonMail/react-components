@@ -102,21 +102,8 @@ const AddressesAutocomplete = React.forwardRef<HTMLInputElement, Props>(
         };
 
         const handleAddRecipient = (newRecipients: Recipient[]) => {
-            const error = validate(newRecipients[0].Address || '');
-
-            // Ignore groups
-            if (newRecipients.length === 1 && error) {
-                if (document.activeElement instanceof HTMLElement) {
-                    // To close the dropdown after selecting and see the error
-                    document.activeElement.blur();
-                }
-
-                onAddInvalidEmail?.();
-                setEmailError(error);
-            } else {
-                setInput('');
-                safeAddRecipients(newRecipients);
-            }
+            setInput('');
+            safeAddRecipients(newRecipients);
         };
 
         const handleAddRecipientFromInput = (input: string) => {
@@ -126,7 +113,14 @@ const AddressesAutocomplete = React.forwardRef<HTMLInputElement, Props>(
                 return;
             }
             const newRecipient = inputToRecipient(trimmedInput);
-            handleAddRecipient([newRecipient]);
+            const error = validate(newRecipient.Address || '');
+
+            if (!error) {
+                handleAddRecipient([newRecipient]);
+            } else {
+                onAddInvalidEmail?.();
+                setEmailError(error);
+            }
         };
 
         const handleSelect = (item: AddressesAutocompleteItem) => {
