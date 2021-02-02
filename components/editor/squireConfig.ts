@@ -340,14 +340,14 @@ export const initSquire = async (document: Document, onEllipseClick: () => void)
             // Prevent to deselect an ongoing selection
             if (!document.defaultView?.getSelection()?.toString().length) {
                 const lines = document.querySelectorAll('#squire > div:not(.protonmail_signature_block)');
-                const lastLine = [...lines].slice(-1)[0];
-                const brs = lastLine.querySelectorAll('br');
-                const lastBr = [...brs].slice(-1)[0];
+                const lastLine = lines.length > 0 ? lines[lines.length - 1] : undefined;
+                const brs = lastLine?.querySelectorAll('br') || [];
+                const lastBr = brs?.length > 0 ? brs[brs?.length - 1] : undefined;
 
                 const range = document.createRange();
                 if (lastBr) {
                     range.setStartBefore(lastBr);
-                } else {
+                } else if (lastLine) {
                     range.selectNode(lastLine);
                     range.collapse(false);
                 }
