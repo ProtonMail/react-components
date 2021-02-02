@@ -1,9 +1,13 @@
+import { getAppName } from 'proton-shared/lib/apps/helper';
+import { APPS } from 'proton-shared/lib/constants';
 import React from 'react';
 
 interface Props {
     className?: string;
 }
 const DriveLogo = ({ className = 'logo' }: Props) => {
+    const appName = getAppName(APPS.PROTONDRIVE);
+
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -29,7 +33,7 @@ const DriveLogo = ({ className = 'logo' }: Props) => {
             <g>
                 <path d="M9.6,4.5H9.5C8.8,2.7,6.7,1.7,4.9,2.4c-1,0.4-1.8,1.2-2.1,2.2C1.1,4.8-0.1,6.2,0,7.8c0.1,1.5,1.4,2.7,3,2.7h2.1V9.2H3.5l2.8-2.8l2.8,2.8H7.5v1.4H5.1V12H3.5l2.8,2.8L9.1,12H7.5v-1.4h2.2l0,0c1.7-0.1,3-1.5,2.9-3.2C12.5,5.8,11.2,4.5,9.6,4.5L9.6,4.5z" />
             </g>
-            <title id="logo__title">ProtonDrive</title>
+            <title id="logo__title">{appName}</title>
         </svg>
     );
 };
