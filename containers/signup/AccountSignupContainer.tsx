@@ -54,7 +54,6 @@ import handleCreateExternalUser from './helpers/handleCreateExternalUser';
 import createAuthApi from './helpers/authApi';
 import handleSetupAddress from './helpers/handleSetupAddress';
 import OneAccountIllustration from '../illustration/OneAccountIllustration';
-import { GenericError } from '../error';
 
 interface Props {
     onLogin: OnLoginCallback;
@@ -334,11 +333,7 @@ const AccountSignupContainer = ({ toApp, onLogin, onBack, Layout }: Props) => {
     const { step, username } = model;
 
     if (step === ERROR) {
-        return (
-            <Layout title="">
-                <GenericError />
-            </Layout>
-        );
+        throw new Error('Missing dependencies');
     }
 
     if (step === ACCOUNT_CREATION_USERNAME || step === ACCOUNT_CREATION_EMAIL) {
