@@ -1,5 +1,5 @@
 export enum SIGNUP_STEPS {
-    NO_SIGNUP = 'no-signup',
+    ERROR = 'error',
     ACCOUNT_CREATION_USERNAME = 'account-creation-username',
     ACCOUNT_CREATION_EMAIL = 'account-creation-email',
     RECOVERY_EMAIL = 'recovery-email',

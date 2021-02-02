@@ -46,7 +46,6 @@ export interface SignupModel {
     email: string;
     password: string;
     confirmPassword: string;
-    verifyMethods: string[];
     domains: string[];
     recoveryEmail: string;
     recoveryPhone: string;

@@ -18,7 +18,6 @@ import {
     getUser,
     queryCheckUsernameAvailability,
     queryCheckVerificationCode,
-    queryDirectSignupStatus,
     queryVerificationCode,
 } from 'proton-shared/lib/api/user';
 import { useApi, useConfig, useLoading, useModals, usePlans } from '../../hooks';
@@ -32,7 +31,6 @@ import SignupRecoveryForm from './SignupRecoveryForm';
 import SignupVerificationCodeForm from './SignupVerificationCodeForm';
 import SignupPlans from './SignupPlans';
 import SignupPayment from './SignupPayment';
-import NoSignup from './NoSignup';
 import InvalidVerificationCodeModal from '../api/humanVerification/InvalidVerificationCodeModal';
 import {
     HumanVerificationError,
@@ -56,6 +54,7 @@ import handleCreateExternalUser from './helpers/handleCreateExternalUser';
 import createAuthApi from './helpers/authApi';
 import handleSetupAddress from './helpers/handleSetupAddress';
 import OneAccountIllustration from '../illustration/OneAccountIllustration';
+import { GenericError } from '../error';
 
 interface Props {
     onLogin: OnLoginCallback;
@@ -65,9 +64,9 @@ interface Props {
 }
 
 const {
+    ERROR,
     ACCOUNT_CREATION_USERNAME,
     ACCOUNT_CREATION_EMAIL,
-    NO_SIGNUP,
     RECOVERY_EMAIL,
     RECOVERY_PHONE,
     VERIFICATION_CODE,
@@ -273,17 +272,10 @@ const AccountSignupContainer = ({ toApp, onLogin, onBack, Layout }: Props) => {
     useEffect(() => {
         const fetchDependencies = async () => {
             try {
-                const { Direct, VerifyMethods: verifyMethods } = await api(queryDirectSignupStatus(CLIENT_TYPE));
-
-                if (!Direct) {
-                    // We block the signup from API demand
-                    throw new Error('No signup');
-                }
-
                 const { Domains: domains } = await api(queryAvailableDomains());
-                setModelDiff({ step: ACCOUNT_CREATION_USERNAME, verifyMethods, domains });
+                setModelDiff({ step: ACCOUNT_CREATION_USERNAME, domains });
             } catch (error) {
-                return setModelDiff({ step: NO_SIGNUP });
+                return setModelDiff({ step: ERROR });
             }
         };
         withLoading(fetchDependencies());
@@ -341,10 +333,10 @@ const AccountSignupContainer = ({ toApp, onLogin, onBack, Layout }: Props) => {
 
     const { step, username } = model;
 
-    if (step === NO_SIGNUP) {
+    if (step === ERROR) {
         return (
-            <Layout title={c('Title').t`Signup disabled`}>
-                <NoSignup />
+            <Layout title="">
+                <GenericError />
             </Layout>
         );
     }
