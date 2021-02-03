@@ -285,8 +285,8 @@ const SubscriptionCustomization = ({
                 key="country"
                 icon="servers-country"
                 feature={c('Feature').ngettext(
-                    msgid`${vpnCountries.free.length} country`,
-                    `${vpnCountries.free.length} countries`,
+                    msgid`Servers in ${vpnCountries.free.length} country`,
+                    ` Servers in ${vpnCountries.free.length} countries`,
                     vpnCountries.free.length
                 )}
             />,
@@ -306,8 +306,8 @@ const SubscriptionCustomization = ({
                 key="country"
                 icon="servers-country"
                 feature={c('Feature').ngettext(
-                    msgid`${vpnCountries.basic.length} country`,
-                    `${vpnCountries.basic.length} countries`,
+                    msgid`Servers in ${vpnCountries.basic.length} country`,
+                    `Servers in ${vpnCountries.basic.length} countries`,
                     vpnCountries.basic.length
                 )}
             />,
