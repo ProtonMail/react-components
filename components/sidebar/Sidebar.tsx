@@ -69,7 +69,7 @@ const Sidebar = ({ expanded = false, onToggleExpand, hasAppLinks = true, logo, p
                 <span className="smaller aligncenter mt0 mb0-5">
                     {humanSize(UsedSpace)}&nbsp;/&nbsp;{humanSize(MaxSpace)}
                 </span>
-                <Meter className="is-thin bl mb0-5 w70" value={spacePercentage} />
+                <Meter className="is-thin mb0-5 w70" value={spacePercentage} />
                 {canAddStorage ? (
                     <AppLink
                         to="/subscription"
