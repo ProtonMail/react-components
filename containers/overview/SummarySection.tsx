@@ -126,7 +126,7 @@ const SummarySection = ({ user, userSettings, organization, subscription }: Prop
                         <li className="flex flex-nowrap flex-align-items-center">
                             <Icon name="protoncalendar" className="mr0-5 flex-item-noshrink" />
                             <AppLink to="/settings/overview" toApp={APPS.PROTONCALENDAR}>{c('Link')
-                                .t`ProtonCalendar settings`}</AppLink>
+                                .t`Proton Calendar settings`}</AppLink>
                         </li>
                         <li className="flex flex-nowrap flex-align-items-center">
                             <Icon name="protoncontacts" className="mr0-5 flex-item-noshrink" />
