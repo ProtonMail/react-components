@@ -3,37 +3,21 @@ import React from 'react';
 import { classnames } from '../../helpers';
 
 interface Props {
-    /**
-     * minimum possible value of a data
-     */
+    /** minimum possible value of a data */
     min?: number;
-    /**
-     * maximum possible value of a data
-     */
+    /** maximum possible value of a data */
     max?: number;
-    /**
-     * when the value of the data can be understood as low
-     */
+    /** when the value of the data can be understood as low */
     low?: number;
-    /**
-     * when the value of the data can be understood as high
-     */
+    /** when the value of the data can be understood as high */
     high?: number;
-    /**
-     * the optimum value of the data. Will influence the color of low and high values.
-     */
+    /** the optimum value of the data. Will influence the color of low and high values */
     optimum?: number;
-    /**
-     * current value of a data
-     */
+    /** current value of a data */
     value?: number;
-    /**
-     * an id to a description of the data
-     */
+    /** an id to a description of the data */
     id?: string;
-    /**
-     * className applied to the root 'meter' html element
-     */
+    /** className applied to the root 'meter' html element */
     className?: string;
 }
 
