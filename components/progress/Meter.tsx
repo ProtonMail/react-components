@@ -15,13 +15,27 @@ interface Props {
     optimum?: number;
     /** current value of a data */
     value?: number;
+    /** which variant of the meter to use */
+    variant?: 'thin' | 'default';
     /** an id to a description of the data */
     id?: string;
     /** className applied to the root 'meter' html element */
     className?: string;
 }
 
-const Meter = ({ min = 0, low = 50, high = 80, max = 100, optimum = 0, value = 50, id, className }: Props) => {
+const Meter = ({
+    min = 0,
+    low = 50,
+    high = 80,
+    max = 100,
+    optimum = 0,
+    value = 50,
+    variant = 'default',
+    id,
+    className: classNameProp,
+}: Props) => {
+    const className = classnames(['meter-bar', variant === 'thin' && 'is-thin', classNameProp]);
+
     return (
         <meter
             min={min}
@@ -31,7 +45,7 @@ const Meter = ({ min = 0, low = 50, high = 80, max = 100, optimum = 0, value = 5
             optimum={optimum}
             value={value}
             aria-describedby={id}
-            className={classnames(['meter-bar', className])}
+            className={className}
         />
     );
 };
