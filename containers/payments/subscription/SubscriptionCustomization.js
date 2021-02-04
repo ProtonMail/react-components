@@ -277,7 +277,11 @@ const SubscriptionCustomization = ({
                     .t`Get access to all the paid features for both ProtonVPN and ProtonMail (the encrypted email service that millions use to protect their data) with one plan.`}
                 url="https://protonmail.com"
             />,
-            <SubscriptionFeatureRow key="user" icon="organization-users" feature={c('Feature').t`6 users`} />,
+            <SubscriptionFeatureRow
+                key="user"
+                icon="organization-users"
+                feature={c('Feature').t`6 ProtonMail users`}
+            />,
         ],
         [VPNFREE]: [
             <SubscriptionFeatureRow key="connection" icon="vpn-connx" feature={c('Feature').t`1 VPN connection`} />,
@@ -376,7 +380,7 @@ const SubscriptionCustomization = ({
             <SubscriptionFeatureRow
                 key="blocked-content"
                 icon="blocked-content"
-                feature={c('Feature').t`Access blocked content`}
+                feature={c('Feature').t`Access geoblocked content`}
                 info={c('Info')
                     .t`Access geo-blocked content (Netflix, Amazon Prime Video, BBC iPlayer, Wikipedia, Facebook, YouTube, etc) no matter where you are.`}
                 url="https://protonvpn.com/support/streaming-guide/"
