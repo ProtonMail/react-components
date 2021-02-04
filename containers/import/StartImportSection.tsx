@@ -32,8 +32,11 @@ const getAuthorizationUrl = () => {
 const WINDOW_WIDTH = 500;
 const WINDOW_HEIGHT = 600;
 
-/* @todo replace me */
-const TEST_ID = '8QpIN_zJxUXVQThOueLJQao-ZjetYRUiEpchaN-HOfu41o6eBz9wIV8FZWE7dlXTSmMcyKei9smisZ6mG5qDMg==';
+const TEST_IDS = [
+    'cxinT4HnEQpRz7FHRiGu7CjH9pFULfMwqHc9mv65yycL99EohZgfRP7eMbBUMlEZG4Ks_yszjrcMzDeKD2No6w==', // Oauthverify1
+    'ddjZNL8VtjZIOVR6tenP3u1Yj9s-hRLPFHuK-iDPnJunIano7ExK27dZGG41Z7t-4NQ_JJB1W2pK1N6dgEuVTA==', // Oauthverify2
+    'hFe07LzzAjBB4HxpAZnIiK7nUIja1qXkdOGPAlPeToHDKd7KlFvovGzZD13Ylp1DrJ00wJkqifz58YeYlVmxFg==', // Oauthverify3
+];
 
 const StartImportSection = () => {
     const [user] = useUser();
@@ -83,12 +86,13 @@ const StartImportSection = () => {
                         if (error) {
                             createNotification({
                                 text: (
-                                    <>
+                                    <div className="text-center">
                                         {c('Error').t`Authentication cancelled.`}
                                         <br />
                                         {c('Error').t`Your import will not be processed.`}
-                                    </>
+                                    </div>
                                 ),
+                                type: 'error',
                             });
                             return;
                         }
@@ -99,12 +103,13 @@ const StartImportSection = () => {
                         if (state !== stateId.current) {
                             createNotification({
                                 text: (
-                                    <>
+                                    <div className="text-center">
                                         {c('Error').t`Authentication error.`}
                                         <br />
                                         {c('Error').t`Your import will not be processed.`}
-                                    </>
+                                    </div>
                                 ),
+                                type: 'error',
                             });
                             return;
                         }
@@ -132,7 +137,7 @@ const StartImportSection = () => {
             </Alert>
 
             <div className="flex flex-flex-align-items-center">
-                {user.ID === TEST_ID ? (
+                {TEST_IDS.includes(user.ID) ? (
                     <PrimaryButton
                         className="inline-flex flex-justify-center mt0-5 mr1"
                         onClick={() => handleOauthClick(OAUTH_PROVIDER.GMAIL)}
