@@ -65,8 +65,8 @@ const Sidebar = ({ expanded = false, onToggleExpand, hasAppLinks = true, logo, p
             <div className="flex-item-fluid flex-nowrap flex flex-column scroll-if-needed customScrollBar-container pb1">
                 {children}
             </div>
-            <div className="flex flex-column flex-items-center">
-                <span className="smaller aligncenter mt0 mb0-5">
+            <div className="flex flex-column flex-align-items-center">
+                <span className="text-xs text-center mt0 mb0-5">
                     {humanSize(UsedSpace)}&nbsp;/&nbsp;{humanSize(MaxSpace)}
                 </span>
                 <Meter variant="thin" className="mb0-5 w70" value={spacePercentage} />
