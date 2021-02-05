@@ -39,7 +39,7 @@ const useItemsDraggable = <Item extends AbstractItem>(
         // Reset checkedIds
         const filteredCheckedIDs = checkedIDs.filter((id) => items.some((elm) => elm.ID === id));
 
-        if (filteredCheckedIDs !== checkedIDs) {
+        if (filteredCheckedIDs.length !== checkedIDs.length) {
             onCheck(filteredCheckedIDs, true, true);
         }
     }, [items]);
@@ -90,6 +90,8 @@ const useItemsDraggable = <Item extends AbstractItem>(
      */
     const handleDragStart = useCallback(
         (event: DragEvent, item: Item) => {
+            clearDragElement();
+
             const ID = item.ID || '';
             const dragInSelection = checkedIDs.includes(ID);
             const selection = dragInSelection ? checkedIDs : [ID];
