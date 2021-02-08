@@ -94,10 +94,10 @@ const Dropdown = ({
     const anchorRectRef = useRef<DOMRect | undefined>();
     const [contentRect, setContentRect] = useState<DOMRect | undefined>();
 
-    const focusTrapProps = useFocusTrap({ rootRef, active: isOpen && !disableFocusTrap, enableInitialFocus: true });
+    const focusTrapProps = useFocusTrap({ rootRef, active: isOpen && !disableFocusTrap, enableInitialFocus: false });
 
     useHotkeys(
-        contentRef,
+        rootRef,
         [
             [
                 'Escape',
