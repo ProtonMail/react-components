@@ -62,7 +62,7 @@ const EditorLinkModal = ({ inputLink, onSubmit, onClose, ...rest }: Props) => {
     };
 
     const handleSubmit = () => {
-        onSubmit({ link: getActualUrl(url, type), title: label });
+        onSubmit({ link: addLinkPrefix(url, type), title: label });
         onClose?.();
     };
 
