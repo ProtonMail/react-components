@@ -41,7 +41,7 @@ const compare = (item1: AddressesAutocompleteItem, item2: AddressesAutocompleteI
 };
 
 const getMajorList = (input: string) => {
-    const { localPart } = getEmailParts(input);
+    const [localPart] = getEmailParts(input);
     if (!localPart) {
         return [];
     }
