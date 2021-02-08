@@ -75,7 +75,7 @@ const Sidebar = ({ expanded = false, onToggleExpand, hasAppLinks = true, logo, p
             </div>
             <div className="flex flex-column flex-align-items-center">
                 {canAddStorage ? (
-                    <Tooltip title="Upgrade storage">
+                    <Tooltip title={c('Storage').t`Upgrade storage`}>
                         <AppLink
                             to="/subscription"
                             toApp={getAccountSettingsApp()}
