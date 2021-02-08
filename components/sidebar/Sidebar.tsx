@@ -6,6 +6,7 @@ import { hasMailProfessional, hasVisionary } from 'proton-shared/lib/helpers/sub
 import { getAccountSettingsApp } from 'proton-shared/lib/apps/helper';
 import { AppLink } from '../link';
 import { Meter } from '../progress';
+import { Tooltip } from '../tooltip';
 import { useUser, useSubscription } from '../../hooks';
 import Hamburger from './Hamburger';
 import MobileAppsLinks from './MobileAppsLinks';
@@ -48,6 +49,12 @@ const Sidebar = ({ expanded = false, onToggleExpand, hasAppLinks = true, logo, p
         return true;
     }, [subscription, user]);
 
+    const storageText = (
+        <>
+            {humanSize(UsedSpace)}&nbsp;/&nbsp;{humanSize(MaxSpace)}
+        </>
+    );
+
     return (
         <div
             ref={rootRef}
@@ -67,20 +74,21 @@ const Sidebar = ({ expanded = false, onToggleExpand, hasAppLinks = true, logo, p
                 {children}
             </div>
             <div className="flex flex-column flex-align-items-center">
-                <span className="text-xs text-center mt0 mb0-5">
-                    {humanSize(UsedSpace)}&nbsp;/&nbsp;{humanSize(MaxSpace)}
-                </span>
-                <Meter variant="thin" className="mb0-5 w70" value={spacePercentage} />
                 {canAddStorage ? (
-                    <AppLink
-                        to="/subscription"
-                        toApp={getAccountSettingsApp()}
-                        className="small link mb0-5 mt0"
-                        title={c('Apps dropdown').t`Add storage space`}
-                    >
-                        {c('Action').t`Add storage`}
-                    </AppLink>
-                ) : null}
+                    <Tooltip title="Upgrade storage">
+                        <AppLink
+                            to="/subscription"
+                            toApp={getAccountSettingsApp()}
+                            className="button--link button--currentColor text-no-decoration text-underline-on-hover text-xs text-center inline-block mt0 mb0-5"
+                            title={c('Storage').t`Add storage space`}
+                        >
+                            {storageText}
+                        </AppLink>
+                    </Tooltip>
+                ) : (
+                    <span className="text-xs text-center mt0 mb0-5">{storageText}</span>
+                )}
+                <Meter variant="thin" className="mb0-5 w70" value={spacePercentage} />
             </div>
             {version}
             {hasAppLinks ? <MobileAppsLinks /> : null}
