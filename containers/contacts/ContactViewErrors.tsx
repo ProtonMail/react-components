@@ -92,14 +92,13 @@ const ContactViewErrors = ({ contactID, errors, onReload }: Props) => {
     return (
         <div className={classnames([bgColor, textColor, 'rounded p0-5 mt1 flex flex-nowrap flex-align-items-center'])}>
             <Icon name="attention" className="flex-item-noshrink mtauto mbauto" />
-            <span className="pl0-5 pr0-5">{text}</span>
-            <span className="flex-item-fluid flex">
+            <span className="flex-item-fluid pl0-5 pr0-5">
+                <span className="mr0-5">{text}</span>
                 <Href
-                    className="underline color-currentColor"
+                    className="underline inline-block color-currentColor"
                     url="https://protonmail.com/support/knowledge-base/encrypted-contacts/"
                 >{c('Link').t`Learn more`}</Href>
             </span>
-
             <span className="flex-item-noshrink flex">
                 <Button onClick={handleAction} className="pm-button--small">
                     {buttonText}
