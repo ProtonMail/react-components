@@ -90,7 +90,7 @@ const ContactViewErrors = ({ contactID, errors, onReload }: Props) => {
     };
 
     return (
-        <div className={classnames([bgColor, textColor, 'rounded p0-5 mt1 flex flex-nowrap flex-items-center'])}>
+        <div className={classnames([bgColor, textColor, 'rounded p0-5 mt1 flex flex-nowrap flex-align-items-center'])}>
             <Icon name="attention" className="flex-item-noshrink mtauto mbauto" />
             <span className="pl0-5 pr0-5">{text}</span>
             <span className="flex-item-fluid flex">
