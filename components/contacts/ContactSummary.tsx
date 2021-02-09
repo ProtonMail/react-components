@@ -83,7 +83,7 @@ const ContactSummary = ({
     }
 
     return (
-        <div className={classnames(['contactsummary-container border-bottom m1', !isNarrow && 'flex flex-nowrap'])}>
+        <div className={classnames(['contactsummary-container mt1 mb1', !isNarrow && 'flex flex-nowrap'])}>
             <div className={classnames(['text-center contactsummary-photo-container pt0-5', leftBlockWidth])}>
                 <ContactImageSummary photo={photo} name={name} />
             </div>

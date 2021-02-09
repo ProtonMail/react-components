@@ -67,16 +67,18 @@ const ContactView = ({
 
     return (
         <div className={classnames([!isModal && 'view-column-detail flex-item-fluid scroll-if-needed'])}>
-            <ContactSummary
-                onExport={handleExport}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
-                properties={properties}
-                leftBlockWidth={isNarrow ? 'mauto max-w100p' : 'w100 max-w100p'}
-                isPreview={isPreview}
-                hasError={hasError}
-            />
-            <ContactViewErrors errors={errors} onReload={onReload} contactID={contactID} />
+            <div className="border-bottom ml1 mr1 pb1 mb1">
+                <ContactSummary
+                    onExport={handleExport}
+                    onEdit={handleEdit}
+                    onDelete={handleDelete}
+                    properties={properties}
+                    leftBlockWidth={isNarrow ? 'mauto max-w100p' : 'w100 max-w100p'}
+                    isPreview={isPreview}
+                    hasError={hasError}
+                />
+                <ContactViewErrors errors={errors} onReload={onReload} contactID={contactID} />
+            </div>
             <div className="pl1 pr1">
                 <ContactViewProperties field="fn" {...contactViewPropertiesProps} />
                 <ContactViewProperties field="email" {...contactViewPropertiesProps} isPreview={isPreview} />
