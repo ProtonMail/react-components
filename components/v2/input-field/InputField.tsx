@@ -1,8 +1,9 @@
-import React, { useRef } from 'react';
+import React from 'react';
 
 import Icon from '../../icon/Icon';
 import Input, { InputTwoProps } from '../input/Input';
 import { classnames, generateUID } from '../../../helpers';
+import { useInstance } from '../../../hooks';
 
 interface InputFieldProps extends InputTwoProps {
     label?: React.ReactNode;
@@ -14,7 +15,7 @@ interface InputFieldProps extends InputTwoProps {
 const InputField = (props: InputFieldProps) => {
     const { label, hint, assistiveText, disabled, error, id: idProp, ...rest } = props;
 
-    const { current: id } = useRef(idProp || generateUID());
+    const id = useInstance(() => idProp || generateUID());
 
     const classes = {
         root: classnames([
