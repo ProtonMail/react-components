@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useRef } from 'react';
 
 import Icon from '../../icon/Icon';
 import Input, { InputTwoProps } from '../input/Input';
-import { classnames } from '../../../helpers';
+import { classnames, generateUID } from '../../../helpers';
 
 interface InputFieldProps extends InputTwoProps {
     label?: React.ReactNode;
@@ -12,7 +12,9 @@ interface InputFieldProps extends InputTwoProps {
 }
 
 const InputField = (props: InputFieldProps) => {
-    const { label, hint, assistiveText, disabled, error, ...rest } = props;
+    const { label, hint, assistiveText, disabled, error, id: idProp, ...rest } = props;
+
+    const { current: id } = useRef(idProp || generateUID());
 
     const classes = {
         root: classnames([
@@ -38,14 +40,14 @@ const InputField = (props: InputFieldProps) => {
     const assitiveTextElement = assistiveText && <div className="inputform-assist">{assistiveText}</div>;
 
     return (
-        <label className={classes.root} htmlFor="id_element1">
+        <label className={classes.root} htmlFor={id}>
             <div className={classes.labelContainer}>
                 <span className="inputform-label-text">{label}</span>
 
                 {hintElement}
             </div>
             <div className={classes.inputContainer}>
-                <Input id="id_element1" className="w100" disabled={disabled} {...rest} />
+                <Input className="w100" id={id} disabled={disabled} {...rest} />
             </div>
 
             {error ? errorElement : assitiveTextElement}
