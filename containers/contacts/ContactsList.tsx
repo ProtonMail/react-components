@@ -204,7 +204,6 @@ const ContactsList = ({
                                     contact={contacts[index]}
                                     onClick={onClick}
                                     onCheck={(event) => onCheckOne(event, contacts[index].ID)}
-                                    userSettings={userSettings}
                                     onDragStart={handleDragStart}
                                     onDragEnd={handleDragEnd}
                                     dragged={draggedIDs.includes(contacts[index].ID)}

@@ -1,17 +1,14 @@
 import React, { CSSProperties, ChangeEvent, DragEvent } from 'react';
 import { c } from 'ttag';
-import { DENSITY } from 'proton-shared/lib/constants';
-import { UserSettings } from 'proton-shared/lib/interfaces';
 import { SimpleMap } from 'proton-shared/lib/interfaces/utils';
 import { ContactFormatted, ContactGroup } from 'proton-shared/lib/interfaces/contacts';
-import { addPlus, getInitial } from 'proton-shared/lib/helpers/string';
-import ItemCheckbox from '../../../proton-contacts/src/app/components/ItemCheckbox';
+import { addPlus } from 'proton-shared/lib/helpers/string';
 import { classnames } from '../../helpers';
-import { Checkbox, ContactGroupLabels } from '../../components';
+import { ContactGroupLabels } from '../../components';
+import { ItemCheckbox } from '../items';
 
 interface Props {
     checked: boolean;
-    userSettings: UserSettings;
     onClick: (ID: string) => void;
     onCheck: (event: ChangeEvent) => void;
     style: CSSProperties;
@@ -27,7 +24,6 @@ interface Props {
 const ContactRow = ({
     checked,
     style,
-    userSettings,
     contactID,
     hasPaidMail,
     contactGroupsMap,
@@ -39,7 +35,6 @@ const ContactRow = ({
     dragged,
 }: Props) => {
     const { ID, Name, LabelIDs = [], emails = [] } = contact;
-    const isCompactView = userSettings.Density === DENSITY.COMPACT;
 
     const contactGroups = contact.LabelIDs.map((ID) => contactGroupsMap[ID] as ContactGroup);
 
@@ -59,26 +54,7 @@ const ContactRow = ({
             ])}
         >
             <div className="flex flex-nowrap w100 h100 mtauto mbauto flex-align-items-center">
-                {isCompactView ? (
-                    <Checkbox
-                        className="item-icon-compact"
-                        checked={checked}
-                        onChange={onCheck}
-                        labelOnClick={(event) => event.stopPropagation()}
-                        data-contact-id={ID}
-                        aria-describedby={ID}
-                    />
-                ) : (
-                    <ItemCheckbox
-                        checked={checked}
-                        onChange={onCheck}
-                        onClick={(event) => event.stopPropagation()}
-                        data-contact-id={ID}
-                    >
-                        {getInitial(Name)}
-                    </ItemCheckbox>
-                )}
-
+                <ItemCheckbox ID={ID} name={Name} checked={checked} onChange={onCheck} />
                 <div className="flex-item-fluid pl1 flex flex-column flex-justify-space-between conversation-titlesender">
                     <div className="flex flex-nowrap flex-align-items-center item-firstline max-w100">
                         <div className={classnames(['flex flex-item-fluid w0', !!LabelIDs.length && 'pr1'])}>
