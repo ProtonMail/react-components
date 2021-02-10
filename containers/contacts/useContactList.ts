@@ -85,6 +85,12 @@ const useContactList = ({ search, contactID, contactGroupID }: Props) => {
         [contactID, contactGroupID]
     );
 
+    const hasCheckedAllFiltered = useMemo(() => {
+        const filteredContactsLength = filteredContacts.length;
+        const checkedIDsLength = checkedIDs.length;
+        return !!filteredContactsLength && checkedIDsLength === filteredContactsLength;
+    }, [filteredContacts, checkedIDs]);
+
     const loading = loadingContacts || loadingContactEmails || loadingContactGroups;
 
     return {
@@ -102,6 +108,7 @@ const useContactList = ({ search, contactID, contactGroupID }: Props) => {
         filteredContacts,
         contacts,
         contactGroups,
+        hasCheckedAllFiltered,
     };
 };
 
