@@ -1,6 +1,6 @@
 import React, { useState, useMemo, ChangeEvent } from 'react';
 import { c } from 'ttag';
-import { ACCOUNT_DELETION_REASONS, APPS, FEATURE_FLAGS } from 'proton-shared/lib/constants';
+import { ACCOUNT_DELETION_REASONS, APPS } from 'proton-shared/lib/constants';
 import { deleteUser, canDelete, unlockPasswordChanges } from 'proton-shared/lib/api/user';
 import { reportBug } from 'proton-shared/lib/api/reports';
 import { srpAuth } from 'proton-shared/lib/srp';
@@ -60,7 +60,7 @@ const DeleteAccountModal = ({ onClose, ...rest }: Props) => {
     const ClientID = getClientID(APP_NAME);
     const Client = getClient(ClientID);
     const hasTOTPEnabled = getHasTOTPSettingEnabled(userSettings);
-    const driveAppName = FEATURE_FLAGS.includes('drive-rename') ? getAppName(APPS.PROTONDRIVE) : 'ProtonDrive';
+    const driveAppName = getAppName(APPS.PROTONDRIVE);
     const calendarAppName = getAppName(APPS.PROTONCALENDAR);
     const contactsAppName = getAppName(APPS.PROTONCONTACTS);
     const mailAppName = getAppName(APPS.PROTONMAIL);

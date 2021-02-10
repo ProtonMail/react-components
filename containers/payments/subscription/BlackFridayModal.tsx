@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { checkSubscription } from 'proton-shared/lib/api/payments';
-import { APPS, CYCLE, DEFAULT_CURRENCY, DEFAULT_CYCLE, FEATURE_FLAGS } from 'proton-shared/lib/constants';
+import { APPS, CYCLE, DEFAULT_CURRENCY, DEFAULT_CYCLE } from 'proton-shared/lib/constants';
 import { c } from 'ttag';
 import { Currency, Cycle, PlanIDs } from 'proton-shared/lib/interfaces';
 import { isProductPayer } from 'proton-shared/lib/helpers/blackfriday';
@@ -49,7 +49,7 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }: Props) => {
     const [currency, updateCurrency] = useState<Currency>(DEFAULT_CURRENCY);
     const [pricing, updatePricing] = useState<Pricing>({});
     const title = useBlackFridayModalTitle(productPayer);
-    const driveAppName = FEATURE_FLAGS.includes('drive-rename') ? getAppName(APPS.PROTONDRIVE) : 'ProtonDrive';
+    const driveAppName = getAppName(APPS.PROTONDRIVE);
 
     const DEAL_TITLE = {
         [MONTHLY]: c('blackfriday Title').t`for 1 month`,

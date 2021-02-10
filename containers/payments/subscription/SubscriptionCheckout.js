@@ -4,16 +4,7 @@ import { c, msgid } from 'ttag';
 import { toMap } from 'proton-shared/lib/helpers/object';
 import { orderBy } from 'proton-shared/lib/helpers/array';
 import { hasBit } from 'proton-shared/lib/helpers/bitset';
-import {
-    PLAN_SERVICES,
-    PLAN_TYPES,
-    CYCLE,
-    PLANS,
-    ADDON_NAMES,
-    APPS,
-    BLACK_FRIDAY,
-    FEATURE_FLAGS,
-} from 'proton-shared/lib/constants';
+import { PLAN_SERVICES, PLAN_TYPES, CYCLE, PLANS, ADDON_NAMES, APPS, BLACK_FRIDAY } from 'proton-shared/lib/constants';
 import humanSize from 'proton-shared/lib/helpers/humanSize';
 import { getAppName } from 'proton-shared/lib/apps/helper';
 import { Price, Info, Badge } from '../../../components';
@@ -55,7 +46,7 @@ CheckoutRow.propTypes = {
 /** @type any */
 const SubscriptionCheckout = ({ submit = c('Action').t`Pay`, plans = [], model, setModel, checkResult, loading }) => {
     const { APP_NAME } = useConfig();
-    const driveAppName = FEATURE_FLAGS.includes('drive-rename') ? getAppName(APPS.PROTONDRIVE) : 'ProtonDrive';
+    const driveAppName = getAppName(APPS.PROTONDRIVE);
     const isVPN = APP_NAME === APPS.PROTONVPN_SETTINGS;
 
     const plansMap = toMap(plans);

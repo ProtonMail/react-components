@@ -1,12 +1,12 @@
 import { getAppName } from 'proton-shared/lib/apps/helper';
-import { APPS, FEATURE_FLAGS } from 'proton-shared/lib/constants';
+import { APPS } from 'proton-shared/lib/constants';
 import React from 'react';
 import { c } from 'ttag';
 
 import { Icon } from '../../components';
 
 const OneAccountIllustration = () => {
-    const driveAppName = FEATURE_FLAGS.includes('drive-rename') ? getAppName(APPS.PROTONDRIVE) : 'ProtonDrive';
+    const driveAppName = getAppName(APPS.PROTONDRIVE);
 
     return (
         <div className="center flex flex-column flex-align-items-center">

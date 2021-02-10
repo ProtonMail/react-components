@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { c } from 'ttag';
-import { APPS, FEATURE_FLAGS, SECOND } from 'proton-shared/lib/constants';
+import { APPS, SECOND } from 'proton-shared/lib/constants';
 import { isCyberMonday } from 'proton-shared/lib/helpers/blackfriday';
 import { getAppName } from 'proton-shared/lib/apps/helper';
 
@@ -8,7 +8,7 @@ const EVERY_SECOND = SECOND;
 
 const useBlackFridayModalTitle = (productPayer: boolean) => {
     const [now, setNow] = useState(new Date());
-    const driveAppName = FEATURE_FLAGS.includes('drive-rename') ? getAppName(APPS.PROTONDRIVE) : 'ProtonDrive';
+    const driveAppName = getAppName(APPS.PROTONDRIVE);
 
     useEffect(() => {
         const intervalID = setInterval(() => {
