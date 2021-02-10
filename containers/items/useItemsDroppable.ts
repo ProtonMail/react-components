@@ -13,7 +13,7 @@ import { DRAG_ITEM_KEY, DRAG_ITEM_ID_KEY } from './constants';
 const useItemsDroppable = (
     dragFilter: (event: DragEvent) => boolean,
     dropEffect: 'none' | 'copy' | 'link' | 'move' = 'move',
-    dropCallback: (itemIDs: string[]) => void
+    dropCallback: (itemIDs: string[]) => void | Promise<void>
 ) => {
     const [dragOver, dragProps] = useDragOver(
         (event: DragEvent) => event.dataTransfer.types.includes(DRAG_ITEM_KEY) && dragFilter(event),
@@ -31,7 +31,7 @@ const useItemsDroppable = (
         dragElement?.dispatchEvent(dragendEvent);
 
         const itemIDs = JSON.parse(event.dataTransfer.getData(DRAG_ITEM_KEY)) as string[];
-        dropCallback(itemIDs);
+        void dropCallback(itemIDs);
     };
 
     return { dragOver, dragProps, handleDrop };
