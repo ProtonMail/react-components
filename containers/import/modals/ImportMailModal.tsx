@@ -15,6 +15,7 @@ import { validateEmailAddress } from 'proton-shared/lib/helpers/email';
 import { isNumber } from 'proton-shared/lib/helpers/validators';
 
 import { useLoading, useAddresses, useModals, useApi, useEventManager } from '../../../hooks';
+
 import {
     ConfirmModal,
     FormModal,

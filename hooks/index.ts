@@ -87,4 +87,3 @@ export { default as useActiveWindow } from './useActiveWindow';
 export { default as useErrorHandler } from './useErrorHandler';
 export { default as usePromoModalState } from './usePromoModalState';
 export * from './useHotkeys';
-export { default as useOAuthPopup } from './useOAuthPopup';
