@@ -3,7 +3,7 @@ import { c } from 'ttag';
 import { noop } from 'proton-shared/lib/helpers/function';
 import { Contact } from 'proton-shared/lib/interfaces/contacts';
 import { resignAllContacts } from 'proton-shared/lib/contacts/globalOperations';
-import { Alert, DynamicProgress, FormModal, PrimaryButton } from '../../../components';
+import { Alert, Button, DynamicProgress, FormModal, PrimaryButton } from '../../../components';
 import { useApi, useContacts, useEventManager, useUserKeys } from '../../../hooks';
 
 interface Props {
@@ -61,7 +61,7 @@ const ContactResignExecutionModal = ({ onClose = noop, ...rest }: Props) => {
 
     return (
         <FormModal
-            title={c('Title').t`Resigning contacts`}
+            title={c('Title').t`Re-signing contacts`}
             onSubmit={onClose}
             onClose={handleClose}
             submit={
@@ -69,17 +69,18 @@ const ContactResignExecutionModal = ({ onClose = noop, ...rest }: Props) => {
                     {c('Action').t`Done`}
                 </PrimaryButton>
             }
+            close={execution ? <Button onClick={handleClose}>{c('Action').t`Cancel`}</Button> : null}
             {...rest}
         >
             <Alert type="info">{c('Info')
-                .t`This process may take some time depending on the amount of contacts that contained data encrypted with the key.`}</Alert>
+                .t`Please wait while we look for contacts that can be re-signed with the primary encryption key.`}</Alert>
             <DynamicProgress
                 id="clear-data-execution-progress"
                 value={progress}
                 display={
                     execution
-                        ? c('Info').t`Resigning contact ${progress}/${max}. ${updated} updated. Please wait...`
-                        : c('Info').t`All your contacts have been resigned.`
+                        ? c('Info').t`Checking contact ${progress} of ${max}. ${updated} re-signed. Please wait...`
+                        : c('Info').t`All your contacts have been checked. ${updated} have been re-signed.`
                 }
                 max={max}
                 loading={execution}

@@ -4,7 +4,7 @@ import { noop } from 'proton-shared/lib/helpers/function';
 import { Contact } from 'proton-shared/lib/interfaces/contacts';
 import { Key } from 'proton-shared/lib/interfaces';
 import { dropDataEncryptedWithAKey } from 'proton-shared/lib/contacts/globalOperations';
-import { Alert, DynamicProgress, FormModal, PrimaryButton } from '../../../components';
+import { Alert, Button, DynamicProgress, FormModal, PrimaryButton } from '../../../components';
 import { useApi, useContacts, useEventManager, useUserKeys } from '../../../hooks';
 
 interface Props {
@@ -72,17 +72,18 @@ const ContactClearDataExecutionModal = ({ onClose = noop, errorKey, ...rest }: P
                     {c('Action').t`Done`}
                 </PrimaryButton>
             }
+            close={execution ? <Button onClick={handleClose}>{c('Action').t`Cancel`}</Button> : null}
             {...rest}
         >
             <Alert type="info">{c('Info')
-                .t`This process may take some time depending on the amount of contacts that contained data encrypted with the key.`}</Alert>
+                .t`Please wait while we look for contacts that contain data encrypted with the selected inactive key and clear it.`}</Alert>
             <DynamicProgress
                 id="clear-data-execution-progress"
                 value={progress}
                 display={
                     execution
-                        ? c('Info').t`Clearing data from ${progress}/${max}. ${updated} updated. Please wait...`
-                        : c('Info').t`All your contacts have been processed.`
+                        ? c('Info').t`Checking contact ${progress} of ${max}.`
+                        : c('Info').t`${updated} contacts updated successfully`
                 }
                 max={max}
                 loading={execution}
