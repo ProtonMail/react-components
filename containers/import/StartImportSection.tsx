@@ -6,12 +6,12 @@ import useOAuthPopup from '../../hooks/useOAuthPopup';
 import { PrimaryButton, Alert, Icon } from '../../components';
 
 import { OAUTH_PROVIDER } from './interfaces';
-import { GOOGLE_OAUTH_CLIENT_ID, GOOGLE_OAUTH_SCOPE, GOOGLE_OAUTH_REDIRECT_PATH } from './constants';
+import { G_OAUTH_CLIENT_ID, G_OAUTH_SCOPE, G_OAUTH_REDIRECT_PATH } from './constants';
 import ImportMailModal from './modals/ImportMailModal';
 
 const getRedirectURL = () => {
     const { protocol, host } = window.location;
-    return `${protocol}//${host}${GOOGLE_OAUTH_REDIRECT_PATH}`;
+    return `${protocol}//${host}${G_OAUTH_REDIRECT_PATH}`;
 };
 
 const getAuthorizationUrl = () => {
@@ -20,8 +20,8 @@ const getAuthorizationUrl = () => {
     params.append('redirect_uri', getRedirectURL());
     params.append('response_type', 'code');
     params.append('access_type', 'offline');
-    params.append('client_id', GOOGLE_OAUTH_CLIENT_ID);
-    params.append('scope', GOOGLE_OAUTH_SCOPE);
+    params.append('client_id', G_OAUTH_CLIENT_ID);
+    params.append('scope', G_OAUTH_SCOPE);
     params.append('prompt', 'consent');
 
     return `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
