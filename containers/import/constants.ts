@@ -19,3 +19,4 @@ export const IMAP_AUTHENTICATION_ERROR_LABEL = 'Authentication failed with IMAP 
 
 export const GOOGLE_OAUTH_CLIENT_ID = '192543898962-v1mvc6s9jlfn71tms865ercsun7crnk4.apps.googleusercontent.com';
 export const GOOGLE_OAUTH_SCOPE = ['email', 'openid', 'https://mail.google.com/'].join(' ');
+export const GOOGLE_OAUTH_REDIRECT_PATH = '/settings/import';

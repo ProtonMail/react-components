@@ -7,19 +7,18 @@ import { useModals, useUser, useNotifications } from '../../hooks';
 import { PrimaryButton, Alert, Icon } from '../../components';
 
 import { OAUTH_PROVIDER } from './interfaces';
-import { GOOGLE_OAUTH_CLIENT_ID, GOOGLE_OAUTH_SCOPE } from './constants';
+import { GOOGLE_OAUTH_CLIENT_ID, GOOGLE_OAUTH_SCOPE, GOOGLE_OAUTH_REDIRECT_PATH } from './constants';
 import ImportMailModal from './modals/ImportMailModal';
 
-const getCleanURL = (url?: URL) => {
-    const { protocol, host, pathname } = url || window.location;
-
-    return `${protocol}//${host}${pathname}`;
+const getRedirectURL = () => {
+    const { protocol, host } = window.location;
+    return `${protocol}//${host}${GOOGLE_OAUTH_REDIRECT_PATH}`;
 };
 
 const getAuthorizationUrl = () => {
     const params = new URLSearchParams();
 
-    params.append('redirect_uri', getCleanURL());
+    params.append('redirect_uri', getRedirectURL());
     params.append('response_type', 'code');
     params.append('access_type', 'offline');
     params.append('client_id', GOOGLE_OAUTH_CLIENT_ID);
@@ -71,13 +70,14 @@ const StartImportSection = () => {
                 We can then move the following logic to a `onmessage` listener
             */
             interval = window.setInterval(() => {
-                const redirectURI = getCleanURL();
+                const redirectURI = getRedirectURL();
 
                 try {
                     const url = new URL(authWindow.document.URL);
                     const params = new URLSearchParams(url.search);
+                    const { protocol, host, pathname } = url;
 
-                    if (getCleanURL(url) === redirectURI) {
+                    if (`${protocol}//${host}${pathname}` === redirectURI) {
                         authWindow.close();
                         window.clearInterval(interval);
 
@@ -87,7 +87,7 @@ const StartImportSection = () => {
                             createNotification({
                                 text: (
                                     <div className="text-center">
-                                        {c('Error').t`Authentication cancelled.`}
+                                        {c('Error').t`Authentication canceled.`}
                                         <br />
                                         {c('Error').t`Your import will not be processed.`}
                                     </div>
