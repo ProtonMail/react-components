@@ -75,9 +75,8 @@ const StartImportSection = () => {
                 try {
                     const url = new URL(authWindow.document.URL);
                     const params = new URLSearchParams(url.search);
-                    const { protocol, host, pathname } = url;
 
-                    if (`${protocol}//${host}${pathname}` === redirectURI) {
+                    if (authWindow.document.URL.startsWith(redirectURI)) {
                         authWindow.close();
                         window.clearInterval(interval);
 
