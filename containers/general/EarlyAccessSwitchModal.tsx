@@ -3,7 +3,7 @@ import { c } from 'ttag';
 
 import { Alert, ConfirmModal } from '../../components';
 
-export type Environment = 'alpha' | 'beta' | 'default';
+export type Environment = 'alpha' | 'beta' | 'prod';
 interface Props {
     environment: Environment;
     onConfirm: () => void;

@@ -4,16 +4,20 @@ import { getCookie, setCookie } from 'proton-shared/lib/helpers/cookies';
 
 import { Alert, FakeSelectChangeEvent, Field, Label, Option, Row, SelectTwo, Toggle } from '../../components';
 import { useModals } from '../../hooks';
+import useFeature from '../../hooks/useFeature';
+import { FeatureCode } from '../features';
 import EarlyAccessSwitchModal, { Environment } from './EarlyAccessSwitchModal';
 
 const EarlyAccessSection = () => {
-    const [environment, setEnvironment] = useState(getCookie('Version') as Environment | undefined);
+    const [environment, setEnvironment] = useState(() => (getCookie('Version') || 'prod') as Environment);
 
     const { createModal } = useModals();
 
+    const { feature: { Value: earlyAccess } = {} } = useFeature(FeatureCode.EarlyAccess);
+
     const confirmEnvironmentSwitch = (env: Environment) => {
         return new Promise<void>((resolve, reject) => {
-            if (env === 'default') {
+            if (env === 'prod') {
                 resolve();
                 return;
             }
@@ -23,7 +27,7 @@ const EarlyAccessSection = () => {
     };
 
     const handleToggleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const env = e.target.checked ? 'beta' : 'default';
+        const env = e.target.checked ? 'beta' : 'prod';
         await confirmEnvironmentSwitch(env);
         setEnvironment(env);
         window.location.reload();
@@ -36,17 +40,15 @@ const EarlyAccessSection = () => {
     };
 
     useEffect(() => {
-        const expiry = new Date(2147483647000);
-
         setCookie({
             cookieName: 'Version',
             cookieValue: environment,
             cookieDomain: window.location.hostname,
-            expirationDate: expiry.toUTCString(),
+            expirationDate: 'max',
         });
     }, [environment]);
 
-    const hasAlphaAccess = true;
+    const hasAlphaAccess = earlyAccess === 'alpha';
 
     return (
         <>

@@ -1,3 +1,4 @@
+export { default as useFeature } from './useFeature';
 export { default as useBeforeUnload } from './useBeforeUnload';
 export { useUser, useGetUser } from './useUser';
 export { default as useUserVPN } from './useUserVPN';
