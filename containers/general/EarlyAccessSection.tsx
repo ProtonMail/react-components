@@ -14,6 +14,9 @@ const EarlyAccessSection = () => {
     const { createModal } = useModals();
 
     const { feature: { Value: earlyAccess } = {} } = useFeature(FeatureCode.EarlyAccess);
+    const { feature: { Value: earlyAccessTwo } = {} } = useFeature(FeatureCode.EarlyAccess);
+
+    console.log(earlyAccess, earlyAccessTwo);
 
     const confirmEnvironmentSwitch = (env: Environment) => {
         return new Promise<void>((resolve, reject) => {
@@ -63,7 +66,7 @@ const EarlyAccessSection = () => {
                 <Field>
                     {hasAlphaAccess ? (
                         <SelectTwo onChange={handleSelectChange} value={environment}>
-                            <Option value="default" title={c('Environment').t`Live (Default)`} />
+                            <Option value="prod" title={c('Environment').t`Live (Default)`} />
                             <Option value="beta" title={c('Environment').t`Beta`} />
                             <Option value="alpha" title={c('Environment').t`Alpha`} />
                         </SelectTwo>
