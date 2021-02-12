@@ -3,9 +3,7 @@ import { c } from 'ttag';
 import { getCookie, setCookie } from 'proton-shared/lib/helpers/cookies';
 
 import { Alert, FakeSelectChangeEvent, Field, Label, Option, Row, SelectTwo, Toggle } from '../../components';
-import { useModals } from '../../hooks';
-import useFeature from '../../hooks/useFeature';
-import { FeatureCode } from '../features';
+import { useEarlyAccess, useModals } from '../../hooks';
 import EarlyAccessSwitchModal, { Environment } from './EarlyAccessSwitchModal';
 
 const EarlyAccessSection = () => {
@@ -13,10 +11,7 @@ const EarlyAccessSection = () => {
 
     const { createModal } = useModals();
 
-    const { feature: { Value: earlyAccess } = {} } = useFeature(FeatureCode.EarlyAccess);
-    const { feature: { Value: earlyAccessTwo } = {} } = useFeature(FeatureCode.EarlyAccess);
-
-    console.log(earlyAccess, earlyAccessTwo);
+    const { hasAlphaAccess } = useEarlyAccess();
 
     const confirmEnvironmentSwitch = (env: Environment) => {
         return new Promise<void>((resolve, reject) => {
@@ -50,8 +45,6 @@ const EarlyAccessSection = () => {
             expirationDate: 'max',
         });
     }, [environment]);
-
-    const hasAlphaAccess = earlyAccess === 'alpha';
 
     return (
         <>
