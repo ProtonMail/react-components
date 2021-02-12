@@ -6,14 +6,24 @@ export interface InputTwoProps extends React.ComponentPropsWithoutRef<'input'> {
     error?: React.ReactNode | boolean;
     suffix?: React.ReactNode;
     icon?: React.ReactNode;
+    onValue?: (value: string) => void;
 }
 
 const InputTwo = (props: InputTwoProps) => {
-    const { error, icon, suffix, className: classNameProp, ...rest } = props;
+    const { error, icon, suffix, className: classNameProp, onValue, ...rest } = props;
 
     const className = classnames([classNameProp, 'w100 inputform-field', Boolean(error) && 'error']);
 
-    const inputElement = <input {...rest} className={className} />;
+    const inputElement = (
+        <input
+            {...rest}
+            onChange={(e) => {
+                onValue?.(e.target.value);
+                rest.onChange?.(e);
+            }}
+            className={className}
+        />
+    );
 
     if (icon) {
         return (
