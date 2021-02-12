@@ -38,13 +38,15 @@ const EarlyAccessSection = () => {
     };
 
     useEffect(() => {
-        setCookie({
-            cookieName: 'Version',
-            cookieValue: environment,
-            cookieDomain: window.location.hostname,
-            expirationDate: 'max',
-            path: '/',
-        });
+        if (['alpha', 'beta'].includes(environment)) {
+            setCookie({
+                cookieName: 'Version',
+                cookieValue: environment,
+                cookieDomain: window.location.hostname,
+                expirationDate: 'max',
+                path: '/',
+            });
+        }
     }, [environment]);
 
     return (
