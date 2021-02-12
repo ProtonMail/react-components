@@ -1,20 +1,26 @@
 import React from 'react';
 
 import Icon from '../../icon/Icon';
-import Input, { InputTwoProps } from '../input/Input';
 import { classnames, generateUID } from '../../../helpers';
 import { useInstance } from '../../../hooks';
 
-interface InputFieldProps extends InputTwoProps {
+type ErrorProp = React.ReactNode | boolean;
+interface RequiredChildProps {
+    id: string;
+    error: ErrorProp;
+    disabled?: boolean;
+}
+export interface FormFieldProps {
     label?: React.ReactNode;
     hint?: React.ReactNode;
     assistiveText?: React.ReactNode;
     disabled?: boolean;
+    id?: string;
+    error?: ErrorProp;
+    children: React.ReactElement<RequiredChildProps>;
 }
 
-const InputField = (props: InputFieldProps) => {
-    const { label, hint, assistiveText, disabled, error, id: idProp, ...rest } = props;
-
+const FormField = ({ label, hint, children, assistiveText, disabled, error, id: idProp }: FormFieldProps) => {
     const id = useInstance(() => idProp || generateUID());
 
     const classes = {
@@ -47,13 +53,10 @@ const InputField = (props: InputFieldProps) => {
 
                 {hintElement}
             </div>
-            <div className={classes.inputContainer}>
-                <Input className="w100" id={id} disabled={disabled} {...rest} />
-            </div>
-
+            <div className={classes.inputContainer}>{React.cloneElement(children, { id, error, disabled })}</div>
             {error ? errorElement : assitiveTextElement}
         </label>
     );
 };
 
-export default InputField;
+export default FormField;
