@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { c } from 'ttag';
+import { c, msgid } from 'ttag';
 import { noop } from 'proton-shared/lib/helpers/function';
 import { Contact } from 'proton-shared/lib/interfaces/contacts';
 import { Key } from 'proton-shared/lib/interfaces';
@@ -83,7 +83,11 @@ const ContactClearDataExecutionModal = ({ onClose = noop, errorKey, ...rest }: P
                 display={
                     execution
                         ? c('Info').t`Checking contact ${progress} of ${max}...`
-                        : c('Info').t`${updated} contacts updated successfully.`
+                        : c('Info').ngettext(
+                              msgid`${updated} contact updated successfully.`,
+                              `${updated} contacts updated successfully.`,
+                              updated
+                          )
                 }
                 max={max}
                 loading={execution}
