@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { getFeature, updateFeatureValue } from 'proton-shared/lib/api/features';
 
 import { useApi } from '../../hooks';
@@ -13,6 +13,8 @@ const FeaturesProvider = ({ children }: Props) => {
 
     const [features, setFeatures] = useState<{ [key: string]: Feature }>({});
 
+    const featureGetPromiseRef = useRef<null | Promise<Feature>>(null);
+
     const addFeature = (code: FeatureCode, feature: Feature) => {
         setFeatures((features) => ({ ...features, [code]: feature }));
     };
@@ -24,11 +26,19 @@ const FeaturesProvider = ({ children }: Props) => {
             return Promise.resolve(features[code]);
         }
 
-        const { Feature } = await api<{ Feature: Feature }>(getFeature(code));
+        const createFeatureGetPromise = async () => {
+            const { Feature } = await api<{ Feature: Feature }>(getFeature(code));
 
-        addFeature(code, Feature);
+            addFeature(code, Feature);
 
-        return Feature;
+            return Feature;
+        };
+
+        if (!featureGetPromiseRef.current) {
+            featureGetPromiseRef.current = createFeatureGetPromise();
+        }
+
+        return featureGetPromiseRef.current;
     };
 
     const put = async (code: FeatureCode, value: any) => {
