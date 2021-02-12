@@ -46,6 +46,11 @@ const EarlyAccessSection = () => {
                 expirationDate: 'max',
                 path: '/',
             });
+        } else {
+            setCookie({
+                cookieName: 'Version',
+                cookieValue: undefined,
+            });
         }
     }, [environment]);
 
