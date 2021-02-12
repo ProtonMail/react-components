@@ -27,11 +27,19 @@ const FeaturesProvider = ({ children }: Props) => {
         }
 
         const createFeatureGetPromise = async () => {
-            const { Feature } = await api<{ Feature: Feature }>(getFeature(code));
+            try {
+                const { Feature } = await api<{ Feature: Feature }>(getFeature(code));
 
-            addFeature(code, Feature);
+                addFeature(code, Feature);
 
-            return Feature;
+                return Feature;
+            } catch (e) {
+                if (code in featureGetPromiseRef.current) {
+                    delete featureGetPromiseRef.current[code];
+                }
+
+                throw e;
+            }
         };
 
         if (!(code in featureGetPromiseRef.current)) {
