@@ -43,6 +43,7 @@ const EarlyAccessSection = () => {
             cookieValue: environment,
             cookieDomain: window.location.hostname,
             expirationDate: 'max',
+            path: '/',
         });
     }, [environment]);
 
