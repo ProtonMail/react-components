@@ -13,7 +13,7 @@ const FeaturesProvider = ({ children }: Props) => {
 
     const [features, setFeatures] = useState<{ [key: string]: Feature }>({});
 
-    const featureGetPromiseRef = useRef<null | Promise<Feature>>(null);
+    const featureGetPromiseRef = useRef<{ [key: string]: Promise<Feature> }>({});
 
     const addFeature = (code: FeatureCode, feature: Feature) => {
         setFeatures((features) => ({ ...features, [code]: feature }));
@@ -34,11 +34,11 @@ const FeaturesProvider = ({ children }: Props) => {
             return Feature;
         };
 
-        if (!featureGetPromiseRef.current) {
-            featureGetPromiseRef.current = createFeatureGetPromise();
+        if (!(code in featureGetPromiseRef.current)) {
+            featureGetPromiseRef.current[code] = createFeatureGetPromise();
         }
 
-        return featureGetPromiseRef.current;
+        return featureGetPromiseRef.current[code];
     };
 
     const put = async (code: FeatureCode, value: any) => {
