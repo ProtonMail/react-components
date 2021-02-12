@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { c, msgid } from 'ttag';
 import { Recipient } from 'proton-shared/lib/interfaces';
 import { ContactEmail } from 'proton-shared/lib/interfaces/contacts';
+import { exportContacts } from 'proton-shared/lib/contacts/export';
 import { FullLoader, SearchInput } from '../../../components';
-import { useModals, useNotifications, useUser, useUserSettings } from '../../../hooks';
+import { useApi, useModals, useNotifications, useUser, useUserKeys, useUserSettings } from '../../../hooks';
 import ContactsList from '../ContactsList';
 import ContactDetailsModal from '../modals/ContactDetailsModal';
 import useContactList from '../useContactList';
@@ -13,14 +14,16 @@ import ContactModal from '../modals/ContactModal';
 
 interface Props {
     onClose: () => void;
-    onCompose?: (recipients: Recipient[]) => void;
+    onCompose?: (recipients: Recipient[], attachments: File[]) => void;
 }
 
 const ContactsWidgetContainer = ({ onClose, onCompose }: Props) => {
     const [user, loadingUser] = useUser();
     const [userSettings, loadingUserSettings] = useUserSettings();
+    const [userKeys] = useUserKeys();
     const { createModal } = useModals();
     const { createNotification } = useNotifications();
+    const api = useApi();
 
     const [search, setSearch] = useState('');
 
@@ -54,7 +57,7 @@ const ContactsWidgetContainer = ({ onClose, onCompose }: Props) => {
         if (selectedIDs.length > 100) {
             createNotification({
                 type: 'error',
-                text: c('Error').t`You can't send a mail to more that 100 recipients`,
+                text: c('Error').t`You can't send a mail to more than 100 recipients`,
             });
             return;
         }
@@ -71,8 +74,8 @@ const ContactsWidgetContainer = ({ onClose, onCompose }: Props) => {
             const noEmailsContactNamesList = noEmailsContactNames.join(', ');
 
             const text = c('Error').ngettext(
-                msgid`${noEmailsContactNamesList} has no email address`,
-                `${noEmailsContactNamesList} have no email address`,
+                msgid`One of the contacts has no email address: ${noEmailsContactNamesList}`,
+                `Some contacts have no email address: ${noEmailsContactNamesList} `,
                 noEmailsContactNamesCount
             );
 
@@ -86,12 +89,35 @@ const ContactsWidgetContainer = ({ onClose, onCompose }: Props) => {
             return { Name: contactEmail.Name, Address: contactEmail.Email };
         });
 
-        onCompose?.(recipients);
+        onCompose?.(recipients, []);
         onClose();
     };
 
-    const handleForward = () => {
-        console.log('TODO');
+    const handleForward = async () => {
+        if (selectedIDs.length > 100) {
+            createNotification({
+                type: 'error',
+                text: c('Error').t`You can't send vcards of more than 10 contacts`,
+            });
+            return;
+        }
+
+        const abortController = new AbortController();
+        const { success, failures } = await exportContacts(selectedIDs, userKeys, abortController.signal, api);
+
+        if (failures.length) {
+            createNotification({
+                type: 'error',
+                text: c('Error').t`There was an error when exporting the contacts vcards`,
+            });
+            return;
+        }
+
+        const files = success.map(
+            (data) => new File([data.vcard], data.name, { type: 'data:text/plain;charset=utf-8;' })
+        );
+
+        onCompose?.([], files);
         onClose();
     };
 

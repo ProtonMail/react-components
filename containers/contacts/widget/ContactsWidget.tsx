@@ -8,7 +8,7 @@ import './ContactsWidget.scss';
 
 interface Props {
     className?: string;
-    onCompose?: (emails: Recipient[]) => void;
+    onCompose?: (emails: Recipient[], attachments: File[]) => void;
 }
 
 const ContactsWidget = ({ className, onCompose }: Props) => {
