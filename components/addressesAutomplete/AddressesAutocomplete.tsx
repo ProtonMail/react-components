@@ -108,7 +108,6 @@ const AddressesAutocomplete = React.forwardRef<HTMLInputElement, Props>(
 
         const handleAddRecipient = (newRecipients: Recipient[]) => {
             setInput('');
-            setEmailError('');
             safeAddRecipients(newRecipients);
         };
 
