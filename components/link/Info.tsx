@@ -19,7 +19,7 @@ const Info = ({
     title = undefined,
     originalPlacement = 'top',
     buttonClass = 'inline-flex color-currentColor',
-    buttonTabIndex = 0,
+    buttonTabIndex,
     className = '',
     ...rest
 }: Props) => {
