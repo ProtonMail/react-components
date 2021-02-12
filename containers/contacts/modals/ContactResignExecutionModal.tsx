@@ -79,8 +79,8 @@ const ContactResignExecutionModal = ({ onClose = noop, ...rest }: Props) => {
                 value={progress}
                 display={
                     execution
-                        ? c('Info').t`Checking contact ${progress} of ${max}. ${updated} re-signed. Please wait...`
-                        : c('Info').t`All your contacts have been checked. ${updated} have been re-signed.`
+                        ? c('Info').t`Checking contact ${progress} of ${max}.`
+                        : c('Info').t`${updated} contacts updated successfully.`
                 }
                 max={max}
                 loading={execution}

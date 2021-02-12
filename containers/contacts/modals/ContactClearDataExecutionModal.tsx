@@ -83,7 +83,7 @@ const ContactClearDataExecutionModal = ({ onClose = noop, errorKey, ...rest }: P
                 display={
                     execution
                         ? c('Info').t`Checking contact ${progress} of ${max}.`
-                        : c('Info').t`${updated} contacts updated successfully`
+                        : c('Info').t`${updated} contacts updated successfully.`
                 }
                 max={max}
                 loading={execution}
