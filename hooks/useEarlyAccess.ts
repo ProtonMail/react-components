@@ -2,7 +2,9 @@ import useFeature from './useFeature';
 import { FeatureCode } from '../containers';
 
 const useEarlyAccess = () => {
-    const { feature: { Value: earlyAccess } = {} } = useFeature(FeatureCode.EarlyAccess);
+    const { feature: { Value: maybeEarlyAccess, DefaultValue } = {} } = useFeature(FeatureCode.EarlyAccess);
+
+    const earlyAccess = maybeEarlyAccess || DefaultValue;
 
     const hasEarlyAccess = earlyAccess === 'alpha' || earlyAccess === 'beta';
 
