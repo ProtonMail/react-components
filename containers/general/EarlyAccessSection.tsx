@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { c } from 'ttag';
 import { getCookie, setCookie } from 'proton-shared/lib/helpers/cookies';
 
@@ -24,35 +24,38 @@ const EarlyAccessSection = () => {
         });
     };
 
-    const handleToggleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const env = e.target.checked ? 'beta' : 'prod';
-        await confirmEnvironmentSwitch(env);
-        setEnvironment(env);
-        window.location.reload();
-    };
-
-    const handleSelectChange = async ({ value }: FakeSelectChangeEvent<Environment>) => {
-        await confirmEnvironmentSwitch(value);
-        setEnvironment(value);
-        window.location.reload();
-    };
-
-    useEffect(() => {
-        if (['alpha', 'beta'].includes(environment)) {
+    const updateVersionCookie = (env: Environment) => {
+        if (['alpha', 'beta'].includes(env)) {
             setCookie({
                 cookieName: 'Version',
-                cookieValue: environment,
+                cookieValue: env,
                 cookieDomain: window.location.hostname,
                 expirationDate: 'max',
                 path: '/',
             });
+            console.log(document.cookie);
         } else {
             setCookie({
                 cookieName: 'Version',
                 cookieValue: undefined,
             });
         }
-    }, [environment]);
+    };
+
+    const handleToggleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const env = e.target.checked ? 'beta' : 'prod';
+        await confirmEnvironmentSwitch(env);
+        setEnvironment(env);
+        updateVersionCookie(env);
+        window.location.reload();
+    };
+
+    const handleSelectChange = async ({ value }: FakeSelectChangeEvent<Environment>) => {
+        await confirmEnvironmentSwitch(value);
+        setEnvironment(value);
+        updateVersionCookie(value);
+        window.location.reload();
+    };
 
     return (
         <>
