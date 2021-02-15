@@ -13,14 +13,16 @@ const EarlyAccessSection = () => {
 
     const { hasAlphaAccess } = useEarlyAccess();
 
-    const confirmEnvironmentSwitch = (env: Environment) => {
+    const confirmEnvironmentSwitch = (toEnvironment: Environment) => {
         return new Promise<void>((resolve, reject) => {
-            if (env === 'prod') {
-                resolve();
-                return;
-            }
-
-            createModal(<EarlyAccessSwitchModal environment={env} onConfirm={resolve} onCancel={reject} />);
+            createModal(
+                <EarlyAccessSwitchModal
+                    fromEnvironment={environment}
+                    toEnvironment={toEnvironment}
+                    onConfirm={resolve}
+                    onCancel={reject}
+                />
+            );
         });
     };
 

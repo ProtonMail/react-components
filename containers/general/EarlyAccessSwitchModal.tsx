@@ -1,25 +1,37 @@
+import { APPS_CONFIGURATION } from 'proton-shared/lib/constants';
 import React from 'react';
 import { c } from 'ttag';
 
 import { Alert, ConfirmModal } from '../../components';
+import { useConfig } from '../../hooks';
 
 export type Environment = 'alpha' | 'beta' | 'prod';
 interface Props {
-    environment: Environment;
+    fromEnvironment: Environment;
+    toEnvironment: Environment;
     onConfirm: () => void;
     onCancel: () => void;
 }
 
-const EarlyAccessSwitchModal = ({ environment, onCancel, onConfirm, ...rest }: Props) => {
-    // translator: refers to early access programs, can be "Alpha" or "Beta"
-    const title = c('Title').t`Opt into ${environment}`;
+const EarlyAccessSwitchModal = ({ fromEnvironment, toEnvironment, onCancel, onConfirm, ...rest }: Props) => {
+    const { APP_NAME } = useConfig();
+
+    const isOptingOut = toEnvironment === 'prod';
+
+    const title = isOptingOut
+        ? // translator: to- & fromEnvironment refers to early access programs, can be "Alpha" or "Beta"
+          c('Title').t`Opt out of ${fromEnvironment}`
+        : c('Title').t`Opt into ${toEnvironment}`;
+
+    const alert = isOptingOut
+        ? c('Info')
+              .t`Please confirm you'd like to opt out of ${APPS_CONFIGURATION[APP_NAME].name}'s ${fromEnvironment}, please note you will no longer have access to the latest features. The application will refresh.`
+        : c('Info')
+              .t`Please confirm you'd like to join the ${toEnvironment} and get access to the latest features available. The application will refresh.`;
 
     return (
-        <ConfirmModal small title={title} onClose={onCancel} onConfirm={onConfirm} {...rest}>
-            <Alert>
-                {c('Info')
-                    .t`Please confirm you'd like to join the ${environment} Program and get access to the latest features available. The application will refresh.`}
-            </Alert>
+        <ConfirmModal small={false} title={title} onClose={onCancel} onConfirm={onConfirm} {...rest}>
+            <Alert>{alert}</Alert>
         </ConfirmModal>
     );
 };
