@@ -6,6 +6,7 @@ import { getIsValidForSending, getKeyEncryptStatus } from 'proton-shared/lib/key
 import { MailSettings, ContactPublicKeyModel } from 'proton-shared/lib/interfaces';
 
 import { CONTACT_PGP_SCHEMES, MIME_TYPES_MORE } from 'proton-shared/lib/constants';
+import { KTInfo, KT_STATUS } from 'key-transparency-web-client';
 import ContactSchemeSelect from '../../components/contacts/ContactSchemeSelect';
 import ContactKeysTable from '../../components/contacts/ContactKeysTable';
 import { useNotifications } from '../../hooks';
@@ -16,9 +17,10 @@ interface Props {
     model: ContactPublicKeyModel;
     setModel: Dispatch<SetStateAction<ContactPublicKeyModel>>;
     mailSettings?: MailSettings;
+    ktConfig?: KTInfo;
 }
 
-const ContactPgpSettings = ({ model, setModel, mailSettings }: Props) => {
+const ContactPgpSettings = ({ model, setModel, mailSettings, ktConfig }: Props) => {
     const { createNotification } = useNotifications();
 
     const hasApiKeys = !!model.publicKeys.apiKeys.length;
@@ -29,6 +31,36 @@ const ContactPgpSettings = ({ model, setModel, mailSettings }: Props) => {
         hasPinnedKeys &&
         !model.publicKeys.pinnedKeys.some((publicKey) => getIsValidForSending(publicKey.getFingerprint(), model));
     const askForPinning = hasPinnedKeys && hasApiKeys && (noPinnedKeyCanSend || !isPrimaryPinned);
+
+    let ktParagraph: string | undefined;
+    let ktAlertType: 'success' | 'error' | 'warning' | undefined;
+    if (ktConfig) {
+        switch (ktConfig.code) {
+            case KT_STATUS.KT_PASSED:
+                ktParagraph = c('Info').t`We verified that the public keys below are in Key Transparency.
+                    This means that you are seeing the same public keys as them.`;
+                ktAlertType = 'success';
+                break;
+            case KT_STATUS.KT_FAILED:
+                ktParagraph = c('Info').t`Verification of the public keys below with Key Transparency failed.
+                    This means that you might not be seeing the same public keys as them.`;
+                ktAlertType = 'error';
+                break;
+            case KT_STATUS.KTERROR_ADDRESS_NOT_IN_KT:
+                ktParagraph = c('Info').t`The recipient's email address is not in Key Transparency.
+                    This means we couldn't verify the public keys below.`;
+                ktAlertType = 'warning';
+                break;
+            case KT_STATUS.KTERROR_MINEPOCHID_NULL:
+                ktParagraph = c('Info')
+                    .t`The recipient's email address is in Key Transparency but their public keys have recently changed.
+                    This means we couldn't verify the public keys below.`;
+                ktAlertType = 'warning';
+                break;
+            default:
+                break;
+        }
+    }
 
     /**
      * Add / update keys to model
@@ -111,6 +143,11 @@ const ContactPgpSettings = ({ model, setModel, mailSettings }: Props) => {
             {model.isPGPExternalWithoutWKDKeys && noPinnedKeyCanSend && (
                 <Alert type="error" learnMore="https://protonmail.com/support/knowledge-base/how-to-use-pgp/">{c('Info')
                     .t`All uploaded keys are expired or revoked! Encryption is automatically disabled.`}</Alert>
+            )}
+            {ktParagraph && ktAlertType && (
+                <Alert type={ktAlertType} learnMore="https://protonmail.com/support/knowledge-base/key-transparency/">
+                    {ktParagraph}
+                </Alert>
             )}
             {!hasApiKeys && (
                 <Row>

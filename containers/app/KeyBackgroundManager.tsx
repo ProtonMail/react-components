@@ -7,6 +7,7 @@ import {
     getAddressesWithKeysToGenerate,
 } from 'proton-shared/lib/keys';
 import { traceError } from 'proton-shared/lib/helpers/sentry';
+import { ktSaveToLS } from 'key-transparency-web-client';
 
 import {
     useAuthentication,
@@ -18,6 +19,7 @@ import {
 } from '../../hooks';
 
 import useApi from '../../hooks/useApi';
+import useKeyTransparency from '../kt/useKeyTransparency';
 
 interface Props {
     hasPrivateMemberKeyGeneration?: boolean;
@@ -36,6 +38,7 @@ const KeyBackgroundManager = ({
     const { call } = useEventManager();
     const normalApi = useApi();
     const silentApi = <T,>(config: any) => normalApi<T>({ ...config, silence: true });
+    const keyTransparencyState = useKeyTransparency();
 
     useEffect(() => {
         const run = async () => {
@@ -54,10 +57,19 @@ const KeyBackgroundManager = ({
                             addressKeys,
                             keyPassword,
                             api: silentApi,
+                            keyTransparencyState,
                         });
                     })
                 )
-                    .then(call)
+                    .then((ktMessageObjects) => {
+                        for (let i = 0; i < ktMessageObjects.length; i++) {
+                            const ktMessageObject = ktMessageObjects[i];
+                            if (ktMessageObject) {
+                                ktSaveToLS(ktMessageObject, userKeys, normalApi);
+                            }
+                        }
+                        call();
+                    })
                     .catch(traceError);
             }
 
@@ -71,8 +83,15 @@ const KeyBackgroundManager = ({
                     addresses,
                     keyPassword,
                     api: silentApi,
+                    keyTransparencyState,
                 })
-                    .then(call)
+                    .then((triplets) => {
+                        triplets.map((triplet) => {
+                            const [, , ktMessageObject] = triplet;
+                            return ktSaveToLS(ktMessageObject, userKeys, normalApi);
+                        });
+                        call();
+                    })
                     .catch(traceError);
             }
         };

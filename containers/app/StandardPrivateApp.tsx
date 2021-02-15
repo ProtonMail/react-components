@@ -36,6 +36,7 @@ import StorageListener from './StorageListener';
 import DelinquentContainer from './DelinquentContainer';
 import { FeaturesProvider } from '../features';
 import { useAppLink } from '../../components';
+import { KeyTransparencyManager } from '../kt';
 
 interface Props<T, M extends Model<T>, E, EvtM extends Model<E>> {
     locales?: TtagLocaleMap;
@@ -185,7 +186,9 @@ const StandardPrivateApp = <T, M extends Model<T>, E, EvtM extends Model<E>>({
                         />
                         <StorageListener />
                         <ForceRefreshProvider>
-                            <LoadedApp />
+                            <KeyTransparencyManager>
+                                <LoadedApp />
+                            </KeyTransparencyManager>
                         </ForceRefreshProvider>
                     </FeaturesProvider>
                 </ContactProvider>

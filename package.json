@@ -55,6 +55,7 @@
     "design-system": "github:ProtonMail/design-system#master",
     "intersection-observer": "^0.5.1",
     "libphonenumber-js": "^1.9.11",
+    "key-transparency-web-client": "github:ProtonMail/key-transparency-web-client#main",
     "markdown-it": "^10.0.0",
     "prop-types": "^15.7.2",
     "push.js": "^1.0.9",

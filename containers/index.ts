@@ -47,3 +47,4 @@ export * from './topBanners';
 export * from './compatibilityCheck';
 export * from './items';
 export * from './importAssistant';
+export * from './kt';

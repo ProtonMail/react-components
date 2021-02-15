@@ -10,6 +10,7 @@ import { missingKeysMemberProcess, missingKeysSelfProcess } from 'proton-shared/
 import { noop } from 'proton-shared/lib/helpers/function';
 import { Address, Member, CachedOrganizationKey } from 'proton-shared/lib/interfaces';
 import { queryAddresses } from 'proton-shared/lib/api/members';
+import { ktSaveToLS } from 'key-transparency-web-client';
 
 import { FormModal, Alert, Table, TableHeader, TableBody, TableRow } from '../../../components';
 import {
@@ -26,6 +27,7 @@ import SelectEncryption from '../../keys/addKey/SelectEncryption';
 import MissingKeysStatus from './MissingKeysStatus';
 import { AddressWithStatus, Status } from './interface';
 import { updateAddress } from './state';
+import useKeyTransparency from '../../kt/useKeyTransparency';
 
 enum STEPS {
     INIT = 0,
@@ -69,6 +71,7 @@ const CreateMissingKeysAddressModal = ({ onClose, member, addressesToGenerate, o
             },
         }))
     );
+    const keyTransparencyState = useKeyTransparency();
 
     const [encryptionType, setEncryptionType] = useState<ENCRYPTION_TYPES>(DEFAULT_ENCRYPTION_CONFIG);
 
@@ -110,7 +113,7 @@ const CreateMissingKeysAddressModal = ({ onClose, member, addressesToGenerate, o
 
     const processSelf = async () => {
         const [userKeys, addresses] = await Promise.all([getUserKeys(), getAddresses()]);
-        await missingKeysSelfProcess({
+        const ktMessageObjects = await missingKeysSelfProcess({
             api,
             userKeys,
             addresses,
@@ -127,7 +130,14 @@ const CreateMissingKeysAddressModal = ({ onClose, member, addressesToGenerate, o
                     });
                 });
             },
+            keyTransparencyState,
         });
+        for (let i = 0; i < ktMessageObjects.length; i++) {
+            const ktMessageObject = ktMessageObjects[i];
+            if (ktMessageObject) {
+                await ktSaveToLS(ktMessageObject, userKeys, api);
+            }
+        }
         await call();
     };
 
