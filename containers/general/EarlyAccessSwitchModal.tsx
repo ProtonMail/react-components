@@ -19,13 +19,15 @@ const EarlyAccessSwitchModal = ({ fromEnvironment, toEnvironment, onCancel, onCo
     const isOptingOut = toEnvironment === 'prod';
 
     const title = isOptingOut
-        ? // translator: to- & fromEnvironment refers to early access programs, can be "Alpha" or "Beta"
+        ? // translator: to- & fromEnvironment refers to early access programs, can be "alpha" or "beta"
           c('Title').t`Opt out of ${fromEnvironment}`
         : c('Title').t`Opt into ${toEnvironment}`;
 
+    const appName = APPS_CONFIGURATION[APP_NAME].name;
+
     const alert = isOptingOut
         ? c('Info')
-              .t`Please confirm you'd like to opt out of ${APPS_CONFIGURATION[APP_NAME].name}'s ${fromEnvironment}, please note you will no longer have access to the latest features. The application will refresh.`
+              .t`Please confirm you'd like to opt out of ${appName}'s ${fromEnvironment}, please note you will no longer have access to the latest features. The application will refresh.`
         : c('Info')
               .t`Please confirm you'd like to join the ${toEnvironment} and get access to the latest features available. The application will refresh.`;
 
