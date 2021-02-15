@@ -9,6 +9,7 @@ import {
     addAddressKeysProcess,
     setAddressKeyFlags,
 } from 'proton-shared/lib/keys';
+import { createKeyTransparencyVerifier } from 'proton-shared/lib/kt/createKeyTransparencyVerifier';
 import { KTError, ktSaveToLS } from 'key-transparency-web-client';
 
 import { Loader, Button } from '../../components';
@@ -220,7 +221,8 @@ const AddressKeysSection = () => {
             <AddKeyModal
                 existingAlgorithms={existingAlgorithms}
                 onAdd={async (encryptionConfig) => {
-                    const [newKey, , ktMessageObject] = await addAddressKeysProcess({
+                    const keyTransparencyVerifier = createKeyTransparencyVerifier({ api, keyTransparencyState });
+                    const [newKey] = await addAddressKeysProcess({
                         api,
                         userKeys,
                         encryptionConfig,
@@ -228,9 +230,9 @@ const AddressKeysSection = () => {
                         address: Address,
                         addressKeys,
                         keyPassword: authentication.getPassword(),
-                        keyTransparencyState,
+                        keyTransparencyVerifier: keyTransparencyVerifier.verify,
                     });
-                    await ktSaveToLS(ktMessageObject, userKeys, api);
+                    await keyTransparencyVerifier.commit(userKeys);
                     await call();
                     return newKey.fingerprint;
                 }}
@@ -248,7 +250,8 @@ const AddressKeysSection = () => {
         createModal(
             <ImportKeyModal
                 onProcess={async (keyImportRecords, cb) => {
-                    const ktMessageObject = await importKeysProcess({
+                    const keyTransparencyVerifier = createKeyTransparencyVerifier({ api, keyTransparencyState });
+                    await importKeysProcess({
                         api,
                         address: Address,
                         addressKeys,
@@ -257,9 +260,9 @@ const AddressKeysSection = () => {
                         keyImportRecords,
                         keyPassword: authentication.getPassword(),
                         onImport: cb,
-                        keyTransparencyState,
+                        keyTransparencyVerifier: keyTransparencyVerifier.verify,
                     });
-                    await ktSaveToLS(ktMessageObject, userKeys, api);
+                    await keyTransparencyVerifier.commit(userKeys);
                     return call();
                 }}
             />
@@ -300,7 +303,8 @@ const AddressKeysSection = () => {
             <ReactivateKeysModal
                 keyReactivationRequests={keyReactivationRequests}
                 onProcess={async (keyReactivationRecords, oldPassword, onReactivation) => {
-                    const ktMessageObjects = await reactivateKeysProcess({
+                    const keyTransparencyVerifier = createKeyTransparencyVerifier({ api, keyTransparencyState });
+                    await reactivateKeysProcess({
                         api,
                         user: User,
                         userKeys,
@@ -308,13 +312,9 @@ const AddressKeysSection = () => {
                         keyReactivationRecords,
                         keyPassword: authentication.getPassword(),
                         onReactivation,
-                        keyTransparencyState,
+                        keyTransparencyVerifier: keyTransparencyVerifier.verify,
                     });
-                    await Promise.all(
-                        ktMessageObjects.map(async (ktMessageObject) => {
-                            ktSaveToLS(ktMessageObject, userKeys, api);
-                        })
-                    );
+                    await keyTransparencyVerifier.commit(userKeys);
                     return call();
                 }}
             />
