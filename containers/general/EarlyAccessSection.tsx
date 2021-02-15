@@ -29,11 +29,9 @@ const EarlyAccessSection = () => {
             setCookie({
                 cookieName: 'Version',
                 cookieValue: env,
-                cookieDomain: window.location.hostname,
                 expirationDate: 'max',
                 path: '/',
             });
-            console.log(document.cookie);
         } else {
             setCookie({
                 cookieName: 'Version',
