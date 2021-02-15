@@ -36,6 +36,7 @@ const EarlyAccessSection = () => {
             setCookie({
                 cookieName: 'Version',
                 cookieValue: undefined,
+                path: '/',
             });
         }
     };
