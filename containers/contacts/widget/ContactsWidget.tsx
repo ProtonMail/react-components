@@ -37,6 +37,8 @@ const ContactsWidget = ({ className, onCompose }: Props) => {
                 autoClose={false}
                 originalPlacement="bottom"
                 className="contacts-widget"
+                noMaxWidth
+                noMaxHeight
             >
                 <ContactsWidgetContainer onClose={close} onCompose={onCompose} />
             </Dropdown>

@@ -153,14 +153,17 @@ const ContactsWidgetContainer = ({ onClose, onCompose }: Props) => {
 
     return (
         <div className="flex flex-column flex-nowrap h100">
-            <div className="m1 mb0">
+            <div className="m1 mb0-25">
+                <label htmlFor="id_contact-widget-search" className="sr-only">{c('Placeholder')
+                    .t`Search for name or email`}</label>
                 <SearchInput
                     value={search}
                     onChange={setSearch}
+                    id="id_contact-widget-search"
                     placeholder={c('Placeholder').t`Search for name or email`}
                 />
             </div>
-            <div className="m1">
+            <div className="p1 border-bottom">
                 <ContactsWidgetToolbar
                     allChecked={hasCheckedAllFiltered}
                     oneSelected={!!selectedIDs.length}
@@ -173,7 +176,9 @@ const ContactsWidgetContainer = ({ onClose, onCompose }: Props) => {
             </div>
             <div className="h100 w100">
                 {loading ? (
-                    <FullLoader />
+                    <div className="flex h100">
+                        <FullLoader className="mauto color-primary" />
+                    </div>
                 ) : (
                     <ContactsList
                         contactID={contactID}
