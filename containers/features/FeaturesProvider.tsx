@@ -34,9 +34,7 @@ const FeaturesProvider = ({ children }: Props) => {
 
                 return Feature;
             } catch (e) {
-                if (code in featureGetPromiseRef.current) {
-                    delete featureGetPromiseRef.current[code];
-                }
+                delete featureGetPromiseRef.current[code];
 
                 throw e;
             }
