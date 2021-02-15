@@ -1,7 +1,7 @@
 import React from 'react';
 import { c } from 'ttag';
 import { getPrimaryKey, reactivateKeysProcess } from 'proton-shared/lib/keys';
-import { ktSaveToLS } from 'key-transparency-web-client';
+import { createKeyTransparencyVerifier } from 'proton-shared/lib/kt/createKeyTransparencyVerifier';
 
 import { Button, Loader } from '../../components';
 import {
@@ -76,7 +76,8 @@ const UserKeysSections = () => {
             <ReactivateKeysModal
                 keyReactivationRequests={keyReactivationRequests}
                 onProcess={async (keyReactivationRecords, oldPassword, cb) => {
-                    const ktMessageObjects = await reactivateKeysProcess({
+                    const keyTransparencyVerifier = createKeyTransparencyVerifier({ api, keyTransparencyState });
+                    await reactivateKeysProcess({
                         api,
                         user: User,
                         userKeys,
@@ -84,13 +85,9 @@ const UserKeysSections = () => {
                         keyReactivationRecords,
                         keyPassword: authentication.getPassword(),
                         onReactivation: cb,
-                        keyTransparencyState,
+                        keyTransparencyVerifier: keyTransparencyVerifier.verify,
                     });
-                    await Promise.all(
-                        ktMessageObjects.map(async (ktMessageObject) => {
-                            ktSaveToLS(ktMessageObject, userKeys, api);
-                        })
-                    );
+                    await keyTransparencyVerifier.commit(userKeys);
                     return call();
                 }}
             />

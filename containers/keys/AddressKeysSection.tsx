@@ -10,7 +10,7 @@ import {
     setAddressKeyFlags,
 } from 'proton-shared/lib/keys';
 import { createKeyTransparencyVerifier } from 'proton-shared/lib/kt/createKeyTransparencyVerifier';
-import { KTError, ktSaveToLS } from 'key-transparency-web-client';
+import { KTError } from 'key-transparency-web-client';
 
 import { Loader, Button } from '../../components';
 import {
@@ -107,8 +107,9 @@ const AddressKeysSection = () => {
 
         try {
             setLoadingKeyID(ID);
-            const ktMessageObject = await setPrimaryAddressKey(api, Address, addressKeys, ID, keyTransparencyState);
-            await ktSaveToLS(ktMessageObject, userKeys, api);
+            const keyTransparencyVerifier = createKeyTransparencyVerifier({ api, keyTransparencyState });
+            await setPrimaryAddressKey(api, Address, addressKeys, ID, keyTransparencyVerifier.verify);
+            await keyTransparencyVerifier.commit(userKeys);
             await call();
         } catch (error) {
             if (error instanceof KTError) {
@@ -136,15 +137,16 @@ const AddressKeysSection = () => {
 
         try {
             setLoadingKeyID(ID);
-            const ktMessageObject = await setAddressKeyFlags(
+            const keyTransparencyVerifier = createKeyTransparencyVerifier({ api, keyTransparencyState });
+            await setAddressKeyFlags(
                 api,
                 Address,
                 addressKeys,
                 ID,
                 getNewKeyFlags(addressDisplayKey.flags, flagAction),
-                keyTransparencyState
+                keyTransparencyVerifier.verify
             );
-            await ktSaveToLS(ktMessageObject, userKeys, api);
+            await keyTransparencyVerifier.commit(userKeys);
             await call();
         } catch (error) {
             if (error instanceof KTError) {
@@ -178,8 +180,9 @@ const AddressKeysSection = () => {
         const privateKey = addressKey?.privateKey;
 
         const onDelete = async (): Promise<void> => {
-            const ktMessageObject = await deleteAddressKey(api, Address, addressKeys, ID, keyTransparencyState);
-            await ktSaveToLS(ktMessageObject, userKeys, api);
+            const keyTransparencyVerifier = createKeyTransparencyVerifier({ api, keyTransparencyState });
+            await deleteAddressKey(api, Address, addressKeys, ID, keyTransparencyVerifier.verify);
+            await keyTransparencyVerifier.commit(userKeys);
             await call();
         };
 

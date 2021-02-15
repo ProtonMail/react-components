@@ -7,7 +7,7 @@ import {
     getAddressesWithKeysToGenerate,
 } from 'proton-shared/lib/keys';
 import { traceError } from 'proton-shared/lib/helpers/sentry';
-import { ktSaveToLS } from 'key-transparency-web-client';
+import { createKeyTransparencyVerifier } from 'proton-shared/lib/kt/createKeyTransparencyVerifier';
 
 import {
     useAuthentication,
@@ -44,6 +44,7 @@ const KeyBackgroundManager = ({
         const run = async () => {
             const [user, userKeys, addresses] = await Promise.all([getUser(), getUserKeys(), getAddresses()]);
             const keyPassword = authentication.getPassword();
+            const keyTransparencyVerifier = createKeyTransparencyVerifier({ api: silentApi, keyTransparencyState });
 
             const addressesWithKeysToActivate = hasReadableMemberKeyActivation
                 ? getAddressesWithKeysToActivate(user, addresses)
@@ -57,17 +58,12 @@ const KeyBackgroundManager = ({
                             addressKeys,
                             keyPassword,
                             api: silentApi,
-                            keyTransparencyState,
+                            keyTransparencyVerifier: keyTransparencyVerifier.verify,
                         });
                     })
                 )
-                    .then((ktMessageObjects) => {
-                        for (let i = 0; i < ktMessageObjects.length; i++) {
-                            const ktMessageObject = ktMessageObjects[i];
-                            if (ktMessageObject) {
-                                ktSaveToLS(ktMessageObject, userKeys, normalApi);
-                            }
-                        }
+                    .then(async () => {
+                        await keyTransparencyVerifier.commit(userKeys);
                         call();
                     })
                     .catch(traceError);
@@ -83,13 +79,10 @@ const KeyBackgroundManager = ({
                     addresses,
                     keyPassword,
                     api: silentApi,
-                    keyTransparencyState,
+                    keyTransparencyVerifier: keyTransparencyVerifier.verify,
                 })
-                    .then((triplets) => {
-                        triplets.map((triplet) => {
-                            const [, , ktMessageObject] = triplet;
-                            return ktSaveToLS(ktMessageObject, userKeys, normalApi);
-                        });
+                    .then(async () => {
+                        await keyTransparencyVerifier.commit(userKeys);
                         call();
                     })
                     .catch(traceError);
