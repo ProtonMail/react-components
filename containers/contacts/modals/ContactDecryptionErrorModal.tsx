@@ -5,7 +5,7 @@ import { Contact } from 'proton-shared/lib/interfaces/contacts';
 import { getKeyUsedForContact } from 'proton-shared/lib/contacts/keyVerifications';
 import { Key } from 'proton-shared/lib/interfaces';
 import { APPS } from 'proton-shared/lib/constants';
-import { Alert, AppLink, Copy, FormModal, LinkButton, PrimaryButton } from '../../../components';
+import { Alert, Copy, FormModal, LinkButton, useAppLink } from '../../../components';
 import { useModals, useNotifications, useUser } from '../../../hooks';
 import ContactClearDataConfirmModal from './ContactClearDataConfirmModal';
 import useContact from '../useContact';
@@ -21,6 +21,7 @@ const ContactDecryptionErrorModal = ({ onClose = noop, contactID, ...rest }: Pro
     const [user] = useUser();
     const [contact] = useContact(contactID) as [Contact | undefined, boolean, Error];
     const [errorKey, setErrorKey] = useState<Key>();
+    const appLink = useAppLink();
 
     useEffect(() => {
         const findKey = async () => {
@@ -33,6 +34,10 @@ const ContactDecryptionErrorModal = ({ onClose = noop, contactID, ...rest }: Pro
         }
     }, [user, contact]);
 
+    const handleSubmit = () => {
+        appLink('/settings/security', APPS.PROTONMAIL);
+    };
+
     const handleClear = () => {
         createModal(<ContactClearDataConfirmModal errorKey={errorKey as Key} />);
         onClose();
@@ -41,14 +46,9 @@ const ContactDecryptionErrorModal = ({ onClose = noop, contactID, ...rest }: Pro
     return (
         <FormModal
             title={c('Title').t`Recover data`}
+            onSubmit={handleSubmit}
             onClose={onClose}
-            submit={
-                <AppLink toApp={APPS.PROTONMAIL} to="/settings/security">
-                    <PrimaryButton type="button" disabled={!errorKey}>
-                        {c('Action').t`Recover data`}
-                    </PrimaryButton>
-                </AppLink>
-            }
+            submit={c('Action').t`Recover data`}
             close={c('Action').t`Close`}
             {...rest}
         >
