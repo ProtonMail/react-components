@@ -36,25 +36,24 @@ const FormField = ({ label, hint, children, assistiveText, disabled, error, id: 
     const hintElement = hint && <div className="inputform-label-hint flex-item-noshrink">{hint}</div>;
 
     const errorElement = error && (
-        <div className="inputform-assist">
+        <>
             {/* TODO: clear up inconsistency between design spacing & code unit system spacing */}
             {/* TODO: find out about missing "vertical-align-top" helper */}
             <Icon name="exclamation-circle-filled" style={{ verticalAlign: 'top', marginRight: '5px' }} />
             <span>{error}</span>
-        </div>
+        </>
     );
 
-    const assitiveTextElement = assistiveText && <div className="inputform-assist">{assistiveText}</div>;
+    const assistiveElement = <>{assistiveText}</>;
 
     return (
         <label className={classes.root} htmlFor={id}>
             <div className={classes.labelContainer}>
                 <span className="inputform-label-text">{label}</span>
-
                 {hintElement}
             </div>
             <div className={classes.inputContainer}>{React.cloneElement(children, { id, error, disabled })}</div>
-            {error ? errorElement : assitiveTextElement}
+            <div className="inputform-assist">{errorElement || assistiveElement}</div>
         </label>
     );
 };
