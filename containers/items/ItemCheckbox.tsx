@@ -48,7 +48,10 @@ const ItemCheckbox = ({ ID = '', name = '', compactClassName, normalClassName, c
                 data-item-id={ID}
                 data-testid="item-checkbox"
             />
-            <span className="item-icon flex-item-noshrink relative rounded inline-flex">
+            <span
+                className="item-icon flex-item-noshrink relative rounded inline-flex"
+                data-test-id="element-list:message-checkbox"
+            >
                 <span className="mauto item-abbr">{getInitial(name)}</span>
                 <span className="item-icon-fakecheck mauto">
                     <Icon name="on" className="item-icon-fakecheck-icon" />
