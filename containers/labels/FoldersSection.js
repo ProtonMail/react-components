@@ -29,6 +29,9 @@ function LabelsSection() {
                 <Label htmlFor="folder-colors">{c('Label').t`Enable folder colors`}</Label>
             </div>
             <div className="mb1">
+                <Label htmlFor="parent-folder-color">{c('Label').t`Inherit parent folder's color`}</Label>
+            </div>
+            <div className="mb1">
                 <PrimaryButton onClick={() => createModal(<EditLabelModal type="folder" />)}>
                     {c('Action').t`Add folder`}
                 </PrimaryButton>
