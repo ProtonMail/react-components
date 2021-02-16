@@ -211,7 +211,7 @@ const MembersSection = () => {
                                     </span>,
                                     <MemberRole key={key} member={member} />,
                                     <MemberPrivate key={key} member={member} />,
-                                    <MemberAddresses key={key} member={member} addresses={memberAddresses} />,
+                                    <MemberAddresses key={key} addresses={memberAddresses} />,
                                     <MemberFeatures key={key} member={member} />,
                                     <MemberActions
                                         key={key}

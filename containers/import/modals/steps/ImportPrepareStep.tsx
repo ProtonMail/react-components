@@ -18,8 +18,7 @@ import {
     FullLoader,
     TextLoader,
 } from '../../../../components';
-
-import { ImportModalModel, MailImportFolder, TIME_UNIT, DestinationFolder, IMPORT_ERROR } from '../../interfaces';
+import { ImportModalModel, MailImportFolder, DestinationFolder, IMPORT_ERROR } from '../../interfaces';
 import { timeUnitLabels } from '../../constants';
 import { escapeSlashes, splitEscaped } from '../../helpers';
 
@@ -61,8 +60,6 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
     );
 
     const selectedFoldersCountLocalized = selectedFolders.length.toLocaleString();
-
-    const selectedPeriodLowerCased = timeUnitLabels[selectedPeriod].toLowerCase();
 
     const importSize = useMemo(() => selectedFolders.reduce((acc, { Size = 0 }) => acc + Size, 0), [selectedFolders]);
 
@@ -320,15 +317,9 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
 
                 <div className="mb1 ml1 flex flex-align-items-center">
                     <Icon className="mr0-5" name="clock" />
-                    {selectedPeriod === TIME_UNIT.BIG_BANG ? (
-                        c('Info').t`Import all messages since ${selectedPeriodLowerCased}`
-                    ) : (
-                        <span>
-                            {c('Info').t`Import all messages since`}
-                            {` `}
-                            <strong>{timeUnitLabels[selectedPeriod]}</strong>
-                        </span>
-                    )}
+                    {c('Label').t`Import interval`}
+                    {`: `}
+                    <strong className="ml0-5">{timeUnitLabels[selectedPeriod]}</strong>
                 </div>
 
                 <div className="mb1 ml1 flex flex-align-items-center flex-nowrap">
@@ -351,7 +342,9 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
                 </div>
 
                 <div className="mt0-5 flex flex-align-items-center">
-                    <Button onClick={handleClickCustomize}>{c('Action').t`Customize import`}</Button>
+                    <Button shape="outline" onClick={handleClickCustomize}>
+                        {c('Action').t`Customize import`}
+                    </Button>
                     {showFoldersNameError && (
                         <Tooltip title={c('Tooltip').t`Edit folder names`} originalPlacement="right">
                             <Icon name="attention-plain" size={20} className="ml0-5" />

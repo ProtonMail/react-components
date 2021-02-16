@@ -5,7 +5,7 @@ import { noop } from 'proton-shared/lib/helpers/function';
 
 import importWelcomeSvg from 'design-system/assets/img/shared/import-welcome.svg';
 
-import { FormModal, Href, PrimaryButton } from '../../../components';
+import { FormModal, Href, Button } from '../../../components';
 
 interface Props {
     onClose?: () => void;
@@ -40,7 +40,11 @@ const ImportWelcomeModal = ({ onClose = noop, ...rest }: Props) => {
             title={
                 <h1 className="modal-title text-center">{c('Title').t`Your smooth transition to digital privacy`}</h1>
             }
-            submit={<PrimaryButton type="submit">{c('Action').t`Try Import Assistant`}</PrimaryButton>}
+            submit={
+                <Button color="norm" type="submit" data-focus-fallback={1}>
+                    {c('Action').t`Try Import Assistant`}
+                </Button>
+            }
             close={null}
             onSubmit={onClose}
             onClose={onClose}

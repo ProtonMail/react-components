@@ -17,7 +17,7 @@ import LossLoyaltyModal from '../LossLoyaltyModal';
 import DowngradeModal from '../DowngradeModal';
 import SubscriptionCancelModal, { SubscriptionCancelModel } from './SubscriptionCancelModal';
 
-interface Props extends ButtonProps {
+interface Props extends Omit<ButtonProps, 'loading' | 'onClick'> {
     children: React.ReactNode;
 }
 

@@ -23,7 +23,6 @@ import {
     Button,
     PrimaryButton,
     Alert,
-    ErrorButton,
     useDebounceInput,
 } from '../../../components';
 
@@ -142,7 +141,11 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps: initialOAu
     const api = useApi();
     const { call } = useEventManager();
 
-    const wizardSteps = [c('Wizard step').t`Authenticate`, c('Wizard step').t`Plan import`, c('Wizard step').t`Import`];
+    const wizardSteps = [
+        c('Wizard step').t`Authenticate`,
+        c('Wizard step').t`Configure Import`,
+        c('Wizard step').t`Import`,
+    ];
 
     const debouncedEmail = useDebounceInput(modalModel.email);
 
@@ -379,7 +382,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps: initialOAu
                 onConfirm={onClose}
                 title={c('Confirm modal title').t`Quit import?`}
                 cancel={c('Action').t`Continue import`}
-                confirm={<ErrorButton type="submit">{c('Action').t`Discard`}</ErrorButton>}
+                confirm={<Button color="danger" type="submit">{c('Action').t`Discard`}</Button>}
             >
                 <Alert>{c('Info').t`Your import will not be processed.`}</Alert>
                 <Alert type="error">{c('Warning').t`Are you sure you want to discard your import?`}</Alert>
@@ -446,7 +449,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps: initialOAu
             [GMAIL_INSTRUCTIONS.LABELS, GMAIL_INSTRUCTIONS.TWO_STEPS].includes(gmailInstructionsStep);
 
         return (
-            <Button onClick={backButton ? handleBack : handleCancel}>
+            <Button shape="outline" onClick={backButton ? handleBack : handleCancel}>
                 {backButton ? c('Action').t`Back` : c('Action').t`Cancel`}
             </Button>
         );
@@ -463,21 +466,21 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps: initialOAu
             case Step.INSTRUCTIONS:
                 return providerInstructions ? (
                     <div>
-                        <PrimaryButton type="submit">
+                        <Button color="norm" type="submit">
                             {providerInstructions === PROVIDER_INSTRUCTIONS.GMAIL &&
                             gmailInstructionsStep !== GMAIL_INSTRUCTIONS.TWO_STEPS
                                 ? c('Action').t`Next`
                                 : c('Action').t`Start Import Assistant`}
-                        </PrimaryButton>
+                        </Button>
                     </div>
                 ) : (
-                    <PrimaryButton type="submit">{c('Action').t`Skip to import`}</PrimaryButton>
+                    <Button color="norm" type="submit">{c('Action').t`Skip to import`}</Button>
                 );
             case Step.START:
                 return (
-                    <PrimaryButton type="submit" disabled={disabledStartStep} loading={loading}>
+                    <Button color="norm" type="submit" disabled={disabledStartStep} loading={loading}>
                         {isReconnectMode ? c('Action').t`Reconnect` : c('Action').t`Next`}
-                    </PrimaryButton>
+                    </Button>
                 );
             case Step.PREPARE:
                 if (oauthProps && oauthError) {
@@ -493,12 +496,12 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps: initialOAu
                 }
 
                 return (
-                    <PrimaryButton loading={loading} disabled={oauthLoading || isPayloadInvalid} type="submit">
+                    <Button color="norm" loading={loading} disabled={oauthLoading || isPayloadInvalid} type="submit">
                         {c('Action').t`Start import`}
-                    </PrimaryButton>
+                    </Button>
                 );
             case Step.STARTED:
-                return <PrimaryButton loading={loading} type="submit">{c('Action').t`Close`}</PrimaryButton>;
+                return <Button color="norm" loading={loading} type="submit">{c('Action').t`Close`}</Button>;
             default:
                 return null;
         }

@@ -6,7 +6,7 @@ import { srpVerify } from 'proton-shared/lib/srp';
 import { Domain, Organization, Address, CachedOrganizationKey } from 'proton-shared/lib/interfaces';
 import { setupMemberKey } from 'proton-shared/lib/keys';
 import { useApi, useNotifications, useEventManager, useGetAddresses } from '../../hooks';
-import { FormModal, Row, Field, Label, PasswordInput, Input, Checkbox, Select } from '../../components';
+import { FormModal, Row, Field, Label, PasswordInput, Input, Toggle, SelectTwo, Option } from '../../components';
 
 import MemberStorageSelector, { getStorageRange } from './MemberStorageSelector';
 import MemberVPNSelector, { getVPNRange } from './MemberVPNSelector';
@@ -154,19 +154,35 @@ const MemberModal = ({ onClose, organization, organizationKey, domains, domainsA
                         required
                     />
                 </Field>
-                <div className="ml1 on-mobile-ml0">
-                    <Checkbox checked={model.private} onChange={handleChangePrivate}>{c('Label for new member')
-                        .t`Private`}</Checkbox>
+            </Row>
+            <Row>
+                <Label>{c('Label').t`Address`}</Label>
+                <Field>
+                    <Input
+                        value={model.address}
+                        onChange={handleChange('address')}
+                        placeholder={c('Placeholder').t`Address`}
+                        required
+                    />
+                </Field>
+                <div className="ml1 on-mobile-ml0 flex flex-nowrap flex-align-items-center">
+                    {domainOptions.length === 1 ? (
+                        <span className="text-ellipsis" title={`@${domainOptions[0].value}`}>
+                            @{domainOptions[0].value}
+                        </span>
+                    ) : (
+                        <>
+                            <SelectTwo value={model.domain} onChange={({ value }) => update('domain', value)}>
+                                {domainOptions.map((option) => (
+                                    <Option value={option.value} title={option.text}>
+                                        @{option.text}
+                                    </Option>
+                                ))}
+                            </SelectTwo>
+                        </>
+                    )}
                 </div>
             </Row>
-            {model.private ? null : (
-                <Row>
-                    <Label>{c('Label').t`Key strength`}</Label>
-                    <div>
-                        <SelectEncryption encryptionType={encryptionType} setEncryptionType={setEncryptionType} />
-                    </div>
-                </Row>
-            )}
             <Row>
                 <Label>{c('Label').t`Password`}</Label>
                 <Field>
@@ -188,26 +204,14 @@ const MemberModal = ({ onClose, organization, organizationKey, domains, domainsA
                     </div>
                 </Field>
             </Row>
-            <Row>
-                <Label>{c('Label').t`Address`}</Label>
-                <Field>
-                    <Input
-                        value={model.address}
-                        onChange={handleChange('address')}
-                        placeholder={c('Placeholder').t`Address`}
-                        required
-                    />
-                </Field>
-                <div className="ml1 on-mobile-ml0 flex flex-nowrap flex-align-items-center">
-                    {domainOptions.length === 1 ? (
-                        <span className="text-ellipsis" title={`@${domainOptions[0].value}`}>
-                            @{domainOptions[0].value}
-                        </span>
-                    ) : (
-                        <Select options={domainOptions} value={model.domain} onChange={handleChange('domain')} />
-                    )}
-                </div>
-            </Row>
+            {model.private ? null : (
+                <Row>
+                    <Label>{c('Label').t`Key strength`}</Label>
+                    <div>
+                        <SelectEncryption encryptionType={encryptionType} setEncryptionType={setEncryptionType} />
+                    </div>
+                </Row>
+            )}
             <Row>
                 <Label>{c('Label').t`Account storage`}</Label>
                 <Field>
@@ -227,6 +231,13 @@ const MemberModal = ({ onClose, organization, organizationKey, domains, domainsA
                     </Field>
                 </Row>
             ) : null}
+
+            <Row>
+                <Label>{c('Label for new member').t`Private`}</Label>
+                <Field>
+                    <Toggle checked={model.private} onChange={handleChangePrivate} />
+                </Field>
+            </Row>
         </FormModal>
     );
 };

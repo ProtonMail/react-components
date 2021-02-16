@@ -21,7 +21,7 @@ const ShortcutsToggle = ({ id, shortcuts, onChange, className }: Props) => {
         call();
         toggle();
         onChange(+target.checked);
-        createNotification({ text: c('Success').t`Keyboard shortcuts preferences updated` });
+        createNotification({ text: c('Success').t`Keyboard shortcuts preferences saved` });
     };
     return <Toggle id={id} className={className} checked={state} onChange={handleChange} loading={loading} />;
 };

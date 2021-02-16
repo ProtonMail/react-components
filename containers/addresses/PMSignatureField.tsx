@@ -17,25 +17,26 @@ const PMSignatureField = ({ id, mailSettings = {} }: Props) => {
     const { createNotification } = useNotifications();
     const { request, loading } = useApiWithoutResult(updatePMSignature);
     const { state, toggle } = useToggle(!!mailSettings.PMSignature);
-    const isMandatory = mailSettings.PMSignature === 2;
 
     const handleChange = async ({ target }: ChangeEvent<HTMLInputElement>) => {
         await request(+target.checked);
-        call();
+        await call();
         toggle();
         createNotification({ text: c('Success').t`Preference saved` });
     };
 
     return (
         <>
-            <Field>
-                <div className="bordered pl1 pr1 pt0-5 pb0-5 mb1" dangerouslySetInnerHTML={{ __html: PM_SIGNATURE }} />
-            </Field>
-            {isMandatory ? null : (
+            <Field className="flex flex-item-fluid">
+                <div
+                    className="bordered flex-item-fluid pl1 pr1 pt0-5 pb0-5 mb1"
+                    // eslint-disable-next-line react/no-danger
+                    dangerouslySetInnerHTML={{ __html: PM_SIGNATURE }}
+                />
                 <div className="ml1 pt0-5 on-mobile-ml0">
                     <Toggle loading={loading} id={id} checked={state} onChange={handleChange} />
                 </div>
-            )}
+            </Field>
         </>
     );
 };

@@ -3,7 +3,9 @@ import { c } from 'ttag';
 
 import { useModals, useUser } from '../../hooks';
 import useOAuthPopup from '../../hooks/useOAuthPopup';
-import { PrimaryButton, Alert, Icon } from '../../components';
+import { Button, Icon } from '../../components';
+
+import { SettingsSection, SettingsParagraph } from '../account';
 
 import { OAuthProps, OAUTH_PROVIDER } from './interfaces';
 import { getOAuthRedirectURL as getRedirectURL, getOAuthAuthorizationUrl as getAuthorizationUrl } from './helpers';
@@ -30,26 +32,29 @@ const StartImportSection = () => {
     };
 
     return (
-        <>
-            <Alert learnMore="https://protonmail.com/support/knowledge-base/import-assistant/">
+        <SettingsSection>
+            <SettingsParagraph learnMoreUrl="https://protonmail.com/support/knowledge-base/import-assistant/">
                 {c('Info')
                     .t`Transfer your data safely to Proton. Import Assistant connects to your external email provider and imports your selected messages and folders.`}
-            </Alert>
+            </SettingsParagraph>
 
             <div className="flex flex-flex-align-items-center">
                 {TEST_IDS.includes(user.ID) ? (
-                    <PrimaryButton className="inline-flex flex-justify-center mt0-5 mr1" onClick={handleOAuthClick}>
+                    <Button
+                        color="norm"
+                        className="inline-flex flex-justify-center mt0-5 mr1"
+                        onClick={handleOAuthClick}
+                    >
                         <Icon name="gmail" className="mr0-5" />
                         {c('Action').t`Continue with Google`}
-                    </PrimaryButton>
+                    </Button>
                 ) : (
-                    <PrimaryButton className="inline-flex flex-justify-center mt0-5" onClick={handleClick}>
-                        <Icon name="imap-smtp" className="mr0-5" />
-                        {c('Action').t`Continue with IMAP`}
-                    </PrimaryButton>
+                    <Button color="norm" className="inline-flex flex-justify-center mt0-5" onClick={handleClick}>
+                        {c('Action').t`Start import`}
+                    </Button>
                 )}
             </div>
-        </>
+        </SettingsSection>
     );
 };
 
