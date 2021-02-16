@@ -100,9 +100,9 @@ function DemoModal({ onAdd, ...rest }) {
 
         const nodeSubmit =
             typeof submit === 'string' ? (
-                <PrimaryButton loading={loading} type="submit" data-focus-fallback="-1">
+                <Button color="norm" loading={loading} type="submit" data-focus-fallback="-1">
                     {submit}
-                </PrimaryButton>
+                </Button>
             ) : (
                 submit
             );

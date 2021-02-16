@@ -2,7 +2,7 @@ import React from 'react';
 import { c } from 'ttag';
 import { APPS } from 'proton-shared/lib/constants';
 
-import { Alert, Block, AppLink, ButtonLike } from '../../components';
+import { Alert, AppLink, ButtonLike } from '../../components';
 import { useOrganization } from '../../hooks';
 
 interface Props {
@@ -17,7 +17,7 @@ const AddressesSection = ({ onClose }: Props) => {
             <>
                 <Alert>{c('Info for domain modal')
                     .t`Add a new user to your organization and create an address for it.`}</Alert>
-                <Block>
+                <div className="mb1">
                     <ButtonLike
                         as={AppLink}
                         color="norm"
@@ -25,9 +25,9 @@ const AddressesSection = ({ onClose }: Props) => {
                         to="/organization#members"
                         toApp={APPS.PROTONACCOUNT}
                     >{c('Action').t`Add user`}</ButtonLike>
-                </Block>
+                </div>
                 <Alert>{c('Info for domain modal').t`Add a new address for any user of your organization.`}</Alert>
-                <Block>
+                <div className="mb1">
                     <ButtonLike
                         as={AppLink}
                         color="norm"
@@ -35,20 +35,20 @@ const AddressesSection = ({ onClose }: Props) => {
                         to="/organization#addresses"
                         toApp={APPS.PROTONACCOUNT}
                     >{c('Action').t`Add address`}</ButtonLike>
-                </Block>
+                </div>
             </>
         );
     }
 
     return (
-        <Block>
+        <div className="mb1">
             <ButtonLike
                 as={AppLink}
                 onClick={() => onClose?.()}
                 to="/organization#addresses"
                 toApp={APPS.PROTONACCOUNT}
             >{c('Action').t`Add address`}</ButtonLike>
-        </Block>
+        </div>
     );
 };
 
