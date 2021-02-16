@@ -6,7 +6,7 @@ import { getKeyUsedForContact } from 'proton-shared/lib/contacts/keyVerification
 import { Key } from 'proton-shared/lib/interfaces';
 import { APPS } from 'proton-shared/lib/constants';
 import { Alert, AppLink, Copy, FormModal, LinkButton, PrimaryButton } from '../../../components';
-import { useModals, useUser } from '../../../hooks';
+import { useModals, useNotifications, useUser } from '../../../hooks';
 import ContactClearDataConfirmModal from './ContactClearDataConfirmModal';
 import useContact from '../useContact';
 
@@ -17,6 +17,7 @@ interface Props {
 
 const ContactDecryptionErrorModal = ({ onClose = noop, contactID, ...rest }: Props) => {
     const { createModal } = useModals();
+    const { createNotification } = useNotifications();
     const [user] = useUser();
     const [contact] = useContact(contactID) as [Contact | undefined, boolean, Error];
     const [errorKey, setErrorKey] = useState<Key>();
@@ -43,7 +44,7 @@ const ContactDecryptionErrorModal = ({ onClose = noop, contactID, ...rest }: Pro
             onClose={onClose}
             submit={
                 <AppLink toApp={APPS.PROTONMAIL} to="/settings/security">
-                    <PrimaryButton type="submit" disabled={!errorKey}>
+                    <PrimaryButton type="button" disabled={!errorKey}>
                         {c('Action').t`Recover data`}
                     </PrimaryButton>
                 </AppLink>
@@ -59,7 +60,13 @@ const ContactDecryptionErrorModal = ({ onClose = noop, contactID, ...rest }: Pro
                 <div className="flex flex-align-items-center mb1">
                     <span className="mr1">{c('Info').t`Key fingerprint`}</span>
                     <span className="flex-item-fluid text-ellipsis mr1">{errorKey.Fingerprint}</span>
-                    <Copy className="button--for-icon" value={errorKey.Fingerprint} />
+                    <Copy
+                        className="button--for-icon"
+                        value={errorKey.Fingerprint}
+                        onCopy={() => {
+                            createNotification({ text: c('Success').t`Fingerprint copied to clipboard` });
+                        }}
+                    />
                 </div>
             )}
             <Alert type="info">
