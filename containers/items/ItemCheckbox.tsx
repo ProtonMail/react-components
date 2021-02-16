@@ -35,6 +35,7 @@ const ItemCheckbox = ({ ID = '', name = '', compactClassName, normalClassName, c
             labelOnClick={handleClick}
             data-item-id={ID}
             aria-describedby={ID}
+            data-testid="item-checkbox"
         />
     ) : (
         // eslint-disable-next-line jsx-a11y/label-has-associated-control
@@ -45,6 +46,7 @@ const ItemCheckbox = ({ ID = '', name = '', compactClassName, normalClassName, c
                 checked={checked}
                 onChange={onChange}
                 data-item-id={ID}
+                data-testid="item-checkbox"
             />
             <span className="item-icon flex-item-noshrink relative rounded inline-flex">
                 <span className="mauto item-abbr">{getInitial(name)}</span>
