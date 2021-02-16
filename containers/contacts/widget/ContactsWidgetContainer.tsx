@@ -102,22 +102,20 @@ const ContactsWidgetContainer = ({ onClose, onCompose }: Props) => {
             return;
         }
 
-        const abortController = new AbortController();
-        const { success, failures } = await exportContacts(selectedIDs, userKeys, abortController.signal, api);
+        try {
+            const exportedContacts = await exportContacts(selectedIDs, userKeys, api);
 
-        if (failures.length) {
+            const files = exportedContacts.map(
+                ({ name, vcard }) => new File([vcard], name, { type: 'data:text/plain;charset=utf-8;' })
+            );
+
+            onCompose?.([], files);
+        } catch {
             createNotification({
                 type: 'error',
                 text: c('Error').t`There was an error when exporting the contacts vcards`,
             });
-            return;
         }
-
-        const files = success.map(
-            (data) => new File([data.vcard], data.name, { type: 'data:text/plain;charset=utf-8;' })
-        );
-
-        onCompose?.([], files);
         onClose();
     };
 

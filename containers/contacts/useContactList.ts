@@ -77,7 +77,7 @@ const useContactList = ({ search, contactID, contactGroupID }: Props) => {
         });
     }, [filteredContacts, contactEmailsMap]);
 
-    const contactIDs = useMemo(() => formattedContacts.map((contact) => contact.ID), [contacts]);
+    const contactIDs = useMemo(() => formattedContacts.map((contact) => contact.ID), [formattedContacts]);
 
     const { checkedIDs, selectedIDs, handleCheck, handleCheckAll, handleCheckOne } = useItemsSelection(
         contactID,
