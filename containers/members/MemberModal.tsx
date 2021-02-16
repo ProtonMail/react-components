@@ -94,6 +94,7 @@ const MemberModal = ({ onClose, organization, organizationKey, domains, domainsA
                 password: model.password,
                 keyTransparencyVerifier: keyTransparencyVerifier.verify,
             });
+            // TODO: Here we are creating another private user, and commiting to local storage with the keys of that user?
             await keyTransparencyVerifier.commit(userKeys);
         }
 
