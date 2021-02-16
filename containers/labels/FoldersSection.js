@@ -1,10 +1,11 @@
 import React from 'react';
 import { c } from 'ttag';
 
-import { Loader, Alert, PrimaryButton } from '../../components';
+import { Loader, Alert, PrimaryButton, Label } from '../../components';
 import { useFolders, useModals } from '../../hooks';
 import FolderTreeViewList from './FolderTreeViewList';
 import EditLabelModal from './modals/EditLabelModal';
+import ToggleFolderColor from './ToggleFolderColor';
 
 function LabelsSection() {
     const [folders, loadingFolders] = useFolders();
@@ -23,6 +24,10 @@ function LabelsSection() {
             >
                 {c('LabelSettings').t`A message can only be filed in a single Folder at a time.`}
             </Alert>
+            <div className="mb1">
+                <ToggleFolderColor id="folder-colors" />
+                <Label htmlFor="folder-colors">{c('Label').t`Enable folder colors`}</Label>
+            </div>
             <div className="mb1">
                 <PrimaryButton onClick={() => createModal(<EditLabelModal type="folder" />)}>
                     {c('Action').t`Add folder`}
