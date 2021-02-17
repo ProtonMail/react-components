@@ -25,11 +25,11 @@ function LabelsSection() {
             >
                 {c('LabelSettings').t`A message can only be filed in a single Folder at a time.`}
             </Alert>
-            <div className="mb1">
+            <div className="mb1 flex flex-items-align-center">
                 <ToggleFolderColor id="folder-colors" className="mr1" />
                 <Label htmlFor="folder-colors">{c('Label').t`Enable folder colors`}</Label>
             </div>
-            <div className="mb1">
+            <div className="mb1 flex flex-items-align-center">
                 <ToggleInheritParentFolderColor id="parent-folder-color" className="mr1" />
                 <Label htmlFor="parent-folder-color">{c('Label').t`Inherit parent folder's color`}</Label>
             </div>
