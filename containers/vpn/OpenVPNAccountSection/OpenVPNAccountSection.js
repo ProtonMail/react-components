@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { c } from 'ttag';
 
 import { resetVPNSettings } from 'proton-shared/lib/api/vpn';
-import { Button, Alert, Row, Field, Label, Copy, PrimaryButton } from '../../../components';
+import { Button, Alert, Label, Copy, PrimaryButton } from '../../../components';
 import { useUserVPN, useApi, useNotifications, useLoading } from '../../../hooks';
 
 const OpenVPNAccountSection = () => {
@@ -28,29 +28,24 @@ const OpenVPNAccountSection = () => {
                     .t`Use the following credentials when connecting to ProtonVPN servers without application. Examples use cases include: Tunnelblick on macOS, OpenVPN on GNU/Linux.
                     Do not use the OpenVPN / IKEv2 credentials in ProtonVPN applications or on the ProtonVPN dashboard.`}
             </Alert>
-            <Row>
+            <div className="flex mb1 on-mobile-flex-column">
                 <Label>{c('Label').t`OpenVPN / IKEv2 username`}</Label>
-                <Field>
+                <div>
                     <div className="pt0-5 text-ellipsis max-w100">
                         <code title={Name}>{Name}</code>
                     </div>
-                </Field>
+                </div>
                 <div className="ml1 flex-item-noshrink on-mobile-ml0 on-mobile-mt0-5">
                     <Copy value={Name} />
                 </div>
-            </Row>
-            <Row>
+            </div>
+            <div className="flex mb1 on-mobile-flex-column">
                 <Label>{c('Label').t`OpenVPN / IKEv2 password`}</Label>
-                <Field>
+                <div>
                     <div className="mb1 pt0-5 text-ellipsis max-w100">
                         <code>{show ? Password : '••••••••••••••••••••'}</code>
                     </div>
-                    <PrimaryButton
-                        disabled={!Name || !Password}
-                        loading={updating}
-                        onClick={() => withUpdating(handleResetCredentials())}
-                    >{c('Action').t`Reset credentials`}</PrimaryButton>
-                </Field>
+                </div>
                 <div className="ml1 flex-item-noshrink on-mobile-ml0 on-mobile-mt0-5">
                     <Copy className="mr1" value={Password} />
                     <Button
@@ -59,7 +54,12 @@ const OpenVPNAccountSection = () => {
                         title={show ? c('Action').t`Hide` : c('Action').t`Show`}
                     />
                 </div>
-            </Row>
+            </div>
+            <PrimaryButton
+                disabled={!Name || !Password}
+                loading={updating}
+                onClick={() => withUpdating(handleResetCredentials())}
+            >{c('Action').t`Reset credentials`}</PrimaryButton>
         </>
     );
 };
