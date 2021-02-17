@@ -8,7 +8,7 @@ const AccountLogo = ({ className = 'logo' }: Props) => {
         <svg
             xmlns="http://www.w3.org/2000/svg"
             xmlnsXlink="http://www.w3.org/1999/xlink"
-            viewBox="0 0 174.6 22"
+            viewBox="0 0 174 22"
             className={className}
             aria-labelledby="logo__title"
         >
