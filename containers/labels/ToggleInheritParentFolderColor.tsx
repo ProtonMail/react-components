@@ -9,7 +9,7 @@ interface Props {
     className?: string;
 }
 
-const ToggleFolderColor = ({ id, className }: Props) => {
+const ToggleInheritParentFolderColor = ({ id, className }: Props) => {
     const api = useApi();
     const { call } = useEventManager();
     const { createNotification } = useNotifications();
@@ -35,4 +35,4 @@ const ToggleFolderColor = ({ id, className }: Props) => {
     );
 };
 
-export default ToggleFolderColor;
+export default ToggleInheritParentFolderColor;

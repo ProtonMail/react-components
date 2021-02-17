@@ -6,6 +6,7 @@ import { useFolders, useModals } from '../../hooks';
 import FolderTreeViewList from './FolderTreeViewList';
 import EditLabelModal from './modals/EditLabelModal';
 import ToggleFolderColor from './ToggleFolderColor';
+import ToggleInheritParentFolderColor from './ToggleInheritParentFolderColor';
 
 function LabelsSection() {
     const [folders, loadingFolders] = useFolders();
@@ -25,10 +26,11 @@ function LabelsSection() {
                 {c('LabelSettings').t`A message can only be filed in a single Folder at a time.`}
             </Alert>
             <div className="mb1">
-                <ToggleFolderColor id="folder-colors" />
+                <ToggleFolderColor id="folder-colors" className="mr1" />
                 <Label htmlFor="folder-colors">{c('Label').t`Enable folder colors`}</Label>
             </div>
             <div className="mb1">
+                <ToggleInheritParentFolderColor id="parent-folder-color" className="mr1" />
                 <Label htmlFor="parent-folder-color">{c('Label').t`Inherit parent folder's color`}</Label>
             </div>
             <div className="mb1">
