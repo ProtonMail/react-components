@@ -9,7 +9,7 @@ import ContactsList from '../ContactsList';
 import ContactDetailsModal from '../modals/ContactDetailsModal';
 import useContactList from '../useContactList';
 import ContactsWidgetToolbar from './ContactsWidgetToolbar';
-import { ContactDeleteModal } from '..';
+import ContactDeleteModal from '../modals/ContactDeleteModal';
 import ContactModal from '../modals/ContactModal';
 
 interface Props {
