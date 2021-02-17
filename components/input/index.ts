@@ -4,6 +4,7 @@ export { default as DateInput } from './DateInput';
 export { default as EmailInput } from './EmailInput';
 export { default as FileInput } from './FileInput';
 export { default as Input } from './Input';
+export { default as DebounceInput } from './DebounceInput';
 export { default as InputButton } from './InputButton';
 export * from './InputButton';
 export { default as IntegerInput } from './IntegerInput';
