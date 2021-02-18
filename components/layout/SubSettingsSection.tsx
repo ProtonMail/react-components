@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import SubTitle from '../title/SubTitle';
+import { SettingsSectionTitle } from '../../containers';
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
     id: string;
@@ -29,7 +29,7 @@ const SubSettingsSection = ({ id, observer, title, children, ...rest }: Props) =
                 <div id={id} className="header-height-anchor" />
             </div>
             <section {...rest} ref={ref} data-target-id={id}>
-                <SubTitle>{title}</SubTitle>
+                <SettingsSectionTitle>{title}</SettingsSectionTitle>
                 {children}
             </section>
         </>
