@@ -16,7 +16,7 @@ const useOrganization = (): [tsOrganizationModel, boolean, Error] => {
         // Not using use user since it's better to read from the cache
         // It will be updated from the event manager.
         const user = cache.get(UserModel.key).value;
-        if (user.isPaid) {
+        if (user?.isPaid) {
             return OrganizationModel.get(api);
         }
         return Promise.resolve(FREE_ORGANIZATION);

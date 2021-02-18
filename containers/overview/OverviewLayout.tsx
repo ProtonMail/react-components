@@ -19,10 +19,10 @@ interface Props {
 const OverviewLayout = ({ title, pages, children, limit }: Props) => {
     const mainAreaRef = useRef<HTMLDivElement>(null);
     const [scrollTop, setScrollTop] = useState<number>(0);
-    const [user] = useUser();
-    const [userSettings] = useUserSettings();
-    const [organization] = useOrganization();
-    const [subscription] = useSubscription();
+    const [user = {}] = useUser();
+    const [userSettings = {}] = useUserSettings();
+    const [organization = {}] = useOrganization();
+    const [subscription = {}] = useSubscription();
     const { hasPaidMail } = user;
 
     useEffect(() => {

@@ -13,7 +13,7 @@ const ROLES = {
 
 const usePermissions = () => {
     const permissions: PERMISSIONS[] = [];
-    const [{ Role, isPaid, hasPaidMail, hasPaidVpn, canPay, isSubUser }] = useUser();
+    const [{ Role, isPaid, hasPaidMail, hasPaidVpn, canPay, isSubUser } = {}] = useUser();
     const [{ MaxMembers = 0 } = {}] = useOrganization();
 
     permissions.push(ROLES[Role]);

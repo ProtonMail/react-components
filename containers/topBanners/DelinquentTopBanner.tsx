@@ -8,7 +8,7 @@ import TopBanner from './TopBanner';
 import AppLink from '../../components/link/AppLink';
 
 const DelinquentTopBanner = () => {
-    const [user] = useUser();
+    const [user = {}] = useUser();
     const { APP_NAME } = useConfig();
     const paymentLinkProps =
         APP_NAME === APPS.PROTONVPN_SETTINGS

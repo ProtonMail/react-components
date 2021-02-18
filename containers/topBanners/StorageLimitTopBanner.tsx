@@ -11,7 +11,7 @@ import AppLink from '../../components/link/AppLink';
 const IGNORE_STORAGE_LIMIT_KEY = 'ignore-storage-limit';
 
 const StorageLimitTopBanner = () => {
-    const [user] = useUser();
+    const [user = {}] = useUser();
     const { APP_NAME } = useConfig();
     const spacePercentage = (user.UsedSpace * 100) / user.MaxSpace;
     const spaceDisplayed = Number.isNaN(spacePercentage) ? 0 : Math.floor(spacePercentage);
