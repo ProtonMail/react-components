@@ -112,7 +112,7 @@ const PrivateMainSettingsArea = ({ setActiveSection, location, title, children, 
     return (
         <PrivateMainArea ref={mainAreaRef}>
             <div className="container-section-sticky">
-                <SettingsPageTitle>{title}</SettingsPageTitle>
+                <SettingsPageTitle className="mt1-5 mb1-5">{title}</SettingsPageTitle>
                 <ErrorBoundary>{wrappedSections}</ErrorBoundary>
             </div>
         </PrivateMainArea>

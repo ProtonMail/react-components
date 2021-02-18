@@ -6,6 +6,7 @@ import { Field, Info, Label, Loader, PrimaryButton, Row, Toggle } from '../../co
 import { useAddresses, useModals, useUserSettings } from '../../hooks';
 
 import ChangePasswordModal, { MODES } from './ChangePasswordModal';
+import TwoFactorSection from './TwoFactorSection';
 
 const PasswordsSection = () => {
     const [userSettings, loadingUserSettings] = useUserSettings();
@@ -81,6 +82,7 @@ const PasswordsSection = () => {
                     )}
                 </>
             )}
+            <TwoFactorSection />
         </>
     );
 };
