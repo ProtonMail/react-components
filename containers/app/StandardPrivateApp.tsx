@@ -74,30 +74,28 @@ const StandardPrivateApp = <T, M extends Model<T>, E, EvtM extends Model<E>>({
     useEffect(() => {
         const modelsToSave = unique([UserSettingsModel, UserModel, AddressesModel, ...preloadModels]);
 
-        const cb = debounce(
-            () => {
-                if (!eventManagerRef.current) {
-                    return;
+        const cb = debounce(() => {
+            if (!eventManagerRef.current) {
+                return;
+            }
+            const copy = modelsToSave.reduce((acc, model) => {
+                const { key } = model;
+                const record = cache.get(key);
+                if (record?.status === STATUS.RESOLVED) {
+                    // @ts-ignore
+                    acc[key] = record;
                 }
-                const copy = modelsToSave.reduce((acc, model) => {
-                    const { key } = model;
-                    const record = cache.get(key);
-                    if (record?.status === STATUS.RESOLVED) {
-                        // @ts-ignore
-                        acc[key] = record;
-                    }
-                    return acc;
-                }, {});
+                return acc;
+            }, {});
 
-                const data = {
-                    cache: copy,
-                    eventID: eventManagerRef.current.getEventID(),
-                };
-                localStorage.setItem('cache-test', JSON.stringify(data));
-            },
-            300,
-            true
-        );
+            const data = {
+                cache: copy,
+                eventID: eventManagerRef.current.getEventID(),
+            };
+            console.log(data.cache);
+            localStorage.setItem('cache-test', JSON.stringify(data));
+        }, 300);
+        window.cache = cache;
         return cache.subscribe(cb);
     }, []);
 
