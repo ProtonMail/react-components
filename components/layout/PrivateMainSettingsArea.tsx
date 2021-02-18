@@ -9,17 +9,14 @@ import { SubSectionConfig, SettingsPropsShared } from './interface';
 import useActiveSection from './useActiveSection';
 
 import createScrollIntoView from '../../helpers/createScrollIntoView';
-import { classnames } from '../../helpers';
-import { SettingsParagraph } from '../../containers';
 
 interface Props extends SettingsPropsShared {
     title: string;
     children: React.ReactNode;
     subsections: SubSectionConfig[];
-    description?: string;
 }
 
-const PrivateMainSettingsArea = ({ setActiveSection, location, title, children, description, subsections }: Props) => {
+const PrivateMainSettingsArea = ({ setActiveSection, location, title, children, subsections }: Props) => {
     const mainAreaRef = useRef<HTMLDivElement>(null);
     const useIntersectionSection = useRef(false);
 
@@ -49,7 +46,7 @@ const PrivateMainSettingsArea = ({ setActiveSection, location, title, children, 
         }
 
         useIntersectionSection.current = false;
-        setActiveSection?.(hash.slice(1));
+        setActiveSection(hash.slice(1));
 
         const abortScroll = createScrollIntoView(el, mainArea, true);
         let removeListeners: () => void;
@@ -89,7 +86,7 @@ const PrivateMainSettingsArea = ({ setActiveSection, location, title, children, 
 
     // Don't always use the observer section observed value since it can not go to sections that are at the bottom or too small.
     // In those cases it can be overridden by clicking on a specific section
-    const observer = useActiveSection(useIntersectionSection.current && setActiveSection ? setActiveSection : noop);
+    const observer = useActiveSection(useIntersectionSection.current ? setActiveSection : noop);
 
     const wrappedSections = React.Children.toArray(children)
         .filter(React.isValidElement)
@@ -115,10 +112,7 @@ const PrivateMainSettingsArea = ({ setActiveSection, location, title, children, 
     return (
         <PrivateMainArea ref={mainAreaRef}>
             <div className="container-section-sticky">
-                <SettingsPageTitle className={classnames(['mt1-5', !description && 'mb1-5'])}>
-                    {title}
-                </SettingsPageTitle>
-                {description && <SettingsParagraph className="mb1-5">{description}</SettingsParagraph>}
+                <SettingsPageTitle className="mt1-5 mb1-5">{title}</SettingsPageTitle>
                 <ErrorBoundary>{wrappedSections}</ErrorBoundary>
             </div>
         </PrivateMainArea>

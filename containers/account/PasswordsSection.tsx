@@ -93,6 +93,7 @@ const PasswordsSection = ({ open }: Props) => {
                     )}
                 </>
             )}
+            <TwoFactorSection />
         </>
     );
 };
