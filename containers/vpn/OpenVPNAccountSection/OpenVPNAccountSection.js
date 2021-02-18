@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { c } from 'ttag';
 
 import { resetVPNSettings } from 'proton-shared/lib/api/vpn';
-import { Button, Alert, Label, Copy, PrimaryButton } from '../../../components';
+import { Button, Alert, Copy, PrimaryButton } from '../../../components';
 import { useUserVPN, useApi, useNotifications, useLoading } from '../../../hooks';
 
 const OpenVPNAccountSection = () => {
@@ -28,26 +28,22 @@ const OpenVPNAccountSection = () => {
                     .t`Use the following credentials when connecting to ProtonVPN servers without application. Examples use cases include: Tunnelblick on macOS, OpenVPN on GNU/Linux.
                     Do not use the OpenVPN / IKEv2 credentials in ProtonVPN applications or on the ProtonVPN dashboard.`}
             </Alert>
-            <div className="flex mb1 on-mobile-flex-column">
-                <Label>{c('Label').t`OpenVPN / IKEv2 username`}</Label>
-                <div>
-                    <div className="pt0-5 text-ellipsis max-w100">
-                        <code title={Name}>{Name}</code>
-                    </div>
+            <div className="flex flex-align-items-center mb1 on-mobile-flex-column">
+                <span className="label pt0">{c('Label').t`OpenVPN / IKEv2 username`}</span>
+                <div className="text-ellipsis max-w100 mr1 on-mobile-mr0">
+                    <code title={Name}>{Name}</code>
                 </div>
-                <div className="ml1 flex-item-noshrink on-mobile-ml0 on-mobile-mt0-5">
-                    <Copy value={Name} />
+                <div className="flex flex-item-noshrink on-mobile-mt0-5">
+                    <Copy className="button--for-icon pt0-5 pb0-5" value={Name} />
                 </div>
             </div>
-            <div className="flex mb1 on-mobile-flex-column">
-                <Label>{c('Label').t`OpenVPN / IKEv2 password`}</Label>
-                <div>
-                    <div className="mb1 pt0-5 text-ellipsis max-w100">
-                        <code>{show ? Password : '••••••••••••••••••••'}</code>
-                    </div>
+            <div className="flex flex-align-items-center mb1 on-mobile-flex-column">
+                <span className="label pt0">{c('Label').t`OpenVPN / IKEv2 password`}</span>
+                <div className="text-ellipsis max-w100 mr1 on-mobile-mr0">
+                    <code>{show ? Password : '••••••••••••••••'}</code>
                 </div>
-                <div className="ml1 flex-item-noshrink on-mobile-ml0 on-mobile-mt0-5">
-                    <Copy className="mr1" value={Password} />
+                <div className="flex flex-item-noshrink on-mobile-mt0-5">
+                    <Copy className="mr1 button--for-icon" value={Password} />
                     <Button
                         icon={show ? 'unread' : 'read'}
                         onClick={() => setShow(!show)}
