@@ -6,6 +6,7 @@ import { Field, Info, Label, Loader, PrimaryButton, Row, Toggle } from '../../co
 import { useAddresses, useModals, useUserSettings } from '../../hooks';
 
 import ChangePasswordModal, { MODES } from './ChangePasswordModal';
+import TwoFactorSection from './TwoFactorSection';
 
 interface Props {
     open?: boolean;
@@ -88,6 +89,7 @@ const PasswordsSection = ({ open }: Props) => {
                     )}
                 </>
             )}
+            <TwoFactorSection />
         </>
     );
 };

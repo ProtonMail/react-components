@@ -6,6 +6,7 @@ import { useModals, useUser, useSubscription, useAddresses, useConfig } from '..
 
 import MozillaInfoPanel from './MozillaInfoPanel';
 import DeleteAccountModal from './DeleteAccountModal';
+import SettingsParagraph from './SettingsParagraph';
 
 const DeleteSection = () => {
     const [{ isMember }] = useUser();
@@ -41,10 +42,10 @@ const DeleteSection = () => {
 
     return (
         <>
-            <Alert type="error">
+            <SettingsParagraph>
                 {c('Info')
                     .t`This will permanently delete all data associated with your account. You will not be able to reactivate this account.`}
-            </Alert>
+            </SettingsParagraph>
             <ErrorButton id="deleteButton" onClick={() => createModal(<DeleteAccountModal />)}>
                 {c('Action').t`Delete your account`}
             </ErrorButton>
