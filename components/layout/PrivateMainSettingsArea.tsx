@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { noop } from 'proton-shared/lib/helpers/function';
 import ErrorBoundary from '../../containers/app/ErrorBoundary';
+import SettingsPageTitle from '../../containers/account/SettingsPageTitle';
 import useAppTitle from '../../hooks/useAppTitle';
-import SettingsTitle from '../container/SettingsTitle';
 import SubSettingsSection from './SubSettingsSection';
 import PrivateMainArea from './PrivateMainArea';
 import { SubSectionConfig, SettingsPropsShared } from './interface';
@@ -18,7 +18,6 @@ interface Props extends SettingsPropsShared {
 
 const PrivateMainSettingsArea = ({ setActiveSection, location, title, children, subsections }: Props) => {
     const mainAreaRef = useRef<HTMLDivElement>(null);
-    const [scrollTop, setScrollTop] = useState<number>(0);
     const useIntersectionSection = useRef(false);
 
     useAppTitle(title);
@@ -28,10 +27,6 @@ const PrivateMainSettingsArea = ({ setActiveSection, location, title, children, 
             mainAreaRef.current.scrollTop = 0;
         }
     }, [location.pathname]);
-
-    const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-        setScrollTop(e.currentTarget.scrollTop);
-    };
 
     useEffect(() => {
         const { hash } = location;
@@ -115,9 +110,9 @@ const PrivateMainSettingsArea = ({ setActiveSection, location, title, children, 
         });
 
     return (
-        <PrivateMainArea ref={mainAreaRef} onScroll={handleScroll}>
-            <SettingsTitle onTop={!scrollTop}>{title}</SettingsTitle>
+        <PrivateMainArea ref={mainAreaRef}>
             <div className="container-section-sticky">
+                <SettingsPageTitle>{title}</SettingsPageTitle>
                 <ErrorBoundary>{wrappedSections}</ErrorBoundary>
             </div>
         </PrivateMainArea>

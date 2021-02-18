@@ -1,4 +1,3 @@
-export { default as SettingsTitle } from './SettingsTitle';
 export { default as Bordered } from './Bordered';
 export { default as Block } from './Block';
 export { default as Row } from './Row';
