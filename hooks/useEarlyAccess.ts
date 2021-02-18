@@ -1,5 +1,5 @@
 import useFeature from './useFeature';
-import { FeatureCode } from '../containers';
+import { FeatureCode } from '../containers/features';
 
 const useEarlyAccess = () => {
     const { feature: { Value: maybeEarlyAccess, DefaultValue } = {} } = useFeature(FeatureCode.EarlyAccess);
