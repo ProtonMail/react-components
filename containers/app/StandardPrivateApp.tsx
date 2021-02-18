@@ -12,6 +12,8 @@ import { getIs401Error } from 'proton-shared/lib/api/helpers/apiErrorHelper';
 import { getBrowserLocale, getClosestLocaleCode } from 'proton-shared/lib/i18n/helper';
 import { REQUIRES_INTERNAL_EMAIL_ADDRESS, REQUIRES_NONDELINQUENT, UNPAID_STATE } from 'proton-shared/lib/constants';
 import { getHasOnlyExternalAddresses } from 'proton-shared/lib/helpers/address';
+import { debounce } from 'proton-shared/lib/helpers/function';
+import { STATUS } from 'proton-shared/lib/models/cache';
 
 import { useApi, useCache, useConfig, useErrorHandler } from '../../hooks';
 
@@ -70,6 +72,51 @@ const StandardPrivateApp = <T, M extends Model<T>, E, EvtM extends Model<E>>({
     const hasDelinquentBlockRef = useRef(false);
 
     useEffect(() => {
+        const modelsToSave = unique([UserSettingsModel, UserModel, AddressesModel, ...preloadModels]);
+
+        const cb = debounce(
+            () => {
+                if (!eventManagerRef.current) {
+                    return;
+                }
+                const copy = modelsToSave.reduce((acc, model) => {
+                    const { key } = model;
+                    const record = cache.get(key);
+                    if (record?.status === STATUS.RESOLVED) {
+                        // @ts-ignore
+                        acc[key] = record;
+                    }
+                    return acc;
+                }, {});
+
+                const data = {
+                    cache: copy,
+                    eventID: eventManagerRef.current.getEventID(),
+                };
+                localStorage.setItem('cache-test', JSON.stringify(data));
+            },
+            300,
+            true
+        );
+        return cache.subscribe(cb);
+    }, []);
+
+    useEffect(() => {
+        try {
+            const cachedData = localStorage.getItem('cache-test');
+            if (cachedData) {
+                const x = JSON.parse(cachedData);
+                if (x && x.eventID && x.cache) {
+                    cache.set('tmpEventID', x.eventID);
+                    const cachedCache = x.cache;
+                    Object.keys(cachedCache).forEach((cacheKey) => {
+                        cache.set(cacheKey, cachedCache[cacheKey]);
+                    });
+                }
+            }
+            // eslint-disable-next-line no-empty
+        } catch (e) {}
+
         const eventManagerPromise = loadEventID(silentApi, cache).then((eventID) => {
             eventManagerRef.current = createEventManager({ api: silentApi, eventID });
         });
@@ -134,6 +181,7 @@ const StandardPrivateApp = <T, M extends Model<T>, E, EvtM extends Model<E>>({
             });
 
         return () => {
+            eventManagerRef.current = undefined;
             destroyOpenPGP();
         };
     }, []);
