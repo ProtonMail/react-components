@@ -1,15 +1,30 @@
 import React from 'react';
 import { c } from 'ttag';
-import { APPS_CONFIGURATION } from 'proton-shared/lib/constants';
+import { APPS, APPS_CONFIGURATION } from 'proton-shared/lib/constants';
 import { noop } from 'proton-shared/lib/helpers/function';
 import { UserModel } from 'proton-shared/lib/interfaces';
 import { useConfig, useDocumentTitle } from '../../hooks';
-import { FullLoader, Hamburger, Icon, MainLogo, PrivateMainArea, SimpleDropdown, TextLoader } from '../../components';
+import {
+    FullLoader,
+    Hamburger,
+    Icon,
+    MainLogo,
+    PrivateMainArea,
+    SidebarBackButton,
+    SidebarList,
+    SidebarListItemsWithSubsections,
+    SidebarNav,
+    SimpleDropdown,
+    SimpleSidebarListItemHeader,
+    TextLoader,
+} from '../../components';
 import Header from '../../components/header/Header';
 import { PrivateAppContainer, TopNavbar } from './index';
 import { TopNavbarItem } from './TopNavbar';
 import SupportDropdown from '../heading/SupportDropdown';
 import UserDropdownButton from '../heading/UserDropdownButton';
+import { getAccountPages } from './accountPages';
+import { getMailPages } from './mailPages';
 
 interface Props {
     text?: string;
@@ -66,6 +81,38 @@ const LoaderPage = ({ text, loaderClassName = 'color-global-light' }: Props) => 
                                 <Hamburger expanded onToggle={noop} data-focus-fallback={1} />
                             </div>
                         </div>
+                        <div className="pl1 pr1 pb1 flex-item-noshrink">
+                            <SidebarBackButton to="/" toApp={APPS.PROTONMAIL} target="_self">{c('Action')
+                                .t`Back to Mailbox`}</SidebarBackButton>
+                        </div>
+                        <SidebarNav>
+                            <SidebarList>
+                                <SimpleSidebarListItemHeader
+                                    text={c('Link').t`Account`}
+                                    title={c('Link').t`Account`}
+                                    onToggle={noop}
+                                    toggle
+                                    hasCaret={false}
+                                />
+                                <SidebarListItemsWithSubsections
+                                    list={getAccountPages({})}
+                                    pathname={window.location.pathname}
+                                    activeSection=""
+                                />
+                                <SimpleSidebarListItemHeader
+                                    text={c('Link').t`ProtonMail`}
+                                    title={c('Link').t`ProtonMail`}
+                                    onToggle={noop}
+                                    toggle
+                                    hasCaret={false}
+                                />
+                                <SidebarListItemsWithSubsections
+                                    list={getMailPages({})}
+                                    pathname={window.location.pathname}
+                                    activeSection=""
+                                />
+                            </SidebarList>
+                        </SidebarNav>
                     </div>
                 }
             >
