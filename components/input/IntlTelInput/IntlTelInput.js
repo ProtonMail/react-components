@@ -8,6 +8,7 @@ const IntlTelInput = ({ containerClassName, inputClassName, ...rest }) => (
     <ReactIntlTelInput
         containerClassName={classnames(['intl-tel-input', containerClassName])}
         inputClassName={classnames(['field', inputClassName])}
+        fieldId={rest.id}
         {...rest}
     />
 );

@@ -18,7 +18,6 @@ import {
 import AuthModal from '../password/AuthModal';
 import RecoveryEmail from './RecoveryEmail';
 import RecoveryPhone from './RecoveryPhone';
-import PhoneModal from './PhoneModal';
 import SettingsParagraph from '../account/SettingsParagraph';
 
 const { VPN } = CLIENT_TYPES;
@@ -36,15 +35,6 @@ const RecoveryMethodsSection = () => {
     if (loadingUserSettings || !userSettings) {
         return <Loader />;
     }
-
-    const handleRecoveryPhone = () => {
-        createModal(
-            <PhoneModal
-                phone={userSettings.Phone.Value || '' /* can be null */}
-                hasReset={!!userSettings.Phone.Reset}
-            />
-        );
-    };
 
     const handleChangePasswordEmailToggle = async (value: number) => {
         if (value && !userSettings.Email.Value) {
@@ -87,7 +77,7 @@ const RecoveryMethodsSection = () => {
                     .t`We recommend adding a linked email or phone number so you can recover your account if you lose your password.`}
             </SettingsParagraph>
             <Row>
-                <Label className="on-mobile-mb0-5">{c('Label').t`Email address`}</Label>
+                <Label className="on-mobile-mb0-5" htmlFor="emailInput">{c('Label').t`Email address`}</Label>
                 <Field className="w100">
                     <div className="mb1">
                         <RecoveryEmail
@@ -131,10 +121,10 @@ const RecoveryMethodsSection = () => {
             </Row>
             <hr className="mb2 mt2" />
             <Row>
-                <Label className="pt0 on-mobile-mb0-5">{c('Label').t`Phone number`}</Label>
+                <Label className="pt0 on-mobile-mb0-5" htmlFor="phoneInput">{c('Label').t`Phone number`}</Label>
                 <Field className="w100">
                     <div className="mb1">
-                        <RecoveryPhone phone={userSettings.Phone.Value} onClick={handleRecoveryPhone} />
+                        <RecoveryPhone phone={userSettings.Phone.Value} hasReset={!!userSettings.Phone.Reset} />
                     </div>
                     <div className="flex flex-align-items-center">
                         <Toggle
