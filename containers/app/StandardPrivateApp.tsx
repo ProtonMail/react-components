@@ -92,7 +92,6 @@ const StandardPrivateApp = <T, M extends Model<T>, E, EvtM extends Model<E>>({
                 cache: copy,
                 eventID: eventManagerRef.current.getEventID(),
             };
-            console.log(data.cache);
             localStorage.setItem('cache-test', JSON.stringify(data));
         }, 300);
         return cache.subscribe(cb);

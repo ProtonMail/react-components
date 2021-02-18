@@ -15,7 +15,7 @@ interface Props {
     activeSection: string;
 }
 const SidebarListItemsWithSubsections = ({ list, pathname, activeSection }: Props) => {
-    const children = list.map(({ text, to, icon, subsections }) => {
+    const children = list.map(({ text, to, toApp, icon, subsections }) => {
         const subSections = subsections?.length ? (
             <SubSidebarList aria-hidden={to !== pathname}>
                 {subsections.map(({ text, id }) => {
@@ -35,7 +35,7 @@ const SidebarListItemsWithSubsections = ({ list, pathname, activeSection }: Prop
 
         return (
             <SidebarListItem key={text}>
-                <SidebarListItemLink to={to}>
+                <SidebarListItemLink to={to} toApp={toApp}>
                     <SidebarListItemContent left={<SidebarListItemContentIcon name={icon} />}>
                         {text}
                     </SidebarListItemContent>

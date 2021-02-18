@@ -31,7 +31,7 @@ const AppLink = ({ to, toApp, children, ...rest }: Props) => {
             return (
                 // internal link, trusted
                 // eslint-disable-next-line react/jsx-no-target-blank
-                <a target="_blank" {...rest} {...overrides} href={href}>
+                <a target="_self" {...rest} {...overrides} href={href}>
                     {children}
                 </a>
             );

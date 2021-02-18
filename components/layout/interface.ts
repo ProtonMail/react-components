@@ -1,5 +1,5 @@
 import * as H from 'history';
-import { PERMISSIONS } from 'proton-shared/lib/constants';
+import { PERMISSIONS, APP_NAMES } from 'proton-shared/lib/constants';
 
 export interface SettingsPropsShared {
     location: H.Location;
@@ -16,6 +16,7 @@ export interface SubSectionConfig {
 export interface SectionConfig {
     text: string;
     to: string;
+    toApp?: APP_NAMES;
     icon: string;
     subsections?: SubSectionConfig[];
     permissions?: PERMISSIONS[];
