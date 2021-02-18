@@ -18,8 +18,9 @@ import {
 import AuthModal from '../password/AuthModal';
 import RecoveryEmail from './RecoveryEmail';
 import RecoveryPhone from './RecoveryPhone';
+import EmailModal from './EmailModal';
+import PhoneModal from './PhoneModal';
 import SettingsParagraph from '../account/SettingsParagraph';
-import { SettingsSection } from '../account';
 
 const { VPN } = CLIENT_TYPES;
 
@@ -36,6 +37,25 @@ const RecoveryMethodsSection = () => {
     if (loadingUserSettings || !userSettings) {
         return <Loader />;
     }
+
+    const handleRecoveryEmail = () => {
+        createModal(
+            <EmailModal
+                email={userSettings.Email.Value || '' /* can be null */}
+                hasReset={!!userSettings.Email.Reset}
+                hasNotify={!!userSettings.Email.Notify}
+            />
+        );
+    };
+
+    const handleRecoveryPhone = () => {
+        createModal(
+            <PhoneModal
+                phone={userSettings.Phone.Value || '' /* can be null */}
+                hasReset={!!userSettings.Phone.Reset}
+            />
+        );
+    };
 
     const handleChangePasswordEmailToggle = async (value: number) => {
         if (value && !userSettings.Email.Value) {
@@ -72,20 +92,16 @@ const RecoveryMethodsSection = () => {
     };
 
     return (
-        <SettingsSection>
+        <>
             <SettingsParagraph>
                 {c('Info')
                     .t`We recommend adding a linked email or phone number so you can recover your account if you lose your password.`}
             </SettingsParagraph>
             <Row>
-                <Label className="on-mobile-mb0-5 text-bold" htmlFor="emailInput">{c('Label').t`Email address`}</Label>
+                <Label>{c('Label').t`Email address`}</Label>
                 <Field className="w100">
                     <div className="mb1">
-                        <RecoveryEmail
-                            email={userSettings.Email.Value}
-                            hasReset={!!userSettings.Email.Reset}
-                            hasNotify={!!userSettings.Email.Notify}
-                        />
+                        <RecoveryEmail email={userSettings.Email.Value} onClick={handleRecoveryEmail} />
                     </div>
                     <div className="mb1">
                         <Toggle
@@ -97,7 +113,7 @@ const RecoveryMethodsSection = () => {
                                 withLoadingReset(handleChangePasswordEmailToggle(+checked))
                             }
                         />
-                        {c('Label').t`Email recovery`}
+                        {c('Label').t`Allow password reset`}
                     </div>
                     {CLIENT_TYPE === VPN ? null : (
                         <div className="flex flex-align-items-center">
@@ -122,11 +138,10 @@ const RecoveryMethodsSection = () => {
             </Row>
             <hr className="mb2 mt2" />
             <Row>
-                <Label className="pt0 on-mobile-mb0-5 text-bold" htmlFor="phoneInput">{c('Label')
-                    .t`Phone number`}</Label>
+                <Label className="pt0">{c('Label').t`Phone number`}</Label>
                 <Field className="w100">
                     <div className="mb1">
-                        <RecoveryPhone phone={userSettings.Phone.Value} hasReset={!!userSettings.Phone.Reset} />
+                        <RecoveryPhone phone={userSettings.Phone.Value} onClick={handleRecoveryPhone} />
                     </div>
                     <div className="flex flex-align-items-center">
                         <Toggle
@@ -138,11 +153,11 @@ const RecoveryMethodsSection = () => {
                                 withLoadingReset(handleChangePasswordPhoneToggle(+checked))
                             }
                         />
-                        <label htmlFor="passwordPhoneResetToggle">{c('Label').t`Password reset allowed`}</label>
+                        <label htmlFor="passwordPhoneResetToggle">{c('Label').t`Allow password reset`}</label>
                     </div>
                 </Field>
             </Row>
-        </SettingsSection>
+        </>
     );
 };
 
