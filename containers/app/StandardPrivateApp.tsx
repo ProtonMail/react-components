@@ -95,7 +95,6 @@ const StandardPrivateApp = <T, M extends Model<T>, E, EvtM extends Model<E>>({
             console.log(data.cache);
             localStorage.setItem('cache-test', JSON.stringify(data));
         }, 300);
-        window.cache = cache;
         return cache.subscribe(cb);
     }, []);
 
