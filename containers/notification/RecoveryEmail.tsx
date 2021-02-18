@@ -13,7 +13,7 @@ interface Props {
 }
 
 const RecoveryEmail = ({ email, hasReset, hasNotify }: Props) => {
-    const [input, setInput] = useState(email || '');
+    const [input, setInput] = useState(email);
     const [loading, withLoading] = useLoading();
     const { createNotification } = useNotifications();
     const { createModal } = useModals();
@@ -59,7 +59,12 @@ const RecoveryEmail = ({ email, hasReset, hasNotify }: Props) => {
     return (
         <div className="flex flex-wrap">
             <div className="text-ellipsis flex-item-fluid" title={email || ''}>
-                <EmailInput id="emailInput" value={input} placeholder={c('Info').t`Not set`} onChange={handleChange} />
+                <EmailInput
+                    id="emailInput"
+                    value={input || ''}
+                    placeholder={c('Info').t`Not set`}
+                    onChange={handleChange}
+                />
             </div>
             <div className="ml1">
                 <PrimaryButton disabled={email === input} loading={loading} onClick={() => withLoading(handleSubmit())}>
