@@ -1,7 +1,7 @@
 import React from 'react';
 import { c } from 'ttag';
 
-import { PrimaryButton, Field } from '../../components';
+import { PrimaryButton } from '../../components';
 
 interface Props {
     email: string | null;
@@ -10,16 +10,14 @@ interface Props {
 
 const RecoveryEmail = ({ email, onClick }: Props) => {
     return (
-        <>
-            <Field>
-                <div className="text-ellipsis" title={email || ''}>
-                    {email || c('Info').t`Not set`}
-                </div>
-            </Field>
+        <div className="flex flex-align-items-center">
+            <div className="text-ellipsis flex-item-fluid" title={email || ''}>
+                {email || c('Info').t`Not set`}
+            </div>
             <div className="ml1 on-mobile-ml0">
                 <PrimaryButton onClick={onClick}>{c('Action').t`Edit`}</PrimaryButton>
             </div>
-        </>
+        </div>
     );
 };
 
