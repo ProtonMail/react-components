@@ -18,7 +18,6 @@ import {
 import AuthModal from '../password/AuthModal';
 import RecoveryEmail from './RecoveryEmail';
 import RecoveryPhone from './RecoveryPhone';
-import EmailModal from './EmailModal';
 import PhoneModal from './PhoneModal';
 import SettingsParagraph from '../account/SettingsParagraph';
 
@@ -37,16 +36,6 @@ const RecoveryMethodsSection = () => {
     if (loadingUserSettings || !userSettings) {
         return <Loader />;
     }
-
-    const handleRecoveryEmail = () => {
-        createModal(
-            <EmailModal
-                email={userSettings.Email.Value || '' /* can be null */}
-                hasReset={!!userSettings.Email.Reset}
-                hasNotify={!!userSettings.Email.Notify}
-            />
-        );
-    };
 
     const handleRecoveryPhone = () => {
         createModal(
@@ -98,10 +87,14 @@ const RecoveryMethodsSection = () => {
                     .t`We recommend adding a linked email or phone number so you can recover your account if you lose your password.`}
             </SettingsParagraph>
             <Row>
-                <Label>{c('Label').t`Email address`}</Label>
+                <Label className="on-mobile-mb0-5">{c('Label').t`Email address`}</Label>
                 <Field className="w100">
                     <div className="mb1">
-                        <RecoveryEmail email={userSettings.Email.Value} onClick={handleRecoveryEmail} />
+                        <RecoveryEmail
+                            email={userSettings.Email.Value}
+                            hasReset={!!userSettings.Email.Reset}
+                            hasNotify={!!userSettings.Email.Notify}
+                        />
                     </div>
                     <div className="mb1">
                         <Toggle
@@ -138,7 +131,7 @@ const RecoveryMethodsSection = () => {
             </Row>
             <hr className="mb2 mt2" />
             <Row>
-                <Label className="pt0">{c('Label').t`Phone number`}</Label>
+                <Label className="pt0 on-mobile-mb0-5">{c('Label').t`Phone number`}</Label>
                 <Field className="w100">
                     <div className="mb1">
                         <RecoveryPhone phone={userSettings.Phone.Value} onClick={handleRecoveryPhone} />
