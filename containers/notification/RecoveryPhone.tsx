@@ -55,7 +55,6 @@ const RecoveryPhone = ({ phone, hasReset }: Props) => {
                     inputClassName="w100"
                     onPhoneNumberChange={handleChange}
                     defaultValue={input}
-                    autoFocus
                     dropdownContainer="body"
                     required
                 />
