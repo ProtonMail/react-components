@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { SettingsSectionTitle, SettingsSection } from '../../containers';
+import { SettingsSectionTitle } from '../../containers';
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
     id: string;
@@ -28,10 +28,10 @@ const SubSettingsSection = ({ id, observer, title, children, ...rest }: Props) =
             <div className="relative">
                 <div id={id} className="header-height-anchor" />
             </div>
-            <SettingsSection {...rest} ref={ref} data-target-id={id}>
+            <section {...rest} ref={ref} data-target-id={id}>
                 <SettingsSectionTitle>{title}</SettingsSectionTitle>
                 {children}
-            </SettingsSection>
+            </section>
         </>
     );
 };
