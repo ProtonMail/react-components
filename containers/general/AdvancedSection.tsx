@@ -24,7 +24,7 @@ import ShortcutsToggle from './ShortcutsToggle';
 const AdvancedSection = () => {
     const { createModal } = useModals();
 
-    const [{ Shortcuts = 1 }] = useMailSettings();
+    const [{ Shortcuts = 1 } = {}] = useMailSettings();
     const [shortcuts, setShortcuts] = useState(Shortcuts);
     const [environment, setEnvironment] = useState(() => (getCookie('Version') || 'prod') as Environment);
 
