@@ -52,7 +52,7 @@ const ContactView = ({
 
     const handleExport = () => singleExport(properties);
 
-    const hasError = !!errors?.filter((error) => error.type !== CRYPTO_PROCESSING_TYPES.SIGNATURE_NOT_VERIFIED).length;
+    const hasError = errors?.some((error) => error.type !== CRYPTO_PROCESSING_TYPES.SIGNATURE_NOT_VERIFIED);
 
     const contactViewPropertiesProps = {
         contactID,

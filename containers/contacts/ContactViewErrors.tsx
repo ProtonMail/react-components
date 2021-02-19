@@ -25,9 +25,9 @@ const getText = (errorType: CRYPTO_PROCESSING_TYPES) => {
         case FAIL_TO_DECRYPT:
             return c('Warning').t`The decryption of the encrypted content failed.`;
         case SIGNATURE_NOT_VERIFIED:
-            return c('Warning').t`The verification of the contact detail's signature failed.`;
+            return c('Warning').t`The verification of the contact details' signature failed.`;
         default:
-            return c('Warning').t`The contact failed loading.`;
+            return c('Warning').t`The contact failed to load.`;
     }
 };
 
@@ -51,7 +51,7 @@ interface Props {
 const ContactViewErrors = ({ contactID, errors, onReload }: Props) => {
     const { createModal } = useModals();
 
-    if (!errors || !errors.length) {
+    if (!errors?.length) {
         return null;
     }
 

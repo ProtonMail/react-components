@@ -29,7 +29,7 @@ const ContactSignatureErrorModal = ({ onClose = noop, contactID, ...rest }: Prop
             {...rest}
         >
             <Alert type="info">{c('Info')
-                .t`To re-sign your contacts, we need to check every contact against the list of encryption keys available in your account. If no match is found, your contact will be re-signed with the primary encryption key on file.`}</Alert>
+                .t`To re-sign your contacts, we need to check every contact against the list of encryption keys available in your account. If no match is found, your contact will be re-signed with the primary encryption key.`}</Alert>
             <Alert type="info">{c('Info')
                 .t`Please note that this process may take some time depending on the size of your address book.`}</Alert>
         </FormModal>

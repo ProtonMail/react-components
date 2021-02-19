@@ -47,7 +47,7 @@ const ContactResignExecutionModal = ({ onClose = noop, ...rest }: Props) => {
         void execute();
     }, [loadingContacts]);
 
-    // Delayed closing no to leave ongoing process
+    // Delayed closing not to leave ongoing process
     useEffect(() => {
         if (closing && !execution) {
             onClose();

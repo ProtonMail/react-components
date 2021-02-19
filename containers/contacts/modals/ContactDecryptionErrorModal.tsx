@@ -71,7 +71,7 @@ const ContactDecryptionErrorModal = ({ onClose = noop, contactID, ...rest }: Pro
             )}
             <Alert type="info">
                 {c('Info')
-                    .t`Cannot remember your password? We can help you clear the encrypted data and in the process dismiss the alert.`}
+                    .t`Cannot remember your password? We can help you clear the encrypted data of all contacts encrypted with this key and in the process dismiss the alert.`}
                 <LinkButton className="ml0-5" onClick={handleClear} disabled={!errorKey}>
                     {c('Action').t`Click here.`}
                 </LinkButton>
