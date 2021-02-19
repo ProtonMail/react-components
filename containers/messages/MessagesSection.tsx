@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
 
+import { SHOW_IMAGES } from 'proton-shared/lib/constants';
+
 import { Row, Field, Label, Info } from '../../components';
 import { useMailSettings } from '../../hooks';
 
@@ -10,15 +12,17 @@ import ShowMovedToggle from './ShowMovedToggle';
 import RequestLinkConfirmationToggle from './RequestLinkConfirmationToggle';
 import DelaySendSecondsSelect from './DelaySendSecondsSelect';
 
+const { EMBEDDED } = SHOW_IMAGES;
+
 const MessagesSection = () => {
-    const [{ ShowImages, ConfirmLink, DelaySendSeconds } = {}] = useMailSettings();
+    const [{ ShowImages = EMBEDDED, ConfirmLink = 1, DelaySendSeconds = 10 } = {}] = useMailSettings();
     const [showImages, setShowImages] = useState(ShowImages);
-    const handleChange = (newValue) => setShowImages(newValue);
+    const handleChange = (newValue: number) => setShowImages(newValue);
 
     return (
         <>
             <Row>
-                <Label htmlFor="remoteToggle">
+                <Label htmlFor="remoteToggle" className="text-bold">
                     <span className="mr0-5">{c('Label').t`Auto-load remote content`}</span>
                     <Info url="https://protonmail.com/support/knowledge-base/images-by-default/" />
                 </Label>
@@ -27,7 +31,7 @@ const MessagesSection = () => {
                 </Field>
             </Row>
             <Row>
-                <Label htmlFor="embeddedToggle">
+                <Label htmlFor="embeddedToggle" className="text-bold">
                     <span className="mr0-5">{c('Label').t`Auto-load embedded images`}</span>
                     <Info url="https://protonmail.com/support/knowledge-base/images-by-default/" />
                 </Label>
@@ -36,8 +40,8 @@ const MessagesSection = () => {
                 </Field>
             </Row>
             <Row>
-                <Label htmlFor="showMovedToggle">
-                    <span className="mr0-5">{c('Label').t`Sent/Drafts`}</span>
+                <Label htmlFor="showMovedToggle" className="text-bold">
+                    <span className="mr0-5">{c('Label').t`Include moved in Sent/Drafts`}</span>
                     <Info
                         title={c('Tooltip')
                             .t`Setting to 'Include moved' means that sent / draft messages that have been moved to other folders will continue to appear in the Sent/Drafts folder.`}
@@ -45,17 +49,17 @@ const MessagesSection = () => {
                 </Label>
                 <Field>
                     <ShowMovedToggle id="showMovedToggle" />
-                    <Label htmlFor="showMovedToggle" className="ml1">{c('Label').t`Include moved`}</Label>
                 </Field>
             </Row>
             <Row>
-                <Label htmlFor="requestLinkConfirmationToggle">{c('Label').t`Request link confirmation`}</Label>
+                <Label htmlFor="requestLinkConfirmationToggle" className="text-bold">{c('Label')
+                    .t`Request link confirmation`}</Label>
                 <Field>
                     <RequestLinkConfirmationToggle confirmLink={ConfirmLink} id="requestLinkConfirmationToggle" />
                 </Field>
             </Row>
             <Row>
-                <Label htmlFor="delaySendSecondsSelect">
+                <Label htmlFor="delaySendSecondsSelect" className="text-bold">
                     <span className="mr0-5">{c('Label').t`Undo send`}</span>
                     <Info
                         title={c('Tooltip')

@@ -11,12 +11,14 @@ import {
     useModals,
     useNotifications,
     usePremiumDomains,
+    useUser,
 } from '../../hooks';
 import { PrimaryButton } from '../../components';
 import UnlockModal from '../login/UnlockModal';
-import CreateMissingKeysAddressModal from './missingKeys/CreateMissingKeysAddressModal';
+import CreateMissingKeysAddressModal from '../addresses/missingKeys/CreateMissingKeysAddressModal';
 
 const PmMeButton = () => {
+    const [{ Name }] = useUser();
     const [loading, withLoading] = useLoading();
     const { createNotification } = useNotifications();
     const { createModal } = useModals();
@@ -55,7 +57,7 @@ const PmMeButton = () => {
             loading={loading}
             onClick={() => withLoading(createPremiumAddress())}
         >
-            {c('Action').t`Activate`}
+            {c('Action').t`Activate ${Name}@pm.me`}
         </PrimaryButton>
     );
 };
