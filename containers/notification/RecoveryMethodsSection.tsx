@@ -19,6 +19,7 @@ import AuthModal from '../password/AuthModal';
 import RecoveryEmail from './RecoveryEmail';
 import RecoveryPhone from './RecoveryPhone';
 import SettingsParagraph from '../account/SettingsParagraph';
+import { SettingsSection } from '../account';
 
 const { VPN } = CLIENT_TYPES;
 
@@ -71,13 +72,13 @@ const RecoveryMethodsSection = () => {
     };
 
     return (
-        <>
+        <SettingsSection>
             <SettingsParagraph>
                 {c('Info')
                     .t`We recommend adding a linked email or phone number so you can recover your account if you lose your password.`}
             </SettingsParagraph>
             <Row>
-                <Label className="on-mobile-mb0-5" htmlFor="emailInput">{c('Label').t`Email address`}</Label>
+                <Label className="on-mobile-mb0-5 text-bold" htmlFor="emailInput">{c('Label').t`Email address`}</Label>
                 <Field className="w100">
                     <div className="mb1">
                         <RecoveryEmail
@@ -96,7 +97,7 @@ const RecoveryMethodsSection = () => {
                                 withLoadingReset(handleChangePasswordEmailToggle(+checked))
                             }
                         />
-                        {c('Label').t`Allow password reset`}
+                        {c('Label').t`Email recovery`}
                     </div>
                     {CLIENT_TYPE === VPN ? null : (
                         <div className="flex flex-align-items-center">
@@ -121,7 +122,8 @@ const RecoveryMethodsSection = () => {
             </Row>
             <hr className="mb2 mt2" />
             <Row>
-                <Label className="pt0 on-mobile-mb0-5" htmlFor="phoneInput">{c('Label').t`Phone number`}</Label>
+                <Label className="pt0 on-mobile-mb0-5 text-bold" htmlFor="phoneInput">{c('Label')
+                    .t`Phone number`}</Label>
                 <Field className="w100">
                     <div className="mb1">
                         <RecoveryPhone phone={userSettings.Phone.Value} hasReset={!!userSettings.Phone.Reset} />
@@ -136,11 +138,11 @@ const RecoveryMethodsSection = () => {
                                 withLoadingReset(handleChangePasswordPhoneToggle(+checked))
                             }
                         />
-                        <label htmlFor="passwordPhoneResetToggle">{c('Label').t`Allow password reset`}</label>
+                        <label htmlFor="passwordPhoneResetToggle">{c('Label').t`Password reset allowed`}</label>
                     </div>
                 </Field>
             </Row>
-        </>
+        </SettingsSection>
     );
 };
 

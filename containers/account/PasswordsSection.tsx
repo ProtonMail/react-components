@@ -45,17 +45,20 @@ const PasswordsSection = ({ open }: Props) => {
     return (
         <>
             <Row>
-                <Label htmlFor="passwordChange">{passwordLabel}</Label>
+                <Label htmlFor="passwordChange" className="text-bold">
+                    {passwordLabel}
+                </Label>
                 <Field>
                     <PrimaryButton onClick={() => handleChangePassword(changePasswordMode)}>
                         {passwordButtonLabel}
                     </PrimaryButton>
                 </Field>
             </Row>
+            <TwoFactorSection />
             {hasAddresses && (
                 <>
                     <Row>
-                        <Label htmlFor="passwordModeToggle">
+                        <Label htmlFor="passwordModeToggle" className="text-bold">
                             <span className="mr0-5">{c('Label').t`Two password mode`}</span>
                             <Info url="https://protonmail.com/support/knowledge-base/single-password" />
                         </Label>
@@ -74,7 +77,7 @@ const PasswordsSection = ({ open }: Props) => {
                     </Row>
                     {!isOnePasswordMode && (
                         <Row>
-                            <Label htmlFor="passwordModeToggle">
+                            <Label htmlFor="passwordModeToggle" className="text-bold">
                                 <span className="mr0-5">{c('Label').t`Mailbox password`}</span>
                                 <Info url="https://protonmail.com/support/knowledge-base/single-password" />
                             </Label>
@@ -89,7 +92,6 @@ const PasswordsSection = ({ open }: Props) => {
                     )}
                 </>
             )}
-            <TwoFactorSection />
         </>
     );
 };
