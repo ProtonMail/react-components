@@ -19,6 +19,7 @@ import { useApi, useAuthentication, useModals, useLoading, useNotifications } fr
 import SessionAction from './SessionAction';
 import { Session } from './interface';
 import { getClientsI18N } from './helper';
+import { SettingsParagraph, SettingsSection } from '../account';
 
 const PAGE_SIZE = 10;
 
@@ -77,9 +78,11 @@ const SessionsSection = () => {
     const currentUID = authentication.getUID();
 
     return (
-        <>
-            <Alert learnMore="https://protonmail.com/support/knowledge-base/log-out-all-other-sessions/">{c('Info')
-                .t`Unless you explicitly sign out or change your password, sessions remain active and only expire after 30 days of inactivity.`}</Alert>
+        <SettingsSection>
+            <SettingsParagraph learnMoreUrl="https://protonmail.com/support/knowledge-base/log-out-all-other-sessions/">
+                {c('Info')
+                    .t`Unless you explicitly sign out or change your password, sessions remain active and only expire after 30 days of inactivity.`}
+            </SettingsParagraph>
             <Block className="flex flex-justify-space-between">
                 <div>
                     <Button onClick={handleOpenModal} loading={loadingRevokeAll}>{c('Action')
@@ -119,7 +122,7 @@ const SessionsSection = () => {
                     })}
                 </TableBody>
             </Table>
-        </>
+        </SettingsSection>
     );
 };
 
