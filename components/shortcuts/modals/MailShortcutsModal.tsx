@@ -17,7 +17,7 @@ const MailShortCutsModal = ({ ...rest }: Props) => {
     const appName = getAppName(APPS.PROTONMAIL);
     const title = c('Title').t`${appName} Keyboard Shortcuts`;
 
-    const [{ Shortcuts = 1 }] = useMailSettings();
+    const [{ Shortcuts = 1 } = {}] = useMailSettings();
 
     const mailShortcuts = getShortcuts();
     const alwaysOnSections = mailShortcuts.filter((section) => section.alwaysActive);
