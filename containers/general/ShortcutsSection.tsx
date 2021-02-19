@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { c } from 'ttag';
 
-import { Row, Label, Field, SmallButton } from '../../components';
-import { useMailSettings } from '../../hooks';
+import { Row, Label, Field, SmallButton, MailShortcutsModal } from '../../components';
+import { useMailSettings, useModals } from '../../hooks';
 
 import ShortcutsToggle from './ShortcutsToggle';
 
-interface Props {
-    onOpenShortcutsModal: () => void;
-}
-
-const ShortcutsSection = ({ onOpenShortcutsModal }: Props) => {
+const ShortcutsSection = () => {
+    const { createModal } = useModals();
     const [{ Shortcuts } = { Shortcuts: 0 }] = useMailSettings();
     const [shortcuts, setShortcuts] = useState(Shortcuts);
+
+    const openShortcutsModal = () => {
+        createModal(<MailShortcutsModal />, 'shortcuts-modal');
+    };
 
     // Handle updates from the Event Manager.
     useEffect(() => {
@@ -34,8 +35,7 @@ const ShortcutsSection = ({ onOpenShortcutsModal }: Props) => {
                     />
                 </div>
                 <div className="mt1">
-                    <SmallButton onClick={onOpenShortcutsModal}>{c('Action')
-                        .t`Display keyboard shortcuts`}</SmallButton>
+                    <SmallButton onClick={openShortcutsModal}>{c('Action').t`Display keyboard shortcuts`}</SmallButton>
                 </div>
             </Field>
         </Row>
