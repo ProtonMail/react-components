@@ -11,11 +11,11 @@ const PmMePanel = () => {
     const [{ canPay, hasPaidMail }] = useUser();
     const [addresses, loading] = useAddresses();
 
-    if (loading && !Array.isArray(addresses)) {
-        return <Loader />;
-    }
-
     const contentRenderer = () => {
+        if (loading && !Array.isArray(addresses)) {
+            return <Loader />;
+        }
+
         if (canPay) {
             const hasPremium = addresses.some(({ Type }) => Type === ADDRESS_TYPE.TYPE_PREMIUM);
 
