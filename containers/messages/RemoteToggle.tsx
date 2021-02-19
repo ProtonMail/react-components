@@ -1,21 +1,29 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { c } from 'ttag';
+
 import { SHOW_IMAGES } from 'proton-shared/lib/constants';
 import { updateShowImages } from 'proton-shared/lib/api/mailSettings';
 import { setBit, clearBit, hasBit } from 'proton-shared/lib/helpers/bitset';
-import { c } from 'ttag';
-import { useEventManager, useToggle, useNotifications, useApi, useLoading } from '../../hooks';
+
 import { Toggle } from '../../components';
+import { useEventManager, useToggle, useNotifications, useApi, useLoading } from '../../hooks';
 
 const { REMOTE } = SHOW_IMAGES;
 
-const RemoteToggle = ({ id, showImages, onChange }) => {
+interface Props {
+    id: string;
+    showImages: number;
+    onChange: (value: number) => void;
+}
+
+const RemoteToggle = ({ id, showImages, onChange }: Props) => {
     const [loading, withLoading] = useLoading();
     const { createNotification } = useNotifications();
     const { call } = useEventManager();
     const api = useApi();
     const { state, toggle } = useToggle(hasBit(showImages, REMOTE));
-    const handleChange = async (checked) => {
+
+    const handleChange = async (checked: boolean) => {
         const bit = checked ? setBit(showImages, REMOTE) : clearBit(showImages, REMOTE);
         await api(updateShowImages(bit));
         await call();
@@ -31,12 +39,6 @@ const RemoteToggle = ({ id, showImages, onChange }) => {
             loading={loading}
         />
     );
-};
-
-RemoteToggle.propTypes = {
-    id: PropTypes.string,
-    showImages: PropTypes.number.isRequired,
-    onChange: PropTypes.func.isRequired,
 };
 
 export default RemoteToggle;

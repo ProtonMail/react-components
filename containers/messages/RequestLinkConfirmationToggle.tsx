@@ -1,18 +1,24 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { updateConfirmLink } from 'proton-shared/lib/api/mailSettings';
 import { c } from 'ttag';
+
+import { updateConfirmLink } from 'proton-shared/lib/api/mailSettings';
+
 import { useToggle, useEventManager, useNotifications, useApi, useLoading } from '../../hooks';
 import { Toggle } from '../../components';
 
-const RequestLinkConfirmationToggle = ({ id, confirmLink }) => {
+interface Props {
+    id: string;
+    confirmLink: number;
+}
+
+const RequestLinkConfirmationToggle = ({ id, confirmLink }: Props) => {
     const { createNotification } = useNotifications();
     const [loading, withLoading] = useLoading();
     const { call } = useEventManager();
     const api = useApi();
     const { state, toggle } = useToggle(!!confirmLink);
 
-    const handleChange = async (checked) => {
+    const handleChange = async (checked: boolean) => {
         await api(updateConfirmLink(+checked));
         await call();
         toggle();
@@ -27,11 +33,6 @@ const RequestLinkConfirmationToggle = ({ id, confirmLink }) => {
             loading={loading}
         />
     );
-};
-
-RequestLinkConfirmationToggle.propTypes = {
-    id: PropTypes.string,
-    confirmLink: PropTypes.number,
 };
 
 export default RequestLinkConfirmationToggle;

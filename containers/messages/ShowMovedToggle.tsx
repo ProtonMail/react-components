@@ -1,22 +1,27 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { c } from 'ttag';
+
 import { updateShowMoved } from 'proton-shared/lib/api/mailSettings';
 import { SHOW_MOVED } from 'proton-shared/lib/constants';
-import { c } from 'ttag';
+
 import { useApi, useEventManager, useToggle, useMailSettings, useNotifications, useLoading } from '../../hooks';
 import { Toggle } from '../../components';
 
 const { DRAFTS_AND_SENT, NONE } = SHOW_MOVED;
 
-const ShowMovedToggle = ({ id }) => {
+interface Props {
+    id: string;
+}
+
+const ShowMovedToggle = ({ id }: Props) => {
     const [loading, withLoading] = useLoading();
     const { createNotification } = useNotifications();
     const api = useApi();
-    const [{ ShowMoved } = {}] = useMailSettings();
+    const [{ ShowMoved = 0 } = {}] = useMailSettings();
     const { call } = useEventManager();
     const { state, toggle } = useToggle(!!ShowMoved);
 
-    const handleChange = async (checked) => {
+    const handleChange = async (checked: boolean) => {
         await api(updateShowMoved(checked ? DRAFTS_AND_SENT : NONE));
         await call();
         toggle();
@@ -31,10 +36,6 @@ const ShowMovedToggle = ({ id }) => {
             loading={loading}
         />
     );
-};
-
-ShowMovedToggle.propTypes = {
-    id: PropTypes.string,
 };
 
 export default ShowMovedToggle;
