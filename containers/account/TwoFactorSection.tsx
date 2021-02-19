@@ -3,14 +3,11 @@ import { c } from 'ttag';
 import { APPS } from 'proton-shared/lib/constants';
 import { getHasTOTPSettingEnabled } from 'proton-shared/lib/settings/twoFactor';
 
-import { Info, Toggle } from '../../components';
+import { Row, Label, Info, Field, Toggle } from '../../components';
 import { useConfig, useModals, useUserSettings } from '../../hooks';
 
 import EnableTOTPModal from './EnableTOTPModal';
 import DisableTOTPModal from './DisableTOTPModal';
-import SettingsLayout from './SettingsLayout';
-import SettingsLayoutLeft from './SettingsLayoutLeft';
-import SettingsLayoutRight from './SettingsLayoutRight';
 
 const TwoFactorSection = () => {
     const { APP_NAME } = useConfig();
@@ -32,17 +29,15 @@ const TwoFactorSection = () => {
             : 'https://protonmail.com/support/knowledge-base/two-factor-authentication';
 
     return (
-        <SettingsLayout>
-            <SettingsLayoutLeft>
-                <label htmlFor="twoFactorToggle" className="text-semibold">
-                    <span className="mr0-5">{c('Label').t`Two-factor authentication`}</span>
-                    <Info url={twoFactorAuthLink} />
-                </label>
-            </SettingsLayoutLeft>
-            <SettingsLayoutRight>
+        <Row>
+            <Label htmlFor="twoFactorToggle" className="text-bold">
+                <span className="mr0-5">{c('Label').t`Two-factor authentication`}</span>
+                <Info url={twoFactorAuthLink} />
+            </Label>
+            <Field>
                 <Toggle checked={hasTOTPEnabled} id="twoFactorToggle" onChange={handleChange} />
-            </SettingsLayoutRight>
-        </SettingsLayout>
+            </Field>
+        </Row>
     );
 };
 
