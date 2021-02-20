@@ -25,13 +25,17 @@ const DeskopNotificationTopBanner = () => {
     };
 
     const enableDesktopNotifications = (
-        <button key="enable-desktop-notifications" type="button" onClick={handleEnable}>{c('Action')
-            .t`enable desktop notifications`}</button>
+        <button
+            key="enable-desktop-notifications"
+            className="link align-baseline text-left color-currentColor"
+            type="button"
+            onClick={handleEnable}
+        >{c('Action').t`enable desktop notifications`}</button>
     );
 
     return (
         <TopBanner onClose={() => setDontAsk(true)} className="bg-pm-blue">{c('Info')
-            .jt`Proton needs your permission to ${enableDesktopNotifications}`}</TopBanner>
+            .jt`Proton needs your permission to ${enableDesktopNotifications}.`}</TopBanner>
     );
 };
 
