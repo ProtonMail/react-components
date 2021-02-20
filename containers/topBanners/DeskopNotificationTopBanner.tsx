@@ -3,12 +3,13 @@ import { c } from 'ttag';
 import { getStatus, request, Status } from 'proton-shared/lib/helpers/desktopNotification';
 
 import TopBanner from './TopBanner';
+import { useLocalState } from '../../hooks';
 
 const DeskopNotificationTopBanner = () => {
     const [status, setStatus] = useState<Status>(getStatus());
-    const [hide, setHide] = useState(false);
+    const [dontAsk, setDontAsk] = useLocalState(false, 'dont-ask-desktop-notification');
 
-    if (hide) {
+    if (dontAsk) {
         return null;
     }
 
@@ -29,7 +30,7 @@ const DeskopNotificationTopBanner = () => {
     );
 
     return (
-        <TopBanner onClose={() => setHide(true)} className="bg-pm-blue">{c('Info')
+        <TopBanner onClose={() => setDontAsk(true)} className="bg-pm-blue">{c('Info')
             .jt`Proton needs your permission to ${enableDesktopNotifications}`}</TopBanner>
     );
 };
