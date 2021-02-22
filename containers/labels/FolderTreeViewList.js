@@ -59,7 +59,6 @@ const FolderTreeViewList = ({ items = [] }) => {
             <TreeViewContainer>
                 {order(items).map((item) => {
                     const isOverred = item.ID === overRef.current.ID;
-                    const hasSubFolders = Array.isArray(parents[item.ID]) && parents[item.ID].length;
                     const handleDrop = async () => {
                         if (position === INSIDE) {
                             if (grabbed.ID === overRef.current.ID) {
@@ -139,11 +138,7 @@ const FolderTreeViewList = ({ items = [] }) => {
                                                 className="mr1 flex-item-noshrink cursor-row-resize"
                                             />
                                         )}
-                                        <FolderIcon
-                                            isRoot={hasSubFolders}
-                                            className="mr0-5 flex-item-noshrink"
-                                            color={item.Color}
-                                        />
+                                        <FolderIcon className="mr0-5 flex-item-noshrink" folder={item} />
                                         <span className="text-ellipsis" title={item.Name}>
                                             {item.Name}
                                         </span>
