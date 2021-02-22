@@ -5,7 +5,7 @@ import { classnames } from '../../helpers';
 
 export enum ToggleState {
     on = 'on',
-    off = 'off',
+    off = '',
 }
 export interface Props extends React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
     loading?: boolean;
@@ -23,7 +23,7 @@ const Toggle = ({
     label = (key: ToggleState) => {
         return (
             <span className="toggle-label-text" aria-hidden="true">
-                <Icon name={key} alt="" className="toggle-label-img" />
+                <Icon name={key} alt="" size={8} className="toggle-label-img" />
             </span>
         );
     },
