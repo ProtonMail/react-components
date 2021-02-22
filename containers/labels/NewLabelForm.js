@@ -1,12 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { LABEL_TYPE } from 'proton-shared/lib/constants';
+import { LABEL_TYPE, ROOT_FOLDER } from 'proton-shared/lib/constants';
 import { Alert, Input, Label, Row, Field, ColorPicker, Toggle, Info } from '../../components';
 
 import ParentFolderSelector from './ParentFolderSelector';
+import { useMailSettings } from '../../hooks';
 
 function NewLabelForm({ label, onChangeColor, onChangeName, onChangeParentID, onChangeNotify }) {
+    const [mailSettings] = useMailSettings();
+    const hasColorPicker =
+        label.Type === LABEL_TYPE.MESSAGE_LABEL ||
+        (mailSettings?.EnableFolderColor &&
+            !(mailSettings?.InheritParentFolderColor && label.ParentID === `${ROOT_FOLDER}`));
+
     return (
         <div className="center flex-item-fluid">
             {!label.ID && label.Type === LABEL_TYPE.MESSAGE_FOLDER ? (
@@ -34,7 +41,7 @@ function NewLabelForm({ label, onChangeColor, onChangeName, onChangeParentID, on
                     />
                 </Field>
             </Row>
-            {label.Type === LABEL_TYPE.MESSAGE_LABEL ? (
+            {hasColorPicker ? (
                 <Row>
                     <Label htmlFor="accountType">{c('New Label form').t`Color`} </Label>
                     <Field>

@@ -10,6 +10,7 @@ import { useApi, useLoading, useEventManager, useActiveBreakpoint } from '../../
 import { classnames } from '../../helpers';
 import ActionsLabel from './ActionsLabel';
 import ToggleNotify from './ToggleNotify';
+import FolderIcon from './FolderIcon';
 
 const INSIDE = 'inside';
 const AFTER = 'after';
@@ -138,9 +139,10 @@ const FolderTreeViewList = ({ items = [] }) => {
                                                 className="mr1 flex-item-noshrink cursor-row-resize"
                                             />
                                         )}
-                                        <Icon
-                                            name={hasSubFolders ? 'parent-folder' : 'folder'}
+                                        <FolderIcon
+                                            isRoot={hasSubFolders}
                                             className="mr0-5 flex-item-noshrink"
+                                            color={item.Color}
                                         />
                                         <span className="text-ellipsis" title={item.Name}>
                                             {item.Name}
