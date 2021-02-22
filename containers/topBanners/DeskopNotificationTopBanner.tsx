@@ -1,13 +1,23 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
 import { getStatus, request, Status } from 'proton-shared/lib/helpers/desktopNotification';
+import { APP_NAMES, APPS } from 'proton-shared/lib/constants';
 
 import TopBanner from './TopBanner';
-import { useLocalState } from '../../hooks';
+import { useLocalState, useConfig } from '../../hooks';
 
 const DeskopNotificationTopBanner = () => {
     const [status, setStatus] = useState<Status>(getStatus());
     const [dontAsk, setDontAsk] = useLocalState(false, 'dont-ask-desktop-notification');
+    const { APP_NAME } = useConfig();
+
+    if (
+        ([APPS.PROTONACCOUNT, APPS.PROTONCONTACTS, APPS.PROTONADMIN, APPS.PROTONVPN_SETTINGS] as APP_NAMES[]).includes(
+            APP_NAME
+        )
+    ) {
+        return null;
+    }
 
     if (dontAsk) {
         return null;
