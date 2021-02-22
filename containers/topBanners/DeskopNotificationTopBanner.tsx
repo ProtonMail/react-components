@@ -11,11 +11,7 @@ const DeskopNotificationTopBanner = () => {
     const [dontAsk, setDontAsk] = useLocalState(false, 'dont-ask-desktop-notification');
     const { APP_NAME } = useConfig();
 
-    if (
-        ([APPS.PROTONACCOUNT, APPS.PROTONCONTACTS, APPS.PROTONADMIN, APPS.PROTONVPN_SETTINGS] as APP_NAMES[]).includes(
-            APP_NAME
-        )
-    ) {
+    if (!([APPS.PROTONMAIL, APPS.PROTONCALENDAR] as APP_NAMES[]).includes(APP_NAME)) {
         return null;
     }
 
