@@ -1,6 +1,6 @@
 import React, { ChangeEvent, MouseEvent } from 'react';
 import { DENSITY } from 'proton-shared/lib/constants';
-import { getInitial } from 'proton-shared/lib/helpers/string';
+import { getInitials } from 'proton-shared/lib/helpers/string';
 import { useUserSettings } from '../../hooks';
 import { Checkbox, Icon } from '../../components';
 import { classnames } from '../../helpers';
@@ -52,7 +52,7 @@ const ItemCheckbox = ({ ID = '', name = '', compactClassName, normalClassName, c
                 className="item-icon flex-item-noshrink relative rounded inline-flex"
                 data-test-id="element-list:message-checkbox"
             >
-                <span className="mauto item-abbr">{getInitial(name)}</span>
+                <span className="mauto item-abbr">{getInitials(name)}</span>
                 <span className="item-icon-fakecheck mauto">
                     <Icon name="on" className="item-icon-fakecheck-icon" />
                 </span>
