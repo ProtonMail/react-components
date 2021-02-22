@@ -1,21 +1,23 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { c } from 'ttag';
+
 import { ADDRESS_TYPE } from 'proton-shared/lib/constants';
-import { Alert, Loader } from '../../components';
-import { useUser, useAddresses } from '../../hooks';
+import { Address } from 'proton-shared/lib/interfaces';
 
-import PmMeButton from './PmMeButton';
+import { Alert } from '../../components';
+import { useUser } from '../../hooks';
+
 import { SettingsSection } from '../account';
+import PmMeButton from './PmMeButton';
 
-const PmMePanel = () => {
+interface Props {
+    addresses: Address[];
+}
+
+const PmMePanel = ({addresses}: Props) => {
     const [{ canPay, hasPaidMail }] = useUser();
-    const [addresses, loading] = useAddresses();
 
-    const contentRenderer = () => {
-        if (loading && !Array.isArray(addresses)) {
-            return <Loader />;
-        }
-
+    const contentRenderer = useCallback(() => {
         if (canPay) {
             const hasPremium = addresses.some(({ Type }) => Type === ADDRESS_TYPE.TYPE_PREMIUM);
 
@@ -62,7 +64,7 @@ const PmMePanel = () => {
             <Alert>{c('Info')
                 .t`ProtonMail now supports @pm.me email addresses (short for ProtonMail me or Private Message me). Upgrade to a paid account to also send emails from your @pm.me address.`}</Alert>
         );
-    };
+    }, [addresses]);
 
     return <SettingsSection>{contentRenderer()}</SettingsSection>;
 };
