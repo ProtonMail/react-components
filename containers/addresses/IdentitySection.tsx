@@ -3,34 +3,32 @@ import { c } from 'ttag';
 import { ADDRESS_STATUS, RECEIVE_ADDRESS, SEND_ADDRESS } from 'proton-shared/lib/constants';
 import { Address } from 'proton-shared/lib/interfaces';
 
-import { Alert, /* Button, */ Label, Select, /* Info, */ Field, Loader, Row } from '../../components';
-import { useAddresses, /* useModals, */ useMailSettings } from '../../hooks';
+import { Alert, Label, Select, Field, Loader, Row } from '../../components';
+import { useAddresses, useMailSettings } from '../../hooks';
 
-import SettingsSection from '../account/SettingsSection';
-import SettingsParagraph from '../account/SettingsParagraph';
+import { SettingsParagraph, SettingsSection } from '../account';
 
-/* import EditAddressModal from './EditAddressModal';
- */ import PMSignatureField from './PMSignatureField';
+import PMSignatureField from './PMSignatureField';
 import EditAddressesSection from './EditAddressesSection';
 
 const IdentitySection = () => {
-    const [addresses = [], loading] = useAddresses();
+    const [addresses, loading] = useAddresses();
 
     const [mailSettings] = useMailSettings();
     const showPMSignatureWarning = mailSettings?.PMSignature === 2;
 
     const [address, setAddress] = useState<Address>();
 
-    const filtered = useMemo(
-        () =>
-            addresses.filter(
-                ({ Status, Receive, Send }) =>
-                    Status === ADDRESS_STATUS.STATUS_ENABLED &&
-                    Receive === RECEIVE_ADDRESS.RECEIVE_YES &&
-                    Send === SEND_ADDRESS.SEND_YES
-            ),
-        [addresses]
-    );
+    const filtered = useMemo<Address[]>(() => {
+        return addresses
+            ? addresses.filter(
+                  ({ Status, Receive, Send }) =>
+                      Status === ADDRESS_STATUS.STATUS_ENABLED &&
+                      Receive === RECEIVE_ADDRESS.RECEIVE_YES &&
+                      Send === SEND_ADDRESS.SEND_YES
+              )
+            : [];
+    }, [addresses]);
 
     useEffect(() => {
         if (!address && filtered.length) {
@@ -38,17 +36,21 @@ const IdentitySection = () => {
         }
     }, [address, filtered]);
 
-    if (loading && !addresses.length) {
+    if (loading || !Array.isArray(addresses)) {
         return <Loader />;
+    }
+
+    if (!loading && !filtered.length) {
+        return <Alert>{c('Info').t`No addresses exist`}</Alert>;
     }
 
     const options = filtered.map(({ Email: text }, index) => ({ text, value: index }));
 
-    const handleChange = ({ target }: ChangeEvent<HTMLSelectElement>) => setAddress(filtered[+target.value]);
-
-    if (!filtered.length || !address) {
-        return <Alert>{c('Info').t`No addresses exist`}</Alert>;
-    }
+    const handleChange = ({ target }: ChangeEvent<HTMLSelectElement>) => {
+        if (filtered) {
+            setAddress(filtered[+target.value]);
+        }
+    };
 
     return (
         <SettingsSection className="pr3">
@@ -66,15 +68,14 @@ const IdentitySection = () => {
                 </Field>
             </Row>
 
-            <EditAddressesSection address={address} />
+            {address && <EditAddressesSection address={address} />}
 
             {showPMSignatureWarning && (
                 <Alert>{c('Info')
                     .t`A paid plan is required to turn off the ProtonMail signature. Paid plan revenue allows us to continue supporting free accounts.`}</Alert>
             )}
             <Row>
-                <Label htmlFor="pmSignatureToggle" className="text-bold w16r">{c('Label')
-                    .t`ProtonMail signature`}</Label>
+                <Label htmlFor="pmSignatureToggle" className="text-bold w16r">{c('Label').t`ProtonMail footer`}</Label>
                 <PMSignatureField id="pmSignatureToggle" mailSettings={mailSettings} />
             </Row>
         </SettingsSection>

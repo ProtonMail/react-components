@@ -8,7 +8,7 @@ import { ADDRESS_TYPE } from 'proton-shared/lib/constants';
 import { Alert, OrderableTable, OrderableTableHeader, OrderableTableBody, OrderableTableRow } from '../../components';
 import { useApi, useEventManager, useAddresses, useNotifications } from '../../hooks';
 
-import SettingsSectionWide from '../account/SettingsSectionWide';
+import { SettingsSectionWide } from '../account';
 
 import AddressStatus from './AddressStatus';
 import AddressActions from './AddressActions';

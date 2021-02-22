@@ -19,8 +19,7 @@ import {
 } from '../../components';
 import { useMembers, useMemberAddresses, useModals, useOrganizationKey, useNotifications } from '../../hooks';
 
-import SettingsParagraph from '../account/SettingsParagraph';
-import SettingsSectionWide from '../account/SettingsSectionWide';
+import { SettingsParagraph, SettingsSectionWide } from '../account';
 
 import AddressModal from './AddressModal';
 import AddressStatus from './AddressStatus';

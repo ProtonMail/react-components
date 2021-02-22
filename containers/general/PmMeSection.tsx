@@ -1,18 +1,15 @@
 import React from 'react';
-import { UserModel } from 'proton-shared/lib/interfaces';
+
+import { Address } from 'proton-shared/lib/interfaces';
 
 import PmMePanel from './PmMePanel';
 
 interface Props {
-    user: UserModel;
+    addresses: Address[];
 }
 
-const PmMeSection = ({ user }: Props) => {
-    if (!user.canPay || user.isSubUser) {
-        return null;
-    }
-
-    return <PmMePanel />;
+const PmMeSection = ({ addresses }: Props) => {
+    return <PmMePanel addresses={addresses} />;
 };
 
 export default PmMeSection;
