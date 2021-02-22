@@ -3,7 +3,7 @@ import { PERMISSIONS } from 'proton-shared/lib/constants';
 
 export interface SettingsPropsShared {
     location: H.Location;
-    setActiveSection: (section: string) => void;
+    setActiveSection?: (section: string) => void;
 }
 
 export interface SubSectionConfig {

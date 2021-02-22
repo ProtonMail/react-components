@@ -21,16 +21,17 @@ const PMSignatureField = ({ id, mailSettings = {} }: Props) => {
 
     const handleChange = async ({ target }: ChangeEvent<HTMLInputElement>) => {
         await request(+target.checked);
-        call();
+        await call();
         toggle();
         createNotification({ text: c('Success').t`Preference saved` });
     };
 
     return (
         <>
-            <Field>
+            <Field className="flex-item-fluid">
                 <div
                     className="bordered-container pl1 pr1 pt0-5 pb0-5 mb1"
+                    // eslint-disable-next-line react/no-danger
                     dangerouslySetInnerHTML={{ __html: PM_SIGNATURE }}
                 />
             </Field>
