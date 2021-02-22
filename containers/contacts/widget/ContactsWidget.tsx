@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
 import { Recipient } from 'proton-shared/lib/interfaces';
-import { Dropdown, Icon, usePopperAnchor } from '../../../components';
+import { Dropdown, Icon, Tabs, usePopperAnchor } from '../../../components';
 import { generateUID } from '../../../helpers';
 import ContactsWidgetContainer from './ContactsWidgetContainer';
+import ContactsWidgetGroupsContainer from './ContactsWidgetGroupsContainer';
 import './ContactsWidget.scss';
 
 interface Props {
@@ -14,6 +15,7 @@ interface Props {
 const ContactsWidget = ({ className, onCompose }: Props) => {
     const [uid] = useState(generateUID('dropdown'));
     const { anchorRef, isOpen, toggle, close } = usePopperAnchor<HTMLButtonElement>();
+    const [tabIndex, setTabIndex] = useState(0);
     const title = c('Header').t`Contacts`;
 
     return (
@@ -40,7 +42,20 @@ const ContactsWidget = ({ className, onCompose }: Props) => {
                 noMaxWidth
                 noMaxHeight
             >
-                <ContactsWidgetContainer onClose={close} onCompose={onCompose} />
+                <Tabs
+                    tabs={[
+                        {
+                            title: c('Title').t`Contacts`,
+                            content: <ContactsWidgetContainer onClose={close} onCompose={onCompose} />,
+                        },
+                        {
+                            title: c('Title').t`Groups`,
+                            content: <ContactsWidgetGroupsContainer onClose={close} onCompose={onCompose} />,
+                        },
+                    ]}
+                    value={tabIndex}
+                    onChange={setTabIndex}
+                />
             </Dropdown>
         </>
     );
