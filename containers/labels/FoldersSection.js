@@ -5,7 +5,7 @@ import { Loader, Alert, PrimaryButton, Label } from '../../components';
 import { useFolders, useModals } from '../../hooks';
 import FolderTreeViewList from './FolderTreeViewList';
 import EditLabelModal from './modals/EditLabelModal';
-import ToggleFolderColor from './ToggleFolderColor';
+import ToggleEnableFolderColor from './ToggleEnableFolderColor';
 import ToggleInheritParentFolderColor from './ToggleInheritParentFolderColor';
 
 function LabelsSection() {
@@ -26,7 +26,7 @@ function LabelsSection() {
                 {c('LabelSettings').t`A message can only be filed in a single Folder at a time.`}
             </Alert>
             <div className="mb1 flex flex-items-align-center">
-                <ToggleFolderColor id="folder-colors" className="mr1" />
+                <ToggleEnableFolderColor id="folder-colors" className="mr1" />
                 <Label htmlFor="folder-colors">{c('Label').t`Enable folder colors`}</Label>
             </div>
             <div className="mb1 flex flex-items-align-center">

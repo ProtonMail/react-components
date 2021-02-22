@@ -1,5 +1,6 @@
 import React, { ChangeEvent } from 'react';
 import { c } from 'ttag';
+import { updateEnableFolderColor } from 'proton-shared/lib/api/mailSettings';
 
 import { Toggle } from '../../components';
 import { useApi, useLoading, useEventManager, useNotifications, useMailSettings } from '../../hooks';
@@ -9,7 +10,7 @@ interface Props {
     className?: string;
 }
 
-const ToggleFolderColor = ({ id, className }: Props) => {
+const ToggleEnableFolderColor = ({ id, className }: Props) => {
     const api = useApi();
     const { call } = useEventManager();
     const { createNotification } = useNotifications();
@@ -17,7 +18,7 @@ const ToggleFolderColor = ({ id, className }: Props) => {
     const [mailSettings] = useMailSettings();
 
     const handleChange = async ({ target }: ChangeEvent<HTMLInputElement>) => {
-        await api({ FolderColor: +target.checked });
+        await api(updateEnableFolderColor(+target.checked));
         await call();
         createNotification({
             text: c('label/folder notification').t`Preference updated`,
@@ -27,7 +28,7 @@ const ToggleFolderColor = ({ id, className }: Props) => {
     return (
         <Toggle
             id={id}
-            checked={!!mailSettings?.AlsoArchive}
+            checked={!!mailSettings?.EnableFolderColor}
             className={className}
             onChange={(e) => withLoading(handleChange(e))}
             loading={loading}
@@ -35,4 +36,4 @@ const ToggleFolderColor = ({ id, className }: Props) => {
     );
 };
 
-export default ToggleFolderColor;
+export default ToggleEnableFolderColor;

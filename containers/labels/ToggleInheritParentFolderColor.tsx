@@ -1,5 +1,6 @@
 import React, { ChangeEvent } from 'react';
 import { c } from 'ttag';
+import { updateInheritParentFolderColor } from 'proton-shared/lib/api/mailSettings';
 
 import { Toggle } from '../../components';
 import { useApi, useLoading, useEventManager, useNotifications, useMailSettings } from '../../hooks';
@@ -17,7 +18,7 @@ const ToggleInheritParentFolderColor = ({ id, className }: Props) => {
     const [mailSettings] = useMailSettings();
 
     const handleChange = async ({ target }: ChangeEvent<HTMLInputElement>) => {
-        await api({ FolderColor: +target.checked });
+        await api(updateInheritParentFolderColor(+target.checked));
         await call();
         createNotification({
             text: c('label/folder notification').t`Preference updated`,
@@ -27,7 +28,7 @@ const ToggleInheritParentFolderColor = ({ id, className }: Props) => {
     return (
         <Toggle
             id={id}
-            checked={!!mailSettings?.AlsoArchive}
+            checked={!!mailSettings?.InheritParentFolderColor}
             className={className}
             onChange={(e) => withLoading(handleChange(e))}
             loading={loading}
