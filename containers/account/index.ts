@@ -1,6 +1,7 @@
 export { default as SettingsPageTitle } from './SettingsPageTitle';
 export { default as SettingsParagraph } from './SettingsParagraph';
 export { default as SettingsSection } from './SettingsSection';
+export { default as SettingsSectionWide } from './SettingsSectionWide';
 export { default as SettingsSectionTitle } from './SettingsSectionTitle';
 export { default as NewsCheckboxes } from './NewsCheckboxes';
 export { default as NewsSection } from './NewsSection';

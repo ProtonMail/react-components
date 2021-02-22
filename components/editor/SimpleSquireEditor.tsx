@@ -13,6 +13,7 @@ interface Props {
     disabled?: boolean;
     onReady?: () => void;
     onFocus?: () => void;
+    keydownHandler?: (e: KeyboardEvent) => void;
 }
 
 /**
@@ -23,7 +24,16 @@ interface Props {
  * Look at the specific SquireEditorRef provided to set initial value
  */
 const SimpleSquireEditor = (
-    { className, supportImages = true, isNarrow: forcedIsNarrow, onChange, disabled, onReady, onFocus }: Props,
+    {
+        className,
+        supportImages = true,
+        isNarrow: forcedIsNarrow,
+        onChange,
+        disabled,
+        onReady,
+        onFocus,
+        keydownHandler,
+    }: Props,
     ref: Ref<SquireEditorRef>
 ) => {
     const { isNarrow } = useActiveBreakpoint();
@@ -49,6 +59,7 @@ const SimpleSquireEditor = (
             onReady={onReady}
             onFocus={onFocus}
             onAddImages={handleAddImages}
+            keydownHandler={keydownHandler}
         />
     );
 };

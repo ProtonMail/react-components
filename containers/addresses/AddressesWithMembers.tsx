@@ -4,6 +4,7 @@ import { APPS, ALL_MEMBERS_ID, MEMBER_PRIVATE } from 'proton-shared/lib/constant
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 import { c } from 'ttag';
 import { UserModel, Address, Organization, Member } from 'proton-shared/lib/interfaces';
+
 import {
     Alert,
     Loader,
@@ -17,6 +18,9 @@ import {
     AppLink,
 } from '../../components';
 import { useMembers, useMemberAddresses, useModals, useOrganizationKey, useNotifications } from '../../hooks';
+
+import SettingsParagraph from '../account/SettingsParagraph';
+import SettingsSectionWide from '../account/SettingsSectionWide';
 
 import AddressModal from './AddressModal';
 import AddressStatus from './AddressStatus';
@@ -114,9 +118,11 @@ const AddressesWithMembers = ({ user, organization, isOnlySelf }: Props) => {
     );
 
     return (
-        <>
-            <Alert>{c('Info')
-                .t`Premium plans let you add multiple email addresses to your account. All the emails associated with them will appear in the same mailbox. If you are the admin of a Professional or Visionary plan, you can manage email addresses for each user in your organization. The email address at the top of the list will automatically be selected as the default email address.`}</Alert>
+        <SettingsSectionWide>
+            <SettingsParagraph>
+                {c('Info')
+                    .t`Premium plans let you add multiple email addresses to your account. All the emails associated with them will appear in the same mailbox. If you are the admin of a Professional or Visionary plan, you can manage email addresses for each user in your organization. The email address at the top of the list will automatically be selected as the default email address.`}
+            </SettingsParagraph>
             {!isOnlySelf && memberOptions.length > 2 ? (
                 <Block>
                     <Select
@@ -181,7 +187,7 @@ const AddressesWithMembers = ({ user, organization, isOnlySelf }: Props) => {
                     </TableBody>
                 </Table>
             )}
-        </>
+        </SettingsSectionWide>
     );
 };
 
