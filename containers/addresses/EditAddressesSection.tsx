@@ -5,7 +5,7 @@ import { isMac } from 'proton-shared/lib/helpers/browser';
 import { updateAddress } from 'proton-shared/lib/api/addresses';
 import { Address } from 'proton-shared/lib/interfaces';
 
-import { Row, Field, Label, Input, SimpleSquireEditor, Button } from '../../components';
+import { Row, Field, Label, Input, SimpleSquireEditor, PrimaryButton } from '../../components';
 import {
     useApi,
     useLoading,
@@ -111,9 +111,7 @@ const EditAddressesSection = ({ address }: Props) => {
             }}
         >
             <Row>
-                <Label htmlFor="displayName" className="w16r text-semibold">
-                    {c('Label').t`Display name`}
-                </Label>
+                <Label htmlFor="displayName" className="w16r text-bold">{c('Label').t`Display name`}</Label>
                 <Field className="w100">
                     <Input
                         id="displayName"
@@ -125,9 +123,8 @@ const EditAddressesSection = ({ address }: Props) => {
             </Row>
 
             <Row>
-                <Label className="w16r text-semibold" onClick={() => editorRef.current?.focus()}>
-                    {c('Label').t`Signature`}
-                </Label>
+                <Label className="w16r text-bold" onClick={() => editorRef.current?.focus()}>{c('Label')
+                    .t`Signature`}</Label>
                 <Field className="w100 h100">
                     <div ref={composerRef} tabIndex={-1}>
                         <SimpleSquireEditor
@@ -138,9 +135,9 @@ const EditAddressesSection = ({ address }: Props) => {
                         />
                     </div>
 
-                    <Button color="norm" type="submit" disabled={loading} loading={loading} className="mt1">
+                    <PrimaryButton type="submit" disabled={loading} loading={loading} className="mt1">
                         {c('Action').t`Update`}
-                    </Button>
+                    </PrimaryButton>
                 </Field>
             </Row>
         </form>

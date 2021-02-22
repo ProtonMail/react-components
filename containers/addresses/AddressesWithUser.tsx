@@ -2,11 +2,13 @@ import React, { useCallback, useState, useEffect } from 'react';
 import { c } from 'ttag';
 import { move } from 'proton-shared/lib/helpers/array';
 import { orderAddress } from 'proton-shared/lib/api/addresses';
-import { Address, CachedOrganizationKey, Member, UserModel } from 'proton-shared/lib/interfaces';
+import { Address, UserModel } from 'proton-shared/lib/interfaces';
 import { ADDRESS_TYPE } from 'proton-shared/lib/constants';
 
 import { Alert, OrderableTable, OrderableTableHeader, OrderableTableBody, OrderableTableRow } from '../../components';
 import { useApi, useEventManager, useAddresses, useNotifications } from '../../hooks';
+
+import SettingsSectionWide from '../account/SettingsSectionWide';
 
 import AddressStatus from './AddressStatus';
 import AddressActions from './AddressActions';
@@ -14,8 +16,6 @@ import { getStatus } from './helper';
 
 interface Props {
     user: UserModel;
-    member?: Member;
-    organizationKey?: CachedOrganizationKey;
 }
 
 const formatAddresses = (addresses?: Address[]) => {
@@ -25,7 +25,7 @@ const formatAddresses = (addresses?: Address[]) => {
     return [];
 };
 
-const AddressesUser = ({ user, member, organizationKey }: Props) => {
+const AddressesUser = ({ user }: Props) => {
     const api = useApi();
     const { createNotification } = useNotifications();
     const { call } = useEventManager();
@@ -66,7 +66,7 @@ const AddressesUser = ({ user, member, organizationKey }: Props) => {
     }
 
     return (
-        <>
+        <SettingsSectionWide>
             <OrderableTable onSortEnd={handleSortEnd} className="simple-table--has-actions">
                 <OrderableTableHeader
                     cells={[
@@ -86,19 +86,13 @@ const AddressesUser = ({ user, member, organizationKey }: Props) => {
                                         {address.Email}
                                     </div>,
                                     <AddressStatus key={1} {...getStatus(address, i)} />,
-                                    <AddressActions
-                                        key={2}
-                                        address={address}
-                                        user={user}
-                                        member={member}
-                                        organizationKey={organizationKey}
-                                    />,
+                                    <AddressActions key={2} address={address} user={user} />,
                                 ]}
                             />
                         ))}
                 </OrderableTableBody>
             </OrderableTable>
-        </>
+        </SettingsSectionWide>
     );
 };
 

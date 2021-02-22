@@ -1,17 +1,32 @@
 import React, { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import { useRouteMatch } from 'react-router-dom';
 import { APPS, ALL_MEMBERS_ID, MEMBER_PRIVATE } from 'proton-shared/lib/constants';
+import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 import { c } from 'ttag';
-import { UserModel, Organization, Member } from 'proton-shared/lib/interfaces';
+import { UserModel, Address, Organization, Member } from 'proton-shared/lib/interfaces';
 
-import { Alert, Loader, Select, Button, AppLink } from '../../components';
+import {
+    Alert,
+    Loader,
+    Table,
+    TableHeader,
+    TableBody,
+    TableRow,
+    Block,
+    Select,
+    PrimaryButton,
+    AppLink,
+} from '../../components';
 import { useMembers, useMemberAddresses, useModals, useOrganizationKey, useNotifications } from '../../hooks';
 
-import { SettingsParagraph } from '../account';
+import SettingsParagraph from '../account/SettingsParagraph';
+import SettingsSectionWide from '../account/SettingsSectionWide';
 
 import AddressModal from './AddressModal';
+import AddressStatus from './AddressStatus';
+import { getStatus } from './helper';
+import AddressActions from './AddressActions';
 import AddressesWithUser from './AddressesWithUser';
-import AddressesTable from './AddressesTable';
 
 const getMemberIndex = (members: Member[] = [], memberID?: string, isOnlySelf?: boolean) => {
     const newMemberIndex =
@@ -29,7 +44,6 @@ interface Props {
     organization: Organization;
     isOnlySelf?: boolean;
 }
-
 const AddressesWithMembers = ({ user, organization, isOnlySelf }: Props) => {
     const match = useRouteMatch<{ memberID?: string }>();
     const { createModal } = useModals();
@@ -78,7 +92,7 @@ const AddressesWithMembers = ({ user, organization, isOnlySelf }: Props) => {
             createNotification({ type: 'error', text: c('Error').t`The organization key must be activated first.` });
             throw new Error('Organization key is not decrypted');
         }
-        createModal(<AddressModal member={member} members={members} organizationKey={organizationKey} />);
+        createModal(<AddressModal member={member} organizationKey={organizationKey} />);
     };
 
     const memberOptions = [
@@ -102,52 +116,80 @@ const AddressesWithMembers = ({ user, organization, isOnlySelf }: Props) => {
             .t`activate`}</AppLink>
     );
 
+    // Non-private admins targeting themselves cannot add addresses because they cannot create keys for them
+    const isNonPrivateSelf = currentMember && currentMember.Private === MEMBER_PRIVATE.READABLE && currentMember.Self;
+
     return (
-        <>
+        <SettingsSectionWide>
             <SettingsParagraph>
                 {c('Info')
-                    .t`The email address you place at the top of the list is your default email address. Drag and drop to reorder your addresses.`}
+                    .t`Premium plans let you add multiple email addresses to your account. All the emails associated with them will appear in the same mailbox. If you are the admin of a Professional or Visionary plan, you can manage email addresses for each user in your organization. The email address at the top of the list will automatically be selected as the default email address.`}
             </SettingsParagraph>
-
             {!isOnlySelf && memberOptions.length > 2 ? (
-                <div className="mb1">
+                <Block>
                     <Select
                         id="memberSelect"
                         value={memberIndex}
                         options={memberOptions}
                         onChange={({ target: { value } }: ChangeEvent<HTMLSelectElement>) => setMemberIndex(+value)}
                     />
-                </div>
+                </Block>
             ) : null}
-
-            {!currentMember || memberIndex === ALL_MEMBERS_ID ? null : (
-                <div className="mb1">
+            {!currentMember || memberIndex === ALL_MEMBERS_ID || isNonPrivateSelf ? null : (
+                <Block>
                     {mustActivateOrganizationKey ? (
                         <Alert type="warning">
                             {c('Warning')
                                 .jt`You must ${activateLink} organization keys before adding an email address to a non-private member.`}
                         </Alert>
                     ) : (
-                        <Button shape="outline" onClick={() => handleAddAddress(currentMember)}>
+                        <PrimaryButton onClick={() => handleAddAddress(currentMember)}>
                             {c('Action').t`Add address`}
-                        </Button>
+                        </PrimaryButton>
                     )}
-                </div>
+                </Block>
             )}
-
             {isSelfSelected ? (
-                <AddressesWithUser user={user} member={currentMember} organizationKey={organizationKey} />
+                <AddressesWithUser user={user} />
             ) : (
-                <AddressesTable
-                    hasUsername={hasUsernameDisplay}
-                    loading={selectedMembers.some(({ ID }) => !Array.isArray(memberAddressesMap?.[ID]))}
-                    user={user}
-                    members={selectedMembers}
-                    memberAddresses={memberAddressesMap}
-                    organizationKey={loadingOrganizationKey ? undefined : organizationKey}
-                />
+                <Table className="simple-table--has-actions">
+                    <TableHeader
+                        cells={[
+                            c('Header for addresses table').t`Address`,
+                            hasUsernameDisplay ? c('Header for addresses table').t`Username` : null,
+                            c('Header for addresses table').t`Status`,
+                            c('Header for addresses table').t`Actions`,
+                        ].filter(Boolean)}
+                    />
+                    <TableBody
+                        colSpan={hasUsernameDisplay ? 4 : 3}
+                        loading={selectedMembers.some(({ ID }) => !Array.isArray(memberAddressesMap?.[ID]))}
+                    >
+                        {selectedMembers.flatMap((member) =>
+                            (memberAddressesMap?.[member.ID] || []).map((address: Address, i: number) => (
+                                <TableRow
+                                    key={address.ID}
+                                    cells={[
+                                        <div className="text-ellipsis" title={address.Email}>
+                                            {address.Email}
+                                        </div>,
+                                        hasUsernameDisplay && member.Name,
+                                        <AddressStatus key={1} {...getStatus(address, i)} />,
+                                        <AddressActions
+                                            key={2}
+                                            member={member}
+                                            address={address}
+                                            user={user}
+                                            organizationKey={loadingOrganizationKey ? undefined : organizationKey}
+                                        />,
+                                    ].filter(isTruthy)}
+                                />
+                            ))
+                        )}
+                    </TableBody>
+                </Table>
             )}
-        </>
+        </SettingsSectionWide>
     );
 };
 
