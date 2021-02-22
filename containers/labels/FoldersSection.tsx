@@ -38,7 +38,7 @@ function LabelsSection() {
                     {c('Action').t`Add folder`}
                 </PrimaryButton>
             </div>
-            {folders.length ? (
+            {folders?.length ? (
                 <FolderTreeViewList items={folders} />
             ) : (
                 <Alert>{c('LabelSettings').t`No folders available`}</Alert>
