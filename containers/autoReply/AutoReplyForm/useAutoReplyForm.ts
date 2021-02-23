@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { c } from 'ttag';
 import { fromUnixTime, getUnixTime, addDays, addHours, startOfDay } from 'date-fns';
+
 import {
     fromUTCDate,
     fromLocalDate,
@@ -12,14 +13,17 @@ import {
     toLocalDate,
 } from 'proton-shared/lib/date/timezone';
 import { AutoReplyDuration } from 'proton-shared/lib/constants';
+import { AutoResponder as tsAutoResponder } from 'proton-shared/lib/interfaces';
+
 import { DAY_SECONDS, HOUR_SECONDS, MINUTES_SECONDS, getDurationOptions, getMatchingTimezone } from '../utils';
+import { AutoReplyFormDate, AutoReplyFormModel } from './interfaces';
 
 const getDefaultFixedTimes = () => ({
     StartTime: getUnixTime(new Date()),
     EndTime: getUnixTime(addHours(addDays(new Date(), 7), 2)),
 });
 
-const getDefaultAutoResponder = (AutoResponder) => {
+export const getDefaultAutoResponder = (AutoResponder: tsAutoResponder) => {
     return {
         ...AutoResponder,
         // Comment copied from anglar:
@@ -32,7 +36,7 @@ const getDefaultAutoResponder = (AutoResponder) => {
     };
 };
 
-const toDateTimes = (unixTimestamp, timezone, repeat) => {
+const toDateTimes = (unixTimestamp: number, timezone: string, repeat: AutoReplyDuration) => {
     if (repeat === AutoReplyDuration.PERMANENT) {
         return {};
     }
@@ -73,17 +77,21 @@ const toDateTimes = (unixTimestamp, timezone, repeat) => {
     }
 };
 
-export const getMatchingValues = ({ Zone, Repeat }) => {
+export const getMatchingValues = ({ Zone, Repeat }: tsAutoResponder) => {
     const duration = getDurationOptions().find(({ value }) => value === Repeat);
     const timezones = getTimeZoneOptions();
     const matchingTimezone = getMatchingTimezone(Zone, timezones) || getMatchingTimezone(getTimezone(), timezones);
+
     return {
         timezone: matchingTimezone,
         duration,
     };
 };
 
-export const toModel = ({ Message, StartTime, EndTime, DaysSelected, Subject, IsEnabled }, { duration, timezone }) => {
+export const toModel = (
+    { Message, StartTime, EndTime, DaysSelected, Subject, IsEnabled }: tsAutoResponder,
+    { timezone, duration }: { timezone: string; duration: AutoReplyDuration }
+) => {
     return {
         message: Message,
         daysOfWeek: DaysSelected,
@@ -96,42 +104,45 @@ export const toModel = ({ Message, StartTime, EndTime, DaysSelected, Subject, Is
     };
 };
 
-const toUnixTime = ({ date, time, day }, timezone, repeat) => {
-    if (repeat === AutoReplyDuration.PERMANENT) {
-        return 0;
-    }
-
-    if (repeat === AutoReplyDuration.FIXED) {
-        return getUnixTime(
-            toUTCDate(
-                convertZonedDateTimeToUTC(
-                    {
-                        ...fromLocalDate(date),
-                        hours: time.getHours(),
-                        minutes: time.getMinutes(),
-                    },
-                    timezone
-                )
-            )
-        );
-    }
-
+const toUnixTime = ({ date, time, day }: AutoReplyFormDate, timezone: string, repeat: AutoReplyDuration) => {
     const utcUnixTime = time.getHours() * HOUR_SECONDS + time.getMinutes() * MINUTES_SECONDS;
 
-    if (repeat === AutoReplyDuration.DAILY) {
-        return utcUnixTime;
-    }
-
-    if (repeat === AutoReplyDuration.WEEKLY) {
-        return day * DAY_SECONDS + utcUnixTime;
-    }
-
-    if (repeat === AutoReplyDuration.MONTHLY) {
-        return day * DAY_SECONDS + utcUnixTime;
+    switch (repeat) {
+        case AutoReplyDuration.FIXED:
+            return getUnixTime(
+                toUTCDate(
+                    convertZonedDateTimeToUTC(
+                        {
+                            ...fromLocalDate(date),
+                            hours: time.getHours(),
+                            minutes: time.getMinutes(),
+                        },
+                        timezone
+                    )
+                )
+            );
+        case AutoReplyDuration.DAILY:
+            return utcUnixTime;
+        case AutoReplyDuration.WEEKLY:
+            return day * DAY_SECONDS + utcUnixTime;
+        case AutoReplyDuration.MONTHLY:
+            return day * DAY_SECONDS + utcUnixTime;
+        case AutoReplyDuration.PERMANENT:
+            return 0;
+        default:
+            return utcUnixTime;
     }
 };
 
-const toAutoResponder = ({ message, duration, daysOfWeek, timezone, subject, start, end }) => ({
+const toAutoResponder = ({
+    message,
+    duration,
+    daysOfWeek,
+    timezone,
+    subject,
+    start,
+    end,
+}: AutoReplyFormModel): tsAutoResponder => ({
     Message: message,
     Repeat: duration,
     DaysSelected: daysOfWeek,
@@ -142,17 +153,17 @@ const toAutoResponder = ({ message, duration, daysOfWeek, timezone, subject, sta
     EndTime: toUnixTime(end, timezone, duration),
 });
 
-const useAutoReplyForm = (AutoResponder) => {
+const useAutoReplyForm = (AutoResponder: tsAutoResponder) => {
     const matches = useMemo(() => getMatchingValues(AutoResponder), [AutoResponder]);
 
-    const [model, setModel] = useState(() => {
+    const [model, setModel] = useState<AutoReplyFormModel>(() => {
         return toModel(AutoResponder.IsEnabled ? AutoResponder : getDefaultAutoResponder(AutoResponder), {
-            timezone: matches.timezone.value,
-            duration: matches.duration.value,
+            timezone: matches.timezone?.value,
+            duration: matches.duration?.value,
         });
     });
 
-    const updateModel = (key) => {
+    const updateModel = (key: string) => {
         if (key === 'duration') {
             // When changing the duration, reset the model.
             return (value) =>
