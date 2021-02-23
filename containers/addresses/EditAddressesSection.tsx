@@ -123,8 +123,9 @@ const EditAddressesSection = ({ address }: Props) => {
             </Row>
 
             <Row>
-                <Label className="w16r text-bold" onClick={() => editorRef.current?.focus()}>{c('Label')
-                    .t`Signature`}</Label>
+                <Label className="w16r text-bold" onClick={() => editorRef.current?.focus()}>
+                    {c('Label').t`Signature`}
+                </Label>
                 <Field className="w100 h100">
                     <div ref={composerRef} tabIndex={-1}>
                         <SimpleSquireEditor

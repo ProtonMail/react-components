@@ -1,5 +1,6 @@
 import React, { ChangeEvent, useEffect, useState, useMemo } from 'react';
 import { c } from 'ttag';
+
 import { ADDRESS_STATUS, RECEIVE_ADDRESS, SEND_ADDRESS } from 'proton-shared/lib/constants';
 import { Address } from 'proton-shared/lib/interfaces';
 
@@ -53,7 +54,7 @@ const IdentitySection = () => {
     };
 
     return (
-        <SettingsSection className="pr3">
+        <SettingsSection>
             <SettingsParagraph learnMoreUrl="https://protonmail.com/support/knowledge-base/display-name-and-signature/">
                 {c('Info')
                     .t`Click the Edit button to personalize your email address. Your Display Name appears in the From field when people receive an email from you. Your Signature is appended at the bottom of your messages. Or leave each field empty for more privacy.`}
