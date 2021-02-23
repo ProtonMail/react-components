@@ -1,12 +1,22 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { isValid } from 'date-fns';
 import { Row, Label, DateInput, Field } from '../../../../components';
 
-const DateField = ({ id, label, value, onChange, min, max }) => {
+interface Props {
+    id: string;
+    label: string;
+    value: Date;
+    min?: Date;
+    max?: Date;
+    onChange: (value?: Date) => void;
+}
+
+const DateField = ({ id, label, value, onChange, min, max }: Props) => {
     return (
         <Row>
-            <Label htmlFor={id}>{label}</Label>
+            <Label htmlFor={id} className="w16r text-bold">
+                {label}
+            </Label>
             <Field>
                 <DateInput
                     id={id}
@@ -23,15 +33,6 @@ const DateField = ({ id, label, value, onChange, min, max }) => {
             </Field>
         </Row>
     );
-};
-
-DateField.propTypes = {
-    id: PropTypes.string.isRequired,
-    label: PropTypes.string.isRequired,
-    value: PropTypes.instanceOf(Date).isRequired,
-    min: PropTypes.instanceOf(Date),
-    max: PropTypes.instanceOf(Date),
-    onChange: PropTypes.func.isRequired,
 };
 
 export default DateField;

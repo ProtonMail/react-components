@@ -1,14 +1,18 @@
 import React from 'react';
 import { c } from 'ttag';
-import PropTypes from 'prop-types';
 
 import DateField from './fields/DateField';
 import Alert from '../../../components/alert/Alert';
 import TimeField from './fields/TimeField';
 import TimeZoneField from './fields/TimeZoneField';
-import { modelShape } from './autoReplyShapes';
+import { AutoReplyFormModel } from './interfaces';
 
-const AutoReplyFormFixed = ({ model: { start, end, timezone }, updateModel }) => {
+interface Props {
+    model: AutoReplyFormModel;
+    updateModel: Function;
+}
+
+const AutoReplyFormFixed = ({ model: { start, end, timezone }, updateModel }: Props) => {
     return (
         <>
             <Alert>{c('Info').t`Auto-reply is active from the start time to the end time.`}</Alert>
@@ -41,11 +45,6 @@ const AutoReplyFormFixed = ({ model: { start, end, timezone }, updateModel }) =>
             <TimeZoneField value={timezone} onChange={updateModel('timezone')} />
         </>
     );
-};
-
-AutoReplyFormFixed.propTypes = {
-    model: modelShape,
-    updateModel: PropTypes.func,
 };
 
 export default AutoReplyFormFixed;

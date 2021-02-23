@@ -1,22 +1,26 @@
-import { c } from 'ttag';
 import React from 'react';
-import PropTypes from 'prop-types';
+import { c } from 'ttag';
 
-import Alert from '../../../components/alert/Alert';
+import DayOfMonthField from './fields/DayOfMonthField';
 import TimeZoneField from './fields/TimeZoneField';
-import DayOfWeekField from './fields/DayOfWeekField';
+import Alert from '../../../components/alert/Alert';
 import TimeField from './fields/TimeField';
-import { modelShape } from './autoReplyShapes';
+import { AutoReplyFormModel } from './interfaces';
 
-const AutoReplyFormWeekly = ({ model: { start, end, timezone }, updateModel }) => {
+interface Props {
+    model: AutoReplyFormModel;
+    updateModel: Function;
+}
+
+const AutoReplyFormMonthly = ({ model: { start, end, timezone }, updateModel }: Props) => {
     return (
         <>
-            <Alert>{c('Info').t`Auto-reply is active each week between the selected start and end time.`}</Alert>
-            <DayOfWeekField
+            <Alert>{c('Info').t`Auto-reply is active each month between the selected start and end time.`}</Alert>
+            <DayOfMonthField
+                id="startDayOfMonth"
+                label={c('Label').t`Start day of month`}
                 value={start.day}
                 onChange={updateModel('start.day')}
-                id="startDayOfWeek"
-                label={c('Label').t`Start weekday`}
             />
             <TimeField
                 value={start.time}
@@ -24,11 +28,11 @@ const AutoReplyFormWeekly = ({ model: { start, end, timezone }, updateModel }) =
                 label={c('Label').t`Start time`}
                 id="startTime"
             />
-            <DayOfWeekField
+            <DayOfMonthField
+                id="endDayOfMonth"
+                label={c('Label').t`End day of month`}
                 value={end.day}
                 onChange={updateModel('end.day')}
-                id="endDayOfWeek"
-                label={c('Label').t`End weekday`}
             />
             <TimeField
                 value={end.time}
@@ -41,9 +45,4 @@ const AutoReplyFormWeekly = ({ model: { start, end, timezone }, updateModel }) =
     );
 };
 
-AutoReplyFormWeekly.propTypes = {
-    model: modelShape,
-    updateModel: PropTypes.func,
-};
-
-export default AutoReplyFormWeekly;
+export default AutoReplyFormMonthly;
