@@ -1,6 +1,5 @@
 import React from 'react';
 import { Folder } from 'proton-shared/lib/interfaces/Folder';
-import { ROOT_FOLDER } from 'proton-shared/lib/constants';
 
 import { Icon } from '../../components';
 import { useFolderColor } from '../../hooks';
@@ -18,7 +17,7 @@ const getIconName = (isRoot?: boolean, color?: string) => {
 };
 
 const FolderIcon = ({ folder, className }: Props) => {
-    const isRoot = folder.ParentID === ROOT_FOLDER;
+    const isRoot = !folder.ParentID;
     const color = useFolderColor(folder);
 
     return <Icon name={getIconName(isRoot, color)} color={color} className={className} alt={folder.Name} />;
