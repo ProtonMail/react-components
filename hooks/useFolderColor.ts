@@ -1,4 +1,3 @@
-import { ROOT_FOLDER } from 'proton-shared/lib/constants';
 import { Folder } from 'proton-shared/lib/interfaces/Folder';
 
 import { useFolders } from './useCategories';
@@ -16,7 +15,8 @@ const useFolderColor = (folder: Folder) => {
     }
 
     const getParentFolderColor = ({ ParentID, Color }: Folder): string | undefined => {
-        if (ParentID === ROOT_FOLDER) {
+        // ParentID is undefined or 0 for root folder
+        if (!ParentID) {
             return Color;
         }
         const folder = folders?.find(({ ID }) => ID === ParentID);
