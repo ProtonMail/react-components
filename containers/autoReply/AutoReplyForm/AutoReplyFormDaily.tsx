@@ -1,14 +1,18 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { c } from 'ttag';
 
 import Alert from '../../../components/alert/Alert';
 import DaysOfWeekField from './fields/DaysOfWeekField';
 import TimeZoneField from './fields/TimeZoneField';
 import TimeField from './fields/TimeField';
-import { modelShape } from './autoReplyShapes';
+import { AutoReplyFormModel } from './interfaces';
 
-const AutoReplyFormDaily = ({ model: { daysOfWeek, start, end, timezone }, updateModel }) => {
+interface Props {
+    model: AutoReplyFormModel;
+    updateModel: Function;
+}
+
+const AutoReplyFormDaily = ({ model: { daysOfWeek, start, end, timezone }, updateModel }: Props) => {
     return (
         <>
             <Alert>{c('Info')
@@ -29,11 +33,6 @@ const AutoReplyFormDaily = ({ model: { daysOfWeek, start, end, timezone }, updat
             <TimeZoneField value={timezone} onChange={updateModel('timezone')} />
         </>
     );
-};
-
-AutoReplyFormDaily.propTypes = {
-    model: modelShape,
-    updateModel: PropTypes.func,
 };
 
 export default AutoReplyFormDaily;

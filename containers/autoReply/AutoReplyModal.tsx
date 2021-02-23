@@ -1,7 +1,9 @@
 import React, { useRef } from 'react';
-import PropTypes from 'prop-types';
 import { c } from 'ttag';
+
+import { AutoResponder } from 'proton-shared/lib/interfaces';
 import { updateAutoresponder } from 'proton-shared/lib/api/mailSettings';
+import { noop } from 'proton-shared/lib/helpers/function';
 import { AutoReplyDuration } from 'proton-shared/lib/constants';
 
 import { useEventManager, useNotifications, useApi, useLoading } from '../../hooks';
@@ -14,14 +16,20 @@ import AutoReplyFormDaily from './AutoReplyForm/AutoReplyFormDaily';
 import AutoReplyFormWeekly from './AutoReplyForm/AutoReplyFormWeekly';
 import AutoReplyFormPermanent from './AutoReplyForm/AutoReplyFormPermanent';
 import DurationField from './AutoReplyForm/fields/DurationField';
+import { SquireEditorRef } from '../../components/editor/SquireEditor';
 
-const AutoReplyModal = ({ onClose, autoresponder, ...rest }) => {
+interface Props {
+    autoresponder: AutoResponder;
+    onClose?: () => void;
+}
+
+const AutoReplyModal = ({ onClose = noop, autoresponder, ...rest }: Props) => {
     const [loading, withLoading] = useLoading();
     const api = useApi();
     const { createNotification } = useNotifications();
     const { model, updateModel, toAutoResponder } = useAutoReplyForm(autoresponder);
     const { call } = useEventManager();
-    const editorRef = useRef(null);
+    const editorRef = useRef<SquireEditorRef>(null);
 
     const handleSubmit = async () => {
         await api(updateAutoresponder(toAutoResponder(model)));
@@ -36,6 +44,24 @@ const AutoReplyModal = ({ onClose, autoresponder, ...rest }) => {
         }
     };
 
+    const formRenderer = (duration: AutoReplyDuration) => {
+        switch (duration) {
+            case AutoReplyDuration.FIXED:
+                return <AutoReplyFormFixed model={model} updateModel={updateModel} />;
+            case AutoReplyDuration.DAILY:
+                return <AutoReplyFormDaily model={model} updateModel={updateModel} />;
+            case AutoReplyDuration.MONTHLY:
+                return <AutoReplyFormMonthly model={model} updateModel={updateModel} />;
+            case AutoReplyDuration.WEEKLY:
+                return <AutoReplyFormWeekly model={model} updateModel={updateModel} />;
+            case AutoReplyDuration.PERMANENT:
+                return <AutoReplyFormPermanent />;
+
+            default:
+                return null;
+        }
+    };
+
     return (
         <FormModal
             title={c('Title').t`Create auto-reply`}
@@ -46,15 +72,7 @@ const AutoReplyModal = ({ onClose, autoresponder, ...rest }) => {
             {...rest}
         >
             <DurationField value={model.duration} onChange={updateModel('duration')} />
-            {
-                {
-                    [AutoReplyDuration.FIXED]: <AutoReplyFormFixed model={model} updateModel={updateModel} />,
-                    [AutoReplyDuration.DAILY]: <AutoReplyFormDaily model={model} updateModel={updateModel} />,
-                    [AutoReplyDuration.MONTHLY]: <AutoReplyFormMonthly model={model} updateModel={updateModel} />,
-                    [AutoReplyDuration.WEEKLY]: <AutoReplyFormWeekly model={model} updateModel={updateModel} />,
-                    [AutoReplyDuration.PERMANENT]: <AutoReplyFormPermanent model={model} updateModel={updateModel} />,
-                }[model.duration]
-            }
+            {formRenderer(model.duration)}
             <SimpleSquireEditor
                 ref={editorRef}
                 supportImages={false}
@@ -63,11 +81,6 @@ const AutoReplyModal = ({ onClose, autoresponder, ...rest }) => {
             />
         </FormModal>
     );
-};
-
-AutoReplyModal.propTypes = {
-    onClose: PropTypes.func,
-    autoresponder: PropTypes.object,
 };
 
 export default AutoReplyModal;

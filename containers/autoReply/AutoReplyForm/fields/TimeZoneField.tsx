@@ -1,11 +1,17 @@
 import React, { useMemo } from 'react';
-import PropTypes from 'prop-types';
 import { c } from 'ttag';
+
 import { getTimeZoneOptions } from 'proton-shared/lib/date/timezone';
+
 import { Select, Row, Label, Field } from '../../../../components';
 
-const TimeZoneField = ({ value, onChange }) => {
-    const handleChange = ({ target }) => onChange(target.value);
+interface Props {
+    value: string;
+    onChange: Function;
+}
+
+const TimeZoneField = ({ value, onChange }: Props) => {
+    const handleChange = ({ target }: React.ChangeEvent<HTMLSelectElement>) => onChange(target.value);
 
     const options = useMemo(() => {
         return getTimeZoneOptions();
@@ -13,17 +19,12 @@ const TimeZoneField = ({ value, onChange }) => {
 
     return (
         <Row>
-            <Label htmlFor="timezone">{c('Label').t`Timezone`}</Label>
+            <Label htmlFor="timezone" className="w16r text-bold">{c('Label').t`Timezone`}</Label>
             <Field>
                 <Select id="timezone" options={options} onChange={handleChange} value={value} />
             </Field>
         </Row>
     );
-};
-
-TimeZoneField.propTypes = {
-    value: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired,
 };
 
 export default TimeZoneField;
