@@ -1,3 +1,4 @@
+import { toMap } from 'proton-shared/lib/helpers/object';
 import { Folder } from 'proton-shared/lib/interfaces/Folder';
 
 import { useFolders } from './useCategories';
@@ -10,19 +11,25 @@ const useFolderColor = (folder: Folder) => {
     if (!mailSettings?.EnableFolderColor) {
         return undefined;
     }
+
     if (!mailSettings?.InheritParentFolderColor) {
         return folder.Color;
     }
 
+    const folderMap = toMap(folders);
+
     const getParentFolderColor = ({ ParentID, Color }: Folder): string | undefined => {
-        // ParentID is undefined or 0 for root folder
+        // ParentID is undefined for root folder
         if (!ParentID) {
             return Color;
         }
-        const folder = folders?.find(({ ID }) => ID === ParentID);
+
+        const folder = folderMap[ParentID];
+
         if (folder) {
             return getParentFolderColor(folder);
         }
+
         return undefined;
     };
 
