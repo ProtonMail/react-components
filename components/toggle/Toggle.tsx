@@ -5,7 +5,6 @@ import { classnames } from '../../helpers';
 
 export enum ToggleState {
     on = 'on',
-    off = '',
 }
 export interface Props extends React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
     loading?: boolean;
@@ -23,7 +22,7 @@ const Toggle = ({
     label = (key: ToggleState) => {
         return (
             <span className="toggle-label-text" aria-hidden="true">
-                <Icon name={key} alt="" size={8} className="toggle-label-img" />
+                <Icon name={key} alt="" size={12} className="toggle-label-img" />
             </span>
         );
     },
@@ -47,7 +46,6 @@ const Toggle = ({
                 {...rest}
             />
             <label htmlFor={id} className={classnames(['toggle-label', className])} title={title}>
-                {label(ToggleState.off)}
                 {label(ToggleState.on)}
             </label>
         </>
