@@ -16,11 +16,11 @@ const getIconName = (isRoot?: boolean, color?: string) => {
     return color ? 'folder-filled' : 'folder';
 };
 
-const FolderIcon = ({ folder, className }: Props) => {
+const FolderIcon = ({ folder, ...rest }: Props) => {
     const isRoot = !folder.ParentID;
     const color = useFolderColor(folder);
 
-    return <Icon name={getIconName(isRoot, color)} color={color} className={className} alt={folder.Name} />;
+    return <Icon name={getIconName(isRoot, color)} color={color} alt={folder.Name} {...rest} />;
 };
 
 export default FolderIcon;
