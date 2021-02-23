@@ -54,7 +54,7 @@ const IdentitySection = () => {
     };
 
     return (
-        <SettingsSection>
+        <SettingsSection className="no-scroll">
             <SettingsParagraph learnMoreUrl="https://protonmail.com/support/knowledge-base/display-name-and-signature/">
                 {c('Info')
                     .t`Click the Edit button to personalize your email address. Your Display Name appears in the From field when people receive an email from you. Your Signature is appended at the bottom of your messages. Or leave each field empty for more privacy.`}

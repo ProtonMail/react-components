@@ -46,7 +46,7 @@ const PrivateMainSettingsArea = ({ setActiveSection, location, title, children, 
         }
 
         useIntersectionSection.current = false;
-        setActiveSection(hash.slice(1));
+        setActiveSection?.(hash.slice(1));
 
         const abortScroll = createScrollIntoView(el, mainArea, true);
         let removeListeners: () => void;
@@ -86,7 +86,7 @@ const PrivateMainSettingsArea = ({ setActiveSection, location, title, children, 
 
     // Don't always use the observer section observed value since it can not go to sections that are at the bottom or too small.
     // In those cases it can be overridden by clicking on a specific section
-    const observer = useActiveSection(useIntersectionSection.current ? setActiveSection : noop);
+    const observer = useActiveSection(useIntersectionSection.current && setActiveSection ? setActiveSection : noop);
 
     const wrappedSections = React.Children.toArray(children)
         .filter(React.isValidElement)
