@@ -20,14 +20,20 @@ jest.mock('./useCategories', () => ({
 
 describe('useFolderColor hook', () => {
     it('should not return color if EnableFolderColor is disabled', () => {
-        useMailSettings.mockReturnValueOnce([{ EnableFolderColor: 0, InheritParentFolderColor: 1 }, false]);
+        (useMailSettings as jest.Mock).mockReturnValueOnce([
+            { EnableFolderColor: 0, InheritParentFolderColor: 1 },
+            false,
+        ]);
         const folder = { ID: 'C', Color: 'green' } as Folder;
         const color = useFolderColor(folder);
         expect(color).toBe(undefined);
     });
 
     it('should return current color if InheritParentFolderColor is disabled', () => {
-        useMailSettings.mockReturnValueOnce([{ EnableFolderColor: 1, InheritParentFolderColor: 0 }, false]);
+        (useMailSettings as jest.Mock).mockReturnValueOnce([
+            { EnableFolderColor: 1, InheritParentFolderColor: 0 },
+            false,
+        ]);
         const folder = { ID: 'C', Color: 'green', ParentID: 'B' } as Folder;
         const color = useFolderColor(folder);
         expect(color).toBe('green');
