@@ -1,14 +1,23 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { c } from 'ttag';
+
 import { VIEW_MODE } from 'proton-shared/lib/constants';
+
 import conversationGroupSvg from 'design-system/assets/img/pm-images/conversation-group.svg';
 import conversationSingleSvg from 'design-system/assets/img/pm-images/conversation-single.svg';
+
 import { RadioCards } from '../../components';
 
 const { GROUP, SINGLE } = VIEW_MODE;
 
-const ViewModeRadios = ({ viewMode, onChange, loading, id, ...rest }) => {
+interface Props {
+    viewMode: VIEW_MODE;
+    onChange: (viewMode: VIEW_MODE) => void;
+    loading: boolean;
+    id: string;
+}
+
+const ViewModeRadios = ({ viewMode, onChange, loading, id, ...rest }: Props) => {
     const radioCardGroup = {
         value: GROUP,
         checked: viewMode === GROUP,
@@ -35,13 +44,6 @@ const ViewModeRadios = ({ viewMode, onChange, loading, id, ...rest }) => {
     };
 
     return <RadioCards list={[radioCardGroup, radioCardSingle]} id={id} {...rest} />;
-};
-
-ViewModeRadios.propTypes = {
-    viewMode: PropTypes.number.isRequired,
-    onChange: PropTypes.func.isRequired,
-    loading: PropTypes.bool,
-    id: PropTypes.string,
 };
 
 export default ViewModeRadios;

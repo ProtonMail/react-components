@@ -9,12 +9,12 @@ const { READ_UNREAD, UNREAD_READ } = MESSAGE_BUTTONS;
 
 const ToolbarsSection = () => {
     const { request, loading } = useApiWithoutResult(updateMessageButtons);
-    const [{ MessageButtons } = {}] = useMailSettings();
+    const [{ MessageButtons = 0 } = {}] = useMailSettings();
     const { createNotification } = useNotifications();
     const { call } = useEventManager();
 
-    const hanldeChange = async ({ target }) => {
-        const newState = target.value;
+    const hanldeChange = async ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+        const newState = parseInt(target.value, 10);
         await request(newState);
         await call();
         createNotification({
@@ -29,6 +29,8 @@ const ToolbarsSection = () => {
                 <Field>
                     <div className="mb1">
                         <Radio
+                            id="read-unread"
+                            name="read-unread"
                             checked={MessageButtons === READ_UNREAD}
                             disabled={loading}
                             onChange={hanldeChange}
@@ -42,6 +44,8 @@ const ToolbarsSection = () => {
                     </div>
                     <div>
                         <Radio
+                            id="unread-read"
+                            name="unread-read"
                             checked={MessageButtons === UNREAD_READ}
                             disabled={loading}
                             onChange={hanldeChange}

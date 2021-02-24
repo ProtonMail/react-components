@@ -1,14 +1,23 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { c } from 'ttag';
+
 import { VIEW_LAYOUT } from 'proton-shared/lib/constants';
+
 import inboxColumnSvg from 'design-system/assets/img/pm-images/inbox-column.svg';
 import inboxRowSvg from 'design-system/assets/img/pm-images/inbox-row.svg';
+
 import { RadioCards } from '../../components';
 
 const { COLUMN, ROW } = VIEW_LAYOUT;
 
-const ViewLayoutRadios = ({ viewLayout, onChange, loading, id, ...rest }) => {
+interface Props {
+    viewLayout: VIEW_LAYOUT;
+    onChange: (viewLayout: VIEW_LAYOUT) => void;
+    loading: boolean;
+    id: string;
+}
+
+const ViewLayoutRadios = ({ viewLayout, onChange, loading, id, ...rest }: Props) => {
     const radioCardColumn = {
         value: COLUMN,
         checked: viewLayout === COLUMN,
@@ -35,13 +44,6 @@ const ViewLayoutRadios = ({ viewLayout, onChange, loading, id, ...rest }) => {
     };
 
     return <RadioCards list={[radioCardColumn, radioCardRow]} id={id} {...rest} />;
-};
-
-ViewLayoutRadios.propTypes = {
-    viewLayout: PropTypes.number.isRequired,
-    onChange: PropTypes.func.isRequired,
-    loading: PropTypes.bool,
-    id: PropTypes.string,
 };
 
 export default ViewLayoutRadios;
