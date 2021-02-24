@@ -2,7 +2,7 @@ import React from 'react';
 import { c } from 'ttag';
 import { SETTINGS_PASSWORD_MODE } from 'proton-shared/lib/interfaces';
 
-import { Field, Info, Label, Loader, PrimaryButton, Row, Toggle } from '../../components';
+import { Button, Field, Info, Label, Loader, Row, Toggle } from '../../components';
 import { useAddresses, useModals, useUserSettings } from '../../hooks';
 
 import ChangePasswordModal, { MODES } from './ChangePasswordModal';
@@ -34,7 +34,8 @@ const PasswordsSection = () => {
                     {passwordLabel}
                 </Label>
                 <Field>
-                    <PrimaryButton
+                    <Button
+                        color="norm"
                         onClick={() =>
                             handleChangePassword(
                                 isOnePasswordMode
@@ -44,7 +45,7 @@ const PasswordsSection = () => {
                         }
                     >
                         {passwordButtonLabel}
-                    </PrimaryButton>
+                    </Button>
                 </Field>
             </Row>
             <TwoFactorSection />
@@ -75,11 +76,12 @@ const PasswordsSection = () => {
                                 <Info url="https://protonmail.com/support/knowledge-base/single-password" />
                             </Label>
                             <Field>
-                                <PrimaryButton
+                                <Button
+                                    color="norm"
                                     onClick={() => handleChangePassword(MODES.CHANGE_TWO_PASSWORD_MAILBOX_MODE)}
                                 >
                                     {c('Action').t`Change mailbox password`}
-                                </PrimaryButton>
+                                </Button>
                             </Field>
                         </Row>
                     )}
