@@ -113,12 +113,15 @@ const AppearanceOtherSection = () => {
                             .t`Conversation grouping automatically groups messages in the same conversation together.`}
                     />
                 </Label>
-                <ViewModeToggle
-                    id="viewMode"
-                    viewMode={ViewMode}
-                    loading={loadingViewMode}
-                    onToggle={(value) => withLoadingViewMode(handleChangeViewMode(value))}
-                />
+
+                <Field>
+                    <ViewModeToggle
+                        id="viewMode"
+                        viewMode={ViewMode}
+                        loading={loadingViewMode}
+                        onToggle={(value) => withLoadingViewMode(handleChangeViewMode(value))}
+                    />
+                </Field>
             </Row>
 
             <Row>
