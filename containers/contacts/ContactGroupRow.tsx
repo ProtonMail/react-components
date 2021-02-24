@@ -29,7 +29,10 @@ const ContactGroupRow = ({ checked, style, groupsEmailsMap, group, onClick, onCh
         >
             <div className="flex flex-nowrap w100 h100 mtauto mbauto flex-align-items-center">
                 <ItemCheckbox ID={ID} name={Name} checked={checked} onChange={onCheck} />
-                <span className="ml1 mr1 pl1 pr1 pt0-25 pb0-25 rounded1e" style={{ backgroundColor: Color }}>
+                <span
+                    className="ml1 mr1 pl1 pr1 pt0-25 pb0-25 rounded1e color-white"
+                    style={{ backgroundColor: Color }}
+                >
                     {Name}
                 </span>
                 <span>
