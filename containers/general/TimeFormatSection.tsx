@@ -34,7 +34,7 @@ const TimeSection = () => {
 
     return (
         <Row>
-            <Label htmlFor="time-format-select">{c('Label').t`Time format`}</Label>
+            <Label className="text-bold" htmlFor="time-format-select">{c('Label').t`Time format`}</Label>
             <Field>
                 <Select
                     id="time-format-select"

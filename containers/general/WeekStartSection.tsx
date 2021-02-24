@@ -38,7 +38,7 @@ const WeekStartSection = () => {
 
     return (
         <Row>
-            <Label htmlFor="week-start-select">{c('Label').t`Week start`}</Label>
+            <Label className="text-bold" htmlFor="week-start-select">{c('Label').t`Week start`}</Label>
             <Field>
                 <Select
                     id="week-start-select"

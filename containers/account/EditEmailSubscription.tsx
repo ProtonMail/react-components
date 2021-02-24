@@ -3,7 +3,7 @@ import { c } from 'ttag';
 import { updateNews } from 'proton-shared/lib/api/settings';
 
 import { useUserSettings, useEventManager, useNotifications, useApi, useLoading } from '../../hooks';
-import NewsCheckboxes from './NewsCheckboxes';
+import EmailSubscriptionCheckboxes from './EmailSubscriptionCheckboxes';
 
 const EditNews = () => {
     const [{ News } = { News: 0 }] = useUserSettings();
@@ -20,7 +20,7 @@ const EditNews = () => {
 
     const handleChange = (News: number) => withLoading(update(News));
 
-    return <NewsCheckboxes News={News} onChange={handleChange} disabled={loading} />;
+    return <EmailSubscriptionCheckboxes News={News} onChange={handleChange} disabled={loading} />;
 };
 
 export default EditNews;
