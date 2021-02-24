@@ -9,7 +9,7 @@ import { AutoReplyFormModel } from './interfaces';
 
 interface Props {
     model: AutoReplyFormModel;
-    updateModel: Function;
+    updateModel: (key: string) => (value: any) => void;
 }
 
 const AutoReplyFormMonthly = ({ model: { start, end, timezone }, updateModel }: Props) => {
