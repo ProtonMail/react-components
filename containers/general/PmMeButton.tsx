@@ -13,7 +13,7 @@ import {
     usePremiumDomains,
     useUser,
 } from '../../hooks';
-import { PrimaryButton } from '../../components';
+import { Button } from '../../components';
 import UnlockModal from '../login/UnlockModal';
 import CreateMissingKeysAddressModal from '../addresses/missingKeys/CreateMissingKeysAddressModal';
 
@@ -52,13 +52,14 @@ const PmMeButton = () => {
     };
 
     return (
-        <PrimaryButton
+        <Button
+            color="norm"
             disabled={isLoadingDependencies || !Domain}
             loading={loading}
             onClick={() => withLoading(createPremiumAddress())}
         >
             {c('Action').t`Activate ${Name}@pm.me`}
-        </PrimaryButton>
+        </Button>
     );
 };
 
