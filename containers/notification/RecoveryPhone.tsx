@@ -3,7 +3,7 @@ import { c } from 'ttag';
 import { updatePhone } from 'proton-shared/lib/api/settings';
 
 import AuthModal from '../password/AuthModal';
-import { ConfirmModal, Alert, IntlTelInput, PrimaryButton } from '../../components';
+import { ConfirmModal, Alert, IntlTelInput, Button } from '../../components';
 import { useLoading, useModals, useNotifications, useEventManager } from '../../hooks';
 
 interface Props {
@@ -60,13 +60,14 @@ const RecoveryPhone = ({ phone, hasReset }: Props) => {
                 />
             </div>
             <div className="ml1">
-                <PrimaryButton
+                <Button
+                    color="norm"
                     disabled={(phone || '') === input}
                     loading={loading}
                     onClick={() => withLoading(handleSubmit())}
                 >
                     {c('Action').t`Update`}
-                </PrimaryButton>
+                </Button>
             </div>
         </div>
     );
