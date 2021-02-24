@@ -3,17 +3,17 @@ import { c } from 'ttag';
 import { NEWS } from 'proton-shared/lib/constants';
 import { toggleBit, hasBit } from 'proton-shared/lib/helpers/bitset';
 
-import { Checkbox } from '../../components';
+import { Toggle } from '../../components';
 
 const { ANNOUNCEMENTS, FEATURES, NEWSLETTER, BETA, BUSINESS } = NEWS;
 
-export interface NewsCheckboxesProps {
+export interface EmailSubscriptionCheckboxesProps {
     disabled: boolean;
     News: number;
     onChange: (News: number) => void;
 }
 
-const NewsCheckboxes = ({ disabled, News, onChange }: NewsCheckboxesProps) => {
+const EmailSubscriptionCheckboxes = ({ disabled, News, onChange }: EmailSubscriptionCheckboxesProps) => {
     const handleChange = (mask: number) => () => {
         onChange(toggleBit(News, mask));
     };
@@ -31,13 +31,18 @@ const NewsCheckboxes = ({ disabled, News, onChange }: NewsCheckboxesProps) => {
     ];
 
     return (
-        <ul className="unstyled">
+        <ul className="unstyled relative">
             {checkboxes.map(({ id, flag, text }) => {
                 return (
-                    <li key={id} className="mb0-5">
-                        <Checkbox checked={hasBit(News, flag)} disabled={disabled} onChange={handleChange(flag)}>
-                            {text}
-                        </Checkbox>
+                    <li key={id} className="mb1 flex flex-align-items-center">
+                        <Toggle
+                            id={id}
+                            className="mr2"
+                            checked={hasBit(News, flag)}
+                            disabled={disabled}
+                            onChange={handleChange(flag)}
+                        />
+                        <label htmlFor={id}>{text}</label>
                     </li>
                 );
             })}
@@ -45,4 +50,4 @@ const NewsCheckboxes = ({ disabled, News, onChange }: NewsCheckboxesProps) => {
     );
 };
 
-export default NewsCheckboxes;
+export default EmailSubscriptionCheckboxes;

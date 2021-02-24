@@ -1,3 +1,4 @@
+export { default as CancelSubscriptionSection } from './CancelSubscriptionSection';
 export { default as SubscriptionSection } from './SubscriptionSection';
 export { default as NewSubscriptionModal } from './NewSubscriptionModal';
 export { default as BlackFridayModal } from './BlackFridayModal';
