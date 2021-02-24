@@ -25,6 +25,7 @@ import InvoiceType from './InvoiceType';
 import InvoiceState from './InvoiceState';
 import InvoiceActions from './InvoiceActions';
 import InvoiceTextModal from './InvoiceTextModal';
+import { SettingsParagraph, SettingsSectionWide } from '../account';
 
 const InvoicesSection = () => {
     const [user] = useUser();
@@ -77,11 +78,14 @@ const InvoicesSection = () => {
     });
 
     return (
-        <>
-            <Alert>{c('Info').t`You can customize and download your invoices for accounting purposes.`}</Alert>
+        <SettingsSectionWide>
+            <SettingsParagraph>{c('Info')
+                .t`You can customize and download your invoices for accounting purposes.`}</SettingsParagraph>
             {hasUnpaid ? (
-                <Alert type="error">{c('Error')
-                    .t`Your account or organization currently has an overdue invoice. Please pay all unpaid invoices.`}</Alert>
+                <Alert type="error">
+                    {c('Error')
+                        .t`Your account or organization currently has an overdue invoice. Please pay all unpaid invoices.`}
+                </Alert>
             ) : null}
             <Block className="flex flex-justify-space-between">
                 <div>
@@ -131,7 +135,7 @@ const InvoicesSection = () => {
                     })}
                 </TableBody>
             </Table>
-        </>
+        </SettingsSectionWide>
     );
 };
 

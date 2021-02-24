@@ -1,13 +1,9 @@
 import React from 'react';
 import { c } from 'ttag';
 
-import { Input } from '../../components';
+import Input, { Props as InputProps } from '../../components/input/Input';
 
-interface Props {
-    value: string;
-}
-
-const GiftCodeInput = ({ value, ...rest }: Props) => {
+const GiftCodeInput = ({ value, ...rest }: InputProps) => {
     return <Input placeholder={c('Placeholder').t`Gift code`} value={value} {...rest} />;
 };
 
