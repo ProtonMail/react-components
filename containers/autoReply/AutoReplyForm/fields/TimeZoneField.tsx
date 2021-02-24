@@ -7,7 +7,7 @@ import { Select, Row, Label, Field } from '../../../../components';
 
 interface Props {
     value: string;
-    onChange: Function;
+    onChange: (timezone: string) => void;
 }
 
 const TimeZoneField = ({ value, onChange }: Props) => {

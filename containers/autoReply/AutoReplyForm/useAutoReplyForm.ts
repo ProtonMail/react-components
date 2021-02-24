@@ -153,17 +153,21 @@ const toAutoResponder = ({
     EndTime: toUnixTime(end, timezone, duration),
 });
 
+type UpdateFunction = (value: any) => void;
+
 const useAutoReplyForm = (AutoResponder: tsAutoResponder) => {
     const matches = useMemo(() => getMatchingValues(AutoResponder), [AutoResponder]);
 
-    const [model, setModel] = useState<AutoReplyFormModel>(() => {
+    const getInitialModel = () => {
         return toModel(AutoResponder.IsEnabled ? AutoResponder : getDefaultAutoResponder(AutoResponder), {
             timezone: matches.timezone?.value,
             duration: matches.duration?.value,
         });
-    });
+    };
 
-    const updateModel = (key: string) => {
+    const [model, setModel] = useState<AutoReplyFormModel>(getInitialModel());
+
+    const updateModel = (key: string): UpdateFunction => {
         if (key === 'duration') {
             // When changing the duration, reset the model.
             return (value) =>

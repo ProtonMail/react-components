@@ -6,7 +6,7 @@ import { Select, Label, Row, Field } from '../../../../components';
 
 interface Props {
     value: number;
-    onChange: Function;
+    onChange: (duration: number) => void;
 }
 
 const DurationField = ({ value, onChange }: Props) => {

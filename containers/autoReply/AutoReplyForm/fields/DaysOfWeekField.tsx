@@ -8,7 +8,7 @@ import { Label, Checkbox, Row, Field } from '../../../../components';
 
 interface Props {
     value: number[];
-    onChange: Function;
+    onChange: (days: number[]) => void;
 }
 
 const DaysOfWeekField = ({ value, onChange }: Props) => {
