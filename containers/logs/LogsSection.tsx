@@ -173,6 +173,7 @@ const LogsSection = () => {
             {logAuth !== DISABLE ? (
                 <div>
                     <Button
+                        shape="outline"
                         className="mr1 mb0-5 inline-flex flex-align-items-center"
                         loading={loadingRefresh}
                         onClick={() => withLoadingRefresh(wait(1000).then(fetchAndSetState))}
@@ -185,6 +186,7 @@ const LogsSection = () => {
                     {state.logs.length ? <WipeLogsButton className="mr1 mb0-5" onWipe={handleWipe} /> : null}
                     {state.logs.length ? (
                         <Button
+                            shape="outline"
                             className="mb0-5 mr1"
                             onClick={() => withLoadingDownload(handleDownload())}
                             loading={loadingDownload}

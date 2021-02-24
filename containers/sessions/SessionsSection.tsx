@@ -85,7 +85,7 @@ const SessionsSection = () => {
             </SettingsParagraph>
             <Block className="flex flex-justify-space-between">
                 <div>
-                    <Button onClick={handleOpenModal} loading={loadingRevokeAll}>{c('Action')
+                    <Button shape="outline" onClick={handleOpenModal} loading={loadingRevokeAll}>{c('Action')
                         .t`Revoke all other sessions`}</Button>
                 </div>
                 <Pagination

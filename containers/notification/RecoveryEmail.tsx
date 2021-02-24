@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { c } from 'ttag';
 import { updateEmail } from 'proton-shared/lib/api/settings';
 
-import { Alert, ConfirmModal, EmailInput, PrimaryButton } from '../../components';
+import { Alert, Button, ConfirmModal, EmailInput } from '../../components';
 import { useLoading, useModals, useNotifications, useEventManager } from '../../hooks';
 import AuthModal from '../password/AuthModal';
 
@@ -67,9 +67,14 @@ const RecoveryEmail = ({ email, hasReset, hasNotify }: Props) => {
                 />
             </div>
             <div className="ml1">
-                <PrimaryButton disabled={email === input} loading={loading} onClick={() => withLoading(handleSubmit())}>
+                <Button
+                    color="norm"
+                    disabled={email === input}
+                    loading={loading}
+                    onClick={() => withLoading(handleSubmit())}
+                >
                     {c('Action').t`Update`}
-                </PrimaryButton>
+                </Button>
             </div>
         </div>
     );
