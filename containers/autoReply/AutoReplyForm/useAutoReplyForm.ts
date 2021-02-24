@@ -23,15 +23,20 @@ const getDefaultFixedTimes = () => ({
     EndTime: getUnixTime(addHours(addDays(new Date(), 7), 2)),
 });
 
-export const getDefaultAutoResponder = (AutoResponder: tsAutoResponder) => {
+export const getDefaultAutoResponder = (AutoResponder?: tsAutoResponder) => {
+    const timezones = getTimeZoneOptions();
+
     return {
         ...AutoResponder,
         // Comment copied from anglar:
         // Not translated: it's not editable, foreign people doing international business wouldn't want it to be translated
         // if we make it editable we can translate it again.
         Subject: 'Auto',
-        Message: AutoResponder.Message || c('Autoresponse').t`I'm out of the office with limited access to my email.`,
+        Message: AutoResponder?.Message || c('Autoresponse').t`I'm out of the office with limited access to my email.`,
         Repeat: AutoReplyDuration.FIXED,
+        DaysSelected: [],
+        IsEnabled: true,
+        Zone: getMatchingTimezone(getTimezone(), timezones).value,
         ...getDefaultFixedTimes(),
     };
 };
@@ -91,7 +96,7 @@ export const getMatchingValues = ({ Zone, Repeat }: tsAutoResponder) => {
 export const toModel = (
     { Message, StartTime, EndTime, DaysSelected, Subject, IsEnabled }: tsAutoResponder,
     { timezone, duration }: { timezone: string; duration: AutoReplyDuration }
-) => {
+): AutoReplyFormModel => {
     return {
         message: Message,
         daysOfWeek: DaysSelected,
@@ -99,12 +104,20 @@ export const toModel = (
         enabled: IsEnabled,
         duration,
         timezone,
-        start: toDateTimes(StartTime, timezone, duration),
-        end: toDateTimes(EndTime, timezone, duration),
+        start: toDateTimes(StartTime, timezone, duration) || {},
+        end: toDateTimes(EndTime, timezone, duration) || {},
     };
 };
 
-const toUnixTime = ({ date, time, day }: AutoReplyFormDate, timezone: string, repeat: AutoReplyDuration) => {
+const toUnixTime = (
+    { date = new Date(), time = new Date(), day = new Date().getDay() }: AutoReplyFormDate,
+    timezone: string,
+    repeat: AutoReplyDuration
+) => {
+    if (repeat === AutoReplyDuration.PERMANENT) {
+        return 0;
+    }
+
     const utcUnixTime = time.getHours() * HOUR_SECONDS + time.getMinutes() * MINUTES_SECONDS;
 
     switch (repeat) {
@@ -127,8 +140,6 @@ const toUnixTime = ({ date, time, day }: AutoReplyFormDate, timezone: string, re
             return day * DAY_SECONDS + utcUnixTime;
         case AutoReplyDuration.MONTHLY:
             return day * DAY_SECONDS + utcUnixTime;
-        case AutoReplyDuration.PERMANENT:
-            return 0;
         default:
             return utcUnixTime;
     }
@@ -153,7 +164,7 @@ const toAutoResponder = ({
     EndTime: toUnixTime(end, timezone, duration),
 });
 
-type UpdateFunction = (value: any) => void;
+type UpdateFunction = (value: number | number[] | string | boolean | AutoReplyFormDate) => void;
 
 const useAutoReplyForm = (AutoResponder: tsAutoResponder) => {
     const matches = useMemo(() => getMatchingValues(AutoResponder), [AutoResponder]);
@@ -161,7 +172,7 @@ const useAutoReplyForm = (AutoResponder: tsAutoResponder) => {
     const getInitialModel = () => {
         return toModel(AutoResponder.IsEnabled ? AutoResponder : getDefaultAutoResponder(AutoResponder), {
             timezone: matches.timezone?.value,
-            duration: matches.duration?.value,
+            duration: matches.duration?.value || AutoReplyDuration.FIXED,
         });
     };
 
@@ -179,15 +190,15 @@ const useAutoReplyForm = (AutoResponder: tsAutoResponder) => {
                              * When switching to fixed repeat duration, reset the start time and end time
                              * to avoid having the date be 1/1/1970
                              */
-                            ...(value === AutoReplyDuration.FIXED && AutoResponder.Duration !== AutoReplyDuration.FIXED
+                            ...(value === AutoReplyDuration.FIXED && AutoResponder.Repeat !== AutoReplyDuration.FIXED
                                 ? {
                                       ...getDefaultFixedTimes(),
                                   }
                                 : undefined),
                         },
                         {
-                            timezone: matches.timezone.value,
-                            duration: value,
+                            timezone: matches.timezone?.value,
+                            duration: value as AutoReplyDuration,
                         }
                     ),
                 });

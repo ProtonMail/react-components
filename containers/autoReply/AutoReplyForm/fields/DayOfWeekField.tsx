@@ -6,7 +6,7 @@ import { Row, Label, Field, Select } from '../../../../components';
 interface Props {
     id: string;
     label: string;
-    value: number;
+    value?: number;
     onChange: (day: number) => void;
 }
 
