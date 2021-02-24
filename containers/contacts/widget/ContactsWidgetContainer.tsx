@@ -146,22 +146,31 @@ const ContactsWidgetContainer = ({ onClose, onCompose }: Props) => {
         onClose();
     };
 
+    const contactsCount = formattedContacts.length;
     const contactsLength = contacts ? contacts.length : 0;
     const loading = loadingContacts || loadingUser || loadingUserSettings;
 
     return (
         <div className="flex flex-column flex-nowrap h100">
-            <div className="m1 mb0-25 flex-item-noshrink">
+            <div className="contacts-widget-search-container flex-item-noshrink">
                 <label htmlFor="id_contact-widget-search" className="sr-only">{c('Placeholder')
                     .t`Search for name or email`}</label>
                 <SearchInput
+                    autoFocus
                     value={search}
                     onChange={setSearch}
                     id="id_contact-widget-search"
                     placeholder={c('Placeholder').t`Search for name or email`}
                 />
+                <span className="sr-only" aria-atomic aria-live="assertive">
+                    {c('Info').ngettext(
+                        msgid`${contactsCount} contact found`,
+                        `${contactsCount} contacts found`,
+                        contactsCount
+                    )}
+                </span>
             </div>
-            <div className="pl1 pr1 pt0-5 pb0-75 border-bottom flex-item-noshrink">
+            <div className="contacts-widget-toolbar pt1 pb1 border-bottom flex-item-noshrink">
                 <ContactsWidgetToolbar
                     allChecked={hasCheckedAllFiltered}
                     oneSelected={!!selectedIDs.length}
