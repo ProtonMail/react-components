@@ -1,14 +1,23 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { c } from 'ttag';
+
 import { COMPOSER_MODE } from 'proton-shared/lib/constants';
+
 import composerPopUpSvg from 'design-system/assets/img/pm-images/composer-popup.svg';
 import composerMaximizedSvg from 'design-system/assets/img/pm-images/composer-maximized.svg';
+
 import { RadioCards } from '../../components';
 
 const { POPUP, MAXIMIZED } = COMPOSER_MODE;
 
-const ComposerModeRadios = ({ composerMode, onChange, loading, id, ...rest }) => {
+interface Props {
+    composerMode: COMPOSER_MODE;
+    onChange: (composerMode: COMPOSER_MODE) => void;
+    loading: boolean;
+    id: string;
+}
+
+const ComposerModeRadios = ({ composerMode, onChange, loading, id, ...rest }: Props) => {
     const radioCardPopup = {
         value: POPUP,
         checked: composerMode === POPUP,
@@ -35,13 +44,6 @@ const ComposerModeRadios = ({ composerMode, onChange, loading, id, ...rest }) =>
     };
 
     return <RadioCards list={[radioCardPopup, radioCardMaximized]} id={id} {...rest} />;
-};
-
-ComposerModeRadios.propTypes = {
-    composerMode: PropTypes.number.isRequired,
-    onChange: PropTypes.func.isRequired,
-    loading: PropTypes.bool,
-    id: PropTypes.string,
 };
 
 export default ComposerModeRadios;
