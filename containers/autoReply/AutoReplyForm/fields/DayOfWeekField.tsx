@@ -7,7 +7,7 @@ interface Props {
     id: string;
     label: string;
     value: number;
-    onChange: Function;
+    onChange: (day: number) => void;
 }
 
 const DayOfWeekField = ({ id, label, value, onChange }: Props) => {
