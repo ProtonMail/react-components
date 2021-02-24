@@ -6,7 +6,7 @@ import { getDaysOfMonthOptions } from '../../utils';
 interface Props {
     id: string;
     label: string;
-    value: number;
+    value?: number;
     onChange: (day: number) => void;
 }
 

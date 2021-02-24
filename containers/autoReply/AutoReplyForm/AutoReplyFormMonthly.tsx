@@ -1,10 +1,12 @@
 import React from 'react';
 import { c } from 'ttag';
 
+import { SettingsParagraph } from '../../account';
+
 import DayOfMonthField from './fields/DayOfMonthField';
 import TimeZoneField from './fields/TimeZoneField';
-import Alert from '../../../components/alert/Alert';
 import TimeField from './fields/TimeField';
+
 import { AutoReplyFormModel } from './interfaces';
 
 interface Props {
@@ -15,7 +17,9 @@ interface Props {
 const AutoReplyFormMonthly = ({ model: { start, end, timezone }, updateModel }: Props) => {
     return (
         <>
-            <Alert>{c('Info').t`Auto-reply is active each month between the selected start and end time.`}</Alert>
+            <SettingsParagraph>
+                {c('Info').t`Auto-reply is active each month between the selected start and end time.`}
+            </SettingsParagraph>
             <DayOfMonthField
                 id="startDayOfMonth"
                 label={c('Label').t`Start day of month`}

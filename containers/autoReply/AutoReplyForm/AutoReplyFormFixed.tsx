@@ -1,10 +1,12 @@
 import React from 'react';
 import { c } from 'ttag';
 
+import { SettingsParagraph } from '../../account';
+
 import DateField from './fields/DateField';
-import Alert from '../../../components/alert/Alert';
 import TimeField from './fields/TimeField';
 import TimeZoneField from './fields/TimeZoneField';
+
 import { AutoReplyFormModel } from './interfaces';
 
 interface Props {
@@ -15,7 +17,9 @@ interface Props {
 const AutoReplyFormFixed = ({ model: { start, end, timezone }, updateModel }: Props) => {
     return (
         <>
-            <Alert>{c('Info').t`Auto-reply is active from the start time to the end time.`}</Alert>
+            <SettingsParagraph>
+                {c('Info').t`Auto-reply is active from the start time to the end time.`}
+            </SettingsParagraph>
             <DateField
                 id="startDate"
                 label={c('Label').t`Start date`}

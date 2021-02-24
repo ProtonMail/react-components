@@ -16,7 +16,7 @@ import {
     useHandler,
     useUser,
 } from '../../hooks';
-import { Toggle, Field, Label, Row, SimpleSquireEditor, PrimaryButton, AppLink } from '../../components';
+import { Toggle, Field, Label, Row, SimpleSquireEditor, Button, AppLink } from '../../components';
 
 import { SettingsSection, SettingsParagraph } from '../account';
 
@@ -34,7 +34,7 @@ const AutoReplySection = () => {
     const [{ hasPaidMail }] = useUser();
     const [mailSettings] = useMailSettings();
     const { Shortcuts = 1 } = mailSettings || {};
-    const AutoResponder = mailSettings?.AutoResponder || getDefaultAutoResponder({});
+    const AutoResponder = mailSettings?.AutoResponder || getDefaultAutoResponder();
     const api = useApi();
     const { call } = useEventManager();
     const [enablingLoading, withEnablingLoading] = useLoading();
@@ -152,9 +152,8 @@ const AutoReplySection = () => {
                             <Label className="w16r text-bold" onClick={() => editorRef.current?.focus()}>
                                 {c('Label').t`Message`}
                             </Label>
-                            <Field className="on-mobile-pb0 on-mobile-no-border flex flex-nowrap w100">
+                            <Field className="w100">
                                 <div ref={composerRef} tabIndex={-1} className="w100">
-                                    {' '}
                                     <SimpleSquireEditor
                                         ref={editorRef}
                                         supportImages={false}
@@ -163,17 +162,18 @@ const AutoReplySection = () => {
                                         keydownHandler={squireKeydownHandler}
                                     />
                                 </div>
+
+                                <Button
+                                    color="norm"
+                                    type="submit"
+                                    disabled={updatingLoading}
+                                    loading={updatingLoading}
+                                    className="mt1"
+                                >
+                                    {c('Action').t`Update`}
+                                </Button>
                             </Field>
                         </Row>
-
-                        <PrimaryButton
-                            type="submit"
-                            disabled={updatingLoading}
-                            loading={updatingLoading}
-                            className="mt1"
-                        >
-                            {c('Action').t`Update`}
-                        </PrimaryButton>
                     </form>
                 )
             ) : (

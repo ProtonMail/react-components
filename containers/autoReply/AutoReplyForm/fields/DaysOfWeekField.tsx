@@ -7,11 +7,11 @@ import { dateLocale } from 'proton-shared/lib/i18n';
 import { Label, Checkbox, Row, Field } from '../../../../components';
 
 interface Props {
-    value: number[];
+    value?: number[];
     onChange: (days: number[]) => void;
 }
 
-const DaysOfWeekField = ({ value, onChange }: Props) => {
+const DaysOfWeekField = ({ value = [], onChange }: Props) => {
     const handleChange = (weekday: number) => () =>
         onChange(value.includes(weekday) ? value.filter((existing) => weekday !== existing) : [...value, weekday]);
 

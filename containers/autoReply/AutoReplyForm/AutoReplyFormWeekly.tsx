@@ -1,10 +1,12 @@
 import { c } from 'ttag';
 import React from 'react';
 
-import Alert from '../../../components/alert/Alert';
+import { SettingsParagraph } from '../../account';
+
 import TimeZoneField from './fields/TimeZoneField';
 import DayOfWeekField from './fields/DayOfWeekField';
 import TimeField from './fields/TimeField';
+
 import { AutoReplyFormModel } from './interfaces';
 
 interface Props {
@@ -15,7 +17,9 @@ interface Props {
 const AutoReplyFormWeekly = ({ model: { start, end, timezone }, updateModel }: Props) => {
     return (
         <>
-            <Alert>{c('Info').t`Auto-reply is active each week between the selected start and end time.`}</Alert>
+            <SettingsParagraph>
+                {c('Info').t`Auto-reply is active each week between the selected start and end time.`}
+            </SettingsParagraph>
             <DayOfWeekField
                 value={start.day}
                 onChange={updateModel('start.day')}

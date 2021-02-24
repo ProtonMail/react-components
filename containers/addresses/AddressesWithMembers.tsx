@@ -14,7 +14,7 @@ import {
     TableRow,
     Block,
     Select,
-    PrimaryButton,
+    Button,
     AppLink,
 } from '../../components';
 import { useMembers, useMemberAddresses, useModals, useOrganizationKey, useNotifications } from '../../hooks';
@@ -140,9 +140,9 @@ const AddressesWithMembers = ({ user, organization, isOnlySelf }: Props) => {
                                 .jt`You must ${activateLink} organization keys before adding an email address to a non-private member.`}
                         </Alert>
                     ) : (
-                        <PrimaryButton onClick={() => handleAddAddress(currentMember)}>
+                        <Button color="norm" onClick={() => handleAddAddress(currentMember)}>
                             {c('Action').t`Add address`}
-                        </PrimaryButton>
+                        </Button>
                     )}
                 </Block>
             )}

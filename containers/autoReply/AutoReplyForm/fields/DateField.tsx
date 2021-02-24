@@ -5,13 +5,13 @@ import { Row, Label, DateInput, Field } from '../../../../components';
 interface Props {
     id: string;
     label: string;
-    value: Date;
+    value?: Date;
     min?: Date;
     max?: Date;
     onChange: (value?: Date) => void;
 }
 
-const DateField = ({ id, label, value, onChange, min, max }: Props) => {
+const DateField = ({ id, label, value = new Date(), onChange, min, max }: Props) => {
     return (
         <Row>
             <Label htmlFor={id} className="w16r text-bold">

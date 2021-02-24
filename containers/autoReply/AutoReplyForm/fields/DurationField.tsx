@@ -5,7 +5,7 @@ import { getDurationOptions } from '../../utils';
 import { Select, Label, Row, Field } from '../../../../components';
 
 interface Props {
-    value: number;
+    value?: number;
     onChange: (duration: number) => void;
 }
 
