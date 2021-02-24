@@ -12,8 +12,8 @@ import {
     Row,
     SelectTwo,
     Toggle,
-    SmallButton,
     MailShortcutsModal,
+    Button,
 } from '../../components';
 import { useEarlyAccess, useModals, useMailSettings } from '../../hooks';
 import { SettingsSection } from '../account';
@@ -99,9 +99,13 @@ const AdvancedSection = () => {
                         shortcuts={shortcuts}
                         onChange={handleShortcutsToggleChange}
                     />
-                    <SmallButton onClick={openShortcutsModal} className="flex-item-noshrink flex-item-nogrow">
+                    <Button
+                        shape="outline"
+                        onClick={openShortcutsModal}
+                        className="flex-item-noshrink flex-item-nogrow"
+                    >
                         {c('Action').t`Display keyboard shortcuts`}
-                    </SmallButton>
+                    </Button>
                 </Field>
             </Row>
 

@@ -5,7 +5,7 @@ import { isMac } from 'proton-shared/lib/helpers/browser';
 import { updateAddress } from 'proton-shared/lib/api/addresses';
 import { Address } from 'proton-shared/lib/interfaces';
 
-import { Row, Field, Label, Input, SimpleSquireEditor, PrimaryButton } from '../../components';
+import { Row, Field, Label, Input, SimpleSquireEditor, Button } from '../../components';
 import {
     useApi,
     useLoading,
@@ -136,9 +136,9 @@ const EditAddressesSection = ({ address }: Props) => {
                         />
                     </div>
 
-                    <PrimaryButton type="submit" disabled={loading} loading={loading} className="mt1">
+                    <Button color="norm" type="submit" disabled={loading} loading={loading} className="mt1">
                         {c('Action').t`Update`}
-                    </PrimaryButton>
+                    </Button>
                 </Field>
             </Row>
         </form>
