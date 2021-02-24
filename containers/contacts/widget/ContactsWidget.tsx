@@ -18,6 +18,11 @@ const ContactsWidget = ({ className, onCompose }: Props) => {
     const [tabIndex, setTabIndex] = useState(0);
     const title = c('Header').t`Contacts`;
 
+    const handleClose = () => {
+        setTabIndex(0);
+        close();
+    };
+
     return (
         <>
             <button
@@ -35,7 +40,7 @@ const ContactsWidget = ({ className, onCompose }: Props) => {
                 id={uid}
                 isOpen={isOpen}
                 anchorRef={anchorRef}
-                onClose={close}
+                onClose={handleClose}
                 autoClose={false}
                 originalPlacement="bottom"
                 className="contacts-widget"
@@ -43,14 +48,17 @@ const ContactsWidget = ({ className, onCompose }: Props) => {
                 noMaxHeight
             >
                 <Tabs
+                    className="flex flex-column flex-nowrap"
+                    containerClassName="contacts-widget-tabs flex-item-noshrink"
+                    contentClassNane="flex-item-fluid"
                     tabs={[
                         {
                             title: c('Title').t`Contacts`,
-                            content: <ContactsWidgetContainer onClose={close} onCompose={onCompose} />,
+                            content: <ContactsWidgetContainer onClose={handleClose} onCompose={onCompose} />,
                         },
                         {
                             title: c('Title').t`Groups`,
-                            content: <ContactsWidgetGroupsContainer onClose={close} onCompose={onCompose} />,
+                            content: <ContactsWidgetGroupsContainer onClose={handleClose} onCompose={onCompose} />,
                         },
                     ]}
                     value={tabIndex}

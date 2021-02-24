@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { c } from 'ttag';
+import { c, msgid } from 'ttag';
 import { Recipient } from 'proton-shared/lib/interfaces';
 import { ContactEmail } from 'proton-shared/lib/interfaces/contacts';
 import { normalize } from 'proton-shared/lib/helpers/string';
@@ -9,6 +9,7 @@ import ContactsWidgetGroupsToolbar from './ContactsWidgetGroupsToolbar';
 import ContactsGroupsList from '../ContactsGroupsList';
 import { useItemsSelection } from '../../items';
 import ContactGroupModal from '../modals/ContactGroupModal';
+import ContactGroupDetailsModal from '../modals/ContactGroupDetailsModal';
 
 interface Props {
     onClose: () => void;
@@ -53,9 +54,18 @@ const ContactsWidgetGroupsContainer = ({ onClose, onCompose }: Props) => {
     );
 
     const handleCompose = () => {
-        const emails = selectedIDs.map((selectedID) => groupsEmailsMap[selectedID]).flat();
+        const recipients = selectedIDs
+            .map((selectedID) => {
+                const group = groups.find((group) => group.ID === selectedID);
+                return groupsEmailsMap[selectedID].map((email) => ({
+                    Name: email.Name,
+                    Address: email.Email,
+                    Group: group?.Path,
+                }));
+            })
+            .flat();
 
-        if (emails.length > 100) {
+        if (recipients.length > 100) {
             createNotification({
                 type: 'error',
                 text: c('Error').t`You can't send a mail to more than 100 recipients`,
@@ -63,14 +73,12 @@ const ContactsWidgetGroupsContainer = ({ onClose, onCompose }: Props) => {
             return;
         }
 
-        const recipients = emails.map((email) => ({ Name: email.Name, Address: email.Email }));
-
         onCompose?.(recipients, []);
         onClose();
     };
 
     const handleDetails = (groupID: string) => {
-        createModal(<ContactGroupModal contactGroupID={groupID} />);
+        createModal(<ContactGroupDetailsModal contactGroupID={groupID} />);
         onClose();
     };
 
@@ -80,10 +88,11 @@ const ContactsWidgetGroupsContainer = ({ onClose, onCompose }: Props) => {
     };
 
     const loading = loadingGroups || loadingContactEmails || loadingUserSettings;
+    const groupCounts = filteredGroups.length;
 
     return (
         <div className="flex flex-column flex-nowrap h100">
-            <div className="m1 mb0-25 mt0 flex-item-noshrink">
+            <div className="contacts-widget-search-container flex-item-noshrink">
                 <label htmlFor="id_contact-widget-search" className="sr-only">{c('Placeholder')
                     .t`Search for group name`}</label>
                 <SearchInput
@@ -92,8 +101,11 @@ const ContactsWidgetGroupsContainer = ({ onClose, onCompose }: Props) => {
                     id="id_contact-widget-group-search"
                     placeholder={c('Placeholder').t`Search for group name`}
                 />
+                <span className="sr-only" aria-atomic aria-live="assertive">
+                    {c('Info').ngettext(msgid`${groupCounts} group found`, `${groupCounts} groups found`, groupCounts)}
+                </span>
             </div>
-            <div className="pl1 pr1 pt0-5 pb0-75 border-bottom flex-item-noshrink">
+            <div className="contacts-widget-toolbar pt1 pb1 border-bottom flex-item-noshrink">
                 <ContactsWidgetGroupsToolbar
                     allChecked={allChecked}
                     oneSelected={!!selectedIDs.length}
