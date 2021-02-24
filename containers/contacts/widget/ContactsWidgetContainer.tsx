@@ -3,7 +3,8 @@ import { c, msgid } from 'ttag';
 import { Recipient } from 'proton-shared/lib/interfaces';
 import { ContactEmail } from 'proton-shared/lib/interfaces/contacts';
 import { exportContacts } from 'proton-shared/lib/contacts/export';
-import { FullLoader, SearchInput } from '../../../components';
+import { APPS } from 'proton-shared/lib/constants';
+import { FullLoader, SearchInput, useAppLink } from '../../../components';
 import { useApi, useModals, useNotifications, useUser, useUserKeys, useUserSettings } from '../../../hooks';
 import ContactsList from '../ContactsList';
 import ContactDetailsModal from '../modals/ContactDetailsModal';
@@ -11,6 +12,7 @@ import useContactList from '../useContactList';
 import ContactsWidgetToolbar from './ContactsWidgetToolbar';
 import ContactDeleteModal from '../modals/ContactDeleteModal';
 import ContactModal from '../modals/ContactModal';
+import ContactsWidgetPlaceholder, { EmptyType } from './ContactsWidgetPlaceholder';
 
 interface Props {
     onClose: () => void;
@@ -24,6 +26,7 @@ const ContactsWidgetContainer = ({ onClose, onCompose }: Props) => {
     const { createModal } = useModals();
     const { createNotification } = useNotifications();
     const api = useApi();
+    const appLink = useAppLink();
 
     const [search, setSearch] = useState('');
 
@@ -38,7 +41,6 @@ const ContactsWidgetContainer = ({ onClose, onCompose }: Props) => {
         checkedIDs,
         contacts,
         contactGroupsMap,
-        totalContactsInGroup,
         handleCheck,
         handleCheckOne,
         contactEmailsMap,
@@ -52,6 +54,11 @@ const ContactsWidgetContainer = ({ onClose, onCompose }: Props) => {
         contactID,
         contactGroupID,
     });
+
+    const handleClearSearch = () => {
+        // If done synchronously, button is removed from the dom and the dropdown considers a click outside
+        setTimeout(() => setSearch(''));
+    };
 
     const handleCompose = () => {
         if (selectedIDs.length > 100) {
@@ -142,13 +149,20 @@ const ContactsWidgetContainer = ({ onClose, onCompose }: Props) => {
     };
 
     const handleCreate = () => {
-        createModal(<ContactModal onAdd={() => setSearch('')} />);
+        createModal(<ContactModal />);
         onClose();
+    };
+
+    const handleImport = () => {
+        appLink('/settings/import#import', APPS.PROTONCONTACTS);
     };
 
     const contactsCount = formattedContacts.length;
     const contactsLength = contacts ? contacts.length : 0;
+
     const loading = loadingContacts || loadingUser || loadingUserSettings;
+    const showPlaceholder = !loading && !contactsCount;
+    const showList = !showPlaceholder;
 
     return (
         <div className="flex flex-column flex-nowrap h100">
@@ -186,24 +200,30 @@ const ContactsWidgetContainer = ({ onClose, onCompose }: Props) => {
                     <div className="flex h100">
                         <FullLoader className="mauto color-primary" />
                     </div>
-                ) : (
+                ) : null}
+                {showPlaceholder ? (
+                    <ContactsWidgetPlaceholder
+                        type={contactsLength ? EmptyType.Search : EmptyType.All}
+                        onClearSearch={handleClearSearch}
+                        onCreate={handleCreate}
+                        onImport={handleImport}
+                    />
+                ) : null}
+                {showList ? (
                     <ContactsList
                         contactID={contactID}
-                        contactGroupID={contactGroupID}
                         totalContacts={contactsLength}
-                        totalContactsInGroup={totalContactsInGroup}
                         contacts={formattedContacts}
                         contactGroupsMap={contactGroupsMap}
                         user={user}
                         userSettings={userSettings}
                         onCheckOne={handleCheckOne}
-                        onClearSearch={() => setSearch('')}
                         isDesktop={false}
                         checkedIDs={checkedIDs}
                         onCheck={handleCheck}
                         onClick={handleDetails}
                     />
-                )}
+                ) : null}
             </div>
         </div>
     );
