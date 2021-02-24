@@ -7,7 +7,7 @@ import DialogModal from './Dialog';
 import HeaderModal from './Header';
 import ContentModal from './Content';
 import InnerModal from './Inner';
-import { ResetButton, PrimaryButton } from '../button';
+import { Button } from '../button';
 
 /** @type any */
 const Modal = ({
@@ -62,9 +62,9 @@ function DemoModal({ onAdd, ...rest }) {
 
         const nodeSubmit =
             typeof submit === 'string' ? (
-                <PrimaryButton loading={loading} type="submit" data-focus-fallback="-1">
+                <Button color="norm" loading={loading} type="submit" data-focus-fallback="-1">
                     {submit}
-                </PrimaryButton>
+                </Button>
             ) : (
                 submit
             );
@@ -73,9 +73,9 @@ function DemoModal({ onAdd, ...rest }) {
         return (
             <FooterModal>
                 {typeof close === 'string' ? (
-                    <ResetButton disabled={loading} data-focus-fallback="-2">
+                    <Button shape="outline" type="reset" disabled={loading} data-focus-fallback="-2">
                         {close}
-                    </ResetButton>
+                    </Button>
                 ) : (
                     close
                 )}
