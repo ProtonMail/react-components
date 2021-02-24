@@ -50,7 +50,7 @@ const LanguageSection = ({ locales = {} }: Props) => {
 
     return (
         <Row>
-            <Label htmlFor="languageSelect">{c('Label').t`Default language`}</Label>
+            <Label className="text-bold" htmlFor="languageSelect">{c('Label').t`Default language`}</Label>
             <Field>
                 <Select
                     disabled={loading}
