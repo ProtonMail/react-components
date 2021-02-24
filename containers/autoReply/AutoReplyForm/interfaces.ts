@@ -1,7 +1,7 @@
 export interface AutoReplyFormDate {
-    date: Date;
-    time: Date;
-    day: number;
+    date?: Date;
+    time?: Date;
+    day?: number;
 }
 
 export interface AutoReplyFormModel {
