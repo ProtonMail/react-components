@@ -20,7 +20,7 @@ interface ActionLinkProps {
 
 const ActionLink = ({ onClick, children }: ActionLinkProps) => {
     return (
-        <LinkButton onClick={onClick} className="ml0-25 mr0-25 text-bold">
+        <LinkButton onClick={onClick} className="ml0-25 mr0-25">
             {children}
         </LinkButton>
     );
