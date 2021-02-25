@@ -104,7 +104,7 @@ const RecoveryMethodsSection = () => {
                                 .t`Disabling this will prevent this email from being used for account recovery`}
                         />
                     </div>
-                    {CLIENT_TYPE === VPN ? null : (
+                    {CLIENT_TYPE !== VPN ? (
                         <div className="flex flex-align-items-center">
                             <Toggle
                                 className="mr0-5"
@@ -122,7 +122,7 @@ const RecoveryMethodsSection = () => {
                                     .t`When notifications are enabled, we'll send an alert to your recovery/notification address if you have new messages in your ProtonMail account.`}
                             />
                         </div>
-                    )}
+                    ) : null}
                 </Field>
             </Row>
             <hr className="mb2 mt2" />
