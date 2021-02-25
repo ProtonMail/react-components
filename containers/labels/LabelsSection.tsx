@@ -1,15 +1,19 @@
 import React from 'react';
 import { c } from 'ttag';
 import { arrayMove } from 'react-sortable-hoc';
+
 import { orderLabels } from 'proton-shared/lib/api/labels';
 
-import { Loader, Alert, PrimaryButton, Button } from '../../components';
+import { Loader, Button } from '../../components';
 import { useLabels, useEventManager, useModals, useApi, useNotifications, useLoading } from '../../hooks';
-import LabelSortableList from './LabelSortableList';
+
+import { SettingsSection, SettingsParagraph } from '../account';
+
 import EditLabelModal from './modals/EditLabelModal';
+import LabelSortableList from './LabelSortableList';
 
 function LabelsSection() {
-    const [labels, loadingLabels] = useLabels();
+    const [labels = [], loadingLabels] = useLabels();
     const { call } = useEventManager();
     const api = useApi();
     const { createModal } = useModals();
@@ -22,7 +26,7 @@ function LabelsSection() {
      * @param  {Number} oldIndex cf https://github.com/clauderic/react-sortable-hoc#basic-example
      * @param  {Number} newIndex
      */
-    const onSortEnd = async ({ oldIndex, newIndex }) => {
+    const onSortEnd = async ({ oldIndex, newIndex }: { oldIndex: number; newIndex: number }) => {
         const newLabels = arrayMove(labels, oldIndex, newIndex);
         await api(
             orderLabels({
@@ -44,34 +48,40 @@ function LabelsSection() {
     };
 
     if (loadingLabels) {
-        return <Loader />;
+        return (
+            <SettingsSection>
+                <Loader />
+            </SettingsSection>
+        );
     }
 
     return (
-        <>
-            <Alert
-                type="info"
+        <SettingsSection>
+            <SettingsParagraph
                 className="mt1 mb1"
-                learnMore="https://protonmail.com/support/knowledge-base/creating-folders/"
+                learnMoreUrl="https://protonmail.com/support/knowledge-base/creating-folders/"
             >
                 {c('LabelSettings').t`Multiple labels can be applied to a single message.`}
-            </Alert>
+            </SettingsParagraph>
             <div className="mb1">
-                <PrimaryButton className="mr1" onClick={() => createModal(<EditLabelModal type="label" />)}>
+                <Button color="norm" className="mr1" onClick={() => createModal(<EditLabelModal type="label" />)}>
                     {c('Action').t`Add label`}
-                </PrimaryButton>
+                </Button>
                 <Button
+                    shape="outline"
                     title={c('Title').t`Sort labels alphabetically`}
                     loading={loading}
                     onClick={() => withLoading(handleSortLabel())}
-                >{c('Action').t`Sort`}</Button>
+                >
+                    {c('Action').t`Sort`}
+                </Button>
             </div>
             {labels.length ? (
                 <LabelSortableList getContainer={getScrollContainer} items={labels} onSortEnd={onSortEnd} />
             ) : (
-                <Alert>{c('LabelSettings').t`No labels available`}</Alert>
+                <SettingsParagraph>{c('LabelSettings').t`No labels available`}</SettingsParagraph>
             )}
-        </>
+        </SettingsSection>
     );
 }
 
