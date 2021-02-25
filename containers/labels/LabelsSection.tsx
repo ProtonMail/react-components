@@ -47,39 +47,41 @@ function LabelsSection() {
         createNotification({ text: c('Success message after sorting labels').t`Labels sorted` });
     };
 
-    if (loadingLabels) {
-        return (
-            <SettingsSection>
-                <Loader />
-            </SettingsSection>
-        );
-    }
-
     return (
         <SettingsSection>
-            <SettingsParagraph
-                className="mt1 mb1"
-                learnMoreUrl="https://protonmail.com/support/knowledge-base/creating-folders/"
-            >
-                {c('LabelSettings').t`Multiple labels can be applied to a single message.`}
-            </SettingsParagraph>
-            <div className="mb1">
-                <Button color="norm" className="mr1" onClick={() => createModal(<EditLabelModal type="label" />)}>
-                    {c('Action').t`Add label`}
-                </Button>
-                <Button
-                    shape="outline"
-                    title={c('Title').t`Sort labels alphabetically`}
-                    loading={loading}
-                    onClick={() => withLoading(handleSortLabel())}
-                >
-                    {c('Action').t`Sort`}
-                </Button>
-            </div>
-            {labels.length ? (
-                <LabelSortableList getContainer={getScrollContainer} items={labels} onSortEnd={onSortEnd} />
+            {loadingLabels ? (
+                <Loader />
             ) : (
-                <SettingsParagraph>{c('LabelSettings').t`No labels available`}</SettingsParagraph>
+                <>
+                    <SettingsParagraph
+                        className="mt1 mb1"
+                        learnMoreUrl="https://protonmail.com/support/knowledge-base/creating-folders/"
+                    >
+                        {c('LabelSettings').t`Multiple labels can be applied to a single message.`}
+                    </SettingsParagraph>
+                    <div className="mb1">
+                        <Button
+                            color="norm"
+                            className="mr1"
+                            onClick={() => createModal(<EditLabelModal type="label" />)}
+                        >
+                            {c('Action').t`Add label`}
+                        </Button>
+                        <Button
+                            shape="outline"
+                            title={c('Title').t`Sort labels alphabetically`}
+                            loading={loading}
+                            onClick={() => withLoading(handleSortLabel())}
+                        >
+                            {c('Action').t`Sort`}
+                        </Button>
+                    </div>
+                    {labels.length ? (
+                        <LabelSortableList getContainer={getScrollContainer} items={labels} onSortEnd={onSortEnd} />
+                    ) : (
+                        <SettingsParagraph>{c('LabelSettings').t`No labels available`}</SettingsParagraph>
+                    )}
+                </>
             )}
         </SettingsSection>
     );

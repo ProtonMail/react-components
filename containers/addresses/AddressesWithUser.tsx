@@ -8,8 +8,6 @@ import { ADDRESS_TYPE } from 'proton-shared/lib/constants';
 import { Alert, OrderableTable, OrderableTableHeader, OrderableTableBody, OrderableTableRow } from '../../components';
 import { useApi, useEventManager, useAddresses, useNotifications } from '../../hooks';
 
-import { SettingsSectionWide } from '../account';
-
 import AddressStatus from './AddressStatus';
 import AddressActions from './AddressActions';
 import { getStatus } from './helper';
@@ -68,7 +66,7 @@ const AddressesUser = ({ user, member, organizationKey }: Props) => {
     }
 
     return (
-        <SettingsSectionWide>
+        <>
             <OrderableTable onSortEnd={handleSortEnd} className="simple-table--has-actions">
                 <OrderableTableHeader
                     cells={[
@@ -100,7 +98,7 @@ const AddressesUser = ({ user, member, organizationKey }: Props) => {
                         ))}
                 </OrderableTableBody>
             </OrderableTable>
-        </SettingsSectionWide>
+        </>
     );
 };
 

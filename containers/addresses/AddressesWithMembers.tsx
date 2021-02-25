@@ -8,7 +8,7 @@ import { UserModel, Address, Organization, Member } from 'proton-shared/lib/inte
 import { Alert, Loader, Table, TableHeader, TableBody, TableRow, Select, Button, AppLink } from '../../components';
 import { useMembers, useMemberAddresses, useModals, useOrganizationKey, useNotifications } from '../../hooks';
 
-import { SettingsParagraph, SettingsSectionWide } from '../account';
+import { SettingsParagraph } from '../account';
 
 import AddressModal from './AddressModal';
 import AddressStatus from './AddressStatus';
@@ -106,7 +106,7 @@ const AddressesWithMembers = ({ user, organization, isOnlySelf }: Props) => {
     );
 
     return (
-        <SettingsSectionWide>
+        <>
             <SettingsParagraph>
                 {c('Info')
                     .t`The email address at the top of the list will automatically be selected as the default email address. Drag and drop to reorder addresses.`}
@@ -175,7 +175,7 @@ const AddressesWithMembers = ({ user, organization, isOnlySelf }: Props) => {
                     </TableBody>
                 </Table>
             )}
-        </SettingsSectionWide>
+        </>
     );
 };
 
