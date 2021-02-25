@@ -50,11 +50,12 @@ const LayoutsSection = () => {
             ) : (
                 <>
                     <Row className="flex-column">
-                        <Label htmlFor="layoutMode" className="mb1 text-semibold">
+                        <Label htmlFor="layoutMode" className="mb1 text-bold">
                             <span className="mr0-5">{c('Label').t`Inbox`}</span>
                             <Info
                                 url="https://protonmail.com/support/knowledge-base/change-inbox-layout/"
-                                title={c('Tooltip').t`Set the default layout for your Inbox.`}
+                                title={c('Tooltip')
+                                    .t`ProtonMail supports both column and row layouts for the inbox. Using this setting, it is possible to change between the two layouts.`}
                             />
                         </Label>
                         <ViewLayoutRadios
@@ -66,11 +67,12 @@ const LayoutsSection = () => {
                     </Row>
 
                     <Row className="flex-column">
-                        <Label htmlFor="composerMode" className="mb1 text-semibold">
+                        <Label htmlFor="composerMode" className="mb1 text-bold">
                             <span className="mr0-5">{c('Label').t`Composer`}</span>
                             <Info
                                 url="https://protonmail.com/support/knowledge-base/composer/"
-                                title={c('Tooltip').t`Set the default Composer popup size as small or full screen.`}
+                                title={c('Tooltip')
+                                    .t`This sets the default composer size. Two sizes are available, a smaller popup composer, and a bigger full screen composer.`}
                             />
                         </Label>
                         <ComposerModeRadios
@@ -81,7 +83,7 @@ const LayoutsSection = () => {
                         />
                     </Row>
                     <Row className="flex-column">
-                        <Label htmlFor="density" className="mb1 text-semibold">{c('Label').t`Density`}</Label>
+                        <Label htmlFor="density" className="mb1 text-bold">{c('Label').t`Density`}</Label>
                         <DensityRadios
                             density={Density}
                             onChange={(value) => withLoadingDensity(handleChangeDensity(value))}

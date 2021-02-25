@@ -8,7 +8,7 @@ import { UserModel, Address, Organization, Member } from 'proton-shared/lib/inte
 import { Alert, Loader, Table, TableHeader, TableBody, TableRow, Select, Button, AppLink } from '../../components';
 import { useMembers, useMemberAddresses, useModals, useOrganizationKey, useNotifications } from '../../hooks';
 
-import { SettingsParagraph, SettingsSectionWide } from '../account';
+import { SettingsParagraph } from '../account';
 
 import AddressModal from './AddressModal';
 import AddressStatus from './AddressStatus';
@@ -108,7 +108,7 @@ const AddressesWithMembers = ({ user, organization, isOnlySelf }: Props) => {
     const isNonPrivateSelf = currentMember && currentMember.Private === MEMBER_PRIVATE.READABLE && currentMember.Self;
 
     return (
-        <SettingsSectionWide>
+        <>
             <SettingsParagraph>
                 {c('Info')
                     .t`Premium plans let you add multiple email addresses to your account. All the emails associated with them will appear in the same mailbox. If you are the admin of a Professional or Visionary plan, you can manage email addresses for each user in your organization. The email address at the top of the list will automatically be selected as the default email address.`}
@@ -177,7 +177,7 @@ const AddressesWithMembers = ({ user, organization, isOnlySelf }: Props) => {
                     </TableBody>
                 </Table>
             )}
-        </SettingsSectionWide>
+        </>
     );
 };
 
