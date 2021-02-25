@@ -7,7 +7,7 @@ import { orderLabels } from 'proton-shared/lib/api/labels';
 import { Loader, Button } from '../../components';
 import { useLabels, useEventManager, useModals, useApi, useNotifications, useLoading } from '../../hooks';
 
-import { SettingsSection } from '../account';
+import { SettingsSection, SettingsParagraph } from '../account';
 
 import EditLabelModal from './modals/EditLabelModal';
 import LabelSortableList from './LabelSortableList';
@@ -36,6 +36,8 @@ function LabelsSection() {
         await call();
     };
 
+    const getScrollContainer = () => document.querySelector('.main-area');
+
     const handleSortLabel = async () => {
         const LabelIDs = [...labels]
             .sort((a, b) => a.Name.localeCompare(b.Name, undefined, { numeric: true }))
@@ -51,23 +53,34 @@ function LabelsSection() {
                 <Loader />
             ) : (
                 <>
-                    <div className="mb2">
-                        <Button color="norm" onClick={() => createModal(<EditLabelModal type="label" />)}>
+                    <SettingsParagraph
+                        className="mt1 mb1"
+                        learnMoreUrl="https://protonmail.com/support/knowledge-base/creating-folders/"
+                    >
+                        {c('LabelSettings').t`Multiple labels can be applied to a single message.`}
+                    </SettingsParagraph>
+                    <div className="mb1">
+                        <Button
+                            color="norm"
+                            className="mr1"
+                            onClick={() => createModal(<EditLabelModal type="label" />)}
+                        >
                             {c('Action').t`Add label`}
                         </Button>
-                        {labels.length ? (
-                            <Button
-                                shape="outline"
-                                className="ml1"
-                                title={c('Title').t`Sort labels alphabetically`}
-                                loading={loading}
-                                onClick={() => withLoading(handleSortLabel())}
-                            >
-                                {c('Action').t`Sort`}
-                            </Button>
-                        ) : null}
+                        <Button
+                            shape="outline"
+                            title={c('Title').t`Sort labels alphabetically`}
+                            loading={loading}
+                            onClick={() => withLoading(handleSortLabel())}
+                        >
+                            {c('Action').t`Sort`}
+                        </Button>
                     </div>
-                    {labels.length ? <LabelSortableList items={labels} onSortEnd={onSortEnd} /> : null}
+                    {labels.length ? (
+                        <LabelSortableList getContainer={getScrollContainer} items={labels} onSortEnd={onSortEnd} />
+                    ) : (
+                        <SettingsParagraph>{c('LabelSettings').t`No labels available`}</SettingsParagraph>
+                    )}
                 </>
             )}
         </SettingsSection>
