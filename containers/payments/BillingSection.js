@@ -3,20 +3,21 @@ import PropTypes from 'prop-types';
 import { c, msgid } from 'ttag';
 import { PLAN_NAMES, CYCLE } from 'proton-shared/lib/constants';
 import { unique } from 'proton-shared/lib/helpers/array';
-import { getMonthlyBaseAmount, hasVisionary, getPlanIDs } from 'proton-shared/lib/helpers/subscription';
+import { getMonthlyBaseAmount, hasVisionary } from 'proton-shared/lib/helpers/subscription';
 import humanSize from 'proton-shared/lib/helpers/humanSize';
 
 import { Alert, Loader, LinkButton, Time, Info } from '../../components';
 import { useUser, useSubscription, useOrganization, useModals, usePlans } from '../../hooks';
+import { classnames } from '../../helpers';
+import { SettingsSection } from '../account';
 import MozillaInfoPanel from '../account/MozillaInfoPanel';
 import { formatPlans } from './subscription/helpers';
 import DiscountBadge from './DiscountBadge';
 import GiftCodeModal from './GiftCodeModal';
 import CreditsModal from './CreditsModal';
 import PlanPrice from './subscription/PlanPrice';
-import NewSubscriptionModal from './subscription/NewSubscriptionModal';
+// import NewSubscriptionModal from './subscription/NewSubscriptionModal';
 import CycleDiscountBadge from './CycleDiscountBadge';
-import { SettingsSection } from '../account';
 
 const { MONTHLY, YEARLY, TWO_YEARS } = CYCLE;
 
@@ -35,15 +36,16 @@ const BillingSection = ({ permission }) => {
     const [organization, loadingOrganization] = useOrganization();
     const handleOpenGiftCodeModal = () => createModal(<GiftCodeModal />);
     const handleOpenCreditsModal = () => createModal(<CreditsModal />);
-    const handleOpenSubscriptionModal = () =>
-        createModal(
-            <NewSubscriptionModal
-                planIDs={getPlanIDs(subscription)}
-                coupon={subscription.CouponCode}
-                currency={subscription.Currency}
-                cycle={YEARLY}
-            />
-        );
+
+    // const handleOpenSubscriptionModal = () =>
+    //     createModal(
+    //         <NewSubscriptionModal
+    //             planIDs={getPlanIDs(subscription)}
+    //             coupon={subscription.CouponCode}
+    //             currency={subscription.Currency}
+    //             cycle={YEARLY}
+    //         />
+    //     );
 
     if (!permission) {
         return (
@@ -56,7 +58,7 @@ const BillingSection = ({ permission }) => {
                             <LinkButton className="p0" onClick={handleOpenCreditsModal}>{c('Action')
                                 .t`Add credits`}</LinkButton>
                         </div>
-                        <div className="flex-autogrid-item text-bold text-right">{Credit / 100}</div>
+                        <div className="text-right">{Credit / 100}</div>
                     </div>
                     <div className="flex-autogrid on-mobile-flex-column w100">
                         <div className="flex-autogrid-item">
@@ -94,18 +96,19 @@ const BillingSection = ({ permission }) => {
     const spaceBonus = organization?.BonusSpace;
     const vpnBonus = organization?.BonusVPN;
 
+    const priceRowClassName = 'flex w100 mb1 color-global-altgrey';
+    const priceLabelClassName = 'flex-item-fluid';
+
     return (
         <SettingsSection>
             {hasPaidMail ? (
-                <div className="border-bottom pt1 pl1 pr1 on-mobile-pb1">
+                <div className="border-bottom on-mobile-pb1">
                     {mailPlan ? (
-                        <div className="flex-autogrid flex-align-items-center w100 mb1">
-                            <div className="flex-autogrid-item">
-                                {c('Label').t`ProtonMail plan`}
-                                <div className="hidden auto-mobile text-bold">{PLAN_NAMES[mailPlan.Name]}</div>
+                        <div className={classnames([priceRowClassName, 'text-bold'])}>
+                            <div className={priceLabelClassName}>
+                                {c('Label').t`ProtonMail`} {PLAN_NAMES[mailPlan.Name]}
                             </div>
-                            <div className="flex-autogrid-item text-bold no-mobile">{PLAN_NAMES[mailPlan.Name]}</div>
-                            <div className="flex-autogrid-item text-bold text-right">
+                            <div className="text-right">
                                 <PlanPrice
                                     amount={getMonthlyBaseAmount(mailPlan.Name, plans, subscription)}
                                     currency={Currency}
@@ -115,27 +118,16 @@ const BillingSection = ({ permission }) => {
                         </div>
                     ) : null}
                     {memberAddon ? (
-                        <div className="flex-autogrid flex-align-items-center w100 mb1">
-                            <div className="flex-autogrid-item">
-                                {c('Label').t`Extra users`}
-                                <div className="hidden auto-mobile text-bold">
-                                    +
-                                    {c('Addon unit for subscription').ngettext(
-                                        msgid`${memberAddon.MaxMembers} user`,
-                                        `${memberAddon.MaxMembers} users`,
-                                        memberAddon.MaxMembers
-                                    )}
-                                </div>
-                            </div>
-                            <div className="flex-autogrid-item text-bold no-mobile">
-                                +
+                        <div className={priceRowClassName}>
+                            <div className={priceLabelClassName}>
+                                +{' '}
                                 {c('Addon unit for subscription').ngettext(
-                                    msgid`${memberAddon.MaxMembers} user`,
-                                    `${memberAddon.MaxMembers} users`,
-                                    memberAddon.MaxMembers
+                                    msgid`${memberAddon?.MaxMembers || 5} user`,
+                                    `${memberAddon?.MaxMembers || 5} users`,
+                                    memberAddon?.MaxMembers || 5
                                 )}
                             </div>
-                            <div className="flex-autogrid-item text-bold text-right">
+                            <div className="text-right">
                                 <PlanPrice
                                     amount={getMonthlyBaseAmount(memberAddon.Name, plans, subscription)}
                                     currency={Currency}
@@ -145,27 +137,16 @@ const BillingSection = ({ permission }) => {
                         </div>
                     ) : null}
                     {addressAddon ? (
-                        <div className="flex-autogrid w100 mb1">
-                            <div className="flex-autogrid-item">
-                                {c('Label').t`Extra email addresses`}
-                                <div className="hidden auto-mobile text-bold">
-                                    +
-                                    {c('Addon unit for subscription').ngettext(
-                                        msgid`${addressAddon.MaxAddresses} address`,
-                                        `${addressAddon.MaxAddresses} addresses`,
-                                        addressAddon.MaxAddresses
-                                    )}
-                                </div>
-                            </div>
-                            <div className="flex-autogrid-item text-bold no-mobile">
-                                +
+                        <div className={priceRowClassName}>
+                            <div className={priceLabelClassName}>
+                                +{' '}
                                 {c('Addon unit for subscription').ngettext(
-                                    msgid`${addressAddon.MaxAddresses} address`,
-                                    `${addressAddon.MaxAddresses} addresses`,
-                                    addressAddon.MaxAddresses
+                                    msgid`${addressAddon?.MaxAddresses || 5} address`,
+                                    `${addressAddon?.MaxAddresses || 5} addresses`,
+                                    addressAddon?.MaxAddresses || 5
                                 )}
                             </div>
-                            <div className="flex-autogrid-item text-bold text-right">
+                            <div className="text-right">
                                 <PlanPrice
                                     amount={getMonthlyBaseAmount(addressAddon.Name, plans, subscription)}
                                     currency={Currency}
@@ -175,15 +156,11 @@ const BillingSection = ({ permission }) => {
                         </div>
                     ) : null}
                     {spaceAddon ? (
-                        <div className="flex-autogrid w100 mb1">
-                            <div className="flex-autogrid-item">
-                                {c('Label').t`Extra storage`}
-                                <div className="hidden auto-mobile text-bold">+{humanSize(spaceAddon.MaxSpace)}</div>
+                        <div className={priceRowClassName}>
+                            <div className={priceLabelClassName}>
+                                + {humanSize(spaceAddon?.MaxSpace || 2 ** 30)} {c('Label').t`extra storage`}
                             </div>
-                            <div className="flex-autogrid-item text-bold no-mobile">
-                                +{humanSize(spaceAddon.MaxSpace)}
-                            </div>
-                            <div className="flex-autogrid-item text-bold text-right">
+                            <div className="text-right">
                                 <PlanPrice
                                     amount={getMonthlyBaseAmount(spaceAddon.Name, plans, subscription)}
                                     currency={Currency}
@@ -193,39 +170,26 @@ const BillingSection = ({ permission }) => {
                         </div>
                     ) : null}
                     {spaceBonus ? (
-                        <div className="flex-autogrid w100 mb1">
-                            <div className="flex-autogrid-item">
-                                {c('Label').t`Bonus storage`}
-                                <div className="hidden auto-mobile text-bold">+{humanSize(spaceBonus)}</div>
+                        <div className={priceRowClassName}>
+                            <div className={priceLabelClassName}>
+                                + {humanSize(spaceBonus)} {c('Label').t`bonus storage`}
                             </div>
-                            <div className="flex-autogrid-item text-bold no-mobile">+{humanSize(spaceBonus)}</div>
-                            <div className="flex-autogrid-item text-bold text-right">
+                            <div className="text-right">
                                 <PlanPrice amount={0} currency={Currency} cycle={MONTHLY} />
                             </div>
                         </div>
                     ) : null}
                     {domainAddon ? (
-                        <div className="flex-autogrid w100 mb1">
-                            <div className="flex-autogrid-item">
-                                {c('Label').t`Extra domains`}
-                                <div className="hidden auto-mobile text-bold">
-                                    +
-                                    {c('Addon unit for subscription').ngettext(
-                                        msgid`${domainAddon.MaxDomains} domain`,
-                                        `${domainAddon.MaxDomains} domains`,
-                                        domainAddon.MaxDomains
-                                    )}
-                                </div>
-                            </div>
-                            <div className="flex-autogrid-item text-bold no-mobile">
-                                +
+                        <div className={priceRowClassName}>
+                            <div className={priceLabelClassName}>
+                                +{' '}
                                 {c('Addon unit for subscription').ngettext(
-                                    msgid`${domainAddon.MaxDomains} domain`,
-                                    `${domainAddon.MaxDomains} domains`,
-                                    domainAddon.MaxDomains
+                                    msgid`${domainAddon?.MaxDomains || 5} domain`,
+                                    `${domainAddon?.MaxDomains || 5} domains`,
+                                    domainAddon?.MaxDomains || 5
                                 )}
                             </div>
-                            <div className="flex-autogrid-item text-bold text-right">
+                            <div className="text-right">
                                 <PlanPrice
                                     amount={getMonthlyBaseAmount(domainAddon.Name, plans, subscription)}
                                     currency={Currency}
@@ -237,15 +201,13 @@ const BillingSection = ({ permission }) => {
                 </div>
             ) : null}
             {hasPaidVpn && !hasVisionary(subscription) ? (
-                <div className="border-bottom pt1 pl1 pr1 on-mobile-pb1">
+                <div className="border-bottom pt1 on-mobile-pb1">
                     {vpnPlan ? (
-                        <div className="flex-autogrid w100 mb1">
-                            <div className="flex-autogrid-item">
-                                {c('Label').t`ProtonVPN plan`}
-                                <div className="hidden auto-mobile text-bold">{PLAN_NAMES[vpnPlan.Name]}</div>
+                        <div className={classnames([priceRowClassName, 'text-bold'])}>
+                            <div className={priceLabelClassName}>
+                                {c('Label').t`ProtonVPN`} {PLAN_NAMES[vpnPlan.Name]}
                             </div>
-                            <div className="flex-autogrid-item text-bold no-mobile">{PLAN_NAMES[vpnPlan.Name]}</div>
-                            <div className="flex-autogrid-item text-bold text-right">
+                            <div className="text-right">
                                 <PlanPrice
                                     amount={getMonthlyBaseAmount(vpnPlan.Name, plans, subscription)}
                                     currency={Currency}
@@ -255,27 +217,16 @@ const BillingSection = ({ permission }) => {
                         </div>
                     ) : null}
                     {vpnAddon ? (
-                        <div className="flex-autogrid w100 mb1">
-                            <div className="flex-autogrid-item">
-                                {c('Label').t`Extra connections`}
-                                <div className="hidden auto-mobile text-bold">
-                                    +
-                                    {c('Addon unit for subscription').ngettext(
-                                        msgid`${vpnAddon.MaxVPN} connection`,
-                                        `${vpnAddon.MaxVPN} connections`,
-                                        vpnAddon.MaxVPN
-                                    )}
-                                </div>
-                            </div>
-                            <div className="flex-autogrid-item text-bold no-mobile">
-                                +
+                        <div className={priceRowClassName}>
+                            <div className={priceLabelClassName}>
+                                +{' '}
                                 {c('Addon unit for subscription').ngettext(
-                                    msgid`${vpnAddon.MaxVPN} connection`,
-                                    `${vpnAddon.MaxVPN} connections`,
-                                    vpnAddon.MaxVPN
+                                    msgid`${vpnAddon?.MaxVPN || 5} connection`,
+                                    `${vpnAddon?.MaxVPN || 5} connections`,
+                                    vpnAddon?.MaxVPN || 5
                                 )}
                             </div>
-                            <div className="flex-autogrid-item text-bold text-right">
+                            <div className="text-right">
                                 <PlanPrice
                                     amount={getMonthlyBaseAmount(vpnAddon.Name, plans, subscription)}
                                     currency={Currency}
@@ -285,27 +236,16 @@ const BillingSection = ({ permission }) => {
                         </div>
                     ) : null}
                     {vpnBonus ? (
-                        <div className="flex-autogrid w100 mb1">
-                            <div className="flex-autogrid-item">
-                                {c('Label').t`Bonus connections`}
-                                <div className="hidden auto-mobile text-bold">
-                                    +
-                                    {c('Addon unit for subscription').ngettext(
-                                        msgid`${vpnBonus} connection`,
-                                        `${vpnBonus} connections`,
-                                        vpnBonus
-                                    )}
-                                </div>
-                            </div>
-                            <div className="flex-autogrid-item text-bold no-mobile">
-                                +
+                        <div className={priceRowClassName}>
+                            <div className={priceLabelClassName}>
+                                +{' '}
                                 {c('Addon unit for subscription').ngettext(
                                     msgid`${vpnBonus} connection`,
                                     `${vpnBonus} connections`,
                                     vpnBonus
                                 )}
                             </div>
-                            <div className="flex-autogrid-item text-bold text-right">
+                            <div className="text-right">
                                 <PlanPrice amount={0} currency={Currency} cycle={MONTHLY} />
                             </div>
                         </div>
@@ -313,20 +253,20 @@ const BillingSection = ({ permission }) => {
                 </div>
             ) : null}
             {CouponCode || [YEARLY, TWO_YEARS].includes(Cycle) ? (
-                <div className="border-bottom pt1 pl1 pr1 on-mobile-pb1">
-                    <div className="flex-autogrid w100 mb1">
-                        <div className="flex-autogrid-item h4 mb0">{c('Label').t`Subtotal`}</div>
-                        <div className="flex-autogrid-item h4 mb0 text-bold text-right">
+                <div className="border-bottom pt1 on-mobile-pb1">
+                    <div className={classnames([priceRowClassName, 'text-bold'])}>
+                        <div className={priceLabelClassName}>{c('Label').t`Subtotal`}</div>
+                        <div className="text-right">
                             <PlanPrice amount={subTotal} currency={Currency} cycle={MONTHLY} />
                         </div>
                     </div>
-                    <div className="flex-autogrid w100 mb1">
-                        <div className="flex-autogrid-item">
-                            {c('Label').t`Discount`}
-                            <div className="hidden auto-mobile text-bold">
+                    <div className={priceRowClassName}>
+                        <div className={classnames([priceLabelClassName, 'flex flex-align-items-center'])}>
+                            <div className="mr1">{c('Label').t`Discount`}</div>
+                            <div className="flex flex-align-items-center">
                                 {CouponCode ? (
                                     <>
-                                        <code className="text-bold mr1">{CouponCode}</code>
+                                        <code>{CouponCode}</code>&nbsp;
                                         <DiscountBadge code={CouponCode} />
                                     </>
                                 ) : (
@@ -334,55 +274,23 @@ const BillingSection = ({ permission }) => {
                                 )}
                             </div>
                         </div>
-                        <div className="flex-autogrid-item no-mobile">
-                            {CouponCode ? (
-                                <>
-                                    <code className="text-bold mr1">{CouponCode}</code>
-                                    <DiscountBadge code={CouponCode} />
-                                </>
-                            ) : (
-                                <CycleDiscountBadge cycle={Cycle} />
-                            )}
-                        </div>
-                        <div className="flex-autogrid-item text-bold text-right">
+                        <div className="text-right">
                             <PlanPrice amount={discount} currency={Currency} cycle={MONTHLY} />
                         </div>
                     </div>
                 </div>
             ) : null}
-            <div className="pt1 pl1 pr1">
-                <div className="flex-autogrid w100 mb1">
-                    <div className="flex-autogrid-item h4 mb0">{c('Label').t`Total`}</div>
-                    <div className="flex-autogrid-item h4 mb0 text-bold text-right">
+            <div className="pt1">
+                <div className={classnames([priceRowClassName, 'text-bold'])}>
+                    <div className={priceLabelClassName}>{c('Label').t`Total`}</div>
+                    <div className="text-right">
                         <PlanPrice amount={Amount} currency={Currency} cycle={Cycle} />
                     </div>
                 </div>
             </div>
-            <div className="bg-global-highlight pt1 pl1 pr1">
-                <div className="flex-autogrid w100 mb1">
-                    <div className="flex-autogrid-item">
-                        {c('Label').t`Billing cycle`}
-                        <div className="hidden auto-mobile">
-                            {true ? (
-                                <LinkButton className="p0 text-left" onClick={handleOpenSubscriptionModal}>
-                                    {c('Action').t`Pay annually and save 20%!`}
-                                </LinkButton>
-                            ) : null}
-                        </div>
-                    </div>
-                    <div className="flex-autogrid-item no-mobile">
-                        {true ? (
-                            <LinkButton className="p0 text-left" onClick={handleOpenSubscriptionModal}>{c('Action')
-                                .t`Pay annually and save 20%!`}</LinkButton>
-                        ) : null}
-                    </div>
-                    <div className="flex-autogrid-item text-bold text-right">{i18n[Cycle]}</div>
-                </div>
-                <div className="flex-autogrid w100 mb1">
-                    <div className="flex-autogrid-item">{c('Label').t`Renewal date`}</div>
-                    <div className="flex-autogrid-item text-bold text-right">
-                        <Time>{PeriodEnd}</Time>
-                    </div>
+            <div className={classnames([priceRowClassName, 'text-right mt1'])}>
+                <div className="text-right w100">
+                    {i18n[Cycle]} billing (Renewal on <Time>{PeriodEnd}</Time>)
                 </div>
             </div>
         </SettingsSection>
