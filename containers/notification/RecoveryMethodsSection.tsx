@@ -87,7 +87,7 @@ const RecoveryMethodsSection = () => {
                             hasNotify={!!userSettings.Email.Notify}
                         />
                     </div>
-                    <div className="mb1">
+                    <div className="mb1 flex flex-align-items-center">
                         <Toggle
                             className="mr0-5"
                             loading={loadingReset}
@@ -97,7 +97,12 @@ const RecoveryMethodsSection = () => {
                                 withLoadingReset(handleChangePasswordEmailToggle(+checked))
                             }
                         />
-                        {c('Label').t`Email recovery`}
+                        <span className="mr0-5">{c('Label').t`Email recovery`}</span>
+                        <Info
+                            url="https://protonmail.com/blog/notification-emails/"
+                            title={c('Info')
+                                .t`Disabling this will prevent this email from being used for account recovery`}
+                        />
                     </div>
                     {CLIENT_TYPE === VPN ? null : (
                         <div className="flex flex-align-items-center">
