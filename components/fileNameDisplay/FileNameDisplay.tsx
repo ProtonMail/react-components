@@ -5,7 +5,7 @@ import { MiddleEllipsis } from '../ellipsis';
 const CHARACTERS_BEFORE_EXTENSION = 3;
 
 interface Props {
-    text: string;
+    text?: string;
 }
 
 const FileNameDisplay = ({ text = '' }: Props) => {
