@@ -3,6 +3,7 @@ import { c, msgid } from 'ttag';
 import { Recipient } from 'proton-shared/lib/interfaces';
 import { ContactEmail } from 'proton-shared/lib/interfaces/contacts';
 import { normalize } from 'proton-shared/lib/helpers/string';
+import { noop } from 'proton-shared/lib/helpers/function';
 import { FullLoader, SearchInput } from '../../../components';
 import { useContactEmails, useContactGroups, useModals, useNotifications, useUserSettings } from '../../../hooks';
 import ContactsWidgetGroupsToolbar from './ContactsWidgetGroupsToolbar';
@@ -10,6 +11,7 @@ import ContactsGroupsList from '../ContactsGroupsList';
 import { useItemsSelection } from '../../items';
 import ContactGroupModal from '../modals/ContactGroupModal';
 import ContactGroupDetailsModal from '../modals/ContactGroupDetailsModal';
+import ContactsWidgetPlaceholder, { EmptyType } from './ContactsWidgetPlaceholder';
 
 interface Props {
     onClose: () => void;
@@ -53,6 +55,11 @@ const ContactsWidgetGroupsContainer = ({ onClose, onCompose }: Props) => {
         [groups, contactEmails]
     );
 
+    const handleClearSearch = () => {
+        // If done synchronously, button is removed from the dom and the dropdown considers a click outside
+        setTimeout(() => setSearch(''));
+    };
+
     const handleCompose = () => {
         const recipients = selectedIDs
             .map((selectedID) => {
@@ -87,8 +94,11 @@ const ContactsWidgetGroupsContainer = ({ onClose, onCompose }: Props) => {
         onClose();
     };
 
-    const loading = loadingGroups || loadingContactEmails || loadingUserSettings;
     const groupCounts = filteredGroups.length;
+
+    const loading = loadingGroups || loadingContactEmails || loadingUserSettings;
+    const showPlaceholder = !loading && !groupCounts;
+    const showList = !showPlaceholder;
 
     return (
         <div className="flex flex-column flex-nowrap h100">
@@ -119,19 +129,26 @@ const ContactsWidgetGroupsContainer = ({ onClose, onCompose }: Props) => {
                     <div className="flex h100">
                         <FullLoader className="mauto color-primary" />
                     </div>
-                ) : (
+                ) : null}
+                {showPlaceholder ? (
+                    <ContactsWidgetPlaceholder
+                        type={groups.length ? EmptyType.Search : EmptyType.AllGroups}
+                        onClearSearch={handleClearSearch}
+                        onCreate={handleCreate}
+                        onImport={noop}
+                    />
+                ) : null}
+                {showList ? (
                     <ContactsGroupsList
                         groups={filteredGroups}
                         groupsEmailsMap={groupsEmailsMap}
                         userSettings={userSettings}
                         onCheckOne={handleCheckOne}
-                        onCreate={handleCreate}
                         isDesktop={false}
-                        isSearch={search !== ''}
                         checkedIDs={checkedIDs}
                         onClick={handleDetails}
                     />
-                )}
+                ) : null}
             </div>
         </div>
     );
