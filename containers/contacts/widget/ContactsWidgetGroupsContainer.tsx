@@ -106,6 +106,7 @@ const ContactsWidgetGroupsContainer = ({ onClose, onCompose }: Props) => {
                 <label htmlFor="id_contact-widget-search" className="sr-only">{c('Placeholder')
                     .t`Search for group name`}</label>
                 <SearchInput
+                    autoFocus
                     value={search}
                     onChange={setSearch}
                     id="id_contact-widget-group-search"
