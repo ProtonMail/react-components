@@ -8,13 +8,14 @@ import {
 import { WHITELIST_LOCATION, BLACKLIST_LOCATION } from 'proton-shared/lib/constants';
 import { IncomingDefault } from 'proton-shared/lib/interfaces/IncomingDefault';
 
-import { Alert, SearchInput } from '../../components';
+import { SearchInput } from '../../components';
 import { useApiResult, useApiWithoutResult, useApi, useNotifications, useModals } from '../../hooks';
 
 import useSpamList from '../../hooks/useSpamList';
 import SpamListItem from './spamlist/SpamListItem';
 import AddEmailToListModal from './AddEmailToListModal';
 import { WHITE_OR_BLACK_LOCATION } from './interfaces';
+import { SettingsSectionWide, SettingsParagraph } from '../account';
 
 const getWhiteList = () => getIncomingDefaults({ Location: WHITELIST_LOCATION });
 const getBlackList = () => getIncomingDefaults({ Location: BLACKLIST_LOCATION });
@@ -134,11 +135,11 @@ function SpamFiltersSection() {
     };
 
     return (
-        <>
-            <Alert learnMore="https://protonmail.com/support/knowledge-base/spam-filtering/">
+        <SettingsSectionWide>
+            <SettingsParagraph learnMoreUrl="https://protonmail.com/support/knowledge-base/spam-filtering/">
                 {c('FilterSettings')
                     .t`Sender specific spam rules can be applied here. Allow List addresses always go to Inbox while Block List addresses always go to Spam. Marking a message as spam adds the address to the Block List. Marking a message as not spam adds it to the Allow List.`}
-            </Alert>
+            </SettingsParagraph>
             <div className="mb1">
                 <SearchInput
                     onChange={handleSearchChange}
@@ -155,6 +156,7 @@ function SpamFiltersSection() {
                     onEdit={handleEdit}
                     onRemove={handleRemove}
                     onMove={handleMove}
+                    className="mr1"
                 />
                 <SpamListItem
                     list={blackList}
@@ -167,7 +169,7 @@ function SpamFiltersSection() {
                     onMove={handleMove}
                 />
             </div>
-        </>
+        </SettingsSectionWide>
     );
 }
 

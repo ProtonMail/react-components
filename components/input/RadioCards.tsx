@@ -1,11 +1,15 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import Block from '../container/Block';
-import RadioCard from './RadioCard';
 
-const RadioCards = ({ list = [], id, ...rest }) => {
+import RadioCard, { RadioCardProps } from './RadioCard';
+
+interface Props {
+    list: RadioCardProps[];
+    id: string;
+}
+
+const RadioCards = ({ list = [], id, ...rest }: Props) => {
     return (
-        <Block id={id} className="flex" {...rest}>
+        <div id={id} className="mb1 flex" {...rest}>
             {list.map(({ value, checked, label, name, id, children, onChange, disabled }, index) => {
                 return (
                     <RadioCard
@@ -22,13 +26,8 @@ const RadioCards = ({ list = [], id, ...rest }) => {
                     </RadioCard>
                 );
             })}
-        </Block>
+        </div>
     );
-};
-
-RadioCards.propTypes = {
-    list: PropTypes.array.isRequired,
-    id: PropTypes.string,
 };
 
 export default RadioCards;
