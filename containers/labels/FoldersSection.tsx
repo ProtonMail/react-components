@@ -1,31 +1,37 @@
 import React from 'react';
 import { c } from 'ttag';
 
-import { Loader, Alert, PrimaryButton, Label, Row, Field, Info } from '../../components';
+import { Loader, Button, Row, Label, Field, Info } from '../../components';
 import { useFolders, useMailSettings, useModals } from '../../hooks';
+
+import { SettingsSection, SettingsParagraph } from '../account';
+
 import FolderTreeViewList from './FolderTreeViewList';
 import EditLabelModal from './modals/EditLabelModal';
 import ToggleEnableFolderColor from './ToggleEnableFolderColor';
 import ToggleInheritParentFolderColor from './ToggleInheritParentFolderColor';
 
 function LabelsSection() {
-    const [folders, loadingFolders] = useFolders();
+    const [folders = [], loadingFolders] = useFolders();
     const { createModal } = useModals();
-    const [mailSettings] = useMailSettings();
+    const [ mailSettings ] = useMailSettings();
 
     if (loadingFolders) {
-        return <Loader />;
+        return (
+            <SettingsSection>
+                <Loader />
+            </SettingsSection>
+        );
     }
 
     return (
-        <>
-            <Alert
-                type="info"
+        <SettingsSection>
+            <SettingsParagraph
                 className="mt1 mb1"
-                learnMore="https://protonmail.com/support/knowledge-base/creating-folders/"
+                learnMoreUrl="https://protonmail.com/support/knowledge-base/creating-folders/"
             >
                 {c('LabelSettings').t`A message can only be filed in a single Folder at a time.`}
-            </Alert>
+            </SettingsParagraph>
             <Row>
                 <Label htmlFor="folder-colors">{c('Label').t`Use folder colors`}</Label>
                 <Field>
@@ -48,16 +54,16 @@ function LabelsSection() {
                 </Row>
             ) : null}
             <div className="mb1">
-                <PrimaryButton onClick={() => createModal(<EditLabelModal type="folder" />)}>
+                <Button color="norm" onClick={() => createModal(<EditLabelModal type="folder" />)}>
                     {c('Action').t`Add folder`}
-                </PrimaryButton>
+                </Button>
             </div>
-            {folders?.length ? (
+            {folders.length ? (
                 <FolderTreeViewList items={folders} />
             ) : (
-                <Alert>{c('LabelSettings').t`No folders available`}</Alert>
+                <SettingsParagraph>{c('LabelSettings').t`No folders available`}</SettingsParagraph>
             )}
-        </>
+        </SettingsSection>
     );
 }
 

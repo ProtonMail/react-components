@@ -1,14 +1,23 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+
 import { noop } from 'proton-shared/lib/helpers/function';
+import { Label } from 'proton-shared/lib/interfaces/Label';
+
 import { OrderableTableRow, Icon } from '../../components';
 
 import ActionsLabel from './ActionsLabel';
 
-function LabelItem({ label, onEditLabel = noop, onRemoveLabel = noop, ...rest }) {
+interface Props {
+    label: Label;
+    onEditLabel: Function;
+    onRemoveLabel: Function;
+    index: number;
+}
+
+function LabelItem({ label, onEditLabel = noop, onRemoveLabel = noop, ...rest }: Props) {
     const { Name, Color } = label;
 
-    const handleChange = (type, label) => {
+    const handleChange = (type: 'update' | 'remove', label: Label) => {
         if (type === 'update') {
             onEditLabel(label);
         } else if (type === 'remove') {
@@ -35,12 +44,5 @@ function LabelItem({ label, onEditLabel = noop, onRemoveLabel = noop, ...rest })
         />
     );
 }
-
-LabelItem.propTypes = {
-    label: PropTypes.object.isRequired,
-    onEditLabel: PropTypes.func,
-    onRemoveLabel: PropTypes.func,
-    index: PropTypes.number.isRequired,
-};
 
 export default LabelItem;
