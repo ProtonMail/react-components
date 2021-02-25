@@ -8,7 +8,7 @@ interface Props {
     text: string;
 }
 
-const FileNameDisplay = ({ text }: Props) => {
+const FileNameDisplay = ({ text = '' }: Props) => {
     const fileDetails = splitExtension(text);
     const extensionOffset = fileDetails[1].length + CHARACTERS_BEFORE_EXTENSION;
 
