@@ -29,7 +29,17 @@ function SpamFiltersSection() {
     const { createNotification } = useNotifications();
     const { createModal } = useModals();
     const reqSearch = useApiWithoutResult(getIncomingDefaults);
-    const { blackList, whiteList, refreshWhiteList, refreshBlackList, move, remove, search, create } = useSpamList();
+    const {
+        blackList,
+        whiteList,
+        refreshWhiteList,
+        refreshBlackList,
+        move,
+        remove,
+        search,
+        create,
+        edit,
+    } = useSpamList();
 
     const {
         result: white = {},
@@ -89,6 +99,14 @@ function SpamFiltersSection() {
         });
         create(type, data);
     };
+
+    const handleEdit = async (type: WHITE_OR_BLACK_LOCATION, incomingDefault: IncomingDefault) => {
+        const data: IncomingDefault = await new Promise((resolve) => {
+            createModal(<AddEmailToListModal type={type} onAdd={resolve} incomingDefault={incomingDefault} />);
+        });
+        edit(type, data);
+    };
+
     const handleMove = async (incomingDefault: IncomingDefault) => {
         const { Email, Domain, ID, Location } = incomingDefault;
         const type = Location === WHITELIST_LOCATION ? BLACKLIST_LOCATION : WHITELIST_LOCATION;
@@ -120,7 +138,7 @@ function SpamFiltersSection() {
         <SettingsSectionWide>
             <SettingsParagraph learnMoreUrl="https://protonmail.com/support/knowledge-base/spam-filtering/">
                 {c('FilterSettings')
-                    .t`Apply sender-specific spam rules. Messages from addresses or domains on the Allow List always go to your Inbox while messages from addresses or domains on the Block List always go to Spam. Marking a message as spam adds its address to the Block List. Marking a message as not spam adds it to the Allow List.`}
+                    .t`Sender specific spam rules can be applied here. Allow List addresses always go to Inbox while Block List addresses always go to Spam. Marking a message as spam adds the address to the Block List. Marking a message as not spam adds it to the Allow List.`}
             </SettingsParagraph>
             <div className="mb1">
                 <SearchInput
@@ -135,6 +153,7 @@ function SpamFiltersSection() {
                     type={WHITELIST_LOCATION}
                     loading={loader.white}
                     onCreate={handleCreate}
+                    onEdit={handleEdit}
                     onRemove={handleRemove}
                     onMove={handleMove}
                     className="mr1"
@@ -145,6 +164,7 @@ function SpamFiltersSection() {
                     className="ml1 on-mobile-ml0"
                     loading={loader.black}
                     onCreate={handleCreate}
+                    onEdit={handleEdit}
                     onRemove={handleRemove}
                     onMove={handleMove}
                 />

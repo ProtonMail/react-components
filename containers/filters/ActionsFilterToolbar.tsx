@@ -12,10 +12,10 @@ function ActionsFilterToolbar() {
     return (
         <div className="mb1">
             <Button color="norm" onClick={() => createModal(<FilterModal />)} className="on-mobile-mb0-5 mr1">
-                {c('Action').t`Add filter`}
+                {c('Action').t`Add Filter`}
             </Button>
             <Button shape="outline" onClick={() => createModal(<AdvancedFilterModal />)} className="on-mobile-mb0-5">
-                {c('Action').t`Add sieve filter`}
+                {c('Action').t`Add Sieve filter`}
             </Button>
         </div>
     );

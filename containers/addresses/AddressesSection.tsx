@@ -1,22 +1,39 @@
 import React from 'react';
+import { c, msgid } from 'ttag';
 
 import { Loader } from '../../components';
-import { useOrganization } from '../../hooks';
-import { SettingsSectionWide } from '../account';
+import { useOrganization, useUser } from '../../hooks';
 
-import Addresses from './Addresses';
+import AddressesWithMembers from './AddressesWithMembers';
+import AddressesWithUser from './AddressesWithUser';
 
 interface Props {
     isOnlySelf?: boolean;
 }
 
 const AddressesSection = ({ isOnlySelf }: Props) => {
+    const [user] = useUser();
     const [organization, loadingOrganization] = useOrganization();
+    const { UsedAddresses, MaxAddresses } = organization || {};
+
+    if (loadingOrganization) {
+        return <Loader />;
+    }
 
     return (
-        <SettingsSectionWide>
-            {loadingOrganization ? <Loader /> : <Addresses isOnlySelf={isOnlySelf} organization={organization} />}
-        </SettingsSectionWide>
+        <>
+            {user.isAdmin ? (
+                <AddressesWithMembers isOnlySelf={isOnlySelf} user={user} organization={organization} />
+            ) : (
+                <AddressesWithUser user={user} />
+            )}
+            {MaxAddresses > 1 ? (
+                <div className="mb1 opacity-50">
+                    {UsedAddresses} / {MaxAddresses}{' '}
+                    {c('Info').ngettext(msgid`address used`, `addresses used`, UsedAddresses)}
+                </div>
+            ) : null}
+        </>
     );
 };
 

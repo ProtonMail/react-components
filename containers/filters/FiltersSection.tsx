@@ -43,14 +43,16 @@ function FiltersSection() {
         }
         return list.length ? (
             <FilterSortableList getContainer={getScrollContainer} items={list} onSortEnd={onSortEnd} />
-        ) : null;
+        ) : (
+            <SettingsParagraph>{c('FilterSettings').t`No filters available`}</SettingsParagraph>
+        );
     };
 
     return (
         <SettingsSection>
             <SettingsParagraph>
                 {c('FilterSettings')
-                    .t`Add a custom filter to automatically perform certain actions, like labeling or archiving messages.`}
+                    .t`Add a custom filter to perform actions such as automatically labeling or archiving messages.`}
             </SettingsParagraph>
 
             <ActionsFilterToolbar />
