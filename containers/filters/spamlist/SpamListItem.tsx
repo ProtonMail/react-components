@@ -2,7 +2,7 @@ import React from 'react';
 import { c } from 'ttag';
 import { IncomingDefault } from 'proton-shared/lib/interfaces/IncomingDefault';
 import { WHITELIST_LOCATION, BLACKLIST_LOCATION } from 'proton-shared/lib/constants';
-import { Icon, Loader, Button, Tooltip } from '../../../components';
+import { Loader, DropdownActions, Button } from '../../../components';
 import { classnames } from '../../../helpers';
 
 import './SpamListItem.scss';
@@ -15,21 +15,24 @@ interface Props {
     loading: boolean;
     className?: string;
     onCreate: (type: WHITE_OR_BLACK_LOCATION) => void;
+    onEdit: (type: WHITE_OR_BLACK_LOCATION, incomingDefault: IncomingDefault) => void;
     onMove: (incomingDefault: IncomingDefault) => void;
     onRemove: (incomingDefault: IncomingDefault) => void;
 }
 
-function SpamListItem({ list, type, onCreate, onMove, onRemove, className, loading }: Props) {
+function SpamListItem({ list, type, onCreate, onEdit, onMove, onRemove, className, loading }: Props) {
     const I18N = {
         [WHITELIST_LOCATION]: c('Title').t`Allow List`,
         [BLACKLIST_LOCATION]: c('Title').t`Block List`,
         empty(mode: WHITE_OR_BLACK_LOCATION) {
             // we do not use the variable for both mode because of declension issues with ex: Polish
             if (mode === WHITELIST_LOCATION) {
-                return c('Info').t`Your Allow List is empty.`;
+                return c('Info')
+                    .t`No emails or domains in the Allow List, click Add to add addresses or domains to the Allow List.`;
             }
 
-            return c('Info').t`Your Block List is empty.`;
+            return c('Info')
+                .t`No emails or domains in the Block List, click Add to add addresses or domains to the Block List.`;
         },
     };
 
@@ -57,33 +60,33 @@ function SpamListItem({ list, type, onCreate, onMove, onRemove, className, loadi
                                 <span className="flex-item-fluid text-ellipsis mr0-5" title={item.Email || item.Domain}>
                                     {item.Email || item.Domain}
                                 </span>
-                                <Tooltip
-                                    title={
-                                        type === WHITELIST_LOCATION
-                                            ? c('Action').t`Move to Block List`
-                                            : c('Action').t`Move to Allow List`
-                                    }
-                                >
-                                    <Button
-                                        size="small"
-                                        shape="outline"
-                                        onClick={() => onMove(item)}
-                                        className="p0-5 inline-flex flex-align-items-center flex-justify-center"
-                                    >
-                                        <Icon name="arrow-double-horizontal" size={16} />
-                                    </Button>
-                                </Tooltip>
-
-                                <Tooltip title={c('Action').t`Delete`}>
-                                    <Button
-                                        size="small"
-                                        shape="outline"
-                                        onClick={() => onRemove(item)}
-                                        className="p0-5 inline-flex flex-align-items-center flex-justify-center ml1"
-                                    >
-                                        <Icon name="trash" size={16} />
-                                    </Button>
-                                </Tooltip>
+                                <DropdownActions
+                                    className="button--small"
+                                    list={[
+                                        {
+                                            text: c('Action').t`Edit`,
+                                            onClick() {
+                                                onEdit(type, item);
+                                            },
+                                        },
+                                        {
+                                            text:
+                                                type === WHITELIST_LOCATION
+                                                    ? c('Action').t`Move to Block List`
+                                                    : c('Action').t`Move to Allow List`,
+                                            onClick() {
+                                                onMove(item);
+                                            },
+                                        },
+                                        {
+                                            text: c('Action').t`Delete`,
+                                            actionType: 'delete',
+                                            onClick() {
+                                                onRemove(item);
+                                            },
+                                        } as const,
+                                    ]}
+                                />
                             </li>
                         );
                     })}

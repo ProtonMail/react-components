@@ -5,22 +5,10 @@ import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 import { c } from 'ttag';
 import { UserModel, Address, Organization, Member } from 'proton-shared/lib/interfaces';
 
-import {
-    Alert,
-    Loader,
-    Table,
-    TableHeader,
-    TableBody,
-    TableRow,
-    Block,
-    Select,
-    PrimaryButton,
-    AppLink,
-} from '../../components';
+import { Alert, Loader, Table, TableHeader, TableBody, TableRow, Select, Button, AppLink } from '../../components';
 import { useMembers, useMemberAddresses, useModals, useOrganizationKey, useNotifications } from '../../hooks';
 
-import SettingsParagraph from '../account/SettingsParagraph';
-import SettingsSectionWide from '../account/SettingsSectionWide';
+import { SettingsParagraph, SettingsSectionWide } from '../account';
 
 import AddressModal from './AddressModal';
 import AddressStatus from './AddressStatus';
@@ -126,28 +114,28 @@ const AddressesWithMembers = ({ user, organization, isOnlySelf }: Props) => {
                     .t`Premium plans let you add multiple email addresses to your account. All the emails associated with them will appear in the same mailbox. If you are the admin of a Professional or Visionary plan, you can manage email addresses for each user in your organization. The email address at the top of the list will automatically be selected as the default email address.`}
             </SettingsParagraph>
             {!isOnlySelf && memberOptions.length > 2 ? (
-                <Block>
+                <div className="mb1">
                     <Select
                         id="memberSelect"
                         value={memberIndex}
                         options={memberOptions}
                         onChange={({ target: { value } }: ChangeEvent<HTMLSelectElement>) => setMemberIndex(+value)}
                     />
-                </Block>
+                </div>
             ) : null}
             {!currentMember || memberIndex === ALL_MEMBERS_ID || isNonPrivateSelf ? null : (
-                <Block>
+                <div className="mb1">
                     {mustActivateOrganizationKey ? (
                         <Alert type="warning">
                             {c('Warning')
                                 .jt`You must ${activateLink} organization keys before adding an email address to a non-private member.`}
                         </Alert>
                     ) : (
-                        <PrimaryButton onClick={() => handleAddAddress(currentMember)}>
+                        <Button color="norm" onClick={() => handleAddAddress(currentMember)}>
                             {c('Action').t`Add address`}
-                        </PrimaryButton>
+                        </Button>
                     )}
-                </Block>
+                </div>
             )}
             {isSelfSelected ? (
                 <AddressesWithUser user={user} />
