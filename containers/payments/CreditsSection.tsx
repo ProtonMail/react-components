@@ -23,7 +23,7 @@ const CreditsSection = () => {
                     .t`When your subscription renews, any available credits will be used first before we charge your payment methods above.`}
             </SettingsParagraph>
             <div className="mb2">
-                <Button onClick={handleAddCreditsClick}>{c('Action').t`Add credits`}</Button>
+                <Button shape="outline" onClick={handleAddCreditsClick}>{c('Action').t`Add credits`}</Button>
             </div>
             <div className="pl1 pr1 mb1 flex flex-justify-space-between">
                 <span className="text-bold">Unused credits</span>
