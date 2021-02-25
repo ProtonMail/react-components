@@ -3,11 +3,12 @@ import { c } from 'ttag';
 import { arrayMove, ContainerGetter, SortEndHandler } from 'react-sortable-hoc';
 import { updateFilterOrder } from 'proton-shared/lib/api/filters';
 
-import { Block, Alert, Loader } from '../../components';
+import { Loader } from '../../components';
 import { useFilters, useApiWithoutResult, useEventManager } from '../../hooks';
 import FilterSortableList from './SortableList';
 import ActionsFilterToolbar from './ActionsFilterToolbar';
 import { Filter } from './interfaces';
+import { SettingsSection, SettingsParagraph } from '../account';
 
 function FiltersSection() {
     const { call } = useEventManager();
@@ -43,23 +44,21 @@ function FiltersSection() {
         return list.length ? (
             <FilterSortableList getContainer={getScrollContainer} items={list} onSortEnd={onSortEnd} />
         ) : (
-            <Alert>{c('FilterSettings').t`No filters available`}</Alert>
+            <SettingsParagraph>{c('FilterSettings').t`No filters available`}</SettingsParagraph>
         );
     };
 
     return (
-        <>
-            <Alert type="info">
+        <SettingsSection>
+            <SettingsParagraph>
                 {c('FilterSettings')
                     .t`Add a custom filter to perform actions such as automatically labeling or archiving messages.`}
-            </Alert>
+            </SettingsParagraph>
 
-            <Block>
-                <ActionsFilterToolbar />
-            </Block>
+            <ActionsFilterToolbar />
 
             {contentRenderer()}
-        </>
+        </SettingsSection>
     );
 }
 

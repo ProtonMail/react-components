@@ -2,7 +2,7 @@ import React from 'react';
 import { c } from 'ttag';
 import { IncomingDefault } from 'proton-shared/lib/interfaces/IncomingDefault';
 import { WHITELIST_LOCATION, BLACKLIST_LOCATION } from 'proton-shared/lib/constants';
-import { Bordered, Loader, Alert, DropdownActions, PrimaryButton } from '../../../components';
+import { Loader, DropdownActions, Button } from '../../../components';
 import { classnames } from '../../../helpers';
 
 import './SpamListItem.scss';
@@ -37,11 +37,13 @@ function SpamListItem({ list, type, onCreate, onEdit, onMove, onRemove, classNam
     };
 
     return (
-        <Bordered className={classnames(['flex-item-fluid', className])}>
-            <header className="flex flex-justify-space-between flex-align-items-center">
-                <h3 className="mb0">{I18N[type]}</h3>
+        <div className={classnames(['flex-item-fluid', className])}>
+            <header className="flex flex-justify-space-between flex-align-items-center pb1 border-bottom">
+                <h3 className="mb0 text-bold">{I18N[type]}</h3>
                 <div>
-                    <PrimaryButton onClick={() => onCreate(type)}>{c('Action').t`Add`}</PrimaryButton>
+                    <Button size="small" color="norm" onClick={() => onCreate(type)}>
+                        {c('Action').t`Add`}
+                    </Button>
                 </div>
             </header>
 
@@ -90,8 +92,8 @@ function SpamListItem({ list, type, onCreate, onEdit, onMove, onRemove, classNam
                     })}
                 </ul>
             )}
-            {!list.length && !loading && <Alert>{I18N.empty(type)}</Alert>}
-        </Bordered>
+            {!list.length && !loading && <div>{I18N.empty(type)}</div>}
+        </div>
     );
 }
 

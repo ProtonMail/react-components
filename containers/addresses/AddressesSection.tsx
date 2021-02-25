@@ -1,7 +1,7 @@
 import React from 'react';
 import { c, msgid } from 'ttag';
 
-import { Block, Loader } from '../../components';
+import { Loader } from '../../components';
 import { useOrganization, useUser } from '../../hooks';
 
 import AddressesWithMembers from './AddressesWithMembers';
@@ -28,10 +28,10 @@ const AddressesSection = ({ isOnlySelf }: Props) => {
                 <AddressesWithUser user={user} />
             )}
             {MaxAddresses > 1 ? (
-                <Block className="opacity-50">
+                <div className="mb1 opacity-50">
                     {UsedAddresses} / {MaxAddresses}{' '}
                     {c('Info').ngettext(msgid`address used`, `addresses used`, UsedAddresses)}
-                </Block>
+                </div>
             ) : null}
         </>
     );

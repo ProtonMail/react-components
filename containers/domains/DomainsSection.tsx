@@ -3,7 +3,7 @@ import { c, msgid } from 'ttag';
 import { DomainsModel } from 'proton-shared/lib/models';
 import { loadModels } from 'proton-shared/lib/models/helper';
 
-import { Alert, PrimaryButton, Button, Block, Loader } from '../../components';
+import { Alert, PrimaryButton, Button, Loader } from '../../components';
 import { useApi, useCache, useOrganization, useDomains, useModals, useLoading } from '../../hooks';
 import DomainModal from './DomainModal';
 import DomainsTable from './DomainsTable';
@@ -36,17 +36,17 @@ const DomainsSection = () => {
                 {c('Message')
                     .t`Add a domain to receive emails to your custom email addresses and to add more users to your organization (Visionary and Professional accounts only).`}
             </Alert>
-            <Block>
+            <div className="mb1">
                 <PrimaryButton onClick={() => createModal(<DomainModal />)} className="mr1">
                     {c('Action').t`Add domain`}
                 </PrimaryButton>
                 <Button loading={loading} onClick={() => withLoading(handleRefresh())}>{c('Action')
                     .t`Refresh status`}</Button>
-            </Block>
+            </div>
             {!domains.length ? null : <DomainsTable domains={domains} domainsAddressesMap={domainsAddressesMap} />}
-            <Block className="opacity-50">
+            <div className="mb1 opacity-50">
                 {UsedDomains} / {MaxDomains} {c('Info').ngettext(msgid`domain used`, `domains used`, UsedDomains)}
-            </Block>
+            </div>
         </>
     );
 };

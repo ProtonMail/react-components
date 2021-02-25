@@ -5,18 +5,7 @@ import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 import { c } from 'ttag';
 import { UserModel, Address, Organization, Member } from 'proton-shared/lib/interfaces';
 
-import {
-    Alert,
-    Loader,
-    Table,
-    TableHeader,
-    TableBody,
-    TableRow,
-    Block,
-    Select,
-    Button,
-    AppLink,
-} from '../../components';
+import { Alert, Loader, Table, TableHeader, TableBody, TableRow, Select, Button, AppLink } from '../../components';
 import { useMembers, useMemberAddresses, useModals, useOrganizationKey, useNotifications } from '../../hooks';
 
 import { SettingsParagraph, SettingsSectionWide } from '../account';
@@ -123,17 +112,17 @@ const AddressesWithMembers = ({ user, organization, isOnlySelf }: Props) => {
                     .t`Premium plans let you add multiple email addresses to your account. All the emails associated with them will appear in the same mailbox. If you are the admin of a Professional or Visionary plan, you can manage email addresses for each user in your organization. The email address at the top of the list will automatically be selected as the default email address.`}
             </SettingsParagraph>
             {!isOnlySelf && memberOptions.length > 2 ? (
-                <Block>
+                <div className="mb1">
                     <Select
                         id="memberSelect"
                         value={memberIndex}
                         options={memberOptions}
                         onChange={({ target: { value } }: ChangeEvent<HTMLSelectElement>) => setMemberIndex(+value)}
                     />
-                </Block>
+                </div>
             ) : null}
             {!currentMember || memberIndex === ALL_MEMBERS_ID ? null : (
-                <Block>
+                <div className="mb1">
                     {mustActivateOrganizationKey ? (
                         <Alert type="warning">
                             {c('Warning')
@@ -144,7 +133,7 @@ const AddressesWithMembers = ({ user, organization, isOnlySelf }: Props) => {
                             {c('Action').t`Add address`}
                         </Button>
                     )}
-                </Block>
+                </div>
             )}
             {isSelfSelected ? (
                 <AddressesWithUser user={user} member={currentMember} organizationKey={organizationKey} />
