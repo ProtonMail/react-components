@@ -9,8 +9,8 @@ interface Props {
 }
 
 const FileNameDisplay = ({ text = '' }: Props) => {
-    const fileDetails = splitExtension(text);
-    const extensionOffset = fileDetails[1].length + CHARACTERS_BEFORE_EXTENSION;
+    const [, extension] = splitExtension(text);
+    const extensionOffset = extension.length + CHARACTERS_BEFORE_EXTENSION;
 
     return <MiddleEllipsis charsToDisplayEnd={extensionOffset} className="center" text={text} />;
 };
