@@ -138,8 +138,9 @@ const UserDropdown = ({ ...rest }) => {
                     ) : null}
                     <li className="dropdown-item-hr mt0-5" aria-hidden="false" />
                     <li>
-                        <div className="pl1 pr1 pt0-5 pb0-5 w100 flex flex-nowrap flex-justify-space-between flex-align-items-center">
-                            <label htmlFor="theme-toggle" className="mr1">{c('Action').t`Display mode`}</label>
+                        <div className="pl1 pr1 pt0-5 pb0-5 w100 flex-no-min-children flex-nowrap flex-justify-space-between flex-align-items-center">
+                            <label htmlFor="theme-toggle" className="mr1 flex-item-fluid">{c('Action')
+                                .t`Display mode`}</label>
                             <Toggle
                                 id="theme-toggle"
                                 className="toggle-label--theme-toggle"

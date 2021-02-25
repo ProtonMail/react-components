@@ -5,6 +5,7 @@ import { classnames } from '../../helpers';
 
 export enum ToggleState {
     on = 'on',
+    off = 'off',
 }
 export interface Props extends React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
     loading?: boolean;
@@ -46,6 +47,7 @@ const Toggle = ({
                 {...rest}
             />
             <label htmlFor={id} className={classnames(['toggle-label', className])} title={title}>
+                {label(ToggleState.off)}
                 {label(ToggleState.on)}
             </label>
         </>
