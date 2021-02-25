@@ -43,54 +43,56 @@ const LayoutsSection = () => {
         notifyPreferenceSaved();
     };
 
-    if (loadingMailSettings || loadingUserSettings) {
-        return <Loader />;
-    }
-
     return (
         <SettingsSectionWide className="flex flex-wrap">
-            <Row className="flex-column">
-                <Label htmlFor="layoutMode" className="mb1 text-bold">
-                    <span className="mr0-5">{c('Label').t`Inbox`}</span>
-                    <Info
-                        url="https://protonmail.com/support/knowledge-base/change-inbox-layout/"
-                        title={c('Tooltip')
-                            .t`ProtonMail supports both column and row layouts for the inbox. Using this setting, it is possible to change between the two layouts.`}
-                    />
-                </Label>
-                <ViewLayoutRadios
-                    id="layoutMode"
-                    viewLayout={ViewLayout}
-                    onChange={(value) => withLoadingViewLayout(handleChangeViewLayout(value))}
-                    loading={loadingViewLayout}
-                />
-            </Row>
+            {loadingMailSettings || loadingUserSettings ? (
+                <Loader />
+            ) : (
+                <>
+                    <Row className="flex-column">
+                        <Label htmlFor="layoutMode" className="mb1 text-bold">
+                            <span className="mr0-5">{c('Label').t`Inbox`}</span>
+                            <Info
+                                url="https://protonmail.com/support/knowledge-base/change-inbox-layout/"
+                                title={c('Tooltip')
+                                    .t`ProtonMail supports both column and row layouts for the inbox. Using this setting, it is possible to change between the two layouts.`}
+                            />
+                        </Label>
+                        <ViewLayoutRadios
+                            id="layoutMode"
+                            viewLayout={ViewLayout}
+                            onChange={(value) => withLoadingViewLayout(handleChangeViewLayout(value))}
+                            loading={loadingViewLayout}
+                        />
+                    </Row>
 
-            <Row className="flex-column">
-                <Label htmlFor="composerMode" className="mb1 text-bold">
-                    <span className="mr0-5">{c('Label').t`Composer`}</span>
-                    <Info
-                        url="https://protonmail.com/support/knowledge-base/composer/"
-                        title={c('Tooltip')
-                            .t`This sets the default composer size. Two sizes are available, a smaller popup composer, and a bigger full screen composer.`}
-                    />
-                </Label>
-                <ComposerModeRadios
-                    id="composerMode"
-                    composerMode={ComposerMode}
-                    onChange={(value) => withLoadingComposerMode(handleChangeComposerMode(value))}
-                    loading={loadingComposerMode}
-                />
-            </Row>
-            <Row className="flex-column">
-                <Label htmlFor="density" className="mb1 text-bold">{c('Label').t`Density`}</Label>
-                <DensityRadios
-                    density={Density}
-                    onChange={(value) => withLoadingDensity(handleChangeDensity(value))}
-                    loading={loadingDensity}
-                    id="density"
-                />
-            </Row>
+                    <Row className="flex-column">
+                        <Label htmlFor="composerMode" className="mb1 text-bold">
+                            <span className="mr0-5">{c('Label').t`Composer`}</span>
+                            <Info
+                                url="https://protonmail.com/support/knowledge-base/composer/"
+                                title={c('Tooltip')
+                                    .t`This sets the default composer size. Two sizes are available, a smaller popup composer, and a bigger full screen composer.`}
+                            />
+                        </Label>
+                        <ComposerModeRadios
+                            id="composerMode"
+                            composerMode={ComposerMode}
+                            onChange={(value) => withLoadingComposerMode(handleChangeComposerMode(value))}
+                            loading={loadingComposerMode}
+                        />
+                    </Row>
+                    <Row className="flex-column">
+                        <Label htmlFor="density" className="mb1 text-bold">{c('Label').t`Density`}</Label>
+                        <DensityRadios
+                            density={Density}
+                            onChange={(value) => withLoadingDensity(handleChangeDensity(value))}
+                            loading={loadingDensity}
+                            id="density"
+                        />
+                    </Row>
+                </>
+            )}
         </SettingsSectionWide>
     );
 };
