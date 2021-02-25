@@ -17,7 +17,6 @@ const PMSignatureField = ({ id, mailSettings = {} }: Props) => {
     const { createNotification } = useNotifications();
     const { request, loading } = useApiWithoutResult(updatePMSignature);
     const { state, toggle } = useToggle(!!mailSettings.PMSignature);
-    const isMandatory = mailSettings.PMSignature === 2;
 
     const handleChange = async ({ target }: ChangeEvent<HTMLInputElement>) => {
         await request(+target.checked);
@@ -34,11 +33,9 @@ const PMSignatureField = ({ id, mailSettings = {} }: Props) => {
                     // eslint-disable-next-line react/no-danger
                     dangerouslySetInnerHTML={{ __html: PM_SIGNATURE }}
                 />
-                {isMandatory ? null : (
-                    <div className="ml1 on-mobile-ml0">
-                        <Toggle loading={loading} id={id} checked={state} onChange={handleChange} />
-                    </div>
-                )}
+                <div className="ml1 on-mobile-ml0">
+                    <Toggle loading={loading} id={id} checked={state} onChange={handleChange} />
+                </div>
             </Field>
         </>
     );

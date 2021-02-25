@@ -131,7 +131,6 @@ const AutoReplySection = () => {
                             loading={enablingLoading}
                             checked={isEnabled}
                             onChange={({ target: { checked } }) => withEnablingLoading(handleToggle(checked))}
-                            disabled={!hasPaidMail}
                         />
                     </span>
                 </Field>
