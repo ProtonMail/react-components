@@ -130,7 +130,7 @@ const AppearanceOtherSection = () => {
                 </Label>
                 <Field>
                     <DraftTypeSelect
-                        id="draftTypeSelect"
+                        id="draftType"
                         draftType={DraftMIMEType}
                         onChange={(value) => withLoadingDraftType(handleChangeDraftType(value))}
                         loading={loadingDraftType}

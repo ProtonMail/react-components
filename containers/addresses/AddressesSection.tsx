@@ -1,5 +1,4 @@
 import React from 'react';
-import { c, msgid } from 'ttag';
 
 import { Loader } from '../../components';
 import { useOrganization, useUser } from '../../hooks';
@@ -14,7 +13,6 @@ interface Props {
 const AddressesSection = ({ isOnlySelf }: Props) => {
     const [user] = useUser();
     const [organization, loadingOrganization] = useOrganization();
-    const { UsedAddresses, MaxAddresses } = organization || {};
 
     if (loadingOrganization) {
         return <Loader />;
@@ -27,12 +25,6 @@ const AddressesSection = ({ isOnlySelf }: Props) => {
             ) : (
                 <AddressesWithUser user={user} />
             )}
-            {MaxAddresses > 1 ? (
-                <div className="mb1 opacity-50">
-                    {UsedAddresses} / {MaxAddresses}{' '}
-                    {c('Info').ngettext(msgid`address used`, `addresses used`, UsedAddresses)}
-                </div>
-            ) : null}
         </>
     );
 };
