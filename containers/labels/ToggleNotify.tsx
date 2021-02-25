@@ -1,17 +1,23 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { c } from 'ttag';
+
 import { updateLabel } from 'proton-shared/lib/api/labels';
+import { Folder } from 'proton-shared/lib/interfaces/Folder';
+
 import { Tooltip, Toggle } from '../../components';
 import { useApi, useLoading, useEventManager, useNotifications } from '../../hooks';
 
-const ToggleNotify = ({ label }) => {
+interface Props {
+    label: Folder;
+}
+
+const ToggleNotify = ({ label }: Props) => {
     const api = useApi();
     const { call } = useEventManager();
     const { createNotification } = useNotifications();
     const [loading, withLoading] = useLoading();
 
-    const handleChange = async ({ target }) => {
+    const handleChange = async ({ target }: React.ChangeEvent<HTMLInputElement>) => {
         const newLabel = {
             ...label,
             Notify: +target.checked,
@@ -32,10 +38,6 @@ const ToggleNotify = ({ label }) => {
             />
         </Tooltip>
     );
-};
-
-ToggleNotify.propTypes = {
-    label: PropTypes.object.isRequired,
 };
 
 export default ToggleNotify;

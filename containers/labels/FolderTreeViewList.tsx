@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import { c } from 'ttag';
+
 import { order, getParents } from 'proton-shared/lib/helpers/folder';
+import { Folder } from 'proton-shared/lib/interfaces/Folder';
 import { orderFolders, updateLabel } from 'proton-shared/lib/api/labels';
 import { ROOT_FOLDER } from 'proton-shared/lib/constants';
-import { c } from 'ttag';
 
 import { Icon, TreeViewContainer, TreeViewItem } from '../../components';
 import { useApi, useLoading, useEventManager, useActiveBreakpoint } from '../../hooks';
@@ -16,7 +17,11 @@ const INSIDE = 'inside';
 const AFTER = 'after';
 const BEFORE = 'before';
 
-const Header = ({ isNarrow }) => {
+interface HeaderProps {
+    isNarrow: boolean;
+}
+
+const Header = ({ isNarrow }: HeaderProps) => {
     return (
         <div className="flex flex-nowrap w100 border-bottom pb0-5">
             <span className="text-bold text-uppercase flex-item-fluid">
@@ -29,50 +34,56 @@ const Header = ({ isNarrow }) => {
     );
 };
 
-Header.propTypes = {
-    isNarrow: PropTypes.bool,
-};
+interface Props {
+    items: Folder[];
+}
 
-const FolderTreeViewList = ({ items = [] }) => {
+const FolderTreeViewList = ({ items = [] }: Props) => {
     const api = useApi();
     const { isNarrow } = useActiveBreakpoint();
     const { call } = useEventManager();
     const [loading, withLoading] = useLoading();
-    const [grabbed, setGrabbed] = useState();
-    const [position, setPosition] = useState();
-    const overRef = useRef({});
-    const timeoutRef = useRef();
+    const [grabbed, setGrabbed] = useState<Folder>();
+    const [position, setPosition] = useState<string>();
+    const overRef = useRef<Folder>();
+    const timeoutRef = useRef<NodeJS.Timeout>();
     const parents = getParents(items);
     const rootFolders = items.filter(({ ParentID = ROOT_FOLDER }) => ParentID === ROOT_FOLDER);
 
     const clear = () => {
         // Delay clear to execute onDrop first
         timeoutRef.current = setTimeout(() => {
-            setGrabbed(null);
-            setPosition(null);
-            overRef.current = {};
+            setGrabbed(undefined);
+            setPosition(undefined);
+            overRef.current = undefined;
         }, 200);
     };
 
-    const buildTreeView = (items = [], level = 0) => {
+    const buildTreeView = (items: Folder[] = [], level = 0) => {
         return (
             <TreeViewContainer>
                 {order(items).map((item) => {
-                    const isOverred = item.ID === overRef.current.ID;
+                    const isOverred = item.ID === overRef.current?.ID;
+
                     const handleDrop = async () => {
+                        if (!grabbed) {
+                            return;
+                        }
+
                         if (position === INSIDE) {
-                            if (grabbed.ID === overRef.current.ID) {
+                            if (grabbed.ID === overRef.current?.ID) {
                                 return;
                             }
-                            await api(updateLabel(grabbed.ID, { ...grabbed, ParentID: overRef.current.ID }));
+                            await api(updateLabel(grabbed.ID, { ...grabbed, ParentID: overRef.current?.ID }));
                             return call();
                         }
 
-                        const { ParentID = ROOT_FOLDER } = overRef.current;
+                        const { ParentID = ROOT_FOLDER } = overRef.current as Folder;
+
                         const LabelIDs = order(parents[ParentID])
-                            .filter(({ ID }) => ID !== grabbed.ID)
-                            .reduce((acc, folder) => {
-                                const isOverred = folder.ID === overRef.current.ID;
+                            .filter(({ ID }) => ID !== grabbed?.ID)
+                            .reduce<Folder[]>((acc, folder) => {
+                                const isOverred = folder.ID === overRef.current?.ID;
                                 if (isOverred && position === BEFORE) {
                                     acc.push(grabbed);
                                 }
@@ -96,7 +107,7 @@ const FolderTreeViewList = ({ items = [] }) => {
                             onDragEnd={() => {
                                 clear();
                             }}
-                            onDragOver={(event) => {
+                            onDragOver={(event: React.DragEvent) => {
                                 event.preventDefault();
 
                                 const { currentTarget, clientY } = event;
@@ -164,7 +175,9 @@ const FolderTreeViewList = ({ items = [] }) => {
 
     useEffect(() => {
         return () => {
-            clearTimeout(timeoutRef.current);
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            }
         };
     }, []);
 
@@ -174,23 +187,6 @@ const FolderTreeViewList = ({ items = [] }) => {
             {buildTreeView(rootFolders)}
         </>
     );
-};
-
-FolderTreeViewList.propTypes = {
-    items: PropTypes.arrayOf(
-        PropTypes.shape({
-            ID: PropTypes.string.isRequired,
-            ParentID: PropTypes.string,
-            Name: PropTypes.string.isRequired,
-            Path: PropTypes.string.isRequired,
-            Color: PropTypes.string.isRequired,
-            Type: PropTypes.number.isRequired,
-            Notify: PropTypes.number.isRequired,
-            Order: PropTypes.number.isRequired,
-            Expanded: PropTypes.number.isRequired,
-            Sticky: PropTypes.number.isRequired,
-        })
-    ),
 };
 
 export default FolderTreeViewList;
