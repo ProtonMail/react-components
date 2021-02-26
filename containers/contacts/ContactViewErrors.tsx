@@ -64,7 +64,7 @@ const ContactViewErrors = ({ contactID, errors, onReload }: Props) => {
 
     const isWarning = error.type === SIGNATURE_NOT_VERIFIED;
 
-    const bgColor = isWarning ? 'bg-global-attention' : 'bg-danger';
+    const bgColor = isWarning ? 'bg-warning' : 'bg-danger';
     const text = getText(error.type);
 
     const buttonText = getButtonText(error.type);

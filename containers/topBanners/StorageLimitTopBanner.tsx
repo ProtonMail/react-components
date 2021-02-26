@@ -52,9 +52,8 @@ const StorageLimitTopBanner = () => {
 
     if (!ignoreStorageLimit && spacePercentage >= 80 && spacePercentage < 100) {
         return (
-            <TopBanner className="bg-global-attention color-global-grey" onClose={() => setIgnoreStorageLimit(true)}>{c(
-                'Info'
-            ).jt`You reached ${spaceDisplayed}% of your storage capacity. ${freeUpMessage} ${upgradeLink}`}</TopBanner>
+            <TopBanner className="bg-warning" onClose={() => setIgnoreStorageLimit(true)}>{c('Info')
+                .jt`You reached ${spaceDisplayed}% of your storage capacity. ${freeUpMessage} ${upgradeLink}`}</TopBanner>
         );
     }
     return null;

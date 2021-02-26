@@ -5,7 +5,7 @@ import { classnames } from '../../helpers';
 
 const TYPES = {
     success: 'bg-success',
-    warning: 'bg-global-attention',
+    warning: 'bg-warning',
     error: 'bg-danger',
 };
 
