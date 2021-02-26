@@ -6,7 +6,7 @@ import { classnames } from '../../helpers';
 const TYPES = {
     success: 'bg-success',
     warning: 'bg-global-attention',
-    error: 'bg-global-warning',
+    error: 'bg-danger',
 };
 
 interface Props {
@@ -20,7 +20,7 @@ interface Props {
 
 const RoundedIcon = ({
     className = '',
-    iconClassName = 'color-white',
+    iconClassName,
     type = 'success',
     padding = 'p0-5',
     title,

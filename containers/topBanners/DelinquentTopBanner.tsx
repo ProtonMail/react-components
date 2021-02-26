@@ -29,14 +29,14 @@ const DelinquentTopBanner = () => {
     if (user.canPay) {
         if (user.Delinquent === UNPAID_STATE.NO_RECEIVE) {
             return (
-                <TopBanner className="bg-global-warning">
+                <TopBanner className="bg-danger">
                     {c('Info')
                         .jt`Your account has at least one overdue invoice. Your access has been restricted. ${payInvoiceLink}`}
                 </TopBanner>
             );
         }
         return (
-            <TopBanner className="bg-global-warning">
+            <TopBanner className="bg-danger">
                 {c('Info')
                     .jt`Your account has at least one overdue invoice. Your access will soon get restricted. ${payInvoiceLink}`}
             </TopBanner>
@@ -44,7 +44,7 @@ const DelinquentTopBanner = () => {
     }
     if (user.isMember) {
         return (
-            <TopBanner className="bg-global-warning">
+            <TopBanner className="bg-danger">
                 {c('Info').t`Account access restricted due to unpaid invoices. Please contact your administrator.`}
             </TopBanner>
         );

@@ -239,8 +239,8 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }: Props) => {
                                     {percentage ? (
                                         <span
                                             className={classnames([
-                                                'text-uppercase text-bold absolute color-white blackfriday-percentage text-center',
-                                                popular ? 'bg-global-warning' : 'bg-primary',
+                                                'text-uppercase text-bold absolute blackfriday-percentage text-center',
+                                                popular ? 'bg-danger' : 'bg-primary',
                                             ])}
                                         >
                                             {c('blackfriday Info').jt`Save ${percentage}%`}

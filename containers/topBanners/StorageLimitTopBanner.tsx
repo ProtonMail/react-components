@@ -45,7 +45,7 @@ const StorageLimitTopBanner = () => {
         : c('Info').t`Free up some space or contact your administrator.`;
     if (spacePercentage >= 100) {
         return (
-            <TopBanner className="bg-global-warning">{c('Info')
+            <TopBanner className="bg-danger">{c('Info')
                 .jt`You reached 100% of your storage capacity. You cannot send or receive new emails. ${freeUpMessage} ${upgradeLink}`}</TopBanner>
         );
     }

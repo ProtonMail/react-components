@@ -64,8 +64,7 @@ const ContactViewErrors = ({ contactID, errors, onReload }: Props) => {
 
     const isWarning = error.type === SIGNATURE_NOT_VERIFIED;
 
-    const bgColor = isWarning ? 'bg-global-attention' : 'bg-global-warning';
-    const textColor = isWarning ? 'color-black' : 'color-white';
+    const bgColor = isWarning ? 'bg-global-attention' : 'bg-danger';
     const text = getText(error.type);
 
     const buttonText = getButtonText(error.type);
@@ -89,7 +88,7 @@ const ContactViewErrors = ({ contactID, errors, onReload }: Props) => {
     };
 
     return (
-        <div className={classnames([bgColor, textColor, 'rounded p0-5 mt1 flex flex-nowrap flex-align-items-center'])}>
+        <div className={classnames([bgColor, 'rounded p0-5 mt1 flex flex-nowrap flex-align-items-center'])}>
             <Icon name="attention" className="flex-item-noshrink mtauto mbauto" />
             <span className="flex-item-fluid pl0-5 pr0-5">
                 <span className="mr0-5">{text}</span>
