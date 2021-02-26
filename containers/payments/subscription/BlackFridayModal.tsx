@@ -283,7 +283,7 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }: Props) => {
                                                             url="https://protonmail.com/support/knowledge-base/protondrive-early-access/?utm_campaign=ww-en-2c-mail-coms_inapp-protondrive_learn_more&utm_source=webmail&utm_medium=app_ad&utm_content=tooltip_v4"
                                                         />
                                                         <span className="block">
-                                                            <span className="blackfriday-protonDrive-free bg-global-success text-uppercase color-white text-bold pl0-5 pr0-5">
+                                                            <span className="blackfriday-protonDrive-free bg-success text-uppercase text-bold pl0-5 pr0-5">
                                                                 {c('blackfriday Info').t`Free`}
                                                             </span>
                                                         </span>

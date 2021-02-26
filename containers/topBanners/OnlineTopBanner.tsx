@@ -49,7 +49,7 @@ const OnlineTopBanner = ({ isPublic = false }: Props) => {
     }, [onlineStatus]);
 
     if (onlineStatus && backOnline) {
-        return <TopBanner className="bg-global-success">{c('Info').t`Internet connection restored.`}</TopBanner>;
+        return <TopBanner className="bg-success">{c('Info').t`Internet connection restored.`}</TopBanner>;
     }
 
     if (onlineStatus) {

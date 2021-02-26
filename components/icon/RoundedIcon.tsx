@@ -4,7 +4,7 @@ import Icon from './Icon';
 import { classnames } from '../../helpers';
 
 const TYPES = {
-    success: 'bg-global-success',
+    success: 'bg-success',
     warning: 'bg-global-attention',
     error: 'bg-global-warning',
 };
