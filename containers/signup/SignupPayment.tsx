@@ -62,7 +62,6 @@ const SignupPayment = ({
                 </div>
                 <div className="w25 min-w14e on-mobile-w100">
                     <SubscriptionCheckout
-                        method={method}
                         submit={
                             <SignupCheckoutButton
                                 loading={loading}
@@ -76,8 +75,11 @@ const SignupPayment = ({
                         plans={plans}
                         checkResult={checkResult}
                         loading={loading}
-                        model={model}
-                        setModel={onChange}
+                        currency={model.currency}
+                        cycle={model.cycle}
+                        planIDs={model.planIDs}
+                        onChangeCurrency={(currency) => onChange({ ...model, currency })}
+                        onChangeCycle={(cycle) => onChange({ ...model, cycle })}
                     />
                 </div>
             </div>

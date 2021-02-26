@@ -15,6 +15,7 @@ export { default as usePremiumDomains } from './usePremiumDomains';
 export { useCalendars, useGetCalendars } from './useCalendars';
 export { default as useActiveBreakpoint } from './useActiveBreakpoint';
 export { default as useSvgGraphicsBbox } from './useSvgGraphicsBbox';
+export { default as useDebounceCallback } from './useDebounceCallback';
 export { default as useWindowSize } from './useWindowSize';
 export { default as useElementRect } from './useElementRect';
 export { default as useContacts } from './useContacts';

@@ -1,4 +1,4 @@
-import { HumanVerificationMethodType } from 'proton-shared/lib/interfaces';
+import { HumanVerificationMethodType, Currency, Cycle } from 'proton-shared/lib/interfaces';
 import { APPS, ADDON_NAMES } from 'proton-shared/lib/constants';
 import { SIGNUP_STEPS } from './constants';
 
@@ -51,8 +51,8 @@ export interface SignupModel {
     recoveryEmail: string;
     recoveryPhone: string;
     verificationCode: string;
-    currency: string;
-    cycle: number;
+    currency: Currency;
+    cycle: Cycle;
     planIDs: PlanIDs;
     humanVerificationMethods: HumanVerificationMethodType[];
     humanVerificationToken: string;

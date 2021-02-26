@@ -6,7 +6,7 @@ import { classnames } from '../../../helpers';
 import { Price } from '../../../components';
 
 interface Props {
-    title: string;
+    title: React.ReactNode;
     amount: number;
     currency?: Currency;
     className?: string;

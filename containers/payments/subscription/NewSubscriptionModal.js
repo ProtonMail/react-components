@@ -304,9 +304,11 @@ const NewSubscriptionModal = ({
                                 plans={plans}
                                 checkResult={checkResult}
                                 loading={loadingCheck}
-                                onCheckout={() => withLoading(handleCheckout())}
-                                model={model}
-                                setModel={setModel}
+                                currency={model.currency}
+                                cycle={model.cycle}
+                                planIDs={model.planIDs}
+                                onChangeCurrency={(currency) => setModel({ ...model, currency })}
+                                onChangeCycle={(cycle) => setModel({ ...model, cycle })}
                             />
                             <PaymentGiftCode gift={model.gift} onApply={handleGift} loading={loadingCheck} />
                         </div>
@@ -351,7 +353,6 @@ const NewSubscriptionModal = ({
                     </div>
                     <div className="w25 on-mobile-w100">
                         <SubscriptionCheckout
-                            method={method}
                             submit={
                                 <NewSubscriptionSubmitButton
                                     onClose={onClose}
@@ -367,9 +368,11 @@ const NewSubscriptionModal = ({
                             plans={plans}
                             checkResult={checkResult}
                             loading={loadingCheck}
-                            onCheckout={() => withLoading(handleCheckout())}
-                            model={model}
-                            setModel={setModel}
+                            currency={model.currency}
+                            cycle={model.cycle}
+                            planIDs={model.planIDs}
+                            onChangeCurrency={(currency) => setModel({ ...model, currency })}
+                            onChangeCycle={(cycle) => setModel({ ...model, cycle })}
                         />
                         {checkResult.Amount ? (
                             <PaymentGiftCode gift={model.gift} onApply={handleGift} loading={loadingCheck} />
