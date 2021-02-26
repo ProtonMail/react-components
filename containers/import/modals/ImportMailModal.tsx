@@ -16,16 +16,7 @@ import { isNumber } from 'proton-shared/lib/helpers/validators';
 
 import { useLoading, useAddresses, useModals, useApi, useEventManager } from '../../../hooks';
 
-import {
-    ConfirmModal,
-    FormModal,
-    Button,
-    PrimaryButton,
-    Alert,
-    ErrorButton,
-    useDebounceInput,
-    Loader,
-} from '../../../components';
+import { ConfirmModal, FormModal, Button, Alert, useDebounceInput, Loader } from '../../../components';
 import ImportMailWizard from '../../../components/import/ImportMailWizard';
 
 import { IMAPS } from '../constants';
@@ -323,7 +314,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps, ...rest }:
                 onConfirm={onClose}
                 title={c('Confirm modal title').t`Quit import?`}
                 cancel={c('Action').t`Continue import`}
-                confirm={<ErrorButton type="submit">{c('Action').t`Discard`}</ErrorButton>}
+                confirm={<Button color="danger" type="submit">{c('Action').t`Discard`}</Button>}
             >
                 <Alert>{c('Info').t`Your import will not be processed.`}</Alert>
                 <Alert type="error">{c('Warning').t`Are you sure you want to discard your import?`}</Alert>
@@ -390,7 +381,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps, ...rest }:
             [GMAIL_INSTRUCTIONS.LABELS, GMAIL_INSTRUCTIONS.TWO_STEPS].includes(gmailInstructionsStep);
 
         return (
-            <Button onClick={backButton ? handleBack : handleCancel}>
+            <Button shape="outline" onClick={backButton ? handleBack : handleCancel}>
                 {backButton ? c('Action').t`Back` : c('Action').t`Cancel`}
             </Button>
         );
@@ -407,30 +398,30 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps, ...rest }:
             case Step.INSTRUCTIONS:
                 return providerInstructions ? (
                     <div>
-                        <PrimaryButton type="submit">
+                        <Button color="norm" type="submit">
                             {providerInstructions === PROVIDER_INSTRUCTIONS.GMAIL &&
                             gmailInstructionsStep !== GMAIL_INSTRUCTIONS.TWO_STEPS
                                 ? c('Action').t`Next`
                                 : c('Action').t`Start Import Assistant`}
-                        </PrimaryButton>
+                        </Button>
                     </div>
                 ) : (
-                    <PrimaryButton type="submit">{c('Action').t`Skip to import`}</PrimaryButton>
+                    <Button color="norm" type="submit">{c('Action').t`Skip to import`}</Button>
                 );
             case Step.START:
                 return (
-                    <PrimaryButton type="submit" disabled={disabledStartStep} loading={loading}>
+                    <Button color="norm" type="submit" disabled={disabledStartStep} loading={loading}>
                         {isReconnectMode ? c('Action').t`Reconnect` : c('Action').t`Next`}
-                    </PrimaryButton>
+                    </Button>
                 );
             case Step.PREPARE:
                 return (
-                    <PrimaryButton loading={loading} disabled={isPayloadInvalid} type="submit">
+                    <Button color="norm" loading={loading} disabled={isPayloadInvalid} type="submit">
                         {c('Action').t`Start import`}
-                    </PrimaryButton>
+                    </Button>
                 );
             case Step.STARTED:
-                return <PrimaryButton loading={loading} type="submit">{c('Action').t`Close`}</PrimaryButton>;
+                return <Button color="norm" loading={loading} type="submit">{c('Action').t`Close`}</Button>;
             default:
                 return null;
         }
