@@ -140,6 +140,7 @@ const ImportInstructionsStep = ({ changeProvider, provider, gmailInstructionsSte
 
                 <div className="mb1">
                     <Button
+                        shape="outline"
                         onClick={() => changeProvider(PROVIDER_INSTRUCTIONS.GMAIL)}
                         className="inline-flex flex-align-items-center"
                     >
@@ -157,6 +158,7 @@ const ImportInstructionsStep = ({ changeProvider, provider, gmailInstructionsSte
 
                 <div className="mb1">
                     <Button
+                        shape="outline"
                         onClick={() => changeProvider(PROVIDER_INSTRUCTIONS.YAHOO)}
                         className="inline-flex flex-align-items-center"
                     >
