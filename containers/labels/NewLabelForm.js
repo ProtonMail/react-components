@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { LABEL_TYPE, ROOT_FOLDER } from 'proton-shared/lib/constants';
+import { LABEL_TYPE } from 'proton-shared/lib/constants';
 import { Alert, Input, Label, Row, Field, ColorPicker, Toggle, Info } from '../../components';
 
 import ParentFolderSelector from './ParentFolderSelector';
@@ -9,10 +9,6 @@ import { useMailSettings } from '../../hooks';
 
 function NewLabelForm({ label, onChangeColor, onChangeName, onChangeParentID, onChangeNotify }) {
     const [mailSettings] = useMailSettings();
-    const hasColorPicker =
-        label.Type === LABEL_TYPE.MESSAGE_LABEL ||
-        (mailSettings?.EnableFolderColor &&
-            !(mailSettings?.InheritParentFolderColor && label.ParentID === `${ROOT_FOLDER}`));
 
     return (
         <div className="center flex-item-fluid">
@@ -41,7 +37,7 @@ function NewLabelForm({ label, onChangeColor, onChangeName, onChangeParentID, on
                     />
                 </Field>
             </Row>
-            {hasColorPicker ? (
+            {label.Type === LABEL_TYPE.MESSAGE_LABEL ? (
                 <Row>
                     <Label htmlFor="accountType">{c('New Label form').t`Color`} </Label>
                     <Field>
@@ -62,6 +58,18 @@ function NewLabelForm({ label, onChangeColor, onChangeName, onChangeParentID, on
                             />
                         </Field>
                     </Row>
+                    {mailSettings?.EnableFolderColor ? (
+                        <Row>
+                            <Label htmlFor="accountType">{c('New Label form').t`Color`} </Label>
+                            <Field>
+                                {mailSettings?.InheritParentFolderColor && label.ParentID ? (
+                                    <div className="mt0-5">{c('Info').t`Inherited from parent`}</div>
+                                ) : (
+                                    <ColorPicker color={label.Color} onChange={onChangeColor} />
+                                )}
+                            </Field>
+                        </Row>
+                    ) : null}
                     <Row>
                         <Label htmlFor="notification">
                             <span className="mr0-5">{c('Label').t`Notification`}</span>
