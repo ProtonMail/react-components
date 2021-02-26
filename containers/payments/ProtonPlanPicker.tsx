@@ -62,7 +62,7 @@ const ProtonPlanPicker = ({
         <>
             <h3>{isVpnApp ? vpnAppName : mailAppName} plan</h3>
             {cycle === CYCLE.MONTHLY ? (
-                <p>{c('Info').t`Save 20% on your susbcription by switching to ${annualBilling}`}</p>
+                <p>{c('Info').jt`Save 20% on your susbcription by switching to ${annualBilling}`}</p>
             ) : null}
             {isVpnApp && service === PLAN_SERVICES.MAIL ? (
                 <p>

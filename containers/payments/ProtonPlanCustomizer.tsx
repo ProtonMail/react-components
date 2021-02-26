@@ -139,7 +139,7 @@ const ProtonPlanCustomizer = ({
         [ADDON_NAMES.MEMBER]: c('Info').t`Users`,
         [ADDON_NAMES.DOMAIN]: c('Info').t`Domains`,
         [ADDON_NAMES.ADDRESS]: c('Info').t`Addresses`,
-        [ADDON_NAMES.VPN]: c('Info').t`VPN connection`,
+        [ADDON_NAMES.VPN]: c('Info').t`Connections`,
     } as const;
 
     const infoTooltip = {
@@ -156,7 +156,18 @@ const ProtonPlanCustomizer = ({
         <>
             <h3>{c('Title').t`${appName} customization`}</h3>
             {service === PLAN_SERVICES.MAIL && planIDs[plansMap[PLANS.PLUS].ID] ? (
-                <p>{c('Info').jt`Switch to ${professionalPlan} to add more users.`}</p>
+                <p>
+                    {c('Info').t`ProtonMail Plus is limited to one user and starts with 5GB of storage.`}
+                    <br />
+                    {c('Info').jt`Switch to ${professionalPlan} to add more users.`}
+                </p>
+            ) : null}
+            {service === PLAN_SERVICES.VPN && planIDs[plansMap[PLANS.VPNPLUS].ID] ? (
+                <p>
+                    {c('Info').t`ProtonVPN Plus is limited to 5 connections.`}
+                    <br />
+                    {c('Info').jt`Switch to ${professionalPlan} to add more connections.`}
+                </p>
             ) : null}
             {service === PLAN_SERVICES.MAIL && planIDs[plansMap[PLANS.PROFESSIONAL].ID] ? (
                 <p>{c('Info')
@@ -207,8 +218,8 @@ const ProtonPlanCustomizer = ({
                                     {(quantity * addon.Pricing[cycle]) / cycle}
                                 </Price>
                             )}
-                            {isSupported && !quantity && c('Info').t`Included`}
-                            {!isSupported && c('Info').t`Not customizable`}
+                            {isSupported && !quantity && c('Info').t`included`}
+                            {!isSupported && c('Info').t`not customizable`}
                         </div>
                     </div>
                 );

@@ -17,6 +17,7 @@ import DiscountBadge from '../DiscountBadge';
 import CheckoutRow from './CheckoutRow';
 import { SubscriptionCheckResult, PlanIDs } from '../../signup/interfaces';
 import Checkout from '../Checkout';
+import PaymentGiftCode from '../PaymentGiftCode';
 
 interface Props {
     submit?: React.ReactNode;
@@ -26,8 +27,10 @@ interface Props {
     currency: Currency;
     cycle: Cycle;
     coupon?: string;
+    gift?: string;
     onChangeCycle: (cycle: Cycle) => void;
     onChangeCurrency: (currency: Currency) => void;
+    onChangeGift?: (gift: string) => void;
     planIDs: PlanIDs;
     hideCurrency?: boolean;
     hideCycle?: boolean;
@@ -39,8 +42,10 @@ const SubscriptionCheckout = ({
     currency,
     cycle,
     coupon,
+    gift,
     onChangeCurrency,
     onChangeCycle,
+    onChangeGift,
     planIDs,
     checkResult,
     loading,
@@ -155,7 +160,6 @@ const SubscriptionCheckout = ({
                         ) : null}
                         {update ? (
                             <CheckoutRow
-                                className="color-global-success"
                                 title={
                                     <>
                                         <span className="mr0-5 pr0-5">{getTitle(Name, update)}</span>
@@ -188,24 +192,14 @@ const SubscriptionCheckout = ({
             {hasMailPlan ? (
                 printSummary(PLAN_SERVICES.MAIL)
             ) : (
-                <CheckoutRow
-                    className="text-bold"
-                    title={c('Info').t`ProtonMail Free`}
-                    amount={0}
-                    currency={currency}
-                />
+                <CheckoutRow className="text-bold" title={c('Info').t`ProtonMail Free`} amount={0} />
             )}
             {hasVisionary ? null : (
                 <div className="border-top pt0-5">
                     {hasVpnPlan ? (
                         printSummary(PLAN_SERVICES.VPN)
                     ) : (
-                        <CheckoutRow
-                            className="bold"
-                            title={c('Info').t`ProtonVPN Free`}
-                            amount={0}
-                            currency={currency}
-                        />
+                        <CheckoutRow className="text-bold" title={c('Info').t`ProtonVPN Free`} amount={0} />
                     )}
                 </div>
             )}
@@ -216,7 +210,7 @@ const SubscriptionCheckout = ({
                 hasVpnPlus &&
                 [CYCLE.YEARLY, CYCLE.TWO_YEARS].includes(cycle)) ? (
                 <div className="border-top pt0-5">
-                    <CheckoutRow className="bold" title={c('Info').t`ProtonDrive`} amount={0} />
+                    <CheckoutRow className="text-bold" title={c('Info').t`ProtonDrive`} amount={0} />
                 </div>
             ) : null}
             {checkResult.Amount ? (
@@ -313,9 +307,12 @@ const SubscriptionCheckout = ({
                 title={c('Title').t`Amount due`}
                 amount={checkResult.AmountDue}
                 currency={currency}
-                className="text-bold m0"
+                className="text-bold m0 h4"
             />
-            <div className="mt1">{submit}</div>
+            <div className="mt1 mb1">{submit}</div>
+            {checkResult.Amount && onChangeGift ? (
+                <PaymentGiftCode gift={gift} onApply={onChangeGift} loading={loading} />
+            ) : null}
         </Checkout>
     );
 };

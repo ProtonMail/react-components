@@ -53,7 +53,7 @@ const Checkout = ({
                     />
                 )}
             </div>
-            <h2 className="h4">{c('Title').t`Plan summary`}</h2>
+            <h2 className="h4 text-bold">{c('Title').t`Plan summary`}</h2>
             <div className={loading ? 'opacity-50' : ''}>{children}</div>
             <p className="text-sm lh-standard flex flex-nowrap opacity-50">
                 <span className="flex-item-noshrink mr0-5">

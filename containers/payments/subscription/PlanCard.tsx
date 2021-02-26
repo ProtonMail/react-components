@@ -25,7 +25,9 @@ const PlanCard = ({ planName, price, info, action, onClick, features, currency, 
     );
     return (
         <>
-            {isSelected === true ? <div className="text-sm text-uppercase">{c('Title').t`Your plan`}</div> : null}
+            {isSelected === true ? (
+                <div className="text-xs text-uppercase text-bold text-center">{c('Title').t`Your plan`}</div>
+            ) : null}
             <div className="bordered-container p1">
                 <h3 className="text-bold">{planName}</h3>
                 <Price currency={currency} suffix={c('Suffix for price').t`/ month`}>
