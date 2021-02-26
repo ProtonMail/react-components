@@ -20,9 +20,7 @@ import {
     Select,
     ConfirmModal,
     FormModal,
-    PrimaryButton,
     Button,
-    ErrorButton,
     Label as FormLabel,
 } from '../../../components';
 
@@ -92,7 +90,7 @@ const CustomizeImportModal = ({
                 onConfirm={onClose}
                 title={c('Confirm modal title').t`Quit import customization?`}
                 cancel={c('Action').t`Stay`}
-                confirm={<ErrorButton type="submit">{c('Action').t`Quit`}</ErrorButton>}
+                confirm={<Button color="danger" type="submit">{c('Action').t`Quit`}</Button>}
             >
                 <Alert type="error">{c('Warning').t`You will lose any customization you made so far.`}</Alert>
             </ConfirmModal>
@@ -167,11 +165,15 @@ const CustomizeImportModal = ({
         <FormModal
             title={c('Title').t`Customize import`}
             submit={
-                <PrimaryButton disabled={isEditing || !selectedFoldersCount || hasFoldersTooLongError} type="submit">
+                <Button
+                    color="norm"
+                    disabled={isEditing || !selectedFoldersCount || hasFoldersTooLongError}
+                    type="submit"
+                >
                     {c('Action').t`Save`}
-                </PrimaryButton>
+                </Button>
             }
-            close={<Button onClick={handleCancel}>{c('Action').t`Cancel`}</Button>}
+            close={c('Action').t`Cancel`}
             onSubmit={handleSubmit}
             onClose={handleCancel}
             className="customize-import-modal"
@@ -203,7 +205,7 @@ const CustomizeImportModal = ({
                                 className="max-w100"
                             />
                         )}
-                        <Button className="flex-item-noshrink ml1" onClick={handleEditLabel}>
+                        <Button shape="outline" className="flex-item-noshrink ml1" onClick={handleEditLabel}>
                             {c('Action').t`Edit label`}
                         </Button>
                     </Field>
@@ -270,7 +272,7 @@ const CustomizeImportModal = ({
                                 )}
                             </span>
                         )}
-                        <Button className="ml2" onClick={toggleFolders}>
+                        <Button shape="outline" className="ml2" onClick={toggleFolders}>
                             {organizeFolderVisible ? c('Action').t`Hide folders` : c('Action').t`Show folders`}
                         </Button>
                     </div>
