@@ -3,12 +3,12 @@ import getMemberAndAddress, { getMemberAndAddressID } from 'proton-shared/lib/ca
 import { useGetAddresses } from './useAddresses';
 import { useGetAddressKeys } from './useGetAddressKeys';
 import { useGetCalendarBootstrap } from './useGetCalendarBootstrap';
-import { useGetCalendarKeys } from './useGetCalendarKeys';
+import { useGetDecryptedPassphraseAndCalendarKeys } from './useGetDecryptedPassphraseAndCalendarKeys';
 
 export const useGetCalendarInfo = () => {
     const getCalendarBootstrap = useGetCalendarBootstrap();
     const getAddresses = useGetAddresses();
-    const getCalendarKeys = useGetCalendarKeys();
+    const getCalendarKeys = useGetDecryptedPassphraseAndCalendarKeys();
     const getAddressKeys = useGetAddressKeys();
 
     return useCallback(
@@ -20,7 +20,7 @@ export const useGetCalendarInfo = () => {
 
             const [memberID, addressID] = getMemberAndAddressID(getMemberAndAddress(Addresses, Members));
 
-            const { decryptedCalendarKeys, decryptedPassphrase, passphraseID } = await getCalendarKeys(addressID);
+            const { decryptedCalendarKeys, decryptedPassphrase, passphraseID } = await getCalendarKeys(calendarID);
 
             const addressKeys = await getAddressKeys(addressID);
 

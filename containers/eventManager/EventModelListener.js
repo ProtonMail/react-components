@@ -13,7 +13,7 @@ import { KEY as USER_KEYS_CACHE_KEY } from '../../hooks/useUserKeys';
 import { CACHE_KEY as ADDRESS_KEYS_CACHE } from '../../hooks/useGetAddressKeys';
 import { KEY as ADDRESSES_KEYS_CACHE } from '../../hooks/useAddressesKeys';
 import { KEY as CALENDAR_BOOTSTRAP_CACHE } from '../../hooks/useGetCalendarBootstrap';
-import { CACHE_KEY as CALENDAR_KEYS_CACHE } from '../../hooks/useGetCalendarKeys';
+import { CACHE_KEY as CALENDAR_KEYS_CACHE } from '../../hooks/useGetDecryptedPassphraseAndCalendarKeys';
 import { useEventManager, useCache } from '../../hooks';
 
 const EventModelListener = ({ models }) => {
