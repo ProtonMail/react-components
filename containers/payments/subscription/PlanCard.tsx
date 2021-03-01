@@ -15,9 +15,21 @@ interface Props {
     currency: Currency;
     cycle: Cycle;
     isSelected: undefined | true | false;
+    disabled?: boolean;
 }
 
-const PlanCard = ({ planName, price, info, action, onClick, features, currency, cycle, isSelected }: Props) => {
+const PlanCard = ({
+    planName,
+    price,
+    info,
+    action,
+    onClick,
+    features,
+    currency,
+    cycle,
+    disabled,
+    isSelected,
+}: Props) => {
     const billedPrice = (
         <Price key="price" currency={currency}>
             {price}
@@ -41,11 +53,11 @@ const PlanCard = ({ planName, price, info, action, onClick, features, currency, 
                 ) : null}
                 <p className="text-lg">{info}</p>
                 {isSelected === false ? (
-                    <Button onClick={onClick} className="w100">
+                    <Button onClick={onClick} disabled={disabled} className="w100">
                         {action}
                     </Button>
                 ) : (
-                    <PrimaryButton onClick={onClick} className="w100">
+                    <PrimaryButton onClick={onClick} disabled={disabled} className="w100">
                         {action}
                     </PrimaryButton>
                 )}
