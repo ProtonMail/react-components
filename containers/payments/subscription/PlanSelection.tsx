@@ -84,8 +84,8 @@ const PlanSelection = ({
             c('Plan feature').t`3 folders / labels`,
             c('Plan feature').t`No custom email addresses`,
         ],
-        [PLANS.VPNBASIC]: [],
-        [PLANS.VPNPLUS]: [],
+        [PLANS.VPNBASIC]: [], // TODO
+        [PLANS.VPNPLUS]: [], // TODO
         [PLANS.PLUS]: [
             c('Plan feature').t`1 user`,
             c('Plan feature').t`5 GB storage *`,
@@ -127,7 +127,9 @@ const PlanSelection = ({
             </div>
             {(isVpnApp ? VPNPlans : MailPlans).map((plan: Plan) => {
                 const isFree = plan.ID === FREE_PLAN.ID;
-                const isSelected = subscription?.Plans.some(({ ID }) => ID === plan.ID) || isFree || undefined;
+                const isSelected = subscription
+                    ? subscription.Plans.some(({ ID }) => ID === plan.ID) || isFree
+                    : undefined;
                 return (
                     <PlanCard
                         isSelected={isSelected}
