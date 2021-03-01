@@ -9,7 +9,7 @@ interface Props {
     planName: string;
     price: number;
     info: string;
-    action?: string;
+    action: string;
     onClick: () => void;
     features: React.ReactNode[];
     currency: Currency;
@@ -20,7 +20,7 @@ interface Props {
 const PlanCard = ({ planName, price, info, action, onClick, features, currency, cycle, isSelected }: Props) => {
     const billedPrice = (
         <Price key="price" currency={currency}>
-            {price / cycle}
+            {price}
         </Price>
     );
     return (
@@ -29,7 +29,7 @@ const PlanCard = ({ planName, price, info, action, onClick, features, currency, 
                 <div className="text-xs text-uppercase text-bold text-center">{c('Title').t`Your plan`}</div>
             ) : null}
             <div className="bordered-container p1">
-                <h3 className="text-bold">{planName}</h3>
+                <h3 className="text-bold text-capitalize">{planName}</h3>
                 <Price currency={currency} suffix={c('Suffix for price').t`/ month`}>
                     {price / cycle}
                 </Price>

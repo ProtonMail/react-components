@@ -90,13 +90,13 @@ const NewSubscriptionModalFooter = ({ submit, step, model, plans, onClose, metho
                     </span>
                 </div>
             ),
-        step === SUBSCRIPTION_STEPS.PAYMENT && onlyVPN && (
+        step === SUBSCRIPTION_STEPS.CHECKOUT && onlyVPN && (
             <div key="upsell-6" className="no-mobile flex flex-nowrap flex-align-items-center pl1 pr1">
                 <ClockIcon />
                 <span className="flex-item-fluid">{c('Info').t`30-days money back guaranteed`}</span>
             </div>
         ),
-        step === SUBSCRIPTION_STEPS.PAYMENT && protectedPayment && (
+        step === SUBSCRIPTION_STEPS.CHECKOUT && protectedPayment && (
             <div key="upsell-7" className="no-mobile flex flex-nowrap flex-align-items-center pl1 pr1">
                 <ShieldIcon />
                 <span className="flex-item-fluid">

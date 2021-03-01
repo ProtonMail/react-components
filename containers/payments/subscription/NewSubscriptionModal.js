@@ -28,6 +28,7 @@ import LossLoyaltyModal from '../LossLoyaltyModal';
 import GenericError from '../../error/GenericError';
 import usePayment from '../usePayment';
 import Payment from '../Payment';
+import PlanSelection from './PlanSelection';
 
 import { SUBSCRIPTION_STEPS } from './constants';
 import NewSubscriptionSubmitButton from './NewSubscriptionSubmitButton';
@@ -46,7 +47,7 @@ const hasPlans = (planIDs = {}) => Object.keys(clearPlanIDs(planIDs)).length;
 /** @type any */
 const NewSubscriptionModal = ({
     expanded = false,
-    step: initialStep = SUBSCRIPTION_STEPS.CUSTOMIZATION,
+    step: initialStep = SUBSCRIPTION_STEPS.PLAN_SELECTION,
     cycle = DEFAULT_CYCLE,
     currency = DEFAULT_CURRENCY,
     coupon,
@@ -56,8 +57,9 @@ const NewSubscriptionModal = ({
 }) => {
     const TITLE = {
         [SUBSCRIPTION_STEPS.NETWORK_ERROR]: c('Title').t`Network error`,
-        [SUBSCRIPTION_STEPS.CUSTOMIZATION]: c('Title').t`Plan customization`,
-        [SUBSCRIPTION_STEPS.PAYMENT]: c('Title').t`Checkout`,
+        [SUBSCRIPTION_STEPS.PLAN_SELECTION]: c('Title').t`Select a plan`,
+        [SUBSCRIPTION_STEPS.CUSTOMIZATION]: c('Title').t`Customize your plan`,
+        [SUBSCRIPTION_STEPS.CHECKOUT]: c('Title').t`Checkout`,
         [SUBSCRIPTION_STEPS.UPGRADE]: <div className="text-center">{c('Title').t`Processing...`}</div>,
         [SUBSCRIPTION_STEPS.THANKS]: <div className="text-center">{c('Title').t`Thank you!`}</div>,
     };
@@ -134,13 +136,13 @@ const NewSubscriptionModal = ({
                 await check(); // eslint-disable-line @typescript-eslint/no-use-before-define
                 createNotification({ text: c('Error').t`Checkout expired, please try again.`, type: 'error' });
             }
-            setStep(SUBSCRIPTION_STEPS.PAYMENT);
+            setStep(SUBSCRIPTION_STEPS.CHECKOUT);
             throw error;
         }
     };
 
     const { card, setCard, errors, method, setMethod, parameters, canPay, paypal, paypalCredit } = usePayment({
-        amount: step === SUBSCRIPTION_STEPS.PAYMENT ? checkResult.AmountDue : 0, // Define amount only in the payment step to generate payment tokens
+        amount: step === SUBSCRIPTION_STEPS.CHECKOUT ? checkResult.AmountDue : 0, // Define amount only in the payment step to generate payment tokens
         currency: checkResult.Currency,
         onPay(params) {
             return withLoading(handleSubscribe(params));
@@ -197,7 +199,7 @@ const NewSubscriptionModal = ({
 
     const handleCheckout = async () => {
         if (step === SUBSCRIPTION_STEPS.CUSTOMIZATION) {
-            return setStep(SUBSCRIPTION_STEPS.PAYMENT);
+            return setStep(SUBSCRIPTION_STEPS.CHECKOUT);
         }
 
         const params = await handlePaymentToken({
@@ -214,7 +216,7 @@ const NewSubscriptionModal = ({
     };
 
     const handleClose = (e) => {
-        if (step === SUBSCRIPTION_STEPS.PAYMENT) {
+        if (step === SUBSCRIPTION_STEPS.CHECKOUT) {
             setStep(SUBSCRIPTION_STEPS.CUSTOMIZATION);
             return;
         }
@@ -263,7 +265,7 @@ const NewSubscriptionModal = ({
             }
             className={classnames([
                 'subscription-modal',
-                [SUBSCRIPTION_STEPS.CUSTOMIZATION, SUBSCRIPTION_STEPS.PAYMENT].includes(step) && 'modal--full',
+                [SUBSCRIPTION_STEPS.CUSTOMIZATION, SUBSCRIPTION_STEPS.CHECKOUT].includes(step) && 'modal--full',
                 user.isFree && 'is-free-user',
             ])}
             title={TITLE[step]}
@@ -273,6 +275,7 @@ const NewSubscriptionModal = ({
             {...rest}
         >
             {step === SUBSCRIPTION_STEPS.NETWORK_ERROR && <GenericError />}
+            {step === SUBSCRIPTION_STEPS.PLAN_SELECTION && <PlanSelection plans={plans} currency={model.currency} cycle={model.cycle} planIDs={model.planIDs} subscription={subscription} organization={organization} onChangeCurrency={(currency) => setModel({ ...model, currency })} onChangeCycle={(cycle) => setModel({ ...model, cycle })} />}
             {step === SUBSCRIPTION_STEPS.CUSTOMIZATION && (
                 <div className="flex flex-justify-space-between on-mobile-flex-column">
                     <div className="w75 on-mobile-w100 pr4 on-tablet-landscape-pr1 on-mobile-pr0">
@@ -316,7 +319,7 @@ const NewSubscriptionModal = ({
                     </div>
                 </div>
             )}
-            {step === SUBSCRIPTION_STEPS.PAYMENT && (
+            {step === SUBSCRIPTION_STEPS.CHECKOUT && (
                 <div className="flex flex-justify-space-between on-mobile-flex-column">
                     <div className="w75 on-mobile-w100 on-tablet-landscape-pr1 pr4 on-mobile-pr0">
                         <h3>{c('Title').t`Payment method`}</h3>
@@ -396,10 +399,9 @@ const NewSubscriptionModal = ({
 NewSubscriptionModal.propTypes = {
     expanded: PropTypes.bool,
     step: PropTypes.oneOf([
+        SUBSCRIPTION_STEPS.PLAN_SELECTION,
         SUBSCRIPTION_STEPS.CUSTOMIZATION,
-        SUBSCRIPTION_STEPS.PAYMENT,
-        SUBSCRIPTION_STEPS.UPGRADE,
-        SUBSCRIPTION_STEPS.THANKS,
+        SUBSCRIPTION_STEPS.CHECKOUT
     ]),
     cycle: PropTypes.oneOf([CYCLE.MONTHLY, CYCLE.TWO_YEARS, CYCLE.YEARLY]),
     currency: PropTypes.oneOf(CURRENCIES),

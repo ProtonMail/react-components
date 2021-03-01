@@ -48,7 +48,7 @@ const BlackFridayButton = ({ plans, subscription }: Props) => {
                 cycle={cycle}
                 currency={currency}
                 coupon={couponCode}
-                step={SUBSCRIPTION_STEPS.PAYMENT}
+                step={SUBSCRIPTION_STEPS.CHECKOUT}
             />
         );
     };
