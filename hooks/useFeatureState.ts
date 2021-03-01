@@ -4,7 +4,7 @@ import { getFeature, updateFeatureValue } from 'proton-shared/lib/api/features';
 import useApi from './useApi';
 import useLoading from './useLoading';
 
-const usePromoModalState = (featureID: string, fallbackValue = true) => {
+const useFeatureState = (featureID: string, fallbackValue = true) => {
     const [loading, withLoading] = useLoading(true);
     const [state, setState] = useState(false);
     const api = useApi();
@@ -22,15 +22,15 @@ const usePromoModalState = (featureID: string, fallbackValue = true) => {
     };
 
     useEffect(() => {
-        withLoading(fetchFeature());
+        void withLoading(fetchFeature());
     }, [featureID]);
 
-    const onChange = async (Value: boolean) => {
-        await api(updateFeatureValue(featureID, Value));
-        setState(Value);
+    const onChange = async (value: boolean) => {
+        await api(updateFeatureValue(featureID, value));
+        setState(value);
     };
 
     return [state, loading, onChange] as const;
 };
 
-export default usePromoModalState;
+export default useFeatureState;

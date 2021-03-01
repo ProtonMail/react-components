@@ -14,7 +14,7 @@ import {
     useApi,
     useConfig,
     useProductPayerPeriod,
-    usePromoModalState,
+    useFeatureState,
     useBlackFridayPeriod,
 } from '../../hooks';
 import { MailBlackFridayModal, NewSubscriptionModal, VPNBlackFridayModal } from '../payments';
@@ -28,7 +28,7 @@ const useBlackFriday = () => {
     const [subscription] = useSubscription();
     const isBlackFridayPeriod = useBlackFridayPeriod();
     const isProductPayerPeriod = useProductPayerPeriod();
-    const [modalState, loadingModalState, setModalState] = usePromoModalState(
+    const [modalState, loadingModalState, setModalState] = useFeatureState(
         isFree ? 'BlackFridayPromoShown' : 'BundlePromoShown'
     );
     const [isEligible, setEligibility] = useState(false);
