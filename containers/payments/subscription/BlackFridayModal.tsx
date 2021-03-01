@@ -247,7 +247,7 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }: Props) => {
                                         </span>
                                     ) : null}
                                     {popular ? (
-                                        <div className="text-uppercase absolute text-bold bg-primary color-white pt0-75 pb0-5 mt0 mb0 text-center blackfriday-mostPopular">{c(
+                                        <div className="text-uppercase absolute text-bold bg-primary pt0-75 pb0-5 mt0 mb0 text-center blackfriday-mostPopular">{c(
                                             'blackfriday Title'
                                         ).t`Most popular`}</div>
                                     ) : null}
