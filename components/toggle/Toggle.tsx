@@ -41,7 +41,7 @@ const Toggle = ({
                 id={id}
                 onChange={handleChange}
                 type="checkbox"
-                className="toggle-checkbox"
+                className={classnames(['toggle-checkbox', className])}
                 checked={checked}
                 aria-busy={loading}
                 {...rest}
