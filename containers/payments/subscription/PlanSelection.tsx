@@ -2,8 +2,17 @@ import React, { useState } from 'react';
 import { c } from 'ttag';
 import { Currency, Cycle, Organization, Plan, PlanIDs, Subscription } from 'proton-shared/lib/interfaces';
 import { toMap } from 'proton-shared/lib/helpers/object';
-import { PLANS, PLAN_TYPES, PLAN_SERVICES, CYCLE, DEFAULT_CYCLE, DEFAULT_CURRENCY } from 'proton-shared/lib/constants';
+import {
+    APPS,
+    PLANS,
+    PLAN_TYPES,
+    PLAN_SERVICES,
+    CYCLE,
+    DEFAULT_CYCLE,
+    DEFAULT_CURRENCY,
+} from 'proton-shared/lib/constants';
 import { switchPlan } from 'proton-shared/lib/helpers/subscription';
+import { getAppName } from 'proton-shared/lib/apps/helper';
 
 import PlanCard from './PlanCard';
 import { CycleSelector, CurrencySelector } from '..';
@@ -61,9 +70,11 @@ const PlanSelection = ({
     onChangeCurrency,
 }: Props) => {
     const [showAllFeatures, setShowAllFeatures] = useState(false);
+    const vpnAppName = getAppName(APPS.PROTONVPN_SETTINGS);
+    const mailAppName = getAppName(APPS.PROTONMAIL);
     const isVpnApp = service === PLAN_SERVICES.VPN;
+    const appName = isVpnApp ? vpnAppName : mailAppName;
     const plansMap = toMap(plans, 'Name');
-
     const MailPlans = [FREE_PLAN, plansMap[PLANS.PLUS], plansMap[PLANS.PROFESSIONAL], plansMap[PLANS.VISIONARY]];
     const VPNPlans = [FREE_PLAN, plansMap[PLANS.VPNBASIC], plansMap[PLANS.VPNPLUS], plansMap[PLANS.VISIONARY]];
 
@@ -72,8 +83,8 @@ const PlanSelection = ({
         [PLANS.VPNBASIC]: c('Info').t`TODO`,
         [PLANS.VPNPLUS]: c('Info').t`TODO`,
         [PLANS.PLUS]: c('Info').t`Full-featured mailbox with advanced protection.`,
-        [PLANS.PROFESSIONAL]: c('Info').t`ProtonMail for professionals and businesses.`,
-        [PLANS.VISIONARY]: c('Info').t`ProtonMail for families and small businesses.`,
+        [PLANS.PROFESSIONAL]: c('Info').t`${mailAppName} for professionals and businesses.`,
+        [PLANS.VISIONARY]: c('Info').t`${appName} for families and small businesses.`,
     } as const;
 
     const FEATURES = {
