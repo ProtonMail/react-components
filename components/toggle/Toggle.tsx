@@ -23,7 +23,7 @@ const Toggle = ({
     label = (key: ToggleState) => {
         return (
             <span className="toggle-label-text" aria-hidden="true">
-                <Icon name={key} alt="" size={12} className="toggle-label-img" />
+                <Icon name={key} alt="" size={16} className="toggle-label-img" />
             </span>
         );
     },
