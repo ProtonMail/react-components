@@ -1,13 +1,18 @@
 import React from 'react';
 import { c } from 'ttag';
+
+import { PACKAGE_TYPE } from 'proton-shared/lib/constants';
 import { updateAttachPublicKey, updatePGPScheme, updateSign } from 'proton-shared/lib/api/mailSettings';
+
 import { ConfirmModal, Alert, Row, Field, Label, Info, Toggle } from '../../components';
 import { useMailSettings, useEventManager, useApi, useLoading, useNotifications, useModals } from '../../hooks';
+
+import { SettingsSection, SettingsParagraph } from '../account';
 
 import PGPSchemeSelect from './PGPSchemeSelect';
 
 const ExternalPGPSettingsSection = () => {
-    const [{ Sign, AttachPublicKey, PGPScheme } = {}] = useMailSettings();
+    const [{ Sign = 0, AttachPublicKey = 0, PGPScheme = PACKAGE_TYPE.SEND_PGP_MIME } = {}] = useMailSettings();
     const { call } = useEventManager();
     const { createNotification } = useNotifications();
     const { createModal } = useModals();
@@ -16,7 +21,7 @@ const ExternalPGPSettingsSection = () => {
     const [loadingAttach, withLoadingAttach] = useLoading();
     const [loadingScheme, withLoadingScheme] = useLoading();
 
-    const handleChangeSign = async ({ target }) => {
+    const handleChangeSign = async ({ target }: React.ChangeEvent<HTMLInputElement>) => {
         await api(updateSign(+target.checked));
         await call();
         createNotification({ text: c('Info').t`Encryption setting updated` });
@@ -41,9 +46,9 @@ const ExternalPGPSettingsSection = () => {
         });
     };
 
-    const handleChangeAttach = async ({ target }) => {
+    const handleChangeAttach = async ({ target }: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = +target.checked;
-        if (newValue && !Sign && (await askSign(newValue))) {
+        if (newValue && !Sign && (await askSign())) {
             await api(updateSign(1));
         }
         await api(updateAttachPublicKey(newValue));
@@ -51,17 +56,17 @@ const ExternalPGPSettingsSection = () => {
         createNotification({ text: c('Info').t`Encryption setting updated` });
     };
 
-    const handleChangeScheme = async ({ target }) => {
+    const handleChangeScheme = async ({ target }: React.ChangeEvent<HTMLSelectElement>) => {
         await api(updatePGPScheme(+target.value));
         await call();
         createNotification({ text: c('Info').t`Encryption setting updated` });
     };
 
     return (
-        <>
-            <Alert learnMore="https://protonmail.com/support/knowledge-base/how-to-use-pgp/">
+        <SettingsSection>
+            <SettingsParagraph learnMoreUrl="https://protonmail.com/support/knowledge-base/how-to-use-pgp/">
                 {c('Info').t`Only change these settings if you are using PGP with non-ProtonMail recipients.`}
-            </Alert>
+            </SettingsParagraph>
             <Row>
                 <Label htmlFor="signToggle">
                     <span className="mr0-5">{c('Label').t`Sign external messages`}</span>
@@ -116,7 +121,7 @@ const ExternalPGPSettingsSection = () => {
                     />
                 </Field>
             </Row>
-        </>
+        </SettingsSection>
     );
 };
 
