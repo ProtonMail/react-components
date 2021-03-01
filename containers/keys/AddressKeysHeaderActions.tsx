@@ -1,7 +1,7 @@
 import React from 'react';
 import { c } from 'ttag';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
-import { Block, DropdownActions } from '../../components';
+import { DropdownActions } from '../../components';
 
 interface Props {
     onAddKey?: () => void;
@@ -37,14 +37,14 @@ const AddressKeysHeaderActions = ({ onAddKey, onImportKey, onExportPublic, onExp
     }
 
     return (
-        <Block>
+        <div className="mb1">
             {createActions.length ? (
                 <span className="mr1">
                     <DropdownActions list={createActions} />
                 </span>
             ) : null}
             <DropdownActions list={exportActions} />
-        </Block>
+        </div>
     );
 };
 

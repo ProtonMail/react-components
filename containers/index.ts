@@ -1,5 +1,4 @@
 export * from './app';
-export * from './apps';
 export * from './bridge';
 export * from './api';
 export * from './features';
