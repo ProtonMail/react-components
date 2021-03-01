@@ -124,7 +124,7 @@ const AccountSwitchContainer = ({ Layout, toApp, onLogin, activeSessions, onAddA
                     className={`${listItemClassName} button-show-on-hover button-account`}
                     onClick={() => handleClickSession(LocalID)}
                 >
-                    <span className="dropdown-logout-initials rounded p0-25 inline-flex bg-global-grey color-white">
+                    <span className="dropdown-logout-initials rounded p0-25 inline-flex bg-norm">
                         <span className="dropdown-logout-text center text-semibold" aria-hidden="true">
                             {initials}
                         </span>
