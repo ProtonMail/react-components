@@ -8,9 +8,9 @@ import { TableRow } from '../../components';
 import { Importer, ImportHistory } from './interfaces';
 
 import PastImportStatus from './PastImportStatus';
-import PastImportDeleteButton from './PastImportDeleteButton';
 import ActiveImportRowActions from './ActiveImportRowActions';
 import ActiveImportStatus from './ActiveImportStatus';
+import PastImportRowActions from './PastImportRowActions';
 
 interface Props {
     currentImport: Importer | ImportHistory;
@@ -20,7 +20,7 @@ const ImportListRow = ({ currentImport }: Props) => {
     const { ID, Email } = currentImport;
 
     const { Active } = currentImport as Importer;
-    const { EndTime, TotalSize, State: ReportStatus } = currentImport as ImportHistory;
+    const { EndTime, TotalSize, State: ReportStatus, CanDeleteSource } = currentImport as ImportHistory;
 
     const isImportActive = !!Active;
     const { State, ErrorCode, CreateTime = Date.now(), Mapping = [] } = Active || {};
@@ -67,7 +67,7 @@ const ImportListRow = ({ currentImport }: Props) => {
         <time key="importDate">{format(timeToDisplay * 1000, 'PPp')}</time>,
         !isImportActive ? humanSize(TotalSize) : '—',
         !isImportActive ? (
-            <PastImportDeleteButton key="button" ID={ID} />
+            <PastImportRowActions key="button" email={Email} ID={ID} showDeleteSource={CanDeleteSource} />
         ) : (
             <ActiveImportRowActions key="actions" currentImport={currentImport} />
         ),

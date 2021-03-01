@@ -10,7 +10,7 @@ import {
     setAddressKeyFlags,
 } from 'proton-shared/lib/keys';
 
-import { Alert, Block, Loader, PrimaryButton, Select } from '../../components';
+import { Loader, Button, Select } from '../../components';
 import {
     useAddresses,
     useAddressesKeys,
@@ -21,6 +21,8 @@ import {
     useUser,
     useUserKeys,
 } from '../../hooks';
+
+import { SettingsSectionWide, SettingsParagraph } from '../account';
 
 import { getAllKeysReactivationRequests, getKeysToReactivateCount } from './reactivateKeys/getAllKeysToReactive';
 import AddressKeysHeaderActions from './AddressKeysHeaderActions';
@@ -67,15 +69,23 @@ const AddressKeysSection = () => {
     }, [addressIndex, Addresses]);
 
     if (addressIndex === -1 || loadingAddresses) {
-        return <Loader />;
+        return (
+            <SettingsSectionWide>
+                <Loader />
+            </SettingsSectionWide>
+        );
     }
 
     if (!Array.isArray(Addresses) || !Addresses.length) {
-        return <Alert>{c('Info').t`No addresses exist`}</Alert>;
+        return <SettingsParagraph>{c('Info').t`No addresses exist`}</SettingsParagraph>;
     }
 
     if (loadingAddressesKeys && !Array.isArray(addressKeys)) {
-        return <Loader />;
+        return (
+            <SettingsSectionWide>
+                <Loader />
+            </SettingsSectionWide>
+        );
     }
 
     const isLoadingKey = loadingKeyID !== '';
@@ -306,13 +316,14 @@ const AddressKeysSection = () => {
 
     return (
         <>
-            <Alert learnMore="https://protonmail.com/support/knowledge-base/pgp-key-management/">
+            <SettingsParagraph learnMoreUrl="https://protonmail.com/support/knowledge-base/pgp-key-management/">
                 {c('Info')
                     .t`Download your PGP Keys for use with other PGP compatible services. Only incoming messages in inline OpenPGP format are currently supported.`}
-            </Alert>
+            </SettingsParagraph>
             {canReactivate && (
-                <Block>
-                    <PrimaryButton
+                <div className="mb1">
+                    <Button
+                        color="norm"
                         onClick={() => {
                             if (!isLoadingKey) {
                                 handleReactivateKeys(allKeysToReactivate);
@@ -320,11 +331,11 @@ const AddressKeysSection = () => {
                         }}
                     >
                         {c('Action').t`Reactivate keys`}
-                    </PrimaryButton>
-                </Block>
+                    </Button>
+                </div>
             )}
             {Addresses.length > 1 && (
-                <Block>
+                <div className="mb1">
                     <Select
                         value={addressIndex}
                         options={Addresses.map(({ Email }, i) => ({ text: Email, value: i }))}
@@ -332,7 +343,7 @@ const AddressKeysSection = () => {
                             !isLoadingKey && setAddressIndex(+value)
                         }
                     />
-                </Block>
+                </div>
             )}
             <AddressKeysHeaderActions
                 onAddKey={canAdd ? handleAddKey : undefined}
