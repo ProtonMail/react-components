@@ -17,12 +17,21 @@ export const useGetCalendarInfo = () => {
                 getCalendarBootstrap(calendarID),
                 getAddresses(),
             ]);
+
             const [memberID, addressID] = getMemberAndAddressID(getMemberAndAddress(Addresses, Members));
-            const [addressKeys, calendarKeys] = await Promise.all([
-                getAddressKeys(addressID),
-                getCalendarKeys(calendarID),
-            ]);
-            return { memberID, addressKeys, calendarKeys, calendarSettings };
+
+            const { decryptedCalendarKeys, decryptedPassphrase, passphraseID } = await getCalendarKeys(addressID);
+
+            const addressKeys = await getAddressKeys(addressID);
+
+            return {
+                memberID,
+                addressKeys,
+                decryptedCalendarKeys,
+                calendarSettings,
+                decryptedPassphrase,
+                passphraseID,
+            };
         },
         [getCalendarBootstrap, getAddresses, getCalendarKeys, getAddressKeys]
     );

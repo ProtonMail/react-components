@@ -16,7 +16,13 @@ import { getPromiseValue } from './useCachedModelResult';
 
 export const CACHE_KEY = 'CALENDAR_KEYS';
 
-const useGetCalendarKeysRaw = (): ((key: string) => Promise<DecryptedCalendarKey[]>) => {
+interface CalendarKeysReturn {
+    decryptedCalendarKeys: DecryptedCalendarKey[];
+    decryptedPassphrase: string;
+    passphraseID: string;
+}
+
+const useGetCalendarKeysRaw = (): ((key: string) => Promise<CalendarKeysReturn>) => {
     const getAddresses = useGetAddresses();
     const getAddressKeys = useGetAddressKeys();
     const getCalendarBootstrap = useGetCalendarBootstrap();
@@ -45,6 +51,7 @@ const useGetCalendarKeysRaw = (): ((key: string) => Promise<DecryptedCalendarKey
                         armoredSignature: Signature,
                         ...splitKeys(addressKeys),
                     }).catch(noop);
+
                     if (result) {
                         return result;
                     }
@@ -53,14 +60,23 @@ const useGetCalendarKeysRaw = (): ((key: string) => Promise<DecryptedCalendarKey
 
             const { ID: PassphraseID, MemberPassphrases } = Passphrase;
             const addressesMembersMap = getAddressesMembersMap(Members, Addresses);
-            const passphrase = await getCalendarKeyPassphrase(MemberPassphrases, addressesMembersMap);
-            return getDecryptedCalendarKeys(Keys, { [PassphraseID]: passphrase });
+            const decryptedPassphrase = await getCalendarKeyPassphrase(MemberPassphrases, addressesMembersMap);
+
+            if (!decryptedPassphrase) {
+                throw new Error('No passphrase');
+            }
+
+            return {
+                decryptedCalendarKeys: await getDecryptedCalendarKeys(Keys, { [PassphraseID]: decryptedPassphrase }),
+                decryptedPassphrase,
+                passphraseID: PassphraseID,
+            };
         },
         [getAddresses, getAddressKeys, getCalendarBootstrap]
     );
 };
 
-export const useGetCalendarKeys = (): ((key: string) => Promise<DecryptedCalendarKey[]>) => {
+export const useGetCalendarKeys = (): ((key: string) => Promise<CalendarKeysReturn>) => {
     const cache = useCache();
     const miss = useGetCalendarKeysRaw();
 
