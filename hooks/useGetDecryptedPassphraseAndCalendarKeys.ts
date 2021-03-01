@@ -22,7 +22,7 @@ interface CalendarKeysReturn {
     passphraseID: string;
 }
 
-const useGetCalendarKeysRaw = (): ((key: string) => Promise<CalendarKeysReturn>) => {
+const useGetDecryptedPassphraseAndCalendarKeysRaw = (): ((key: string) => Promise<CalendarKeysReturn>) => {
     const getAddresses = useGetAddresses();
     const getAddressKeys = useGetAddressKeys();
     const getCalendarBootstrap = useGetCalendarBootstrap();
@@ -76,17 +76,17 @@ const useGetCalendarKeysRaw = (): ((key: string) => Promise<CalendarKeysReturn>)
     );
 };
 
-export const useGetCalendarKeys = (): ((key: string) => Promise<CalendarKeysReturn>) => {
+export const useGetDecryptedPassphraseAndCalendarKeys = (): ((calendarID: string) => Promise<CalendarKeysReturn>) => {
     const cache = useCache();
-    const miss = useGetCalendarKeysRaw();
+    const miss = useGetDecryptedPassphraseAndCalendarKeysRaw();
 
     return useCallback(
-        (key: string) => {
+        (calendarID: string) => {
             if (!cache.has(CACHE_KEY)) {
                 cache.set(CACHE_KEY, new Map());
             }
             const subCache = cache.get(CACHE_KEY);
-            return getPromiseValue(subCache, key, miss);
+            return getPromiseValue(subCache, calendarID, miss);
         },
         [cache, miss]
     );

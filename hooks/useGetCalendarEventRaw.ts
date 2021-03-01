@@ -10,13 +10,13 @@ import { splitKeys } from 'proton-shared/lib/keys';
 import { CalendarEvent, CalendarEventData } from 'proton-shared/lib/interfaces/calendar';
 import { useGetAddresses } from './useAddresses';
 import { useGetAddressKeys } from './useGetAddressKeys';
-import { useGetCalendarKeys } from './useGetCalendarKeys';
+import { useGetDecryptedPassphraseAndCalendarKeys } from './useGetDecryptedPassphraseAndCalendarKeys';
 import useGetEncryptionPreferences from './useGetEncryptionPreferences';
 
 const { SIGNED, ENCRYPTED_AND_SIGNED } = CALENDAR_CARD_TYPE;
 
 const useGetCalendarEventRaw = () => {
-    const getCalendarKeys = useGetCalendarKeys();
+    const getCalendarKeys = useGetDecryptedPassphraseAndCalendarKeys();
     const getAddresses = useGetAddresses();
     const getAddressKeys = useGetAddressKeys();
     const getEncryptionPreferences = useGetEncryptionPreferences();
@@ -58,13 +58,13 @@ const useGetCalendarEventRaw = () => {
                 return publicKeysMap;
             };
 
-            const [calendarKeys, publicKeysMap] = await Promise.all([
+            const [{ decryptedCalendarKeys }, publicKeysMap] = await Promise.all([
                 getCalendarKeys(Event.CalendarID),
                 getAuthorPublicKeysMap(),
             ]);
             const [sharedSessionKey, calendarSessionKey] = await readSessionKeys({
                 calendarEvent: Event,
-                ...splitKeys(calendarKeys),
+                privateKeys: splitKeys(decryptedCalendarKeys).privateKeys,
             });
             const withNormalizedAuthor = (x: CalendarEventData) => ({
                 ...x,
