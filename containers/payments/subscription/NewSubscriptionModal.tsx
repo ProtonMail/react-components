@@ -29,22 +29,18 @@ import {
     useModals,
     useConfig,
 } from '../../../hooks';
-
 import { classnames } from '../../../helpers';
 import LossLoyaltyModal from '../LossLoyaltyModal';
 import GenericError from '../../error/GenericError';
 import usePayment from '../usePayment';
 import Payment from '../Payment';
 import PlanSelection from './PlanSelection';
-
 import { SUBSCRIPTION_STEPS } from './constants';
 import NewSubscriptionSubmitButton from './NewSubscriptionSubmitButton';
 import SubscriptionUpgrade from './SubscriptionUpgrade';
 import SubscriptionThanks from './SubscriptionThanks';
 import SubscriptionCheckout from './SubscriptionCheckout';
-import NewSubscriptionModalFooter from './NewSubscriptionModalFooter';
 import PaymentGiftCode from '../PaymentGiftCode';
-
 import './NewSubscriptionModal.scss';
 import { handlePaymentToken } from '../paymentTokenHelper';
 import PlanCustomization from './PlanCustomization';
@@ -56,15 +52,15 @@ interface Props {
     cycle?: Cycle;
     currency?: Currency;
     planIDs?: PlanIDs;
-    onClose: () => void;
-    coupon?: string;
+    onClose?: (e?: any) => void;
+    coupon?: string | null;
 }
 
 interface Model {
     planIDs: PlanIDs;
     currency: Currency;
     cycle: Cycle;
-    coupon?: string;
+    coupon?: string | null;
     gift?: string;
 }
 
@@ -125,13 +121,13 @@ const NewSubscriptionModal = ({
 
     const handleUnsubscribe = async () => {
         if (hasBonuses(organization)) {
-            await new Promise((resolve, reject) => {
+            await new Promise<void>((resolve, reject) => {
                 createModal(<LossLoyaltyModal organization={organization} onConfirm={resolve} onClose={reject} />);
             });
         }
         await api(deleteSubscription());
         await call();
-        onClose();
+        onClose?.();
         createNotification({ text: c('Success').t`You have successfully unsubscribed` });
     };
 
@@ -172,7 +168,7 @@ const NewSubscriptionModal = ({
         },
     });
 
-    const check = async (newModel = model, wantToApplyNewGiftCode = false) => {
+    const check = async (newModel: Model = model, wantToApplyNewGiftCode: boolean = false): Promise<void> => {
         if (!hasPlans(newModel.planIDs)) {
             setCheckResult(TOTAL_ZERO);
             return;
@@ -238,13 +234,13 @@ const NewSubscriptionModal = ({
         return handleSubscribe(params);
     };
 
-    const handleClose = (e) => {
+    const handleClose = (e: any) => {
         if (step === SUBSCRIPTION_STEPS.CHECKOUT) {
             setStep(SUBSCRIPTION_STEPS.CUSTOMIZATION);
             return;
         }
 
-        onClose(e);
+        onClose?.(e);
     };
 
     const handleGift = (gift = '') => {
@@ -263,29 +259,7 @@ const NewSubscriptionModal = ({
     return (
         <FormModal
             hasClose={step === SUBSCRIPTION_STEPS.CUSTOMIZATION}
-            footer={
-                [SUBSCRIPTION_STEPS.UPGRADE, SUBSCRIPTION_STEPS.THANKS].includes(step) ? null : (
-                    <NewSubscriptionModalFooter
-                        onClose={handleClose}
-                        submit={
-                            <NewSubscriptionSubmitButton
-                                onClose={onClose}
-                                canPay={canPay}
-                                paypal={paypal}
-                                step={step}
-                                loading={loadingCheck || loading}
-                                method={method}
-                                checkResult={checkResult}
-                                className="flex-item-noshrink"
-                            />
-                        }
-                        plans={plans}
-                        step={step}
-                        model={model}
-                        method={method}
-                    />
-                )
-            }
+            footer={null}
             className={classnames([
                 'subscription-modal',
                 [SUBSCRIPTION_STEPS.CUSTOMIZATION, SUBSCRIPTION_STEPS.CHECKOUT].includes(step) && 'modal--full',
