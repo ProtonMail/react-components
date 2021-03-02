@@ -162,7 +162,7 @@ const NewSubscriptionModal = ({
     };
 
     const { card, setCard, errors, method, setMethod, parameters, canPay, paypal, paypalCredit } = usePayment({
-        amount: step === SUBSCRIPTION_STEPS.CHECKOUT ? checkResult?.AmountDue || 0 : 0, // Define amount only in the payment step to generate payment tokens
+        amount: model.step === SUBSCRIPTION_STEPS.CHECKOUT ? checkResult?.AmountDue || 0 : 0, // Define amount only in the payment step to generate payment tokens
         currency: checkResult?.Currency || DEFAULT_CURRENCY,
         onPay(params) {
             return withLoading(handleSubscribe(params));
@@ -205,7 +205,7 @@ const NewSubscriptionModal = ({
             if (error.name === 'OfflineError') {
                 setModel({ ...model, step: SUBSCRIPTION_STEPS.NETWORK_ERROR });
             }
-            if (step === SUBSCRIPTION_STEPS.CUSTOMIZATION) {
+            if (model.step === SUBSCRIPTION_STEPS.CUSTOMIZATION) {
                 if (newModel.gift && newModel.gift !== model.gift) {
                     return check({ ...model });
                 }
@@ -218,7 +218,7 @@ const NewSubscriptionModal = ({
     };
 
     const handleCheckout = async () => {
-        if (step === SUBSCRIPTION_STEPS.CUSTOMIZATION) {
+        if (model.step === SUBSCRIPTION_STEPS.CUSTOMIZATION) {
             return setModel({ ...model, step: SUBSCRIPTION_STEPS.CHECKOUT });
         }
 
@@ -236,7 +236,8 @@ const NewSubscriptionModal = ({
     };
 
     const handleClose = (e: any) => {
-        if (step === SUBSCRIPTION_STEPS.CHECKOUT) {
+        debugger;
+        if (model.step === SUBSCRIPTION_STEPS.CHECKOUT) {
             setModel({ ...model, step: SUBSCRIPTION_STEPS.CUSTOMIZATION });
             return;
         }
@@ -255,11 +256,11 @@ const NewSubscriptionModal = ({
 
     useEffect(() => {
         void withLoadingCheck(check());
-    }, [model.cycle, model.currency, model.planIDs]);
+    }, [model.cycle, model.currency]);
 
     return (
         <FormModal
-            hasClose={step === SUBSCRIPTION_STEPS.CUSTOMIZATION}
+            hasClose={model.step === SUBSCRIPTION_STEPS.CUSTOMIZATION}
             footer={null}
             className={classnames([
                 'subscription-modal',
@@ -267,17 +268,17 @@ const NewSubscriptionModal = ({
                     SUBSCRIPTION_STEPS.PLAN_SELECTION,
                     SUBSCRIPTION_STEPS.CUSTOMIZATION,
                     SUBSCRIPTION_STEPS.CHECKOUT,
-                ].includes(step) && 'modal--full',
+                ].includes(model.step) && 'modal--full',
                 user.isFree && 'is-free-user',
             ])}
-            title={TITLE[step]}
+            title={TITLE[model.step]}
             loading={loading || loadingPlans || loadingOrganization || loadingSubscription}
             onSubmit={() => withLoading(handleCheckout())}
             onClose={handleClose}
             {...rest}
         >
-            {step === SUBSCRIPTION_STEPS.NETWORK_ERROR && <GenericError />}
-            {step === SUBSCRIPTION_STEPS.PLAN_SELECTION && (
+            {model.step === SUBSCRIPTION_STEPS.NETWORK_ERROR && <GenericError />}
+            {model.step === SUBSCRIPTION_STEPS.PLAN_SELECTION && (
                 <PlanSelection
                     loading={loadingCheck}
                     plans={plans}
@@ -288,13 +289,13 @@ const NewSubscriptionModal = ({
                     organization={organization}
                     service={service}
                     onChangePlanIDs={(planIDs) =>
-                        setModel({ ...model, planIDs, step: SUBSCRIPTION_STEPS.CUSTOMIZATION })
+                        withLoadingCheck(check({ ...model, planIDs, step: SUBSCRIPTION_STEPS.CUSTOMIZATION }))
                     }
                     onChangeCurrency={(currency) => setModel({ ...model, currency })}
                     onChangeCycle={(cycle) => setModel({ ...model, cycle })}
                 />
             )}
-            {step === SUBSCRIPTION_STEPS.CUSTOMIZATION && (
+            {model.step === SUBSCRIPTION_STEPS.CUSTOMIZATION && (
                 <div className="flex flex-justify-space-between on-mobile-flex-column">
                     <div className="w75 on-mobile-w100 pr4 on-tablet-landscape-pr1 on-mobile-pr0">
                         <PlanCustomization
@@ -306,7 +307,7 @@ const NewSubscriptionModal = ({
                             subscription={subscription}
                             organization={organization}
                             service={service}
-                            onChangePlanIDs={(planIDs) => setModel({ ...model, planIDs })}
+                            onChangePlanIDs={(planIDs) => withLoadingCheck(check({ ...model, planIDs }))}
                             onChangeCycle={(cycle) => setModel({ ...model, cycle })}
                             onBack={() => setModel({ ...model, step: SUBSCRIPTION_STEPS.PLAN_SELECTION })}
                         />
@@ -319,7 +320,7 @@ const NewSubscriptionModal = ({
                                         onClose={onClose}
                                         canPay={canPay}
                                         paypal={paypal}
-                                        step={step}
+                                        step={model.step}
                                         loading={loadingCheck || loading}
                                         method={method}
                                         checkResult={checkResult}
@@ -341,7 +342,7 @@ const NewSubscriptionModal = ({
                     </div>
                 </div>
             )}
-            {step === SUBSCRIPTION_STEPS.CHECKOUT && (
+            {model.step === SUBSCRIPTION_STEPS.CHECKOUT && (
                 <div className="flex flex-justify-space-between on-mobile-flex-column">
                     <div className="w75 on-mobile-w100 on-tablet-landscape-pr1 pr4 on-mobile-pr0">
                         <h3>{c('Title').t`Payment method`}</h3>
@@ -410,12 +411,12 @@ const NewSubscriptionModal = ({
                     </div>
                 </div>
             )}
-            {step === SUBSCRIPTION_STEPS.UPGRADE && (
+            {model.step === SUBSCRIPTION_STEPS.UPGRADE && (
                 <div className="text-center">
                     <SubscriptionUpgrade />
                 </div>
             )}
-            {step === SUBSCRIPTION_STEPS.THANKS && <SubscriptionThanks method={method} onClose={onClose} />}
+            {model.step === SUBSCRIPTION_STEPS.THANKS && <SubscriptionThanks method={method} onClose={onClose} />}
         </FormModal>
     );
 };

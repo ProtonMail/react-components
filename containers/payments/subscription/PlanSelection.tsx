@@ -16,7 +16,7 @@ import { getAppName } from 'proton-shared/lib/apps/helper';
 
 import PlanCard from './PlanCard';
 import { CycleSelector, CurrencySelector } from '..';
-import { Icon, InlineLinkButton } from '../../../components';
+import { Icon, InlineLinkButton, Button } from '../../../components';
 
 const FREE_PLAN = {
     ID: 'free',
@@ -144,59 +144,68 @@ const PlanSelection = ({
 
     return (
         <>
-            <div className="mb1">
-                {cycle === CYCLE.MONTHLY ? (
-                    <button
-                        type="button"
-                        disabled={loading}
-                        className="mr1"
-                        onClick={() => onChangeCycle(CYCLE.YEARLY)}
-                    >{c('Action').jt`${boldSave} by switching to annual billing`}</button>
-                ) : null}
-                <CycleSelector
-                    cycle={cycle}
-                    onSelect={onChangeCycle}
-                    className="mr1"
-                    disabled={loading}
-                    options={[
-                        { text: c('Billing cycle option').t`Monthly`, value: CYCLE.MONTHLY },
-                        { text: c('Billing cycle option').t`Annually SAVE 20%`, value: CYCLE.YEARLY },
-                        { text: c('Billing cycle option').t`Two years SAVE 33%`, value: CYCLE.TWO_YEARS },
-                    ]}
-                />
-                <CurrencySelector currency={currency} onSelect={onChangeCurrency} disabled={loading} />
-            </div>
-            {(isVpnApp ? VPNPlans : MailPlans).map((plan: Plan) => {
-                const isFree = plan.ID === FREE_PLAN.ID;
-                const isSelected = subscription
-                    ? subscription.Plans.some(({ ID }) => ID === plan.ID)
-                    : isFree || undefined;
-                return (
-                    <PlanCard
-                        isSelected={isSelected}
-                        key={plan.ID}
-                        action={isSelected ? c('Action').t`Customize plan` : c('Action').t`Select plan`}
-                        planName={isFree ? 'Free' : plan.Name}
-                        currency={currency}
-                        disabled={loading}
+            <div className="mb2 flex flex-nowrap">
+                <div className="flex-item-fluid" />
+                <div className="flex-item-fluid flex-item-grow-2 text-center">
+                    {cycle === CYCLE.MONTHLY ? (
+                        <Button
+                            shape="solid"
+                            color="success"
+                            disabled={loading}
+                            size="medium"
+                            onClick={() => onChangeCycle(CYCLE.YEARLY)}
+                        >{c('Action').jt`${boldSave} by switching to annual billing`}</Button>
+                    ) : null}
+                </div>
+                <div className="flex-item-fluid flex flex-nowrap">
+                    <CycleSelector
                         cycle={cycle}
-                        price={plan.Pricing[cycle]}
-                        info={INFO[plan.Name as PLANS]}
-                        features={FEATURES[plan.Name as PLANS]}
-                        onClick={() =>
-                            onChangePlanIDs(
-                                switchPlan({
-                                    planIDs,
-                                    plans,
-                                    planID: isFree ? undefined : plan.ID,
-                                    service,
-                                    organization,
-                                })
-                            )
-                        }
+                        onSelect={onChangeCycle}
+                        className="mr1"
+                        disabled={loading}
+                        options={[
+                            { text: c('Billing cycle option').t`Monthly`, value: CYCLE.MONTHLY },
+                            { text: c('Billing cycle option').t`Annually SAVE 20%`, value: CYCLE.YEARLY },
+                            { text: c('Billing cycle option').t`Two years SAVE 33%`, value: CYCLE.TWO_YEARS },
+                        ]}
                     />
-                );
-            })}
+                    <CurrencySelector currency={currency} onSelect={onChangeCurrency} disabled={loading} />
+                </div>
+            </div>
+            <div className="flex flex-nowrap on-mobile-flex-column">
+                {(isVpnApp ? VPNPlans : MailPlans).map((plan: Plan) => {
+                    const isFree = plan.ID === FREE_PLAN.ID;
+                    const isSelected = subscription
+                        ? subscription.Plans.some(({ ID }) => ID === plan.ID)
+                        : isFree || undefined;
+                    return (
+                        <div key={plan.ID} className="flex-item-fluid">
+                            <PlanCard
+                                isSelected={isSelected}
+                                action={isSelected ? c('Action').t`Customize plan` : c('Action').t`Select plan`}
+                                planName={isFree ? 'Free' : plan.Name}
+                                currency={currency}
+                                disabled={loading}
+                                cycle={cycle}
+                                price={plan.Pricing[cycle]}
+                                info={INFO[plan.Name as PLANS]}
+                                features={FEATURES[plan.Name as PLANS]}
+                                onClick={() =>
+                                    onChangePlanIDs(
+                                        switchPlan({
+                                            planIDs,
+                                            plans,
+                                            planID: isFree ? undefined : plan.ID,
+                                            service,
+                                            organization,
+                                        })
+                                    )
+                                }
+                            />
+                        </div>
+                    );
+                })}
+            </div>
             <p className="text-sm">{c('Info').t`* Customizable features`}</p>
             <p className="text-center">
                 <InlineLinkButton onClick={() => setShowAllFeatures(!showAllFeatures)}>
