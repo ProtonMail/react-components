@@ -1,26 +1,33 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { c } from 'ttag';
-import { DEFAULT_CURRENCY, DEFAULT_CYCLE, CYCLE, CURRENCIES, PAYMENT_METHOD_TYPES } from 'proton-shared/lib/constants';
+import {
+    APPS,
+    DEFAULT_CURRENCY,
+    DEFAULT_CYCLE,
+    PAYMENT_METHOD_TYPES,
+    PLAN_SERVICES,
+} from 'proton-shared/lib/constants';
 import { checkSubscription, subscribe, deleteSubscription } from 'proton-shared/lib/api/payments';
 import { hasBonuses } from 'proton-shared/lib/helpers/organization';
 import { getPlanIDs } from 'proton-shared/lib/helpers/subscription';
 import { clearPlanIDs } from 'proton-shared/lib/helpers/planIDs';
 import { API_CUSTOM_ERROR_CODES } from 'proton-shared/lib/errors';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
+import { Cycle, Currency, PlanIDs } from 'proton-shared/lib/interfaces';
 
+import { SubscriptionCheckResult } from '../../signup/interfaces';
 import { Alert, FormModal } from '../../../components';
 import {
     usePlans,
     useApi,
     useLoading,
-    useVPNCountries,
     useEventManager,
     useUser,
     useNotifications,
     useOrganization,
     useSubscription,
     useModals,
+    useConfig,
 } from '../../../hooks';
 
 import { classnames } from '../../../helpers';
@@ -32,7 +39,6 @@ import PlanSelection from './PlanSelection';
 
 import { SUBSCRIPTION_STEPS } from './constants';
 import NewSubscriptionSubmitButton from './NewSubscriptionSubmitButton';
-import SubscriptionCustomization from './SubscriptionCustomization';
 import SubscriptionUpgrade from './SubscriptionUpgrade';
 import SubscriptionThanks from './SubscriptionThanks';
 import SubscriptionCheckout from './SubscriptionCheckout';
@@ -41,12 +47,28 @@ import PaymentGiftCode from '../PaymentGiftCode';
 
 import './NewSubscriptionModal.scss';
 import { handlePaymentToken } from '../paymentTokenHelper';
+import PlanCustomization from './PlanCustomization';
 
 const hasPlans = (planIDs = {}) => Object.keys(clearPlanIDs(planIDs)).length;
 
-/** @type any */
+interface Props {
+    step?: SUBSCRIPTION_STEPS;
+    cycle?: Cycle;
+    currency?: Currency;
+    planIDs?: PlanIDs;
+    onClose: () => void;
+    coupon?: string;
+}
+
+interface Model {
+    planIDs: PlanIDs;
+    currency: Currency;
+    cycle: Cycle;
+    coupon?: string;
+    gift?: string;
+}
+
 const NewSubscriptionModal = ({
-    expanded = false,
     step: initialStep = SUBSCRIPTION_STEPS.PLAN_SELECTION,
     cycle = DEFAULT_CYCLE,
     currency = DEFAULT_CURRENCY,
@@ -54,7 +76,7 @@ const NewSubscriptionModal = ({
     planIDs = {},
     onClose,
     ...rest
-}) => {
+}: Props) => {
     const TITLE = {
         [SUBSCRIPTION_STEPS.NETWORK_ERROR]: c('Title').t`Network error`,
         [SUBSCRIPTION_STEPS.PLAN_SELECTION]: c('Title').t`Select a plan`,
@@ -65,21 +87,22 @@ const NewSubscriptionModal = ({
     };
 
     const api = useApi();
+    const { APP_NAME } = useConfig();
+    const isVpnApp = APP_NAME === APPS.PROTONVPN_SETTINGS;
+    const service = isVpnApp ? PLAN_SERVICES.VPN : PLAN_SERVICES.MAIL;
     const [user] = useUser();
     const [subscription, loadingSubscription] = useSubscription();
     const { call } = useEventManager();
     const { createModal } = useModals();
     const { createNotification } = useNotifications();
-    const [vpnCountries, loadingVpnCountries] = useVPNCountries();
-    const [plans, loadingPlans] = usePlans();
+    const [plans = [], loadingPlans] = usePlans();
     const [organization, loadingOrganization] = useOrganization();
     const [loading, withLoading] = useLoading();
     const [loadingCheck, withLoadingCheck] = useLoading();
-    const [checkResult, setCheckResult] = useState({});
-    const { Credit = 0 } = checkResult;
-    const { Code: couponCode } = checkResult.Coupon || {}; // Coupon can be null
-    const creditsRemaining = (user.Credit + Credit) / 100;
-    const [model, setModel] = useState({
+    const [checkResult, setCheckResult] = useState<SubscriptionCheckResult>();
+    const { Code: couponCode } = checkResult?.Coupon || {}; // Coupon can be null
+    const creditsRemaining = (user.Credit + (checkResult?.Credit || 0)) / 100;
+    const [model, setModel] = useState<Model>({
         cycle,
         currency,
         coupon,
@@ -96,9 +119,9 @@ const NewSubscriptionModal = ({
         Proration: 0,
         Gift: 0,
         Credit: 0,
-    };
+    } as SubscriptionCheckResult;
 
-    const getCodes = ({ gift, coupon }) => [gift, coupon].filter(isTruthy);
+    const getCodes = ({ gift, coupon }: Model) => [gift, coupon].filter(isTruthy);
 
     const handleUnsubscribe = async () => {
         if (hasBonuses(organization)) {
@@ -142,8 +165,8 @@ const NewSubscriptionModal = ({
     };
 
     const { card, setCard, errors, method, setMethod, parameters, canPay, paypal, paypalCredit } = usePayment({
-        amount: step === SUBSCRIPTION_STEPS.CHECKOUT ? checkResult.AmountDue : 0, // Define amount only in the payment step to generate payment tokens
-        currency: checkResult.Currency,
+        amount: step === SUBSCRIPTION_STEPS.CHECKOUT ? checkResult?.AmountDue || 0 : 0, // Define amount only in the payment step to generate payment tokens
+        currency: checkResult?.Currency || DEFAULT_CURRENCY,
         onPay(params) {
             return withLoading(handleSubscribe(params));
         },
@@ -156,7 +179,7 @@ const NewSubscriptionModal = ({
         }
 
         try {
-            const result = await api(
+            const result: SubscriptionCheckResult = await api(
                 checkSubscription({
                     PlanIDs: clearPlanIDs(newModel.planIDs),
                     Currency: newModel.currency,
@@ -204,7 +227,7 @@ const NewSubscriptionModal = ({
 
         const params = await handlePaymentToken({
             params: {
-                Amount: checkResult.AmountDue,
+                Amount: checkResult?.AmountDue || 0,
                 Currency: model.currency,
                 ...parameters,
             },
@@ -230,11 +253,11 @@ const NewSubscriptionModal = ({
             delete withoutGift.gift;
             return withLoadingCheck(check(withoutGift));
         }
-        withLoadingCheck(check({ ...model, gift }, true));
+        void withLoadingCheck(check({ ...model, gift }, true));
     };
 
     useEffect(() => {
-        withLoadingCheck(check());
+        void withLoadingCheck(check());
     }, [model.cycle, model.currency, model.planIDs]);
 
     return (
@@ -269,24 +292,42 @@ const NewSubscriptionModal = ({
                 user.isFree && 'is-free-user',
             ])}
             title={TITLE[step]}
-            loading={loading || loadingPlans || loadingVpnCountries || loadingOrganization || loadingSubscription}
+            loading={loading || loadingPlans || loadingOrganization || loadingSubscription}
             onSubmit={() => withLoading(handleCheckout())}
             onClose={handleClose}
             {...rest}
         >
             {step === SUBSCRIPTION_STEPS.NETWORK_ERROR && <GenericError />}
-            {step === SUBSCRIPTION_STEPS.PLAN_SELECTION && <PlanSelection plans={plans} currency={model.currency} cycle={model.cycle} planIDs={model.planIDs} subscription={subscription} organization={organization} onChangeCurrency={(currency) => setModel({ ...model, currency })} onChangeCycle={(cycle) => setModel({ ...model, cycle })} />}
+            {step === SUBSCRIPTION_STEPS.PLAN_SELECTION && (
+                <PlanSelection
+                    loading={loadingCheck}
+                    plans={plans}
+                    currency={model.currency}
+                    cycle={model.cycle}
+                    planIDs={model.planIDs}
+                    subscription={subscription}
+                    organization={organization}
+                    service={service}
+                    onChangePlanIDs={(planIDs) => setModel({ ...model, planIDs })}
+                    onChangeCurrency={(currency) => setModel({ ...model, currency })}
+                    onChangeCycle={(cycle) => setModel({ ...model, cycle })}
+                />
+            )}
             {step === SUBSCRIPTION_STEPS.CUSTOMIZATION && (
                 <div className="flex flex-justify-space-between on-mobile-flex-column">
                     <div className="w75 on-mobile-w100 pr4 on-tablet-landscape-pr1 on-mobile-pr0">
-                        <SubscriptionCustomization
-                            organization={organization}
-                            vpnCountries={vpnCountries}
-                            loading={loadingCheck}
+                        <PlanCustomization
                             plans={plans}
-                            expanded={expanded}
-                            model={model}
-                            setModel={setModel}
+                            loading={loadingCheck}
+                            currency={model.currency}
+                            cycle={model.cycle}
+                            planIDs={model.planIDs}
+                            subscription={subscription}
+                            organization={organization}
+                            service={service}
+                            onChangePlanIDs={(planIDs) => setModel({ ...model, planIDs })}
+                            onChangeCycle={(cycle) => setModel({ ...model, cycle })}
+                            onBack={() => setStep(SUBSCRIPTION_STEPS.PLAN_SELECTION)}
                         />
                     </div>
                     <div className="w25 on-mobile-w100">
@@ -323,7 +364,7 @@ const NewSubscriptionModal = ({
                 <div className="flex flex-justify-space-between on-mobile-flex-column">
                     <div className="w75 on-mobile-w100 on-tablet-landscape-pr1 pr4 on-mobile-pr0">
                         <h3>{c('Title').t`Payment method`}</h3>
-                        {checkResult.AmountDue ? (
+                        {checkResult?.AmountDue ? (
                             <>
                                 <Alert>{c('Info')
                                     .t`You can use any of your saved payment method or add a new one. Please note that depending on the total amount due, some payment options may not be available.`}</Alert>
@@ -340,7 +381,9 @@ const NewSubscriptionModal = ({
                                     onCard={setCard}
                                     errors={errors}
                                 />
-                                {[PAYMENT_METHOD_TYPES.CASH, PAYMENT_METHOD_TYPES.BITCOIN].includes(method) ? (
+                                {[PAYMENT_METHOD_TYPES.CASH, PAYMENT_METHOD_TYPES.BITCOIN].includes(
+                                    method as PAYMENT_METHOD_TYPES
+                                ) ? (
                                     <Alert type="warning">{c('Warning')
                                         .t`Please note that by choosing this payment method, your account cannot be upgraded immediately. We will update your account once the payment is cleared.`}</Alert>
                                 ) : null}
@@ -348,7 +391,7 @@ const NewSubscriptionModal = ({
                         ) : (
                             <>
                                 <Alert>{c('Info').t`No payment is required at this time.`}</Alert>
-                                {Credit && creditsRemaining ? (
+                                {checkResult?.Credit && creditsRemaining ? (
                                     <Alert>{c('Info')
                                         .t`Please note that upon clicking the Confirm button, your account will have ${creditsRemaining} credits remaining.`}</Alert>
                                 ) : null}
@@ -380,7 +423,7 @@ const NewSubscriptionModal = ({
                             onChangeCycle={(cycle) => setModel({ ...model, cycle })}
                             onChangeGift={handleGift}
                         />
-                        {checkResult.Amount ? (
+                        {checkResult?.Amount ? (
                             <PaymentGiftCode gift={model.gift} onApply={handleGift} loading={loadingCheck} />
                         ) : null}
                     </div>
@@ -394,20 +437,6 @@ const NewSubscriptionModal = ({
             {step === SUBSCRIPTION_STEPS.THANKS && <SubscriptionThanks method={method} onClose={onClose} />}
         </FormModal>
     );
-};
-
-NewSubscriptionModal.propTypes = {
-    expanded: PropTypes.bool,
-    step: PropTypes.oneOf([
-        SUBSCRIPTION_STEPS.PLAN_SELECTION,
-        SUBSCRIPTION_STEPS.CUSTOMIZATION,
-        SUBSCRIPTION_STEPS.CHECKOUT
-    ]),
-    cycle: PropTypes.oneOf([CYCLE.MONTHLY, CYCLE.TWO_YEARS, CYCLE.YEARLY]),
-    currency: PropTypes.oneOf(CURRENCIES),
-    coupon: PropTypes.string,
-    planIDs: PropTypes.object,
-    onClose: PropTypes.func,
 };
 
 export default NewSubscriptionModal;

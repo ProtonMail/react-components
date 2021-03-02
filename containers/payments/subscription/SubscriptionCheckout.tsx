@@ -7,7 +7,7 @@ import { PLAN_SERVICES, PLAN_TYPES, CYCLE, PLANS, ADDON_NAMES, APPS, BLACK_FRIDA
 import humanSize from 'proton-shared/lib/helpers/humanSize';
 import { getTimeRemaining } from 'proton-shared/lib/date/date';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
-import { Plan, Currency, Cycle } from 'proton-shared/lib/interfaces';
+import { Plan, Currency, Cycle, PlanIDs } from 'proton-shared/lib/interfaces';
 
 import { Time, Info } from '../../../components';
 import { useConfig } from '../../../hooks';
@@ -15,7 +15,7 @@ import { getSubTotal } from './helpers';
 import CycleDiscountBadge from '../CycleDiscountBadge';
 import DiscountBadge from '../DiscountBadge';
 import CheckoutRow from './CheckoutRow';
-import { SubscriptionCheckResult, PlanIDs } from '../../signup/interfaces';
+import { SubscriptionCheckResult } from '../../signup/interfaces';
 import Checkout from '../Checkout';
 import PaymentGiftCode from '../PaymentGiftCode';
 
@@ -23,7 +23,7 @@ interface Props {
     submit?: React.ReactNode;
     loading?: boolean;
     plans?: Plan[];
-    checkResult: SubscriptionCheckResult;
+    checkResult?: SubscriptionCheckResult;
     currency: Currency;
     cycle: Cycle;
     coupon?: string;

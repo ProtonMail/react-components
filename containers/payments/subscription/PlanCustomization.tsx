@@ -62,7 +62,7 @@ const PlanCustomization = ({
                 subscription={subscription}
                 organization={organization}
                 plans={plans}
-                service={service}
+                service={service === PLAN_SERVICES.MAIL ? PLAN_SERVICES.VPN : PLAN_SERVICES.MAIL}
                 planIDs={planIDs}
                 cycle={cycle}
                 currency={currency}
@@ -77,7 +77,7 @@ const PlanCustomization = ({
                 currency={currency}
                 plans={plans}
                 planIDs={planIDs}
-                service={service}
+                service={service === PLAN_SERVICES.MAIL ? PLAN_SERVICES.VPN : PLAN_SERVICES.MAIL}
                 organization={organization}
                 onChangePlanIDs={onChangePlanIDs}
             />
