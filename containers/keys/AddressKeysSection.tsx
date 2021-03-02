@@ -10,7 +10,7 @@ import {
     setAddressKeyFlags,
 } from 'proton-shared/lib/keys';
 
-import { Loader, Button, Select } from '../../components';
+import { Loader, Button } from '../../components';
 import {
     useAddresses,
     useAddressesKeys,
@@ -334,18 +334,9 @@ const AddressKeysSection = () => {
                     </Button>
                 </div>
             )}
-            {Addresses.length > 1 && (
-                <div className="mb1">
-                    <Select
-                        value={addressIndex}
-                        options={Addresses.map(({ Email }, i) => ({ text: Email, value: i }))}
-                        onChange={({ target: { value } }: ChangeEvent<HTMLSelectElement>) =>
-                            !isLoadingKey && setAddressIndex(+value)
-                        }
-                    />
-                </div>
-            )}
             <AddressKeysHeaderActions
+                addresses={Addresses}
+                addressIndex={addressIndex}
                 onAddKey={canAdd ? handleAddKey : undefined}
                 onImportKey={canImport ? handleImportKey : undefined}
                 onExportPrivate={
@@ -358,6 +349,13 @@ const AddressKeysSection = () => {
                         ? () => handleExportPublic(primaryPrivateKey.ID)
                         : undefined
                 }
+                onChangeAddress={({ target: { value } }: ChangeEvent<HTMLSelectElement>) => {
+                    if (isLoadingKey) {
+                        return;
+                    }
+
+                    setAddressIndex(+value);
+                }}
             />
             <KeysTable
                 keys={addressKeysDisplay}
