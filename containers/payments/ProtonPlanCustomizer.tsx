@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { c } from 'ttag';
 import { Cycle, Currency, Plan, Organization } from 'proton-shared/lib/interfaces';
-import { PLANS, PLAN_SERVICES, APPS, ADDON_NAMES } from 'proton-shared/lib/constants';
+import { PLANS, PLAN_SERVICES, APPS, ADDON_NAMES, PLAN_TYPES } from 'proton-shared/lib/constants';
 import { toMap } from 'proton-shared/lib/helpers/object';
 import { switchPlan, getSupportedAddons } from 'proton-shared/lib/helpers/subscription';
 import { getAppName } from 'proton-shared/lib/apps/helper';
@@ -112,6 +112,15 @@ const ProtonPlanCustomizer = ({
     const { APP_NAME } = useConfig();
     const plansMap = toMap(plans);
     const plansNameMap = toMap(plans, 'Name');
+    const [currentPlanID] =
+        Object.entries(planIDs).find(([planID, planQuantity]) => {
+            if (planQuantity) {
+                const { Services, Type } = plansMap[planID];
+                return Services & service && Type === PLAN_TYPES.PLAN;
+            }
+            return false;
+        }) || [];
+    const currentPlan = currentPlanID && plansMap[currentPlanID];
 
     const vpnAppName = getAppName(APPS.PROTONVPN_SETTINGS);
     const mailAppName = getAppName(APPS.PROTONMAIL);
@@ -151,6 +160,14 @@ const ProtonPlanCustomizer = ({
         [ADDON_NAMES.VPN]: c('Info')
             .t`Number of VPN connections which can be assigned to users. Each connected device consumes one VPN connection.`,
     } as const;
+
+    if (!currentPlan) {
+        return null;
+    }
+
+    if ([PLANS.VPNBASIC, PLANS.VISIONARY].includes(currentPlan.Name as PLANS)) {
+        return null;
+    }
 
     return (
         <>

@@ -20,7 +20,7 @@ import { Icon, InlineLinkButton } from '../../../components';
 
 const FREE_PLAN = {
     ID: 'free',
-    Name: 'free' as PLANS,
+    Name: 'free_mail' as PLANS,
     Title: 'Free',
     Type: PLAN_TYPES.PLAN,
     Currency: DEFAULT_CURRENCY,
@@ -36,9 +36,9 @@ const FREE_PLAN = {
     Quantity: 1,
     Features: 0,
     Pricing: {
-        1: 0,
-        12: 0,
-        24: 0,
+        [CYCLE.MONTHLY]: 0,
+        [CYCLE.YEARLY]: 0,
+        [CYCLE.TWO_YEARS]: 0,
     },
 } as Plan;
 
@@ -76,10 +76,11 @@ const PlanSelection = ({
     const appName = isVpnApp ? vpnAppName : mailAppName;
     const plansMap = toMap(plans, 'Name');
     const MailPlans = [FREE_PLAN, plansMap[PLANS.PLUS], plansMap[PLANS.PROFESSIONAL], plansMap[PLANS.VISIONARY]];
-    const VPNPlans = [FREE_PLAN, plansMap[PLANS.VPNBASIC], plansMap[PLANS.VPNPLUS], plansMap[PLANS.VISIONARY]];
+    const VPNPlans = [{ ...FREE_PLAN, Name: 'free_vpn' as PLANS }, plansMap[PLANS.VPNBASIC], plansMap[PLANS.VPNPLUS]];
 
     const INFO = {
-        free: c('Info').t`The basic for private and secure communications.`,
+        free_mail: c('Info').t`The basic for private and secure communications.`,
+        free_vpn: c('Info').t`The basic for private and secure communications.`,
         [PLANS.VPNBASIC]: c('Info').t`TODO`,
         [PLANS.VPNPLUS]: c('Info').t`TODO`,
         [PLANS.PLUS]: c('Info').t`Full-featured mailbox with advanced protection.`,
@@ -88,15 +89,34 @@ const PlanSelection = ({
     } as const;
 
     const FEATURES = {
-        free: [
+        free_mail: [
             c('Plan feature').t`1 user`,
             c('Plan feature').t`0.5 GB storage`,
             c('Plan feature').t`1 address`,
             c('Plan feature').t`3 folders / labels`,
             c('Plan feature').t`No custom email addresses`,
         ],
-        [PLANS.VPNBASIC]: [], // TODO
-        [PLANS.VPNPLUS]: [], // TODO
+        free_vpn: [
+            c('Plan feature').t`1 simultaneous connection`,
+            c('Plan feature').t`Medium speed`,
+            c('Plan feature').t`Adblocker (NetShield)`,
+            c('Plan feature').t`Access to blocked content`,
+            c('Plan feature').t`Secure Core VPN`,
+        ],
+        [PLANS.VPNBASIC]: [
+            c('Plan feature').t`2 simultaneous connections`,
+            c('Plan feature').t`High speed`,
+            c('Plan feature').t`Adblocker (NetShield)`,
+            c('Plan feature').t`Access to blocked content`,
+            c('Plan feature').t`Secure Core VPN`,
+        ],
+        [PLANS.VPNPLUS]: [
+            c('Plan feature').t`5 simultaneous connections`,
+            c('Plan feature').t`Highest speed`,
+            c('Plan feature').t`Adblocker (NetShield)`,
+            c('Plan feature').t`Access to blocked content`,
+            c('Plan feature').t`Secure Core VPN`,
+        ],
         [PLANS.PLUS]: [
             c('Plan feature').t`1 user`,
             c('Plan feature').t`5 GB storage *`,
@@ -120,9 +140,19 @@ const PlanSelection = ({
         ],
     } as const;
 
+    const boldSave = <strong key="save">{c('Info').t`Save 20%`}</strong>;
+
     return (
         <>
             <div className="mb1">
+                {cycle === CYCLE.MONTHLY ? (
+                    <button
+                        type="button"
+                        disabled={loading}
+                        className="mr1"
+                        onClick={() => onChangeCycle(CYCLE.YEARLY)}
+                    >{c('Action').jt`${boldSave} by switching to annual billing`}</button>
+                ) : null}
                 <CycleSelector
                     cycle={cycle}
                     onSelect={onChangeCycle}
@@ -145,9 +175,10 @@ const PlanSelection = ({
                     <PlanCard
                         isSelected={isSelected}
                         key={plan.ID}
-                        action={c('Action').t`Select plan`}
+                        action={isSelected ? c('Action').t`Customize plan` : c('Action').t`Select plan`}
                         planName={plan.Name}
                         currency={currency}
+                        disabled={loading}
                         cycle={cycle}
                         price={plan.Pricing[cycle]}
                         info={INFO[plan.Name as PLANS]}
