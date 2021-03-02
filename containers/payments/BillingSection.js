@@ -122,9 +122,9 @@ const BillingSection = ({ permission }) => {
                             <div className={priceLabelClassName}>
                                 +{' '}
                                 {c('Addon unit for subscription').ngettext(
-                                    msgid`${memberAddon?.MaxMembers || 5} user`,
-                                    `${memberAddon?.MaxMembers || 5} users`,
-                                    memberAddon?.MaxMembers || 5
+                                    msgid`${memberAddon.MaxMembers} user`,
+                                    `${memberAddon.MaxMembers} users`,
+                                    memberAddon.MaxMembers
                                 )}
                             </div>
                             <div className="text-right">
@@ -141,9 +141,9 @@ const BillingSection = ({ permission }) => {
                             <div className={priceLabelClassName}>
                                 +{' '}
                                 {c('Addon unit for subscription').ngettext(
-                                    msgid`${addressAddon?.MaxAddresses || 5} address`,
-                                    `${addressAddon?.MaxAddresses || 5} addresses`,
-                                    addressAddon?.MaxAddresses || 5
+                                    msgid`${addressAddon.MaxAddresses} address`,
+                                    `${addressAddon.MaxAddresses} addresses`,
+                                    addressAddon.MaxAddresses
                                 )}
                             </div>
                             <div className="text-right">
@@ -158,7 +158,7 @@ const BillingSection = ({ permission }) => {
                     {spaceAddon ? (
                         <div className={priceRowClassName}>
                             <div className={priceLabelClassName}>
-                                + {humanSize(spaceAddon?.MaxSpace || 2 ** 30)} {c('Label').t`extra storage`}
+                                + {humanSize(spaceAddon.MaxSpace)} {c('Label').t`extra storage`}
                             </div>
                             <div className="text-right">
                                 <PlanPrice
@@ -184,9 +184,9 @@ const BillingSection = ({ permission }) => {
                             <div className={priceLabelClassName}>
                                 +{' '}
                                 {c('Addon unit for subscription').ngettext(
-                                    msgid`${domainAddon?.MaxDomains || 5} domain`,
-                                    `${domainAddon?.MaxDomains || 5} domains`,
-                                    domainAddon?.MaxDomains || 5
+                                    msgid`${domainAddon.MaxDomains} domain`,
+                                    `${domainAddon.MaxDomains} domains`,
+                                    domainAddon.MaxDomains
                                 )}
                             </div>
                             <div className="text-right">
@@ -221,9 +221,9 @@ const BillingSection = ({ permission }) => {
                             <div className={priceLabelClassName}>
                                 +{' '}
                                 {c('Addon unit for subscription').ngettext(
-                                    msgid`${vpnAddon?.MaxVPN || 5} connection`,
-                                    `${vpnAddon?.MaxVPN || 5} connections`,
-                                    vpnAddon?.MaxVPN || 5
+                                    msgid`${vpnAddon.MaxVPN} connection`,
+                                    `${vpnAddon.MaxVPN} connections`,
+                                    vpnAddon.MaxVPN
                                 )}
                             </div>
                             <div className="text-right">
