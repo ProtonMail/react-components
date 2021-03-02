@@ -169,14 +169,14 @@ const PlanSelection = ({
             {(isVpnApp ? VPNPlans : MailPlans).map((plan: Plan) => {
                 const isFree = plan.ID === FREE_PLAN.ID;
                 const isSelected = subscription
-                    ? subscription.Plans.some(({ ID }) => ID === plan.ID) || isFree
-                    : undefined;
+                    ? subscription.Plans.some(({ ID }) => ID === plan.ID)
+                    : isFree || undefined;
                 return (
                     <PlanCard
                         isSelected={isSelected}
                         key={plan.ID}
                         action={isSelected ? c('Action').t`Customize plan` : c('Action').t`Select plan`}
-                        planName={plan.Name}
+                        planName={isFree ? 'Free' : plan.Name}
                         currency={currency}
                         disabled={loading}
                         cycle={cycle}

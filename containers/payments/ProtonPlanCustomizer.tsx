@@ -73,6 +73,7 @@ const ButtonNumberInput = ({
                     id={id}
                     className="border-left border-right"
                     aria-live="assertive"
+                    readOnly={true}
                     onChange={(newValue) => {
                         if (newValue === undefined) {
                             return;
