@@ -236,7 +236,7 @@ const NewSubscriptionModal = ({
     };
 
     const handleClose = (e: any) => {
-        debugger;
+        console.trace();
         if (model.step === SUBSCRIPTION_STEPS.CHECKOUT) {
             setModel({ ...model, step: SUBSCRIPTION_STEPS.CUSTOMIZATION });
             return;

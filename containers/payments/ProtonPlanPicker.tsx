@@ -1,13 +1,12 @@
 import React from 'react';
 import { c } from 'ttag';
 import { Cycle, Currency, Plan, Organization, Subscription } from 'proton-shared/lib/interfaces';
-import { CYCLE, PLANS, PLAN_SERVICES, APPS } from 'proton-shared/lib/constants';
+import { CYCLE, PLANS, PLAN_SERVICES, APPS, PLAN_TYPES } from 'proton-shared/lib/constants';
 import { toMap } from 'proton-shared/lib/helpers/object';
 import { switchPlan, getPlan } from 'proton-shared/lib/helpers/subscription';
 import { getAppName } from 'proton-shared/lib/apps/helper';
 
 import { Radio, Button, InlineLinkButton, Price } from '../../components';
-import { useConfig } from '../../hooks';
 import { PlanIDs } from '../signup/interfaces';
 
 interface Props {
@@ -23,7 +22,7 @@ interface Props {
     subscription?: Subscription;
 }
 
-const MailPlans: PLANS[] = [PLANS.PLUS, PLANS.PROFESSIONAL];
+const MailPlans: PLANS[] = [PLANS.PLUS, PLANS.PROFESSIONAL, PLANS.VISIONARY];
 const VPNPlans: PLANS[] = [PLANS.VPNBASIC, PLANS.VPNPLUS];
 
 const ProtonPlanPicker = ({
@@ -38,102 +37,106 @@ const ProtonPlanPicker = ({
     service,
     subscription,
 }: Props) => {
-    const { APP_NAME } = useConfig();
-
     const vpnAppName = getAppName(APPS.PROTONVPN_SETTINGS);
     const mailAppName = getAppName(APPS.PROTONMAIL);
+    const plansMap = toMap(plans);
+    const planNamesMap = toMap(plans, 'Name');
     const currentPlan = subscription ? getPlan(subscription, service) : null;
-
-    const isVpnApp = APP_NAME === APPS.PROTONVPN_SETTINGS;
-    const plansToShow = isVpnApp ? VPNPlans : MailPlans;
-    if ((isVpnApp && service === PLAN_SERVICES.VPN) || (!isVpnApp && service === PLAN_SERVICES.MAIL)) {
-        plansToShow.push(PLANS.VISIONARY);
-    }
-    const isFree = plansToShow.every((planName) => !planIDs[planName]);
-    const yourPlanText = c('Plan info').t`Your plan`;
+    const plansToShow = service === PLAN_SERVICES.VPN ? VPNPlans : MailPlans;
+    const isFree = !Object.entries(planIDs).some(([planID, planQuantity]) => {
+        if (!planQuantity) {
+            return false;
+        }
+        const { Type, Services } = plansMap[planID];
+        return Type === PLAN_TYPES.PLAN && Services & service;
+    });
+    const yourPlanText = c('Plan info').t`(Your plan)`;
     const isCurrentFreePlan = !currentPlan;
 
-    const plansMap = toMap(plans, 'Name');
     const annualBilling = (
         <InlineLinkButton key="annual-billing" onClick={() => onChangeCycle(CYCLE.YEARLY)}>{c('Action')
             .t`annual billing`}</InlineLinkButton>
     );
     return (
         <>
-            <h3>{isVpnApp ? vpnAppName : mailAppName} plan</h3>
+            <h3>{service === PLAN_SERVICES.VPN ? vpnAppName : mailAppName} plan</h3>
             {cycle === CYCLE.MONTHLY ? (
                 <p>{c('Info').jt`Save 20% on your susbcription by switching to ${annualBilling}`}</p>
             ) : null}
-            {isVpnApp && service === PLAN_SERVICES.MAIL ? (
-                <p>
-                    {c('Info').t`${vpnAppName} Free is included in your plan.`}
-                    <br />
-                    {c('Info').t`Save 20% on both VPN and Mail by adding a Mail subscription.`}
-                </p>
-            ) : null}
-            {!isVpnApp && service === PLAN_SERVICES.VPN ? (
+            {service === PLAN_SERVICES.MAIL ? (
                 <p>
                     {c('Info').t`${mailAppName} Free is included in your plan.`}
                     <br />
-                    {c('Info').t`Save 20% on both Mail and VPN by adding a VPN subscription.`}
+                    {c('Info').t`Save 20% on both Mail and VPN by adding a Mail subscription.`}
                 </p>
             ) : null}
-            <Radio
-                checked={isFree}
-                name="plan"
-                className="mr1"
-                id="free-plan"
-                onChange={() => {
-                    onChangePlanIDs(
-                        switchPlan({
-                            planIDs,
-                            plans,
-                            planID: undefined,
-                            service,
-                            organization,
-                        })
-                    );
-                }}
-            >
-                <span className="flex-item-fluid">Free{isCurrentFreePlan ? ` ${yourPlanText}` : ''}</span>
-                <span>{c('Free price').t`Free`}</span>
-            </Radio>
-
-            {plansToShow.map((planName) => {
-                const plan = plansMap[planName];
-                if (!plan) {
-                    return null;
-                }
-                const isCurrentPlan = currentPlan?.ID === plan.ID;
-
-                return (
+            {service === PLAN_SERVICES.VPN ? (
+                <p>
+                    {c('Info').t`${vpnAppName} Free is included in your plan.`}
+                    <br />
+                    {c('Info').t`Save 20% on both VPN and Mail by adding a VPN subscription.`}
+                </p>
+            ) : null}
+            <ul>
+                <li>
                     <Radio
-                        checked={!!planIDs[plan.ID]}
+                        checked={!!isFree}
                         name="plan"
-                        className="mr1"
-                        id={plan.ID}
+                        className="flex flex-nowrap"
+                        id="free-plan"
                         onChange={() => {
                             onChangePlanIDs(
                                 switchPlan({
                                     planIDs,
                                     plans,
-                                    planID: plan.ID,
+                                    planID: undefined,
                                     service,
                                     organization,
                                 })
                             );
                         }}
                     >
-                        <span className="flex-item-fluid">
-                            {plan.Title}
-                            {isCurrentPlan ? ` ${yourPlanText}` : ''}
-                        </span>
-                        <Price currency={currency} suffix={c('Suffix for price').t`/ month`}>
-                            {plan.Pricing[cycle] / cycle}
-                        </Price>
+                        <span className="flex-item-fluid">Free{isCurrentFreePlan ? ` ${yourPlanText}` : ''}</span>
+                        <span>{c('Free price').t`Free`}</span>
                     </Radio>
-                );
-            })}
+                </li>
+                {plansToShow.map((planName) => {
+                    const plan = planNamesMap[planName];
+                    if (!plan) {
+                        return null;
+                    }
+                    const isCurrentPlan = currentPlan?.ID === plan.ID;
+                    return (
+                        <li key={plan.ID}>
+                            <Radio
+                                checked={!!planIDs[plan.ID]}
+                                name="plan"
+                                className="flex flex-nowrap"
+                                id={plan.ID}
+                                onChange={() => {
+                                    onChangePlanIDs(
+                                        switchPlan({
+                                            planIDs,
+                                            plans,
+                                            planID: plan.ID,
+                                            service,
+                                            organization,
+                                        })
+                                    );
+                                }}
+                            >
+                                <span className="flex-item-fluid">
+                                    {plan.Title}
+                                    {isCurrentPlan ? ` ${yourPlanText}` : ''}
+                                </span>
+                                <Price currency={currency} suffix={c('Suffix for price').t`/ month`}>
+                                    {plan.Pricing[cycle] / cycle}
+                                </Price>
+                            </Radio>
+                        </li>
+                    );
+                })}
+            </ul>
             <Button onClick={() => onBack()}>{c('Action').t`Compare plans`}</Button>
         </>
     );

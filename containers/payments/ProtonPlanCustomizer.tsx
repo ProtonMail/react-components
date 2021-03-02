@@ -5,6 +5,7 @@ import { PLANS, PLAN_SERVICES, APPS, ADDON_NAMES, PLAN_TYPES } from 'proton-shar
 import { toMap } from 'proton-shared/lib/helpers/object';
 import { switchPlan, getSupportedAddons } from 'proton-shared/lib/helpers/subscription';
 import { getAppName } from 'proton-shared/lib/apps/helper';
+import humanSize from 'proton-shared/lib/helpers/humanSize';
 
 import { InlineLinkButton, Icon, IntegerInput, Info, Price } from '../../components';
 import { useConfig, useDebounceCallback } from '../../hooks';
@@ -57,7 +58,8 @@ const ButtonNumberInput = ({
         <div className="bordered-container flex flex-nowrap flex-items-align-center">
             <button
                 type="button"
-                disabled={disabled || value <= min + step}
+                className="pl0-5 pr0-5"
+                disabled={disabled || value - step < min}
                 onClick={() => {
                     const newValue = value - step;
                     setTmpValue(newValue);
@@ -73,7 +75,7 @@ const ButtonNumberInput = ({
                     id={id}
                     className="border-left border-right"
                     aria-live="assertive"
-                    readOnly={true}
+                    readOnly
                     onChange={(newValue) => {
                         if (newValue === undefined) {
                             return;
@@ -87,7 +89,8 @@ const ButtonNumberInput = ({
             </label>
             <button
                 type="button"
-                disabled={disabled || value >= max - step}
+                className="pl0-5 pr0-5"
+                disabled={disabled || value + step > max}
                 onClick={() => {
                     const newValue = value + step;
                     setTmpValue(newValue);
@@ -173,21 +176,21 @@ const ProtonPlanCustomizer = ({
     return (
         <>
             <h3>{c('Title').t`${appName} customization`}</h3>
-            {service === PLAN_SERVICES.MAIL && planIDs[plansMap[PLANS.PLUS].ID] ? (
+            {service === PLAN_SERVICES.MAIL && planIDs[plansNameMap[PLANS.PLUS].ID] ? (
                 <p>
                     {c('Info').t`ProtonMail Plus is limited to one user and starts with 5GB of storage.`}
                     <br />
                     {c('Info').jt`Switch to ${professionalPlan} to add more users.`}
                 </p>
             ) : null}
-            {service === PLAN_SERVICES.VPN && planIDs[plansMap[PLANS.VPNPLUS].ID] ? (
+            {service === PLAN_SERVICES.VPN && planIDs[plansNameMap[PLANS.VPNPLUS].ID] ? (
                 <p>
                     {c('Info').t`ProtonVPN Plus is limited to 5 connections.`}
                     <br />
                     {c('Info').jt`Switch to ${professionalPlan} to add more connections.`}
                 </p>
             ) : null}
-            {service === PLAN_SERVICES.MAIL && planIDs[plansMap[PLANS.PROFESSIONAL].ID] ? (
+            {service === PLAN_SERVICES.MAIL && planIDs[plansNameMap[PLANS.PROFESSIONAL].ID] ? (
                 <p>{c('Info')
                     .t`${mailAppName} Professional starts with one user, and each user adds 5GB and 5 email addresses to the organization’s pool.`}</p>
             ) : null}
@@ -204,9 +207,7 @@ const ProtonPlanCustomizer = ({
                 const isSupported = !!supportedAddons[addonNameKey];
                 const addonMaxKey = AddonKey[addonNameKey];
                 const addonMultiplier = addon[addonMaxKey] ?? 1;
-                const min = Object.entries(planIDs).reduce((acc, [planID, planQuantity]) => {
-                    return acc + planQuantity * (plansMap[planID][addonMaxKey] ?? 0);
-                }, 0);
+                const min = currentPlan[addonMaxKey] ?? 0;
                 const max = 1000; // TODO
 
                 return (
@@ -231,12 +232,12 @@ const ProtonPlanCustomizer = ({
                             </div>
                         )}
                         <div className="mlauto flex-item-noshrink">
-                            {isSupported && quantity && (
+                            {isSupported && quantity ? (
                                 <Price currency={currency} prefix="+" suffix={c('Suffix for price').t`/ month`}>
                                     {(quantity * addon.Pricing[cycle]) / cycle}
                                 </Price>
-                            )}
-                            {isSupported && !quantity && c('Info').t`included`}
+                            ) : null}
+                            {isSupported && !quantity ? c('Info').t`included` : null}
                             {!isSupported && c('Info').t`not customizable`}
                         </div>
                     </div>

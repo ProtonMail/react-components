@@ -25,6 +25,15 @@ const DEFAULT_MODEL = {
     ReturnHost: '',
 };
 
+export interface PayPalHook {
+    isReady: boolean;
+    loadingToken: boolean;
+    loadingVerification: boolean;
+    onToken: () => Promise<void>;
+    onVerification: () => Promise<void>;
+    clear: () => void;
+}
+
 const usePayPal = ({ amount = 0, currency: Currency = '', type: Type, onPay }: Props) => {
     const api = useApi();
     const [model, setModel] = useState<Model>(DEFAULT_MODEL);
