@@ -20,6 +20,7 @@ interface Props {
     onCheck: (contactIDs: string[], checked: boolean, replace: boolean) => void;
     checkedIDs: string[];
     onClick: (contactID: string) => void;
+    activateDrag?: boolean;
 }
 
 const ContactsList = ({
@@ -34,6 +35,7 @@ const ContactsList = ({
     onCheck,
     checkedIDs,
     onClick,
+    activateDrag = true,
 }: Props) => {
     const listRef = useRef<List>(null);
     const containerRef = useRef(null);
@@ -52,6 +54,7 @@ const ContactsList = ({
         };
     }, [contactID]);
 
+    // Useless if activateDrag is false but hook has to be run anyway
     const { draggedIDs, handleDragStart, handleDragEnd } = useItemsDraggable(
         contacts,
         checkedIDs,
@@ -89,7 +92,8 @@ const ContactsList = ({
                                     contact={contacts[index]}
                                     onClick={onClick}
                                     onCheck={(event) => onCheckOne(event, contacts[index].ID)}
-                                    onDragStart={handleDragStart}
+                                    draggable={activateDrag}
+                                    onDragStart={(event) => handleDragStart?.(event, contacts[index])}
                                     onDragEnd={handleDragEnd}
                                     dragged={draggedIDs.includes(contacts[index].ID)}
                                 />

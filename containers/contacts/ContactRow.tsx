@@ -16,7 +16,8 @@ interface Props {
     hasPaidMail: boolean;
     contactGroupsMap: SimpleMap<ContactGroup>;
     contact: ContactFormatted;
-    onDragStart?: (event: DragEvent, contact: ContactFormatted) => void;
+    draggable?: boolean;
+    onDragStart?: (event: DragEvent) => void;
     onDragEnd?: (event: DragEvent) => void;
     dragged?: boolean;
 }
@@ -30,6 +31,7 @@ const ContactRow = ({
     contact,
     onClick,
     onCheck,
+    draggable,
     onDragStart,
     onDragEnd,
     dragged,
@@ -44,8 +46,8 @@ const ContactRow = ({
             style={style}
             key={ID}
             onClick={() => onClick(ID)}
-            draggable
-            onDragStart={(event) => onDragStart?.(event, contact)}
+            draggable={draggable}
+            onDragStart={onDragStart}
             onDragEnd={onDragEnd}
             className={classnames([
                 'item-container item-contact flex cursor-pointer bg-global-white',

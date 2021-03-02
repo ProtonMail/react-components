@@ -1,10 +1,10 @@
 import React, { ChangeEvent } from 'react';
-import { c } from 'ttag';
+import { c, msgid } from 'ttag';
 import { Button, Checkbox, Tooltip } from '../../../components';
 
 interface Props {
     allChecked: boolean;
-    oneSelected: boolean;
+    selectedCount: number;
     onCheckAll: (checked: boolean) => void;
     onCompose: () => void;
     onForward: () => void;
@@ -14,7 +14,7 @@ interface Props {
 
 const ContactsWidgetToolbar = ({
     allChecked,
-    oneSelected,
+    selectedCount,
     onCheckAll,
     onCompose,
     onForward,
@@ -22,6 +22,14 @@ const ContactsWidgetToolbar = ({
     onCreate,
 }: Props) => {
     const handleCheck = ({ target }: ChangeEvent<HTMLInputElement>) => onCheckAll(target.checked);
+    const noSelection = !selectedCount;
+    const deleteText = noSelection
+        ? c('Action').t`Delete contact`
+        : c('Action').ngettext(
+              msgid`Delete ${selectedCount} contact`,
+              `Delete ${selectedCount} contacts`,
+              selectedCount
+          );
 
     return (
         <div className="flex flex-items-align-center">
@@ -41,7 +49,7 @@ const ContactsWidgetToolbar = ({
                     className="button--for-icon inline-flex pt0-5 pb0-5"
                     icon="email"
                     onClick={onCompose}
-                    disabled={!oneSelected}
+                    disabled={noSelection}
                 >
                     <span className="sr-only">{c('Action').t`Compose`}</span>
                 </Button>
@@ -51,19 +59,19 @@ const ContactsWidgetToolbar = ({
                     className="button--for-icon inline-flex pt0-5 pb0-5"
                     icon="forward"
                     onClick={onForward}
-                    disabled={!oneSelected}
+                    disabled={noSelection}
                 >
                     <span className="sr-only">{c('Action').t`Forward as attachment`}</span>
                 </Button>
             </Tooltip>
-            <Tooltip title={c('Action').t`Delete`}>
+            <Tooltip title={deleteText}>
                 <Button
                     className="button--for-icon inline-flex pt0-5 pb0-5"
                     icon="trash"
                     onClick={onDelete}
-                    disabled={!oneSelected}
+                    disabled={noSelection}
                 >
-                    <span className="sr-only">{c('Action').t`Delete`}</span>
+                    <span className="sr-only">{deleteText}</span>
                 </Button>
             </Tooltip>
             <Tooltip className="mlauto" title={c('Action').t`Add new contact`}>

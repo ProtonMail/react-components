@@ -187,7 +187,7 @@ const ContactsWidgetContainer = ({ onClose, onCompose }: Props) => {
             <div className="contacts-widget-toolbar pt1 pb1 border-bottom flex-item-noshrink">
                 <ContactsWidgetToolbar
                     allChecked={hasCheckedAllFiltered}
-                    oneSelected={!!selectedIDs.length}
+                    selectedCount={selectedIDs.length}
                     onCheckAll={handleCheckAll}
                     onCompose={handleCompose}
                     onForward={handleForward}
@@ -222,6 +222,7 @@ const ContactsWidgetContainer = ({ onClose, onCompose }: Props) => {
                         checkedIDs={checkedIDs}
                         onCheck={handleCheck}
                         onClick={handleDetails}
+                        activateDrag={false}
                     />
                 ) : null}
             </div>
