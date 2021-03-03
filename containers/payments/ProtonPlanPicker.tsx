@@ -104,13 +104,13 @@ const ProtonPlanPicker = ({
                     {c('Info').t`Save 20% on both VPN and Mail by adding a VPN subscription.`}
                 </p>
             ) : null}
-            <ul>
+            <ul className="unstyled">
                 {plansToShow.map((plan) => {
                     const isFree = plan.ID === FREE_PLAN.ID;
                     const isCurrentPlan = currentPlan?.ID === plan.ID;
                     const checked = isFree ? plansToShow.every((plan) => !planIDs[plan.ID]) : !!planIDs[plan.ID];
                     return (
-                        <li key={plan.ID}>
+                        <li key={plan.ID} className="mb0-5">
                             <Radio
                                 checked={checked}
                                 name={`plan${service}`}
@@ -128,7 +128,7 @@ const ProtonPlanPicker = ({
                                     );
                                 }}
                             >
-                                <span className="flex-item-fluid">
+                                <span className="flex-item-fluid pl1">
                                     {plan.Title}
                                     {isCurrentPlan ? ` ${yourPlanText}` : ''}
                                 </span>
