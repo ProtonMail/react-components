@@ -58,6 +58,7 @@ interface Props {
 
 interface Model {
     step: SUBSCRIPTION_STEPS;
+    service: PLAN_SERVICES;
     planIDs: PlanIDs;
     currency: Currency;
     cycle: Cycle;
@@ -86,7 +87,6 @@ const NewSubscriptionModal = ({
     const api = useApi();
     const { APP_NAME } = useConfig();
     const isVpnApp = APP_NAME === APPS.PROTONVPN_SETTINGS;
-    const service = isVpnApp ? PLAN_SERVICES.VPN : PLAN_SERVICES.MAIL;
     const [user] = useUser();
     const [subscription, loadingSubscription] = useSubscription();
     const { call } = useEventManager();
@@ -99,7 +99,9 @@ const NewSubscriptionModal = ({
     const [checkResult, setCheckResult] = useState<SubscriptionCheckResult>();
     const { Code: couponCode } = checkResult?.Coupon || {}; // Coupon can be null
     const creditsRemaining = (user.Credit + (checkResult?.Credit ?? 0)) / 100;
+    const currentService = isVpnApp ? PLAN_SERVICES.VPN : PLAN_SERVICES.MAIL;
     const [model, setModel] = useState<Model>({
+        service: currentService,
         step,
         cycle,
         currency,
@@ -287,7 +289,7 @@ const NewSubscriptionModal = ({
                     planIDs={model.planIDs}
                     subscription={subscription}
                     organization={organization}
-                    service={service}
+                    service={model.service}
                     onChangePlanIDs={(planIDs) =>
                         withLoadingCheck(check({ ...model, planIDs, step: SUBSCRIPTION_STEPS.CUSTOMIZATION }))
                     }
@@ -306,10 +308,12 @@ const NewSubscriptionModal = ({
                             planIDs={model.planIDs}
                             subscription={subscription}
                             organization={organization}
-                            service={service}
+                            service={currentService}
                             onChangePlanIDs={(planIDs) => withLoadingCheck(check({ ...model, planIDs }))}
                             onChangeCycle={(cycle) => setModel({ ...model, cycle })}
-                            onBack={() => setModel({ ...model, step: SUBSCRIPTION_STEPS.PLAN_SELECTION })}
+                            onBack={(service: PLAN_SERVICES) =>
+                                setModel({ ...model, service, step: SUBSCRIPTION_STEPS.PLAN_SELECTION })
+                            }
                         />
                     </div>
                     <div className="w25 on-mobile-w100">

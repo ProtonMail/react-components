@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { c } from 'ttag';
 import { Cycle, Currency, Plan, Organization } from 'proton-shared/lib/interfaces';
 import {
@@ -15,11 +15,12 @@ import {
     GIGA,
 } from 'proton-shared/lib/constants';
 import { toMap } from 'proton-shared/lib/helpers/object';
+import { range } from 'proton-shared/lib/helpers/array';
 import { switchPlan, getSupportedAddons } from 'proton-shared/lib/helpers/subscription';
 import { getAppName } from 'proton-shared/lib/apps/helper';
 
-import { InlineLinkButton, Icon, IntegerInput, Info, Price } from '../../components';
-import { useConfig, useDebounceCallback } from '../../hooks';
+import { InlineLinkButton, Icon, SelectTwo, Option, Info, Price } from '../../components';
+import { useConfig } from '../../hooks';
 import { PlanIDs } from '../signup/interfaces';
 
 const MailAddons: ADDON_NAMES[] = [ADDON_NAMES.MEMBER, ADDON_NAMES.SPACE, ADDON_NAMES.ADDRESS, ADDON_NAMES.DOMAIN];
@@ -48,7 +49,7 @@ const ButtonNumberInput = ({
     onChange,
     id,
     min = 0,
-    max = Number.MAX_SAFE_INTEGER,
+    max = 999,
     step = 1,
     disabled = false,
     divider = 1,
@@ -62,11 +63,6 @@ const ButtonNumberInput = ({
     divider?: number;
     onChange: (newValue: number) => void;
 }) => {
-    const [tmpValue, setTmpValue] = useState(value);
-    const debouncedOnChange = useDebounceCallback(onChange, 100);
-    useEffect(() => {
-        setTmpValue(value);
-    }, [value]);
     return (
         <div className="bordered-container flex flex-nowrap flex-items-align-center">
             <button
@@ -75,30 +71,26 @@ const ButtonNumberInput = ({
                 disabled={disabled || value - step < min}
                 onClick={() => {
                     const newValue = value - step;
-                    setTmpValue(newValue);
-                    debouncedOnChange(newValue);
+                    onChange(newValue);
                 }}
             >
                 <Icon name="minus" alt={c('Action').t`Decrease`} />
             </button>
             <label htmlFor={id} className="mt0-25 mb0-25">
-                <IntegerInput
-                    value={value / divider}
+                <SelectTwo
+                    value={value}
                     disabled={disabled}
                     id={id}
                     className="border-left border-right"
                     aria-live="assertive"
-                    readOnly
-                    onChange={(newValue) => {
-                        if (newValue === undefined) {
-                            return;
-                        }
-                        setTmpValue(newValue);
+                    onChange={({ value: newValue }) => {
+                        onChange(newValue);
                     }}
-                    onBlur={() => {
-                        onChange(tmpValue);
-                    }}
-                />
+                >
+                    {range(min, max, step).map((quantity) => {
+                        return <Option key={`${quantity}`} value={quantity} title={`${(min + quantity) / divider}`} />;
+                    })}
+                </SelectTwo>
             </label>
             <button
                 type="button"
@@ -106,8 +98,7 @@ const ButtonNumberInput = ({
                 disabled={disabled || value + step > max}
                 onClick={() => {
                     const newValue = value + step;
-                    setTmpValue(newValue);
-                    debouncedOnChange(newValue);
+                    onChange(newValue);
                 }}
             >
                 <Icon name="plus" alt={c('Action').t`Increase`} />
@@ -117,7 +108,7 @@ const ButtonNumberInput = ({
 };
 
 const addonLimit = {
-    [ADDON_NAMES.SPACE]: MAX_SPACE_ADDON * GIGA,
+    [ADDON_NAMES.SPACE]: MAX_SPACE_ADDON,
     [ADDON_NAMES.MEMBER]: MAX_MEMBER_ADDON,
     [ADDON_NAMES.DOMAIN]: MAX_DOMAIN_PRO_ADDON,
     [ADDON_NAMES.ADDRESS]: MAX_ADDRESS_ADDON,
@@ -229,12 +220,15 @@ const ProtonPlanCustomizer = ({
                 const addonMaxKey = AddonKey[addonNameKey];
                 const addonMultiplier = addon[addonMaxKey] ?? 1;
                 const min = currentPlan[addonMaxKey] ?? 0;
-                const max = addonLimit[addonNameKey];
+                const max = addonLimit[addonNameKey] * addonMultiplier;
                 const value = min + quantity * addonMultiplier;
                 const divider = addonNameKey === ADDON_NAMES.SPACE ? GIGA : 1;
 
                 return (
-                    <div className="flex flex-nowrap on-mobile-flex-wrap">
+                    <div
+                        className="flex-no-min-children flex-nowrap flex-align-items-center mb1 on-mobile-flex-wrap"
+                        key={addon.ID}
+                    >
                         <label htmlFor={addon.ID} className="min-w14e text-bold pr0-5 on-mobile-w100">
                             {addonLabel[addonNameKey]}
                         </label>
@@ -246,12 +240,12 @@ const ProtonPlanCustomizer = ({
                             divider={divider}
                             disabled={loading || !isSupported}
                             onChange={(newQuantity) => {
-                                onChangePlanIDs({ ...planIDs, [addon.ID]: newQuantity / addonMultiplier - min });
+                                onChangePlanIDs({ ...planIDs, [addon.ID]: (newQuantity - min) / addonMultiplier });
                             }}
                             step={addonMultiplier}
                         />
                         {infoTooltipText && (
-                            <div className="flex-item-noshrink">
+                            <div className="flex-item-noshrink ml1">
                                 <Info title={infoTooltipText} />
                             </div>
                         )}

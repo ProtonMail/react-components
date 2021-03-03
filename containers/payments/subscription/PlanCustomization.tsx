@@ -16,7 +16,7 @@ interface Props {
     loading?: boolean;
     onChangePlanIDs: (newPlanIDs: PlanIDs) => void;
     onChangeCycle: (newCycle: Cycle) => void;
-    onBack: () => void;
+    onBack: (service: PLAN_SERVICES) => void;
 }
 
 const PlanCustomization = ({
@@ -32,6 +32,7 @@ const PlanCustomization = ({
     organization,
     subscription,
 }: Props) => {
+    const otherService = service === PLAN_SERVICES.MAIL ? PLAN_SERVICES.VPN : PLAN_SERVICES.MAIL;
     return (
         <>
             <ProtonPlanPicker
@@ -44,7 +45,7 @@ const PlanCustomization = ({
                 currency={currency}
                 onChangeCycle={onChangeCycle}
                 onChangePlanIDs={onChangePlanIDs}
-                onBack={onBack}
+                onBack={() => onBack(service)}
             />
             <hr className="mt2 mb2 border-bottom" />
             <ProtonPlanCustomizer
@@ -62,13 +63,13 @@ const PlanCustomization = ({
                 subscription={subscription}
                 organization={organization}
                 plans={plans}
-                service={service === PLAN_SERVICES.MAIL ? PLAN_SERVICES.VPN : PLAN_SERVICES.MAIL}
+                service={otherService}
                 planIDs={planIDs}
                 cycle={cycle}
                 currency={currency}
                 onChangeCycle={onChangeCycle}
                 onChangePlanIDs={onChangePlanIDs}
-                onBack={onBack}
+                onBack={() => onBack(otherService)}
             />
             <hr className="mt2 mb2 border-bottom" />
             <ProtonPlanCustomizer
@@ -77,7 +78,7 @@ const PlanCustomization = ({
                 currency={currency}
                 plans={plans}
                 planIDs={planIDs}
-                service={service === PLAN_SERVICES.MAIL ? PLAN_SERVICES.VPN : PLAN_SERVICES.MAIL}
+                service={otherService}
                 organization={organization}
                 onChangePlanIDs={onChangePlanIDs}
             />

@@ -40,7 +40,7 @@ const PlanCard = ({
             {isSelected === true ? (
                 <div className="text-xs text-uppercase text-bold text-center">{c('Title').t`Your plan`}</div>
             ) : null}
-            <div className="bordered-container p1">
+            <div className="bordered-container p2">
                 <h3 className="text-bold text-capitalize">{planName}</h3>
                 <Price currency={currency} suffix={c('Suffix for price').t`/ month`}>
                     {price / cycle}
@@ -62,11 +62,11 @@ const PlanCard = ({
                     </PrimaryButton>
                 )}
                 {features.length ? (
-                    <ul>
+                    <ul className="unstyled">
                         {features.map((feature, index) => (
                             <li key={`${index}`} className="flex flex-nowrap mb0-5">
-                                <span className="flex-item-noshrink mr0-5">
-                                    <Icon name="check" className="color-primary" />
+                                <span className="flex-item-noshrink mr1">
+                                    <Icon name="on" className="color-primary" />
                                 </span>
                                 <span className="flex-item-fluid">{feature}</span>
                             </li>
