@@ -1,14 +1,19 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { c } from 'ttag';
 import { toMap } from 'proton-shared/lib/helpers/object';
 import { PLANS } from 'proton-shared/lib/constants';
-import { c } from 'ttag';
+import { Currency, Cycle } from 'proton-shared/lib/interfaces';
 
 import { Loader } from '../../../components';
 import { usePlans, useVPNCountries } from '../../../hooks';
 import SubscriptionPrices from './SubscriptionPrices';
 
-const VpnFeaturesTable = ({ cycle, currency }) => {
+interface Props {
+    cycle: Cycle;
+    currency: Currency;
+}
+
+const VpnFeaturesTable = ({ cycle, currency }: Props) => {
     const [vpnCountries, loadingVpnCountries] = useVPNCountries();
     const [plans, loadingPlans] = usePlans();
     const plansMap = toMap(plans, 'Name');
@@ -161,11 +166,6 @@ const VpnFeaturesTable = ({ cycle, currency }) => {
             <p className="text-sm mt1 mb0">* {c('Info concerning plan features').t`Denotes customizable features`}</p>
         </>
     );
-};
-
-VpnFeaturesTable.propTypes = {
-    cycle: PropTypes.number,
-    currency: PropTypes.string,
 };
 
 export default VpnFeaturesTable;

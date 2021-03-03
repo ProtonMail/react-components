@@ -7,7 +7,7 @@ import { c } from 'ttag';
 import { PrimaryButton, Loader } from '../../../components';
 import { useUser, useSubscription, useModals, usePlans, useAddresses, useOrganization } from '../../../hooks';
 
-import NewSubscriptionModal from './NewSubscriptionModal';
+import SubscriptionModal from './SubscriptionModal';
 
 const UpsellSubscription = () => {
     const [{ hasPaidMail, hasPaidVpn }, loadingUser] = useUser();
@@ -39,7 +39,7 @@ const UpsellSubscription = () => {
                         className="button--small flex-item-noshrink"
                         onClick={() => {
                             createModal(
-                                <NewSubscriptionModal
+                                <SubscriptionModal
                                     currency={Currency}
                                     cycle={Cycle}
                                     planIDs={switchPlan({
@@ -65,7 +65,7 @@ const UpsellSubscription = () => {
                         className="button--small flex-item-noshrink"
                         onClick={() => {
                             createModal(
-                                <NewSubscriptionModal
+                                <SubscriptionModal
                                     currency={Currency}
                                     cycle={Cycle}
                                     planIDs={switchPlan({
@@ -90,7 +90,7 @@ const UpsellSubscription = () => {
                     className="button--small flex-item-noshrink"
                     onClick={() => {
                         createModal(
-                            <NewSubscriptionModal
+                            <SubscriptionModal
                                 currency={Currency}
                                 cycle={Cycle}
                                 planIDs={switchPlan({

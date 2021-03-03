@@ -1,19 +1,21 @@
 import { useEffect, useState } from 'react';
 import { queryVPNLogicalServerInfo } from 'proton-shared/lib/api/vpn';
+import { VPNServer } from 'proton-shared/lib/interfaces/VPNServer';
+
 import useApi from './useApi';
 import useLoading from './useLoading';
 
 const useVPNCountries = () => {
     const api = useApi();
     const [loading, withLoading] = useLoading();
-    const [logicalServers, setLogicalServers] = useState([]);
+    const [logicalServers, setLogicalServers] = useState<VPNServer[]>([]);
 
     const query = async () => {
         const { LogicalServers = [] } = await api(queryVPNLogicalServerInfo());
         setLogicalServers(LogicalServers);
     };
 
-    const getCountries = (servers) =>
+    const getCountries = (servers: VPNServer[]) =>
         Object.keys(servers.reduce((countries, { ExitCountry }) => ({ ...countries, [ExitCountry]: true }), {}));
 
     const free = getCountries(logicalServers.filter(({ Tier }) => Tier === 0));
@@ -21,7 +23,7 @@ const useVPNCountries = () => {
     const all = getCountries(logicalServers);
 
     useEffect(() => {
-        withLoading(query());
+        void withLoading(query());
     }, []);
 
     return [
@@ -31,7 +33,7 @@ const useVPNCountries = () => {
             all,
         },
         loading,
-    ];
+    ] as const;
 };
 
 export default useVPNCountries;

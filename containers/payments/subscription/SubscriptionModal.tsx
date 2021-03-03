@@ -36,14 +36,15 @@ import usePayment from '../usePayment';
 import Payment from '../Payment';
 import PlanSelection from './PlanSelection';
 import { SUBSCRIPTION_STEPS } from './constants';
-import NewSubscriptionSubmitButton from './NewSubscriptionSubmitButton';
+import SubscriptionSubmitButton from './SubscriptionSubmitButton';
 import SubscriptionUpgrade from './SubscriptionUpgrade';
 import SubscriptionThanks from './SubscriptionThanks';
 import SubscriptionCheckout from './SubscriptionCheckout';
 import PaymentGiftCode from '../PaymentGiftCode';
-import './NewSubscriptionModal.scss';
+import './SubscriptionModal.scss';
 import { handlePaymentToken } from '../paymentTokenHelper';
 import PlanCustomization from './PlanCustomization';
+import SubscriptionModalHeader from './SubscriptionModalHeader';
 
 const hasPlans = (planIDs = {}) => Object.keys(clearPlanIDs(planIDs)).length;
 
@@ -66,7 +67,12 @@ interface Model {
     gift?: string;
 }
 
-const NewSubscriptionModal = ({
+const BACK = {
+    [SUBSCRIPTION_STEPS.CUSTOMIZATION]: SUBSCRIPTION_STEPS.PLAN_SELECTION,
+    [SUBSCRIPTION_STEPS.CHECKOUT]: SUBSCRIPTION_STEPS.CUSTOMIZATION,
+} as const;
+
+const SubscriptionModal = ({
     step = SUBSCRIPTION_STEPS.PLAN_SELECTION,
     cycle = DEFAULT_CYCLE,
     currency = DEFAULT_CURRENCY,
@@ -80,8 +86,8 @@ const NewSubscriptionModal = ({
         [SUBSCRIPTION_STEPS.PLAN_SELECTION]: c('Title').t`Select a plan`,
         [SUBSCRIPTION_STEPS.CUSTOMIZATION]: c('Title').t`Customize your plan`,
         [SUBSCRIPTION_STEPS.CHECKOUT]: c('Title').t`Checkout`,
-        [SUBSCRIPTION_STEPS.UPGRADE]: <div className="text-center">{c('Title').t`Processing...`}</div>,
-        [SUBSCRIPTION_STEPS.THANKS]: <div className="text-center">{c('Title').t`Thank you!`}</div>,
+        [SUBSCRIPTION_STEPS.UPGRADE]: c('Title').t`Processing...`,
+        [SUBSCRIPTION_STEPS.THANKS]: c('Title').t`Thank you!`,
     };
 
     const api = useApi();
@@ -238,7 +244,6 @@ const NewSubscriptionModal = ({
     };
 
     const handleClose = (e: any) => {
-        console.trace();
         if (model.step === SUBSCRIPTION_STEPS.CHECKOUT) {
             setModel({ ...model, step: SUBSCRIPTION_STEPS.CUSTOMIZATION });
             return;
@@ -262,7 +267,7 @@ const NewSubscriptionModal = ({
 
     return (
         <FormModal
-            hasClose={model.step === SUBSCRIPTION_STEPS.CUSTOMIZATION}
+            hasClose={[SUBSCRIPTION_STEPS.PLAN_SELECTION, SUBSCRIPTION_STEPS.CUSTOMIZATION].includes(model.step)}
             footer={null}
             className={classnames([
                 'subscription-modal',
@@ -273,7 +278,12 @@ const NewSubscriptionModal = ({
                 ].includes(model.step) && 'modal--full',
                 user.isFree && 'is-free-user',
             ])}
-            title={TITLE[model.step]}
+            title={
+                <SubscriptionModalHeader
+                    title={TITLE[model.step]}
+                    onBack={BACK[model.step] ? () => setModel({ ...model, step: BACK[model.step] }) : undefined}
+                />
+            }
             loading={loading || loadingPlans || loadingOrganization || loadingSubscription}
             onSubmit={() => withLoading(handleCheckout())}
             onClose={handleClose}
@@ -320,7 +330,7 @@ const NewSubscriptionModal = ({
                         <div className="subscriptionCheckout-container">
                             <SubscriptionCheckout
                                 submit={
-                                    <NewSubscriptionSubmitButton
+                                    <SubscriptionSubmitButton
                                         onClose={onClose}
                                         canPay={canPay}
                                         paypal={paypal}
@@ -387,7 +397,7 @@ const NewSubscriptionModal = ({
                     <div className="w25 on-mobile-w100">
                         <SubscriptionCheckout
                             submit={
-                                <NewSubscriptionSubmitButton
+                                <SubscriptionSubmitButton
                                     onClose={onClose}
                                     canPay={canPay}
                                     paypal={paypal}
@@ -425,4 +435,4 @@ const NewSubscriptionModal = ({
     );
 };
 
-export default NewSubscriptionModal;
+export default SubscriptionModal;

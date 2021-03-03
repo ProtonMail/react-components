@@ -17,6 +17,8 @@ import { getAppName } from 'proton-shared/lib/apps/helper';
 import PlanCard from './PlanCard';
 import { CycleSelector, CurrencySelector } from '..';
 import { Icon, InlineLinkButton, Button } from '../../../components';
+import MailFeaturesTable from './MailFeaturesTable';
+import VpnFeaturesTable from './VpnFeaturesTable';
 
 const FREE_PLAN = {
     ID: 'free',
@@ -215,7 +217,12 @@ const PlanSelection = ({
                     <Icon name={showAllFeatures ? 'arrow-up' : 'arrow-down'} />
                 </InlineLinkButton>
             </p>
-            {showAllFeatures ? <h1>TODO</h1> : null}
+            {showAllFeatures ? (
+                <>
+                    {service === PLAN_SERVICES.MAIL ? <MailFeaturesTable cycle={cycle} currency={currency} /> : null}
+                    {service === PLAN_SERVICES.VPN ? <VpnFeaturesTable cycle={cycle} currency={currency} /> : null}
+                </>
+            ) : null}
         </>
     );
 };

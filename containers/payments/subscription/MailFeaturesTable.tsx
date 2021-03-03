@@ -1,14 +1,19 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { c } from 'ttag';
 import { toMap } from 'proton-shared/lib/helpers/object';
 import { PLANS } from 'proton-shared/lib/constants';
-import { c } from 'ttag';
+import { Currency, Cycle } from 'proton-shared/lib/interfaces';
+
 import { Loader } from '../../../components';
 import { usePlans } from '../../../hooks';
-
 import SubscriptionPrices from './SubscriptionPrices';
 
-const MailFeaturesTable = ({ cycle, currency }) => {
+interface Props {
+    cycle: Cycle;
+    currency: Currency;
+}
+
+const MailFeaturesTable = ({ cycle, currency }: Props) => {
     const [plans, loadingPlans] = usePlans();
     const plansMap = toMap(plans, 'Name');
 
@@ -196,11 +201,6 @@ const MailFeaturesTable = ({ cycle, currency }) => {
             </p>
         </>
     );
-};
-
-MailFeaturesTable.propTypes = {
-    cycle: PropTypes.number,
-    currency: PropTypes.string,
 };
 
 export default MailFeaturesTable;

@@ -17,7 +17,7 @@ import {
     usePromoModalState,
     useBlackFridayPeriod,
 } from '../../hooks';
-import { MailBlackFridayModal, NewSubscriptionModal, VPNBlackFridayModal } from '../payments';
+import { MailBlackFridayModal, SubscriptionModal, VPNBlackFridayModal } from '../payments';
 import { SUBSCRIPTION_STEPS } from '../payments/subscription/constants';
 
 const useBlackFriday = () => {
@@ -51,7 +51,7 @@ const useBlackFriday = () => {
         couponCode?: string | null;
     }) => {
         createModal(
-            <NewSubscriptionModal
+            <SubscriptionModal
                 planIDs={planIDs}
                 cycle={cycle}
                 currency={currency}

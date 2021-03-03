@@ -11,7 +11,7 @@ import MozillaInfoPanel from '../../account/MozillaInfoPanel';
 
 import { formatPlans } from './helpers';
 import UpsellSubscription from './UpsellSubscription';
-import NewSubscriptionModal from './NewSubscriptionModal';
+import SubscriptionModal from './SubscriptionModal';
 import UnsubscribeButton from './UnsubscribeButton';
 
 const AddonRow = ({ label, used, max, format = identity }) => {
@@ -78,7 +78,7 @@ const SubscriptionSection = ({ permission }) => {
 
     const handleModal = () => {
         createModal(
-            <NewSubscriptionModal
+            <SubscriptionModal
                 planIDs={getPlanIDs(subscription)}
                 coupon={CouponCode || undefined} // CouponCode can equal null
                 currency={Currency}

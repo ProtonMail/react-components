@@ -20,7 +20,7 @@ interface Props {
     paypal: PayPalHook;
 }
 
-const NewSubscriptionSubmitButton = ({
+const SubscriptionSubmitButton = ({
     className,
     paypal,
     canPay,
@@ -67,4 +67,4 @@ const NewSubscriptionSubmitButton = ({
     );
 };
 
-export default NewSubscriptionSubmitButton;
+export default SubscriptionSubmitButton;

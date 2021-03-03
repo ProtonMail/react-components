@@ -21,7 +21,7 @@ import {
     useLoading,
 } from '../../hooks';
 
-import NewSubscriptionModal from './subscription/NewSubscriptionModal';
+import SubscriptionModal from './subscription/SubscriptionModal';
 import MailSubscriptionTable from './subscription/MailSubscriptionTable';
 import VpnSubscriptionTable from './subscription/VpnSubscriptionTable';
 import CurrencySelector from './CurrencySelector';
@@ -101,7 +101,7 @@ const PlansSection = () => {
         const coupon = Coupon ? Coupon.Code : undefined; // Coupon can equals null
 
         createModal(
-            <NewSubscriptionModal
+            <SubscriptionModal
                 planIDs={plansIDs}
                 coupon={coupon}
                 currency={currency}

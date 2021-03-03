@@ -14,7 +14,7 @@ import DiscountBadge from './DiscountBadge';
 import GiftCodeModal from './GiftCodeModal';
 import CreditsModal from './CreditsModal';
 import PlanPrice from './subscription/PlanPrice';
-import NewSubscriptionModal from './subscription/NewSubscriptionModal';
+import SubscriptionModal from './subscription/SubscriptionModal';
 import CycleDiscountBadge from './CycleDiscountBadge';
 
 const { MONTHLY, YEARLY, TWO_YEARS } = CYCLE;
@@ -36,7 +36,7 @@ const BillingSection = ({ permission }) => {
     const handleOpenCreditsModal = () => createModal(<CreditsModal />);
     const handleOpenSubscriptionModal = () =>
         createModal(
-            <NewSubscriptionModal
+            <SubscriptionModal
                 planIDs={getPlanIDs(subscription)}
                 coupon={subscription.CouponCode}
                 currency={subscription.Currency}
