@@ -138,8 +138,7 @@ const UserDropdown = ({ ...rest }) => {
                     <li className="dropdown-item-hr mt0-5" aria-hidden="false" />
                     <li>
                         <div className="pl1 pr1 pt0-5 pb0-5 w100 flex-no-min-children flex-nowrap flex-justify-space-between flex-align-items-center">
-                            <label htmlFor="theme-toggle" className="mr1 flex-item-fluid">{c('Action')
-                                .t`Dark mode`}</label>
+                            <label htmlFor="theme-toggle" className="mr1">{c('Action').t`Dark mode`}</label>
                             <Toggle
                                 id="theme-toggle"
                                 title={c('Title').t`Toggle display mode`}
