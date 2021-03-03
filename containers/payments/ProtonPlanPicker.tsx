@@ -1,7 +1,15 @@
 import React from 'react';
 import { c } from 'ttag';
 import { Cycle, Currency, Plan, Organization, Subscription } from 'proton-shared/lib/interfaces';
-import { CYCLE, PLANS, PLAN_SERVICES, APPS, PLAN_TYPES } from 'proton-shared/lib/constants';
+import {
+    CYCLE,
+    PLANS,
+    PLAN_SERVICES,
+    APPS,
+    PLAN_TYPES,
+    DEFAULT_CURRENCY,
+    DEFAULT_CYCLE,
+} from 'proton-shared/lib/constants';
 import { toMap } from 'proton-shared/lib/helpers/object';
 import { switchPlan, getPlan } from 'proton-shared/lib/helpers/subscription';
 import { getAppName } from 'proton-shared/lib/apps/helper';
@@ -22,8 +30,29 @@ interface Props {
     subscription?: Subscription;
 }
 
-const MailPlans: PLANS[] = [PLANS.PLUS, PLANS.PROFESSIONAL, PLANS.VISIONARY];
-const VPNPlans: PLANS[] = [PLANS.VPNBASIC, PLANS.VPNPLUS];
+const FREE_PLAN = {
+    ID: 'free',
+    Name: 'free' as PLANS,
+    Title: 'Free',
+    Type: PLAN_TYPES.PLAN,
+    Currency: DEFAULT_CURRENCY,
+    Cycle: DEFAULT_CYCLE,
+    Amount: 0,
+    MaxDomains: 0,
+    MaxAddresses: 0,
+    MaxSpace: 0,
+    MaxMembers: 0,
+    MaxVPN: 0,
+    MaxTier: 0,
+    Services: PLAN_SERVICES.MAIL + PLAN_SERVICES.VPN,
+    Quantity: 1,
+    Features: 0,
+    Pricing: {
+        [CYCLE.MONTHLY]: 0,
+        [CYCLE.YEARLY]: 0,
+        [CYCLE.TWO_YEARS]: 0,
+    },
+} as Plan;
 
 const ProtonPlanPicker = ({
     cycle,
@@ -39,19 +68,17 @@ const ProtonPlanPicker = ({
 }: Props) => {
     const vpnAppName = getAppName(APPS.PROTONVPN_SETTINGS);
     const mailAppName = getAppName(APPS.PROTONMAIL);
-    const plansMap = toMap(plans);
     const planNamesMap = toMap(plans, 'Name');
+    const MailPlans: Plan[] = [
+        FREE_PLAN,
+        planNamesMap[PLANS.PLUS],
+        planNamesMap[PLANS.PROFESSIONAL],
+        planNamesMap[PLANS.VISIONARY],
+    ];
+    const VPNPlans: Plan[] = [FREE_PLAN, planNamesMap[PLANS.VPNBASIC], planNamesMap[PLANS.VPNPLUS]];
     const currentPlan = subscription ? getPlan(subscription, service) : null;
     const plansToShow = service === PLAN_SERVICES.VPN ? VPNPlans : MailPlans;
-    const isFree = !Object.entries(planIDs).some(([planID, planQuantity]) => {
-        if (!planQuantity) {
-            return false;
-        }
-        const { Type, Services } = plansMap[planID];
-        return Type === PLAN_TYPES.PLAN && Services & service;
-    });
     const yourPlanText = c('Plan info').t`(Your plan)`;
-    const isCurrentFreePlan = !currentPlan;
 
     const annualBilling = (
         <InlineLinkButton key="annual-billing" onClick={() => onChangeCycle(CYCLE.YEARLY)}>{c('Action')
@@ -78,47 +105,23 @@ const ProtonPlanPicker = ({
                 </p>
             ) : null}
             <ul>
-                <li>
-                    <Radio
-                        checked={!!isFree}
-                        name="plan"
-                        className="flex flex-nowrap"
-                        id="free-plan"
-                        onChange={() => {
-                            onChangePlanIDs(
-                                switchPlan({
-                                    planIDs,
-                                    plans,
-                                    planID: undefined,
-                                    service,
-                                    organization,
-                                })
-                            );
-                        }}
-                    >
-                        <span className="flex-item-fluid">Free{isCurrentFreePlan ? ` ${yourPlanText}` : ''}</span>
-                        <span>{c('Free price').t`Free`}</span>
-                    </Radio>
-                </li>
-                {plansToShow.map((planName) => {
-                    const plan = planNamesMap[planName];
-                    if (!plan) {
-                        return null;
-                    }
+                {plansToShow.map((plan) => {
+                    const isFree = plan.ID === FREE_PLAN.ID;
                     const isCurrentPlan = currentPlan?.ID === plan.ID;
+                    const checked = isFree ? plansToShow.every((plan) => !planIDs[plan.ID]) : !!planIDs[plan.ID];
                     return (
                         <li key={plan.ID}>
                             <Radio
-                                checked={!!planIDs[plan.ID]}
-                                name="plan"
+                                checked={checked}
+                                name={`plan${service}`}
                                 className="flex flex-nowrap"
-                                id={plan.ID}
+                                id={`${plan.ID}${service}`}
                                 onChange={() => {
                                     onChangePlanIDs(
                                         switchPlan({
                                             planIDs,
                                             plans,
-                                            planID: plan.ID,
+                                            planID: isFree ? undefined : plan.ID,
                                             service,
                                             organization,
                                         })
@@ -129,9 +132,13 @@ const ProtonPlanPicker = ({
                                     {plan.Title}
                                     {isCurrentPlan ? ` ${yourPlanText}` : ''}
                                 </span>
-                                <Price currency={currency} suffix={c('Suffix for price').t`/ month`}>
-                                    {plan.Pricing[cycle] / cycle}
-                                </Price>
+                                {isFree ? (
+                                    <span>{c('Free price').t`Free`}</span>
+                                ) : (
+                                    <Price currency={currency} suffix={c('Suffix for price').t`/ month`}>
+                                        {plan.Pricing[cycle] / cycle}
+                                    </Price>
+                                )}
                             </Radio>
                         </li>
                     );

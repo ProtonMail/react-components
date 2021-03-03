@@ -98,7 +98,7 @@ const NewSubscriptionModal = ({
     const [loadingCheck, withLoadingCheck] = useLoading();
     const [checkResult, setCheckResult] = useState<SubscriptionCheckResult>();
     const { Code: couponCode } = checkResult?.Coupon || {}; // Coupon can be null
-    const creditsRemaining = (user.Credit + (checkResult?.Credit || 0)) / 100;
+    const creditsRemaining = (user.Credit + (checkResult?.Credit ?? 0)) / 100;
     const [model, setModel] = useState<Model>({
         step,
         cycle,

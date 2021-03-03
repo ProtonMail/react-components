@@ -1,11 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { c } from 'ttag';
 import { Cycle, Currency, Plan, Organization } from 'proton-shared/lib/interfaces';
-import { PLANS, PLAN_SERVICES, APPS, ADDON_NAMES, PLAN_TYPES } from 'proton-shared/lib/constants';
+import {
+    PLANS,
+    PLAN_SERVICES,
+    APPS,
+    ADDON_NAMES,
+    PLAN_TYPES,
+    MAX_SPACE_ADDON,
+    MAX_MEMBER_ADDON,
+    MAX_DOMAIN_PRO_ADDON,
+    MAX_ADDRESS_ADDON,
+    MAX_VPN_ADDON,
+    GIGA,
+} from 'proton-shared/lib/constants';
 import { toMap } from 'proton-shared/lib/helpers/object';
 import { switchPlan, getSupportedAddons } from 'proton-shared/lib/helpers/subscription';
 import { getAppName } from 'proton-shared/lib/apps/helper';
-import humanSize from 'proton-shared/lib/helpers/humanSize';
 
 import { InlineLinkButton, Icon, IntegerInput, Info, Price } from '../../components';
 import { useConfig, useDebounceCallback } from '../../hooks';
@@ -40,6 +51,7 @@ const ButtonNumberInput = ({
     max = Number.MAX_SAFE_INTEGER,
     step = 1,
     disabled = false,
+    divider = 1,
 }: {
     step?: number;
     id: string;
@@ -47,6 +59,7 @@ const ButtonNumberInput = ({
     max?: number;
     value: number;
     disabled?: boolean;
+    divider?: number;
     onChange: (newValue: number) => void;
 }) => {
     const [tmpValue, setTmpValue] = useState(value);
@@ -70,7 +83,7 @@ const ButtonNumberInput = ({
             </button>
             <label htmlFor={id} className="mt0-25 mb0-25">
                 <IntegerInput
-                    value={value}
+                    value={value / divider}
                     disabled={disabled}
                     id={id}
                     className="border-left border-right"
@@ -102,6 +115,14 @@ const ButtonNumberInput = ({
         </div>
     );
 };
+
+const addonLimit = {
+    [ADDON_NAMES.SPACE]: MAX_SPACE_ADDON * GIGA,
+    [ADDON_NAMES.MEMBER]: MAX_MEMBER_ADDON,
+    [ADDON_NAMES.DOMAIN]: MAX_DOMAIN_PRO_ADDON,
+    [ADDON_NAMES.ADDRESS]: MAX_ADDRESS_ADDON,
+    [ADDON_NAMES.VPN]: MAX_VPN_ADDON,
+} as const;
 
 const ProtonPlanCustomizer = ({
     cycle,
@@ -208,7 +229,9 @@ const ProtonPlanCustomizer = ({
                 const addonMaxKey = AddonKey[addonNameKey];
                 const addonMultiplier = addon[addonMaxKey] ?? 1;
                 const min = currentPlan[addonMaxKey] ?? 0;
-                const max = 1000; // TODO
+                const max = addonLimit[addonNameKey];
+                const value = min + quantity * addonMultiplier;
+                const divider = addonNameKey === ADDON_NAMES.SPACE ? GIGA : 1;
 
                 return (
                     <div className="flex flex-nowrap on-mobile-flex-wrap">
@@ -217,9 +240,10 @@ const ProtonPlanCustomizer = ({
                         </label>
                         <ButtonNumberInput
                             id={addon.ID}
-                            value={min + quantity * addonMultiplier}
+                            value={value}
                             min={min}
                             max={max}
+                            divider={divider}
                             disabled={loading || !isSupported}
                             onChange={(newQuantity) => {
                                 onChangePlanIDs({ ...planIDs, [addon.ID]: newQuantity / addonMultiplier - min });

@@ -23,7 +23,7 @@ interface Props {
     submit?: React.ReactNode;
     loading?: boolean;
     plans?: Plan[];
-    checkResult?: SubscriptionCheckResult;
+    checkResult: SubscriptionCheckResult;
     currency: Currency;
     cycle: Cycle;
     coupon?: string;
@@ -61,7 +61,7 @@ const SubscriptionCheckout = ({
     const domainAddon = plans.find(({ Name }) => Name === ADDON_NAMES.DOMAIN);
     const memberAddon = plans.find(({ Name }) => Name === ADDON_NAMES.MEMBER);
     const vpnAddon = plans.find(({ Name }) => Name === ADDON_NAMES.VPN);
-    const { years, months, days } = getTimeRemaining(new Date(), new Date((checkResult.PeriodEnd || 0) * 1000));
+    const { years, months, days } = getTimeRemaining(new Date(), new Date(checkResult.PeriodEnd * 1000));
     const monthsWithYears = months + years * 12;
     const countdown = [
         monthsWithYears &&
