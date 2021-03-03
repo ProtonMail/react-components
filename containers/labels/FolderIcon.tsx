@@ -3,10 +3,10 @@ import { Folder } from 'proton-shared/lib/interfaces/Folder';
 
 import { Icon } from '../../components';
 import { useFolderColor } from '../../hooks';
+import { Props as IconProps } from '../../components/icon/Icon';
 
-interface Props {
+interface Props extends IconProps {
     folder: Folder;
-    className?: string;
 }
 
 const getIconName = (isRoot?: boolean, color?: string) => {
@@ -16,11 +16,11 @@ const getIconName = (isRoot?: boolean, color?: string) => {
     return color ? 'folder-filled' : 'folder';
 };
 
-const FolderIcon = ({ folder, ...rest }: Props) => {
+const FolderIcon = ({ folder, name, ...rest }: Props) => {
     const isRoot = !folder.ParentID;
     const color = useFolderColor(folder);
 
-    return <Icon name={getIconName(isRoot, color)} color={color} alt={folder.Name} {...rest} />;
+    return <Icon name={name || getIconName(isRoot, color)} color={color} alt={folder.Name} {...rest} />;
 };
 
 export default FolderIcon;
