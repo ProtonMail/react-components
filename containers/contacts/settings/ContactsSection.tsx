@@ -11,8 +11,8 @@ const ContactsSection = () => {
     const { AutoSaveContacts } = mailSettings || {};
     return (
         <Row>
-            <Label htmlFor="saveContactToggle" className="text-semibold">
-                <span className="mr0-5">{c('Label').t`Automatically save contacts`}</span>
+            <Label htmlFor="saveContactToggle">
+                <span className="mr0-5 text-semibold">{c('Label').t`Automatically save contacts`}</span>
                 <Info url="https://protonmail.com/support/knowledge-base/autosave-contact-list/" />
             </Label>
             <Field>
