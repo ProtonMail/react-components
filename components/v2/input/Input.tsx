@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 
 import { classnames } from '../../../helpers';
 
@@ -6,17 +6,19 @@ export interface InputTwoProps extends React.ComponentPropsWithoutRef<'input'> {
     error?: React.ReactNode | boolean;
     suffix?: React.ReactNode;
     icon?: React.ReactNode;
+    left?: React.ReactNode;
     onValue?: (value: string) => void;
 }
 
-const InputTwo = (props: InputTwoProps) => {
-    const { error, icon, suffix, className: classNameProp, onValue, ...rest } = props;
+const InputTwo = forwardRef<HTMLInputElement, InputTwoProps>((props: InputTwoProps, ref) => {
+    const { error, icon, suffix, left, className: classNameProp, onValue, ...rest } = props;
 
     const className = classnames([classNameProp, 'w100 inputform-field', Boolean(error) && 'error']);
 
     const inputElement = (
         <input
             {...rest}
+            ref={ref}
             onChange={(e) => {
                 onValue?.(e.target.value);
                 rest.onChange?.(e);
@@ -24,6 +26,15 @@ const InputTwo = (props: InputTwoProps) => {
             className={className}
         />
     );
+
+    if (left) {
+        return (
+            <div className="inputform-icon-container flex flex-nowrap flex-align-items-center flex-item-fluid relative">
+                <div className="inputform-suffix right-icon pl0-5 flex">{suffix}</div>
+                <div className="flex-item-fluid">{inputElement}</div>
+            </div>
+        );
+    }
 
     if (icon) {
         return (
@@ -44,6 +55,6 @@ const InputTwo = (props: InputTwoProps) => {
     }
 
     return inputElement;
-};
+});
 
 export default InputTwo;
