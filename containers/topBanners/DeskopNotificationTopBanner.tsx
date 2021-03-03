@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
-import { getStatus, request, Status } from 'proton-shared/lib/helpers/desktopNotification';
+import { getStatus, request, Status, create } from 'proton-shared/lib/helpers/desktopNotification';
 import { APP_NAMES, APPS } from 'proton-shared/lib/constants';
 import { getAppName } from 'proton-shared/lib/apps/helper';
 
@@ -27,7 +27,16 @@ const DeskopNotificationTopBanner = () => {
 
     const handleEnable = () => {
         request(
-            () => setStatus(getStatus()),
+            () => {
+                setStatus(getStatus());
+                create(c('Info').t`Desktop notification example`, {
+                    body: c('Info').t`This is a ${appName} desktop notification`,
+                    icon: '/assets/img/notification-badge.gif',
+                    onClick() {
+                        window.focus();
+                    },
+                });
+            },
             () => setStatus(getStatus())
         );
     };
