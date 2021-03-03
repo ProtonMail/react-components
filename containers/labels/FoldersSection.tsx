@@ -13,8 +13,8 @@ import ToggleInheritParentFolderColor from './ToggleInheritParentFolderColor';
 
 function LabelsSection() {
     const [folders = [], loadingFolders] = useFolders();
+    const [mailSettings] = useMailSettings();
     const { createModal } = useModals();
-    const [ mailSettings ] = useMailSettings();
 
     return (
         <SettingsSection>
@@ -29,14 +29,16 @@ function LabelsSection() {
                         {c('LabelSettings').t`A message can only be filed in a single Folder at a time.`}
                     </SettingsParagraph>
                     <Row>
-                <Label htmlFor="folder-colors">{c('Label').t`Use folder colors`}</Label>
-                <Field>
-                    <ToggleEnableFolderColor id="folder-colors" />
-                </Field>
-                </Row>
+                        <Label htmlFor="folder-colors" className="text-bold">
+                            {c('Label').t`Use folder colors`}
+                        </Label>
+                        <Field>
+                            <ToggleEnableFolderColor id="folder-colors" />
+                        </Field>
+                    </Row>
                     {mailSettings?.EnableFolderColor ? (
                         <Row>
-                            <Label htmlFor="parent-folder-color">
+                            <Label htmlFor="parent-folder-color" className="text-bold">
                                 <span>{c('Label').t`Inherit color from parent folder`}</span>
                                 <Info
                                     buttonClass="ml0-5 inline-flex"
