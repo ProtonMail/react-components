@@ -29,7 +29,7 @@ const DeskopNotificationTopBanner = () => {
         request(
             () => {
                 setStatus(getStatus());
-                create(c('Info').t`Desktop notification example`, {
+                void create(c('Info').t`Desktop notification example`, {
                     body: c('Info').t`This is a ${appName} desktop notification`,
                     icon: '/assets/img/notification-badge.gif',
                     onClick() {
