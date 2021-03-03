@@ -54,7 +54,7 @@ function NewLabelForm({ label: labelOrFolder, onChangeColor, onChangeName, onCha
                         <Label htmlFor="accountType">{c('New Label form').t`Color`} </Label>
                         <Field>
                             {mailSettings?.InheritParentFolderColor && folder.ParentID ? (
-                                <div className="mt0-5">{c('Info').t`Inherited from parent`}</div>
+                                <div className="mt0-5">{c('Info').t`Inherited from parent folder`}</div>
                             ) : (
                                 <ColorPicker color={folder.Color} onChange={onChangeColor} />
                             )}
