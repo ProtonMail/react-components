@@ -111,7 +111,7 @@ const EditAddressesSection = ({ address }: Props) => {
             }}
         >
             <Row>
-                <Label htmlFor="displayName" className="w16r text-bold">{c('Label').t`Display name`}</Label>
+                <Label htmlFor="displayName" className="w16r text-semibold">{c('Label').t`Display name`}</Label>
                 <Field className="w100">
                     <Input
                         id="displayName"
@@ -123,7 +123,7 @@ const EditAddressesSection = ({ address }: Props) => {
             </Row>
 
             <Row>
-                <Label className="w16r text-bold" onClick={() => editorRef.current?.focus()}>
+                <Label className="w16r text-semibold" onClick={() => editorRef.current?.focus()}>
                     {c('Label').t`Signature`}
                 </Label>
                 <Field className="w100 h100">

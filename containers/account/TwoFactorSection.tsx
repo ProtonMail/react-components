@@ -30,7 +30,7 @@ const TwoFactorSection = () => {
 
     return (
         <Row>
-            <Label htmlFor="twoFactorToggle" className="text-bold">
+            <Label htmlFor="twoFactorToggle" className="text-semibold">
                 <span className="mr0-5">{c('Label').t`Two-factor authentication`}</span>
                 <Info url={twoFactorAuthLink} />
             </Label>

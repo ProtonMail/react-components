@@ -142,7 +142,7 @@ const LogsSection = () => {
                     .t`Logs include authentication attempts for all Proton services that use your Proton credentials.`}
             </SettingsParagraph>
             <Row>
-                <Label className="text-bold" htmlFor="logs-toggle">
+                <Label className="text-semibold" htmlFor="logs-toggle">
                     {c('Log preference').t`Enable authentication logs`}
                 </Label>
                 <Field>
@@ -156,7 +156,7 @@ const LogsSection = () => {
 
             {logAuth !== DISABLE ? (
                 <Row>
-                    <Label className="text-bold" htmlFor="advanced-logs-toggle">
+                    <Label className="text-semibold" htmlFor="advanced-logs-toggle">
                         <span className="mr0-5">{c('Log preference').t`Enable advanced logs`}</span>
                         <Info title={c('Tooltip').t`Records the IP address of each event in the security log.`} />
                     </Label>

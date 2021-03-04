@@ -19,7 +19,7 @@ const TimeZoneField = ({ value, onChange }: Props) => {
 
     return (
         <Row>
-            <Label htmlFor="timezone" className="w16r text-bold">{c('Label').t`Timezone`}</Label>
+            <Label htmlFor="timezone" className="w16r text-semibold">{c('Label').t`Timezone`}</Label>
             <Field>
                 <Select id="timezone" options={options} onChange={handleChange} value={value} />
             </Field>

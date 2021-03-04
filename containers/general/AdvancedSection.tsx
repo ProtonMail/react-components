@@ -89,7 +89,7 @@ const AdvancedSection = () => {
     return (
         <SettingsSection>
             <Row>
-                <Label htmlFor="shortcutsToggle" className="text-bold">
+                <Label htmlFor="shortcutsToggle" className="text-semibold">
                     {c('Title').t`Keyboard shortcuts`}
                 </Label>
                 <Field className="flex flex-item-fluid flex-justify-space-between">
@@ -110,7 +110,7 @@ const AdvancedSection = () => {
             </Row>
 
             <Row>
-                <Label htmlFor="betaToggle" className="text-bold">
+                <Label htmlFor="betaToggle" className="text-semibold">
                     {hasAlphaAccess ? (
                         <span className="mr0-5">{c('Label').t`Application Version`}</span>
                     ) : (
