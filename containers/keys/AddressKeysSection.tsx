@@ -316,9 +316,10 @@ const AddressKeysSection = () => {
 
     return (
         <>
-            <SettingsParagraph learnMoreUrl="https://protonmail.com/support/knowledge-base/pgp-key-management/">
-                {c('Info')
-                    .t`Download your PGP Keys for use with other PGP compatible services. Only incoming messages in inline OpenPGP format are currently supported.`}
+            <SettingsParagraph>
+                {c('Info').t`Download your PGP keys for use with other PGP-compatible services.`}
+                <br />
+                {c('Info').t`Only incoming messages in inline OpenPGP format are currently supported.`}
             </SettingsParagraph>
             {canReactivate && (
                 <div className="mb1">

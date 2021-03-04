@@ -111,8 +111,9 @@ const AddressesWithMembers = ({ user, organization, isOnlySelf }: Props) => {
         <>
             <SettingsParagraph>
                 {c('Info')
-                    .t`The email address at the top of the list will automatically be selected as the default email address. Drag and drop to reorder addresses.`}
+                    .t`The email address you place at the top of the list is your default email address. Drag and drop to reorder your addresses.`}
             </SettingsParagraph>
+
             {!isOnlySelf && memberOptions.length > 2 ? (
                 <div className="mb1">
                     <Select
@@ -123,6 +124,7 @@ const AddressesWithMembers = ({ user, organization, isOnlySelf }: Props) => {
                     />
                 </div>
             ) : null}
+
             {!currentMember || memberIndex === ALL_MEMBERS_ID || isNonPrivateSelf ? null : (
                 <div className="mb1">
                     {mustActivateOrganizationKey ? (
@@ -137,6 +139,7 @@ const AddressesWithMembers = ({ user, organization, isOnlySelf }: Props) => {
                     )}
                 </div>
             )}
+
             {isSelfSelected ? (
                 <AddressesWithUser user={user} />
             ) : (

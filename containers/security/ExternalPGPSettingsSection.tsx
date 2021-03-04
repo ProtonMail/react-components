@@ -67,13 +67,14 @@ const ExternalPGPSettingsSection = () => {
             <SettingsParagraph learnMoreUrl="https://protonmail.com/support/knowledge-base/how-to-use-pgp/">
                 {c('Info').t`Only change these settings if you are using PGP with non-ProtonMail recipients.`}
             </SettingsParagraph>
+
             <Row>
                 <Label htmlFor="signToggle" className="text-semibold">
                     <span className="mr0-5">{c('Label').t`Sign external messages`}</span>
                     <Info
                         url="https://protonmail.com/support/knowledge-base/what-is-a-digital-signature/"
                         title={c('Tooltip sign external messages')
-                            .t`Automatically sign all your outgoing messages so users can verify the authenticity of your messages. This is done in combination with the Default PGP Scheme that is selected down below.`}
+                            .t`Automatically sign all your outgoing messages so users can verify the authenticity of your messages. This is done in combination with the default PGP settings which can be configured below.`}
                     />
                 </Label>
                 <Field>
@@ -105,11 +106,11 @@ const ExternalPGPSettingsSection = () => {
             </Row>
             <Row>
                 <Label htmlFor="PGPSchemeSelect" className="text-semibold">
-                    <span className="mr0-5">{c('Label').t`Default PGP Scheme`}</span>
+                    <span className="mr0-5">{c('Label').t`Default PGP settings`}</span>
                     <Info
                         url="https://protonmail.com/support/knowledge-base/pgp-mime-pgp-inline/"
                         title={c('Tooltip default pgp scheme')
-                            .t`Select the default PGP scheme to be used when signing or encrypting to an user. Note that PGP/Inline forces plain text messages. Click for more info.`}
+                            .t`Select the default PGP settings used to sign or encrypt messages with non-ProtonMail PGP users. Note that Inline PGP forces plain text messages. Learn more`}
                     />
                 </Label>
                 <Field>
