@@ -72,7 +72,7 @@ function FilterItemRow({ filter, index, ...rest }: Props) {
             onClick: handleEdit(),
         },
         {
-            text: c('Action').t`Edit Sieve`,
+            text: c('Action').t`Edit sieve`,
             onClick: handleEdit('sieve'),
         },
         {

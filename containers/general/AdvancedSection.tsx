@@ -90,7 +90,7 @@ const AdvancedSection = () => {
         <SettingsSection>
             <Row>
                 <Label htmlFor="shortcutsToggle" className="text-semibold">
-                    {c('Title').t`Keyboard shortcuts`}
+                    {c('Title').t`Enable keyboard shortcuts`}
                 </Label>
                 <Field className="flex flex-item-fluid flex-justify-space-between">
                     <ShortcutsToggle
@@ -104,7 +104,7 @@ const AdvancedSection = () => {
                         onClick={openShortcutsModal}
                         className="flex-item-noshrink flex-item-nogrow"
                     >
-                        {c('Action').t`Display keyboard shortcuts`}
+                        {c('Action').t`Show shortcuts`}
                     </Button>
                 </Field>
             </Row>
@@ -114,17 +114,14 @@ const AdvancedSection = () => {
                     {hasAlphaAccess ? (
                         <span className="mr0-5">{c('Label').t`Application Version`}</span>
                     ) : (
-                        <span className="mr0-5">{c('Label').t`Beta Program Opt-In`}</span>
+                        <>
+                            <span className="mr0-5">{c('Label').t`Join the beta program`}</span>
+                            <Info
+                                title={c('Info')
+                                    .t`ProtonMail beta testers get early access to new features and take part in the development of our products.`}
+                            />
+                        </>
                     )}
-                    <Info
-                        title={
-                            hasAlphaAccess
-                                ? c('Info')
-                                      .t`Participating in early access programs gives you the opportunity to test new features and improvements before they get released to the general public. It offers a chance to have an active role in shaping the quality of our services.`
-                                : c('Info')
-                                      .t`Participating in beta programs gives you the opportunity to test new features and improvements before they get released to the general public. It offers a chance to have an active role in shaping the quality of our services.`
-                        }
-                    />
                 </Label>
                 <Field>
                     {hasAlphaAccess ? (

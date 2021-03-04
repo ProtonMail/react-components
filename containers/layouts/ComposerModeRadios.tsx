@@ -24,11 +24,11 @@ const ComposerModeRadios = ({ composerMode, onChange, loading, id, ...rest }: Pr
         id: 'popupRadio',
         disabled: loading,
         name: 'composerMode',
-        label: c('Label to change composer mode').t`Popup`,
+        label: c('Label to change composer mode').t`Normal`,
         onChange() {
             onChange(POPUP);
         },
-        children: <img alt="Popup" src={composerPopUpSvg} />,
+        children: <img alt="Normal" src={composerPopUpSvg} />,
     };
     const radioCardMaximized = {
         value: MAXIMIZED,

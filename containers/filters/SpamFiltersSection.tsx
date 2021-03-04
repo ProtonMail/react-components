@@ -120,7 +120,7 @@ function SpamFiltersSection() {
         <SettingsSectionWide>
             <SettingsParagraph learnMoreUrl="https://protonmail.com/support/knowledge-base/spam-filtering/">
                 {c('FilterSettings')
-                    .t`Sender specific spam rules can be applied here. Allow List addresses always go to Inbox while Block List addresses always go to Spam. Marking a message as spam adds the address to the Block List. Marking a message as not spam adds it to the Allow List.`}
+                    .t`Apply sender-specific spam rules. Messages from addresses or domains on the Allow List always go to your Inbox while messages from addresses or domains on the Block List always go to Spam. Marking a message as spam adds its address to the Block List. Marking a message as not spam adds it to the Allow List.`}
             </SettingsParagraph>
             <div className="mb1">
                 <SearchInput

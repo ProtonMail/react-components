@@ -20,13 +20,15 @@ function LabelSortableList({ items, onEditLabel = noop, onRemoveLabel = noop, ..
             <caption className="sr-only">{c('Settings/labels').t`Labels/Folders`}</caption>
             <OrderableTableHeader>
                 <tr>
-                    <th scope="col" className="w5">
+                    <th scope="col" className="w5 text-capitalize">
                         <Icon name="arrow-cross" />
                     </th>
-                    <th scope="col" className="w70">
-                        {c('Settings/labels - table').t`Name`}
+                    <th scope="col" className="w70 text-capitalize">
+                        {c('Settings/labels - table').t`Labels`}
                     </th>
-                    <th scope="col">{c('Settings/labels - table').t`Actions`}</th>
+                    <th scope="col" className="text-capitalize">
+                        {c('Settings/labels - table').t`Actions`}
+                    </th>
                 </tr>
             </OrderableTableHeader>
             <OrderableTableBody colSpan={0}>

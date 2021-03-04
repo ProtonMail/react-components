@@ -28,7 +28,7 @@ const ImportListSection = () => {
     ];
 
     if (!importsToDisplay.length) {
-        return <SettingsParagraph>{c('Info').t`No imports in progress.`}</SettingsParagraph>;
+        return <SettingsParagraph>{c('Info').t`No imports to display.`}</SettingsParagraph>;
     }
 
     const activeImports = importsToDisplay as Importer[];
@@ -82,7 +82,9 @@ const ImportListSection = () => {
 
     const infoRenderer = () => {
         if (!hasAuthPausedImports) {
-            return <SettingsParagraph>{c('Info').t`Check the status of your imports in progress`}</SettingsParagraph>;
+            return (
+                <SettingsParagraph>{c('Info').t`Check the status of current and previous imports.`}</SettingsParagraph>
+            );
         }
 
         if (hasStoragePausedImports) {

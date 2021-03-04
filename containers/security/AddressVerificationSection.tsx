@@ -25,13 +25,14 @@ const AddressVerificationSection = () => {
                 {c('Info')
                     .t`Address verification is an advanced security feature. Only turn this on if you know what it does.`}
             </SettingsParagraph>
+
             <Row>
                 <Label htmlFor="trustToggle" className="text-semibold">
                     <span className="mr0-5">{c('Label').t`Prompt to trust keys`}</span>
                     <Info
                         url="https://protonmail.com/support/knowledge-base/address-verification/"
                         title={c('Tooltip prompt to trust keys')
-                            .t`When receiving an internal message from a sender that has no trusted keys in your contacts, show a banner asking if you want to enable trusted keys.`}
+                            .t`When receiving an email from another ProtonMail user who does not have trusted keys in your contacts, a banner will ask if you want to enable trusted keys.`}
                     />
                 </Label>
                 <Field>

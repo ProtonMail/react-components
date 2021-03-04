@@ -92,7 +92,7 @@ const AppearanceOtherSection = () => {
                     <span className="mr0-5">{c('Label').t`Use sticky labels`}</span>
                     <Info
                         title={c('Tooltip')
-                            .t`When a label is added to a message in a conversation, all future messages you send or receive will have that same label automatically applied.`}
+                            .t`When you add a label to a message in a conversation, it will automatically be applied to all future messages you send or receive in that conversation.`}
                     />
                 </Label>
                 <Field>
@@ -110,7 +110,7 @@ const AppearanceOtherSection = () => {
                     <span className="mr0-5">{c('Label').t`Conversation grouping`}</span>
                     <Info
                         title={c('Tooltip')
-                            .t`Conversation grouping automatically groups messages in the same conversation together.`}
+                            .t`Group emails in the same conversation together in your Inbox or display them separately.`}
                     />
                 </Label>
 
@@ -152,7 +152,7 @@ const AppearanceOtherSection = () => {
             </Row>
 
             <Row>
-                <Label className="text-semibold">{c('Label').t`Read/unread order`}</Label>
+                <Label className="text-semibold">{c('Label').t`Read/unread toolbar order`}</Label>
                 <Field>
                     <div className="mb1">
                         <Radio

@@ -104,7 +104,7 @@ const ProtonMailBridgeSection = () => {
         <SettingsSectionWide>
             <SettingsParagraph learnMoreUrl="https://protonmail.com/bridge/">
                 {c('Info')
-                    .t`ProtonMail supports IMAP/SMTP via the ProtonMail Bridge application. Thunderbird, Microsoft Outlook, and Apple Mail are officially supported on both Windows and macOS.`}
+                    .t`You can use ProtonMail with any desktop email client that supports IMAP/SMTP, including Outlook, Apple Mail, and Thunderbird.`}
             </SettingsParagraph>
 
             <div className="bridge-grid">{bridgeClients.map(renderBox)}</div>

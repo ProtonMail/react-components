@@ -4,7 +4,7 @@ import { c } from 'ttag';
 import { Loader, Button, Row, Label, Field, Info } from '../../components';
 import { useFolders, useMailSettings, useModals } from '../../hooks';
 
-import { SettingsSection, SettingsParagraph } from '../account';
+import { SettingsSection } from '../account';
 
 import FolderTreeViewList from './FolderTreeViewList';
 import EditLabelModal from './modals/EditLabelModal';
@@ -22,12 +22,6 @@ function LabelsSection() {
                 <Loader />
             ) : (
                 <>
-                    <SettingsParagraph
-                        className="mt1 mb1"
-                        learnMoreUrl="https://protonmail.com/support/knowledge-base/creating-folders/"
-                    >
-                        {c('LabelSettings').t`A message can only be filed in a single Folder at a time.`}
-                    </SettingsParagraph>
                     <Row>
                         <Label htmlFor="folder-colors" className="text-semibold">
                             {c('Label').t`Use folder colors`}
@@ -36,6 +30,7 @@ function LabelsSection() {
                             <ToggleEnableFolderColor id="folder-colors" />
                         </Field>
                     </Row>
+
                     {mailSettings?.EnableFolderColor ? (
                         <Row>
                             <Label htmlFor="parent-folder-color" className="text-semibold">
@@ -51,16 +46,14 @@ function LabelsSection() {
                             </Field>
                         </Row>
                     ) : null}
-                    <div className="mb1">
+
+                    <div className="mt2 mb2">
                         <Button color="norm" onClick={() => createModal(<EditLabelModal type="folder" />)}>
                             {c('Action').t`Add folder`}
                         </Button>
                     </div>
-                    {folders.length ? (
-                        <FolderTreeViewList items={folders} />
-                    ) : (
-                        <SettingsParagraph>{c('LabelSettings').t`No folders available`}</SettingsParagraph>
-                    )}
+
+                    {folders.length ? <FolderTreeViewList items={folders} /> : null}
                 </>
             )}
         </SettingsSection>

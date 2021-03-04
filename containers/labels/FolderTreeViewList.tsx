@@ -24,12 +24,12 @@ interface HeaderProps {
 const Header = ({ isNarrow }: HeaderProps) => {
     return (
         <div className="flex flex-nowrap w100 border-bottom pb0-5">
-            <span className="text-bold text-uppercase flex-item-fluid">
+            <span className="text-bold flex-item-fluid">
                 {isNarrow ? null : <Icon name="arrow-cross" className="mr1" />}
-                {c('Header').t`Name`}
+                {c('Header').t`Folders`}
             </span>
-            <span className="text-bold text-uppercase w10e no-mobile">{c('Header').t`Notification`}</span>
-            <span className="text-bold text-uppercase w10e text-right">{c('Header').t`Actions`}</span>
+            <span className="text-bold w10e no-mobile">{c('Header').t`Notifications`}</span>
+            <span className="text-bold w10e text-right">{c('Header').t`Actions`}</span>
         </div>
     );
 };
