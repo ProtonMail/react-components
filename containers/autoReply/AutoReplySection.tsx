@@ -3,8 +3,7 @@ import { c } from 'ttag';
 
 import { isMac } from 'proton-shared/lib/helpers/browser';
 import { updateAutoresponder } from 'proton-shared/lib/api/mailSettings';
-import { AutoReplyDuration, PERMISSIONS } from 'proton-shared/lib/constants';
-import { HTTP_ERROR_CODES } from 'proton-shared/lib/errors';
+import { AutoReplyDuration } from 'proton-shared/lib/constants';
 import { getAccountSettingsApp } from 'proton-shared/lib/apps/helper';
 
 import {
@@ -49,29 +48,12 @@ const AutoReplySection = () => {
     const composerRef = useRef<HTMLDivElement>(null);
 
     const handleToggle = async (IsEnabled: boolean) => {
-        try {
-            await api({
-                ...updateAutoresponder({ ...AutoResponder, IsEnabled }),
-                silence: true,
-            });
-            await call();
-            setIsEnabled(IsEnabled);
-            createNotification({
-                text: IsEnabled ? c('Success').t`Auto-reply enabled` : c('Success').t`Auto-reply disabled`,
-            });
-        } catch (e) {
-            let text = e.data.Error;
-
-            if (e.status === HTTP_ERROR_CODES.UNLOCK && e.data.Details.MissingScopes[0] === PERMISSIONS.PAID) {
-                text = c('Error')
-                    .t`Automatic replies is a paid feature. Please upgrade to a paid account to use this feature.`;
-            }
-
-            createNotification({
-                type: 'error',
-                text,
-            });
-        }
+        await api(updateAutoresponder({ ...AutoResponder, IsEnabled }));
+        await call();
+        setIsEnabled(IsEnabled);
+        createNotification({
+            text: IsEnabled ? c('Success').t`Auto-reply enabled` : c('Success').t`Auto-reply disabled`,
+        });
     };
 
     const handleSubmit = async () => {
@@ -130,22 +112,10 @@ const AutoReplySection = () => {
 
     return (
         <SettingsSection className="no-scroll">
-            {hasPaidMail ? (
-                <SettingsParagraph className="mt0 mb1">
-                    {c('Info')
-                        .t`Use automatic replies to inform contacts you are out of the office or otherwise unable to respond.`}
-                </SettingsParagraph>
-            ) : (
-                <div className="flex flex-align-items-center bg-pm-blue-gradient color-white rounded mt0 mb1 p1">
-                    <p className="m0 mr1 flex-item-fluid">
-                        {c('Info')
-                            .t`Upgrade to ProtonMail Professional to enable automatic replies for when you are out of the office.`}
-                    </p>
-                    <AppLink to="/subscription" toApp={getAccountSettingsApp()} className="color-white">
-                        {c('Action').t`Upgrade`}
-                    </AppLink>
-                </div>
-            )}
+            <SettingsParagraph className="mt0 mb1">
+                {c('Info')
+                    .t`Use automatic replies to inform contacts you are out of the office or otherwise unable to respond.`}
+            </SettingsParagraph>
 
             <Row>
                 <Label htmlFor="autoReplyToggle" className="on-mobile-pb0 on-mobile-no-border w16r text-semibold">
@@ -162,45 +132,57 @@ const AutoReplySection = () => {
                     </span>
                 </Field>
             </Row>
-            {hasPaidMail && isEnabled ? (
-                <form
-                    onSubmit={async (e) => {
-                        e.preventDefault();
-                        await withUpdatingLoading(handleSubmit());
-                    }}
-                >
-                    <DurationField value={model.duration} onChange={updateModel('duration')} />
+            {hasPaidMail ? (
+                isEnabled && (
+                    <form
+                        onSubmit={async (e) => {
+                            e.preventDefault();
+                            await withUpdatingLoading(handleSubmit());
+                        }}
+                    >
+                        <DurationField value={model.duration} onChange={updateModel('duration')} />
 
-                    {formRenderer(model.duration)}
+                        {formRenderer(model.duration)}
 
-                    <Row>
-                        <Label className="w16r text-semibold" onClick={() => editorRef.current?.focus()}>
-                            {c('Label').t`Message`}
-                        </Label>
-                        <Field className="w100">
-                            <div ref={composerRef} tabIndex={-1} className="w100">
-                                <SimpleSquireEditor
-                                    ref={editorRef}
-                                    supportImages={false}
-                                    onReady={handleEditorReady}
-                                    onChange={updateModel('message')}
-                                    keydownHandler={squireKeydownHandler}
-                                />
-                            </div>
+                        <Row>
+                            <Label className="w16r text-semibold" onClick={() => editorRef.current?.focus()}>
+                                {c('Label').t`Message`}
+                            </Label>
+                            <Field className="w100">
+                                <div ref={composerRef} tabIndex={-1} className="w100">
+                                    <SimpleSquireEditor
+                                        ref={editorRef}
+                                        supportImages={false}
+                                        onReady={handleEditorReady}
+                                        onChange={updateModel('message')}
+                                        keydownHandler={squireKeydownHandler}
+                                    />
+                                </div>
 
-                            <Button
-                                color="norm"
-                                type="submit"
-                                disabled={updatingLoading}
-                                loading={updatingLoading}
-                                className="mt1"
-                            >
-                                {c('Action').t`Update`}
-                            </Button>
-                        </Field>
-                    </Row>
-                </form>
-            ) : null}
+                                <Button
+                                    color="norm"
+                                    type="submit"
+                                    disabled={updatingLoading}
+                                    loading={updatingLoading}
+                                    className="mt1"
+                                >
+                                    {c('Action').t`Update`}
+                                </Button>
+                            </Field>
+                        </Row>
+                    </form>
+                )
+            ) : (
+                <div className="flex flex-align-items-center bg-pm-blue-gradient color-white rounded mt2 p1">
+                    <p className="m0 mr1 flex-item-fluid">
+                        {c('Info')
+                            .t`Upgrade to ProtonMail Professional to enable automatic replies for when you are out of the office.`}
+                    </p>
+                    <AppLink to="/subscription" toApp={getAccountSettingsApp()} className="color-white">
+                        {c('Action').t`Upgrade`}
+                    </AppLink>
+                </div>
+            )}
         </SettingsSection>
     );
 };
