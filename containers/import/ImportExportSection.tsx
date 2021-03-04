@@ -16,11 +16,13 @@ const ImportExportSection = () => {
         <SettingsSection>
             <SettingsParagraph>
                 {c('Info')
-                    .t`Import and export your messages for local backups with Proton's import/export desktop app. Available on MacOS, Windows and Linux.`}
+                    .t`For advanced security, the Import-Export app encrypts emails on your device before migrating them to Proton servers. You can also export messages for local backups.`}
+                <br />
+                {c('Info').t`Available on macOS, Windows, and Linux.`}
             </SettingsParagraph>
 
             <Button color="norm" onClick={handleClick}>
-                {c('Action').t`Download`}
+                {c('Action').t`Download the Import-Export app`}
             </Button>
         </SettingsSection>
     );

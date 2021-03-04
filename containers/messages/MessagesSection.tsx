@@ -24,7 +24,11 @@ const MessagesSection = () => {
             <Row>
                 <Label htmlFor="remoteToggle" className="text-semibold">
                     <span className="mr0-5">{c('Label').t`Auto-load remote content`}</span>
-                    <Info url="https://protonmail.com/support/knowledge-base/images-by-default/" />
+                    <Info
+                        url="https://protonmail.com/support/knowledge-base/images-by-default/"
+                        title={c('Info')
+                            .t`When disabled, this prevents all files from loading on your device without your knowledge.	`}
+                    />
                 </Label>
                 <Field>
                     <RemoteToggle id="remoteToggle" showImages={showImages} onChange={handleChange} />
@@ -33,7 +37,11 @@ const MessagesSection = () => {
             <Row>
                 <Label htmlFor="embeddedToggle" className="text-semibold">
                     <span className="mr0-5">{c('Label').t`Auto-load embedded images`}</span>
-                    <Info url="https://protonmail.com/support/knowledge-base/images-by-default/" />
+                    <Info
+                        url="https://protonmail.com/support/knowledge-base/images-by-default/"
+                        title={c('Info')
+                            .t`When disabled, this prevents image files from loading on your device without your knowledge.`}
+                    />
                 </Label>
                 <Field>
                     <EmbeddedToggle id="embeddedToggle" showImages={showImages} onChange={handleChange} />
@@ -41,10 +49,10 @@ const MessagesSection = () => {
             </Row>
             <Row>
                 <Label htmlFor="showMovedToggle" className="text-semibold">
-                    <span className="mr0-5">{c('Label').t`Include moved in Sent/Drafts`}</span>
+                    <span className="mr0-5">{c('Label').t`Keep messsages in Sent/Drafts`}</span>
                     <Info
                         title={c('Tooltip')
-                            .t`Setting to 'Include moved' means that sent / draft messages that have been moved to other folders will continue to appear in the Sent/Drafts folder.`}
+                            .t`Messages in the Sent or Drafts folder will continue to appear in that folder, even if you move them to another folder.`}
                     />
                 </Label>
                 <Field>
@@ -52,8 +60,13 @@ const MessagesSection = () => {
                 </Field>
             </Row>
             <Row>
-                <Label htmlFor="requestLinkConfirmationToggle" className="text-semibold">{c('Label')
-                    .t`Request link confirmation`}</Label>
+                <Label htmlFor="requestLinkConfirmationToggle" className="text-semibold">
+                    <span className="mr0-5">{c('Label').t`Link confirmation`}</span>
+                    <Info
+                        title={c('Tooltip')
+                            .t`When you click on a link, this anti-phishing feature will ask you to confirm the URL of the web page.`}
+                    />
+                </Label>
                 <Field>
                     <RequestLinkConfirmationToggle confirmLink={ConfirmLink} id="requestLinkConfirmationToggle" />
                 </Field>
@@ -63,7 +76,7 @@ const MessagesSection = () => {
                     <span className="mr0-5">{c('Label').t`Undo send`}</span>
                     <Info
                         title={c('Tooltip')
-                            .t`This feature delays sending your emails. You can undo send during the selected timeframe.`}
+                            .t`This feature delays sending your emails, giving you the opportunity to undo send during the selected time frame.`}
                     />
                 </Label>
                 <Field>

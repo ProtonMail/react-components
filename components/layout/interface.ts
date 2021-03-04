@@ -17,6 +17,7 @@ export interface SectionConfig {
     text: string;
     to: string;
     icon: string;
+    description?: string;
     subsections?: SubSectionConfig[];
     permissions?: PERMISSIONS[];
 }

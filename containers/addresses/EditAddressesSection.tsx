@@ -111,7 +111,9 @@ const EditAddressesSection = ({ address }: Props) => {
             }}
         >
             <Row>
-                <Label htmlFor="displayName" className="w16r text-semibold">{c('Label').t`Display name`}</Label>
+                <Label htmlFor="displayName" className="w16r text-semibold">
+                    {c('Label').t`Display name`}
+                </Label>
                 <Field className="w100">
                     <Input
                         id="displayName"

@@ -112,17 +112,14 @@ const AutoReplySection = () => {
 
     return (
         <SettingsSection className="no-scroll">
-            <SettingsParagraph
-                className="mt1 mb1"
-                learnMoreUrl="https://protonmail.com/support/knowledge-base/autoresponder/"
-            >
+            <SettingsParagraph className="mt0 mb1">
                 {c('Info')
-                    .t`Automatic replies can respond automatically to incoming messages (such as when you are on vacation and can't respond).`}
+                    .t`Use automatic replies to inform contacts you are out of the office or otherwise unable to respond.`}
             </SettingsParagraph>
 
             <Row>
                 <Label htmlFor="autoReplyToggle" className="on-mobile-pb0 on-mobile-no-border w16r text-semibold">
-                    {c('Label').t`Auto-reply`}
+                    {c('Label').t`Auto reply`}
                 </Label>
                 <Field className="on-mobile-pb0 on-mobile-no-border flex flex-nowrap w100">
                     <span className="flex-item-noshrink">
@@ -179,7 +176,7 @@ const AutoReplySection = () => {
                 <div className="flex flex-align-items-center bg-pm-blue-gradient color-white rounded mt2 p1">
                     <p className="m0 mr1 flex-item-fluid">
                         {c('Info')
-                            .t`Upgrade to ProtonMail Professional to enable the auto-reply premium feature to respond automatically to incoming messages.`}
+                            .t`Upgrade to ProtonMail Professional to enable automatic replies for when you are out of the office.`}
                     </p>
                     <AppLink to="/subscription" toApp={getAccountSettingsApp()} className="color-white">
                         {c('Action').t`Upgrade`}
