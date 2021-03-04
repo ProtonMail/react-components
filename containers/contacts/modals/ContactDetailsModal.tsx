@@ -75,7 +75,7 @@ const ContactDetailsModal = ({ contactID, onClose = noop, ...rest }: Props) => {
                         contactGroupsMap={contactGroupsMap}
                         ownAddresses={ownAddresses}
                         userKeysList={userKeysList}
-                        onDelete={() => onClose()}
+                        onDelete={onClose}
                         isModal
                     />
                 </div>
