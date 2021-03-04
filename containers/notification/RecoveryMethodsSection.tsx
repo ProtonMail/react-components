@@ -78,7 +78,8 @@ const RecoveryMethodsSection = () => {
                     .t`We recommend adding a linked email or phone number so you can recover your account if you lose your password.`}
             </SettingsParagraph>
             <Row>
-                <Label className="on-mobile-mb0-5 text-bold" htmlFor="emailInput">{c('Label').t`Email address`}</Label>
+                <Label className="on-mobile-mb0-5 text-semibold" htmlFor="emailInput">{c('Label')
+                    .t`Email address`}</Label>
                 <Field className="w100">
                     <div className="mb1">
                         <RecoveryEmail
@@ -127,7 +128,7 @@ const RecoveryMethodsSection = () => {
             </Row>
             <hr className="mb2 mt2" />
             <Row>
-                <Label className="pt0 on-mobile-mb0-5 text-bold" htmlFor="phoneInput">{c('Label')
+                <Label className="pt0 on-mobile-mb0-5 text-semibold" htmlFor="phoneInput">{c('Label')
                     .t`Phone number`}</Label>
                 <Field className="w100">
                     <div className="mb1">

@@ -88,7 +88,7 @@ const AppearanceOtherSection = () => {
     return (
         <>
             <Row>
-                <Label htmlFor="stickyLabelsToggle" className="text-bold">
+                <Label htmlFor="stickyLabelsToggle" className="text-semibold">
                     <span className="mr0-5">{c('Label').t`Use sticky labels`}</span>
                     <Info
                         title={c('Tooltip')
@@ -106,7 +106,7 @@ const AppearanceOtherSection = () => {
             </Row>
 
             <Row>
-                <Label htmlFor="viewMode" className="text-bold">
+                <Label htmlFor="viewMode" className="text-semibold">
                     <span className="mr0-5">{c('Label').t`Conversation grouping`}</span>
                     <Info
                         title={c('Tooltip')
@@ -125,7 +125,7 @@ const AppearanceOtherSection = () => {
             </Row>
 
             <Row>
-                <Label htmlFor="draftType" className="text-bold">
+                <Label htmlFor="draftType" className="text-semibold">
                     {c('Label').t`Composer mode`}
                 </Label>
                 <Field>
@@ -138,7 +138,7 @@ const AppearanceOtherSection = () => {
                 </Field>
             </Row>
             <Row>
-                <Label htmlFor="textDirection" className="text-bold">
+                <Label htmlFor="textDirection" className="text-semibold">
                     {c('Label').t`Composer text direction`}
                 </Label>
                 <Field>
@@ -152,7 +152,7 @@ const AppearanceOtherSection = () => {
             </Row>
 
             <Row>
-                <Label className="text-bold">{c('Label').t`Read/unread order`}</Label>
+                <Label className="text-semibold">{c('Label').t`Read/unread order`}</Label>
                 <Field>
                     <div className="mb1">
                         <Radio

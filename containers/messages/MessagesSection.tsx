@@ -22,7 +22,7 @@ const MessagesSection = () => {
     return (
         <>
             <Row>
-                <Label htmlFor="remoteToggle" className="text-bold">
+                <Label htmlFor="remoteToggle" className="text-semibold">
                     <span className="mr0-5">{c('Label').t`Auto-load remote content`}</span>
                     <Info url="https://protonmail.com/support/knowledge-base/images-by-default/" />
                 </Label>
@@ -31,7 +31,7 @@ const MessagesSection = () => {
                 </Field>
             </Row>
             <Row>
-                <Label htmlFor="embeddedToggle" className="text-bold">
+                <Label htmlFor="embeddedToggle" className="text-semibold">
                     <span className="mr0-5">{c('Label').t`Auto-load embedded images`}</span>
                     <Info url="https://protonmail.com/support/knowledge-base/images-by-default/" />
                 </Label>
@@ -40,7 +40,7 @@ const MessagesSection = () => {
                 </Field>
             </Row>
             <Row>
-                <Label htmlFor="showMovedToggle" className="text-bold">
+                <Label htmlFor="showMovedToggle" className="text-semibold">
                     <span className="mr0-5">{c('Label').t`Include moved in Sent/Drafts`}</span>
                     <Info
                         title={c('Tooltip')
@@ -52,14 +52,14 @@ const MessagesSection = () => {
                 </Field>
             </Row>
             <Row>
-                <Label htmlFor="requestLinkConfirmationToggle" className="text-bold">{c('Label')
+                <Label htmlFor="requestLinkConfirmationToggle" className="text-semibold">{c('Label')
                     .t`Request link confirmation`}</Label>
                 <Field>
                     <RequestLinkConfirmationToggle confirmLink={ConfirmLink} id="requestLinkConfirmationToggle" />
                 </Field>
             </Row>
             <Row>
-                <Label htmlFor="delaySendSecondsSelect" className="text-bold">
+                <Label htmlFor="delaySendSecondsSelect" className="text-semibold">
                     <span className="mr0-5">{c('Label').t`Undo send`}</span>
                     <Info
                         title={c('Tooltip')

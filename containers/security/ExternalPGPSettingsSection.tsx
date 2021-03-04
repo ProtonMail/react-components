@@ -68,7 +68,7 @@ const ExternalPGPSettingsSection = () => {
                 {c('Info').t`Only change these settings if you are using PGP with non-ProtonMail recipients.`}
             </SettingsParagraph>
             <Row>
-                <Label htmlFor="signToggle">
+                <Label htmlFor="signToggle" className="text-semibold">
                     <span className="mr0-5">{c('Label').t`Sign external messages`}</span>
                     <Info
                         url="https://protonmail.com/support/knowledge-base/what-is-a-digital-signature/"
@@ -86,7 +86,7 @@ const ExternalPGPSettingsSection = () => {
                 </Field>
             </Row>
             <Row>
-                <Label htmlFor="attachPublicKeyToggle">
+                <Label htmlFor="attachPublicKeyToggle" className="text-semibold">
                     <span className="mr0-5">{c('Label').t`Attach public key`}</span>
                     <Info
                         url="https://protonmail.com/support/knowledge-base/how-to-use-pgp"
@@ -104,7 +104,7 @@ const ExternalPGPSettingsSection = () => {
                 </Field>
             </Row>
             <Row>
-                <Label htmlFor="PGPSchemeSelect">
+                <Label htmlFor="PGPSchemeSelect" className="text-semibold">
                     <span className="mr0-5">{c('Label').t`Default PGP Scheme`}</span>
                     <Info
                         url="https://protonmail.com/support/knowledge-base/pgp-mime-pgp-inline/"

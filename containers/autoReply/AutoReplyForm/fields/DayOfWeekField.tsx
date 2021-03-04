@@ -19,7 +19,7 @@ const DayOfWeekField = ({ id, label, value, onChange }: Props) => {
 
     return (
         <Row>
-            <Label htmlFor={id} className="w16r text-bold">
+            <Label htmlFor={id} className="w16r text-semibold">
                 {label}
             </Label>
             <Field>

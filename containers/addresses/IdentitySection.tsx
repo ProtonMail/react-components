@@ -60,7 +60,7 @@ const IdentitySection = () => {
                     </SettingsParagraph>
 
                     <Row>
-                        <Label className="on-mobile-pb0 text-bold w16r" htmlFor="addressSelector">
+                        <Label className="on-mobile-pb0 text-semibold w16r" htmlFor="addressSelector">
                             {c('Label').t`Select an address`}
                         </Label>
                         <Field className="on-mobile-pb0 flex flex-row flex-nowrap w100">
@@ -71,7 +71,7 @@ const IdentitySection = () => {
                     {address && <EditAddressesSection address={address} />}
 
                     <Row>
-                        <Label htmlFor="pmSignatureToggle" className="text-bold w16r">{c('Label')
+                        <Label htmlFor="pmSignatureToggle" className="text-semibold w16r">{c('Label')
                             .t`ProtonMail footer`}</Label>
                         <PMSignatureField id="pmSignatureToggle" mailSettings={mailSettings} />
                     </Row>
