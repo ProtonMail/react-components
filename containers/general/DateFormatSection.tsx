@@ -28,7 +28,7 @@ const DateFormatSection = () => {
 
     return (
         <Row>
-            <Label className="text-bold" htmlFor="date-format-select">{c('Label').t`Date format`}</Label>
+            <Label className="text-semibold" htmlFor="date-format-select">{c('Label').t`Date format`}</Label>
             <Field>
                 <Select
                     id="date-format-select"

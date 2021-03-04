@@ -14,7 +14,7 @@ interface Props {
 const DateField = ({ id, label, value = new Date(), onChange, min, max }: Props) => {
     return (
         <Row>
-            <Label htmlFor={id} className="w16r text-bold">
+            <Label htmlFor={id} className="w16r text-semibold">
                 {label}
             </Label>
             <Field>

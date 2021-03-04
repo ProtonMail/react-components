@@ -50,7 +50,7 @@ const LayoutsSection = () => {
             ) : (
                 <>
                     <Row className="flex-column">
-                        <Label htmlFor="layoutMode" className="mb1 text-bold">
+                        <Label htmlFor="layoutMode" className="mb1 text-semibold">
                             <span className="mr0-5">{c('Label').t`Inbox`}</span>
                             <Info
                                 url="https://protonmail.com/support/knowledge-base/change-inbox-layout/"
@@ -67,7 +67,7 @@ const LayoutsSection = () => {
                     </Row>
 
                     <Row className="flex-column">
-                        <Label htmlFor="composerMode" className="mb1 text-bold">
+                        <Label htmlFor="composerMode" className="mb1 text-semibold">
                             <span className="mr0-5">{c('Label').t`Composer`}</span>
                             <Info
                                 url="https://protonmail.com/support/knowledge-base/composer/"
@@ -83,7 +83,7 @@ const LayoutsSection = () => {
                         />
                     </Row>
                     <Row className="flex-column">
-                        <Label htmlFor="density" className="mb1 text-bold">{c('Label').t`Density`}</Label>
+                        <Label htmlFor="density" className="mb1 text-semibold">{c('Label').t`Density`}</Label>
                         <DensityRadios
                             density={Density}
                             onChange={(value) => withLoadingDensity(handleChangeDensity(value))}

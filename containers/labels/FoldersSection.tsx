@@ -29,7 +29,7 @@ function LabelsSection() {
                         {c('LabelSettings').t`A message can only be filed in a single Folder at a time.`}
                     </SettingsParagraph>
                     <Row>
-                        <Label htmlFor="folder-colors" className="text-bold">
+                        <Label htmlFor="folder-colors" className="text-semibold">
                             {c('Label').t`Use folder colors`}
                         </Label>
                         <Field>
@@ -38,7 +38,7 @@ function LabelsSection() {
                     </Row>
                     {mailSettings?.EnableFolderColor ? (
                         <Row>
-                            <Label htmlFor="parent-folder-color" className="text-bold">
+                            <Label htmlFor="parent-folder-color" className="text-semibold">
                                 <span>{c('Label').t`Inherit color from parent folder`}</span>
                                 <Info
                                     buttonClass="ml0-5 inline-flex"

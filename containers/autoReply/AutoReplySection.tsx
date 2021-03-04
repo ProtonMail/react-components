@@ -121,7 +121,7 @@ const AutoReplySection = () => {
             </SettingsParagraph>
 
             <Row>
-                <Label htmlFor="autoReplyToggle" className="on-mobile-pb0 on-mobile-no-border w16r text-bold">
+                <Label htmlFor="autoReplyToggle" className="on-mobile-pb0 on-mobile-no-border w16r text-semibold">
                     {c('Label').t`Auto-reply`}
                 </Label>
                 <Field className="on-mobile-pb0 on-mobile-no-border flex flex-nowrap w100">
@@ -148,7 +148,7 @@ const AutoReplySection = () => {
                         {formRenderer(model.duration)}
 
                         <Row>
-                            <Label className="w16r text-bold" onClick={() => editorRef.current?.focus()}>
+                            <Label className="w16r text-semibold" onClick={() => editorRef.current?.focus()}>
                                 {c('Label').t`Message`}
                             </Label>
                             <Field className="w100">

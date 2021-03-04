@@ -17,7 +17,7 @@ const DaysOfWeekField = ({ value = [], onChange }: Props) => {
 
     return (
         <Row>
-            <Label className="w16r text-bold">{c('Label').t`Days of the week`}</Label>
+            <Label className="w16r text-semibold">{c('Label').t`Days of the week`}</Label>
             <Field>
                 <div className="flex flex-column">
                     {getFormattedWeekdays('iiii', { locale: dateLocale }).map((text, i) => (
