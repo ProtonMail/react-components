@@ -4,7 +4,7 @@ import { c } from 'ttag';
 import { ADDRESS_STATUS, RECEIVE_ADDRESS, SEND_ADDRESS } from 'proton-shared/lib/constants';
 import { Address } from 'proton-shared/lib/interfaces';
 
-import { Label, Select, Field, Loader, Row } from '../../components';
+import { Label, Select, Field, Loader, Row, Info } from '../../components';
 import { useAddresses, useMailSettings } from '../../hooks';
 
 import { SettingsParagraph, SettingsSection } from '../account';
@@ -54,14 +54,9 @@ const IdentitySection = () => {
                 <Loader />
             ) : (
                 <>
-                    <SettingsParagraph learnMoreUrl="https://protonmail.com/support/knowledge-base/display-name-and-signature/">
-                        {c('Info')
-                            .t`Click the Edit button to personalize your email address. Your Display Name appears in the From field when people receive an email from you. Your Signature is appended at the bottom of your messages. Or leave each field empty for more privacy.`}
-                    </SettingsParagraph>
-
                     <Row>
-                        <Label className="on-mobile-pb0 text-bold w16r" htmlFor="addressSelector">
-                            {c('Label').t`Select an address`}
+                        <Label className="on-mobile-pb0 text-semibold w16r" htmlFor="addressSelector">
+                            {c('Label').t`Email address`}
                         </Label>
                         <Field className="on-mobile-pb0 flex flex-row flex-nowrap w100">
                             <Select id="addressSelector" options={options} onChange={handleChange} />
@@ -71,8 +66,10 @@ const IdentitySection = () => {
                     {address && <EditAddressesSection address={address} />}
 
                     <Row>
-                        <Label htmlFor="pmSignatureToggle" className="text-bold w16r">{c('Label')
-                            .t`ProtonMail footer`}</Label>
+                        <Label htmlFor="pmSignatureToggle" className="text-semibold w16r">
+                            <span className="mr0-5">{c('Label').t`ProtonMail footer`}</span>
+                            <Info title={c('Info').t`Let your contacts know you care about their privacy.`} />
+                        </Label>
                         <PMSignatureField id="pmSignatureToggle" mailSettings={mailSettings} />
                     </Row>
                 </>

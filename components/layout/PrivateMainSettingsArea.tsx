@@ -9,14 +9,17 @@ import { SubSectionConfig, SettingsPropsShared } from './interface';
 import useActiveSection from './useActiveSection';
 
 import createScrollIntoView from '../../helpers/createScrollIntoView';
+import { classnames } from '../../helpers';
+import { SettingsParagraph } from '../../containers';
 
 interface Props extends SettingsPropsShared {
     title: string;
     children: React.ReactNode;
     subsections: SubSectionConfig[];
+    description?: string;
 }
 
-const PrivateMainSettingsArea = ({ setActiveSection, location, title, children, subsections }: Props) => {
+const PrivateMainSettingsArea = ({ setActiveSection, location, title, children, description, subsections }: Props) => {
     const mainAreaRef = useRef<HTMLDivElement>(null);
     const useIntersectionSection = useRef(false);
 
@@ -112,7 +115,10 @@ const PrivateMainSettingsArea = ({ setActiveSection, location, title, children, 
     return (
         <PrivateMainArea ref={mainAreaRef}>
             <div className="container-section-sticky">
-                <SettingsPageTitle className="mt1-5 mb1-5">{title}</SettingsPageTitle>
+                <SettingsPageTitle className={classnames(['mt1-5', !description && 'mb1-5'])}>
+                    {title}
+                </SettingsPageTitle>
+                {description && <SettingsParagraph className="mb1-5">{description}</SettingsParagraph>}
                 <ErrorBoundary>{wrappedSections}</ErrorBoundary>
             </div>
         </PrivateMainArea>

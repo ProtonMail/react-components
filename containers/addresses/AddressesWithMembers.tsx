@@ -111,8 +111,9 @@ const AddressesWithMembers = ({ user, organization, isOnlySelf }: Props) => {
         <>
             <SettingsParagraph>
                 {c('Info')
-                    .t`Premium plans let you add multiple email addresses to your account. All the emails associated with them will appear in the same mailbox. If you are the admin of a Professional or Visionary plan, you can manage email addresses for each user in your organization. The email address at the top of the list will automatically be selected as the default email address.`}
+                    .t`The email address you place at the top of the list is your default email address. Drag and drop to reorder your addresses.`}
             </SettingsParagraph>
+
             {!isOnlySelf && memberOptions.length > 2 ? (
                 <div className="mb1">
                     <Select
@@ -123,6 +124,7 @@ const AddressesWithMembers = ({ user, organization, isOnlySelf }: Props) => {
                     />
                 </div>
             ) : null}
+
             {!currentMember || memberIndex === ALL_MEMBERS_ID || isNonPrivateSelf ? null : (
                 <div className="mb1">
                     {mustActivateOrganizationKey ? (
@@ -131,12 +133,13 @@ const AddressesWithMembers = ({ user, organization, isOnlySelf }: Props) => {
                                 .jt`You must ${activateLink} organization keys before adding an email address to a non-private member.`}
                         </Alert>
                     ) : (
-                        <Button color="norm" onClick={() => handleAddAddress(currentMember)}>
+                        <Button shape="outline" onClick={() => handleAddAddress(currentMember)}>
                             {c('Action').t`Add address`}
                         </Button>
                     )}
                 </div>
             )}
+
             {isSelfSelected ? (
                 <AddressesWithUser user={user} />
             ) : (

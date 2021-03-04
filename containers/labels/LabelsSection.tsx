@@ -7,7 +7,7 @@ import { orderLabels } from 'proton-shared/lib/api/labels';
 import { Loader, Button } from '../../components';
 import { useLabels, useEventManager, useModals, useApi, useNotifications, useLoading } from '../../hooks';
 
-import { SettingsSection, SettingsParagraph } from '../account';
+import { SettingsSection } from '../account';
 
 import EditLabelModal from './modals/EditLabelModal';
 import LabelSortableList from './LabelSortableList';
@@ -36,8 +36,6 @@ function LabelsSection() {
         await call();
     };
 
-    const getScrollContainer = () => document.querySelector('.main-area');
-
     const handleSortLabel = async () => {
         const LabelIDs = [...labels]
             .sort((a, b) => a.Name.localeCompare(b.Name, undefined, { numeric: true }))
@@ -53,13 +51,7 @@ function LabelsSection() {
                 <Loader />
             ) : (
                 <>
-                    <SettingsParagraph
-                        className="mt1 mb1"
-                        learnMoreUrl="https://protonmail.com/support/knowledge-base/creating-folders/"
-                    >
-                        {c('LabelSettings').t`Multiple labels can be applied to a single message.`}
-                    </SettingsParagraph>
-                    <div className="mb1">
+                    <div className="mb2">
                         <Button
                             color="norm"
                             className="mr1"
@@ -76,11 +68,7 @@ function LabelsSection() {
                             {c('Action').t`Sort`}
                         </Button>
                     </div>
-                    {labels.length ? (
-                        <LabelSortableList getContainer={getScrollContainer} items={labels} onSortEnd={onSortEnd} />
-                    ) : (
-                        <SettingsParagraph>{c('LabelSettings').t`No labels available`}</SettingsParagraph>
-                    )}
+                    {labels.length ? <LabelSortableList items={labels} onSortEnd={onSortEnd} /> : null}
                 </>
             )}
         </SettingsSection>

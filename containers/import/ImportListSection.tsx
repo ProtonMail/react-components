@@ -22,34 +22,34 @@ const ImportListSection = () => {
     const [imports = [], importsLoading] = useImporters();
     const [pastImports = [], pastImportsLoading] = useImportHistory();
 
-    const activeImports = imports.filter(({ Active }) => Active);
+    const importsToDisplay = [
+        ...imports.filter(({ Active }) => Active).sort(sortActiveImports),
+        ...pastImports.sort(sortPastImports),
+    ];
 
-    if (importsLoading || pastImportsLoading) {
-        return (
-            <SettingsSectionWide>
-                <Loader />
-            </SettingsSectionWide>
-        );
-    }
-
-    if (!activeImports.length && !pastImports.length) {
+    if (!importsToDisplay.length) {
         return <SettingsParagraph>{c('Info').t`No imports to display.`}</SettingsParagraph>;
     }
 
-    const hasStoragePausedImports = imports.some(({ Active }) => {
+    const activeImports = importsToDisplay as Importer[];
+
+    const hasStoragePausedImports = activeImports.some(({ Active }) => {
         return (
-            Active?.State === ImportMailStatus.PAUSED && Active?.ErrorCode === ImportMailError.ERROR_CODE_QUOTA_LIMIT
+            Active &&
+            Active.State === ImportMailStatus.PAUSED &&
+            Active.ErrorCode === ImportMailError.ERROR_CODE_QUOTA_LIMIT
         );
     });
 
-    const hasAuthPausedImports = imports.some(({ Active }) => {
+    const hasAuthPausedImports = activeImports.some(({ Active }) => {
         return (
-            Active?.State === ImportMailStatus.PAUSED &&
-            Active?.ErrorCode === ImportMailError.ERROR_CODE_IMAP_CONNECTION
+            Active &&
+            Active.State === ImportMailStatus.PAUSED &&
+            Active.ErrorCode === ImportMailError.ERROR_CODE_IMAP_CONNECTION
         );
     });
 
-    const delayedImport = imports.find(({ Active }) => {
+    const delayedImport = activeImports.find(({ Active }) => {
         return Active?.State === ImportMailStatus.DELAYED;
     });
 
@@ -121,19 +121,23 @@ const ImportListSection = () => {
 
     return (
         <SettingsSectionWide>
-            {infoRenderer()}
-            <Table className="on-mobile-hide-td3 on-mobile-hide-td4 simple-table--has-actions">
-                <thead>
-                    <tr>{headerCells}</tr>
-                </thead>
-                <TableBody>
-                    {[...activeImports.sort(sortActiveImports), ...pastImports.sort(sortPastImports)].map(
-                        (currentImport) => (
-                            <ImportListRow key={currentImport.ID} currentImport={currentImport} />
-                        )
-                    )}
-                </TableBody>
-            </Table>
+            {importsLoading || pastImportsLoading ? (
+                <Loader />
+            ) : (
+                <>
+                    {infoRenderer()}
+                    <Table className="on-mobile-hide-td3 on-mobile-hide-td4 simple-table--has-actions">
+                        <thead>
+                            <tr>{headerCells}</tr>
+                        </thead>
+                        <TableBody>
+                            {importsToDisplay.map((currentImport) => (
+                                <ImportListRow key={currentImport.ID} currentImport={currentImport} />
+                            ))}
+                        </TableBody>
+                    </Table>
+                </>
+            )}
         </SettingsSectionWide>
     );
 };
