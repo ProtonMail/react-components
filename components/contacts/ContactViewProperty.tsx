@@ -13,6 +13,8 @@ import {
     ContactGroup,
 } from 'proton-shared/lib/interfaces/contacts/Contact';
 
+import EncryptedIcon from './EncryptedIcon';
+
 import ContactGroupDropdown from '../../containers/contacts/ContactGroupDropdown';
 import ContactLabelProperty from './ContactLabelProperty';
 import ContactEmailSettingsModal from '../../containers/contacts/modals/ContactEmailSettingsModal';
@@ -21,7 +23,6 @@ import RemoteImage from '../image/RemoteImage';
 import Tooltip from '../tooltip/Tooltip';
 import { Button, Copy } from '../button';
 import { classnames } from '../../helpers';
-import Row from '../container/Row';
 import Icon from '../icon/Icon';
 
 import ContactUpgradeModal from './ContactUpgradeModal';
@@ -69,7 +70,11 @@ const ContactViewProperty = ({
                     <a className="mr0-5" href={`mailto:${value}`} title={value}>
                         {value}
                     </a>
-                    {contactGroups && <ContactGroupLabels contactGroups={contactGroups} />}
+                    {contactGroups && (
+                        <div className="mt0-5">
+                            <ContactGroupLabels contactGroups={contactGroups} isStacked={false} />
+                        </div>
+                    )}
                 </>
             );
         }
@@ -186,19 +191,31 @@ const ContactViewProperty = ({
     };
 
     return (
-        <Row>
-            <div className={classnames(['flex flex-align-items-center', leftBlockWidth])}>
-                <ContactLabelProperty field={field} type={type} />
-            </div>
-            <div
-                className={classnames(['flex flex-nowrap flex-align-items-center pl1 on-mobile-pl0', rightBlockWidth])}
-            >
-                <span className={classnames(['mr0-5 flex-item-fluid', !['note'].includes(field) && 'text-ellipsis'])}>
+        <div className="flex flex-nowrap flex-align-items-start mb1">
+            <div className={classnames(['flex flex-nowrap flex-item-fluid on-mobile-flex-column', rightBlockWidth])}>
+                <div className={classnames(['flex flex-item-fluid flex-align-items-start', leftBlockWidth])}>
+                    <div className="inline-flex flex-item-fluid flex-align-items-center">
+                        <span role="heading" aria-level="3">
+                            <ContactLabelProperty field={field} type={type} />
+                        </span>
+                        {field && ['email', 'fn'].includes(field) ? null : (
+                            <span className="ml0-5">
+                                <EncryptedIcon className="flex" />
+                            </span>
+                        )}
+                    </div>
+                </div>
+                <span
+                    className={classnames([
+                        'mr0-5 flex-item-fluid pl2 on-mobile-pl0 pb1',
+                        !['note'].includes(field) && 'text-ellipsis',
+                    ])}
+                >
                     {getContent()}
                 </span>
-                <span className="flex-item-noshrink flex">{getActions()}</span>
             </div>
-        </Row>
+            <div className="flex-item-noshrink flex">{getActions()}</div>
+        </div>
     );
 };
 

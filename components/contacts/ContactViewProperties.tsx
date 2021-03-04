@@ -1,29 +1,10 @@
 import React from 'react';
-import { c } from 'ttag';
 
 import { OTHER_INFORMATION_FIELDS } from 'proton-shared/lib/contacts/constants';
 import { DecryptedKey } from 'proton-shared/lib/interfaces';
 import { ContactEmail, ContactProperties, ContactGroup } from 'proton-shared/lib/interfaces/contacts';
 
 import ContactViewProperty from './ContactViewProperty';
-import EncryptedIcon from './EncryptedIcon';
-import Icon from '../icon/Icon';
-
-const TITLES: { [key: string]: string } = {
-    fn: c('Title').t`Display name`,
-    email: c('Title').t`Email addresses`,
-    tel: c('Title').t`Phone numbers`,
-    adr: c('Title').t`Addresses`,
-    other: c('Title').t`Other information`,
-};
-
-const ICONS: { [key: string]: string } = {
-    fn: 'contact',
-    email: 'email',
-    tel: 'phone',
-    adr: 'address',
-    other: 'info',
-};
 
 interface Props {
     properties: ContactProperties;
@@ -50,9 +31,7 @@ const ContactViewProperties = ({
     rightBlockWidth = 'w70',
     isPreview = false,
 }: Props) => {
-    const title = field ? TITLES[field] : TITLES.other;
-    const iconName = field ? ICONS[field] : ICONS.other;
-    const toExclude = ['photo'];
+    const toExclude = ['photo', 'org'];
     const fields = field ? [field] : OTHER_INFORMATION_FIELDS.filter((field) => !toExclude.includes(field));
 
     const properties = allProperties.filter(({ field }) => fields.includes(field));
@@ -63,11 +42,6 @@ const ContactViewProperties = ({
 
     return (
         <div className="border-bottom mb1">
-            <h3 className="mb1 flex flex-nowrap flex-align-items-center">
-                <Icon name={iconName} className="mr0-5" />
-                <span className="mr0-5">{title}</span>
-                {field && ['email', 'fn'].includes(field) ? null : <EncryptedIcon className="flex" />}
-            </h3>
             {properties.map((property, index) => {
                 const contactEmail = contactEmails && contactEmails[index];
                 const contactGroups =

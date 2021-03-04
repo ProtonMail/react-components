@@ -84,43 +84,27 @@ const ContactSummary = ({
     }
 
     return (
-        <div className={classnames(['contactsummary-container mt1 mb1', !isNarrow && 'flex flex-nowrap'])}>
-            <div className={classnames(['text-center contactsummary-photo-container pt0-5', leftBlockWidth])}>
+        <div
+            className={classnames([
+                'contactsummary-container mt1 mb1',
+                !isNarrow && 'flex flex-nowrap flex-align-items-center',
+            ])}
+        >
+            <div
+                className={classnames([
+                    'text-center contactsummary-photo-container on-mobile-mb0-5 pt0-5',
+                    leftBlockWidth,
+                ])}
+            >
                 <ContactImageSummary photo={photo} name={name} />
             </div>
-            <div className="pl1 flex-item-fluid">
-                <h2 className="on-mobile-text-center mb0 text-ellipsis" title={name}>
+            <div className="pl2 on-mobile-pl0 flex-item-fluid">
+                <h2 className="on-mobile-text-center mb0 on-mobile-mb1 text-bold text-ellipsis" title={name}>
                     {name}
                 </h2>
-                <div className="on-mobile-text-center">
-                    <ul className="unstyled mt0-5 inline-block">
-                        {summary.map(({ icon, component }) => {
-                            if (!component) {
-                                return null;
-                            }
-                            return (
-                                <li
-                                    key={icon}
-                                    className="contactsummary-list-item flex flex-nowrap flex-align-items-center"
-                                >
-                                    <Icon name={icon} className="mr0-5 flex-item-noshrink" />
-                                    <span className="text-ellipsis">{component}</span>
-                                </li>
-                            );
-                        })}
-                    </ul>
-                </div>
             </div>
             {!isPreview && (
-                <div className="flex-item-noshrink pt0-5 on-mobile-text-center mb1">
-                    {!hasError && (
-                        <Tooltip title={c('Action').t`Edit`} className="ml0-5">
-                            <Button onClick={() => onEdit()} className="button--for-icon inline-flex">
-                                <Icon className="color-primary mt0-25 mb0-1" name="pen" alt={c('Action').t`Edit`} />
-                            </Button>
-                        </Tooltip>
-                    )}
-
+                <div className="flex-item-noshrink on-mobile-text-center">
                     {!hasError && (
                         <Tooltip title={c('Action').t`Export`} className="ml0-5">
                             <Button onClick={onExport} className="button--for-icon inline-flex">
@@ -131,13 +115,17 @@ const ContactSummary = ({
 
                     <Tooltip title={c('Action').t`Delete`} className="ml0-5">
                         <Button onClick={onDelete} className="button--for-icon inline-flex">
-                            <Icon
-                                className="color-global-warning mt0-25 mb0-1"
-                                name="trash"
-                                alt={c('Action').t`Delete`}
-                            />
+                            <Icon className="mt0-25 mb0-1" name="trash" alt={c('Action').t`Delete`} />
                         </Button>
                     </Tooltip>
+
+                    {!hasError && (
+                        <Tooltip title={c('Action').t`Edit`} className="ml0-5">
+                            <Button onClick={() => onEdit()} className="button--for-icon button--primary inline-flex">
+                                <Icon className="mt0-25 mb0-1" name="pen" alt={c('Action').t`Edit`} />
+                            </Button>
+                        </Tooltip>
+                    )}
                 </div>
             )}
         </div>
