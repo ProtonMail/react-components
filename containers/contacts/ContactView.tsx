@@ -13,6 +13,8 @@ import ContactDeleteModal from './modals/ContactDeleteModal';
 import ContactViewErrors from './ContactViewErrors';
 import { Button } from '../../components';
 
+import './ContactView.scss';
+
 interface Props {
     contactID: string;
     contactEmails: ContactEmail[];
@@ -81,9 +83,12 @@ const ContactView = ({
 
     return (
         <div
-            className={classnames([!isModal && 'view-column-detail flex-item-fluid scroll-if-needed p2 on-mobile-p1'])}
+            className={classnames([
+                'contact-view',
+                !isModal && 'view-column-detail flex-item-fluid scroll-if-needed p2 on-mobile-p1',
+            ])}
         >
-            <div className="border-bottom ml1 mr1 pb1 mb1 on-mobile-ml0-5 on-mobile-mr0-5 on-tiny-mobile-ml0">
+            <div className="contact-summary-wrapper border-bottom ml1 mr1 pb1 mb1 on-mobile-ml0-5 on-mobile-mr0-5 on-tiny-mobile-ml0">
                 <ContactSummary
                     onExport={handleExport}
                     onEdit={handleEdit}
@@ -95,34 +100,36 @@ const ContactView = ({
                 />
                 <ContactViewErrors errors={errors} onReload={onReload} contactID={contactID} />
             </div>
-            <div className="pl1 pr1 on-mobile-pl0-5 on-mobile-pr0-5 on-tiny-mobile-pl0">
+            <div className="contact-view-contents pl1 pr1 on-mobile-pl0-5 on-mobile-pr0-5 on-tiny-mobile-pl0">
                 <ContactViewProperties field="fn" {...contactViewPropertiesProps} />
                 <ContactViewProperties field="email" {...contactViewPropertiesProps} isPreview={isPreview} />
                 <ContactViewProperties field="tel" {...contactViewPropertiesProps} isPreview={isPreview} />
                 <ContactViewProperties field="adr" {...contactViewPropertiesProps} isPreview={isPreview} />
                 <ContactViewProperties {...contactViewPropertiesProps} />
             </div>
-            {hasEmail ? null : (
-                <div className="mb0-5">
-                    <Button shape="outline" color="norm" size="medium" onClick={() => handleEdit('email')}>
-                        Add email
-                    </Button>
-                </div>
-            )}
-            {hasTel ? null : (
-                <div className="mb0-5">
-                    <Button shape="outline" color="norm" size="medium" onClick={() => handleEdit('tel')}>
-                        Add phone number
-                    </Button>
-                </div>
-            )}
-            {hasAdr ? null : (
-                <div className="mb0-5">
-                    <Button shape="outline" color="norm" size="medium" onClick={() => handleEdit('adr')}>
-                        Add address
-                    </Button>
-                </div>
-            )}
+            <div className="contact-view-cta mt1-5 pl1 pr1 on-mobile-pl0-5 on-mobile-pr0-5 on-tiny-mobile-pl0">
+                {hasEmail ? null : (
+                    <div className="mb0-5">
+                        <Button shape="outline" color="norm" size="medium" onClick={() => handleEdit('email')}>
+                            Add email
+                        </Button>
+                    </div>
+                )}
+                {hasTel ? null : (
+                    <div className="mb0-5">
+                        <Button shape="outline" color="norm" size="medium" onClick={() => handleEdit('tel')}>
+                            Add phone number
+                        </Button>
+                    </div>
+                )}
+                {hasAdr ? null : (
+                    <div className="mb0-5">
+                        <Button shape="outline" color="norm" size="medium" onClick={() => handleEdit('adr')}>
+                            Add address
+                        </Button>
+                    </div>
+                )}
+            </div>
         </div>
     );
 };

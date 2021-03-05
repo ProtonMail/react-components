@@ -191,11 +191,16 @@ const ContactViewProperty = ({
     };
 
     return (
-        <div className="flex flex-nowrap flex-align-items-start mb1">
-            <div className={classnames(['flex flex-nowrap flex-item-fluid on-mobile-flex-column', rightBlockWidth])}>
+        <div className="contact-view-row flex flex-nowrap flex-align-items-start mb1">
+            <div
+                className={classnames([
+                    'contact-view-row-left flex flex-nowrap flex-item-fluid on-mobile-flex-column',
+                    rightBlockWidth,
+                ])}
+            >
                 <div
                     className={classnames([
-                        'flex on-mobile-max-w100 flex-item-noshrink flex-align-items-start',
+                        'contact-view-row-label flex-no-min-children on-mobile-max-w100 flex-item-noshrink flex-align-items-start',
                         leftBlockWidth,
                     ])}
                 >
@@ -208,7 +213,7 @@ const ContactViewProperty = ({
                 </div>
                 <span
                     className={classnames([
-                        'mr0-5 flex-item-fluid pl2 pt0-5 on-mobile-pl0',
+                        'contact-view-row-content mr0-5 flex-item-fluid pl2 pt0-5 on-mobile-pl0',
                         !['note'].includes(field) && 'text-ellipsis',
                     ])}
                 >
