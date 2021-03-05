@@ -4,7 +4,7 @@ import { ContactProperties, ContactEmail, ContactGroup } from 'proton-shared/lib
 import { DecryptedKey } from 'proton-shared/lib/interfaces';
 import { CryptoProcessingError } from 'proton-shared/lib/contacts/decrypt';
 import { singleExport } from 'proton-shared/lib/contacts/export';
-import { useModals, useActiveBreakpoint } from '../../hooks';
+import { useModals } from '../../hooks';
 import ContactSummary from '../../components/contacts/ContactSummary';
 import ContactViewProperties from '../../components/contacts/ContactViewProperties';
 import { classnames } from '../../helpers';
@@ -41,7 +41,6 @@ const ContactView = ({
     isPreview = false,
 }: Props) => {
     const { createModal } = useModals();
-    const { isNarrow } = useActiveBreakpoint();
 
     const handleDelete = () => {
         createModal(<ContactDeleteModal contactIDs={[contactID]} onDelete={onDelete} />);
@@ -62,7 +61,7 @@ const ContactView = ({
         ownAddresses,
         properties,
         contactGroupsMap,
-        leftBlockWidth: 'w100 max-w100p',
+        leftBlockWidth: 'label max-w100p',
         rightBlockWidth: 'w100',
     };
 
@@ -90,22 +89,40 @@ const ContactView = ({
                     onEdit={handleEdit}
                     onDelete={handleDelete}
                     properties={properties}
-                    leftBlockWidth={isNarrow ? 'mauto max-w100p' : 'w100 max-w100p'}
+                    leftBlockWidth="w100 max-w100p on-mobile-wauto"
                     isPreview={isPreview}
                     hasError={hasError}
                 />
                 <ContactViewErrors errors={errors} onReload={onReload} contactID={contactID} />
             </div>
-            <div className="pl1 pr1 on-mobile-pl0-5 on-mobile-pr0-5  on-tiny-mobile-pl0">
+            <div className="pl1 pr1 on-mobile-pl0-5 on-mobile-pr0-5 on-tiny-mobile-pl0">
                 <ContactViewProperties field="fn" {...contactViewPropertiesProps} />
                 <ContactViewProperties field="email" {...contactViewPropertiesProps} isPreview={isPreview} />
                 <ContactViewProperties field="tel" {...contactViewPropertiesProps} isPreview={isPreview} />
                 <ContactViewProperties field="adr" {...contactViewPropertiesProps} isPreview={isPreview} />
                 <ContactViewProperties {...contactViewPropertiesProps} />
             </div>
-            {hasEmail ? null : <Button onClick={() => handleEdit('email')}>Add email</Button>}
-            {hasTel ? null : <Button onClick={() => handleEdit('tel')}>Add phone number</Button>}
-            {hasAdr ? null : <Button onClick={() => handleEdit('adr')}>Add address</Button>}
+            {hasEmail ? null : (
+                <div className="mb0-5">
+                    <Button shape="outline" color="norm" size="medium" onClick={() => handleEdit('email')}>
+                        Add email
+                    </Button>
+                </div>
+            )}
+            {hasTel ? null : (
+                <div className="mb0-5">
+                    <Button shape="outline" color="norm" size="medium" onClick={() => handleEdit('tel')}>
+                        Add phone number
+                    </Button>
+                </div>
+            )}
+            {hasAdr ? null : (
+                <div className="mb0-5">
+                    <Button shape="outline" color="norm" size="medium" onClick={() => handleEdit('adr')}>
+                        Add address
+                    </Button>
+                </div>
+            )}
         </div>
     );
 };
