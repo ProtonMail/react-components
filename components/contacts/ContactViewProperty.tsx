@@ -70,7 +70,7 @@ const ContactViewProperty = ({
                     <a className="mr0-5" href={`mailto:${value}`} title={value}>
                         {value}
                     </a>
-                    {contactGroups && (
+                    {!!contactGroups.length && (
                         <div className="mt0-5">
                             <ContactGroupLabels contactGroups={contactGroups} isStacked={false} />
                         </div>

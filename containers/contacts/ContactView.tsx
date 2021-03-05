@@ -11,6 +11,7 @@ import { classnames } from '../../helpers';
 import ContactModal from './modals/ContactModal';
 import ContactDeleteModal from './modals/ContactDeleteModal';
 import ContactViewErrors from './ContactViewErrors';
+import { Button } from '../../components';
 
 interface Props {
     contactID: string;
@@ -65,6 +66,20 @@ const ContactView = ({
         rightBlockWidth: 'w100',
     };
 
+    const { hasEmail, hasTel, hasAdr } = properties.reduce<{ hasEmail: boolean; hasTel: boolean; hasAdr: boolean }>(
+        (acc, { field }) => {
+            acc.hasEmail = acc.hasEmail || field === 'email';
+            acc.hasTel = acc.hasTel || field === 'tel';
+            acc.hasAdr = acc.hasAdr || field === 'adr';
+            return acc;
+        },
+        {
+            hasEmail: false,
+            hasTel: false,
+            hasAdr: false,
+        }
+    );
+
     return (
         <div
             className={classnames([!isModal && 'view-column-detail flex-item-fluid scroll-if-needed p2 on-mobile-p1'])}
@@ -88,6 +103,9 @@ const ContactView = ({
                 <ContactViewProperties field="adr" {...contactViewPropertiesProps} isPreview={isPreview} />
                 <ContactViewProperties {...contactViewPropertiesProps} />
             </div>
+            {hasEmail ? null : <Button onClick={() => handleEdit('email')}>Add email</Button>}
+            {hasTel ? null : <Button onClick={() => handleEdit('tel')}>Add phone number</Button>}
+            {hasAdr ? null : <Button onClick={() => handleEdit('adr')}>Add address</Button>}
         </div>
     );
 };
