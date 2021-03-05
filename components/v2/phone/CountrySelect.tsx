@@ -7,12 +7,6 @@ import InputTwo from '../input/Input';
 import { classnames } from '../../../helpers';
 import { Icon } from '../../icon';
 
-interface Props {
-    options: CountryOptionData[];
-    value?: CountryOptionData;
-    onChange: (newValue: CountryOptionData) => void;
-}
-
 const Row = ({
     data,
     style,
@@ -51,7 +45,14 @@ const Row = ({
     );
 };
 
-const CountrySelect = ({ value, options, onChange }: Props) => {
+interface Props {
+    options: CountryOptionData[];
+    value?: CountryOptionData;
+    onChange: (newValue: CountryOptionData) => void;
+    onClosed?: (isFromSelection: boolean) => void;
+}
+
+const CountrySelect = ({ value, options, onChange, onClosed }: Props) => {
     const anchorRef = useRef<HTMLButtonElement>(null);
     const [isOpen, setIsOpen] = useState(false);
     const [search, setSearch] = useState('');
@@ -62,9 +63,12 @@ const CountrySelect = ({ value, options, onChange }: Props) => {
 
     const selectedIndex = !value ? 0 : filteredOptions.indexOf(value);
 
+    const pickRef = useRef(false);
+
     const handleChange = (value: CountryOptionData) => {
         onChange(value);
         setIsOpen(false);
+        pickRef.current = true;
     };
 
     return (
@@ -72,7 +76,10 @@ const CountrySelect = ({ value, options, onChange }: Props) => {
             <DropdownButton
                 isOpen={isOpen}
                 hasCaret
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={() => {
+                    pickRef.current = false;
+                    setIsOpen(!isOpen);
+                }}
                 className="ml0-5 unstyled"
                 buttonRef={anchorRef}
                 caretClassName="mtauto mbauto"
@@ -86,8 +93,8 @@ const CountrySelect = ({ value, options, onChange }: Props) => {
                     ) : (
                         <img
                             role="presentation"
-                            alt={value?.countryName}
-                            src={value?.countryFlag}
+                            alt={value.countryName}
+                            src={value.countryFlag}
                             width="30"
                             height="30"
                         />
@@ -100,10 +107,12 @@ const CountrySelect = ({ value, options, onChange }: Props) => {
                 isOpen={isOpen}
                 anchorRef={anchorRef}
                 onClose={() => {
+                    pickRef.current = false;
                     setIsOpen(false);
                 }}
                 onClosed={() => {
                     setSearch('');
+                    onClosed?.(pickRef.current);
                 }}
                 offset={4}
                 autoClose={false}
@@ -114,6 +123,7 @@ const CountrySelect = ({ value, options, onChange }: Props) => {
                     switch (key) {
                         case 'Enter': {
                             e.preventDefault();
+                            pickRef.current = true;
                             setIsOpen(false);
                             break;
                         }
@@ -151,7 +161,7 @@ const CountrySelect = ({ value, options, onChange }: Props) => {
                             <List
                                 height={height}
                                 width={width}
-                                rowHeight={50}
+                                rowHeight={38}
                                 className="unstyled m0 p0 scroll-if-needed"
                                 scrollToIndex={selectedIndex < 0 ? 0 : selectedIndex}
                                 rowCount={filteredOptions.length}

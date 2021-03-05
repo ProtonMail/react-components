@@ -1,22 +1,15 @@
-import { AsYouType, CountryCode, getCountryCallingCode, getExampleNumber } from 'libphonenumber-js/min';
+import parsePhoneNumberFromString, {
+    AsYouType,
+    CountryCode,
+    formatIncompletePhoneNumber,
+    getCountryCallingCode,
+    getExampleNumber,
+} from 'libphonenumber-js/min';
 import metadata from 'libphonenumber-js/metadata.min.json';
 import examples from 'libphonenumber-js/examples.mobile.json';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
-import countries from './countries';
-
-const flags = require.context('design-system/assets/img/shared/flags/4x3', true, /.svg$/);
-const flagsMap = flags.keys().reduce<Partial<{ [key: string]: () => { default: string } }>>((acc, key) => {
-    acc[key] = () => flags(key);
-    return acc;
-}, {});
-
-export const getFlagSvg = (abbreviation: string) => {
-    const key = `./${abbreviation.toLowerCase()}.svg`;
-    if (!flagsMap[key]) {
-        return;
-    }
-    return flagsMap[key]?.().default;
-};
+import { getFlagSvg } from './flagSvgs';
+import { callingCodeToLeading, countries } from './data';
 
 export const getTrimmedString = (string: string) => {
     // Handle (123) -> (123
@@ -120,4 +113,54 @@ export const getCountries = (): CountryOptionData[] => {
         })
         .filter(isTruthy)
         .sort((a, b) => a.countryName.localeCompare(b.countryName));
+};
+
+export const getCursorPosition = (digitIndex: number, value: string) => {
+    const regex = /[\d+]/;
+
+    let n = 0;
+    let i = 0;
+
+    for (; i < value.length; ++i) {
+        if (value[i].match(regex)) {
+            if (n++ >= digitIndex) {
+                break;
+            }
+        }
+    }
+
+    if (!value[i - 1]?.match(regex)) {
+        i -= 1;
+    }
+
+    return Math.max(0, Math.min(i, value.length));
+};
+
+export const getFormattedValue = (number: string) => {
+    const result = parsePhoneNumberFromString(number);
+    if (result && result.isValid()) {
+        return result.formatInternational();
+    }
+    return formatIncompletePhoneNumber(number);
+};
+
+export const getSpecificCountry = (
+    value: string,
+    countryCallingCode: string,
+    countryCode: string
+): [string, number] => {
+    const leadings = callingCodeToLeading[countryCallingCode];
+    if (!leadings) {
+        return [countryCode, 0];
+    }
+    return leadings.reduce(
+        (acc, { countryCode, areaCodes }) => {
+            const result = areaCodes.find((areaCode) => value.startsWith(areaCode));
+            if (result && result.length >= acc[1]) {
+                return [countryCode, result.length];
+            }
+            return acc;
+        },
+        [countryCode, 0]
+    );
 };
