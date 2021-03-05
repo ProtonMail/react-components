@@ -205,7 +205,7 @@ const ContactViewProperty = ({
                     ])}
                 >
                     <div className="inline-flex flex-item-noshrink flex-item-fluid flex-align-items-center">
-                        <span role="heading" aria-level="3" className="mr0-5">
+                        <span role="heading" aria-level={3} className="mr0-5">
                             <ContactLabelProperty field={field} type={type} />
                         </span>
                         {field && ['email', 'fn'].includes(field) ? null : <EncryptedIcon className="flex" />}
