@@ -41,7 +41,7 @@ const ContactViewProperties = ({
     }
 
     return (
-        <div className="border-bottom mb1">
+        <div className="border-bottom mb0-5 pb0-25">
             {properties.map((property, index) => {
                 const contactEmail = contactEmails && contactEmails[index];
                 const contactGroups =

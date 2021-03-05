@@ -72,7 +72,7 @@ const ContactViewProperty = ({
                     </a>
                     {!!contactGroups.length && (
                         <div className="mt0-5">
-                            <ContactGroupLabels contactGroups={contactGroups} isStacked={false} />
+                            <ContactGroupLabels className="max-w100" contactGroups={contactGroups} isStacked={false} />
                         </div>
                     )}
                 </>
@@ -168,7 +168,7 @@ const ContactViewProperty = ({
             case 'tel':
                 return (
                     <Copy
-                        className="ml0-5 button--for-icon"
+                        className="ml0-5 pt0-5 pb0-5 mt0-1 button--for-icon"
                         value={value}
                         onCopy={() => {
                             createNotification({ text: c('Success').t`Phone number copied to clipboard` });
@@ -178,7 +178,7 @@ const ContactViewProperty = ({
             case 'adr':
                 return (
                     <Copy
-                        className="ml0-5 button--for-icon"
+                        className="ml0-5 pt0-5 pb0-5 mt0-1 button--for-icon"
                         value={formatAdr(property?.value as string[])}
                         onCopy={() => {
                             createNotification({ text: c('Success').t`Address copied to clipboard` });
@@ -193,21 +193,22 @@ const ContactViewProperty = ({
     return (
         <div className="flex flex-nowrap flex-align-items-start mb1">
             <div className={classnames(['flex flex-nowrap flex-item-fluid on-mobile-flex-column', rightBlockWidth])}>
-                <div className={classnames(['flex flex-item-fluid flex-align-items-start', leftBlockWidth])}>
-                    <div className="inline-flex flex-item-fluid flex-align-items-center">
-                        <span role="heading" aria-level="3">
+                <div
+                    className={classnames([
+                        'flex on-mobile-max-w100 flex-item-noshrink flex-align-items-start',
+                        leftBlockWidth,
+                    ])}
+                >
+                    <div className="inline-flex flex-item-noshrink flex-item-fluid flex-align-items-center">
+                        <span role="heading" aria-level="3" className="mr0-5">
                             <ContactLabelProperty field={field} type={type} />
                         </span>
-                        {field && ['email', 'fn'].includes(field) ? null : (
-                            <span className="ml0-5">
-                                <EncryptedIcon className="flex" />
-                            </span>
-                        )}
+                        {field && ['email', 'fn'].includes(field) ? null : <EncryptedIcon className="flex" />}
                     </div>
                 </div>
                 <span
                     className={classnames([
-                        'mr0-5 flex-item-fluid pl2 on-mobile-pl0 pb1',
+                        'mr0-5 flex-item-fluid pl2 pt0-5 on-mobile-pl0',
                         !['note'].includes(field) && 'text-ellipsis',
                     ])}
                 >

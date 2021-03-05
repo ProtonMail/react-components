@@ -92,7 +92,7 @@ const ContactSummary = ({
         >
             <div
                 className={classnames([
-                    'text-center contactsummary-photo-container on-mobile-mb0-5 pt0-5',
+                    'text-center contactsummary-photo-container pt0-5 on-mobile-mb0-5 on-mobile-mlauto on-mobile-mrauto',
                     leftBlockWidth,
                 ])}
             >
