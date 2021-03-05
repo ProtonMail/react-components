@@ -6,7 +6,6 @@
 @include respond-to($breakpoint-medium-landscape) {
 	@include respond-to($breakpoint-medium, 'min') {
 		.contact-view {
-			border: 1px solid chartreuse;
 			.contactsummary-container {
 				display: block;
 			}
