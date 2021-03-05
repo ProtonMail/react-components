@@ -34,6 +34,7 @@ interface Props {
     planIDs: PlanIDs;
     hideCurrency?: boolean;
     hideCycle?: boolean;
+    service: PLAN_SERVICES;
 }
 
 const SubscriptionCheckout = ({
@@ -51,6 +52,7 @@ const SubscriptionCheckout = ({
     loading,
     hideCurrency,
     hideCycle,
+    service,
 }: Props) => {
     const { APP_NAME } = useConfig();
     const isVPN = APP_NAME === APPS.PROTONVPN_SETTINGS;
@@ -188,6 +190,7 @@ const SubscriptionCheckout = ({
             loading={loading}
             hideCurrency={hideCurrency}
             hideCycle={hideCycle}
+            service={service}
         >
             {hasMailPlan ? (
                 printSummary(PLAN_SERVICES.MAIL)

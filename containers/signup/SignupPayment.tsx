@@ -1,6 +1,6 @@
 import React from 'react';
 import { c } from 'ttag';
-import { PAYMENT_METHOD_TYPES } from 'proton-shared/lib/constants';
+import { PAYMENT_METHOD_TYPES, PLAN_SERVICES } from 'proton-shared/lib/constants';
 import { Plan } from 'proton-shared/lib/interfaces';
 
 import { Alert } from '../../components';
@@ -22,6 +22,7 @@ interface Props {
     canPay: boolean;
     loading: boolean;
     plans?: Plan[];
+    service: PLAN_SERVICES;
     onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
 }
 
@@ -40,6 +41,7 @@ const SignupPayment = ({
     errors,
     loading,
     onSubmit,
+    service,
 }: Props) => {
     return (
         <form name="payment-form" onSubmit={onSubmit} method="post">
@@ -73,6 +75,7 @@ const SignupPayment = ({
                             />
                         }
                         plans={plans}
+                        service={service}
                         checkResult={checkResult}
                         loading={loading}
                         currency={model.currency}

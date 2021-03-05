@@ -1,7 +1,7 @@
 import React from 'react';
 import { c } from 'ttag';
 import { Currency, Cycle } from 'proton-shared/lib/interfaces';
-import { CYCLE } from 'proton-shared/lib/constants';
+import { CYCLE, PLAN_SERVICES } from 'proton-shared/lib/constants';
 
 import { Icon } from '../../components';
 import CycleSelector from './CycleSelector';
@@ -16,6 +16,7 @@ interface Props {
     hideCurrency?: boolean;
     loading?: boolean;
     children: React.ReactNode;
+    service: PLAN_SERVICES;
 }
 
 const Checkout = ({
@@ -27,6 +28,7 @@ const Checkout = ({
     hideCycle,
     loading,
     children,
+    service,
 }: Props) => {
     return (
         <div className="p2 bg-global-highlight">
@@ -62,12 +64,14 @@ const Checkout = ({
                 <span className="flex-item-fluid">{c('Info')
                     .t`Payments are protected with TLS encryptionand Swiss privacy laws.`}</span>
             </p>
-            <p className="text-sm flex flex-nowrap opacity-50">
-                <span className="flex-item-noshrink mr0-5">
-                    <Icon name="clock" />
-                </span>
-                <span className="flex-item-fluid">{c('Info').t`30 days money-back guarantee.`}</span>
-            </p>
+            {service === PLAN_SERVICES.VPN ? (
+                <p className="text-sm flex flex-nowrap opacity-50">
+                    <span className="flex-item-noshrink mr0-5">
+                        <Icon name="clock" />
+                    </span>
+                    <span className="flex-item-fluid">{c('Info').t`30 days money-back guarantee.`}</span>
+                </p>
+            ) : null}
         </div>
     );
 };

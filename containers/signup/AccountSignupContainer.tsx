@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useEffect, useMemo, useRef, useState } from 'react';
 import * as History from 'history';
 import { queryAvailableDomains } from 'proton-shared/lib/api/domains';
-import { APP_NAMES, PAYMENT_METHOD_TYPES, TOKEN_TYPES } from 'proton-shared/lib/constants';
+import { APP_NAMES, PAYMENT_METHOD_TYPES, TOKEN_TYPES, APPS, PLAN_SERVICES } from 'proton-shared/lib/constants';
 import { API_CUSTOM_ERROR_CODES } from 'proton-shared/lib/errors';
 import { checkSubscription, subscribe } from 'proton-shared/lib/api/payments';
 import { c } from 'ttag';
@@ -95,7 +95,9 @@ const AccountSignupContainer = ({ toApp, onLogin, onBack, Layout }: Props) => {
     const { currency, cycle, preSelectedPlan, service } = useMemo(() => {
         return getSearchParams(history.location.search);
     }, [history.location.search]);
-
+    const { APP_NAME } = useConfig();
+    const isVpnApp = APP_NAME === APPS.PROTONVPN_SETTINGS;
+    const currentService = isVpnApp ? PLAN_SERVICES.VPN : PLAN_SERVICES.MAIL;
     const api = useApi();
     const { createModal } = useModals();
     const { CLIENT_TYPE } = useConfig();
@@ -582,6 +584,7 @@ const AccountSignupContainer = ({ toApp, onLogin, onBack, Layout }: Props) => {
         return (
             <Layout title={c('Title').t`Choose a payment method`} left={<BackButton onClick={handleBack} />} larger>
                 <SignupPayment
+                    service={currentService}
                     paypal={paypal}
                     paypalCredit={paypalCredit}
                     checkResult={checkResult}

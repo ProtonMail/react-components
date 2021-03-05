@@ -341,6 +341,7 @@ const SubscriptionModal = ({
                                     />
                                 }
                                 plans={plans}
+                                service={currentService}
                                 checkResult={checkResult}
                                 loading={loadingCheck}
                                 currency={model.currency}
@@ -408,6 +409,7 @@ const SubscriptionModal = ({
                                 />
                             }
                             plans={plans}
+                            service={currentService}
                             checkResult={checkResult}
                             loading={loadingCheck}
                             currency={model.currency}
