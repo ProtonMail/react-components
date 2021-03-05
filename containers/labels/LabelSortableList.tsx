@@ -10,8 +10,8 @@ import LabelSortableItem from './LabelSortableItem';
 
 interface Props extends SortableContainerProps {
     items: Label[];
-    onEditLabel: Function;
-    onRemoveLabel: Function;
+    onEditLabel?: Function;
+    onRemoveLabel?: Function;
 }
 
 function LabelSortableList({ items, onEditLabel = noop, onRemoveLabel = noop, ...rest }: Props) {

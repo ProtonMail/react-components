@@ -99,6 +99,7 @@ const FolderTreeViewList = ({ items = [] }: Props) => {
                         await api(orderFolders({ LabelIDs, ParentID }));
                         return call();
                     };
+
                     return (
                         <TreeViewItem
                             onDragStart={() => {
