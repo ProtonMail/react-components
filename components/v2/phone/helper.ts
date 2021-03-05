@@ -164,3 +164,14 @@ export const getSpecificCountry = (
         [countryCode, 0]
     );
 };
+
+export const getSpecificMaxLength = (countryCallingCode: string, countryCode: string) => {
+    const leadings = callingCodeToLeading[countryCallingCode] || [];
+    const areaCodes =
+        leadings.find((leading) => {
+            return countryCode === leading.countryCode;
+        })?.areaCodes || [];
+    return areaCodes.reduce((acc, cur) => {
+        return Math.max(acc, cur.length);
+    }, 0);
+};

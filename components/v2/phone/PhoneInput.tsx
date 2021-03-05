@@ -11,6 +11,7 @@ import {
     getNumberWithoutCountryCode,
     getSafeCountryCallingCode,
     getSpecificCountry,
+    getSpecificMaxLength,
     getTrimmedString,
 } from './helper';
 import CountrySelect from './CountrySelect';
@@ -87,7 +88,10 @@ const PhoneInput = ({ value: actualValue = '', defaultCountry = 'US', onChange, 
             setOldCountry('');
             return;
         }
-        oldSpecificCountryLengthRef.current = foundLength;
+        // Setting from country select
+        if (trimmedValue !== '') {
+            oldSpecificCountryLengthRef.current = foundLength;
+        }
         setOldCountry(countryCode);
     }, [countryCode]);
 
@@ -118,6 +122,10 @@ const PhoneInput = ({ value: actualValue = '', defaultCountry = 'US', onChange, 
                     value={selectedValue}
                     options={countries}
                     onChange={(newSelectedValue) => {
+                        oldSpecificCountryLengthRef.current = getSpecificMaxLength(
+                            getSafeCountryCallingCode(newSelectedValue.countryCode),
+                            newSelectedValue.countryCode
+                        );
                         setIsCountryCallingCodeMode(false);
                         setOldCountry(newSelectedValue.countryCode);
                         onChange('');
