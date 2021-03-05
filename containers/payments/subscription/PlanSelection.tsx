@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
-import { Currency, Cycle, Organization, Plan, PlanIDs, Subscription } from 'proton-shared/lib/interfaces';
+import { Currency, Cycle, Organization, Plan, PlanIDs } from 'proton-shared/lib/interfaces';
 import { toMap } from 'proton-shared/lib/helpers/object';
 import {
     APPS,
@@ -44,13 +44,22 @@ const FREE_PLAN = {
     },
 } as Plan;
 
+const NAMES = {
+    free_mail: 'Free',
+    free_vpn: 'Free',
+    [PLANS.VPNBASIC]: 'Basic',
+    [PLANS.VPNPLUS]: 'Plus',
+    [PLANS.PLUS]: 'Plus',
+    [PLANS.PROFESSIONAL]: 'Professional',
+    [PLANS.VISIONARY]: 'Visionary',
+} as const;
+
 interface Props {
     planIDs: PlanIDs;
     currency: Currency;
     cycle: Cycle;
     plans: Plan[];
     service: PLAN_SERVICES;
-    subscription?: Subscription;
     organization?: Organization;
     loading?: boolean;
     onChangePlanIDs: (newPlanIDs: PlanIDs) => void;
@@ -65,29 +74,37 @@ const PlanSelection = ({
     currency,
     service,
     loading,
-    subscription,
     organization,
     onChangePlanIDs,
     onChangeCycle,
     onChangeCurrency,
 }: Props) => {
     const [showAllFeatures, setShowAllFeatures] = useState(false);
-    const vpnAppName = getAppName(APPS.PROTONVPN_SETTINGS);
     const mailAppName = getAppName(APPS.PROTONMAIL);
     const isVpnApp = service === PLAN_SERVICES.VPN;
-    const appName = isVpnApp ? vpnAppName : mailAppName;
-    const plansMap = toMap(plans, 'Name');
-    const MailPlans = [FREE_PLAN, plansMap[PLANS.PLUS], plansMap[PLANS.PROFESSIONAL], plansMap[PLANS.VISIONARY]];
-    const VPNPlans = [{ ...FREE_PLAN, Name: 'free_vpn' as PLANS }, plansMap[PLANS.VPNBASIC], plansMap[PLANS.VPNPLUS]];
+    const planNamesMap = toMap(plans, 'Name');
+    const MailPlans = [
+        FREE_PLAN,
+        planNamesMap[PLANS.PLUS],
+        planNamesMap[PLANS.PROFESSIONAL],
+        planNamesMap[PLANS.VISIONARY],
+    ];
+    const VPNPlans = [
+        { ...FREE_PLAN, Name: 'free_vpn' as PLANS },
+        planNamesMap[PLANS.VPNBASIC],
+        planNamesMap[PLANS.VPNPLUS],
+        planNamesMap[PLANS.VISIONARY],
+    ];
+    const plansToShow = isVpnApp ? VPNPlans : MailPlans;
 
-    const INFO = {
+    const INFOS = {
         free_mail: c('Info').t`The basic for private and secure communications.`,
         free_vpn: c('Info').t`The basic for private and secure communications.`,
-        [PLANS.VPNBASIC]: c('Info').t`TODO`,
-        [PLANS.VPNPLUS]: c('Info').t`TODO`,
+        [PLANS.VPNBASIC]: c('Info').t`Starter VPN with ad, malware and tracker blocking.`,
+        [PLANS.VPNPLUS]: c('Info').t`Full-featured VPN with advanced protection.`,
         [PLANS.PLUS]: c('Info').t`Full-featured mailbox with advanced protection.`,
         [PLANS.PROFESSIONAL]: c('Info').t`${mailAppName} for professionals and businesses.`,
-        [PLANS.VISIONARY]: c('Info').t`${appName} for families and small businesses.`,
+        [PLANS.VISIONARY]: c('Info').t`Mail + VPN bundle for families and small businesses.`,
     } as const;
 
     const FEATURES = {
@@ -175,22 +192,20 @@ const PlanSelection = ({
                 </div>
             </div>
             <div className="flex flex-nowrap on-mobile-flex-column">
-                {(isVpnApp ? VPNPlans : MailPlans).map((plan: Plan) => {
+                {plansToShow.map((plan: Plan) => {
                     const isFree = plan.ID === FREE_PLAN.ID;
-                    const isSelected = subscription
-                        ? subscription.Plans.some(({ ID }) => ID === plan.ID)
-                        : isFree || undefined;
+                    const isSelected = isFree ? plansToShow.every((plan) => !planIDs[plan.ID]) : !!planIDs[plan.ID];
                     return (
                         <div key={plan.ID} className="flex-item-fluid">
                             <PlanCard
                                 isSelected={isSelected}
                                 action={isSelected ? c('Action').t`Customize plan` : c('Action').t`Select plan`}
-                                planName={isFree ? 'Free' : plan.Name}
+                                planName={NAMES[plan.Name as PLANS]}
                                 currency={currency}
                                 disabled={loading}
                                 cycle={cycle}
                                 price={plan.Pricing[cycle]}
-                                info={INFO[plan.Name as PLANS]}
+                                info={INFOS[plan.Name as PLANS]}
                                 features={FEATURES[plan.Name as PLANS]}
                                 onClick={() =>
                                     onChangePlanIDs(

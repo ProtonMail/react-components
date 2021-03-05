@@ -297,7 +297,6 @@ const SubscriptionModal = ({
                     currency={model.currency}
                     cycle={model.cycle}
                     planIDs={model.planIDs}
-                    subscription={subscription}
                     organization={organization}
                     service={model.service}
                     onChangePlanIDs={(planIDs) =>
