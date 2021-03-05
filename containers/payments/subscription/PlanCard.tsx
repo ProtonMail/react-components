@@ -38,7 +38,7 @@ const PlanCard = ({
     return (
         <>
             {isSelected === true ? (
-                <div className="text-xs text-uppercase text-bold text-center">{c('Title').t`Your plan`}</div>
+                <div className="text-xs text-uppercase text-bold text-center">{c('Title').t`Current plan`}</div>
             ) : null}
             <div className="bordered-container p2">
                 <h3 className="text-bold text-capitalize">{planName}</h3>

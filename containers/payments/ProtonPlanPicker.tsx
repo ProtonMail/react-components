@@ -18,6 +18,7 @@ import { Radio, Button, InlineLinkButton, Price } from '../../components';
 import { PlanIDs } from '../signup/interfaces';
 
 interface Props {
+    index?: number;
     cycle: Cycle;
     currency: Currency;
     onChangePlanIDs: (planIDs: PlanIDs) => void;
@@ -55,6 +56,7 @@ const FREE_PLAN = {
 } as Plan;
 
 const ProtonPlanPicker = ({
+    index,
     cycle,
     currency,
     onChangePlanIDs,
@@ -78,31 +80,29 @@ const ProtonPlanPicker = ({
     const VPNPlans: Plan[] = [FREE_PLAN, planNamesMap[PLANS.VPNBASIC], planNamesMap[PLANS.VPNPLUS]];
     const currentPlan = subscription ? getPlan(subscription, service) : null;
     const plansToShow = service === PLAN_SERVICES.VPN ? VPNPlans : MailPlans;
-    const yourPlanText = c('Plan info').t`(Your plan)`;
+    const yourPlanText = c('Plan info').t`(Current plan)`;
 
     const annualBilling = (
         <InlineLinkButton key="annual-billing" onClick={() => onChangeCycle(CYCLE.YEARLY)}>{c('Action')
             .t`annual billing`}</InlineLinkButton>
     );
+    const save20 = <span className="TODO" key="save-20">{c('Info').t`Save 20%`}</span>;
+
+    if (index === 1 && planIDs[planNamesMap[PLANS.VISIONARY].ID]) {
+        return null;
+    }
+
     return (
-        <>
+        <div className="pb2 mb2 border-bottom">
             <h3>{service === PLAN_SERVICES.VPN ? vpnAppName : mailAppName} plan</h3>
-            {cycle === CYCLE.MONTHLY ? (
-                <p>{c('Info').jt`Save 20% on your susbcription by switching to ${annualBilling}`}</p>
+            {index === 0 && cycle === CYCLE.MONTHLY ? (
+                <p>{c('Info').jt`${save20} on your susbcription by switching to ${annualBilling}`}</p>
             ) : null}
-            {service === PLAN_SERVICES.MAIL ? (
-                <p>
-                    {c('Info').t`${mailAppName} Free is included in your plan.`}
-                    <br />
-                    {c('Info').t`Save 20% on both Mail and VPN by adding a Mail subscription.`}
-                </p>
+            {index === 1 && service === PLAN_SERVICES.MAIL ? (
+                <p>{c('Info').jt`${save20} on both Mail and VPN by adding a Mail subscription.`}</p>
             ) : null}
-            {service === PLAN_SERVICES.VPN ? (
-                <p>
-                    {c('Info').t`${vpnAppName} Free is included in your plan.`}
-                    <br />
-                    {c('Info').t`Save 20% on both VPN and Mail by adding a VPN subscription.`}
-                </p>
+            {index === 1 && service === PLAN_SERVICES.VPN ? (
+                <p>{c('Info').jt`${save20} on both VPN and Mail by adding a VPN subscription.`}</p>
             ) : null}
             <ul className="unstyled">
                 {plansToShow.map((plan) => {
@@ -144,8 +144,8 @@ const ProtonPlanPicker = ({
                     );
                 })}
             </ul>
-            <Button onClick={() => onBack()}>{c('Action').t`Compare plans`}</Button>
-        </>
+            <Button color="weak" onClick={() => onBack()}>{c('Action').t`Compare plans`}</Button>
+        </div>
     );
 };
 

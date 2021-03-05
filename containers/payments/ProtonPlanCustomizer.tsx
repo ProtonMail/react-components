@@ -20,7 +20,6 @@ import { switchPlan, getSupportedAddons } from 'proton-shared/lib/helpers/subscr
 import { getAppName } from 'proton-shared/lib/apps/helper';
 
 import { InlineLinkButton, Icon, SelectTwo, Option, Info, Price } from '../../components';
-import { useConfig } from '../../hooks';
 import { PlanIDs } from '../signup/interfaces';
 
 const MailAddons: ADDON_NAMES[] = [ADDON_NAMES.MEMBER, ADDON_NAMES.SPACE, ADDON_NAMES.ADDRESS, ADDON_NAMES.DOMAIN];
@@ -125,7 +124,6 @@ const ProtonPlanCustomizer = ({
     service,
     loading,
 }: Props) => {
-    const { APP_NAME } = useConfig();
     const plansMap = toMap(plans);
     const plansNameMap = toMap(plans, 'Name');
     const [currentPlanID] =
@@ -141,9 +139,9 @@ const ProtonPlanCustomizer = ({
     const vpnAppName = getAppName(APPS.PROTONVPN_SETTINGS);
     const mailAppName = getAppName(APPS.PROTONMAIL);
 
-    const isVpnApp = APP_NAME === APPS.PROTONVPN_SETTINGS;
-    const appName = isVpnApp ? vpnAppName : mailAppName;
-    const addonsToShow = isVpnApp ? VPNAddons : MailAddons;
+    const isVpn = service === PLAN_SERVICES.VPN;
+    const appName = isVpn ? vpnAppName : mailAppName;
+    const addonsToShow = isVpn ? VPNAddons : MailAddons;
     const supportedAddons = getSupportedAddons(planIDs, plans);
 
     const professionalPlan = (
@@ -186,7 +184,7 @@ const ProtonPlanCustomizer = ({
     }
 
     return (
-        <>
+        <div className="pb2 mb2 border-bottom">
             <h3>{c('Title').t`${appName} customization`}</h3>
             {service === PLAN_SERVICES.MAIL && planIDs[plansNameMap[PLANS.PLUS].ID] ? (
                 <p>
@@ -199,7 +197,9 @@ const ProtonPlanCustomizer = ({
                 <p>
                     {c('Info').t`ProtonVPN Plus is limited to 5 connections.`}
                     <br />
-                    {c('Info').jt`Switch to ${professionalPlan} to add more connections.`}
+                    {planIDs[plansNameMap[PLANS.PROFESSIONAL].ID]
+                        ? c('Info').t`Each additional connection can be assigned to users in your organization.`
+                        : c('Info').jt`Switch to ${professionalPlan} to add more connections.`}
                 </p>
             ) : null}
             {service === PLAN_SERVICES.MAIL && planIDs[plansNameMap[PLANS.PROFESSIONAL].ID] ? (
@@ -261,7 +261,7 @@ const ProtonPlanCustomizer = ({
                     </div>
                 );
             })}
-        </>
+        </div>
     );
 };
 
