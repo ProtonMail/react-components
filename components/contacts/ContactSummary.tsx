@@ -92,19 +92,22 @@ const ContactSummary = ({
         >
             <div
                 className={classnames([
-                    'text-center contactsummary-photo-container pt0-5 on-mobile-mb0-5 on-mobile-mlauto on-mobile-mrauto',
+                    'text-center contactsummary-photo-container pt0-5 on-mobile-mb0-5 on-mobile-center',
                     leftBlockWidth,
                 ])}
             >
                 <ContactImageSummary photo={photo} name={name} />
             </div>
-            <div className="pl2 on-mobile-pl0 flex-item-fluid">
-                <h2 className="on-mobile-text-center mb0 on-mobile-mb1 text-bold text-ellipsis" title={name}>
+            <div className="contactsummary-contact-name-container pl2 on-mobile-pl0 flex-item-fluid">
+                <h2
+                    className="contactsummary-contact-name on-mobile-text-center mb0 on-mobile-mb1 text-bold text-ellipsis"
+                    title={name}
+                >
                     {name}
                 </h2>
             </div>
             {!isPreview && (
-                <div className="flex-item-noshrink on-mobile-text-center">
+                <div className="contactsummary-action-buttons flex-item-noshrink on-mobile-text-center ">
                     {!hasError && (
                         <Tooltip title={c('Action').t`Export`} className="ml0-5">
                             <Button onClick={onExport} className="button--for-icon inline-flex">
