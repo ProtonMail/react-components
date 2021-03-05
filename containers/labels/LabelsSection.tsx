@@ -52,21 +52,20 @@ function LabelsSection() {
             ) : (
                 <>
                     <div className="mb2">
-                        <Button
-                            color="norm"
-                            className="mr1"
-                            onClick={() => createModal(<EditLabelModal type="label" />)}
-                        >
+                        <Button color="norm" onClick={() => createModal(<EditLabelModal type="label" />)}>
                             {c('Action').t`Add label`}
                         </Button>
-                        <Button
-                            shape="outline"
-                            title={c('Title').t`Sort labels alphabetically`}
-                            loading={loading}
-                            onClick={() => withLoading(handleSortLabel())}
-                        >
-                            {c('Action').t`Sort`}
-                        </Button>
+                        {labels.length ? (
+                            <Button
+                                shape="outline"
+                                className="ml1"
+                                title={c('Title').t`Sort labels alphabetically`}
+                                loading={loading}
+                                onClick={() => withLoading(handleSortLabel())}
+                            >
+                                {c('Action').t`Sort`}
+                            </Button>
+                        ) : null}
                     </div>
                     {labels.length ? <LabelSortableList items={labels} onSortEnd={onSortEnd} /> : null}
                 </>
