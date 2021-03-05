@@ -1,25 +1,22 @@
-import React, { useRef, useState } from 'react';
+import React, { forwardRef, Ref, useRef, useState } from 'react';
 import { normalize } from 'proton-shared/lib/helpers/string';
-import { List, AutoSizer } from 'react-virtualized';
+import { List, AutoSizer, CellMeasurer, CellMeasurerCache } from 'react-virtualized';
 import { CountryOptionData } from './helper';
 import { Dropdown, DropdownButton, DropdownMenuButton } from '../../dropdown';
 import InputTwo from '../input/Input';
 import { classnames } from '../../../helpers';
 import { Icon } from '../../icon';
 
-const Row = ({
-    data,
-    style,
-    value,
-    onChange,
-}: {
+interface RowProps {
     data: CountryOptionData;
     style: any;
     value?: CountryOptionData;
     onChange: (data: CountryOptionData) => void;
-}) => {
+}
+
+const Row = ({ data, style, value, onChange }: RowProps, ref?: Ref<HTMLLIElement>) => {
     return (
-        <li className="dropdown-item" style={style}>
+        <li className="dropdown-item" style={style} ref={ref}>
             <DropdownMenuButton
                 isSelected={false}
                 className={classnames(['block w100 text-ellipsis text-left no-outline', data === value && 'active'])}
@@ -45,12 +42,20 @@ const Row = ({
     );
 };
 
+const ForwardRow = forwardRef<HTMLLIElement, RowProps>(Row);
+
 interface Props {
     options: CountryOptionData[];
     value?: CountryOptionData;
     onChange: (newValue: CountryOptionData) => void;
     onClosed?: (isFromSelection: boolean) => void;
 }
+
+const cache = new CellMeasurerCache({
+    defaultHeight: 100,
+    fixedWidth: true,
+    keyMapper: () => 0,
+});
 
 const CountrySelect = ({ value, options, onChange, onClosed }: Props) => {
     const anchorRef = useRef<HTMLButtonElement>(null);
@@ -161,19 +166,30 @@ const CountrySelect = ({ value, options, onChange, onClosed }: Props) => {
                             <List
                                 height={height}
                                 width={width}
-                                rowHeight={38}
+                                rowHeight={cache.rowHeight}
                                 className="unstyled m0 p0 scroll-if-needed"
                                 scrollToIndex={selectedIndex < 0 ? 0 : selectedIndex}
                                 rowCount={filteredOptions.length}
-                                rowRenderer={({ index, key, style }) => {
+                                rowRenderer={({ index, key, parent, style }) => {
                                     return (
-                                        <Row
-                                            data={filteredOptions[index]}
-                                            value={value}
+                                        <CellMeasurer
+                                            cache={cache}
+                                            columnIndex={0}
                                             key={key}
-                                            style={style}
-                                            onChange={handleChange}
-                                        />
+                                            rowIndex={index}
+                                            parent={parent}
+                                        >
+                                            {({ registerChild }) => (
+                                                <ForwardRow
+                                                    ref={registerChild as Ref<HTMLLIElement>}
+                                                    data={filteredOptions[index]}
+                                                    value={value}
+                                                    key={key}
+                                                    style={style}
+                                                    onChange={handleChange}
+                                                />
+                                            )}
+                                        </CellMeasurer>
                                     );
                                 }}
                             />
