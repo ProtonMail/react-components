@@ -77,16 +77,18 @@ const ContactModalProperties = (
     return (
         <div className="border-bottom mb1">
             <h3 className="mb1 flex flex-nowrap flex-align-items-center flex-item-noshrink">
-                <Icon className="mr0-5 flex-item-noshrink" name={iconName} />
-                <span className="mr0-5">{title}</span>
+                <Icon className="mr0-25 flex-item-noshrink" name={iconName} />
+                <span className="ml0-1 mr0-5">{title}</span>
                 {field && !['fn', 'email'].includes(field) && (
                     <EncryptedIcon className="flex flex-item-centered-vert flex-item-noshrink" />
                 )}
             </h3>
-            {field && ['email'].includes(field) && <span className="semibold ml2 mb0-5">Primary</span>}
+            {field && ['email'].includes(field) && (
+                <span className="text-semibold ml1-5 pl0-25 mb0-5">{c('Info').t`Primary`}</span>
+            )}
             {onOrderChange ? (
                 <OrderableContainer helperClass="row--orderable" onSortEnd={handleSortEnd} useDragHandle>
-                    <div className="chartreuse">
+                    <div className="mt0-5">
                         {rows.map((row, index) => (
                             <OrderableElement key={row.key || `row${index}`} index={index}>
                                 {row}
