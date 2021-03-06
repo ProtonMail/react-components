@@ -115,8 +115,8 @@ const ContactImageSummary = ({ photo, name }: Props) => {
         <div className="bordered rounded bg-white-dm ratio-container-square mb0">
             <span className="inner-ratio-container flex">
                 <span className="mauto text-sm lh-rg">
-                    <Icon name="contact" />
-                    <Button className="m0-5 p0 block button--link" onClick={handleClick}>{c('Action')
+                    <Icon name="remote-content" />
+                    <Button className="m0-5 p0 block button--link text-no-decoration" onClick={handleClick}>{c('Action')
                         .t`Load image`}</Button>
                 </span>
             </span>
