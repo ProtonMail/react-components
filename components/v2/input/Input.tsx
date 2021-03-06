@@ -2,7 +2,7 @@ import React, { forwardRef, Ref } from 'react';
 
 import { classnames } from '../../../helpers';
 
-export interface InputTwoProps extends Omit<React.ComponentPropsWithoutRef<'input'>, 'prefix'> {
+export interface InputTwoProps extends Omit<React.ComponentPropsWithRef<'input'>, 'prefix'> {
     error?: React.ReactNode | boolean;
     suffix?: React.ReactNode;
     prefix?: React.ReactNode;

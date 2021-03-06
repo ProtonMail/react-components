@@ -24,7 +24,7 @@ const usePreviousValue = <T,>(value: T) => {
     return ref.current;
 };
 
-interface Props extends Omit<InputTwoProps, 'type' | 'value' | 'onChange'> {
+export interface Props extends Omit<InputTwoProps, 'type' | 'value' | 'onChange'> {
     value: string;
     defaultCountry?: string;
     onChange: (value: string) => void;
