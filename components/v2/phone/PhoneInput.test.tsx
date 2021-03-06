@@ -17,6 +17,44 @@ jest.mock('./flagSvgs', () => {
         getFlagSvg: () => true,
     };
 });
+jest.mock('react-virtualized', () => {
+    const ReactVirtualized = jest.requireActual('react-virtualized');
+    return {
+        ...ReactVirtualized,
+        // @ts-ignore
+        AutoSizer: ({ children }) => children({ height: 1000, width: 1000 }),
+    };
+});
+
+interface TestCommands {
+    input?: string;
+    select?: string;
+    expectation: { value: string; country: string | null };
+}
+
+const runTest = (testCommands: TestCommands[]) => {
+    const { getByTestId, getByRole, getByPlaceholderText, getByTitle } = render(
+        <Test initialValue="" defaultCountry="US" />
+    );
+
+    const inputEl = getByTestId('input') as HTMLInputElement;
+    const buttonEl = getByRole('button') as HTMLButtonElement;
+
+    testCommands.forEach(({ input, select, expectation: { value, country } }) => {
+        if (select !== undefined) {
+            fireEvent.click(buttonEl);
+            const searchEl = getByPlaceholderText('Country');
+            fireEvent.change(searchEl, { target: { value: select } });
+            const rowEl = getByTitle(select);
+            fireEvent.click(rowEl);
+        }
+        if (input !== undefined) {
+            fireEvent.change(inputEl, { target: { value: input } });
+        }
+        expect(inputEl.value).toBe(value);
+        expect(getCountry(buttonEl)).toBe(country);
+    });
+};
 
 describe('PhoneInput', () => {
     it('should format input', () => {
@@ -40,10 +78,7 @@ describe('PhoneInput', () => {
     });
 
     it('format as user enters text', () => {
-        const { getByTestId, getByRole } = render(<Test initialValue="" defaultCountry="US" />);
-        const inputEl = getByTestId('input') as HTMLInputElement;
-        const buttonEl = getByRole('button') as HTMLButtonElement;
-        [
+        runTest([
             { input: '631', expectation: { value: '631', country: 'United States' } },
             { input: '6311', expectation: { value: '631 1', country: 'United States' } },
             { input: '631', expectation: { value: '631', country: 'United States' } },
@@ -54,18 +89,11 @@ describe('PhoneInput', () => {
             { input: '6', expectation: { value: '6', country: 'Canada' } },
             { input: '63', expectation: { value: '63', country: 'Canada' } },
             { input: '631', expectation: { value: '631', country: 'United States' } },
-        ].forEach(({ input, expectation: { value, country } }) => {
-            fireEvent.change(inputEl, { target: { value: input } });
-            expect(inputEl.value).toBe(value);
-            expect(getCountry(buttonEl)).toBe(country);
-        });
+        ]);
     });
 
     it('change country if entering with country calling code', () => {
-        const { getByTestId, getByRole } = render(<Test initialValue="" defaultCountry="US" />);
-        const inputEl = getByTestId('input') as HTMLInputElement;
-        const buttonEl = getByRole('button') as HTMLButtonElement;
-        [
+        runTest([
             { input: '', expectation: { value: '', country: 'United States' } },
             { input: '+41', expectation: { value: '+41', country: 'Switzerland' } },
             { input: '+417', expectation: { value: '+41 7', country: 'Switzerland' } },
@@ -73,29 +101,34 @@ describe('PhoneInput', () => {
             { input: '', expectation: { value: '', country: 'Switzerland' } },
             { input: '78', expectation: { value: '78', country: 'Switzerland' } },
             { input: '781', expectation: { value: '78 1', country: 'Switzerland' } },
-        ].forEach(({ input, expectation: { value, country } }) => {
-            fireEvent.change(inputEl, { target: { value: input } });
-            expect(inputEl.value).toBe(value);
-            expect(getCountry(buttonEl)).toBe(country);
-        });
+        ]);
+    });
+
+    it('change country selecting from dropdown', () => {
+        runTest([
+            { input: '', expectation: { value: '', country: 'United States' } },
+            { select: 'Canada', expectation: { value: '', country: 'Canada' } },
+            { input: '6', expectation: { value: '6', country: 'Canada' } },
+            { input: '61', expectation: { value: '61', country: 'Canada' } },
+            { input: '613', expectation: { value: '613', country: 'Canada' } },
+            { select: 'Bahamas', expectation: { value: '', country: 'Bahamas' } },
+            { input: '6', expectation: { value: '6', country: 'Bahamas' } },
+            { input: '61', expectation: { value: '61', country: 'Bahamas' } },
+            { input: '613', expectation: { value: '613', country: 'Canada' } },
+            { input: '631', expectation: { value: '631', country: 'United States' } },
+            { select: 'Canada', expectation: { value: '', country: 'Canada' } },
+        ]);
     });
 
     it('reset and remember country', () => {
-        const { getByTestId, getByRole } = render(<Test initialValue="" defaultCountry="US" />);
-        const inputEl = getByTestId('input') as HTMLInputElement;
-        const buttonEl = getByRole('button') as HTMLButtonElement;
-        [
+        runTest([
             { input: '', expectation: { value: '', country: 'United States' } },
             { input: '+', expectation: { value: '+', country: null } },
             { input: '+4', expectation: { value: '+4', country: null } },
             { input: '+41', expectation: { value: '+41', country: 'Switzerland' } },
             { input: '', expectation: { value: '', country: 'Switzerland' } },
             { input: '+', expectation: { value: '+', country: null } },
-        ].forEach(({ input, expectation: { value, country } }) => {
-            fireEvent.change(inputEl, { target: { value: input } });
-            expect(inputEl.value).toBe(value);
-            expect(getCountry(buttonEl)).toBe(country);
-        });
+        ]);
     });
 
     it('should get a country from a number', () => {

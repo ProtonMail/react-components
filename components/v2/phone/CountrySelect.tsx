@@ -1,48 +1,11 @@
-import React, { forwardRef, Ref, useRef, useState } from 'react';
+import React, { Ref, useRef, useState } from 'react';
 import { normalize } from 'proton-shared/lib/helpers/string';
 import { List, AutoSizer, CellMeasurer, CellMeasurerCache } from 'react-virtualized';
 import { CountryOptionData } from './helper';
-import { Dropdown, DropdownButton, DropdownMenuButton } from '../../dropdown';
+import { Dropdown, DropdownButton } from '../../dropdown';
 import InputTwo from '../input/Input';
-import { classnames } from '../../../helpers';
 import { Icon } from '../../icon';
-
-interface RowProps {
-    data: CountryOptionData;
-    style: any;
-    value?: CountryOptionData;
-    onChange: (data: CountryOptionData) => void;
-}
-
-const Row = ({ data, style, value, onChange }: RowProps, ref?: Ref<HTMLLIElement>) => {
-    return (
-        <li className="dropdown-item" style={style} ref={ref}>
-            <DropdownMenuButton
-                isSelected={false}
-                className={classnames(['block w100 text-ellipsis text-left no-outline', data === value && 'active'])}
-                title={data.countryName}
-                onClick={() => {
-                    onChange(data);
-                }}
-            >
-                <div className="flex">
-                    <img
-                        role="presentation"
-                        className="flex-item-noshrink"
-                        alt={data.countryName}
-                        src={data.countryFlag}
-                        width="30"
-                        height="20"
-                    />
-                    <span className="flex-item-fluid pl0-5 text-ellipsis">{data.countryName}</span>
-                    <span className="flex-item-noshrink text-bold">+{data.countryCallingCode}</span>
-                </div>
-            </DropdownMenuButton>
-        </li>
-    );
-};
-
-const ForwardRow = forwardRef<HTMLLIElement, RowProps>(Row);
+import CountrySelectRow from './CountrySelectRow';
 
 interface Props {
     options: CountryOptionData[];
@@ -180,8 +143,8 @@ const CountrySelect = ({ value, options, onChange, onClosed }: Props) => {
                                             parent={parent}
                                         >
                                             {({ registerChild }) => (
-                                                <ForwardRow
-                                                    ref={registerChild as Ref<HTMLLIElement>}
+                                                <CountrySelectRow
+                                                    ref={registerChild as Ref<HTMLDivElement>}
                                                     data={filteredOptions[index]}
                                                     value={value}
                                                     key={key}
