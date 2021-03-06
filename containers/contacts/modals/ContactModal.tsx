@@ -188,7 +188,7 @@ const ContactModal = ({
             onClose={onClose}
             {...rest}
         >
-            <div className="redborder mb1">
+            <div className="mb1">
                 <ContactModalRow
                     ref={nameFieldRef}
                     isSubmitted={isSubmitted}
@@ -197,6 +197,8 @@ const ContactModal = ({
                     onRemove={handleRemove}
                     isOrderable={false}
                     actionRow={false}
+                    labelWidthClassName="w25"
+                    mainItem
                 />
 
                 <ContactModalRow
@@ -205,8 +207,10 @@ const ContactModal = ({
                     onChange={handleChange}
                     onRemove={handleRemove}
                     isOrderable={false}
+                    labelWidthClassName="w25"
                     actionRow
                     fixedType
+                    mainItem
                 />
             </div>
             <ContactModalProperties
