@@ -16,7 +16,7 @@ import {
 } from 'proton-shared/lib/constants';
 import { toMap } from 'proton-shared/lib/helpers/object';
 import { range } from 'proton-shared/lib/helpers/array';
-import { switchPlan, getSupportedAddons } from 'proton-shared/lib/helpers/subscription';
+import { switchPlan, getSupportedAddons } from 'proton-shared/lib/helpers/planIDs';
 import { getAppName } from 'proton-shared/lib/apps/helper';
 
 import { InlineLinkButton, Icon, SelectTwo, Option, Info, Price } from '../../components';

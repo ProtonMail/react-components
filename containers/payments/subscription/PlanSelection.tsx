@@ -11,7 +11,7 @@ import {
     DEFAULT_CYCLE,
     DEFAULT_CURRENCY,
 } from 'proton-shared/lib/constants';
-import { switchPlan } from 'proton-shared/lib/helpers/subscription';
+import { switchPlan } from 'proton-shared/lib/helpers/planIDs';
 import { getAppName } from 'proton-shared/lib/apps/helper';
 
 import PlanCard from './PlanCard';

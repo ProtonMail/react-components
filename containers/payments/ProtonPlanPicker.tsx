@@ -11,7 +11,8 @@ import {
     DEFAULT_CYCLE,
 } from 'proton-shared/lib/constants';
 import { toMap } from 'proton-shared/lib/helpers/object';
-import { switchPlan, getPlan } from 'proton-shared/lib/helpers/subscription';
+import { getPlan } from 'proton-shared/lib/helpers/subscription';
+import { switchPlan } from 'proton-shared/lib/helpers/planIDs';
 import { getAppName } from 'proton-shared/lib/apps/helper';
 
 import { Radio, Button, InlineLinkButton, Price } from '../../components';
