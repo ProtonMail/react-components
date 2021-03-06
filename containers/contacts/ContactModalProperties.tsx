@@ -80,9 +80,10 @@ const ContactModalProperties = forwardRef<HTMLInputElement, Props>(
                         <EncryptedIcon className="flex flex-item-centered-vert flex-item-noshrink" />
                     )}
                 </h3>
+                {field && ['email'].includes(field) && <span className="semibold ml2 mb0-5">Primary</span>}
                 {onOrderChange ? (
                     <OrderableContainer helperClass="row--orderable" onSortEnd={handleSortEnd} useDragHandle>
-                        <div>
+                        <div className="chartreuse">
                             {rows.map((row, index) => (
                                 <OrderableElement key={row.key || `row${index}`} index={index}>
                                     {row}
