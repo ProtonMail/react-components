@@ -21,10 +21,11 @@ interface Props {
     onRemove: (value: string) => void;
     isOrderable?: boolean;
     isSubmitted?: boolean;
+    actionRow?: boolean;
 }
 
 const ContactModalRow = forwardRef<HTMLInputElement, Props>(
-    ({ property, onChange, onRemove, isOrderable = false, isSubmitted = false }: Props, ref) => {
+    ({ property, onChange, onRemove, isOrderable = false, isSubmitted = false, actionRow = true }: Props, ref) => {
         const { isNarrow } = useActiveBreakpoint();
         const { createModal } = useModals();
         const { field, uid, value } = property;
@@ -51,7 +52,7 @@ const ContactModalRow = forwardRef<HTMLInputElement, Props>(
                 text: canEdit ? (
                     <span className="color-global-warning">{c('Action').t`Delete`}</span>
                 ) : (
-                    <Icon name="trash" className="color-global-warning mauto" alt={c('Action').t`Delete`} />
+                    <Icon name="trash" className="mauto" alt={c('Action').t`Delete`} />
                 ),
                 onClick: () => {
                     if (property.uid) {
@@ -71,7 +72,7 @@ const ContactModalRow = forwardRef<HTMLInputElement, Props>(
                     </OrderableHandle>
                 ) : (
                     <div className="mr0-5 flex flex-align-items-center flex-item-noshrink">
-                        <Icon name="text-justify visibility-hidden" />
+                        <Icon name="text-justify" className="visibility-hidden" />
                     </div>
                 )}
                 <div className="flex flex-nowrap on-mobile-flex-column w95 flex-align-items-start">
@@ -85,7 +86,7 @@ const ContactModalRow = forwardRef<HTMLInputElement, Props>(
                             <ContactModalLabel field={field} type={type} uid={property.uid} onChange={onChange} />
                         </span>
                     )}
-                    <div className="flex flex-nowrap flex-align-items-start flex-item-noshrink">
+                    <div className="flex flex-nowrap flex-align-items-start flex-item-fluid flex-item-noshrink">
                         <span className="flex-item-fluid mb1">
                             <div className="pr1 w100 on-mobile-pr0-5">
                                 <ContactFieldProperty
@@ -98,15 +99,17 @@ const ContactModalRow = forwardRef<HTMLInputElement, Props>(
                                 />
                             </div>
                         </span>
-                        <span className="mb1">
-                            <div className="min-w3e">
-                                {list.length > 0 && (
-                                    <div className="flex flex-item-noshrink flex-align-items-start">
-                                        <DropdownActions className="button--for-icon" list={list} />
-                                    </div>
-                                )}
-                            </div>
-                        </span>
+                        {actionRow && (
+                            <span className="mb1">
+                                <div className="min-w3e">
+                                    {list.length > 0 && (
+                                        <div className="flex flex-item-noshrink flex-align-items-start">
+                                            <DropdownActions className="button--for-icon" list={list} />
+                                        </div>
+                                    )}
+                                </div>
+                            </span>
+                        )}
                     </div>
                 </div>
             </div>

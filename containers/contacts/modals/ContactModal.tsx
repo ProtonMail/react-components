@@ -170,6 +170,13 @@ const ContactModal = ({
         >
             <Alert>{c('Info')
                 .t`Email address, phone number and address at the top of their respective list are automatically set as the default information and will be displayed in the contact information's summary section.`}</Alert>
+            <div className="redborder mb1">
+                Here specific stuff for name + photo
+                <span className="w30 contact-modal-select flex flex-nowrap mb1 flex-align-items-start on-mobile-mb0-5 on-mobile-flex-align-self-start">
+                    Name
+                </span>
+                <span className="flex-item-fluid">dsbfkldsnfkds</span>
+            </div>
             <ContactModalProperties
                 ref={nameFieldRef}
                 properties={properties}
