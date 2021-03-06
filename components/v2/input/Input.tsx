@@ -1,16 +1,16 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, Ref } from 'react';
 
 import { classnames } from '../../../helpers';
 
-export interface InputTwoProps extends React.ComponentPropsWithoutRef<'input'> {
+export interface InputTwoProps extends Omit<React.ComponentPropsWithoutRef<'input'>, 'prefix'> {
     error?: React.ReactNode | boolean;
     suffix?: React.ReactNode;
-    icon?: React.ReactNode;
     prefix?: React.ReactNode;
+    icon?: React.ReactNode;
     onValue?: (value: string) => void;
 }
 
-const InputTwo = forwardRef<HTMLInputElement, InputTwoProps>((props: InputTwoProps, ref) => {
+const InputTwo = (props: InputTwoProps, ref: Ref<HTMLInputElement>) => {
     const { error, icon, suffix, prefix, className: classNameProp, onValue, ...rest } = props;
 
     const className = classnames([classNameProp, 'w100 inputform-field', Boolean(error) && 'error']);
@@ -55,6 +55,6 @@ const InputTwo = forwardRef<HTMLInputElement, InputTwoProps>((props: InputTwoPro
     }
 
     return inputElement;
-});
+};
 
-export default InputTwo;
+export default forwardRef<HTMLInputElement, InputTwoProps>(InputTwo);
