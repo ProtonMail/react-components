@@ -12,6 +12,7 @@ import { CONTACT_IMG_SIZE } from 'proton-shared/lib/contacts/constants';
 import { useLoading, useMailSettings } from '../../hooks';
 import Loader from '../loader/Loader';
 import { Button } from '../button';
+import { Icon } from '../icon';
 
 interface Props {
     photo: string;
@@ -113,8 +114,10 @@ const ContactImageSummary = ({ photo, name }: Props) => {
     return (
         <div className="bordered rounded bg-white-dm ratio-container-square mb0">
             <span className="inner-ratio-container flex">
-                <span className="mauto color-global-border">
-                    <Button className="m0-5" onClick={handleClick}>{c('Action').t`Load photo`}</Button>
+                <span className="mauto text-sm lh-rg">
+                    <Icon name="contact" />
+                    <Button className="m0-5 p0 block button--link" onClick={handleClick}>{c('Action')
+                        .t`Load image`}</Button>
                 </span>
             </span>
         </div>
