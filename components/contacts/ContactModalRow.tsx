@@ -95,7 +95,7 @@ const ContactModalRow = (
                         'contact-modal-select flex flex-nowrap mb1 flex-align-items-start on-mobile-mb0-5 on-mobile-flex-align-self-start',
                         field === 'fn' && 'pt0-5',
                         mainItem && 'text-semibold',
-                        !labelWidthClassName && 'w30',
+                        labelWidthClassName || 'w30',
                     ])}
                 >
                     <ContactModalLabel
