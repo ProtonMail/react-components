@@ -7,9 +7,10 @@ import Select, { Props as SelectProps } from '../../components/select/Select';
 
 const { MONTHLY, YEARLY, TWO_YEARS } = CYCLE;
 
-interface Props extends Omit<SelectProps, 'onSelect' | 'onChange'> {
+interface Props extends Omit<SelectProps, 'onSelect' | 'onChange' | 'options'> {
     cycle: Cycle;
     onSelect: (newCycle: Cycle) => void;
+    options?: SelectProps['options'];
 }
 
 const CycleSelector = ({
