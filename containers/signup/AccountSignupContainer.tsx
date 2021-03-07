@@ -5,7 +5,14 @@ import { APP_NAMES, PAYMENT_METHOD_TYPES, TOKEN_TYPES, APPS, PLAN_SERVICES } fro
 import { API_CUSTOM_ERROR_CODES } from 'proton-shared/lib/errors';
 import { checkSubscription, subscribe } from 'proton-shared/lib/api/payments';
 import { c } from 'ttag';
-import { Address, HumanVerificationMethodType, User as tsUser } from 'proton-shared/lib/interfaces';
+import {
+    Address,
+    Currency,
+    Cycle,
+    HumanVerificationMethodType,
+    SubscriptionCheckResponse,
+    User as tsUser,
+} from 'proton-shared/lib/interfaces';
 import { queryAddresses } from 'proton-shared/lib/api/addresses';
 import { getApiErrorMessage } from 'proton-shared/lib/api/helpers/apiErrorHelper';
 import { persistSession } from 'proton-shared/lib/authentication/persistedSessionHelper';
@@ -34,15 +41,8 @@ import SignupPlans from './SignupPlans';
 import SignupPayment from './SignupPayment';
 import NoSignup from './NoSignup';
 import InvalidVerificationCodeModal from '../api/humanVerification/InvalidVerificationCodeModal';
-import {
-    HumanVerificationError,
-    PlanIDs,
-    SERVICES,
-    SERVICES_KEYS,
-    SignupModel,
-    SubscriptionCheckResult,
-} from './interfaces';
-import { DEFAULT_CHECK_RESULT, DEFAULT_SIGNUP_MODEL, SIGNUP_STEPS } from './constants';
+import { HumanVerificationError, PlanIDs, SERVICES, SERVICES_KEYS, SignupModel } from './interfaces';
+import { DEFAULT_CHECK_RESULT, SIGNUP_STEPS } from './constants';
 import createHumanApi from './helpers/humanApi';
 import RequestNewCodeModal from '../api/humanVerification/RequestNewCodeModal';
 import SignupCreatingAccount from './SignupCreatingAccount';
@@ -56,6 +56,24 @@ import handleCreateExternalUser from './helpers/handleCreateExternalUser';
 import createAuthApi from './helpers/authApi';
 import handleSetupAddress from './helpers/handleSetupAddress';
 import OneAccountIllustration from '../illustration/OneAccountIllustration';
+
+export const DEFAULT_SIGNUP_MODEL: SignupModel = {
+    step: SIGNUP_STEPS.ACCOUNT_CREATION_USERNAME,
+    username: '',
+    password: '',
+    confirmPassword: '',
+    email: '',
+    verifyMethods: [],
+    domains: [],
+    recoveryEmail: '',
+    recoveryPhone: '',
+    verificationCode: '',
+    currency: 'EUR',
+    cycle: 12,
+    planIDs: {},
+    humanVerificationMethods: [],
+    humanVerificationToken: '',
+};
 
 interface Props {
     onLogin: OnLoginCallback;
@@ -83,8 +101,8 @@ interface CacheRef {
 
 const getSearchParams = (search: History.Search) => {
     const searchParams = new URLSearchParams(search);
-    const currency = searchParams.get('currency');
-    const cycle = Number(searchParams.get('billing'));
+    const currency = searchParams.get('currency') as Currency;
+    const cycle = Number(searchParams.get('billing')) as Cycle;
     const preSelectedPlan = searchParams.get('plan');
     const service = searchParams.get('service') as SERVICES_KEYS | undefined;
     return { currency, cycle, preSelectedPlan, service: service ? SERVICES[service] : undefined };
@@ -103,7 +121,7 @@ const AccountSignupContainer = ({ toApp, onLogin, onBack, Layout }: Props) => {
     const { CLIENT_TYPE } = useConfig();
     const [plans, loadingPlans] = usePlans();
     const [loading, withLoading] = useLoading();
-    const [checkResult, setCheckResult] = useState<SubscriptionCheckResult>(DEFAULT_CHECK_RESULT);
+    const [checkResult, setCheckResult] = useState<SubscriptionCheckResponse>(DEFAULT_CHECK_RESULT);
 
     const cacheRef = useRef<CacheRef>({});
     const [humanApi] = useState(() => createHumanApi({ api, createModal }));
@@ -311,7 +329,7 @@ const AccountSignupContainer = ({ toApp, onLogin, onBack, Layout }: Props) => {
 
     useEffect(() => {
         const check = async () => {
-            const result = await humanApi.api<SubscriptionCheckResult>(
+            const result = await humanApi.api<SubscriptionCheckResponse>(
                 checkSubscription({
                     PlanIDs: model.planIDs,
                     Currency: model.currency,

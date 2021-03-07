@@ -13,9 +13,8 @@ import { getPlanIDs } from 'proton-shared/lib/helpers/subscription';
 import { clearPlanIDs } from 'proton-shared/lib/helpers/planIDs';
 import { API_CUSTOM_ERROR_CODES } from 'proton-shared/lib/errors';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
-import { Cycle, Currency, PlanIDs } from 'proton-shared/lib/interfaces';
+import { Cycle, Currency, PlanIDs, SubscriptionCheckResponse } from 'proton-shared/lib/interfaces';
 
-import { SubscriptionCheckResult } from '../../signup/interfaces';
 import { Alert, FormModal } from '../../../components';
 import {
     usePlans,
@@ -67,10 +66,10 @@ interface Model {
     gift?: string;
 }
 
-const BACK = {
+const BACK: Partial<{ [key in SUBSCRIPTION_STEPS]: SUBSCRIPTION_STEPS }> = {
     [SUBSCRIPTION_STEPS.CUSTOMIZATION]: SUBSCRIPTION_STEPS.PLAN_SELECTION,
     [SUBSCRIPTION_STEPS.CHECKOUT]: SUBSCRIPTION_STEPS.CUSTOMIZATION,
-} as const;
+};
 
 const SubscriptionModal = ({
     step = SUBSCRIPTION_STEPS.PLAN_SELECTION,
@@ -102,7 +101,7 @@ const SubscriptionModal = ({
     const [organization, loadingOrganization] = useOrganization();
     const [loading, withLoading] = useLoading();
     const [loadingCheck, withLoadingCheck] = useLoading();
-    const [checkResult, setCheckResult] = useState<SubscriptionCheckResult>();
+    const [checkResult, setCheckResult] = useState<SubscriptionCheckResponse>();
     const { Code: couponCode } = checkResult?.Coupon || {}; // Coupon can be null
     const creditsRemaining = (user.Credit + (checkResult?.Credit ?? 0)) / 100;
     const currentService = isVpnApp ? PLAN_SERVICES.VPN : PLAN_SERVICES.MAIL;
@@ -124,7 +123,7 @@ const SubscriptionModal = ({
         Proration: 0,
         Gift: 0,
         Credit: 0,
-    } as SubscriptionCheckResult;
+    } as SubscriptionCheckResponse;
 
     const getCodes = ({ gift, coupon }: Model) => [gift, coupon].filter(isTruthy);
 
@@ -184,7 +183,7 @@ const SubscriptionModal = ({
         }
 
         try {
-            const result: SubscriptionCheckResult = await api(
+            const result: SubscriptionCheckResponse = await api(
                 checkSubscription({
                     PlanIDs: clearPlanIDs(newModel.planIDs),
                     Currency: newModel.currency,
@@ -265,6 +264,8 @@ const SubscriptionModal = ({
         void withLoadingCheck(check());
     }, [model.cycle, model.currency]);
 
+    const backStep = BACK[model.step];
+
     return (
         <FormModal
             hasClose={[SUBSCRIPTION_STEPS.PLAN_SELECTION, SUBSCRIPTION_STEPS.CUSTOMIZATION].includes(model.step)}
@@ -281,7 +282,7 @@ const SubscriptionModal = ({
             title={
                 <SubscriptionModalHeader
                     title={TITLE[model.step]}
-                    onBack={BACK[model.step] ? () => setModel({ ...model, step: BACK[model.step] }) : undefined}
+                    onBack={backStep !== undefined ? () => setModel({ ...model, step: backStep }) : undefined}
                 />
             }
             loading={loading || loadingPlans || loadingOrganization || loadingSubscription}

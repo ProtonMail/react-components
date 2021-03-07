@@ -7,7 +7,7 @@ import { PLAN_SERVICES, PLAN_TYPES, CYCLE, PLANS, ADDON_NAMES, APPS, BLACK_FRIDA
 import humanSize from 'proton-shared/lib/helpers/humanSize';
 import { getTimeRemaining } from 'proton-shared/lib/date/date';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
-import { Plan, Currency, Cycle, PlanIDs } from 'proton-shared/lib/interfaces';
+import { Plan, Currency, Cycle, PlanIDs, SubscriptionCheckResponse } from 'proton-shared/lib/interfaces';
 
 import { Time, Info } from '../../../components';
 import { useConfig } from '../../../hooks';
@@ -15,7 +15,6 @@ import { getSubTotal } from './helpers';
 import CycleDiscountBadge from '../CycleDiscountBadge';
 import DiscountBadge from '../DiscountBadge';
 import CheckoutRow from './CheckoutRow';
-import { SubscriptionCheckResult } from '../../signup/interfaces';
 import Checkout from '../Checkout';
 import PaymentGiftCode from '../PaymentGiftCode';
 
@@ -23,7 +22,7 @@ interface Props {
     submit?: React.ReactNode;
     loading?: boolean;
     plans?: Plan[];
-    checkResult: SubscriptionCheckResult;
+    checkResult?: Partial<SubscriptionCheckResponse>;
     currency: Currency;
     cycle: Cycle;
     coupon?: string;
@@ -48,7 +47,7 @@ const SubscriptionCheckout = ({
     onChangeCycle,
     onChangeGift,
     planIDs,
-    checkResult,
+    checkResult = {},
     loading,
     hideCurrency,
     hideCycle,
@@ -63,7 +62,10 @@ const SubscriptionCheckout = ({
     const domainAddon = plans.find(({ Name }) => Name === ADDON_NAMES.DOMAIN);
     const memberAddon = plans.find(({ Name }) => Name === ADDON_NAMES.MEMBER);
     const vpnAddon = plans.find(({ Name }) => Name === ADDON_NAMES.VPN);
-    const { years, months, days } = getTimeRemaining(new Date(), new Date(checkResult.PeriodEnd * 1000));
+    const { years, months, days } = getTimeRemaining(
+        new Date(),
+        checkResult.PeriodEnd ? new Date(checkResult.PeriodEnd * 1000) : new Date()
+    );
     const monthsWithYears = months + years * 12;
     const countdown = [
         monthsWithYears &&
@@ -92,9 +94,9 @@ const SubscriptionCheckout = ({
         }) / cycle;
 
     const total = isUpdating
-        ? checkResult.AmountDue - checkResult.Credit
-        : checkResult.Amount + checkResult.CouponDiscount;
-    const monthlyTotal = (checkResult.Amount + checkResult.CouponDiscount) / cycle;
+        ? (checkResult.AmountDue || 0) - (checkResult.Credit || 0)
+        : (checkResult.Amount || 0) + (checkResult.CouponDiscount || 0);
+    const monthlyTotal = ((checkResult.Amount || 0) + (checkResult.CouponDiscount || 0)) / cycle;
     const discount = monthlyTotal - subTotal;
     const collection = orderBy(
         Object.entries(planIDs).map(([planID, quantity]) => ({ ...plansMap[planID], quantity })),
@@ -309,7 +311,7 @@ const SubscriptionCheckout = ({
             ) : null}
             <CheckoutRow
                 title={c('Title').t`Amount due`}
-                amount={checkResult.AmountDue}
+                amount={checkResult.AmountDue || 0}
                 currency={currency}
                 className="text-bold m0 h4"
             />

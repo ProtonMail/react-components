@@ -57,6 +57,60 @@ const NAMES = {
     [PLANS.VISIONARY]: 'Visionary',
 } as const;
 
+const getFeatures = (planName: PLANS) => {
+    return {
+        free_mail: [
+            c('Plan feature').t`1 user`,
+            c('Plan feature').t`0.5 GB storage`,
+            c('Plan feature').t`1 address`,
+            c('Plan feature').t`3 folders / labels`,
+            c('Plan feature').t`No custom email addresses`,
+        ],
+        free_vpn: [
+            c('Plan feature').t`1 simultaneous connection`,
+            c('Plan feature').t`Medium speed`,
+            c('Plan feature').t`Adblocker (NetShield)`,
+            c('Plan feature').t`Access to blocked content`,
+            c('Plan feature').t`Secure Core VPN`,
+        ],
+        [PLANS.VPNBASIC]: [
+            c('Plan feature').t`2 simultaneous connections`,
+            c('Plan feature').t`High speed`,
+            c('Plan feature').t`Adblocker (NetShield)`,
+            c('Plan feature').t`Access to blocked content`,
+            c('Plan feature').t`Secure Core VPN`,
+        ],
+        [PLANS.VPNPLUS]: [
+            c('Plan feature').t`5 simultaneous connections`,
+            c('Plan feature').t`Highest speed`,
+            c('Plan feature').t`Adblocker (NetShield)`,
+            c('Plan feature').t`Access to blocked content`,
+            c('Plan feature').t`Secure Core VPN`,
+        ],
+        [PLANS.PLUS]: [
+            c('Plan feature').t`1 user`,
+            c('Plan feature').t`5 GB storage *`,
+            c('Plan feature').t`5 addresses`,
+            c('Plan feature').t`200 folders / labels`,
+            c('Plan feature').t`Custom email addresses`,
+        ],
+        [PLANS.PROFESSIONAL]: [
+            c('Plan feature').t`1 - 5000 users *`,
+            c('Plan feature').t`5 GB storage / user`,
+            c('Plan feature').t`5 addresses / user`,
+            c('Plan feature').t`Unlimited folders / labels`,
+            c('Plan feature').t`Custom email addresses`,
+        ],
+        [PLANS.VISIONARY]: [
+            c('Plan feature').t`6 users`,
+            c('Plan feature').t`20 GB storage`,
+            c('Plan feature').t`50 addresses`,
+            c('Plan feature').t`Unlimited folders / labels`,
+            c('Plan feature').t`Custom email addresses`,
+        ],
+    }[planName];
+};
+
 interface Props {
     planIDs: PlanIDs;
     currency: Currency;
@@ -110,58 +164,6 @@ const PlanSelection = ({
         [PLANS.VISIONARY]: c('Info').t`Mail + VPN bundle for families and small businesses.`,
     } as const;
 
-    const FEATURES = {
-        free_mail: [
-            c('Plan feature').t`1 user`,
-            c('Plan feature').t`0.5 GB storage`,
-            c('Plan feature').t`1 address`,
-            c('Plan feature').t`3 folders / labels`,
-            c('Plan feature').t`No custom email addresses`,
-        ],
-        free_vpn: [
-            c('Plan feature').t`1 simultaneous connection`,
-            c('Plan feature').t`Medium speed`,
-            c('Plan feature').t`Adblocker (NetShield)`,
-            c('Plan feature').t`Access to blocked content`,
-            c('Plan feature').t`Secure Core VPN`,
-        ],
-        [PLANS.VPNBASIC]: [
-            c('Plan feature').t`2 simultaneous connections`,
-            c('Plan feature').t`High speed`,
-            c('Plan feature').t`Adblocker (NetShield)`,
-            c('Plan feature').t`Access to blocked content`,
-            c('Plan feature').t`Secure Core VPN`,
-        ],
-        [PLANS.VPNPLUS]: [
-            c('Plan feature').t`5 simultaneous connections`,
-            c('Plan feature').t`Highest speed`,
-            c('Plan feature').t`Adblocker (NetShield)`,
-            c('Plan feature').t`Access to blocked content`,
-            c('Plan feature').t`Secure Core VPN`,
-        ],
-        [PLANS.PLUS]: [
-            c('Plan feature').t`1 user`,
-            c('Plan feature').t`5 GB storage *`,
-            c('Plan feature').t`5 addresses`,
-            c('Plan feature').t`200 folders / labels`,
-            c('Plan feature').t`Custom email addresses`,
-        ],
-        [PLANS.PROFESSIONAL]: [
-            c('Plan feature').t`1 - 5000 users *`,
-            c('Plan feature').t`5 GB storage / user`,
-            c('Plan feature').t`5 addresses / user`,
-            c('Plan feature').t`Unlimited folders / labels`,
-            c('Plan feature').t`Custom email addresses`,
-        ],
-        [PLANS.VISIONARY]: [
-            c('Plan feature').t`6 users`,
-            c('Plan feature').t`20 GB storage`,
-            c('Plan feature').t`50 addresses`,
-            c('Plan feature').t`Unlimited folders / labels`,
-            c('Plan feature').t`Custom email addresses`,
-        ],
-    } as const;
-
     const boldSave = <strong key="save">{c('Info').t`Save 20%`}</strong>;
 
     return (
@@ -209,7 +211,7 @@ const PlanSelection = ({
                                 cycle={cycle}
                                 price={plan.Pricing[cycle]}
                                 info={INFOS[plan.Name as PLANS]}
-                                features={FEATURES[plan.Name as PLANS]}
+                                features={getFeatures(plan.Name as PLANS)}
                                 onClick={() =>
                                     onChangePlanIDs(
                                         switchPlan({

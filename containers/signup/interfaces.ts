@@ -1,5 +1,5 @@
 import { HumanVerificationMethodType, Currency, Cycle } from 'proton-shared/lib/interfaces';
-import { APPS, ADDON_NAMES } from 'proton-shared/lib/constants';
+import { APPS } from 'proton-shared/lib/constants';
 import { SIGNUP_STEPS } from './constants';
 
 export const SERVICES = {
@@ -13,31 +13,6 @@ export type SERVICES_KEYS = keyof typeof SERVICES;
 
 export interface PlanIDs {
     [planID: string]: number;
-}
-
-export interface Additions {
-    [ADDON_NAMES.ADDRESS]?: number;
-    [ADDON_NAMES.DOMAIN]?: number;
-    [ADDON_NAMES.MEMBER]?: number;
-    [ADDON_NAMES.SPACE]?: number;
-    [ADDON_NAMES.VPN]?: number;
-}
-
-export interface SubscriptionCheckResult {
-    Amount: number;
-    AmountDue: number;
-    Proration: number;
-    Credit: number;
-    Currency: string;
-    Cycle: number;
-    Gift: number;
-    CouponDiscount: number;
-    Coupon: null | {
-        Code: string;
-        Description: string;
-    };
-    Additions: null | Additions;
-    PeriodEnd: number;
 }
 
 export interface SignupModel {

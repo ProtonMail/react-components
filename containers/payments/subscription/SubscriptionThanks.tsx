@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import { APPS, PAYMENT_METHOD_TYPES } from 'proton-shared/lib/constants';
 import mailLandscapeSvg from 'design-system/assets/img/pm-images/landscape.svg';
@@ -9,14 +8,18 @@ import playStoreSvg from 'design-system/assets/img/shared/play-store.svg';
 import { PrimaryButton, Href } from '../../../components';
 import { useConfig } from '../../../hooks';
 
-const SubscriptionThanks = ({ method = '', onClose }) => {
+interface Props {
+    onClose?: () => void;
+    method?: PAYMENT_METHOD_TYPES;
+}
+const SubscriptionThanks = ({ method, onClose }: Props) => {
     const { APP_NAME } = useConfig();
     const isVPN = APP_NAME === APPS.PROTONVPN_SETTINGS;
 
     return (
         <>
             <p className="text-center mb1">
-                {[PAYMENT_METHOD_TYPES.CASH, PAYMENT_METHOD_TYPES.BITCOIN].includes(method)
+                {method && [PAYMENT_METHOD_TYPES.CASH, PAYMENT_METHOD_TYPES.BITCOIN].includes(method)
                     ? c('Info').t`Your account will be updated once the payment is cleared.`
                     : c('Info').t`Your account has been successfully updated.`}
             </p>
@@ -51,11 +54,6 @@ const SubscriptionThanks = ({ method = '', onClose }) => {
             </div>
         </>
     );
-};
-
-SubscriptionThanks.propTypes = {
-    method: PropTypes.string,
-    onClose: PropTypes.func.isRequired,
 };
 
 export default SubscriptionThanks;

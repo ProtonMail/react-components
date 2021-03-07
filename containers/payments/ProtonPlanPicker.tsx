@@ -18,20 +18,6 @@ import { getAppName } from 'proton-shared/lib/apps/helper';
 import { Radio, Button, InlineLinkButton, Price } from '../../components';
 import { PlanIDs } from '../signup/interfaces';
 
-interface Props {
-    index?: number;
-    cycle: Cycle;
-    currency: Currency;
-    onChangePlanIDs: (planIDs: PlanIDs) => void;
-    onChangeCycle: (cycle: Cycle) => void;
-    onBack: () => void;
-    planIDs: PlanIDs;
-    plans: Plan[];
-    organization?: Organization;
-    service: PLAN_SERVICES;
-    subscription?: Subscription;
-}
-
 const FREE_PLAN = {
     ID: 'free',
     Name: 'free' as PLANS,
@@ -55,6 +41,20 @@ const FREE_PLAN = {
         [CYCLE.TWO_YEARS]: 0,
     },
 } as Plan;
+
+export interface Props {
+    index?: number;
+    cycle: Cycle;
+    currency: Currency;
+    onChangePlanIDs: (planIDs: PlanIDs) => void;
+    onChangeCycle: (cycle: Cycle) => void;
+    onBack: () => void;
+    planIDs: PlanIDs;
+    plans: Plan[];
+    organization?: Organization;
+    service: PLAN_SERVICES;
+    subscription?: Subscription;
+}
 
 const ProtonPlanPicker = ({
     index,

@@ -1,16 +1,16 @@
 import React from 'react';
 import { c } from 'ttag';
 import { PAYMENT_METHOD_TYPES, PLAN_SERVICES } from 'proton-shared/lib/constants';
-import { Plan } from 'proton-shared/lib/interfaces';
+import { Plan, SubscriptionCheckResponse } from 'proton-shared/lib/interfaces';
 
 import { Alert } from '../../components';
 import { SubscriptionCheckout, Payment } from '../payments';
-import { SignupModel, SignupPayPal, SubscriptionCheckResult } from './interfaces';
+import { SignupModel, SignupPayPal } from './interfaces';
 import SignupCheckoutButton from './SignupCheckoutButton';
 
 interface Props {
     model: SignupModel;
-    checkResult: SubscriptionCheckResult;
+    checkResult: SubscriptionCheckResponse;
     onChange: (model: SignupModel) => void;
     card: any;
     onCardChange: (key: string, value: string) => void;
