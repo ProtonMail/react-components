@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import { Icon, LinkButton } from '../../components';
 import { useToggle } from '../../hooks';
 
 import GiftCodeForm from './subscription/GiftCodeForm';
 
-const PaymentGiftCode = ({ gift = '', onApply, loading }) => {
+interface Props {
+    loading?: boolean;
+    gift?: string;
+    onApply: (value: string) => void;
+}
+
+const PaymentGiftCode = ({ gift = '', onApply, loading }: Props) => {
     const { state, toggle, set } = useToggle();
     const [code, setCode] = useState('');
 
@@ -27,7 +32,7 @@ const PaymentGiftCode = ({ gift = '', onApply, loading }) => {
             <div className="inline-flex flex-nowrap flex-align-items-center">
                 <span className="mr1 flex flex-nowrap flex-align-items-center">
                     <Icon name="gift" className="mr0-5 mb0-25" />
-                    <code>{gift.match(/.{1,4}/g).join('-')}</code>
+                    <code>{(gift.match(/.{1,4}/g) || ['']).join('-')}</code>
                 </span>
                 <LinkButton
                     className="flex flex-align-items-center ml0-25"
@@ -54,12 +59,6 @@ const PaymentGiftCode = ({ gift = '', onApply, loading }) => {
     }
 
     return <LinkButton onClick={toggle} icon={gift}>{c('Link').t`Add a gift code`}</LinkButton>;
-};
-
-PaymentGiftCode.propTypes = {
-    loading: PropTypes.bool,
-    gift: PropTypes.string,
-    onApply: PropTypes.func.isRequired,
 };
 
 export default PaymentGiftCode;

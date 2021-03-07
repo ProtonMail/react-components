@@ -1,6 +1,7 @@
 import { getFirstTop } from '../../helpers/countries';
+import { CardModel } from './interface';
 
-const getDefault = () => {
+const getDefault = (): CardModel => {
     const { value: country } = getFirstTop();
 
     return {

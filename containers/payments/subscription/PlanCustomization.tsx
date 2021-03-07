@@ -31,7 +31,7 @@ const PlanCustomization = ({
         <>
             {services.map((service, index) => {
                 return (
-                    <>
+                    <React.Fragment key={service}>
                         <ProtonPlanPicker
                             index={index}
                             subscription={subscription}
@@ -55,7 +55,7 @@ const PlanCustomization = ({
                             organization={organization}
                             onChangePlanIDs={onChangePlanIDs}
                         />
-                    </>
+                    </React.Fragment>
                 );
             })}
         </>
