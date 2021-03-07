@@ -1,6 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import humanPrice from 'proton-shared/lib/helpers/humanPrice';
+import { Currency } from 'proton-shared/lib/interfaces';
 
 import { classnames } from '../../helpers';
 
@@ -10,10 +10,26 @@ const CURRENCIES = {
     CHF: 'CHF',
 };
 
-const Price = ({ children: amount = 0, currency = '', className = '', divisor = 100, suffix = '', prefix = '' }) => {
+interface Props {
+    children: number;
+    currency?: Currency | string;
+    className?: string;
+    divisor?: number;
+    suffix?: string;
+    prefix?: string;
+}
+
+const Price = ({
+    children: amount = 0,
+    currency = '',
+    className = '',
+    divisor = 100,
+    suffix = '',
+    prefix = '',
+}: Props) => {
     const value = humanPrice(amount, divisor);
     const [integer, decimal] = `${value}`.split('.');
-    const c = <span className="currency">{CURRENCIES[currency] || currency}</span>;
+    const c = <span className="currency">{CURRENCIES[currency as Currency] || currency}</span>;
     const p = amount < 0 ? <span className="prefix">-</span> : null;
     const v = (
         <span className="amount">
@@ -45,15 +61,6 @@ const Price = ({ children: amount = 0, currency = '', className = '', divisor = 
             {s}
         </span>
     ); // -2 EUR/month
-};
-
-Price.propTypes = {
-    currency: PropTypes.string,
-    children: PropTypes.number,
-    className: PropTypes.string,
-    divisor: PropTypes.number,
-    suffix: PropTypes.string,
-    prefix: PropTypes.string,
 };
 
 export default Price;

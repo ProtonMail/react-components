@@ -1,6 +1,6 @@
 import React from 'react';
 import { c } from 'ttag';
-import { APPS, PAYMENT_METHOD_TYPES } from 'proton-shared/lib/constants';
+import { APPS, PAYMENT_METHOD_TYPE, PAYMENT_METHOD_TYPES } from 'proton-shared/lib/constants';
 import mailLandscapeSvg from 'design-system/assets/img/pm-images/landscape.svg';
 import vpnLandscapeSvg from 'design-system/assets/img/pv-images/landscape.svg';
 import appStoreSvg from 'design-system/assets/img/shared/app-store.svg';
@@ -10,7 +10,7 @@ import { useConfig } from '../../../hooks';
 
 interface Props {
     onClose?: () => void;
-    method?: PAYMENT_METHOD_TYPES;
+    method?: PAYMENT_METHOD_TYPE;
 }
 const SubscriptionThanks = ({ method, onClose }: Props) => {
     const { APP_NAME } = useConfig();

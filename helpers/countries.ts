@@ -242,10 +242,13 @@ const COUNTRIES = [
     { value: 'ZW', label: 'Zimbabwe' },
 ];
 
-const countriesByAbbr = COUNTRIES.reduce((list, country) => ({ ...list, [country.value]: country.label }), {});
+const countriesByAbbr = COUNTRIES.reduce<{ [key: string]: string }>(
+    (list, country) => ({ ...list, [country.value]: country.label }),
+    {}
+);
 
-export const getCountryByAbbr = (abbr) => countriesByAbbr[abbr];
-export const correctAbbr = (abbr) => (abbr === 'UK' ? 'GB' : abbr);
+export const getCountryByAbbr = (abbr: string) => countriesByAbbr[abbr];
+export const correctAbbr = (abbr: string) => (abbr === 'UK' ? 'GB' : abbr);
 export const getFullList = () => TOP_COUNTRIES.concat([DEFAULT_SEPARATOR], COUNTRIES);
 export const getList = () => COUNTRIES;
 export const getFirstTop = () => TOP_COUNTRIES[0];

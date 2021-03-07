@@ -378,9 +378,8 @@ const SubscriptionModal = ({
                                     onCard={setCard}
                                     errors={errors}
                                 />
-                                {[PAYMENT_METHOD_TYPES.CASH, PAYMENT_METHOD_TYPES.BITCOIN].includes(
-                                    method as PAYMENT_METHOD_TYPES
-                                ) ? (
+                                {method &&
+                                [PAYMENT_METHOD_TYPES.CASH, PAYMENT_METHOD_TYPES.BITCOIN].includes(method) ? (
                                     <Alert type="warning">{c('Warning')
                                         .t`Please note that by choosing this payment method, your account cannot be upgraded immediately. We will update your account once the payment is cleared.`}</Alert>
                                 ) : null}

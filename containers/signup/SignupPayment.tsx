@@ -1,6 +1,6 @@
 import React from 'react';
 import { c } from 'ttag';
-import { PAYMENT_METHOD_TYPES, PLAN_SERVICES } from 'proton-shared/lib/constants';
+import { PAYMENT_METHOD_TYPE, PLAN_SERVICES } from 'proton-shared/lib/constants';
 import { Plan, SubscriptionCheckResponse } from 'proton-shared/lib/interfaces';
 
 import { Alert } from '../../components';
@@ -17,7 +17,7 @@ interface Props {
     paypal: SignupPayPal;
     paypalCredit: SignupPayPal;
     method: any;
-    onMethodChange: (method: PAYMENT_METHOD_TYPES) => void;
+    onMethodChange: (method: PAYMENT_METHOD_TYPE) => void;
     errors: any;
     canPay: boolean;
     loading: boolean;

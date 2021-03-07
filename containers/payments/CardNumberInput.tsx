@@ -1,14 +1,14 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import creditCardType from 'credit-card-type';
 import { getLightOrDark } from 'proton-shared/lib/themes/helpers';
 import { isNumber } from 'proton-shared/lib/helpers/validators';
 
-import { Input, Icon } from '../../components';
+import Input, { Props as InputProps } from '../../components/input/Input';
+import { Icon } from '../../components';
 
 const banks = require.context('design-system/assets/img/shared/bank-icons', true, /.svg$/);
 
-const banksMap = banks.keys().reduce((acc, key) => {
+const banksMap = banks.keys().reduce<{ [key: string]: () => { default: string } }>((acc, key) => {
     acc[key] = () => banks(key);
     return acc;
 }, {});
@@ -25,9 +25,9 @@ const getBankSvg = (type = '') => {
     return getLightOrDark(ligthLogo, darkLogo);
 };
 
-const isValidNumber = (v) => !v || isNumber(v);
+const isValidNumber = (v: string) => !v || isNumber(v);
 
-const withGaps = (value = '', gaps = []) => {
+const withGaps = (value = '', gaps: number[] = []) => {
     return [...value].reduce((acc, digit, index) => {
         if (gaps.includes(index)) {
             return `${acc} ${digit}`;
@@ -36,17 +36,16 @@ const withGaps = (value = '', gaps = []) => {
     }, '');
 };
 
-const CardNumberInput = ({ value, onChange, errors = [], ...rest }) => {
-    const [{ type = '', niceType = '', gaps = [] } = {}] = creditCardType(value) || [];
+interface Props extends Omit<InputProps, 'value' | 'onChange'> {
+    value: string;
+    onChange: (value: string) => void;
+}
+
+const CardNumberInput = ({ value, onChange, ...rest }: Props) => {
+    const [firstCreditCardType] = creditCardType(value);
+    const { type = '', niceType = '', gaps = [] } = firstCreditCardType;
     const bankIcon = getBankSvg(type);
     const valueWithGaps = gaps.length ? withGaps(value, gaps) : value;
-
-    const handleChange = ({ target }) => {
-        const val = target.value.replace(/\s/g, '');
-        if (isValidNumber(val)) {
-            onChange(val);
-        }
-    };
 
     return (
         <Input
@@ -54,8 +53,12 @@ const CardNumberInput = ({ value, onChange, errors = [], ...rest }) => {
             name="cardnumber"
             placeholder="0000 0000 0000 0000"
             maxLength={23}
-            errors={errors}
-            onChange={handleChange}
+            onChange={({ target }) => {
+                const val = target.value.replace(/\s/g, '');
+                if (isValidNumber(val)) {
+                    onChange(val);
+                }
+            }}
             value={valueWithGaps}
             icon={
                 value && bankIcon ? (
@@ -67,12 +70,6 @@ const CardNumberInput = ({ value, onChange, errors = [], ...rest }) => {
             {...rest}
         />
     );
-};
-
-CardNumberInput.propTypes = {
-    value: PropTypes.string,
-    onChange: PropTypes.func,
-    errors: PropTypes.array,
 };
 
 export default CardNumberInput;

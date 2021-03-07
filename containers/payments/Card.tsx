@@ -1,15 +1,24 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import { c } from 'ttag';
-import PropTypes from 'prop-types';
 import { Label, Block, Input, Select, Info } from '../../components';
 
 import { getFullList } from '../../helpers/countries';
 import ExpInput from './ExpInput';
 import CardNumberInput from './CardNumberInput';
+import { CardModel } from './interface';
 
-const Card = ({ card, errors, onChange, loading = false }) => {
-    const countries = getFullList().map(({ value, label: text, disabled }) => ({ value, text, disabled }));
-    const handleChange = (key) => ({ target }) => onChange(key, target.value);
+interface Props {
+    onChange: (key: string, value: string) => void;
+    loading?: boolean;
+    card: CardModel;
+    errors: any;
+}
+
+const Card = ({ card, errors, onChange, loading = false }: Props) => {
+    const countries = getFullList().map(({ value, label: text }) => ({ value, text }));
+    const handleChange = (key: keyof CardModel) => ({
+        target,
+    }: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLSelectElement>) => onChange(key, target.value);
 
     return (
         <>
@@ -109,13 +118,6 @@ const Card = ({ card, errors, onChange, loading = false }) => {
             </div>
         </>
     );
-};
-
-Card.propTypes = {
-    loading: PropTypes.bool,
-    card: PropTypes.object.isRequired,
-    errors: PropTypes.object.isRequired,
-    onChange: PropTypes.func.isRequired,
 };
 
 export default Card;

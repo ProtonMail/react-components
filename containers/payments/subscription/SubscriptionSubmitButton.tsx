@@ -1,5 +1,5 @@
 import React from 'react';
-import { PAYMENT_METHOD_TYPES } from 'proton-shared/lib/constants';
+import { PAYMENT_METHOD_TYPE, PAYMENT_METHOD_TYPES } from 'proton-shared/lib/constants';
 import { SubscriptionCheckResponse } from 'proton-shared/lib/interfaces';
 import { c } from 'ttag';
 import { PrimaryButton } from '../../../components';
@@ -17,7 +17,7 @@ interface Props {
     onClose?: () => void;
     checkResult?: SubscriptionCheckResponse;
     loading?: boolean;
-    method?: PAYMENT_METHOD_TYPES;
+    method?: PAYMENT_METHOD_TYPE;
     paypal: PayPalHook;
 }
 
