@@ -139,15 +139,16 @@ const SubscriptionCheckout = ({
             .filter(({ Services, quantity }) => hasBit(Services, service) && quantity)
             .map(({ ID, Title, Pricing, Type, Name, quantity }) => {
                 const update = (isUpdating && checkResult?.Additions?.[Name as ADDON_NAMES]) || 0;
+                const diff = quantity - update;
                 return (
                     <React.Fragment key={ID}>
-                        {quantity - update ? (
+                        {diff ? (
                             <CheckoutRow
                                 className={Type === PLAN_TYPES.PLAN ? 'text-bold' : ''}
                                 title={
                                     <>
                                         <span className="mr0-5 pr0-5">
-                                            {Type === PLAN_TYPES.PLAN ? Title : getTitle(Name, quantity - update)}
+                                            {Type === PLAN_TYPES.PLAN ? Title : getTitle(Name, diff)}
                                         </span>
                                         {!isUpdating && [CYCLE.YEARLY, CYCLE.TWO_YEARS].includes(cycle) && (
                                             <span className="text-no-bold">
@@ -156,7 +157,7 @@ const SubscriptionCheckout = ({
                                         )}
                                     </>
                                 }
-                                amount={isUpdating ? 0 : ((quantity - update) * Pricing[cycle]) / cycle}
+                                amount={isUpdating ? 0 : (diff * Pricing[cycle]) / cycle}
                                 currency={currency}
                             />
                         ) : null}
