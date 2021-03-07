@@ -14,9 +14,12 @@ import {
 import { switchPlan } from 'proton-shared/lib/helpers/planIDs';
 import { getAppName } from 'proton-shared/lib/apps/helper';
 
-import PlanCard from './PlanCard';
-import { CycleSelector, CurrencySelector } from '..';
 import { Icon, InlineLinkButton, Button } from '../../../components';
+
+import CurrencySelector from '../CurrencySelector';
+import CycleSelector from '../CycleSelector';
+
+import PlanCard from './PlanCard';
 import MailFeaturesTable from './MailFeaturesTable';
 import VpnFeaturesTable from './VpnFeaturesTable';
 
