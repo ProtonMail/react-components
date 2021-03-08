@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { noop } from 'proton-shared/lib/helpers/function';
 import { Label } from 'proton-shared/lib/interfaces/Label';
 
 import { OrderableTableRow, Icon } from '../../components';
@@ -9,26 +8,16 @@ import ActionsLabel from './ActionsLabel';
 
 interface Props {
     label: Label;
-    onEditLabel: Function;
-    onRemoveLabel: Function;
     index: number;
 }
 
-function LabelItem({ label, onEditLabel = noop, onRemoveLabel = noop, ...rest }: Props) {
+function LabelItem({ label, ...rest }: Props) {
     const { Name, Color } = label;
-
-    const handleChange = (type: 'update' | 'remove', label: Label) => {
-        if (type === 'update') {
-            onEditLabel(label);
-        } else if (type === 'remove') {
-            onRemoveLabel(label);
-        }
-    };
 
     return (
         <OrderableTableRow
             cells={[
-                <div key="0" className="flex flex-nowrap">
+                <div key="label" className="flex flex-nowrap">
                     <Icon
                         name="label"
                         style={{ fill: Color }}
@@ -38,7 +27,7 @@ function LabelItem({ label, onEditLabel = noop, onRemoveLabel = noop, ...rest }:
                         {Name}
                     </span>
                 </div>,
-                <ActionsLabel key="2" label={label} onChange={handleChange} />,
+                <ActionsLabel key="actions" label={label} />,
             ]}
             {...rest}
         />

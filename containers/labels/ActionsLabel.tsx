@@ -11,10 +11,9 @@ import EditLabelModal from './modals/EditLabelModal';
 
 interface Props {
     label: Label;
-    onChange?: Function;
 }
 
-function ActionsLabel({ label, onChange }: Props) {
+function ActionsLabel({ label }: Props) {
     const api = useApi();
     const { call } = useEventManager();
     const { createModal } = useModals();
@@ -56,13 +55,10 @@ function ActionsLabel({ label, onChange }: Props) {
         createNotification({
             text: c('Success notification').t`${label.Name} removed`,
         });
-        onChange?.('remove', label);
     };
 
     const handleEdit = () => {
-        createModal(
-            <EditLabelModal label={label} mode="edition" onEdit={(label) => onChange && onChange('update', label)} />
-        );
+        createModal(<EditLabelModal label={label} mode="edition" />);
     };
 
     const list = [
