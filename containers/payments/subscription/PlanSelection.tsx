@@ -21,8 +21,8 @@ import CurrencySelector from '../CurrencySelector';
 import CycleSelector from '../CycleSelector';
 
 import PlanCard from './PlanCard';
-import MailFeaturesTable from './MailFeaturesTable';
-import VpnFeaturesTable from './VpnFeaturesTable';
+import MailFeatures from './MailFeatures';
+import VPNFeatures from './VPNFeatures';
 
 const FREE_PLAN = {
     ID: 'free',
@@ -243,8 +243,38 @@ const PlanSelection = ({
             </p>
             {showAllFeatures ? (
                 <>
-                    {service === PLAN_SERVICES.MAIL ? <MailFeaturesTable cycle={cycle} currency={currency} /> : null}
-                    {service === PLAN_SERVICES.VPN ? <VpnFeaturesTable cycle={cycle} currency={currency} /> : null}
+                    {service === PLAN_SERVICES.MAIL ? (
+                        <MailFeatures
+                            onSelect={(planName) => {
+                                const plan = plans.find(({ Name }) => Name === planName);
+                                onChangePlanIDs(
+                                    switchPlan({
+                                        planIDs,
+                                        plans,
+                                        planID: plan?.ID,
+                                        service,
+                                        organization,
+                                    })
+                                );
+                            }}
+                        />
+                    ) : null}
+                    {service === PLAN_SERVICES.VPN ? (
+                        <VPNFeatures
+                            onSelect={(planName) => {
+                                const plan = plans.find(({ Name }) => Name === planName);
+                                onChangePlanIDs(
+                                    switchPlan({
+                                        planIDs,
+                                        plans,
+                                        planID: plan?.ID,
+                                        service,
+                                        organization,
+                                    })
+                                );
+                            }}
+                        />
+                    ) : null}
                 </>
             ) : null}
         </>
