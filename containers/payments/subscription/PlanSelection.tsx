@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
-import { Currency, Cycle, Organization, Plan, PlanIDs } from 'proton-shared/lib/interfaces';
+import { Currency, Cycle, Organization, Plan, PlanIDs, Subscription } from 'proton-shared/lib/interfaces';
 import { toMap } from 'proton-shared/lib/helpers/object';
 import {
     APPS,
@@ -13,6 +13,7 @@ import {
 } from 'proton-shared/lib/constants';
 import { switchPlan } from 'proton-shared/lib/helpers/planIDs';
 import { getAppName } from 'proton-shared/lib/apps/helper';
+import { getPlan } from 'proton-shared/lib/helpers/subscription';
 
 import { Icon, InlineLinkButton, Button } from '../../../components';
 
@@ -122,6 +123,7 @@ interface Props {
     onChangePlanIDs: (newPlanIDs: PlanIDs) => void;
     onChangeCycle: (newCycle: Cycle) => void;
     onChangeCurrency: (newCurrency: Currency) => void;
+    subscription?: Subscription;
 }
 
 const PlanSelection = ({
@@ -132,11 +134,13 @@ const PlanSelection = ({
     service,
     loading,
     organization,
+    subscription,
     onChangePlanIDs,
     onChangeCycle,
     onChangeCurrency,
 }: Props) => {
     const [showAllFeatures, setShowAllFeatures] = useState(false);
+    const currentPlan = subscription ? getPlan(subscription, service) : null;
     const mailAppName = getAppName(APPS.PROTONMAIL);
     const isVpnApp = service === PLAN_SERVICES.VPN;
     const planNamesMap = toMap(plans, 'Name');
@@ -199,12 +203,12 @@ const PlanSelection = ({
             <div className="flex flex-nowrap on-mobile-flex-column">
                 {plansToShow.map((plan: Plan) => {
                     const isFree = plan.ID === FREE_PLAN.ID;
-                    const isSelected = isFree ? plansToShow.every((plan) => !planIDs[plan.ID]) : !!planIDs[plan.ID];
+                    const isCurrentPlan = isFree ? !currentPlan : currentPlan?.ID === plan.ID;
                     return (
                         <div key={plan.ID} className="flex-item-fluid">
                             <PlanCard
-                                isSelected={isSelected}
-                                action={isSelected ? c('Action').t`Customize plan` : c('Action').t`Select plan`}
+                                isCurrentPlan={isCurrentPlan}
+                                action={c('Action').t`Select plan`}
                                 planName={NAMES[plan.Name as PLANS]}
                                 currency={currency}
                                 disabled={loading}

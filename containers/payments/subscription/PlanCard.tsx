@@ -3,7 +3,7 @@ import { c } from 'ttag';
 import { Currency, Cycle } from 'proton-shared/lib/interfaces';
 import { CYCLE } from 'proton-shared/lib/constants';
 
-import { Icon, Price, Button, PrimaryButton } from '../../../components';
+import { Icon, Price, PrimaryButton } from '../../../components';
 
 interface Props {
     planName: string;
@@ -14,7 +14,7 @@ interface Props {
     features: React.ReactNode[];
     currency: Currency;
     cycle: Cycle;
-    isSelected: undefined | true | false;
+    isCurrentPlan?: boolean;
     disabled?: boolean;
 }
 
@@ -28,7 +28,7 @@ const PlanCard = ({
     currency,
     cycle,
     disabled,
-    isSelected,
+    isCurrentPlan,
 }: Props) => {
     const billedPrice = (
         <Price key="price" currency={currency}>
@@ -37,7 +37,7 @@ const PlanCard = ({
     );
     return (
         <>
-            {isSelected === true ? (
+            {isCurrentPlan ? (
                 <div className="text-xs text-uppercase text-bold text-center">{c('Title').t`Current plan`}</div>
             ) : null}
             <div className="bordered-container p2">
@@ -52,15 +52,9 @@ const PlanCard = ({
                     <p className="text-sm">{c('Info').jt`Billed as ${billedPrice} every 2 years`}</p>
                 ) : null}
                 <p className="text-lg">{info}</p>
-                {isSelected === false ? (
-                    <Button onClick={onClick} disabled={disabled} className="w100">
-                        {action}
-                    </Button>
-                ) : (
-                    <PrimaryButton onClick={onClick} disabled={disabled} className="w100">
-                        {action}
-                    </PrimaryButton>
-                )}
+                <PrimaryButton onClick={onClick} disabled={disabled} className="w100">
+                    {action}
+                </PrimaryButton>
                 {features.length ? (
                     <ul className="unstyled">
                         {features.map((feature, index) => (

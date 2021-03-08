@@ -270,7 +270,7 @@ const SubscriptionModal = ({
 
     return (
         <FormModal
-            hasClose={[SUBSCRIPTION_STEPS.PLAN_SELECTION, SUBSCRIPTION_STEPS.CUSTOMIZATION].includes(model.step)}
+            hasClose={[SUBSCRIPTION_STEPS.PLAN_SELECTION].includes(model.step)}
             footer={null}
             className={classnames([
                 'subscription-modal',
@@ -301,6 +301,7 @@ const SubscriptionModal = ({
                     cycle={model.cycle}
                     planIDs={model.planIDs}
                     organization={organization}
+                    subscription={subscription}
                     service={model.service}
                     onChangePlanIDs={(planIDs) =>
                         withLoadingCheck(check({ ...model, planIDs, step: SUBSCRIPTION_STEPS.CUSTOMIZATION }))
