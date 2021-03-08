@@ -118,7 +118,11 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps, ...rest }:
     const api = useApi();
     const { call } = useEventManager();
 
-    const wizardSteps = [c('Wizard step').t`Authenticate`, c('Wizard step').t`Plan import`, c('Wizard step').t`Import`];
+    const wizardSteps = [
+        c('Wizard step').t`Authenticate`,
+        c('Wizard step').t`Configure Import`,
+        c('Wizard step').t`Import`,
+    ];
 
     const debouncedEmail = useDebounceInput(modalModel.email);
 
