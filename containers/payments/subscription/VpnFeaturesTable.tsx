@@ -163,7 +163,7 @@ const VpnFeaturesTable = ({ cycle, currency }: Props) => {
                     </tr>
                 </tbody>
             </table>
-            <p className="text-sm mt1 mb0">* {c('Info concerning plan features').t`Denotes customizable features`}</p>
+            <p className="text-sm mt1 mb1">* {c('Info concerning plan features').t`Denotes customizable features`}</p>
         </>
     );
 };

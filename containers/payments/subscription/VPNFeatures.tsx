@@ -7,7 +7,7 @@ import { Icon } from '../../../components';
 import { VPNFeature } from './interface';
 import Features from './Features';
 
-const CheckIcon = () => <Icon name="on" />;
+const CheckIcon = () => <Icon className="color-primary" name="on" alt={c('information').t`Included`} />;
 const EmDash = '—';
 
 interface VPNCountries {

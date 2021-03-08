@@ -6,7 +6,7 @@ import { Icon } from '../../../components';
 import { MailFeature } from './interface';
 import Features from './Features';
 
-const CheckIcon = () => <Icon name="on" />;
+const CheckIcon = () => <Icon className="color-primary" name="on" alt={c('Info').t`included`} />;
 const EmDash = '—';
 
 const getFeatures = (): MailFeature[] => {
@@ -32,7 +32,7 @@ const getFeatures = (): MailFeature[] => {
             label: c('Mail feature').t`Addresses`,
             free: '1',
             [PLANS.PLUS]: '5',
-            [PLANS.PROFESSIONAL]: c('Mail feature option').t`'5 / user *`,
+            [PLANS.PROFESSIONAL]: c('Mail feature option').t`5 / user *`,
             [PLANS.VISIONARY]: '50',
         },
         {
@@ -146,7 +146,17 @@ const MailFeatures = ({ onSelect }: Props) => {
         { label: 'Professional', key: PLANS.PROFESSIONAL },
         { label: 'Visionary', key: PLANS.VISIONARY },
     ];
-    return <Features onSelect={onSelect} planLabels={planLabels} features={features} />;
+    return (
+        <>
+            <Features onSelect={onSelect} planLabels={planLabels} features={features} />
+            <p className="text-sm mt1 mb1">* {c('Info concerning plan features').t`Denotes customizable features`}</p>
+            <p className="text-sm mt0 mb1">
+                **{' '}
+                {c('Info concerning plan features')
+                    .t`ProtonMail cannot be used for mass emailing or spamming. Legitimate emails are unlimited.`}
+            </p>
+        </>
+    );
 };
 
 export default MailFeatures;

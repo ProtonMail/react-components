@@ -3,6 +3,7 @@ import { c } from 'ttag';
 import { Currency, Cycle } from 'proton-shared/lib/interfaces';
 import { CYCLE } from 'proton-shared/lib/constants';
 
+import { classnames } from '../../../helpers';
 import { Icon, Price, PrimaryButton } from '../../../components';
 
 interface Props {
@@ -37,10 +38,17 @@ const PlanCard = ({
     );
     return (
         <>
-            {isCurrentPlan ? (
-                <div className="text-xs text-uppercase text-bold text-center">{c('Title').t`Current plan`}</div>
-            ) : null}
-            <div className="bordered-container p2">
+            <div
+                className={classnames([
+                    'bordered-container relative h100 plan-selection-plan p2',
+                    isCurrentPlan && 'plan-selection-plan-current-card',
+                ])}
+            >
+                {isCurrentPlan ? (
+                    <div className="text-xs text-uppercase text-bold text-center absolute m0 plan-selection-plan-current">{c(
+                        'Title'
+                    ).t`Current plan`}</div>
+                ) : null}
                 <h3 className="text-bold text-capitalize">{planName}</h3>
                 <Price currency={currency} suffix={c('Suffix for price').t`/ month`}>
                     {price / cycle}

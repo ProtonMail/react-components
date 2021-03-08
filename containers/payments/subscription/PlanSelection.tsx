@@ -24,6 +24,8 @@ import PlanCard from './PlanCard';
 import MailFeatures from './MailFeatures';
 import VPNFeatures from './VPNFeatures';
 
+import './PlanSelection.scss';
+
 const FREE_PLAN = {
     ID: 'free',
     Name: 'free_mail' as PLANS,
@@ -200,35 +202,36 @@ const PlanSelection = ({
                     <CurrencySelector currency={currency} onSelect={onChangeCurrency} disabled={loading} />
                 </div>
             </div>
-            <div className="flex flex-nowrap on-mobile-flex-column">
+            <div className="plan-selection">
                 {plansToShow.map((plan: Plan) => {
                     const isFree = plan.ID === FREE_PLAN.ID;
                     const isCurrentPlan = isFree ? !currentPlan : currentPlan?.ID === plan.ID;
                     return (
-                        <div key={plan.ID} className="flex-item-fluid">
-                            <PlanCard
-                                isCurrentPlan={isCurrentPlan}
-                                action={c('Action').t`Select plan`}
-                                planName={NAMES[plan.Name as PLANS]}
-                                currency={currency}
-                                disabled={loading}
-                                cycle={cycle}
-                                price={plan.Pricing[cycle]}
-                                info={INFOS[plan.Name as PLANS]}
-                                features={getFeatures(plan.Name as PLANS)}
-                                onClick={() =>
-                                    onChangePlanIDs(
-                                        switchPlan({
-                                            planIDs,
-                                            plans,
-                                            planID: isFree ? undefined : plan.ID,
-                                            service,
-                                            organization,
-                                        })
-                                    )
-                                }
-                            />
-                        </div>
+                        // <div className="h100 relative">
+                        <PlanCard
+                            isCurrentPlan={isCurrentPlan}
+                            action={c('Action').t`Select plan`}
+                            planName={NAMES[plan.Name as PLANS]}
+                            currency={currency}
+                            disabled={loading}
+                            cycle={cycle}
+                            key={plan.ID}
+                            price={plan.Pricing[cycle]}
+                            info={INFOS[plan.Name as PLANS]}
+                            features={getFeatures(plan.Name as PLANS)}
+                            onClick={() =>
+                                onChangePlanIDs(
+                                    switchPlan({
+                                        planIDs,
+                                        plans,
+                                        planID: isFree ? undefined : plan.ID,
+                                        service,
+                                        organization,
+                                    })
+                                )
+                            }
+                        />
+                        // </div>
                     );
                 })}
             </div>
