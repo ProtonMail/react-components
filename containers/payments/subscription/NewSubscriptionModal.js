@@ -70,6 +70,7 @@ const NewSubscriptionModal = ({
     const { createNotification } = useNotifications();
     const [vpnCountries, loadingVpnCountries] = useVPNCountries();
     const [plans, loadingPlans] = usePlans();
+    console.log(plans);
     const [organization, loadingOrganization] = useOrganization();
     const [loading, withLoading] = useLoading();
     const [loadingCheck, withLoadingCheck] = useLoading();

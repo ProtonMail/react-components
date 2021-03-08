@@ -7,7 +7,7 @@ import { getPlans, isBundleEligible, getPlan, getPlanIDs } from 'proton-shared/l
 import { switchPlan, clearPlanIDs } from 'proton-shared/lib/helpers/planIDs';
 import { hasBonuses } from 'proton-shared/lib/helpers/organization';
 
-import { Alert, Loader } from '../../components';
+import { Loader } from '../../components';
 import {
     useSubscription,
     useOrganization,
@@ -29,6 +29,7 @@ import CycleSelector from './CycleSelector';
 import DowngradeModal from './DowngradeModal';
 import LossLoyaltyModal from './LossLoyaltyModal';
 import MozillaInfoPanel from '../account/MozillaInfoPanel';
+import { SettingsParagraph, SettingsSectionWide } from '../account';
 
 const PlansSection = () => {
     const { call } = useEventManager();
@@ -129,18 +130,20 @@ const PlansSection = () => {
     }
 
     return (
-        <>
+        <SettingsSectionWide>
             <div className="flex flew-nowrap on-mobile-flex-column">
-                <Alert
-                    className="flex-item-fluid"
-                    learnMore="https://protonmail.com/support/knowledge-base/paid-plans/"
-                >
-                    {bundleEligible ? (
-                        <div>{c('Info')
-                            .t`Get 20% bundle discount when you purchase ProtonMail and ProtonVPN together.`}</div>
-                    ) : null}
-                    {Plans.length ? <div>{c('Info').t`You are currently subscribed to ${names}.`}</div> : null}
-                </Alert>
+                <div className="flex-item-fluid">
+                    <SettingsParagraph
+                        className="mt0 mb0"
+                        learnMoreUrl="https://protonmail.com/support/knowledge-base/paid-plans/"
+                    >
+                        {/* TODO: find out how to show this in the new designs */}
+                        {bundleEligible
+                            ? c('Info').t`Get 20% bundle discount when you purchase ProtonMail and ProtonVPN together.`
+                            : null}
+                        {Plans.length ? c('Info').t`You are currently subscribed to ${names}.` : null}
+                    </SettingsParagraph>
+                </div>
                 <div className="flex-no-min-children flex-nowrap">
                     <CycleSelector
                         cycle={cycle}
@@ -155,6 +158,7 @@ const PlansSection = () => {
                     <CurrencySelector currency={currency} onSelect={setCurrency} className="wauto" />
                 </div>
             </div>
+
             {isVPN ? (
                 <VpnSubscriptionTable
                     plans={plans}
@@ -174,7 +178,7 @@ const PlansSection = () => {
                     disabled={loading}
                 />
             )}
-        </>
+        </SettingsSectionWide>
     );
 };
 
