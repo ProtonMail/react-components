@@ -207,7 +207,7 @@ const useAutoReplyForm = (AutoResponder: tsAutoResponder) => {
         const [a, b] = key.split('.');
 
         return (value) => {
-            setModel((prev) => ({
+            setModel((prev: any) => ({
                 ...prev,
                 [a]: !b
                     ? value
