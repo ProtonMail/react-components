@@ -61,7 +61,7 @@ const ContactGroupsTable = () => {
 
     const header = [c('Table header').t`Name`, c('Table header').t`Group size`, c('Table header').t`Actions`];
 
-    return (
+    return list.length ? (
         <OrderableTable className="no-border simple-table--has-actions" onSortEnd={handleSortEnd}>
             <OrderableTableHeader cells={header} />
             <OrderableTableBody colSpan={1}>
@@ -119,7 +119,7 @@ const ContactGroupsTable = () => {
                 })}
             </OrderableTableBody>
         </OrderableTable>
-    );
+    ) : null;
 };
 
 export default ContactGroupsTable;
