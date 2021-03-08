@@ -12,6 +12,7 @@ import { SettingsSection, SettingsParagraph } from '../../account';
 const ContactGroupsSection = () => {
     const { createModal } = useModals();
     const handleCreate = () => createModal(<ContactGroupModal selectedContactEmails={[]} />);
+
     return (
         <SettingsSection>
             <SettingsParagraph>
