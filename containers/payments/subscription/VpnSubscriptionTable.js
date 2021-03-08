@@ -8,7 +8,7 @@ import plusPlanSvg from 'design-system/assets/img/pv-images/plans/vpnbasic-plan.
 import professionalPlanSvg from 'design-system/assets/img/pv-images/plans/vpnplus-plan.svg';
 import visionaryPlanSvg from 'design-system/assets/img/pv-images/plans/visionary-plan.svg';
 
-import { LinkButton, Info } from '../../../components';
+import { Info, Button } from '../../../components';
 import { useVPNCountries, useModals } from '../../../hooks';
 
 import SubscriptionTable from './SubscriptionTable';
@@ -316,12 +316,14 @@ const VpnSubscriptionTable = ({
                 {...rest}
             />
             <div className="text-center pb1 on-mobile-pb2 subscriptionTable-show-features-container">
-                <LinkButton
-                    className="button--small"
+                <Button
+                    shape="ghost"
+                    size="small"
+                    color="norm"
                     onClick={() => createModal(<SubscriptionFeaturesModal currency={currency} cycle={cycle} />)}
                 >
-                    {c('Action').t`Show all features`}
-                </LinkButton>
+                    {c('Action').t`Compare plans`}
+                </Button>
             </div>
         </div>
     );
