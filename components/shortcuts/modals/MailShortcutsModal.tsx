@@ -1,21 +1,21 @@
 import React from 'react';
 import { c } from 'ttag';
 
-import { APPS } from 'proton-shared/lib/constants';
-import { getAppName } from 'proton-shared/lib/apps/helper';
 import { getShortcuts } from 'proton-shared/lib/shortcuts/mail';
 
 import { Alert, ShortcutsModal, ShortcutsSectionView, AppLink } from '../..';
 import { useMailSettings } from '../../../hooks';
 import { classnames } from '../../../helpers';
+import Title from '../../modal/Title';
 
 interface Props {
     onClose?: () => void;
 }
 
 const MailShortCutsModal = ({ ...rest }: Props) => {
-    const appName = getAppName(APPS.PROTONMAIL);
-    const title = c('Title').t`${appName} Keyboard Shortcuts`;
+    const questionMark = <kbd key="key">?</kbd>;
+    // translator: the variable here is a HTML tag representing the question mark key, here is the complete sentence: "Keyboard Shortcuts (Open with [?])"
+    const title = <Title id="modalTitle">{c('Title').jt`Keyboard Shortcuts (Open with ${questionMark})`}</Title>;
 
     const [{ Shortcuts = 1 } = {}] = useMailSettings();
 
