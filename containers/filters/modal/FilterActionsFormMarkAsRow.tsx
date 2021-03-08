@@ -1,7 +1,7 @@
 import React from 'react';
 import { c } from 'ttag';
 
-import { Checkbox, Button, Tooltip, Icon } from '../../../components';
+import { Checkbox, Icon } from '../../../components';
 import { classnames } from '../../../helpers';
 
 import { Actions } from '../interfaces';
@@ -34,10 +34,6 @@ const FilterActionsFormMarkAsRow = ({ isNarrow, actions, handleUpdateActions, is
 
     const toggleSection = () => {
         handleChangeModel({ isOpen: !isOpen });
-    };
-
-    const handleClear = () => {
-        handleChangeModel({ starred: false, read: false });
     };
 
     const renderClosed = () => {
@@ -100,20 +96,6 @@ const FilterActionsFormMarkAsRow = ({ isNarrow, actions, handleUpdateActions, is
                 ) : (
                     renderClosed()
                 )}
-            </div>
-            <div>
-                <Button
-                    disabled={!markAs?.read && !markAs?.starred}
-                    onClick={handleClear}
-                    className={classnames(['button--for-icon', isNarrow ? 'mt1' : 'ml1'])}
-                >
-                    <Tooltip
-                        title={c('Action').t`Reset`}
-                        className={classnames([isDark ? 'color-global-muted' : 'color-global-altgrey'])}
-                    >
-                        <Icon name="remove-text-formatting" />
-                    </Tooltip>
-                </Button>
             </div>
         </div>
     );

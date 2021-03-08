@@ -237,7 +237,7 @@ const FilterConditionsRow = ({
                     onClick={toggleSection}
                 >
                     <Icon name="caret" className={classnames([isOpen && 'rotateX-180'])} />
-                    <span className={classnames(['ml0-5', condition.error && 'color-global-warning'])}>{label}</span>
+                    <span className="ml0-5">{label}</span>
                 </button>
                 <div className={classnames(['flex flex-column flex-item-fluid', !isNarrow && 'ml1'])}>
                     {isOpen ? (
@@ -284,15 +284,15 @@ const FilterConditionsRow = ({
                     )}
                 </div>
                 {displayDelete && (
-                    <div>
-                        <Button
-                            onClick={() => handleDelete(conditionIndex)}
-                            className={classnames(['button--for-icon', isNarrow ? 'mt1' : 'ml1'])}
-                        >
-                            <Tooltip title={c('Action').t`Delete`} className="color-global-warning">
-                                <Icon name="trash" />
-                            </Tooltip>
-                        </Button>
+                    <div className="flex flex-align-items-center">
+                        <Tooltip title={c('Action').t`Delete`} className={classnames([isNarrow ? 'mt1' : 'ml1'])}>
+                            <Button
+                                shape="outline"
+                                onClick={() => handleDelete(conditionIndex)}
+                                className="color-global-warning p0-5 flex"
+                                icon="trash"
+                            />
+                        </Tooltip>
                     </div>
                 )}
             </div>
