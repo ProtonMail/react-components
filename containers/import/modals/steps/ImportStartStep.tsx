@@ -246,15 +246,11 @@ const ImportStartStep = ({
             {isReconnect || [IMPORT_ERROR.AUTH_IMAP, IMPORT_ERROR.AUTH_CREDENTIALS].includes(errorCode) ? (
                 renderError()
             ) : (
-                <>
-                    <Alert>{c('Info').t`Enter the credentials of the email account you want to import from.`}</Alert>
-                    {showPassword && (
-                        <Alert type="warning" learnMore="https://protonmail.com/privacy-policy/">
-                            {c('Warning')
-                                .t`By sharing your login credentials, you are giving Proton permission to fetch data from your external email provider. We will delete your login information once the import is complete.`}
-                        </Alert>
-                    )}
-                </>
+                <Alert>
+                    {c('Info').t`Enter the credentials of the email account you want to import from.`}
+                    <br />
+                    {c('Info').t`Your login information will not be saved after the import is completed.`}
+                </Alert>
             )}
 
             <Row>
