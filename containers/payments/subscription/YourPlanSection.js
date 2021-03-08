@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import { PLAN_NAMES } from 'proton-shared/lib/constants';
 import humanSize from 'proton-shared/lib/helpers/humanSize';
-import { identity } from 'proton-shared/lib/helpers/function';
 import percentage from 'proton-shared/lib/helpers/percentage';
 import { getPlanIDs } from 'proton-shared/lib/helpers/subscription';
 import { Alert, Href, Loader, Meter, Label, Button } from '../../../components';
@@ -16,33 +15,8 @@ import { SettingsSection } from '../../account';
 import UpsellMailSubscription from './UpsellMailSubscription';
 import UpsellVPNSubscription from './UpsellVPNSubscription';
 
-const AddonRow = ({ label, used, max, format = identity }) => {
-    return (
-        <div className="flex-autogrid on-mobile-flex-column w100 mb1">
-            <div className="flex-autogrid-item pl1">{label}</div>
-            <div className="flex-autogrid-item">
-                <strong>
-                    {Number.isInteger(used) ? `${format(used)} ${c('x of y').t`of`} ${format(max)}` : format(max)}
-                </strong>
-            </div>
-            <div className="flex-autogrid-item">
-                {Number.isInteger(Math.round(percentage(max, used))) ? (
-                    <Meter value={Math.round(percentage(max, used))} />
-                ) : null}
-            </div>
-        </div>
-    );
-};
-
-AddonRow.propTypes = {
-    label: PropTypes.string.isRequired,
-    used: PropTypes.number,
-    max: PropTypes.number.isRequired,
-    format: PropTypes.func,
-};
-
 const YourPlanSection = ({ permission }) => {
-    const [{ hasPaidMail, hasPaidVpn }] = useUser();
+    const [user] = useUser();
     const [addresses, loadingAddresses] = useAddresses();
     const [subscription, loadingSubscription] = useSubscription();
     const { createModal } = useModals();
@@ -63,15 +37,25 @@ const YourPlanSection = ({ permission }) => {
         return <MozillaInfoPanel />;
     }
 
+    const { hasPaidMail, hasPaidVpn } = user;
+
+    /*
+     * For paid users, the feature data is found on their organization,
+     * however free users don't have an organization, therefore we default
+     * to 1 for addresses and users.
+     *
+     * For space, that information is found on the user directly (also on
+     * the organization if the user has a paid plan)
+     */
     const {
         UsedDomains,
         MaxDomains,
-        UsedSpace,
-        MaxSpace,
-        UsedAddresses,
-        MaxAddresses,
-        UsedMembers,
-        MaxMembers,
+        UsedSpace = user.UsedSpace,
+        MaxSpace = user.MaxSpace,
+        UsedAddresses = 1,
+        MaxAddresses = 1,
+        UsedMembers = 1,
+        MaxMembers = 1,
         MaxVPN,
     } = organization || {};
 
@@ -90,7 +74,7 @@ const YourPlanSection = ({ permission }) => {
         );
     };
 
-    const mailAddons = Boolean(hasPaidMail) && (
+    const mailAddons = (
         <>
             <div className="w100">
                 {UsedMembers} {c('x of y').t`of`} {MaxMembers} {c('Label').t`Users`}
@@ -98,9 +82,11 @@ const YourPlanSection = ({ permission }) => {
             <div className="mt1">
                 {UsedAddresses} {c('x of y').t`of`} {MaxAddresses} {c('Label').t`Email addresses`}
             </div>
-            <div className="mt1">
-                {UsedDomains} {c('x of y').t`of`} {MaxDomains} {c('Label').t`Custom domains`}
-            </div>
+            {Boolean(hasPaidMail) && (
+                <div className="mt1">
+                    {UsedDomains} {c('x of y').t`of`} {MaxDomains} {c('Label').t`Custom domains`}
+                </div>
+            )}
             <div className="mt1">
                 {c('Label').t`Using`} {humanSize(UsedSpace)} {c('x of y').t`of`} {humanSize(MaxSpace)}
                 <Meter className="mt1" value={Math.round(percentage(MaxSpace, UsedSpace))} />
