@@ -2,7 +2,7 @@ import React from 'react';
 import { c } from 'ttag';
 
 import { Label } from 'proton-shared/lib/interfaces/Label';
-import { Checkbox, Button, Tooltip, Icon, LabelStack } from '../../../components';
+import { Checkbox, Button, Icon, LabelStack } from '../../../components';
 import { classnames } from '../../../helpers';
 import { useModals } from '../../../hooks';
 
@@ -39,10 +39,6 @@ const FilterActionsFormLabelsRow = ({ actions, isNarrow, handleUpdateActions, la
 
     const toggleSection = () => {
         handleChangeModel({ isOpen: !isOpen });
-    };
-
-    const handleClear = () => {
-        handleChangeModel({ labels: [] });
     };
 
     const handleCreateLabel = async () => {
@@ -135,27 +131,13 @@ const FilterActionsFormLabelsRow = ({ actions, isNarrow, handleUpdateActions, la
                                 <div className="pt0-5 mb1">{c('Label').t`No label found`}</div>
                             )}
                         </div>
-                        <Button className="mt0" onClick={handleCreateLabel}>
+                        <Button shape="outline" className="mt0" onClick={handleCreateLabel}>
                             {c('Action').t`Create label`}
                         </Button>
                     </>
                 ) : (
                     <div className="mt0-5">{renderClosed()}</div>
                 )}
-            </div>
-            <div>
-                <Button
-                    disabled={!labelAs?.labels.length}
-                    onClick={handleClear}
-                    className={classnames(['button--for-icon', isNarrow ? 'mt1' : 'ml1'])}
-                >
-                    <Tooltip
-                        title={c('Action').t`Reset`}
-                        className={classnames([isDark ? 'color-global-muted' : 'color-global-altgrey'])}
-                    >
-                        <Icon name="remove-text-formatting" />
-                    </Tooltip>
-                </Button>
             </div>
         </div>
     );
