@@ -18,6 +18,7 @@ import { toMap } from 'proton-shared/lib/helpers/object';
 import { range } from 'proton-shared/lib/helpers/array';
 import { switchPlan, getSupportedAddons } from 'proton-shared/lib/helpers/planIDs';
 import { getAppName } from 'proton-shared/lib/apps/helper';
+import { hasBit } from 'proton-shared/lib/helpers/bitset';
 
 import { InlineLinkButton, Icon, SelectTwo, Option, Info, Price } from '../../components';
 import { PlanIDs } from '../signup/interfaces';
@@ -86,8 +87,8 @@ const ButtonNumberInput = ({
                         onChange(newValue);
                     }}
                 >
-                    {range(min, max, step).map((quantity) => {
-                        return <Option key={`${quantity}`} value={quantity} title={`${(min + quantity) / divider}`} />;
+                    {range(min, max + 1, step).map((quantity) => {
+                        return <Option key={`${quantity}`} value={quantity} title={`${quantity / divider}`} />;
                     })}
                 </SelectTwo>
             </label>
@@ -130,7 +131,7 @@ const ProtonPlanCustomizer = ({
         Object.entries(planIDs).find(([planID, planQuantity]) => {
             if (planQuantity) {
                 const { Services, Type } = plansMap[planID];
-                return Services & service && Type === PLAN_TYPES.PLAN;
+                return hasBit(Services, service) && Type === PLAN_TYPES.PLAN;
             }
             return false;
         }) || [];
@@ -195,7 +196,7 @@ const ProtonPlanCustomizer = ({
             ) : null}
             {service === PLAN_SERVICES.VPN && planIDs[plansNameMap[PLANS.VPNPLUS].ID] ? (
                 <p>
-                    {c('Info').t`ProtonVPN Plus is limited to 5 connections.`}
+                    {c('Info').t`ProtonVPN Plus includes 5 VPN connections.`}
                     <br />
                     {planIDs[plansNameMap[PLANS.PROFESSIONAL].ID]
                         ? c('Info').t`Each additional connection can be assigned to users in your organization.`
