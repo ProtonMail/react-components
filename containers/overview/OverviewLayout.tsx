@@ -47,7 +47,7 @@ const OverviewLayout = ({ title, pages, children, limit }: Props) => {
                     <div className="flex on-mobile-flex-column pb2">
                         <div className="flex-item-fluid">
                             {children ? (
-                                <section className="overview-grid-item overview-grid-item--full bordered-container bg-norm tiny-shadow-container p2 mb1-5">
+                                <section className="overview-grid-item overview-grid-item--full bordered bg-norm shadow-lifted p2 mb1-5">
                                     {children}
                                 </section>
                             ) : null}

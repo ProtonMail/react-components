@@ -269,7 +269,7 @@ const OpenVPNConfigurationSection = () => {
                     )}
                 </div>
                 {userVPN.PlanName === 'trial' || !hasPaidVpn ? (
-                    <div className="bordered-container p2 text-center">
+                    <div className="bordered p2 text-center">
                         <h3 className="color-primary mt0 mb1">{c('Title')
                             .t`Get ProtonVPN Plus to access all servers`}</h3>
                         <ul className="unstyled inline-flex mt0 mb2 on-mobile-flex-column">

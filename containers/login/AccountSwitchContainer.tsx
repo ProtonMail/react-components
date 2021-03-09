@@ -153,7 +153,7 @@ const AccountSwitchContainer = ({ Layout, toApp, onLogin, activeSessions, onAddA
             subtitle={toAppName ? c('Info').t`to continue to ${toAppName}` : undefined}
             right={<LinkButton onClick={handleSignOutAll}>{c('Action').t`Sign out all accounts`}</LinkButton>}
         >
-            <div className="tiny-shadow-container button-account-container scroll-if-needed">
+            <div className="shadow-lifted bordered button-account-container scroll-if-needed">
                 <div className="button-account-container-inner">
                     {inner()}
                     <div className="relative p1">

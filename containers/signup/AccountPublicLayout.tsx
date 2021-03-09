@@ -47,7 +47,7 @@ const AccountPublicLayout = ({ children, title, subtitle, aside, larger, left, c
                     <div className="flex flex-column flex-nowrap flex-item-noshrink on-mobile-flex-item-fluid-auto">
                         <div
                             className={classnames([
-                                'center bg-norm color-weak mt2 mb2 on-mobile-mt0 on-mobile-mb0 on-mobile-pb1 w100 max-w100 bordered-container flex-item-noshrink flex flex-nowrap signup-container',
+                                'center bg-norm color-weak mt2 mb2 on-mobile-mt0 on-mobile-mb0 on-mobile-pb1 w100 max-w100 bordered flex-item-noshrink flex flex-nowrap signup-container',
                                 larger ? '' : 'max-w50e',
                             ])}
                         >
