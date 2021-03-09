@@ -30,7 +30,7 @@ const AttachingModalContent = ({
     ) : (
         <Alert learnMore="https://protonmail.com/support/knowledge-base/adding-contacts/">
             {c('Description').t`The file should have a maximum size of ${MAX_IMPORT_FILE_SIZE_STRING} and have
-                up to ${MAX_IMPORT_CONTACTS_STRING} contacts. If your file is bigger, please split it into smaller files.`}
+                up to ${MAX_IMPORT_CONTACTS_STRING} contacts. If your file is bigger, please split it into smaller files. We support both CSV and VCF formats.`}
         </Alert>
     );
     return (

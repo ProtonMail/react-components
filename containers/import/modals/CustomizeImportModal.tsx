@@ -215,7 +215,7 @@ const CustomizeImportModal = ({
             <div className="mb1 pt1 border-bottom flex-align-items-center">
                 <Row>
                     <FormLabel className="flex flex-align-items-center">
-                        {c('Label').t`Import messages since`}
+                        {c('Label').t`Import interval`}
                         <Tooltip title={c('Tooltip').t`The import will start with the most recent messages.`}>
                             <Icon name="info" className="ml0-5" />
                         </Tooltip>
