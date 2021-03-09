@@ -22,7 +22,7 @@ const ExportFooter = ({ loading }: FooterProps) => {
         <>
             <ResetButton>{c('Action').t`Cancel`}</ResetButton>
             <PrimaryButton loading={loading} type="submit">
-                {c('Action').t`Save`}
+                {c('Action').t`Download`}
             </PrimaryButton>
         </>
     );
