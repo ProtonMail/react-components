@@ -6,7 +6,17 @@ import { deleteMailImportReport } from 'proton-shared/lib/api/mailImport';
 import humanSize from 'proton-shared/lib/helpers/humanSize';
 
 import { useApi, useLoading, useEventManager, useNotifications, useModals, useImportHistory } from '../../hooks';
-import { Button, Loader, Alert, Table, TableCell, TableBody, TableRow, Badge, ErrorButton } from '../../components';
+import {
+    Loader,
+    Alert,
+    Table,
+    TableCell,
+    TableBody,
+    TableRow,
+    Badge,
+    ErrorButton,
+    DropdownActions,
+} from '../../components';
 
 import { ConfirmModal } from '../../components/modal';
 
@@ -39,11 +49,12 @@ const DeleteButton = ({ ID }: DeleteButtonProps) => {
     const api = useApi();
     const { call } = useEventManager();
     const { createModal } = useModals();
-
-    const [loadingActions, withLoadingActions] = useLoading();
     const { createNotification } = useNotifications();
 
-    const handleDelete = async () => {
+    const [loadingDeleteRecord, withLoadingDeleteRecord] = useLoading();
+    const [loadingDeleteOriginal /* , withLoadingDeleteOriginal */] = useLoading();
+
+    const handleDeleteRecord = async () => {
         await new Promise<void>((resolve, reject) => {
             createModal(
                 <ConfirmModal
@@ -59,18 +70,47 @@ const DeleteButton = ({ ID }: DeleteButtonProps) => {
                 </ConfirmModal>
             );
         });
-        await api(deleteMailImportReport(ID));
+        await withLoadingDeleteRecord(api(deleteMailImportReport(ID)));
         await call();
         createNotification({ text: c('Success').t`Import record deleted` });
     };
 
-    return (
-        <Button
-            loading={loadingActions}
-            className="button--small"
-            onClick={() => withLoadingActions(handleDelete())}
-        >{c('Action').t`Delete record`}</Button>
-    );
+    const handleDeleteOriginal = async () => {
+        await new Promise<void>((resolve, reject) => {
+            createModal(
+                <ConfirmModal
+                    onConfirm={resolve}
+                    onClose={reject}
+                    title={c('Confirm modal title').t`Delete original messages?`}
+                    cancel={c('Action').t`Cancel`}
+                    confirm={<ErrorButton type="submit">{c('Action').t`Delete away!`}</ErrorButton>}
+                >
+                    <Alert type="error">{c('Warning').t`This is a very dangerous action, are you 100% sure?`}</Alert>
+                </ConfirmModal>
+            );
+        });
+
+        // await withLoadingDeleteOriginal(api(deleteOriginalMessagesOrWhatever(ID)));
+        // await call();
+
+        createNotification({ text: c('Success').t`Orignal mailbox cleared` });
+    };
+
+    const list = [
+        {
+            text: c('Action').t`Delete record`,
+            onClick: handleDeleteRecord,
+            loading: loadingDeleteRecord,
+        },
+        {
+            text: c('Action').t`Delete original messages`,
+            onClick: handleDeleteOriginal,
+            loading: loadingDeleteOriginal,
+            actionType: 'delete',
+        } as const,
+    ];
+
+    return <DropdownActions className="button--small" list={list} />;
 };
 
 const sortByDate = (a: ImportHistory, b: ImportHistory) => (a.EndTime > b.EndTime ? -1 : 1);
@@ -88,7 +128,10 @@ const PastImportsSection = () => {
 
     const headerCells = [
         { node: c('Title header').t`Import` },
-        { node: c('Title header').t`Status`, className: 'on-mobile-w33 on-mobile-text-center' },
+        {
+            node: c('Title header').t`Status`,
+            className: 'on-mobile-w33 on-mobile-text-center',
+        },
         { node: c('Title header').t`Date`, className: 'no-mobile' },
         { node: c('Title header').t`Size`, className: 'no-mobile' },
         { node: c('Title header').t`Actions`, className: 'no-mobile' },
