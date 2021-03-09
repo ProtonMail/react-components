@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { SearchInput, Icon } from '../../components';
 import { classnames } from '../../helpers';
 
-const Searchbox = ({ delay, className = '', advanced, placeholder = '', value = '', onSearch, onChange }) => {
+const Searchbox = ({ delay, className = '', advanced, placeholder = '', value = '', onSearch, onChange, onFocus }) => {
     const handleSubmit = (event) => {
         event.preventDefault();
         onSearch?.(value);
@@ -43,6 +43,7 @@ const Searchbox = ({ delay, className = '', advanced, placeholder = '', value = 
                     placeholder={placeholder}
                     className="searchbox-field"
                     data-shorcut-target="searchbox-field"
+                    onFocus={onFocus}
                 />
             </label>
             <button type="submit" className="searchbox-search-button flex">
