@@ -7,7 +7,7 @@ import { useAddresses, useModals, useUserSettings } from '../../hooks';
 
 import ChangePasswordModal, { MODES } from './ChangePasswordModal';
 
-const PasswordsSection = () => {
+const PasswordsSection = ({ open }: { open?: MODES | 'changePassword' }) => {
     const [userSettings, loadingUserSettings] = useUserSettings();
     const [addresses, loadingAddresses] = useAddresses();
     const { createModal } = useModals();
@@ -21,25 +21,24 @@ const PasswordsSection = () => {
     const isOnePasswordMode = userSettings?.Password?.Mode === SETTINGS_PASSWORD_MODE.ONE_PASSWORD_MODE;
     const passwordLabel = isOnePasswordMode ? c('Title').t`Password` : c('Title').t`Login password`;
     const passwordButtonLabel = isOnePasswordMode ? c('Title').t`Change password` : c('Title').t`Change login password`;
+    const changePasswordMode = isOnePasswordMode
+        ? MODES.CHANGE_ONE_PASSWORD_MODE
+        : MODES.CHANGE_TWO_PASSWORD_LOGIN_MODE;
 
     const handleChangePassword = (mode: MODES) => {
         createModal(<ChangePasswordModal mode={mode} />);
     };
+
+    if (open) {
+        handleChangePassword(open === 'changePassword' ? changePasswordMode : open);
+    }
 
     return (
         <>
             <Row>
                 <Label htmlFor="passwordChange">{passwordLabel}</Label>
                 <Field>
-                    <PrimaryButton
-                        onClick={() =>
-                            handleChangePassword(
-                                isOnePasswordMode
-                                    ? MODES.CHANGE_ONE_PASSWORD_MODE
-                                    : MODES.CHANGE_TWO_PASSWORD_LOGIN_MODE
-                            )
-                        }
-                    >
+                    <PrimaryButton onClick={() => handleChangePassword(changePasswordMode)}>
                         {passwordButtonLabel}
                     </PrimaryButton>
                 </Field>
