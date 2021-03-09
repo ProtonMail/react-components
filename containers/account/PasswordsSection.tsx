@@ -29,7 +29,7 @@ const PasswordsSection = ({ open }: { open?: MODES | 'changePassword' }) => {
         createModal(<ChangePasswordModal mode={mode} />);
     };
 
-    if (open) {
+    if (open && !document.querySelector('.modal')) {
         handleChangePassword(open === 'changePassword' ? changePasswordMode : open);
     }
 
