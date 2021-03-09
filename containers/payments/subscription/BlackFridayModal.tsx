@@ -268,18 +268,13 @@ const BlackFridayModal = ({ bundles = [], onSelect, ...rest }: Props) => {
                                             {Object.keys(planIDs).length > 1 ? (
                                                 <>
                                                     <p className="m0">{c('blackfriday Info').t`Includes`}</p>
-                                                    <p
-                                                        className={classnames([
-                                                            'mt0',
-                                                            popular && 'color-global-success',
-                                                        ])}
-                                                    >
+                                                    <p className={classnames(['mt0', popular && 'color-success'])}>
                                                         {c('blackfriday Info').t`early access to`}
                                                         <strong className="blackfriday-protonDrive-productName ml0-25">
                                                             {driveAppName}
                                                         </strong>
                                                         <Info
-                                                            buttonClass="inline-flex color-currentColor ml0-25 mb0-1"
+                                                            buttonClass="inline-flex color-inherit ml0-25 mb0-1"
                                                             url="https://protonmail.com/support/knowledge-base/protondrive-early-access/?utm_campaign=ww-en-2c-mail-coms_inapp-protondrive_learn_more&utm_source=webmail&utm_medium=app_ad&utm_content=tooltip_v4"
                                                         />
                                                         <span className="block">

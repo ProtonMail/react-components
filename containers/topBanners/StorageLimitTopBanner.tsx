@@ -34,7 +34,7 @@ const StorageLimitTopBanner = () => {
     }, [ignoreStorageLimit]);
 
     const upgradeLink = user.canPay ? (
-        <AppLink key="storage-link" className="color-currentColor" {...paymentLinkProps}>
+        <AppLink key="storage-link" className="color-inherit" {...paymentLinkProps}>
             {c('Link').t`Upgrade account`}
         </AppLink>
     ) : (

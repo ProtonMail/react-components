@@ -191,7 +191,7 @@ const ImportManageFoldersRow = ({
                     <Icon
                         tabIndex={-1}
                         name="info"
-                        className="color-global-warning inline-flex flex-align-self-center flex-item-noshrink"
+                        className="color-danger inline-flex flex-align-self-center flex-item-noshrink"
                     />
                 </Tooltip>
             );
@@ -305,15 +305,15 @@ const ImportManageFoldersRow = ({
                                 name={DestinationFolder ? FOLDER_ICONS[DestinationFolder] : 'folder'}
                                 className={classnames([
                                     'flex-item-noshrink',
-                                    hasError && 'color-global-warning',
-                                    mergeWarning && 'color-global-attention',
+                                    hasError && 'color-danger',
+                                    mergeWarning && 'color-warning',
                                 ])}
                             />
                             <div
                                 className={classnames([
                                     'ml0-5 w100 flex flex-nowrap',
-                                    hasError && 'color-global-warning',
-                                    mergeWarning && 'color-global-attention',
+                                    hasError && 'color-danger',
+                                    mergeWarning && 'color-warning',
                                 ])}
                             >
                                 {editMode && !disabled ? (
@@ -338,7 +338,7 @@ const ImportManageFoldersRow = ({
                                                 <Icon
                                                     tabIndex={-1}
                                                     name="info"
-                                                    className="color-global-warning inline-flex flex-align-self-center flex-item-noshrink"
+                                                    className="color-danger inline-flex flex-align-self-center flex-item-noshrink"
                                                 />
                                             </Tooltip>
                                         )}
@@ -351,7 +351,7 @@ const ImportManageFoldersRow = ({
                                                 <Icon
                                                     tabIndex={-1}
                                                     name="info"
-                                                    className="color-global-attention inline-flex flex-align-self-center flex-item-noshrink"
+                                                    className="color-warning inline-flex flex-align-self-center flex-item-noshrink"
                                                 />
                                             </Tooltip>
                                         )}

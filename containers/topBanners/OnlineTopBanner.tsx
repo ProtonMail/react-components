@@ -58,7 +58,7 @@ const OnlineTopBanner = ({ isPublic = false }: Props) => {
             const retryNow = (
                 <InlineLinkButton
                     key="0"
-                    className="color-currentColor"
+                    className="color-inherit"
                     disabled={loading}
                     onClick={() => withLoading(handleRetry())}
                 >

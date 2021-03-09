@@ -175,7 +175,7 @@ const FilterConditionsRow = ({
 
     const renderClosed = () => {
         if (condition?.error) {
-            return <em className="pt0-5 color-global-warning">{condition?.error}</em>;
+            return <em className="pt0-5 color-danger">{condition?.error}</em>;
         }
 
         let label;
@@ -237,7 +237,7 @@ const FilterConditionsRow = ({
                     onClick={toggleSection}
                 >
                     <Icon name="caret" className={classnames([isOpen && 'rotateX-180'])} />
-                    <span className={classnames(['ml0-5', condition.error && 'color-global-warning'])}>{label}</span>
+                    <span className={classnames(['ml0-5', condition.error && 'color-danger'])}>{label}</span>
                 </button>
                 <div className={classnames(['flex flex-column flex-item-fluid', !isNarrow && 'ml1'])}>
                     {isOpen ? (
@@ -289,7 +289,7 @@ const FilterConditionsRow = ({
                             onClick={() => handleDelete(conditionIndex)}
                             className={classnames(['button--for-icon', isNarrow ? 'mt1' : 'ml1'])}
                         >
-                            <Tooltip title={c('Action').t`Delete`} className="color-global-warning">
+                            <Tooltip title={c('Action').t`Delete`} className="color-danger">
                                 <Icon name="trash" />
                             </Tooltip>
                         </Button>

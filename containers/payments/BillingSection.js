@@ -48,7 +48,7 @@ const BillingSection = ({ permission }) => {
         return (
             <>
                 <Alert>{c('Info').t`There are no billing details available for your current subscription.`}</Alert>
-                <div className="shadow-container bg-global-highlight mb1 pt1 pl1 pr1">
+                <div className="shadow-container bg-weak mb1 pt1 pl1 pr1">
                     <div className="flex-autogrid on-mobile-flex-column w100 mb1">
                         <div className="flex-autogrid-item">{c('Label').t`Credits`}</div>
                         <div className="flex-autogrid-item">
@@ -363,7 +363,7 @@ const BillingSection = ({ permission }) => {
                         </div>
                     </div>
                 </div>
-                <div className="bg-global-highlight pt1 pl1 pr1">
+                <div className="bg-weak pt1 pl1 pr1">
                     <div className="flex-autogrid w100 mb1">
                         <div className="flex-autogrid-item">
                             {c('Label').t`Billing cycle`}

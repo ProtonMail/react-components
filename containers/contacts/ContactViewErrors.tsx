@@ -93,7 +93,7 @@ const ContactViewErrors = ({ contactID, errors, onReload }: Props) => {
             <span className="flex-item-fluid pl0-5 pr0-5">
                 <span className="mr0-5">{text}</span>
                 <Href
-                    className="underline inline-block color-currentColor"
+                    className="underline inline-block color-inherit"
                     url="https://protonmail.com/support/knowledge-base/encrypted-contacts/"
                 >{c('Link').t`Learn more`}</Href>
             </span>

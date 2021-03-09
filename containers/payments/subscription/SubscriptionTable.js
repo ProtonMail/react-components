@@ -34,7 +34,7 @@ const SubscriptionTable = ({
                                         </div>
                                     ) : null}
                                     {index === mostPopularIndex ? (
-                                        <div className="mb0-5 text-center color-global-success text-bold text-sm mt0 text-uppercase subscriptionTable-mostPopular">{c(
+                                        <div className="mb0-5 text-center color-success text-bold text-sm mt0 text-uppercase subscriptionTable-mostPopular">{c(
                                             'Title for subscription plan'
                                         ).t`Most popular`}</div>
                                     ) : null}

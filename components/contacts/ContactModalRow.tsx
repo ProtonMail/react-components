@@ -49,9 +49,9 @@ const ContactModalRow = forwardRef<HTMLInputElement, Props>(
         if (canDelete) {
             list.push({
                 text: canEdit ? (
-                    <span className="color-global-warning">{c('Action').t`Delete`}</span>
+                    <span className="color-danger">{c('Action').t`Delete`}</span>
                 ) : (
-                    <Icon name="trash" className="color-global-warning mauto" alt={c('Action').t`Delete`} />
+                    <Icon name="trash" className="color-danger mauto" alt={c('Action').t`Delete`} />
                 ),
                 onClick: () => {
                     if (property.uid) {

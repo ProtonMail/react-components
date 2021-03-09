@@ -16,7 +16,7 @@ const IndexSection = ({ pages, limit = 4 }: { pages: SectionConfig[]; limit?: nu
                     <section
                         key={to}
                         className={classnames([
-                            'overview-grid-item bordered-container bg-white-dm tiny-shadow-container p2',
+                            'overview-grid-item bordered-container bg-norm tiny-shadow-container p2',
                             subsections.length > limit && 'overview-grid-item--tall',
                         ])}
                     >

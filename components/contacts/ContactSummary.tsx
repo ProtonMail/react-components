@@ -131,11 +131,7 @@ const ContactSummary = ({
 
                     <Tooltip title={c('Action').t`Delete`} className="ml0-5">
                         <Button onClick={onDelete} className="button--for-icon inline-flex">
-                            <Icon
-                                className="color-global-warning mt0-25 mb0-1"
-                                name="trash"
-                                alt={c('Action').t`Delete`}
-                            />
+                            <Icon className="color-danger mt0-25 mb0-1" name="trash" alt={c('Action').t`Delete`} />
                         </Button>
                     </Tooltip>
                 </div>

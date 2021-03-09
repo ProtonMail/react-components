@@ -20,8 +20,7 @@ const DelinquentTopBanner = () => {
                   toApp: getAccountSettingsApp(),
               };
     const payInvoiceLink = (
-        <AppLink key="pay-invoices" className="color-currentColor" {...paymentLinkProps}>{c('Link')
-            .t`Pay invoice`}</AppLink>
+        <AppLink key="pay-invoices" className="color-inherit" {...paymentLinkProps}>{c('Link').t`Pay invoice`}</AppLink>
     );
     if (!user.Delinquent) {
         return null;
