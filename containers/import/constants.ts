@@ -2,10 +2,10 @@ import { c } from 'ttag';
 import { TIME_UNIT } from './interfaces';
 
 export const timeUnitLabels = {
-    [TIME_UNIT.BIG_BANG]: c('Label').t`Account creation date`,
-    [TIME_UNIT.LAST_YEAR]: c('Label').t`12 months ago`,
-    [TIME_UNIT.LAST_3_MONTHS]: c('Label').t`3 months ago`,
-    [TIME_UNIT.LAST_MONTH]: c('Label').t`1 month ago`,
+    [TIME_UNIT.BIG_BANG]: c('Label').t`Import all messages`,
+    [TIME_UNIT.LAST_YEAR]: c('Label').t`Last 12 months only`,
+    [TIME_UNIT.LAST_3_MONTHS]: c('Label').t`Last 3 months only`,
+    [TIME_UNIT.LAST_MONTH]: c('Label').t`Last month only`,
 };
 
 export const IMAPS = {

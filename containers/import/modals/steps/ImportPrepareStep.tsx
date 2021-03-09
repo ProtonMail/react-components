@@ -10,7 +10,7 @@ import isDeepEqual from 'proton-shared/lib/helpers/isDeepEqual';
 import { useFolders, useUser, useModals } from '../../../../hooks';
 import { Icon, LabelStack, Button, Alert, Loader, Tooltip, InlineLinkButton } from '../../../../components';
 
-import { ImportModalModel, MailImportFolder, TIME_UNIT, DestinationFolder } from '../../interfaces';
+import { ImportModalModel, MailImportFolder, DestinationFolder } from '../../interfaces';
 import { timeUnitLabels } from '../../constants';
 import { escapeSlashes, splitEscaped } from '../../helpers';
 
@@ -52,8 +52,6 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
     );
 
     const selectedFoldersCountLocalized = selectedFolders.length.toLocaleString();
-
-    const selectedPeriodLowerCased = timeUnitLabels[selectedPeriod].toLowerCase();
 
     const importSize = useMemo(() => selectedFolders.reduce((acc, { Size = 0 }) => acc + Size, 0), [selectedFolders]);
 
@@ -290,15 +288,9 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
 
                 <div className="mb1 ml1 flex flex-align-items-center">
                     <Icon className="mr0-5" name="clock" />
-                    {selectedPeriod === TIME_UNIT.BIG_BANG ? (
-                        c('Info').t`Import all messages since ${selectedPeriodLowerCased}`
-                    ) : (
-                        <span>
-                            {c('Info').t`Import all messages since`}
-                            {` `}
-                            <strong>{timeUnitLabels[selectedPeriod]}</strong>
-                        </span>
-                    )}
+                    {c('Label').t`Import interval`}
+                    {`: `}
+                    <strong className="ml0-5">{timeUnitLabels[selectedPeriod]}</strong>
                 </div>
 
                 <div className="mb1 ml1 flex flex-align-items-center flex-nowrap">
