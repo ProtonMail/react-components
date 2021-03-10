@@ -130,6 +130,7 @@ export interface ImportHistory {
     NumMessages: number;
     State: ImportMailReportStatus;
     TotalSize: number;
+    CanDeleteSource: number;
 }
 
 export interface CheckedFoldersMap {

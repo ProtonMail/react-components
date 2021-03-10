@@ -4,6 +4,7 @@ import { c } from 'ttag';
 
 import { deleteMailImportReport, deleteSource } from 'proton-shared/lib/api/mailImport';
 import humanSize from 'proton-shared/lib/helpers/humanSize';
+import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 
 import { useApi, useLoading, useEventManager, useNotifications, useModals, useImportHistory } from '../../hooks';
 import {
@@ -44,9 +45,10 @@ const ImportStatus = ({ status }: ImportStatusProps) => {
 interface DeleteButtonProps {
     ID: string;
     email: string;
+    showDeleteSource: number;
 }
 
-const DeleteButton = ({ ID, email }: DeleteButtonProps) => {
+const DeleteButton = ({ ID, email, showDeleteSource }: DeleteButtonProps) => {
     const api = useApi();
     const { call } = useEventManager();
     const { createModal } = useModals();
@@ -101,13 +103,14 @@ const DeleteButton = ({ ID, email }: DeleteButtonProps) => {
             onClick: handleDeleteRecord,
             loading: loadingDeleteRecord,
         },
-        {
-            text: c('Action').t`Delete original messages`,
-            onClick: handleDeleteOriginal,
-            loading: loadingDeleteOriginal,
-            actionType: 'delete',
-        } as const,
-    ];
+        showDeleteSource &&
+            ({
+                text: c('Action').t`Delete original messages`,
+                onClick: handleDeleteOriginal,
+                loading: loadingDeleteOriginal,
+                actionType: 'delete',
+            } as const),
+    ].filter(isTruthy);
 
     return <DropdownActions className="button--small" list={list} />;
 };
@@ -150,7 +153,7 @@ const PastImportsSection = () => {
                     <tr>{headerCells}</tr>
                 </thead>
                 <TableBody>
-                    {imports.sort(sortByDate).map(({ State, Email, ID, TotalSize, EndTime }) => {
+                    {imports.sort(sortByDate).map(({ State, Email, ID, TotalSize, EndTime, CanDeleteSource }) => {
                         return (
                             <TableRow
                                 key={ID}
@@ -168,7 +171,12 @@ const PastImportsSection = () => {
                                     </div>,
                                     <time key="importDate">{format(EndTime * 1000, 'PPp')}</time>,
                                     humanSize(TotalSize),
-                                    <DeleteButton key="button" email={Email} ID={ID} />,
+                                    <DeleteButton
+                                        key="button"
+                                        email={Email}
+                                        ID={ID}
+                                        showDeleteSource={CanDeleteSource}
+                                    />,
                                 ]}
                             />
                         );
