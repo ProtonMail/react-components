@@ -2,7 +2,7 @@ import React from 'react';
 import { format } from 'date-fns';
 import { c } from 'ttag';
 
-import { deleteMailImportReport } from 'proton-shared/lib/api/mailImport';
+import { deleteMailImportReport, deleteSource } from 'proton-shared/lib/api/mailImport';
 import humanSize from 'proton-shared/lib/helpers/humanSize';
 
 import { useApi, useLoading, useEventManager, useNotifications, useModals, useImportHistory } from '../../hooks';
@@ -16,11 +16,11 @@ import {
     Badge,
     ErrorButton,
     DropdownActions,
+    ConfirmModal,
 } from '../../components';
 
-import { ConfirmModal } from '../../components/modal';
-
 import { ImportHistory, ImportMailReportStatus } from './interfaces';
+import DeleteAllMessagesModal from './modals/DeleteAllMessagesModal';
 
 interface ImportStatusProps {
     status: ImportMailReportStatus;
@@ -43,16 +43,17 @@ const ImportStatus = ({ status }: ImportStatusProps) => {
 
 interface DeleteButtonProps {
     ID: string;
+    email: string;
 }
 
-const DeleteButton = ({ ID }: DeleteButtonProps) => {
+const DeleteButton = ({ ID, email }: DeleteButtonProps) => {
     const api = useApi();
     const { call } = useEventManager();
     const { createModal } = useModals();
     const { createNotification } = useNotifications();
 
     const [loadingDeleteRecord, withLoadingDeleteRecord] = useLoading();
-    const [loadingDeleteOriginal /* , withLoadingDeleteOriginal */] = useLoading();
+    const [loadingDeleteOriginal, withLoadingDeleteOriginal] = useLoading();
 
     const handleDeleteRecord = async () => {
         await new Promise<void>((resolve, reject) => {
@@ -78,20 +79,18 @@ const DeleteButton = ({ ID }: DeleteButtonProps) => {
     const handleDeleteOriginal = async () => {
         await new Promise<void>((resolve, reject) => {
             createModal(
-                <ConfirmModal
+                <DeleteAllMessagesModal
                     onConfirm={resolve}
                     onClose={reject}
-                    title={c('Confirm modal title').t`Delete original messages?`}
+                    title={c('Confirm modal title').t`Delete all messages`}
                     cancel={c('Action').t`Cancel`}
-                    confirm={<ErrorButton type="submit">{c('Action').t`Delete away!`}</ErrorButton>}
-                >
-                    <Alert type="error">{c('Warning').t`This is a very dangerous action, are you 100% sure?`}</Alert>
-                </ConfirmModal>
+                    email={email}
+                />
             );
         });
 
-        // await withLoadingDeleteOriginal(api(deleteOriginalMessagesOrWhatever(ID)));
-        // await call();
+        await withLoadingDeleteOriginal(api(deleteSource(ID)));
+        await call();
 
         createNotification({ text: c('Success').t`Orignal mailbox cleared` });
     };
@@ -169,7 +168,7 @@ const PastImportsSection = () => {
                                     </div>,
                                     <time key="importDate">{format(EndTime * 1000, 'PPp')}</time>,
                                     humanSize(TotalSize),
-                                    <DeleteButton key="button" ID={ID} />,
+                                    <DeleteButton key="button" email={Email} ID={ID} />,
                                 ]}
                             />
                         );
