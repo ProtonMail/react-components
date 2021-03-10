@@ -94,7 +94,7 @@ const DeleteButton = ({ ID, email, showDeleteSource }: DeleteButtonProps) => {
         await withLoadingDeleteOriginal(api(deleteSource(ID)));
         await call();
 
-        createNotification({ text: c('Success').t`Orignal mailbox cleared` });
+        createNotification({ text: c('Success').t`Deleting original messages` });
     };
 
     const list = [
