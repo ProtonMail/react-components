@@ -7,19 +7,27 @@ export interface InputTwoProps extends Omit<React.ComponentPropsWithRef<'input'>
     suffix?: React.ReactNode;
     prefix?: React.ReactNode;
     icon?: React.ReactNode;
+    disableChange?: boolean;
     onValue?: (value: string) => void;
 }
 
 const InputTwo = (props: InputTwoProps, ref: Ref<HTMLInputElement>) => {
-    const { error, icon, suffix, prefix, className: classNameProp, onValue, ...rest } = props;
+    const { error, icon, suffix, prefix, className: classNameProp, onValue, disableChange, ...rest } = props;
 
     const className = classnames([classNameProp, 'w100 inputform-field', Boolean(error) && 'error']);
 
     const inputElement = (
         <input
+            autoComplete="off"
+            autoCapitalize="off"
+            autoCorrect="off"
+            spellCheck="false"
             {...rest}
             ref={ref}
             onChange={(e) => {
+                if (disableChange) {
+                    return;
+                }
                 onValue?.(e.target.value);
                 rest.onChange?.(e);
             }}
@@ -30,7 +38,7 @@ const InputTwo = (props: InputTwoProps, ref: Ref<HTMLInputElement>) => {
     if (prefix) {
         return (
             <div className="inputform-icon-container flex flex-nowrap flex-align-items-center flex-item-fluid relative">
-                <div className="inputform-suffix pr0-5 flex">{prefix}</div>
+                <div className="inputform-prefix pr0-5 flex">{prefix}</div>
                 <div className="flex-item-fluid">{inputElement}</div>
             </div>
         );

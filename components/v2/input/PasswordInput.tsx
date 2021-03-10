@@ -11,6 +11,10 @@ const PasswordInputTwo = ({ disabled, ...rest }: Omit<InputTwoProps, 'type'>) =>
     };
     return (
         <InputTwo
+            autoComplete="off"
+            autoCapitalize="off"
+            autoCorrect="off"
+            spellCheck="false"
             {...rest}
             type={type}
             disabled={disabled}
@@ -26,9 +30,6 @@ const PasswordInputTwo = ({ disabled, ...rest }: Omit<InputTwoProps, 'type'>) =>
                     <Icon className="mauto" name={type === 'password' ? 'read' : 'unread'} />
                 </button>
             }
-            autoCapitalize="off"
-            autoCorrect="off"
-            spellCheck="false"
         />
     );
 };

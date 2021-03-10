@@ -15,19 +15,21 @@ export interface FormFieldProps {
     hint?: React.ReactNode;
     assistiveText?: React.ReactNode;
     disabled?: boolean;
+    bigger?: boolean;
     id?: string;
     error?: ErrorProp;
     children: React.ReactElement<RequiredChildProps>;
 }
 
-const FormField = ({ label, hint, children, assistiveText, disabled, error, id: idProp }: FormFieldProps) => {
+const FormField = ({ label, hint, children, assistiveText, disabled, bigger, error, id: idProp }: FormFieldProps) => {
     const id = useInstance(() => idProp || generateUID());
 
     const classes = {
         root: classnames([
-            'inputform-container w100 mb1',
+            'inputform-container w100 mb0-5',
             disabled && 'inputform-container--disabled',
             Boolean(error) && 'inputform-container--invalid',
+            bigger && 'inputform-container--bigger',
         ]),
         labelContainer: 'flex inputform-label flex-justify-space-between flex-nowrap flex-align-items-end',
         inputContainer: 'inputform-field-container relative',
@@ -38,8 +40,7 @@ const FormField = ({ label, hint, children, assistiveText, disabled, error, id: 
     const errorElement = error && (
         <>
             {/* TODO: clear up inconsistency between design spacing & code unit system spacing */}
-            {/* TODO: find out about missing "vertical-align-top" helper */}
-            <Icon name="exclamation-circle-filled" style={{ verticalAlign: 'top', marginRight: '5px' }} />
+            <Icon name="exclamation-circle-filled" className="aligntop mr0-25" />
             <span>{error}</span>
         </>
     );
@@ -53,7 +54,7 @@ const FormField = ({ label, hint, children, assistiveText, disabled, error, id: 
                 {hintElement}
             </div>
             <div className={classes.inputContainer}>{React.cloneElement(children, { id, error, disabled })}</div>
-            <div className="inputform-assist">{errorElement || assistiveElement}</div>
+            <div className="inputform-assist flex">{errorElement || assistiveElement}</div>
         </label>
     );
 };

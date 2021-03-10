@@ -48,7 +48,7 @@ const CountrySelect = ({ value, options, onChange, onClosed }: Props) => {
                     pickRef.current = false;
                     setIsOpen(!isOpen);
                 }}
-                className="ml0-5 unstyled"
+                className="ml0-5 unstyled inputform-prefix-phone border-right pr0-5"
                 buttonRef={anchorRef}
                 caretClassName="mtauto mbauto"
                 aria-live="assertive"
@@ -57,7 +57,7 @@ const CountrySelect = ({ value, options, onChange, onClosed }: Props) => {
             >
                 <span className="mr0-5">
                     {!value ? (
-                        <Icon name="globe" />
+                        <Icon name="globe" className="align-top inline-flex" />
                     ) : (
                         <img
                             role="presentation"
@@ -65,10 +65,11 @@ const CountrySelect = ({ value, options, onChange, onClosed }: Props) => {
                             src={value.countryFlag}
                             width="30"
                             height="30"
+                            className="align-top inline-flex"
                         />
                     )}
                 </span>
-                <span>+{value ? value.countryCallingCode : '00'}</span>
+                <span className="min-w3e inline-flex">+{value ? value.countryCallingCode : '00'}</span>
             </DropdownButton>
 
             <Dropdown

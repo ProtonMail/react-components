@@ -6,7 +6,7 @@ interface Props {
     input: React.ReactNode;
     className?: string;
 }
-const SignupLabelInputRow = ({ label, input, className }: Props) => {
+const InputField = ({ label, input, className }: Props) => {
     return (
         <div className={classnames(['flex on-mobile-flex-column signup-label-field-container mb1', className])}>
             {label}
@@ -15,4 +15,4 @@ const SignupLabelInputRow = ({ label, input, className }: Props) => {
     );
 };
 
-export default SignupLabelInputRow;
+export default InputField;
