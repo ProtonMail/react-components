@@ -18,8 +18,9 @@ interface Props {
 const EmailMethodForm = ({ api, onSubmit, defaultPhone = '', defaultCountry }: Props) => {
     const [phone, setPhone] = useState(defaultPhone);
     const [loading, withLoading] = useLoading();
+    const [phoneError, setPhoneError] = useState('');
 
-    const { validator, setError, onFormSubmit } = useFormErrors();
+    const { validator, onFormSubmit } = useFormErrors();
 
     const handleSubmit = async () => {
         if (loading || !onFormSubmit()) {
@@ -29,7 +30,7 @@ const EmailMethodForm = ({ api, onSubmit, defaultPhone = '', defaultCountry }: P
         try {
             await api(validatePhone(phone));
         } catch (error) {
-            setError('phone', getApiErrorMessage(error) || c('Error').t`Can't validate phone, try again later`);
+            setPhoneError(getApiErrorMessage(error) || c('Error').t`Can't validate phone, try again later`);
             throw error;
         }
 
@@ -42,14 +43,17 @@ const EmailMethodForm = ({ api, onSubmit, defaultPhone = '', defaultCountry }: P
                 id="phone"
                 bigger
                 label={c('Label').t`Phone number`}
-                error={validator('phone', [requiredValidator(phone)])}
+                error={validator([requiredValidator(phone), phoneError])}
             >
                 <PhoneInput
                     disableChange={loading}
                     autoFocus
                     defaultCountry={defaultCountry}
                     value={phone}
-                    onChange={setPhone}
+                    onChange={(value) => {
+                        setPhoneError('');
+                        setPhone(value);
+                    }}
                 />
             </FormField>
             <Button

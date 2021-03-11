@@ -18,8 +18,9 @@ interface Props {
 const EmailMethodForm = ({ api, onSubmit, defaultEmail = '' }: Props) => {
     const [email, setEmail] = useState(defaultEmail);
     const [loading, withLoading] = useLoading();
+    const [emailError, setEmailError] = useState('');
 
-    const { validator, setError, onFormSubmit } = useFormErrors();
+    const { validator, onFormSubmit } = useFormErrors();
 
     const handleSubmit = async () => {
         if (loading || !onFormSubmit()) {
@@ -29,7 +30,7 @@ const EmailMethodForm = ({ api, onSubmit, defaultEmail = '' }: Props) => {
         try {
             await api(validateEmail(email));
         } catch (error) {
-            setError('email', getApiErrorMessage(error) || c('Error').t`Can't validate email, try again later`);
+            setEmailError(getApiErrorMessage(error) || c('Error').t`Can't validate email, try again later`);
             throw error;
         }
 
@@ -42,14 +43,17 @@ const EmailMethodForm = ({ api, onSubmit, defaultEmail = '' }: Props) => {
                 id="email"
                 bigger
                 label={c('Label').t`Email address`}
-                error={validator('email', [requiredValidator(email)])}
+                error={validator([requiredValidator(email), emailError])}
             >
                 <InputTwo
                     disableChange={loading}
                     autoFocus
                     type="email"
                     value={email}
-                    onValue={setEmail}
+                    onValue={(value) => {
+                        setEmailError('');
+                        setEmail(value);
+                    }}
                     onKeyDown={(event) => {
                         if (event.key === 'Enter') {
                             event.preventDefault();

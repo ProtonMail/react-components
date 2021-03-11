@@ -2,41 +2,32 @@ import { useEffect, useRef, useState } from 'react';
 
 const useFormErrors = () => {
     const [, rerender] = useState<any>();
-    const errorsMapRef = useRef<{ [key: string]: string | undefined }>({});
+    const errorsMapRef = useRef<string[]>([]);
     const isSubmittedRef = useRef(false);
 
-    const errors: { [key: string]: string | undefined } = {};
+    const errors: string[] = [];
 
     useEffect(() => {
-        errorsMapRef.current = {
-            ...errorsMapRef.current,
-            ...errors,
-        };
+        errorsMapRef.current = errors;
     });
 
     useEffect(() => {
         return () => {
-            errorsMapRef.current = {};
+            errorsMapRef.current = [];
         };
     }, []);
 
     return {
-        setError: (key: string, error: string) => {
-            errorsMapRef.current[key] = error;
-        },
-        clearError: (key: string) => {
-            delete errorsMapRef.current[key];
-        },
         onFormSubmit: () => {
             isSubmittedRef.current = true;
             rerender({});
-            const errorsMap = errorsMapRef.current;
-            const hasError = Object.keys(errorsMap).some((key) => !!errorsMap[key]);
-            return !hasError;
+            const oldErrors = errorsMapRef.current;
+            return !oldErrors.some((value) => !!value);
         },
-        validator: (id: string, validations: string[]) => {
-            errors[id] = validations.reduce((acc, x) => acc || x, '');
-            return isSubmittedRef.current ? errors[id] : '';
+        validator: (validations: string[]) => {
+            const error = validations.reduce((acc, x) => acc || x, '');
+            errors.push(error);
+            return isSubmittedRef.current ? error : '';
         },
     };
 };
