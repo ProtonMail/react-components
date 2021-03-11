@@ -34,11 +34,15 @@ const ContactGroupTable = ({ contactEmails, onDelete }: Props) => {
                                     <div className="text-ellipsis max-w100" key={ID} title={Email}>
                                         {Email}
                                     </div>,
-                                    <SmallButton key={ID} onClick={() => onDelete(ID)} className="button--redborder">
+                                    <SmallButton
+                                        key={ID || Email}
+                                        onClick={() => onDelete(ID)}
+                                        className="button--redborder"
+                                    >
                                         {c('Action').t`Remove`}
                                     </SmallButton>,
                                 ];
-                                return <TableRow key={ID} cells={cells} />;
+                                return <TableRow key={ID || Email} cells={cells} />;
                             })}
                         </TableBody>
                     ) : null}
