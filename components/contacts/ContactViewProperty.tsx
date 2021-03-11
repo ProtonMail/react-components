@@ -63,49 +63,6 @@ const ContactViewProperty = ({
     const type = types[cleanType] || cleanType;
     const value = property.value as string;
 
-    const getContent = () => {
-        if (field === 'email') {
-            return (
-                <>
-                    <a className="mr0-5" href={`mailto:${value}`} title={value}>
-                        {value}
-                    </a>
-                    {!!contactGroups.length && (
-                        <div className="mt0-5">
-                            <ContactGroupLabels className="max-w100" contactGroups={contactGroups} isStacked={false} />
-                        </div>
-                    )}
-                </>
-            );
-        }
-        if (field === 'url') {
-            // use new root address when the url does not include the protocol (HTTP or HTTPS)
-            const href = value.startsWith('http') || value.startsWith('//') ? value : `//${value}`;
-            return (
-                <a href={href} target="_blank" rel="noopener noreferrer">
-                    {value}
-                </a>
-            );
-        }
-        if (field === 'tel') {
-            return <a href={`tel:${value}`}>{value}</a>;
-        }
-        if (['bday', 'anniversary'].includes(field)) {
-            const [date] = [parseISO(value), new Date(value)].filter(isValid);
-            if (date) {
-                return format(date, 'PP', { locale: dateLocale });
-            }
-            return value;
-        }
-        if (field === 'logo') {
-            return <RemoteImage src={value} />;
-        }
-        if (field === 'adr') {
-            return formatAdr(property.value as string[]);
-        }
-        return value;
-    };
-
     const getActions = () => {
         if (isPreview) {
             return null;
@@ -190,6 +147,66 @@ const ContactViewProperty = ({
         }
     };
 
+    const getContent = () => {
+        if (field === 'email') {
+            return (
+                <>
+                    <span className="w100">
+                        <span className="float-right flex-item-noshrink flex contact-view-actions">{getActions()}</span>
+                        <a className="mr0-5" href={`mailto:${value}`} title={value}>
+                            {value}
+                        </a>
+                        {!!contactGroups.length && (
+                            <div className="mt1">
+                                <ContactGroupLabels
+                                    className="max-w100"
+                                    contactGroups={contactGroups}
+                                    isStacked={false}
+                                />
+                            </div>
+                        )}
+                    </span>
+                </>
+            );
+        }
+        if (field === 'url') {
+            // use new root address when the url does not include the protocol (HTTP or HTTPS)
+            const href = value.startsWith('http') || value.startsWith('//') ? value : `//${value}`;
+            return (
+                <a href={href} target="_blank" rel="noopener noreferrer">
+                    {value}
+                </a>
+            );
+        }
+        if (field === 'tel') {
+            return (
+                <span className="w100">
+                    <span className="float-right flex-item-noshrink flex contact-view-actions">{getActions()}</span>
+                    <a href={`tel:${value}`}>{value}</a>
+                </span>
+            );
+        }
+        if (['bday', 'anniversary'].includes(field)) {
+            const [date] = [parseISO(value), new Date(value)].filter(isValid);
+            if (date) {
+                return format(date, 'PP', { locale: dateLocale });
+            }
+            return value;
+        }
+        if (field === 'logo') {
+            return <RemoteImage src={value} />;
+        }
+        if (field === 'adr') {
+            return (
+                <span className="w100">
+                    <span className="float-right flex-item-noshrink flex contact-view-actions">{getActions()}</span>
+                    {formatAdr(property.value as string[])}
+                </span>
+            );
+        }
+        return value;
+    };
+
     return (
         <div className="contact-view-row flex flex-nowrap flex-align-items-start mb1">
             <div
@@ -220,7 +237,6 @@ const ContactViewProperty = ({
                     {getContent()}
                 </span>
             </div>
-            <div className="flex-item-noshrink flex">{getActions()}</div>
         </div>
     );
 };

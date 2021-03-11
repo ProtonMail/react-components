@@ -1,11 +1,38 @@
 @import '~design-system/scss/config/';
 
-/*
- * triger mobile adaptation around 1000px because... not enough space
- */
-@include respond-to($breakpoint-medium-landscape) {
-	@include respond-to($breakpoint-medium, 'min') {
-		.contact-view {
+.contact-view {
+	&-actions {
+		margin-top: -0.5em;
+	}
+
+	.contactsummary-contact-name {
+		font-size: em(24);
+		line-height: 1.333; // design wanted 32px for line-height
+		flex: 1 1 auto;
+		margin-bottom: 0.25em;
+	}
+
+	/*
+	 * Make summary elements wrap at 1500
+	 */
+	@include respond-to($breakpoint-large) {
+		.contactsummary-contact-name-container {
+			display: flex;
+			flex-direction: column;
+		}
+
+		.contactsummary-action-buttons {
+			> :first-child {
+				margin-left: 0;
+			}
+		}
+	}
+
+	/*
+	* triger mobile adaptation around 1000px because... not enough space
+	*/
+	@include respond-to($breakpoint-medium-landscape) {
+		@include respond-to($breakpoint-medium, 'min') {
 			.contactsummary-container {
 				display: block;
 			}
