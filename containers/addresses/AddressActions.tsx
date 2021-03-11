@@ -17,6 +17,7 @@ interface Props {
     user: UserModel;
     organizationKey?: CachedOrganizationKey;
 }
+
 const AddressActions = ({ address, member, user, organizationKey }: Props) => {
     const api = useApi();
     const { call } = useEventManager();
