@@ -22,18 +22,11 @@ const ImportListSection = () => {
     const [imports = [], importsLoading] = useImporters();
     const [pastImports = [], pastImportsLoading] = useImportHistory();
 
-    const importsToDisplay = [
-        ...imports.filter(({ Active }) => Active).sort(sortActiveImports),
-        ...pastImports.sort(sortPastImports),
-    ];
-
-    if (!importsToDisplay.length) {
+    if (!imports.length && !pastImports.length) {
         return <SettingsParagraph>{c('Info').t`No imports to display.`}</SettingsParagraph>;
     }
 
-    const activeImports = importsToDisplay as Importer[];
-
-    const hasStoragePausedImports = activeImports.some(({ Active }) => {
+    const hasStoragePausedImports = imports.some(({ Active }) => {
         return (
             Active &&
             Active.State === ImportMailStatus.PAUSED &&
@@ -41,7 +34,7 @@ const ImportListSection = () => {
         );
     });
 
-    const hasAuthPausedImports = activeImports.some(({ Active }) => {
+    const hasAuthPausedImports = imports.some(({ Active }) => {
         return (
             Active &&
             Active.State === ImportMailStatus.PAUSED &&
@@ -49,7 +42,7 @@ const ImportListSection = () => {
         );
     });
 
-    const delayedImport = activeImports.find(({ Active }) => {
+    const delayedImport = imports.find(({ Active }) => {
         return Active?.State === ImportMailStatus.DELAYED;
     });
 
@@ -131,7 +124,10 @@ const ImportListSection = () => {
                             <tr>{headerCells}</tr>
                         </thead>
                         <TableBody>
-                            {importsToDisplay.map((currentImport) => (
+                            {[
+                                ...imports.filter(({ Active }) => Active).sort(sortActiveImports),
+                                ...pastImports.sort(sortPastImports),
+                            ].map((currentImport) => (
                                 <ImportListRow key={currentImport.ID} currentImport={currentImport} />
                             ))}
                         </TableBody>
