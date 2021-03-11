@@ -1,20 +1,17 @@
 import React, { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import { useRouteMatch } from 'react-router-dom';
 import { APPS, ALL_MEMBERS_ID, MEMBER_PRIVATE } from 'proton-shared/lib/constants';
-import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 import { c } from 'ttag';
-import { UserModel, Address, Organization, Member } from 'proton-shared/lib/interfaces';
+import { UserModel, Organization, Member } from 'proton-shared/lib/interfaces';
 
-import { Alert, Loader, Table, TableHeader, TableBody, TableRow, Select, Button, AppLink } from '../../components';
+import { Alert, Loader, Select, Button, AppLink } from '../../components';
 import { useMembers, useMemberAddresses, useModals, useOrganizationKey, useNotifications } from '../../hooks';
 
 import { SettingsParagraph } from '../account';
 
 import AddressModal from './AddressModal';
-import AddressStatus from './AddressStatus';
-import { getStatus } from './helper';
-import AddressActions from './AddressActions';
 import AddressesWithUser from './AddressesWithUser';
+import AddressesTable from './AddressesTable';
 
 const getMemberIndex = (members: Member[] = [], memberID?: string, isOnlySelf?: boolean) => {
     const newMemberIndex =
@@ -80,7 +77,7 @@ const AddressesWithMembers = ({ user, organization, isOnlySelf }: Props) => {
             createNotification({ type: 'error', text: c('Error').t`The organization key must be activated first.` });
             throw new Error('Organization key is not decrypted');
         }
-        createModal(<AddressModal member={member} organizationKey={organizationKey} />);
+        createModal(<AddressModal member={member} members={members} organizationKey={organizationKey} />);
     };
 
     const memberOptions = [
@@ -143,42 +140,14 @@ const AddressesWithMembers = ({ user, organization, isOnlySelf }: Props) => {
             {isSelfSelected ? (
                 <AddressesWithUser user={user} />
             ) : (
-                <Table className="simple-table--has-actions">
-                    <TableHeader
-                        cells={[
-                            c('Header for addresses table').t`Address`,
-                            hasUsernameDisplay ? c('Header for addresses table').t`Username` : null,
-                            c('Header for addresses table').t`Status`,
-                            c('Header for addresses table').t`Actions`,
-                        ].filter(Boolean)}
-                    />
-                    <TableBody
-                        colSpan={hasUsernameDisplay ? 4 : 3}
-                        loading={selectedMembers.some(({ ID }) => !Array.isArray(memberAddressesMap?.[ID]))}
-                    >
-                        {selectedMembers.flatMap((member) =>
-                            (memberAddressesMap?.[member.ID] || []).map((address: Address, i: number) => (
-                                <TableRow
-                                    key={address.ID}
-                                    cells={[
-                                        <div className="text-ellipsis" title={address.Email}>
-                                            {address.Email}
-                                        </div>,
-                                        hasUsernameDisplay && member.Name,
-                                        <AddressStatus key={1} {...getStatus(address, i)} />,
-                                        <AddressActions
-                                            key={2}
-                                            member={member}
-                                            address={address}
-                                            user={user}
-                                            organizationKey={loadingOrganizationKey ? undefined : organizationKey}
-                                        />,
-                                    ].filter(isTruthy)}
-                                />
-                            ))
-                        )}
-                    </TableBody>
-                </Table>
+                <AddressesTable
+                    hasUsername={hasUsernameDisplay}
+                    loading={selectedMembers.some(({ ID }) => !Array.isArray(memberAddressesMap?.[ID]))}
+                    user={user}
+                    members={selectedMembers}
+                    memberAddresses={memberAddressesMap}
+                    organizationKey={loadingOrganizationKey ? undefined : organizationKey}
+                />
             )}
         </>
     );
