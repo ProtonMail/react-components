@@ -147,7 +147,7 @@ const ContactGroupModal = ({ contactGroupID, onClose = noop, selectedContactEmai
             </h4>
             <Row>
                 <Label htmlFor="contactGroupName">{c('Label for contact group name').t`Name`}</Label>
-                <Field>
+                <Field className="flex-item-fluid">
                     <Input
                         id="contactGroupName"
                         placeholder={c('Placeholder for contact group name').t`Name`}
@@ -170,7 +170,7 @@ const ContactGroupModal = ({ contactGroupID, onClose = noop, selectedContactEmai
             {options.length ? (
                 <div ref={autocompleteRef} className="flex flex-nowrap mb1 on-mobile-flex-column">
                     <Label htmlFor="contactGroupEmail">{c('Label').t`Add email address`}</Label>
-                    <Field>
+                    <Field className="flex-item-fluid">
                         <Autocomplete
                             id="contactGroupEmail"
                             options={options}
@@ -184,9 +184,9 @@ const ContactGroupModal = ({ contactGroupID, onClose = noop, selectedContactEmai
                             autoComplete="off"
                         />
                     </Field>
-                    <div className="flex-item-fluid flex flex-justify-end">
-                        <Button onClick={handleAdd} disabled={!isValidEmail}>{c('Action').t`Add`}</Button>
-                    </div>
+                    <Button className="ml1" onClick={handleAdd} disabled={!isValidEmail}>
+                        {c('Action').t`Add`}
+                    </Button>
                 </div>
             ) : null}
 
