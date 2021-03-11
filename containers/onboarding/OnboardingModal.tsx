@@ -15,7 +15,6 @@ import {
     useEventManager,
     useGetAddresses,
     useLoading,
-    useNotifications,
     useSubscription,
     useUser,
     useUserSettings,
@@ -42,6 +41,7 @@ interface Props {
     setWelcomeFlags?: boolean;
     showGenericSteps?: boolean;
     allowClose?: boolean;
+    hideDisplayName?: boolean;
 }
 
 const OnboardingModal = ({
@@ -49,20 +49,21 @@ const OnboardingModal = ({
     showGenericSteps,
     allowClose = false,
     setWelcomeFlags = true,
+    hideDisplayName = false,
     ...rest
 }: Props) => {
     const [user] = useUser();
     const goToApp = useAppLink();
     const [userSettings] = useUserSettings();
-    const [subscription] = useSubscription();
-    const { createNotification } = useNotifications();
+    const [subscription, loadingSubscription] = useSubscription();
     const [displayName, setDisplayName] = useState(user.DisplayName || user.Name || '');
     const [loading, withLoading] = useLoading();
     const getAddresses = useGetAddresses();
     const api = useApi();
     const { call } = useEventManager();
     const [welcomeFlags] = useWelcomeFlags();
-    const canManageOrganization = user.isAdmin && (hasVisionary(subscription) || hasMailProfessional(subscription));
+    const canManageOrganization =
+        !loadingSubscription && user.isAdmin && (hasVisionary(subscription) || hasMailProfessional(subscription));
     const mailAppName = getAppName(APPS.PROTONMAIL);
     const themes = availableThemes.map(({ identifier, getI18NLabel, src }) => {
         return { identifier, label: getI18NLabel(), src };
@@ -96,7 +97,6 @@ const OnboardingModal = ({
     const handleChangeTheme = async (newThemeIdentifier: ThemeTypes) => {
         await api(updateThemeType(newThemeIdentifier));
         await call();
-        createNotification({ text: c('Success').t`Theme saved` });
     };
 
     const handleSetDisplayNameNext = async () => {
@@ -172,9 +172,9 @@ const OnboardingModal = ({
         </OnboardingStep>
     );
 
-    const hasDisplayNameStep = welcomeFlags?.hasDisplayNameStep;
+    const hasDisplayNameStep = welcomeFlags?.hasDisplayNameStep && !hideDisplayName;
     const displayGenericSteps = showGenericSteps || hasDisplayNameStep;
-    const genericSteps = displayGenericSteps ? [welcomeStep, setDisplayNameStep, themesStep] : [];
+    const genericSteps = displayGenericSteps ? [welcomeStep, hasDisplayNameStep && setDisplayNameStep, themesStep] : [];
     const finalGenericSteps = displayGenericSteps ? [discoverAppsStep] : [];
 
     const productSteps = children
@@ -217,56 +217,52 @@ const OnboardingModal = ({
             {...childStepProps}
             title={<BackButton onClick={childStep.props.onClose || handleBack} />}
             small
-            footer={
-                <div className="flex flex-nowrap flex-column">
-                    {typeof childStep.props.submit === 'string' ? (
-                        <Button
-                            shape="solid"
-                            size="large"
-                            color="norm"
-                            fullWidth
-                            loading={childStep.props.loading}
-                            type="submit"
-                            className="mb1"
-                            data-focus-fallback={1}
-                        >
-                            {childStepProps.submit}
-                        </Button>
-                    ) : (
-                        childStep.props.submit
-                    )}
-
-                    {typeof childStep.props.close === 'string' ? (
-                        <Button
-                            shape="ghost"
-                            size="large"
-                            color="norm"
-                            fullWidth
-                            disabled={childStep.props.loading}
-                            className="mb1"
-                            onClick={childStep.props.onClose || handleBack}
-                        >
-                            {childStepProps.close}
-                        </Button>
-                    ) : (
-                        childStep.props.close
-                    )}
-
-                    {hasDots && (
-                        <StepDots
-                            className="absolute centered-absolute-horizontal"
-                            onChange={handleChange}
-                            value={step}
-                        >
-                            {range(0, genericSteps.length).map((index) => (
-                                <StepDot key={index} aria-controls={`onboarding-${index}`} />
-                            ))}
-                        </StepDots>
-                    )}
-                </div>
-            }
+            footer={null}
         >
             {childStep}
+            <div className="flex flex-nowrap flex-column">
+                {typeof childStep.props.submit === 'string' ? (
+                    <Button
+                        shape="solid"
+                        size="large"
+                        color="norm"
+                        fullWidth
+                        loading={childStep.props.loading}
+                        type="submit"
+                        className="mb1"
+                        data-focus-fallback={1}
+                    >
+                        {childStepProps.submit}
+                    </Button>
+                ) : (
+                    childStep.props.submit
+                )}
+
+                {typeof childStep.props.close === 'string' ? (
+                    <Button
+                        shape="ghost"
+                        size="large"
+                        color="norm"
+                        fullWidth
+                        disabled={childStep.props.loading}
+                        className="mb1"
+                        onClick={childStep.props.onClose || handleBack}
+                    >
+                        {childStepProps.close}
+                    </Button>
+                ) : (
+                    childStep.props.close
+                )}
+            </div>
+            {hasDots && (
+                <div className="text-center">
+                    <StepDots onChange={handleChange} value={step}>
+                        {range(0, steps.length).map((index) => (
+                            <StepDot key={index} aria-controls={`onboarding-${index}`} />
+                        ))}
+                    </StepDots>
+                </div>
+            )}
         </FormModal>
     );
 };
