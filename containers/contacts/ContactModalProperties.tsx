@@ -79,7 +79,7 @@ const ContactModalProperties = (
             <h3 className="mb1 flex flex-nowrap flex-align-items-center flex-item-noshrink">
                 <Icon className="mr0-25 flex-item-noshrink" name={iconName} />
                 <span className="ml0-1 mr0-5">{title}</span>
-                {field && !['fn', 'email'].includes(field) && (
+                {((field && !['fn', 'email'].includes(field)) || field === undefined) && (
                     <EncryptedIcon className="flex flex-item-centered-vert flex-item-noshrink" />
                 )}
             </h3>
