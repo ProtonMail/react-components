@@ -2,7 +2,6 @@ import React from 'react';
 import { c } from 'ttag';
 
 import { getShortcuts } from 'proton-shared/lib/shortcuts/mail';
-import { APPS } from 'proton-shared/lib/constants';
 
 import { Alert, ShortcutsModal, ShortcutsSectionView, SettingsLink } from '../..';
 import { useMailSettings } from '../../../hooks';
