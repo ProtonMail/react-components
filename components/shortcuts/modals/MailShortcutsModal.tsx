@@ -2,8 +2,9 @@ import React from 'react';
 import { c } from 'ttag';
 
 import { getShortcuts } from 'proton-shared/lib/shortcuts/mail';
+import { APPS } from 'proton-shared/lib/constants';
 
-import { Alert, ShortcutsModal, ShortcutsSectionView, AppLink } from '../..';
+import { Alert, ShortcutsModal, ShortcutsSectionView, SettingsLink } from '../..';
 import { useMailSettings } from '../../../hooks';
 import { classnames } from '../../../helpers';
 import Title from '../../modal/Title';
@@ -24,9 +25,14 @@ const MailShortCutsModal = ({ ...rest }: Props) => {
     const shortcutEnabledSections = mailShortcuts.filter((section) => !section.alwaysActive);
 
     const settingsLink = (
-        <AppLink to="/settings/general#shortcuts" key="settings-link" onClick={() => rest.onClose?.()}>
+        <SettingsLink
+            app={APPS.PROTONMAIL}
+            path="/general#shortcuts"
+            key="settings-link"
+            onClick={() => rest.onClose?.()}
+        >
             {c('Link').t`general settings.`}
-        </AppLink>
+        </SettingsLink>
     );
 
     return (
