@@ -7,7 +7,7 @@ import { Alert } from '../../components';
 import { useUserSettings, useEventManager, useApi, useLoading, useNotifications } from '../../hooks';
 import ThemeCards from './ThemeCards';
 
-const availableThemes = [PROTON_THEMES.DEFAULT, PROTON_THEMES.DARK];
+export const availableThemes = [PROTON_THEMES.DEFAULT, PROTON_THEMES.DARK];
 
 const ThemesSection = () => {
     const api = useApi();

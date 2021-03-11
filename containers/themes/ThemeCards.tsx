@@ -4,12 +4,11 @@ import { ThemeTypes } from 'proton-shared/lib/themes/themes';
 import { Block } from '../../components';
 import ThemeCard from './ThemeCard';
 
-interface Theme {
+export interface Theme {
     label: string;
     identifier: ThemeTypes;
     src: string;
 }
-
 interface Props {
     themeIdentifier: ThemeTypes;
     onChange: (themeType: ThemeTypes) => void;
