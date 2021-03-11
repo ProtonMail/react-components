@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
-import { c, msgid } from 'ttag';
-import { normalize } from 'proton-shared/lib/helpers/string';
+import { c } from 'ttag';
+import { getInitials, normalize } from 'proton-shared/lib/helpers/string';
 import { DOMAIN_STATE } from 'proton-shared/lib/constants';
 import { Organization as tsOrganization, Domain, CachedOrganizationKey } from 'proton-shared/lib/interfaces';
 import {
@@ -9,11 +9,11 @@ import {
     Info,
     Block,
     Loader,
-    Alert,
     SearchInput,
     TableBody,
     TableRow,
-    PrimaryButton,
+    Badge,
+    Button,
 } from '../../components';
 import {
     useMembers,
@@ -29,11 +29,15 @@ import MemberActions from './MemberActions';
 import MemberAddresses from './MemberAddresses';
 import MemberFeatures from './MemberFeatures';
 import MemberRole from './MemberRole';
-import MemberPrivate from './MemberPrivate';
 import RestoreAdministratorPrivileges from '../organization/RestoreAdministratorPrivileges';
 import MemberModal from './MemberModal';
 import { getOrganizationKeyInfo } from '../organization/helpers/organizationKeysHelper';
 import useDomainsAddresses from '../../hooks/useDomainsAddresses';
+import Avatar from '../../components/avatar';
+import { SettingsParagraph, SettingsSectionWide } from '../account';
+
+import './UsersAndAddressesSection.scss';
+import { AddressModal } from '../addresses';
 
 const validateAddUser = (
     organization: tsOrganization,
@@ -71,7 +75,7 @@ const validateAddUser = (
 
 const { DOMAIN_STATE_ACTIVE } = DOMAIN_STATE;
 
-const MembersSection = () => {
+const UsersAndAddressesSection = () => {
     const [members, membersLoading] = useMembers();
     const [organization, loadingOrganization] = useOrganization();
     const [organizationKey, loadingOrganizationKey] = useOrganizationKey(organization);
@@ -91,8 +95,12 @@ const MembersSection = () => {
         }
 
         const normalizedWords = normalize(keywords);
-        return members.filter(({ Name }) => {
-            return normalize(Name).includes(normalizedWords);
+
+        return members.filter(({ Name, ID }) => {
+            const addressMatch = memberAddressesMap && memberAddressesMap[ID].some((address) => address.Email);
+            const nameMatch = normalize(Name).includes(normalizedWords);
+
+            return addressMatch || nameMatch;
         });
     }, [keywords, members]);
 
@@ -117,6 +125,10 @@ const MembersSection = () => {
         );
     };
 
+    const handleAddAddress = () => {
+        createModal(<AddressModal members={members} organizationKey={organizationKey} />);
+    };
+
     if (loadingOrganization) {
         return <Loader />;
     }
@@ -132,15 +144,6 @@ const MembersSection = () => {
                     </span>
                 </>
             ),
-        },
-        {
-            node: (
-                <>
-                    <span className="mr0-5">{c('Title header for members table').t`Private`}</span>
-                    <Info url="https://protonmail.com/support/knowledge-base/private-members/" />
-                </>
-            ),
-            className: 'no-tablet no-mobile',
         },
         {
             node: (
@@ -173,18 +176,35 @@ const MembersSection = () => {
     });
 
     return (
-        <>
+        <SettingsSectionWide>
             <RestoreAdministratorPrivileges />
-            <Alert learnMore="https://protonmail.com/support/knowledge-base/user-roles/">{c('Info for members section')
-                .t`Add, remove, and manage users within your organization. Here you can adjust their allocated storage space, grant admin rights, and more.`}</Alert>
-            <Block className="flex flex-justify-space-between">
-                <PrimaryButton
+            <SettingsParagraph>
+                {c('Info for members section')
+                    .t`Add, remove, and manage users within your organization. Here you can adjust their allocated storage space, grant admin rights, and more. Select a user to manage their email addresses. The email address at the top of the list will automatically be selected as the default email address.`}
+            </SettingsParagraph>
+            {/* <Alert learnMore="https://protonmail.com/support/knowledge-base/user-roles/">{c('Info for members section')
+                .t`Add, remove, and manage users within your organization. Here you can adjust their allocated storage space, grant admin rights, and more.`}</Alert> */}
+            <Block className="flex flex-align-items-start">
+                <Button
+                    shape="outline"
                     disabled={loadingOrganization || loadingDomains || loadingDomainAddresses || loadingOrganizationKey}
                     onClick={handleAddUser}
-                    className="on-mobile-mb0-5"
+                    className="on-mobile-mb0-5 mr1"
                 >
-                    {c('Action').t`Add user`}
-                </PrimaryButton>
+                    {c('Action').t`Add User`}
+                </Button>
+                <div className="flex-item-fluid">
+                    <Button
+                        shape="outline"
+                        disabled={
+                            loadingOrganization || loadingDomains || loadingDomainAddresses || loadingOrganizationKey
+                        }
+                        onClick={handleAddAddress}
+                        className="on-mobile-mb0-5"
+                    >
+                        {c('Action').t`Add Address`}
+                    </Button>
+                </div>
                 <div>
                     <SearchInput
                         onChange={handleSearch}
@@ -194,45 +214,59 @@ const MembersSection = () => {
                     />
                 </div>
             </Block>
-            <Table className="simple-table--has-actions">
+            <Table className="simple-table--has-actions members-table">
                 <thead>
                     <tr>{headerCells}</tr>
                 </thead>
                 <TableBody loading={membersLoading || loadingMemberAddresses} colSpan={6}>
                     {membersSelected.map((member) => {
-                        const key = member.ID;
                         const memberAddresses = (memberAddressesMap && memberAddressesMap[member.ID]) || [];
                         return (
                             <TableRow
-                                key={key}
+                                key={member.ID}
+                                className="on-mobile-hide-td4 pt1 pb1"
                                 cells={[
-                                    <span className="text-ellipsis max-w100 inline-block" key={key} title={member.Name}>
-                                        {member.Name}
+                                    <span
+                                        className="pt1 pb1 text-ellipsis max-w100 inline-block flex flex-nowrap flex-align-items-start"
+                                        title={member.Name}
+                                    >
+                                        <Avatar className="mr1">{getInitials(member.Name)}</Avatar>
+                                        <div>
+                                            <span className="block">{member.Name}</span>
+                                            {Boolean(member.Private) && (
+                                                <Badge type="light">{c('Private Member').t`private`}</Badge>
+                                            )}
+                                        </div>
                                     </span>,
-                                    <MemberRole key={key} member={member} />,
-                                    <MemberPrivate key={key} member={member} />,
-                                    <MemberAddresses key={key} addresses={memberAddresses} />,
-                                    <MemberFeatures key={key} member={member} />,
-                                    <MemberActions
-                                        key={key}
-                                        member={member}
-                                        addresses={memberAddresses}
-                                        organization={organization}
-                                        organizationKey={organizationKey}
-                                    />,
+                                    <span className="pt1 pb1 inline-block">
+                                        <MemberRole member={member} />
+                                    </span>,
+                                    <span className="pt1 pb1 inline-block">
+                                        <MemberAddresses addresses={memberAddresses} />
+                                    </span>,
+                                    <span className="pt1 pb1 inline-block">
+                                        <MemberFeatures member={member} />
+                                    </span>,
+                                    <span className="pt1 pb1 inline-block">
+                                        <MemberActions
+                                            member={member}
+                                            addresses={memberAddresses}
+                                            organization={organization}
+                                            organizationKey={organizationKey}
+                                        />
+                                    </span>,
                                 ]}
-                                className="on-tablet-hide-td3 on-mobile-hide-td5"
                             />
                         );
                     })}
                 </TableBody>
             </Table>
-            <Block className="opacity-50">
+            {/* <Block className="opacity-50">
                 {organization.UsedMembers} / {organization.MaxMembers}{' '}
                 {c('Info').ngettext(msgid`user used`, `users used`, organization.UsedMembers)}
-            </Block>
-        </>
+            </Block> */}
+        </SettingsSectionWide>
     );
 };
 
-export default MembersSection;
+export default UsersAndAddressesSection;

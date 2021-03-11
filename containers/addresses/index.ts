@@ -1,4 +1,4 @@
-export { default as useAddressModal } from './useAddressModal';
+export { default as useAddressModel } from './useAddressModel';
 export { default as AddressActions } from './AddressActions';
 export { default as DomainsSelect } from './DomainsSelect';
 export { default as EditAddressModal } from './EditAddressModal';

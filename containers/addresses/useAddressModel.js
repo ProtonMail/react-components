@@ -1,15 +1,16 @@
 import { useState } from 'react';
 
-const toModel = ({ Self, addresses = [] }) => {
+const toModel = ({ ID, Self, addresses = [] }) => {
     const [{ DisplayName } = {}] = addresses;
     return {
+        id: ID,
         name: Self ? DisplayName || '' : '', // DisplayName can be null
         address: '',
         domain: '',
     };
 };
 
-const useAddressModal = (member) => {
+const useAddressModel = (member) => {
     const initialModel = toModel(member);
     const [model, updateModel] = useState(initialModel);
     const update = (key, value) => updateModel({ ...model, [key]: value });
@@ -20,4 +21,4 @@ const useAddressModal = (member) => {
     };
 };
 
-export default useAddressModal;
+export default useAddressModel;
