@@ -1,7 +1,6 @@
 import React from 'react';
 
 export interface OnboardingStepProps {
-    title: React.ReactNode;
     submit: React.ReactNode;
     close: React.ReactNode;
     children: React.ReactNode;
