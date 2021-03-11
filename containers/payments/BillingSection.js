@@ -96,8 +96,9 @@ const BillingSection = ({ permission }) => {
     const spaceBonus = organization?.BonusSpace;
     const vpnBonus = organization?.BonusVPN;
 
-    const priceRowClassName = 'flex w100 mb1 color-global-altgrey';
+    const priceRowClassName = 'flex w100 mb1';
     const priceLabelClassName = 'flex-item-fluid';
+    const weakRowClassName = classnames([priceRowClassName, 'color-weak']);
 
     return (
         <SettingsSection>
@@ -118,7 +119,7 @@ const BillingSection = ({ permission }) => {
                         </div>
                     ) : null}
                     {memberAddon ? (
-                        <div className={priceRowClassName}>
+                        <div className={weakRowClassName}>
                             <div className={priceLabelClassName}>
                                 +{' '}
                                 {c('Addon unit for subscription').ngettext(
@@ -137,7 +138,7 @@ const BillingSection = ({ permission }) => {
                         </div>
                     ) : null}
                     {addressAddon ? (
-                        <div className={priceRowClassName}>
+                        <div className={weakRowClassName}>
                             <div className={priceLabelClassName}>
                                 +{' '}
                                 {c('Addon unit for subscription').ngettext(
@@ -156,7 +157,7 @@ const BillingSection = ({ permission }) => {
                         </div>
                     ) : null}
                     {spaceAddon ? (
-                        <div className={priceRowClassName}>
+                        <div className={weakRowClassName}>
                             <div className={priceLabelClassName}>
                                 + {humanSize(spaceAddon.MaxSpace)} {c('Label').t`extra storage`}
                             </div>
@@ -170,7 +171,7 @@ const BillingSection = ({ permission }) => {
                         </div>
                     ) : null}
                     {spaceBonus ? (
-                        <div className={priceRowClassName}>
+                        <div className={weakRowClassName}>
                             <div className={priceLabelClassName}>
                                 + {humanSize(spaceBonus)} {c('Label').t`bonus storage`}
                             </div>
@@ -180,7 +181,7 @@ const BillingSection = ({ permission }) => {
                         </div>
                     ) : null}
                     {domainAddon ? (
-                        <div className={priceRowClassName}>
+                        <div className={weakRowClassName}>
                             <div className={priceLabelClassName}>
                                 +{' '}
                                 {c('Addon unit for subscription').ngettext(
@@ -217,7 +218,7 @@ const BillingSection = ({ permission }) => {
                         </div>
                     ) : null}
                     {vpnAddon ? (
-                        <div className={priceRowClassName}>
+                        <div className={weakRowClassName}>
                             <div className={priceLabelClassName}>
                                 +{' '}
                                 {c('Addon unit for subscription').ngettext(
@@ -236,7 +237,7 @@ const BillingSection = ({ permission }) => {
                         </div>
                     ) : null}
                     {vpnBonus ? (
-                        <div className={priceRowClassName}>
+                        <div className={weakRowClassName}>
                             <div className={priceLabelClassName}>
                                 +{' '}
                                 {c('Addon unit for subscription').ngettext(
@@ -260,7 +261,7 @@ const BillingSection = ({ permission }) => {
                             <PlanPrice amount={subTotal} currency={Currency} cycle={MONTHLY} />
                         </div>
                     </div>
-                    <div className={priceRowClassName}>
+                    <div className={weakRowClassName}>
                         <div className={classnames([priceLabelClassName, 'flex flex-align-items-center'])}>
                             <div className="mr1">{c('Label').t`Discount`}</div>
                             <div className="flex flex-align-items-center">
@@ -288,7 +289,7 @@ const BillingSection = ({ permission }) => {
                     </div>
                 </div>
             </div>
-            <div className={classnames([priceRowClassName, 'text-right mt1'])}>
+            <div className={classnames([weakRowClassName, 'text-right mt1'])}>
                 <div className="text-right w100">
                     {i18n[Cycle]} billing (Renewal on <Time>{PeriodEnd}</Time>)
                 </div>
