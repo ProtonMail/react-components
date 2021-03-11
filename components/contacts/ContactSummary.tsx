@@ -98,39 +98,42 @@ const ContactSummary = ({
             >
                 <ContactImageSummary photo={photo} name={name} />
             </div>
-            <div className="contactsummary-contact-name-container pl2 on-mobile-pl0 flex-item-fluid">
+            <div className="contactsummary-contact-name-container pl2 on-mobile-pl0 flex-no-min-children flex-item-fluid">
                 <h2
-                    className="contactsummary-contact-name on-mobile-text-center mb0 on-mobile-mb1 text-bold text-ellipsis"
+                    className="contactsummary-contact-name on-mobile-text-center mb0 flex-item-fluid on-mobile-mb1 text-bold text-ellipsis-two-lines"
                     title={name}
                 >
                     {name}
                 </h2>
+                {!isPreview && (
+                    <div className="contactsummary-action-buttons flex-item-noshrink on-mobile-text-center ">
+                        {!hasError && (
+                            <Tooltip title={c('Action').t`Export`} className="ml0-5">
+                                <Button onClick={onExport} className="button--for-icon inline-flex">
+                                    <Icon className="mt0-25 mb0-1" name="export" alt={c('Action').t`Export`} />
+                                </Button>
+                            </Tooltip>
+                        )}
+
+                        <Tooltip title={c('Action').t`Delete`} className="ml0-5">
+                            <Button onClick={onDelete} className="button--for-icon inline-flex">
+                                <Icon className="mt0-25 mb0-1" name="trash" alt={c('Action').t`Delete`} />
+                            </Button>
+                        </Tooltip>
+
+                        {!hasError && (
+                            <Tooltip title={c('Action').t`Edit`} className="ml0-5">
+                                <Button
+                                    onClick={() => onEdit()}
+                                    className="button--for-icon button--primary inline-flex"
+                                >
+                                    <Icon className="mt0-25 mb0-1" name="pen" alt={c('Action').t`Edit`} />
+                                </Button>
+                            </Tooltip>
+                        )}
+                    </div>
+                )}
             </div>
-            {!isPreview && (
-                <div className="contactsummary-action-buttons flex-item-noshrink on-mobile-text-center ">
-                    {!hasError && (
-                        <Tooltip title={c('Action').t`Export`} className="ml0-5">
-                            <Button onClick={onExport} className="button--for-icon inline-flex">
-                                <Icon className="mt0-25 mb0-1" name="export" alt={c('Action').t`Export`} />
-                            </Button>
-                        </Tooltip>
-                    )}
-
-                    <Tooltip title={c('Action').t`Delete`} className="ml0-5">
-                        <Button onClick={onDelete} className="button--for-icon inline-flex">
-                            <Icon className="mt0-25 mb0-1" name="trash" alt={c('Action').t`Delete`} />
-                        </Button>
-                    </Tooltip>
-
-                    {!hasError && (
-                        <Tooltip title={c('Action').t`Edit`} className="ml0-5">
-                            <Button onClick={() => onEdit()} className="button--for-icon button--primary inline-flex">
-                                <Icon className="mt0-25 mb0-1" name="pen" alt={c('Action').t`Edit`} />
-                            </Button>
-                        </Tooltip>
-                    )}
-                </div>
-            )}
         </div>
     );
 };

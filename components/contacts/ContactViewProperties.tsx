@@ -5,6 +5,7 @@ import { DecryptedKey } from 'proton-shared/lib/interfaces';
 import { ContactEmail, ContactProperties, ContactGroup } from 'proton-shared/lib/interfaces/contacts';
 
 import ContactViewProperty from './ContactViewProperty';
+import { classnames } from '../../helpers';
 
 interface Props {
     properties: ContactProperties;
@@ -41,7 +42,7 @@ const ContactViewProperties = ({
     }
 
     return (
-        <div className="border-bottom mb0-5 pb0-25">
+        <div className={classnames(['border-bottom mb0-5 pb0-25', field === 'fn' && 'mb1'])}>
             {properties.map((property, index) => {
                 const contactEmail = contactEmails && contactEmails[index];
                 const contactGroups =
