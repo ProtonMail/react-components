@@ -4,10 +4,11 @@ import { switchPlan } from 'proton-shared/lib/helpers/planIDs';
 import { DEFAULT_CURRENCY, DEFAULT_CYCLE, PLAN_SERVICES, PLANS } from 'proton-shared/lib/constants';
 import { toMap } from 'proton-shared/lib/helpers/object';
 import { c } from 'ttag';
-import { Loader, Icon, Button } from '../../../components';
+import { Loader, Button } from '../../../components';
 import { useUser, useSubscription, useModals, usePlans, useOrganization } from '../../../hooks';
 
 import NewSubscriptionModal from './NewSubscriptionModal';
+import UpsellItem from './UpsellItem';
 
 const UpsellVPNSubscription = () => {
     const [{ hasPaidVpn }, loadingUser] = useUser();
@@ -46,18 +47,11 @@ const UpsellVPNSubscription = () => {
 
     return (
         <div className="bg-global-highlight p1 mt1-5">
-            <div className="flex flex-align-items-center">
-                <Icon name="speed-fast" className="mr0-5 color-pm-blue" />{' '}
-                {c('VPN upsell feature').t`Higher speed servers (up to 10Gbps)`}
-            </div>
-            <div className="flex flex-align-items-center">
-                <Icon name="tour" className="mr0-5 color-pm-blue" />{' '}
+            <UpsellItem icon="rocket">{c('VPN upsell feature').t`Higher speed servers (up to 10Gbps)`}</UpsellItem>
+            <UpsellItem icon="tour">
                 {c('VPN upsell feature').t`Access geo-blocked content (Netflix, Youtube, etc.)`}
-            </div>
-            <div className="flex flex-align-items-center">
-                <Icon name="protonvpn" className="mr0-5 color-pm-blue" />{' '}
-                {c('VPN upsell feature').t`Unlock advanced VPN features`}
-            </div>
+            </UpsellItem>
+            <UpsellItem icon="protonvpn">{c('VPN upsell feature').t`Unlock advanced VPN features`}</UpsellItem>
             <Button color="norm" className="mt1" onClick={handleUpgradeClick}>
                 {c('Action').t`Upgrade to Plus`}
             </Button>

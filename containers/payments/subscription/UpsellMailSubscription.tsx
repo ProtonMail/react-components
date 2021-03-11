@@ -4,10 +4,20 @@ import { switchPlan } from 'proton-shared/lib/helpers/planIDs';
 import { DEFAULT_CURRENCY, DEFAULT_CYCLE, PLAN_SERVICES, PLANS } from 'proton-shared/lib/constants';
 import { toMap } from 'proton-shared/lib/helpers/object';
 import { c } from 'ttag';
-import { Loader, Icon, Button } from '../../../components';
+import { Loader, Button } from '../../../components';
 import { useUser, useSubscription, useModals, usePlans, useAddresses, useOrganization } from '../../../hooks';
 
 import NewSubscriptionModal from './NewSubscriptionModal';
+import UpsellItem from './UpsellItem';
+
+const UpsellMailTemplate = ({ children }: { children: React.ReactNode }) => (
+    <div className="bg-global-highlight p1 mt1-5">
+        <UpsellItem icon="organization-users">{c('Mail upsell feature').t`Get Multi-user support`}</UpsellItem>
+        <UpsellItem icon="organization">{c('Mail upsell feature').t`Host emails for your organization`}</UpsellItem>
+        <UpsellItem icon="keys">{c('Mail upsell feature').t`Create separate logins for each user`}</UpsellItem>
+        {children}
+    </div>
+);
 
 const UpsellMailSubscription = () => {
     const [{ hasPaidMail }, loadingUser] = useUser();
@@ -42,46 +52,27 @@ const UpsellMailSubscription = () => {
         return <Loader />;
     }
 
-    return [
-        isFreeMail && hasAddresses && (
-            <div className="bg-global-highlight p1 mt1-5" key="0">
-                <div className="flex flex-align-items-center">
-                    <Icon name="organization-users" className="mr0-5 color-pm-blue" />{' '}
-                    {c('Mail upsell feature').t`Get Multi-user support`}
-                </div>
-                <div className="flex flex-align-items-center">
-                    <Icon name="organization" className="mr0-5 color-pm-blue" />{' '}
-                    {c('Mail upsell feature').t`Host emails for your organization`}
-                </div>
-                <div className="flex flex-align-items-center">
-                    <Icon name="keys" className="mr0-5 color-pm-blue" />{' '}
-                    {c('Mail upsell feature').t`Create separate logins for each user`}
-                </div>
+    if (isFreeMail && hasAddresses) {
+        return (
+            <UpsellMailTemplate>
                 <Button color="norm" className="mt1" onClick={handleUpgradeClick(PLANS.PLUS)}>
                     {c('Action').t`Upgrade to Plus`}
                 </Button>
-            </div>
-        ),
-        hasMailPlus(subscription) && hasAddresses && (
-            <div className="bg-global-highlight p1 mt1-5" key="1">
-                <div className="flex flex-align-items-center">
-                    <Icon name="organization-users" className="mr0-5 color-pm-blue" />{' '}
-                    {c('Mail upsell feature').t`Get Multi-user support`}
-                </div>
-                <div className="flex flex-align-items-center">
-                    <Icon name="organization" className="mr0-5 color-pm-blue" />{' '}
-                    {c('Mail upsell feature').t`Host emails for your organization`}
-                </div>
-                <div className="flex flex-align-items-center">
-                    <Icon name="keys" className="mr0-5 color-pm-blue" />{' '}
-                    {c('Mail upsell feature').t`Create separate logins for each user`}
-                </div>
+            </UpsellMailTemplate>
+        );
+    }
+
+    if (hasMailPlus(subscription) && hasAddresses) {
+        return (
+            <UpsellMailTemplate>
                 <Button color="norm" className="mt1" onClick={handleUpgradeClick(PLANS.PROFESSIONAL)}>
                     {c('Action').t`Upgrade to Professional`}
                 </Button>
-            </div>
-        ),
-    ].filter(Boolean);
+            </UpsellMailTemplate>
+        );
+    }
+
+    return null;
 };
 
 export default UpsellMailSubscription;
