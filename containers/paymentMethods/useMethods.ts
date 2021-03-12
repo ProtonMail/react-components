@@ -76,15 +76,31 @@ const useMethods = ({ amount = 0, coupon, flow }: Props) => {
 
     if (methods.length) {
         options.unshift(
-            ...methods.map((paymentMethod) => {
-                const expired = isExpired(paymentMethod.Details as any);
-                return {
-                    icon: getIcon(paymentMethod),
-                    text: [getMethod(paymentMethod), expired && `(${c('Info').t`Expired`})`].filter(Boolean).join(' '),
-                    value: paymentMethod.ID,
-                    disabled: expired,
-                };
-            })
+            ...methods
+                .filter((paymentMethod) => {
+                    if (paymentMethod.Type === PAYMENT_METHOD_TYPES.CARD && status?.Card) {
+                        return true;
+                    }
+                    if (
+                        (paymentMethod.Type === PAYMENT_METHOD_TYPES.PAYPAL ||
+                            paymentMethod.Type === PAYMENT_METHOD_TYPES.PAYPAL_CREDIT) &&
+                        status?.Paypal
+                    ) {
+                        return true;
+                    }
+                    return false;
+                })
+                .map((paymentMethod) => {
+                    const expired = isExpired(paymentMethod.Details as any);
+                    return {
+                        icon: getIcon(paymentMethod),
+                        text: [getMethod(paymentMethod), expired && `(${c('Info').t`Expired`})`]
+                            .filter(Boolean)
+                            .join(' '),
+                        value: paymentMethod.ID,
+                        disabled: expired,
+                    };
+                })
         );
     }
 
