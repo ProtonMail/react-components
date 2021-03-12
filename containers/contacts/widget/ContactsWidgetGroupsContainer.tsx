@@ -39,7 +39,7 @@ const ContactsWidgetGroupsContainer = ({ onClose, onCompose }: Props) => {
 
     const { checkedIDs, selectedIDs, handleCheckAll, handleCheckOne } = useItemsSelection(undefined, groupIDs, []);
 
-    const allChecked = checkedIDs.length === filteredGroups.length;
+    const allChecked = checkedIDs.length > 0 && checkedIDs.length === filteredGroups.length;
 
     const groupsEmailsMap = useMemo(
         () =>
