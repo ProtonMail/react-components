@@ -2,11 +2,15 @@ import React from 'react';
 import { c } from 'ttag';
 
 import { getShortcuts } from 'proton-shared/lib/shortcuts/mail';
+import { APPS } from 'proton-shared/lib/constants';
 
-import { Alert, ShortcutsModal, ShortcutsSectionView, SettingsLink } from '../..';
 import { useMailSettings } from '../../../hooks';
 import { classnames } from '../../../helpers';
 import Title from '../../modal/Title';
+import SettingsLink from '../../link/SettingsLink';
+import Alert from '../../alert/Alert';
+import ShortcutsSectionView from '../ShortcutsSectionView';
+import ShortcutsModal from '../ShortcutsModal';
 
 interface Props {
     onClose?: () => void;
