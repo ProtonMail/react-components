@@ -35,7 +35,7 @@ const ContactModalLabel = ({ field, uid, type = '', onChange, fixedType = false 
     }
 
     if (field === 'fn' || fixedType || !fieldType.map(({ value: type }) => type).includes(type)) {
-        return <ContactLabelProperty field={field} type={type} />;
+        return <ContactLabelProperty className="pt0-5" field={field} type={type} />;
     }
 
     return (
