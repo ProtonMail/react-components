@@ -9,7 +9,7 @@ import { APPS } from 'proton-shared/lib/constants';
 import { getAccountSettingsApp, getAppName } from 'proton-shared/lib/apps/helper';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 
-import { StepDots, StepDot, FormModal, Button, useAppLink } from '../../components';
+import { Icon, StepDots, StepDot, FormModal, Button, useAppLink } from '../../components';
 import {
     useApi,
     useEventManager,
@@ -27,7 +27,6 @@ import OnboardingStep from './OnboardingStep';
 import OnboardingDiscoverApps from './OnboardingDiscoverApps';
 import OnboardingWelcome from './OnboardingWelcome';
 import { availableThemes } from '../themes/ThemesSection';
-import BackButton from '../../components/modal/BackButton';
 
 interface Props {
     title?: string;
@@ -188,6 +187,10 @@ const OnboardingModal = ({
     const childStep = steps[step];
     const hasDots = steps.length > 1 && step < steps.length;
 
+    if (!steps.length) {
+        rest?.onClose?.();
+    }
+
     if (!React.isValidElement<OnboardingStepProps>(childStep)) {
         throw new Error('Missing step');
     }
@@ -209,7 +212,11 @@ const OnboardingModal = ({
             {...rest}
             hasClose={allowClose}
             {...childStepProps}
-            title={<BackButton onClick={childStepProps.onClose || handleBack} />}
+            title={
+                <button type="button" title={c('Action').t`Back`} onClick={childStepProps.onClose || handleBack}>
+                    <Icon name="arrow-left" alt={c('Action').t`Back`} />
+                </button>
+            }
             small
             footer={null}
         >
