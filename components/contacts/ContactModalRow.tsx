@@ -85,7 +85,7 @@ const ContactModalRow = (
                     <Icon name="text-justify" className="visibility-hidden" />
                 </div>
             )}
-            <div className="flex flex-nowrap on-mobile-flex-column w100 flex-align-items-start">
+            <div className="contact-modal-field relative flex flex-nowrap on-mobile-flex-column w100 flex-align-items-start">
                 <span
                     className={classnames([
                         'contact-modal-select flex flex-nowrap mb1 flex-align-items-start on-mobile-mb0-5 on-mobile-flex-align-self-start',
