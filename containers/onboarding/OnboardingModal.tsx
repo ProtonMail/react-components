@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { c } from 'ttag';
 import { updateAddress } from 'proton-shared/lib/api/addresses';
 import { updateWelcomeFlags, updateThemeType } from 'proton-shared/lib/api/settings';
@@ -7,6 +7,7 @@ import { range } from 'proton-shared/lib/helpers/array';
 import { ThemeTypes } from 'proton-shared/lib/themes/themes';
 import { APPS } from 'proton-shared/lib/constants';
 import { getAccountSettingsApp, getAppName } from 'proton-shared/lib/apps/helper';
+import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 
 import { StepDots, StepDot, FormModal, Button, useAppLink } from '../../components';
 import {
@@ -67,6 +68,7 @@ const OnboardingModal = ({
     const themes = availableThemes.map(({ identifier, getI18NLabel, src }) => {
         return { identifier, label: getI18NLabel(), src };
     });
+
     const handleUpdateWelcomeFlags = async () => {
         if (setWelcomeFlags) {
             return api(updateWelcomeFlags()).catch(noop);
@@ -151,21 +153,16 @@ const OnboardingModal = ({
     );
 
     const discoverAppsStep = (
-        <OnboardingStep
-            submit={c('Action').t`Start using ${mailAppName}`}
-            close={null}
-            onSubmit={() => {
-                void handleUpdateWelcomeFlags();
-                rest?.onClose?.();
-            }}
-        >
+        <OnboardingStep submit={c('Action').t`Start using ${mailAppName}`} close={null} onSubmit={handleNext}>
             <OnboardingDiscoverApps />
         </OnboardingStep>
     );
 
     const hasDisplayNameStep = welcomeFlags?.hasDisplayNameStep && !hideDisplayName;
     const displayGenericSteps = showGenericSteps || hasDisplayNameStep;
-    const genericSteps = displayGenericSteps ? [welcomeStep, setDisplayNameStep, themesStep] : [];
+    const genericSteps = displayGenericSteps
+        ? [welcomeStep, hasDisplayNameStep && setDisplayNameStep, themesStep].filter(isTruthy)
+        : [];
     const finalGenericSteps = displayGenericSteps ? [discoverAppsStep] : [];
 
     const productSteps = children
@@ -189,49 +186,63 @@ const OnboardingModal = ({
     }
 
     const hasDots = steps.length > 1 && step < steps.length;
+    const isLastStep = steps.length - 1 === step;
+
+    const childStepProps = isLastStep
+        ? {
+              ...childStep.props,
+              onSubmit: rest?.onClose,
+          }
+        : childStep.props;
+
+    useEffect(() => {
+        if (isLastStep) {
+            void handleUpdateWelcomeFlags();
+        }
+    }, [step, steps]);
 
     return (
         <FormModal
             {...rest}
             hasClose={allowClose}
-            {...childStep.props}
-            title={<BackButton onClick={childStep.props.onClose || handleBack} />}
+            {...childStepProps}
+            title={<BackButton onClick={childStepProps.onClose || handleBack} />}
             small
             footer={null}
         >
             {childStep}
             <footer className="flex flex-nowrap flex-column">
-                {typeof childStep.props.submit === 'string' ? (
+                {typeof childStepProps.submit === 'string' ? (
                     <Button
                         shape="solid"
                         size="large"
                         color="norm"
                         fullWidth
-                        loading={childStep.props.loading}
+                        loading={childStepProps.loading}
                         type="submit"
                         className="mb1"
                         data-focus-fallback={1}
                     >
-                        {childStep.props.submit}
+                        {childStepProps.submit}
                     </Button>
                 ) : (
-                    childStep.props.submit
+                    childStepProps.submit
                 )}
 
-                {typeof childStep.props.close === 'string' ? (
+                {typeof childStepProps.close === 'string' ? (
                     <Button
                         shape="ghost"
                         size="large"
                         color="norm"
                         fullWidth
-                        disabled={childStep.props.loading}
+                        disabled={childStepProps.loading}
                         className="mb1"
-                        onClick={childStep.props.onClose || handleBack}
+                        onClick={childStepProps.onClose || handleBack}
                     >
-                        {childStep.props.close}
+                        {childStepProps.close}
                     </Button>
                 ) : (
-                    childStep.props.close
+                    childStepProps.close
                 )}
             </footer>
             {hasDots && (
