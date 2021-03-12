@@ -20,7 +20,14 @@ const OnboardingThemes = ({ themes, userSettings, loading, onChange, ...rest }: 
             description={c('Onboarding Proton').t`You can change this anytime in your settings.`}
             {...rest}
         >
-            <ThemeCards list={themes} themeIdentifier={userSettings.ThemeType} onChange={onChange} disabled={loading} />
+            <div className="flex flex-nowrap">
+                <ThemeCards
+                    list={themes}
+                    themeIdentifier={userSettings.ThemeType}
+                    onChange={onChange}
+                    disabled={loading}
+                />
+            </div>
         </OnboardingContent>
     );
 };
