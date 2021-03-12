@@ -122,7 +122,7 @@ const AddressesWithMembers = ({ user, organization, isOnlySelf }: Props) => {
                 </div>
             ) : null}
 
-            {!currentMember || memberIndex === ALL_MEMBERS_ID || isNonPrivateSelf ? null : (
+            {!currentMember || memberIndex === ALL_MEMBERS_ID ? null : (
                 <div className="mb1">
                     {mustActivateOrganizationKey ? (
                         <Alert type="warning">
