@@ -76,7 +76,6 @@ export interface ImportPayloadModel {
         Order: number;
     };
     StartTime?: Date;
-    EndTime?: Date;
     Mapping: FolderMapping[];
     CustomFields?: number;
 }
