@@ -10,6 +10,8 @@ export interface Feature {
     free: React.ReactNode;
 }
 
+export type CalendarFeatureName = 'multi' | 'import' | 'recurring' | 'invitation' | 'share';
+
 export type MailFeatureName =
     | 'users'
     | 'storage'
@@ -47,6 +49,13 @@ export type VPNFeatureName =
     | 'split tunneling'
     | 'swiss based'
     | 'support';
+
+export interface CalendarFeature extends Feature {
+    name: CalendarFeatureName;
+    [PLANS.PLUS]: React.ReactNode;
+    [PLANS.PROFESSIONAL]: React.ReactNode;
+    [PLANS.VISIONARY]: React.ReactNode;
+}
 
 export interface MailFeature extends Feature {
     name: MailFeatureName;

@@ -3,16 +3,16 @@ import { c } from 'ttag';
 import { PLANS } from 'proton-shared/lib/constants';
 
 import { useActiveBreakpoint } from '../../../hooks';
-import { MailFeature, VPNFeature, PlanLabel } from './interface';
+import { MailFeature, VPNFeature, CalendarFeature, PlanLabel } from './interface';
 import { PrimaryButton, Tabs } from '../../../components';
 
 interface Props {
     planLabels: PlanLabel[];
-    features: (MailFeature | VPNFeature)[];
+    features: (MailFeature | VPNFeature | CalendarFeature)[];
     onSelect: (planName: PLANS | 'free') => void;
 }
 
-type UghRest = keyof Omit<MailFeature | VPNFeature, 'name' | 'label'>;
+type UghRest = keyof Omit<MailFeature | VPNFeature | CalendarFeature, 'name' | 'label'>;
 
 const Features = ({ onSelect, planLabels, features }: Props) => {
     const { isNarrow } = useActiveBreakpoint();
