@@ -1,7 +1,6 @@
 import React from 'react';
 import { ThemeTypes } from 'proton-shared/lib/themes/themes';
 
-import { Block } from '../../components';
 import ThemeCard from './ThemeCard';
 
 export interface Theme {
@@ -18,7 +17,7 @@ interface Props {
 
 const ThemeCards = ({ themeIdentifier, onChange, disabled, list }: Props) => {
     return (
-        <Block className="flex">
+        <>
             {list.map(({ identifier, label, src }) => {
                 const id = `id_${identifier}`;
                 return (
@@ -33,7 +32,7 @@ const ThemeCards = ({ themeIdentifier, onChange, disabled, list }: Props) => {
                     />
                 );
             })}
-        </Block>
+        </>
     );
 };
 

@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { c } from 'ttag';
 import { updateAddress } from 'proton-shared/lib/api/addresses';
 import { updateWelcomeFlags, updateThemeType } from 'proton-shared/lib/api/settings';
 import { noop } from 'proton-shared/lib/helpers/function';
 import { range } from 'proton-shared/lib/helpers/array';
-import { hasVisionary, hasMailProfessional } from 'proton-shared/lib/helpers/subscription';
 import { ThemeTypes } from 'proton-shared/lib/themes/themes';
 import { APPS } from 'proton-shared/lib/constants';
 import { getAccountSettingsApp, getAppName } from 'proton-shared/lib/apps/helper';
@@ -15,7 +14,7 @@ import {
     useEventManager,
     useGetAddresses,
     useLoading,
-    useSubscription,
+    useOrganization,
     useUser,
     useUserSettings,
     useWelcomeFlags,
@@ -55,7 +54,7 @@ const OnboardingModal = ({
     const [user] = useUser();
     const goToApp = useAppLink();
     const [userSettings] = useUserSettings();
-    const [subscription, loadingSubscription] = useSubscription();
+    const [organization, loadingOrganization] = useOrganization();
     const [displayName, setDisplayName] = useState(user.DisplayName || user.Name || '');
     const [loading, withLoading] = useLoading();
     const getAddresses = useGetAddresses();
@@ -63,7 +62,7 @@ const OnboardingModal = ({
     const { call } = useEventManager();
     const [welcomeFlags] = useWelcomeFlags();
     const canManageOrganization =
-        !loadingSubscription && user.isAdmin && (hasVisionary(subscription) || hasMailProfessional(subscription));
+        !loadingOrganization && user.isAdmin && organization.MaxMembers > 1 && organization.UsedMembers === 1;
     const mailAppName = getAppName(APPS.PROTONMAIL);
     const themes = availableThemes.map(({ identifier, getI18NLabel, src }) => {
         return { identifier, label: getI18NLabel(), src };
@@ -73,12 +72,6 @@ const OnboardingModal = ({
             return api(updateWelcomeFlags()).catch(noop);
         }
     };
-
-    useEffect(() => {
-        if (!welcomeFlags?.hasDisplayNameStep) {
-            handleUpdateWelcomeFlags();
-        }
-    }, []);
 
     const [step, setStep] = useState(0);
 
@@ -90,27 +83,23 @@ const OnboardingModal = ({
         setStep((step) => step - 1);
     };
 
-    const handleChange = (step: number) => {
-        setStep(step);
-    };
-
     const handleChangeTheme = async (newThemeIdentifier: ThemeTypes) => {
         await api(updateThemeType(newThemeIdentifier));
         await call();
     };
 
-    const handleSetDisplayNameNext = async () => {
-        const addresses = await getAddresses();
-        const firstAddress = addresses[0];
-        // Should never happen.
-        if (!firstAddress) {
-            handleUpdateWelcomeFlags();
-            handleNext();
-            return;
-        }
-        await api(updateAddress(firstAddress.ID, { DisplayName: displayName, Signature: firstAddress.Signature }));
-        await call();
-        handleUpdateWelcomeFlags();
+    const handleSetDisplayNameNext = () => {
+        const process = async () => {
+            const addresses = await getAddresses();
+            const firstAddress = addresses[0];
+            // Should never happen.
+            if (!firstAddress) {
+                return;
+            }
+            await api(updateAddress(firstAddress.ID, { DisplayName: displayName, Signature: firstAddress.Signature }));
+            await call();
+        };
+        void process();
         handleNext();
     };
 
@@ -145,12 +134,7 @@ const OnboardingModal = ({
     );
 
     const setDisplayNameStep = (
-        <OnboardingStep
-            submit={c('Action').t`Next`}
-            loading={loading}
-            close={null}
-            onSubmit={() => withLoading(handleSetDisplayNameNext())}
-        >
+        <OnboardingStep submit={c('Action').t`Next`} loading={loading} close={null} onSubmit={handleSetDisplayNameNext}>
             <OnboardingSetDisplayName id="onboarding-0" displayName={displayName} setDisplayName={setDisplayName} />
         </OnboardingStep>
     );
@@ -167,14 +151,21 @@ const OnboardingModal = ({
     );
 
     const discoverAppsStep = (
-        <OnboardingStep submit={c('Action').t`Start using ${mailAppName}`} close={null} onSubmit={handleNext}>
+        <OnboardingStep
+            submit={c('Action').t`Start using ${mailAppName}`}
+            close={null}
+            onSubmit={() => {
+                void handleUpdateWelcomeFlags();
+                rest?.onClose?.();
+            }}
+        >
             <OnboardingDiscoverApps />
         </OnboardingStep>
     );
 
     const hasDisplayNameStep = welcomeFlags?.hasDisplayNameStep && !hideDisplayName;
     const displayGenericSteps = showGenericSteps || hasDisplayNameStep;
-    const genericSteps = displayGenericSteps ? [welcomeStep, hasDisplayNameStep && setDisplayNameStep, themesStep] : [];
+    const genericSteps = displayGenericSteps ? [welcomeStep, setDisplayNameStep, themesStep] : [];
     const finalGenericSteps = displayGenericSteps ? [discoverAppsStep] : [];
 
     const productSteps = children
@@ -199,28 +190,17 @@ const OnboardingModal = ({
 
     const hasDots = steps.length > 1 && step < steps.length;
 
-    const isLastStep = steps.length - 1 === step;
-
-    const childStepProps =
-        isLastStep && productSteps.length === 0
-            ? {
-                  ...childStep.props,
-                  submit: c('Action').t`Done`,
-                  onSubmit: rest?.onClose,
-              }
-            : childStep.props;
-
     return (
         <FormModal
             {...rest}
             hasClose={allowClose}
-            {...childStepProps}
+            {...childStep.props}
             title={<BackButton onClick={childStep.props.onClose || handleBack} />}
             small
             footer={null}
         >
             {childStep}
-            <div className="flex flex-nowrap flex-column">
+            <footer className="flex flex-nowrap flex-column">
                 {typeof childStep.props.submit === 'string' ? (
                     <Button
                         shape="solid"
@@ -232,7 +212,7 @@ const OnboardingModal = ({
                         className="mb1"
                         data-focus-fallback={1}
                     >
-                        {childStepProps.submit}
+                        {childStep.props.submit}
                     </Button>
                 ) : (
                     childStep.props.submit
@@ -248,15 +228,15 @@ const OnboardingModal = ({
                         className="mb1"
                         onClick={childStep.props.onClose || handleBack}
                     >
-                        {childStepProps.close}
+                        {childStep.props.close}
                     </Button>
                 ) : (
                     childStep.props.close
                 )}
-            </div>
+            </footer>
             {hasDots && (
                 <div className="text-center">
-                    <StepDots onChange={handleChange} value={step}>
+                    <StepDots value={step}>
                         {range(0, steps.length).map((index) => (
                             <StepDot key={index} aria-controls={`onboarding-${index}`} />
                         ))}

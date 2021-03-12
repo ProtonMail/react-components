@@ -1,7 +1,7 @@
 import React from 'react';
 import { c } from 'ttag';
-import onboardingAccessingApps from 'design-system/assets/img/onboarding/onboarding-managing-account.svg';
-import onboardingAccessingAppsDark from 'design-system/assets/img/onboarding/onboarding-managing-account-dark.svg';
+import onboardingAccessingApps from 'design-system/assets/img/onboarding/onboarding-accessing-apps.svg';
+import onboardingAccessingAppsDark from 'design-system/assets/img/onboarding/onboarding-accessing-apps-dark.svg';
 import { getLightOrDark } from 'proton-shared/lib/themes/helpers';
 
 import OnboardingContent, { Props as OnboardingContentProps } from './OnboardingContent';
