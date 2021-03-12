@@ -60,7 +60,6 @@ const EmailMethodForm = ({ api, onSubmit, defaultEmail = '' }: Props) => {
                             withLoading(handleSubmit()).catch(noop);
                         }
                     }}
-                    required
                 />
             </FormField>
             <Button

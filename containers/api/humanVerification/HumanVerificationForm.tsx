@@ -16,7 +16,7 @@ import InvalidVerificationCodeModal from './InvalidVerificationCodeModal';
 import VerifyCodeForm from './VerifyCodeForm';
 import RequestNewCodeModal from './RequestNewCodeModal';
 
-enum Steps {
+export enum Steps {
     ENTER_DESTINATION,
     VERIFY_CODE,
 }
@@ -32,26 +32,36 @@ interface Props {
     defaultEmail?: string;
     defaultPhone?: string;
     defaultCountry?: string;
+    step: Steps;
+    onChangeStep: (step: Steps) => void;
 }
 
-const HumanVerificationForm = ({ defaultCountry, defaultEmail, defaultPhone, methods, token, onSubmit }: Props) => {
+const HumanVerificationForm = ({
+    defaultCountry,
+    defaultEmail,
+    defaultPhone,
+    methods,
+    token,
+    onSubmit,
+    step,
+    onChangeStep,
+}: Props) => {
     const api = useApi();
     const { createModal } = useModals();
     const { createNotification } = useNotifications();
-    const [step, setStep] = useState(Steps.ENTER_DESTINATION);
 
     const verificationRef = useRef<VerificationModel | undefined>(undefined);
     const verificationModel = verificationRef.current;
 
     const sendCode = async (verificationModel: VerificationModel) => {
         await api(getRoute(verificationModel));
-        setStep(Steps.VERIFY_CODE);
+        onChangeStep(Steps.VERIFY_CODE);
         const methodTo = verificationModel.value;
         createNotification({ text: c('Success').t`Code sent to ${methodTo}` });
     };
 
     const handleEditDestination = () => {
-        setStep(Steps.ENTER_DESTINATION);
+        onChangeStep(Steps.ENTER_DESTINATION);
     };
 
     const handleResend = async () => {
@@ -105,7 +115,7 @@ const HumanVerificationForm = ({ defaultCountry, defaultEmail, defaultPhone, met
                                 value: email,
                             };
                             await sendCode(verificationRef.current);
-                            setStep(Steps.VERIFY_CODE);
+                            onChangeStep(Steps.VERIFY_CODE);
                         }}
                     />
                 </>
@@ -128,7 +138,7 @@ const HumanVerificationForm = ({ defaultCountry, defaultEmail, defaultPhone, met
                                 value: phone,
                             };
                             await sendCode(verificationRef.current);
-                            setStep(Steps.VERIFY_CODE);
+                            onChangeStep(Steps.VERIFY_CODE);
                         }}
                         defaultPhone={
                             defaultPhone ||

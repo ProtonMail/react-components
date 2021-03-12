@@ -1,7 +1,7 @@
 import React from 'react';
 import { c } from 'ttag';
 
-import { FormModal } from '../../../components';
+import { Button, FormModal } from '../../../components';
 import { useLoading } from '../../../hooks';
 import { VerificationModel } from './interface';
 
@@ -21,22 +21,51 @@ const RequestNewCodeModal = ({ verificationModel, onEdit, onResend, ...rest }: P
             title={c('Title').t`Request new verification code`}
             mode="alert"
             loading={loading}
-            onSubmit={async () => {
-                await withLoading(onResend());
-                rest.onClose?.();
-            }}
-            submit={c('Action').t`Request new code`}
-            close={
-                verificationModel.method === 'email'
-                    ? c('Action').t`Edit email address`
-                    : c('Action').t`Edit phone number`
+            footer={
+                <>
+                    <Button
+                        size="large"
+                        color="norm"
+                        type="button"
+                        fullWidth
+                        loading={loading}
+                        onClick={async () => {
+                            await withLoading(onResend());
+                            rest.onClose?.();
+                        }}
+                        data-focus-fallback="-1"
+                    >
+                        {c('Action').t`Request new code`}
+                    </Button>
+                    <Button
+                        size="large"
+                        color="weak"
+                        type="button"
+                        onClick={() => {
+                            rest.onClose?.();
+                            onEdit();
+                        }}
+                        disabled={loading}
+                        fullWidth
+                        data-focus-fallback="-2"
+                    >
+                        {verificationModel.method === 'email'
+                            ? c('Action').t`Edit email address`
+                            : c('Action').t`Edit phone number`}
+                    </Button>
+                    <Button
+                        size="large"
+                        color="weak"
+                        type="button"
+                        onClick={rest.onClose}
+                        disabled={loading}
+                        fullWidth
+                        data-focus-fallback="-3"
+                    >
+                        {c('Action').t`Cancel`}
+                    </Button>
+                </>
             }
-            closeProps={{
-                onClick: () => {
-                    rest.onClose?.();
-                    onEdit();
-                },
-            }}
             {...rest}
         >
             {verificationModel.method === 'email'

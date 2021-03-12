@@ -42,7 +42,11 @@ const VerifyCodeForm = ({ onSubmit, onNoReceive, verification }: Props) => {
                 id="verification"
                 bigger
                 label={c('Label').t`Verification code`}
-                error={validator([requiredValidator(code), numberValidator(code)])}
+                error={validator([
+                    requiredValidator(code),
+                    numberValidator(code),
+                    code.length !== 6 ? c('Error').t`Enter 6 digits` : '',
+                ])}
                 assistiveText={c('Label').t`Enter the 6-digit code`}
             >
                 <InputTwo

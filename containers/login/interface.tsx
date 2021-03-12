@@ -8,7 +8,6 @@ export enum AuthStep {
     UNLOCK,
     NEW_PASSWORD,
     GENERATE_INTERNAL,
-    GENERATE_INTERNAL_CONFIRM,
     DONE,
 }
 

@@ -129,7 +129,7 @@ const StandardPrivateApp = <T, M extends Model<T>, E, EvtM extends Model<E>>({
         ])
             .then(([hasOnlyExternalAddresses]) => {
                 if (hasOnlyExternalAddresses) {
-                    appLink('/setup-internal-address', APPS.PROTONACCOUNT);
+                    appLink(`/setup-internal-address?app=${APP_NAME}`, APPS.PROTONACCOUNT);
                 } else {
                     setLoading(false);
                 }

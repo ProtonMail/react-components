@@ -54,6 +54,12 @@ const EmailMethodForm = ({ api, onSubmit, defaultPhone = '', defaultCountry }: P
                         setPhoneError('');
                         setPhone(value);
                     }}
+                    onKeyDown={(event) => {
+                        if (event.key === 'Enter') {
+                            event.preventDefault();
+                            withLoading(handleSubmit()).catch(noop);
+                        }
+                    }}
                 />
             </FormField>
             <Button
