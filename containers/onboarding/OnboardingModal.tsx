@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { c } from 'ttag';
 import { updateAddress } from 'proton-shared/lib/api/addresses';
 import { updateWelcomeFlags, updateThemeType } from 'proton-shared/lib/api/settings';
@@ -78,6 +78,10 @@ const OnboardingModal = ({
     const [step, setStep] = useState(0);
 
     const handleNext = () => {
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
+        if (isLastStep) {
+            rest?.onClose?.();
+        }
         setStep((step) => step + 1);
     };
 
@@ -174,34 +178,31 @@ const OnboardingModal = ({
                       renderCallback?.({
                           onNext: handleNext,
                           onBack: handleBack,
-                          onClose: rest?.onClose,
                       }) ?? null
               )
               .filter((x) => x !== null)
         : [];
 
     const steps = [...genericSteps, ...productSteps, ...finalGenericSteps];
+    const isLastStep = steps.length - 1 === step;
     const childStep = steps[step];
+    const hasDots = steps.length > 1 && step < steps.length;
 
     if (!React.isValidElement<OnboardingStepProps>(childStep)) {
         throw new Error('Missing step');
     }
 
-    const hasDots = steps.length > 1 && step < steps.length;
-    const isLastStep = steps.length - 1 === step;
-
     const childStepProps = isLastStep
         ? {
               ...childStep.props,
-              onSubmit: rest?.onClose,
+              onSubmit: () => {
+                  if (isLastStep) {
+                      void handleUpdateWelcomeFlags();
+                  }
+                  rest?.onClose?.();
+              },
           }
         : childStep.props;
-
-    useEffect(() => {
-        if (isLastStep) {
-            void handleUpdateWelcomeFlags();
-        }
-    }, [step, steps]);
 
     return (
         <FormModal
