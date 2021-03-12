@@ -113,6 +113,7 @@ const OnboardingModal = ({
                         size="large"
                         color="norm"
                         shape="solid"
+                        className="mb1"
                         fullWidth
                         onClick={() => {
                             goToApp('/organization', getAccountSettingsApp());
@@ -125,8 +126,9 @@ const OnboardingModal = ({
             }
             close={
                 canManageOrganization ? (
-                    <Button size="large" color="norm" shape="ghost" fullWidth onClick={handleNext}>{c('Action')
-                        .t`Setup your inbox`}</Button>
+                    <Button size="large" color="norm" shape="ghost" className="mb1" fullWidth onClick={handleNext}>{c(
+                        'Action'
+                    ).t`Setup your inbox`}</Button>
                 ) : null
             }
             onSubmit={handleNext}
