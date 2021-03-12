@@ -171,7 +171,7 @@ const ProtonPlanCustomizer = ({
         [ADDON_NAMES.MEMBER]: '',
         [ADDON_NAMES.DOMAIN]: c('Info')
             .t`Allows you to host emails for your own domain(s) at ${mailAppName}, e.g. john.smith@example.com`,
-        [ADDON_NAMES.ADDRESS]: c('Info').t`Add additional addresses to your account like username2@protonmail.com`,
+        [ADDON_NAMES.ADDRESS]: c('Info').t`Add additional addresses to your account like user2@protonmail.com`,
         [ADDON_NAMES.VPN]: c('Info')
             .t`Number of VPN connections which can be assigned to users. Each connected device consumes one VPN connection.`,
     } as const;
@@ -185,7 +185,7 @@ const ProtonPlanCustomizer = ({
     }
 
     return (
-        <div className="pb2 mb2 border-bottom">
+        <div className="pb2 mb2 border-bottom plan-customiser">
             <h3>{c('Title').t`${appName} customization`}</h3>
             {service === PLAN_SERVICES.MAIL && planIDs[plansNameMap[PLANS.PLUS].ID] ? (
                 <p>
@@ -230,7 +230,10 @@ const ProtonPlanCustomizer = ({
                         className="flex-no-min-children flex-nowrap flex-align-items-center mb1 on-mobile-flex-wrap"
                         key={addon.ID}
                     >
-                        <label htmlFor={addon.ID} className="min-w14e text-bold pr0-5 on-mobile-w100">
+                        <label
+                            htmlFor={addon.ID}
+                            className="min-w14e plan-customiser-addon-label text-bold pr0-5 on-mobile-w100"
+                        >
                             {addonLabel[addonNameKey]}
                         </label>
                         <ButtonNumberInput
@@ -256,8 +259,10 @@ const ProtonPlanCustomizer = ({
                                     {(quantity * addon.Pricing[cycle]) / cycle}
                                 </Price>
                             ) : null}
-                            {isSupported && !quantity ? c('Info').t`included` : null}
-                            {!isSupported && c('Info').t`not customizable`}
+                            {isSupported && !quantity ? (
+                                <span className="opacity-50">{c('Info').t`included`}</span>
+                            ) : null}
+                            {!isSupported && <span className="opacity-50">{c('Info').t`not customizable`}</span>}
                         </div>
                     </div>
                 );

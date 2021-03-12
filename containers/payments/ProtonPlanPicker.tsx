@@ -16,6 +16,7 @@ import { switchPlan } from 'proton-shared/lib/helpers/planIDs';
 import { getAppName } from 'proton-shared/lib/apps/helper';
 
 import { Radio, Button, InlineLinkButton, Price } from '../../components';
+import { classnames } from '../../helpers';
 import { PlanIDs } from '../signup/interfaces';
 
 const FREE_PLAN = {
@@ -133,13 +134,15 @@ const ProtonPlanPicker = ({
                                     {plan.Title}
                                     {isCurrentPlan ? ` ${yourPlanText}` : ''}
                                 </span>
-                                {isFree ? (
-                                    <span>{c('Free price').t`Free`}</span>
-                                ) : (
-                                    <Price currency={currency} suffix={c('Suffix for price').t`/ month`}>
-                                        {plan.Pricing[cycle] / cycle}
-                                    </Price>
-                                )}
+                                <span className={classnames([!isCurrentPlan && 'opacity-50'])}>
+                                    {isFree ? (
+                                        <span>{c('Free price').t`Free`}</span>
+                                    ) : (
+                                        <Price currency={currency} suffix={c('Suffix for price').t`/ month`}>
+                                            {plan.Pricing[cycle] / cycle}
+                                        </Price>
+                                    )}
+                                </span>
                             </Radio>
                         </li>
                     );

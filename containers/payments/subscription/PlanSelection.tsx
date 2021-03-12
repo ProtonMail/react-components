@@ -174,7 +174,7 @@ const PlanSelection = ({
 
     return (
         <>
-            <div className="mb2 flex flex-nowrap">
+            <div className="mb2 pb2 flex flex-nowrap">
                 <div className="flex-item-fluid" />
                 <div className="flex-item-fluid flex-item-grow-2 text-center">
                     {cycle === CYCLE.MONTHLY ? (
@@ -202,7 +202,7 @@ const PlanSelection = ({
                     <CurrencySelector currency={currency} onSelect={onChangeCurrency} disabled={loading} />
                 </div>
             </div>
-            <div className="plan-selection">
+            <div className="plan-selection mt1" style={{ '--plan-selection-number': plansToShow.length }}>
                 {plansToShow.map((plan: Plan) => {
                     const isFree = plan.ID === FREE_PLAN.ID;
                     const isCurrentPlan = isFree ? !currentPlan : currentPlan?.ID === plan.ID;

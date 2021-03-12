@@ -311,8 +311,8 @@ const SubscriptionModal = ({
                 />
             )}
             {model.step === SUBSCRIPTION_STEPS.CUSTOMIZATION && (
-                <div className="flex flex-justify-space-between on-mobile-flex-column">
-                    <div className="w75 on-mobile-w100 pr4 on-tablet-landscape-pr1 on-mobile-pr0">
+                <div className="flex-no-min-children on-mobile-flex-column">
+                    <div className="flex-item-fluid on-mobile-w100 pr4 on-tablet-landscape-pr1 on-mobile-pr0">
                         <PlanCustomization
                             plans={plans}
                             loading={loadingCheck}
@@ -329,7 +329,7 @@ const SubscriptionModal = ({
                             }
                         />
                     </div>
-                    <div className="w25 on-mobile-w100">
+                    <div className="subscriptionCheckout-column on-mobile-w100">
                         <div className="subscriptionCheckout-container">
                             <SubscriptionCheckout
                                 submit={
