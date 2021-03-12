@@ -28,7 +28,7 @@ const Payment = ({
     onCard,
     errors,
 }) => {
-    const { methods, options, loading } = useMethods({ amount, coupon, type });
+    const { methods, options, loading } = useMethods({ amount, coupon, flow: type });
     const lastCustomMethod = [...options]
         .reverse()
         .find(
