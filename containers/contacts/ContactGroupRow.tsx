@@ -28,14 +28,23 @@ const ContactGroupRow = ({ checked, style, groupsEmailsMap, group, onClick, onCh
             className={classnames(['item-container item-contact flex cursor-pointer bg-global-white'])}
         >
             <div className="flex flex-nowrap w100 h100 mtauto mbauto flex-align-items-center">
-                <ItemCheckbox ID={ID} name={Name} checked={checked} onChange={onCheck} />
-                <span
-                    className="ml1 mr1 pl1 pr1 pt0-25 pb0-25 rounded1e color-white"
-                    style={{ backgroundColor: Color }}
-                >
-                    {Name}
+                <ItemCheckbox
+                    ID={ID}
+                    name={Name}
+                    checked={checked}
+                    onChange={onCheck}
+                    normalClassName="flex-item-noshrink"
+                    compactClassName="flex-item-noshrink"
+                />
+                <span className="max-w100 flex pl1 pr1">
+                    <span
+                        className="inline-block pl1 pr1 pt0-25 pb0-25 rounded1e color-white text-ellipsis"
+                        style={{ backgroundColor: Color }}
+                    >
+                        {Name}
+                    </span>
                 </span>
-                <span>
+                <span className="flex-item-noshrink">
                     {addressCount === 0
                         ? c('Info').t`No email address`
                         : c('Info').ngettext(
