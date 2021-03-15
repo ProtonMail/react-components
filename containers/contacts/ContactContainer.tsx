@@ -1,6 +1,6 @@
 import React from 'react';
 import { DecryptedKey } from 'proton-shared/lib/interfaces';
-import { Contact, ContactEmail, ContactGroup } from 'proton-shared/lib/interfaces/contacts/Contact';
+import { ContactEmail, ContactGroup } from 'proton-shared/lib/interfaces/contacts/Contact';
 import useContact from './useContact';
 import ContactView from './ContactView';
 import useContactProperties from './useContactProperties';
@@ -25,7 +25,8 @@ const ContactContainer = ({
     isModal = false,
     onDelete,
 }: Props) => {
-    const [contact, contactLoading] = useContact(contactID) as [Contact, boolean, Error];
+    const [contact, contactLoading] = useContact(contactID, onDelete);
+
     const [{ properties, errors, ID }, onReload] = useContactProperties({ contact, userKeysList });
 
     if (contactLoading || !properties || ID !== contactID) {

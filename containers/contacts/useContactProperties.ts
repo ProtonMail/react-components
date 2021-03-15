@@ -13,7 +13,7 @@ export type ContactPropertiesModel = {
 
 interface Props {
     userKeysList: DecryptedKey[];
-    contact: Contact;
+    contact: Contact | undefined;
 }
 
 const useContactProperties = ({ contact, userKeysList }: Props): [ContactPropertiesModel, () => void] => {
