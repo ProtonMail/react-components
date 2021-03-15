@@ -60,25 +60,31 @@ const useApplyGroups = () => {
                     .filter(([, isChecked]) => isChecked)
                     .map(([groupID]) => groupID);
 
-                selectedEmails = await new Promise<ContactEmail[]>((resolve, reject) => {
-                    createModal(
-                        <SelectEmailsModal
-                            groupIDs={groupIDs}
-                            contacts={collectedContacts}
-                            onSubmit={resolve}
-                            onClose={reject}
-                        />
-                    );
-                });
+                if (groupIDs.length) {
+                    selectedEmails = await new Promise<ContactEmail[]>((resolve, reject) => {
+                        createModal(
+                            <SelectEmailsModal
+                                groupIDs={groupIDs}
+                                contacts={collectedContacts}
+                                onSubmit={resolve}
+                                onClose={reject}
+                            />
+                        );
+                    });
+                }
             }
 
-            const selectedContactEmails = [...simpleEmails, ...selectedEmails];
+            // When removing a group, we remove it for all emails selected
+            const listForRemoving = [...contactEmails];
+
+            // When adding a group, we do it only for the selected ones
+            const listForAdding = [...simpleEmails, ...selectedEmails];
 
             const groupEntries = Object.entries(changes);
             await Promise.all(
                 groupEntries.map(([groupID, isChecked]) => {
                     if (isChecked) {
-                        const toLabel = selectedContactEmails
+                        const toLabel = listForAdding
                             .filter(({ LabelIDs = [] }) => !LabelIDs.includes(groupID))
                             .map(({ ID }) => ID);
                         if (!toLabel.length) {
@@ -87,7 +93,7 @@ const useApplyGroups = () => {
                         return api(labelContactEmails({ LabelID: groupID, ContactEmailIDs: toLabel }));
                     }
 
-                    const toUnlabel = selectedContactEmails
+                    const toUnlabel = listForRemoving
                         .filter(({ LabelIDs = [] }) => LabelIDs.includes(groupID))
                         .map(({ ID }) => ID);
 

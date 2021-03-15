@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo, ReactNode, ChangeEvent } from 'react';
 import { c } from 'ttag';
 import { normalize } from 'proton-shared/lib/helpers/string';
-import { ContactEmail, ContactGroup, Contact } from 'proton-shared/lib/interfaces/contacts/Contact';
+import { ContactEmail, ContactGroup } from 'proton-shared/lib/interfaces/contacts/Contact';
 import ContactGroupDropdownButton from '../../components/contacts/ContactGroupDropdownButton';
 import { usePopperAnchor } from '../../components/popper';
 import { useLoading, useContactGroups, useModals } from '../../hooks';
@@ -46,33 +46,6 @@ const getModel = (contactGroups: ContactGroup[] = [], contactEmails: ContactEmai
     }, Object.create(null));
 };
 
-/**
- * Collect contacts having multiple emails
- * Used for <SelectEmailsModal />
- * @param contactEmails
- * @returns result.contacts
- */
-export const collectContacts = (contactEmails: ContactEmail[] = [], contacts: Contact[]) => {
-    return contactEmails.reduce(
-        (acc, { ContactID }) => {
-            acc.duplicate[ContactID] = (acc.duplicate[ContactID] || 0) + 1;
-
-            if (acc.duplicate[ContactID] === 2) {
-                const contact = contacts.find(({ ID }: { ID: string }) => ID === ContactID);
-                if (contact) {
-                    acc.contacts.push(contact);
-                }
-            }
-
-            return acc;
-        },
-        {
-            contacts: [] as Contact[],
-            duplicate: Object.create(null),
-        }
-    );
-};
-
 interface Props {
     children: ReactNode;
     className: string;
@@ -87,6 +60,7 @@ const ContactGroupDropdown = ({ children, className, contactEmails, disabled = f
     const { anchorRef, isOpen, toggle, close } = usePopperAnchor();
     const { createModal } = useModals();
     const [contactGroups = []] = useContactGroups();
+    const [initialModel, setInitialModel] = useState<{ [groupID: string]: number }>(Object.create(null));
     const [model, setModel] = useState<{ [groupID: string]: number }>(Object.create(null));
     const [uid] = useState(generateUID('contactGroupDropdown'));
     const applyGroups = useApplyGroups();
@@ -100,10 +74,9 @@ const ContactGroupDropdown = ({ children, className, contactEmails, disabled = f
 
     const handleApply = async () => {
         const changes = Object.entries(model).reduce<{ [groupID: string]: boolean }>((acc, [groupID, isChecked]) => {
-            if (isChecked === INDETERMINATE) {
-                return acc;
+            if (isChecked !== initialModel[groupID]) {
+                acc[groupID] = isChecked === CHECKED;
             }
-            acc[groupID] = isChecked === CHECKED;
             return acc;
         }, {});
 
@@ -114,7 +87,9 @@ const ContactGroupDropdown = ({ children, className, contactEmails, disabled = f
 
     useEffect(() => {
         if (isOpen) {
-            setModel(getModel(contactGroups, contactEmails));
+            const initialModel = getModel(contactGroups, contactEmails);
+            setInitialModel(initialModel);
+            setModel(initialModel);
         }
     }, [contactGroups, contactEmails, isOpen]);
 
