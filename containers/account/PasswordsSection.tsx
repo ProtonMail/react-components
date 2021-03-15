@@ -7,7 +7,7 @@ import { useAddresses, useModals, useUserSettings } from '../../hooks';
 
 import ChangePasswordModal, { MODES } from './ChangePasswordModal';
 
-const PasswordsSection = ({ open }: { open?: MODES | 'changePassword' }) => {
+const PasswordsSection = ({ open }: { open?: boolean }) => {
     const [userSettings, loadingUserSettings] = useUserSettings();
     const [addresses, loadingAddresses] = useAddresses();
     const { createModal } = useModals();
@@ -26,11 +26,11 @@ const PasswordsSection = ({ open }: { open?: MODES | 'changePassword' }) => {
         : MODES.CHANGE_TWO_PASSWORD_LOGIN_MODE;
 
     const handleChangePassword = (mode: MODES) => {
-        createModal(<ChangePasswordModal mode={mode} />);
+        createModal(<ChangePasswordModal mode={mode} />, 'change-password');
     };
 
     if (open && !document.querySelector('.modal')) {
-        handleChangePassword(open === 'changePassword' ? changePasswordMode : open);
+        handleChangePassword(changePasswordMode);
     }
 
     return (
