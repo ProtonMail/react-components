@@ -114,7 +114,7 @@ const useResetPassword = ({ onLogin, initialStep = INITIAL_STATE.step }: Props) 
                 return setState((state: ResetPasswordState) => ({
                     ...state,
                     error: Error,
-                    step: STEPS.ERROR,
+                    step: STEPS.NO_RECOVERY_METHODS,
                 }));
             }
             throw error;

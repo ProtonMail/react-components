@@ -14,8 +14,8 @@ export interface ConfirmModalProps {
     small?: boolean;
     tiny?: boolean;
     mode?: 'alert';
-    submitProps: any;
-    closeProps: any;
+    submitProps?: any;
+    closeProps?: any;
 }
 
 const Confirm = ({
