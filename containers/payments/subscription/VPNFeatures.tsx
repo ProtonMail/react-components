@@ -1,6 +1,7 @@
 import React from 'react';
 import { c } from 'ttag';
 import { APPS, PLANS } from 'proton-shared/lib/constants';
+import { getAppName } from 'proton-shared/lib/apps/helper';
 
 import { useVPNCountries } from '../../../hooks';
 import { Icon } from '../../../components';
@@ -17,6 +18,7 @@ interface VPNCountries {
 }
 
 const getFeatures = (vpnCountries: VPNCountries): VPNFeature[] => {
+    const mailAppName = getAppName(APPS.PROTONMAIL);
     return [
         {
             name: 'connections',
@@ -27,12 +29,20 @@ const getFeatures = (vpnCountries: VPNCountries): VPNFeature[] => {
             [PLANS.VISIONARY]: '10',
         },
         {
-            name: 'countries',
+            name: 'speed',
+            label: c('VPN feature').t`Speed`,
+            free: c('VPN feature option').t`Medium`,
+            [PLANS.VPNBASIC]: c('VPN feature option').t`High`,
+            [PLANS.VPNPLUS]: c('VPN feature option').t`Highest (up to 10Gbits/s)`,
+            [PLANS.VISIONARY]: c('VPN feature option').t`Highest (10Gbps)`,
+        },
+        {
+            name: 'servers',
             label: c('VPN feature').t`VPN servers`,
-            free: vpnCountries.free.length,
-            [PLANS.VPNBASIC]: vpnCountries.basic.length,
-            [PLANS.VPNPLUS]: vpnCountries.all.length,
-            [PLANS.VISIONARY]: vpnCountries.all.length,
+            free: 17,
+            [PLANS.VPNBASIC]: '350+',
+            [PLANS.VPNPLUS]: '1200+',
+            [PLANS.VISIONARY]: '1200+',
         },
         {
             name: 'countries',
@@ -41,14 +51,6 @@ const getFeatures = (vpnCountries: VPNCountries): VPNFeature[] => {
             [PLANS.VPNBASIC]: vpnCountries.basic.length,
             [PLANS.VPNPLUS]: vpnCountries.all.length,
             [PLANS.VISIONARY]: vpnCountries.all.length,
-        },
-        {
-            name: 'speed',
-            label: c('VPN feature').t`Speed`,
-            free: c('VPN feature option').t`Medium`,
-            [PLANS.VPNBASIC]: c('VPN feature option').t`High`,
-            [PLANS.VPNPLUS]: c('VPN feature option').t`Highest (up to 10Gbits/s)`,
-            [PLANS.VISIONARY]: c('VPN feature option').t`Highest (10Gbps)`,
         },
         {
             name: 'netshield',
@@ -92,7 +94,7 @@ const getFeatures = (vpnCountries: VPNCountries): VPNFeature[] => {
         },
         {
             name: 'visionary',
-            label: c('VPN feature').t`ProtonMail Visionary`,
+            label: c('VPN feature').t`${mailAppName} Visionary`,
             free: EmDash,
             [PLANS.VPNBASIC]: EmDash,
             [PLANS.VPNPLUS]: EmDash,
@@ -108,7 +110,7 @@ const getFeatures = (vpnCountries: VPNCountries): VPNFeature[] => {
         },
         {
             name: 'audited',
-            label: c('VPN feature').t`Open source and audited apps`,
+            label: c('VPN feature').t`Open source & audited apps`,
             free: <CheckIcon />,
             [PLANS.VPNBASIC]: <CheckIcon />,
             [PLANS.VPNPLUS]: <CheckIcon />,
@@ -167,7 +169,7 @@ const getFeatures = (vpnCountries: VPNCountries): VPNFeature[] => {
         },
         {
             name: 'DNS',
-            label: c('VPN feature').t`DNS leak protection`,
+            label: c('VPN feature').t`DNS leak prevention`,
             free: <CheckIcon />,
             [PLANS.VPNBASIC]: <CheckIcon />,
             [PLANS.VPNPLUS]: <CheckIcon />,
@@ -203,25 +205,25 @@ const getFeatures = (vpnCountries: VPNCountries): VPNFeature[] => {
             free: (
                 <>
                     <CheckIcon />
-                    <span>{c('VPN feature option').t`(Android & windows only)`}</span>
+                    <span className="ml0-5">{c('VPN feature option').t`(Android & windows only)`}</span>
                 </>
             ),
             [PLANS.VPNBASIC]: (
                 <>
                     <CheckIcon />
-                    <span>{c('VPN feature option').t`(Android & windows only)`}</span>
+                    <span className="ml0-5">{c('VPN feature option').t`(Android & windows only)`}</span>
                 </>
             ),
             [PLANS.VPNPLUS]: (
                 <>
                     <CheckIcon />
-                    <span>{c('VPN feature option').t`(Android & windows only)`}</span>
+                    <span className="ml0-5">{c('VPN feature option').t`(Android & windows only)`}</span>
                 </>
             ),
             [PLANS.VISIONARY]: (
                 <>
                     <CheckIcon />
-                    <span>{c('VPN feature option').t`(Android & windows only)`}</span>
+                    <span className="ml0-5">{c('VPN feature option').t`(Android & windows only)`}</span>
                 </>
             ),
         },
@@ -244,7 +246,7 @@ const getFeatures = (vpnCountries: VPNCountries): VPNFeature[] => {
         {
             name: 'money-back',
             label: c('VPN feature').t`30-days money-back guarantee`,
-            free: EmDash,
+            free: 'N/A',
             [PLANS.VPNBASIC]: <CheckIcon />,
             [PLANS.VPNPLUS]: <CheckIcon />,
             [PLANS.VISIONARY]: <CheckIcon />,
