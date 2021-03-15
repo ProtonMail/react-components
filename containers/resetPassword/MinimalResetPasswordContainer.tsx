@@ -203,7 +203,7 @@ const MinimalResetPasswordContainer = ({ onLogin }: Props) => {
         );
     }
 
-    if (step === STEPS.ERROR) {
+    if (step === STEPS.ERROR || step === STEPS.NO_RECOVERY_METHODS) {
         return <GenericError />;
     }
 
