@@ -28,27 +28,27 @@ const getFeatures = (vpnCountries: VPNCountries): VPNFeature[] => {
         },
         {
             name: 'countries',
-            label: c('VPN feature').t`Servers in countries`,
+            label: c('VPN feature').t`VPN servers`,
             free: vpnCountries.free.length,
             [PLANS.VPNBASIC]: vpnCountries.basic.length,
             [PLANS.VPNPLUS]: vpnCountries.all.length,
             [PLANS.VISIONARY]: vpnCountries.all.length,
         },
         {
-            name: 'connection speed',
-            label: c('VPN feature').t`Speed`,
-            free: c('VPN feature option').t`Medium speed`,
-            [PLANS.VPNBASIC]: c('VPN feature option').t`High speed`,
-            [PLANS.VPNPLUS]: c('VPN feature option').t`Highest speed (up to 10Gbps)`,
-            [PLANS.VISIONARY]: c('VPN feature option').t`Highest speed (10Gbps)`,
+            name: 'countries',
+            label: c('VPN feature').t`Locations/Countries`,
+            free: `${vpnCountries.free.length} (US, NL, JP)`,
+            [PLANS.VPNBASIC]: vpnCountries.basic.length,
+            [PLANS.VPNPLUS]: vpnCountries.all.length,
+            [PLANS.VISIONARY]: vpnCountries.all.length,
         },
         {
-            name: 'filesharing',
-            label: c('VPN feature').t`Filesharing / P2P`,
-            free: EmDash,
-            [PLANS.VPNBASIC]: <CheckIcon />,
-            [PLANS.VPNPLUS]: <CheckIcon />,
-            [PLANS.VISIONARY]: <CheckIcon />,
+            name: 'speed',
+            label: c('VPN feature').t`Speed`,
+            free: c('VPN feature option').t`Medium`,
+            [PLANS.VPNBASIC]: c('VPN feature option').t`High`,
+            [PLANS.VPNPLUS]: c('VPN feature option').t`Highest (up to 10Gbits/s)`,
+            [PLANS.VISIONARY]: c('VPN feature option').t`Highest (10Gbps)`,
         },
         {
             name: 'netshield',
@@ -59,18 +59,58 @@ const getFeatures = (vpnCountries: VPNCountries): VPNFeature[] => {
             [PLANS.VISIONARY]: <CheckIcon />,
         },
         {
-            name: 'secure core',
-            label: c('VPN feature').t`Secure Core and Tor VPN`,
+            name: 'filesharing',
+            label: c('VPN feature').t`P2P/BitTorrent`,
+            free: EmDash,
+            [PLANS.VPNBASIC]: <CheckIcon />,
+            [PLANS.VPNPLUS]: <CheckIcon />,
+            [PLANS.VISIONARY]: <CheckIcon />,
+        },
+        {
+            name: 'content',
+            label: c('VPN feature').t`Specific content unlocking`,
             free: EmDash,
             [PLANS.VPNBASIC]: EmDash,
             [PLANS.VPNPLUS]: <CheckIcon />,
             [PLANS.VISIONARY]: <CheckIcon />,
         },
         {
-            name: 'privacy features',
-            label: c('VPN feature').t`Advanced privacy features`,
+            name: 'tor',
+            label: c('VPN feature').t`Tor over VPN`,
             free: EmDash,
             [PLANS.VPNBASIC]: EmDash,
+            [PLANS.VPNPLUS]: <CheckIcon />,
+            [PLANS.VISIONARY]: <CheckIcon />,
+        },
+        {
+            name: 'secure-core',
+            label: c('VPN feature').t`SecureCore servers`,
+            free: EmDash,
+            [PLANS.VPNBASIC]: EmDash,
+            [PLANS.VPNPLUS]: <CheckIcon />,
+            [PLANS.VISIONARY]: <CheckIcon />,
+        },
+        {
+            name: 'visionary',
+            label: c('VPN feature').t`ProtonMail Visionary`,
+            free: EmDash,
+            [PLANS.VPNBASIC]: EmDash,
+            [PLANS.VPNPLUS]: EmDash,
+            [PLANS.VISIONARY]: <CheckIcon />,
+        },
+        {
+            name: 'juridiction',
+            label: c('VPN feature').t`Juridiction`,
+            free: c('VPN feature option').t`Switzerland`,
+            [PLANS.VPNBASIC]: c('VPN feature option').t`Switzerland`,
+            [PLANS.VPNPLUS]: c('VPN feature option').t`Switzerland`,
+            [PLANS.VISIONARY]: c('VPN feature option').t`Switzerland`,
+        },
+        {
+            name: 'audited',
+            label: c('VPN feature').t`Open source and audited apps`,
+            free: <CheckIcon />,
+            [PLANS.VPNBASIC]: <CheckIcon />,
             [PLANS.VPNPLUS]: <CheckIcon />,
             [PLANS.VISIONARY]: <CheckIcon />,
         },
@@ -83,8 +123,59 @@ const getFeatures = (vpnCountries: VPNCountries): VPNFeature[] => {
             [PLANS.VISIONARY]: <CheckIcon />,
         },
         {
-            name: 'no logs',
-            label: c('VPN feature').t`No logs / no ads`,
+            name: 'no-logs',
+            label: c('VPN feature').t`Strict no-logs policy`,
+            free: <CheckIcon />,
+            [PLANS.VPNBASIC]: <CheckIcon />,
+            [PLANS.VPNPLUS]: <CheckIcon />,
+            [PLANS.VISIONARY]: <CheckIcon />,
+        },
+        {
+            name: 'bandwidth',
+            label: c('VPN feature').t`Volume/bandwidth cap`,
+            free: EmDash,
+            [PLANS.VPNBASIC]: EmDash,
+            [PLANS.VPNPLUS]: EmDash,
+            [PLANS.VISIONARY]: EmDash,
+        },
+        {
+            name: 'data',
+            label: c('VPN feature').t`User data monetization`,
+            free: c('VPN feature option').t`None`,
+            [PLANS.VPNBASIC]: c('VPN feature option').t`None`,
+            [PLANS.VPNPLUS]: c('VPN feature option').t`None`,
+            [PLANS.VISIONARY]: c('VPN feature option').t`None`,
+        },
+        {
+            name: 'platform',
+            label: c('VPN feature').t`Platforms supported`,
+            free: c('VPN feature option').t`Windows, macOS, iOS, Linux, Android, Android TV, Chromebook, Chromecast`,
+            [PLANS.VPNBASIC]: c('VPN feature option')
+                .t`Windows, macOS, iOS, Linux, Android, Android TV, Chromebook, Chromecast`,
+            [PLANS.VPNPLUS]: c('VPN feature option')
+                .t`Windows, macOS, iOS, Linux, Android, Android TV, Chromebook, Chromecast`,
+            [PLANS.VISIONARY]: c('VPN feature option')
+                .t`Windows, macOS, iOS, Linux, Android, Android TV, Chromebook, Chromecast`,
+        },
+        {
+            name: 'language',
+            label: c('VPN feature').t`Languages supported`,
+            free: 12,
+            [PLANS.VPNBASIC]: 12,
+            [PLANS.VPNPLUS]: 12,
+            [PLANS.VISIONARY]: 12,
+        },
+        {
+            name: 'DNS',
+            label: c('VPN feature').t`DNS leak protection`,
+            free: <CheckIcon />,
+            [PLANS.VPNBASIC]: <CheckIcon />,
+            [PLANS.VPNPLUS]: <CheckIcon />,
+            [PLANS.VISIONARY]: <CheckIcon />,
+        },
+        {
+            name: 'kill switch',
+            label: c('VPN feature').t`Kill Switch / Always-on VPN`,
             free: <CheckIcon />,
             [PLANS.VPNBASIC]: <CheckIcon />,
             [PLANS.VPNPLUS]: <CheckIcon />,
@@ -100,47 +191,7 @@ const getFeatures = (vpnCountries: VPNCountries): VPNFeature[] => {
         },
         {
             name: 'encryption',
-            label: c('VPN feature').t`AES-256 encryption`,
-            free: <CheckIcon />,
-            [PLANS.VPNBASIC]: <CheckIcon />,
-            [PLANS.VPNPLUS]: <CheckIcon />,
-            [PLANS.VISIONARY]: <CheckIcon />,
-        },
-        {
-            name: 'DNS leak protection',
-            label: c('VPN feature').t`DNS leak protection`,
-            free: <CheckIcon />,
-            [PLANS.VPNBASIC]: <CheckIcon />,
-            [PLANS.VPNPLUS]: <CheckIcon />,
-            [PLANS.VISIONARY]: <CheckIcon />,
-        },
-        {
-            name: 'kill switch',
-            label: c('VPN feature').t`Kill switch`,
-            free: <CheckIcon />,
-            [PLANS.VPNBASIC]: <CheckIcon />,
-            [PLANS.VPNPLUS]: <CheckIcon />,
-            [PLANS.VISIONARY]: <CheckIcon />,
-        },
-        {
-            name: 'always-on',
-            label: c('VPN feature').t`Always-on VPN`,
-            free: <CheckIcon />,
-            [PLANS.VPNBASIC]: <CheckIcon />,
-            [PLANS.VPNPLUS]: <CheckIcon />,
-            [PLANS.VISIONARY]: <CheckIcon />,
-        },
-        {
-            name: 'open source',
-            label: c('VPN feature').t`Open source`,
-            free: <CheckIcon />,
-            [PLANS.VPNBASIC]: <CheckIcon />,
-            [PLANS.VPNPLUS]: <CheckIcon />,
-            [PLANS.VISIONARY]: <CheckIcon />,
-        },
-        {
-            name: '10 Gbps servers',
-            label: c('VPN feature').t`10 Gbps servers`,
+            label: c('VPN feature').t`Full Disk Encryption on Servers`,
             free: <CheckIcon />,
             [PLANS.VPNBASIC]: <CheckIcon />,
             [PLANS.VPNPLUS]: <CheckIcon />,
@@ -148,24 +199,52 @@ const getFeatures = (vpnCountries: VPNCountries): VPNFeature[] => {
         },
         {
             name: 'split tunneling',
-            label: c('VPN feature').t`Split tunneling support`,
+            label: c('VPN feature').t`Split tunneling`,
+            free: (
+                <>
+                    <CheckIcon />
+                    <span>{c('VPN feature option').t`(Android & windows only)`}</span>
+                </>
+            ),
+            [PLANS.VPNBASIC]: (
+                <>
+                    <CheckIcon />
+                    <span>{c('VPN feature option').t`(Android & windows only)`}</span>
+                </>
+            ),
+            [PLANS.VPNPLUS]: (
+                <>
+                    <CheckIcon />
+                    <span>{c('VPN feature option').t`(Android & windows only)`}</span>
+                </>
+            ),
+            [PLANS.VISIONARY]: (
+                <>
+                    <CheckIcon />
+                    <span>{c('VPN feature option').t`(Android & windows only)`}</span>
+                </>
+            ),
+        },
+        {
+            name: 'profiles',
+            label: c('VPN feature').t`Custom connection profiles`,
             free: <CheckIcon />,
             [PLANS.VPNBASIC]: <CheckIcon />,
             [PLANS.VPNPLUS]: <CheckIcon />,
             [PLANS.VISIONARY]: <CheckIcon />,
         },
         {
-            name: 'swiss based',
-            label: c('VPN feature').t`Swiss based`,
+            name: 'router',
+            label: c('VPN feature').t`Router support`,
             free: <CheckIcon />,
             [PLANS.VPNBASIC]: <CheckIcon />,
             [PLANS.VPNPLUS]: <CheckIcon />,
             [PLANS.VISIONARY]: <CheckIcon />,
         },
         {
-            name: 'support',
-            label: c('VPN feature').t`Professional support`,
-            free: <CheckIcon />,
+            name: 'money-back',
+            label: c('VPN feature').t`30-days money-back guarantee`,
+            free: EmDash,
             [PLANS.VPNBASIC]: <CheckIcon />,
             [PLANS.VPNPLUS]: <CheckIcon />,
             [PLANS.VISIONARY]: <CheckIcon />,
