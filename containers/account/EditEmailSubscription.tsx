@@ -15,7 +15,7 @@ const EditNews = () => {
     const update = async (News: number) => {
         await api(updateNews(News));
         await call();
-        createNotification({ text: c('Info').t`Emailing preference updated` });
+        createNotification({ text: c('Info').t`Emailing preference saved` });
     };
 
     const handleChange = (News: number) => withLoading(update(News));
