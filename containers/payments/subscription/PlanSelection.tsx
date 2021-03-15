@@ -251,7 +251,7 @@ const PlanSelection = ({
             <p className="text-center">
                 <InlineLinkButton onClick={handleScroll}>
                     <span className="mr0-5">{c('Action').t`Compare all features`}</span>
-                    <Icon name="arrow-down" />
+                    <Icon name="arrow-down" className="align-sub" />
                 </InlineLinkButton>
             </p>
             <div ref={featuresRef}>

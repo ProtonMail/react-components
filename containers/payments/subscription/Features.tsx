@@ -31,21 +31,28 @@ const Features = ({ appName, onSelect, planLabels, features }: Props) => {
                                 <PrimaryButton onClick={() => onSelect(key)}>{c('Action')
                                     .t`Select plan`}</PrimaryButton>
                             </div>
-                            <table key={key} className="simple-table text-cut simple-table--alternate-bg-row w100">
+                            <table key={key} className="text-cut alternate-table-bg-row-rounded w100">
                                 <thead>
                                     <tr>
-                                        <th scope="col">
-                                            <Icon name={icon} alt={name} className="mr1" />
+                                        <th scope="col" className="w3e" aria-hidden="true">
+                                            <Icon name={icon} alt={name} className="mb0-25" />
+                                        </th>
+                                        <th scope="col" className="text-left">
                                             <strong>{name}</strong>
                                         </th>
-                                        <th scope="col">{label}</th>
+                                        <th scope="col" className="text-left">
+                                            {label}
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {features.map(({ name, label, ...rest }) => {
                                         return (
                                             <tr key={name}>
-                                                <th scope="row">{label}</th>
+                                                <th aria-hidden="true" />
+                                                <th scope="row" className="text-left">
+                                                    {label}
+                                                </th>
                                                 <td key={key}>{rest[key as UghRest]}</td>
                                             </tr>
                                         );
@@ -60,15 +67,17 @@ const Features = ({ appName, onSelect, planLabels, features }: Props) => {
     }
 
     return (
-        <table className="simple-table text-cut simple-table--alternate-bg-row w100">
+        <table className="alternate-table-bg-row-rounded text-cut w100">
             <thead>
                 <tr>
-                    <th scope="col">
-                        <Icon name={icon} alt={name} className="mr1" />
+                    <th scope="col" className="w3e" aria-hidden="true">
+                        <Icon name={icon} alt={name} className="mb0-25" />
+                    </th>
+                    <th scope="col" className="text-left">
                         <strong>{name}</strong>
                     </th>
                     {planLabels.map(({ label, key }) => (
-                        <th scope="col" key={key}>
+                        <th scope="col" className="text-left" key={key}>
                             {label}
                         </th>
                     ))}
@@ -79,7 +88,10 @@ const Features = ({ appName, onSelect, planLabels, features }: Props) => {
                     const restKeys = Object.keys(rest) as UghRest[];
                     return (
                         <tr key={name}>
-                            <th scope="row">{label}</th>
+                            <th aria-hidden="true" />
+                            <th scope="row" className="text-left">
+                                {label}
+                            </th>
                             {restKeys.map((key) => {
                                 return (
                                     <td className="no-border" key={key}>
