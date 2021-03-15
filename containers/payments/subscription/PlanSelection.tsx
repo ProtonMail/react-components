@@ -62,7 +62,7 @@ const NAMES = {
     [PLANS.VISIONARY]: 'Visionary',
 } as const;
 
-const getFeatures = (planName: PLANS) => {
+const getFeatures = (planName: PLANS, service: PLAN_SERVICES) => {
     return {
         free_mail: [
             { content: c('Plan feature').t`1 user` },
@@ -72,25 +72,25 @@ const getFeatures = (planName: PLANS) => {
             { content: c('Plan feature').t`No custom email addresses`, icon: EmDash, className: 'NICO' },
         ],
         free_vpn: [
-            { content: c('Plan feature').t`1 simultaneous connection` },
-            { content: c('Plan feature').t`Medium speed` },
-            { content: c('Plan feature').t`Adblocker (NetShield)` },
-            { content: c('Plan feature').t`Access to blocked content` },
-            { content: c('Plan feature').t`Secure Core VPN` },
+            { content: c('Plan feature').t`Open-source, audited, no-logs` },
+            { content: c('Plan feature').t`17 servers in 3 countries` },
+            { content: c('Plan feature').t`1 VPN connection` },
+            { content: c('Plan feature').t`Built-in adblocker`, icon: EmDash },
+            { content: c('Plan feature').t`Exclusive SecureCore servers`, icon: EmDash },
         ],
         [PLANS.VPNBASIC]: [
-            { content: c('Plan feature').t`2 simultaneous connections` },
-            { content: c('Plan feature').t`High speed` },
-            { content: c('Plan feature').t`Adblocker (NetShield)` },
-            { content: c('Plan feature').t`Access to blocked content` },
-            { content: c('Plan feature').t`Secure Core VPN` },
+            { content: c('Plan feature').t`Open-source, audited, no-logs` },
+            { content: c('Plan feature').t`350+ servers in 54 countries` },
+            { content: c('Plan feature').t`2 VPN connections` },
+            { content: c('Plan feature').t`Built-in adblocker` },
+            { content: c('Plan feature').t`Exclusive SecureCore servers`, icon: EmDash },
         ],
         [PLANS.VPNPLUS]: [
-            { content: c('Plan feature').t`5 simultaneous connections` },
-            { content: c('Plan feature').t`Highest speed` },
-            { content: c('Plan feature').t`Adblocker (NetShield)` },
-            { content: c('Plan feature').t`Access to blocked content` },
-            { content: c('Plan feature').t`Secure Core VPN` },
+            { content: c('Plan feature').t`Open-source, audited, no-logs` },
+            { content: c('Plan feature').t`1200+ servers in 54 countries` },
+            { content: c('Plan feature').t`5 VPN connections` },
+            { content: c('Plan feature').t`Built-in adblocker` },
+            { content: c('Plan feature').t`Exclusive SecureCore servers` },
         ],
         [PLANS.PLUS]: [
             { content: c('Plan feature').t`1 user` },
@@ -106,13 +106,22 @@ const getFeatures = (planName: PLANS) => {
             { content: c('Plan feature').t`Unlimited folders / labels` },
             { content: c('Plan feature').t`Custom email addresses` },
         ],
-        [PLANS.VISIONARY]: [
-            { content: c('Plan feature').t`6 users` },
-            { content: c('Plan feature').t`20 GB storage` },
-            { content: c('Plan feature').t`50 addresses` },
-            { content: c('Plan feature').t`Unlimited folders / labels` },
-            { content: c('Plan feature').t`Custom email addresses` },
-        ],
+        [PLANS.VISIONARY]:
+            service === PLAN_SERVICES.VPN
+                ? [
+                      { content: c('Plan feature').t`All plan features` },
+                      { content: c('Plan feature').t`ProtonMail Visionary account` },
+                      { content: c('Plan feature').t`10 VPN connections` },
+                      { content: c('Plan feature').t`Early access to new products` },
+                      { content: c('Plan feature').t`Support Proton Technologies!` },
+                  ]
+                : [
+                      { content: c('Plan feature').t`6 users` },
+                      { content: c('Plan feature').t`20 GB storage` },
+                      { content: c('Plan feature').t`50 addresses` },
+                      { content: c('Plan feature').t`Unlimited folders / labels` },
+                      { content: c('Plan feature').t`Custom email addresses` },
+                  ],
     }[planName];
 };
 
@@ -164,12 +173,14 @@ const PlanSelection = ({
 
     const INFOS = {
         free_mail: c('Info').t`The basic for private and secure communications.`,
-        free_vpn: c('Info').t`The basic for private and secure communications.`,
-        [PLANS.VPNBASIC]: c('Info').t`Starter VPN with ad, malware and tracker blocking.`,
-        [PLANS.VPNPLUS]: c('Info').t`Full-featured VPN with advanced protection.`,
+        free_vpn: c('Info').t`A free and uncensored Internet should be available to all.`,
+        [PLANS.VPNBASIC]: c('Info').t`Starter VPN service with P2P support and Adblocker.`,
+        [PLANS.VPNPLUS]: c('Info').t`Full-featured VPN with speed up to 10 Gbit/s.`,
         [PLANS.PLUS]: c('Info').t`Full-featured mailbox with advanced protection.`,
         [PLANS.PROFESSIONAL]: c('Info').t`${mailAppName} for professionals and businesses.`,
-        [PLANS.VISIONARY]: c('Info').t`Mail + VPN bundle for families and small businesses.`,
+        [PLANS.VISIONARY]: isVpnApp
+            ? c('Info').t`VPN + ${mailAppName} bundle for families and small businesses.`
+            : c('Info').t`Mail + VPN bundle for families and small businesses.`,
     } as const;
 
     const boldSave = <strong key="save">{c('Info').t`Save 20%`}</strong>;
@@ -232,7 +243,7 @@ const PlanSelection = ({
                             key={plan.ID}
                             price={plan.Pricing[cycle]}
                             info={INFOS[plan.Name as PLANS]}
-                            features={getFeatures(plan.Name as PLANS)}
+                            features={getFeatures(plan.Name as PLANS, service)}
                             onClick={() =>
                                 onChangePlanIDs(
                                     switchPlan({
