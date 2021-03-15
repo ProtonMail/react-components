@@ -6,13 +6,18 @@ import { CYCLE } from 'proton-shared/lib/constants';
 import { classnames } from '../../../helpers';
 import { Icon, Price, PrimaryButton } from '../../../components';
 
+export interface PlanCardFeature {
+    icon?: React.ReactNode;
+    content: React.ReactNode;
+}
+
 interface Props {
     planName: string;
     price: number;
     info: string;
     action: string;
     onClick: () => void;
-    features: React.ReactNode[];
+    features: PlanCardFeature[];
     currency: Currency;
     cycle: Cycle;
     isCurrentPlan?: boolean;
@@ -69,9 +74,9 @@ const PlanCard = ({
                         {features.map((feature, index) => (
                             <li key={`${index}`} className="flex flex-nowrap mb0-5">
                                 <span className="flex-item-noshrink mr1">
-                                    <Icon name="on" className="color-primary" />
+                                    {feature.icon || <Icon name="on" className="color-primary" />}
                                 </span>
-                                <span className="flex-item-fluid">{feature}</span>
+                                <span className="flex-item-fluid">{feature.content}</span>
                             </li>
                         ))}
                     </ul>
