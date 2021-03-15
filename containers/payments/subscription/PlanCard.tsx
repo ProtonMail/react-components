@@ -9,6 +9,7 @@ import { Icon, Price, PrimaryButton } from '../../../components';
 export interface PlanCardFeature {
     icon?: React.ReactNode;
     content: React.ReactNode;
+    className?: string;
 }
 
 interface Props {
@@ -72,7 +73,7 @@ const PlanCard = ({
                 {features.length ? (
                     <ul className="unstyled">
                         {features.map((feature, index) => (
-                            <li key={`${index}`} className="flex flex-nowrap mb0-5">
+                            <li key={`${index}`} className={classnames(['flex flex-nowrap mb0-5', feature.className])}>
                                 <span className="flex-item-noshrink mr1">
                                     {feature.icon || <Icon name="on" className="color-primary" />}
                                 </span>

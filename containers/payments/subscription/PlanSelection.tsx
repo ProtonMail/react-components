@@ -69,7 +69,7 @@ const getFeatures = (planName: PLANS) => {
             { content: c('Plan feature').t`0.5 GB storage` },
             { content: c('Plan feature').t`1 address` },
             { content: c('Plan feature').t`3 folders / labels` },
-            { content: c('Plan feature').t`No custom email addresses`, icon: EmDash },
+            { content: c('Plan feature').t`No custom email addresses`, icon: EmDash, className: 'NICO' },
         ],
         free_vpn: [
             { content: c('Plan feature').t`1 simultaneous connection` },
