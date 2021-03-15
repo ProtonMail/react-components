@@ -53,7 +53,7 @@ const useMethods = ({ amount, coupon, type }) => {
         {
             icon: 'payments-type-card',
             value: PAYMENT_METHOD_TYPES.CARD,
-            text: c('Payment method option').t`Credit/debit card`,
+            text: c('Payment method option').t`New credit/debit card`,
         },
     ];
 

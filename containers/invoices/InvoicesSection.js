@@ -91,13 +91,15 @@ const InvoicesSection = () => {
                 <div>
                     {user.isPaid ? (
                         <Group className="mr1">
-                            <ButtonGroup className={owner === USER ? 'is-active' : ''} onClick={handleOwner(USER)}>{c(
-                                'Action'
-                            ).t`User`}</ButtonGroup>
+                            <ButtonGroup className={owner === USER ? 'is-active' : ''} onClick={handleOwner(USER)}>
+                                {c('Action').t`User`}
+                            </ButtonGroup>
                             <ButtonGroup
                                 className={owner === ORGANIZATION ? 'is-active' : ''}
                                 onClick={handleOwner(ORGANIZATION)}
-                            >{c('Action').t`Organization`}</ButtonGroup>
+                            >
+                                {c('Action').t`Organization`}
+                            </ButtonGroup>
                         </Group>
                     ) : null}
                     <Button onClick={handleOpenModal}>{c('Action').t`Customize`}</Button>

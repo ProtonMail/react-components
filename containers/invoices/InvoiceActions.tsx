@@ -20,7 +20,8 @@ const InvoiceActions = ({ invoice, fetchInvoices }: Props) => {
     const { createModal } = useModals();
     const { createNotification } = useNotifications();
     const api = useApi();
-    const [loading, withLoading] = useLoading();
+    const [downloadLoading, withDownloadLoading] = useLoading();
+    const [viewLoading, withViewLoading] = useLoading();
 
     const getInvoiceBlob = async () => {
         const buffer = await api<ArrayBuffer>(getInvoice(invoice.ID));
@@ -46,7 +47,7 @@ const InvoiceActions = ({ invoice, fetchInvoices }: Props) => {
         },
         {
             text: c('Action').t`View`,
-            onClick: () => {
+            onClick: async () => {
                 const handler = async () => {
                     const blob = await getInvoiceBlob();
 
@@ -58,22 +59,24 @@ const InvoiceActions = ({ invoice, fetchInvoices }: Props) => {
                         />
                     );
                 };
-                withLoading(handler());
+                await withViewLoading(handler());
             },
+            loading: viewLoading,
         },
         {
             text: c('Action').t`Download`,
-            onClick: () => {
+            onClick: async () => {
                 const handler = async () => {
                     const blob = await getInvoiceBlob();
                     downloadFile(blob, filename);
                 };
-                withLoading(handler());
+                await withDownloadLoading(handler());
             },
+            loading: downloadLoading,
         },
     ].filter(isTruthy);
 
-    return <DropdownActions loading={loading} list={list} className="button--small" />;
+    return <DropdownActions list={list} className="button--small" />;
 };
 
 export default InvoiceActions;
