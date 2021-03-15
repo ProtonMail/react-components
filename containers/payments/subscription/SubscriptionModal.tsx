@@ -313,21 +313,23 @@ const SubscriptionModal = ({
             {model.step === SUBSCRIPTION_STEPS.CUSTOMIZATION && (
                 <div className="flex-no-min-children on-mobile-flex-column">
                     <div className="flex-item-fluid on-mobile-w100 pr4 on-tablet-landscape-pr1 on-mobile-pr0">
-                        <PlanCustomization
-                            plans={plans}
-                            loading={loadingCheck}
-                            currency={model.currency}
-                            cycle={model.cycle}
-                            planIDs={model.planIDs}
-                            subscription={subscription}
-                            organization={organization}
-                            service={currentService}
-                            onChangePlanIDs={(planIDs) => withLoadingCheck(check({ ...model, planIDs }))}
-                            onChangeCycle={(cycle) => setModel({ ...model, cycle })}
-                            onBack={(service: PLAN_SERVICES) =>
-                                setModel({ ...model, service, step: SUBSCRIPTION_STEPS.PLAN_SELECTION })
-                            }
-                        />
+                        <div className="mlauto mrauto max-w50e">
+                            <PlanCustomization
+                                plans={plans}
+                                loading={loadingCheck}
+                                currency={model.currency}
+                                cycle={model.cycle}
+                                planIDs={model.planIDs}
+                                subscription={subscription}
+                                organization={organization}
+                                service={currentService}
+                                onChangePlanIDs={(planIDs) => withLoadingCheck(check({ ...model, planIDs }))}
+                                onChangeCycle={(cycle) => setModel({ ...model, cycle })}
+                                onBack={(service: PLAN_SERVICES) =>
+                                    setModel({ ...model, service, step: SUBSCRIPTION_STEPS.PLAN_SELECTION })
+                                }
+                            />
+                        </div>
                     </div>
                     <div className="subscriptionCheckout-column on-mobile-w100">
                         <div className="subscriptionCheckout-container">

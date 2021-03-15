@@ -134,7 +134,7 @@ const ProtonPlanPicker = ({
                                     {plan.Title}
                                     {isCurrentPlan ? ` ${yourPlanText}` : ''}
                                 </span>
-                                <span className={classnames([!isCurrentPlan && 'opacity-50'])}>
+                                <span className={classnames([!checked && 'opacity-50'])}>
                                     {isFree ? (
                                         <span>{c('Free price').t`Free`}</span>
                                     ) : (
