@@ -19,7 +19,7 @@ const ContactDecryptionErrorModal = ({ onClose = noop, contactID, ...rest }: Pro
     const { createModal } = useModals();
     const { createNotification } = useNotifications();
     const [user] = useUser();
-    const [contact] = useContact(contactID) as [Contact | undefined, boolean, Error];
+    const [contact] = useContact(contactID);
     const [errorKey, setErrorKey] = useState<Key>();
     const appLink = useAppLink();
 

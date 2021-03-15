@@ -27,7 +27,7 @@ const ContactDetailsModal = ({ contactID, onClose = noop, onMailTo, ...rest }: P
     const [userKeysList, loadingUserKeys] = useUserKeys();
     const [addresses = [], loadingAddresses] = useAddresses();
     const { loading: loadingContacts, contactEmailsMap } = useContactList({});
-    const [contact, loadingContact] = useContact(contactID);
+    const [contact, loadingContact] = useContact(contactID, onClose);
     const modalRef = useRef<HTMLDivElement>(null);
     const modalContentRef = useRef<HTMLDivElement>(null);
 
