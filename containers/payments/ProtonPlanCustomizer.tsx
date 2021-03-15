@@ -20,7 +20,7 @@ import { switchPlan, getSupportedAddons } from 'proton-shared/lib/helpers/planID
 import { getAppName } from 'proton-shared/lib/apps/helper';
 import { hasBit } from 'proton-shared/lib/helpers/bitset';
 
-import { InlineLinkButton, Icon, SelectTwo, Option, Info, Price } from '../../components';
+import { InlineLinkButton, Icon, Info, Price } from '../../components';
 import { PlanIDs } from '../signup/interfaces';
 
 const MailAddons: ADDON_NAMES[] = [ADDON_NAMES.MEMBER, ADDON_NAMES.SPACE, ADDON_NAMES.ADDRESS, ADDON_NAMES.DOMAIN];
@@ -77,20 +77,27 @@ const ButtonNumberInput = ({
                 <Icon name="minus" alt={c('Action').t`Decrease`} />
             </button>
             <label htmlFor={id} className="mt0-25 mb0-25">
-                <SelectTwo
+                <select
                     value={value}
                     disabled={disabled}
                     id={id}
-                    className="border-left border-right"
+                    style={{
+                        textAlignLast: 'center',
+                    }}
+                    className="w6e border-left border-right text-center"
                     aria-live="assertive"
-                    onChange={({ value: newValue }) => {
-                        onChange(newValue);
+                    onChange={({ target: { value: newValue } }) => {
+                        onChange(+newValue);
                     }}
                 >
                     {range(min, max + 1, step).map((quantity) => {
-                        return <Option key={`${quantity}`} value={quantity} title={`${quantity / divider}`} />;
+                        return (
+                            <option key={quantity} value={quantity}>
+                                {`${quantity / divider}`}
+                            </option>
+                        );
                     })}
-                </SelectTwo>
+                </select>
             </label>
             <button
                 type="button"
