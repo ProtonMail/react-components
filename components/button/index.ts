@@ -12,3 +12,4 @@ export { default as PrimaryButton } from './PrimaryButton';
 export { default as Group } from './Group';
 export { default as LinkButton } from './LinkButton';
 export { default as ResetButton } from './ResetButton';
+export { default as FileButton } from './FileButton';

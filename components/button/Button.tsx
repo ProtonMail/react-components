@@ -1,101 +1,17 @@
-import React from 'react';
+import React, { useRef } from 'react';
 
-import Icon, { Props as IconProps } from '../icon/Icon';
-import { classnames } from '../../helpers';
+import ButtonLike, { ButtonLikeProps } from './ButtonLike';
 
-type Shape = 'solid' | 'outline' | 'ghost';
+interface ButtonProps extends Omit<ButtonLikeProps<'button'>, 'component'> {}
 
-type Color = 'norm' | 'weak' | 'danger' | 'warning' | 'success' | 'info';
-
-type Size = 'small' | 'medium' | 'large';
-
-export interface ButtonProps extends React.ComponentPropsWithoutRef<'button'> {
-    buttonRef?: React.Ref<HTMLButtonElement>;
-    icon?: React.ReactNode;
-    /**
-     * Props supplied to the Icon component.
-     * The Icon component only renders if the "icon" prop is supplied.
-     */
-    iconProps?: IconProps;
-    /**
-     * Whether the button should render a loader.
-     * Button is disabled when this prop is true.
-     */
-    loading?: boolean;
-    shape?: Shape;
-    /**
-     * Controls the colors of the button.
-     * Exact styles applied depend on the chosen shape as well.
-     */
-    color?: Color;
-    /**
-     * Controls how large the button should be.
-     */
-    size?: Size;
-    /** Puts the button in a disabled state. */
-    disabled?: boolean;
-    /** If true, the button will take up the full width of its container. */
-    fullWidth?: boolean;
-}
-
-const Button = ({
-    buttonRef,
-    type = 'button',
-    loading = false,
-    disabled = false,
-    className,
-    tabIndex,
-    icon,
-    iconProps,
-    children,
-    shape: shapeProp,
-    color: colorProp,
-    size: sizeProp,
-    fullWidth,
-    ...rest
-}: ButtonProps) => {
-    const shape = shapeProp || 'solid';
-
-    const color = colorProp || 'weak';
-
-    const size = sizeProp || 'medium';
-
-    const isDisabled = loading || disabled;
-
-    const isUsingLegacyApi = !shapeProp && !colorProp && !sizeProp;
-
-    const iconComponent =
-        typeof icon === 'string' ? (
-            <Icon name={icon} {...iconProps} className={classnames(['flex-item-noshrink', iconProps?.className])} />
-        ) : (
-            icon
-        );
-
-    const iconButtonClass = isUsingLegacyApi ? 'button--for-icon' : 'button-for-icon';
-
-    const buttonClassName = classnames([
-        isUsingLegacyApi ? 'button' : 'button-henlo',
-        !isUsingLegacyApi && size !== 'medium' && `button-${size}`,
-        !isUsingLegacyApi && `button-${shape}-${color}`,
-        fullWidth && 'w100',
-        !children && iconButtonClass,
-        className,
-    ]);
-
+const Button = (props: ButtonProps) => {
+     const ref = useRef<HTMLButtonElement>(null);
+// think the problem is just the forwardRef typing we need to fix, yeah the ref: Ref<T> looks suspicious
     return (
-        <button
-            ref={buttonRef}
-            type={type}
-            className={buttonClassName}
-            disabled={isDisabled}
-            tabIndex={isDisabled ? -1 : tabIndex}
-            aria-busy={loading}
-            {...rest}
-        >
-            {children}
-            {iconComponent}
-        </button>
-    );
-};
+        <ButtonLike component="button" type="bxutton" ref={ref} {...props}>
+            henlo
+        </ButtonLike>
+    )
+}
 
 export default Button;
