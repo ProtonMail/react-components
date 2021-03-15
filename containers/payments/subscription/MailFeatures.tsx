@@ -131,6 +131,14 @@ const getFeatures = (): MailFeature[] => {
             [PLANS.PROFESSIONAL]: <CheckIcon />,
             [PLANS.VISIONARY]: <CheckIcon />,
         },
+        {
+            name: 'vpn',
+            label: 'ProtonVPN',
+            free: c('VPN feature option').t`Optional *`,
+            [PLANS.PLUS]: c('VPN feature option').t`Optional *`,
+            [PLANS.PROFESSIONAL]: c('VPN feature option').t`Optional *`,
+            [PLANS.VISIONARY]: c('VPN feature option').t`Included`,
+        },
     ];
 };
 

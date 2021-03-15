@@ -27,7 +27,8 @@ export type MailFeatureName =
     | 'autoresponder'
     | 'short domain'
     | 'catch all email'
-    | 'multi user support';
+    | 'multi user support'
+    | 'vpn';
 
 export type VPNFeatureName =
     | 'connections'
