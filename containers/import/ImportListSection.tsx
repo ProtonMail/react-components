@@ -22,23 +22,22 @@ const ImportListSection = () => {
     const [imports = [], importsLoading] = useImporters();
     const [pastImports = [], pastImportsLoading] = useImportHistory();
 
-    if (!imports.length && !pastImports.length) {
+    const activeImports = imports.filter(({ Active }) => Active);
+
+    if (!activeImports.length && !pastImports.length) {
         return <SettingsParagraph>{c('Info').t`No imports to display.`}</SettingsParagraph>;
     }
 
     const hasStoragePausedImports = imports.some(({ Active }) => {
         return (
-            Active &&
-            Active.State === ImportMailStatus.PAUSED &&
-            Active.ErrorCode === ImportMailError.ERROR_CODE_QUOTA_LIMIT
+            Active?.State === ImportMailStatus.PAUSED && Active?.ErrorCode === ImportMailError.ERROR_CODE_QUOTA_LIMIT
         );
     });
 
     const hasAuthPausedImports = imports.some(({ Active }) => {
         return (
-            Active &&
-            Active.State === ImportMailStatus.PAUSED &&
-            Active.ErrorCode === ImportMailError.ERROR_CODE_IMAP_CONNECTION
+            Active?.State === ImportMailStatus.PAUSED &&
+            Active?.ErrorCode === ImportMailError.ERROR_CODE_IMAP_CONNECTION
         );
     });
 
@@ -124,12 +123,11 @@ const ImportListSection = () => {
                             <tr>{headerCells}</tr>
                         </thead>
                         <TableBody>
-                            {[
-                                ...imports.filter(({ Active }) => Active).sort(sortActiveImports),
-                                ...pastImports.sort(sortPastImports),
-                            ].map((currentImport) => (
-                                <ImportListRow key={currentImport.ID} currentImport={currentImport} />
-                            ))}
+                            {[...activeImports.sort(sortActiveImports), ...pastImports.sort(sortPastImports)].map(
+                                (currentImport) => (
+                                    <ImportListRow key={currentImport.ID} currentImport={currentImport} />
+                                )
+                            )}
                         </TableBody>
                     </Table>
                 </>
