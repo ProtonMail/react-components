@@ -80,6 +80,19 @@ const VpnSubscriptionTable = ({
                 {
                     icon: 'close',
                     content: (
+                        <del className="mr0-5" key="access">
+                            <span className="opacity-50 mr0-5"> {c('Plan feature').t`Access blocked content`}</span>
+                            <Info
+                                title={c('Info')
+                                    .t`Access blocked content, like social media, news, Wikipedia, YouTube, and many others, no matter where you are.`}
+                                url="https://protonvpn.com/support/streaming-guide/"
+                            />
+                        </del>
+                    ),
+                },
+                {
+                    icon: 'close',
+                    content: (
                         <del className="mr0-5" key="secure">
                             <span className="opacity-50 mr0-5"> {c('Plan feature').t`Secure Core VPN`}</span>
                             <Info
@@ -106,12 +119,12 @@ const VpnSubscriptionTable = ({
                 {
                     icon: 'close',
                     content: (
-                        <del className="mr0-5" key="access">
-                            <span className="opacity-50 mr0-5"> {c('Plan feature').t`Access blocked content`}</span>
+                        <del className="mr0-5" key="advanced">
+                            <span className="opacity-50 mr0-5"> {c('Plan feature').t`Streaming service support`}</span>
                             <Info
                                 title={c('Info')
-                                    .t`Access geo-blocked content (Netflix, Amazon Prime Video, BBC iPlayer, Wikipedia, Facebook, YouTube, etc) no matter where you are.`}
-                                url="https://protonvpn.com/support/streaming-guide/"
+                                    .t`Access your streaming services, like Netflix, Disney+, Prime Video, and many others, no matter where you are. Bolding should be applied according to the screenshot.`}
+                                url="https://protonvpn.com/support/tor-vpn/"
                             />
                         </del>
                     ),
@@ -156,6 +169,19 @@ const VpnSubscriptionTable = ({
                     ),
                 },
                 {
+                    icon: 'arrow-right',
+                    content: (
+                        <span className="mr0-5" key="access">
+                            <span className="mr0-5"> {c('Plan feature').t`Access blocked content`}</span>
+                            <Info
+                                title={c('Info')
+                                    .t`Access blocked content, like social media, news, Wikipedia, YouTube, and many others, no matter where you are.`}
+                                url="https://protonvpn.com/support/streaming-guide/"
+                            />
+                        </span>
+                    ),
+                },
+                {
                     icon: 'close',
                     content: (
                         <del className="mr0-5" key="secure">
@@ -184,12 +210,12 @@ const VpnSubscriptionTable = ({
                 {
                     icon: 'close',
                     content: (
-                        <del className="mr0-5" key="access">
-                            <span className="opacity-50 mr0-5"> {c('Plan feature').t`Access blocked content`}</span>
+                        <del className="mr0-5" key="advanced">
+                            <span className="opacity-50 mr0-5"> {c('Plan feature').t`Streaming service support`}</span>
                             <Info
                                 title={c('Info')
-                                    .t`Access geo-blocked content (Netflix, Amazon Prime Video, BBC iPlayer, Wikipedia, Facebook, YouTube, etc) no matter where you are.`}
-                                url="https://protonvpn.com/support/streaming-guide/"
+                                    .t`Access your streaming services, like Netflix, Disney+, Prime Video, and many others, no matter where you are. Bolding should be applied according to the screenshot.`}
+                                url="https://protonvpn.com/support/tor-vpn/"
                             />
                         </del>
                     ),
@@ -236,6 +262,19 @@ const VpnSubscriptionTable = ({
                 {
                     icon: 'arrow-right',
                     content: (
+                        <span className="mr0-5" key="access">
+                            <span className="mr0-5"> {c('Plan feature').t`Access blocked content`}</span>
+                            <Info
+                                title={c('Info')
+                                    .t`Access blocked content, like social media, news, Wikipedia, YouTube, and many others, no matter where you are.`}
+                                url="https://protonvpn.com/support/streaming-guide/"
+                            />
+                        </span>
+                    ),
+                },
+                {
+                    icon: 'arrow-right',
+                    content: (
                         <span className="mr0-5">
                             <span className="mr0-5">{c('Plan feature').t`Secure Core VPN`}</span>
                             <Info
@@ -262,12 +301,12 @@ const VpnSubscriptionTable = ({
                 {
                     icon: 'arrow-right',
                     content: (
-                        <span className="mr0-5">
-                            <span className="mr0-5">{c('Plan feature').t`Access blocked content`}</span>
+                        <span className="mr0-5" key="advanced">
+                            <span className="mr0-5"> {c('Plan feature').t`Streaming service support`}</span>
                             <Info
                                 title={c('Info')
-                                    .t`Access geo-blocked content (Netflix, Amazon Prime Video, BBC iPlayer, Wikipedia, Facebook, YouTube, etc) no matter where you are.`}
-                                url="https://protonvpn.com/support/streaming-guide/"
+                                    .t`Access your streaming services, like Netflix, Disney+, Prime Video, and many others, no matter where you are. Bolding should be applied according to the screenshot.`}
+                                url="https://protonvpn.com/support/tor-vpn/"
                             />
                         </span>
                     ),
