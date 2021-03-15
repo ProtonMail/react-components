@@ -1,15 +1,10 @@
 import React, { forwardRef, Ref } from 'react';
 import { c } from 'ttag';
-
 import { clearType, getType } from 'proton-shared/lib/contacts/property';
 import { ContactProperty, ContactPropertyChange } from 'proton-shared/lib/interfaces/contacts';
 import { classnames } from '../../helpers';
-
-// import { useModals } from '../../hooks';
-
 import ContactFieldProperty from './ContactFieldProperty';
 import ContactModalLabel from './ContactModalLabel';
-// import ContactImageModal from '../../containers/contacts/modals/ContactImageModal';
 import Icon from '../icon/Icon';
 import { OrderableHandle } from '../orderable';
 import DropdownActions from '../dropdown/DropdownActions';
@@ -40,25 +35,11 @@ const ContactModalRow = (
     }: Props,
     ref: Ref<HTMLInputElement>
 ) => {
-    // const { createModal } = useModals();
     const { field, value } = property;
     const type = clearType(getType(property.type));
-    // const isImage = ['photo', 'logo'].includes(field);
-    const canDelete = !(field === 'photo' && !value); // isImage && !!value;
-
-    // const handleChangeImage = () => {
-    //     const handleSubmit = (value: string) => onChange({ uid, value });
-    //     createModal(<ContactImageModal url={property.value as string} onSubmit={handleSubmit} />);
-    // };
+    const canDelete = !(field === 'photo' && !value);
 
     const list = [];
-
-    // if (canEdit) {
-    //     list.push({
-    //         text: isImage ? c('Action').t`Change` : c('Action').t`Edit`,
-    //         onClick: handleChangeImage,
-    //     });
-    // }
 
     // Delete is always available (except when primary and no image). Primary name has action row disabled.
     if (canDelete) {
@@ -120,7 +101,7 @@ const ContactModalRow = (
                                     className={classnames([
                                         'flex flex-item-noshrink',
                                         field,
-                                        property.value,
+                                        Array.isArray(property.value) ? property.value.join(' ') : property.value,
                                         (field === 'photo' ||
                                             field === 'note' ||
                                             field === 'logo' ||
