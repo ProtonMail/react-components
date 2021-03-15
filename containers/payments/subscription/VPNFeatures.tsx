@@ -1,6 +1,6 @@
 import React from 'react';
 import { c } from 'ttag';
-import { PLANS } from 'proton-shared/lib/constants';
+import { APPS, PLANS } from 'proton-shared/lib/constants';
 
 import { useVPNCountries } from '../../../hooks';
 import { Icon } from '../../../components';
@@ -188,7 +188,9 @@ const VPNFeatures = ({ onSelect }: Props) => {
         { label: 'Visionary', key: PLANS.VISIONARY },
     ];
 
-    return <Features onSelect={onSelect} planLabels={planLabels} features={features} />;
+    return (
+        <Features appName={APPS.PROTONVPN_SETTINGS} onSelect={onSelect} planLabels={planLabels} features={features} />
+    );
 };
 
 export default VPNFeatures;

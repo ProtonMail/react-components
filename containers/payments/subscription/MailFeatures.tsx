@@ -1,6 +1,6 @@
 import React from 'react';
 import { c } from 'ttag';
-import { PLANS } from 'proton-shared/lib/constants';
+import { APPS, PLANS } from 'proton-shared/lib/constants';
 
 import { Icon } from '../../../components';
 import { MailFeature } from './interface';
@@ -146,17 +146,7 @@ const MailFeatures = ({ onSelect }: Props) => {
         { label: 'Professional', key: PLANS.PROFESSIONAL },
         { label: 'Visionary', key: PLANS.VISIONARY },
     ];
-    return (
-        <>
-            <Features onSelect={onSelect} planLabels={planLabels} features={features} />
-            <p className="text-sm mt1 mb1">* {c('Info concerning plan features').t`Denotes customizable features`}</p>
-            <p className="text-sm mt0 mb1">
-                **{' '}
-                {c('Info concerning plan features')
-                    .t`ProtonMail cannot be used for mass emailing or spamming. Legitimate emails are unlimited.`}
-            </p>
-        </>
-    );
+    return <Features appName={APPS.PROTONMAIL} onSelect={onSelect} planLabels={planLabels} features={features} />;
 };
 
 export default MailFeatures;

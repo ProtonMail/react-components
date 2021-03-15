@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef } from 'react';
 import { c } from 'ttag';
 import { Currency, Cycle, Organization, Plan, PlanIDs, Subscription } from 'proton-shared/lib/interfaces';
 import { toMap } from 'proton-shared/lib/helpers/object';
@@ -141,8 +141,8 @@ const PlanSelection = ({
     onChangeCycle,
     onChangeCurrency,
 }: Props) => {
-    const [showAllFeatures, setShowAllFeatures] = useState(false);
     const currentPlan = subscription ? getPlan(subscription, service) : null;
+    const featuresRef = useRef<HTMLDivElement>(null);
     const mailAppName = getAppName(APPS.PROTONMAIL);
     const isVpnApp = service === PLAN_SERVICES.VPN;
     const planNamesMap = toMap(plans, 'Name');
@@ -171,6 +171,18 @@ const PlanSelection = ({
     } as const;
 
     const boldSave = <strong key="save">{c('Info').t`Save 20%`}</strong>;
+
+    const handleScroll = () => {
+        const container = document.querySelector('.modal-content-inner');
+        if (!featuresRef.current || !container) {
+            return;
+        }
+        const { offsetTop } = featuresRef.current;
+        container.scroll({
+            top: offsetTop,
+            behavior: 'smooth',
+        });
+    };
 
     return (
         <>
@@ -237,49 +249,53 @@ const PlanSelection = ({
             </div>
             <p className="text-sm">{c('Info').t`* Customizable features`}</p>
             <p className="text-center">
-                <InlineLinkButton onClick={() => setShowAllFeatures(!showAllFeatures)}>
-                    <span className="mr0-5">
-                        {showAllFeatures ? c('Action').t`Hide all features` : c('Action').t`Compare all features`}
-                    </span>
-                    <Icon name={showAllFeatures ? 'arrow-up' : 'arrow-down'} />
+                <InlineLinkButton onClick={handleScroll}>
+                    <span className="mr0-5">{c('Action').t`Compare all features`}</span>
+                    <Icon name="arrow-down" />
                 </InlineLinkButton>
             </p>
-            {showAllFeatures ? (
-                <>
-                    {service === PLAN_SERVICES.MAIL ? (
-                        <MailFeatures
-                            onSelect={(planName) => {
-                                const plan = plans.find(({ Name }) => Name === planName);
-                                onChangePlanIDs(
-                                    switchPlan({
-                                        planIDs,
-                                        plans,
-                                        planID: plan?.ID,
-                                        service,
-                                        organization,
-                                    })
-                                );
-                            }}
-                        />
-                    ) : null}
-                    {service === PLAN_SERVICES.VPN ? (
-                        <VPNFeatures
-                            onSelect={(planName) => {
-                                const plan = plans.find(({ Name }) => Name === planName);
-                                onChangePlanIDs(
-                                    switchPlan({
-                                        planIDs,
-                                        plans,
-                                        planID: plan?.ID,
-                                        service,
-                                        organization,
-                                    })
-                                );
-                            }}
-                        />
-                    ) : null}
-                </>
-            ) : null}
+            <div ref={featuresRef}>
+                {service === PLAN_SERVICES.MAIL ? (
+                    <MailFeatures
+                        onSelect={(planName) => {
+                            const plan = plans.find(({ Name }) => Name === planName);
+                            onChangePlanIDs(
+                                switchPlan({
+                                    planIDs,
+                                    plans,
+                                    planID: plan?.ID,
+                                    service,
+                                    organization,
+                                })
+                            );
+                        }}
+                    />
+                ) : null}
+                {service === PLAN_SERVICES.VPN ? (
+                    <VPNFeatures
+                        onSelect={(planName) => {
+                            const plan = plans.find(({ Name }) => Name === planName);
+                            onChangePlanIDs(
+                                switchPlan({
+                                    planIDs,
+                                    plans,
+                                    planID: plan?.ID,
+                                    service,
+                                    organization,
+                                })
+                            );
+                        }}
+                    />
+                ) : null}
+                <p className="text-sm mt1 mb1">
+                    * {c('Info concerning plan features').t`Denotes customizable features`}
+                </p>
+                <p className="text-sm mt0 mb1">
+                    **{' '}
+                    {c('Info concerning plan features')
+                        .t`ProtonMail cannot be used for mass emailing or spamming. Legitimate emails are unlimited.`}
+                </p>
+            </div>
         </>
     );
 };

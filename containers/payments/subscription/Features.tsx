@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
-import { PLANS } from 'proton-shared/lib/constants';
+import { PLANS, APP_NAMES, APPS_CONFIGURATION } from 'proton-shared/lib/constants';
 
 import { useActiveBreakpoint } from '../../../hooks';
 import { MailFeature, VPNFeature, CalendarFeature, PlanLabel } from './interface';
-import { PrimaryButton, Tabs } from '../../../components';
+import { PrimaryButton, Tabs, Icon } from '../../../components';
 
 interface Props {
+    appName: APP_NAMES;
     planLabels: PlanLabel[];
     features: (MailFeature | VPNFeature | CalendarFeature)[];
     onSelect: (planName: PLANS | 'free') => void;
@@ -14,9 +15,10 @@ interface Props {
 
 type UghRest = keyof Omit<MailFeature | VPNFeature | CalendarFeature, 'name' | 'label'>;
 
-const Features = ({ onSelect, planLabels, features }: Props) => {
+const Features = ({ appName, onSelect, planLabels, features }: Props) => {
     const { isNarrow } = useActiveBreakpoint();
     const [tab, setTab] = useState(0);
+    const { icon, name } = APPS_CONFIGURATION[appName];
 
     if (isNarrow) {
         return (
@@ -32,7 +34,10 @@ const Features = ({ onSelect, planLabels, features }: Props) => {
                             <table key={key} className="simple-table text-cut simple-table--alternate-bg-row w100">
                                 <thead>
                                     <tr>
-                                        <th scope="col">{c('Title').t`All features`}</th>
+                                        <th scope="col">
+                                            <Icon name={icon} alt={name} className="mr1" />
+                                            <strong>{name}</strong>
+                                        </th>
                                         <th scope="col">{label}</th>
                                     </tr>
                                 </thead>
@@ -58,7 +63,10 @@ const Features = ({ onSelect, planLabels, features }: Props) => {
         <table className="simple-table text-cut simple-table--alternate-bg-row w100">
             <thead>
                 <tr>
-                    <th scope="col">{c('Title').t`All features`}</th>
+                    <th scope="col">
+                        <Icon name={icon} alt={name} className="mr1" />
+                        <strong>{name}</strong>
+                    </th>
                     {planLabels.map(({ label, key }) => (
                         <th scope="col" key={key}>
                             {label}
