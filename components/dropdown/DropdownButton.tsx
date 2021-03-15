@@ -1,33 +1,31 @@
 import React from 'react';
 import { classnames } from '../../helpers';
+import Button, { ButtonProps } from '../button/Button';
 import DropdownCaret from './DropdownCaret';
 
-export interface Props
-    extends React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement> {
+export interface Props extends ButtonProps {
     loading?: boolean;
     buttonRef?: React.Ref<HTMLButtonElement>;
     icon?: React.ReactNode;
     caretClassName?: string;
     hasCaret?: boolean;
     isOpen?: boolean;
-    children?: React.ReactNode;
-    className?: string;
-    disabled?: boolean;
 }
 
 const DropdownButton = ({
     children,
     buttonRef,
-    className = 'button',
+    className,
     hasCaret = false,
     isOpen = false,
     caretClassName = '',
     disabled = false,
     loading = false,
+    icon,
     ...rest
 }: Props) => {
     return (
-        <button
+        <Button
             ref={buttonRef}
             type="button"
             className={classnames(['flex-item-noshrink', className])}
@@ -35,13 +33,16 @@ const DropdownButton = ({
             aria-busy={loading}
             disabled={loading ? true : disabled}
             data-testid="dropdown-button"
+            iconSide="right"
+            icon={
+                hasCaret ? (
+                    <DropdownCaret className={classnames(['flex-item-noshrink', caretClassName])} isOpen={isOpen} />
+                ) : undefined
+            }
             {...rest}
         >
-            <span className="mauto">
-                <span className={classnames([hasCaret && children ? 'mr0-5' : undefined])}>{children}</span>
-                {hasCaret && <DropdownCaret className={caretClassName} isOpen={isOpen} />}
-            </span>
-        </button>
+            {children}
+        </Button>
     );
 };
 

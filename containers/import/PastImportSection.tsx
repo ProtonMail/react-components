@@ -65,11 +65,8 @@ const DeleteButton = ({ ID }: DeleteButtonProps) => {
     };
 
     return (
-        <Button
-            loading={loadingActions}
-            className="button--small"
-            onClick={() => withLoadingActions(handleDelete())}
-        >{c('Action').t`Delete record`}</Button>
+        <Button loading={loadingActions} size="small" onClick={() => withLoadingActions(handleDelete())}>{c('Action')
+            .t`Delete record`}</Button>
     );
 };
 

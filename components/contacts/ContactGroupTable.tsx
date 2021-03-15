@@ -3,7 +3,7 @@ import { c } from 'ttag';
 
 import { ContactEmail } from 'proton-shared/lib/interfaces/contacts';
 import { Table, TableHeader, TableBody, TableRow, TableCell } from '../table';
-import { SmallButton } from '../button';
+import { Button } from '../button';
 
 interface Props {
     contactEmails: ContactEmail[];
@@ -34,9 +34,15 @@ const ContactGroupTable = ({ contactEmails, onDelete }: Props) => {
                                     <div className="text-ellipsis max-w100" key={ID} title={Email}>
                                         {Email}
                                     </div>,
-                                    <SmallButton key={ID} onClick={() => onDelete(ID)} className="button--redborder">
+                                    <Button
+                                        key={ID}
+                                        onClick={() => onDelete(ID)}
+                                        color="danger"
+                                        shape="outline"
+                                        size="small"
+                                    >
                                         {c('Action').t`Remove`}
-                                    </SmallButton>,
+                                    </Button>,
                                 ];
                                 return <TableRow key={ID} cells={cells} />;
                             })}

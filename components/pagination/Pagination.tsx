@@ -63,11 +63,7 @@ const Pagination = ({
                     onClick={onPrevious}
                 />
             ) : null}
-            <SimpleDropdown
-                className="button grouped-button button--for-icon"
-                title={c('Title').t`Open pagination`}
-                content={page}
-            >
+            <SimpleDropdown className="grouped-button" title={c('Title').t`Open pagination`} content={page}>
                 <DropdownMenu>{actions}</DropdownMenu>
             </SimpleDropdown>
             {hasNext ? (

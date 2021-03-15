@@ -1,13 +1,10 @@
 import React from 'react';
 import Button, { ButtonProps } from './Button';
-import { classnames } from '../../helpers';
 
-const ErrorButton = ({ children, className, ...rest }: ButtonProps) => {
-    return (
-        <Button className={classnames(['button--error', className])} {...rest}>
-            {children}
-        </Button>
-    );
+export type ErrorButtonProps = Omit<ButtonProps, 'color'>;
+
+const ErrorButton = (props: ErrorButtonProps) => {
+    return <Button color="danger" {...props} />;
 };
 
 export default ErrorButton;

@@ -125,33 +125,39 @@ const ContactViewProperty = ({
                 return (
                     <>
                         {!isOwnAddress && (
-                            <Button onClick={handleSettings} className="ml0-5 button--for-icon">
-                                <Tooltip title={c('Title').t`Email settings`}>
-                                    <Icon name="settings-singular" alt={c('Action').t`Email settings`} />
-                                </Tooltip>
-                            </Button>
+                            <Button
+                                onClick={handleSettings}
+                                className="ml0-5 relative"
+                                icon={
+                                    <Tooltip title={c('Title').t`Email settings`} className="increase-click-surface">
+                                        <Icon name="settings-singular" alt={c('Action').t`Email settings`} />
+                                    </Tooltip>
+                                }
+                            />
                         )}
                         {hasPaidMail ? (
                             <ContactGroupDropdown
-                                className="ml0-5 button button--for-icon"
+                                className="ml0-5 relative"
                                 contactEmails={[contactEmail]}
-                            >
-                                <Tooltip title={c('Title').t`Contact group`}>
-                                    <Icon name="contacts-groups" alt={c('Action').t`Contact group`} />
-                                </Tooltip>
-                            </ContactGroupDropdown>
+                                icon={
+                                    <Tooltip title={c('Title').t`Contact group`} className="increase-click-surface">
+                                        <Icon name="contacts-groups" alt={c('Action').t`Contact group`} />
+                                    </Tooltip>
+                                }
+                            />
                         ) : (
                             <Button
                                 onClick={() => createModal(<ContactUpgradeModal />)}
-                                className="ml0-5 button--for-icon"
-                            >
-                                <Tooltip title={c('Title').t`Contact group`}>
-                                    <Icon name="contacts-groups" alt={c('Action').t`Contact group`} />
-                                </Tooltip>
-                            </Button>
+                                className="ml0-5 relative"
+                                icon={
+                                    <Tooltip title={c('Title').t`Contact group`} className="increase-click-surface">
+                                        <Icon name="contacts-groups" alt={c('Action').t`Contact group`} />
+                                    </Tooltip>
+                                }
+                            />
                         )}
                         <Copy
-                            className="ml0-5 button--for-icon"
+                            className="ml0-5"
                             value={value}
                             onCopy={() => {
                                 createNotification({ text: c('Success').t`Email address copied to clipboard` });
@@ -163,7 +169,7 @@ const ContactViewProperty = ({
             case 'tel':
                 return (
                     <Copy
-                        className="ml0-5 button--for-icon"
+                        className="ml0-5"
                         value={value}
                         onCopy={() => {
                             createNotification({ text: c('Success').t`Phone number copied to clipboard` });
@@ -173,7 +179,7 @@ const ContactViewProperty = ({
             case 'adr':
                 return (
                     <Copy
-                        className="ml0-5 button--for-icon"
+                        className="ml0-5"
                         value={formatAdr(property?.value as string[])}
                         onCopy={() => {
                             createNotification({ text: c('Success').t`Address copied to clipboard` });

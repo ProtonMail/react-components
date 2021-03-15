@@ -17,6 +17,7 @@ const AppsDropdown = () => {
         <SimpleDropdown
             hasCaret={false}
             content={<Icon name="more" className="apps-dropdown-button-icon flex-item-noshrink" />}
+            reset
             className="apps-dropdown-button"
             dropdownClassName="apps-dropdown"
             originalPlacement="bottom-right"

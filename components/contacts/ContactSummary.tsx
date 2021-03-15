@@ -115,28 +115,35 @@ const ContactSummary = ({
                 <div className="flex-item-noshrink pt0-5 on-mobile-text-center mb1">
                     {!hasError && (
                         <Tooltip title={c('Action').t`Edit`} className="ml0-5">
-                            <Button onClick={() => onEdit()} className="button--for-icon inline-flex">
-                                <Icon className="color-primary mt0-25 mb0-1" name="pen" alt={c('Action').t`Edit`} />
-                            </Button>
+                            <Button
+                                onClick={() => onEdit()}
+                                className="inline-flex"
+                                color="norm"
+                                shape="outline"
+                                icon={<Icon name="pen" alt={c('Action').t`Edit`} />}
+                            />
                         </Tooltip>
                     )}
 
                     {!hasError && (
                         <Tooltip title={c('Action').t`Export`} className="ml0-5">
-                            <Button onClick={onExport} className="button--for-icon inline-flex">
-                                <Icon className="mt0-25 mb0-1" name="export" alt={c('Action').t`Export`} />
-                            </Button>
+                            <Button
+                                onClick={onExport}
+                                className="inline-flex"
+                                shape="outline"
+                                icon={<Icon name="export" alt={c('Action').t`Export`} />}
+                            />
                         </Tooltip>
                     )}
 
                     <Tooltip title={c('Action').t`Delete`} className="ml0-5">
-                        <Button onClick={onDelete} className="button--for-icon inline-flex">
-                            <Icon
-                                className="color-global-warning mt0-25 mb0-1"
-                                name="trash"
-                                alt={c('Action').t`Delete`}
-                            />
-                        </Button>
+                        <Button
+                            shape="outline"
+                            color="danger"
+                            onClick={onDelete}
+                            className="inline-flex"
+                            icon={<Icon name="trash" alt={c('Action').t`Delete`} />}
+                        />
                     </Tooltip>
                 </div>
             )}

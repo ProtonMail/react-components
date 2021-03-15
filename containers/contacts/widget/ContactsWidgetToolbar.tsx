@@ -45,41 +45,22 @@ const ContactsWidgetToolbar = ({
                 </label>
             </Tooltip>
             <Tooltip className="mr0-5" title={c('Action').t`Compose`}>
-                <Button
-                    className="button--for-icon inline-flex pt0-5 pb0-5"
-                    icon="email"
-                    onClick={onCompose}
-                    disabled={noSelection}
-                >
+                <Button className="inline-flex pt0-5 pb0-5" icon="email" onClick={onCompose} disabled={noSelection}>
                     <span className="sr-only">{c('Action').t`Compose`}</span>
                 </Button>
             </Tooltip>
             <Tooltip className="mr0-5" title={c('Action').t`Forward as attachment`}>
-                <Button
-                    className="button--for-icon inline-flex pt0-5 pb0-5"
-                    icon="forward"
-                    onClick={onForward}
-                    disabled={noSelection}
-                >
+                <Button className="inline-flex pt0-5 pb0-5" icon="forward" onClick={onForward} disabled={noSelection}>
                     <span className="sr-only">{c('Action').t`Forward as attachment`}</span>
                 </Button>
             </Tooltip>
             <Tooltip title={deleteText}>
-                <Button
-                    className="button--for-icon inline-flex pt0-5 pb0-5"
-                    icon="trash"
-                    onClick={onDelete}
-                    disabled={noSelection}
-                >
+                <Button className="inline-flex pt0-5 pb0-5" icon="trash" onClick={onDelete} disabled={noSelection}>
                     <span className="sr-only">{deleteText}</span>
                 </Button>
             </Tooltip>
             <Tooltip className="mlauto" title={c('Action').t`Add new contact`}>
-                <Button
-                    className="button--for-icon button--primary inline-flex pt0-5 pb0-5"
-                    icon="contact-add"
-                    onClick={onCreate}
-                >
+                <Button color="norm" className="inline-flex pt0-5 pb0-5" icon="contact-add" onClick={onCreate}>
                     <span className="sr-only">{c('Action').t`Add new contact`}</span>
                 </Button>
             </Tooltip>

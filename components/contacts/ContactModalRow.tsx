@@ -102,7 +102,7 @@ const ContactModalRow = forwardRef<HTMLInputElement, Props>(
                             <div className="min-w3e">
                                 {list.length > 0 && (
                                     <div className="flex flex-item-noshrink flex-align-items-start">
-                                        <DropdownActions className="button--for-icon" list={list} />
+                                        <DropdownActions list={list} />
                                     </div>
                                 )}
                             </div>

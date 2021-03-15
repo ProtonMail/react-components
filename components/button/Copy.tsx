@@ -1,17 +1,19 @@
 import React, { MouseEvent } from 'react';
 import { c } from 'ttag';
 import { textToClipboard } from 'proton-shared/lib/helpers/browser';
+
 import { Icon } from '../icon';
 import { Tooltip } from '../tooltip';
-import Button from './Button';
+import { classnames } from '../../helpers';
+import Button, { ButtonProps } from './Button';
 
-interface Props {
+interface Props extends ButtonProps {
     value: string;
     className?: string;
     onCopy?: () => void;
 }
 
-const Copy = ({ value, className = '', onCopy }: Props) => {
+const Copy = ({ value, className = '', onCopy, ...rest }: Props) => {
     const handleClick = (e: MouseEvent<HTMLButtonElement>) => {
         e.stopPropagation();
         textToClipboard(value, e.currentTarget);
@@ -19,12 +21,16 @@ const Copy = ({ value, className = '', onCopy }: Props) => {
     };
 
     return (
-        <Button onClick={handleClick} className={className}>
-            <Tooltip className="flex" title={c('Label').t`Copy`}>
-                <Icon name="clipboard" />
-                <span className="sr-only">{c('Label').t`Copy`}</span>
-            </Tooltip>
-        </Button>
+        <Button
+            onClick={handleClick}
+            className={classnames(['relative', className])}
+            icon={
+                <Tooltip className="increase-click-surface" title={c('Label').t`Copy`}>
+                    <Icon name="attach" alt={c('Label').t`Copy`} />
+                </Tooltip>
+            }
+            {...rest}
+        />
     );
 };
 

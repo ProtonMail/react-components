@@ -165,7 +165,7 @@ const FilterActionsFormFolderRow = ({ folders, isNarrow, actions, handleUpdateAc
                 <Button
                     disabled={!moveTo?.folder}
                     onClick={handleClear}
-                    className={classnames(['button--for-icon', isNarrow ? 'mt1' : 'ml1'])}
+                    className={classnames(['button-for-icon', isNarrow ? 'mt1' : 'ml1'])}
                 >
                     <Tooltip
                         title={c('Action').t`Reset`}

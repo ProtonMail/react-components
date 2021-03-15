@@ -34,7 +34,7 @@ const OpenVPNAccountSection = () => {
                     <code title={Name}>{Name}</code>
                 </div>
                 <div className="flex flex-item-noshrink on-mobile-mt0-5">
-                    <Copy className="button--for-icon pt0-5 pb0-5" value={Name} />
+                    <Copy className="pt0-5 pb0-5" value={Name} />
                 </div>
             </div>
             <div className="flex flex-align-items-center mb1 on-mobile-flex-column">
@@ -43,7 +43,7 @@ const OpenVPNAccountSection = () => {
                     <code>{show ? Password : '••••••••••••••••'}</code>
                 </div>
                 <div className="flex flex-item-noshrink on-mobile-mt0-5">
-                    <Copy className="mr1 button--for-icon" value={Password} />
+                    <Copy className="mr1" value={Password} />
                     <Button
                         icon={show ? 'unread' : 'read'}
                         onClick={() => setShow(!show)}

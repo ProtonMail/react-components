@@ -48,9 +48,10 @@ const SquireToolbarDropdown = ({
                     isOpen={isOpen}
                     onClick={handleClick}
                     hasCaret
+                    reset
                     disabled={disabled}
                     caretClassName="editor-toolbar-icon"
-                    className="editor-toolbar-button composer-toolbar-fontDropDown max-w100"
+                    className="editor-toolbar-button composer-toolbar-fontDropDown max-w100 flex flex-align-items-center flex-nowrap"
                     tabIndex={-1}
                     {...rest}
                 >

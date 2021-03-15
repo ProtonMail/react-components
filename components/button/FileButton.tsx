@@ -1,6 +1,6 @@
 import React, { ChangeEvent, KeyboardEvent, useRef, ReactNode } from 'react';
 import { classnames } from '../../helpers';
-import Icon from '../icon/Icon';
+import ButtonLike from './ButtonLike';
 
 import './FileButton.scss';
 
@@ -29,21 +29,21 @@ const FileButton = ({ onAddFiles, icon = 'attach', disabled, className, children
 
     return (
         <div className="file-button flex">
-            <label
+            <ButtonLike
+                as="label"
                 role="button"
                 tabIndex={0}
                 className={classnames([
-                    'button inline-flex relative flex-align-items-center',
-                    icon && !children && 'button--for-icon',
+                    'inline-flex relative flex-align-items-center',
                     disabled && 'is-disabled',
                     className,
                 ])}
                 onKeyDown={handleKey}
+                icon={icon}
             >
-                <Icon name="attach" />
                 {children}
                 <input ref={inputRef} type="file" multiple onChange={handleChange} {...rest} />
-            </label>
+            </ButtonLike>
         </div>
     );
 };

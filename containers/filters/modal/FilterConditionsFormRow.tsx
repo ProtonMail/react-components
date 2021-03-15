@@ -287,7 +287,7 @@ const FilterConditionsRow = ({
                     <div>
                         <Button
                             onClick={() => handleDelete(conditionIndex)}
-                            className={classnames(['button--for-icon', isNarrow ? 'mt1' : 'ml1'])}
+                            className={classnames(['button-for-icon', isNarrow ? 'mt1' : 'ml1'])}
                         >
                             <Tooltip title={c('Action').t`Delete`} className="color-global-warning">
                                 <Icon name="trash" />

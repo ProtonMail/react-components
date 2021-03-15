@@ -1,13 +1,10 @@
 import React from 'react';
 import Button, { ButtonProps } from './Button';
-import { classnames } from '../../helpers';
 
-const WarningButton = ({ children, className = '', ...rest }: ButtonProps) => {
-    return (
-        <Button className={classnames(['button--warning', className])} {...rest}>
-            {children}
-        </Button>
-    );
+export type WarningButtonProps = Omit<ButtonProps, 'color'>;
+
+const WarningButton = (props: WarningButtonProps) => {
+    return <Button color="warning" {...props} />;
 };
 
 export default WarningButton;

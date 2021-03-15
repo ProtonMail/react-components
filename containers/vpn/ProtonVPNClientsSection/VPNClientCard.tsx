@@ -1,6 +1,6 @@
 import React from 'react';
 import { c } from 'ttag';
-import { Bordered, Icon, Block, Href, SimpleDropdown, DropdownMenu, Group } from '../../../components';
+import { Bordered, Icon, Block, Href, SimpleDropdown, DropdownMenu, Group, ButtonLike } from '../../../components';
 
 interface Props {
     title: string;
@@ -17,20 +17,20 @@ const VPNClientCard = ({ title, link, items, icon }: Props) => {
             <Block>{title}</Block>
             {!items ? (
                 <div className="pl1-25 pr1-25 flex mt1 flex-justify-center">
-                    <Href url={link} className="button">
+                    <ButtonLike as={Href} url={link}>
                         {c('Action').t`Download`}
                         <span className="sr-only">{title}</span>
-                    </Href>
+                    </ButtonLike>
                 </div>
             ) : (
                 <Group className="flex mt1 flex-justify-center">
-                    <Href url={link} className="button grouped-button">
+                    <ButtonLike as={Href} url={link} className="grouped-button">
                         {c('Action').t`Download`}
                         <span className="sr-only">{title}</span>
-                    </Href>
+                    </ButtonLike>
                     <SimpleDropdown
                         originalPlacement="bottom-right"
-                        className="button grouped-button button--for-icon"
+                        className="grouped-button"
                         title={c('Title').t`Open actions dropdown`}
                         content=""
                     >

@@ -105,7 +105,7 @@ const FilterActionsFormMarkAsRow = ({ isNarrow, actions, handleUpdateActions, is
                 <Button
                     disabled={!markAs?.read && !markAs?.starred}
                     onClick={handleClear}
-                    className={classnames(['button--for-icon', isNarrow ? 'mt1' : 'ml1'])}
+                    className={classnames(['button-for-icon', isNarrow ? 'mt1' : 'ml1'])}
                 >
                     <Tooltip
                         title={c('Action').t`Reset`}

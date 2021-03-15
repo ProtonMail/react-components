@@ -10,7 +10,8 @@ import Dropdown from '../../components/dropdown/Dropdown';
 import Tooltip from '../../components/tooltip/Tooltip';
 import Icon from '../../components/icon/Icon';
 import SearchInput from '../../components/input/SearchInput';
-import { SmallButton, PrimaryButton } from '../../components/button';
+import { ButtonProps } from '../../components/button/Button';
+import { Button } from '../../components/button';
 import Mark from '../../components/text/Mark';
 import Checkbox from '../../components/input/Checkbox';
 import ContactGroupModal from './modals/ContactGroupModal';
@@ -46,15 +47,15 @@ const getModel = (contactGroups: ContactGroup[] = [], contactEmails: ContactEmai
     }, Object.create(null));
 };
 
-interface Props {
-    children: ReactNode;
+interface Props extends ButtonProps {
+    children?: ReactNode;
     className: string;
     disabled?: boolean;
     contactEmails: ContactEmail[];
     forToolbar?: boolean;
 }
 
-const ContactGroupDropdown = ({ children, className, contactEmails, disabled = false, forToolbar = false }: Props) => {
+const ContactGroupDropdown = ({ children, className, contactEmails, disabled = false, forToolbar = false, ...rest }: Props) => {
     const [keyword, setKeyword] = useState('');
     const [loading, withLoading] = useLoading();
     const { anchorRef, isOpen, toggle, close } = usePopperAnchor();
@@ -112,6 +113,7 @@ const ContactGroupDropdown = ({ children, className, contactEmails, disabled = f
                 disabled={disabled}
                 buttonRef={anchorRef}
                 isOpen={isOpen}
+                {...rest}
                 onClick={toggle}
             >
                 {children}
@@ -128,9 +130,16 @@ const ContactGroupDropdown = ({ children, className, contactEmails, disabled = f
                 <div className="flex flex-justify-space-between flex-align-items-center m1 mb0">
                     <strong>{c('Label').t`Add to group`}</strong>
                     <Tooltip title={c('Info').t`Create a new contact group`}>
-                        <SmallButton className="button--primary button--for-icon" onClick={handleAdd}>
-                            <Icon name="contacts-groups" />+
-                        </SmallButton>
+                        <Button
+                            size="small"
+                            className="button--for-icon"
+                            onClick={handleAdd}
+                            icon={
+                                <>
+                                    <Icon name="contacts-groups" />+
+                                </>
+                            }
+                        />
                     </Tooltip>
                 </div>
                 <div className="m1 mb0">
@@ -185,14 +194,15 @@ const ContactGroupDropdown = ({ children, className, contactEmails, disabled = f
                     ) : null}
                 </div>
                 <div className="m1">
-                    <PrimaryButton
-                        className="w100"
+                    <Button
+                        color="norm"
+                        fullWidth
                         loading={loading}
                         disabled={!filteredContactGroups.length}
                         onClick={() => withLoading(handleApply())}
                     >
                         {c('Action').t`Apply`}
-                    </PrimaryButton>
+                    </Button>
                 </div>
             </Dropdown>
         </>

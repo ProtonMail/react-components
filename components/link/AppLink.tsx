@@ -7,7 +7,7 @@ import { LoginTypes } from 'proton-shared/lib/authentication/LoginInterface';
 import { useAuthentication, useConfig, useLoginType } from '../../hooks';
 import Tooltip from '../tooltip/Tooltip';
 
-export interface Props extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
+export interface Props extends Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, 'color'> {
     to: string;
     toApp?: APP_NAMES;
 }
