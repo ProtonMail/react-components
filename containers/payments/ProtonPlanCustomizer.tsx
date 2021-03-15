@@ -23,6 +23,8 @@ import { hasBit } from 'proton-shared/lib/helpers/bitset';
 import { InlineLinkButton, Icon, Info, Price } from '../../components';
 import { PlanIDs } from '../signup/interfaces';
 
+import { classnames } from '../../helpers';
+
 const MailAddons: ADDON_NAMES[] = [ADDON_NAMES.MEMBER, ADDON_NAMES.SPACE, ADDON_NAMES.ADDRESS, ADDON_NAMES.DOMAIN];
 const VPNAddons: ADDON_NAMES[] = [ADDON_NAMES.VPN];
 const AddonKey = {
@@ -64,19 +66,20 @@ const ButtonNumberInput = ({
     onChange: (newValue: number) => void;
 }) => {
     return (
-        <div className="bordered-container flex flex-nowrap flex-items-align-center">
+        <div className="bordered-container flex flex-nowrap">
             <button
                 type="button"
-                className="pl0-5 pr0-5"
+                title={c('Action').t`Decrease`}
+                className={classnames(['p0-5 flex', (disabled || value - step < min) && 'opacity-50'])}
                 disabled={disabled || value - step < min}
                 onClick={() => {
                     const newValue = value - step;
                     onChange(newValue);
                 }}
             >
-                <Icon name="minus" alt={c('Action').t`Decrease`} />
+                <Icon name="minus" alt={c('Action').t`Decrease`} className="mauto" />
             </button>
-            <label htmlFor={id} className="mt0-25 mb0-25">
+            <label htmlFor={id} className="mt0-5 flex mb0-5">
                 <select
                     value={value}
                     disabled={disabled}
@@ -101,14 +104,15 @@ const ButtonNumberInput = ({
             </label>
             <button
                 type="button"
-                className="pl0-5 pr0-5"
+                title={c('Action').t`Increase`}
+                className={classnames(['p0-5 flex', (disabled || value + step > max) && 'opacity-50'])}
                 disabled={disabled || value + step > max}
                 onClick={() => {
                     const newValue = value + step;
                     onChange(newValue);
                 }}
             >
-                <Icon name="plus" alt={c('Action').t`Increase`} />
+                <Icon name="plus" alt={c('Action').t`Increase`} className="mauto" />
             </button>
         </div>
     );
