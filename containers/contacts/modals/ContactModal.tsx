@@ -22,6 +22,7 @@ import ContactModalRow from '../../../components/contacts/ContactModalRow';
 const DEFAULT_MODEL = [
     { field: 'fn', value: '' },
     { field: 'email', value: '' },
+    { field: 'photo', value: '' },
 ];
 const { OVERWRITE_CONTACT, THROW_ERROR_IF_CONFLICT } = OVERWRITE;
 const { INCLUDE, IGNORE } = CATEGORIES;
@@ -34,6 +35,14 @@ const UID_PREFIX = 'contact-property';
 const formatModel = (properties: ContactProperties = []): ContactProperties => {
     if (!properties.length) {
         return DEFAULT_MODEL.map((property) => ({ ...property, uid: generateUID(UID_PREFIX) })); // Add UID to localize the property easily;
+    }
+    // Ensure name exists even if it should always be there
+    if (!properties.find((property) => property.field === 'fn')) {
+        properties.push({ field: 'fn', value: '' });
+    }
+    // Ensure photo field is prepared
+    if (!properties.find((property) => property.field === 'photo')) {
+        properties.push({ field: 'photo', value: '' });
     }
     return properties
         .filter(({ field }) => editableFields.includes(field)) // Only includes editable properties that we decided
@@ -68,33 +77,45 @@ const ContactModal = ({
 
     const title = contactID ? c('Title').t`Edit contact` : c('Title').t`Create contact`;
 
-    const nameProperty = useMemo(() => {
-        const existing = allProperties.find((property) => property.field === 'fn');
-        if (existing) {
-            return existing;
-        }
-        return { field: 'fn', value: '', uid: generateUID(UID_PREFIX) };
-    }, [allProperties]);
-    const photoProperty = useMemo(() => {
-        const existing = allProperties.find((property) => property.field === 'photo');
-        if (existing) {
-            return existing;
-        }
-        return { field: 'photo', value: '', uid: generateUID(UID_PREFIX) };
-    }, [allProperties]);
+    const nameProperty = useMemo(
+        // Ignoring undefined should be ok because formatModel should prevent the field to not exist
+        () => allProperties.find((property) => property.field === 'fn') as ContactProperty,
+        [allProperties]
+    );
+    const photoProperty = useMemo(
+        // Ignoring undefined should be ok because formatModel should prevent the field to not exist
+        () => allProperties.find((property) => property.field === 'photo') as ContactProperty,
+        [allProperties]
+    );
     const properties = useMemo(
         () => allProperties.filter((property) => property !== nameProperty && property !== photoProperty),
         [allProperties]
     );
 
     const isFormValid = () => {
-        const nameProperty = properties.find((property) => property.field === 'fn');
         const nameFilled = !!nameProperty?.value;
         return nameFilled;
     };
 
     const handleRemove = (propertyUID: string) => {
-        setAllProperties(allProperties.filter(({ uid }: ContactProperty) => uid !== propertyUID));
+        const property = allProperties.find(({ uid }) => uid === propertyUID);
+
+        // Never remove the last photo property
+        if (property?.field === 'photo') {
+            const photoCount = allProperties.filter(({ field }) => field === 'photo').length;
+            if (photoCount === 1) {
+                const newValue = allProperties.map((property) => {
+                    if (property.field === 'photo') {
+                        return { ...property, value: '' };
+                    }
+                    return property;
+                });
+                setAllProperties(newValue);
+                return;
+            }
+        }
+
+        setAllProperties(allProperties.filter(({ uid }) => uid !== propertyUID));
     };
 
     const handleAdd = (field?: string) => () => {
@@ -118,7 +139,7 @@ const ContactModal = ({
         }
 
         const notEditableProperties = initialProperties.filter(({ field }) => !editableFields.includes(field));
-        const Contacts = await prepareContacts([properties.concat(notEditableProperties)], userKeysList[0]);
+        const Contacts = await prepareContacts([allProperties.concat(notEditableProperties)], userKeysList[0]);
         const labels = hasCategories(notEditableProperties) ? INCLUDE : IGNORE;
         const {
             Responses: [{ Response: { Code = null, Contact: { ID = null } = {} } = {} }],
