@@ -256,20 +256,30 @@ const PlanSelection = ({
             </p>
             <div ref={featuresRef}>
                 {service === PLAN_SERVICES.MAIL ? (
-                    <MailFeatures
-                        onSelect={(planName) => {
-                            const plan = plans.find(({ Name }) => Name === planName);
-                            onChangePlanIDs(
-                                switchPlan({
-                                    planIDs,
-                                    plans,
-                                    planID: plan?.ID,
-                                    service,
-                                    organization,
-                                })
-                            );
-                        }}
-                    />
+                    <>
+                        <MailFeatures
+                            onSelect={(planName) => {
+                                const plan = plans.find(({ Name }) => Name === planName);
+                                onChangePlanIDs(
+                                    switchPlan({
+                                        planIDs,
+                                        plans,
+                                        planID: plan?.ID,
+                                        service,
+                                        organization,
+                                    })
+                                );
+                            }}
+                        />
+                        <p className="text-sm mt1 mb1">
+                            * {c('Info concerning plan features').t`Customizable features`}
+                        </p>
+                        <p className="text-sm mt0 mb1">
+                            **{' '}
+                            {c('Info concerning plan features')
+                                .t`ProtonMail cannot be used for mass emailing or spamming. Legitimate emails are unlimited.`}
+                        </p>
+                    </>
                 ) : null}
                 {service === PLAN_SERVICES.VPN ? (
                     <VPNFeatures
@@ -287,14 +297,6 @@ const PlanSelection = ({
                         }}
                     />
                 ) : null}
-                <p className="text-sm mt1 mb1">
-                    * {c('Info concerning plan features').t`Denotes customizable features`}
-                </p>
-                <p className="text-sm mt0 mb1">
-                    **{' '}
-                    {c('Info concerning plan features')
-                        .t`ProtonMail cannot be used for mass emailing or spamming. Legitimate emails are unlimited.`}
-                </p>
             </div>
         </>
     );
