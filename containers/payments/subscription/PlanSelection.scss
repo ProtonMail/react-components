@@ -1,5 +1,21 @@
 @import '~design-system/scss/config/';
 
+/*
+ * cycle selector
+*/
+@include respond-to(1100) {
+	.cycle-currency-selectors {
+		&.flex-nowrap {
+			flex-wrap: wrap;
+			.field {
+				width: 100%;
+				margin-right: 0;
+				margin-bottom: 0.25em;
+			}
+		}
+	}
+}
+
 .plan-selection {
 	display: grid;
 	grid-gap: 1em;
