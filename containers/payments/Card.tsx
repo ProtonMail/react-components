@@ -47,8 +47,8 @@ const Card = ({ card, errors, onChange, loading = false }: Props) => {
                     required
                 />
             </Block>
-            <div className="payment-side-fields mb1">
-                <div>
+            <div className="flex flex-justify-space-between mb1 on-tiny-mobile-flex-column">
+                <div className="flex-item-fluid mr0-5 on-tiny-mobile-mr0">
                     <Label className="mb0-5 block" htmlFor="exp">{c('Label').t`Expiry date`}</Label>
                     <ExpInput
                         id="exp"
@@ -63,7 +63,7 @@ const Card = ({ card, errors, onChange, loading = false }: Props) => {
                         required
                     />
                 </div>
-                <div>
+                <div className="flex-item-fluid ml0-5 on-tiny-mobile-ml0">
                     <Label className="mb0-5 block flex flex-align-items-center text-cut" htmlFor="cvc">
                         <span className="mr0-25">{c('Label').t`Security code`}</span>
                         <Info
@@ -84,8 +84,8 @@ const Card = ({ card, errors, onChange, loading = false }: Props) => {
                     />
                 </div>
             </div>
-            <div className="payment-side-fields mb1">
-                <div>
+            <div className="flex flex-justify-space-between mb1 on-tiny-mobile-flex-column">
+                <div className="flex-item-fluid mr0-5 on-tiny-mobile-mr0">
                     <Label className="mb0-5 block" htmlFor="country">{c('Label').t`Country`}</Label>
                     <Select
                         id="country"
@@ -97,7 +97,7 @@ const Card = ({ card, errors, onChange, loading = false }: Props) => {
                         title={c('Label').t`Select your country`}
                     />
                 </div>
-                <div>
+                <div className="flex-item-fluid ml0-5 on-tiny-mobile-ml0">
                     <Label className="mb0-5 block" htmlFor="postalcode">
                         {card.country === 'US' ? c('Label').t`ZIP` : c('Label').t`Postal code`}
                     </Label>

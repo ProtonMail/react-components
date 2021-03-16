@@ -9,7 +9,7 @@ import {
 } from 'proton-shared/lib/constants';
 import { Currency } from 'proton-shared/lib/interfaces';
 
-import { Row, Alert, Price, Loader } from '../../components';
+import { Alert, Price, Loader } from '../../components';
 import { useMethods } from '../paymentMethods';
 import PaymentMethodSelector from '../paymentMethods/PaymentMethodSelector';
 import Card from './Card';
@@ -105,9 +105,9 @@ const Payment = ({
 
     return (
         <>
-            <Row className="payment-container">
-                <div className="label payment-left mr1 on-mobile-mr0">
-                    <label className="mb0-5 block">{c('Label').t`Select a method`}</label>
+            <div className="payment-container max-w37e on-mobile-max-w100 center">
+                <div className="mr1 on-mobile-mr0 border-bottom pb2">
+                    <h2 className="text-2xl text-bold">{c('Label').t`Select a method`}</h2>
                     <PaymentMethodSelector
                         options={options}
                         method={method}
@@ -115,40 +115,39 @@ const Payment = ({
                         lastCustomMethod={lastCustomMethod}
                     />
                 </div>
-                <div className="payment-right mr0-25">
-                    <div className="max-w37e on-mobile-max-w100">
-                        {method === PAYMENT_METHOD_TYPES.CARD && (
-                            <>
-                                <Card card={card} errors={errors} onChange={onCard} />
-                                <Alert3DS />
-                            </>
-                        )}
-                        {method === PAYMENT_METHOD_TYPES.CASH && <Cash />}
-                        {method === PAYMENT_METHOD_TYPES.BITCOIN && (
-                            <Bitcoin amount={amount} currency={currency} type={type} />
-                        )}
-                        {method === PAYMENT_METHOD_TYPES.PAYPAL && (
-                            <PayPalView
-                                paypal={paypal}
-                                paypalCredit={paypalCredit}
-                                amount={amount}
-                                currency={currency}
-                                type={type}
+                <div className="mt2">
+                    <h2 className="text-2xl text-bold">{c('Title').t`Payment details`}</h2>
+                    {method === PAYMENT_METHOD_TYPES.CARD && (
+                        <>
+                            <Card card={card} errors={errors} onChange={onCard} />
+                            <Alert3DS />
+                        </>
+                    )}
+                    {method === PAYMENT_METHOD_TYPES.CASH && <Cash />}
+                    {method === PAYMENT_METHOD_TYPES.BITCOIN && (
+                        <Bitcoin amount={amount} currency={currency} type={type} />
+                    )}
+                    {method === PAYMENT_METHOD_TYPES.PAYPAL && (
+                        <PayPalView
+                            paypal={paypal}
+                            paypalCredit={paypalCredit}
+                            amount={amount}
+                            currency={currency}
+                            type={type}
+                        />
+                    )}
+                    {customPaymentMethod && (
+                        <>
+                            <PaymentMethodDetails
+                                type={customPaymentMethod.Type}
+                                details={customPaymentMethod.Details}
                             />
-                        )}
-                        {customPaymentMethod && (
-                            <>
-                                <PaymentMethodDetails
-                                    type={customPaymentMethod.Type}
-                                    details={customPaymentMethod.Details}
-                                />
-                                {customPaymentMethod.Type === PAYMENT_METHOD_TYPES.CARD ? <Alert3DS /> : null}
-                            </>
-                        )}
-                        {children}
-                    </div>
+                            {customPaymentMethod.Type === PAYMENT_METHOD_TYPES.CARD ? <Alert3DS /> : null}
+                        </>
+                    )}
+                    {children}
                 </div>
-            </Row>
+            </div>
         </>
     );
 };

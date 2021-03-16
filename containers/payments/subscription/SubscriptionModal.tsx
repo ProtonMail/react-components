@@ -312,7 +312,7 @@ const SubscriptionModal = ({
             )}
             {model.step === SUBSCRIPTION_STEPS.CUSTOMIZATION && (
                 <div className="flex-no-min-children on-mobile-flex-column">
-                    <div className="flex-item-fluid on-mobile-w100 pr4 on-tablet-landscape-pr1 on-mobile-pr0">
+                    <div className="flex-item-fluid on-mobile-w100 on-tablet-landscape-pr1 on-mobile-pr0">
                         <div className="mlauto mrauto max-w50e">
                             <PlanCustomization
                                 plans={plans}
@@ -363,71 +363,72 @@ const SubscriptionModal = ({
                 </div>
             )}
             {model.step === SUBSCRIPTION_STEPS.CHECKOUT && (
-                <div className="flex flex-justify-space-between on-mobile-flex-column">
-                    <div className="w75 on-mobile-w100 on-tablet-landscape-pr1 pr4 on-mobile-pr0">
-                        <h3>{c('Title').t`Payment method`}</h3>
-                        {checkResult?.AmountDue ? (
-                            <>
-                                <Alert>{c('Info')
-                                    .t`You can use any of your saved payment method or add a new one. Please note that depending on the total amount due, some payment options may not be available.`}</Alert>
-                                <Payment
-                                    type="subscription"
-                                    paypal={paypal}
-                                    paypalCredit={paypalCredit}
-                                    method={method}
-                                    amount={checkResult.AmountDue}
-                                    currency={checkResult.Currency}
-                                    coupon={couponCode}
-                                    card={card}
-                                    onMethod={setMethod}
-                                    onCard={setCard}
-                                    errors={errors}
-                                />
-                                {method &&
-                                [PAYMENT_METHOD_TYPES.CASH, PAYMENT_METHOD_TYPES.BITCOIN].includes(method) ? (
-                                    <Alert type="warning">{c('Warning')
-                                        .t`Please note that by choosing this payment method, your account cannot be upgraded immediately. We will update your account once the payment is cleared.`}</Alert>
-                                ) : null}
-                            </>
-                        ) : (
-                            <>
-                                <Alert>{c('Info').t`No payment is required at this time.`}</Alert>
-                                {checkResult?.Credit && creditsRemaining ? (
-                                    <Alert>{c('Info')
-                                        .t`Please note that upon clicking the Confirm button, your account will have ${creditsRemaining} credits remaining.`}</Alert>
-                                ) : null}
-                            </>
-                        )}
+                <div className="flex-no-min-children on-mobile-flex-column">
+                    <div className="flex-item-fluid on-mobile-w100 on-tablet-landscape-pr1 on-mobile-pr0">
+                        <div className="mlauto mrauto max-w37e on-mobile-max-w100  ">
+                            {checkResult?.AmountDue ? (
+                                <>
+                                    <Payment
+                                        type="subscription"
+                                        paypal={paypal}
+                                        paypalCredit={paypalCredit}
+                                        method={method}
+                                        amount={checkResult.AmountDue}
+                                        currency={checkResult.Currency}
+                                        coupon={couponCode}
+                                        card={card}
+                                        onMethod={setMethod}
+                                        onCard={setCard}
+                                        errors={errors}
+                                    />
+                                    {method &&
+                                    [PAYMENT_METHOD_TYPES.CASH, PAYMENT_METHOD_TYPES.BITCOIN].includes(method) ? (
+                                        <Alert type="warning">{c('Warning')
+                                            .t`Please note that by choosing this payment method, your account cannot be upgraded immediately. We will update your account once the payment is cleared.`}</Alert>
+                                    ) : null}
+                                </>
+                            ) : (
+                                <>
+                                    <Alert>{c('Info').t`No payment is required at this time.`}</Alert>
+                                    {checkResult?.Credit && creditsRemaining ? (
+                                        <Alert>{c('Info')
+                                            .t`Please note that upon clicking the Confirm button, your account will have ${creditsRemaining} credits remaining.`}</Alert>
+                                    ) : null}
+                                </>
+                            )}
+                        </div>
                     </div>
-                    <div className="w25 on-mobile-w100">
-                        <SubscriptionCheckout
-                            submit={
-                                <SubscriptionSubmitButton
-                                    onClose={onClose}
-                                    canPay={canPay}
-                                    paypal={paypal}
-                                    step={step}
-                                    loading={loadingCheck || loading}
-                                    method={method}
-                                    checkResult={checkResult}
-                                    className="w100"
-                                />
-                            }
-                            plans={plans}
-                            service={currentService}
-                            checkResult={checkResult}
-                            loading={loadingCheck}
-                            currency={model.currency}
-                            cycle={model.cycle}
-                            planIDs={model.planIDs}
-                            gift={model.gift}
-                            onChangeCurrency={(currency) => setModel({ ...model, currency })}
-                            onChangeCycle={(cycle) => setModel({ ...model, cycle })}
-                            onChangeGift={handleGift}
-                        />
-                        {checkResult?.Amount ? (
-                            <PaymentGiftCode gift={model.gift} onApply={handleGift} loading={loadingCheck} />
-                        ) : null}
+                    <div className="subscriptionCheckout-column on-mobile-w100">
+                        <div className="subscriptionCheckout-container">
+                            <SubscriptionCheckout
+                                submit={
+                                    <SubscriptionSubmitButton
+                                        onClose={onClose}
+                                        canPay={canPay}
+                                        paypal={paypal}
+                                        step={step}
+                                        loading={loadingCheck || loading}
+                                        method={method}
+                                        checkResult={checkResult}
+                                        className="w100"
+                                    />
+                                }
+                                plans={plans}
+                                service={currentService}
+                                checkResult={checkResult}
+                                loading={loadingCheck}
+                                currency={model.currency}
+                                cycle={model.cycle}
+                                planIDs={model.planIDs}
+                                gift={model.gift}
+                                onChangeCurrency={(currency) => setModel({ ...model, currency })}
+                                onChangeCycle={(cycle) => setModel({ ...model, cycle })}
+                                onChangeGift={handleGift}
+                            />
+                            {checkResult?.Amount ? (
+                                <PaymentGiftCode gift={model.gift} onApply={handleGift} loading={loadingCheck} />
+                            ) : null}
+                        </div>
                     </div>
                 </div>
             )}
