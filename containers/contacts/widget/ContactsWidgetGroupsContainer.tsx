@@ -4,8 +4,15 @@ import { Recipient } from 'proton-shared/lib/interfaces';
 import { ContactEmail } from 'proton-shared/lib/interfaces/contacts';
 import { normalize } from 'proton-shared/lib/helpers/string';
 import { noop } from 'proton-shared/lib/helpers/function';
-import { FullLoader, SearchInput } from '../../../components';
-import { useContactEmails, useContactGroups, useModals, useNotifications, useUserSettings } from '../../../hooks';
+import { ContactUpgradeModal, FullLoader, SearchInput } from '../../../components';
+import {
+    useContactEmails,
+    useContactGroups,
+    useModals,
+    useNotifications,
+    useUser,
+    useUserSettings,
+} from '../../../hooks';
 import ContactsWidgetGroupsToolbar from './ContactsWidgetGroupsToolbar';
 import ContactsGroupsList from '../ContactsGroupsList';
 import { useItemsSelection } from '../../items';
@@ -22,6 +29,7 @@ const ContactsWidgetGroupsContainer = ({ onClose, onCompose }: Props) => {
     const [userSettings, loadingUserSettings] = useUserSettings();
     const { createModal } = useModals();
     const { createNotification } = useNotifications();
+    const [user] = useUser();
 
     const [search, setSearch] = useState('');
 
@@ -90,6 +98,12 @@ const ContactsWidgetGroupsContainer = ({ onClose, onCompose }: Props) => {
     };
 
     const handleCreate = () => {
+        if (!user.hasPaidMail) {
+            createModal(<ContactUpgradeModal />);
+            onClose();
+            return;
+        }
+
         createModal(<ContactGroupModal />);
         onClose();
     };
