@@ -23,11 +23,8 @@ function LabelSortableList({ items, onEditLabel = noop, onRemoveLabel = noop, ..
                     <th scope="col" className="w5 text-capitalize">
                         <Icon name="arrow-cross" />
                     </th>
-                    <th scope="col" className="w70 text-capitalize">
+                    <th scope="col" className="w70">
                         {c('Settings/labels - table').t`Labels`}
-                    </th>
-                    <th scope="col" className="text-capitalize">
-                        {c('Settings/labels - table').t`Actions`}
                     </th>
                 </tr>
             </OrderableTableHeader>
