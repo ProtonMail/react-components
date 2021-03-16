@@ -96,7 +96,7 @@ const ProtonPlanPicker = ({
 
     return (
         <div className="pb2 mb2 border-bottom">
-            <h3>{service === PLAN_SERVICES.VPN ? vpnAppName : mailAppName} plan</h3>
+            <h2 className="text-2xl text-bold">{service === PLAN_SERVICES.VPN ? vpnAppName : mailAppName} plan</h2>
             {index === 0 && cycle === CYCLE.MONTHLY ? (
                 <p>{c('Info').jt`${save20} on your susbcription by switching to ${annualBilling}`}</p>
             ) : null}
@@ -116,7 +116,7 @@ const ProtonPlanPicker = ({
                             <Radio
                                 checked={checked}
                                 name={`plan${service}`}
-                                className="flex flex-nowrap"
+                                className="flex flex-nowrap flex-align-items-center"
                                 id={`${plan.ID}${service}`}
                                 onChange={() => {
                                     onChangePlanIDs(
@@ -130,9 +130,16 @@ const ProtonPlanPicker = ({
                                     );
                                 }}
                             >
-                                <span className="flex-item-fluid pl1">
+                                <span className="flex-item-fluid pl1 pr0-5">
                                     {plan.Title}
-                                    {isCurrentPlan ? <span className="opacity-50 ml0-25">{yourPlanText}</span> : ''}
+                                    {isCurrentPlan ? (
+                                        <>
+                                            {' '}
+                                            <span className="opacity-50 inline-block">{yourPlanText}</span>
+                                        </>
+                                    ) : (
+                                        ''
+                                    )}
                                 </span>
                                 <span className={classnames([!checked && 'opacity-50'])}>
                                     {isFree ? (

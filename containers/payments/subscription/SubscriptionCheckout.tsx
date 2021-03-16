@@ -258,6 +258,7 @@ const SubscriptionCheckout = ({
                                     <span className="mr0-5">{totalLabel}</span>
                                     {isUpdating ? (
                                         <Info
+                                            buttonClass="mb0-5"
                                             title={c('Info')
                                                 .jt`Billed to the end of your current billing cycle (renews ${renewalDate})`}
                                         />
@@ -276,6 +277,7 @@ const SubscriptionCheckout = ({
                                         <>
                                             <span className="mr0-5">{c('Label').t`Proration`}</span>
                                             <Info
+                                                buttonClass="mb0-5"
                                                 url={
                                                     isVPN
                                                         ? 'https://protonvpn.com/support/vpn-credit-proration/'

@@ -66,7 +66,7 @@ const ButtonNumberInput = ({
     onChange: (newValue: number) => void;
 }) => {
     return (
-        <div className="bordered-container flex flex-nowrap">
+        <div className="bordered-container flex-item-noshrink flex flex-nowrap">
             <button
                 type="button"
                 title={c('Action').t`Decrease`}
@@ -193,7 +193,7 @@ const ProtonPlanCustomizer = ({
 
     return (
         <div className="pb2 mb2 border-bottom plan-customiser">
-            <h3>{c('Title').t`${appName} customization`}</h3>
+            <h2 className="text-2xl text-bold">{c('Title').t`${appName} customization`}</h2>
             {service === PLAN_SERVICES.MAIL && planIDs[plansNameMap[PLANS.PLUS].ID] ? (
                 <p>
                     {c('Info').t`ProtonMail Plus is limited to one user and starts with 5GB of storage.`}
@@ -260,7 +260,7 @@ const ProtonPlanCustomizer = ({
                                 <Info title={infoTooltipText} />
                             </div>
                         )}
-                        <div className="mlauto flex-item-noshrink">
+                        <div className="mlauto text-right text-cut pl0-5 on-tiny-mobile-w100 on-tiny-mobile-text-left on-tiny-mobile-pl0">
                             {isSupported && quantity ? (
                                 <Price currency={currency} prefix="+" suffix={c('Suffix for price').t`/ month`}>
                                     {(quantity * addon.Pricing[cycle]) / cycle}
