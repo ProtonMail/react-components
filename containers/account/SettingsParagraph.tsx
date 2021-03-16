@@ -1,12 +1,15 @@
 import React from 'react';
+
 import { LearnMore, LearnMoreProps } from '../../components';
+import { classnames } from '../../helpers';
+import './SettingsParagraph.scss';
 
 interface SettingsParagraphProps extends React.ComponentPropsWithoutRef<'p'> {
     learnMoreUrl?: string;
     learnMoreProps?: Omit<LearnMoreProps, 'url'>;
 }
 
-const SettingsParagraph = ({ learnMoreUrl, learnMoreProps, children, ...rest }: SettingsParagraphProps) => {
+const SettingsParagraph = ({ learnMoreUrl, learnMoreProps, className, children, ...rest }: SettingsParagraphProps) => {
     const learnMoreElement = learnMoreUrl ? (
         <>
             <br />
@@ -15,7 +18,7 @@ const SettingsParagraph = ({ learnMoreUrl, learnMoreProps, children, ...rest }: 
     ) : null;
 
     return (
-        <p style={{ maxWidth: 600 }} {...rest}>
+        <p className={classnames(['settings-paragraph', className])} {...rest}>
             {children}
             {learnMoreElement}
         </p>

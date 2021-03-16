@@ -1,7 +1,10 @@
 import React from 'react';
+import { classnames } from '../../helpers';
 
-const SettingsSection = (props: any) => {
-    return <div style={{ maxWidth: 640 }} {...props} />;
+import './SettingsSection.scss';
+
+const SettingsSection = ({ className, ...rest }: React.ComponentPropsWithoutRef<'div'>) => {
+    return <div className={classnames(['settings-section', className])} {...rest} />;
 };
 
 export default SettingsSection;
