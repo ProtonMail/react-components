@@ -16,8 +16,10 @@ import { EXTENSION, IMPORT_STEPS, ImportContactsModel } from 'proton-shared/lib/
 import { ImportFatalError } from 'proton-shared/lib/contacts/errors/ImportFatalError';
 import { IMPORT_ERROR_TYPE, ImportFileError } from 'proton-shared/lib/contacts/errors/ImportFileError';
 
-import { useEventManager } from '../../../hooks';
+import { useEventManager, useFeature } from '../../../hooks';
 import { FormModal, onlyDragFiles, PrimaryButton } from '../../../components';
+
+import { FeatureCode } from '../../features';
 
 import AttachingModalContent from './AttachingModalContent';
 import ImportCsvModalContent from './ImportCsvModalContent';
@@ -44,6 +46,9 @@ const ImportModal = ({ ...rest }: Props) => {
     const { call } = useEventManager();
     const [model, setModel] = useState<ImportContactsModel>(getInitialState());
     const [isDropzoneHovered, setIsDropzoneHovered] = useState(false);
+    const { feature: featureUsedContactsImport, update: updateUsedContactsImport } = useFeature(
+        FeatureCode.UsedContactsImport
+    );
 
     const { content, ...modalProps } = (() => {
         if (model.step <= IMPORT_STEPS.ATTACHED) {
@@ -149,6 +154,9 @@ const ImportModal = ({ ...rest }: Props) => {
                         });
                     } else {
                         throw new ImportFileError(IMPORT_ERROR_TYPE.NO_CSV_OR_VCF_FILE);
+                    }
+                    if (featureUsedContactsImport?.Value === false) {
+                        updateUsedContactsImport(true);
                     }
                 } catch (e) {
                     const failure = e instanceof ImportFileError ? e : new ImportFatalError(e);
