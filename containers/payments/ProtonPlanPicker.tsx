@@ -80,9 +80,9 @@ const ProtonPlanPicker = ({
         planNamesMap[PLANS.VISIONARY],
     ];
     const VPNPlans: Plan[] = [FREE_PLAN, planNamesMap[PLANS.VPNBASIC], planNamesMap[PLANS.VPNPLUS]];
-    const currentPlan = subscription ? getPlan(subscription, service) : null;
+    const currentPlan = subscription ? getPlan(subscription, service) : FREE_PLAN;
     const plansToShow = service === PLAN_SERVICES.VPN ? VPNPlans : MailPlans;
-    const yourPlanText = c('Plan info').t`(current plan)`;
+    const currentPlanText = c('Plan info').t`(current plan)`;
 
     const annualBilling = (
         <InlineLinkButton key="annual-billing" onClick={() => onChangeCycle(CYCLE.YEARLY)}>{c('Action')
@@ -135,7 +135,7 @@ const ProtonPlanPicker = ({
                                     {isCurrentPlan ? (
                                         <>
                                             {' '}
-                                            <span className="opacity-50 inline-block">{yourPlanText}</span>
+                                            <span className="opacity-50 inline-block">{currentPlanText}</span>
                                         </>
                                     ) : (
                                         ''
