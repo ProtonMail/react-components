@@ -70,7 +70,7 @@ const getFeatures = (): MailFeature[] => {
         {
             name: 'encrypted contacts',
             label: c('Mail feature').t`Encrypted contacts`,
-            free: EmDash,
+            free: <CheckIcon />,
             [PLANS.PLUS]: <CheckIcon />,
             [PLANS.PROFESSIONAL]: <CheckIcon />,
             [PLANS.VISIONARY]: <CheckIcon />,

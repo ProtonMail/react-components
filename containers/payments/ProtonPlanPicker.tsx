@@ -19,6 +19,15 @@ import { Radio, Button, InlineLinkButton, Price } from '../../components';
 import { classnames } from '../../helpers';
 import { PlanIDs } from '../signup/interfaces';
 
+const NAMES = {
+    free: 'Free',
+    [PLANS.VPNBASIC]: 'Basic',
+    [PLANS.VPNPLUS]: 'Plus',
+    [PLANS.PLUS]: 'Plus',
+    [PLANS.PROFESSIONAL]: 'Professional',
+    [PLANS.VISIONARY]: 'Visionary',
+} as const;
+
 const FREE_PLAN = {
     ID: 'free',
     Name: 'free' as PLANS,
@@ -80,9 +89,9 @@ const ProtonPlanPicker = ({
         planNamesMap[PLANS.VISIONARY],
     ];
     const VPNPlans: Plan[] = [FREE_PLAN, planNamesMap[PLANS.VPNBASIC], planNamesMap[PLANS.VPNPLUS]];
-    const currentPlan = subscription ? getPlan(subscription, service) : null;
+    const currentPlan = subscription ? getPlan(subscription, service) : FREE_PLAN;
     const plansToShow = service === PLAN_SERVICES.VPN ? VPNPlans : MailPlans;
-    const yourPlanText = c('Plan info').t`(current plan)`;
+    const currentPlanText = c('Plan info').t`(current plan)`;
 
     const annualBilling = (
         <InlineLinkButton key="annual-billing" onClick={() => onChangeCycle(CYCLE.YEARLY)}>{c('Action')
@@ -131,11 +140,11 @@ const ProtonPlanPicker = ({
                                 }}
                             >
                                 <span className="flex-item-fluid pl1 pr0-5">
-                                    {plan.Title}
+                                    {NAMES[plan.Name as PLANS]}
                                     {isCurrentPlan ? (
                                         <>
                                             {' '}
-                                            <span className="opacity-50 inline-block">{yourPlanText}</span>
+                                            <span className="opacity-50 inline-block">{currentPlanText}</span>
                                         </>
                                     ) : (
                                         ''
