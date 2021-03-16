@@ -3,7 +3,7 @@ import { c } from 'ttag';
 import { updateNotifyEmail, updateResetEmail, updateResetPhone } from 'proton-shared/lib/api/settings';
 import { CLIENT_TYPES } from 'proton-shared/lib/constants';
 
-import { Toggle, Label, Row, Field, Info, Loader } from '../../components';
+import { Toggle, Info, Loader } from '../../components';
 
 import {
     useApi,
@@ -20,6 +20,9 @@ import RecoveryEmail from './RecoveryEmail';
 import RecoveryPhone from './RecoveryPhone';
 import SettingsParagraph from '../account/SettingsParagraph';
 import { SettingsSection } from '../account';
+import SettingsLayout from '../account/SettingsLayout';
+import SettingsLayoutLeft from '../account/SettingsLayoutLeft';
+import SettingsLayoutRight from '../account/SettingsLayoutRight';
 
 const { VPN } = CLIENT_TYPES;
 
@@ -77,10 +80,13 @@ const RecoveryMethodsSection = () => {
                 {c('Info')
                     .t`We recommend adding a linked email or phone number so you can recover your account if you lose your password.`}
             </SettingsParagraph>
-            <Row>
-                <Label className="on-mobile-mb0-5 text-semibold" htmlFor="emailInput">{c('Label')
-                    .t`Email address`}</Label>
-                <Field className="w100">
+            <SettingsLayout>
+                <SettingsLayoutLeft>
+                    <label className="on-mobile-mb0-5 text-semibold" htmlFor="emailInput">
+                        {c('Label').t`Email address`}
+                    </label>
+                </SettingsLayoutLeft>
+                <SettingsLayoutRight>
                     <div className="mb1">
                         <RecoveryEmail
                             email={userSettings.Email.Value}
@@ -124,13 +130,18 @@ const RecoveryMethodsSection = () => {
                             />
                         </div>
                     ) : null}
-                </Field>
-            </Row>
+                </SettingsLayoutRight>
+            </SettingsLayout>
+
             <hr className="mb2 mt2" />
-            <Row>
-                <Label className="pt0 on-mobile-mb0-5 text-semibold" htmlFor="phoneInput">{c('Label')
-                    .t`Phone number`}</Label>
-                <Field className="w100">
+
+            <SettingsLayout>
+                <SettingsLayoutLeft>
+                    <label className="pt0 on-mobile-mb0-5 text-semibold" htmlFor="phoneInput">
+                        {c('label').t`Phone number`}
+                    </label>
+                </SettingsLayoutLeft>
+                <SettingsLayoutRight>
                     <div className="mb1">
                         <RecoveryPhone phone={userSettings.Phone.Value} hasReset={!!userSettings.Phone.Reset} />
                     </div>
@@ -146,8 +157,8 @@ const RecoveryMethodsSection = () => {
                         />
                         <label htmlFor="passwordPhoneResetToggle">{c('Label').t`Password reset allowed`}</label>
                     </div>
-                </Field>
-            </Row>
+                </SettingsLayoutRight>
+            </SettingsLayout>
         </SettingsSection>
     );
 };
