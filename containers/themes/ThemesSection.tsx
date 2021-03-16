@@ -30,7 +30,7 @@ const ThemesSection = () => {
 
     return (
         <SettingsSectionWide>
-            <SettingsParagraph>{c('Info').t`Choose the look and feel of your Mailbox.`}</SettingsParagraph>
+            <SettingsParagraph>{c('Info').t`Choose the look and feel of the application.`}</SettingsParagraph>
             <ThemeCards
                 list={themes}
                 themeIdentifier={ThemeType}
