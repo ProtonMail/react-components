@@ -75,7 +75,7 @@ const ContactGroupModal = ({ contactGroupID, onClose = noop, selectedContactEmai
         }
         setModel((model) => ({
             ...model,
-            contactEmails: [...model.contactEmails, { Email: value } as ContactEmail],
+            contactEmails: [...model.contactEmails, { Name: value, Email: value } as ContactEmail],
         }));
         setValue('');
     };
