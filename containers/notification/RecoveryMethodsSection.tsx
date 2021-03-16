@@ -78,7 +78,8 @@ const RecoveryMethodsSection = () => {
                     .t`We recommend adding a linked email or phone number so you can recover your account if you lose your password.`}
             </SettingsParagraph>
             <Row>
-                <Label className="on-mobile-mb0-5 text-bold" htmlFor="emailInput">{c('Label').t`Email address`}</Label>
+                <Label className="on-mobile-mb0-5 text-semibold" htmlFor="emailInput">{c('Label')
+                    .t`Email address`}</Label>
                 <Field className="w100">
                     <div className="mb1">
                         <RecoveryEmail
@@ -87,7 +88,7 @@ const RecoveryMethodsSection = () => {
                             hasNotify={!!userSettings.Email.Notify}
                         />
                     </div>
-                    <div className="mb1">
+                    <div className="mb1 flex flex-align-items-center">
                         <Toggle
                             className="mr0-5"
                             loading={loadingReset}
@@ -97,9 +98,14 @@ const RecoveryMethodsSection = () => {
                                 withLoadingReset(handleChangePasswordEmailToggle(+checked))
                             }
                         />
-                        {c('Label').t`Email recovery`}
+                        <span className="mr0-5">{c('Label').t`Email recovery`}</span>
+                        <Info
+                            url="https://protonmail.com/blog/notification-emails/"
+                            title={c('Info')
+                                .t`Disabling this will prevent this email from being used for account recovery`}
+                        />
                     </div>
-                    {CLIENT_TYPE === VPN ? null : (
+                    {CLIENT_TYPE !== VPN ? (
                         <div className="flex flex-align-items-center">
                             <Toggle
                                 className="mr0-5"
@@ -117,12 +123,12 @@ const RecoveryMethodsSection = () => {
                                     .t`When notifications are enabled, we'll send an alert to your recovery/notification address if you have new messages in your ProtonMail account.`}
                             />
                         </div>
-                    )}
+                    ) : null}
                 </Field>
             </Row>
             <hr className="mb2 mt2" />
             <Row>
-                <Label className="pt0 on-mobile-mb0-5 text-bold" htmlFor="phoneInput">{c('Label')
+                <Label className="pt0 on-mobile-mb0-5 text-semibold" htmlFor="phoneInput">{c('Label')
                     .t`Phone number`}</Label>
                 <Field className="w100">
                     <div className="mb1">

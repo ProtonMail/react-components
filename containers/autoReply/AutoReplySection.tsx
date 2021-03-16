@@ -130,10 +130,22 @@ const AutoReplySection = () => {
 
     return (
         <SettingsSection className="no-scroll">
-            <SettingsParagraph className="mt0 mb1">
-                {c('Info')
-                    .t`Use automatic replies to inform contacts you are out of the office or otherwise unable to respond.`}
-            </SettingsParagraph>
+            {hasPaidMail ? (
+                <SettingsParagraph className="mt0 mb1">
+                    {c('Info')
+                        .t`Use automatic replies to inform contacts you are out of the office or otherwise unable to respond.`}
+                </SettingsParagraph>
+            ) : (
+                <div className="flex flex-align-items-center bg-pm-blue-gradient color-white rounded mt0 mb1 p1">
+                    <p className="m0 mr1 flex-item-fluid">
+                        {c('Info')
+                            .t`Upgrade to ProtonMail Professional to enable automatic replies for when you are out of the office.`}
+                    </p>
+                    <AppLink to="/subscription" toApp={getAccountSettingsApp()} className="color-white">
+                        {c('Action').t`Upgrade`}
+                    </AppLink>
+                </div>
+            )}
 
             <Row>
                 <Label htmlFor="autoReplyToggle" className="on-mobile-pb0 on-mobile-no-border w16r text-semibold">
@@ -150,57 +162,45 @@ const AutoReplySection = () => {
                     </span>
                 </Field>
             </Row>
-            {hasPaidMail ? (
-                isEnabled && (
-                    <form
-                        onSubmit={async (e) => {
-                            e.preventDefault();
-                            await withUpdatingLoading(handleSubmit());
-                        }}
-                    >
-                        <DurationField value={model.duration} onChange={updateModel('duration')} />
+            {hasPaidMail && isEnabled ? (
+                <form
+                    onSubmit={async (e) => {
+                        e.preventDefault();
+                        await withUpdatingLoading(handleSubmit());
+                    }}
+                >
+                    <DurationField value={model.duration} onChange={updateModel('duration')} />
 
-                        {formRenderer(model.duration)}
+                    {formRenderer(model.duration)}
 
-                        <Row>
-                            <Label className="w16r text-semibold" onClick={() => editorRef.current?.focus()}>
-                                {c('Label').t`Message`}
-                            </Label>
-                            <Field className="w100">
-                                <div ref={composerRef} tabIndex={-1} className="w100">
-                                    <SimpleSquireEditor
-                                        ref={editorRef}
-                                        supportImages={false}
-                                        onReady={handleEditorReady}
-                                        onChange={updateModel('message')}
-                                        keydownHandler={squireKeydownHandler}
-                                    />
-                                </div>
+                    <Row>
+                        <Label className="w16r text-semibold" onClick={() => editorRef.current?.focus()}>
+                            {c('Label').t`Message`}
+                        </Label>
+                        <Field className="w100">
+                            <div ref={composerRef} tabIndex={-1} className="w100">
+                                <SimpleSquireEditor
+                                    ref={editorRef}
+                                    supportImages={false}
+                                    onReady={handleEditorReady}
+                                    onChange={updateModel('message')}
+                                    keydownHandler={squireKeydownHandler}
+                                />
+                            </div>
 
-                                <Button
-                                    color="norm"
-                                    type="submit"
-                                    disabled={updatingLoading}
-                                    loading={updatingLoading}
-                                    className="mt1"
-                                >
-                                    {c('Action').t`Update`}
-                                </Button>
-                            </Field>
-                        </Row>
-                    </form>
-                )
-            ) : (
-                <div className="flex flex-align-items-center bg-pm-blue-gradient color-white rounded mt2 p1">
-                    <p className="m0 mr1 flex-item-fluid">
-                        {c('Info')
-                            .t`Upgrade to ProtonMail Professional to enable automatic replies for when you are out of the office.`}
-                    </p>
-                    <AppLink to="/subscription" toApp={getAccountSettingsApp()} className="color-white">
-                        {c('Action').t`Upgrade`}
-                    </AppLink>
-                </div>
-            )}
+                            <Button
+                                color="norm"
+                                type="submit"
+                                disabled={updatingLoading}
+                                loading={updatingLoading}
+                                className="mt1"
+                            >
+                                {c('Action').t`Update`}
+                            </Button>
+                        </Field>
+                    </Row>
+                </form>
+            ) : null}
         </SettingsSection>
     );
 };

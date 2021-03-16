@@ -29,17 +29,7 @@ function SpamFiltersSection() {
     const { createNotification } = useNotifications();
     const { createModal } = useModals();
     const reqSearch = useApiWithoutResult(getIncomingDefaults);
-    const {
-        blackList,
-        whiteList,
-        refreshWhiteList,
-        refreshBlackList,
-        move,
-        remove,
-        search,
-        create,
-        edit,
-    } = useSpamList();
+    const { blackList, whiteList, refreshWhiteList, refreshBlackList, move, remove, search, create } = useSpamList();
 
     const {
         result: white = {},
@@ -99,14 +89,6 @@ function SpamFiltersSection() {
         });
         create(type, data);
     };
-
-    const handleEdit = async (type: WHITE_OR_BLACK_LOCATION, incomingDefault: IncomingDefault) => {
-        const data: IncomingDefault = await new Promise((resolve) => {
-            createModal(<AddEmailToListModal type={type} onAdd={resolve} incomingDefault={incomingDefault} />);
-        });
-        edit(type, data);
-    };
-
     const handleMove = async (incomingDefault: IncomingDefault) => {
         const { Email, Domain, ID, Location } = incomingDefault;
         const type = Location === WHITELIST_LOCATION ? BLACKLIST_LOCATION : WHITELIST_LOCATION;
@@ -153,7 +135,6 @@ function SpamFiltersSection() {
                     type={WHITELIST_LOCATION}
                     loading={loader.white}
                     onCreate={handleCreate}
-                    onEdit={handleEdit}
                     onRemove={handleRemove}
                     onMove={handleMove}
                     className="mr1"
@@ -164,7 +145,6 @@ function SpamFiltersSection() {
                     className="ml1 on-mobile-ml0"
                     loading={loader.black}
                     onCreate={handleCreate}
-                    onEdit={handleEdit}
                     onRemove={handleRemove}
                     onMove={handleMove}
                 />
