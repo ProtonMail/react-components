@@ -17,15 +17,13 @@ function LabelSortableList({ items, ...rest }: Props) {
             <caption className="sr-only">{c('Settings/labels').t`Labels/Folders`}</caption>
             <OrderableTableHeader>
                 <tr>
-                    <th scope="col" className="w5 text-capitalize">
+                    <th scope="col" className="w5">
                         <Icon name="arrow-cross" />
                     </th>
-                    <th scope="col" className="w70 text-capitalize">
+                    <th scope="col" className="w70">
                         {c('Settings/labels - table').t`Labels`}
                     </th>
-                    <th scope="col" className="text-capitalize">
-                        {c('Settings/labels - table').t`Actions`}
-                    </th>
+                    <th scope="col">{c('Settings/labels - table').t`Actions`}</th>
                 </tr>
             </OrderableTableHeader>
             <OrderableTableBody colSpan={0}>
