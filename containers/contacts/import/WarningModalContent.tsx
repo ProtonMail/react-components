@@ -29,7 +29,7 @@ const WarningModalContent = ({ model }: Props) => {
             <Alert type="warning">
                 <div>{c('Import contacts warning').jt`ProtonContacts does not support ${forNow}:`}</div>
                 <ul>
-                    <li>{c('Import calendar warning').t`vCard versions < 4.0`}</li>
+                    <li>{c('Import calendar warning').t`vCard versions < 3.0`}</li>
                 </ul>
             </Alert>
             <ErrorDetails summary={summary} errors={model.errors} />
