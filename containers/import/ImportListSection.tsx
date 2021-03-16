@@ -22,34 +22,26 @@ const ImportListSection = () => {
     const [imports = [], importsLoading] = useImporters();
     const [pastImports = [], pastImportsLoading] = useImportHistory();
 
-    const importsToDisplay = [
-        ...imports.filter(({ Active }) => Active).sort(sortActiveImports),
-        ...pastImports.sort(sortPastImports),
-    ];
+    const activeImports = imports.filter(({ Active }) => Active);
 
-    if (!importsToDisplay.length) {
+    if (!activeImports.length && !pastImports.length) {
         return <SettingsParagraph>{c('Info').t`No imports to display.`}</SettingsParagraph>;
     }
 
-    const activeImports = importsToDisplay as Importer[];
-
-    const hasStoragePausedImports = activeImports.some(({ Active }) => {
+    const hasStoragePausedImports = imports.some(({ Active }) => {
         return (
-            Active &&
-            Active.State === ImportMailStatus.PAUSED &&
-            Active.ErrorCode === ImportMailError.ERROR_CODE_QUOTA_LIMIT
+            Active?.State === ImportMailStatus.PAUSED && Active?.ErrorCode === ImportMailError.ERROR_CODE_QUOTA_LIMIT
         );
     });
 
-    const hasAuthPausedImports = activeImports.some(({ Active }) => {
+    const hasAuthPausedImports = imports.some(({ Active }) => {
         return (
-            Active &&
-            Active.State === ImportMailStatus.PAUSED &&
-            Active.ErrorCode === ImportMailError.ERROR_CODE_IMAP_CONNECTION
+            Active?.State === ImportMailStatus.PAUSED &&
+            Active?.ErrorCode === ImportMailError.ERROR_CODE_IMAP_CONNECTION
         );
     });
 
-    const delayedImport = activeImports.find(({ Active }) => {
+    const delayedImport = imports.find(({ Active }) => {
         return Active?.State === ImportMailStatus.DELAYED;
     });
 
@@ -131,9 +123,11 @@ const ImportListSection = () => {
                             <tr>{headerCells}</tr>
                         </thead>
                         <TableBody>
-                            {importsToDisplay.map((currentImport) => (
-                                <ImportListRow key={currentImport.ID} currentImport={currentImport} />
-                            ))}
+                            {[...activeImports.sort(sortActiveImports), ...pastImports.sort(sortPastImports)].map(
+                                (currentImport) => (
+                                    <ImportListRow key={currentImport.ID} currentImport={currentImport} />
+                                )
+                            )}
                         </TableBody>
                     </Table>
                 </>
