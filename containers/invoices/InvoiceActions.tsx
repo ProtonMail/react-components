@@ -1,10 +1,11 @@
 import React from 'react';
 import { c } from 'ttag';
 import { INVOICE_STATE } from 'proton-shared/lib/constants';
-import { getPaymentMethodStatus } from 'proton-shared/lib/api/payments';
+import { getInvoice, getPaymentMethodStatus } from 'proton-shared/lib/api/payments';
+import downloadFile from 'proton-shared/lib/helpers/downloadFile';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 
-import { DropdownActions } from '../../components';
+import { DropdownActions, PreviewPDFModal } from '../../components';
 import { useApi, useLoading, useModals, useNotifications } from '../../hooks';
 import PayInvoiceModal from './PayInvoiceModal';
 import { Invoice } from './interface';
@@ -12,16 +13,20 @@ import { Invoice } from './interface';
 interface Props {
     invoice: Invoice;
     fetchInvoices: () => void;
-    onPreview: (invoice: Invoice) => void;
-    onDownload: (invoice: Invoice) => void;
 }
 
-const InvoiceActions = ({ invoice, fetchInvoices, onPreview, onDownload }: Props) => {
+const InvoiceActions = ({ invoice, fetchInvoices }: Props) => {
+    const filename = `${c('Title for PDF file').t`ProtonMail invoice`} ${invoice.ID}.pdf`;
     const { createModal } = useModals();
     const { createNotification } = useNotifications();
     const api = useApi();
     const [downloadLoading, withDownloadLoading] = useLoading();
     const [viewLoading, withViewLoading] = useLoading();
+
+    const getInvoiceBlob = async () => {
+        const buffer = await api<ArrayBuffer>(getInvoice(invoice.ID));
+        return new Blob([buffer], { type: 'application/pdf' });
+    };
 
     const list = [
         invoice.State === INVOICE_STATE.UNPAID && {
@@ -44,7 +49,15 @@ const InvoiceActions = ({ invoice, fetchInvoices, onPreview, onDownload }: Props
             text: c('Action').t`View`,
             onClick: async () => {
                 const handler = async () => {
-                    onPreview(invoice);
+                    const blob = await getInvoiceBlob();
+
+                    createModal(
+                        <PreviewPDFModal
+                            url={URL.createObjectURL(blob)}
+                            title={c('Title').t`Preview invoice`}
+                            filename={filename}
+                        />
+                    );
                 };
                 await withViewLoading(handler());
             },
@@ -54,7 +67,8 @@ const InvoiceActions = ({ invoice, fetchInvoices, onPreview, onDownload }: Props
             text: c('Action').t`Download`,
             onClick: async () => {
                 const handler = async () => {
-                    onDownload(invoice);
+                    const blob = await getInvoiceBlob();
+                    downloadFile(blob, filename);
                 };
                 await withDownloadLoading(handler());
             },

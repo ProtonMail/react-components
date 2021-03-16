@@ -3,7 +3,8 @@ import { c } from 'ttag';
 
 import { isMac } from 'proton-shared/lib/helpers/browser';
 import { updateAutoresponder } from 'proton-shared/lib/api/mailSettings';
-import { AutoReplyDuration } from 'proton-shared/lib/constants';
+import { AutoReplyDuration, PERMISSIONS } from 'proton-shared/lib/constants';
+import { HTTP_ERROR_CODES } from 'proton-shared/lib/errors';
 import { getAccountSettingsApp } from 'proton-shared/lib/apps/helper';
 
 import {
@@ -48,12 +49,29 @@ const AutoReplySection = () => {
     const composerRef = useRef<HTMLDivElement>(null);
 
     const handleToggle = async (IsEnabled: boolean) => {
-        await api(updateAutoresponder({ ...AutoResponder, IsEnabled }));
-        await call();
-        setIsEnabled(IsEnabled);
-        createNotification({
-            text: IsEnabled ? c('Success').t`Auto-reply enabled` : c('Success').t`Auto-reply disabled`,
-        });
+        try {
+            await api({
+                ...updateAutoresponder({ ...AutoResponder, IsEnabled }),
+                silence: true,
+            });
+            await call();
+            setIsEnabled(IsEnabled);
+            createNotification({
+                text: IsEnabled ? c('Success').t`Auto-reply enabled` : c('Success').t`Auto-reply disabled`,
+            });
+        } catch (e) {
+            let text = e.data.Error;
+
+            if (e.status === HTTP_ERROR_CODES.UNLOCK && e.data.Details.MissingScopes[0] === PERMISSIONS.PAID) {
+                text = c('Error')
+                    .t`Automatic replies is a paid feature. Please upgrade to a paid account to use this feature.`;
+            }
+
+            createNotification({
+                type: 'error',
+                text,
+            });
+        }
     };
 
     const handleSubmit = async () => {
