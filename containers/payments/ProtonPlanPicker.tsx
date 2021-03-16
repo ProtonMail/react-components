@@ -82,7 +82,7 @@ const ProtonPlanPicker = ({
     const VPNPlans: Plan[] = [FREE_PLAN, planNamesMap[PLANS.VPNBASIC], planNamesMap[PLANS.VPNPLUS]];
     const currentPlan = subscription ? getPlan(subscription, service) : null;
     const plansToShow = service === PLAN_SERVICES.VPN ? VPNPlans : MailPlans;
-    const yourPlanText = c('Plan info').t`(Current plan)`;
+    const yourPlanText = c('Plan info').t`(current plan)`;
 
     const annualBilling = (
         <InlineLinkButton key="annual-billing" onClick={() => onChangeCycle(CYCLE.YEARLY)}>{c('Action')
@@ -112,7 +112,7 @@ const ProtonPlanPicker = ({
                     const isCurrentPlan = currentPlan?.ID === plan.ID;
                     const checked = isFree ? plansToShow.every((plan) => !planIDs[plan.ID]) : !!planIDs[plan.ID];
                     return (
-                        <li key={plan.ID} className="mb0-5">
+                        <li key={plan.ID} className="mb0-75">
                             <Radio
                                 checked={checked}
                                 name={`plan${service}`}
@@ -132,7 +132,7 @@ const ProtonPlanPicker = ({
                             >
                                 <span className="flex-item-fluid pl1">
                                     {plan.Title}
-                                    {isCurrentPlan ? ` ${yourPlanText}` : ''}
+                                    {isCurrentPlan ? <span className="opacity-50 ml0-25">{yourPlanText}</span> : ''}
                                 </span>
                                 <span className={classnames([!checked && 'opacity-50'])}>
                                     {isFree ? (

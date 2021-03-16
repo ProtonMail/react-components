@@ -70,7 +70,7 @@ const ButtonNumberInput = ({
             <button
                 type="button"
                 title={c('Action').t`Decrease`}
-                className={classnames(['p0-5 flex', (disabled || value - step < min) && 'opacity-50'])}
+                className={classnames(['p0-5 flex', (disabled || value - step < min) && 'opacity-30'])}
                 disabled={disabled || value - step < min}
                 onClick={() => {
                     const newValue = value - step;
@@ -84,11 +84,7 @@ const ButtonNumberInput = ({
                     value={value}
                     disabled={disabled}
                     id={id}
-                    style={{
-                        textAlignLast: 'center',
-                    }}
-                    className="w6e border-left border-right text-center"
-                    aria-live="assertive"
+                    className={classnames(['w6e border-left border-right text-center', disabled && 'opacity-30'])}
                     onChange={({ target: { value: newValue } }) => {
                         onChange(+newValue);
                     }}
@@ -105,7 +101,7 @@ const ButtonNumberInput = ({
             <button
                 type="button"
                 title={c('Action').t`Increase`}
-                className={classnames(['p0-5 flex', (disabled || value + step > max) && 'opacity-50'])}
+                className={classnames(['p0-5 flex', (disabled || value + step > max) && 'opacity-30'])}
                 disabled={disabled || value + step > max}
                 onClick={() => {
                     const newValue = value + step;

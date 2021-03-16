@@ -313,7 +313,7 @@ const SubscriptionCheckout = ({
                 title={c('Title').t`Amount due`}
                 amount={checkResult.AmountDue || 0}
                 currency={currency}
-                className="text-bold m0 h4"
+                className="text-bold m0 text-2xl"
             />
             <div className="mt1 mb1">{submit}</div>
             {checkResult.Amount && onChangeGift ? (

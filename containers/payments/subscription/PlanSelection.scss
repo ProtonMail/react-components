@@ -21,6 +21,7 @@
 	grid-gap: 1em;
 	grid-template-columns: repeat(var(--plan-selection-number, 4), 1fr);
 	& &-plan {
+		// specificity ^^
 		border-radius: $global-bigger-border-radius;
 	}
 	.plan-selection {
