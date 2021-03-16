@@ -1,8 +1,19 @@
 import React from 'react';
 import { c } from 'ttag';
 
+import { ROOT_FOLDER } from 'proton-shared/lib/constants';
+import { orderFolders } from 'proton-shared/lib/api/labels';
+
 import { Loader, Button, Row, Label, Field, Info } from '../../components';
-import { useFolders, useMailSettings, useModals } from '../../hooks';
+import {
+    useFolders,
+    useMailSettings,
+    useModals,
+    useLoading,
+    useApi,
+    useEventManager,
+    useNotifications,
+} from '../../hooks';
 
 import { SettingsSection } from '../account';
 
@@ -15,6 +26,21 @@ function LabelsSection() {
     const [folders = [], loadingFolders] = useFolders();
     const [mailSettings] = useMailSettings();
     const { createModal } = useModals();
+    const [loading, withLoading] = useLoading();
+    const { call } = useEventManager();
+    const api = useApi();
+    const { createNotification } = useNotifications();
+
+    const handleSortFolders = async () => {
+        const rootFolders = folders.filter(({ ParentID = ROOT_FOLDER }) => ParentID === ROOT_FOLDER);
+
+        const LabelIDs = [...rootFolders]
+            .sort((a, b) => a.Name.localeCompare(b.Name, undefined, { numeric: true }))
+            .map(({ ID }) => ID);
+        await api(orderFolders({ LabelIDs }));
+        await call();
+        createNotification({ text: c('Success message after sorting folders').t`Folders sorted` });
+    };
 
     return (
         <SettingsSection>
@@ -51,6 +77,17 @@ function LabelsSection() {
                         <Button color="norm" onClick={() => createModal(<EditLabelModal type="folder" />)}>
                             {c('Action').t`Add folder`}
                         </Button>
+                        {folders.length ? (
+                            <Button
+                                className="ml1"
+                                shape="outline"
+                                title={c('Title').t`Sort folders alphabetically`}
+                                loading={loading}
+                                onClick={() => withLoading(handleSortFolders())}
+                            >
+                                {c('Action').t`Sort`}
+                            </Button>
+                        ) : null}
                     </div>
 
                     {folders.length ? <FolderTreeViewList items={folders} /> : null}
