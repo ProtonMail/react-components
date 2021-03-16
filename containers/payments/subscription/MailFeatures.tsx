@@ -47,7 +47,7 @@ const getFeatures = (): MailFeature[] => {
             name: 'messages per day',
             label: c('Mail feature').t`Messages per day`,
             free: '150',
-            [PLANS.PLUS]: c('Mail feature option').t`Unlimited`,
+            [PLANS.PLUS]: c('Mail feature option').t`Unlimited **`,
             [PLANS.PROFESSIONAL]: c('Mail feature option').t`Unlimited **`,
             [PLANS.VISIONARY]: c('Mail feature option').t`Unlimited **`,
         },
@@ -70,6 +70,14 @@ const getFeatures = (): MailFeature[] => {
         {
             name: 'encrypted contacts',
             label: c('Mail feature').t`Encrypted contacts`,
+            free: EmDash,
+            [PLANS.PLUS]: <CheckIcon />,
+            [PLANS.PROFESSIONAL]: <CheckIcon />,
+            [PLANS.VISIONARY]: <CheckIcon />,
+        },
+        {
+            name: 'contact groups',
+            label: c('Mail feature').t`Contact groups`,
             free: EmDash,
             [PLANS.PLUS]: <CheckIcon />,
             [PLANS.PROFESSIONAL]: <CheckIcon />,
