@@ -14,6 +14,7 @@ import { toMap } from 'proton-shared/lib/helpers/object';
 import { getPlan } from 'proton-shared/lib/helpers/subscription';
 import { switchPlan } from 'proton-shared/lib/helpers/planIDs';
 import { getAppName } from 'proton-shared/lib/apps/helper';
+import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 
 import { Radio, Button, InlineLinkButton, Price } from '../../components';
 import { classnames } from '../../helpers';
@@ -86,9 +87,14 @@ const ProtonPlanPicker = ({
         FREE_PLAN,
         planNamesMap[PLANS.PLUS],
         planNamesMap[PLANS.PROFESSIONAL],
-        planNamesMap[PLANS.VISIONARY],
-    ];
-    const VPNPlans: Plan[] = [FREE_PLAN, planNamesMap[PLANS.VPNBASIC], planNamesMap[PLANS.VPNPLUS]];
+        index === 0 && service === PLAN_SERVICES.MAIL && planNamesMap[PLANS.VISIONARY],
+    ].filter(isTruthy);
+    const VPNPlans: Plan[] = [
+        FREE_PLAN,
+        planNamesMap[PLANS.VPNBASIC],
+        planNamesMap[PLANS.VPNPLUS],
+        index === 0 && service === PLAN_SERVICES.VPN && planNamesMap[PLANS.VISIONARY],
+    ].filter(isTruthy);
     const currentPlan = subscription ? getPlan(subscription, service) : FREE_PLAN;
     const plansToShow = service === PLAN_SERVICES.VPN ? VPNPlans : MailPlans;
     const currentPlanText = c('Plan info').t`(current plan)`;
