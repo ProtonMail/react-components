@@ -56,14 +56,17 @@ const PlanCard = ({
                     ).t`Current plan`}</div>
                 ) : null}
                 <h3 className="plan-selection-title text-bold text-capitalize">{planName}</h3>
-                <Price currency={currency} suffix={c('Suffix for price').t`/ month`}>
-                    {price / cycle}
-                </Price>
+                <span className="plan-selection-main-price">
+                    <Price currency={currency} suffix={c('Suffix for price').t`/ month`}>
+                        {price / cycle}
+                    </Price>
+                </span>
                 {cycle === CYCLE.YEARLY ? (
-                    <p className="text-sm plan-selection-price">{c('Info').jt`Billed as ${billedPrice} per year`}</p>
+                    <p className="text-sm mt0-5 plan-selection-price">{c('Info')
+                        .jt`Billed as ${billedPrice} per year`}</p>
                 ) : null}
                 {cycle === CYCLE.TWO_YEARS ? (
-                    <p className="text-sm plan-selection-price">{c('Info')
+                    <p className="text-sm mt0-5 plan-selection-price">{c('Info')
                         .jt`Billed as ${billedPrice} every 2 years`}</p>
                 ) : null}
                 <p className="text-lg plan-selection-info">{info}</p>

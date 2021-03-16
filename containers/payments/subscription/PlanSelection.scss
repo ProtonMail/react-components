@@ -46,6 +46,17 @@
 				min-height: 0;
 			}
 		}
+
+		&-main-price {
+			.amount,
+			.currency {
+				font-size: 2em;
+				line-height: 1.2; // font only takes the place for characters ^^
+			}
+			.suffix {
+				opacity: 0.5; // while waiting for new taxonomy
+			}
+		}
 	}
 	@include respond-to($breakpoint-medium) {
 		grid-template-columns: repeat(2, 1fr);
