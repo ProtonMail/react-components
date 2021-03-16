@@ -19,6 +19,15 @@ import { Radio, Button, InlineLinkButton, Price } from '../../components';
 import { classnames } from '../../helpers';
 import { PlanIDs } from '../signup/interfaces';
 
+const NAMES = {
+    free: 'Free',
+    [PLANS.VPNBASIC]: 'Basic',
+    [PLANS.VPNPLUS]: 'Plus',
+    [PLANS.PLUS]: 'Plus',
+    [PLANS.PROFESSIONAL]: 'Professional',
+    [PLANS.VISIONARY]: 'Visionary',
+} as const;
+
 const FREE_PLAN = {
     ID: 'free',
     Name: 'free' as PLANS,
@@ -131,7 +140,7 @@ const ProtonPlanPicker = ({
                                 }}
                             >
                                 <span className="flex-item-fluid pl1 pr0-5">
-                                    {plan.Title}
+                                    {NAMES[plan.Name as PLANS]}
                                     {isCurrentPlan ? (
                                         <>
                                             {' '}
