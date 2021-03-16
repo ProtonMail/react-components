@@ -55,7 +55,7 @@ const PlanCard = ({
                         'Title'
                     ).t`Current plan`}</div>
                 ) : null}
-                <h3 className="plan-selection-title text-bold text-capitalize">{planName}</h3>
+                <h3 className="plan-selection-title text-bold text-capitalize mb0-5">{planName}</h3>
                 <span className="plan-selection-main-price">
                     <Price currency={currency} suffix={c('Suffix for price').t`/ month`}>
                         {price / cycle}
