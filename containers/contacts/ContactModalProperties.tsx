@@ -70,6 +70,9 @@ const ContactModalProperties = (
         [properties, field]
     );
 
+    // In most cases, (other) name section will be empty, and we don't want to display it
+    // if it is empty because the main name is always displayed at the top of the modal
+    // only used for exceptions - old records imported with multiple names
     if (field === 'fn' && !properties.length) {
         return null;
     }

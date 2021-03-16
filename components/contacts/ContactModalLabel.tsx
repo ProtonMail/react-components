@@ -12,6 +12,9 @@ interface Props {
     uid?: string;
     type?: string;
     onChange: (payload: ContactPropertyChange) => void;
+    /**
+     * fixedType means you don't want to change the type of data (ie: no select)
+     */
     fixedType?: boolean;
 }
 
