@@ -315,7 +315,7 @@ const AddressKeysSection = () => {
     const canExportPrimaryPublicKey = !!primaryPrivateKey;
 
     return (
-        <>
+        <SettingsSectionWide>
             <SettingsParagraph>
                 {c('Info').t`Download your PGP keys for use with other PGP-compatible services.`}
                 <br />
@@ -370,7 +370,7 @@ const AddressKeysSection = () => {
                 onSetObsolete={handleSetObsolete}
                 onSetNotObsolete={handleSetNotObsolete}
             />
-        </>
+        </SettingsSectionWide>
     );
 };
 

@@ -119,7 +119,7 @@ const YourPlanSection = ({ permission }) => {
 
                 <div className="flex flex-nowrap p1-5 border-top">
                     <Label className="text-semibold">
-                        {hasPaidVpn ? c('Label').t`ProtonVPN ${VPNPlanName}` : c('Label').t`ProtonVPN Free`}
+                        {c('Label').t`ProtonVPN ${hasPaidVpn ? VPNPlanName : c('Plan').t`Free`}`}
                     </Label>
                     <div>
                         {hasPaidVpn ? MaxVPN : 1} {c('Label').t`VPN Connections available`}
