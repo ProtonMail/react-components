@@ -18,7 +18,7 @@ import {
     useOrganization,
     useLoading,
 } from '../../hooks';
-import { usePopperAnchor, Dropdown, Icon, Toggle, AppLink, Href, Button } from '../../components';
+import { usePopperAnchor, Dropdown, Icon, AppLink, Href, Button, SelectTwo, Option } from '../../components';
 import { generateUID } from '../../helpers';
 import UserDropdownButton from './UserDropdownButton';
 import { DonateModal } from '../payments';
@@ -59,10 +59,6 @@ const UserDropdown = ({ ...rest }) => {
     const handleThemeChange = async (themeType: ThemeTypes) => {
         await api(updateThemeType(themeType));
         await call();
-    };
-
-    const handleThemeToggle = (e: React.ChangeEvent<HTMLInputElement>) => {
-        withLoading(handleThemeChange(e.target.checked ? ThemeTypes.Dark : ThemeTypes.Default));
     };
 
     return (
@@ -137,15 +133,22 @@ const UserDropdown = ({ ...rest }) => {
                     ) : null}
                     <li className="dropdown-item-hr mt0-5" aria-hidden="false" />
                     <li>
-                        <div className="pl1 pr1 pt0-5 pb0-5 w100 flex-no-min-children flex-nowrap flex-justify-space-between flex-align-items-center">
-                            <label htmlFor="theme-toggle" className="mr1">{c('Action').t`Dark mode`}</label>
-                            <Toggle
+                        <div className="pl1 pr1 pt0-5 pb0-5">
+                            <label htmlFor="theme-toggle" className="block mb0-5">{c('Action').t`Theme`}</label>
+                            <SelectTwo
                                 id="theme-toggle"
                                 title={c('Title').t`Toggle display mode`}
-                                checked={userSettings.ThemeType === ThemeTypes.Dark}
+                                disabled={loading}
                                 loading={loading}
-                                onChange={handleThemeToggle}
-                            />
+                                value={userSettings.ThemeType}
+                                onChange={({ value }) => withLoading(handleThemeChange(value))}
+                            >
+                                <Option title="Default" value={ThemeTypes.Default} />
+                                <Option title="Dark" value={ThemeTypes.Dark} />
+                                <Option title="Light" value={ThemeTypes.Light} />
+                                <Option title="Monokai" value={ThemeTypes.Monokai} />
+                                <Option title="Contrast" value={ThemeTypes.Contrast} />
+                            </SelectTwo>
                         </div>
                     </li>
                     <li className="dropdown-item-hr mb0-5" aria-hidden="false" />
