@@ -9,7 +9,7 @@ interface Props extends ConfirmModalProps {
 
 const DeleteAllMessagesModal = ({ email, ...rest }: Props) => {
     const [phraseInput, setPhraseInput] = useState('');
-    const phrase = `PERMANENTLY DELETE MESSAGES IN ${email.toUpperCase()}`;
+    const phrase = c('Security phrase').t`PERMANENTLY DELETE MESSAGES IN ${email.toUpperCase()}`;
 
     const domain = email.split('@')[1];
     // translator: this is a segment of a full sentence. The ${email} variable here is the email address messages will be deleted from. For context, the full sentence is "This action will permanently delete all messages on mail@example.com. You will not be able to recover the messages on example.com."
