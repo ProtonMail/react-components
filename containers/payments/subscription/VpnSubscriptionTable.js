@@ -21,10 +21,10 @@ const INDEXES = {
     [PLANS.VISIONARY]: 3,
 };
 
-const netflix = <b>Netflix</b>;
-const disney = <b>Disney+</b>;
-const primeVideo = <b>Prime Video</b>;
-const many = <b>and many others</b>;
+const netflix = <b>{c('Netflix').t`Netflix`}</b>;
+const disney = <b>{c('Disney').t`Disney+`}</b>;
+const primeVideo = <b>{c('Prime Video').t`Prime Video`}</b>;
+const many = <b>{c('Many Others').t`and many others`}</b>;
 
 const VpnSubscriptionTable = ({
     planNameSelected,
