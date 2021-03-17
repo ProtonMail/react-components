@@ -43,11 +43,11 @@ const OverviewLayout = ({ title, pages, children, limit }: Props) => {
                 className="relative flex-nowrap flex-item-fluid bg-weak on-desktop-h100 scroll-if-needed"
             >
                 <SettingsTitle onTop={!scrollTop}>{title}</SettingsTitle>
-                <div className="container-section-sticky pt0">
+                <div className="container-section-sticky pt0 ui-prominent">
                     <div className="flex on-mobile-flex-column pb2">
                         <div className="flex-item-fluid">
                             {children ? (
-                                <section className="overview-grid-item overview-grid-item--full bordered bg-norm shadow-lifted p2 mb1-5">
+                                <section className="ui-standard overview-grid-item overview-grid-item--full bordered bg-norm shadow-lifted p2 mb1-5">
                                     {children}
                                 </section>
                             ) : null}
