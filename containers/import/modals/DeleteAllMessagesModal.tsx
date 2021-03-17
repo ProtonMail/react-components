@@ -9,7 +9,8 @@ interface Props extends ConfirmModalProps {
 
 const DeleteAllMessagesModal = ({ email, ...rest }: Props) => {
     const [phraseInput, setPhraseInput] = useState('');
-    const phrase = c('Security phrase').t`PERMANENTLY DELETE MESSAGES IN ${email.toUpperCase()}`;
+    const phrase = c('Security phrase').t`Permanently delete messages in ${email}`;
+    const upperCasedPhrase = phrase.toUpperCase();
 
     const domain = email.split('@')[1];
     // translator: this is a segment of a full sentence. The ${email} variable here is the email address messages will be deleted from. For context, the full sentence is "This action will permanently delete all messages on mail@example.com. You will not be able to recover the messages on example.com."
@@ -24,7 +25,7 @@ const DeleteAllMessagesModal = ({ email, ...rest }: Props) => {
         <ConfirmModal
             {...rest}
             confirm={
-                <ErrorButton disabled={phraseInput !== phrase} type="submit">
+                <ErrorButton disabled={phraseInput !== upperCasedPhrase} type="submit">
                     {c('Action').t`Delete all messages`}
                 </ErrorButton>
             }
@@ -40,7 +41,7 @@ const DeleteAllMessagesModal = ({ email, ...rest }: Props) => {
                     letterSpacing: '-0.2px',
                 }}
             >
-                {phrase}
+                {upperCasedPhrase}
             </div>
 
             <Row>
