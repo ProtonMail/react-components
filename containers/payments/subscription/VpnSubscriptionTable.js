@@ -21,6 +21,11 @@ const INDEXES = {
     [PLANS.VISIONARY]: 3,
 };
 
+const netflix = <b>Netflix</b>;
+const disney = <b>Disney+</b>;
+const primeVideo = <b>Prime Video</b>;
+const many = <b>and many others</b>;
+
 const VpnSubscriptionTable = ({
     planNameSelected,
     plans: apiPlans = [],
@@ -123,7 +128,7 @@ const VpnSubscriptionTable = ({
                             <span className="opacity-50 mr0-5"> {c('Plan feature').t`Streaming service support`}</span>
                             <Info
                                 title={c('Info')
-                                    .t`Access your streaming services, like Netflix, Disney+, Prime Video, and many others, no matter where you are. Bolding should be applied according to the screenshot.`}
+                                    .jt`Access your streaming services, like ${netflix}, ${disney}, ${primeVideo}, ${many}, no matter where you are.`}
                                 url="https://protonvpn.com/support/tor-vpn/"
                             />
                         </del>
@@ -214,7 +219,7 @@ const VpnSubscriptionTable = ({
                             <span className="opacity-50 mr0-5"> {c('Plan feature').t`Streaming service support`}</span>
                             <Info
                                 title={c('Info')
-                                    .t`Access your streaming services, like Netflix, Disney+, Prime Video, and many others, no matter where you are. Bolding should be applied according to the screenshot.`}
+                                    .jt`Access your streaming services, like ${netflix}, ${disney}, ${primeVideo}, ${many}, no matter where you are.`}
                                 url="https://protonvpn.com/support/tor-vpn/"
                             />
                         </del>
@@ -305,7 +310,7 @@ const VpnSubscriptionTable = ({
                             <span className="mr0-5"> {c('Plan feature').t`Streaming service support`}</span>
                             <Info
                                 title={c('Info')
-                                    .t`Access your streaming services, like Netflix, Disney+, Prime Video, and many others, no matter where you are. Bolding should be applied according to the screenshot.`}
+                                    .jt`Access your streaming services, like ${netflix}, ${disney}, ${primeVideo}, ${many}, no matter where you are.`}
                                 url="https://protonvpn.com/support/tor-vpn/"
                             />
                         </span>
