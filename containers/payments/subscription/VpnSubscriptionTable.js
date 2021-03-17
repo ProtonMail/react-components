@@ -21,11 +21,6 @@ const INDEXES = {
     [PLANS.VISIONARY]: 3,
 };
 
-const netflix = <b>{c('Netflix').t`Netflix`}</b>;
-const disney = <b>{c('Disney').t`Disney+`}</b>;
-const primeVideo = <b>{c('Prime Video').t`Prime Video`}</b>;
-const many = <b>{c('Many Others').t`and many others`}</b>;
-
 const VpnSubscriptionTable = ({
     planNameSelected,
     plans: apiPlans = [],
@@ -42,6 +37,10 @@ const VpnSubscriptionTable = ({
     const visionaryPlan = plansMap[PLANS.VISIONARY];
     const plusPlan = plansMap[PLANS.PLUS];
     const [vpnCountries] = useVPNCountries();
+    const netflix = <b>{c('Netflix').t`Netflix`}</b>;
+    const disney = <b>{c('Disney').t`Disney+`}</b>;
+    const primeVideo = <b>{c('Prime Video').t`Prime Video`}</b>;
+    const many = <b>{c('Many Others').t`and many others`}</b>;
     const plans = [
         {
             name: '',
