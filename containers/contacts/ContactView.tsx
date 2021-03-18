@@ -130,14 +130,14 @@ const ContactView = ({
                 )}
                 {hasTel ? null : (
                     <div className="mb0-5">
-                        <Button shape="outline" color="norm" size="medium" onClick={() => handleEdit('tel')}>
+                        <Button shape="outline" color="norm" onClick={() => handleEdit('tel')}>
                             Add phone number
                         </Button>
                     </div>
                 )}
                 {hasAdr ? null : (
                     <div className="mb0-5">
-                        <Button shape="outline" color="norm" size="medium" onClick={() => handleEdit('adr')}>
+                        <Button shape="outline" color="norm" onClick={() => handleEdit('adr')}>
                             Add address
                         </Button>
                     </div>
