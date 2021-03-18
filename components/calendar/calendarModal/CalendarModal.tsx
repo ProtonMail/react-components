@@ -15,7 +15,7 @@ import { noop } from 'proton-shared/lib/helpers/function';
 import { loadModels } from 'proton-shared/lib/models/helper';
 import { CalendarsModel } from 'proton-shared/lib/models';
 import { Calendar, CalendarSettings } from 'proton-shared/lib/interfaces/calendar';
-import { dedupeNotifications, sortNotificationsByAscendingTrigger } from 'proton-shared/lib/helpers/alarms';
+import { dedupeNotifications, sortNotificationsByAscendingTrigger } from 'proton-shared/lib/calendar/alarms';
 import { FormModal, Loader, Tabs } from '../../index';
 import { GenericError } from '../../../index';
 import {
