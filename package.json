@@ -53,6 +53,7 @@
     "codemirror": "^5.46.0",
     "date-fns": "^2.6.0",
     "design-system": "github:ProtonMail/design-system#master",
+    "idb": "^6.0.0",
     "intersection-observer": "^0.5.1",
     "libphonenumber-js": "^1.9.11",
     "markdown-it": "^10.0.0",

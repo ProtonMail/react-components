@@ -27,7 +27,6 @@ interface Props extends HeaderProps {
     hasAppsDropdown?: boolean;
     title: string;
     expanded: boolean;
-    handleES: () => Promise<void>;
     onToggleExpand?: () => void;
     isNarrow?: boolean;
 }
@@ -45,7 +44,6 @@ const PrivateHeader = ({
     helpDropdown,
     floatingButton,
     expanded,
-    handleES,
     onToggleExpand,
     title,
 }: Props) => {
@@ -89,7 +87,6 @@ const PrivateHeader = ({
             {title && isNarrow ? <span className="text-lg lh-rg mtauto mbauto text-ellipsis">{title}</span> : null}
             {isNarrow ? null : searchBox}
             <TopNavbar>
-<<<<<<< HEAD
                 <TopNavbarList>
                     {isNarrow && searchDropdown ? <TopNavbarListItem>{searchDropdown}</TopNavbarListItem> : null}
                     {showBlackFridayButton ? (
@@ -127,30 +124,6 @@ const PrivateHeader = ({
                         <UserDropdown />
                     </TopNavbarListItem>
                 </TopNavbarList>
-=======
-                {isNarrow && searchDropdown ? <TopNavbarItem>{searchDropdown}</TopNavbarItem> : null}
-                {showBlackFridayButton ? (
-                    <TopNavbarItem>
-                        <BlackFridayButton plans={plans} subscription={subscription} />
-                    </TopNavbarItem>
-                ) : null}
-                {hasPaidMail || isNarrow || isVPN ? null : (
-                    <TopNavbarItem>
-                        <UpgradeButton />
-                    </TopNavbarItem>
-                )}
-                {hasPaidVpn || isNarrow || !isVPN ? null : (
-                    <TopNavbarItem>
-                        <UpgradeVPNButton />
-                    </TopNavbarItem>
-                )}
-                {!contactsButton ? null : <TopNavbarItem>{contactsButton}</TopNavbarItem>}
-                {!settingsButton ? null : <TopNavbarItem>{settingsButton}</TopNavbarItem>}
-                <TopNavbarItem>{supportDropdown || <SupportDropdown />}</TopNavbarItem>
-                <TopNavbarItem className="relative">
-                    <UserDropdown handleES={handleES} />
-                </TopNavbarItem>
->>>>>>> fa9dc5bd (Delete DB at logout)
             </TopNavbar>
             {isNarrow && floatingButton ? floatingButton : null}
         </Header>

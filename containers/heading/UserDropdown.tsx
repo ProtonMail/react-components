@@ -36,10 +36,8 @@ const UserDropdown = ({ ...rest }) => {
     };
 
     const handleLogout = () => {
-        void handleES().then(() => {
-            logout();
-            close();
-        });
+        logout();
+        close();
     };
 
     return (
