@@ -180,3 +180,9 @@ export enum GMAIL_INSTRUCTIONS {
     LABELS = 2,
     TWO_STEPS = 3,
 }
+
+export interface OAuthProps {
+    code: string;
+    provider: OAUTH_PROVIDER;
+    redirectURI: string;
+}
