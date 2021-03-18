@@ -24,6 +24,14 @@ const ImportListSection = () => {
 
     const activeImports = imports.filter(({ Active }) => Active);
 
+    if (importsLoading || pastImportsLoading) {
+        return (
+            <SettingsSectionWide>
+                <Loader />
+            </SettingsSectionWide>
+        );
+    }
+
     if (!activeImports.length && !pastImports.length) {
         return <SettingsParagraph>{c('Info').t`No imports to display.`}</SettingsParagraph>;
     }
@@ -113,25 +121,19 @@ const ImportListSection = () => {
 
     return (
         <SettingsSectionWide>
-            {importsLoading || pastImportsLoading ? (
-                <Loader />
-            ) : (
-                <>
-                    {infoRenderer()}
-                    <Table className="on-mobile-hide-td3 on-mobile-hide-td4 simple-table--has-actions">
-                        <thead>
-                            <tr>{headerCells}</tr>
-                        </thead>
-                        <TableBody>
-                            {[...activeImports.sort(sortActiveImports), ...pastImports.sort(sortPastImports)].map(
-                                (currentImport) => (
-                                    <ImportListRow key={currentImport.ID} currentImport={currentImport} />
-                                )
-                            )}
-                        </TableBody>
-                    </Table>
-                </>
-            )}
+            {infoRenderer()}
+            <Table className="on-mobile-hide-td3 on-mobile-hide-td4 simple-table--has-actions">
+                <thead>
+                    <tr>{headerCells}</tr>
+                </thead>
+                <TableBody>
+                    {[...activeImports.sort(sortActiveImports), ...pastImports.sort(sortPastImports)].map(
+                        (currentImport) => (
+                            <ImportListRow key={currentImport.ID} currentImport={currentImport} />
+                        )
+                    )}
+                </TableBody>
+            </Table>
         </SettingsSectionWide>
     );
 };
