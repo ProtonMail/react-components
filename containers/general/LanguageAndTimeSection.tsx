@@ -14,7 +14,7 @@ const LanguageAndTimeSection = () => {
             <LanguageSection locales={locales} />
             <TimeFormatSection />
             <WeekStartSection />
-            {IS_DATE_FORMAT_ENABLED ? <DateFormatSection /> : null}
+            {IS_DATE_FORMAT_ENABLED && <DateFormatSection />}
         </SettingsSection>
     );
 };

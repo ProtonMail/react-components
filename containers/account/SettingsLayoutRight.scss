@@ -1,12 +1,5 @@
 @import '~design-system/scss/config/';
 
 .settings-layout-right {
-	width: $field-container;
-	@extend .max-w100;
-	@extend .inline-block;
-	@extend .relative;
-
-	&.auto {
-		@extend .auto;
-	}
+	min-width: em(240);
 }

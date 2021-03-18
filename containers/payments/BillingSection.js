@@ -6,17 +6,14 @@ import { unique } from 'proton-shared/lib/helpers/array';
 import { getMonthlyBaseAmount, hasVisionary } from 'proton-shared/lib/helpers/subscription';
 import humanSize from 'proton-shared/lib/helpers/humanSize';
 
-import { Alert, Loader, LinkButton, Time, Info } from '../../components';
-import { useUser, useSubscription, useOrganization, useModals, usePlans } from '../../hooks';
+import { Loader, Time } from '../../components';
+import { useUser, useSubscription, useOrganization, usePlans } from '../../hooks';
 import { classnames } from '../../helpers';
-import { SettingsSection } from '../account';
+import { SettingsParagraph, SettingsSection } from '../account';
 import MozillaInfoPanel from '../account/MozillaInfoPanel';
 import { formatPlans } from './subscription/helpers';
 import DiscountBadge from './DiscountBadge';
-import GiftCodeModal from './GiftCodeModal';
-import CreditsModal from './CreditsModal';
 import PlanPrice from './subscription/PlanPrice';
-// import NewSubscriptionModal from './subscription/NewSubscriptionModal';
 import CycleDiscountBadge from './CycleDiscountBadge';
 
 const { MONTHLY, YEARLY, TWO_YEARS } = CYCLE;
@@ -29,53 +26,18 @@ const getCyclesI18N = () => ({
 
 const BillingSection = ({ permission }) => {
     const i18n = getCyclesI18N();
-    const { createModal } = useModals();
-    const [{ hasPaidMail, hasPaidVpn, Credit }] = useUser();
+    const [{ hasPaidMail, hasPaidVpn }] = useUser();
     const [plans, loadingPlans] = usePlans();
     const [subscription, loadingSubscription] = useSubscription();
     const [organization, loadingOrganization] = useOrganization();
-    const handleOpenGiftCodeModal = () => createModal(<GiftCodeModal />);
-    const handleOpenCreditsModal = () => createModal(<CreditsModal />);
-
-    // const handleOpenSubscriptionModal = () =>
-    //     createModal(
-    //         <NewSubscriptionModal
-    //             planIDs={getPlanIDs(subscription)}
-    //             coupon={subscription.CouponCode}
-    //             currency={subscription.Currency}
-    //             cycle={YEARLY}
-    //         />
-    //     );
 
     if (!permission) {
         return (
-            <>
-                <Alert>{c('Info').t`There are no billing details available for your current subscription.`}</Alert>
-                <div className="bg-global-highlight mb1 pt1 pl1 pr1">
-                    <div className="flex-autogrid on-mobile-flex-column w100 mb1">
-                        <div className="flex-autogrid-item">{c('Label').t`Credits`}</div>
-                        <div className="flex-autogrid-item">
-                            <LinkButton className="p0" onClick={handleOpenCreditsModal}>{c('Action')
-                                .t`Add credits`}</LinkButton>
-                        </div>
-                        <div className="text-right">{Credit / 100}</div>
-                    </div>
-                    <div className="flex-autogrid on-mobile-flex-column w100">
-                        <div className="flex-autogrid-item">
-                            {c('Label').t`Gift code`}{' '}
-                            <Info
-                                title={c('Info')
-                                    .t`If you purchased a gift code or received one from our support team, you can enter it here.`}
-                            />
-                        </div>
-                        <div className="flex-autogrid-item">
-                            <LinkButton className="p0" onClick={handleOpenGiftCodeModal}>{c('Action')
-                                .t`Use gift code`}</LinkButton>
-                        </div>
-                        <div className="flex-autogrid-item" />
-                    </div>
-                </div>
-            </>
+            <SettingsSection>
+                <SettingsParagraph>
+                    {c('Info').t`There are no billing details available for your current subscription.`}
+                </SettingsParagraph>
+            </SettingsSection>
         );
     }
 

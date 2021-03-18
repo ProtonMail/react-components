@@ -6,6 +6,8 @@ import AuthModal from '../password/AuthModal';
 import { ConfirmModal, Alert, IntlTelInput, Button } from '../../components';
 import { useLoading, useModals, useNotifications, useEventManager } from '../../hooks';
 
+import './RecoveryPhone.scss';
+
 interface Props {
     phone: string | null;
     hasReset: boolean;
@@ -46,8 +48,8 @@ const RecoveryPhone = ({ phone, hasReset }: Props) => {
     };
 
     return (
-        <div className="flex flex-align-items-center">
-            <div className="flex-item-fluid">
+        <div className="recovery-phone_container">
+            <div className="recovery-phone_phone-input">
                 <IntlTelInput
                     id="phoneInput"
                     placeholder={c('Info').t`Not set`}
@@ -59,7 +61,7 @@ const RecoveryPhone = ({ phone, hasReset }: Props) => {
                     required
                 />
             </div>
-            <div className="ml1">
+            <div>
                 <Button
                     color="norm"
                     disabled={(phone || '') === input}

@@ -6,6 +6,8 @@ import { Alert, Button, ConfirmModal, EmailInput } from '../../components';
 import { useLoading, useModals, useNotifications, useEventManager } from '../../hooks';
 import AuthModal from '../password/AuthModal';
 
+import './RecoveryEmail.scss';
+
 interface Props {
     email: string | null;
     hasReset: boolean;
@@ -57,16 +59,17 @@ const RecoveryEmail = ({ email, hasReset, hasNotify }: Props) => {
     };
 
     return (
-        <div className="flex flex-wrap">
-            <div className="text-ellipsis flex-item-fluid" title={email || ''}>
+        <div className="recovery-email_container">
+            <div className="text-ellipsis mr1" title={email || ''}>
                 <EmailInput
+                    className="recovery-email_email-input"
                     id="emailInput"
                     value={input || ''}
                     placeholder={c('Info').t`Not set`}
                     onChange={handleChange}
                 />
             </div>
-            <div className="ml1">
+            <div>
                 <Button
                     color="norm"
                     disabled={email === input}

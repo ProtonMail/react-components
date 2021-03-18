@@ -22,17 +22,38 @@ const EmailSubscriptionCheckboxes = ({ disabled, News, onChange }: EmailSubscrip
         {
             id: 'announcements',
             flag: ANNOUNCEMENTS,
-            text: c('Label for news').t`Proton announcements (2-3 emails per year)`,
+            text: c('Label for news').t`Proton announcements`,
+            frequency: c('Frequency of news').t`(2-3 emails per year)`,
         },
-        { id: 'features', flag: FEATURES, text: c('Label for news').t`Proton major features (3-4 emails per year)` },
-        { id: 'business', flag: BUSINESS, text: c('Label for news').t`Proton for business (4-5 emails per year)` },
-        { id: 'newsletter', flag: NEWSLETTER, text: c('Label for news').t`Proton newsletter (8-10 emails per year)` },
-        { id: 'beta', flag: BETA, text: c('Label for news').t`Proton Beta (10-12 emails per year)` },
+        {
+            id: 'features',
+            flag: FEATURES,
+            text: c('Label for news').t`Proton major features`,
+            frequency: c('Frequency of news').t`(3-4 emails per year)`,
+        },
+        {
+            id: 'business',
+            flag: BUSINESS,
+            text: c('Label for news').t`Proton for business`,
+            frequency: c('Frequency of news').t`(4-5 emails per year)`,
+        },
+        {
+            id: 'newsletter',
+            flag: NEWSLETTER,
+            text: c('Label for news').t`Proton newsletter`,
+            frequency: c('Frequency of news').t`(8-10 emails per year)`,
+        },
+        {
+            id: 'beta',
+            flag: BETA,
+            text: c('Label for news').t`Proton Beta`,
+            frequency: c('Frequency of news').t`(10-12 emails per year)`,
+        },
     ];
 
     return (
         <ul className="unstyled relative">
-            {checkboxes.map(({ id, flag, text }) => {
+            {checkboxes.map(({ id, flag, text, frequency }) => {
                 return (
                     <li key={id} className="mb1 flex flex-align-items-center">
                         <Toggle
@@ -42,7 +63,10 @@ const EmailSubscriptionCheckboxes = ({ disabled, News, onChange }: EmailSubscrip
                             disabled={disabled}
                             onChange={handleChange(flag)}
                         />
-                        <label htmlFor={id}>{text}</label>
+                        <label htmlFor={id} className="flex on-mobile-flex-column">
+                            <span>{text} </span>
+                            {frequency}
+                        </label>
                     </li>
                 );
             })}

@@ -82,7 +82,7 @@ const RecoveryMethodsSection = () => {
             </SettingsParagraph>
             <SettingsLayout>
                 <SettingsLayoutLeft>
-                    <label className="on-mobile-mb0-5 text-semibold" htmlFor="emailInput">
+                    <label className="text-semibold" htmlFor="emailInput">
                         {c('Label').t`Email address`}
                     </label>
                 </SettingsLayoutLeft>
