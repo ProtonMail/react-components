@@ -123,7 +123,7 @@ const ContactView = ({
             >
                 {hasEmail ? null : (
                     <div className="mb0-5">
-                        <Button shape="outline" color="norm" size="medium" onClick={() => handleEdit('email')}>
+                        <Button shape="outline" color="norm" onClick={() => handleEdit('email')}>
                             Add email
                         </Button>
                     </div>
