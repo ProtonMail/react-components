@@ -5,7 +5,7 @@ import { PLAN_NAMES } from 'proton-shared/lib/constants';
 import humanSize from 'proton-shared/lib/helpers/humanSize';
 import percentage from 'proton-shared/lib/helpers/percentage';
 import { getPlanIDs } from 'proton-shared/lib/helpers/subscription';
-import { Alert, Href, Loader, Meter, Label, Button } from '../../../components';
+import { Alert, Href, Loader, Meter, Button } from '../../../components';
 import { useModals, useSubscription, useOrganization, useUser, useAddresses } from '../../../hooks';
 import MozillaInfoPanel from '../../account/MozillaInfoPanel';
 
@@ -14,6 +14,9 @@ import NewSubscriptionModal from './NewSubscriptionModal';
 import { SettingsSection } from '../../account';
 import UpsellMailSubscription from './UpsellMailSubscription';
 import UpsellVPNSubscription from './UpsellVPNSubscription';
+import SettingsLayoutLeft from '../../account/SettingsLayoutLeft';
+import SettingsLayout from '../../account/SettingsLayout';
+import SettingsLayoutRight from '../../account/SettingsLayoutRight';
 
 const YourPlanSection = ({ permission }) => {
     const [user] = useUser();
@@ -101,8 +104,8 @@ const YourPlanSection = ({ permission }) => {
     return (
         <SettingsSection>
             <div className="bordered-container mb2">
-                <div className="flex p1-5">
-                    <Label className="text-semibold">
+                <SettingsLayout className="p1">
+                    <SettingsLayoutLeft className="text-semibold ml-1 pl1">
                         {hasPaidMail ? (
                             c('Plan').t`ProtonMail ${MailPlanName}`
                         ) : hasAddresses ? (
@@ -110,22 +113,22 @@ const YourPlanSection = ({ permission }) => {
                         ) : (
                             <Href url="https://mail.protonmail.com/login">{c('Info').t`Not activated`}</Href>
                         )}
-                    </Label>
-                    <div>
+                    </SettingsLayoutLeft>
+                    <SettingsLayoutRight>
                         {mailAddons}
                         <UpsellMailSubscription />
-                    </div>
-                </div>
+                    </SettingsLayoutRight>
+                </SettingsLayout>
 
-                <div className="flex flex-nowrap p1-5 border-top">
-                    <Label className="text-semibold">
+                <SettingsLayout className="p1 border-top">
+                    <SettingsLayoutLeft className="text-semibold ml-1 pl1">
                         {c('Label').t`ProtonVPN ${hasPaidVpn ? VPNPlanName : c('Plan').t`Free`}`}
-                    </Label>
-                    <div>
+                    </SettingsLayoutLeft>
+                    <SettingsLayoutRight>
                         {hasPaidVpn ? MaxVPN : 1} {c('Label').t`VPN Connections available`}
                         <UpsellVPNSubscription />
-                    </div>
-                </div>
+                    </SettingsLayoutRight>
+                </SettingsLayout>
             </div>
 
             <Button shape="outline" onClick={handleModal}>
