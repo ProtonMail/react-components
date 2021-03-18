@@ -25,10 +25,9 @@ const useUpdateGroup = () => {
     return useCallback(async ({ groupID, name, color, toAdd, toRemove, toCreate }: UpdateGroupOptions) => {
         // Update contact group
         const contactGroupParams = { Name: name, Color: color };
-        const { Label } = await api(
-            groupID ? updateLabel(groupID, contactGroupParams) : createContactGroup(contactGroupParams)
-        );
-        const { ID } = Label;
+        const {
+            Label: { ID: LabelID },
+        } = await api(groupID ? updateLabel(groupID, contactGroupParams) : createContactGroup(contactGroupParams));
 
         // Create new contacts
         const properties: ContactProperties[] = toCreate.map(({ Email }) => [
@@ -48,9 +47,9 @@ const useUpdateGroup = () => {
         // Label and unlabel existing contact emails
         await Promise.all(
             [
-                toAdd.length && api(labelContactEmails({ LabelID: ID, ContactEmailIDs: toAdd.map(({ ID }) => ID) })),
+                toAdd.length && api(labelContactEmails({ LabelID, ContactEmailIDs: toAdd.map(({ ID }) => ID) })),
                 toRemove.length &&
-                    api(unLabelContactEmails({ LabelID: ID, ContactEmailIDs: toRemove.map(({ ID }) => ID) })),
+                    api(unLabelContactEmails({ LabelID, ContactEmailIDs: toRemove.map(({ ID }) => ID) })),
             ].filter(Boolean)
         );
         await call();
