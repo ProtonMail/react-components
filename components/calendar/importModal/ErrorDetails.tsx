@@ -1,9 +1,9 @@
 import React from 'react';
 import { c } from 'ttag';
-import { Bordered, Details, Summary } from 'index';
 import { truncateMore } from 'proton-shared/lib/helpers/string';
 import { MAX_UID_CHARS_DISPLAY } from 'proton-shared/lib/calendar/constants';
 import { ImportEventError } from 'proton-shared/lib/calendar/ImportEventError';
+import { Bordered, Details, Summary } from '../../index';
 
 const getComponentText = (component: string) => {
     if (component === 'vevent') {
