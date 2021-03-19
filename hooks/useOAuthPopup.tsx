@@ -21,7 +21,10 @@ const useOAuth = ({ getRedirectURL, getAuthorizationUrl }: OAuthHookContext) => 
     const { createNotification } = useNotifications();
     const stateId = useRef<string>();
 
-    const triggerOAuthPopup = (provider: OAUTH_PROVIDER, callback: (oauthProps: OAuthProps) => void) => {
+    const triggerOAuthPopup = (
+        provider: OAUTH_PROVIDER,
+        callback: (oauthProps: OAuthProps) => void | Promise<void>
+    ) => {
         let interval: number;
 
         const uid = generateProtonWebUID();
@@ -94,7 +97,7 @@ const useOAuth = ({ getRedirectURL, getAuthorizationUrl }: OAuthHookContext) => 
                             return;
                         }
 
-                        callback({ code, provider, redirectURI });
+                        void callback({ code, provider, redirectURI });
                     }
                 } catch (err) {
                     // silent error

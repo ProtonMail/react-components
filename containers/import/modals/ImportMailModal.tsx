@@ -42,6 +42,7 @@ import {
     GMAIL_INSTRUCTIONS,
     OAUTH_PROVIDER,
     OAuthProps,
+    AuthenticationMethod,
 } from '../interfaces';
 
 import ImportInstructionsStep from './steps/ImportInstructionsStep';
@@ -83,7 +84,7 @@ interface ImporterFromServer {
     MailboxSize: {
         [key: string]: number;
     };
-    Sasl: 'PLAIN' | 'XOAUTH2';
+    Sasl: AuthenticationMethod;
 }
 interface Props {
     currentImport?: Importer;
@@ -109,8 +110,15 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps: initialOAu
 
     const [showPassword, setShowPassword] = useState(false);
 
+    const initialStep = () => {
+        if (isReconnectMode) {
+            return oauthProps ? Step.PREPARE : Step.START;
+        }
+        return Step.INSTRUCTIONS;
+    };
+
     const [modalModel, setModalModel] = useState<ImportModalModel>({
-        step: isReconnectMode || oauthProps ? Step.START : Step.INSTRUCTIONS,
+        step: initialStep(),
         importID: currentImport?.ID || '',
         email: currentImport?.Email || '',
         password: '',
@@ -229,7 +237,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps: initialOAu
                         Email: modalModel.email,
                         ImapHost: modalModel.imap,
                         ImapPort: parseInt(modalModel.port, 10),
-                        Sasl: 'PLAIN',
+                        Sasl: AuthenticationMethod.PLAIN,
                         Code: modalModel.password,
                     }),
                     /*
@@ -262,7 +270,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps: initialOAu
                 ...createMailImport({
                     ImapHost: oauthProps?.provider ? IMAPS[oauthProps.provider] : '',
                     ImapPort: 993,
-                    Sasl: 'XOAUTH2',
+                    Sasl: AuthenticationMethod.OAUTH,
                     Code: oauthProps?.code,
                     RedirectUri: oauthProps?.redirectURI,
                 }),
@@ -325,7 +333,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps: initialOAu
                 Code: modalModel.password,
                 ImapHost: modalModel.imap,
                 ImapPort: parseInt(modalModel.port, 10),
-                Sasl: 'PLAIN',
+                Sasl: AuthenticationMethod.OAUTH,
             })
         );
         await api(resumeMailImport(modalModel.importID));

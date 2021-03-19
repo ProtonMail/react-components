@@ -28,7 +28,7 @@ export const getOAuthRedirectURL = () => {
     return `${protocol}//${host}${G_OAUTH_REDIRECT_PATH}`;
 };
 
-export const getOAuthAuthorizationUrl = () => {
+export const getOAuthAuthorizationUrl = (email?: string) => {
     const params = new URLSearchParams();
 
     params.append('redirect_uri', getOAuthRedirectURL());
@@ -37,6 +37,10 @@ export const getOAuthAuthorizationUrl = () => {
     params.append('client_id', G_OAUTH_CLIENT_ID);
     params.append('scope', G_OAUTH_SCOPE);
     params.append('prompt', 'consent');
+
+    if (email) {
+        params.append('login_hint', email);
+    }
 
     return `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
 };
