@@ -1,15 +1,11 @@
 import React from 'react';
 import { c } from 'ttag';
 
-import { IMPORT_CALENDAR_FAQ_URL } from 'proton-shared/lib/calendar/constants';
+import { IMPORT_CALENDAR_FAQ_URL, CALENDAR_APP_NAME } from 'proton-shared/lib/calendar/constants';
 import { ImportCalendarModel } from 'proton-shared/lib/interfaces/calendar/Import';
-import { getAppName } from 'proton-shared/lib/apps/helper';
-import { APPS } from 'proton-shared/lib/constants';
 import { Alert } from '../../index';
 
 import ErrorDetails from './ErrorDetails';
-
-const CALENDAR_APP_NAME = getAppName(APPS.PROTONCALENDAR);
 
 interface Props {
     model: ImportCalendarModel;
