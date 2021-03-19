@@ -16,7 +16,7 @@ export interface ButtonProps extends React.ComponentPropsWithoutRef<'button'> {
      * Props supplied to the Icon component.
      * The Icon component only renders if the "icon" prop is supplied.
      */
-    iconProps?: IconProps;
+    iconProps?: Omit<IconProps, 'name'>;
     /**
      * Whether the button should render a loader.
      * Button is disabled when this prop is true.

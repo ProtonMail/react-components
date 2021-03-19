@@ -1,9 +1,8 @@
 import React from 'react';
-import Icon from '../icon/Icon';
-import PrimaryButton, { PrimaryButtonProps } from './PrimaryButton';
 import { classnames } from '../../helpers';
+import Button from './Button';
 
-interface Props extends PrimaryButtonProps {
+interface Props extends ButtonProps {
     icon: string;
     title?: string;
     className?: string;
@@ -11,10 +10,17 @@ interface Props extends PrimaryButtonProps {
 
 const FloatingButton = ({ icon, title, className, ...rest }: Props) => {
     return (
-        <PrimaryButton className={classnames(['fab flex', className])} {...rest}>
-            <Icon size={24} className="mauto" name={icon} />
-            {title ? <span className="sr-only">{title}</span> : null}
-        </PrimaryButton>
+        <Button
+            color="norm"
+            icon={icon}
+            iconProps={{
+                size: 24,
+                className: 'mauto',
+                alt: title,
+            }}
+            className={classnames(['fab flex', className])}
+            {...rest}
+        />
     );
 };
 

@@ -25,7 +25,7 @@ const EditorToolbarButton = ({
                 type="button"
                 // title={title}
                 disabled={disabled || loading}
-                className="editor-toolbar-button m0 flex"
+                className="editor-toolbar-button interactive m0 flex"
                 {...rest}
             >
                 {children}
