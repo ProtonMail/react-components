@@ -1,10 +1,17 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { c } from 'ttag';
 import { PrimaryButton, Input } from '../../../components';
 
-const GiftCodeForm = ({ code, loading, disabled, onChange, onSubmit }) => {
-    const handleEnter = (event) => {
+interface Props {
+    code: string;
+    loading?: boolean;
+    disabled?: boolean;
+    onChange: (value: string) => void;
+    onSubmit: () => void;
+}
+
+const GiftCodeForm = ({ code, loading, disabled, onChange, onSubmit }: Props) => {
+    const handleEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
             event.preventDefault();
             onSubmit();
@@ -28,14 +35,6 @@ const GiftCodeForm = ({ code, loading, disabled, onChange, onSubmit }) => {
             >{c('Action').t`Apply`}</PrimaryButton>
         </div>
     );
-};
-
-GiftCodeForm.propTypes = {
-    onChange: PropTypes.func.isRequired,
-    onSubmit: PropTypes.func,
-    loading: PropTypes.bool,
-    disabled: PropTypes.bool,
-    code: PropTypes.string,
 };
 
 export default GiftCodeForm;
