@@ -21,6 +21,8 @@ import { replaceUrl } from 'proton-shared/lib/helpers/browser';
 import { getAppHref } from 'proton-shared/lib/apps/helper';
 import { requestFork } from 'proton-shared/lib/authentication/sessionForking';
 import { FORK_TYPE } from 'proton-shared/lib/authentication/ForkInterface';
+import { getItem } from 'proton-shared/lib/helpers/storage';
+import { deleteDB } from 'idb';
 
 import { Icons } from '../../components';
 import Signout from './Signout';
@@ -139,6 +141,11 @@ const ProtonApp = ({ config, children, hasInitialAuth }: Props) => {
             authentication.setPassword(keyPassword);
             if (newLocalID !== undefined) {
                 authentication.setLocalID(newLocalID);
+            }
+
+            // Remove encrypted search DB in case there is a corrupt leftover
+            if (!getItem(`ES:${User.ID}:Key`)) {
+                void deleteDB(`ES:${User.ID}:DB`);
             }
 
             const oldCache = cacheRef.current;

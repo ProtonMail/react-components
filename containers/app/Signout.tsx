@@ -20,13 +20,12 @@ const Signout = ({ onDone }: Props) => {
     const authentication = useAuthentication();
     const getUser = useGetUser();
 
-    const handleES = async (userID: string) => {
+    const handleES = (userID: string) => {
         removeItem(`ES:${userID}:Key`);
         removeItem(`ES:${userID}:Event`);
         removeItem(`ES:${userID}:BuildEvent`);
         removeItem(`ES:${userID}:Recover`);
-        removeItem(`ES:${userID}:RecoverStatus`);
-        await deleteDB(`ES:${userID}:DB`);
+        return userID;
     };
 
     useEffect(() => {
@@ -35,14 +34,18 @@ const Signout = ({ onDone }: Props) => {
             const UID = authentication.getUID?.();
             const { ID: userID } = await getUser();
             return Promise.all([
+                handleES(userID),
                 wait(200),
                 UID ? api({ ...revoke(), silence: true }) : undefined,
                 UID ? removeLastRefreshDate(UID) : undefined,
                 localID !== undefined ? removePersistedSession(localID) : undefined,
-                handleES(userID),
             ]);
         };
-        run().finally(onDone);
+        run()
+            .then(([userID]) => {
+                void deleteDB(`ES:${userID}:DB`);
+            })
+            .finally(onDone);
     }, []);
 
     return (
