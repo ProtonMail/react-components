@@ -183,6 +183,7 @@ const OnboardingModal = ({
     const isLastStep = steps.length - 1 === step;
     const childStep = steps[step];
     const hasDots = steps.length > 1 && step < steps.length;
+    const hasBack = steps.length === 1 || step > 0;
 
     if (!steps.length) {
         rest?.onClose?.();
@@ -210,9 +211,11 @@ const OnboardingModal = ({
             hasClose={allowClose}
             {...childStepProps}
             title={
-                <button type="button" title={c('Action').t`Back`} onClick={childStepProps.onClose || handleBack}>
-                    <Icon name="arrow-left" alt={c('Action').t`Back`} />
-                </button>
+                hasBack ? (
+                    <button type="button" title={c('Action').t`Back`} onClick={childStepProps.onClose || handleBack}>
+                        <Icon name="arrow-left" alt={c('Action').t`Back`} />
+                    </button>
+                ) : null
             }
             small
             footer={null}
@@ -227,7 +230,7 @@ const OnboardingModal = ({
                         fullWidth
                         loading={childStepProps.loading}
                         type="submit"
-                        className="mb1"
+                        className="mb0-25"
                         data-focus-fallback={1}
                     >
                         {childStepProps.submit}
@@ -243,7 +246,6 @@ const OnboardingModal = ({
                         color="norm"
                         fullWidth
                         disabled={childStepProps.loading}
-                        className="mb1"
                         onClick={childStepProps.onClose || handleBack}
                     >
                         {childStepProps.close}
