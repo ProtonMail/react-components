@@ -64,7 +64,7 @@ const useGetCalendarEventRaw = () => {
             ]);
             const [sharedSessionKey, calendarSessionKey] = await readSessionKeys({
                 calendarEvent: Event,
-                privateKeys: splitKeys(decryptedCalendarKeys).privateKeys,
+                ...splitKeys(decryptedCalendarKeys),
             });
             const withNormalizedAuthor = (x: CalendarEventData) => ({
                 ...x,
