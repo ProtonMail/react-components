@@ -24,7 +24,7 @@ const useGetCalendarEventRaw = () => {
             ]);
             const [sharedSessionKey, calendarSessionKey] = await readSessionKeys({
                 calendarEvent: Event,
-                privateKeys: splitKeys(decryptedCalendarKeys).privateKeys,
+                ...splitKeys(decryptedCalendarKeys),
             });
             return readCalendarEvent({
                 isOrganizer: !!Event.IsOrganizer,
