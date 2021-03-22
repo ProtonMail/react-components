@@ -26,6 +26,7 @@ import OnboardingThemes from './OnboardingThemes';
 import OnboardingStep from './OnboardingStep';
 import OnboardingDiscoverApps from './OnboardingDiscoverApps';
 import OnboardingWelcome from './OnboardingWelcome';
+import OnboardingSetupOrganization from './OnboardingSetupOrganization';
 import { availableThemes } from '../themes/ThemesSection';
 
 interface Props {
@@ -109,33 +110,7 @@ const OnboardingModal = ({
     };
 
     const welcomeStep = (
-        <OnboardingStep
-            submit={
-                canManageOrganization ? (
-                    <Button
-                        size="large"
-                        color="norm"
-                        shape="solid"
-                        className="mb1"
-                        fullWidth
-                        onClick={() => {
-                            goToApp('/organization', getAccountSettingsApp());
-                            handleNext();
-                        }}
-                    >{c('Action').t`Setup your organization`}</Button>
-                ) : (
-                    c('Action').t`Next`
-                )
-            }
-            close={
-                canManageOrganization ? (
-                    <Button size="large" color="norm" shape="ghost" className="mb1" fullWidth onClick={handleNext}>{c(
-                        'Action'
-                    ).t`Setup your inbox`}</Button>
-                ) : null
-            }
-            onSubmit={handleNext}
-        >
+        <OnboardingStep submit={c('Action').t`Get started`} close={null} onSubmit={handleNext}>
             <OnboardingWelcome />
         </OnboardingStep>
     );
@@ -143,6 +118,23 @@ const OnboardingModal = ({
     const setDisplayNameStep = (
         <OnboardingStep submit={c('Action').t`Next`} loading={loading} close={null} onSubmit={handleSetDisplayNameNext}>
             <OnboardingSetDisplayName id="onboarding-0" displayName={displayName} setDisplayName={setDisplayName} />
+        </OnboardingStep>
+    );
+
+    const setupOrganizationStep = (
+        <OnboardingStep
+            submit={c('Action').t`Start setup`}
+            close={
+                <Button size="large" color="norm" shape="ghost" className="mb1" fullWidth onClick={handleNext}>{c(
+                    'Action'
+                ).t`Skip`}</Button>
+            }
+            onSubmit={() => {
+                goToApp('/organization', getAccountSettingsApp());
+                handleNext();
+            }}
+        >
+            <OnboardingSetupOrganization />
         </OnboardingStep>
     );
 
@@ -166,7 +158,12 @@ const OnboardingModal = ({
     const hasDisplayNameStep = welcomeFlags?.hasDisplayNameStep && !hideDisplayName;
     const displayGenericSteps = showGenericSteps || hasDisplayNameStep;
     const genericSteps = displayGenericSteps
-        ? [welcomeStep, hasDisplayNameStep && setDisplayNameStep, themesStep].filter(isTruthy)
+        ? [
+              welcomeStep,
+              hasDisplayNameStep && setDisplayNameStep,
+              canManageOrganization && setupOrganizationStep,
+              themesStep,
+          ].filter(isTruthy)
         : [];
     const finalGenericSteps = displayGenericSteps ? [discoverAppsStep] : [];
 
