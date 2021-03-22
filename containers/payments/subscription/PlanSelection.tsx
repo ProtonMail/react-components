@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { c } from 'ttag';
 import { Currency, Cycle, Organization, Plan, PlanIDs, Subscription } from 'proton-shared/lib/interfaces';
 import { toMap } from 'proton-shared/lib/helpers/object';
@@ -11,20 +11,20 @@ import {
     DEFAULT_CYCLE,
     DEFAULT_CURRENCY,
 } from 'proton-shared/lib/constants';
-import { switchPlan } from 'proton-shared/lib/helpers/planIDs';
+import { clearPlanIDs, switchPlan } from 'proton-shared/lib/helpers/planIDs';
 import { getAppName } from 'proton-shared/lib/apps/helper';
 import { getPlan } from 'proton-shared/lib/helpers/subscription';
+import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 
-import { Icon, InlineLinkButton, Button } from '../../../components';
+import { Button } from '../../../components';
 
 import CurrencySelector from '../CurrencySelector';
 import CycleSelector from '../CycleSelector';
 
 import PlanCard from './PlanCard';
-import MailFeatures from './MailFeatures';
-import VPNFeatures from './VPNFeatures';
 
 import './PlanSelection.scss';
+import PlanSelectionComparison from './PlanSelectionComparison';
 
 const EmDash = '—';
 
@@ -166,11 +166,14 @@ const getFeatures = (planName: PLANS, service: PLAN_SERVICES) => {
 interface Props {
     planIDs: PlanIDs;
     currency: Currency;
+    hasFreePlan?: boolean;
+    hasPlanSelectionComparison?: boolean;
     cycle: Cycle;
     plans: Plan[];
     service: PLAN_SERVICES;
     organization?: Organization;
     loading?: boolean;
+    mode?: 'signup' | 'settings';
     onChangePlanIDs: (newPlanIDs: PlanIDs) => void;
     onChangeCycle: (newCycle: Cycle) => void;
     onChangeCurrency: (newCurrency: Currency) => void;
@@ -178,6 +181,9 @@ interface Props {
 }
 
 const PlanSelection = ({
+    mode,
+    hasFreePlan = true,
+    hasPlanSelectionComparison = true,
     planIDs,
     plans,
     cycle,
@@ -191,22 +197,21 @@ const PlanSelection = ({
     onChangeCurrency,
 }: Props) => {
     const currentPlan = subscription ? getPlan(subscription, service) : null;
-    const featuresRef = useRef<HTMLDivElement>(null);
     const mailAppName = getAppName(APPS.PROTONMAIL);
     const isVpnApp = service === PLAN_SERVICES.VPN;
     const planNamesMap = toMap(plans, 'Name');
     const MailPlans = [
-        FREE_PLAN,
+        hasFreePlan && FREE_PLAN,
         planNamesMap[PLANS.PLUS],
         planNamesMap[PLANS.PROFESSIONAL],
         planNamesMap[PLANS.VISIONARY],
-    ];
+    ].filter(isTruthy);
     const VPNPlans = [
-        { ...FREE_PLAN, Name: 'free_vpn' as PLANS },
+        hasFreePlan && { ...FREE_PLAN, Name: 'free_vpn' as PLANS },
         planNamesMap[PLANS.VPNBASIC],
         planNamesMap[PLANS.VPNPLUS],
         planNamesMap[PLANS.VISIONARY],
-    ];
+    ].filter(isTruthy);
     const plansToShow = isVpnApp ? VPNPlans : MailPlans;
 
     const INFOS = {
@@ -223,17 +228,7 @@ const PlanSelection = ({
 
     const boldSave = <strong key="save">{c('Info').t`Save 20%`}</strong>;
 
-    const handleScroll = () => {
-        const container = document.querySelector('.modal-content-inner');
-        if (!featuresRef.current || !container) {
-            return;
-        }
-        const { offsetTop } = featuresRef.current;
-        container.scroll({
-            top: offsetTop,
-            behavior: 'smooth',
-        });
-    };
+    const isSignupMode = mode === 'signup';
 
     return (
         <>
@@ -270,9 +265,8 @@ const PlanSelection = ({
                     const isFree = plan.ID === FREE_PLAN.ID;
                     const isCurrentPlan = isFree ? !currentPlan : currentPlan?.ID === plan.ID;
                     return (
-                        // <div className="h100 relative">
                         <PlanCard
-                            isCurrentPlan={isCurrentPlan}
+                            isCurrentPlan={!isSignupMode && isCurrentPlan}
                             action={c('Action').t`Select plan`}
                             planName={NAMES[plan.Name as PLANS]}
                             currency={currency}
@@ -282,75 +276,32 @@ const PlanSelection = ({
                             price={plan.Pricing[cycle]}
                             info={INFOS[plan.Name as PLANS]}
                             features={getFeatures(plan.Name as PLANS, service)}
-                            onClick={() =>
+                            onClick={() => {
                                 onChangePlanIDs(
-                                    switchPlan({
-                                        planIDs,
-                                        plans,
-                                        planID: isFree ? undefined : plan.ID,
-                                        service,
-                                        organization,
-                                    })
-                                )
-                            }
-                        />
-                        // </div>
-                    );
-                })}
-            </div>
-            <p className="text-sm">{c('Info').t`* Customizable features`}</p>
-            <p className="text-center">
-                <InlineLinkButton onClick={handleScroll}>
-                    <span className="mr0-5">{c('Action').t`Compare all features`}</span>
-                    <Icon name="arrow-down" className="align-sub" />
-                </InlineLinkButton>
-            </p>
-            <div ref={featuresRef}>
-                {service === PLAN_SERVICES.MAIL ? (
-                    <>
-                        <MailFeatures
-                            onSelect={(planName) => {
-                                const plan = plans.find(({ Name }) => Name === planName);
-                                onChangePlanIDs(
-                                    switchPlan({
-                                        planIDs,
-                                        plans,
-                                        planID: plan?.ID,
-                                        service,
-                                        organization,
-                                    })
+                                    clearPlanIDs(
+                                        switchPlan({
+                                            planIDs,
+                                            plans,
+                                            planID: isFree ? undefined : plan.ID,
+                                            service,
+                                            organization,
+                                        })
+                                    )
                                 );
                             }}
                         />
-                        <p className="text-sm mt1 mb1">
-                            * {c('Info concerning plan features').t`Customizable features`}
-                        </p>
-                        <p className="text-sm mt0 mb1">
-                            **{' '}
-                            {c('Info concerning plan features')
-                                .t`ProtonMail cannot be used for mass emailing or spamming. Legitimate emails are unlimited.`}
-                        </p>
-                    </>
-                ) : null}
-                {service === PLAN_SERVICES.VPN ? (
-                    <VPNFeatures
-                        onSelect={(planName) => {
-                            const plan = plans.find(({ Name }) => Name === planName);
-                            onChangePlanIDs(
-                                switchPlan({
-                                    planIDs,
-                                    plans,
-                                    planID: plan?.ID,
-                                    service,
-                                    organization,
-                                })
-                            );
-                        }}
-                    />
-                ) : null}
+                    );
+                })}
             </div>
+            {hasPlanSelectionComparison && (
+                <PlanSelectionComparison
+                    service={service}
+                    onChangePlanIDs={onChangePlanIDs}
+                    plans={plans}
+                    planIDs={planIDs}
+                />
+            )}
         </>
     );
 };
-
 export default PlanSelection;

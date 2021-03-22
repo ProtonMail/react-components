@@ -185,7 +185,7 @@ const SubscriptionModal = ({
         }
 
         try {
-            const result: SubscriptionCheckResponse = await api(
+            const result = await api<SubscriptionCheckResponse>(
                 checkSubscription({
                     PlanIDs: clearPlanIDs(newModel.planIDs),
                     Currency: newModel.currency,
