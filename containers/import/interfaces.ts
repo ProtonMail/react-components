@@ -65,6 +65,10 @@ export interface FolderMapping {
     Source: string;
     Destinations: {
         FolderPath: string;
+        LabelNames?: {
+            Name: string;
+            Color: string;
+        }[];
     };
     checked: boolean;
 }
@@ -163,6 +167,13 @@ export interface EditModeMap {
 
 export interface FolderPathsMap {
     [key: string]: string;
+}
+
+export interface LabelsMap {
+    [key: string]: {
+        Name: string;
+        Color: string;
+    };
 }
 
 export enum TIME_UNIT {

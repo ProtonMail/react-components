@@ -37,6 +37,7 @@ interface Props {
     address: Address;
     onClose?: () => void;
     customizeFoldersOpen: boolean;
+    isLabelMapping: boolean;
 }
 
 const CustomizeImportModal = ({
@@ -45,6 +46,7 @@ const CustomizeImportModal = ({
     address,
     onClose = noop,
     customizeFoldersOpen = false,
+    isLabelMapping,
     ...rest
 }: Props) => {
     const initialPayload = modalModel.payload;
@@ -155,6 +157,10 @@ const CustomizeImportModal = ({
         setIsEditing(editing);
     };
 
+    const hideCopy = isLabelMapping ? c('Action').t`Hide labels` : c('Action').t`Hide folders`;
+    const showCopy = isLabelMapping ? c('Action').t`Show labels` : c('Action').t`Show folders`;
+    const toggleActionCopy = organizeFolderVisible ? hideCopy : showCopy;
+
     return (
         <FormModal
             title={c('Title').t`Customize import`}
@@ -170,8 +176,11 @@ const CustomizeImportModal = ({
             {...rest}
         >
             <Alert>
-                {c('Info')
-                    .t`Create a label for the imported messages, a time range for this import, and the folders you would like to import.`}
+                {isLabelMapping
+                    ? c('Info')
+                          .t`Create a label for the imported messages, a time range for this import, and the labels you would like to import.`
+                    : c('Info')
+                          .t`Create a label for the imported messages, a time range for this import, and the folders you would like to import.`}
             </Alert>
 
             <div className="mb1 pt1 border-bottom flex-align-items-center">
@@ -242,28 +251,40 @@ const CustomizeImportModal = ({
 
             <div className="mb1 pt1 flex-align-items-center">
                 <Row>
-                    <FormLabel>{c('Label').t`Manage folders`}</FormLabel>
+                    <FormLabel>{isLabelMapping ? c('Label').t`Manage labels` : c('Label').t`Manage folders`}</FormLabel>
                     <div className="flex flex-align-items-center">
-                        <Icon name="parent-folder" className="mr0-5" />
+                        <Icon name={isLabelMapping ? 'folder-label' : 'parent-folder'} className="mr0-5" />
                         {selectedFoldersCount === totalFoldersCount ? (
                             <span>
-                                {c('Info').ngettext(
-                                    msgid`All (${totalFoldersCount} folder)`,
-                                    `All (${totalFoldersCount} folders)`,
-                                    totalFoldersCount
-                                )}
+                                {isLabelMapping
+                                    ? c('Info').ngettext(
+                                          msgid`All (${totalFoldersCount} label)`,
+                                          `All (${totalFoldersCount} labels)`,
+                                          totalFoldersCount
+                                      )
+                                    : c('Info').ngettext(
+                                          msgid`All (${totalFoldersCount} folder)`,
+                                          `All (${totalFoldersCount} folders)`,
+                                          totalFoldersCount
+                                      )}
                             </span>
                         ) : (
                             <span>
-                                {c('Info').ngettext(
-                                    msgid`${selectedFoldersCount} folder selected`,
-                                    `${selectedFoldersCount} folders selected`,
-                                    selectedFoldersCount
-                                )}
+                                {isLabelMapping
+                                    ? c('Info').ngettext(
+                                          msgid`${selectedFoldersCount} label selected`,
+                                          `${selectedFoldersCount} labels selected`,
+                                          selectedFoldersCount
+                                      )
+                                    : c('Info').ngettext(
+                                          msgid`${selectedFoldersCount} folder selected`,
+                                          `${selectedFoldersCount} folders selected`,
+                                          selectedFoldersCount
+                                      )}
                             </span>
                         )}
                         <Button className="ml2" onClick={toggleFolders}>
-                            {organizeFolderVisible ? c('Action').t`Hide folders` : c('Action').t`Show folders`}
+                            {toggleActionCopy}
                         </Button>
                     </div>
                 </Row>
@@ -276,6 +297,7 @@ const CustomizeImportModal = ({
                     payload={customizedPayload}
                     onChangePayload={handleChangePayload}
                     toggleEditing={toggleEditing}
+                    isLabelMapping={isLabelMapping}
                 />
             )}
         </FormModal>

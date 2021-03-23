@@ -2,7 +2,7 @@ import React, { ChangeEvent, useState, useRef, useEffect, useMemo } from 'react'
 import { c } from 'ttag';
 
 import { classnames } from '../../../helpers';
-import { Tooltip, Icon, Checkbox, InlineLinkButton, Input } from '../../../components';
+import { Tooltip, Icon, Checkbox, InlineLinkButton, Input, LabelStack } from '../../../components';
 
 import {
     DestinationFolder,
@@ -13,6 +13,7 @@ import {
     FolderNamesMap,
     FolderPathsMap,
     EditModeMap,
+    LabelsMap,
 } from '../interfaces';
 
 import { escapeSlashes, unescapeSlashes, splitEscaped } from '../helpers';
@@ -72,6 +73,7 @@ interface Props {
     providerFolders: MailImportFolder[];
     folderNamesMap: FolderNamesMap;
     folderPathsMap: FolderPathsMap;
+    labelsMap: LabelsMap;
     editModeMap: EditModeMap;
     updateEditModeMapping: (key: string, editMode: boolean) => void;
     getParent: (folderName: string) => string | undefined;
@@ -88,6 +90,7 @@ const ImportManageFoldersRow = ({
     providerFolders,
     folderNamesMap,
     folderPathsMap,
+    labelsMap,
     onRename,
     updateEditModeMapping,
     getParent,
@@ -130,9 +133,15 @@ const ImportManageFoldersRow = ({
         const newPath = folderPathsMap[folder.Source];
 
         return Object.entries(folderPathsMap).some(([source, path]) => {
-            return source !== Source && path === newPath && checkedFoldersMap[source];
+            return (
+                source !== Source &&
+                path === newPath &&
+                checkedFoldersMap[source] &&
+                !labelsMap[source] &&
+                !folder.DestinationFolder
+            );
         });
-    }, [inputValue, checked, folderNamesMap, folderPathsMap, checkedFoldersMap]);
+    }, [inputValue, checked, folderNamesMap, folderPathsMap, checkedFoldersMap, labelsMap]);
 
     const hasError = emptyValueError || nameTooLongError;
 
@@ -265,6 +274,132 @@ const ImportManageFoldersRow = ({
         marginLeft: `${isParentSystemFolder ? Math.max(0, Math.min(level - 1, 2)) : Math.min(level, 2)}em`,
     };
 
+    const renderDestination = () => {
+        if (labelsMap[Source]) {
+            const { Name: name, Color: color } = labelsMap[Source];
+            return (
+                <div className="flex flex-nowrap flex-align-items-center flex-item-fluid-auto">
+                    <LabelStack
+                        labels={[
+                            {
+                                name,
+                                color,
+                                title: name,
+                            },
+                        ]}
+                        className="max-w100"
+                    />
+                </div>
+            );
+        }
+
+        return (
+            <div
+                className="flex flex-nowrap flex-align-items-center flex-item-fluid-auto"
+                style={DestinationFolder ? undefined : destinationIndentStyles}
+            >
+                <Icon
+                    name={DestinationFolder ? FOLDER_ICONS[DestinationFolder] : 'folder'}
+                    className={classnames([
+                        'flex-item-noshrink',
+                        hasError && 'color-danger',
+                        mergeWarning && 'color-warning',
+                    ])}
+                />
+                <div
+                    className={classnames([
+                        'ml0-5 flex flex-nowrap flex-item-fluid-auto',
+                        hasError && 'color-danger',
+                        mergeWarning && 'color-warning',
+                    ])}
+                >
+                    {editMode && !disabled ? (
+                        renderInput()
+                    ) : (
+                        <div
+                            className={classnames([
+                                'flex-item-fluid-auto text-ellipsis flex flex-align-items-center',
+                                (nameTooLongError || mergeWarning) && 'text-bold',
+                            ])}
+                            title={unescapeSlashes(destinationName)}
+                        >
+                            <span className="mr0-5">{unescapeSlashes(destinationName)}</span>
+                            {nameTooLongError && (
+                                <Tooltip title={ERRORS.nameTooLongError} type="error">
+                                    <Icon
+                                        tabIndex={-1}
+                                        name="info"
+                                        className="flex-item-noshrink color-danger inline-flex flex-align-self-center flex-item-noshrink"
+                                    />
+                                </Tooltip>
+                            )}
+
+                            {mergeWarning && (
+                                <Tooltip title={WARNINGS.mergeWarning} type="warning">
+                                    <Icon
+                                        tabIndex={-1}
+                                        name="info"
+                                        className="flex-item-noshrink color-warning inline-flex flex-align-self-center flex-item-noshrink"
+                                    />
+                                </Tooltip>
+                            )}
+
+                            {isSystemSubfolder && !mergeWarning && (
+                                <Tooltip
+                                    title={c('Tooltip')
+                                        .t`System subfolders will show up as separate folders in ProtonMail`}
+                                >
+                                    <Icon
+                                        tabIndex={-1}
+                                        name="info"
+                                        className="flex-item-noshrink inline-flex flex-align-self-center flex-item-noshrink"
+                                    />
+                                </Tooltip>
+                            )}
+                        </div>
+                    )}
+                </div>
+
+                {!DestinationFolder && (
+                    <div
+                        className="flex flex-align-items-center flex-item-noshrink"
+                        onClick={(e) => {
+                            if (disabled) {
+                                preventDefaultAndStopPropagation(e);
+                            }
+                        }}
+                    >
+                        {editMode && !disabled ? (
+                            <>
+                                <InlineLinkButton
+                                    onClick={handleSave}
+                                    className={classnames(['p0-5', hasError && DIMMED_OPACITY_CLASSNAME])}
+                                    aria-disabled={hasError}
+                                    disabled={hasError}
+                                >
+                                    {c('Action').t`Save`}
+                                </InlineLinkButton>
+                                <InlineLinkButton onClick={handleCancel} className="ml0-5 p0-5">
+                                    {c('Action').t`Cancel`}
+                                </InlineLinkButton>
+                            </>
+                        ) : (
+                            <InlineLinkButton
+                                aria-disabled={!checked}
+                                disabled={!checked}
+                                tabIndex={disabled ? -1 : 0}
+                                onClick={toggleEditMode}
+                                className="p0-5"
+                            >
+                                {c('Action').t`Rename`}
+                            </InlineLinkButton>
+                        )}
+                    </div>
+                )}
+            </div>
+        );
+    };
+
     return (
         <li>
             <div className="border-bottom">
@@ -277,7 +412,7 @@ const ImportManageFoldersRow = ({
                         (disabled || editMode) && 'cursor-default',
                     ])}
                 >
-                    <div className="flex w40 flex-nowrap flex-align-items-center flex-item-noshrink pr1">
+                    <div className="flex w50 flex-nowrap flex-align-items-center flex-item-noshrink pr1">
                         <div className="flex-item-noshrink" style={DestinationFolder ? undefined : sourceIndentStyles}>
                             <Checkbox
                                 onChange={({ target: { checked } }: ChangeEvent<HTMLInputElement>) => {
@@ -296,110 +431,7 @@ const ImportManageFoldersRow = ({
                         </div>
                     </div>
 
-                    <div className="flex w40 pr1">
-                        <div
-                            className="flex flex-nowrap flex-align-items-center flex-item-fluid-auto"
-                            style={DestinationFolder ? undefined : destinationIndentStyles}
-                        >
-                            <Icon
-                                name={DestinationFolder ? FOLDER_ICONS[DestinationFolder] : 'folder'}
-                                className={classnames([
-                                    'flex-item-noshrink',
-                                    hasError && 'color-danger',
-                                    mergeWarning && 'color-warning',
-                                ])}
-                            />
-                            <div
-                                className={classnames([
-                                    'ml0-5 w100 flex flex-nowrap',
-                                    hasError && 'color-danger',
-                                    mergeWarning && 'color-warning',
-                                ])}
-                            >
-                                {editMode && !disabled ? (
-                                    renderInput()
-                                ) : (
-                                    <>
-                                        <span
-                                            className={classnames([
-                                                'flex-item-fluid-auto text-ellipsis',
-                                                (nameTooLongError || mergeWarning) && 'text-bold',
-                                            ])}
-                                            title={unescapeSlashes(destinationName)}
-                                        >
-                                            {unescapeSlashes(destinationName)}
-                                        </span>
-                                        {nameTooLongError && (
-                                            <Tooltip title={ERRORS.nameTooLongError} type="error">
-                                                <Icon
-                                                    tabIndex={-1}
-                                                    name="info"
-                                                    className="flex-item-noshrink color-danger inline-flex flex-align-self-center flex-item-noshrink"
-                                                />
-                                            </Tooltip>
-                                        )}
-                                        {mergeWarning && (
-                                            <Tooltip title={WARNINGS.mergeWarning} type="warning">
-                                                <Icon
-                                                    tabIndex={-1}
-                                                    name="info"
-                                                    className="flex-item-noshrink color-warning inline-flex flex-align-self-center flex-item-noshrink"
-                                                />
-                                            </Tooltip>
-                                        )}
-                                        {isSystemSubfolder && !mergeWarning && (
-                                            <Tooltip
-                                                title={c('Tooltip')
-                                                    .t`System subfolders will show up as separate folders in ProtonMail`}
-                                            >
-                                                <Icon
-                                                    tabIndex={-1}
-                                                    name="info"
-                                                    className="flex-item-noshrink inline-flex flex-align-self-center flex-item-noshrink"
-                                                />
-                                            </Tooltip>
-                                        )}
-                                    </>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                    {!DestinationFolder && (
-                        <div
-                            className="flex w20 flex-align-items-center"
-                            onClick={(e) => {
-                                if (disabled) {
-                                    preventDefaultAndStopPropagation(e);
-                                }
-                            }}
-                        >
-                            {editMode && !disabled ? (
-                                <>
-                                    <InlineLinkButton
-                                        onClick={handleSave}
-                                        className={classnames(['p0-5', hasError && DIMMED_OPACITY_CLASSNAME])}
-                                        aria-disabled={hasError}
-                                        disabled={hasError}
-                                    >
-                                        {c('Action').t`Save`}
-                                    </InlineLinkButton>
-                                    <InlineLinkButton onClick={handleCancel} className="ml0-5 p0-5">
-                                        {c('Action').t`Cancel`}
-                                    </InlineLinkButton>
-                                </>
-                            ) : (
-                                <InlineLinkButton
-                                    aria-disabled={!checked}
-                                    disabled={!checked}
-                                    tabIndex={disabled ? -1 : 0}
-                                    onClick={toggleEditMode}
-                                    className="p0-5"
-                                >
-                                    {c('Action').t`Rename`}
-                                </InlineLinkButton>
-                            )}
-                        </div>
-                    )}
+                    <div className="flex w50 pr1">{renderDestination()}</div>
                 </RowWrapperComponent>
             </div>
             {children.length > 0 && (
@@ -416,6 +448,7 @@ const ImportManageFoldersRow = ({
                             providerFolders={providerFolders}
                             folderNamesMap={folderNamesMap}
                             folderPathsMap={folderPathsMap}
+                            labelsMap={labelsMap}
                             onRename={onRename}
                             updateEditModeMapping={updateEditModeMapping}
                             getParent={getParent}

@@ -1,3 +1,6 @@
+import { LABEL_COLORS } from 'proton-shared/lib/constants';
+import { randomIntFromInterval } from 'proton-shared/lib/helpers/function';
+
 import { G_OAUTH_CLIENT_ID, G_OAUTH_SCOPE, G_OAUTH_REDIRECT_PATH } from './constants';
 
 const SEPARATOR_SPLIT_TOKEN = `##**${Date.now()}**##`;
@@ -44,3 +47,4 @@ export const getOAuthAuthorizationUrl = (email?: string) => {
 
     return `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
 };
+export const getRandomLabelColor = () => LABEL_COLORS[randomIntFromInterval(0, LABEL_COLORS.length - 1)];

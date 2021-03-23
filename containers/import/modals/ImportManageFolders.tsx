@@ -15,6 +15,7 @@ import {
     FolderPathsMap,
     EditModeMap,
     DestinationFolder,
+    LabelsMap,
 } from '../interfaces';
 
 import { escapeSlashes, splitEscaped } from '../helpers';
@@ -29,9 +30,17 @@ interface Props {
     payload: ImportPayloadModel;
     onChangePayload: (newPayload: ImportPayloadModel) => void;
     toggleEditing: (editing: boolean) => void;
+    isLabelMapping: boolean;
 }
 
-const ImportManageFolders = ({ modalModel, address, payload, toggleEditing, onChangePayload }: Props) => {
+const ImportManageFolders = ({
+    modalModel,
+    address,
+    payload,
+    toggleEditing,
+    onChangePayload,
+    isLabelMapping,
+}: Props) => {
     const { providerFolders } = modalModel;
 
     const getLevel = (name: string, separator: string) => {
@@ -97,6 +106,16 @@ const ImportManageFolders = ({ modalModel, address, payload, toggleEditing, onCh
             acc[folder.Source] = getNameValue(
                 found?.Destinations.FolderPath || folder.DestinationFolder || folder.Source
             );
+            return acc;
+        }, {})
+    );
+
+    const [labelsMap, setLabelsMap] = useState(
+        providerFolders.reduce<LabelsMap>((acc, folder) => {
+            const found = payload.Mapping.find((m) => m.Source === folder.Source);
+            if (found?.Destinations?.LabelNames?.length) {
+                [acc[folder.Source]] = found.Destinations.LabelNames;
+            }
             return acc;
         }, {})
     );
@@ -191,12 +210,20 @@ const ImportManageFolders = ({ modalModel, address, payload, toggleEditing, onCh
 
     useEffect(() => {
         const Mapping = providerFolders.reduce<FolderMapping[]>((acc, folder) => {
+            /* @todo update from labelNamesMap */
             if (checkedFoldersMap[folder.Source]) {
+                const Destinations = isLabelMapping
+                    ? {
+                          FolderPath: folder.DestinationFolder || DestinationFolder.ALL_MAIL,
+                          LabelNames: !folder.DestinationFolder ? [labelsMap[folder.Source]] : [],
+                      }
+                    : {
+                          FolderPath: forgeNewPath(folder),
+                      };
+
                 acc.push({
                     Source: folder.Source,
-                    Destinations: {
-                        FolderPath: forgeNewPath(folder),
-                    },
+                    Destinations,
                     checked: true,
                 });
             }
@@ -208,23 +235,19 @@ const ImportManageFolders = ({ modalModel, address, payload, toggleEditing, onCh
             ...payload,
             Mapping,
         });
-    }, [checkedFoldersMap, folderNamesMap]);
+    }, [checkedFoldersMap, labelsMap, folderNamesMap]);
 
     return (
         <>
             <Alert className="mt2 mb1">{c('Info').t`Please select the folders you would like to import:`}</Alert>
 
             <div className="flex">
-                <div className="w40 text-ellipsis pt1">
+                <div className="w50 text-ellipsis pt1">
                     <strong>{c('Label').t`From: ${modalModel.email}`}</strong>
                 </div>
 
-                <div className="w40 text-ellipsis pt1">
+                <div className="w50 text-ellipsis pt1">
                     <strong>{c('Label').t`To: ${address.Email}`}</strong>
-                </div>
-
-                <div className="w20 pt1">
-                    <strong>{c('Label').t`Actions`}</strong>
                 </div>
             </div>
 
@@ -245,6 +268,7 @@ const ImportManageFolders = ({ modalModel, address, payload, toggleEditing, onCh
                                     providerFolders={providerFolders}
                                     folderNamesMap={folderNamesMap}
                                     folderPathsMap={folderPathsMap}
+                                    labelsMap={labelsMap}
                                     onRename={handleRename}
                                     editModeMap={editModeMap}
                                     getParent={getParent}

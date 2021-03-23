@@ -3,8 +3,7 @@ import { format, isValid } from 'date-fns';
 import { c, msgid } from 'ttag';
 
 import { Address } from 'proton-shared/lib/interfaces';
-import { LABEL_COLORS, LABEL_TYPE } from 'proton-shared/lib/constants';
-import { randomIntFromInterval } from 'proton-shared/lib/helpers/function';
+import { LABEL_TYPE } from 'proton-shared/lib/constants';
 import isDeepEqual from 'proton-shared/lib/helpers/isDeepEqual';
 
 import { useFolders, useUser, useModals } from '../../../../hooks';
@@ -20,8 +19,8 @@ import {
 } from '../../../../components';
 
 import { ImportModalModel, MailImportFolder, TIME_UNIT, DestinationFolder, IMPORT_ERROR } from '../../interfaces';
-import { timeUnitLabels } from '../../constants';
-import { escapeSlashes, splitEscaped } from '../../helpers';
+import { IMAPS, timeUnitLabels } from '../../constants';
+import { escapeSlashes, getRandomLabelColor, splitEscaped } from '../../helpers';
 
 import CustomizeImportModal from '../CustomizeImportModal';
 
@@ -43,12 +42,14 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
     const { createModal } = useModals();
     const { providerFolders, password } = modalModel;
     const [folders = [], foldersLoading] = useFolders();
+    const [labels = [], labelsLoading] = useFolders();
+
+    const isLabelMapping = modalModel.imap === IMAPS.GMAIL;
 
     const { payload, selectedPeriod } = modalModel;
 
-    const providerFoldersNum = useMemo(() => {
-        return providerFolders.length;
-    }, [providerFolders]);
+    const providerFoldersNum = useMemo(() => providerFolders.length, [providerFolders]);
+
     const providerFoldersNumLocalized = providerFoldersNum.toLocaleString();
 
     const selectedFolders = useMemo(
@@ -91,6 +92,7 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
                 modalModel={modalModel}
                 updateModalModel={updateModalModel}
                 customizeFoldersOpen={showFoldersNumError || showFoldersNameError}
+                isLabelMapping={isLabelMapping}
             />
         );
     };
@@ -184,21 +186,42 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
         return pathParts.join('/');
     };
 
+    const getDestinationLabels = ({ Source, Separator }: MailImportFolder) => {
+        /* @todo if length greater than 100 */
+        /* @todo check conflicts with exitsting Folders / Labels */
+        return [
+            {
+                Name: Source.split(Separator).join('-'),
+                Color: getRandomLabelColor(),
+            },
+        ];
+    };
+
     useEffect(() => {
         if (!modalModel.importID) {
             return;
         }
-        const Mapping = providerFolders.map((folder) => ({
-            Source: folder.Source,
-            Destinations: {
-                FolderPath: folder.DestinationFolder || getDestinationFolderPath(folder),
-            },
-            checked: true,
-        }));
+
+        const Mapping = providerFolders.map((folder) => {
+            const Destinations = isLabelMapping
+                ? {
+                      FolderPath: folder.DestinationFolder || DestinationFolder.ALL_MAIL,
+                      LabelNames: !folder.DestinationFolder ? getDestinationLabels(folder) : [],
+                  }
+                : {
+                      FolderPath: folder.DestinationFolder || getDestinationFolderPath(folder),
+                  };
+
+            return {
+                Source: folder.Source,
+                Destinations,
+                checked: true,
+            };
+        });
 
         const ImportLabel = {
             Name: `${modalModel.email.split('@')[1]} ${format(new Date(), 'dd-MM-yyyy HH:mm')}`,
-            Color: LABEL_COLORS[randomIntFromInterval(0, LABEL_COLORS.length - 1)],
+            Color: getRandomLabelColor(),
             Type: LABEL_TYPE.MESSAGE_LABEL,
             Order: 0,
         };
@@ -287,50 +310,6 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
                     {c('Info').t`Import mailbox`}
                 </div>
 
-                <div className="mb1 ml1 flex flex-align-items-center">
-                    <Icon className="mr0-5" name="parent-folder" />
-                    {c('Info').ngettext(
-                        msgid`${providerFoldersNumLocalized} folder found`,
-                        `${providerFoldersNumLocalized} folders found`,
-                        providerFoldersNum
-                    )}
-
-                    {showFoldersNumError && (
-                        <Tooltip
-                            title={c('Tooltip').t`Customize import to reduce the number of folders`}
-                            originalPlacement="right"
-                        >
-                            <Icon name="attention-plain" size={18} />
-                        </Tooltip>
-                    )}
-                </div>
-
-                {selectedFolders.length !== providerFoldersNum && (
-                    <div className="mb1 ml2 flex flex-align-items-center">
-                        <strong>
-                            <Icon className="mr0-5" name="parent-folder" />
-                            {c('Info').ngettext(
-                                msgid`${selectedFoldersCountLocalized} folder selected`,
-                                `${selectedFoldersCountLocalized} folders selected`,
-                                selectedFolders.length
-                            )}
-                        </strong>
-                    </div>
-                )}
-
-                <div className="mb1 ml1 flex flex-align-items-center">
-                    <Icon className="mr0-5" name="clock" />
-                    {selectedPeriod === TIME_UNIT.BIG_BANG ? (
-                        c('Info').t`Import all messages since ${selectedPeriodLowerCased}`
-                    ) : (
-                        <span>
-                            {c('Info').t`Import all messages since`}
-                            {` `}
-                            <strong>{timeUnitLabels[selectedPeriod]}</strong>
-                        </span>
-                    )}
-                </div>
-
                 <div className="mb1 ml1 flex flex-align-items-center flex-nowrap">
                     <Icon className="flex-item-noshrink mr0-5" name="label" />
                     <span className="flex-item-noshrink">{c('Info').t`Label all imported messages as`}</span>
@@ -350,10 +329,75 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
                     )}
                 </div>
 
+                <div className="mb1 ml1 flex flex-align-items-center">
+                    <Icon className="mr0-5" name="clock" />
+                    {selectedPeriod === TIME_UNIT.BIG_BANG ? (
+                        c('Info').t`Import all messages since ${selectedPeriodLowerCased}`
+                    ) : (
+                        <span>
+                            {c('Info').t`Import all messages since`}
+                            {` `}
+                            <strong>{timeUnitLabels[selectedPeriod]}</strong>
+                        </span>
+                    )}
+                </div>
+
+                <div className="mb1 ml1 flex flex-align-items-center">
+                    <Icon className="mr0-5" name={isLabelMapping ? 'folder-label' : 'parent-folder'} />
+                    {isLabelMapping
+                        ? c('Info').ngettext(
+                              msgid`${providerFoldersNumLocalized} label found in Gmail`,
+                              `${providerFoldersNumLocalized} labels found in Gmail`,
+                              providerFoldersNum
+                          )
+                        : c('Info').ngettext(
+                              msgid`${providerFoldersNumLocalized} folder found`,
+                              `${providerFoldersNumLocalized} folders found`,
+                              providerFoldersNum
+                          )}
+
+                    {showFoldersNumError && (
+                        <Tooltip
+                            title={
+                                isLabelMapping
+                                    ? c('Tooltip').t`Customize import to reduce the number of labels`
+                                    : c('Tooltip').t`Customize import to reduce the number of folders`
+                            }
+                            originalPlacement="right"
+                        >
+                            <Icon className="ml0-5" name="attention-plain" size={18} />
+                        </Tooltip>
+                    )}
+                </div>
+
+                {selectedFolders.length !== providerFoldersNum && (
+                    <div className="mb1 ml2 flex flex-align-items-center">
+                        <strong>
+                            <Icon className="mr0-5" name="parent-folder" />
+                            {isLabelMapping
+                                ? c('Info').ngettext(
+                                      msgid`${selectedFoldersCountLocalized} label selected`,
+                                      `${selectedFoldersCountLocalized} labels selected`,
+                                      selectedFolders.length
+                                  )
+                                : c('Info').ngettext(
+                                      msgid`${selectedFoldersCountLocalized} folder selected`,
+                                      `${selectedFoldersCountLocalized} folders selected`,
+                                      selectedFolders.length
+                                  )}
+                        </strong>
+                    </div>
+                )}
+
                 <div className="mt0-5 flex flex-align-items-center">
                     <Button onClick={handleClickCustomize}>{c('Action').t`Customize import`}</Button>
                     {showFoldersNameError && (
-                        <Tooltip title={c('Tooltip').t`Edit folder names`} originalPlacement="right">
+                        <Tooltip
+                            title={
+                                isLabelMapping ? c('Tooltip').t`Edit label names` : c('Tooltip').t`Edit folder names`
+                            }
+                            originalPlacement="right"
+                        >
                             <Icon name="attention-plain" size={20} className="ml0-5" />
                         </Tooltip>
                     )}
