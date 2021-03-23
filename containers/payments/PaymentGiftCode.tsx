@@ -41,7 +41,7 @@ const PaymentGiftCode = ({ gift = '', onApply, loading }: Props) => {
                     onClick={() => onApply('')}
                     title={c('Action').t`Remove gift code`}
                 >
-                    <Icon name="trash" alt={c('Action').t`Remove gift code`}/>
+                    <Icon name="trash" alt={c('Action').t`Remove gift code`} />
                 </Button>
             </div>
         );

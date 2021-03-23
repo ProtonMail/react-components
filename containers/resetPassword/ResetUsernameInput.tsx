@@ -21,6 +21,7 @@ const ResetUsernameInput = ({ id, value, setValue, placeholder = c('Placeholder'
             placeholder={placeholder}
             value={value}
             onChange={({ target: { value } }) => setValue(value)}
+            data-testid="field-username"
             required
         />
     );

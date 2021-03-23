@@ -33,6 +33,7 @@ const CreditCard = ({ card, errors, onChange, loading = false }: Props) => {
                     placeholder="Thomas Anderson"
                     error={errors.fullname}
                     disabled={loading}
+                    data-testid="field-card-name"
                     required
                 />
             </Block>
@@ -44,6 +45,7 @@ const CreditCard = ({ card, errors, onChange, loading = false }: Props) => {
                     onChange={(value) => onChange('number', value)}
                     error={errors.number}
                     disabled={loading}
+                    data-testid="field-card-number"
                     required
                 />
             </Block>
@@ -56,6 +58,7 @@ const CreditCard = ({ card, errors, onChange, loading = false }: Props) => {
                         year={card.year}
                         error={errors.month}
                         disabled={loading}
+                        data-testid="field-card-expiry"
                         onChange={({ month, year }) => {
                             onChange('month', month);
                             onChange('year', year);
@@ -80,6 +83,7 @@ const CreditCard = ({ card, errors, onChange, loading = false }: Props) => {
                         placeholder="000"
                         error={errors.cvc}
                         disabled={loading}
+                        data-testid="field-card-cvc"
                         required
                     />
                 </div>
@@ -94,6 +98,7 @@ const CreditCard = ({ card, errors, onChange, loading = false }: Props) => {
                         options={countries}
                         disabled={loading}
                         autoComplete="country"
+                        data-testid="field-card-country"
                         title={c('Label').t`Select your country`}
                     />
                 </div>
@@ -113,6 +118,7 @@ const CreditCard = ({ card, errors, onChange, loading = false }: Props) => {
                         minLength={3}
                         maxLength={9}
                         required
+                        data-testid="field-card-postal-code"
                     />
                 </div>
             </div>

@@ -70,13 +70,17 @@ const EarlyAccessSection = () => {
                 </Label>
                 <Field>
                     {hasAlphaAccess ? (
-                        <SelectTwo onChange={handleSelectChange} value={environment}>
+                        <SelectTwo onChange={handleSelectChange} value={environment} data-testid="select-early-access">
                             <Option value="prod" title={c('Environment').t`Live (Default)`} />
                             <Option value="beta" title={c('Environment').t`Beta`} />
                             <Option value="alpha" title={c('Environment').t`Alpha`} />
                         </SelectTwo>
                     ) : (
-                        <Toggle checked={environment === 'beta'} onChange={handleToggleChange} />
+                        <Toggle
+                            checked={environment === 'beta'}
+                            onChange={handleToggleChange}
+                            data-testid="toggle-environment"
+                        />
                     )}
                 </Field>
             </Row>

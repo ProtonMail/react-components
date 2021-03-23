@@ -29,6 +29,7 @@ const CycleSelector = ({
             value={cycle}
             options={options}
             onChange={({ target }) => onSelect(+target.value as Cycle)}
+            data-testid="select-billing-cycle"
             {...rest}
         />
     );

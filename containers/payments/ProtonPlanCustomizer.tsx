@@ -268,6 +268,7 @@ const ProtonPlanCustomizer = ({
                                     );
                                 }}
                                 step={addonMultiplier}
+                                data-testid={`numberinput-addon-${addon.Name}`}
                             />
                         ) : (
                             <ButtonNumberInput id={addon.ID} disabled value={value} divider={divider} />

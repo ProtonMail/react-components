@@ -55,6 +55,7 @@ const EditMemberModal = ({ onClose, member, ...rest }) => {
                         id="nameInput"
                         placeholder="Thomas A. Anderson"
                         onChange={handleChangeName}
+                        data-testid="field-member-name"
                         required
                     />
                 </Field>

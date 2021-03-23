@@ -56,6 +56,7 @@ const WeekStartSection = () => {
                         days[1],
                         days[6],
                     ]}
+                    data-testid="select-week-start"
                 />
             </Field>
         </Row>

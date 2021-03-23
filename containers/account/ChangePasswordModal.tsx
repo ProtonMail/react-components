@@ -13,11 +13,7 @@ import { srpVerify } from 'proton-shared/lib/srp';
 import { Address } from 'proton-shared/lib/interfaces';
 import { getUpdateKeysPayload } from 'proton-shared/lib/keys/changePassword';
 
-
-import {
-    handleUnlock,
-    handleChangeLoginPassword,
-} from './changePasswordHelper';
+import { handleUnlock, handleChangeLoginPassword } from './changePasswordHelper';
 import { Alert, PasswordInput, TwoFactorInput, Row, Label, Field, FormModal, Loader } from '../../components';
 
 import { GenericError } from '../error';
@@ -497,6 +493,7 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }: Props) => {
                             placeholder={c('Placeholder').t`Password`}
                             autoComplete="current-password"
                             required
+                            data-testid="field-password-old"
                         />
                     </Field>
                 </Row>
@@ -532,6 +529,7 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }: Props) => {
                         placeholder={c('Placeholder').t`Password`}
                         autoComplete="new-password"
                         required
+                        data-testid="field-password-new"
                     />
                 </Field>
             </Row>
@@ -549,6 +547,7 @@ const ChangePasswordModal = ({ onClose, mode, ...rest }: Props) => {
                         placeholder={c('Placeholder').t`Confirm`}
                         autoComplete="new-password"
                         required
+                        data-testid="field-password-confirm"
                     />
                 </Field>
             </Row>

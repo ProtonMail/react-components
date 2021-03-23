@@ -45,7 +45,11 @@ const DeleteSection = () => {
                 {c('Info')
                     .t`This will permanently delete all data associated with your account. You will not be able to reactivate this account.`}
             </Alert>
-            <ErrorButton id="deleteButton" onClick={() => createModal(<DeleteAccountModal />)}>
+            <ErrorButton
+                id="deleteButton"
+                onClick={() => createModal(<DeleteAccountModal />)}
+                data-testid="button-account-delete"
+            >
                 {c('Action').t`Delete your account`}
             </ErrorButton>
         </>

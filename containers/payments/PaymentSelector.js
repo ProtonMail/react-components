@@ -55,6 +55,7 @@ const PaymentSelector = ({ currency, amount, onChangeCurrency, onChangeAmount, m
                         onBlur={handleBlur}
                         value={inputValue}
                         placeholder={c('Placeholder').t`Other`}
+                        data-testid="field-payment-amount-other"
                     />
                 </div>
                 <div className="flex-autogrid-item">

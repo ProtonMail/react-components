@@ -5,7 +5,11 @@ import { classnames } from '../../helpers';
 
 const AmountButton = ({ value = 0, amount = 0, currency, onSelect, className = '' }) => {
     return (
-        <Button className={classnames([className, value === amount && 'is-active'])} onClick={() => onSelect(value)}>
+        <Button
+            className={classnames([className, value === amount && 'is-active'])}
+            onClick={() => onSelect(value)}
+            data-testid="button-amount"
+        >
             <Price currency={currency}>{value}</Price>
         </Button>
     );

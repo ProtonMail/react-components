@@ -57,8 +57,9 @@ const AttachScreenshot = ({ id, onUpload, onReset }: Props) => {
     }
 
     return (
-        <FileInput className="flex" multiple accept="image/*" id={id} onChange={handleChange}>{c('Action')
-            .t`Add screenshot(s)`}</FileInput>
+        <FileInput className="flex" multiple accept="image/*" id={id} data-testid="file-input" onChange={handleChange}>{c(
+            'Action'
+        ).t`Add screenshot(s)`}</FileInput>
     );
 };
 

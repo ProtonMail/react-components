@@ -50,6 +50,7 @@ const TimeSection = () => {
                         },
                         ...timeFormats,
                     ]}
+                    data-testid="select-time-format"
                 />
             </Field>
         </Row>

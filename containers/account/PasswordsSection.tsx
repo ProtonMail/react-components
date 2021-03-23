@@ -46,7 +46,10 @@ const PasswordsSection = ({ open }: Props) => {
             <Row>
                 <Label htmlFor="passwordChange">{passwordLabel}</Label>
                 <Field>
-                    <PrimaryButton onClick={() => handleChangePassword(changePasswordMode)}>
+                    <PrimaryButton
+                        onClick={() => handleChangePassword(changePasswordMode)}
+                        data-testid="button-password-change"
+                    >
                         {passwordButtonLabel}
                     </PrimaryButton>
                 </Field>
@@ -68,6 +71,7 @@ const PasswordsSection = ({ open }: Props) => {
                                         isOnePasswordMode ? MODES.SWITCH_TWO_PASSWORD : MODES.SWITCH_ONE_PASSWORD
                                     )
                                 }
+                                data-testid="toggle-password-mode"
                             />
                         </Field>
                     </Row>
@@ -80,6 +84,7 @@ const PasswordsSection = ({ open }: Props) => {
                             <Field>
                                 <PrimaryButton
                                     onClick={() => handleChangePassword(MODES.CHANGE_TWO_PASSWORD_MAILBOX_MODE)}
+                                    data-testid="button-password-mailbox-change"
                                 >
                                     {c('Action').t`Change mailbox password`}
                                 </PrimaryButton>

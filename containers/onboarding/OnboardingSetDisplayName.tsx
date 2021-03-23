@@ -48,6 +48,7 @@ const OnboardingSetDisplayName = ({
                                 placeholder={c('Placeholder').t`e.g. Julia Smith`}
                                 isSubmitted={isSubmitted}
                                 error={displayNameError}
+                                data-testid="field-display-name"
                                 autoFocus
                             />
                         }

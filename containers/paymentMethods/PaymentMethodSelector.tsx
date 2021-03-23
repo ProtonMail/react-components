@@ -32,6 +32,7 @@ const PaymentMethodSelector = ({ method, lastCustomMethod, options, onChange }: 
                             name="value"
                             checked={value === method}
                             onChange={() => onChange(value)}
+                            data-testid={`select-paymentmethod-${value}`}
                         />
                         <Icon className="mr0-5" name={icon} />
                         <span className="text-cut">{text}</span>

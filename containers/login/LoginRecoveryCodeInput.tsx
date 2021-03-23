@@ -21,6 +21,7 @@ const LoginRecoveryCodeInput = ({ code, setCode, id }: Props) => {
             placeholder="123456"
             onChange={({ target: { value } }: React.ChangeEvent<HTMLInputElement>) => setCode(value)}
             data-cy-login="recoveryCode"
+            data-testid="field-recovery-code"
         />
     );
 };

@@ -34,6 +34,7 @@ const MemberAddresses = ({ member, addresses }) => {
                         className="w100 text-center"
                         to={`/organization/${member.ID}#addresses`}
                         toApp={APPS.PROTONACCOUNT}
+                        data-testid="dropdown-addresses"
                     >{c('Link').t`Manage`}</ButtonLike>
                 </div>
                 <DropdownMenu>{list}</DropdownMenu>

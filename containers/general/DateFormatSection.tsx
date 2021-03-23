@@ -46,6 +46,7 @@ const DateFormatSection = () => {
                         { text: 'MM/DD/YYYY', value: SETTINGS_DATE_FORMAT.MMDDYYYY },
                         { text: 'YYYY/MM/DD', value: SETTINGS_DATE_FORMAT.YYYYMMDD },
                     ]}
+                    data-testid="select-date-format"
                 />
             </Field>
         </Row>

@@ -17,7 +17,7 @@ interface Props {
 }
 const Alert = ({ type = 'info', children, learnMore, className }: Props) => {
     return (
-        <div className={classnames([CLASSES[type], className])}>
+        <div className={classnames([CLASSES[type], className])} data-testid="alert">
             <div>{children}</div>
             {learnMore ? (
                 <div>

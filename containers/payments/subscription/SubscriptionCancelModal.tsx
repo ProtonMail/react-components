@@ -61,6 +61,7 @@ const SubscriptionCancellationModal = ({ onSubmit, onClose, onSkip, ...rest }: P
                         autoFocus
                         value={model.Reason}
                         onChange={({ value }) => setModel({ ...model, Reason: value })}
+                        data-testid="select-subscription-cancel-reason"
                     >
                         <Option title={c('Option').t`Select a reason`} value="" />
                         <Option
@@ -106,6 +107,7 @@ const SubscriptionCancellationModal = ({ onSubmit, onClose, onSkip, ...rest }: P
                         value={model.Score}
                         InputButtonProps={{ 'aria-describedby': 'score-label' }}
                         onChange={handleScoreChange}
+                        data-testid="scale-subscription-cancel-score"
                     />
                 </div>
 
@@ -117,6 +119,7 @@ const SubscriptionCancellationModal = ({ onSubmit, onClose, onSkip, ...rest }: P
                         value={model.Feedback}
                         placeholder={c('Placeholder').t`Feedback`}
                         onChange={handleChange('Feedback')}
+                        data-testid="textarea-subscription-cancel-feedback"
                     />
                 </div>
             </div>

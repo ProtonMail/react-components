@@ -199,6 +199,7 @@ const BugModal = ({ onClose = noop, username: Username = '', addresses = [], ...
                             value={model.Username}
                             onChange={handleChange('Username')}
                             placeholder={c('Placeholder').t`Proton username`}
+                            data-testid="field-username"
                         />
                     </Field>
                 </Row>
@@ -224,6 +225,7 @@ const BugModal = ({ onClose = noop, username: Username = '', addresses = [], ...
                             value={model.Title}
                             options={options}
                             onChange={handleChange('Title')}
+                            data-testid="select-category"
                             required
                         />
                     </Field>
@@ -237,6 +239,7 @@ const BugModal = ({ onClose = noop, username: Username = '', addresses = [], ...
                         value={model.Description}
                         onChange={handleChange('Description')}
                         placeholder={c('Placeholder').t`Please describe the problem and include any error messages`}
+                        data-testid="textarea-description"
                         required
                     />
                 </Field>
@@ -256,7 +259,7 @@ const BugModal = ({ onClose = noop, username: Username = '', addresses = [], ...
             <Row>
                 <Label>{c('Label').t`System information`}</Label>
                 <Field className="inline-flex">
-                    <Button onClick={toggleDetails}>
+                    <Button onClick={toggleDetails} data-testid="toggle-info">
                         {showDetails ? c('Action').t`Hide info` : c('Action').t`Show info`}
                     </Button>
                 </Field>
@@ -273,6 +276,7 @@ const BugModal = ({ onClose = noop, username: Username = '', addresses = [], ...
                                 value={model.Browser}
                                 onChange={handleChange('Browser')}
                                 placeholder={c('Placeholder').t`Browser name`}
+                                data-testid="field-browser-name"
                             />
                         </Field>
                     </Row>
@@ -283,6 +287,7 @@ const BugModal = ({ onClose = noop, username: Username = '', addresses = [], ...
                                 id="BrowserVersion"
                                 value={model.BrowserVersion}
                                 onChange={handleChange('BrowserVersion')}
+                                data-testid="field-browser-version"
                                 placeholder={c('Placeholder').t`Browser version`}
                             />
                         </Field>

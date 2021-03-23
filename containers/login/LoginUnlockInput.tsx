@@ -24,6 +24,7 @@ const LoginUnlockInput = ({ password, setPassword, id, error }: Props) => {
             placeholder={c('Placeholder').t`Mailbox password`}
             onChange={({ target: { value } }) => setPassword(value)}
             data-cy-login="mailbox password"
+            data-testid="field-mailbox-password"
         />
     );
 };

@@ -5,7 +5,7 @@ import { getCountryFromNumber, getCursorPosition, getSpecificCountry } from './h
 
 const Test = ({ initialValue, defaultCountry }: { initialValue: string; defaultCountry?: string }) => {
     const [value, setValue] = useState(initialValue);
-    return <PhoneInput defaultCountry={defaultCountry} data-testid="input" value={value} onChange={setValue} />;
+    return <PhoneInput defaultCountry={defaultCountry} value={value} onChange={setValue} />;
 };
 
 const getCountry = (el: HTMLElement) => {
@@ -37,7 +37,7 @@ const runTest = (testCommands: TestCommands[]) => {
         <Test initialValue="" defaultCountry="US" />
     );
 
-    const inputEl = getByTestId('input') as HTMLInputElement;
+    const inputEl = getByTestId('field-phone') as HTMLInputElement;
     const buttonEl = getByRole('button') as HTMLButtonElement;
 
     testCommands.forEach(({ input, select, expectation: { value, country } }) => {
@@ -59,20 +59,18 @@ const runTest = (testCommands: TestCommands[]) => {
 describe('PhoneInput', () => {
     it('should format input', () => {
         const spy = jest.fn();
-        const { getByTestId, getByRole, rerender } = render(
-            <PhoneInput value="+41781234567" data-testid="input" onChange={spy} />
-        );
-        const input = getByTestId('input') as HTMLInputElement;
+        const { getByTestId, getByRole, rerender } = render(<PhoneInput value="+41781234567" onChange={spy} />);
+        const input = getByTestId('field-phone') as HTMLInputElement;
         const button = getByRole('button') as HTMLButtonElement;
         expect(input.value).toBe('78 123 45 67');
         expect(getCountry(button)).toBe('Switzerland');
-        rerender(<PhoneInput data-testid="input" value="+410782354666" onChange={spy} />);
+        rerender(<PhoneInput value="+410782354666" onChange={spy} />);
         expect(input.value).toBe('78 235 46 66');
         expect(getCountry(button)).toBe('Switzerland');
-        rerender(<PhoneInput data-testid="input" value="+1613123" onChange={spy} />);
+        rerender(<PhoneInput value="+1613123" onChange={spy} />);
         expect(input.value).toBe('613 123');
         expect(getCountry(button)).toBe('Canada');
-        rerender(<PhoneInput data-testid="input" value="+1631123" onChange={spy} />);
+        rerender(<PhoneInput value="+1631123" onChange={spy} />);
         expect(input.value).toBe('631 123');
         expect(getCountry(button)).toBe('United States');
     });

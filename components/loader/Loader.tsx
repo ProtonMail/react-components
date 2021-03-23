@@ -10,7 +10,7 @@ interface Props {
 const Loader = ({ size = 'small', className = 'center flex mb2 mt2' }: Props) => {
     return (
         <div className={className}>
-            <CircleLoader className={classnames(['mauto', `is-${size}`])} />
+            <CircleLoader className={classnames(['mauto', `is-${size}`])} data-testid="loader" />
         </div>
     );
 };

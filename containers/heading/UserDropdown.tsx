@@ -88,6 +88,7 @@ const UserDropdown = ({ ...rest }) => {
         <>
             <UserDropdownButton
                 data-cy-header="userDropdown"
+                data-testid="button-userdropdown"
                 {...rest}
                 user={user}
                 ref={anchorRef}
@@ -108,7 +109,7 @@ const UserDropdown = ({ ...rest }) => {
                 <ul className="unstyled mt1 mb1">
                     {APP_NAME !== APPS.PROTONVPN_SETTINGS ? (
                         <>
-                            <li className="pl1 pr1">
+                            <li className="pl1 pr1" data-testid="userdropdown-org-name">
                                 {organizationName ? (
                                     <>
                                         <div className="opacity-50 text-sm m0">{c('Label').t`Organization`}</div>
@@ -121,6 +122,7 @@ const UserDropdown = ({ ...rest }) => {
                                     color="norm"
                                     shape="outline"
                                     className="block w100 mt1-5 mb1-5 text-center"
+                                    data-testid="button-manage-account"
                                     toApp={getAccountSettingsApp()}
                                     onClick={() => close()}
                                 >
@@ -135,6 +137,7 @@ const UserDropdown = ({ ...rest }) => {
                             <button
                                 type="button"
                                 className="w100 flex dropdown-item-link pl1 pr1 pt0-5 pb0-5 text-left"
+                                data-testid="button-switch-account"
                                 onClick={handleSwitchAccount}
                             >
                                 <Icon className="mt0-25 mr0-5" name="organization-users" />
@@ -146,6 +149,7 @@ const UserDropdown = ({ ...rest }) => {
                         <Href
                             className="w100 flex flex-nowrap dropdown-item-link text-no-decoration pl1 pr1 pt0-5 pb0-5"
                             url="https://shop.protonmail.com"
+                            data-testid="link-shop"
                             onClick={() => close()}
                         >
                             <Icon className="mt0-25 mr0-5" name="shop" />
@@ -157,6 +161,7 @@ const UserDropdown = ({ ...rest }) => {
                             <button
                                 type="button"
                                 className="w100 flex dropdown-item-link pl1 pr1 pt0-5 pb0-5 text-left"
+                                data-testid="button-supportus"
                                 onClick={handleSupportUsClick}
                             >
                                 <Icon className="mt0-25 mr0-5" name="donate" />
@@ -173,6 +178,7 @@ const UserDropdown = ({ ...rest }) => {
                                     id="theme-toggle"
                                     title={c('Title').t`Toggle display mode`}
                                     value={themeType}
+                                    data-testid="select-theme"
                                     onChange={({ value }) => handleThemeChange(value)}
                                 >
                                     <Option title="Default" value={ThemeTypes.Default} />
@@ -188,6 +194,7 @@ const UserDropdown = ({ ...rest }) => {
                                 <Toggle
                                     id="theme-toggle"
                                     title={c('Title').t`Toggle display mode`}
+                                    data-testid="toggle-dark-mode"
                                     checked={themeType === ThemeTypes.Dark}
                                     onChange={handleThemeToggle}
                                 />
@@ -200,6 +207,7 @@ const UserDropdown = ({ ...rest }) => {
                             color="norm"
                             className="w100 text-center navigationUser-logout"
                             onClick={handleLogout}
+                            data-testid="button-logout"
                             data-cy-header-user-dropdown="logout"
                         >
                             {c('Action').t`Sign out`}

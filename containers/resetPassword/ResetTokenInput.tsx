@@ -16,6 +16,7 @@ const ResetTokenInput = ({ id, value, setValue, placeholder = c('Placeholder').t
             name="resetToken"
             id={id}
             placeholder={placeholder}
+            data-testid="field-reset-token"
             autoFocus
             required
         />

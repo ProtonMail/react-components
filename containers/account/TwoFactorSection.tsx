@@ -35,7 +35,7 @@ const TwoFactorSection = () => {
                 <Info url={twoFactorAuthLink} />
             </Label>
             <Field>
-                <Toggle checked={hasTOTPEnabled} id="twoFactorToggle" onChange={handleChange} />
+                <Toggle checked={hasTOTPEnabled} id="twoFactorToggle" onChange={handleChange} data-testid="toggle-totp" />
             </Field>
         </Row>
     );

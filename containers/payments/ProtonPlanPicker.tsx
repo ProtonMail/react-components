@@ -132,6 +132,7 @@ const ProtonPlanPicker = ({
                                 name={`plan${service}`}
                                 className="flex flex-nowrap flex-align-items-center"
                                 id={`${plan.ID}${service}`}
+                                data-testid={`planpicker-plan-${plan.Name}`}
                                 onChange={() => {
                                     onChangePlanIDs(
                                         switchPlan({
@@ -149,7 +150,9 @@ const ProtonPlanPicker = ({
                                     {isCurrentPlan ? (
                                         <>
                                             {' '}
-                                            <span className="color-hint inline-block">{currentPlanText}</span>
+                                            <span className="color-hint inline-block" data-testid="planpicker-current">
+                                                {currentPlanText}
+                                            </span>
                                         </>
                                     ) : (
                                         ''

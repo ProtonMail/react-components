@@ -21,6 +21,7 @@ const LoginTotpInput = ({ totp, setTotp, id }: Props) => {
             placeholder="123456"
             onChange={({ target: { value } }) => setTotp(value)}
             data-cy-login="TOTP"
+            data-testid="field-totp"
         />
     );
 };

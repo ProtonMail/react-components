@@ -7,7 +7,7 @@ import Input, { Props } from './Input';
  * e.g. 0fac27c3 and 505037.
  */
 const TwoFactorInput = ({ value, onChange, maxLength = 8, ...rest }: Props) => {
-    return <Input value={value} onChange={onChange} maxLength={maxLength} {...rest} />;
+    return <Input value={value} onChange={onChange} maxLength={maxLength} data-testid="field-twofa" {...rest} />;
 };
 
 export default TwoFactorInput;

@@ -348,6 +348,7 @@ const PlanSelection = ({
                             price={plan.Pricing[cycle]}
                             info={INFOS[plan.Name as PLANS]}
                             features={getFeatures(plan.Name as PLANS, service, vpnCountries)}
+                            data-testid={`plancard-${NAMES[plan.Name as PLANS]}`}
                             onClick={() => {
                                 onChangePlanIDs(
                                     switchPlan({

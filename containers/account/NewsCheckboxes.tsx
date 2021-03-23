@@ -35,7 +35,12 @@ const NewsCheckboxes = ({ disabled, News, onChange }: NewsCheckboxesProps) => {
             {checkboxes.map(({ id, flag, text }) => {
                 return (
                     <li key={id} className="mb0-5">
-                        <Checkbox checked={hasBit(News, flag)} disabled={disabled} onChange={handleChange(flag)}>
+                        <Checkbox
+                            checked={hasBit(News, flag)}
+                            disabled={disabled}
+                            onChange={handleChange(flag)}
+                            data-testid={`checkbox-account-announcments-${id}`}
+                        >
                             {text}
                         </Checkbox>
                     </li>

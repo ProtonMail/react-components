@@ -16,6 +16,7 @@ const ResetDangerInput = ({ id, value, setValue, dangerWord }: Props) => {
             value={value}
             onChange={({ target }) => setValue(target.value)}
             error={value.length > 0 && value !== dangerWord ? c('Error').t`Please enter '${dangerWord}'` : ''}
+            data-testid="field-danger-word"
             required
         />
     );

@@ -38,6 +38,7 @@ const DeleteMemberModal = ({ member, onConfirm, onClose, ...rest }: Props) => {
                 value={username}
                 onChange={({ target }) => setUsername(target.value)}
                 placeholder={c('Placeholder').t`Username`}
+                data-testid="field-member-username"
                 autoFocus
             />
         </DeleteModal>

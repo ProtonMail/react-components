@@ -117,6 +117,7 @@ const PhoneInput = ({ value: actualValue = '', defaultCountry = 'US', onChange, 
             value={formattedValueInMode}
             ref={inputRef}
             placeholder={placeholder}
+            data-testid="field-phone"
             prefix={
                 <CountrySelect
                     value={selectedValue}

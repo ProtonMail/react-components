@@ -151,12 +151,14 @@ const MemberModal = ({ onClose, organization, organizationKey, domains, domainsA
                         placeholder="Thomas A. Anderson"
                         onChange={handleChange('name')}
                         value={model.name}
+                        data-testid="field-member-name"
                         required
                     />
                 </Field>
                 <div className="ml1 on-mobile-ml0">
-                    <Checkbox checked={model.private} onChange={handleChangePrivate}>{c('Label for new member')
-                        .t`Private`}</Checkbox>
+                    <Checkbox checked={model.private} onChange={handleChangePrivate} ata-testid="checkbox-private">
+                        {c('Label for new member').t`Private`}
+                    </Checkbox>
                 </div>
             </Row>
             {model.private ? null : (
@@ -175,6 +177,7 @@ const MemberModal = ({ onClose, organization, organizationKey, domains, domainsA
                             value={model.password}
                             onChange={handleChange('password')}
                             placeholder={c('Placeholder').t`Password`}
+                            data-testid="field-member-password"
                             required
                         />
                     </div>
@@ -183,6 +186,7 @@ const MemberModal = ({ onClose, organization, organizationKey, domains, domainsA
                             value={model.confirm}
                             onChange={handleChange('confirm')}
                             placeholder={c('Placeholder').t`Confirm password`}
+                            data-testid="field-confirm"
                             required
                         />
                     </div>
@@ -194,6 +198,7 @@ const MemberModal = ({ onClose, organization, organizationKey, domains, domainsA
                     <Input
                         value={model.address}
                         onChange={handleChange('address')}
+                        data-testid="field-address"
                         placeholder={c('Placeholder').t`Address`}
                         required
                     />
@@ -204,7 +209,12 @@ const MemberModal = ({ onClose, organization, organizationKey, domains, domainsA
                             @{domainOptions[0].value}
                         </span>
                     ) : (
-                        <Select options={domainOptions} value={model.domain} onChange={handleChange('domain')} />
+                        <Select
+                            options={domainOptions}
+                            value={model.domain}
+                            onChange={handleChange('domain')}
+                            data-testid="select-domain"
+                        />
                     )}
                 </div>
             </Row>

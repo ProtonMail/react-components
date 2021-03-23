@@ -7,7 +7,7 @@ import Input, { Props } from './Input';
 
 const EmailInput = ({ value = '', ...rest }: Props) => {
     const error = value ? (validateEmailAddress(value as string) ? '' : c('Error').t`Email address invalid`) : '';
-    return <Input type="email" error={error} placeholder={EMAIL_PLACEHOLDER} value={value} {...rest} />;
+    return <Input type="email" error={error} placeholder={EMAIL_PLACEHOLDER} value={value} data-testid="field-email" {...rest}/>;
 };
 
 export default EmailInput;

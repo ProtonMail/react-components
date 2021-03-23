@@ -59,6 +59,7 @@ const CurrencySelector = ({ currency = DEFAULT_CURRENCY, onSelect, mode = 'selec
                 options={options.map((option) => ({ ...option, text: addSymbol(option.text as Currency) }))}
                 onChange={({ target }) => onSelect(target.value as Currency)}
                 loading={loading}
+                data-testid="select-currency"
                 {...rest}
             />
         );

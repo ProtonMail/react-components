@@ -44,9 +44,12 @@ const PaymentMethodsSection = () => {
             >{c('Info for payment methods')
                 .t`If you wish to have your subscription renewed automatically, you can add your credit card or PayPal account to the list of saved payment methods. Other payment methods are also available.`}</Alert>
             <Block>
-                <PrimaryButton className="mr1" onClick={handleCard}>{c('Action')
+                <PrimaryButton className="mr1" onClick={handleCard} data-testid="button-add-card">{c('Action')
                     .t`Add credit / debit card`}</PrimaryButton>
-                {hasPayPal ? null : <PrimaryButton onClick={handlePayPal}>{c('Action').t`Add PayPal`}</PrimaryButton>}
+                {hasPayPal ? null : (
+                    <PrimaryButton onClick={handlePayPal} data-testid="button-add-paypal">{c('Action')
+                        .t`Add PayPal`}</PrimaryButton>
+                )}
             </Block>
             <PaymentMethodsTable loading={loadingPaymentMethods || loadingSubscription} methods={paymentMethods} />
         </>

@@ -60,6 +60,7 @@ const LanguageSection = ({ locales = {} }: Props) => {
                     onChange={(e) => {
                         withLoading(handleChange(e));
                     }}
+                    data-testid="select-language"
                 />
             </Field>
         </Row>

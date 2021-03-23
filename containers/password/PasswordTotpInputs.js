@@ -18,6 +18,7 @@ const PasswordTotpInputs = ({ password, setPassword, passwordError, totp, setTot
                         autoFocus
                         autoComplete="current-password"
                         required
+                        data-testid="field-totp-password"
                     />
                 </Field>
             </Row>
@@ -32,6 +33,7 @@ const PasswordTotpInputs = ({ password, setPassword, passwordError, totp, setTot
                             error={totpError}
                             onChange={({ target: { value } }) => setTotp(value)}
                             required
+                            data-testid="field-totp-code"
                         />
                     </Field>
                 </Row>

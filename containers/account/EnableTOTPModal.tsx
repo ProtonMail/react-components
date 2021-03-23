@@ -236,7 +236,7 @@ const EnableTOTPModal = (props: any) => {
                                 );
                             })}
                         </div>
-                        <div className="text-center">
+                        <div className="text-center" data-testid="button-to-tp-download-codes">
                             <Button
                                 onClick={() => {
                                     const blob = new Blob([recoveryCodes.join('\r\n')], {

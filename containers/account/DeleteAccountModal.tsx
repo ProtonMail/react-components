@@ -181,6 +181,7 @@ const DeleteAccountModal = ({ onClose, ...rest }: Props) => {
                         onChange={handleChange('reason')}
                         disabled={loading}
                         required
+                        data-testid="field-acc-delete-reason"
                     />
                 </Field>
             </Row>
@@ -195,6 +196,7 @@ const DeleteAccountModal = ({ onClose, ...rest }: Props) => {
                         placeholder={c('Placeholder').t`Feedback`}
                         onChange={handleChange('feedback')}
                         disabled={loading}
+                        data-testid="field-acc-delete-feedback"
                     />
                 </Field>
             </Row>
@@ -209,6 +211,7 @@ const DeleteAccountModal = ({ onClose, ...rest }: Props) => {
                             value={model.email}
                             onChange={handleChange('email')}
                             placeholder={c('Placeholder').t`Email address`}
+                            data-testid="field-acc-delete-email"
                         />
                     </div>
                     <div className="text-sm m0">{c('Info')
@@ -225,6 +228,7 @@ const DeleteAccountModal = ({ onClose, ...rest }: Props) => {
                             value={model.password}
                             onChange={handleChange('password')}
                             placeholder={c('Placeholder').t`Password`}
+                            data-testid="field-acc-delete-password"
                         />
                     </div>
                     <div className="text-sm m0">{c('Info').t`Enter your login password to confirm your identity.`}</div>
@@ -251,6 +255,7 @@ const DeleteAccountModal = ({ onClose, ...rest }: Props) => {
                     checked={model.check}
                     disabled={loading}
                     onChange={({ target }) => setModel({ ...model, check: target.checked })}
+                    data-testid="checkbox-acc-delete"
                 >{c('Label').t`Yes, I want to permanently delete this account and all its data.`}</Checkbox>
             </Row>
         </FormModal>

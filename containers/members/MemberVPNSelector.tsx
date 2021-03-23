@@ -21,6 +21,7 @@ const MemberVPNSelector = ({ range: [min, max], step, value, onChange }: Props) 
         <Select
             value={value}
             options={options}
+            data-testid="select-member-vpn"
             onChange={({ target }: ChangeEvent<HTMLSelectElement>) => onChange(+target.value)}
         />
     );

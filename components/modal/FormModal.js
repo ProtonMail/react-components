@@ -90,6 +90,7 @@ function DemoModal({ onAdd, ...rest }) {
                             fullWidth
                             data-focus-fallback="-2"
                             {...closeProps}
+                            data-testid="form-modal-close"
                         >
                             {close}
                         </Button>
@@ -100,7 +101,12 @@ function DemoModal({ onAdd, ...rest }) {
 
         const nodeSubmit =
             typeof submit === 'string' ? (
-                <PrimaryButton loading={loading} type="submit" data-focus-fallback="-1">
+                <PrimaryButton 
+                    loading={loading} 
+                    type="submit" 
+                    data-focus-fallback="-1" 
+                    data-testid="form-modal-submit"
+                >
                     {submit}
                 </PrimaryButton>
             ) : (
@@ -111,7 +117,12 @@ function DemoModal({ onAdd, ...rest }) {
         return (
             <FooterModal>
                 {typeof close === 'string' ? (
-                    <Button type="reset" disabled={loading} data-focus-fallback="-2">
+                    <Button 
+                        type="reset" 
+                        disabled={loading} 
+                        data-focus-fallback="-2" 
+                        data-testid="form-modal-reset"
+                    >
                         {close}
                     </Button>
                 ) : (

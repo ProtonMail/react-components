@@ -23,7 +23,16 @@ const ShortcutsToggle = ({ id, shortcuts, onChange, className }: Props) => {
         onChange(+target.checked);
         createNotification({ text: c('Success').t`Keyboard shortcuts preferences updated` });
     };
-    return <Toggle id={id} className={className} checked={state} onChange={handleChange} loading={loading} />;
+    return (
+        <Toggle
+            id={id}
+            className={className}
+            checked={state}
+            onChange={handleChange}
+            loading={loading}
+            data-testid="toggle-shortcuts"
+        />
+    );
 };
 
 export default ShortcutsToggle;

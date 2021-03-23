@@ -26,6 +26,7 @@ const MemberStorageSelector = ({ range: [min, max], step, value, onChange }: Pro
         <Select
             value={value}
             options={options}
+            data-testid="select-member-storage"
             onChange={({ target }: ChangeEvent<HTMLSelectElement>) => onChange(+target.value)}
         />
     );
