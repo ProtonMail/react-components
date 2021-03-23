@@ -2,6 +2,7 @@ import React from 'react';
 import { c } from 'ttag';
 
 import { AdvancedSimpleFilterModalModel, StepSieve, ErrorsSieve } from '../../interfaces';
+import Icon from '../../../../components/icon/Icon';
 
 interface Props {
     model: AdvancedSimpleFilterModalModel;
@@ -23,6 +24,9 @@ const HeaderAdvancedFilterModal = ({ model, errors, onChange }: Props) => {
                     >
                         {c('StepSieve in filter modal').t`Name`}
                     </button>
+                </li>
+                <li aria-hidden="true" className="opacity-50 inline-flex mt0-1">
+                    <Icon name="caret" size={14} className="rotateZ-270 mauto " />
                 </li>
                 <li className="breadcrumb-item">
                     <button

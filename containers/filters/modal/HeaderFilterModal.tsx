@@ -2,6 +2,7 @@ import React from 'react';
 import { c } from 'ttag';
 
 import { SimpleFilterModalModel, Step, Errors } from '../interfaces';
+import Icon from '../../../components/icon/Icon';
 
 interface Props {
     model: SimpleFilterModalModel;
@@ -24,6 +25,9 @@ const HeaderFilterModal = ({ model, errors, onChange }: Props) => {
                         {c('Step in filter modal').t`Name`}
                     </button>
                 </li>
+                <li aria-hidden="true" className="opacity-50 inline-flex mt0-1">
+                    <Icon name="caret" size={14} className="rotateZ-270 mauto " />
+                </li>
                 <li className="breadcrumb-item">
                     <button
                         type="button"
@@ -35,6 +39,9 @@ const HeaderFilterModal = ({ model, errors, onChange }: Props) => {
                         {c('Step in filter modal').t`Conditions`}
                     </button>
                 </li>
+                <li aria-hidden="true" className="opacity-50 inline-flex mt0-1">
+                    <Icon name="caret" size={14} className="rotateZ-270 mauto " />
+                </li>
                 <li className="breadcrumb-item">
                     <button
                         type="button"
@@ -45,6 +52,9 @@ const HeaderFilterModal = ({ model, errors, onChange }: Props) => {
                     >
                         {c('Step in filter modal').t`Actions`}
                     </button>
+                </li>
+                <li aria-hidden="true" className="opacity-50 inline-flex mt0-1">
+                    <Icon name="caret" size={14} className="rotateZ-270 mauto " />
                 </li>
                 <li className="breadcrumb-item">
                     <button
