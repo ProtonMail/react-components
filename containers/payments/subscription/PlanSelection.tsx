@@ -66,12 +66,16 @@ const getFeatures = (planName: keyof typeof NAMES, service: PLAN_SERVICES): Plan
     const primeVideo = <b>{c('Prime Video').t`Prime Video`}</b>;
     const many = <b>{c('Many Others').t`and many others`}</b>;
 
+    const mailAppName = getAppName(APPS.PROTONMAIL);
+    const vpnAppName = getAppName(APPS.PROTONVPN_SETTINGS);
+
     const adBlocker = {
         content: c('Plan feature').t`Built-in Adblocker (NetShield)`,
         info: (
             <Info
                 title={c('Tooltip')
                     .t`NetShield protects your device and speeds up your browsing by blocking ads, trackers, and malware.`}
+                url=" https://protonvpn.com/support/netshield/"
             />
         ),
     };
@@ -82,6 +86,7 @@ const getFeatures = (planName: keyof typeof NAMES, service: PLAN_SERVICES): Plan
             <Info
                 title={c('Tooltip')
                     .t`Defends against threats to VPN privacy by passing your Internet traffic through multiple servers.`}
+                url="https://protonvpn.com/support/secure-core-vpn/"
             />
         ),
     };
@@ -140,7 +145,8 @@ const getFeatures = (planName: keyof typeof NAMES, service: PLAN_SERVICES): Plan
                 info: (
                     <Info
                         title={c('Tooltip')
-                            .t`Get access to all the paid features for both ProtonVPN and ProtonMail (the encrypted email service that million use to protect their data) with one plan.`}
+                            .t`Get access to all the paid features for both ${vpnAppName} and ${mailAppName} (the encrypted email service that million use to protect their data) with one plan.`}
+                        url="https://protonmail.com"
                     />
                 ),
             },
@@ -152,7 +158,8 @@ const getFeatures = (planName: keyof typeof NAMES, service: PLAN_SERVICES): Plan
         content: c('Plan feature').t`Custom email addresses`,
         info: (
             <Info
-                title={c('Tooltip').t`Host emails for your own domain(s) at ProtonMail, e.g. john.smith@example.com`}
+                title={c('Tooltip')
+                    .t`Host emails for your own domain(s) at ${mailAppName}, e.g. john.smith@example.com`}
             />
         ),
     };
