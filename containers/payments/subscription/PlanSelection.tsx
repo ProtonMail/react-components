@@ -11,7 +11,7 @@ import {
     DEFAULT_CYCLE,
     DEFAULT_CURRENCY,
 } from 'proton-shared/lib/constants';
-import { clearPlanIDs, switchPlan } from 'proton-shared/lib/helpers/planIDs';
+import { switchPlan } from 'proton-shared/lib/helpers/planIDs';
 import { getAppName } from 'proton-shared/lib/apps/helper';
 import { getPlan } from 'proton-shared/lib/helpers/subscription';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
@@ -278,15 +278,13 @@ const PlanSelection = ({
                             features={getFeatures(plan.Name as PLANS, service)}
                             onClick={() => {
                                 onChangePlanIDs(
-                                    clearPlanIDs(
-                                        switchPlan({
-                                            planIDs,
-                                            plans,
-                                            planID: isFree ? undefined : plan.ID,
-                                            service,
-                                            organization,
-                                        })
-                                    )
+                                    switchPlan({
+                                        planIDs,
+                                        plans,
+                                        planID: isFree ? undefined : plan.ID,
+                                        service,
+                                        organization,
+                                    })
                                 );
                             }}
                         />

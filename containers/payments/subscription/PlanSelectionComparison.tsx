@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { c } from 'ttag';
 import { PLAN_SERVICES } from 'proton-shared/lib/constants';
-import { clearPlanIDs, switchPlan } from 'proton-shared/lib/helpers/planIDs';
+import { switchPlan } from 'proton-shared/lib/helpers/planIDs';
 import { Organization, Plan, PlanIDs } from 'proton-shared/lib/interfaces';
 import { Button, Icon } from '../../../components';
 import MailFeatures from './MailFeatures';
@@ -38,15 +38,13 @@ const PlanSelectionComparison = ({ service, onChangePlanIDs, plans, organization
                             onSelect={(planName) => {
                                 const plan = plans.find(({ Name }) => Name === planName);
                                 onChangePlanIDs(
-                                    clearPlanIDs(
-                                        switchPlan({
-                                            planIDs,
-                                            plans,
-                                            planID: plan?.ID,
-                                            service,
-                                            organization,
-                                        })
-                                    )
+                                    switchPlan({
+                                        planIDs,
+                                        plans,
+                                        planID: plan?.ID,
+                                        service,
+                                        organization,
+                                    })
                                 );
                             }}
                         />
@@ -65,15 +63,13 @@ const PlanSelectionComparison = ({ service, onChangePlanIDs, plans, organization
                         onSelect={(planName) => {
                             const plan = plans.find(({ Name }) => Name === planName);
                             onChangePlanIDs(
-                                clearPlanIDs(
-                                    switchPlan({
-                                        planIDs,
-                                        plans,
-                                        planID: plan?.ID,
-                                        service,
-                                        organization,
-                                    })
-                                )
+                                switchPlan({
+                                    planIDs,
+                                    plans,
+                                    planID: plan?.ID,
+                                    service,
+                                    organization,
+                                })
                             );
                         }}
                     />

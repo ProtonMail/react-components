@@ -4,7 +4,6 @@ import { c } from 'ttag';
 import { checkSubscription, deleteSubscription } from 'proton-shared/lib/api/payments';
 import { DEFAULT_CURRENCY, DEFAULT_CYCLE, PLAN_SERVICES, APPS } from 'proton-shared/lib/constants';
 import { getPlanIDs } from 'proton-shared/lib/helpers/subscription';
-import { clearPlanIDs } from 'proton-shared/lib/helpers/planIDs';
 import { hasBonuses } from 'proton-shared/lib/helpers/organization';
 import { Currency, Organization, PlanIDs, Subscription, SubscriptionCheckResponse } from 'proton-shared/lib/interfaces';
 
@@ -82,7 +81,7 @@ const PlansSection = () => {
         const couponCode = CouponCode || undefined; // From current subscription; CouponCode can be null
         const { Coupon } = await api<SubscriptionCheckResponse>(
             checkSubscription({
-                PlanIDs: clearPlanIDs(newPlanIDs),
+                PlanIDs: newPlanIDs,
                 Currency: currency,
                 Cycle: cycle,
                 CouponCode: couponCode,
