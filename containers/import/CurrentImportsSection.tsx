@@ -63,7 +63,6 @@ const RowActions = ({ currentImport }: RowActionsProps) => {
         triggerOAuthPopup(OAUTH_PROVIDER.GMAIL, async (oauthProps: OAuthProps) => {
             await api(
                 updateMailImport(ID, {
-                    Email,
                     Code: oauthProps.code,
                     ImapHost,
                     ImapPort,
