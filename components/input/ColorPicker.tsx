@@ -32,7 +32,7 @@ const ColorPicker = <T extends React.ElementType>({
             <DropdownButton
                 as="button"
                 type="button"
-                className={classnames([className, !rest.as && rest.as !== 'button' && 'field select'])}
+                className={classnames([className, !rest.as && 'field select'])}
                 hasCaret
                 {...rest}
                 ref={anchorRef}
