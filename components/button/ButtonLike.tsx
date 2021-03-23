@@ -3,7 +3,7 @@ import React from 'react';
 import { classnames } from '../../helpers';
 import { Box, PolymorphicComponentProps } from '../../helpers/react-polymorphic-box';
 
-export type Shape = 'solid' | 'outline' | 'ghost' | 'link';
+type Shape = 'solid' | 'outline' | 'ghost' | 'link';
 
 type Color = 'norm' | 'weak' | 'danger' | 'warning' | 'success' | 'info';
 

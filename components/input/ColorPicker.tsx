@@ -1,20 +1,21 @@
 import React, { useState } from 'react';
 import { noop } from 'proton-shared/lib/helpers/function';
 import tinycolor from 'tinycolor2';
-import { Shape } from '../button/ButtonLike';
 import { Icon } from '../icon';
 import { Dropdown, DropdownButton } from '../dropdown';
 import { generateUID } from '../../helpers';
 import ColorSelector from '../color/ColorSelector';
 import { usePopperAnchor } from '../popper';
+import { DropdownButtonProps } from '../dropdown/DropdownButton';
 
-interface Props {
+interface OwnProps {
     color?: string;
-    shape?: Shape;
     onChange: (color: string) => void;
 }
 
-const ColorPicker = ({ color = 'blue', shape = 'outline', onChange = noop }: Props) => {
+export type Props<T extends React.ElementType> = OwnProps & DropdownButtonProps<T>;
+
+const ColorPicker = <T extends React.ElementType>({ color = 'blue', onChange = noop, ...rest }: Props<T>) => {
     const colorModel = tinycolor(color) as any;
     const iconColor = colorModel.isValid() ? colorModel.toHexString() : '';
 
@@ -23,7 +24,7 @@ const ColorPicker = ({ color = 'blue', shape = 'outline', onChange = noop }: Pro
 
     return (
         <>
-            <DropdownButton shape={shape} ref={anchorRef} isOpen={isOpen} onClick={toggle} hasCaret>
+            <DropdownButton hasCaret shape="outline" {...rest} ref={anchorRef} isOpen={isOpen} onClick={toggle}>
                 <Icon className="flex-item-noshrink" name="circle" color={iconColor} />
             </DropdownButton>
             <Dropdown id={uid} isOpen={isOpen} noMaxSize anchorRef={anchorRef} onClose={close}>
