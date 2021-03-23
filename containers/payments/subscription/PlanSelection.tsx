@@ -4,29 +4,27 @@ import { Currency, Cycle, Organization, Plan, PlanIDs, Subscription } from 'prot
 import { toMap } from 'proton-shared/lib/helpers/object';
 import {
     APPS,
-    PLANS,
-    PLAN_TYPES,
-    PLAN_SERVICES,
     CYCLE,
-    DEFAULT_CYCLE,
     DEFAULT_CURRENCY,
+    DEFAULT_CYCLE,
+    PLAN_SERVICES,
+    PLAN_TYPES,
+    PLANS,
 } from 'proton-shared/lib/constants';
 import { switchPlan } from 'proton-shared/lib/helpers/planIDs';
 import { getAppName } from 'proton-shared/lib/apps/helper';
 import { getPlan } from 'proton-shared/lib/helpers/subscription';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 
-import { Button } from '../../../components';
+import { Button, Info } from '../../../components';
 
 import CurrencySelector from '../CurrencySelector';
 import CycleSelector from '../CycleSelector';
 
-import PlanCard from './PlanCard';
+import PlanCard, { PlanCardFeature } from './PlanCard';
 
 import './PlanSelection.scss';
 import PlanSelectionComparison from './PlanSelectionComparison';
-
-const EmDash = '—';
 
 const FREE_PLAN = {
     ID: 'free',
@@ -62,105 +60,160 @@ const NAMES = {
     [PLANS.VISIONARY]: 'Visionary',
 } as const;
 
-const getFeatures = (planName: PLANS, service: PLAN_SERVICES) => {
-    return {
-        free_mail: [
+const getFeatures = (planName: keyof typeof NAMES, service: PLAN_SERVICES): PlanCardFeature[] => {
+    const netflix = <b>{c('Netflix').t`Netflix`}</b>;
+    const disney = <b>{c('Disney').t`Disney+`}</b>;
+    const primeVideo = <b>{c('Prime Video').t`Prime Video`}</b>;
+    const many = <b>{c('Many Others').t`and many others`}</b>;
+
+    const adBlocker = {
+        content: c('Plan feature').t`Built-in Adblocker (NetShield)`,
+        info: (
+            <Info
+                title={c('Tooltip')
+                    .t`NetShield protects your device and speeds up your browsing by blocking ads, trackers, and malware.`}
+            />
+        ),
+    };
+
+    const secureCore = {
+        content: c('Plan feature').t`Secure Core servers`,
+        info: (
+            <Info
+                title={c('Tooltip')
+                    .t`Defends against threats to VPN privacy by passing your Internet traffic through multiple servers.`}
+            />
+        ),
+    };
+
+    const streamingService = {
+        content: c('Plan feature').t`Streaming service support`,
+        info: (
+            <Info
+                title={c('Info')
+                    .jt`Access your streaming services, like ${netflix}, ${disney}, ${primeVideo}, ${many}, no matter where you are.`}
+                url="https://protonvpn.com/support/streaming-guide/"
+            />
+        ),
+    };
+
+    if (planName === 'free_vpn') {
+        return [
+            { content: c('Plan feature').t`17 servers in 3 countries` },
+            { content: c('Plan feature').t`1 VPN connection` },
+            { content: c('Plan feature').t`Medium speed` },
+            { ...adBlocker, notIncluded: true },
+            { ...secureCore, notIncluded: true },
+            { ...streamingService, notIncluded: true },
+        ];
+    }
+
+    if (planName === PLANS.VPNBASIC) {
+        return [
+            { content: c('Plan feature').t`350+ servers in 55 countries` },
+            { content: c('Plan feature').t`2 VPN connections` },
+            { content: c('Plan feature').t`High speed` },
+            adBlocker,
+            { ...secureCore, notIncluded: true },
+            { ...streamingService, notIncluded: true },
+        ];
+    }
+
+    if (planName === PLANS.VPNPLUS) {
+        return [
+            { content: c('Plan feature').t`1200+ servers in 55 countries` },
+            { content: c('Plan feature').t`5 VPN connections` },
+            { content: c('Plan feature').t`Highest speed (up to 10Gbps)` },
+            adBlocker,
+            secureCore,
+            streamingService,
+        ];
+    }
+
+    if (planName === PLANS.VISIONARY && service === PLAN_SERVICES.VPN) {
+        return [
+            { content: c('Plan feature').t`All plan features` },
+            { content: c('Plan feature').t`10 VPN connections` },
+            { content: c('Plan feature').t`Includes 6 user accounts` },
+            {
+                content: c('Plan feature').t`Includes Proton Visionary`,
+                info: (
+                    <Info
+                        title={c('Tooltip')
+                            .t`Get access to all the paid features for both ProtonVPN and ProtonMail (the encrypted email service that million use to protect their data) with one plan.`}
+                    />
+                ),
+            },
+            { content: c('Plan feature').t`Early access to new products` },
+        ];
+    }
+
+    const customEmail = {
+        content: c('Plan feature').t`Custom email addresses`,
+        info: (
+            <Info
+                title={c('Tooltip').t`Host emails for your own domain(s) at ProtonMail, e.g. john.smith@example.com`}
+            />
+        ),
+    };
+
+    if (planName === 'free_mail') {
+        return [
             { content: c('Plan feature').t`1 user` },
             { content: c('Plan feature').t`0.5 GB storage` },
             { content: c('Plan feature').t`1 address` },
             { content: c('Plan feature').t`3 folders / labels` },
-            { content: c('Plan feature').t`No custom email addresses`, icon: EmDash, className: 'opacity-50' },
-        ],
-        free_vpn: [
-            { content: c('Plan feature').t`Open-source, audited, no-logs` },
-            { content: c('Plan feature').t`17 servers in 3 countries` },
-            { content: c('Plan feature').t`1 VPN connection` },
-            { content: c('Plan feature').t`Adblocker (Netshield)`, icon: EmDash, className: 'opacity-50' },
-            { content: c('Plan feature').t`Exclusive SecureCore servers`, icon: EmDash, className: 'opacity-50' },
-        ],
-        [PLANS.VPNBASIC]: [
-            { content: c('Plan feature').t`Open-source, audited, no-logs` },
-            { content: c('Plan feature').t`350+ servers in 54 countries` },
-            { content: c('Plan feature').t`2 VPN connections` },
-            {
-                content: c('Plan feature').t`Adblocker (Netshield)`,
-                tooltip: c('Tooltip')
-                    .t`NetShield protects your device and speeds up your browsing by blocking ads, trackers, and malware.`,
-            },
-            { content: c('Plan feature').t`Exclusive SecureCore servers`, icon: EmDash, className: 'opacity-50' },
-        ],
-        [PLANS.VPNPLUS]: [
-            { content: c('Plan feature').t`Open-source, audited, no-logs` },
-            { content: c('Plan feature').t`1200+ servers in 54 countries` },
-            { content: c('Plan feature').t`5 VPN connections` },
-            {
-                content: c('Plan feature').t`Adblocker (Netshield)`,
-                tooltip: c('Tooltip')
-                    .t`NetShield protects your device and speeds up your browsing by blocking ads, trackers, and malware.`,
-            },
-            {
-                content: c('Plan feature').t`Exclusive SecureCore servers`,
-                tooltip: c('Tooltip')
-                    .t`Defends against threats to VPN privacy by passing your Internet traffic through multiple servers.`,
-            },
-        ],
-        [PLANS.PLUS]: [
+            { ...customEmail, notIncluded: true },
+        ];
+    }
+
+    const multipleInfo = (
+        <Info
+            title={c('Tooltip')
+                .t`Use multiple addresses / aliases linked to your account, e.g. username2@protonmail.com`}
+        />
+    );
+
+    if (planName === PLANS.PLUS) {
+        return [
             { content: c('Plan feature').t`1 user` },
             { content: c('Plan feature').t`5 GB storage *` },
             {
                 content: c('Plan feature').t`5 addresses`,
-                tooltip: c('Tooltip')
-                    .t`Use multiple addresses / aliases linked to your account, e.g. username2@protonmail.com`,
+                info: multipleInfo,
             },
             { content: c('Plan feature').t`200 folders / labels` },
-            {
-                content: c('Plan feature').t`Custom email addresses`,
-                tooltip: c('Tooltip').t`Host emails for your own domain(s) at ProtonMail, e.g. john.smith@example.com`,
-            },
-        ],
-        [PLANS.PROFESSIONAL]: [
+            customEmail,
+        ];
+    }
+
+    if (planName === PLANS.PROFESSIONAL) {
+        return [
             { content: c('Plan feature').t`1 - 5000 users *` },
             { content: c('Plan feature').t`5 GB storage / user` },
             {
                 content: c('Plan feature').t`5 addresses / user`,
-                tooltip: c('Tooltip')
-                    .t`Use multiple addresses / aliases linked to your account, e.g. username2@protonmail.com`,
+                info: multipleInfo,
             },
             { content: c('Plan feature').t`Unlimited folders / labels` },
+            customEmail,
+        ];
+    }
+
+    if (planName === PLANS.VISIONARY && service === PLAN_SERVICES.MAIL) {
+        return [
+            { content: c('Plan feature').t`6 users` },
+            { content: c('Plan feature').t`20 GB storage` },
             {
-                content: c('Plan feature').t`Custom email addresses`,
-                tooltip: c('Tooltip').t`Host emails for your own domain(s) at ProtonMail, e.g. john.smith@example.com`,
+                content: c('Plan feature').t`50 addresses`,
+                info: multipleInfo,
             },
-        ],
-        [PLANS.VISIONARY]:
-            service === PLAN_SERVICES.VPN
-                ? [
-                      { content: c('Plan feature').t`All plan features` },
-                      {
-                          content: c('Plan feature').t`ProtonMail Visionary account`,
-                          tooltip: c('Tooltip')
-                              .t`Get access to all the paid features for both ProtonVPN and ProtonMail (the encrypted email service that million use to protect their data) with one plan.`,
-                      },
-                      { content: c('Plan feature').t`10 VPN connections` },
-                      { content: c('Plan feature').t`Early access to new products` },
-                      { content: c('Plan feature').t`Support Proton Technologies!` },
-                  ]
-                : [
-                      { content: c('Plan feature').t`6 users` },
-                      { content: c('Plan feature').t`20 GB storage` },
-                      {
-                          content: c('Plan feature').t`50 addresses`,
-                          tooltip: c('Tooltip')
-                              .t`Use multiple addresses / aliases linked to your account, e.g. username2@protonmail.com`,
-                      },
-                      { content: c('Plan feature').t`Unlimited folders / labels` },
-                      {
-                          content: c('Plan feature').t`Custom email addresses`,
-                          tooltip: c('Tooltip')
-                              .t`Host emails for your own domain(s) at ProtonMail, e.g. john.smith@example.com`,
-                      },
-                  ],
-    }[planName];
+            { content: c('Plan feature').t`Unlimited folders / labels` },
+            customEmail,
+        ];
+    }
+
+    return [];
 };
 
 interface Props {
@@ -302,4 +355,5 @@ const PlanSelection = ({
         </>
     );
 };
+
 export default PlanSelection;
