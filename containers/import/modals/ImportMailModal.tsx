@@ -333,7 +333,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps: initialOAu
                 Code: modalModel.password,
                 ImapHost: modalModel.imap,
                 ImapPort: parseInt(modalModel.port, 10),
-                Sasl: AuthenticationMethod.OAUTH,
+                Sasl: AuthenticationMethod.PLAIN,
             })
         );
         await api(resumeMailImport(modalModel.importID));
@@ -502,7 +502,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps: initialOAu
 
             void withOauthLoading(submitOAuth());
         }
-    }, [oauthProps]);
+    }, []);
 
     useEffect(() => {
         if (debouncedEmail && validateEmailAddress(debouncedEmail)) {
