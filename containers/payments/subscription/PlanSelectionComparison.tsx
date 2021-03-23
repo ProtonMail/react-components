@@ -3,7 +3,7 @@ import { c } from 'ttag';
 import { PLAN_SERVICES } from 'proton-shared/lib/constants';
 import { clearPlanIDs, switchPlan } from 'proton-shared/lib/helpers/planIDs';
 import { Organization, Plan, PlanIDs } from 'proton-shared/lib/interfaces';
-import { Icon, InlineLinkButton } from '../../../components';
+import { Button, Icon } from '../../../components';
 import MailFeatures from './MailFeatures';
 import VPNFeatures from './VPNFeatures';
 
@@ -20,16 +20,17 @@ const PlanSelectionComparison = ({ service, onChangePlanIDs, plans, organization
     return (
         <>
             <p className="text-sm">{c('Info').t`* Customizable features`}</p>
-            <p className="text-center">
-                <InlineLinkButton
-                    onClick={() => {
-                        featuresRef.current?.scrollIntoView({ behavior: 'smooth' });
-                    }}
-                >
-                    <span className="mr0-5">{c('Action').t`Compare all features`}</span>
-                    <Icon name="arrow-down" className="align-sub" />
-                </InlineLinkButton>
-            </p>
+            <Button
+                color="norm"
+                shape="ghost"
+                className="flex flex-align-items-center center mb1"
+                onClick={() => {
+                    featuresRef.current?.scrollIntoView({ behavior: 'smooth' });
+                }}
+            >
+                <span className="mr0-5">{c('Action').t`Compare all features`}</span>
+                <Icon name="arrow-down" className="align-sub" />
+            </Button>
             <div ref={featuresRef}>
                 {service === PLAN_SERVICES.MAIL ? (
                     <>

@@ -8,7 +8,7 @@ import { clearPlanIDs } from 'proton-shared/lib/helpers/planIDs';
 import { hasBonuses } from 'proton-shared/lib/helpers/organization';
 import { Currency, Organization, PlanIDs, Subscription, SubscriptionCheckResponse } from 'proton-shared/lib/interfaces';
 
-import { Loader } from '../../components';
+import { Button, Loader } from '../../components';
 import {
     useSubscription,
     useOrganization,
@@ -139,6 +139,25 @@ const PlansSection = () => {
                 onChangeCurrency={setCurrency}
                 onChangeCycle={setCycle}
             />
+            <p className="text-sm">{c('Info').t`* Customizable features`}</p>
+            <Button
+                color="norm"
+                shape="ghost"
+                className="flex center mb1"
+                onClick={() => {
+                    createModal(
+                        <SubscriptionModal
+                            planIDs={currentPlanIDs}
+                            coupon={CouponCode}
+                            currency={currency}
+                            cycle={cycle}
+                            step={SUBSCRIPTION_STEPS.PLAN_SELECTION}
+                        />
+                    );
+                }}
+            >
+                {c('Action').t`Compare plans`}
+            </Button>
         </>
     );
 };
