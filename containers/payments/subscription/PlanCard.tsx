@@ -86,8 +86,7 @@ const PlanCard = ({
                                     {feature.notIncluded ? '—' : <Icon name="on" className="color-primary" />}
                                 </span>
                                 <span className="flex-item-fluid">
-                                    <span className="mr0-5">{feature.content}</span>
-                                    {feature.info}
+                                    {feature.content} {feature.info}
                                 </span>
                             </li>
                         ))}

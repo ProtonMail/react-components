@@ -61,10 +61,10 @@ const NAMES = {
 } as const;
 
 const getFeatures = (planName: keyof typeof NAMES, service: PLAN_SERVICES): PlanCardFeature[] => {
-    const netflix = <b>{c('Netflix').t`Netflix`}</b>;
-    const disney = <b>{c('Disney').t`Disney+`}</b>;
-    const primeVideo = <b>{c('Prime Video').t`Prime Video`}</b>;
-    const many = <b>{c('Many Others').t`and many others`}</b>;
+    const netflix = <b key={1}>{c('Netflix').t`Netflix`}</b>;
+    const disney = <b key={2}>{c('Disney').t`Disney+`}</b>;
+    const primeVideo = <b key={3}>{c('Prime Video').t`Prime Video`}</b>;
+    const many = <b key={4}>{c('Many Others').t`and many others`}</b>;
 
     const mailAppName = getAppName(APPS.PROTONMAIL);
     const vpnAppName = getAppName(APPS.PROTONVPN_SETTINGS);
