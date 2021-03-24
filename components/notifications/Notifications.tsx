@@ -43,13 +43,10 @@ export const Notifications = ({
                             onChange={(newNotification) => onChange(updateItem(notifications, index, newNotification))}
                             error={errors?.notifications?.fields.includes(index) ? '' : undefined}
                         />
-                        <Tooltip
-                            title={c('Action').t`Remove this notification`}
-                            className="w2e flex flex-item-noshrink ml0-5"
-                        >
+                        <Tooltip title={c('Action').t`Remove this notification`}>
                             <LinkButton
                                 data-test-id="delete-notification"
-                                className="w2e flex flex-item-noshrink"
+                                className="w2e flex flex-item-noshrink ml0-5"
                                 onClick={() => onChange(removeItem(notifications, index))}
                             >
                                 <Icon name="trash" className="mauto" />

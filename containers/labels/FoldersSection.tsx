@@ -4,7 +4,7 @@ import { c } from 'ttag';
 import { ROOT_FOLDER } from 'proton-shared/lib/constants';
 import { orderFolders } from 'proton-shared/lib/api/labels';
 
-import { Loader, Button, Row, Label, Field, Info } from '../../components';
+import { Loader, Button, Info } from '../../components';
 import {
     useFolders,
     useMailSettings,
@@ -21,6 +21,9 @@ import FolderTreeViewList from './FolderTreeViewList';
 import EditLabelModal from './modals/EditLabelModal';
 import ToggleEnableFolderColor from './ToggleEnableFolderColor';
 import ToggleInheritParentFolderColor from './ToggleInheritParentFolderColor';
+import SettingsLayout from '../account/SettingsLayout';
+import SettingsLayoutLeft from '../account/SettingsLayoutLeft';
+import SettingsLayoutRight from '../account/SettingsLayoutRight';
 
 function LabelsSection() {
     const [folders = [], loadingFolders] = useFolders();
@@ -48,29 +51,33 @@ function LabelsSection() {
                 <Loader />
             ) : (
                 <>
-                    <Row>
-                        <Label htmlFor="folder-colors" className="text-semibold">
-                            {c('Label').t`Use folder colors`}
-                        </Label>
-                        <Field>
+                    <SettingsLayout>
+                        <SettingsLayoutLeft>
+                            <label htmlFor="folder-colors" className="text-semibold">
+                                {c('Label').t`Use folder colors`}
+                            </label>
+                        </SettingsLayoutLeft>
+                        <SettingsLayoutRight>
                             <ToggleEnableFolderColor id="folder-colors" />
-                        </Field>
-                    </Row>
+                        </SettingsLayoutRight>
+                    </SettingsLayout>
 
                     {mailSettings?.EnableFolderColor ? (
-                        <Row>
-                            <Label htmlFor="parent-folder-color" className="text-semibold">
-                                <span>{c('Label').t`Inherit color from parent folder`}</span>
-                                <Info
-                                    buttonClass="ml0-5 inline-flex"
-                                    title={c('Info - folder colouring feature')
-                                        .t`When enabled, sub-folders inherit the color of the parent folder.`}
-                                />
-                            </Label>
-                            <Field>
+                        <SettingsLayout>
+                            <SettingsLayoutLeft>
+                                <label htmlFor="parent-folder-color" className="text-semibold">
+                                    <span>{c('Label').t`Inherit color from parent folder`}</span>
+                                    <Info
+                                        buttonClass="ml0-5 inline-flex"
+                                        title={c('Info - folder colouring feature')
+                                            .t`When enabled, sub-folders inherit the color of the parent folder.`}
+                                    />
+                                </label>
+                            </SettingsLayoutLeft>
+                            <SettingsLayoutRight>
                                 <ToggleInheritParentFolderColor id="parent-folder-color" />
-                            </Field>
-                        </Row>
+                            </SettingsLayoutRight>
+                        </SettingsLayout>
                     ) : null}
 
                     <div className="mt2 mb2">

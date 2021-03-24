@@ -261,6 +261,69 @@ const UsersAndAddressesSection = () => {
                     })}
                 </TableBody>
             </Table>
+
+            <div className="members-table-mobile">
+                {membersSelected.map(
+                    (member) => {
+                        const memberAddresses = (memberAddressesMap && memberAddressesMap[member.ID]) || [];
+
+                        return (
+                            <div className="pt1 pb1 border-bottom">
+                                <div className="flex mb1-5">
+                                    <span style={{ minWidth: 100 }} className="text-bold">
+                                        {c('Title header for members table').t`Name`}
+                                    </span>
+                                    <div>
+                                        <span className="block">{member.Name}</span>
+                                        {Boolean(member.Private) && (
+                                            <Badge type="light">{c('Private Member').t`private`}</Badge>
+                                        )}
+                                    </div>
+                                </div>
+                                <div className="flex mb1-5">
+                                    <span style={{ minWidth: 100 }} className="text-bold">
+                                        <span className="mr0-5">{c('Title header for members table').t`Role`}</span>
+                                        <span className="no-mobile">
+                                            <Info url="https://protonmail.com/support/knowledge-base/member-roles/" />
+                                        </span>
+                                    </span>
+                                    <MemberRole member={member} />
+                                </div>
+                                <div className="flex mb1-5">
+                                    <span style={{ minWidth: 100 }} className="text-bold">
+                                        <span
+                                            className="text-ellipsis inline-block align-bottom max-w100"
+                                            title={c('Title header for members table').t`Addresses`}
+                                        >{c('Title header for members table').t`Addresses`}</span>
+                                    </span>
+                                    <MemberAddresses addresses={memberAddresses} />
+                                </div>
+                                <div className="flex mb1-5">
+                                    <div style={{ minWidth: 100 }} className="text-bold">
+                                        <span
+                                            className="text-ellipsis inline-block align-bottom max-w100"
+                                            title={c('Title header for members table').t`Features`}
+                                        >{c('Title header for members table').t`Features`}</span>
+                                    </div>
+                                    <div>
+                                        <MemberFeatures member={member} />
+                                    </div>
+                                </div>
+                                <div className="flex mb1-5">
+                                    <span style={{ minWidth: 100 }} />
+                                    <MemberActions
+                                        member={member}
+                                        addresses={memberAddresses}
+                                        organization={organization}
+                                        organizationKey={organizationKey}
+                                    />
+                                </div>
+                            </div>
+                        )
+                    }
+                )}
+            </div>
+            
             {/* <Block className="opacity-50">
                 {organization.UsedMembers} / {organization.MaxMembers}{' '}
                 {c('Info').ngettext(msgid`user used`, `users used`, organization.UsedMembers)}

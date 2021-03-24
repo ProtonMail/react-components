@@ -10,7 +10,6 @@ import {
     Time,
     Pagination,
     Alert,
-    Block,
     ConfirmModal,
     usePagination,
 } from '../../components';
@@ -83,8 +82,8 @@ const SessionsSection = () => {
                 {c('Info')
                     .t`Unless you explicitly sign out or change your password, sessions remain active and only expire after 30 days of inactivity.`}
             </SettingsParagraph>
-            <Block className="flex flex-justify-space-between">
-                <div>
+            <div className="flex flex-justify-space-between mb1">
+                <div className="on-mobile-mb1">
                     <Button shape="outline" onClick={handleOpenModal} loading={loadingRevokeAll}>{c('Action')
                         .t`Revoke all other sessions`}</Button>
                 </div>
@@ -96,7 +95,7 @@ const SessionsSection = () => {
                     onPrevious={onPrevious}
                     onSelect={onSelect}
                 />
-            </Block>
+            </div>
             <Table>
                 <TableHeader cells={[c('Title').t`App`, c('Title').t`Date`, c('Title').t`Action`]} />
                 <TableBody loading={loading} colSpan={3}>

@@ -1,10 +1,13 @@
 import React from 'react';
 import { c } from 'ttag';
 import { updatePromptPin } from 'proton-shared/lib/api/mailSettings';
-import { Row, Field, Label, Info, Toggle } from '../../components';
+import { Info, Toggle } from '../../components';
 import { useApi, useLoading, useMailSettings, useEventManager, useNotifications } from '../../hooks';
 
 import { SettingsSection, SettingsParagraph } from '../account';
+import SettingsLayout from '../account/SettingsLayout';
+import SettingsLayoutLeft from '../account/SettingsLayoutLeft';
+import SettingsLayoutRight from '../account/SettingsLayoutRight';
 
 const AddressVerificationSection = () => {
     const { createNotification } = useNotifications();
@@ -26,24 +29,26 @@ const AddressVerificationSection = () => {
                     .t`Address verification is an advanced security feature. Only turn this on if you know what it does.`}
             </SettingsParagraph>
 
-            <Row>
-                <Label htmlFor="trustToggle" className="text-semibold">
-                    <span className="mr0-5">{c('Label').t`Prompt to trust keys`}</span>
-                    <Info
-                        url="https://protonmail.com/support/knowledge-base/address-verification/"
-                        title={c('Tooltip prompt to trust keys')
-                            .t`When receiving an email from another ProtonMail user who does not have trusted keys in your contacts, a banner will ask if you want to enable trusted keys.`}
-                    />
-                </Label>
-                <Field>
+            <SettingsLayout>
+                <SettingsLayoutLeft>
+                    <label htmlFor="trustToggle" className="text-semibold">
+                        <span className="mr0-5">{c('Label').t`Prompt to trust keys`}</span>
+                        <Info
+                            url="https://protonmail.com/support/knowledge-base/address-verification/"
+                            title={c('Tooltip prompt to trust keys')
+                                .t`When receiving an email from another ProtonMail user who does not have trusted keys in your contacts, a banner will ask if you want to enable trusted keys.`}
+                        />
+                    </label>
+                </SettingsLayoutLeft>
+                <SettingsLayoutRight>
                     <Toggle
                         id="trustToggle"
                         loading={loading}
                         checked={!!PromptPin}
                         onChange={(e) => withLoading(handleChange(e))}
                     />
-                </Field>
-            </Row>
+                </SettingsLayoutRight>
+            </SettingsLayout>
         </SettingsSection>
     );
 };

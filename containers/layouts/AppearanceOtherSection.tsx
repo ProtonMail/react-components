@@ -10,7 +10,7 @@ import {
 } from 'proton-shared/lib/api/mailSettings';
 import { MESSAGE_BUTTONS, VIEW_MODE, MIME_TYPES, RIGHT_TO_LEFT, STICKY_LABELS } from 'proton-shared/lib/constants';
 
-import { ButtonGroup, Group, Row, Label, Field, Radio, Info, Button, Icon } from '../../components';
+import { ButtonGroup, Label, Radio, Info, Button, Icon } from '../../components';
 import {
     useEventManager,
     useMailSettings,
@@ -19,11 +19,13 @@ import {
     useApiWithoutResult,
     useLoading,
 } from '../../hooks';
-
 import DraftTypeSelect from './DraftTypeSelect';
 import TextDirectionSelect from './TextDirectionSelect';
 import ViewModeToggle from './ViewModeToggle';
 import StickyLabelsToggle from './StickyLabelsToggle';
+import SettingsLayout from '../account/SettingsLayout';
+import SettingsLayoutLeft from '../account/SettingsLayoutLeft';
+import SettingsLayoutRight from '../account/SettingsLayoutRight';
 
 const { READ_UNREAD, UNREAD_READ } = MESSAGE_BUTTONS;
 
@@ -87,73 +89,86 @@ const AppearanceOtherSection = () => {
 
     return (
         <>
-            <Row>
-                <Label htmlFor="stickyLabelsToggle" className="text-semibold">
-                    <span className="mr0-5">{c('Label').t`Use sticky labels`}</span>
-                    <Info
-                        title={c('Tooltip')
-                            .t`When you add a label to a message in a conversation, it will automatically be applied to all future messages you send or receive in that conversation.`}
-                    />
-                </Label>
-                <Field>
+            <SettingsLayout>
+                <SettingsLayoutLeft>
+                    <label htmlFor="stickyLabelsToggle" className="text-semibold">
+                        <span className="mr0-5">{c('Label').t`Use sticky labels`}</span>
+                        <Info
+                            title={c('Tooltip')
+                                .t`When you add a label to a message in a conversation, it will automatically be applied to all future messages you send or receive in that conversation.`}
+                        />
+                    </label>
+                </SettingsLayoutLeft>
+                <SettingsLayoutRight>
                     <StickyLabelsToggle
                         id="stickyLabelsToggle"
                         stickyLabels={StickyLabels}
                         loading={loadingStickyLabels}
                         onToggle={(value) => withLoadingStickyLabels(handleToggleStickyLabels(value))}
                     />
-                </Field>
-            </Row>
+                </SettingsLayoutRight>
+            </SettingsLayout>
 
-            <Row>
-                <Label htmlFor="viewMode" className="text-semibold">
-                    <span className="mr0-5">{c('Label').t`Conversation grouping`}</span>
-                    <Info
-                        title={c('Tooltip')
-                            .t`Group emails in the same conversation together in your Inbox or display them separately.`}
-                    />
-                </Label>
+            <SettingsLayout>
+                <SettingsLayoutLeft>
+                    <label htmlFor="viewMode" className="text-semibold">
+                        <span className="mr0-5">{c('Label').t`Conversation grouping`}</span>
+                        <Info
+                            title={c('Tooltip')
+                                .t`Group emails in the same conversation together in your Inbox or display them separately.`}
+                        />
+                    </label>
+                </SettingsLayoutLeft>
 
-                <Field>
+                <SettingsLayoutRight>
                     <ViewModeToggle
                         id="viewMode"
                         viewMode={ViewMode}
                         loading={loadingViewMode}
                         onToggle={(value) => withLoadingViewMode(handleChangeViewMode(value))}
                     />
-                </Field>
-            </Row>
+                </SettingsLayoutRight>
+            </SettingsLayout>
 
-            <Row>
-                <Label htmlFor="draftType" className="text-semibold">
-                    {c('Label').t`Composer mode`}
-                </Label>
-                <Field>
+            <SettingsLayout>
+                <SettingsLayoutLeft>
+                    <Label htmlFor="draftType" className="text-semibold">
+                        {c('Label').t`Composer mode`}
+                    </Label>
+                </SettingsLayoutLeft>
+                <SettingsLayoutRight>
                     <DraftTypeSelect
                         id="draftType"
                         draftType={DraftMIMEType}
                         onChange={(value) => withLoadingDraftType(handleChangeDraftType(value))}
                         loading={loadingDraftType}
                     />
-                </Field>
-            </Row>
-            <Row>
-                <Label htmlFor="textDirection" className="text-semibold">
-                    {c('Label').t`Composer text direction`}
-                </Label>
-                <Field>
+                </SettingsLayoutRight>
+            </SettingsLayout>
+
+            <SettingsLayout>
+                <SettingsLayoutLeft>
+                    <label htmlFor="textDirection" className="text-semibold">
+                        {c('Label').t`Composer text direction`}
+                    </label>
+                </SettingsLayoutLeft>
+                <SettingsLayoutRight>
                     <TextDirectionSelect
                         id="textDirection"
                         rightToLeft={RightToLeft}
                         onChange={(value) => withLoadingRightToLeft(handleChangeRightToLeft(value))}
                         loading={loadingRightToLeft}
                     />
-                </Field>
-            </Row>
+                </SettingsLayoutRight>
+            </SettingsLayout>
 
-            <Row>
-                <Label className="text-semibold">{c('Label').t`Read/unread toolbar order`}</Label>
-                <Field>
+            <SettingsLayout>
+                <SettingsLayoutLeft>
+                    <label className="text-semibold">
+                        {c('Label').t`Read/unread toolbar order`}
+                    </label>
+                </SettingsLayoutLeft>
+                <SettingsLayoutRight>
                     <div className="mb1">
                         <Radio
                             id="read-unread"
@@ -192,8 +207,8 @@ const AppearanceOtherSection = () => {
                             </ButtonGroup>
                         </Radio>
                     </div>
-                </Field>
-            </Row>
+                </SettingsLayoutRight>
+            </SettingsLayout>
         </>
     );
 };
