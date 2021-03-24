@@ -25,8 +25,8 @@ import {
     SelectTwo,
     Option,
     Href,
-    Button,
     Toggle,
+    PrimaryButton,
 } from '../../components';
 import { generateUID } from '../../helpers';
 import UserDropdownButton from './UserDropdownButton';
@@ -196,14 +196,13 @@ const UserDropdown = ({ ...rest }) => {
                     </li>
                     <li className="dropdown-item-hr mb0-5" aria-hidden="false" />
                     <li className="pt0-5 pb0-5 pl1 pr1 flex">
-                        <Button
-                            color="norm"
+                        <PrimaryButton
                             className="w100 text-center navigationUser-logout"
                             onClick={handleLogout}
                             data-cy-header-user-dropdown="logout"
                         >
                             {c('Action').t`Sign out`}
-                        </Button>
+                        </PrimaryButton>
                     </li>
                 </ul>
             </Dropdown>
