@@ -16,6 +16,7 @@ import {
     useGetAddresses,
     useLoading,
     useOrganization,
+    useOrganizationKey,
     useUser,
     useUserSettings,
     useWelcomeFlags,
@@ -28,6 +29,7 @@ import OnboardingDiscoverApps from './OnboardingDiscoverApps';
 import OnboardingWelcome from './OnboardingWelcome';
 import OnboardingSetupOrganization from './OnboardingSetupOrganization';
 import { availableThemes } from '../themes/ThemesSection';
+import { getOrganizationKeyInfo } from '../organization/helpers/organizationKeysHelper';
 
 interface Props {
     title?: string;
@@ -57,13 +59,20 @@ const OnboardingModal = ({
     const [userSettings] = useUserSettings();
     const [organization, loadingOrganization] = useOrganization();
     const [displayName, setDisplayName] = useState(user.DisplayName || user.Name || '');
+    const [organizationKey, loadingOrganizationKey] = useOrganizationKey(organization);
+    const { hasOrganizationKey } = getOrganizationKeyInfo(organizationKey);
     const [loading, withLoading] = useLoading();
     const getAddresses = useGetAddresses();
     const api = useApi();
     const { call } = useEventManager();
     const [welcomeFlags] = useWelcomeFlags();
     const canManageOrganization =
-        !loadingOrganization && user.isAdmin && organization.MaxMembers > 1 && organization.UsedMembers === 1;
+        !loadingOrganization &&
+        !loadingOrganizationKey &&
+        user.isAdmin &&
+        organization.MaxMembers > 1 &&
+        organization.UsedMembers === 1 &&
+        !hasOrganizationKey;
     const mailAppName = getAppName(APPS.PROTONMAIL);
     const themes = availableThemes.map(({ identifier, getI18NLabel, src }) => {
         return { identifier, label: getI18NLabel(), src };
