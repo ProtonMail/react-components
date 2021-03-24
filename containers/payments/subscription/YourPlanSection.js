@@ -10,7 +10,6 @@ import { Alert, Href, Loader, Meter, Button } from '../../../components';
 import { useModals, useSubscription, useOrganization, useUser, useAddresses } from '../../../hooks';
 import MozillaInfoPanel from '../../account/MozillaInfoPanel';
 import { formatPlans } from './helpers';
-import NewSubscriptionModal from './NewSubscriptionModal';
 import { SettingsSection } from '../../account';
 import UpsellMailSubscription from './UpsellMailSubscription';
 import UpsellVPNSubscription from './UpsellVPNSubscription';
@@ -18,7 +17,6 @@ import SettingsLayoutLeft from '../../account/SettingsLayoutLeft';
 import SettingsLayout from '../../account/SettingsLayout';
 import SettingsLayoutRight from '../../account/SettingsLayoutRight';
 import SubscriptionModal from './SubscriptionModal';
-import UnsubscribeButton from './UnsubscribeButton';
 import { SUBSCRIPTION_STEPS } from './constants';
 
 const YourPlanSection = ({ permission }) => {
