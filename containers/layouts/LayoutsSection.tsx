@@ -12,9 +12,6 @@ import { SettingsSectionWide } from '../account';
 import ComposerModeRadios from './ComposerModeRadios';
 import ViewLayoutRadios from './ViewLayoutRadios';
 import DensityRadios from './DensityRadios';
-import SettingsLayout from '../account/SettingsLayout';
-import SettingsLayoutLeft from '../account/SettingsLayoutLeft';
-import SettingsLayoutRight from '../account/SettingsLayoutRight';
 
 const LayoutsSection = () => {
     const [{ ComposerMode = 0, ViewLayout = 0 } = {}, loadingMailSettings] = useMailSettings();
@@ -52,63 +49,49 @@ const LayoutsSection = () => {
                 <Loader />
             ) : (
                 <>
-                    <SettingsLayout>
-                        <SettingsLayoutLeft>
-                            <label htmlFor="layoutMode" className="mb1 text-semibold">
-                                <span className="mr0-5">
-                                    {c('Label').t`Inbox`}
-                                </span>
-                                <Info
-                                    url="https://protonmail.com/support/knowledge-base/change-inbox-layout/"
-                                    title={c('Tooltip').t`Set the default layout for your Inbox.`}
-                                />
-                            </label>
-                        </SettingsLayoutLeft>
-                        <SettingsLayoutRight>
-                            <ViewLayoutRadios
-                                id="layoutMode"
-                                viewLayout={ViewLayout}
-                                onChange={(value) => withLoadingViewLayout(handleChangeViewLayout(value))}
-                                loading={loadingViewLayout}
+                    <div className="flex flex-nowrap mb1 on-mobile-flex-column flex-column">
+                        <label htmlFor="layoutMode" className="mb1 text-semibold">
+                            <span className="mr0-5">{c('Label').t`Inbox`}</span>
+                            <Info
+                                url="https://protonmail.com/support/knowledge-base/change-inbox-layout/"
+                                title={c('Tooltip').t`Set the default layout for your Inbox.`}
                             />
-                        </SettingsLayoutRight>
-                    </SettingsLayout>
+                        </label>
+                        <ViewLayoutRadios
+                            id="layoutMode"
+                            viewLayout={ViewLayout}
+                            onChange={(value) => withLoadingViewLayout(handleChangeViewLayout(value))}
+                            loading={loadingViewLayout}
+                        />
+                    </div>
 
-                    <SettingsLayout className="flex-column">
-                        <SettingsLayoutLeft>
-                            <label htmlFor="composerMode" className="mb1 text-semibold">
-                                <span className="mr0-5">{c('Label').t`Composer`}</span>
-                                <Info
-                                    url="https://protonmail.com/support/knowledge-base/composer/"
-                                    title={c('Tooltip').t`Set the default Composer popup size as small or full screen.`}
-                                />
-                            </label>
-                        </SettingsLayoutLeft>
-                        <SettingsLayoutRight>
-                            <ComposerModeRadios
-                                id="composerMode"
-                                composerMode={ComposerMode}
-                                onChange={(value) => withLoadingComposerMode(handleChangeComposerMode(value))}
-                                loading={loadingComposerMode}
+                    <div className="flex flex-nowrap mb1 on-mobile-flex-column flex-column">
+                        <label htmlFor="composerMode" className="mb1 text-semibold">
+                            <span className="mr0-5">{c('Label').t`Composer`}</span>
+                            <Info
+                                url="https://protonmail.com/support/knowledge-base/composer/"
+                                title={c('Tooltip').t`Set the default Composer popup size as small or full screen.`}
                             />
-                        </SettingsLayoutRight>
-                    </SettingsLayout>
+                        </label>
+                        <ComposerModeRadios
+                            id="composerMode"
+                            composerMode={ComposerMode}
+                            onChange={(value) => withLoadingComposerMode(handleChangeComposerMode(value))}
+                            loading={loadingComposerMode}
+                        />
+                    </div>
 
-                    <SettingsLayout className="flex-column">
-                        <SettingsLayoutLeft>
-                            <label htmlFor="density" className="mb1 text-semibold">
-                                {c('Label').t`Density`}
-                            </label>
-                        </SettingsLayoutLeft>
-                        <SettingsLayoutRight>
-                            <DensityRadios
-                                density={Density}
-                                onChange={(value) => withLoadingDensity(handleChangeDensity(value))}
-                                loading={loadingDensity}
-                                id="density"
-                            />
-                        </SettingsLayoutRight>
-                    </SettingsLayout>
+                    <div className="flex flex-nowrap mb1 on-mobile-flex-column flex-column">
+                        <label htmlFor="density" className="mb1 text-semibold">
+                            {c('Label').t`Density`}
+                        </label>
+                        <DensityRadios
+                            density={Density}
+                            onChange={(value) => withLoadingDensity(handleChangeDensity(value))}
+                            loading={loadingDensity}
+                            id="density"
+                        />
+                    </div>
                 </>
             )}
         </SettingsSectionWide>
