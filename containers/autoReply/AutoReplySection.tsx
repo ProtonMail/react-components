@@ -17,7 +17,7 @@ import {
     useHandler,
     useUser,
 } from '../../hooks';
-import { Toggle, Field, Label, Row, SimpleSquireEditor, Button, AppLink } from '../../components';
+import { Toggle, SimpleSquireEditor, Button, AppLink, Card } from '../../components';
 
 import { SettingsSection, SettingsParagraph } from '../account';
 
@@ -30,6 +30,9 @@ import AutoReplyFormPermanent from './AutoReplyForm/AutoReplyFormPermanent';
 import AutoReplyFormFixed from './AutoReplyForm/AutoReplyFormFixed';
 import DurationField from './AutoReplyForm/fields/DurationField';
 import useAutoReplyForm, { getDefaultAutoResponder } from './AutoReplyForm/useAutoReplyForm';
+import SettingsLayout from '../account/SettingsLayout';
+import SettingsLayoutLeft from '../account/SettingsLayoutLeft';
+import SettingsLayoutRight from '../account/SettingsLayoutRight';
 
 const AutoReplySection = () => {
     const [{ hasPaidMail }] = useUser();
@@ -136,32 +139,33 @@ const AutoReplySection = () => {
                         .t`Use automatic replies to inform contacts you are out of the office or otherwise unable to respond.`}
                 </SettingsParagraph>
             ) : (
-                <div className="flex flex-align-items-center bg-pm-blue-gradient color-white rounded mt0 mb1 p1">
-                    <p className="m0 mr1 flex-item-fluid">
+                <Card className="flex flex-align-items-center mb1">
+                    <p className="m0 mr2 flex-item-fluid">
                         {c('Info')
                             .t`Upgrade to ProtonMail Professional to enable automatic replies for when you are out of the office.`}
                     </p>
-                    <AppLink to="/subscription" toApp={getAccountSettingsApp()} className="color-white">
+                    <AppLink to="/subscription" toApp={getAccountSettingsApp()}>
                         {c('Action').t`Upgrade`}
                     </AppLink>
-                </div>
+                </Card>
             )}
 
-            <Row>
-                <Label htmlFor="autoReplyToggle" className="on-mobile-pb0 on-mobile-no-border w16r text-semibold">
-                    {c('Label').t`Auto reply`}
-                </Label>
-                <Field className="on-mobile-pb0 pt0-5 on-mobile-no-border flex flex-nowrap w100">
-                    <span className="flex-item-noshrink">
-                        <Toggle
-                            id="autoReplyToggle"
-                            loading={enablingLoading}
-                            checked={isEnabled}
-                            onChange={({ target: { checked } }) => withEnablingLoading(handleToggle(checked))}
-                        />
-                    </span>
-                </Field>
-            </Row>
+            <SettingsLayout>
+                <SettingsLayoutLeft>
+                    <label htmlFor="autoReplyToggle" className="on-mobile-pb0 on-mobile-no-border w16r text-semibold">
+                        {c('Label').t`Auto reply`}
+                    </label>
+                </SettingsLayoutLeft>
+                <SettingsLayoutRight className="pt0-5">
+                    <Toggle
+                        id="autoReplyToggle"
+                        loading={enablingLoading}
+                        checked={isEnabled}
+                        onChange={({ target: { checked } }) => withEnablingLoading(handleToggle(checked))}
+                    />
+                </SettingsLayoutRight>
+            </SettingsLayout>
+
             {hasPaidMail && isEnabled ? (
                 <form
                     onSubmit={async (e) => {
@@ -173,11 +177,13 @@ const AutoReplySection = () => {
 
                     {formRenderer(model.duration)}
 
-                    <Row>
-                        <Label className="w16r text-semibold" onClick={() => editorRef.current?.focus()}>
-                            {c('Label').t`Message`}
-                        </Label>
-                        <Field className="w100">
+                    <SettingsLayout>
+                        <SettingsLayoutLeft>
+                            <label className="w16r text-semibold" onClick={() => editorRef.current?.focus()}>
+                                {c('Label').t`Message`}
+                            </label>
+                        </SettingsLayoutLeft>
+                        <SettingsLayoutRight>
                             <div ref={composerRef} tabIndex={-1} className="w100">
                                 <SimpleSquireEditor
                                     ref={editorRef}
@@ -197,8 +203,8 @@ const AutoReplySection = () => {
                             >
                                 {c('Action').t`Update`}
                             </Button>
-                        </Field>
-                    </Row>
+                        </SettingsLayoutRight>
+                    </SettingsLayout>
                 </form>
             ) : null}
         </SettingsSection>

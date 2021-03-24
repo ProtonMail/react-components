@@ -6,10 +6,7 @@ import { getCookie, setCookie } from 'proton-shared/lib/helpers/cookies';
 import {
     Info,
     FakeSelectChangeEvent,
-    Field,
-    Label,
     Option,
-    Row,
     SelectTwo,
     Toggle,
     MailShortcutsModal,
@@ -20,6 +17,9 @@ import { SettingsSection } from '../account';
 
 import EarlyAccessSwitchModal, { Environment } from './EarlyAccessSwitchModal';
 import ShortcutsToggle from './ShortcutsToggle';
+import SettingsLayout from '../account/SettingsLayout';
+import SettingsLayoutRight from '../account/SettingsLayoutRight';
+import SettingsLayoutLeft from '../account/SettingsLayoutLeft';
 
 const AdvancedSection = () => {
     const { createModal } = useModals();
@@ -88,11 +88,13 @@ const AdvancedSection = () => {
 
     return (
         <SettingsSection>
-            <Row>
-                <Label htmlFor="shortcutsToggle" className="text-semibold">
-                    {c('Title').t`Enable keyboard shortcuts`}
-                </Label>
-                <Field className="flex flex-item-fluid flex-justify-space-between flex-align-items-center">
+            <SettingsLayout>
+                <SettingsLayoutLeft>
+                    <label htmlFor="shortcutsToggle" className="text-semibold">
+                        {c('Title').t`Enable keyboard shortcuts`}
+                    </label>
+                </SettingsLayoutLeft>
+                <SettingsLayoutRight className="flex flex-item-fluid flex-justify-space-between flex-align-items-center">
                     <ShortcutsToggle
                         className="mr1"
                         id="shortcutsToggle"
@@ -106,24 +108,26 @@ const AdvancedSection = () => {
                     >
                         {c('Action').t`Show shortcuts`}
                     </Button>
-                </Field>
-            </Row>
+                </SettingsLayoutRight>
+            </SettingsLayout>
 
-            <Row>
-                <Label htmlFor="betaToggle" className="text-semibold">
-                    {hasAlphaAccess ? (
-                        <span className="mr0-5">{c('Label').t`Application Version`}</span>
-                    ) : (
-                        <>
-                            <span className="mr0-5">{c('Label').t`Join the beta program`}</span>
-                            <Info
-                                title={c('Info')
-                                    .t`ProtonMail beta testers get early access to new features and take part in the development of our products.`}
-                            />
-                        </>
-                    )}
-                </Label>
-                <Field>
+            <SettingsLayout>
+                <SettingsLayoutLeft>
+                    <label htmlFor="betaToggle" className="text-semibold">
+                        {hasAlphaAccess ? (
+                            <span className="mr0-5">{c('Label').t`Application Version`}</span>
+                        ) : (
+                            <>
+                                <span className="mr0-5">{c('Label').t`Join the beta program`}</span>
+                                <Info
+                                    title={c('Info')
+                                        .t`ProtonMail beta testers get early access to new features and take part in the development of our products.`}
+                                />
+                            </>
+                        )}
+                    </label>
+                </SettingsLayoutLeft>
+                <SettingsLayoutRight>
                     {hasAlphaAccess ? (
                         <SelectTwo onChange={handleSelectChange} value={environment}>
                             <Option value="prod" title={c('Environment').t`Live (Default)`} />
@@ -135,8 +139,8 @@ const AdvancedSection = () => {
                             <Toggle id="betaToggle" checked={environment === 'beta'} onChange={handleToggleChange} />
                         </div>
                     )}
-                </Field>
-            </Row>
+                </SettingsLayoutRight>
+            </SettingsLayout>
         </SettingsSection>
     );
 };

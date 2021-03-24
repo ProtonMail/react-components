@@ -1,8 +1,11 @@
 import React from 'react';
 import { c } from 'ttag';
 
-import { Row, Field, Label, Info } from '../../../components';
+import { Info } from '../../../components';
 import { useMailSettings } from '../../../hooks';
+import SettingsLayout from '../../account/SettingsLayout';
+import SettingsLayoutLeft from '../../account/SettingsLayoutLeft';
+import SettingsLayoutRight from '../../account/SettingsLayoutRight';
 
 import { AutoSaveContactsToggle } from '../../general';
 
@@ -10,15 +13,17 @@ const ContactsSection = () => {
     const [mailSettings] = useMailSettings();
     const { AutoSaveContacts } = mailSettings || {};
     return (
-        <Row>
-            <Label htmlFor="saveContactToggle">
-                <span className="mr0-5 text-semibold">{c('Label').t`Automatically save contacts`}</span>
-                <Info url="https://protonmail.com/support/knowledge-base/autosave-contact-list/" />
-            </Label>
-            <Field>
+        <SettingsLayout>
+            <SettingsLayoutLeft>
+                <label htmlFor="saveContactToggle">
+                    <span className="mr0-5 text-semibold">{c('Label').t`Automatically save contacts`}</span>
+                    <Info url="https://protonmail.com/support/knowledge-base/autosave-contact-list/" />
+                </label>
+            </SettingsLayoutLeft>
+            <SettingsLayoutRight>
                 <AutoSaveContactsToggle autoSaveContacts={!!AutoSaveContacts} id="saveContactToggle" />
-            </Field>
-        </Row>
+            </SettingsLayoutRight>
+        </SettingsLayout>
     );
 };
 

@@ -11,12 +11,9 @@ import {
     Alert,
     Button,
     ConfirmModal,
-    Field,
     Icon,
     Info,
-    Label,
     Pagination,
-    Row,
     Toggle,
     usePaginationAsync,
 } from '../../components';
@@ -26,6 +23,9 @@ import LogsTable from './LogsTable';
 import WipeLogsButton from './WipeLogsButton';
 import { getAllAuthenticationLogs } from './helper';
 import { SettingsParagraph, SettingsSection } from '../account';
+import SettingsLayout from '../account/SettingsLayout';
+import SettingsLayoutLeft from '../account/SettingsLayoutLeft';
+import SettingsLayoutRight from '../account/SettingsLayoutRight';
 
 const { BASIC, DISABLE, ADVANCED } = SETTINGS_LOG_AUTH_STATE;
 
@@ -141,40 +141,44 @@ const LogsSection = () => {
                 {c('Info')
                     .t`Logs include authentication attempts for all Proton services that use your Proton credentials.`}
             </SettingsParagraph>
-            <Row>
-                <Label className="text-semibold" htmlFor="logs-toggle">
-                    {c('Log preference').t`Enable authentication logs`}
-                </Label>
-                <Field>
+            <SettingsLayout>
+                <SettingsLayoutLeft>
+                    <label className="text-semibold" htmlFor="logs-toggle">
+                        {c('Log preference').t`Enable authentication logs`}
+                    </label>
+                </SettingsLayoutLeft>
+                <SettingsLayoutRight>
                     <Toggle
                         id="logs-toggle"
                         checked={logAuth === BASIC || logAuth === ADVANCED}
                         onChange={handleLogsChange}
                     />
-                </Field>
-            </Row>
+                </SettingsLayoutRight>
+            </SettingsLayout>
 
-            {logAuth !== DISABLE ? (
-                <Row>
-                    <Label className="text-semibold" htmlFor="advanced-logs-toggle">
-                        <span className="mr0-5">{c('Log preference').t`Enable advanced logs`}</span>
-                        <Info title={c('Tooltip').t`Records the IP address of each event in the security log.`} />
-                    </Label>
-                    <Field>
+            {logAuth !== DISABLE && (
+                <SettingsLayout>
+                    <SettingsLayoutLeft>
+                        <label className="text-semibold" htmlFor="advanced-logs-toggle">
+                            <span className="mr0-5">{c('Log preference').t`Enable advanced logs`}</span>
+                            <Info title={c('Tooltip').t`Records the IP address of each event in the security log.`} />
+                        </label>
+                    </SettingsLayoutLeft>
+                    <SettingsLayoutRight>
                         <Toggle
                             id="advanced-logs-toggle"
                             checked={logAuth === ADVANCED}
                             onChange={handleAdvancedLogsChange}
                         />
-                    </Field>
-                </Row>
-            ) : null}
+                    </SettingsLayoutRight>
+                </SettingsLayout>
+            )}
 
-            {logAuth !== DISABLE ? (
-                <div>
+            {logAuth !== DISABLE && (
+                <div className="mt2 mb1">
                     <Button
                         shape="outline"
-                        className="mr1 mb0-5 inline-flex flex-align-items-center"
+                        className="mr1 inline-flex flex-align-items-center"
                         loading={loadingRefresh}
                         onClick={() => withLoadingRefresh(wait(1000).then(fetchAndSetState))}
                         title={c('Action').t`Reload`}
@@ -182,17 +186,20 @@ const LogsSection = () => {
                         <Icon name="reload" className="mr0-5" />
                         <span>{c('Action').t`Reload`}</span>
                     </Button>
-                    {state.logs.length ? <WipeLogsButton className="mr1 mb0-5" onWipe={handleWipe} /> : null}
+
+                    {state.logs.length ?
+                        <WipeLogsButton className="mr1" onWipe={handleWipe} />
+                        : null}
                     {state.logs.length ? (
                         <Button
                             shape="outline"
-                            className="mb0-5 mr1"
+                            className="mr1"
                             onClick={() => withLoadingDownload(handleDownload())}
                             loading={loadingDownload}
                         >{c('Action').t`Download`}</Button>
                     ) : null}
                 </div>
-            ) : null}
+            )}
 
             <div className="mb0-5">
                 <Pagination

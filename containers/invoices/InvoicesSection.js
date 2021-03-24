@@ -17,6 +17,7 @@ import {
     usePaginationAsync,
     TableRow,
     Time,
+    TableHeader,
 } from '../../components';
 import { useModals, useSubscription, useUser, useApi } from '../../hooks';
 
@@ -69,20 +70,6 @@ const InvoicesSection = () => {
     if (page === 1 && !loading && invoices.length === 0) {
         return <Alert>{c('Error').t`You have no invoices.`}</Alert>;
     }
-    const headerCells = [
-        { node: 'ID', className: 'text-ellipsis' },
-        { node: c('Title').t`Amount` },
-        { node: c('Title').t`Type`, className: 'no-tablet no-mobile' },
-        { node: c('Title').t`Status`, className: 'no-mobile' },
-        { node: c('Title').t`Date`, className: 'no-mobile' },
-        { node: c('Title').t`Action` },
-    ].map(({ node, className = '' }, i) => {
-        return (
-            <TableCell key={i.toString()} className={className} type="header">
-                {node}
-            </TableCell>
-        );
-    });
 
     const getFilename = (invoice) => `${c('Title for PDF file').t`ProtonMail invoice`} ${invoice.ID}.pdf`;
 
@@ -130,36 +117,54 @@ const InvoicesSection = () => {
                         onSelect={onSelect}
                     />
                 </Block>
-                <Table className="simple-table--has-actions">
-                    <thead>
-                        <tr>{headerCells}</tr>
-                    </thead>
-                    <TableBody loading={loading} colSpan={6}>
-                        {invoices.map((invoice, index) => {
-                            const key = index.toString();
-                            return (
-                                <TableRow
-                                    key={key}
-                                    cells={[
-                                        invoice.ID,
-                                        <InvoiceAmount key={key} invoice={invoice} />,
-                                        <InvoiceType key={key} invoice={invoice} />,
-                                        <InvoiceState key={key} invoice={invoice} />,
-                                        <Time key={key}>{invoice.CreateTime}</Time>,
-                                        <InvoiceActions
-                                            key={key}
-                                            invoice={invoice}
-                                            fetchInvoices={request}
-                                            onPreview={previewRef.current.preview}
-                                            onDownload={handleDownload}
-                                        />,
-                                    ]}
-                                    className="on-tablet-hide-td3 on-mobile-hide-td4 on-mobile-hide-td5"
-                                />
-                            );
-                        })}
-                    </TableBody>
-                </Table>
+                <div style={{ overflow: 'auto' }}>
+                    <Table className="simple-table--has-actions">
+                        <TableHeader>
+                            <TableCell type="header">
+                                ID
+                            </TableCell>
+                            <TableCell type="header">
+                                {c('Title').t`Amount`}
+                            </TableCell>
+                            <TableCell type="header">
+                                {c('Title').t`Type`}
+                            </TableCell>
+                            <TableCell type="header">
+                                {c('Title').t`Status`}
+                            </TableCell>
+                            <TableCell type="header">
+                                {c('Title').t`Date`}
+                            </TableCell>
+                            <TableCell type="header">
+                                {c('Title').t`Action`}
+                            </TableCell>
+                        </TableHeader>
+                        <TableBody loading={loading} colSpan={6}>
+                            {invoices.map((invoice, index) => {
+                                const key = index.toString();
+                                return (
+                                    <TableRow
+                                        key={key}
+                                        cells={[
+                                            invoice.ID,
+                                            <InvoiceAmount key={key} invoice={invoice} />,
+                                            <InvoiceType key={key} invoice={invoice} />,
+                                            <InvoiceState key={key} invoice={invoice} />,
+                                            <Time key={key}>{invoice.CreateTime}</Time>,
+                                            <InvoiceActions
+                                                key={key}
+                                                invoice={invoice}
+                                                fetchInvoices={request}
+                                                onPreview={previewRef.current.preview}
+                                                onDownload={handleDownload}
+                                            />,
+                                        ]}
+                                    />
+                                );
+                            })}
+                        </TableBody>
+                    </Table>
+                </div>
             </SettingsSectionWide>
             <InvoicesPreview
                 ref={previewRef}

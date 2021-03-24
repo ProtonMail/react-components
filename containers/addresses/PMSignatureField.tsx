@@ -5,14 +5,14 @@ import { updatePMSignature } from 'proton-shared/lib/api/mailSettings';
 import { MailSettings } from 'proton-shared/lib/interfaces';
 
 import { useToggle, useNotifications, useEventManager, useApiWithoutResult } from '../../hooks';
-import { Toggle, Field } from '../../components';
+import { Toggle } from '../../components';
 
 interface Props {
     id: string;
     mailSettings?: Partial<MailSettings>;
 }
 
-const PMSignatureField = ({ id, mailSettings = {} }: Props) => {
+const PMSignature = ({ id, mailSettings = {} }: Props) => {
     const { call } = useEventManager();
     const { createNotification } = useNotifications();
     const { request, loading } = useApiWithoutResult(updatePMSignature);
@@ -26,19 +26,17 @@ const PMSignatureField = ({ id, mailSettings = {} }: Props) => {
     };
 
     return (
-        <>
-            <Field className="flex flex-item-fluid">
-                <div
-                    className="bordered flex-item-fluid pl1 pr1 pt0-5 pb0-5 mb1"
-                    // eslint-disable-next-line react/no-danger
-                    dangerouslySetInnerHTML={{ __html: PM_SIGNATURE }}
-                />
-                <div className="ml1 pt0-5 on-mobile-ml0">
-                    <Toggle loading={loading} id={id} checked={state} onChange={handleChange} />
-                </div>
-            </Field>
-        </>
+        <div className="flex flex-item-fluid">
+            <div
+                className="bordered-container flex-item-fluid pl1 pr1 pt0-5 pb0-5 mb1"
+                // eslint-disable-next-line react/no-danger
+                dangerouslySetInnerHTML={{ __html: PM_SIGNATURE }}
+            />
+            <div className="ml1 pt0-5 on-mobile-ml0">
+                <Toggle loading={loading} id={id} checked={state} onChange={handleChange} />
+            </div>
+        </div>
     );
 };
 
-export default PMSignatureField;
+export default PMSignature;

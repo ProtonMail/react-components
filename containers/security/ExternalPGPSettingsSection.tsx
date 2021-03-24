@@ -4,12 +4,15 @@ import { c } from 'ttag';
 import { PACKAGE_TYPE } from 'proton-shared/lib/constants';
 import { updateAttachPublicKey, updatePGPScheme, updateSign } from 'proton-shared/lib/api/mailSettings';
 
-import { ConfirmModal, Alert, Row, Field, Label, Info, Toggle } from '../../components';
+import { ConfirmModal, Alert, Info, Toggle } from '../../components';
 import { useMailSettings, useEventManager, useApi, useLoading, useNotifications, useModals } from '../../hooks';
 
 import { SettingsSection, SettingsParagraph } from '../account';
 
 import PGPSchemeSelect from './PGPSchemeSelect';
+import SettingsLayout from '../account/SettingsLayout';
+import SettingsLayoutLeft from '../account/SettingsLayoutLeft';
+import SettingsLayoutRight from '../account/SettingsLayoutRight';
 
 const ExternalPGPSettingsSection = () => {
     const [{ Sign = 0, AttachPublicKey = 0, PGPScheme = PACKAGE_TYPE.SEND_PGP_MIME } = {}] = useMailSettings();
@@ -68,60 +71,66 @@ const ExternalPGPSettingsSection = () => {
                 {c('Info').t`Only change these settings if you are using PGP with non-ProtonMail recipients.`}
             </SettingsParagraph>
 
-            <Row>
-                <Label htmlFor="signToggle" className="text-semibold">
-                    <span className="mr0-5">{c('Label').t`Sign external messages`}</span>
-                    <Info
-                        url="https://protonmail.com/support/knowledge-base/what-is-a-digital-signature/"
-                        title={c('Tooltip sign external messages')
-                            .t`Automatically sign all your outgoing messages so users can verify the authenticity of your messages. This is done in combination with the default PGP settings which can be configured below.`}
-                    />
-                </Label>
-                <Field className="pt0-5">
+            <SettingsLayout>
+                <SettingsLayoutLeft>
+                    <label htmlFor="signToggle" className="text-semibold">
+                        <span className="mr0-5">{c('Label').t`Sign external messages`}</span>
+                        <Info
+                            url="https://protonmail.com/support/knowledge-base/what-is-a-digital-signature/"
+                            title={c('Tooltip sign external messages')
+                                .t`Automatically sign all your outgoing messages so users can verify the authenticity of your messages. This is done in combination with the default PGP settings which can be configured below.`}
+                        />
+                    </label>
+                </SettingsLayoutLeft>
+                <SettingsLayoutRight className="pt0-5">
                     <Toggle
                         id="signToggle"
                         checked={!!Sign}
                         onChange={(e) => withLoadingSign(handleChangeSign(e))}
                         loading={loadingSign}
                     />
-                </Field>
-            </Row>
-            <Row>
-                <Label htmlFor="attachPublicKeyToggle" className="text-semibold">
-                    <span className="mr0-5">{c('Label').t`Attach public key`}</span>
-                    <Info
-                        url="https://protonmail.com/support/knowledge-base/how-to-use-pgp"
-                        title={c('Tooltip automatically attach public key')
-                            .t`This automatically adds your public key to each message you send. Recipients can use this to verify the authenticity of your messages and send encrypted messages to you.`}
-                    />
-                </Label>
-                <Field className="pt0-5">
+                </SettingsLayoutRight>
+            </SettingsLayout>
+            <SettingsLayout>
+                <SettingsLayoutLeft>
+                    <label htmlFor="attachPublicKeyToggle" className="text-semibold">
+                        <span className="mr0-5">{c('Label').t`Attach public key`}</span>
+                        <Info
+                            url="https://protonmail.com/support/knowledge-base/how-to-use-pgp"
+                            title={c('Tooltip automatically attach public key')
+                                .t`This automatically adds your public key to each message you send. Recipients can use this to verify the authenticity of your messages and send encrypted messages to you.`}
+                        />
+                    </label>
+                </SettingsLayoutLeft>
+                <SettingsLayoutRight className="pt0-5">
                     <Toggle
                         id="attachPublicKeyToggle"
                         checked={!!AttachPublicKey}
                         onChange={(e) => withLoadingAttach(handleChangeAttach(e))}
                         loading={loadingAttach}
                     />
-                </Field>
-            </Row>
-            <Row>
-                <Label htmlFor="PGPSchemeSelect" className="text-semibold">
-                    <span className="mr0-5">{c('Label').t`Default PGP settings`}</span>
-                    <Info
-                        url="https://protonmail.com/support/knowledge-base/pgp-mime-pgp-inline/"
-                        title={c('Tooltip default pgp scheme')
-                            .t`Select the default PGP settings used to sign or encrypt messages with non-ProtonMail PGP users. Note that Inline PGP forces plain text messages. Learn more`}
-                    />
-                </Label>
-                <Field>
+                </SettingsLayoutRight>
+            </SettingsLayout>
+            <SettingsLayout>
+                <SettingsLayoutLeft>
+                    <label htmlFor="PGPSchemeSelect" className="text-semibold">
+                        <span className="mr0-5">{c('Label').t`Default PGP settings`}</span>
+                        <Info
+                            url="https://protonmail.com/support/knowledge-base/pgp-mime-pgp-inline/"
+                            title={c('Tooltip default pgp scheme')
+                                .t`Select the default PGP settings used to sign or encrypt messages with non-ProtonMail PGP users. Note that Inline PGP forces plain text messages. Learn more`}
+                        />
+                    </label>
+                </SettingsLayoutLeft>
+                <SettingsLayoutRight>
                     <PGPSchemeSelect
                         id="PGPSchemeSelect"
                         pgpScheme={PGPScheme}
                         onChange={(e) => withLoadingScheme(handleChangeScheme(e))}
                         disabled={loadingScheme}
                     />
-                </Field>
-            </Row>
+                </SettingsLayoutRight>
+            </SettingsLayout>
         </SettingsSection>
     );
 };
