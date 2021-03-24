@@ -272,19 +272,18 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps: initialOAu
     const submitOAuth = async () => {
         setOauthLoading(true);
         try {
-            if (isReconnectMode && oauthProps && currentImport) {
-                const { ID, ImapHost, ImapPort } = currentImport;
-
+            const { importID, imap, port } = modalModel;
+            if (oauthProps && importID) {
                 await api(
-                    updateMailImport(ID, {
+                    updateMailImport(importID, {
                         Code: oauthProps.code,
-                        ImapHost,
-                        ImapPort,
+                        ImapHost: imap,
+                        ImapPort: port,
                         Sasl: AuthenticationMethod.OAUTH,
                         RedirectUri: oauthProps?.redirectURI,
                     })
                 );
-                await api(resumeMailImport(ID));
+                await api(resumeMailImport(importID));
                 await call();
 
                 onClose();
