@@ -266,6 +266,25 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps: initialOAu
 
     const submitOAuth = async () => {
         try {
+            if (isReconnectMode && oauthProps && currentImport) {
+                const { ID, ImapHost, ImapPort } = currentImport;
+
+                await api(
+                    updateMailImport(ID, {
+                        Code: oauthProps.code,
+                        ImapHost,
+                        ImapPort,
+                        Sasl: AuthenticationMethod.OAUTH,
+                        RedirectUri: oauthProps?.redirectURI,
+                    })
+                );
+                await api(resumeMailImport(ID));
+                await call();
+
+                onClose();
+                return;
+            }
+
             const { Importer } = await api({
                 ...createMailImport({
                     ImapHost: oauthProps?.provider ? IMAPS[oauthProps.provider] : '',
@@ -501,7 +520,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps: initialOAu
 
             void withOauthLoading(submitOAuth());
         }
-    }, []);
+    }, [oauthProps]);
 
     useEffect(() => {
         if (debouncedEmail && validateEmailAddress(debouncedEmail)) {
