@@ -36,8 +36,9 @@ const ThemeStyleProvider = ({ children }: Props) => {
         }
         if (colorModel.isDark()) {
             document.body.classList.add(DARK_MODE_CLASS);
+            return clear;
         }
-        return clear;
+        clear();
     }, [style]);
 
     return (
