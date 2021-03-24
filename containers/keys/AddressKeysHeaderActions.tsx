@@ -51,17 +51,17 @@ const AddressKeysHeaderActions = ({
     }
 
     return (
-        <div className="mb1">
+        <div className="mb1 flex flex-align-items-start">
             {addresses.length > 1 && (
                 <Select
                     value={addressIndex}
                     options={addresses.map(({ Email }, i) => ({ text: Email, value: i }))}
                     onChange={onChangeAddress}
-                    className="wauto mr1"
+                    className="wauto mr1 mb1"
                 />
             )}
             {createActions.length ? (
-                <span className="mr1">
+                <span className="inline-block mr1 mb1">
                     <DropdownActions list={createActions} />
                 </span>
             ) : null}

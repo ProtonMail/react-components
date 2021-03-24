@@ -106,8 +106,8 @@ const YourPlanSection = ({ permission }) => {
     return (
         <SettingsSection>
             <div className="bordered mb2">
-                <SettingsLayout className="p1">
-                    <SettingsLayoutLeft className="text-semibold ml-1 pl1">
+                <SettingsLayout className="pb1 pt1 pl2 pr2">
+                    <SettingsLayoutLeft className="text-semibold">
                         {hasPaidMail ? (
                             c('Plan').t`ProtonMail ${MailPlanName}`
                         ) : hasAddresses ? (
@@ -122,8 +122,8 @@ const YourPlanSection = ({ permission }) => {
                     </SettingsLayoutRight>
                 </SettingsLayout>
 
-                <SettingsLayout className="p1 border-top">
-                    <SettingsLayoutLeft className="text-semibold ml-1 pl1">
+                <SettingsLayout className="pb1 pt1 pl2 pr2 border-top">
+                    <SettingsLayoutLeft className="text-semibold">
                         {c('Label').t`ProtonVPN ${hasPaidVpn ? VPNPlanName : c('Plan').t`Free`}`}
                     </SettingsLayoutLeft>
                     <SettingsLayoutRight>

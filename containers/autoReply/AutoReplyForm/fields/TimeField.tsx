@@ -1,6 +1,9 @@
 import React from 'react';
 
-import { Row, Label, Field, TimeInput } from '../../../../components';
+import { TimeInput } from '../../../../components';
+import SettingsLayout from '../../../account/SettingsLayout';
+import SettingsLayoutLeft from '../../../account/SettingsLayoutLeft';
+import SettingsLayoutRight from '../../../account/SettingsLayoutRight';
 
 interface Props {
     id: string;
@@ -11,14 +14,16 @@ interface Props {
 
 const TimeField = ({ id, label, value = new Date(), onChange }: Props) => {
     return (
-        <Row>
-            <Label htmlFor={id} className="w16r text-semibold">
-                {label}
-            </Label>
-            <Field>
+        <SettingsLayout>
+            <SettingsLayoutLeft>
+                <label htmlFor={id} className="w16r text-semibold">
+                    {label}
+                </label>
+            </SettingsLayoutLeft>
+            <SettingsLayoutRight>
                 <TimeInput id={id} value={value} onChange={onChange} />
-            </Field>
-        </Row>
+            </SettingsLayoutRight>
+        </SettingsLayout>
     );
 };
 

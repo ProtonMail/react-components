@@ -4,7 +4,10 @@ import { c } from 'ttag';
 import { getFormattedWeekdays } from 'proton-shared/lib/date/date';
 import { dateLocale } from 'proton-shared/lib/i18n';
 
-import { Label, Checkbox, Row, Field } from '../../../../components';
+import { Checkbox } from '../../../../components';
+import SettingsLayout from '../../../account/SettingsLayout';
+import SettingsLayoutRight from '../../../account/SettingsLayoutRight';
+import SettingsLayoutLeft from '../../../account/SettingsLayoutLeft';
 
 interface Props {
     value?: number[];
@@ -16,9 +19,11 @@ const DaysOfWeekField = ({ value = [], onChange }: Props) => {
         onChange(value.includes(weekday) ? value.filter((existing) => weekday !== existing) : [...value, weekday]);
 
     return (
-        <Row>
-            <Label className="w16r text-semibold">{c('Label').t`Days of the week`}</Label>
-            <Field>
+        <SettingsLayout>
+            <SettingsLayoutLeft>
+                <label className="w16r text-semibold">{c('Label').t`Days of the week`}</label>
+            </SettingsLayoutLeft>
+            <SettingsLayoutRight>
                 <div className="flex flex-column">
                     {getFormattedWeekdays('iiii', { locale: dateLocale }).map((text, i) => (
                         <Checkbox id={`weekday-${i}`} key={text} checked={value.includes(i)} onChange={handleChange(i)}>
@@ -26,8 +31,8 @@ const DaysOfWeekField = ({ value = [], onChange }: Props) => {
                         </Checkbox>
                     ))}
                 </div>
-            </Field>
-        </Row>
+            </SettingsLayoutRight>
+        </SettingsLayout>
     );
 };
 

@@ -5,7 +5,7 @@ import { isMac } from 'proton-shared/lib/helpers/browser';
 import { updateAddress } from 'proton-shared/lib/api/addresses';
 import { Address } from 'proton-shared/lib/interfaces';
 
-import { Row, Field, Label, Input, SimpleSquireEditor, Button } from '../../components';
+import { Input, SimpleSquireEditor, Button } from '../../components';
 import {
     useApi,
     useLoading,
@@ -17,6 +17,9 @@ import {
 } from '../../hooks';
 
 import { SquireEditorRef } from '../../components/editor/SquireEditor';
+import SettingsLayout from '../account/SettingsLayout';
+import SettingsLayoutRight from '../account/SettingsLayoutRight';
+import SettingsLayoutLeft from '../account/SettingsLayoutLeft';
 
 const EMPTY_VALUES = [/^(<div><br><\/div>)+$/, /^(<div>\s*<\/div>)+$/];
 
@@ -110,25 +113,29 @@ const EditAddressesSection = ({ address }: Props) => {
                 await withLoading(handleSubmit());
             }}
         >
-            <Row>
-                <Label htmlFor="displayName" className="w16r text-semibold">
-                    {c('Label').t`Display name`}
-                </Label>
-                <Field className="w100">
+            <SettingsLayout>
+                <SettingsLayoutLeft>
+                    <label htmlFor="displayName" className="w16r text-semibold">
+                        {c('Label').t`Display name`}
+                    </label>
+                </SettingsLayoutLeft>
+                <SettingsLayoutRight className="w100">
                     <Input
                         id="displayName"
                         value={model.displayName}
                         placeholder={c('Placeholder').t`Choose display name`}
                         onChange={handleDisplayName}
                     />
-                </Field>
-            </Row>
+                </SettingsLayoutRight>
+            </SettingsLayout>
 
-            <Row>
-                <Label className="w16r text-semibold" onClick={() => editorRef.current?.focus()}>
-                    {c('Label').t`Signature`}
-                </Label>
-                <Field className="w100 h100">
+            <SettingsLayout>
+                <SettingsLayoutLeft>
+                    <label className="w16r text-semibold" onClick={() => editorRef.current?.focus()}>
+                        {c('Label').t`Signature`}
+                    </label>
+                </SettingsLayoutLeft>
+                <SettingsLayoutRight className="w100 h100">
                     <div ref={composerRef} tabIndex={-1}>
                         <SimpleSquireEditor
                             ref={editorRef}
@@ -141,8 +148,8 @@ const EditAddressesSection = ({ address }: Props) => {
                     <Button color="norm" type="submit" disabled={loading} loading={loading} className="mt1">
                         {c('Action').t`Update`}
                     </Button>
-                </Field>
-            </Row>
+                </SettingsLayoutRight>
+            </SettingsLayout>
         </form>
     );
 };

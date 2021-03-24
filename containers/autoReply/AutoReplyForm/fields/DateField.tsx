@@ -1,6 +1,9 @@
 import React from 'react';
 import { isValid } from 'date-fns';
-import { Row, Label, DateInput, Field } from '../../../../components';
+import { DateInput } from '../../../../components';
+import SettingsLayout from '../../../account/SettingsLayout';
+import SettingsLayoutRight from '../../../account/SettingsLayoutRight';
+import SettingsLayoutLeft from '../../../account/SettingsLayoutLeft';
 
 interface Props {
     id: string;
@@ -13,11 +16,13 @@ interface Props {
 
 const DateField = ({ id, label, value = new Date(), onChange, min, max }: Props) => {
     return (
-        <Row>
-            <Label htmlFor={id} className="w16r text-semibold">
-                {label}
-            </Label>
-            <Field>
+        <SettingsLayout>
+            <SettingsLayoutLeft>
+                <label htmlFor={id} className="w16r text-semibold">
+                    {label}
+                </label>
+            </SettingsLayoutLeft>
+            <SettingsLayoutRight>
                 <DateInput
                     id={id}
                     className="w100"
@@ -30,8 +35,8 @@ const DateField = ({ id, label, value = new Date(), onChange, min, max }: Props)
                         }
                     }}
                 />
-            </Field>
-        </Row>
+            </SettingsLayoutRight>
+        </SettingsLayout>
     );
 };
 

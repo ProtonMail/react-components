@@ -19,7 +19,7 @@ import {
 } from '../../hooks';
 import { Toggle, SimpleSquireEditor, Button, AppLink, Card } from '../../components';
 
-import { SettingsSection, SettingsParagraph } from '../account';
+import { SettingsParagraph, SettingsSectionWide } from '../account';
 
 import { SquireEditorRef } from '../../components/editor/SquireEditor';
 
@@ -132,7 +132,7 @@ const AutoReplySection = () => {
     ]);
 
     return (
-        <SettingsSection className="no-scroll">
+        <SettingsSectionWide className="no-scroll">
             {hasPaidMail ? (
                 <SettingsParagraph className="mt0 mb1">
                     {c('Info')
@@ -207,7 +207,7 @@ const AutoReplySection = () => {
                     </SettingsLayout>
                 </form>
             ) : null}
-        </SettingsSection>
+        </SettingsSectionWide>
     );
 };
 

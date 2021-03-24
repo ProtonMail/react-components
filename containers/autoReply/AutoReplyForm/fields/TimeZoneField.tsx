@@ -3,7 +3,10 @@ import { c } from 'ttag';
 
 import { getTimeZoneOptions } from 'proton-shared/lib/date/timezone';
 
-import { Select, Row, Label, Field } from '../../../../components';
+import { Select } from '../../../../components';
+import SettingsLayout from '../../../account/SettingsLayout';
+import SettingsLayoutRight from '../../../account/SettingsLayoutRight';
+import SettingsLayoutLeft from '../../../account/SettingsLayoutLeft';
 
 interface Props {
     value: string;
@@ -18,12 +21,16 @@ const TimeZoneField = ({ value, onChange }: Props) => {
     }, []);
 
     return (
-        <Row>
-            <Label htmlFor="timezone" className="w16r text-semibold">{c('Label').t`Timezone`}</Label>
-            <Field>
+        <SettingsLayout>
+            <SettingsLayoutLeft>
+                <label htmlFor="timezone" className="w16r text-semibold">
+                    {c('Label').t`Timezone`}
+                </label>
+            </SettingsLayoutLeft>
+            <SettingsLayoutRight>
                 <Select id="timezone" options={options} onChange={handleChange} value={value} />
-            </Field>
-        </Row>
+            </SettingsLayoutRight>
+        </SettingsLayout>
     );
 };
 

@@ -1,6 +1,9 @@
 import React from 'react';
 
-import { Row, Label, Field, Select } from '../../../../components';
+import { Select } from '../../../../components';
+import SettingsLayout from '../../../account/SettingsLayout';
+import SettingsLayoutLeft from '../../../account/SettingsLayoutLeft';
+import SettingsLayoutRight from '../../../account/SettingsLayoutRight';
 import { getDaysOfMonthOptions } from '../../utils';
 
 interface Props {
@@ -14,14 +17,16 @@ const DayOfMonthField = ({ id, label, value, onChange }: Props) => {
     const handleChange = ({ target }: React.ChangeEvent<HTMLSelectElement>) => onChange(+target.value);
 
     return (
-        <Row>
-            <Label htmlFor={id} className="w16r text-semibold">
-                {label}
-            </Label>
-            <Field>
+        <SettingsLayout>
+            <SettingsLayoutLeft>
+                <label htmlFor={id} className="w16r text-semibold">
+                    {label}
+                </label>
+            </SettingsLayoutLeft>
+            <SettingsLayoutRight>
                 <Select id={id} options={getDaysOfMonthOptions()} value={value} onChange={handleChange} />
-            </Field>
-        </Row>
+            </SettingsLayoutRight>
+        </SettingsLayout>
     );
 };
 

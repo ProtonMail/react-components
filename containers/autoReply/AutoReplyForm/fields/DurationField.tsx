@@ -2,7 +2,10 @@ import React from 'react';
 import { c } from 'ttag';
 
 import { getDurationOptions } from '../../utils';
-import { Select, Label, Row, Field } from '../../../../components';
+import { Select } from '../../../../components';
+import SettingsLayout from '../../../account/SettingsLayout';
+import SettingsLayoutRight from '../../../account/SettingsLayoutRight';
+import SettingsLayoutLeft from '../../../account/SettingsLayoutLeft';
 
 interface Props {
     value?: number;
@@ -13,12 +16,16 @@ const DurationField = ({ value, onChange }: Props) => {
     const handleChange = ({ target }: React.ChangeEvent<HTMLSelectElement>) => onChange(+target.value);
 
     return (
-        <Row>
-            <Label htmlFor="duration" className="w16r text-semibold">{c('Label').t`Duration`}</Label>
-            <Field>
+        <SettingsLayout>
+            <SettingsLayoutLeft>
+                <label htmlFor="duration" className="w16r text-semibold">
+                    {c('Label').t`Duration`}
+                </label>
+            </SettingsLayoutLeft>
+            <SettingsLayoutRight>
                 <Select id="duration" value={value} onChange={handleChange} options={getDurationOptions()} />
-            </Field>
-        </Row>
+            </SettingsLayoutRight>
+        </SettingsLayout>
     );
 };
 
