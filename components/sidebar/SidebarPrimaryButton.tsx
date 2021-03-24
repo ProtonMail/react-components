@@ -11,6 +11,7 @@ const SidebarPrimaryButton = (
         <Button
             color="norm"
             size="large"
+            shape="solid"
             className={classnames(['text-bold mt0-25 w100', className])}
             ref={ref}
             {...rest}

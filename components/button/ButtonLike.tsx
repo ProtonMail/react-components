@@ -51,7 +51,7 @@ const ButtonLike: <E extends React.ElementType = typeof defaultElement>(
             className,
             tabIndex,
             children,
-            shape = 'solid',
+            shape = 'outline',
             color = 'weak',
             size = 'medium',
             fullWidth,
