@@ -96,8 +96,11 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps: initialOAu
     const [oauthError, setOauthError] = useState(false);
     const [oauthProps, setOauthProps] = useState<OAuthProps | undefined>(initialOAuthProps);
     const isReconnectMode = !!currentImport;
+
     const [loading, withLoading] = useLoading();
-    const [oauthLoading, withOauthLoading] = useLoading();
+    // useLoading seems buggy in this context for some reason
+    const [oauthLoading, setOauthLoading] = useState(false);
+
     const { createModal } = useModals();
     const { createNotification } = useNotifications();
     const [addresses, loadingAddresses] = useAddresses();
@@ -193,6 +196,8 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps: initialOAu
             imap: Importer.ImapHost,
             port: `${Importer.ImapPort}`,
             step: Step.PREPARE,
+            errorCode: 0,
+            errorLabel: '',
         });
     };
 
@@ -265,6 +270,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps: initialOAu
     };
 
     const submitOAuth = async () => {
+        setOauthLoading(true);
         try {
             if (isReconnectMode && oauthProps && currentImport) {
                 const { ID, ImapHost, ImapPort } = currentImport;
@@ -298,9 +304,12 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps: initialOAu
             await call();
 
             const { Folders = [] } = await api(getMailImportFolders(Importer.ID));
+
+            setOauthLoading(false);
             moveToPrepareStep(Importer, Folders);
         } catch (error) {
             setOauthError(true);
+            setOauthLoading(false);
 
             const { data: { Code, Error } = { Code: 0, Error: '' } } = error;
 
@@ -518,17 +527,21 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps: initialOAu
             });
             setOauthError(false);
 
-            void withOauthLoading(submitOAuth());
+            void submitOAuth();
         }
     }, [oauthProps]);
 
     useEffect(() => {
+        if (modalModel.step !== Step.START) {
+            return;
+        }
+
         if (debouncedEmail && validateEmailAddress(debouncedEmail)) {
             void withLoading(checkAuth());
         } else {
             setShowPassword(false);
         }
-    }, [debouncedEmail]);
+    }, [debouncedEmail, modalModel.step]);
 
     // this one is to avoid a UI glitch when removing the email
     useEffect(() => {

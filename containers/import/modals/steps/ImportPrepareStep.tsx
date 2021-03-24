@@ -221,7 +221,7 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
 
     if (modalModel.errorCode === IMPORT_ERROR.IMAP_CONNECTION_ERROR) {
         return (
-            <div className="p1 text-center w100 color-global-warning">
+            <div className="p1 text-center w100 color-danger">
                 <Icon name="attention" size={60} />
                 <div className="mt0-5 mlauto mrauto mb0-5 max-w30e">
                     {c('Error').t`We were unable to connect to your service provider.`}
