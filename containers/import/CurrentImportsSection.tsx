@@ -246,7 +246,9 @@ const CurrentImportsSection = () => {
                             const percentage = (processed * 100) / total;
                             const percentageValue = Number.isNaN(percentage) ? 0 : Math.floor(percentage);
 
-                            let badge = <Badge>{c('Import status').t`${percentageValue}% processed`}</Badge>;
+                            let badge = (
+                                <Badge type="primary">{c('Import status').t`${percentageValue}% processed`}</Badge>
+                            );
 
                             if (State === ImportMailStatus.PAUSED) {
                                 badge = (
@@ -268,7 +270,7 @@ const CurrentImportsSection = () => {
                             }
 
                             if (State === ImportMailStatus.QUEUED) {
-                                badge = <Badge>{c('Import status').t`Started`}</Badge>;
+                                badge = <Badge type="primary">{c('Import status').t`Started`}</Badge>;
                             }
 
                             if (State === ImportMailStatus.CANCELED) {
