@@ -23,7 +23,11 @@ import useDisplayKeys from './shared/useDisplayKeys';
 import { KeyReactivationRequest } from './reactivateKeys/interface';
 import { getKeyByID } from './shared/helper';
 
-const UserKeysSections = () => {
+interface Props {
+    retryIndexEncryptedSearch: () => Promise<void>;
+}
+
+const UserKeysSections = ({ retryIndexEncryptedSearch }: Props) => {
     const { createModal } = useModals();
     const { call } = useEventManager();
     const api = useApi();
@@ -84,6 +88,7 @@ const UserKeysSections = () => {
                     });
                     return call();
                 }}
+                retryIndexEncryptedSearch={retryIndexEncryptedSearch}
             />
         );
     };

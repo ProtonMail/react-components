@@ -39,7 +39,11 @@ import { FlagAction } from './shared/interface';
 import { KeyReactivationRequest } from './reactivateKeys/interface';
 import { getKeyByID } from './shared/helper';
 
-const AddressKeysSection = () => {
+interface Props {
+    retryIndexEncryptedSearch: () => Promise<void>;
+}
+
+const AddressKeysSection = ({ retryIndexEncryptedSearch }: Props) => {
     const { createModal } = useModals();
     const { call } = useEventManager();
     const authentication = useAuthentication();
@@ -280,6 +284,7 @@ const AddressKeysSection = () => {
                     });
                     return call();
                 }}
+                retryIndexEncryptedSearch={retryIndexEncryptedSearch}
             />
         );
     };
