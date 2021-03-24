@@ -5,5 +5,4 @@ export { default as EditableSection } from './EditableSection';
 export { default as Field } from './Field';
 export { default as Details } from './Details';
 export { default as Summary } from './Summary';
-export { default as RelatedSettingsSection } from './RelatedSettingsSection';
 export { default as ProminentContainer } from './ProminentContainer';
