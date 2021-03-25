@@ -24,6 +24,7 @@ const Signout = ({ onDone }: Props) => {
         removeItem(`ES:${userID}:Key`);
         removeItem(`ES:${userID}:Event`);
         removeItem(`ES:${userID}:BuildEvent`);
+        removeItem(`ES:${userID}:RefreshEvent`);
         removeItem(`ES:${userID}:Recover`);
         return userID;
     };
@@ -43,7 +44,7 @@ const Signout = ({ onDone }: Props) => {
         };
         run()
             .then(([userID]) => {
-                void deleteDB(`ES:${userID}:DB`);
+                void deleteDB(`ES:${userID}:DB`).catch(() => undefined);
             })
             .finally(onDone);
     }, []);

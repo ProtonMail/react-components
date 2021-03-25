@@ -145,7 +145,7 @@ const ProtonApp = ({ config, children, hasInitialAuth }: Props) => {
 
             // Remove encrypted search DB in case there is a corrupt leftover
             if (!getItem(`ES:${User.ID}:Key`)) {
-                void deleteDB(`ES:${User.ID}:DB`);
+                void deleteDB(`ES:${User.ID}:DB`).catch(() => undefined);
             }
 
             const oldCache = cacheRef.current;
