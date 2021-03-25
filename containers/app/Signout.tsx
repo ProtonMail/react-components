@@ -26,6 +26,7 @@ const Signout = ({ onDone }: Props) => {
         removeItem(`ES:${userID}:BuildEvent`);
         removeItem(`ES:${userID}:RefreshEvent`);
         removeItem(`ES:${userID}:Recover`);
+        removeItem(`ES:${userID}:SyncFail`);
         return userID;
     };
 
