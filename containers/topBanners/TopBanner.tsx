@@ -2,6 +2,7 @@ import React from 'react';
 
 import { classnames } from '../../helpers';
 import Icon from '../../components/icon/Icon';
+import { Button } from '../../components';
 
 interface Props {
     children: React.ReactNode;
@@ -11,12 +12,12 @@ interface Props {
 
 const TopBanner = ({ children, className, onClose }: Props) => {
     return (
-        <div className={classnames(['text-center p0-5 relative text-bold', className])}>
-            {children}
+        <div className={classnames(['flex flex-nowrap text-center relative text-bold', className])}>
+            <div className="flex-item-fluid p0-5">{children}</div>
             {onClose ? (
-                <button type="button" className="float-right" onClick={onClose}>
+                <Button icon shape="ghost" className="flex-item-noshrinkd" onClick={onClose}>
                     <Icon name="off" />
-                </button>
+                </Button>
             ) : null}
         </div>
     );
