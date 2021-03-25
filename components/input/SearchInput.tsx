@@ -14,11 +14,10 @@ interface Props extends Omit<InputProps, 'onChange'> {
     delay?: number;
     onChange?: (value: string) => void;
     value?: string;
-    iconSearchDisplayed?: boolean;
 }
 
 const SearchInput = React.forwardRef<HTMLInputElement, Props>(
-    ({ delay = 200, onChange = noop, value = '', iconSearchDisplayed = true, ...rest }, ref) => {
+    ({ delay = 200, onChange = noop, value = '', ...rest }, ref) => {
         const [keywords, setKeywords] = useState(value);
         const words = useDebounceInput(keywords, delay);
 
@@ -32,16 +31,7 @@ const SearchInput = React.forwardRef<HTMLInputElement, Props>(
             setKeywords(value);
         }, [value]);
 
-        return (
-            <Input
-                ref={ref}
-                value={keywords}
-                onChange={handleChange}
-                iconSearchDisplayed={iconSearchDisplayed}
-                type="search"
-                {...rest}
-            />
-        );
+        return <Input ref={ref} value={keywords} onChange={handleChange} type="search" {...rest} />;
     }
 );
 
