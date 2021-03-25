@@ -6,10 +6,10 @@ interface Props extends React.HTMLProps<HTMLDetailsElement> {
     open?: boolean;
 }
 
-const Details = ({ children, className, open = false, ...props }: Props) => (
-    <details className={className} open={open} {...props}>
+const Details = ({ children, className, open = false, ...props }: Props, ref: React.Ref<HTMLDetailsElement>) => (
+    <details className={className} open={open} ref={ref} {...props}>
         {children}
     </details>
 );
 
-export default Details;
+export default React.forwardRef<HTMLDetailsElement, Props>(Details);
