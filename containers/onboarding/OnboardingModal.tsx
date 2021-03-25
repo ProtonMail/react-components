@@ -8,6 +8,7 @@ import { ThemeTypes } from 'proton-shared/lib/themes/themes';
 import { APPS } from 'proton-shared/lib/constants';
 import { getAccountSettingsApp, getAppName } from 'proton-shared/lib/apps/helper';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
+import { hasVisionary } from 'proton-shared/lib/helpers/subscription';
 
 import { Icon, StepDots, StepDot, FormModal, Button, useAppLink } from '../../components';
 import {
@@ -17,6 +18,7 @@ import {
     useLoading,
     useOrganization,
     useOrganizationKey,
+    useSubscription,
     useUser,
     useUserSettings,
     useWelcomeFlags,
@@ -58,6 +60,7 @@ const OnboardingModal = ({
     const goToApp = useAppLink();
     const [userSettings] = useUserSettings();
     const [organization, loadingOrganization] = useOrganization();
+    const [subscription, loadingSubscription] = useSubscription();
     const [displayName, setDisplayName] = useState(user.DisplayName || user.Name || '');
     const [organizationKey, loadingOrganizationKey] = useOrganizationKey(organization);
     const { hasOrganizationKey } = getOrganizationKeyInfo(organizationKey);
@@ -68,11 +71,13 @@ const OnboardingModal = ({
     const [welcomeFlags] = useWelcomeFlags();
     const canManageOrganization =
         !loadingOrganization &&
+        !loadingSubscription &&
         !loadingOrganizationKey &&
         user.isAdmin &&
         organization.MaxMembers > 1 &&
         organization.UsedMembers === 1 &&
-        !hasOrganizationKey;
+        !hasOrganizationKey &&
+        !hasVisionary(subscription);
     const mailAppName = getAppName(APPS.PROTONMAIL);
     const themes = availableThemes.map(({ identifier, getI18NLabel, src }) => {
         return { identifier, label: getI18NLabel(), src };
