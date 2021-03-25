@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
 import { updateEmail } from 'proton-shared/lib/api/settings';
+import { emailValidator, requiredValidator } from 'proton-shared/lib/helpers/formValidators';
 
-import { Alert, Button, ConfirmModal, EmailInput } from '../../components';
+import { Alert, Button, ConfirmModal, InputFieldTwo, useFormErrors } from '../../components';
 import { useLoading, useModals, useNotifications, useEventManager } from '../../hooks';
 import AuthModal from '../password/AuthModal';
 
@@ -20,10 +21,9 @@ const RecoveryEmail = ({ email, hasReset, hasNotify }: Props) => {
     const { createNotification } = useNotifications();
     const { createModal } = useModals();
     const { call } = useEventManager();
+    const { validator, onFormSubmit } = useFormErrors();
 
-    const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => setInput(target.value);
-
-    const handleSubmit = async () => {
+    const submit = async () => {
         if (!input && (hasReset || hasNotify)) {
             await new Promise<void>((resolve, reject) => {
                 createModal(
@@ -55,31 +55,38 @@ const RecoveryEmail = ({ email, hasReset, hasNotify }: Props) => {
         });
 
         await call();
+
         createNotification({ text: c('Success').t`Email updated` });
     };
 
     return (
-        <div className="recovery-email_container">
+        <form
+            className="recovery-email_container"
+            onSubmit={(e) => {
+                e.preventDefault();
+                if (onFormSubmit()) {
+                    withLoading(submit());
+                }
+            }}
+        >
             <div className="text-ellipsis mr1" title={email || ''}>
-                <EmailInput
+                <InputFieldTwo
+                    type="email"
+                    autoComplete="email"
+                    id="recovery-email-input"
                     className="recovery-email_email-input"
-                    id="emailInput"
                     value={input || ''}
                     placeholder={c('Info').t`Not set`}
-                    onChange={handleChange}
+                    error={validator([requiredValidator(input), emailValidator(input || '')])}
+                    onValue={setInput}
                 />
             </div>
             <div>
-                <Button
-                    color="norm"
-                    disabled={email === input}
-                    loading={loading}
-                    onClick={() => withLoading(handleSubmit())}
-                >
+                <Button type="submit" color="norm" disabled={email === input} loading={loading}>
                     {c('Action').t`Update`}
                 </Button>
             </div>
-        </div>
+        </form>
     );
 };
 
