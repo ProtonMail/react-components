@@ -72,9 +72,10 @@ const FeaturesProvider = ({ children }: Props) => {
             updateFeature(code, Feature);
 
             return Feature;
-        } catch {
+        } catch (e) {
             // Rollback optimistic change if it fails
             updateFeature(code, copyFeature);
+            throw e;
         } finally {
             updateLoading(code, false);
         }
