@@ -1,4 +1,5 @@
 import React from 'react';
+import { c } from 'ttag';
 
 import { classnames } from '../../helpers';
 import Icon from '../../components/icon/Icon';
@@ -15,8 +16,14 @@ const TopBanner = ({ children, className, onClose }: Props) => {
         <div className={classnames(['flex flex-nowrap text-center relative text-bold', className])}>
             <div className="flex-item-fluid p0-5">{children}</div>
             {onClose ? (
-                <Button icon shape="ghost" className="flex-item-noshrink" onClick={onClose}>
-                    <Icon name="off" />
+                <Button
+                    icon
+                    shape="ghost"
+                    className="flex-item-noshrink"
+                    onClick={onClose}
+                    title={c('Action').t`Close this banner`}
+                >
+                    <Icon name="off" alt={c('Action').t`Close this banner`} />
                 </Button>
             ) : null}
         </div>
