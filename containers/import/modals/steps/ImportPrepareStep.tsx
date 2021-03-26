@@ -217,7 +217,9 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
         const children = folderRelationshipsMap[Source] || [];
 
         acc[Source] = acc[Source] || color;
-        children.forEach((f) => (acc[f] = acc[f] || acc[Source]));
+        children.forEach((f) => {
+            acc[f] = acc[f] || acc[Source];
+        });
 
         return acc;
     }, {});

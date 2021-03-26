@@ -12,7 +12,6 @@ import {
     MailImportFolder,
     CheckedFoldersMap,
     DisabledFoldersMap,
-    FolderRelationshipsMap,
     FolderNamesMap,
     FolderPathsMap,
     EditModeMap,
