@@ -1,6 +1,7 @@
 import React from 'react';
 import { classnames } from '../../helpers/component';
 
+import Icon from '../icon/Icon';
 import './ImportMailWizard.scss';
 
 interface Props {
@@ -19,7 +20,9 @@ const ImportMailWizard = ({ step = 0, steps = [] }: Props) => {
                             className={classnames(['wizard-item', index < step && 'is-complete'])}
                             aria-current={index === step ? 'step' : undefined}
                         >
-                            <span className="wizard-marker" />
+                            <span className="wizard-marker flex">
+                                {index < step && <Icon name="on" size={12} className="z10 mauto wizard-marker-icon" />}
+                            </span>
                         </li>
                     );
                 })}
