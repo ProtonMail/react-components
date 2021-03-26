@@ -22,6 +22,7 @@ import {
     useUser,
     useUserSettings,
     useWelcomeFlags,
+    useConfig,
 } from '../../hooks';
 import { OnboardingStepProps, OnboardingStepRenderCallback } from './interface';
 import OnboardingSetDisplayName from './OnboardingSetDisplayName';
@@ -30,6 +31,7 @@ import OnboardingStep from './OnboardingStep';
 import OnboardingDiscoverApps from './OnboardingDiscoverApps';
 import OnboardingWelcome from './OnboardingWelcome';
 import OnboardingSetupOrganization from './OnboardingSetupOrganization';
+import OnboardingWelcomeMail from './OnboardingWelcomeMail';
 import { availableThemes } from '../themes/ThemesSection';
 import { getOrganizationKeyInfo } from '../organization/helpers/organizationKeysHelper';
 
@@ -69,6 +71,7 @@ const OnboardingModal = ({
     const api = useApi();
     const { call } = useEventManager();
     const [welcomeFlags] = useWelcomeFlags();
+    const { APP_NAME } = useConfig();
     const canManageOrganization =
         !loadingOrganization &&
         !loadingSubscription &&
@@ -169,6 +172,12 @@ const OnboardingModal = ({
         </OnboardingStep>
     );
 
+    const mailWelcomeMailStep = (
+        <OnboardingStep submit={c('Onboarding').t`Next`} onSubmit={handleNext} close={null}>
+            <OnboardingWelcomeMail />
+        </OnboardingStep>
+    );
+
     const hasDisplayNameStep = welcomeFlags?.hasDisplayNameStep && !hideDisplayName;
     const displayGenericSteps = showGenericSteps || hasDisplayNameStep;
     const genericSteps = displayGenericSteps
@@ -178,7 +187,7 @@ const OnboardingModal = ({
               canManageOrganization && setupOrganizationStep,
               themesStep,
           ].filter(isTruthy)
-        : [];
+        : [APP_NAME === APPS.PROTONMAIL && mailWelcomeMailStep].filter(isTruthy);
     const finalGenericSteps = displayGenericSteps ? [discoverAppsStep] : [];
 
     const productSteps = children
