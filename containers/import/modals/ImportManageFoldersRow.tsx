@@ -200,14 +200,22 @@ const ImportManageFoldersRow = ({
 
     const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
         const { value } = target;
-        isLabelMapping ? onRenameLabel(Source, value) : onRenameFolder(Source, value);
         setInputValue(value);
+        if (isLabelMapping) {
+            onRenameLabel(Source, value);
+        } else {
+            onRenameFolder(Source, value);
+        }
     };
 
     const handleCancel = (e: React.MouseEvent) => {
         preventDefaultAndStopPropagation(e);
         setEditMode(false);
-        isLabelMapping ? onRenameLabel(Source, initialValue.current) : onRenameFolder(Source, initialValue.current);
+        if (isLabelMapping) {
+            onRenameLabel(Source, initialValue.current);
+        } else {
+            onRenameFolder(Source, initialValue.current);
+        }
         setInputValue(initialValue.current);
     };
 
