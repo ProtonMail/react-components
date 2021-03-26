@@ -1,6 +1,9 @@
 import React, { ChangeEvent, useState, useRef, useEffect, useMemo } from 'react';
 import { c } from 'ttag';
 
+import { Folder } from 'proton-shared/lib/interfaces/Folder';
+import { Label } from 'proton-shared/lib/interfaces/Label';
+
 import { classnames } from '../../../helpers';
 import { Tooltip, Icon, Checkbox, InlineLinkButton, Input, LabelStack } from '../../../components';
 
@@ -16,7 +19,7 @@ import {
     LabelsMap,
 } from '../interfaces';
 
-import { escapeSlashes, unescapeSlashes, splitEscaped } from '../helpers';
+import { escapeSlashes, unescapeSlashes, splitEscaped, nameAlreadyExists } from '../helpers';
 
 const SYSTEM_FOLDERS = Object.values(DestinationFolder) as string[];
 
@@ -31,16 +34,6 @@ const FOLDER_ICONS = {
     [DestinationFolder.DRAFTS]: 'drafts',
     [DestinationFolder.STARRED]: 'star',
     [DestinationFolder.ALL_MAIL]: 'all-emails',
-};
-
-const ERRORS = {
-    nameTooLongError: c('Error').t`The folder name is too long. Please choose a different name.`,
-    emptyValueError: c('Error').t`Folder name cannot be empty`,
-};
-
-const WARNINGS = {
-    mergeWarning: c('Warning')
-        .t`Proton will merge all folders with the same name. To avoid this, change the names before import.`,
 };
 
 const DIMMED_OPACITY_CLASSNAME = 'opacity-30';
@@ -63,7 +56,8 @@ const RowWrapperComponent = ({ isLabel, children, checkboxId, className }: Wrapp
 };
 
 interface Props {
-    onRename: (source: string, newName: string) => void;
+    onRenameFolder: (source: string, newName: string) => void;
+    onRenameLabel: (source: string, Name: string) => void;
     onToggleCheck: (source: string, checked: boolean) => void;
     folder: MailImportFolder;
     level: number;
@@ -78,6 +72,9 @@ interface Props {
     updateEditModeMapping: (key: string, editMode: boolean) => void;
     getParent: (folderName: string) => string | undefined;
     isSystemSubfolder?: boolean;
+    isLabelMapping: boolean;
+    folders: Folder[];
+    labels: Label[];
 }
 
 const ImportManageFoldersRow = ({
@@ -91,11 +88,15 @@ const ImportManageFoldersRow = ({
     folderNamesMap,
     folderPathsMap,
     labelsMap,
-    onRename,
+    onRenameFolder,
+    onRenameLabel,
     updateEditModeMapping,
     getParent,
     editModeMap,
     isSystemSubfolder = false,
+    isLabelMapping,
+    folders,
+    labels,
 }: Props) => {
     const { Source, Separator, DestinationFolder } = folder;
 
@@ -110,19 +111,47 @@ const ImportManageFoldersRow = ({
         return acc;
     }, []);
 
-    const destinationName = folderNamesMap[Source];
+    const destinationName =
+        isLabelMapping && labelsMap[Source] ? labelsMap[Source].Name : unescapeSlashes(folderNamesMap[Source]);
 
     const inputRef = useRef<HTMLInputElement>(null);
-    const [inputValue, setInputValue] = useState(unescapeSlashes(destinationName));
+    const [inputValue, setInputValue] = useState(destinationName);
     const initialValue = useRef<string>(inputValue);
 
+    const ERRORS = {
+        nameTooLongError: isLabelMapping
+            ? c('Error').t`The label name is too long. Please choose a different name.`
+            : c('Error').t`The folder name is too long. Please choose a different name.`,
+        emptyValueError: isLabelMapping
+            ? c('Error').t`Label name cannot be empty`
+            : c('Error').t`Folder name cannot be empty`,
+        nameAlreadyExistsError: isLabelMapping
+            ? c('Error').t`This label name is not available. Please choose a different name`
+            : c('Error').t`This folder name is not available. Please choose a different name`,
+    };
+
+    const WARNINGS = {
+        mergeWarning: c('Warning')
+            .t`Proton will merge all folders with the same name. To avoid this, change the names before import.`,
+    };
+
     const emptyValueError = useMemo(() => !inputValue || !inputValue.trim(), [inputValue]);
+
+    /*
+     * Here we check folders names agains existing labels
+     * and labels against existing folders
+     * */
+    const nameAlreadyExistsError = useMemo(() => nameAlreadyExists(inputValue, isLabelMapping ? folders : labels), [
+        inputValue,
+        folders,
+        labels,
+    ]);
 
     const nameTooLongError = useMemo(() => {
         if (!checked) {
             return false;
         }
-        return escapeSlashes(inputValue).length >= 100;
+        return isLabelMapping ? inputValue.length >= 100 : escapeSlashes(inputValue).length >= 100;
     }, [inputValue, checked]);
 
     const mergeWarning = useMemo(() => {
@@ -143,7 +172,7 @@ const ImportManageFoldersRow = ({
         });
     }, [inputValue, checked, folderNamesMap, folderPathsMap, checkedFoldersMap, labelsMap]);
 
-    const hasError = emptyValueError || nameTooLongError;
+    const hasError = emptyValueError || nameTooLongError || nameAlreadyExistsError;
 
     const [editMode, setEditMode] = useState(hasError);
 
@@ -171,14 +200,14 @@ const ImportManageFoldersRow = ({
 
     const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
         const { value } = target;
+        isLabelMapping ? onRenameLabel(Source, value) : onRenameFolder(Source, value);
         setInputValue(value);
-        onRename(Source, value);
     };
 
     const handleCancel = (e: React.MouseEvent) => {
         preventDefaultAndStopPropagation(e);
         setEditMode(false);
-        onRename(Source, initialValue.current);
+        isLabelMapping ? onRenameLabel(Source, initialValue.current) : onRenameFolder(Source, initialValue.current);
         setInputValue(initialValue.current);
     };
 
@@ -188,6 +217,10 @@ const ImportManageFoldersRow = ({
 
         if (nameTooLongError) {
             error = ERRORS.nameTooLongError;
+        }
+
+        if (nameAlreadyExistsError) {
+            error = ERRORS.nameAlreadyExistsError;
         }
 
         if (emptyValueError) {
@@ -216,7 +249,7 @@ const ImportManageFoldersRow = ({
                 onChange={handleChange}
                 onPressEnter={(e: React.KeyboardEvent) => {
                     e.preventDefault();
-                    if (emptyValueError || nameTooLongError) {
+                    if (hasError) {
                         return;
                     }
                     handleSave(e);
@@ -224,6 +257,7 @@ const ImportManageFoldersRow = ({
                 icon={item}
                 error={error}
                 errorZoneClassName="hidden"
+                className="hauto"
             />
         );
     };
@@ -279,16 +313,76 @@ const ImportManageFoldersRow = ({
             const { Name: name, Color: color } = labelsMap[Source];
             return (
                 <div className="flex flex-nowrap flex-align-items-center flex-item-fluid-auto">
-                    <LabelStack
-                        labels={[
-                            {
-                                name,
-                                color,
-                                title: name,
-                            },
-                        ]}
-                        className="max-w100"
-                    />
+                    <div
+                        className={classnames([
+                            'ml0-5 flex flex-nowrap flex-item-fluid-auto',
+                            hasError && 'color-danger',
+                            mergeWarning && 'color-warning',
+                        ])}
+                    >
+                        {editMode && !disabled ? (
+                            renderInput()
+                        ) : (
+                            <div
+                                className={classnames([
+                                    'flex-item-fluid-auto text-ellipsis flex flex-align-items-center',
+                                    (hasError || mergeWarning) && 'text-bold',
+                                ])}
+                                title={destinationName}
+                            >
+                                <LabelStack
+                                    labels={[
+                                        {
+                                            name,
+                                            color,
+                                            title: name,
+                                        },
+                                    ]}
+                                    className="max-w100 mr0-5"
+                                />
+
+                                {nameTooLongError && (
+                                    <Tooltip title={ERRORS.nameTooLongError} type="error">
+                                        <Icon
+                                            tabIndex={-1}
+                                            name="info"
+                                            className="flex-item-noshrink color-danger inline-flex flex-align-self-center flex-item-noshrink"
+                                        />
+                                    </Tooltip>
+                                )}
+
+                                {nameAlreadyExistsError && !nameTooLongError && (
+                                    <Tooltip title={ERRORS.nameAlreadyExistsError} type="error">
+                                        <Icon
+                                            tabIndex={-1}
+                                            name="info"
+                                            className="flex-item-noshrink color-danger inline-flex flex-align-self-center flex-item-noshrink"
+                                        />
+                                    </Tooltip>
+                                )}
+                            </div>
+                        )}
+                    </div>
+
+                    {editMode && !disabled && (
+                        <div
+                            className="flex flex-align-items-center flex-item-noshrink ml0-5"
+                            onClick={(e) => {
+                                if (disabled) {
+                                    preventDefaultAndStopPropagation(e);
+                                }
+                            }}
+                        >
+                            <InlineLinkButton
+                                onClick={handleSave}
+                                className={classnames(['p0-5', hasError && DIMMED_OPACITY_CLASSNAME])}
+                                aria-disabled={hasError}
+                                disabled={hasError}
+                            >
+                                {c('Action').t`Rename`}
+                            </InlineLinkButton>
+                        </div>
+                    )}
                 </div>
             );
         }
@@ -319,13 +413,24 @@ const ImportManageFoldersRow = ({
                         <div
                             className={classnames([
                                 'flex-item-fluid-auto text-ellipsis flex flex-align-items-center',
-                                (nameTooLongError || mergeWarning) && 'text-bold',
+                                (hasError || mergeWarning) && 'text-bold',
                             ])}
-                            title={unescapeSlashes(destinationName)}
+                            title={destinationName}
                         >
-                            <span className="mr0-5">{unescapeSlashes(destinationName)}</span>
+                            <span className="mr0-5">{destinationName}</span>
+
                             {nameTooLongError && (
                                 <Tooltip title={ERRORS.nameTooLongError} type="error">
+                                    <Icon
+                                        tabIndex={-1}
+                                        name="info"
+                                        className="flex-item-noshrink color-danger inline-flex flex-align-self-center flex-item-noshrink"
+                                    />
+                                </Tooltip>
+                            )}
+
+                            {nameAlreadyExistsError && !nameTooLongError && (
+                                <Tooltip title={ERRORS.nameAlreadyExistsError} type="error">
                                     <Icon
                                         tabIndex={-1}
                                         name="info"
@@ -449,11 +554,15 @@ const ImportManageFoldersRow = ({
                             folderNamesMap={folderNamesMap}
                             folderPathsMap={folderPathsMap}
                             labelsMap={labelsMap}
-                            onRename={onRename}
+                            onRenameFolder={onRenameFolder}
+                            onRenameLabel={onRenameLabel}
                             updateEditModeMapping={updateEditModeMapping}
                             getParent={getParent}
                             editModeMap={editModeMap}
                             isSystemSubfolder={!!DestinationFolder || isSystemSubfolder}
+                            isLabelMapping={isLabelMapping}
+                            folders={folders}
+                            labels={labels}
                         />
                     ))}
                 </ul>

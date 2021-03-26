@@ -2,6 +2,8 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { c } from 'ttag';
 
 import { Address } from 'proton-shared/lib/interfaces';
+import { Folder } from 'proton-shared/lib/interfaces/Folder';
+import { Label } from 'proton-shared/lib/interfaces/Label';
 
 import {
     ImportModalModel,
@@ -31,6 +33,8 @@ interface Props {
     onChangePayload: (newPayload: ImportPayloadModel) => void;
     toggleEditing: (editing: boolean) => void;
     isLabelMapping: boolean;
+    folders: Folder[];
+    labels: Label[];
 }
 
 const ImportManageFolders = ({
@@ -40,6 +44,8 @@ const ImportManageFolders = ({
     toggleEditing,
     onChangePayload,
     isLabelMapping,
+    folders,
+    labels,
 }: Props) => {
     const { providerFolders } = modalModel;
 
@@ -184,10 +190,21 @@ const ImportManageFolders = ({
         setCheckedFoldersMap(newCheckedFoldersMap);
     };
 
-    const handleRename = (source: string, newName: string) => {
-        const newFoldersNameMap = { ...folderNamesMap };
-        newFoldersNameMap[source] = escapeSlashes(newName);
-        setFoldersNameMap(newFoldersNameMap);
+    const handleRenameFolder = (source: string, newName: string) => {
+        setFoldersNameMap({
+            ...folderNamesMap,
+            [source]: escapeSlashes(newName),
+        });
+    };
+
+    const handleRenameLabel = (source: string, Name: string) => {
+        setLabelsMap({
+            ...labelsMap,
+            [source]: {
+                ...labelsMap[source],
+                Name,
+            },
+        });
     };
 
     const [editModeMap, setEditModeMap] = useState(
@@ -269,10 +286,14 @@ const ImportManageFolders = ({
                                     folderNamesMap={folderNamesMap}
                                     folderPathsMap={folderPathsMap}
                                     labelsMap={labelsMap}
-                                    onRename={handleRename}
+                                    onRenameFolder={handleRenameFolder}
+                                    onRenameLabel={handleRenameLabel}
                                     editModeMap={editModeMap}
                                     getParent={getParent}
                                     updateEditModeMapping={updateEditModeMapping}
+                                    isLabelMapping={isLabelMapping}
+                                    folders={folders}
+                                    labels={labels}
                                 />
                             ))}
                     </ul>

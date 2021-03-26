@@ -1,12 +1,12 @@
 import React, { useMemo, useEffect, useRef, useState } from 'react';
-import { format, isValid } from 'date-fns';
+import { format } from 'date-fns';
 import { c, msgid } from 'ttag';
 
 import { Address } from 'proton-shared/lib/interfaces';
 import { LABEL_TYPE } from 'proton-shared/lib/constants';
 import isDeepEqual from 'proton-shared/lib/helpers/isDeepEqual';
 
-import { useFolders, useUser, useModals } from '../../../../hooks';
+import { useFolders, useUser, useModals, useLabels } from '../../../../hooks';
 import {
     Icon,
     LabelStack,
@@ -20,7 +20,14 @@ import {
 
 import { ImportModalModel, MailImportFolder, TIME_UNIT, DestinationFolder, IMPORT_ERROR } from '../../interfaces';
 import { IMAPS, timeUnitLabels } from '../../constants';
-import { escapeSlashes, getRandomLabelColor, splitEscaped } from '../../helpers';
+import {
+    escapeSlashes,
+    getRandomLabelColor,
+    mappingHasFoldersTooLong,
+    mappingHasLabelsTooLong,
+    mappingHasUnavailableNames,
+    splitEscaped,
+} from '../../helpers';
 
 import CustomizeImportModal from '../CustomizeImportModal';
 
@@ -41,16 +48,13 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
     const [user, userLoading] = useUser();
     const { createModal } = useModals();
     const { providerFolders, password } = modalModel;
+
     const [folders = [], foldersLoading] = useFolders();
-    const [labels = [], labelsLoading] = useFolders();
+    const [labels = [], labelsLoading] = useLabels();
 
     const isLabelMapping = modalModel.imap === IMAPS.GMAIL;
 
     const { payload, selectedPeriod } = modalModel;
-
-    const providerFoldersNum = useMemo(() => providerFolders.length, [providerFolders]);
-
-    const providerFoldersNumLocalized = providerFoldersNum.toLocaleString();
 
     const selectedFolders = useMemo(
         () =>
@@ -61,8 +65,9 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
         [payload.Mapping, providerFolders]
     );
 
+    const providerFoldersNum = useMemo(() => providerFolders.length, [providerFolders]);
+    const providerFoldersNumLocalized = providerFoldersNum.toLocaleString();
     const selectedFoldersCountLocalized = selectedFolders.length.toLocaleString();
-
     const selectedPeriodLowerCased = timeUnitLabels[selectedPeriod].toLowerCase();
 
     const importSize = useMemo(() => selectedFolders.reduce((acc, { Size = 0 }) => acc + Size, 0), [selectedFolders]);
@@ -73,17 +78,20 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
         user.MaxSpace,
     ]);
 
-    const showFoldersNumError = useMemo(() => selectedFolders.length + folders.length >= 500, [
+    const showMaxFoldersError = useMemo(() => selectedFolders.length + folders.length >= 500, [
         selectedFolders,
         folders,
     ]);
 
-    const showFoldersNameError = useMemo(() => {
-        return payload.Mapping.some((m) => {
-            const splitted = splitEscaped(m.Destinations.FolderPath);
-            return m.checked && splitted[splitted.length - 1].length >= 100;
-        });
-    }, [payload.Mapping]);
+    const showUnavailableNamesError = useMemo(
+        () => mappingHasUnavailableNames(payload.Mapping, isLabelMapping ? folders : labels, isLabelMapping),
+        [payload.Mapping, folders, labels]
+    );
+    const showFoldersNameTooLongError = useMemo(() => mappingHasFoldersTooLong(payload.Mapping), [payload.Mapping]);
+    const showLabelsNameTooLongError = useMemo(() => mappingHasLabelsTooLong(payload.Mapping), [payload.Mapping]);
+
+    const hasError =
+        showMaxFoldersError || showFoldersNameTooLongError || showLabelsNameTooLongError || showUnavailableNamesError;
 
     const handleClickCustomize = () => {
         createModal(
@@ -91,8 +99,10 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
                 address={address}
                 modalModel={modalModel}
                 updateModalModel={updateModalModel}
-                customizeFoldersOpen={showFoldersNumError || showFoldersNameError}
+                customizeFoldersOpen={hasError}
                 isLabelMapping={isLabelMapping}
+                folders={folders}
+                labels={labels}
             />
         );
     };
@@ -134,8 +144,11 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
     }, [payload.StartTime, payload.ImportLabel, payload.Mapping]);
 
     useEffect(() => {
-        updateModalModel({ ...modalModel, isPayloadInvalid: showFoldersNumError || showFoldersNameError });
-    }, [showFoldersNumError, showFoldersNameError]);
+        updateModalModel({
+            ...modalModel,
+            isPayloadInvalid: hasError,
+        });
+    }, [hasError]);
 
     const getParentSource = (folderPath: string, separator: string) => {
         const split = splitEscaped(folderPath, separator);
@@ -255,7 +268,7 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
         );
     }
 
-    if (!modalModel.importID || foldersLoading || userLoading) {
+    if (!modalModel.importID || foldersLoading || userLoading || labelsLoading) {
         return (
             <div className="p1 text-center w100">
                 <FullLoader size={100} />
@@ -277,17 +290,30 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
                     .t`Proton will transfer as much data as possible, starting with your most recent messages.`}
             </Alert>
 
-            {showFoldersNumError && (
+            {showMaxFoldersError && (
                 <Alert type="error" className="mt1 mb1">
                     {c('Error')
                         .t`There are too many folders in your external account. Please customize the import to delete some folders.`}
                 </Alert>
             )}
 
-            {showFoldersNameError && (
+            {(showFoldersNameTooLongError || showLabelsNameTooLongError) && (
                 <Alert type="error" className="mt1 mb1">
-                    {c('Error')
-                        .t`Some of your folder names exceed ProtonMail's maximum character limit. Please customize the import to edit these names.`}
+                    {isLabelMapping
+                        ? c('Error')
+                              .t`Some of your label names exceed ProtonMail's maximum character limit. Please customize the import to edit these names.`
+                        : c('Error')
+                              .t`Some of your folder names exceed ProtonMail's maximum character limit. Please customize the import to edit these names.`}
+                </Alert>
+            )}
+
+            {showUnavailableNamesError && (
+                <Alert type="error" className="mt1 mb1">
+                    {isLabelMapping
+                        ? c('Error')
+                              .t`Some of your label names are unavailable. Please customize the import to edit these names.`
+                        : c('Error')
+                              .t`Some of your folder names are unavailable. Please customize the import to edit these names.`}
                 </Alert>
             )}
 
@@ -356,7 +382,7 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
                               providerFoldersNum
                           )}
 
-                    {showFoldersNumError && (
+                    {showMaxFoldersError && (
                         <Tooltip
                             title={
                                 isLabelMapping
@@ -391,7 +417,7 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
 
                 <div className="mt0-5 flex flex-align-items-center">
                     <Button onClick={handleClickCustomize}>{c('Action').t`Customize import`}</Button>
-                    {showFoldersNameError && (
+                    {(showFoldersNameTooLongError || showLabelsNameTooLongError || showUnavailableNamesError) && (
                         <Tooltip
                             title={
                                 isLabelMapping ? c('Tooltip').t`Edit label names` : c('Tooltip').t`Edit folder names`
@@ -401,7 +427,7 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
                             <Icon name="attention-plain" size={20} className="ml0-5" />
                         </Tooltip>
                     )}
-                    {isCustom && isValid && (
+                    {isCustom && (
                         <InlineLinkButton className="ml1" onClick={handleReset}>
                             {c('Action').t`Reset to default`}
                         </InlineLinkButton>
