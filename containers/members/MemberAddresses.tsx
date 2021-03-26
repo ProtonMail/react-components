@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 import { msgid, c } from 'ttag';
-import { Icon } from '../../components';
+import { Address } from 'proton-shared/lib/interfaces';
+
+import { Button, Icon } from '../../components';
 import { classnames } from '../../helpers';
 
 const amountOfDisplayedAddresses = 3;
 
-const MemberAddresses = ({ addresses }) => {
+interface MemberAddressesProps {
+    addresses: Address[];
+}
+
+const MemberAddresses = ({ addresses }: MemberAddressesProps) => {
     const [expanded, setExpanded] = useState(false);
 
     const handleExpandClick = () => {
@@ -17,7 +22,7 @@ const MemberAddresses = ({ addresses }) => {
 
     const addressesPluralized = `${c('Info').ngettext(msgid`address`, `addresses`, amountOfAddresses)}`;
 
-    const renderListItem = ({ ID, Email }, index) => {
+    const renderListItem = ({ ID, Email }: Address, index: number) => {
         /*
          * By default, the addresses list shows 3 addresses as well as
          * a clickable text saying "x more addresses", which, when clicked,
@@ -62,7 +67,13 @@ const MemberAddresses = ({ addresses }) => {
         if (remainingAddresses.length > 0) {
             const expandButton = (
                 <li key="expand" className="mb0-5">
-                    <Button onClick={handleExpandClick} shape="ghost" color="norm" className="flex flex-align-items-center">
+                    <Button
+                        onClick={handleExpandClick}
+                        color="norm"
+                        shape="ghost"
+                        size="small"
+                        className="flex flex-align-items-center"
+                    >
                         {remainingAddresses.length} {c('Info').t`more`}{' '}
                         <span className="no-mobile mr0-5">{addressesPluralized}</span>
                         <Icon size={12} name="caret" />
@@ -77,10 +88,6 @@ const MemberAddresses = ({ addresses }) => {
     };
 
     return <ul className="unstyled mt-0-5 mb-0-5">{getAddressesListItems()}</ul>;
-};
-
-MemberAddresses.propTypes = {
-    addresses: PropTypes.array.isRequired,
 };
 
 export default MemberAddresses;
