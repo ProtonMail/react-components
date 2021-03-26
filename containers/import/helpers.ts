@@ -6,7 +6,7 @@ import { Folder } from 'proton-shared/lib/interfaces/Folder';
 import { Label } from 'proton-shared/lib/interfaces/Label';
 
 import { G_OAUTH_CLIENT_ID, G_OAUTH_SCOPE, G_OAUTH_REDIRECT_PATH } from './constants';
-import { FolderMapping } from './interfaces';
+import { FolderMapping, FolderRelationshipsMap, MailImportFolder } from './interfaces';
 
 const SEPARATOR_SPLIT_TOKEN = `##**${Date.now()}**##`;
 
@@ -90,3 +90,34 @@ export const mappingHasUnavailableNames = (
 
     return destinations.some((dest) => nameAlreadyExists(dest, collection));
 };
+
+export const getLevel = (name: string, separator: string, folders: MailImportFolder[]) => {
+    const split = splitEscaped(name, separator);
+    let level = 0;
+    while (split.length) {
+        split.pop();
+        if (folders.find((f) => f.Source === split.join(separator))) {
+            level += 1;
+        }
+    }
+
+    return level;
+};
+
+export const getFolderRelationshipsMap = (folders: MailImportFolder[]) =>
+    folders.reduce((acc: FolderRelationshipsMap, folder) => {
+        const currentLevel = getLevel(folder.Source, folder.Separator, folders);
+
+        acc[folder.Source] = folders
+            .filter((f) => {
+                const level = getLevel(f.Source, f.Separator, folders);
+                return (
+                    currentLevel + 1 === level &&
+                    (f.Source.split(f.Separator).slice(0, -1).join(f.Separator) === folder.Source ||
+                        f.Source.startsWith(folder.Source))
+                );
+            })
+            .map((f) => f.Source);
+
+        return acc;
+    }, {});

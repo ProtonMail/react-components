@@ -20,7 +20,7 @@ import {
     LabelsMap,
 } from '../interfaces';
 
-import { escapeSlashes, splitEscaped } from '../helpers';
+import { escapeSlashes, getFolderRelationshipsMap, getLevel, splitEscaped } from '../helpers';
 
 import { Alert } from '../../../components';
 
@@ -49,36 +49,8 @@ const ImportManageFolders = ({
 }: Props) => {
     const { providerFolders } = modalModel;
 
-    const getLevel = (name: string, separator: string) => {
-        const split = splitEscaped(name, separator);
-        let level = 0;
-        while (split.length) {
-            split.pop();
-            if (providerFolders.find((f) => f.Source === split.join(separator))) {
-                level += 1;
-            }
-        }
-
-        return level;
-    };
-
     // Here we map folders with their direct children
-    const folderRelationshipsMap = providerFolders.reduce((acc: FolderRelationshipsMap, folder) => {
-        const currentLevel = getLevel(folder.Source, folder.Separator);
-
-        acc[folder.Source] = providerFolders
-            .filter((f) => {
-                const level = getLevel(f.Source, f.Separator);
-                return (
-                    currentLevel + 1 === level &&
-                    (f.Source.split(f.Separator).slice(0, -1).join(f.Separator) === folder.Source ||
-                        f.Source.startsWith(folder.Source))
-                );
-            })
-            .map((f) => f.Source);
-
-        return acc;
-    }, {});
+    const folderRelationshipsMap = getFolderRelationshipsMap(providerFolders);
 
     const [checkedFoldersMap, setCheckedFoldersMap] = useState(
         providerFolders.reduce<CheckedFoldersMap>((acc, folder) => {
@@ -227,7 +199,6 @@ const ImportManageFolders = ({
 
     useEffect(() => {
         const Mapping = providerFolders.reduce<FolderMapping[]>((acc, folder) => {
-            /* @todo update from labelNamesMap */
             if (checkedFoldersMap[folder.Source]) {
                 const Destinations = isLabelMapping
                     ? {
@@ -272,7 +243,7 @@ const ImportManageFolders = ({
                 <div className="flex-item-fluid pt0-5">
                     <ul className="unstyled m0">
                         {providerFolders
-                            .filter((folder) => getLevel(folder.Source, folder.Separator) === 0)
+                            .filter((folder) => getLevel(folder.Source, folder.Separator, providerFolders) === 0)
                             .map((item: MailImportFolder) => (
                                 <ImportManageFoldersRow
                                     onToggleCheck={handleToggleCheck}

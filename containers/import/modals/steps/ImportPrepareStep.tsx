@@ -22,6 +22,7 @@ import { ImportModalModel, MailImportFolder, TIME_UNIT, DestinationFolder, IMPOR
 import { IMAPS, timeUnitLabels } from '../../constants';
 import {
     escapeSlashes,
+    getFolderRelationshipsMap,
     getRandomLabelColor,
     mappingHasFoldersTooLong,
     mappingHasLabelsTooLong,
@@ -30,6 +31,10 @@ import {
 } from '../../helpers';
 
 import CustomizeImportModal from '../CustomizeImportModal';
+
+interface LabelColorMap {
+    [key: string]: string;
+}
 
 interface Props {
     modalModel: ImportModalModel;
@@ -199,13 +204,29 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
         return pathParts.join('/');
     };
 
+    const folderRelationshipsMap = getFolderRelationshipsMap(providerFolders);
+
+    const labelColorMap = providerFolders.reduce((acc: LabelColorMap, folder) => {
+        const { DestinationFolder, Source } = folder;
+
+        if (DestinationFolder) {
+            return acc;
+        }
+
+        const color = getRandomLabelColor();
+        const children = folderRelationshipsMap[Source] || [];
+
+        acc[Source] = acc[Source] || color;
+        children.forEach((f) => (acc[f] = acc[f] || acc[Source]));
+
+        return acc;
+    }, {});
+
     const getDestinationLabels = ({ Source, Separator }: MailImportFolder) => {
-        /* @todo if length greater than 100 */
-        /* @todo check conflicts with exitsting Folders / Labels */
         return [
             {
                 Name: Source.split(Separator).join('-'),
-                Color: getRandomLabelColor(),
+                Color: labelColorMap[Source],
             },
         ];
     };
