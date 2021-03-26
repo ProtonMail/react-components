@@ -119,7 +119,7 @@ const EditAddressesSection = ({ address }: Props) => {
                         {c('Label').t`Display name`}
                     </label>
                 </SettingsLayoutLeft>
-                <SettingsLayoutRight className="w100">
+                <SettingsLayoutRight>
                     <Input
                         id="displayName"
                         value={model.displayName}
@@ -135,7 +135,7 @@ const EditAddressesSection = ({ address }: Props) => {
                         {c('Label').t`Signature`}
                     </label>
                 </SettingsLayoutLeft>
-                <SettingsLayoutRight className="w100 h100">
+                <SettingsLayoutRight>
                     <div ref={composerRef} tabIndex={-1}>
                         <SimpleSquireEditor
                             ref={editorRef}

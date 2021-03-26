@@ -7,7 +7,7 @@ import { Address } from 'proton-shared/lib/interfaces';
 import { Select, Loader, Info } from '../../components';
 import { useAddresses, useMailSettings } from '../../hooks';
 
-import { SettingsParagraph, SettingsSection } from '../account';
+import { SettingsParagraph, SettingsSectionWide } from '../account';
 
 import PMSignature from './PMSignatureField';
 import EditAddressesSection from './EditAddressesSection';
@@ -52,7 +52,7 @@ const IdentitySection = () => {
     };
 
     return (
-        <SettingsSection className="no-scroll">
+        <SettingsSectionWide className="no-scroll">
             {loading || !Array.isArray(addresses) ? (
                 <Loader />
             ) : (
@@ -63,7 +63,7 @@ const IdentitySection = () => {
                                 {c('Label').t`Email address`}
                             </label>
                         </SettingsLayoutLeft>
-                        <SettingsLayoutRight className="on-mobile-pb0 flex flex-row flex-nowrap w100">
+                        <SettingsLayoutRight className="on-mobile-pb0 flex flex-row flex-nowrap">
                             <Select id="addressSelector" options={options} onChange={handleChange} />
                         </SettingsLayoutRight>
                     </SettingsLayout>
@@ -83,7 +83,7 @@ const IdentitySection = () => {
                     </SettingsLayout>
                 </>
             )}
-        </SettingsSection>
+        </SettingsSectionWide>
     );
 };
 
