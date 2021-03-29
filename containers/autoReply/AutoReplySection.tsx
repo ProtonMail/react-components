@@ -145,7 +145,7 @@ const AutoReplySection = () => {
                             .t`Upgrade to ProtonMail Professional to enable automatic replies for when you are out of the office.`}
                     </p>
                     <AppLink to="/subscription" toApp={getAccountSettingsApp()}>
-                        {c('Action').t`Upgrade`}
+                        <Button color="norm">{c('Action').t`Upgrade`}</Button>
                     </AppLink>
                 </Card>
             )}
