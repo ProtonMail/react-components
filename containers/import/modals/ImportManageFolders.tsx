@@ -224,7 +224,7 @@ const ImportManageFolders = ({
         });
     }, [checkedFoldersMap, labelsMap, folderNamesMap]);
 
-    const addressToDisplay = addresses.find((addr) => addr.ID === modalModel.payload.AddressID);
+    const emailAddress = addresses.find((addr) => addr.ID === modalModel.payload.AddressID)?.Email;
 
     return (
         <>
@@ -236,7 +236,7 @@ const ImportManageFolders = ({
                 </div>
 
                 <div className="w40 text-ellipsis pt1">
-                    <strong>{c('Label').t`To: ${addressToDisplay?.Email}`}</strong>
+                    <strong>{c('Label').t`To: ${emailAddress}`}</strong>
                 </div>
             </div>
 
