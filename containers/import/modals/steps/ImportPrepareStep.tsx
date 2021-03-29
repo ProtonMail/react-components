@@ -241,8 +241,8 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, address }: Props) => 
         const Mapping = providerFolders.map((folder) => {
             const Destinations = isLabelMapping
                 ? {
-                      FolderPath: folder.DestinationFolder || DestinationFolder.ALL_MAIL,
-                      LabelNames: !folder.DestinationFolder ? getDestinationLabels(folder) : [],
+                      FolderPath: folder.DestinationFolder,
+                      Labels: !folder.DestinationFolder ? getDestinationLabels(folder) : [],
                   }
                 : {
                       FolderPath: folder.DestinationFolder || getDestinationFolderPath(folder),

@@ -64,10 +64,10 @@ export const mappingHasFoldersTooLong = (mapping: FolderMapping[]) => {
 
 export const mappingHasLabelsTooLong = (mapping: FolderMapping[]) => {
     return mapping.some((m) => {
-        if (!m.checked || !m.Destinations.LabelNames || !m.Destinations.LabelNames.length) {
+        if (!m.checked || !m.Destinations.Labels || !m.Destinations.Labels.length) {
             return false;
         }
-        return m.Destinations.LabelNames[0]?.Name.length >= 100;
+        return m.Destinations.Labels[0]?.Name.length >= 100;
     });
 };
 
@@ -82,9 +82,7 @@ export const mappingHasUnavailableNames = (
 ) => {
     const destinations = mapping
         .map((m) =>
-            m.checked && isLabelMapping
-                ? m.Destinations.LabelNames?.[0]?.Name
-                : unescapeSlashes(m.Destinations.FolderPath)
+            m.checked && isLabelMapping ? m.Destinations.Labels?.[0]?.Name : unescapeSlashes(m.Destinations.FolderPath)
         )
         .filter(isTruthy);
 

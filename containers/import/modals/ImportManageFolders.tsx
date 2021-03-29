@@ -90,8 +90,8 @@ const ImportManageFolders = ({
     const [labelsMap, setLabelsMap] = useState(
         providerFolders.reduce<LabelsMap>((acc, folder) => {
             const found = payload.Mapping.find((m) => m.Source === folder.Source);
-            if (found?.Destinations?.LabelNames?.length) {
-                [acc[folder.Source]] = found.Destinations.LabelNames;
+            if (found?.Destinations?.Labels?.length) {
+                [acc[folder.Source]] = found.Destinations.Labels;
             }
             return acc;
         }, {})
@@ -201,8 +201,8 @@ const ImportManageFolders = ({
             if (checkedFoldersMap[folder.Source]) {
                 const Destinations = isLabelMapping
                     ? {
-                          FolderPath: folder.DestinationFolder || DestinationFolder.ALL_MAIL,
-                          LabelNames: !folder.DestinationFolder ? [labelsMap[folder.Source]] : [],
+                          FolderPath: folder.DestinationFolder,
+                          Labels: !folder.DestinationFolder ? [labelsMap[folder.Source]] : [],
                       }
                     : {
                           FolderPath: forgeNewPath(folder),

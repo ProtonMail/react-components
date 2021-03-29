@@ -64,8 +64,8 @@ export interface ImportModalModel {
 export interface FolderMapping {
     Source: string;
     Destinations: {
-        FolderPath: string;
-        LabelNames?: {
+        FolderPath?: string;
+        Labels?: {
             Name: string;
             Color: string;
         }[];
