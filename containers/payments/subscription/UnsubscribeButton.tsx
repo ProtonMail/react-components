@@ -4,6 +4,8 @@ import { c } from 'ttag';
 import { deleteSubscription } from 'proton-shared/lib/api/payments';
 import { hasBonuses } from 'proton-shared/lib/helpers/organization';
 import { MAX_CALENDARS_PER_FREE_USER } from 'proton-shared/lib/calendar/constants';
+import { Calendar } from 'proton-shared/lib/interfaces/calendar';
+import { queryCalendars } from 'proton-shared/lib/api/calendars';
 import Button, { ButtonProps } from '../../../components/button/Button';
 import {
     useApi,
@@ -13,7 +15,6 @@ import {
     useModals,
     useEventManager,
     useOrganization,
-    useCalendars,
 } from '../../../hooks';
 import LossLoyaltyModal from '../LossLoyaltyModal';
 import DowngradeModal from '../DowngradeModal';
@@ -29,7 +30,6 @@ const UnsubscribeButton = ({ className, children, ...rest }: Props) => {
     const [organization] = useOrganization();
     const { createNotification, hideNotification } = useNotifications();
     const { createModal } = useModals();
-    const [calendars] = useCalendars();
     const api = useApi();
     const { call } = useEventManager();
     const [loading, withLoading] = useLoading();
@@ -58,6 +58,8 @@ const UnsubscribeButton = ({ className, children, ...rest }: Props) => {
         if (user.isFree) {
             return createNotification({ type: 'error', text: c('Info').t`You already have a free account` });
         }
+
+        const calendars: Calendar[] | undefined = (await api(queryCalendars({ Page: 1, PageSize: 2 })))?.Calendars;
 
         if ((calendars?.length || 0) > MAX_CALENDARS_PER_FREE_USER) {
             await new Promise<void>((resolve, reject) => {
