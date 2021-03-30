@@ -64,11 +64,9 @@ const Info = ({
                 <Icon
                     className={classnames(['icon-16p color-primary', className])}
                     name="info"
-                    alt={c('Action').t`More info:`}
+                    alt={c('Action').t`More info: ${title && title}`}
                     {...rest}
                 />
-                {title && <span className="sr-only">{title // just for proper vocalisation
-                    }</span>}
             </button>
             {title && isOpen ? (
                 <Popper
