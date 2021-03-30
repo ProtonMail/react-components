@@ -64,7 +64,7 @@ const Info = ({
                 <Icon
                     className={classnames(['icon-16p color-primary', className])}
                     name="info"
-                    alt={c('Action').t`More info: ${title && title}`}
+                    alt={c('Action').t`More info: ${title || ''}`}
                     {...rest}
                 />
             </button>
