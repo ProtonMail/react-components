@@ -18,7 +18,7 @@ const SettingsParagraph = ({ learnMoreUrl, learnMoreProps, className, children, 
     ) : null;
 
     return (
-        <p className={classnames(['settings-paragraph', className])} {...rest}>
+        <p className={classnames(['settings-paragraph color-weak', className])} {...rest}>
             {children}
             {learnMoreElement}
         </p>
