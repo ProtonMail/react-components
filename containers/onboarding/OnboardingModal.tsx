@@ -5,7 +5,6 @@ import { updateWelcomeFlags, updateThemeType } from 'proton-shared/lib/api/setti
 import { noop } from 'proton-shared/lib/helpers/function';
 import { range } from 'proton-shared/lib/helpers/array';
 import { ThemeTypes } from 'proton-shared/lib/themes/themes';
-import { APPS } from 'proton-shared/lib/constants';
 import { getAccountSettingsApp, getAppName } from 'proton-shared/lib/apps/helper';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 import { hasVisionary } from 'proton-shared/lib/helpers/subscription';
@@ -31,7 +30,6 @@ import OnboardingStep from './OnboardingStep';
 import OnboardingDiscoverApps from './OnboardingDiscoverApps';
 import OnboardingWelcome from './OnboardingWelcome';
 import OnboardingSetupOrganization from './OnboardingSetupOrganization';
-import OnboardingWelcomeMail from './OnboardingWelcomeMail';
 import { availableThemes } from '../themes/ThemesSection';
 import { getOrganizationKeyInfo } from '../organization/helpers/organizationKeysHelper';
 
@@ -172,12 +170,6 @@ const OnboardingModal = ({
         </OnboardingStep>
     );
 
-    const mailWelcomeMailStep = (
-        <OnboardingStep submit={c('Onboarding').t`Next`} onSubmit={handleNext} close={null}>
-            <OnboardingWelcomeMail />
-        </OnboardingStep>
-    );
-
     const hasDisplayNameStep = welcomeFlags?.hasDisplayNameStep && !hideDisplayName;
     const displayGenericSteps = showGenericSteps || hasDisplayNameStep;
     const genericSteps = displayGenericSteps
@@ -187,7 +179,7 @@ const OnboardingModal = ({
               canManageOrganization && setupOrganizationStep,
               themesStep,
           ].filter(isTruthy)
-        : [APP_NAME === APPS.PROTONMAIL && mailWelcomeMailStep].filter(isTruthy);
+        : [];
     const finalGenericSteps = displayGenericSteps ? [discoverAppsStep] : [];
 
     const productSteps = children
@@ -197,6 +189,7 @@ const OnboardingModal = ({
                       renderCallback?.({
                           onNext: handleNext,
                           onBack: handleBack,
+                          displayGenericSteps,
                       }) ?? null
               )
               .filter((x) => x !== null)

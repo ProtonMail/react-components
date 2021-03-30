@@ -12,4 +12,5 @@ export interface OnboardingStepProps {
 export interface OnboardingStepRenderCallback {
     onNext: () => void;
     onBack?: () => void;
+    displayGenericSteps?: boolean;
 }
