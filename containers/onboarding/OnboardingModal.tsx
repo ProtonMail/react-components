@@ -81,7 +81,7 @@ const OnboardingModal = ({
         organization.UsedMembers === 1 &&
         !hasOrganizationKey &&
         !hasVisionary(subscription);
-    const mailAppName = getAppName(APPS.PROTONMAIL);
+    const appName = getAppName(APP_NAME);
     const themes = availableThemes.map(({ identifier, getI18NLabel, src }) => {
         return { identifier, label: getI18NLabel(), src };
     });
@@ -167,7 +167,7 @@ const OnboardingModal = ({
     );
 
     const discoverAppsStep = (
-        <OnboardingStep submit={c('Action').t`Start using ${mailAppName}`} close={null} onSubmit={handleNext}>
+        <OnboardingStep submit={c('Action').t`Start using ${appName}`} close={null} onSubmit={handleNext}>
             <OnboardingDiscoverApps />
         </OnboardingStep>
     );

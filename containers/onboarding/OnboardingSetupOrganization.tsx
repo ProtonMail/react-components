@@ -6,9 +6,9 @@ import OnboardingContent, { Props as OnboardingContentProps } from './Onboarding
 const OnboardingSetupOrganization = (props: Omit<OnboardingContentProps, 'decription' | 'img'>) => {
     return (
         <OnboardingContent
-            title={c('Onboarding Proton').t`Set your organization up`}
+            title={c('Onboarding Proton').t`Set up your organization`}
             description={c('Onboarding Proton')
-                .t`Configure your organization, link your custom domain and add users to spread the power of privacy.`}
+                .t`Configure your organization, link your domain name, and create accounts to ensure all members of your organization are protected.`}
             img={<img src="TODO" alt="Proton" />}
             {...props}
         />

@@ -2,21 +2,20 @@ import React from 'react';
 import { c } from 'ttag';
 import onboardingWelcome from 'design-system/assets/img/onboarding/proton-welcome.svg';
 
-import { Label } from '../../components/label';
-import { Input, LegacyInputField } from '../../components/input';
+import { LegacyInputField, Label, Input } from '../../components';
 import OnboardingContent, { Props as OnboardingContentProps } from './OnboardingContent';
 
 interface Props extends Omit<OnboardingContentProps, 'img' | 'text' | 'description'> {
     displayName: string;
     setDisplayName: (displayName: string) => void;
     displayNameError?: string;
-    isSubmitted?: boolean;
 }
 
-const OnboardingSetDisplayName = ({ isSubmitted, displayName, setDisplayName, displayNameError, ...rest }: Props) => {
+const OnboardingSetDisplayName = ({ displayName, setDisplayName, displayNameError, ...rest }: Props) => {
     return (
         <OnboardingContent
-            description={c('Onboarding Proton').t`This is what people will see when you send them an email.`}
+            description={c('Onboarding Proton')
+                .t`This is what people will see when you send them an email, invite them to an event, or share a file with them.`}
             img={<img src={onboardingWelcome} alt="Proton" />}
             title={c('Onboarding Proton').t`Choose a display name`}
             {...rest}
@@ -30,7 +29,6 @@ const OnboardingSetDisplayName = ({ isSubmitted, displayName, setDisplayName, di
                             onChange={({ target }) => setDisplayName(target.value)}
                             id="displayName"
                             placeholder={c('Placeholder').t`e.g. Julia Smith`}
-                            isSubmitted={isSubmitted}
                             error={displayNameError}
                             autoFocus
                         />
