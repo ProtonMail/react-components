@@ -17,7 +17,7 @@ import {
     useHandler,
     useUser,
 } from '../../hooks';
-import { Toggle, SimpleSquireEditor, Button, AppLink, Card } from '../../components';
+import { Toggle, SimpleSquireEditor, Button, AppLink, Card, ButtonLike } from '../../components';
 
 import { SettingsParagraph, SettingsSectionWide } from '../account';
 
@@ -144,9 +144,9 @@ const AutoReplySection = () => {
                         {c('Info')
                             .t`Upgrade to ProtonMail Professional to enable automatic replies for when you are out of the office.`}
                     </p>
-                    <AppLink to="/subscription" toApp={getAccountSettingsApp()}>
-                        <Button color="norm">{c('Action').t`Upgrade`}</Button>
-                    </AppLink>
+                    <ButtonLike color="norm" as={AppLink} to="/subscription" toApp={getAccountSettingsApp()}>
+                        {c('Action').t`Upgrade`}
+                    </ButtonLike>
                 </Card>
             )}
 
