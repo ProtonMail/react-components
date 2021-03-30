@@ -59,7 +59,8 @@ const UnsubscribeButton = ({ className, children, ...rest }: Props) => {
             return createNotification({ type: 'error', text: c('Info').t`You already have a free account` });
         }
 
-        const calendars: Calendar[] | undefined = (await api(queryCalendars({ Page: 1, PageSize: 2 })))?.Calendars;
+        const { Calendars: calendars } =
+            (await api<{ Calendars: Calendar[] | undefined }>(queryCalendars({ Page: 1, PageSize: 2 }))) || {};
 
         if ((calendars?.length || 0) > MAX_CALENDARS_PER_FREE_USER) {
             await new Promise<void>((resolve, reject) => {
