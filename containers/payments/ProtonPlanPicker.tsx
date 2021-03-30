@@ -157,7 +157,7 @@ const ProtonPlanPicker = ({
                                 </span>
                                 <span className={classnames([!checked && 'color-hint'])}>
                                     {isFree ? (
-                                        <span>{c('Free price').t`Free`}</span>
+                                        <span aria-hidden="true">{c('Free price').t`Free`}</span>
                                     ) : (
                                         <Price currency={currency} suffix={c('Suffix for price').t`/ month`}>
                                             {plan.Pricing[cycle] / cycle}

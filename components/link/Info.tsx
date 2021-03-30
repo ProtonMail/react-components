@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { c } from 'ttag';
 
 import { generateUID, classnames } from '../../helpers';
 import Icon from '../icon/Icon';
@@ -58,8 +59,16 @@ const Info = ({
                 {...tooltipHandlers}
                 aria-describedby={uid}
                 type="button"
+                role={url ? 'link' : undefined}
             >
-                <Icon className={classnames(['icon-16p color-primary', className])} name="info" {...rest} />
+                <Icon
+                    className={classnames(['icon-16p color-primary', className])}
+                    name="info"
+                    alt={c('Action').t`More info:`}
+                    {...rest}
+                />
+                {title && <span className="sr-only">{title // just for proper vocalisation
+                    }</span>}
             </button>
             {title && isOpen ? (
                 <Popper
