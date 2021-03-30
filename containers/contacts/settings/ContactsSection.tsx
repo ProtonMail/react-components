@@ -20,7 +20,7 @@ const ContactsSection = () => {
                     <Info url="https://protonmail.com/support/knowledge-base/autosave-contact-list/" />
                 </label>
             </SettingsLayoutLeft>
-            <SettingsLayoutRight>
+            <SettingsLayoutRight className="pt0-5">
                 <AutoSaveContactsToggle autoSaveContacts={!!AutoSaveContacts} id="saveContactToggle" />
             </SettingsLayoutRight>
         </SettingsLayout>

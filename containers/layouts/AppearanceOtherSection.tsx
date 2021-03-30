@@ -120,7 +120,7 @@ const AppearanceOtherSection = () => {
                     </label>
                 </SettingsLayoutLeft>
 
-                <SettingsLayoutRight>
+                <SettingsLayoutRight className="pt0-5">
                     <ViewModeToggle
                         id="viewMode"
                         viewMode={ViewMode}
@@ -164,9 +164,7 @@ const AppearanceOtherSection = () => {
 
             <SettingsLayout>
                 <SettingsLayoutLeft>
-                    <label className="text-semibold">
-                        {c('Label').t`Read/unread toolbar order`}
-                    </label>
+                    <label className="text-semibold">{c('Label').t`Read/unread toolbar order`}</label>
                 </SettingsLayoutLeft>
                 <SettingsLayoutRight>
                     <div className="mb1">

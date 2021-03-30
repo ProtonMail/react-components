@@ -7,16 +7,7 @@ import downloadFile from 'proton-shared/lib/helpers/downloadFile';
 import { SETTINGS_LOG_AUTH_STATE } from 'proton-shared/lib/interfaces';
 import { wait } from 'proton-shared/lib/helpers/promise';
 import { AuthLog, getAuthLogEventsI18N } from 'proton-shared/lib/authlog';
-import {
-    Alert,
-    Button,
-    ConfirmModal,
-    Icon,
-    Info,
-    Pagination,
-    Toggle,
-    usePaginationAsync,
-} from '../../components';
+import { Alert, Button, ConfirmModal, Icon, Info, Pagination, Toggle, usePaginationAsync } from '../../components';
 import { useApi, useLoading, useModals, useUserSettings } from '../../hooks';
 
 import LogsTable from './LogsTable';
@@ -147,7 +138,7 @@ const LogsSection = () => {
                         {c('Log preference').t`Enable authentication logs`}
                     </label>
                 </SettingsLayoutLeft>
-                <SettingsLayoutRight>
+                <SettingsLayoutRight className="pt0-5">
                     <Toggle
                         id="logs-toggle"
                         checked={logAuth === BASIC || logAuth === ADVANCED}
@@ -164,7 +155,7 @@ const LogsSection = () => {
                             <Info title={c('Tooltip').t`Records the IP address of each event in the security log.`} />
                         </label>
                     </SettingsLayoutLeft>
-                    <SettingsLayoutRight>
+                    <SettingsLayoutRight className="pt0-5">
                         <Toggle
                             id="advanced-logs-toggle"
                             checked={logAuth === ADVANCED}
@@ -187,9 +178,7 @@ const LogsSection = () => {
                         <span>{c('Action').t`Reload`}</span>
                     </Button>
 
-                    {state.logs.length ?
-                        <WipeLogsButton className="mr1" onWipe={handleWipe} />
-                        : null}
+                    {state.logs.length ? <WipeLogsButton className="mr1" onWipe={handleWipe} /> : null}
                     {state.logs.length ? (
                         <Button
                             shape="outline"
