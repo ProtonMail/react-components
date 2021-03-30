@@ -4,7 +4,7 @@ import { switchPlan } from 'proton-shared/lib/helpers/planIDs';
 import { DEFAULT_CURRENCY, DEFAULT_CYCLE, PLAN_SERVICES, PLANS } from 'proton-shared/lib/constants';
 import { toMap } from 'proton-shared/lib/helpers/object';
 import { c } from 'ttag';
-import { Loader, Button } from '../../../components';
+import { Loader, Button, Card } from '../../../components';
 import { useUser, useSubscription, useModals, usePlans, useAddresses, useOrganization } from '../../../hooks';
 
 import SubscriptionModal from './SubscriptionModal';
@@ -12,12 +12,12 @@ import { SUBSCRIPTION_STEPS } from './constants';
 import UpsellItem from './UpsellItem';
 
 const UpsellMailTemplate = ({ children }: { children: React.ReactNode }) => (
-    <div className="bg-global-highlight p1 mt1-5">
+    <Card rounded bordered={false} className="mt1-5">
         <UpsellItem icon="organization-users">{c('Mail upsell feature').t`Get Multi-user support`}</UpsellItem>
         <UpsellItem icon="organization">{c('Mail upsell feature').t`Host emails for your organization`}</UpsellItem>
         <UpsellItem icon="keys">{c('Mail upsell feature').t`Create separate logins for each user`}</UpsellItem>
         {children}
-    </div>
+    </Card>
 );
 
 const UpsellMailSubscription = () => {

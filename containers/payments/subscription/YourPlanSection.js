@@ -116,7 +116,7 @@ const YourPlanSection = ({ permission }) => {
                             <Href url="https://mail.protonmail.com/login">{c('Info').t`Not activated`}</Href>
                         )}
                     </SettingsLayoutLeft>
-                    <SettingsLayoutRight>
+                    <SettingsLayoutRight className="flex-item-fluid">
                         {mailAddons}
                         <UpsellMailSubscription />
                     </SettingsLayoutRight>
@@ -126,7 +126,7 @@ const YourPlanSection = ({ permission }) => {
                     <SettingsLayoutLeft className="text-semibold">
                         {c('Label').t`ProtonVPN ${hasPaidVpn ? VPNPlanName : c('Plan').t`Free`}`}
                     </SettingsLayoutLeft>
-                    <SettingsLayoutRight>
+                    <SettingsLayoutRight className="flex-item-fluid">
                         {hasPaidVpn ? MaxVPN : 1} {c('Label').t`VPN Connections available`}
                         <UpsellVPNSubscription />
                     </SettingsLayoutRight>

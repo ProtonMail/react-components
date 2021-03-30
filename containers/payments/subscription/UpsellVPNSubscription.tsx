@@ -4,7 +4,7 @@ import { switchPlan } from 'proton-shared/lib/helpers/planIDs';
 import { DEFAULT_CURRENCY, DEFAULT_CYCLE, PLAN_SERVICES, PLANS } from 'proton-shared/lib/constants';
 import { toMap } from 'proton-shared/lib/helpers/object';
 import { c } from 'ttag';
-import { Loader, Button } from '../../../components';
+import { Loader, Button, Card } from '../../../components';
 import { useUser, useSubscription, useModals, usePlans, useOrganization } from '../../../hooks';
 import SubscriptionModal from './SubscriptionModal';
 import { SUBSCRIPTION_STEPS } from './constants';
@@ -47,7 +47,7 @@ const UpsellVPNSubscription = () => {
     }
 
     return (
-        <div className="bg-global-highlight p1 mt1-5">
+        <Card rounded bordered={false} className="mt1-5">
             <UpsellItem icon="rocket">{c('VPN upsell feature').t`Higher speed servers (up to 10Gbps)`}</UpsellItem>
             <UpsellItem icon="tour">
                 {c('VPN upsell feature').t`Access geo-blocked content (Netflix, YouTube, etc.)`}
@@ -56,7 +56,7 @@ const UpsellVPNSubscription = () => {
             <Button color="norm" className="mt1" onClick={handleUpgradeClick}>
                 {c('Action').t`Upgrade to Plus`}
             </Button>
-        </div>
+        </Card>
     );
 };
 
