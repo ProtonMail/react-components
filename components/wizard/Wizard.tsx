@@ -14,7 +14,10 @@ interface Props {
 const Wizard = ({ step = 0, steps = [], hideText = false }: Props) => {
     return (
         <div
-            className={classnames(['wizard-container pt0 pb1 mb1', hideText && 'wizard-container--no-text-displayed'])}
+            className={classnames([
+                'wizard-container relative pt0 pb1 mb1',
+                hideText && 'wizard-container--no-text-displayed',
+            ])}
         >
             <ul className="wizard mt0 unstyled flex flex-nowrap flex-justify-space-between">
                 {steps.map((text = '', index) => {
