@@ -9,6 +9,7 @@ interface Props {
     onPrevious: () => void;
     onNext: () => void;
 }
+
 const ImportCsvTableHeader = ({ disabledPrevious = true, disabledNext = true, onPrevious, onNext, ...rest }: Props) => {
     return (
         <thead {...rest}>
@@ -22,16 +23,12 @@ const ImportCsvTableHeader = ({ disabledPrevious = true, disabledNext = true, on
                     <div className="inline-flex">
                         <span className="flex-item-centered-vert mr0-5">{c('TableHeader').t`VALUES`}</span>
                         <span className="flex flex-nowrap">
-                            <Button
-                                disabled={disabledPrevious}
-                                icon={<Icon name="caret" className="flex-item-noshrink rotateZ-90" />}
-                                onClick={onPrevious}
-                            />
-                            <Button
-                                disabled={disabledNext}
-                                icon={<Icon name="caret" className="flex-item-noshrink rotateZ-270" />}
-                                onClick={onNext}
-                            />
+                            <Button icon disabled={disabledPrevious} onClick={onPrevious}>
+                                <Icon name="caret" className="flex-item-noshrink rotateZ-90" />
+                            </Button>
+                            <Button icon disabled={disabledNext} onClick={onNext}>
+                                <Icon name="caret" className="flex-item-noshrink rotateZ-270" />
+                            </Button>
                         </span>
                     </div>
                 </TableCell>

@@ -8,7 +8,7 @@ import { DecryptedKey } from 'proton-shared/lib/interfaces';
 import { Contact } from 'proton-shared/lib/interfaces/contacts';
 import { exportContactsFromLabel } from 'proton-shared/lib/contacts/export';
 
-import { FormModal, ResetButton, PrimaryButton, Alert, DynamicProgress } from '../../../components';
+import { FormModal, Button, PrimaryButton, Alert, DynamicProgress } from '../../../components';
 import { useContacts, useApi } from '../../../hooks';
 
 const DOWNLOAD_FILENAME = 'protonContacts';
@@ -20,9 +20,9 @@ interface FooterProps {
 const ExportFooter = ({ loading }: FooterProps) => {
     return (
         <>
-            <ResetButton>{c('Action').t`Cancel`}</ResetButton>
+            <Button type="reset">{c('Action').t`Cancel`}</Button>
             <PrimaryButton loading={loading} type="submit">
-                {c('Action').t`Download`}
+                {c('Action').t`Save`}
             </PrimaryButton>
         </>
     );

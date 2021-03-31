@@ -10,7 +10,7 @@ const ErrorDetail = ({ error, ...rest }: { error: ImportContactError }) => {
     return (
         <div {...rest}>
             <span>{c('Import contact error').t`Contact ${contactId}: `}</span>
-            <span className="color-global-warning">{error.message}</span>
+            <span className="color-danger">{error.message}</span>
         </div>
     );
 };

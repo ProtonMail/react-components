@@ -30,13 +30,13 @@ const AttachingModalContent = ({
     ) : (
         <Alert learnMore="https://protonmail.com/support/knowledge-base/adding-contacts/">
             {c('Description').t`The file should have a maximum size of ${MAX_IMPORT_FILE_SIZE_STRING} and have
-                up to ${MAX_IMPORT_CONTACTS_STRING} contacts. If your file is bigger, please split it into smaller files. We support both CSV and VCF formats.`}
+                up to ${MAX_IMPORT_CONTACTS_STRING} contacts. If your file is bigger, please split it into smaller files.`}
         </Alert>
     );
     return (
         <>
             {alert}
-            <Bordered className={classnames(['flex relative', !!model.failure && 'bordered-container--error'])}>
+            <Bordered className={classnames(['flex relative', !!model.failure && 'border--danger'])}>
                 {/* TODO: drag&drop component here. There seems to be no React component for this kind of behavior yet */}
                 {model.fileAttached ? (
                     <AttachedFile file={model.fileAttached} iconName="contacts-groups" onClear={onClear} />
@@ -48,7 +48,7 @@ const AttachingModalContent = ({
                         onDragLeave={onDragLeave}
                         className="w100"
                     >
-                        <FileInput className="text-center" accept=".csv, .vcf" id="import-contacts" onChange={onAttach}>
+                        <FileInput accept=".csv, .vcf" id="import-contacts" onChange={onAttach}>
                             {c('Action').t`Choose a file or drag it here`}
                         </FileInput>
                     </Dropzone>
