@@ -9,7 +9,7 @@ import { SettingsSectionWide, SettingsParagraph } from '../account';
 
 import ThemeCards from './ThemeCards';
 
-const availableThemes = [PROTON_THEMES.DEFAULT, PROTON_THEMES.DARK];
+const availableThemes = Object.values(PROTON_THEMES);
 
 const ThemesSection = () => {
     const api = useApi();
