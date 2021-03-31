@@ -49,7 +49,7 @@ enum CustomFieldsBitmap {
 }
 
 const ImportPrepareStep = ({ modalModel, updateModalModel, addresses }: Props) => {
-    const availableAddresses = addresses.filter((addr) => addr.Keys.some((k) => k.Active));
+    const availableAddresses = addresses.filter((addr) => addr.Receive && addr.Send && addr.Keys.some((k) => k.Active));
 
     const initialModel = useRef<ImportModalModel>(modalModel);
     const [user, userLoading] = useUser();
