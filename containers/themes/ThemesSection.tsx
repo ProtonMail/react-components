@@ -1,42 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { c } from 'ttag';
 
 import { updateThemeType } from 'proton-shared/lib/api/settings';
 import { PROTON_THEMES, ThemeTypes } from 'proton-shared/lib/themes/themes';
 
-import { useUserSettings, useEventManager, useApi, useLoading, useNotifications } from '../../hooks';
+import { useUserSettings, useApi } from '../../hooks';
 import { SettingsSectionWide, SettingsParagraph } from '../account';
 
 import ThemeCards from './ThemeCards';
+import { getThemeStyle } from './ThemeInjector';
+import { useThemeStyle } from './ThemeStyleProvider';
 
 const availableThemes = Object.values(PROTON_THEMES);
 
 const ThemesSection = () => {
     const api = useApi();
-    const { createNotification } = useNotifications();
-    const [{ ThemeType }] = useUserSettings();
-    const { call } = useEventManager();
-    const [loading, withLoading] = useLoading();
+    const [{ ThemeType: actualThemeType }] = useUserSettings();
+    const [themeType, setThemeType] = useState(actualThemeType);
+    const [, setThemeStyle] = useThemeStyle();
 
     const themes = availableThemes.map(({ identifier, getI18NLabel, src }) => {
         return { identifier, label: getI18NLabel(), src };
     });
 
-    const handleChangeTheme = async (newThemeIdentifier: ThemeTypes) => {
-        await api(updateThemeType(newThemeIdentifier));
-        await call();
-        createNotification({ text: c('Success').t`Theme saved` });
+    const handleThemeChange = (newThemeType: ThemeTypes) => {
+        setThemeType(newThemeType);
+        setThemeStyle(getThemeStyle(newThemeType));
+        api(updateThemeType(newThemeType));
     };
 
     return (
         <SettingsSectionWide>
             <SettingsParagraph>{c('Info').t`Choose the look and feel of the application.`}</SettingsParagraph>
-            <ThemeCards
-                list={themes}
-                themeIdentifier={ThemeType}
-                onChange={(identifier) => withLoading(handleChangeTheme(identifier))}
-                disabled={loading}
-            />
+            <ThemeCards list={themes} themeIdentifier={themeType} onChange={handleThemeChange} />
         </SettingsSectionWide>
     );
 };

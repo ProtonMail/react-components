@@ -74,10 +74,10 @@ const UserDropdown = ({ ...rest }) => {
         close();
     };
 
-    const handleThemeChange = (themeType: ThemeTypes) => {
-        setThemeType(themeType);
-        setThemeStyle(getThemeStyle(themeType));
-        api(updateThemeType(themeType));
+    const handleThemeChange = (newThemeType: ThemeTypes) => {
+        setThemeType(newThemeType);
+        setThemeStyle(getThemeStyle(newThemeType));
+        api(updateThemeType(newThemeType));
     };
 
     const handleThemeToggle = () => {
