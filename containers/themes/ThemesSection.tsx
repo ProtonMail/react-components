@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { c } from 'ttag';
 
 import { updateThemeType } from 'proton-shared/lib/api/settings';
@@ -18,6 +18,14 @@ const ThemesSection = () => {
     const [{ ThemeType: actualThemeType }] = useUserSettings();
     const [themeType, setThemeType] = useState(actualThemeType);
     const [, setThemeStyle] = useThemeStyle();
+
+    useEffect(
+        // Updates from event-manager
+        () => {
+            setThemeType(actualThemeType);
+        },
+        [actualThemeType]
+    );
 
     const themes = availableThemes.map(({ identifier, getI18NLabel, src }) => {
         return { identifier, label: getI18NLabel(), src };

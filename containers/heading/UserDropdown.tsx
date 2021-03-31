@@ -52,7 +52,7 @@ const UserDropdown = ({ ...rest }) => {
     const [themeType, setThemeType] = useState(actualThemeType);
 
     useEffect(() => {
-        // Updates from ev
+        // Updates from event-manager
         setThemeType(themeType);
     }, [actualThemeType]);
 
