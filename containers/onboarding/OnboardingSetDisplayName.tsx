@@ -1,6 +1,6 @@
 import React from 'react';
 import { c } from 'ttag';
-import onboardingWelcome from 'design-system/assets/img/onboarding/proton-welcome.svg';
+import onboardingDisplayName from 'design-system/assets/img/onboarding/onboarding-display-name.svg';
 
 import { LegacyInputField, Label, Input } from '../../components';
 import OnboardingContent, { Props as OnboardingContentProps } from './OnboardingContent';
@@ -16,7 +16,7 @@ const OnboardingSetDisplayName = ({ displayName, setDisplayName, displayNameErro
         <OnboardingContent
             description={c('Onboarding Proton')
                 .t`This is what people will see when you send them an email, invite them to an event, or share a file with them.`}
-            img={<img src={onboardingWelcome} alt="Proton" />}
+            img={<img src={onboardingDisplayName} alt={c('Onboarding Proton').t`Choose a display name`} />}
             title={c('Onboarding Proton').t`Choose a display name`}
             {...rest}
         >
