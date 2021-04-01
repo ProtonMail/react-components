@@ -19,16 +19,21 @@ const AuthenticationCertificateSection = () => {
     const api = useApi();
 
     const getKeyPair = async (mode) => {
-        if (!isCryptoSupported()) {
+        try {
+            if (!isCryptoSupported()) {
+                throw new Error('crypto not supported');
+            }
+
+            const generateKeyPair = mode === 'rsa' ? generateRsaKeyPair : generateEcKeyPair;
+            const key = await generateKeyPair();
+
+            return {
+                PrivateKey: await exportPrivateKey(key),
+                PublicKey: await exportPublicKey(key),
+            };
+        } catch (e) {
             return api(queryAuthenticationCertificateKey(mode));
         }
-
-        const key = await (mode === 'rsa' ? generateRsaKeyPair() : generateEcKeyPair());
-
-        return {
-            PrivateKey: await exportPrivateKey(key),
-            PublicKey: await exportPublicKey(key),
-        };
     };
 
     const download = async (mode) => {
@@ -37,7 +42,7 @@ const AuthenticationCertificateSection = () => {
         const { SerialNumber, Certificate, ExpirationTime } = await api(
             queryAuthenticationCertificate({
                 ClientPublicKey: PublicKey,
-                ClientPublicKeyMode: mode,
+                ClientPublicKeyMode: mode.toUpperCase(),
             })
         );
 
