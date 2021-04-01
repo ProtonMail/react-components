@@ -3,6 +3,7 @@ import { c } from 'ttag';
 import { queryAuthenticationCertificate, queryAuthenticationCertificateKey } from 'proton-shared/lib/api/vpn';
 // import { ENCRYPTION_CONFIGS, ENCRYPTION_TYPES } from 'proton-shared/lib/constants';
 // import { randomBytes } from 'crypto';
+import { exportPrivateKey, exportPublicKey, generateKeyPair, isCryptoSupported } from 'proton-shared/lib/keys/keyPair';
 import { Button } from '../../../components';
 import useApi from '../../../hooks/useApi';
 import { useLoading } from '../../../hooks';
@@ -11,9 +12,22 @@ const AuthenticationCertificateSection = () => {
     const [loading, withLoading] = useLoading();
     const api = useApi();
 
+    const getKeyPair = async () => {
+        if (!isCryptoSupported()) {
+            return api(queryAuthenticationCertificateKey());
+        }
+
+        const key = await generateKeyPair();
+
+        return {
+            PrivateKey: exportPrivateKey(key),
+            PublicKey: exportPublicKey(key),
+        };
+    };
+
     const download = async () => {
         // const passphrase = randomBytes(32).toString();
-        const { PrivateKey, PublicKey } = await api(queryAuthenticationCertificateKey());
+        const { PrivateKey, PublicKey } = await getKeyPair();
         const { SerialNumber, Certificate, ExpirationTime } = await api(
             queryAuthenticationCertificate({
                 ClientPublicKey: PublicKey,
