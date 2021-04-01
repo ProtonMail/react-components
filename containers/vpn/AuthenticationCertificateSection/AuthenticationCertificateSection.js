@@ -22,15 +22,17 @@ const AuthenticationCertificateSection = () => {
         return {
             PrivateKey: exportPrivateKey(key),
             PublicKey: exportPublicKey(key),
+            Mode: 'RSA',
         };
     };
 
     const download = async () => {
         // const passphrase = randomBytes(32).toString();
-        const { PrivateKey, PublicKey } = await getKeyPair();
+        const { PrivateKey, PublicKey, Mode } = await getKeyPair();
         const { SerialNumber, Certificate, ExpirationTime } = await api(
             queryAuthenticationCertificate({
                 ClientPublicKey: PublicKey,
+                ClientPublicKeyMode: Mode || 'EC',
             })
         );
 
