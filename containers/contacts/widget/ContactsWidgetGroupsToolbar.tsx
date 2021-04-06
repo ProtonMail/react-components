@@ -1,6 +1,9 @@
 import React, { ChangeEvent } from 'react';
 import { c } from 'ttag';
+import { APPS } from 'proton-shared/lib/constants';
+
 import { Checkbox, Icon, Button, Tooltip } from '../../../components';
+import { useConfig } from '../../../hooks';
 
 interface Props {
     allChecked: boolean;
@@ -11,6 +14,8 @@ interface Props {
 }
 
 const ContactsWidgetGroupsToolbar = ({ allChecked, oneSelected, onCheckAll, onCompose, onCreate }: Props) => {
+    const { APP_NAME } = useConfig();
+    const isMailApp = APP_NAME === APPS.PROTONMAIL;
     const handleCheck = ({ target }: ChangeEvent<HTMLInputElement>) => onCheckAll(target.checked);
 
     return (
@@ -28,11 +33,13 @@ const ContactsWidgetGroupsToolbar = ({ allChecked, oneSelected, onCheckAll, onCo
                     </label>
                 </span>
             </Tooltip>
-            <Tooltip title={c('Action').t`Compose`}>
-                <Button icon className="inline-flex mr0-5 pt0-5 pb0-5" onClick={onCompose} disabled={!oneSelected}>
-                    <Icon name="email" alt={c('Action').t`Compose`} />
-                </Button>
-            </Tooltip>
+            {isMailApp ? (
+                <Tooltip title={c('Action').t`Compose`}>
+                    <Button icon className="inline-flex mr0-5 pt0-5 pb0-5" onClick={onCompose} disabled={!oneSelected}>
+                        <Icon name="email" alt={c('Action').t`Compose`} />
+                    </Button>
+                </Tooltip>
+            ) : null}
             <Tooltip title={c('Action').t`Add new group`}>
                 <Button icon color="norm" className="mlauto inline-flex pt0-5 pb0-5" onClick={onCreate}>
                     <Icon name="contacts-group-add" alt={c('Action').t`Add new contact`} />
