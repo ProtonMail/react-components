@@ -1,6 +1,9 @@
 import React, { ChangeEvent } from 'react';
 import { c, msgid } from 'ttag';
+import { APPS } from 'proton-shared/lib/constants';
+
 import { Checkbox, Icon, Button, Tooltip } from '../../../components';
+import { useConfig } from '../../../hooks';
 
 interface Props {
     allChecked: boolean;
@@ -21,6 +24,8 @@ const ContactsWidgetToolbar = ({
     onDelete,
     onCreate,
 }: Props) => {
+    const { APP_NAME } = useConfig();
+    const isMailApp = APP_NAME === APPS.PROTONMAIL;
     const handleCheck = ({ target }: ChangeEvent<HTMLInputElement>) => onCheckAll(target.checked);
     const noSelection = !selectedCount;
     const deleteText = noSelection
@@ -46,28 +51,32 @@ const ContactsWidgetToolbar = ({
                     </label>
                 </span>
             </Tooltip>
-            <Tooltip title={c('Action').t`Compose`}>
-                <Button
-                    icon
-                    className="mr0-5 inline-flex pt0-5 pb0-5"
-                    onClick={onCompose}
-                    disabled={noSelection}
-                    title={c('Action').t`Compose`}
-                >
-                    <Icon name="email" />
-                </Button>
-            </Tooltip>
-            <Tooltip title={c('Action').t`Forward as attachment`}>
-                <Button
-                    icon
-                    className="mr0-5 inline-flex pt0-5 pb0-5"
-                    onClick={onForward}
-                    disabled={noSelection}
-                    title={c('Action').t`Forward as attachment`}
-                >
-                    <Icon name="forward" />
-                </Button>
-            </Tooltip>
+            {isMailApp ? (
+                <>
+                    <Tooltip title={c('Action').t`Compose`}>
+                        <Button
+                            icon
+                            className="mr0-5 inline-flex pt0-5 pb0-5"
+                            onClick={onCompose}
+                            disabled={noSelection}
+                            title={c('Action').t`Compose`}
+                        >
+                            <Icon name="email" />
+                        </Button>
+                    </Tooltip>
+                    <Tooltip title={c('Action').t`Forward as attachment`}>
+                        <Button
+                            icon
+                            className="mr0-5 inline-flex pt0-5 pb0-5"
+                            onClick={onForward}
+                            disabled={noSelection}
+                            title={c('Action').t`Forward as attachment`}
+                        >
+                            <Icon name="forward" />
+                        </Button>
+                    </Tooltip>
+                </>
+            ) : null}
             <Tooltip title={deleteText}>
                 <Button
                     icon
