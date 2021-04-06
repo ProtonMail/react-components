@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { c, msgid } from 'ttag';
 import { Recipient } from 'proton-shared/lib/interfaces';
 import { ContactEmail } from 'proton-shared/lib/interfaces/contacts';
 import { exportContacts } from 'proton-shared/lib/contacts/export';
 import { APPS } from 'proton-shared/lib/constants';
+import { extractMergeable } from 'proton-shared/lib/contacts/merge';
+
 import { FullLoader, SearchInput, useAppLink } from '../../../components';
 import { useApi, useModals, useNotifications, useUser, useUserKeys, useUserSettings } from '../../../hooks';
+import MergeModal from '../merge/MergeModal';
 import ContactsList from '../ContactsList';
 import ContactDetailsModal from '../modals/ContactDetailsModal';
 import useContactList from '../useContactList';
@@ -13,6 +16,7 @@ import ContactsWidgetToolbar from './ContactsWidgetToolbar';
 import ContactDeleteModal from '../modals/ContactDeleteModal';
 import ContactModal from '../modals/ContactModal';
 import ContactsWidgetPlaceholder, { EmptyType } from './ContactsWidgetPlaceholder';
+import MergeContactBanner from './MergeContactBanner';
 
 interface Props {
     onClose: () => void;
@@ -22,6 +26,7 @@ interface Props {
 const ContactsWidgetContainer = ({ onClose, onCompose }: Props) => {
     const [user, loadingUser] = useUser();
     const [userSettings, loadingUserSettings] = useUserSettings();
+    const [userKeysList, loadingUserKeys] = useUserKeys();
     const [userKeys] = useUserKeys();
     const { createModal } = useModals();
     const { createNotification } = useNotifications();
@@ -54,6 +59,9 @@ const ContactsWidgetContainer = ({ onClose, onCompose }: Props) => {
         contactID,
         contactGroupID,
     });
+
+    const mergeableContacts = useMemo(() => extractMergeable(formattedContacts), [formattedContacts]);
+    const countMergeableContacts = mergeableContacts.length;
 
     const handleClearSearch = () => {
         // If done synchronously, button is removed from the dom and the dropdown considers a click outside
@@ -157,10 +165,24 @@ const ContactsWidgetContainer = ({ onClose, onCompose }: Props) => {
         appLink('/contacts/import-export#import', APPS.PROTONACCOUNT);
     };
 
+    const handleMerge = (mergeContactsDetected?: boolean) => {
+        const selectedContacts = formattedContacts.filter((contact) => selectedIDs.includes(contact.ID));
+        const contacts = mergeContactsDetected ? mergeableContacts : [selectedContacts];
+
+        createModal(
+            <MergeModal
+                contacts={contacts}
+                contactID={contactID}
+                userKeysList={userKeysList}
+                onMerged={() => handleCheckAll(false)} // Unselect all contacts
+            />
+        );
+    };
+
     const contactsCount = formattedContacts.length;
     const contactsLength = contacts ? contacts.length : 0;
 
-    const loading = loadingContacts || loadingUser || loadingUserSettings;
+    const loading = loadingContacts || loadingUser || loadingUserSettings || loadingUserKeys;
     const showPlaceholder = !loading && !contactsCount;
     const showList = !showPlaceholder;
 
@@ -193,6 +215,7 @@ const ContactsWidgetContainer = ({ onClose, onCompose }: Props) => {
                     onForward={handleForward}
                     onCreate={handleCreate}
                     onDelete={handleDelete}
+                    onMerge={() => handleMerge(false)}
                 />
             </div>
             <div className="flex-item-fluid w100">
@@ -210,20 +233,28 @@ const ContactsWidgetContainer = ({ onClose, onCompose }: Props) => {
                     />
                 ) : null}
                 {showList ? (
-                    <ContactsList
-                        contactID={contactID}
-                        totalContacts={contactsLength}
-                        contacts={formattedContacts}
-                        contactGroupsMap={contactGroupsMap}
-                        user={user}
-                        userSettings={userSettings}
-                        onCheckOne={handleCheckOne}
-                        isDesktop={false}
-                        checkedIDs={checkedIDs}
-                        onCheck={handleCheck}
-                        onClick={handleDetails}
-                        activateDrag={false}
-                    />
+                    <>
+                        {countMergeableContacts ? (
+                            <MergeContactBanner
+                                countMergeableContacts={countMergeableContacts}
+                                onMerge={() => handleMerge(true)}
+                            />
+                        ) : null}
+                        <ContactsList
+                            contactID={contactID}
+                            totalContacts={contactsLength}
+                            contacts={formattedContacts}
+                            contactGroupsMap={contactGroupsMap}
+                            user={user}
+                            userSettings={userSettings}
+                            onCheckOne={handleCheckOne}
+                            isDesktop={false}
+                            checkedIDs={checkedIDs}
+                            onCheck={handleCheck}
+                            onClick={handleDetails}
+                            activateDrag={false}
+                        />
+                    </>
                 ) : null}
             </div>
         </div>

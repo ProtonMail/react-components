@@ -13,6 +13,7 @@ interface Props {
     onForward: () => void;
     onDelete: () => void;
     onCreate: () => void;
+    onMerge: () => void;
 }
 
 const ContactsWidgetToolbar = ({
@@ -23,11 +24,13 @@ const ContactsWidgetToolbar = ({
     onForward,
     onDelete,
     onCreate,
+    onMerge,
 }: Props) => {
     const { APP_NAME } = useConfig();
     const isMailApp = APP_NAME === APPS.PROTONMAIL;
     const handleCheck = ({ target }: ChangeEvent<HTMLInputElement>) => onCheckAll(target.checked);
     const noSelection = !selectedCount;
+    const canMerge = selectedCount > 1;
     const deleteText = noSelection
         ? c('Action').t`Delete contact`
         : c('Action').ngettext(
@@ -77,6 +80,17 @@ const ContactsWidgetToolbar = ({
                     </Tooltip>
                 </>
             ) : null}
+            <Tooltip title={c('Action').t`Merge contacts`}>
+                <Button
+                    icon
+                    className="mr0-5 inline-flex pt0-5 pb0-5"
+                    onClick={onMerge}
+                    disabled={!canMerge}
+                    title={c('Action').t`Merge contacts`}
+                >
+                    <Icon name="merge" />
+                </Button>
+            </Tooltip>
             <Tooltip title={deleteText}>
                 <Button
                     icon
