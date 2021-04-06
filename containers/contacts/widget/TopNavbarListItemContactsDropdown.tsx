@@ -5,6 +5,7 @@ import { Dropdown, DropdownButton, Icon, Tabs, usePopperAnchor } from '../../../
 import { generateUID } from '../../../helpers';
 import ContactsWidgetContainer from './ContactsWidgetContainer';
 import ContactsWidgetGroupsContainer from './ContactsWidgetGroupsContainer';
+import ContactsWidgetSettingsContainer from './ContactsWidgetSettingsContainer';
 import './ContactsWidget.scss';
 import TopNavbarListItemButton, {
     TopNavbarListItemButtonProps,
@@ -74,6 +75,10 @@ const TopNavbarListItemContactsDropdown = ({ className, onCompose }: Props) => {
                         {
                             title: c('Title').t`Groups`,
                             content: <ContactsWidgetGroupsContainer onClose={handleClose} onCompose={onCompose} />,
+                        },
+                        {
+                            title: c('Title').t`Settings`,
+                            content: <ContactsWidgetSettingsContainer onClose={handleClose} />,
                         },
                     ]}
                     value={tabIndex}
