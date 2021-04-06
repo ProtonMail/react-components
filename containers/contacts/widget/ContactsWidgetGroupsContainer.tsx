@@ -4,6 +4,8 @@ import { Recipient } from 'proton-shared/lib/interfaces';
 import { ContactEmail } from 'proton-shared/lib/interfaces/contacts';
 import { normalize } from 'proton-shared/lib/helpers/string';
 import { noop } from 'proton-shared/lib/helpers/function';
+import { orderContactGroups } from 'proton-shared/lib/helpers/contactGroups';
+
 import { ContactUpgradeModal, FullLoader, SearchInput } from '../../../components';
 import {
     useContactEmails,
@@ -34,14 +36,15 @@ const ContactsWidgetGroupsContainer = ({ onClose, onCompose }: Props) => {
     const [search, setSearch] = useState('');
 
     const [groups = [], loadingGroups] = useContactGroups();
+    const orderedGroups = orderContactGroups(groups);
     const [contactEmails = [], loadingContactEmails] = useContactEmails() as [ContactEmail[], boolean, any];
 
     const normalizedSearch = normalize(search);
 
-    const filteredGroups = useMemo(() => groups.filter(({ Name }) => normalize(Name).includes(normalizedSearch)), [
-        groups,
-        normalizedSearch,
-    ]);
+    const filteredGroups = useMemo(
+        () => orderedGroups.filter(({ Name }) => normalize(Name).includes(normalizedSearch)),
+        [orderedGroups, normalizedSearch]
+    );
 
     const groupIDs = filteredGroups.map((group) => group.ID);
 
