@@ -14,9 +14,10 @@ const EventSettingsTab = ({ model, setModel }: Props) => {
     return (
         <>
             <Row>
-                <Label>{c('Label').t`Default event duration`}</Label>
+                <Label htmlFor="duration-select">{c('Label').t`Default event duration`}</Label>
                 <Field>
                     <SelectTwo
+                        id="duration-select"
                         data-test-id="create-calendar/event-settings:event-duration"
                         value={model.duration}
                         onChange={({ value }) => setModel({ ...model, duration: +value })}
