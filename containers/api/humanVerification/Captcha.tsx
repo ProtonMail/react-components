@@ -13,7 +13,6 @@ const getIframeUrl = (apiUrl: string, token: string) => {
     url.hostname = getRelativeApiHostname(url.hostname);
     url.pathname = '/core/v4/captcha';
     url.searchParams.set('Token', token);
-    url.searchParams.set('Client', 'web');
     return url;
 };
 
