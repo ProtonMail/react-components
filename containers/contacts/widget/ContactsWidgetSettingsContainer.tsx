@@ -27,7 +27,7 @@ const ContactsWidgetSettingsContainer = ({ onClose }: Props) => {
     };
 
     return (
-        <>
+        <div className="pl2 pr2 pt1 pb1">
             <Row>
                 <Label htmlFor="saveContactToggle">
                     <span className="mr0-5 text-semibold">{c('Label').t`Automatically save contacts`}</span>
@@ -47,14 +47,14 @@ const ContactsWidgetSettingsContainer = ({ onClose }: Props) => {
             </div>
             <div>
                 <Label htmlFor="export-contacts-button" className="text-semibold">{c('Label')
-                    .t`Import contacts`}</Label>
+                    .t`Export contacts`}</Label>
                 <p>{c('Info')
                     .t`The application needs to locally decrypt your contacts before they can be exported. At the end of the process, a VCF file will be generated and you will be able to download it.`}</p>
                 <PrimaryButton disabled={loadingUserKeys} id="export-contacts-button" onClick={handleExport}>{c(
                     'Action'
                 ).t`Export contacts`}</PrimaryButton>
             </div>
-        </>
+        </div>
     );
 };
 
