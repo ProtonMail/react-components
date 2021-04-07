@@ -19,6 +19,7 @@ const ContactsWidgetSettingsContainer = ({ onClose }: Props) => {
 
     const handleImport = () => {
         createModal(<ImportContactsModal />);
+        onClose();
     };
 
     const handleExport = () => {
