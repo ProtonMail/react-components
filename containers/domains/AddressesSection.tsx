@@ -1,4 +1,5 @@
 import React from 'react';
+import { useRouteMatch } from 'react-router';
 import { c } from 'ttag';
 import { APPS } from 'proton-shared/lib/constants';
 
@@ -12,6 +13,10 @@ interface Props {
 const AddressesSection = ({ onClose }: Props) => {
     const [organization] = useOrganization();
 
+    const match = useRouteMatch<{ slug: string }>('/:slug');
+
+    const slug = match?.params.slug;
+
     if (organization?.MaxMembers > 1) {
         return (
             <>
@@ -22,7 +27,7 @@ const AddressesSection = ({ onClose }: Props) => {
                         as={AppLink}
                         color="norm"
                         onClick={() => onClose?.()}
-                        to="/organization#members"
+                        to={`/${slug}/users-addresses`}
                         toApp={APPS.PROTONACCOUNT}
                     >{c('Action').t`Add user`}</ButtonLike>
                 </div>
@@ -32,7 +37,7 @@ const AddressesSection = ({ onClose }: Props) => {
                         as={AppLink}
                         color="norm"
                         onClick={() => onClose?.()}
-                        to="/organization#addresses"
+                        to={`/${slug}/users-addresses`}
                         toApp={APPS.PROTONACCOUNT}
                     >{c('Action').t`Add address`}</ButtonLike>
                 </div>
@@ -45,7 +50,7 @@ const AddressesSection = ({ onClose }: Props) => {
             <ButtonLike
                 as={AppLink}
                 onClick={() => onClose?.()}
-                to="/organization#addresses"
+                to={`/${slug}/users-addresses`}
                 toApp={APPS.PROTONACCOUNT}
             >{c('Action').t`Add address`}</ButtonLike>
         </div>
