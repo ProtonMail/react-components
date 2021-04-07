@@ -3,10 +3,9 @@ import { c, msgid } from 'ttag';
 import { Recipient } from 'proton-shared/lib/interfaces';
 import { ContactEmail } from 'proton-shared/lib/interfaces/contacts';
 import { exportContacts } from 'proton-shared/lib/contacts/export';
-import { APPS } from 'proton-shared/lib/constants';
 import { extractMergeable } from 'proton-shared/lib/contacts/merge';
 
-import { FullLoader, SearchInput, useAppLink } from '../../../components';
+import { FullLoader, SearchInput } from '../../../components';
 import { useApi, useModals, useNotifications, useUser, useUserKeys, useUserSettings } from '../../../hooks';
 import MergeModal from '../merge/MergeModal';
 import ContactsList from '../ContactsList';
@@ -20,10 +19,11 @@ import MergeContactBanner from './MergeContactBanner';
 
 interface Props {
     onClose: () => void;
+    onImport: () => void;
     onCompose?: (recipients: Recipient[], attachments: File[]) => void;
 }
 
-const ContactsWidgetContainer = ({ onClose, onCompose }: Props) => {
+const ContactsWidgetContainer = ({ onClose, onImport, onCompose }: Props) => {
     const [user, loadingUser] = useUser();
     const [userSettings, loadingUserSettings] = useUserSettings();
     const [userKeysList, loadingUserKeys] = useUserKeys();
@@ -31,7 +31,6 @@ const ContactsWidgetContainer = ({ onClose, onCompose }: Props) => {
     const { createModal } = useModals();
     const { createNotification } = useNotifications();
     const api = useApi();
-    const appLink = useAppLink();
 
     const [search, setSearch] = useState('');
 
@@ -161,10 +160,6 @@ const ContactsWidgetContainer = ({ onClose, onCompose }: Props) => {
         onClose();
     };
 
-    const handleImport = () => {
-        appLink('/contacts/import-export#import', APPS.PROTONACCOUNT);
-    };
-
     const handleMerge = (mergeContactsDetected?: boolean) => {
         const selectedContacts = formattedContacts.filter((contact) => selectedIDs.includes(contact.ID));
         const contacts = mergeContactsDetected ? mergeableContacts : [selectedContacts];
@@ -229,7 +224,7 @@ const ContactsWidgetContainer = ({ onClose, onCompose }: Props) => {
                         type={contactsLength ? EmptyType.Search : EmptyType.All}
                         onClearSearch={handleClearSearch}
                         onCreate={handleCreate}
-                        onImport={handleImport}
+                        onImport={onImport}
                     />
                 ) : null}
                 {showList ? (

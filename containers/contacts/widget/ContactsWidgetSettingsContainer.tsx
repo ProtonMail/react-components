@@ -5,22 +5,17 @@ import { Row, Label, Field, Info, PrimaryButton } from '../../../components';
 import { useMailSettings, useModals, useUserKeys } from '../../../hooks';
 import AutoSaveContactsToggle from '../../general/AutoSaveContactsToggle';
 import ExportContactsModal from '../modals/ExportContactsModal';
-import ImportContactsModal from '../import/ImportContactsModal';
 
 interface Props {
     onClose: () => void;
+    onImport: () => void;
 }
 
-const ContactsWidgetSettingsContainer = ({ onClose }: Props) => {
+const ContactsWidgetSettingsContainer = ({ onClose, onImport }: Props) => {
     const [mailSettings] = useMailSettings();
     const { AutoSaveContacts } = mailSettings || {};
     const { createModal } = useModals();
     const [userKeysList, loadingUserKeys] = useUserKeys();
-
-    const handleImport = () => {
-        createModal(<ImportContactsModal />);
-        onClose();
-    };
 
     const handleExport = () => {
         createModal(<ExportContactsModal userKeysList={userKeysList} />);
@@ -43,7 +38,7 @@ const ContactsWidgetSettingsContainer = ({ onClose }: Props) => {
                     .t`Import contacts`}</Label>
                 <p className="color-weak mt0-5 mb1">{c('Info')
                     .t`We support importing CSV files from Outlook, Outlook Express, Yahoo! Mail, Hotmail, Eudora and some other apps. We also support importing vCard 4.0. (UTF-8 encoding).`}</p>
-                <PrimaryButton id="import-contacts-button" onClick={handleImport}>{c('Action')
+                <PrimaryButton id="import-contacts-button" onClick={onImport}>{c('Action')
                     .t`Import contacts`}</PrimaryButton>
             </div>
             <div>
