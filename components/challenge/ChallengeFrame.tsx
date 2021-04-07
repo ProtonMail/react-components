@@ -61,6 +61,10 @@ const ChallengeFrame = ({
         const logs: ChallengeLog[] = [];
         const tmpUrl = new URL(src);
         const addLog = (text: string, data: unknown, type: ChallengeLogType) => {
+            // To keep it somewhat limited
+            if (logs.length > 20) {
+                return;
+            }
             const log: ChallengeLog = {
                 type,
                 text: `${new Date().toISOString()} ${text} ${tmpUrl.searchParams.toString()}`,
