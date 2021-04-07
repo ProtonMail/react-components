@@ -1,11 +1,9 @@
 import React from 'react';
 import { c } from 'ttag';
-
-import { resumeMailImport, cancelMailImport } from 'proton-shared/lib/api/mailImport';
+import { resumeMailImport, cancelMailImport, updateMailImport } from 'proton-shared/lib/api/mailImport';
 
 import { Alert, ConfirmModal, DropdownActions, Button } from '../../components';
 import { useApi, useLoading, useNotifications, useEventManager, useModals } from '../../hooks';
-
 import ImportMailModal from './modals/ImportMailModal';
 import {
     OAuthProps,
@@ -15,9 +13,9 @@ import {
     ImportMailError,
     AuthenticationMethod,
 } from './interfaces';
-
 import useOAuthPopup from '../../hooks/useOAuthPopup';
 import { getOAuthRedirectURL as getRedirectURL, getOAuthAuthorizationUrl } from './helpers';
+
 interface Props {
     currentImport: Importer;
 }
