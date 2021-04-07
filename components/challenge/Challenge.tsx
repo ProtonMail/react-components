@@ -42,7 +42,7 @@ const Challenge = ({ children, style, onSuccess, onError, bodyClassName, loaderC
     const challengeSrc = (() => {
         const url = new URL(config.API_URL, window.location.origin);
         url.hostname = getRelativeApiHostname(url.hostname);
-        url.pathname = '/api/challenge/v4/html';
+        url.pathname = '/challenge/v4/html';
         url.searchParams.set('Type', `${type}`);
         if (errorRetry) {
             url.searchParams.set('retry', `${errorRetry}`);
