@@ -243,7 +243,12 @@ const ChallengeFrame = ({
 
     return (
         <>
-            <div ref={renderDivRef} style={{ position: 'absolute', left: '-1000px', top: '-1000px' }}>
+            <div
+                ref={renderDivRef}
+                style={{ position: 'absolute', left: '-1000px', top: '-1000px' }}
+                aria-hidden="true"
+                className="visibility-hidden"
+            >
                 {children}
             </div>
             <iframe
