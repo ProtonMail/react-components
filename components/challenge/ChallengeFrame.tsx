@@ -59,8 +59,12 @@ const ChallengeFrame = ({
         };
 
         const logs: ChallengeLog[] = [];
+        const tmpUrl = new URL(src);
         const addLog = (text: string, data: unknown, type: ChallengeLogType) => {
-            const log: ChallengeLog = { type, text: `${new Date().toISOString()} ${text}` };
+            const log: ChallengeLog = {
+                type,
+                text: `${new Date().toISOString()} ${text} ${tmpUrl.searchParams.toString()}`,
+            };
             // The sentry serializer doesn't like undefined values
             if (data) {
                 log.data = data;
@@ -197,7 +201,7 @@ const ChallengeFrame = ({
             focus: (selector: string) => {
                 const contentWindow = iframeRef.current?.contentWindow;
                 if (!contentWindow || stage !== 'loaded') {
-                    throw new Error('No iframe available');
+                    return;
                 }
                 contentWindow.postMessage(
                     {
