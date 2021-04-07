@@ -37,7 +37,7 @@ const ChallengeFrame = ({
     bodyClassName = '',
     challengeRef,
     src,
-    hasSizeObserver = false,
+    hasSizeObserver,
     errorTimeout = ERROR_TIMEOUT_MS,
     challengeTimeout = CHALLENGE_TIMEOUT_MS,
     ...rest

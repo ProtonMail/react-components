@@ -45,7 +45,7 @@ const Challenge = ({ children, style, onSuccess, onError, bodyClassName, loaderC
         url.pathname = '/challenge/v4/html';
         url.searchParams.set('Type', `${type}`);
         if (errorRetry) {
-            url.searchParams.set('retry', `${errorRetry}`);
+            url.searchParams.set('Retry', `${errorRetry}`);
         }
         return url.toString();
     })();
