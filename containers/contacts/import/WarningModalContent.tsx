@@ -17,7 +17,7 @@ const WarningModalContent = ({ model }: Props) => {
     const totalContactsDiscarded = contactsDiscarded.length;
     const totalContacts = totalSupported + totalContactsDiscarded;
 
-    const forNow = <span key="for-now" className="text-bold">{c('Import contacts warning').t`for now`}</span>;
+    const forNow = <strong key="for-now">{c('Import contacts warning').t`for now`}</strong>;
     const summary =
         totalContactsDiscarded === totalContacts
             ? c('Import warning').t`No contact can be imported. Click for details`
