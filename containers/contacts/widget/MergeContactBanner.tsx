@@ -11,7 +11,7 @@ interface Props {
 const MergeContactBanner = ({ countMergeableContacts, onMerge }: Props) => {
     const mergeAction = <InlineLinkButton onClick={onMerge}>{c('Action').t`Merge`}</InlineLinkButton>;
     return (
-        <div className="pl2 pr2 pt1 pb1 bg-weak flex flex-items-align-center flex-nowrap">
+        <div className="pl2 pr2 pt1 pb1 bg-weak flex flex-items-align-center flex-nowrap border-bottom">
             <Icon name="merge" className="mr0-5" />
             <span>{c('Info, no need for singular')
                 .jt`${countMergeableContacts} contacts look identical. ${mergeAction}`}</span>
