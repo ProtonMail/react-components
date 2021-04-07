@@ -199,7 +199,7 @@ const OnboardingModal = ({
     const isLastStep = steps.length - 1 === step;
     const childStep = steps[step];
     const hasDots = steps.length > 1 && step < steps.length;
-    const hasBack = steps.length === 1 || step > 0;
+    const hasBack = step > 0;
 
     if (!steps.length) {
         rest?.onClose?.();
