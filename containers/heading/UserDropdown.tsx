@@ -49,6 +49,7 @@ const UserDropdown = ({ ...rest }) => {
                 ref={anchorRef}
                 isOpen={isOpen}
                 onClick={toggle}
+                data-testid="button-userdropdown"
             />
             <Dropdown
                 id={uid}
@@ -120,7 +121,6 @@ const UserDropdown = ({ ...rest }) => {
                             </button>
                         </li>
                     ) : null}
-
                     <li className="dropdown-item-hr mb0-5" aria-hidden="false" />
 
                     <li className="pt0-5 pl1 pr1 flex">
@@ -129,6 +129,7 @@ const UserDropdown = ({ ...rest }) => {
                             className="w100 text-center navigationUser-logout"
                             onClick={handleLogout}
                             data-cy-header-user-dropdown="logout"
+                            data-testid="button-logout"
                         >
                             {c('Action').t`Sign out`}
                         </Button>

@@ -23,6 +23,7 @@ const LoginUsernameInput = ({ username, setUsername, id, title }: Props) => {
             placeholder={EMAIL_PLACEHOLDER}
             onChange={({ target: { value } }) => setUsername(value)}
             data-cy-login="username"
+            data-testid="field-username"
         />
     );
 };

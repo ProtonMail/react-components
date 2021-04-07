@@ -21,6 +21,7 @@ const PasswordInput = ({ disabled = false, ...rest }: Props) => {
                     disabled={disabled}
                     type="button"
                     onClick={toggle}
+                    data-testid="button-reveal-password"
                 >
                     <Icon className="mauto" name={type === 'password' ? 'read' : 'unread'} />
                 </button>

@@ -27,6 +27,7 @@ const Searchbox = ({ delay, className = '', advanced, placeholder = '', value = 
             ])}
             onSubmit={handleSubmit}
             onReset={handleReset}
+            data-testid="searchbox"
         >
             <label htmlFor="global_search">
                 <span className="sr-only">{placeholder}</span>
@@ -44,14 +45,19 @@ const Searchbox = ({ delay, className = '', advanced, placeholder = '', value = 
                     className="searchbox-field"
                     iconSearchDisplayed={false}
                     data-shorcut-target="searchbox-field"
+                    data-testid="field-searchbox"
                 />
             </label>
-            <button type="submit" className="searchbox-search-button flex">
+            <button type="submit" className="searchbox-search-button flex" data-testid="button-submit-searchbox">
                 <Icon name="search" className="mauto searchbox-search-button-icon" />
                 <span className="sr-only">{c('Action').t`Search`}</span>
             </button>
             {value.length ? (
-                <button type="reset" className="searchbox-advanced-search-button flex">
+                <button
+                    type="reset"
+                    className="searchbox-advanced-search-button flex"
+                    data-testid="button-clear-searchbox"
+                >
                     <Icon name="close" className="mauto searchbox-search-button-icon" />
                     <span className="sr-only">{c('Action').t`Clear`}</span>
                 </button>

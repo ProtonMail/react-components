@@ -33,6 +33,7 @@ const RequestNewCodeModal = ({ verificationModel, onEdit, onResend, ...rest }: P
                             await withLoading(onResend());
                             rest.onClose?.();
                         }}
+                        data-testid="button-request-new-code"
                     >
                         {c('Action').t`Request new code`}
                     </Button>
@@ -46,12 +47,13 @@ const RequestNewCodeModal = ({ verificationModel, onEdit, onResend, ...rest }: P
                         }}
                         disabled={loading}
                         fullWidth
+                        data-testid={`button-edit-${verificationModel.method}`}
                     >
                         {verificationModel.method === 'email'
                             ? c('Action').t`Edit email address`
                             : c('Action').t`Edit phone number`}
                     </Button>
-                    <Button size="large" color="weak" type="button" onClick={rest.onClose} disabled={loading} fullWidth>
+                    <Button size="large" color="weak" type="button" onClick={rest.onClose} disabled={loading} fullWidth data-testid="button-cancel">
                         {c('Action').t`Cancel`}
                     </Button>
                 </>

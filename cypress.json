@@ -1,0 +1,6 @@
+{
+    "videoUploadOnPasses": false,
+    "component": {
+        "componentFolder": "cypress/components"
+    }
+}

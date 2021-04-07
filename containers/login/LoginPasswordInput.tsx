@@ -18,6 +18,7 @@ const LoginPasswordInput = ({ password, setPassword, id, title }: Props) => {
             value={password}
             onChange={({ target: { value } }) => setPassword(value)}
             data-cy-login="password"
+            data-testid="field-password"
         />
     );
 };

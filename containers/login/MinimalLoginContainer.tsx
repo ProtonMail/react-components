@@ -79,7 +79,7 @@ const TOTPForm = ({
     );
 };
 
-const LoginForm = ({
+export const LoginForm = ({
     onSubmit,
     needHelp,
 }: {
@@ -119,7 +119,7 @@ const LoginForm = ({
             </div>
             <div className="flex flex-justify-space-between">
                 {needHelp}
-                <PrimaryButton type="submit" loading={loading} data-cy-login="submit">
+                <PrimaryButton type="submit" loading={loading} data-cy-login="submit" data-testid="button-login">
                     {c('Action').t`Log in`}
                 </PrimaryButton>
             </div>
