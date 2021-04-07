@@ -7,6 +7,7 @@ import { useModals } from '../../hooks';
 import RestoreAdministratorPrivileges from './RestoreAdministratorPrivileges';
 import OrganizationNameModal from './OrganizationNameModal';
 import ActivateOrganizationButton from './ActivateOrganizationButton';
+import { SettingsParagraph } from '../account';
 
 interface Props {
     organization?: Organization;
@@ -34,7 +35,9 @@ const OrganizationSection = ({ organization }: Props) => {
     return (
         <>
             <RestoreAdministratorPrivileges />
-            <Alert>{c('Info').t`The name will be visible to your users while they are logged in.`}</Alert>
+            <SettingsParagraph>
+                {c('Info').t`The name will be visible to your users while they are logged in.`}
+            </SettingsParagraph>
             <Row>
                 <Label>{c('Label').t`Organization name`}</Label>
                 <Field className="pt0-5">
