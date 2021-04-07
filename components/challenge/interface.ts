@@ -3,7 +3,7 @@ export type ChallengeLogType = 'message' | 'error' | 'step';
 export interface ChallengeLog {
     type: ChallengeLogType;
     text: string;
-    data: any;
+    data?: unknown;
 }
 
 export type ChallengeResult = { [key: string]: string } | undefined;

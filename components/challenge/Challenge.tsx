@@ -14,8 +14,8 @@ import { ChallengeLog } from './interface';
 
 interface Props extends Omit<ChallengeProps, 'src' | 'onError' | 'onSuccess'> {
     type: number;
-    onSuccess: (challengeLog: ChallengeLog[][]) => void;
-    onError: (challengeLog: ChallengeLog[][]) => void;
+    onSuccess: (challengeLog: ChallengeLog[]) => void;
+    onError: (challengeLog: ChallengeLog[]) => void;
 }
 
 const Challenge = ({ children, style, onSuccess, onError, bodyClassName, loaderClassName, type, ...rest }: Props) => {
@@ -25,7 +25,7 @@ const Challenge = ({ children, style, onSuccess, onError, bodyClassName, loaderC
     const [isLoading, setIsLoading] = useState(true);
     const [hasError, setHasError] = useState(false);
     const [errorRetry, setErrorRetry] = useState(0);
-    const challengeLogRef = useRef<ChallengeLog[][]>([]);
+    const challengeLogRef = useRef<ChallengeLog[]>([]);
 
     const supportTeam = (
         <InlineLinkButton
@@ -78,7 +78,7 @@ const Challenge = ({ children, style, onSuccess, onError, bodyClassName, loaderC
                         onSuccess?.(challengeLogRef.current);
                     }}
                     onError={(challengeLog) => {
-                        challengeLogRef.current.push(challengeLog);
+                        challengeLogRef.current = challengeLogRef.current.concat(challengeLog);
                         if (errorRetry < 2) {
                             setErrorRetry(errorRetry + 1);
                             return;

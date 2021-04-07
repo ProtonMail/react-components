@@ -2,6 +2,7 @@ import ReactTestUtils from 'react-dom/test-utils';
 import { getBrowserLocale } from 'proton-shared/lib/i18n/helper';
 import { getTimezone } from 'proton-shared/lib/date/timezone';
 import { captureMessage } from 'proton-shared/lib/helpers/sentry';
+import { Severity } from '@sentry/types';
 
 import { ChallengeLog } from './interface';
 
@@ -52,10 +53,6 @@ export const handleEvent = (renderEl: HTMLElement | undefined, eventPayload: Eve
     }
 };
 
-export const getChallengeURL = (API_URL: string, type: number) => {
-    return new URL(`${API_URL}/challenge/js?Type=${type}`, window.location.origin);
-};
-
 export const getStyleSrcUrls = () => {
     return [...document.querySelectorAll<HTMLLinkElement>('link[rel=stylesheet]')]
         .map((x) => {
@@ -81,15 +78,16 @@ export const getStyleSrcsData = (styleSrcUrls: string[]) => {
     });
 };
 
-export const captureChallengeMessage = (message: string, logs: ChallengeLog[][]) => {
+export const captureChallengeMessage = (message: string, logs: ChallengeLog[]) => {
     if (
-        !logs.some((log) => {
-            return log.some(({ type }) => type === 'error');
+        !logs.some(({ type }) => {
+            return type === 'error';
         })
     ) {
         return;
     }
     captureMessage(message, {
+        level: Severity.Error,
         extra: {
             logs,
             locale: getBrowserLocale(),

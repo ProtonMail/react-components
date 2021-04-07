@@ -57,8 +57,13 @@ const ChallengeFrame = ({
         };
 
         const logs: ChallengeLog[] = [];
-        const addLog = (text: string, data: any, type: ChallengeLogType) => {
-            logs.push({ type, text: `${new Date().toISOString()} ${text}`, data });
+        const addLog = (text: string, data: unknown, type: ChallengeLogType) => {
+            const log: ChallengeLog = { type, text: `${new Date().toISOString()} ${text}` };
+            // The sentry serializer doesn't like undefined values
+            if (data) {
+                log.data = data;
+            }
+            logs.push(log);
         };
 
         let error = false;
@@ -112,7 +117,7 @@ const ChallengeFrame = ({
             const eventDataType = eventData?.type;
             const eventDataPayload = eventData?.payload;
 
-            addLog(`Event data type: ${eventDataType || 'Unknown'} (${stage})`, undefined, 'message');
+            addLog(`Event data type: ${eventDataType || 'Unknown'} (${stage} - ${src})`, undefined, 'message');
 
             if (eventDataType === 'init' && stage === 'initialize') {
                 clearTimeout(errorTimeoutHandle);
@@ -165,7 +170,7 @@ const ChallengeFrame = ({
             }
 
             if (eventDataType === 'onerror') {
-                addLog(`Script error`, { error: eventDataPayload }, 'error');
+                addLog(`Script error`, { error: eventDataPayload }, 'message');
             }
 
             if (eventDataType === 'event' && stage === 'loaded' && renderDivRef.current) {
