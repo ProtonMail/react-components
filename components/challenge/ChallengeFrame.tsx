@@ -20,6 +20,7 @@ export interface Props
     className?: string;
     bodyClassName?: string;
     loaderClassName?: string;
+    hasSizeObserver?: boolean;
     title?: string;
     onError?: (logs: ChallengeLog[]) => void;
     onSuccess?: () => void;
@@ -36,6 +37,7 @@ const ChallengeFrame = ({
     bodyClassName = '',
     challengeRef,
     src,
+    hasSizeObserver = false,
     errorTimeout = ERROR_TIMEOUT_MS,
     challengeTimeout = CHALLENGE_TIMEOUT_MS,
     ...rest
@@ -117,8 +119,6 @@ const ChallengeFrame = ({
             const eventDataType = eventData?.type;
             const eventDataPayload = eventData?.payload;
 
-            addLog(`Event data type: ${eventDataType || 'Unknown'} (${stage} - ${src})`, undefined, 'message');
-
             if (eventDataType === 'init' && stage === 'initialize') {
                 clearTimeout(errorTimeoutHandle);
                 setStage('initialized');
@@ -150,6 +150,7 @@ const ChallengeFrame = ({
                                 payload: {
                                     iconsRoot: `${iconsNodeData}`,
                                     stylesRoot: `${styles}\n${themeNodeData}`,
+                                    hasSizeObserver,
                                     bodyClassName,
                                 },
                             },
@@ -177,6 +178,10 @@ const ChallengeFrame = ({
                 handleEvent(renderDivRef.current, eventDataPayload);
             }
 
+            if (eventDataType === 'rect' && stage === 'loaded' && eventDataPayload?.height !== undefined) {
+                iframe.style.height = `${eventDataPayload.height}px`;
+            }
+
             if (eventDataType === 'child.message.data' && stage === 'loaded') {
                 const messageData = eventData.data;
                 if (!messageData) {
@@ -189,6 +194,21 @@ const ChallengeFrame = ({
         };
 
         challengeRef.current = {
+            focus: (selector: string) => {
+                const contentWindow = iframeRef.current?.contentWindow;
+                if (!contentWindow || stage !== 'loaded') {
+                    throw new Error('No iframe available');
+                }
+                contentWindow.postMessage(
+                    {
+                        type: 'focus',
+                        payload: {
+                            selector,
+                        },
+                    },
+                    targetOrigin
+                );
+            },
             getChallenge: () => {
                 return new Promise<ChallengeResult | undefined>((resolve, reject) => {
                     const contentWindow = iframeRef.current?.contentWindow;
@@ -234,7 +254,7 @@ const ChallengeFrame = ({
         if (!renderDivEl || !contentWindow || !isLoaded) {
             return;
         }
-        if (iframeRef.current) {
+        if (iframeRef.current && !hasSizeObserver) {
             iframeRef.current.style.height = `${renderDivEl.getBoundingClientRect().height}px`;
         }
         contentWindow.postMessage(

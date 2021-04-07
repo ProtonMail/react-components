@@ -9,5 +9,6 @@ export interface ChallengeLog {
 export type ChallengeResult = { [key: string]: string } | undefined;
 
 export interface ChallengeRef {
+    focus: (selector: string) => void;
     getChallenge: () => Promise<ChallengeResult>;
 }
