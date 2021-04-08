@@ -1,27 +1,39 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
+import { sendFeedback } from 'proton-shared/lib/api/feedback';
 
 import { FormModal, Scale, TextArea } from '../../components';
+import { useApi, useLoading, useNotifications } from '../../hooks';
 
 interface FeedbackModalModel {
     Score?: number;
-    Feedback?: string;
+    Feedback: string;
 }
 
 interface Props {
-    onClose: () => void;
-    onSubmit: (model: FeedbackModalModel) => void;
+    onClose?: () => void;
 }
 
-const FeedbackModal = ({ onSubmit, onClose, ...rest }: Props) => {
+const FeedbackModal = ({ onClose, ...rest }: Props) => {
+    const api = useApi();
+    const { createNotification } = useNotifications();
+    const [loading, withLoading] = useLoading();
     const [model, setModel] = useState<FeedbackModalModel>({
         Score: undefined,
         Feedback: '',
     });
 
-    const handleSubmit = () => {
-        onSubmit(model);
-        onClose();
+    const handleSubmit = async () => {
+        if (model.Score === undefined) {
+            createNotification({
+                text: c('Error notification when score is missing in user feedback form modal').t`Score required`,
+                type: 'error',
+            });
+            return;
+        }
+        await api(sendFeedback(model.Score, model.Feedback));
+        createNotification({ text: c('Success notification when user send feedback').t`Feedback sent` });
+        onClose?.();
     };
 
     const handleChange = (field: string) => (e: any) => {
@@ -36,7 +48,13 @@ const FeedbackModal = ({ onSubmit, onClose, ...rest }: Props) => {
     };
 
     return (
-        <FormModal title={c('Title').t`Give feedback`} submit={c('Action').t`Submit`} onSubmit={handleSubmit} {...rest}>
+        <FormModal
+            title={c('Title').t`Give feedback`}
+            submit={c('Action').t`Submit`}
+            onSubmit={() => withLoading(handleSubmit())}
+            loading={loading}
+            {...rest}
+        >
             <div className="w75 on-mobile-w100">
                 <p className="mb2">{c('Info')
                     .t`Proton has received a facelift. We would love to hear what you think about it!`}</p>

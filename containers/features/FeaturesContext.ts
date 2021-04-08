@@ -22,6 +22,7 @@ export enum FeatureCode {
     BundlePromoShown = 'BundlePromoShown',
     UsedMailMobileApp = 'UsedMailMobileApp',
     UsedContactsImport = 'UsedContactsImport',
+    CanSendUserFeedback = 'CanSendUserFeedback',
 }
 
 export interface FeaturesContextValue {
