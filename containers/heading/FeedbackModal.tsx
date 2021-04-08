@@ -26,7 +26,7 @@ const FeedbackModal = ({ onClose, ...rest }: Props) => {
     const handleSubmit = async () => {
         if (model.Score === undefined) {
             createNotification({
-                text: c('Error notification when score is missing in user feedback form modal').t`Score required`,
+                text: c('Error notification when score is missing in user feedback form modal').t`Score is required`,
                 type: 'error',
             });
             return;
@@ -53,6 +53,7 @@ const FeedbackModal = ({ onClose, ...rest }: Props) => {
             submit={c('Action').t`Submit`}
             onSubmit={() => withLoading(handleSubmit())}
             loading={loading}
+            onClose={onClose}
             {...rest}
         >
             <div className="w75 on-mobile-w100">
