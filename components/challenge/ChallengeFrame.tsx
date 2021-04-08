@@ -91,7 +91,7 @@ const ChallengeFrame = ({
         };
 
         let errorTimeoutHandle = window.setTimeout(() => {
-            addLog(`Initial iframe timeout`, undefined, 'error');
+            addLog('Initial iframe timeout', undefined, 'error');
             handleError();
         }, errorTimeout);
 
@@ -130,7 +130,7 @@ const ChallengeFrame = ({
             if (eventDataType === 'init' && stage === 'initialize') {
                 clearTimeout(errorTimeoutHandle);
                 setStage('initialized');
-                addLog(`Initialized`, undefined, 'step');
+                addLog('Initialized', undefined, 'step');
                 iframe.style.height = `0px`;
 
                 stylesPromise
@@ -141,13 +141,13 @@ const ChallengeFrame = ({
 
                         clearTimeout(errorTimeoutHandle);
                         errorTimeoutHandle = window.setTimeout(() => {
-                            addLog(`Load iframe error`, undefined, 'error');
+                            addLog('Load iframe error', undefined, 'error');
                             handleError();
                         }, errorTimeout);
 
                         setStage('load');
                         addLog(
-                            `Sending data`,
+                            'Sending data',
                             [themeNodeData, styles, iconsNodeData].map((x) => x.slice(0, 30)).join(' - '),
                             'step'
                         );
@@ -166,7 +166,7 @@ const ChallengeFrame = ({
                         );
                     })
                     .catch((error) => {
-                        addLog(`CSS load error`, { error }, 'error');
+                        addLog('CSS load error', { error }, 'error');
                         handleError();
                     });
             }
@@ -174,12 +174,12 @@ const ChallengeFrame = ({
             if (eventDataType === 'onload' && stage === 'load') {
                 clearTimeout(errorTimeoutHandle);
                 setStage('loaded');
-                addLog(`Fully loaded`, undefined, 'step');
+                addLog('Fully loaded', undefined, 'step');
                 handleLoaded();
             }
 
             if (eventDataType === 'onerror') {
-                addLog(`Script error`, { error: eventDataPayload }, 'message');
+                addLog('Script error', { error: eventDataPayload }, 'message');
             }
 
             if (eventDataType === 'event' && stage === 'loaded' && renderDivRef.current) {
