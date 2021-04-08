@@ -1,12 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { getRelativeApiHostname } from 'proton-shared/lib/helpers/url';
 import { useConfig } from '../../../hooks';
-
-export const getRelativeApiHostname = (hostname: string) => {
-    const idx = hostname.indexOf('.');
-    const first = hostname.substr(0, idx);
-    const second = hostname.substr(idx + 1);
-    return `${first}-api.${second}`;
-};
 
 const getIframeUrl = (apiUrl: string, token: string) => {
     const url = new URL(apiUrl, window.location.origin);
