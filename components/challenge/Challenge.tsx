@@ -27,18 +27,6 @@ const Challenge = ({ children, style, onSuccess, onError, bodyClassName, loaderC
     const [errorRetry, setErrorRetry] = useState(0);
     const challengeLogRef = useRef<ChallengeLog[]>([]);
 
-    const supportTeam = (
-        <InlineLinkButton
-            key="support"
-            title="Contact the ProtonMail support team."
-            onClick={() => {
-                createModal(<BugModal />);
-            }}
-        >
-            {c('Info').t`support team`}
-        </InlineLinkButton>
-    );
-
     const challengeSrc = (() => {
         const url = new URL(config.API_URL, window.location.origin);
         url.hostname = getRelativeApiHostname(url.hostname);
@@ -54,6 +42,23 @@ const Challenge = ({ children, style, onSuccess, onError, bodyClassName, loaderC
     const jitter = randomIntFromInterval(0, 3);
     const errorTimeout = (15 + errorRetry * 5 - jitter) * 1000;
 
+    const refresh = (
+        <InlineLinkButton key="refresh" onClick={() => window.location.reload()}>{c('Action')
+            .t`refresh the page`}</InlineLinkButton>
+    );
+
+    const supportTeam = (
+        <InlineLinkButton
+            key="support"
+            title="Contact the ProtonMail support team."
+            onClick={() => {
+                createModal(<BugModal />);
+            }}
+        >
+            {c('Info').t`support team`}
+        </InlineLinkButton>
+    );
+
     return (
         <div style={style}>
             {isLoading ? <Loader className={loaderClassName} /> : null}
@@ -62,7 +67,7 @@ const Challenge = ({ children, style, onSuccess, onError, bodyClassName, loaderC
                 <>
                     <Alert type="error">
                         {c('Error')
-                            .jt`Something went wrong, please refresh the page in order to proceed. If you still see this error message please contact our ${supportTeam}.`}
+                            .jt`Something went wrong, please ${refresh} in order to proceed. If you still see this error message please contact our ${supportTeam}.`}
                     </Alert>
                 </>
             ) : (
