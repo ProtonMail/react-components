@@ -36,7 +36,7 @@ const FeedbackModal = ({ onClose, ...rest }: Props) => {
         onClose?.();
     };
 
-    const handleChange = (field: string) => (e: any) => {
+    const handleChange = (field: string) => (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setModel({
             ...model,
             [field]: e.target.value,
@@ -80,6 +80,7 @@ const FeedbackModal = ({ onClose, ...rest }: Props) => {
                         value={model.Feedback}
                         placeholder={c('Placeholder').t`Feedback`}
                         onChange={handleChange('Feedback')}
+                        required
                     />
                 </div>
             </div>
