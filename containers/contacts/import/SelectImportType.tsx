@@ -1,7 +1,5 @@
 import React, { ChangeEvent } from 'react';
-
 import { getAllTypes } from 'proton-shared/lib/contacts/helpers/types';
-import { VCardKey } from 'proton-shared/lib/interfaces/contacts/VCard';
 
 import { Label, Select } from '../../../components';
 
@@ -17,7 +15,7 @@ const SelectImportType = ({ field = '', value, onChangeType }: Props) => {
 
     return (
         <Label className="pt0">
-            <Select value={value} options={types[field as VCardKey]} onChange={handleChangeType} />
+            <Select value={value} options={types[field as keyof typeof types]} onChange={handleChangeType} />
         </Label>
     );
 };
