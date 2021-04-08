@@ -28,6 +28,7 @@ const Signout = ({ onDone }: Props) => {
         removeItem(`ES:${userID}:Recover`);
         removeItem(`ES:${userID}:SyncFail`);
         removeItem(`ES:${userID}:Pause`);
+        removeItem(`ES:${userID}:ESEnabled`);
     };
 
     useEffect(() => {
