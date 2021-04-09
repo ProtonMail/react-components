@@ -280,7 +280,7 @@ const AccountSignupContainer = ({ toApp, onLogin, onBack, Layout }: Props) => {
                     throw new Error('No signup');
                 }
 
-                const { Domains: domains } = await api(queryAvailableDomains());
+                const { Domains: domains } = await api(queryAvailableDomains('signup'));
                 setModelDiff({ step: ACCOUNT_CREATION_USERNAME, verifyMethods, domains });
             } catch (error) {
                 return setModelDiff({ step: NO_SIGNUP });

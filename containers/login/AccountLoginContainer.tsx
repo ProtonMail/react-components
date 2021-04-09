@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { c } from 'ttag';
 import { noop } from 'proton-shared/lib/helpers/function';
@@ -10,6 +10,7 @@ import { queryAddresses } from 'proton-shared/lib/api/addresses';
 import { getHasOnlyExternalAddresses } from 'proton-shared/lib/helpers/address';
 import { revoke } from 'proton-shared/lib/api/auth';
 import { removePersistedSession } from 'proton-shared/lib/authentication/persistedSessionStorage';
+import { queryAvailableDomains } from 'proton-shared/lib/api/domains';
 
 import { useApi, useModals, useNotifications, useErrorHandler } from '../../hooks';
 
@@ -58,6 +59,10 @@ const AccountLoginContainer = ({ onLogin, onBack, ignoreUnlock = false, Layout, 
 
     const normalApi = useApi();
     const silentApi = <T,>(config: any) => normalApi<T>({ ...config, silence: true });
+
+    useEffect(() => {
+        silentApi(queryAvailableDomains('login'));
+    }, []);
 
     const [generateInternalAddress, setGenerateInternalAddress] = useState<InternalAddressGeneration | undefined>();
 
