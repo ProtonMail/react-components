@@ -3,7 +3,7 @@ import { c } from 'ttag';
 
 import { noop } from 'proton-shared/lib/helpers/function';
 
-import importWelcomeSvg from 'design-system/assets/img/placeholders/import-welcome.svg';
+import importWelcomeSvg from 'design-system/assets/img/onboarding/import-welcome.svg';
 
 import { FormModal, Href, PrimaryButton } from '../../../components';
 
