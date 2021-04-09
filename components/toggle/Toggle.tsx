@@ -43,7 +43,7 @@ const Toggle = (
                 title={title}
             >
                 <input
-                    disabled={loading ? true : disabled}
+                    disabled={loading || disabled}
                     id={id}
                     onChange={handleChange}
                     type="checkbox"
