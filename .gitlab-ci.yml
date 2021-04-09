@@ -1,5 +1,5 @@
 include:
   - project: 'deploy-app/fe-scripts'
-    ref: master
+    ref: feat/split-job-trigger
     file: '/jobs/lib/libs.gitlab-ci.yaml'
 
