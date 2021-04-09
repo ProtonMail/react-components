@@ -1,3 +1,4 @@
+import { noop } from 'proton-shared/lib/helpers/function';
 import React, { useState, useEffect } from 'react';
 import { c } from 'ttag';
 import {
@@ -131,13 +132,18 @@ const SubscriptionModal = ({
     const getCodes = ({ gift, coupon }: Model) => [gift, coupon].filter(isTruthy);
 
     const handleUnsubscribe = async () => {
-        const { Calendars: calendars } =
-            (await api<{ Calendars: Calendar[] | undefined }>(queryCalendars({ Page: 1, PageSize: 2 }))) || {};
+        try {
+            const { Calendars: calendars } =
+                (await api<{ Calendars: Calendar[] | undefined }>(queryCalendars({ Page: 1, PageSize: 2 }))) || {};
 
-        if ((calendars?.length || 0) > MAX_CALENDARS_PER_FREE_USER) {
-            await new Promise<void>((resolve, reject) => {
-                createModal(<CalendarDowngradeModal onSubmit={resolve} onClose={reject} />);
-            });
+            if ((calendars?.length || 0) > MAX_CALENDARS_PER_FREE_USER) {
+                await new Promise<void>((resolve, reject) => {
+                    createModal(<CalendarDowngradeModal onSubmit={resolve} onClose={reject} />);
+                });
+            }
+        } catch (e) {
+            // Ignore if the call fails (can happen because of lack of token scope)
+            noop();
         }
         if (hasBonuses(organization)) {
             await new Promise<void>((resolve, reject) => {
