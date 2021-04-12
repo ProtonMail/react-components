@@ -4,7 +4,7 @@ import { updateAddress } from 'proton-shared/lib/api/addresses';
 import { updateWelcomeFlags, updateThemeType } from 'proton-shared/lib/api/settings';
 import { noop } from 'proton-shared/lib/helpers/function';
 import { range } from 'proton-shared/lib/helpers/array';
-import { ThemeTypes } from 'proton-shared/lib/themes/themes';
+import { PROTON_THEMES, ThemeTypes } from 'proton-shared/lib/themes/themes';
 import { getAccountSettingsApp, getAppName } from 'proton-shared/lib/apps/helper';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 import { hasVisionary } from 'proton-shared/lib/helpers/subscription';
@@ -14,7 +14,6 @@ import {
     useApi,
     useEventManager,
     useGetAddresses,
-    useLoading,
     useOrganization,
     useOrganizationKey,
     useSubscription,
@@ -30,8 +29,11 @@ import OnboardingStep from './OnboardingStep';
 import OnboardingDiscoverApps from './OnboardingDiscoverApps';
 import OnboardingWelcome from './OnboardingWelcome';
 import OnboardingSetupOrganization from './OnboardingSetupOrganization';
-import { availableThemes } from '../themes/ThemesSection';
 import { getOrganizationKeyInfo } from '../organization/helpers/organizationKeysHelper';
+import { useThemeStyle } from '../themes';
+import { getThemeStyle } from '../themes/ThemeInjector';
+
+const availableThemes = Object.values(PROTON_THEMES);
 
 interface Props {
     title?: string;
@@ -64,7 +66,8 @@ const OnboardingModal = ({
     const [displayName, setDisplayName] = useState(user.DisplayName || user.Name || '');
     const [organizationKey, loadingOrganizationKey] = useOrganizationKey(organization);
     const { hasOrganizationKey } = getOrganizationKeyInfo(organizationKey);
-    const [loading, withLoading] = useLoading();
+    const [, setThemeStyle] = useThemeStyle();
+    const [themeType, setThemeType] = useState(userSettings.ThemeType);
     const getAddresses = useGetAddresses();
     const api = useApi();
     const { call } = useEventManager();
@@ -104,9 +107,10 @@ const OnboardingModal = ({
         setStep((step) => step - 1);
     };
 
-    const handleChangeTheme = async (newThemeIdentifier: ThemeTypes) => {
-        await api(updateThemeType(newThemeIdentifier));
-        await call();
+    const handleThemeChange = async (newThemeType: ThemeTypes) => {
+        setThemeType(newThemeType);
+        setThemeStyle(getThemeStyle(newThemeType));
+        await api(updateThemeType(newThemeType));
     };
 
     const handleSetDisplayNameNext = () => {
@@ -131,7 +135,7 @@ const OnboardingModal = ({
     );
 
     const setDisplayNameStep = (
-        <OnboardingStep submit={c('Action').t`Next`} loading={loading} close={null} onSubmit={handleSetDisplayNameNext}>
+        <OnboardingStep submit={c('Action').t`Next`} close={null} onSubmit={handleSetDisplayNameNext}>
             <OnboardingSetDisplayName id="onboarding-0" displayName={displayName} setDisplayName={setDisplayName} />
         </OnboardingStep>
     );
@@ -155,12 +159,7 @@ const OnboardingModal = ({
 
     const themesStep = (
         <OnboardingStep submit={c('Action').t`Next`} close={null} onSubmit={handleNext}>
-            <OnboardingThemes
-                userSettings={userSettings}
-                themes={themes}
-                loading={loading}
-                onChange={(newIdentifier) => withLoading(handleChangeTheme(newIdentifier))}
-            />
+            <OnboardingThemes themeIdentifier={themeType} themes={themes} onChange={handleThemeChange} />
         </OnboardingStep>
     );
 
