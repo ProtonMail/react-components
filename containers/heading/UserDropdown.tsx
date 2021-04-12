@@ -11,7 +11,11 @@ import { generateUID } from '../../helpers';
 import UserDropdownButton from './UserDropdownButton';
 import { DonateModal } from '../payments';
 
-const UserDropdown = ({ ...rest }) => {
+interface Props {
+    softDeleteIDB: () => void;
+}
+
+const UserDropdown = ({ softDeleteIDB, ...rest }: Props) => {
     const { APP_NAME } = useConfig();
     const [organization] = useOrganization();
     const { Name: organizationName } = organization || {};
@@ -36,6 +40,7 @@ const UserDropdown = ({ ...rest }) => {
     };
 
     const handleLogout = () => {
+        softDeleteIDB();
         logout();
         close();
     };

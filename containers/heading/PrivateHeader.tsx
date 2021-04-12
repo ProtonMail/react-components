@@ -27,6 +27,7 @@ interface Props extends HeaderProps {
     hasAppsDropdown?: boolean;
     title: string;
     expanded: boolean;
+    softDeleteIDB: () => void;
     onToggleExpand?: () => void;
     isNarrow?: boolean;
 }
@@ -44,6 +45,7 @@ const PrivateHeader = ({
     helpDropdown,
     floatingButton,
     expanded,
+    softDeleteIDB,
     onToggleExpand,
     title,
 }: Props) => {
@@ -67,7 +69,7 @@ const PrivateHeader = ({
                 <TopNavbar>
                     <TopNavbarList>
                         <TopNavbarListItem>
-                            <UserDropdown />
+                            <UserDropdown softDeleteIDB={softDeleteIDB} />
                         </TopNavbarListItem>
                     </TopNavbarList>
                 </TopNavbar>
@@ -121,7 +123,7 @@ const PrivateHeader = ({
                     {settingsButton ? <TopNavbarListItem noShrink>{settingsButton}</TopNavbarListItem> : null}
                     <TopNavbarListItem noShrink>{helpDropdown || <TopNavbarListItemHelpDropdown />}</TopNavbarListItem>
                     <TopNavbarListItem className="relative">
-                        <UserDropdown />
+                        <UserDropdown softDeleteIDB={softDeleteIDB} />
                     </TopNavbarListItem>
                 </TopNavbarList>
             </TopNavbar>
