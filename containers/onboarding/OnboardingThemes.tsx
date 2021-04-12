@@ -18,7 +18,7 @@ const OnboardingThemes = ({ themes, themeIdentifier, onChange, ...rest }: Props)
             description={c('Onboarding Proton').t`You can change this anytime in your settings.`}
             {...rest}
         >
-            <div className="flex flex-nowrap">
+            <div className="flex">
                 <ThemeCards list={themes} themeIdentifier={themeIdentifier} onChange={onChange} />
             </div>
         </OnboardingContent>
