@@ -44,7 +44,6 @@ interface Props {
         oldPassword: string,
         onReactivation: OnKeyReactivationCallback
     ) => Promise<void>;
-    retryIndexEncryptedSearch: () => Promise<void>;
 }
 
 interface KeyReactivationError {
@@ -106,13 +105,7 @@ const getReactivatedKeys = async (
     return { process, errors };
 };
 
-const ReactivateKeysModal = ({
-    keyReactivationRequests,
-    onProcess,
-    onClose,
-    retryIndexEncryptedSearch,
-    ...rest
-}: Props) => {
+const ReactivateKeysModal = ({ keyReactivationRequests, onProcess, onClose, ...rest }: Props) => {
     const { createNotification } = useNotifications();
     const { createModal } = useModals();
     const api = useApi();
@@ -133,9 +126,6 @@ const ReactivateKeysModal = ({
         setStates((oldKeys) => {
             return updateKey(oldKeys, id, newResult);
         });
-        if (result === 'ok') {
-            void retryIndexEncryptedSearch();
-        }
     };
 
     const getKeyByID = (id: string): KeyReactivationRequestStateData => {
