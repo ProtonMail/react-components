@@ -1,5 +1,5 @@
 include:
   - project: 'deploy-app/fe-scripts'
-    ref: feat/MAILWEB-2058
+    ref: master
     file: '/jobs/lib/libs.gitlab-ci.yaml'
 
