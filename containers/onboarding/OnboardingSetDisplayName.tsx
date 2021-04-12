@@ -1,6 +1,6 @@
 import React from 'react';
 import { c } from 'ttag';
-import onboardingDisplayName from 'design-system/assets/img/illustrations/display-name.svg';
+import onboardingDisplayName from 'design-system/assets/img/onboarding/display-name.svg';
 
 import { LegacyInputField, Label, Input } from '../../components';
 import OnboardingContent, { Props as OnboardingContentProps } from './OnboardingContent';
