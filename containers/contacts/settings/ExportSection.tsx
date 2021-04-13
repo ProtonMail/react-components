@@ -35,7 +35,7 @@ const ExportSection = () => {
                     <div className="mb1">
                         {hasNoContacts ? (
                             <Tooltip title={c('Tooltip').t`You do not have any contacts to export`}>
-                                {exportButton}
+                                <span className="inline-block">{exportButton}</span>
                             </Tooltip>
                         ) : (
                             exportButton
