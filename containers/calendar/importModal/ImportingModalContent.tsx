@@ -9,7 +9,7 @@ import { c } from 'ttag';
 
 import {
     EncryptedEvent,
-    EXPORT_STEPS,
+    IMPORT_STEPS,
     ImportCalendarModel,
     StoredEncryptedEvent,
 } from 'proton-shared/lib/interfaces/calendar';
@@ -52,7 +52,7 @@ const ImportingModalContent = ({ model, setModel, onFinish }: Props) => {
             setModelWithAbort((model) => ({
                 ...model,
                 totalEncrypted: model.totalEncrypted + encrypted.length,
-                totalExported: model.totalExported + imported.length,
+                totalImported: model.totalImported + imported.length,
                 errors: [...model.errors, ...errors],
             }));
         };
@@ -90,11 +90,11 @@ const ImportingModalContent = ({ model, setModel, onFinish }: Props) => {
                 onFinish([...importedEvents, ...recurrenceImportedEvents]);
             } catch (error) {
                 setModelWithAbort((model) => ({
-                    step: EXPORT_STEPS.ATTACHING,
+                    step: IMPORT_STEPS.ATTACHING,
                     calendar: model.calendar,
                     eventsParsed: [],
                     totalEncrypted: 0,
-                    totalExported: 0,
+                    totalImported: 0,
                     errors: [],
                     failure: new ImportFatalError(error),
                     loading: false,
