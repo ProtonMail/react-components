@@ -99,7 +99,8 @@
     "proton-shared": "github:ProtonMail/proton-shared#master",
     "react-test-renderer": "^16.8.6",
     "ttag": "^1.7.0",
-    "typescript": "^4.0.3"
+    "typescript": "^4.0.3",
+    "cypress": "^7.1.0"
   },
   "peerDependencies": {
     "date-fns": "^2.0.0",

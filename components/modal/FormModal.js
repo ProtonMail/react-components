@@ -76,6 +76,7 @@ function DemoModal({ onAdd, ...rest }) {
                         loading={loading}
                         onClick={onSubmit}
                         {...submitProps}
+                        data-testid="button-form-submit"
                     >
                         {submit}
                     </Button>
@@ -88,6 +89,7 @@ function DemoModal({ onAdd, ...rest }) {
                             disabled={loading}
                             fullWidth
                             {...closeProps}
+                            data-testid="button-form-reset"
                         >
                             {close}
                         </Button>
@@ -98,7 +100,7 @@ function DemoModal({ onAdd, ...rest }) {
 
         const nodeSubmit =
             typeof submit === 'string' ? (
-                <Button color="norm" loading={loading} type="submit">
+                <Button color="norm" loading={loading} type="submit" data-testid="button-form-submit">
                     {submit}
                 </Button>
             ) : (
@@ -109,7 +111,7 @@ function DemoModal({ onAdd, ...rest }) {
         return (
             <FooterModal>
                 {typeof close === 'string' ? (
-                    <Button type="reset" disabled={loading}>
+                    <Button type="reset" disabled={loading} data-testid="button-form-reset">
                         {close}
                     </Button>
                 ) : (
