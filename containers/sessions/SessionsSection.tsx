@@ -87,14 +87,16 @@ const SessionsSection = () => {
                     <Button shape="outline" onClick={handleOpenModal} loading={loadingRevokeAll}>{c('Action')
                         .t`Revoke all other sessions`}</Button>
                 </div>
-                <Pagination
-                    page={page}
-                    total={state.total}
-                    limit={PAGE_SIZE}
-                    onNext={onNext}
-                    onPrevious={onPrevious}
-                    onSelect={onSelect}
-                />
+                <div>
+                    <Pagination
+                        page={page}
+                        total={state.total}
+                        limit={PAGE_SIZE}
+                        onNext={onNext}
+                        onPrevious={onPrevious}
+                        onSelect={onSelect}
+                    />
+                </div>
             </div>
             <Table>
                 <TableHeader cells={[c('Title').t`App`, c('Title').t`Date`, c('Title').t`Action`]} />
