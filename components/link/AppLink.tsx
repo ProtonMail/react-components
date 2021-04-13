@@ -46,8 +46,7 @@ const AppLink = ({ to, toApp, children, ...rest }: Props, ref: React.Ref<HTMLAnc
             );
         }
         const fromVPN = APP_NAME === APPS.PROTONVPN_SETTINGS;
-        const href = fromVPN ? getAppHref(to, toApp) : getAppHrefBundle(to, toApp);
-        const target = fromVPN ? '_blank' : '_self';
+        const [href, target] = fromVPN ? ['_blank', getAppHref(to, toApp)] : ['_self', getAppHrefBundle(to, toApp)];
         return (
             <a ref={ref} target={target} {...rest} href={href}>
                 {children}
