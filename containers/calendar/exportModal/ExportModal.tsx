@@ -21,7 +21,6 @@ import ExportingModalContent from './ExportingModalContent';
 import ExportSummaryModalContent from './ExportSummaryModalContent';
 import { useApi, useCalendarUserSettings, useConfig, useGetAddresses } from '../../../hooks';
 import { createExportIcs } from './createExportIcs';
-import { getDefaultTzid } from '../../../../proton-calendar/src/app/containers/calendar/getSettings';
 import { useGetVTimezones } from '../../../hooks/useGetVtimezones';
 
 interface Props {
@@ -37,7 +36,7 @@ export const ExportModal = ({ calendar, ...rest }: Props) => {
     const getVTimezones = useGetVTimezones();
     const [calendarUserSettings = DEFAULT_CALENDAR_USER_SETTINGS] = useCalendarUserSettings();
     const localTzid = getTimezone();
-    const defaultTzid = getDefaultTzid(calendarUserSettings, localTzid);
+    const defaultTzid = calendarUserSettings.PrimaryTimezone || localTzid;
 
     const prodId = useMemo(() => getProdId(config), [config]);
 
