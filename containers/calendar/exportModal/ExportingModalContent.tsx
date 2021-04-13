@@ -1,7 +1,12 @@
 import React, { Dispatch, SetStateAction, useEffect } from 'react';
 import { c } from 'ttag';
 
-import { EXPORT_STEPS, ExportCalendarModel, VcalVeventComponent } from 'proton-shared/lib/interfaces/calendar';
+import {
+    CalendarEvent,
+    EXPORT_STEPS,
+    ExportCalendarModel,
+    VcalVeventComponent,
+} from 'proton-shared/lib/interfaces/calendar';
 import { processInBatches } from 'proton-shared/lib/calendar/decryptEvents';
 
 import { Address } from 'proton-shared/lib/interfaces';
@@ -12,7 +17,7 @@ import useGetEncryptionPreferences from '../../../hooks/useGetEncryptionPreferen
 interface Props {
     model: ExportCalendarModel;
     setModel: Dispatch<SetStateAction<ExportCalendarModel>>;
-    onFinish: (vevents: VcalVeventComponent[]) => void;
+    onFinish: (vevents: VcalVeventComponent[], erroredEvents: CalendarEvent[]) => void;
     addresses: Address[];
 }
 const ExportingModalContent = ({ model, setModel, onFinish, addresses }: Props) => {
@@ -63,14 +68,15 @@ const ExportingModalContent = ({ model, setModel, onFinish, addresses }: Props) 
                     getCalendarKeys,
                     totalToProcess,
                 };
-                const exportedEvents = await processInBatches(processData);
+                const [exportedEvents, erroredEvents] = await processInBatches(processData);
+                console.log(exportedEvents, erroredEvents);
                 handleExportProgress([]);
 
                 if (signal.aborted) {
                     return;
                 }
 
-                onFinish(exportedEvents);
+                onFinish(exportedEvents, erroredEvents);
             } catch (error) {
                 console.error('error: ', error);
                 setModelWithAbort((model) => ({
@@ -78,11 +84,14 @@ const ExportingModalContent = ({ model, setModel, onFinish, addresses }: Props) 
                     calendar: model.calendar,
                     totalProcessed: [],
                     totalToProcess: 0,
+                    erroredEvents: [],
                 }));
+
                 if (signal.aborted) {
                     return;
                 }
-                onFinish([]);
+
+                onFinish([], []);
             }
         };
 

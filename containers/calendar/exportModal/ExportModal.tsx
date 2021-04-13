@@ -1,6 +1,7 @@
 import { noop } from 'proton-shared/lib/helpers/function';
 import {
     Calendar,
+    CalendarEvent,
     EXPORT_STEPS,
     ExportCalendarModel,
     VcalVeventComponent,
@@ -43,6 +44,7 @@ export const ExportModal = ({ calendar, ...rest }: Props) => {
     const [model, setModel] = useState<ExportCalendarModel>({
         step: EXPORT_STEPS.EXPORTING,
         totalProcessed: [],
+        erroredEvents: [],
         totalToProcess: 0,
         calendar,
     });
@@ -72,7 +74,7 @@ export const ExportModal = ({ calendar, ...rest }: Props) => {
                 </Button>
             );
 
-            const handleFinish = async (exportedEvents: VcalVeventComponent[]) => {
+            const handleFinish = async (exportedEvents: VcalVeventComponent[], erroredEvents: CalendarEvent[]) => {
                 const vtimezones = (
                     await Promise.all(
                         exportedEvents.map((vevent) => generateVtimezonesComponents(vevent, getVTimezones))
@@ -82,7 +84,7 @@ export const ExportModal = ({ calendar, ...rest }: Props) => {
                     .flat();
                 const uniqueTimezones = unique(vtimezones);
 
-                setModel((model) => ({ ...model, step: EXPORT_STEPS.FINISHED }));
+                setModel((model) => ({ ...model, step: EXPORT_STEPS.FINISHED, erroredEvents }));
                 const ics = createExportIcs({
                     calendar,
                     prodId,
@@ -124,7 +126,7 @@ export const ExportModal = ({ calendar, ...rest }: Props) => {
     useEffect(() => {
         void (async () => {
             try {
-                setModel({ ...model, step: EXPORT_STEPS.FETCHING_DEPENDENCIES });
+                setModel((currentModel) => ({ ...currentModel, step: EXPORT_STEPS.FETCHING_DEPENDENCIES }));
                 const addresses = await getAddresses();
 
                 if (!addresses) {
@@ -134,11 +136,14 @@ export const ExportModal = ({ calendar, ...rest }: Props) => {
                 setAddresses(addresses);
 
                 const countResponse = await api<{ Total: number }>(getEventsCount(calendar.ID));
-                setModel({ ...model, totalToProcess: countResponse.Total });
 
-                setModel({ ...model, step: EXPORT_STEPS.EXPORTING });
+                setModel((currentModel) => ({
+                    ...currentModel,
+                    totalToProcess: countResponse.Total,
+                    step: EXPORT_STEPS.EXPORTING,
+                }));
             } catch (error) {
-                setModel({ ...model, step: EXPORT_STEPS.ERROR_FETCHING_DEPENDENCIES });
+                setModel((currentModel) => ({ ...currentModel, step: EXPORT_STEPS.ERROR_FETCHING_DEPENDENCIES }));
             }
         })();
     }, []);

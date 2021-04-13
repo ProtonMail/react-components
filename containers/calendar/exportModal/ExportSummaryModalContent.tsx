@@ -16,22 +16,22 @@ const ExportSummaryModalContent = ({ model }: Props) => {
     const isPartialSuccess = totalProcessed.length > 0 && !isSuccess;
 
     const alertMessage = isSuccess
-        ? c('Import calendar').ngettext(
-              msgid`Event successfully imported. The imported event will now appear in your calendar.`,
-              `Events successfully imported. The imported events will now appear in your calendar.`,
+        ? c('Export calendar').ngettext(
+              msgid`Event successfully exported. The exported event will now appear in your calendar.`,
+              `Events successfully exported. The exported events will now appear in your calendar.`,
               totalProcessed.length
           )
         : isPartialSuccess
-        ? c('Import calendar')
-              .t`An error occurred while encrypting and adding your events. ${totalProcessed.length} out of ${totalToProcess} events successfully imported.`
-        : c('Import calendar').ngettext(
-              msgid`An error occurred while encrypting and adding your event. No event could be imported.`,
-              `An error occurred while encrypting and adding your events. No event could be imported.`,
+        ? c('Export calendar')
+              .t`An error occurred while decrypting and adding your events. ${totalProcessed.length} out of ${totalToProcess} events successfully exported.`
+        : c('Export calendar').ngettext(
+              msgid`An error occurred while decrypting and adding your event. No event could be exported.`,
+              `An error occurred while decrypting and adding your events. No event could be exported.`,
               totalToProcess
           );
-    const displayMessage = c('Import calendar').ngettext(
-        msgid`${totalProcessed.length}/${totalToProcess} event encrypted and added to your calendar`,
-        `${totalProcessed.length}/${totalToProcess} events encrypted and added to your calendar`,
+    const displayMessage = c('Export calendar').ngettext(
+        msgid`${totalProcessed.length}/${totalToProcess} event decrypted and added to your calendar`,
+        `${totalProcessed.length}/${totalToProcess} events decrypted and added to your calendar`,
         totalToProcess
     );
 
@@ -39,7 +39,7 @@ const ExportSummaryModalContent = ({ model }: Props) => {
         <>
             <Alert type={isSuccess ? 'info' : isPartialSuccess ? 'warning' : 'error'}>{alertMessage}</Alert>
             <DynamicProgress
-                id="progress-import-calendar"
+                id="progress-export-calendar"
                 value={totalProcessed.length}
                 display={displayMessage}
                 max={totalToProcess}
