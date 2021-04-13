@@ -6,7 +6,7 @@ import { noop } from 'proton-shared/lib/helpers/function';
 import {
     Calendar,
     StoredEncryptedEvent,
-    IMPORT_STEPS,
+    EXPORT_STEPS,
     ImportCalendarModel,
 } from 'proton-shared/lib/interfaces/calendar';
 import React, { ChangeEvent, useState, DragEvent } from 'react';
@@ -31,11 +31,11 @@ interface Props {
 }
 
 const getInitialState = (calendar: Calendar): ImportCalendarModel => ({
-    step: IMPORT_STEPS.ATTACHING,
+    step: EXPORT_STEPS.ATTACHING,
     calendar,
     eventsParsed: [],
     totalEncrypted: 0,
-    totalImported: 0,
+    totalExported: 0,
     errors: [],
     loading: false,
 });
@@ -47,9 +47,9 @@ const ImportModal = ({ calendars, defaultCalendar, ...rest }: Props) => {
     const [isDropzoneHovered, setIsDropzoneHovered] = useState(false);
 
     const { content, ...modalProps } = (() => {
-        if (model.step <= IMPORT_STEPS.ATTACHED) {
+        if (model.step <= EXPORT_STEPS.ATTACHED) {
             const submit = (
-                <PrimaryButton disabled={model.step === IMPORT_STEPS.ATTACHING} loading={model.loading} type="submit">
+                <PrimaryButton disabled={model.step === EXPORT_STEPS.ATTACHING} loading={model.loading} type="submit">
                     {c('Action').t`Import`}
                 </PrimaryButton>
             );
@@ -69,7 +69,7 @@ const ImportModal = ({ calendars, defaultCalendar, ...rest }: Props) => {
                 if (fileAttached.size > MAX_IMPORT_FILE_SIZE) {
                     throw new ImportFileError(IMPORT_ERROR_TYPE.FILE_TOO_BIG, filename);
                 }
-                setModel({ ...model, step: IMPORT_STEPS.ATTACHED, fileAttached, failure: undefined });
+                setModel({ ...model, step: EXPORT_STEPS.ATTACHED, fileAttached, failure: undefined });
             };
 
             const handleHover = (hover: boolean) =>
@@ -126,7 +126,7 @@ const ImportModal = ({ calendars, defaultCalendar, ...rest }: Props) => {
                     if (!parsed.length && !errors.length) {
                         throw new ImportFileError(IMPORT_ERROR_TYPE.NO_EVENTS, fileAttached.name);
                     }
-                    const step = errors.length || !parsed.length ? IMPORT_STEPS.WARNING : IMPORT_STEPS.IMPORTING;
+                    const step = errors.length || !parsed.length ? EXPORT_STEPS.WARNING : EXPORT_STEPS.EXPORTING;
                     setModel({
                         ...model,
                         step,
@@ -163,7 +163,7 @@ const ImportModal = ({ calendars, defaultCalendar, ...rest }: Props) => {
             };
         }
 
-        if (model.step <= IMPORT_STEPS.WARNING) {
+        if (model.step <= EXPORT_STEPS.WARNING) {
             const submit = (
                 <PrimaryButton disabled={!model.eventsParsed?.length} type="submit">
                     {c('Action').t`Import`}
@@ -171,7 +171,7 @@ const ImportModal = ({ calendars, defaultCalendar, ...rest }: Props) => {
             );
 
             const handleSubmit = () => {
-                setModel({ ...model, step: IMPORT_STEPS.IMPORTING, errors: [] });
+                setModel({ ...model, step: EXPORT_STEPS.EXPORTING, errors: [] });
             };
 
             return {
@@ -182,7 +182,7 @@ const ImportModal = ({ calendars, defaultCalendar, ...rest }: Props) => {
             };
         }
 
-        if (model.step === IMPORT_STEPS.IMPORTING) {
+        if (model.step === EXPORT_STEPS.EXPORTING) {
             const submit = (
                 <PrimaryButton disabled type="submit">
                     {c('Action').t`Continue`}
@@ -190,7 +190,7 @@ const ImportModal = ({ calendars, defaultCalendar, ...rest }: Props) => {
             );
 
             const handleFinish = async (importedEvents: StoredEncryptedEvent[]) => {
-                setModel((model) => ({ ...model, step: IMPORT_STEPS.FINISHED }));
+                setModel((model) => ({ ...model, step: EXPORT_STEPS.FINISHED }));
                 if (!importedEvents.length) {
                     return;
                 }

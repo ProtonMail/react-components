@@ -14,9 +14,19 @@ interface Props {
     onEdit: (calendar: Calendar) => void;
     onSetDefault: (id: string) => void;
     onDelete: (calendar: Calendar) => void;
+    onExport: (calendar: Calendar) => void;
     loadingMap: { [key: string]: boolean };
 }
-const CalendarsTable = ({ calendars, defaultCalendarID, user, onEdit, onSetDefault, onDelete, loadingMap }: Props) => {
+const CalendarsTable = ({
+    calendars,
+    defaultCalendarID,
+    user
+    onEdit,
+    onSetDefault,
+    onDelete,
+    onExport,
+    loadingMap,
+}: Props) => {
     return (
         <Table className="simple-table--has-actions">
             <TableHeader cells={[c('Header').t`Name`, c('Header').t`Status`, c('Header').t`Actions`]} />
@@ -39,6 +49,10 @@ const CalendarsTable = ({ calendars, defaultCalendarID, user, onEdit, onSetDefau
                                 text: c('Action').t`Set as default`,
                                 onClick: () => onSetDefault(ID),
                             },
+                        {
+                            text: c('Action').t`Export (.ics)`,
+                            onClick: () => onExport(calendar),
+                        },
                         {
                             text: c('Action').t`Delete`,
                             actionType: 'delete',
