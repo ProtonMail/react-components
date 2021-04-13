@@ -18,7 +18,7 @@ import {
     TextLoader,
 } from '../../../../../components';
 
-import { ImportModalModel, MailImportFolder, TIME_UNIT, DestinationFolder, IMPORT_ERROR } from '../../interfaces';
+import { ImportModalModel, MailImportFolder, DestinationFolder, IMPORT_ERROR } from '../../interfaces';
 import { IMAPS, timeUnitLabels } from '../../constants';
 import {
     escapeSlashes,
@@ -75,7 +75,6 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, addresses }: Props) =
     const providerFoldersNum = useMemo(() => providerFolders.length, [providerFolders]);
     const providerFoldersNumLocalized = providerFoldersNum.toLocaleString();
     const selectedFoldersCountLocalized = selectedFolders.length.toLocaleString();
-    const selectedPeriodLowerCased = timeUnitLabels[selectedPeriod].toLowerCase();
 
     const importSize = useMemo(() => selectedFolders.reduce((acc, { Size = 0 }) => acc + Size, 0), [selectedFolders]);
 
@@ -365,37 +364,6 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, addresses }: Props) =
                 </div>
 
                 <div className="mb1 ml1 flex flex-align-items-center">
-                    <Icon className="mr0-5" name="parent-folder" />
-                    {c('Info').ngettext(
-                        msgid`${providerFoldersNumLocalized} folder found`,
-                        `${providerFoldersNumLocalized} folders found`,
-                        providerFoldersNum
-                    )}
-
-                    {showMaxFoldersError && (
-                        <Tooltip
-                            title={c('Tooltip').t`Customize import to reduce the number of folders`}
-                            originalPlacement="right"
-                        >
-                            <Icon name="attention-plain" size={18} />
-                        </Tooltip>
-                    )}
-                </div>
-
-                {selectedFolders.length !== providerFoldersNum && (
-                    <div className="mb1 ml2 flex flex-align-items-center">
-                        <strong>
-                            <Icon className="mr0-5" name="parent-folder" />
-                            {c('Info').ngettext(
-                                msgid`${selectedFoldersCountLocalized} folder selected`,
-                                `${selectedFoldersCountLocalized} folders selected`,
-                                selectedFolders.length
-                            )}
-                        </strong>
-                    </div>
-                )}
-
-                <div className="mb1 ml1 flex flex-align-items-center">
                     <Icon className="mr0-5" name="clock" />
                     {c('Label').t`Import interval`}
                     {`: `}
@@ -417,19 +385,6 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, addresses }: Props) =
                                 ]}
                                 className="max-w100"
                             />
-                        </span>
-                    )}
-                </div>
-
-                <div className="mb1 ml1 flex flex-align-items-center">
-                    <Icon className="mr0-5" name="clock" />
-                    {selectedPeriod === TIME_UNIT.BIG_BANG ? (
-                        c('Info').t`Import all messages since ${selectedPeriodLowerCased}`
-                    ) : (
-                        <span>
-                            {c('Info').t`Import all messages since`}
-                            {` `}
-                            <strong>{timeUnitLabels[selectedPeriod]}</strong>
                         </span>
                     )}
                 </div>
@@ -465,7 +420,7 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, addresses }: Props) =
                 {selectedFolders.length !== providerFoldersNum && (
                     <div className="mb1 ml2 flex flex-align-items-center">
                         <strong>
-                            <Icon className="mr0-5" name="parent-folder" />
+                            <Icon className="mr0-5" name={isLabelMapping ? 'folder-label' : 'parent-folder'} />
                             {isLabelMapping
                                 ? c('Info').ngettext(
                                       msgid`${selectedFoldersCountLocalized} label selected`,

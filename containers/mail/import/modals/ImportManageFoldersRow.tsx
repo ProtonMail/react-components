@@ -201,6 +201,11 @@ const ImportManageFoldersRow = ({
     const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
         const { value } = target;
         setInputValue(value);
+
+        if (!value) {
+            return;
+        }
+
         if (isLabelMapping) {
             onRenameLabel(Source, value);
         } else {
@@ -208,8 +213,7 @@ const ImportManageFoldersRow = ({
         }
     };
 
-    const handleCancel = (e: React.MouseEvent) => {
-        preventDefaultAndStopPropagation(e);
+    const handleCancel = () => {
         setEditMode(false);
         if (isLabelMapping) {
             onRenameLabel(Source, initialValue.current);
@@ -287,18 +291,26 @@ const ImportManageFoldersRow = ({
     };
 
     useEffect(() => {
-        if (disabled) {
-            setEditMode(false);
-            setInputValue(initialValue.current);
-        }
-    }, [disabled]);
-
-    useEffect(() => {
         if (editMode && inputRef && inputRef.current) {
             inputRef.current.focus();
         }
         updateEditModeMapping(Source, editMode);
     }, [editMode]);
+
+    useEffect(() => {
+        if (disabled) {
+            handleCancel();
+            return;
+        }
+
+        if (!checked && editMode) {
+            handleCancel();
+        }
+
+        if (checked && hasError) {
+            setEditMode(true);
+        }
+    }, [checked, disabled]);
 
     const isParentSystemFolder = useMemo(() => {
         const split = splitEscaped(Source, Separator);
@@ -319,16 +331,33 @@ const ImportManageFoldersRow = ({
     const renderDestination = () => {
         if (labelsMap[Source]) {
             const { Name: name, Color: color } = labelsMap[Source];
+
+            const warnings = !checked ? null : (
+                <>
+                    {nameTooLongError && (
+                        <Tooltip title={ERRORS.nameTooLongError} type="error">
+                            <Icon tabIndex={-1} name="info" className="color-danger" />
+                        </Tooltip>
+                    )}
+
+                    {!checked && nameAlreadyExistsError && !nameTooLongError && (
+                        <Tooltip title={ERRORS.nameAlreadyExistsError} type="error">
+                            <Icon tabIndex={-1} name="info" className="color-danger" />
+                        </Tooltip>
+                    )}
+                </>
+            );
+
             return (
                 <div className="flex flex-nowrap flex-align-items-center flex-item-fluid-auto">
                     <div
                         className={classnames([
-                            'ml0-5 flex flex-nowrap flex-item-fluid-auto',
+                            'flex flex-nowrap flex-item-fluid-auto',
                             hasError && 'color-danger',
                             mergeWarning && 'color-warning',
                         ])}
                     >
-                        {editMode && !disabled ? (
+                        {editMode && !disabled && checked ? (
                             renderInput()
                         ) : (
                             <div
@@ -346,27 +375,13 @@ const ImportManageFoldersRow = ({
                                             title: name,
                                         },
                                     ]}
-                                    className="max-w100 mr0-5"
+                                    className="max-w100 flex-item-fluid"
                                 />
 
-                                {nameTooLongError && (
-                                    <Tooltip title={ERRORS.nameTooLongError} type="error">
-                                        <Icon
-                                            tabIndex={-1}
-                                            name="info"
-                                            className="flex-item-noshrink color-danger inline-flex flex-align-self-center flex-item-noshrink"
-                                        />
-                                    </Tooltip>
-                                )}
-
-                                {nameAlreadyExistsError && !nameTooLongError && (
-                                    <Tooltip title={ERRORS.nameAlreadyExistsError} type="error">
-                                        <Icon
-                                            tabIndex={-1}
-                                            name="info"
-                                            className="flex-item-noshrink color-danger inline-flex flex-align-self-center flex-item-noshrink"
-                                        />
-                                    </Tooltip>
+                                {warnings && (
+                                    <div className="flex-item-noshrink inline-flex flex-align-self-center flex-item-noshrink ml1">
+                                        {warnings}
+                                    </div>
                                 )}
                             </div>
                         )}
@@ -395,6 +410,34 @@ const ImportManageFoldersRow = ({
             );
         }
 
+        const warnings = !checked ? null : (
+            <>
+                {nameTooLongError && (
+                    <Tooltip title={ERRORS.nameTooLongError} type="error">
+                        <Icon tabIndex={-1} name="info" className="color-danger" />
+                    </Tooltip>
+                )}
+
+                {nameAlreadyExistsError && !nameTooLongError && (
+                    <Tooltip title={ERRORS.nameAlreadyExistsError} type="error">
+                        <Icon tabIndex={-1} name="info" className="color-danger" />
+                    </Tooltip>
+                )}
+
+                {mergeWarning && (
+                    <Tooltip title={WARNINGS.mergeWarning} type="warning">
+                        <Icon tabIndex={-1} name="info" className="color-warning" />
+                    </Tooltip>
+                )}
+
+                {isSystemSubfolder && !mergeWarning && (
+                    <Tooltip title={c('Tooltip').t`System subfolders will show up as separate folders in ProtonMail`}>
+                        <Icon tabIndex={-1} name="info" />
+                    </Tooltip>
+                )}
+            </>
+        );
+
         return (
             <div
                 className="flex flex-nowrap flex-align-items-center flex-item-fluid-auto"
@@ -403,14 +446,14 @@ const ImportManageFoldersRow = ({
                 <Icon
                     name={DestinationFolder ? FOLDER_ICONS[DestinationFolder] : 'folder'}
                     className={classnames([
-                        'flex-item-noshrink',
+                        'flex-item-noshrink mr0-5',
                         hasError && 'color-danger',
                         mergeWarning && 'color-warning',
                     ])}
                 />
                 <div
                     className={classnames([
-                        'ml0-5 flex flex-nowrap flex-item-fluid-auto',
+                        'flex flex-nowrap flex-item-fluid flex-align-items-center',
                         hasError && 'color-danger',
                         mergeWarning && 'color-warning',
                     ])}
@@ -420,54 +463,17 @@ const ImportManageFoldersRow = ({
                     ) : (
                         <div
                             className={classnames([
-                                'flex-item-fluid-auto text-ellipsis flex flex-align-items-center',
+                                'text-ellipsis flex flex-align-items-center',
                                 (hasError || mergeWarning) && 'text-bold',
                             ])}
                             title={destinationName}
                         >
-                            <span className="mr0-5">{destinationName}</span>
+                            <div className="flex-item-fluid text-ellipsis">{destinationName}</div>
 
-                            {nameTooLongError && (
-                                <Tooltip title={ERRORS.nameTooLongError} type="error">
-                                    <Icon
-                                        tabIndex={-1}
-                                        name="info"
-                                        className="flex-item-noshrink color-danger inline-flex flex-align-self-center flex-item-noshrink"
-                                    />
-                                </Tooltip>
-                            )}
-
-                            {nameAlreadyExistsError && !nameTooLongError && (
-                                <Tooltip title={ERRORS.nameAlreadyExistsError} type="error">
-                                    <Icon
-                                        tabIndex={-1}
-                                        name="info"
-                                        className="flex-item-noshrink color-danger inline-flex flex-align-self-center flex-item-noshrink"
-                                    />
-                                </Tooltip>
-                            )}
-
-                            {mergeWarning && (
-                                <Tooltip title={WARNINGS.mergeWarning} type="warning">
-                                    <Icon
-                                        tabIndex={-1}
-                                        name="info"
-                                        className="flex-item-noshrink color-warning inline-flex flex-align-self-center flex-item-noshrink"
-                                    />
-                                </Tooltip>
-                            )}
-
-                            {isSystemSubfolder && !mergeWarning && (
-                                <Tooltip
-                                    title={c('Tooltip')
-                                        .t`System subfolders will show up as separate folders in ProtonMail`}
-                                >
-                                    <Icon
-                                        tabIndex={-1}
-                                        name="info"
-                                        className="flex-item-noshrink inline-flex flex-align-self-center flex-item-noshrink"
-                                    />
-                                </Tooltip>
+                            {warnings && (
+                                <div className="flex-item-noshrink inline-flex flex-align-self-center flex-item-noshrink ml0-5">
+                                    {warnings}
+                                </div>
                             )}
                         </div>
                     )}
@@ -486,13 +492,19 @@ const ImportManageFoldersRow = ({
                             <>
                                 <InlineLinkButton
                                     onClick={handleSave}
-                                    className={classnames(['p0-5', hasError && DIMMED_OPACITY_CLASSNAME])}
+                                    className={classnames(['ml0-5 p0-5', hasError && DIMMED_OPACITY_CLASSNAME])}
                                     aria-disabled={hasError}
                                     disabled={hasError}
                                 >
                                     {c('Action').t`Save`}
                                 </InlineLinkButton>
-                                <InlineLinkButton onClick={handleCancel} className="ml0-5 p0-5">
+                                <InlineLinkButton
+                                    onClick={(e) => {
+                                        preventDefaultAndStopPropagation(e);
+                                        handleCancel();
+                                    }}
+                                    className="ml0-5 p0-5"
+                                >
                                     {c('Action').t`Cancel`}
                                 </InlineLinkButton>
                             </>
@@ -502,7 +514,7 @@ const ImportManageFoldersRow = ({
                                 disabled={!checked}
                                 tabIndex={disabled ? -1 : 0}
                                 onClick={toggleEditMode}
-                                className="p0-5"
+                                className="ml0-5 p0-5"
                             >
                                 {c('Action').t`Rename`}
                             </InlineLinkButton>
@@ -525,13 +537,10 @@ const ImportManageFoldersRow = ({
                         (disabled || editMode) && 'cursor-default',
                     ])}
                 >
-                    <div className="flex w50 flex-nowrap flex-align-items-center flex-item-noshrink pr1">
+                    <div className="flex w50 flex-nowrap flex-align-items-center flex-item-noshrink pr0-5">
                         <div className="flex-item-noshrink" style={DestinationFolder ? undefined : sourceIndentStyles}>
                             <Checkbox
                                 onChange={({ target: { checked } }: ChangeEvent<HTMLInputElement>) => {
-                                    if (!checked && editMode) {
-                                        setEditMode(false);
-                                    }
                                     onToggleCheck(Source, checked);
                                 }}
                                 id={Source}
@@ -544,9 +553,10 @@ const ImportManageFoldersRow = ({
                         </div>
                     </div>
 
-                    <div className="flex w50 pr1">{renderDestination()}</div>
+                    <div className="flex w50 pl0-5">{renderDestination()}</div>
                 </RowWrapperComponent>
             </div>
+
             {children.length > 0 && (
                 <ul className="unstyled m0">
                     {children.map((f) => (

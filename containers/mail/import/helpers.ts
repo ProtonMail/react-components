@@ -72,7 +72,7 @@ export const mappingHasLabelsTooLong = (mapping: FolderMapping[]) => {
 };
 
 export const nameAlreadyExists = (name: string, collection: Label[] | Folder[]) => {
-    return collection.map((i: Label | Folder) => i.Name).some((i) => i === name);
+    return collection.map((i: Label | Folder) => i.Name).some((i) => i.toLowerCase() === name.toLowerCase());
 };
 
 export const mappingHasUnavailableNames = (

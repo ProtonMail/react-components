@@ -166,7 +166,7 @@ const CustomizeImportModal = ({
     };
 
     const totalFoldersCount = modalModel.providerFolders.length;
-    const selectedFoldersCount = customizedPayload.Mapping.length;
+    const selectedFoldersCount = customizedPayload.Mapping.filter((m) => m.checked).length;
 
     const handleSubmit = () => {
         updateModalModel({

@@ -54,7 +54,7 @@ const ImportManageFolders = ({
     const [checkedFoldersMap, setCheckedFoldersMap] = useState(
         providerFolders.reduce<CheckedFoldersMap>((acc, folder) => {
             const found = payload.Mapping.find((m) => m.Source === folder.Source);
-            acc[folder.Source] = !!found;
+            acc[folder.Source] = !!found && found.checked;
             return acc;
         }, {})
     );
@@ -198,22 +198,20 @@ const ImportManageFolders = ({
 
     useEffect(() => {
         const Mapping = providerFolders.reduce<FolderMapping[]>((acc, folder) => {
-            if (checkedFoldersMap[folder.Source]) {
-                const Destinations = isLabelMapping
-                    ? {
-                          FolderPath: folder.DestinationFolder,
-                          Labels: !folder.DestinationFolder ? [labelsMap[folder.Source]] : [],
-                      }
-                    : {
-                          FolderPath: forgeNewPath(folder),
-                      };
+            const Destinations = isLabelMapping
+                ? {
+                      FolderPath: folder.DestinationFolder,
+                      Labels: !folder.DestinationFolder ? [labelsMap[folder.Source]] : [],
+                  }
+                : {
+                      FolderPath: forgeNewPath(folder),
+                  };
 
-                acc.push({
-                    Source: folder.Source,
-                    Destinations,
-                    checked: true,
-                });
-            }
+            acc.push({
+                Source: folder.Source,
+                Destinations,
+                checked: checkedFoldersMap[folder.Source],
+            });
 
             return acc;
         }, []);
@@ -230,12 +228,12 @@ const ImportManageFolders = ({
         <>
             <Alert className="mt2 mb1">{c('Info').t`Please select the folders you would like to import:`}</Alert>
 
-            <div className="flex">
-                <div className="w50 text-ellipsis pt1">
+            <div className="flex pt1">
+                <div className="flex-item-fluid text-ellipsis pr0-5">
                     <strong>{c('Label').t`From: ${modalModel.email}`}</strong>
                 </div>
 
-                <div className="w40 text-ellipsis pt1">
+                <div className="flex-item-fluid text-ellipsis pl0-5">
                     <strong>{c('Label').t`To: ${emailAddress}`}</strong>
                 </div>
             </div>
