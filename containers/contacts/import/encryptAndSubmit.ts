@@ -184,15 +184,12 @@ export const submitCategories = async (categories: ImportCategories[], api: Api)
         }
         if (action === IMPORT_GROUPS_ACTION.CREATE) {
             const labelID = newLabelIDsMap[targetName];
-            if (!labelID) {
-                throw new Error('Label ID could not be found');
-            }
-            if (contactEmailIDs.length) {
+            if (labelID && contactEmailIDs.length) {
                 labelRequests.push(() =>
                     api(labelContactEmails({ LabelID: labelID, ContactEmailIDs: contactEmailIDs })).catch(noop)
                 );
             }
-            if (contactIDs.length) {
+            if (labelID && contactIDs.length) {
                 labelRequests.push(() => api(labelContacts({ LabelID: labelID, ContactIDs: contactIDs })).catch(noop));
             }
         }

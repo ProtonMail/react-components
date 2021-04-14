@@ -1,5 +1,7 @@
+import { FORBIDDEN_LABEL_NAMES } from 'proton-shared/lib/constants';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 import { omit } from 'proton-shared/lib/helpers/object';
+import { normalize } from 'proton-shared/lib/helpers/string';
 import { ContactGroup, IMPORT_GROUPS_ACTION, ImportContactsModel } from 'proton-shared/lib/interfaces/contacts';
 import React, { ChangeEvent, Dispatch, SetStateAction } from 'react';
 import { c, msgid } from 'ttag';
@@ -69,6 +71,8 @@ const SelectGroup = ({
             onError(c('Error').t`You must set a name`, index);
         } else if (groupNames.includes(name)) {
             onError(c('Error').t`A group with this name already exists`, index);
+        } else if (FORBIDDEN_LABEL_NAMES.includes(normalize(name))) {
+            onError(c('Error').t`Invalid name`, index);
         }
         onChangeTargetName(target.value, index);
     };
@@ -81,6 +85,7 @@ const SelectGroup = ({
                 maxLength={100}
                 title={c('Title').t`Add contact group name`}
                 error={error}
+                isSubmitted={!!error}
                 value={targetName}
                 onChange={handleChangeGroupName}
             />
@@ -116,7 +121,7 @@ const ImportGroupsModalContent = ({ model, setModel }: Props) => {
             ...model,
             categories: model.categories.map((category, j) => {
                 if (index !== j) {
-                    return omit(category, ['error']);
+                    return category;
                 }
                 return { ...omit(category, ['error']), action };
             }),
