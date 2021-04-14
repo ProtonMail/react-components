@@ -276,7 +276,7 @@ const OnboardingModal = ({
                     childStepProps.close
                 )}
             </footer>
-            {hasDots && (
+            {hasDots ? (
                 <div className="text-center">
                     <StepDots value={step}>
                         {range(0, steps.length).map((index) => (
@@ -284,6 +284,8 @@ const OnboardingModal = ({
                         ))}
                     </StepDots>
                 </div>
+            ) : (
+                <div className="pt1 pb1" />
             )}
         </FormModal>
     );
