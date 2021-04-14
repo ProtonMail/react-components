@@ -227,12 +227,19 @@ const OnboardingModal = ({
             {...childStepProps}
             title={
                 hasBack ? (
-                    <button type="button" title={c('Action').t`Back`} onClick={childStepProps.onClose || handleBack}>
-                        <Icon name="arrow-left" alt={c('Action').t`Back`} />
-                    </button>
+                    <span className="absolute top-left mt1 ml1">
+                        <Button
+                            icon
+                            shape="ghost"
+                            title={c('Action').t`Back`}
+                            onClick={childStepProps.onClose || handleBack}
+                        >
+                            <Icon name="arrow-left" alt={c('Action').t`Back`} />
+                        </Button>
+                    </span>
                 ) : null
             }
-            small
+            intermediate
             footer={null}
         >
             {childStep}
