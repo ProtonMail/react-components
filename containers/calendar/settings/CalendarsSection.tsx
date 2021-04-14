@@ -37,7 +37,6 @@ const CalendarsSection = ({
 
     const defaultCalendarID = defaultCalendar ? defaultCalendar.ID : undefined;
     const hasDisabledCalendar = disabledCalendars.length > 0;
-    const { isDelinquent } = { isDelinquent: true };
 
     const handleCreate = () => {
         createModal(<CalendarModal activeCalendars={activeCalendars} defaultCalendarID={defaultCalendarID} />);
@@ -109,7 +108,7 @@ const CalendarsSection = ({
 
     const calendarLimit = user.isFree ? MAX_CALENDARS_PER_FREE_USER : MAX_CALENDARS_PER_USER;
     const isBelowLimit = calendars.length < calendarLimit;
-    const canAddCalendar = activeAddresses.length > 0 && isBelowLimit && !isDelinquent;
+    const canAddCalendar = activeAddresses.length > 0 && isBelowLimit && !user.isDelinquent;
 
     return (
         <SettingsSection>
@@ -144,7 +143,7 @@ const CalendarsSection = ({
             <CalendarsTable
                 calendars={calendars}
                 defaultCalendarID={defaultCalendarID}
-                isDelinquentUser={isDelinquent}
+                user={user}
                 onEdit={handleEdit}
                 onSetDefault={handleSetDefault}
                 onDelete={handleDelete}

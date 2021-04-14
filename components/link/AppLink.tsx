@@ -36,6 +36,16 @@ const AppLink = ({ to, toApp, children, ...rest }: Props, ref: React.Ref<HTMLAnc
                 </a>
             );
         }
+        if (APP_NAME === APPS.PROTONVPN_SETTINGS) {
+            const href = getAppHref(to, toApp);
+            return (
+                // internal link, trusted
+                // eslint-disable-next-line react/jsx-no-target-blank
+                <a ref={ref} target="_blank" {...rest} href={href}>
+                    {children}
+                </a>
+            );
+        }
         if (isStandaloneMode) {
             return (
                 <Tooltip title="Disabled in standalone mode">
@@ -45,10 +55,9 @@ const AppLink = ({ to, toApp, children, ...rest }: Props, ref: React.Ref<HTMLAnc
                 </Tooltip>
             );
         }
-        const fromVPN = APP_NAME === APPS.PROTONVPN_SETTINGS;
-        const [href, target] = fromVPN ? ['_blank', getAppHref(to, toApp)] : ['_self', getAppHrefBundle(to, toApp)];
+        const href = getAppHrefBundle(to, toApp);
         return (
-            <a ref={ref} target={target} {...rest} href={href}>
+            <a ref={ref} target="_self" {...rest} href={href}>
                 {children}
             </a>
         );
