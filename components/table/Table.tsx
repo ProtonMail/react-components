@@ -9,10 +9,12 @@ interface Props extends React.DetailedHTMLProps<React.TableHTMLAttributes<HTMLTa
 
 const Table = ({ children, className, caption, ...props }: Props) => {
     return (
-        <table className={classnames(['simple-table', className])} {...props}>
-            {caption ? <caption className="sr-only">{caption}</caption> : null}
-            {children}
-        </table>
+        <div className="simple-table-container">
+            <table className={classnames(['simple-table', className])} {...props}>
+                {caption ? <caption className="sr-only">{caption}</caption> : null}
+                {children}
+            </table>
+        </div>
     );
 };
 
