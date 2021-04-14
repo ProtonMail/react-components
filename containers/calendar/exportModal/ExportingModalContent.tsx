@@ -31,7 +31,7 @@ const ExportingModalContent = ({ model, setModel, onFinish, addresses }: Props) 
     useBeforeUnload(c('Alert').t`By leaving now, some events may not be imported`);
 
     useEffect(() => {
-        // Prepare api for allowing cancellation in the middle of the import
+        // Prepare api for allowing cancellation in the middle of the export
         const abortController = new AbortController();
         const { signal } = abortController;
 
@@ -69,7 +69,6 @@ const ExportingModalContent = ({ model, setModel, onFinish, addresses }: Props) 
                     totalToProcess,
                 };
                 const [exportedEvents, erroredEvents] = await processInBatches(processData);
-                console.log(exportedEvents, erroredEvents);
                 handleExportProgress([]);
 
                 if (signal.aborted) {
@@ -78,13 +77,13 @@ const ExportingModalContent = ({ model, setModel, onFinish, addresses }: Props) 
 
                 onFinish(exportedEvents, erroredEvents);
             } catch (error) {
-                console.error('error: ', error);
                 setModelWithAbort((model) => ({
-                    step: EXPORT_STEPS.WARNING, // TODO: is it supposed to be WARNING?
+                    step: EXPORT_STEPS.FINISHED,
                     calendar: model.calendar,
                     totalProcessed: [],
                     totalToProcess: 0,
                     erroredEvents: [],
+                    error,
                 }));
 
                 if (signal.aborted) {
@@ -102,6 +101,11 @@ const ExportingModalContent = ({ model, setModel, onFinish, addresses }: Props) 
         };
     }, []);
 
+    const display =
+        totalToProcess && !model.totalProcessed.length
+            ? c('Export calendar').t`Loading events`
+            : c('Export calendar').t`${model.totalProcessed.length} events out of ${totalToProcess}...`;
+
     return (
         <>
             <Alert>
@@ -110,7 +114,7 @@ const ExportingModalContent = ({ model, setModel, onFinish, addresses }: Props) 
             <DynamicProgress
                 id="progress-export-calendar"
                 value={model.totalProcessed.length}
-                display={c('Export calendar').t`${model.totalProcessed.length} events out of ${totalToProcess}...`}
+                display={display}
                 max={totalToProcess}
                 loading
             />

@@ -107,9 +107,7 @@ const CalendarsSection = ({
         }
     };
 
-    const handleExport = (calendar: Calendar) => {
-        return calendar ? createModal(<ExportModal calendar={calendar} />) : undefined;
-    };
+    const handleExport = (calendar: Calendar) => createModal(<ExportModal calendar={calendar} />);
 
     const calendarLimit = user.isFree ? MAX_CALENDARS_PER_FREE_USER : MAX_CALENDARS_PER_USER;
     const isBelowLimit = calendars.length < calendarLimit;

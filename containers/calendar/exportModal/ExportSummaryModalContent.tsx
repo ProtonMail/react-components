@@ -3,7 +3,6 @@ import { c, msgid } from 'ttag';
 
 import { ExportCalendarModel } from 'proton-shared/lib/interfaces/calendar';
 
-import ErrorDetails from './ErrorDetails';
 import { Alert, DynamicProgress } from '../../../components';
 
 interface Props {
@@ -47,7 +46,6 @@ const ExportSummaryModalContent = ({ model }: Props) => {
                 success={isSuccess}
                 partialSuccess={isPartialSuccess}
             />
-            <ErrorDetails errors={[]} />
         </>
     );
 };
