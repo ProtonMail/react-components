@@ -1,5 +1,5 @@
 import React from 'react';
-import { c, msgid } from 'ttag';
+import { c } from 'ttag';
 
 import { ExportCalendarModel } from 'proton-shared/lib/interfaces/calendar';
 
@@ -14,25 +14,17 @@ const ExportSummaryModalContent = ({ model }: Props) => {
     const isSuccess = totalProcessed.length === totalToProcess;
     const isPartialSuccess = totalProcessed.length > 0 && !isSuccess;
 
-    const alertMessage = isSuccess
-        ? c('Export calendar').ngettext(
-              msgid`Event successfully exported. The exported event will now appear in your calendar.`,
-              `Events successfully exported. The exported events will now appear in your calendar.`,
-              totalProcessed.length
-          )
-        : isPartialSuccess
-        ? c('Export calendar')
-              .t`An error occurred while decrypting and adding your events. ${totalProcessed.length} out of ${totalToProcess} events successfully exported.`
-        : c('Export calendar').ngettext(
-              msgid`An error occurred while decrypting and adding your event. No event could be exported.`,
-              `An error occurred while decrypting and adding your events. No event could be exported.`,
-              totalToProcess
-          );
-    const displayMessage = c('Export calendar').ngettext(
-        msgid`${totalProcessed.length}/${totalToProcess} event decrypted and added to your calendar`,
-        `${totalProcessed.length}/${totalToProcess} events decrypted and added to your calendar`,
-        totalToProcess
+    const alertMessage = isSuccess ? (
+        c('Export calendar').t`Calendar successfully exported. Please save the ICS file.`
+    ) : isPartialSuccess ? (
+        <>
+            <div>{c('Export calendar').t`Some events cannot be exported.`}</div>
+            <div>{c('Export calendar').t`You can save an ICS file of the events that were successfully exported.`}</div>
+        </>
+    ) : (
+        c('Export calendar').t`None of the events could be exported.`
     );
+    const displayMessage = c('Export calendar').t`${totalProcessed.length}/${totalToProcess} events exported`;
 
     return (
         <>
