@@ -18,8 +18,8 @@ const OnboardingThemes = ({ themes, themeIdentifier, onChange, ...rest }: Props)
             description={c('Onboarding Proton').t`You can change this anytime in your settings.`}
             {...rest}
         >
-            <div className="flex">
-                <ThemeCards list={themes} themeIdentifier={themeIdentifier} onChange={onChange} />
+            <div className="flex mb0-5">
+                <ThemeCards liClassName="w33" list={themes} themeIdentifier={themeIdentifier} onChange={onChange} />
             </div>
         </OnboardingContent>
     );
