@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { PLAN_NAMES, PLANS, CYCLE, CURRENCIES } from 'proton-shared/lib/constants';
@@ -71,12 +72,11 @@ const VpnSubscriptionTable = ({
                 {
                     icon: 'close',
                     content: (
-                        <del className="mr0-5" key="secure">
-                            <span className="opacity-50 mr0-5"> {c('Plan feature').t`Adblocker (NetShield)`}</span>
+                        <del className="mr0-5" key="access">
+                            <span className="opacity-50 mr0-5"> {c('Plan feature').t`Access blocked content`}</span>
                             <Info
                                 title={c('Info')
-                                    .t`NetShield protects your device and speeds up your browsing by blocking ads, trackers, and malware.`}
-                                url="https://protonvpn.com/support/netshield/"
+                                    .t`Access blocked content, like social media, news, Wikipedia, YouTube, and many others, no matter where you are.`}
                             />
                         </del>
                     ),
@@ -84,11 +84,12 @@ const VpnSubscriptionTable = ({
                 {
                     icon: 'close',
                     content: (
-                        <del className="mr0-5" key="access">
-                            <span className="opacity-50 mr0-5"> {c('Plan feature').t`Access blocked content`}</span>
+                        <del className="mr0-5" key="secure">
+                            <span className="opacity-50 mr0-5"> {c('Plan feature').t`Adblocker (NetShield)`}</span>
                             <Info
                                 title={c('Info')
-                                    .t`Access blocked content, like social media, news, Wikipedia, YouTube, and many others, no matter where you are.`}
+                                    .t`NetShield protects your device and speeds up your browsing by blocking ads, trackers, and malware.`}
+                                url="https://protonvpn.com/support/netshield/"
                             />
                         </del>
                     ),
@@ -161,19 +162,6 @@ const VpnSubscriptionTable = ({
                 {
                     icon: 'arrow-right',
                     content: (
-                        <span className="mr0-5">
-                            <span className="mr0-5">{c('Plan feature').t`Adblocker (NetShield)`}</span>
-                            <Info
-                                title={c('Info')
-                                    .t`NetShield protects your device and speeds up your browsing by blocking ads, trackers, and malware.`}
-                                url="https://protonvpn.com/support/netshield/"
-                            />
-                        </span>
-                    ),
-                },
-                {
-                    icon: 'arrow-right',
-                    content: (
                         <span className="mr0-5" key="access">
                             <span className="mr0-5"> {c('Plan feature').t`Access blocked content`}</span>
                             <Info
@@ -181,6 +169,19 @@ const VpnSubscriptionTable = ({
                                     .t`Access blocked content, like social media, news, Wikipedia, YouTube, and many others, no matter where you are.`}
                             />
                         </span>
+                    ),
+                },
+                {
+                    icon: 'close',
+                    content: (
+                        <del className="mr0-5" key="secure">
+                            <span className="opacity-50 mr0-5"> {c('Plan feature').t`Adblocker (NetShield)`}</span>
+                            <Info
+                                title={c('Info')
+                                    .t`NetShield protects your device and speeds up your browsing by blocking ads, trackers, and malware.`}
+                                url="https://protonvpn.com/support/netshield/"
+                            />
+                        </del>
                     ),
                 },
                 {
@@ -251,12 +252,11 @@ const VpnSubscriptionTable = ({
                 {
                     icon: 'arrow-right',
                     content: (
-                        <span className="mr0-5">
-                            <span className="mr0-5">{c('Plan feature').t`Adblocker (NetShield)`}</span>
+                        <span className="mr0-5" key="access">
+                            <span className="mr0-5"> {c('Plan feature').t`Access blocked content`}</span>
                             <Info
                                 title={c('Info')
-                                    .t`NetShield protects your device and speeds up your browsing by blocking ads, trackers, and malware.`}
-                                url="https://protonvpn.com/support/netshield/"
+                                    .t`Access blocked content, like social media, news, Wikipedia, YouTube, and many others, no matter where you are.`}
                             />
                         </span>
                     ),
@@ -264,11 +264,12 @@ const VpnSubscriptionTable = ({
                 {
                     icon: 'arrow-right',
                     content: (
-                        <span className="mr0-5" key="access">
-                            <span className="mr0-5"> {c('Plan feature').t`Access blocked content`}</span>
+                        <span className="mr0-5">
+                            <span className="mr0-5">{c('Plan feature').t`Adblocker (NetShield)`}</span>
                             <Info
                                 title={c('Info')
-                                    .t`Access blocked content, like social media, news, Wikipedia, YouTube, and many others, no matter where you are.`}
+                                    .t`NetShield protects your device and speeds up your browsing by blocking ads, trackers, and malware.`}
+                                url="https://protonvpn.com/support/netshield/"
                             />
                         </span>
                     ),

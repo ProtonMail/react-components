@@ -83,7 +83,9 @@ const VpnFeaturesTable = ({ cycle, currency }) => {
                         <td className="scroll-if-needed">
                             <del>{c('Feature').t`Adblocker (NetShield)`}</del>
                         </td>
-                        <td className="scroll-if-needed">{c('Feature').t`Adblocker (NetShield)`}</td>
+                        <td className="scroll-if-needed">
+                            <del>{c('Feature').t`Adblocker (NetShield)`}</del>
+                        </td>
                         <td className="scroll-if-needed">{c('Feature').t`Adblocker (NetShield)`}</td>
                         <td className="scroll-if-needed">{c('Feature').t`Adblocker (NetShield)`}</td>
                     </tr>
