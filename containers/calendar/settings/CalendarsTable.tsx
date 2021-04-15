@@ -20,7 +20,7 @@ interface Props {
 const CalendarsTable = ({
     calendars,
     defaultCalendarID,
-    user
+    user,
     onEdit,
     onSetDefault,
     onDelete,
