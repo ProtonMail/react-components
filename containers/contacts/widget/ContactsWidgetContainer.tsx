@@ -2,8 +2,8 @@ import React, { useState, useMemo } from 'react';
 import { c, msgid } from 'ttag';
 import { Recipient } from 'proton-shared/lib/interfaces';
 import { ContactEmail } from 'proton-shared/lib/interfaces/contacts';
-import { exportContacts } from 'proton-shared/lib/contacts/export';
-import { extractMergeable } from 'proton-shared/lib/contacts/merge';
+import { exportContacts } from 'proton-shared/lib/contacts/helpers/export';
+import { extractMergeable } from 'proton-shared/lib/contacts/helpers/merge';
 
 import { FullLoader, SearchInput } from '../../../components';
 import { useApi, useModals, useNotifications, useUser, useUserKeys, useUserSettings } from '../../../hooks';

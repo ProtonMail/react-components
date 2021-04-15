@@ -7,13 +7,13 @@ import { wait } from 'proton-shared/lib/helpers/promise';
 import { chunk } from 'proton-shared/lib/helpers/array';
 import { prepareContact as decrypt } from 'proton-shared/lib/contacts/decrypt';
 import { prepareContact as encrypt } from 'proton-shared/lib/contacts/encrypt';
-import { API_CODES, API_SAFE_INTERVAL, ADD_CONTACTS_MAX_SIZE } from 'proton-shared/lib/constants';
-import { OVERWRITE, CATEGORIES } from 'proton-shared/lib/contacts/constants';
+import { API_CODES } from 'proton-shared/lib/constants';
+import { API_SAFE_INTERVAL, ADD_CONTACTS_MAX_SIZE, OVERWRITE, CATEGORIES } from 'proton-shared/lib/contacts/constants';
 import { DecryptedKey } from 'proton-shared/lib/interfaces';
 import { Contact as ContactType, ContactProperties } from 'proton-shared/lib/interfaces/contacts';
-import { merge } from 'proton-shared/lib/contacts/merge';
-import { splitEncryptedContacts } from 'proton-shared/lib/contacts/import';
-import { combineProgress } from 'proton-shared/lib/contacts/progress';
+import { merge } from 'proton-shared/lib/contacts/helpers/merge';
+import { splitEncryptedContacts } from 'proton-shared/lib/contacts/helpers/import';
+import { combineProgress } from 'proton-shared/lib/contacts/helpers/progress';
 import { EncryptedContact } from 'proton-shared/lib/interfaces/contacts/Import';
 
 import { Alert, DynamicProgress } from '../../../components';

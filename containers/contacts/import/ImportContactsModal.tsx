@@ -4,13 +4,13 @@ import { extractVcards, readVcf } from 'proton-shared/lib/contacts/vcard';
 import { splitExtension } from 'proton-shared/lib/helpers/file';
 import { noop } from 'proton-shared/lib/helpers/function';
 import { MAX_IMPORT_CONTACTS, MAX_IMPORT_FILE_SIZE } from 'proton-shared/lib/contacts/constants';
-import { prepare, readCsv, toVcardContacts } from 'proton-shared/lib/contacts/csv';
+import { prepare, readCsv, toVcardContacts } from 'proton-shared/lib/contacts/helpers/csv';
 import {
     getHasPreVcardsContacts,
     getIsAcceptedExtension,
     getSupportedContacts,
     splitErrors,
-} from 'proton-shared/lib/contacts/import';
+} from 'proton-shared/lib/contacts/helpers/import';
 import { EXTENSION, IMPORT_STEPS, ImportContactsModel } from 'proton-shared/lib/interfaces/contacts/Import';
 
 import { FormModal, PrimaryButton, onlyDragFiles } from '../../../components';
