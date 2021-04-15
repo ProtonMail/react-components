@@ -31,8 +31,14 @@ const FeedbackModal = ({ onClose, ...rest }: Props) => {
             });
             return;
         }
-        await api(sendFeedback(model.Score, model.Feedback));
-        createNotification({ text: c('Success notification when user send feedback').t`Feedback sent` });
+        await api(
+            sendFeedback({
+                Score: model.Score,
+                Feedback: model.Feedback,
+                FeedbackType: 'v4_migration',
+            })
+        );
+        createNotification({ text: c('Success notification when user send feedback').t`FeedbackType sent` });
         onClose?.();
     };
 
