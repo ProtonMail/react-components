@@ -18,9 +18,9 @@ interface Props {
 const OrganizationSection = ({ organization }: Props) => {
     const { createModal } = useModals();
     const { APP_NAME } = useConfig();
-    const [subscription] = useSubscription();
+    const [subscription, loadingSubscription] = useSubscription();
 
-    if (!organization) {
+    if (!organization || loadingSubscription) {
         return <Loader />;
     }
 
