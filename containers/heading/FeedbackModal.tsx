@@ -62,12 +62,12 @@ const FeedbackModal = ({ onClose, ...rest }: Props) => {
             onClose={onClose}
             {...rest}
         >
-            <div className="w75 on-mobile-w100">
-                <p className="mb2">{c('Info')
-                    .t`Proton has received a facelift. We would love to hear what you think about it!`}</p>
-                <div className="mb2">
-                    <label className="mb1 block" id="score-label">{c('Label')
-                        .t`How would you rate our new look and feel?`}</label>
+            <p className="mb2">{c('Info')
+                .t`Proton has received a facelift. We would love to hear what you think about it!`}</p>
+            <div className="mb2">
+                <label className="mb1 block" id="score-label">{c('Label')
+                    .t`How would you rate our new look and feel?`}</label>
+                <div className="w75 on-mobile-w100">
                     <Scale
                         from={0}
                         to={10}
@@ -78,17 +78,17 @@ const FeedbackModal = ({ onClose, ...rest }: Props) => {
                         onChange={handleScoreChange}
                     />
                 </div>
-                <div>
-                    <label className="mb1 block" htmlFor="feedback-label">{c('Label')
-                        .t`Please let us know about any additional feedback that you might have. Thank you for helping us making Proton products better!`}</label>
-                    <TextArea
-                        id="feedback-label"
-                        value={model.Feedback}
-                        placeholder={c('Placeholder').t`Feedback`}
-                        onChange={handleChange('Feedback')}
-                        required
-                    />
-                </div>
+            </div>
+            <div>
+                <label className="mb1 block" htmlFor="feedback-label">{c('Label')
+                    .t`Please let us know about any additional feedback that you might have. Thank you for helping us making Proton products better!`}</label>
+                <TextArea
+                    id="feedback-label"
+                    value={model.Feedback}
+                    placeholder={c('Placeholder').t`Feedback`}
+                    onChange={handleChange('Feedback')}
+                    required
+                />
             </div>
         </FormModal>
     );
