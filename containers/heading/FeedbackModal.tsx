@@ -38,7 +38,7 @@ const FeedbackModal = ({ onClose, ...rest }: Props) => {
                 FeedbackType: 'v4_migration',
             })
         );
-        createNotification({ text: c('Success notification when user send feedback').t`FeedbackType sent` });
+        createNotification({ text: c('Success notification when user send feedback').t`Feedback sent` });
         onClose?.();
     };
 
