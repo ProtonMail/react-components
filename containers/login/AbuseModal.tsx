@@ -1,8 +1,12 @@
 import React from 'react';
 import { c } from 'ttag';
-import { FormModal, Alert, Href } from '../../components';
+import { FormModal, Href } from '../../components';
 
-const AbuseModal = (props: any) => {
+interface Props {
+    message?: string;
+}
+
+const AbuseModal = ({ message, ...rest }: Props) => {
     const title = c('Title').t`Account disabled`;
 
     const abuseOrFraudLink = (
@@ -18,11 +22,13 @@ const AbuseModal = (props: any) => {
     );
 
     return (
-        <FormModal hasClose={false} hasSubmit={false} title={title} close={c('Action').t`Close`} {...props}>
-            <Alert type="warning">
-                <div className="mb1">{c('Info').jt`Account disabled due to ${abuseOrFraudLink}.`}</div>
-                <div>{c('Info').jt`You can find more information and contact us ${contactLink}.`}</div>
-            </Alert>
+        <FormModal hasClose={false} hasSubmit={false} title={title} small close={c('Action').t`Close`} {...rest}>
+            {message || (
+                <>
+                    <div className="mb1">{c('Info').jt`Account disabled due to ${abuseOrFraudLink}.`}</div>
+                    <div>{c('Info').jt`You can find more information and contact us ${contactLink}.`}</div>
+                </>
+            )}
         </FormModal>
     );
 };
