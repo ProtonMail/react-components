@@ -32,7 +32,7 @@ const MergeTableBody = ({
                 const deleted = beDeleted[ID];
                 const options = [
                     !deleted && {
-                        text: c('Action').t`Contact details`,
+                        text: c('Action').t`View`,
                         onClick() {
                             onClickDetails(ID);
                         },
