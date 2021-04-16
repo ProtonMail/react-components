@@ -23,7 +23,7 @@ const ContactsWidgetSettingsContainer = ({ onClose, onImport }: Props) => {
     };
 
     return (
-        <div className="pl2 pr2 pt1 pb1">
+        <div className="pl2 pr2 pt1 pb1 scroll-if-needed h100">
             <Row>
                 <Label htmlFor="saveContactToggle">
                     <span className="mr0-5 text-semibold">{c('Label').t`Automatically save contacts`}</span>
