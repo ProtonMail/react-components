@@ -1,7 +1,7 @@
-import { noop } from 'proton-shared/lib/helpers/function';
 import {
     Calendar,
     CalendarEvent,
+    EXPORT_ERRORS,
     EXPORT_STEPS,
     ExportCalendarModel,
     VcalVeventComponent,
@@ -74,19 +74,18 @@ export const ExportModal = ({ calendar, ...rest }: Props) => {
                 setCalendarBlob(new Blob([ics], { type: 'data:text/plain;charset=utf-8;' }));
             };
 
-            const submit = (
-                <Button color="norm" disabled type="submit">
-                    {c('Action').t`Continue`}
-                </Button>
-            );
-
             return {
                 content: <ExportingModalContent model={model} setModel={setModel} onFinish={handleFinish} />,
-                submit,
-                onSubmit: noop,
+                submit: null,
             };
         }
-        const submit = <Button color="norm" type="submit">{c('Action').t`Save ICS file`}</Button>;
+        const submit =
+            model.error === EXPORT_ERRORS.NETWORK_ERROR ? (
+                <Button color="norm" onClick={() => updateModel({ step: EXPORT_STEPS.EXPORTING })}>{c('Action')
+                    .t`Try again`}</Button>
+            ) : (
+                <Button color="norm" type="submit">{c('Action').t`Save ICS file`}</Button>
+            );
 
         return {
             content: <ExportSummaryModalContent model={model} />,
