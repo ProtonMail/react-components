@@ -12,7 +12,7 @@ import { processInBatches } from 'proton-shared/lib/calendar/decryptEvents';
 
 import { getEventsCount } from 'proton-shared/lib/api/calendars';
 import { Alert, DynamicProgress } from '../../../components';
-import { useApi, useBeforeUnload, useGetAddresses, useGetAddressKeys, useGetCalendarKeys } from '../../../hooks';
+import { useApi, useGetAddresses, useGetAddressKeys, useGetCalendarKeys } from '../../../hooks';
 import useGetEncryptionPreferences from '../../../hooks/useGetEncryptionPreferences';
 
 interface Props {
@@ -28,8 +28,6 @@ const ExportingModalContent = ({ model, setModel, onFinish }: Props) => {
     const getCalendarKeys = useGetCalendarKeys();
 
     const { totalToProcess } = model;
-
-    useBeforeUnload(c('Alert').t`By leaving now, some events may not be imported`);
 
     useEffect(() => {
         // Prepare api for allowing cancellation in the middle of the export
