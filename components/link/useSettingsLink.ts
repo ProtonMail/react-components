@@ -11,16 +11,19 @@ const useSettingsLink = () => {
     const location = useLocation();
     const { APP_NAME } = useConfig();
 
-    return useCallback((path: string, app?: APP_NAMES, newTab?: boolean) => {
-        if (APP_NAME === APPS.PROTONVPN_SETTINGS) {
-            return goToApp(path, APP_NAME, newTab);
-        }
+    return useCallback(
+        (path: string, app?: APP_NAMES, newTab?: boolean) => {
+            if (APP_NAME === APPS.PROTONVPN_SETTINGS) {
+                return goToApp(path, APP_NAME, newTab);
+            }
 
-        const settingsApp = APP_NAME === APPS.PROTONACCOUNT ? getAppFromPathnameSafe(location.pathname) : undefined;
-        const slug = getSlugFromApp(settingsApp || app || APP_NAME);
+            const settingsApp = APP_NAME === APPS.PROTONACCOUNT ? getAppFromPathnameSafe(location.pathname) : undefined;
+            const slug = getSlugFromApp(settingsApp || app || APP_NAME);
 
-        return goToApp(`/${slug}${path}`, APPS.PROTONACCOUNT, newTab);
-    }, []);
+            return goToApp(`/${slug}${path}`, APPS.PROTONACCOUNT, newTab);
+        },
+        [location, goToApp]
+    );
 };
 
 export default useSettingsLink;
