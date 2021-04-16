@@ -20,7 +20,7 @@ const getFeatures = (vpnCountries: VPNCountries): VPNFeature[] => {
             label: c('VPN feature').t`VPN Connections`,
             free: '1',
             [PLANS.VPNBASIC]: '2',
-            [PLANS.VPNPLUS]: '5',
+            [PLANS.VPNPLUS]: '10',
             [PLANS.VISIONARY]: '10',
         },
         {

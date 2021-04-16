@@ -134,7 +134,7 @@ const getFeatures = (
     if (planName === PLANS.VPNPLUS) {
         return [
             { content: c('Plan feature').t`1200+ servers in ${allCountries} countries` },
-            { content: c('Plan feature').t`5 VPN connections` },
+            { content: c('Plan feature').t`10 VPN connections` },
             { content: c('Plan feature').t`Highest speed (up to 10 Gbps)` },
             adBlocker,
             secureCore,
@@ -145,7 +145,6 @@ const getFeatures = (
     if (planName === PLANS.VISIONARY && service === PLAN_SERVICES.VPN) {
         return [
             { content: c('Plan feature').t`All plan features` },
-            { content: c('Plan feature').t`10 VPN connections` },
             { content: c('Plan feature').t`Includes 6 user accounts` },
             {
                 content: c('Plan feature').t`Includes Proton Visionary`,
