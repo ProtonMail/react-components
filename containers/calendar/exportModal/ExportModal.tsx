@@ -6,10 +6,9 @@ import {
     ExportCalendarModel,
     VcalVeventComponent,
 } from 'proton-shared/lib/interfaces/calendar';
-import React, { useState, useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { c } from 'ttag';
 
-import { Address } from 'proton-shared/lib/interfaces';
 import { getProdId, getPropertyTzid } from 'proton-shared/lib/calendar/vcalHelper';
 import downloadFile from 'proton-shared/lib/helpers/downloadFile';
 import { DEFAULT_CALENDAR_USER_SETTINGS } from 'proton-shared/lib/calendar/calendar';
@@ -20,7 +19,6 @@ import ExportSummaryModalContent from './ExportSummaryModalContent';
 import { useCalendarUserSettings, useConfig } from '../../../hooks';
 import { createExportIcs } from './createExportIcs';
 import { useGetVTimezones } from '../../../hooks/useGetVtimezones';
-import ExportModalFetchingDependenciesContent from './ExportModalFetchingDepdendenciesContent';
 
 interface Props {
     calendar: Calendar;
@@ -37,34 +35,18 @@ export const ExportModal = ({ calendar, ...rest }: Props) => {
     const prodId = useMemo(() => getProdId(config), [config]);
 
     const [model, setModel] = useState<ExportCalendarModel>({
-        step: EXPORT_STEPS.FETCHING_DEPENDENCIES,
+        step: EXPORT_STEPS.EXPORTING,
         totalProcessed: [],
         erroredEvents: [],
         totalToProcess: 0,
         calendar,
     });
-    const [addresses, setAddresses] = useState<Address[]>();
+    const updateModel = (changes: Partial<ExportCalendarModel>) =>
+        setModel((currentModel) => ({ ...currentModel, ...changes }));
+
     const [calendarBlob, setCalendarBlob] = useState<Blob>();
 
     const { content, ...modalProps } = (() => {
-        if (model.step === EXPORT_STEPS.FETCHING_DEPENDENCIES) {
-            return {
-                content: (
-                    <ExportModalFetchingDependenciesContent
-                        calendar={calendar}
-                        setModel={setModel}
-                        setAddresses={setAddresses}
-                    />
-                ),
-            };
-        }
-
-        if (model.step === EXPORT_STEPS.ERROR_FETCHING_DEPENDENCIES) {
-            return {
-                content: <>Error fetching dependencies</>,
-            };
-        }
-
         if (model.step === EXPORT_STEPS.EXPORTING) {
             const handleFinish = async (exportedEvents: VcalVeventComponent[], erroredEvents: CalendarEvent[]) => {
                 const vtimezones = Object.values(
@@ -81,7 +63,6 @@ export const ExportModal = ({ calendar, ...rest }: Props) => {
                 ).flatMap((vtimezoneObj) => (vtimezoneObj ? [vtimezoneObj.vtimezone] : []));
                 const uniqueTimezones = uniqueBy(vtimezones, (tz) => tz.tzid.value);
 
-                setModel((model) => ({ ...model, step: EXPORT_STEPS.FINISHED, erroredEvents }));
                 const ics = createExportIcs({
                     calendar,
                     prodId,
@@ -89,6 +70,7 @@ export const ExportModal = ({ calendar, ...rest }: Props) => {
                     defaultTzid,
                     vtimezones: uniqueTimezones,
                 });
+                updateModel({ step: EXPORT_STEPS.FINISHED, erroredEvents });
                 setCalendarBlob(new Blob([ics], { type: 'data:text/plain;charset=utf-8;' }));
             };
 
@@ -99,14 +81,7 @@ export const ExportModal = ({ calendar, ...rest }: Props) => {
             );
 
             return {
-                content: (
-                    <ExportingModalContent
-                        model={model}
-                        setModel={setModel}
-                        onFinish={handleFinish}
-                        addresses={addresses!}
-                    />
-                ),
+                content: <ExportingModalContent model={model} setModel={setModel} onFinish={handleFinish} />,
                 submit,
                 onSubmit: noop,
             };
@@ -125,7 +100,6 @@ export const ExportModal = ({ calendar, ...rest }: Props) => {
 
     return (
         <FormModal title={c('Title').t`Exporting calendar`} {...modalProps} {...rest}>
-            {/* <pre>{JSON.stringify(model.totalProcessed, null, 2)}</pre> */}
             {content}
         </FormModal>
     );

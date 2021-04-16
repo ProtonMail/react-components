@@ -3,25 +3,26 @@ import { c } from 'ttag';
 
 import {
     CalendarEvent,
+    EXPORT_ERRORS,
     EXPORT_STEPS,
     ExportCalendarModel,
     VcalVeventComponent,
 } from 'proton-shared/lib/interfaces/calendar';
 import { processInBatches } from 'proton-shared/lib/calendar/decryptEvents';
 
-import { Address } from 'proton-shared/lib/interfaces';
+import { getEventsCount } from 'proton-shared/lib/api/calendars';
 import { Alert, DynamicProgress } from '../../../components';
-import { useApi, useBeforeUnload, useGetAddressKeys, useGetCalendarKeys } from '../../../hooks';
+import { useApi, useBeforeUnload, useGetAddresses, useGetAddressKeys, useGetCalendarKeys } from '../../../hooks';
 import useGetEncryptionPreferences from '../../../hooks/useGetEncryptionPreferences';
 
 interface Props {
     model: ExportCalendarModel;
     setModel: Dispatch<SetStateAction<ExportCalendarModel>>;
     onFinish: (vevents: VcalVeventComponent[], erroredEvents: CalendarEvent[]) => void;
-    addresses: Address[];
 }
-const ExportingModalContent = ({ model, setModel, onFinish, addresses }: Props) => {
+const ExportingModalContent = ({ model, setModel, onFinish }: Props) => {
     const api = useApi();
+    const getAddresses = useGetAddresses();
     const getAddressKeys = useGetAddressKeys();
     const getEncryptionPreferences = useGetEncryptionPreferences();
     const getCalendarKeys = useGetCalendarKeys();
@@ -37,7 +38,7 @@ const ExportingModalContent = ({ model, setModel, onFinish, addresses }: Props) 
 
         const apiWithAbort: <T>(config: object) => Promise<T> = (config) => api({ ...config, signal });
 
-        const setModelWithAbort = (set: (model: ExportCalendarModel) => ExportCalendarModel) => {
+        const setModelWithAbort = (set: (currentModel: ExportCalendarModel) => ExportCalendarModel) => {
             if (signal.aborted) {
                 return;
             }
@@ -49,14 +50,26 @@ const ExportingModalContent = ({ model, setModel, onFinish, addresses }: Props) 
                 return;
             }
 
-            setModelWithAbort((model) => ({
-                ...model,
-                totalProcessed: [...model.totalProcessed, ...veventComponents],
+            setModelWithAbort((currentModel) => ({
+                ...currentModel,
+                totalProcessed: [...currentModel.totalProcessed, ...veventComponents],
             }));
         };
 
         const process = async () => {
             try {
+                const addresses = await getAddresses();
+                const { Total: totalToProcess } = await api<{ Total: number }>(getEventsCount(model.calendar.ID));
+
+                setModelWithAbort((currentModel) => ({
+                    ...currentModel,
+                    totalToProcess,
+                }));
+
+                if (!addresses) {
+                    throw new Error('No addresses');
+                }
+
                 const processData = {
                     calendarID: model.calendar.ID,
                     addresses,
@@ -69,7 +82,6 @@ const ExportingModalContent = ({ model, setModel, onFinish, addresses }: Props) 
                     totalToProcess,
                 };
                 const [exportedEvents, erroredEvents] = await processInBatches(processData);
-                handleExportProgress([]);
 
                 if (signal.aborted) {
                     return;
@@ -77,13 +89,13 @@ const ExportingModalContent = ({ model, setModel, onFinish, addresses }: Props) 
 
                 onFinish(exportedEvents, erroredEvents);
             } catch (error) {
-                setModelWithAbort((model) => ({
+                setModelWithAbort((currentModel) => ({
                     step: EXPORT_STEPS.FINISHED,
-                    calendar: model.calendar,
+                    calendar: currentModel.calendar,
                     totalProcessed: [],
                     totalToProcess: 0,
                     erroredEvents: [],
-                    error,
+                    error: EXPORT_ERRORS.NETWORK_ERROR,
                 }));
 
                 if (signal.aborted) {
@@ -101,10 +113,9 @@ const ExportingModalContent = ({ model, setModel, onFinish, addresses }: Props) 
         };
     }, []);
 
-    const display =
-        totalToProcess && !model.totalProcessed.length
-            ? c('Export calendar').t`Loading events`
-            : c('Export calendar').t`${model.totalProcessed.length} events out of ${totalToProcess}...`;
+    const display = !model.totalProcessed.length
+        ? c('Export calendar').t`Loading events`
+        : c('Export calendar').t`${model.totalProcessed.length} events out of ${totalToProcess}...`;
 
     return (
         <>
