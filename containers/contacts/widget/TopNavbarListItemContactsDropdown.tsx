@@ -44,10 +44,19 @@ const TopNavbarListItemContactsDropdown = ({ className, onCompose }: Props) => {
         close();
     };
 
+    const handleClickDropdownButton = () => {
+        if (isOpen) {
+            handleClose();
+        } else {
+            toggle();
+        }
+    };
+
     const handleImport = () => {
         createModal(<ImportContactsModal />);
-        close();
+        handleClose();
     };
+
     return (
         <>
             <DropdownButton
@@ -55,7 +64,7 @@ const TopNavbarListItemContactsDropdown = ({ className, onCompose }: Props) => {
                 isOpen={isOpen}
                 className={className}
                 ref={anchorRef}
-                onClick={toggle}
+                onClick={handleClickDropdownButton}
             >
                 <></>
             </DropdownButton>
