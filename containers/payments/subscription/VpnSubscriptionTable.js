@@ -233,7 +233,7 @@ const VpnSubscriptionTable = ({
             imageSrc: professionalPlanSvg,
             description: c('Description').t`Advanced security features`,
             features: [
-                { icon: 'arrow-right', content: c('Feature').t`5 VPN connections` },
+                { icon: 'arrow-right', content: c('Feature').t`10 VPN connections` },
                 { icon: 'arrow-right', content: c('Feature').t`Servers in ${vpnCountries.all.length} countries` },
                 { icon: 'arrow-right', content: c('Feature').t`Highest speed (up to 10 Gbps)` },
                 { icon: 'arrow-right', content: c('Feature').t`Strict no-logs policy` },
@@ -324,7 +324,6 @@ const VpnSubscriptionTable = ({
             description: c('Description').t`The complete privacy suite`,
             features: [
                 { icon: 'arrow-right', content: c('Feature').t`All Plus plan features` },
-                { icon: 'arrow-right', content: c('Feature').t`10 simultaneous VPN connections` },
                 {
                     icon: 'arrow-right',
                     content: (

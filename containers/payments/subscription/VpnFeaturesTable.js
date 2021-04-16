@@ -52,7 +52,7 @@ const VpnFeaturesTable = ({ cycle, currency }) => {
                     <tr>
                         <td className="scroll-if-needed">{c('Feature').t`1 VPN connection`}</td>
                         <td className="scroll-if-needed">{c('Feature').t`2 VPN connections`}</td>
-                        <td className="scroll-if-needed">{c('Feature').t`5 VPN connections`}</td>
+                        <td className="scroll-if-needed">{c('Feature').t`10 VPN connections`}</td>
                         <td className="scroll-if-needed">{c('Feature').t`10 VPN connections`}</td>
                     </tr>
                     <tr>
