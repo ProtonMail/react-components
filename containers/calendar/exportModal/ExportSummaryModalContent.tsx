@@ -16,7 +16,7 @@ const ExportSummaryModalContent = ({ model }: Props) => {
 
     const getAlertMessage = () => {
         if (isSuccess) {
-            return c('Export calendar').t`Calendar successfully exported. Please save the ICS file.`;
+            return c('Export calendar').t`Calendar successfully exported. You can now save the ICS file.`;
         }
 
         if (isPartialSuccess) {

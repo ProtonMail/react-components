@@ -9,16 +9,16 @@ import {
 import React, { useMemo, useState } from 'react';
 import { c } from 'ttag';
 
-import { getProdId, getPropertyTzid } from 'proton-shared/lib/calendar/vcalHelper';
+import { getProdId } from 'proton-shared/lib/calendar/vcalHelper';
 import downloadFile from 'proton-shared/lib/helpers/downloadFile';
 import { DEFAULT_CALENDAR_USER_SETTINGS } from 'proton-shared/lib/calendar/calendar';
-import { uniqueBy } from 'proton-shared/lib/helpers/array';
+import { format } from 'date-fns';
 import { Button, FormModal } from '../../../components';
 import ExportingModalContent from './ExportingModalContent';
 import ExportSummaryModalContent from './ExportSummaryModalContent';
 import { useCalendarUserSettings, useConfig } from '../../../hooks';
 import { createExportIcs } from './createExportIcs';
-import { useGetVTimezones } from '../../../hooks/useGetVtimezones';
+import useExtractUniqueVTimezonesFromVevents from '../useExtractUniqueVTimezonesFromVevents';
 
 interface Props {
     calendar: Calendar;
@@ -28,7 +28,7 @@ interface Props {
 export const ExportModal = ({ calendar, ...rest }: Props) => {
     const config = useConfig();
 
-    const getVTimezones = useGetVTimezones();
+    const extractUniqueTimezones = useExtractUniqueVTimezonesFromVevents();
     const [calendarUserSettings = DEFAULT_CALENDAR_USER_SETTINGS] = useCalendarUserSettings();
     const { PrimaryTimezone: defaultTzid } = calendarUserSettings;
 
@@ -49,19 +49,7 @@ export const ExportModal = ({ calendar, ...rest }: Props) => {
     const { content, ...modalProps } = (() => {
         if (model.step === EXPORT_STEPS.EXPORTING) {
             const handleFinish = async (exportedEvents: VcalVeventComponent[], erroredEvents: CalendarEvent[]) => {
-                const vtimezones = Object.values(
-                    await getVTimezones(
-                        await Promise.all(
-                            exportedEvents.flatMap(({ dtstart, dtend }) =>
-                                [dtstart, dtend]
-                                    .flatMap((date) => (date ? [date] : []))
-                                    .map(getPropertyTzid)
-                                    .flatMap((tzid) => (tzid ? [tzid] : []))
-                            )
-                        )
-                    )
-                ).flatMap((vtimezoneObj) => (vtimezoneObj ? [vtimezoneObj.vtimezone] : []));
-                const uniqueTimezones = uniqueBy(vtimezones, (tz) => tz.tzid.value);
+                const uniqueTimezones = await extractUniqueTimezones(exportedEvents);
 
                 const ics = createExportIcs({
                     calendar,
@@ -91,7 +79,7 @@ export const ExportModal = ({ calendar, ...rest }: Props) => {
             content: <ExportSummaryModalContent model={model} />,
             submit,
             onSubmit: () => {
-                downloadFile(calendarBlob, `${calendar.Name}.ics`);
+                downloadFile(calendarBlob, `${calendar.Name}-${format(Date.now(), 'yyyy-MM-dd')}.ics`);
                 rest.onClose?.();
             },
         };

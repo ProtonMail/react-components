@@ -57,16 +57,17 @@ const ExportingModalContent = ({ model, setModel, onFinish }: Props) => {
         const process = async () => {
             try {
                 const addresses = await getAddresses();
+
+                if (!addresses) {
+                    throw new Error('No addresses');
+                }
+
                 const { Total: totalToProcess } = await api<{ Total: number }>(getEventsCount(model.calendar.ID));
 
                 setModelWithAbort((currentModel) => ({
                     ...currentModel,
                     totalToProcess,
                 }));
-
-                if (!addresses) {
-                    throw new Error('No addresses');
-                }
 
                 const processData = {
                     calendarID: model.calendar.ID,
