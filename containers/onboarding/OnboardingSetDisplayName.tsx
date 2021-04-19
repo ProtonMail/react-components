@@ -2,7 +2,7 @@ import React from 'react';
 import { c } from 'ttag';
 import onboardingDisplayName from 'design-system/assets/img/onboarding/display-name.svg';
 
-import { LegacyInputField, Label, Input } from '../../components';
+import { InputFieldTwo } from '../../components';
 import OnboardingContent, { Props as OnboardingContentProps } from './OnboardingContent';
 
 interface Props extends Omit<OnboardingContentProps, 'img' | 'text' | 'description'> {
@@ -20,21 +20,15 @@ const OnboardingSetDisplayName = ({ displayName, setDisplayName, displayNameErro
             title={c('Onboarding Proton').t`Choose a display name`}
             {...rest}
         >
-            <div className="sign-layout-container">
-                <LegacyInputField
-                    label={<Label htmlFor="displayName">{c('Label').t`Display name`}</Label>}
-                    input={
-                        <Input
-                            value={displayName}
-                            onChange={({ target }) => setDisplayName(target.value)}
-                            id="displayName"
-                            placeholder={c('Placeholder').t`e.g. Julia Smith`}
-                            error={displayNameError}
-                            autoFocus
-                        />
-                    }
-                />
-            </div>
+            <InputFieldTwo
+                id="displayName"
+                label={c('Label').t`Display name`}
+                autoFocus
+                placeholder={c('Placeholder').t`e.g. Julia Smith`}
+                value={displayName}
+                onValue={setDisplayName}
+                error={displayNameError}
+            />
         </OnboardingContent>
     );
 };
