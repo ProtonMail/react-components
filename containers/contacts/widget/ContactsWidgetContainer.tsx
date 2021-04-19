@@ -61,7 +61,10 @@ const ContactsWidgetContainer = ({ onClose, onImport, onCompose }: Props) => {
     });
 
     const mergeableContacts = useMemo(() => extractMergeable(formattedContacts), [formattedContacts]);
-    const countMergeableContacts = mergeableContacts.length;
+    const countMergeableContacts = mergeableContacts.reduce(
+        (acc, mergeableContact) => acc + mergeableContact.length,
+        0
+    );
 
     const handleClearSearch = () => {
         // If done synchronously, button is removed from the dom and the dropdown considers a click outside
