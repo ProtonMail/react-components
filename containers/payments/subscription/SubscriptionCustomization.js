@@ -320,14 +320,6 @@ const SubscriptionCustomization = ({
                 )}
             />,
             <SubscriptionFeatureRow
-                key="netshield"
-                icon="netshield"
-                feature={c('Feature').t`Adblocker (NetShield)`}
-                url="https://protonvpn.com/support/netshield/"
-                info={c('Info')
-                    .t`NetShield protects your device and speeds up your browsing by blocking ads, trackers, and malware.`}
-            />,
-            <SubscriptionFeatureRow
                 key="p2p"
                 icon="p2p"
                 url="https://protonvpn.com/support/p2p-vpn-redirection/"
