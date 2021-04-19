@@ -1,9 +1,6 @@
 import React from 'react';
-import { classnames } from '../../helpers';
+import { Vr } from '../vr';
 
-interface Props {
-    className?: string;
-}
-const ToolbarSeparator = ({ className }: Props) => <span className={classnames(['toolbar-separator', className])} />;
+const ToolbarSeparator = ({ ...rest }) => <Vr {...rest} />;
 
 export default ToolbarSeparator;

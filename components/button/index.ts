@@ -7,5 +7,6 @@ export { default as FloatingButton } from './FloatingButton';
 export { default as InlineLinkButton } from './InlineLinkButton';
 export { default as PrimaryButton } from './PrimaryButton';
 export { default as ButtonGroup } from './ButtonGroup';
+export { default as ButtonGroupItem } from './ButtonGroupItem';
 export { default as LinkButton } from './LinkButton';
 export { default as FileButton } from './FileButton';

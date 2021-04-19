@@ -1,13 +1,15 @@
 import React from 'react';
 import { classnames } from '../../helpers';
 
+type Shape = 'outline' | 'ghost';
 interface Props {
     children: React.ReactNode;
+    shape?: Shape;
     className?: string;
 }
 
-const ButtonGroup = ({ children, className = '' }: Props, ref: React.Ref<HTMLDivElement>) => (
-    <div className={classnames(['grouped-buttons', className])} ref={ref}>
+const ButtonGroup = ({ children, shape = 'outline', className = '' }: Props, ref: React.Ref<HTMLDivElement>) => (
+    <div className={classnames(['button-group', `button-group-${shape}`, className])} ref={ref}>
         {children}
     </div>
 );
