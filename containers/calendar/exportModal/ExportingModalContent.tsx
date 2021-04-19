@@ -1,3 +1,4 @@
+import { processInBatches } from 'proton-shared/lib/calendar/export/export';
 import React, { Dispatch, SetStateAction, useEffect } from 'react';
 import { c } from 'ttag';
 
@@ -8,7 +9,6 @@ import {
     ExportCalendarModel,
     VcalVeventComponent,
 } from 'proton-shared/lib/interfaces/calendar';
-import { processInBatches } from 'proton-shared/lib/calendar/decryptEvents';
 
 import { getEventsCount } from 'proton-shared/lib/api/calendars';
 import { Alert, DynamicProgress } from '../../../components';
