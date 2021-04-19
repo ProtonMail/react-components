@@ -271,7 +271,6 @@ const SubscriptionCustomization = ({
         ],
         [PLANS.VISIONARY]: [
             <SubscriptionFeatureRow key="all" icon="add" feature={c('Feature').t`All ProtonVPN Plus features`} />,
-            <SubscriptionFeatureRow key="vpn" icon="vpn-connx" feature={c('Feature').t`10 VPN connections`} />,
             <SubscriptionFeatureRow
                 key="mail"
                 icon="protonmail"
