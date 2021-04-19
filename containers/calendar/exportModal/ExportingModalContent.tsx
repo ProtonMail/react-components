@@ -113,7 +113,8 @@ const ExportingModalContent = ({ model, setModel, onFinish }: Props) => {
 
     const display = !model.totalProcessed.length
         ? c('Export calendar').t`Loading events`
-        : c('Export calendar').t`${model.totalProcessed.length} events out of ${totalToProcess}...`;
+        : c('Export calendar')
+              .t`Decrypting events from your calendar: ${model.totalProcessed.length}/${totalToProcess}`;
 
     return (
         <>

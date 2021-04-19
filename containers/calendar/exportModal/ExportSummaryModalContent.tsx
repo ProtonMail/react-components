@@ -1,5 +1,5 @@
 import React from 'react';
-import { c } from 'ttag';
+import { c, msgid } from 'ttag';
 
 import { EXPORT_ERRORS, ExportCalendarModel } from 'proton-shared/lib/interfaces/calendar';
 
@@ -22,7 +22,7 @@ const ExportSummaryModalContent = ({ model }: Props) => {
         if (isPartialSuccess) {
             return (
                 <>
-                    <div>{c('Export calendar').t`Some events cannot be exported.`}</div>
+                    <div>{c('Export calendar').t`Some events could not be exported.`}</div>
                     <div>{c('Export calendar')
                         .t`You can save an ICS file of the events that were successfully exported.`}</div>
                 </>
@@ -36,7 +36,11 @@ const ExportSummaryModalContent = ({ model }: Props) => {
 
         return c('Export calendar').t`None of the events could be exported.`;
     };
-    const displayMessage = c('Export calendar').t`${totalProcessed.length}/${totalToProcess} events exported`;
+    const displayMessage = c('Export calendar').ngettext(
+        msgid`${totalProcessed.length}/${totalToProcess} event exported`,
+        `${totalProcessed.length}/${totalToProcess} event exported`,
+        totalToProcess
+    );
 
     return (
         <>
