@@ -228,12 +228,7 @@ const OnboardingModal = ({
             title={
                 hasBack ? (
                     <span className="absolute top-left mt1 ml1">
-                        <Button
-                            icon
-                            shape="ghost"
-                            title={c('Action').t`Back`}
-                            onClick={childStepProps.onClose || handleBack}
-                        >
+                        <Button icon shape="ghost" title={c('Action').t`Back`} onClick={handleBack}>
                             <Icon name="arrow-left" alt={c('Action').t`Back`} />
                         </Button>
                     </span>
