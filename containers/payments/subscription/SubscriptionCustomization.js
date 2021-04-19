@@ -193,7 +193,6 @@ const SubscriptionCustomization = ({
         (model.planIDs[memberAddon.ID] || 0) * memberAddon.MaxAddresses + professionalPlan.MaxAddresses;
     const professionalDomains =
         (model.planIDs[domainAddon.ID] || 0) * domainAddon.MaxDomains + professionalPlan.MaxDomains;
-    const vpnPlusVpn = (model.planIDs[vpnAddon.ID] || 0) * vpnAddon.MaxVPN + vpnplusPlan.MaxVPN;
 
     const FEATURES = {
         [FREE]: [
@@ -336,15 +335,7 @@ const SubscriptionCustomization = ({
             />,
         ],
         [PLANS.VPNPLUS]: [
-            <SubscriptionFeatureRow
-                key="connection"
-                icon="vpn-connx"
-                feature={c('Feature').ngettext(
-                    msgid`${vpnPlusVpn} VPN connection`,
-                    `${vpnPlusVpn} VPN connections`,
-                    vpnPlusVpn
-                )}
-            />,
+            <SubscriptionFeatureRow key="connection" icon="vpn-connx" feature={c('Feature').t`10 VPN connections`} />,
             <SubscriptionFeatureRow
                 key="exclusive"
                 icon="servers-country"
