@@ -49,7 +49,11 @@ export const ExportModal = ({ calendar, ...rest }: Props) => {
     const { content, ...modalProps } = (() => {
         if (model.step === EXPORT_STEPS.EXPORTING) {
             const handleFinish = async (exportedEvents: VcalVeventComponent[], erroredEvents: CalendarEvent[]) => {
-                const uniqueTimezones = await getUniqueVtimezones(exportedEvents, getVTimezonesMap);
+                const uniqueTimezones = await getUniqueVtimezones({
+                    vevents: exportedEvents,
+                    tzids: [defaultTzid],
+                    getVTimezonesMap,
+                });
 
                 const ics = createExportIcs({
                     calendar,
