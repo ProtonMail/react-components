@@ -1,3 +1,5 @@
+import { createExportIcs } from 'proton-shared/lib/calendar/export/createExportIcs';
+import { getUniqueVtimezones } from 'proton-shared/lib/calendar/vtimezoneHelper';
 import {
     Calendar,
     CalendarEvent,
@@ -6,7 +8,7 @@ import {
     ExportCalendarModel,
     VcalVeventComponent,
 } from 'proton-shared/lib/interfaces/calendar';
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { c } from 'ttag';
 
 import { getProdId } from 'proton-shared/lib/calendar/vcalHelper';
@@ -14,11 +16,10 @@ import downloadFile from 'proton-shared/lib/helpers/downloadFile';
 import { DEFAULT_CALENDAR_USER_SETTINGS } from 'proton-shared/lib/calendar/calendar';
 import { format } from 'date-fns';
 import { Button, FormModal } from '../../../components';
+import { useGetVtimezonesMap } from '../../../hooks/useGetVtimezonesMap';
 import ExportingModalContent from './ExportingModalContent';
 import ExportSummaryModalContent from './ExportSummaryModalContent';
 import { useCalendarUserSettings, useConfig } from '../../../hooks';
-import { createExportIcs } from './createExportIcs';
-import useExtractUniqueVTimezonesFromVevents from '../useExtractUniqueVTimezonesFromVevents';
 
 interface Props {
     calendar: Calendar;
@@ -27,12 +28,11 @@ interface Props {
 
 export const ExportModal = ({ calendar, ...rest }: Props) => {
     const config = useConfig();
+    const prodId = getProdId(config);
 
-    const extractUniqueTimezones = useExtractUniqueVTimezonesFromVevents();
+    const getVTimezonesMap = useGetVtimezonesMap();
     const [calendarUserSettings = DEFAULT_CALENDAR_USER_SETTINGS] = useCalendarUserSettings();
     const { PrimaryTimezone: defaultTzid } = calendarUserSettings;
-
-    const prodId = useMemo(() => getProdId(config), [config]);
 
     const [model, setModel] = useState<ExportCalendarModel>({
         step: EXPORT_STEPS.EXPORTING,
@@ -49,7 +49,7 @@ export const ExportModal = ({ calendar, ...rest }: Props) => {
     const { content, ...modalProps } = (() => {
         if (model.step === EXPORT_STEPS.EXPORTING) {
             const handleFinish = async (exportedEvents: VcalVeventComponent[], erroredEvents: CalendarEvent[]) => {
-                const uniqueTimezones = await extractUniqueTimezones(exportedEvents);
+                const uniqueTimezones = await getUniqueVtimezones(exportedEvents, getVTimezonesMap);
 
                 const ics = createExportIcs({
                     calendar,

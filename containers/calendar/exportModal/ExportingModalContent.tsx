@@ -69,7 +69,7 @@ const ExportingModalContent = ({ model, setModel, onFinish }: Props) => {
                     totalToProcess,
                 }));
 
-                const processData = {
+                const [exportedEvents, erroredEvents] = await processInBatches({
                     calendarID: model.calendar.ID,
                     addresses,
                     api: apiWithAbort,
@@ -79,8 +79,7 @@ const ExportingModalContent = ({ model, setModel, onFinish }: Props) => {
                     getEncryptionPreferences,
                     getCalendarKeys,
                     totalToProcess,
-                };
-                const [exportedEvents, erroredEvents] = await processInBatches(processData);
+                });
 
                 if (signal.aborted) {
                     return;
