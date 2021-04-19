@@ -236,7 +236,6 @@ const ContactsWidgetContainer = ({ onClose, onImport, onCompose }: Props) => {
                         {countMergeableContacts ? (
                             <MergeContactBanner
                                 mergeContactBannerRef={mergeContactBannerRef}
-                                countMergeableContacts={countMergeableContacts}
                                 onMerge={() => handleMerge(true)}
                             />
                         ) : null}
