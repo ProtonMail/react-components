@@ -6,7 +6,7 @@ type Shape = 'outline' | 'ghost';
 
 type Size = 'small' | 'medium' | 'large';
 
-interface Props {
+interface Props extends React.ComponentPropsWithoutRef<'div'> {
     children: React.ReactNode;
     shape?: Shape;
     size?: Size;
@@ -14,7 +14,7 @@ interface Props {
 }
 
 const ButtonGroup = (
-    { children, shape = 'outline', size = 'medium', className = '' }: Props,
+    { children, shape = 'outline', size = 'medium', className = '', ...rest }: Props,
     ref: React.Ref<HTMLDivElement>
 ) => {
     const childrenWithSeparators = React.Children.toArray(children)
@@ -34,6 +34,7 @@ const ButtonGroup = (
         <div
             className={classnames(['button-group', `button-group-${shape}`, `button-group-${size}`, className])}
             ref={ref}
+            {...rest}
         >
             {childrenWithSeparators}
         </div>
