@@ -34,8 +34,6 @@ interface ButtonLikeOwnProps {
     pill?: boolean;
     /** If true, display as icon */
     icon?: boolean;
-    /** If true, display as part of button group */
-    group?: boolean;
 }
 
 export type ButtonLikeProps<E extends React.ElementType> = PolymorphicComponentProps<E, ButtonLikeOwnProps>;
@@ -58,7 +56,6 @@ const ButtonLike: <E extends React.ElementType = typeof defaultElement>(
             fullWidth,
             pill,
             icon,
-            group,
             ...restProps
         }: ButtonLikeProps<E>,
         ref: typeof restProps.ref
@@ -71,7 +68,6 @@ const ButtonLike: <E extends React.ElementType = typeof defaultElement>(
             shape === 'link' ? 'button-link' : 'button-henlo',
             pill && 'button-pill',
             icon && 'button-for-icon',
-            group && 'grouped-button',
             size !== 'medium' && `button-${size}`,
             `button-${shape}-${color}`,
             restProps.as !== 'button' ? 'inline-block text-center' : '',
