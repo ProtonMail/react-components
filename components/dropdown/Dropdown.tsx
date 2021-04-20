@@ -9,6 +9,7 @@ import Portal from '../portal/Portal';
 import { useCombinedRefs, useHotkeys } from '../../hooks';
 import { useFocusTrap } from '../focus';
 import useIsClosing from './useIsClosing';
+import { Scroll } from '../scroll';
 
 interface ContentProps extends React.HTMLAttributes<HTMLDivElement> {
     ref: React.RefObject<HTMLDivElement>;
@@ -199,7 +200,7 @@ const Dropdown = ({
         ...varSize,
     };
 
-    const contentStyle = UNSTABLE_AUTO_HEIGHT ? { height: 'auto' } : undefined;
+    const contentStyle = UNSTABLE_AUTO_HEIGHT ? { height: 'unset' } : undefined;
 
     return (
         <Portal>
@@ -224,8 +225,10 @@ const Dropdown = ({
                     style={contentStyle}
                     className={classnames(['dropdown-content'])}
                     {...contentProps}
-                >
-                    {children}
+                > 
+                    <Scroll className="dropdown-scroll">
+                        {children}
+                    </Scroll>
                 </div>
             </div>
         </Portal>

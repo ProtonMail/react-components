@@ -8,7 +8,7 @@ interface ScrollProps extends React.ComponentPropsWithoutRef<'div'> {
     horizontal?: boolean;
 }
 
-const Scroll = ({ children, horizontal }: ScrollProps) => {
+const Scroll = ({ children, className, horizontal, ...rest }: ScrollProps) => {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const scrollChildRef = useRef<HTMLDivElement>(null);
     const [showStartShadow, setShowStartShadow] = useState(false);
@@ -66,12 +66,17 @@ const Scroll = ({ children, horizontal }: ScrollProps) => {
         setShadows(scrollContainer, scrollChild);
     };
 
-    const outerClassName = horizontal ? 'scroll-outer-horizontal' : 'scroll-outer-vertical';
+    const outerClassName = classnames([
+        className,
+        horizontal ? 'scroll-outer-horizontal' : 'scroll-outer-vertical',
+    ]);
+
     const startShadowClassName = classnames([showStartShadow && 'scroll-start-shadow']);
+
     const endShadowClassName = classnames([showEndShadow && 'scroll-end-shadow']);
 
     return (
-        <div className={outerClassName}>
+        <div className={outerClassName} {...rest}>
             <div className={startShadowClassName} aria-hidden="true" />
             <div className={endShadowClassName} aria-hidden="true" />
             <div className="scroll-inner" ref={scrollContainerRef} onScroll={handleScroll}>
