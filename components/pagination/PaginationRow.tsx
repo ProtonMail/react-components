@@ -44,7 +44,7 @@ const PaginationRow = ({
                 </ButtonGroupItem>
             </Tooltip>
             <Tooltip title={c('Action').t`Go to previous page`}>
-                <ButtonGroupItem group disabled={disabled || disablePrevious} onClick={() => onPrevious()}>
+                <ButtonGroupItem disabled={disabled || disablePrevious} onClick={() => onPrevious()}>
                     <Icon name="caret" className="rotateZ-90" alt={c('Action').t`Go to previous page`} />
                 </ButtonGroupItem>
             </Tooltip>

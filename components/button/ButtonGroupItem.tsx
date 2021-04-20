@@ -2,18 +2,28 @@ import React from 'react';
 import { classnames } from '../../helpers';
 import ButtonLike, { ButtonLikeProps } from './ButtonLike';
 
-export type ButtonGroupItemProps = Omit<ButtonLikeProps, 'shape' | 'color' | 'size'>;
+export type ButtonGroupItemProps<T extends React.ElementType> = Omit<ButtonLikeProps<T>, 'shape' | 'color' | 'size'>;
 
-const ButtonGroupItem = ({ className, ...props }: ButtonGroupItemProps, ref: React.Ref<HTMLButtonElement>) => {
-    return (
-        <ButtonLike
-            className={classnames(['button-group-item', className])}
-            shape="ghost"
-            color="weak"
-            ref={ref}
-            {...props}
-        />
-    );
-};
+const defaultElement = 'button';
 
-export default React.forwardRef<HTMLButtonElement, ButtonGroupItemProps>(ButtonGroupItem);
+const ButtonGroupItem: <E extends React.ElementType = typeof defaultElement>(
+    props: ButtonLikeProps<E>
+) => React.ReactElement | null = React.forwardRef(
+    <E extends React.ElementType = typeof defaultElement>(
+        { className, ...rest }: ButtonGroupItemProps<E>,
+        ref: typeof rest.ref
+    ) => {
+        return (
+            <ButtonLike
+                className={classnames(['button-group-item', className])}
+                shape="ghost"
+                color="weak"
+                ref={ref}
+                as={defaultElement}
+                {...rest}
+            />
+        );
+    }
+);
+
+export default ButtonGroupItem;
