@@ -1,8 +1,8 @@
 import React from 'react';
 import { c } from 'ttag';
 
-import { Button } from '../../../components';
-import { useModals } from '../../../hooks';
+import { Button, ContactUpgradeModal } from '../../../components';
+import { useModals, useUser } from '../../../hooks';
 
 import ContactGroupModal from '../modals/ContactGroupModal';
 import ContactGroupsTable from '../ContactGroupsTable';
@@ -11,7 +11,14 @@ import { SettingsSection, SettingsParagraph } from '../../account';
 
 const ContactGroupsSection = () => {
     const { createModal } = useModals();
-    const handleCreate = () => createModal(<ContactGroupModal selectedContactEmails={[]} />);
+    const [user] = useUser();
+
+    const handleCreate = () => {
+        if (!user.hasPaidMail) {
+            return createModal(<ContactUpgradeModal />);
+        }
+        createModal(<ContactGroupModal selectedContactEmails={[]} />);
+    };
 
     return (
         <SettingsSection>
