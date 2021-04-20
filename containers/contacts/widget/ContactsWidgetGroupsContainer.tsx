@@ -21,6 +21,7 @@ import { useItemsSelection } from '../../items';
 import ContactGroupModal from '../modals/ContactGroupModal';
 import ContactGroupDetailsModal from '../modals/ContactGroupDetailsModal';
 import ContactsWidgetPlaceholder, { EmptyType } from './ContactsWidgetPlaceholder';
+import ContactGroupDeleteModal from '../modals/ContactGroupDeleteModal';
 
 interface Props {
     onClose: () => void;
@@ -100,6 +101,21 @@ const ContactsWidgetGroupsContainer = ({ onClose, onCompose }: Props) => {
         onClose();
     };
 
+    const handleDelete = () => {
+        createModal(
+            <ContactGroupDeleteModal
+                groupIDs={selectedIDs}
+                onDelete={() => {
+                    if (selectedIDs.length === filteredGroups.length) {
+                        setSearch('');
+                    }
+                    handleCheckAll(false);
+                }}
+            />
+        );
+        onClose();
+    };
+
     const handleCreate = () => {
         if (!user.hasPaidMail) {
             createModal(<ContactUpgradeModal />);
@@ -136,10 +152,11 @@ const ContactsWidgetGroupsContainer = ({ onClose, onCompose }: Props) => {
             <div className="contacts-widget-toolbar pt1 pb1 border-bottom flex-item-noshrink">
                 <ContactsWidgetGroupsToolbar
                     allChecked={allChecked}
-                    oneSelected={!!selectedIDs.length}
+                    selectedCount={selectedIDs.length}
                     onCheckAll={handleCheckAll}
                     onCompose={handleCompose}
                     onCreate={handleCreate}
+                    onDelete={handleDelete}
                 />
             </div>
             <div className="flex-item-fluid w100">
