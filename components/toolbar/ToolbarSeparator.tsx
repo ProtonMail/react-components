@@ -1,6 +1,5 @@
-import React from 'react';
-import { Vr } from '../vr';
+import Vr from '../vr/Vr';
 
-const ToolbarSeparator = ({ ...rest }) => <Vr {...rest} />;
+const ToolbarSeparator = Vr;
 
 export default ToolbarSeparator;
