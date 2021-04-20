@@ -4,6 +4,7 @@ import { ContactFormatted } from 'proton-shared/lib/interfaces/contacts';
 
 import { Block, OrderableTable, TableCell, Button } from '../../../components';
 import MergeTableBody from './MergeTableBody';
+import '../../../components/orderableTable/OrderableTableHeader.scss';
 
 const MergeTableHeader = () => {
     return (
