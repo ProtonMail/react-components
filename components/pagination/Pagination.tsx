@@ -1,6 +1,6 @@
 import React from 'react';
 import { c } from 'ttag';
-import { ButtonGroup, Button } from '../button';
+import { ButtonGroup, ButtonGroupItem } from '../button';
 import DropdownMenuButton from '../dropdown/DropdownMenuButton';
 import DropdownMenu from '../dropdown/DropdownMenu';
 import SimpleDropdown from '../dropdown/SimpleDropdown';
@@ -57,17 +57,17 @@ const Pagination = ({
     return (
         <ButtonGroup>
             {hasPrevious ? (
-                <Button icon group className="previous-button" disabled={disablePrevious} onClick={onPrevious}>
+                <ButtonGroupItem icon className="previous-button" disabled={disablePrevious} onClick={onPrevious}>
                     <Icon name="arrow-left" />
-                </Button>
+                </ButtonGroupItem>
             ) : null}
-            <SimpleDropdown group title={c('Title').t`Open pagination`} content={page}>
+            <SimpleDropdown as={ButtonGroupItem} title={c('Title').t`Open pagination`} content={page}>
                 <DropdownMenu>{actions}</DropdownMenu>
             </SimpleDropdown>
             {hasNext ? (
-                <Button icon group className="next-button" disabled={disableNext} onClick={onNext}>
+                <ButtonGroupItem icon className="next-button" disabled={disableNext} onClick={onNext}>
                     <Icon name="arrow-right" />
-                </Button>
+                </ButtonGroupItem>
             ) : null}
         </ButtonGroup>
     );

@@ -2,7 +2,7 @@ import React from 'react';
 import { classnames } from '../../helpers';
 import Button, { ButtonProps } from './Button';
 
-export type ButtonGroupItemProps = Omit<ButtonProps, 'shape' | 'color' | 'size'>;
+export type ButtonGroupItemProps = Omit<ButtonProps, 'shape' | 'color'>;
 
 const ButtonGroupItem = ({ className, ...props }: ButtonGroupItemProps, ref: React.Ref<HTMLButtonElement>) => {
     return (
