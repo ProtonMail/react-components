@@ -9,6 +9,7 @@ import {
     DropdownMenu,
     ButtonGroup,
     ButtonLike,
+    ButtonGroupItem,
 } from '../../../components';
 
 interface Props {
@@ -34,10 +35,10 @@ const VPNClientCard = ({ title, link, items, icon }: Props) => {
                 </div>
             ) : (
                 <ButtonGroup className="flex mt1 flex-justify-center">
-                    <ButtonLike as={Href} url={link} group>
+                    <ButtonGroupItem as={Href} url={link}>
                         {c('Action').t`Download`}
                         <span className="sr-only">{title}</span>
-                    </ButtonLike>
+                    </ButtonGroupItem>
                     <SimpleDropdown
                         icon
                         group

@@ -2,7 +2,7 @@ import React from 'react';
 import { c } from 'ttag';
 import { range } from 'proton-shared/lib/helpers/array';
 
-import { ButtonGroup, Button } from '../button';
+import { ButtonGroup, ButtonGroupItem } from '../button';
 import { Icon } from '../icon';
 import { classnames } from '../../helpers';
 import { Tooltip } from '../tooltip';
@@ -39,23 +39,21 @@ const PaginationRow = ({
     return (
         <ButtonGroup className={className}>
             <Tooltip title={c('Action').t`Go to first page`}>
-                <Button icon group shape="ghost" disabled={disabled || disablePrevious} onClick={() => onStart()}>
+                <ButtonGroupItem icon disabled={disabled || disablePrevious} onClick={() => onStart()}>
                     <Icon name="caret-double-left" alt={c('Action').t`Go to first page`} />
-                </Button>
+                </ButtonGroupItem>
             </Tooltip>
             <Tooltip title={c('Action').t`Go to previous page`}>
-                <Button group icon shape="ghost" disabled={disabled || disablePrevious} onClick={() => onPrevious()}>
+                <ButtonGroupItem group disabled={disabled || disablePrevious} onClick={() => onPrevious()}>
                     <Icon name="caret" className="rotateZ-90" alt={c('Action').t`Go to previous page`} />
-                </Button>
+                </ButtonGroupItem>
             </Tooltip>
             {pages.map((pageNumber) => {
                 const isActive = pageNumber === page;
                 return (
                     <Tooltip key={pageNumber} title={goToPageTitle(pageNumber)}>
-                        <Button
-                            group
+                        <ButtonGroupItem
                             icon
-                            shape="ghost"
                             aria-current={isActive}
                             className={classnames([isActive && 'text-bold', isActive && 'no-pointer-events'])}
                             disabled={disabled}
@@ -63,19 +61,19 @@ const PaginationRow = ({
                         >
                             <span className="sr-only">{goToPageTitle(pageNumber)}</span>
                             <span aria-hidden="true">{pageNumber}</span>
-                        </Button>
+                        </ButtonGroupItem>
                     </Tooltip>
                 );
             })}
             <Tooltip title={c('Action').t`Go to next page`}>
-                <Button group icon shape="ghost" disabled={disabled || disableNext} onClick={() => onNext()}>
+                <ButtonGroupItem icon disabled={disabled || disableNext} onClick={() => onNext()}>
                     <Icon name="caret" className="rotateZ-270" alt={c('Action').t`Go to next page`} />
-                </Button>
+                </ButtonGroupItem>
             </Tooltip>
             <Tooltip title={c('Action').t`Go to last page`}>
-                <Button group icon shape="ghost" disabled={disabled || disableNext} onClick={() => onEnd()}>
+                <ButtonGroupItem icon disabled={disabled || disableNext} onClick={() => onEnd()}>
                     <Icon name="caret-double-left" className="mirror" alt={c('Action').t`Go to last page`} />
-                </Button>
+                </ButtonGroupItem>
             </Tooltip>
         </ButtonGroup>
     );

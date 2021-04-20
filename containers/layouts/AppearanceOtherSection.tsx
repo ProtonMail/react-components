@@ -10,7 +10,7 @@ import {
 } from 'proton-shared/lib/api/mailSettings';
 import { MESSAGE_BUTTONS, VIEW_MODE, MIME_TYPES, RIGHT_TO_LEFT, STICKY_LABELS } from 'proton-shared/lib/constants';
 
-import { ButtonGroup, Label, Radio, Info, Button, Icon } from '../../components';
+import { ButtonGroup, Label, Radio, Info, Icon, ButtonGroupItem } from '../../components';
 import {
     useEventManager,
     useMailSettings,
@@ -177,12 +177,12 @@ const AppearanceOtherSection = () => {
                             value={READ_UNREAD}
                         >
                             <ButtonGroup className="ml1 no-pointer-events">
-                                <Button group icon title={c('Action').t`Read`}>
+                                <ButtonGroupItem icon title={c('Action').t`Read`}>
                                     <Icon name="read" />
-                                </Button>
-                                <Button group icon title={c('Action').t`Unread`}>
+                                </ButtonGroupItem>
+                                <ButtonGroupItem icon title={c('Action').t`Unread`}>
                                     <Icon name="unread" />
-                                </Button>
+                                </ButtonGroupItem>
                             </ButtonGroup>
                         </Radio>
                     </div>
@@ -196,12 +196,12 @@ const AppearanceOtherSection = () => {
                             value={UNREAD_READ}
                         >
                             <ButtonGroup className="ml1 no-pointer-events">
-                                <Button group icon title={c('Action').t`Unread`}>
+                                <ButtonGroupItem icon title={c('Action').t`Unread`}>
                                     <Icon name="unread" />
-                                </Button>
-                                <Button group icon title={c('Action').t`Read`}>
+                                </ButtonGroupItem>
+                                <ButtonGroupItem icon title={c('Action').t`Read`}>
                                     <Icon name="read" />
-                                </Button>
+                                </ButtonGroupItem>
                             </ButtonGroup>
                         </Radio>
                     </div>

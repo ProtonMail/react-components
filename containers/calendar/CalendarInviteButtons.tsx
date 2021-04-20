@@ -5,7 +5,7 @@ import { PartstatActions } from 'proton-shared/lib/interfaces/calendar';
 import { c } from 'ttag';
 import React from 'react';
 import { useLoadingMap } from '../../hooks';
-import { Button, ButtonGroup, DropdownMenu, DropdownMenuButton, SimpleDropdown } from '../../components';
+import { ButtonGroup, ButtonGroupItem, DropdownMenu, DropdownMenuButton, SimpleDropdown } from '../../components';
 
 interface Props {
     actions: PartstatActions;
@@ -36,33 +36,30 @@ const CalendarInviteButtons = ({
     if (partstat === ICAL_ATTENDEE_STATUS.NEEDS_ACTION) {
         return (
             <ButtonGroup className={className}>
-                <Button
-                    group
+                <ButtonGroupItem
                     onClick={onAccept}
                     disabled={loadingAnswer || disabled}
                     loading={loadingAccept}
                     title={acceptText}
                 >
                     {c('Action').t`Yes`}
-                </Button>
-                <Button
-                    group
+                </ButtonGroupItem>
+                <ButtonGroupItem
                     onClick={onTentative}
                     disabled={loadingAnswer || disabled}
                     loading={loadingTentative}
                     title={tentativeText}
                 >
                     {c('Action').t`Maybe`}
-                </Button>
-                <Button
-                    group
+                </ButtonGroupItem>
+                <ButtonGroupItem
                     onClick={onDecline}
                     disabled={loadingAnswer || disabled}
                     loading={loadingDecline}
                     title={declineText}
                 >
                     {c('Action').t`No`}
-                </Button>
+                </ButtonGroupItem>
             </ButtonGroup>
         );
     }

@@ -3,7 +3,7 @@ import { CURRENCIES, DEFAULT_CURRENCY } from 'proton-shared/lib/constants';
 import { c } from 'ttag';
 import { Currency } from 'proton-shared/lib/interfaces';
 
-import { Select, ButtonGroup, Button } from '../../components';
+import { Select, ButtonGroup, ButtonGroupItem } from '../../components';
 import { classnames } from '../../helpers';
 
 const addSymbol = (currency: Currency) => {
@@ -36,15 +36,14 @@ const CurrencySelector = ({ currency = DEFAULT_CURRENCY, onSelect, mode = 'selec
             <ButtonGroup {...rest}>
                 {options.map(({ text, value }) => {
                     return (
-                        <Button
-                            group
-                            className={classnames([currency === value && 'is-active'])}
+                        <ButtonGroupItem
+                            className={classnames([currency === value && 'is-selected'])}
                             key={value}
                             onClick={() => onSelect(value as Currency)}
                             disabled={loading}
                         >
                             {text}
-                        </Button>
+                        </ButtonGroupItem>
                     );
                 })}
             </ButtonGroup>

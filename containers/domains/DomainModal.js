@@ -3,7 +3,7 @@ import { c } from 'ttag';
 import PropTypes from 'prop-types';
 import { addDomain, getDomain } from 'proton-shared/lib/api/domains';
 import { VERIFY_STATE, DOMAIN_STATE, SPF_STATE, MX_STATE, DMARC_STATE, DKIM_STATE } from 'proton-shared/lib/constants';
-import { FormModal, ButtonGroup, Button, RoundedIcon, Tooltip, Icon } from '../../components';
+import { FormModal, ButtonGroup, RoundedIcon, Tooltip, Icon, ButtonGroupItem } from '../../components';
 import { useLoading, useApi, useStep, useNotifications, useDomains } from '../../hooks';
 import { classnames } from '../../helpers';
 
@@ -252,13 +252,12 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], ...rest }) =>
         >
             <ButtonGroup className="mb1">
                 {breadcrumbLabels.map((label, index) => (
-                    <Button
-                        group
+                    <ButtonGroupItem
                         icon
                         key={index}
                         className={classnames([
                             'flex flex-nowrap flex-align-items-center on-mobile-pl0-25 on-mobile-pr0-25',
-                            index === step && 'is-active',
+                            index === step && 'is-selected',
                         ])}
                         disabled={
                             (index > STEPS.DOMAIN && !domainModel.ID) ||
@@ -269,7 +268,7 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], ...rest }) =>
                     >
                         {breadcrumbIcons[index]}
                         <span className="text-ellipsis max-w100">{label}</span>
-                    </Button>
+                    </ButtonGroupItem>
                 ))}
             </ButtonGroup>
             {section}

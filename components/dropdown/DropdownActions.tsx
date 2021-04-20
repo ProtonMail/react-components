@@ -71,12 +71,11 @@ const DropdownActions = ({
     }
 
     return (
-        <ButtonGroup>
+        <ButtonGroup size={size}>
             <ButtonGroupItem
                 disabled={disabled}
                 loading={loading}
                 className={className}
-                size={size}
                 {...restProps}
                 {...restButtonProps}
             >
@@ -85,7 +84,6 @@ const DropdownActions = ({
             <SimpleDropdown
                 as={ButtonGroupItem}
                 icon
-                size={size}
                 autoFocus={autoFocus}
                 originalPlacement="bottom-right"
                 disabled={disabled}

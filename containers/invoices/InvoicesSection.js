@@ -18,6 +18,7 @@ import {
     TableRow,
     Time,
     TableHeader,
+    ButtonGroupItem,
 } from '../../components';
 import { useModals, useSubscription, useUser, useApi } from '../../hooks';
 
@@ -98,16 +99,18 @@ const InvoicesSection = () => {
                     <div className="flex flex-align-items-center">
                         {user.isPaid ? (
                             <ButtonGroup className="mr1">
-                                <Button group className={owner === USER ? 'is-active' : ''} onClick={handleOwner(USER)}>
+                                <ButtonGroupItem
+                                    className={owner === USER ? 'is-selected' : ''}
+                                    onClick={handleOwner(USER)}
+                                >
                                     {c('Action').t`User`}
-                                </Button>
-                                <Button
-                                    group
-                                    className={owner === ORGANIZATION ? 'is-active' : ''}
+                                </ButtonGroupItem>
+                                <ButtonGroupItem
+                                    className={owner === ORGANIZATION ? 'is-selected' : ''}
                                     onClick={handleOwner(ORGANIZATION)}
                                 >
                                     {c('Action').t`Organization`}
-                                </Button>
+                                </ButtonGroupItem>
                             </ButtonGroup>
                         ) : null}
                         <Button onClick={handleOpenModal}>{c('Action').t`Customize`}</Button>
