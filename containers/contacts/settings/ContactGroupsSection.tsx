@@ -13,9 +13,12 @@ const ContactGroupsSection = () => {
     const { createModal } = useModals();
     const [user] = useUser();
 
+    const showUpgradeModal = () => createModal(<ContactUpgradeModal />);
+
     const handleCreate = () => {
         if (!user.hasPaidMail) {
-            return createModal(<ContactUpgradeModal />);
+            showUpgradeModal();
+            return;
         }
         createModal(<ContactGroupModal selectedContactEmails={[]} />);
     };
@@ -29,7 +32,7 @@ const ContactGroupsSection = () => {
             <div className="mb1">
                 <Button color="norm" onClick={handleCreate}>{c('Action').t`Add group`}</Button>
             </div>
-            <ContactGroupsTable />
+            <ContactGroupsTable hasPaidMail={user.hasPaidMail} showUpgradeModal={showUpgradeModal} />
         </SettingsSection>
     );
 };
