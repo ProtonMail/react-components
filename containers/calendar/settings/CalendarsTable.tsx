@@ -5,7 +5,9 @@ import { Calendar } from 'proton-shared/lib/interfaces/calendar';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 import { UserModel } from 'proton-shared/lib/interfaces';
 
-import { Icon, Table, TableHeader, TableBody, TableRow, DropdownActions, Badge } from '../../../components';
+import { Badge, DropdownActions, Icon, Table, TableBody, TableHeader, TableRow } from '../../../components';
+import { useFeature } from '../../../hooks';
+import { FeatureCode } from '../../features';
 
 interface Props {
     calendars: Calendar[];
@@ -27,6 +29,9 @@ const CalendarsTable = ({
     onExport,
     loadingMap,
 }: Props) => {
+    const { feature: exportFeature, loading: loadingExportFeature } = useFeature(FeatureCode.CalendarExport);
+    const showExport = !loadingExportFeature && !!exportFeature?.Value;
+
     return (
         <Table className="simple-table--has-actions">
             <TableHeader cells={[c('Header').t`Name`, c('Header').t`Status`, c('Header').t`Actions`]} />
@@ -49,7 +54,7 @@ const CalendarsTable = ({
                                 text: c('Action').t`Set as default`,
                                 onClick: () => onSetDefault(ID),
                             },
-                        {
+                        showExport && {
                             text: c('Action').t`Export (.ics)`,
                             onClick: () => onExport(calendar),
                         },
