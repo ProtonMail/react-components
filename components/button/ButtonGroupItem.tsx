@@ -1,12 +1,12 @@
 import React from 'react';
 import { classnames } from '../../helpers';
-import Button, { ButtonProps } from './Button';
+import ButtonLike, { ButtonLikeProps } from './ButtonLike';
 
-export type ButtonGroupItemProps = Omit<ButtonProps, 'shape' | 'color'>;
+export type ButtonGroupItemProps = Omit<ButtonLikeProps, 'shape' | 'color' | 'size'>;
 
 const ButtonGroupItem = ({ className, ...props }: ButtonGroupItemProps, ref: React.Ref<HTMLButtonElement>) => {
     return (
-        <Button
+        <ButtonLike
             className={classnames(['button-group-item', className])}
             shape="ghost"
             color="weak"
