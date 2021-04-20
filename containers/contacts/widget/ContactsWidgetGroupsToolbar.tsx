@@ -1,5 +1,5 @@
 import React, { ChangeEvent } from 'react';
-import { c } from 'ttag';
+import { c, msgid } from 'ttag';
 import { APPS } from 'proton-shared/lib/constants';
 
 import { Checkbox, Icon, Button, Tooltip } from '../../../components';
@@ -7,16 +7,32 @@ import { useConfig } from '../../../hooks';
 
 interface Props {
     allChecked: boolean;
-    oneSelected: boolean;
+    selectedCount: number;
     onCheckAll: (checked: boolean) => void;
     onCompose: () => void;
     onCreate: () => void;
+    onDelete: () => void;
 }
 
-const ContactsWidgetGroupsToolbar = ({ allChecked, oneSelected, onCheckAll, onCompose, onCreate }: Props) => {
+const ContactsWidgetGroupsToolbar = ({
+    allChecked,
+    selectedCount,
+    onCheckAll,
+    onCompose,
+    onCreate,
+    onDelete,
+}: Props) => {
     const { APP_NAME } = useConfig();
     const isMailApp = APP_NAME === APPS.PROTONMAIL;
     const handleCheck = ({ target }: ChangeEvent<HTMLInputElement>) => onCheckAll(target.checked);
+    const noSelection = !selectedCount;
+    const deleteText = noSelection
+        ? c('Action').t`Delete contact group`
+        : c('Action').ngettext(
+              msgid`Delete ${selectedCount} contact group`,
+              `Delete ${selectedCount} contacts groups`,
+              selectedCount
+          );
 
     return (
         <div className="flex flex-items-align-center">
@@ -35,11 +51,22 @@ const ContactsWidgetGroupsToolbar = ({ allChecked, oneSelected, onCheckAll, onCo
             </Tooltip>
             {isMailApp ? (
                 <Tooltip title={c('Action').t`Compose`}>
-                    <Button icon className="inline-flex mr0-5 pt0-5 pb0-5" onClick={onCompose} disabled={!oneSelected}>
+                    <Button icon className="inline-flex mr0-5 pt0-5 pb0-5" onClick={onCompose} disabled={noSelection}>
                         <Icon name="email" alt={c('Action').t`Compose`} />
                     </Button>
                 </Tooltip>
             ) : null}
+            <Tooltip>
+                <Button
+                    icon
+                    className="inline-flex pt0-5 pb0-5"
+                    onClick={onDelete}
+                    disabled={noSelection}
+                    title={deleteText}
+                >
+                    <Icon name="trash" />
+                </Button>
+            </Tooltip>
             <Tooltip title={c('Action').t`Add new group`}>
                 <Button icon color="norm" className="mlauto inline-flex pt0-5 pb0-5" onClick={onCreate}>
                     <Icon name="contacts-group-add" alt={c('Action').t`Add new contact`} />

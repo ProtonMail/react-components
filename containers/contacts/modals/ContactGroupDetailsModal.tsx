@@ -2,10 +2,12 @@ import React from 'react';
 import { c, msgid } from 'ttag';
 import { ContactEmail } from 'proton-shared/lib/interfaces/contacts/Contact';
 import { noop } from 'proton-shared/lib/helpers/function';
-import { FormModal, ContactGroupTable, Icon, TitleModal } from '../../../components';
+import { FormModal, ContactGroupTable, Icon, TitleModal, Button } from '../../../components';
 import { useContactEmails, useContactGroups, useModals } from '../../../hooks';
 import ContactGroupModal from './ContactGroupModal';
 import './ContactGroupDetailsModal.scss';
+import Tooltip from '../../../components/tooltip/Tooltip';
+import ContactGroupDeleteModal from './ContactGroupDeleteModal';
 
 interface Props {
     contactGroupID: string;
@@ -28,6 +30,11 @@ const ContactGroupDetailsModal = ({ contactGroupID, onClose = noop, ...rest }: P
         onClose();
     };
 
+    const handleDelete = () => {
+        createModal(<ContactGroupDeleteModal groupIDs={[contactGroupID]} />);
+        onClose();
+    };
+
     return (
         <FormModal
             onSubmit={handleEdit}
@@ -47,10 +54,26 @@ const ContactGroupDetailsModal = ({ contactGroupID, onClose = noop, ...rest }: P
             onClose={onClose}
             {...rest}
         >
-            <h4 className="mb1 flex flex-align-items-center">
-                <Icon className="mr0-5" name="contacts-groups" />
-                <span>{c('Title').ngettext(msgid`${emailsCount} member`, `${emailsCount} members`, emailsCount)}</span>
-            </h4>
+            <div className="flex flex-no-min-children flex-item-fluid">
+                <h4 className="mb1 flex flex-align-items-center flex-item-fluid">
+                    <Icon className="mr0-5" name="contacts-groups" />
+                    <span>
+                        {c('Title').ngettext(msgid`${emailsCount} member`, `${emailsCount} members`, emailsCount)}
+                    </span>
+                </h4>
+                <div className="flex-item-noshrink">
+                    <Tooltip title={c('Action').t`Delete`}>
+                        <Button color="weak" shape="outline" icon onClick={handleDelete} className="inline-flex ml0-5">
+                            <Icon name="trash" alt={c('Action').t`Delete`} />
+                        </Button>
+                    </Tooltip>
+                    <Tooltip title={c('Action').t`Edit`}>
+                        <Button icon shape="solid" color="norm" onClick={handleEdit} className="inline-flex ml0-5">
+                            <Icon name="pen" alt={c('Action').t`Edit`} />
+                        </Button>
+                    </Tooltip>
+                </div>
+            </div>
             <ContactGroupTable contactEmails={emails} />
         </FormModal>
     );
