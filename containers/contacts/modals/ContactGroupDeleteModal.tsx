@@ -2,7 +2,6 @@ import React from 'react';
 import { c, msgid } from 'ttag';
 
 import { noop } from 'proton-shared/lib/helpers/function';
-import { wait } from 'proton-shared/lib/helpers/promise';
 import { ContactGroup } from 'proton-shared/lib/interfaces/contacts';
 import { deleteLabel } from 'proton-shared/lib/api/labels';
 
@@ -19,37 +18,23 @@ const ContactGroupDeleteModal = ({ groupIDs = [], onDelete, onClose = noop, ...r
     const api = useApi();
     const { createNotification } = useNotifications();
     const { call } = useEventManager();
-    const [loadingDelete, withLoadingDelete] = useLoading();
+    const [loading, withLoading] = useLoading();
     const [groups = []] = useContactGroups();
 
-    const submit = <ErrorButton type="submit" loading={loadingDelete}>{c('Action').t`Delete`}</ErrorButton>;
+    const submit = <ErrorButton type="submit" loading={loading}>{c('Action').t`Delete`}</ErrorButton>;
 
     const handleDelete = async () => {
-        // Call the callback and close the modal and wait a bit to trigger the event manager
-        // In order eventual contact view can be closed and will not try to request the contact
-        const delayedClosing = async () => {
-            onDelete?.();
-            onClose();
-            await wait(1000);
-            await call();
-        };
-
-        const apiSuccess = await Promise.all(groupIDs.map((groupID) => api(deleteLabel(groupID))));
-        void delayedClosing();
-        if (!apiSuccess) {
-            return createNotification({
-                text: c('Error').t`Some contacts groups could not be deleted`,
-                type: 'warning',
-            });
-        }
+        await Promise.all(groupIDs.map((groupID) => api(deleteLabel(groupID))));
+        await call();
+        onDelete?.();
+        onClose();
         createNotification({
             text: c('Success').ngettext(msgid`Contact group deleted`, `Contacts groups deleted`, groupIDs.length),
         });
     };
 
     const count = groupIDs.length;
-    const group = groups.find((group: ContactGroup) => group.ID === groupIDs[0]);
-    const Name = group?.Name || '';
+    const { Name = '' } = groups.find((group: ContactGroup) => group.ID === groupIDs[0]) || {};
     const title =
         count === 1
             ? c('Title').t`Delete ${Name}`
@@ -58,10 +43,10 @@ const ContactGroupDeleteModal = ({ groupIDs = [], onDelete, onClose = noop, ...r
     return (
         <FormModal
             title={title}
-            onSubmit={() => withLoadingDelete(handleDelete())}
+            onSubmit={() => withLoading(handleDelete())}
             onClose={onClose}
             submit={submit}
-            loading={loadingDelete}
+            loading={loading}
             className="modal--smaller"
             {...rest}
         >
