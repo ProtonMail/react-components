@@ -21,14 +21,13 @@ $price-size: 21;
 	.scrollshadow-static {
 		background: #1c1736;
 	}
-	.scrollshadow-sticky {
-		&--top {
-			background-image: radial-gradient(farthest-side at 50% 0, #505560, transparent);
-		}
-		&--bottom {
-			bottom: 0;
-			background-image: radial-gradient(farthest-side at 50% 100%, #505560, transparent);
-		}
+
+	.scroll-start-shadow {
+		background-image: radial-gradient(farthest-side at 50% 0, #505560, transparent);
+	}
+
+	.scroll-end-shadow {
+		background-image: radial-gradient(farthest-side at 50% 100%, #505560, transparent);
 	}
 
 	.modal-close-icon {
