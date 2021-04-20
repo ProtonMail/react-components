@@ -1,6 +1,7 @@
 import React from 'react';
+
 import { classnames } from '../../helpers';
-import ScrollShadows from '../scroll/ScrollShadows';
+import { Scroll } from '../scroll';
 
 interface Props {
     children: React.ReactNode;
@@ -9,7 +10,7 @@ interface Props {
 const Inner = ({ children, className = '' }: Props) => {
     return (
         <div className={classnames(['modal-content-inner', className])}>
-            <ScrollShadows>{children}</ScrollShadows>
+            <Scroll>{children}</Scroll>
         </div>
     );
 };

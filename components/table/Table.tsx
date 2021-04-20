@@ -1,5 +1,7 @@
 import React from 'react';
+
 import { classnames } from '../../helpers';
+import Scroll from '../scroll/Scroll';
 
 interface Props extends React.DetailedHTMLProps<React.TableHTMLAttributes<HTMLTableElement>, HTMLTableElement> {
     children: React.ReactNode;
@@ -9,10 +11,12 @@ interface Props extends React.DetailedHTMLProps<React.TableHTMLAttributes<HTMLTa
 
 const Table = ({ children, className, caption, ...props }: Props) => {
     return (
-        <table className={classnames(['simple-table', className])} {...props}>
-            {caption ? <caption className="sr-only">{caption}</caption> : null}
-            {children}
-        </table>
+        <Scroll horizontal>
+            <table className={classnames(['simple-table', className])} {...props}>
+                {caption ? <caption className="sr-only">{caption}</caption> : null}
+                {children}
+            </table>
+        </Scroll>
     );
 };
 
