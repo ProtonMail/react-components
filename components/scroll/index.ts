@@ -1,1 +1,1 @@
-export { default as ScrollShadows } from './ScrollShadows';
+export { default as Scroll } from './Scroll';

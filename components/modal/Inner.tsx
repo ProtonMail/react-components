@@ -1,6 +1,7 @@
 import React, { Ref } from 'react';
+
 import { classnames } from '../../helpers';
-import ScrollShadows from '../scroll/ScrollShadows';
+import { Scroll } from '../scroll';
 
 interface Props {
     children: React.ReactNode;
@@ -10,7 +11,7 @@ const Inner = React.forwardRef<HTMLDivElement, Props>(
     ({ children, className = '' }: Props, ref: Ref<HTMLDivElement>) => {
         return (
             <div ref={ref} className={classnames(['modal-content-inner', className])}>
-                <ScrollShadows>{children}</ScrollShadows>
+                <Scroll>{children}</Scroll>
             </div>
         );
     }
