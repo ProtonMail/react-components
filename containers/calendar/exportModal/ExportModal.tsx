@@ -8,18 +8,21 @@ import {
     ExportCalendarModel,
     VcalVeventComponent,
 } from 'proton-shared/lib/interfaces/calendar';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { c } from 'ttag';
 
-import { getProdId } from 'proton-shared/lib/calendar/vcalHelper';
+import { getProdIdFromNameAndVersion } from 'proton-shared/lib/calendar/vcalHelper';
 import downloadFile from 'proton-shared/lib/helpers/downloadFile';
 import { DEFAULT_CALENDAR_USER_SETTINGS } from 'proton-shared/lib/calendar/calendar';
 import { format } from 'date-fns';
+import { getAppName } from 'proton-shared/lib/apps/helper';
+import { APPS } from 'proton-shared/lib/constants';
+import { getHostname } from 'proton-shared/lib/helpers/url';
 import { Button, FormModal } from '../../../components';
 import { useGetVtimezonesMap } from '../../../hooks/useGetVtimezonesMap';
 import ExportingModalContent from './ExportingModalContent';
 import ExportSummaryModalContent from './ExportSummaryModalContent';
-import { useCalendarUserSettings, useConfig } from '../../../hooks';
+import { useApi, useCalendarUserSettings } from '../../../hooks';
 
 interface Props {
     calendar: Calendar;
@@ -27,8 +30,8 @@ interface Props {
 }
 
 export const ExportModal = ({ calendar, ...rest }: Props) => {
-    const config = useConfig();
-    const prodId = getProdId(config);
+    const api = useApi();
+    const [prodId, setProdId] = useState<string>();
 
     const getVTimezonesMap = useGetVtimezonesMap();
     const [calendarUserSettings = DEFAULT_CALENDAR_USER_SETTINGS] = useCalendarUserSettings();
@@ -54,6 +57,10 @@ export const ExportModal = ({ calendar, ...rest }: Props) => {
                     tzids: [defaultTzid],
                     getVTimezonesMap,
                 });
+
+                if (!prodId) {
+                    throw new Error('Missing prodId');
+                }
 
                 const ics = createExportIcs({
                     calendar,
@@ -88,6 +95,31 @@ export const ExportModal = ({ calendar, ...rest }: Props) => {
             },
         };
     })();
+
+    useEffect(() => {
+        try {
+            void (async () => {
+                const { version } = await api<{ version: string }>({
+                    url: `https://${getHostname(window.location.href).replace(
+                        'account',
+                        'calendar'
+                    )}/assets/version.json`,
+                    method: 'get',
+                });
+
+                setProdId(getProdIdFromNameAndVersion(getAppName(APPS.PROTONCALENDAR), version));
+            })();
+        } catch {
+            setModel((currentModel) => ({
+                ...currentModel,
+                step: EXPORT_STEPS.FINISHED,
+                totalProcessed: [],
+                erroredEvents: [],
+                totalToProcess: 0,
+                error: EXPORT_ERRORS.NETWORK_ERROR,
+            }));
+        }
+    }, []);
 
     return (
         <FormModal title={c('Title').t`Exporting calendar`} {...modalProps} {...rest}>
