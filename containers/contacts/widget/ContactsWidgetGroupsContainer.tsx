@@ -67,23 +67,26 @@ const ContactsWidgetGroupsContainer = ({ onClose, onCompose }: Props) => {
         [groups, contactEmails]
     );
 
+    const recipients = selectedIDs
+        .map((selectedID) => {
+            const group = groups.find((group) => group.ID === selectedID);
+            if (groupsEmailsMap[selectedID]) {
+                return groupsEmailsMap[selectedID].map((email) => ({
+                    Name: email.Name,
+                    Address: email.Email,
+                    Group: group?.Path,
+                }));
+            }
+            return [];
+        })
+        .flat();
+
     const handleClearSearch = () => {
         // If done synchronously, button is removed from the dom and the dropdown considers a click outside
         setTimeout(() => setSearch(''));
     };
 
     const handleCompose = () => {
-        const recipients = selectedIDs
-            .map((selectedID) => {
-                const group = groups.find((group) => group.ID === selectedID);
-                return groupsEmailsMap[selectedID].map((email) => ({
-                    Name: email.Name,
-                    Address: email.Email,
-                    Group: group?.Path,
-                }));
-            })
-            .flat();
-
         if (recipients.length > 100) {
             createNotification({
                 type: 'error',
@@ -155,6 +158,7 @@ const ContactsWidgetGroupsContainer = ({ onClose, onCompose }: Props) => {
                 <ContactsWidgetGroupsToolbar
                     allChecked={allChecked}
                     selectedCount={selectedIDs.length}
+                    numberOfRecipients={recipients.length}
                     onCheckAll={handleCheckAll}
                     onCompose={onCompose ? handleCompose : undefined}
                     onCreate={handleCreate}
