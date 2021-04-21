@@ -1,4 +1,5 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { MAX_LINKS_PER_CALENDAR } from 'proton-shared/lib/calendar/constants';
+import React, { useEffect, useState } from 'react';
 import { c } from 'ttag';
 import { Calendar, ACCESS_LEVEL } from 'proton-shared/lib/interfaces/calendar';
 import { SimpleMap } from 'proton-shared/lib/interfaces/utils';
@@ -18,32 +19,37 @@ import {
 
 interface Props {
     calendars: Calendar[];
+    defaultCalendar?: Calendar;
     onCreateLink: ({ accessLevel, calendarID }: { accessLevel: ACCESS_LEVEL; calendarID: string }) => Promise<void>;
-    isLoading: boolean;
+    isLoadingCreate: boolean;
     disabled: boolean;
-    defaultSelectedCalendar: Calendar;
     linksPerCalendar: SimpleMap<number>;
 }
 
 const ShareTable = ({
-    defaultSelectedCalendar,
     calendars = [],
+    defaultCalendar,
     onCreateLink,
-    isLoading,
+    isLoadingCreate,
     disabled,
     linksPerCalendar,
 }: Props) => {
-    const [selectedCalendarID, setSelectedCalendarID] = useState(defaultSelectedCalendar.ID);
+    const fallbackCalendar = defaultCalendar || calendars[0];
+    const [selectedCalendarID, setSelectedCalendarID] = useState(fallbackCalendar?.ID);
     const [accessLevel, setAccessLevel] = useState<ACCESS_LEVEL>(ACCESS_LEVEL.LIMITED);
-    const maxLinksPerCalendarReached = useMemo(() => linksPerCalendar?.[selectedCalendarID] === 5, [
-        linksPerCalendar,
-        selectedCalendarID,
-    ]);
+    const maxLinksPerCalendarReached = linksPerCalendar?.[selectedCalendarID] === MAX_LINKS_PER_CALENDAR;
     const shouldDisableCreateButton = disabled || maxLinksPerCalendarReached;
 
     useEffect(() => {
-        setSelectedCalendarID(defaultSelectedCalendar.ID);
-    }, [calendars, defaultSelectedCalendar]);
+        // if the selected calendar gets deleted, use next preferred one
+        if (!calendars.find(({ ID }) => ID === selectedCalendarID)) {
+            setSelectedCalendarID(fallbackCalendar?.ID);
+        }
+    }, [calendars]);
+
+    if (!fallbackCalendar) {
+        return null;
+    }
 
     return (
         <>
@@ -107,7 +113,7 @@ const ShareTable = ({
                             </div>,
                             <Button
                                 color="norm"
-                                loading={isLoading}
+                                loading={isLoadingCreate}
                                 disabled={shouldDisableCreateButton}
                                 onClick={() => onCreateLink({ accessLevel, calendarID: selectedCalendarID })}
                             >
@@ -120,7 +126,7 @@ const ShareTable = ({
             </Table>
             {maxLinksPerCalendarReached && (
                 <Alert className="mb1-5" type="warning">{c('Info')
-                    .t`You can create up to 5 links per calendar. To create a new link to this calendar, delete one from the list below.`}</Alert>
+                    .t`You can create up to ${MAX_LINKS_PER_CALENDAR} links per calendar. To create a new link to this calendar, delete one from the list below.`}</Alert>
             )}
         </>
     );

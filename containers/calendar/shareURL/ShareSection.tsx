@@ -13,7 +13,7 @@ import {
     getPassphraseKey,
     decryptCacheKey,
 } from 'proton-shared/lib/calendar/shareUrl/helpers';
-import { createPublicLink, CreatePublicLinks, deletePublicLink, editPublicLink } from 'proton-shared/lib/api/calendars';
+import { createPublicLink, deletePublicLink, editPublicLink } from 'proton-shared/lib/api/calendars';
 import { generateSessionKey } from 'pmcrypto';
 import { splitKeys } from 'proton-shared/lib/keys';
 import { AES256 } from 'proton-shared/lib/constants';
@@ -43,7 +43,6 @@ const ShareSection = ({ calendars, defaultCalendar }: Props) => {
     const getCalendarInfo = useGetCalendarInfo();
     const { createModal } = useModals();
     const { call } = useCalendarModelEventManager();
-    const defaultSelectedCalendar = useMemo(() => defaultCalendar || calendars[0], [defaultCalendar, calendars]);
     const linksPerCalendar = useMemo(
         () =>
             links?.reduce<SimpleMap<number>>((acc, link) => {
@@ -62,10 +61,7 @@ const ShareSection = ({ calendars, defaultCalendar }: Props) => {
         const { decryptedCalendarKeys, decryptedPassphrase, passphraseID } = await getCalendarInfo(calendarID);
         const { publicKeys } = splitKeys(decryptedCalendarKeys);
 
-        // TODO: no user input for purpose on creating
-        // const EncryptedPurpose = await generateEncryptedPurpose({ purpose, publicKeys });
         const encryptedPurpose = null;
-
         const passphraseKey = await generateSessionKey(AES256);
         const encryptedPassphrase =
             accessLevel === ACCESS_LEVEL.FULL
@@ -77,17 +73,19 @@ const ShareSection = ({ calendars, defaultCalendar }: Props) => {
         const cacheKeyHash = await getCacheKeyHash({ cacheKey, cacheKeySalt });
         const encryptedCacheKey = await generateEncryptedCacheKey({ cacheKey, publicKeys });
 
-        const params: CreatePublicLinks = {
-            AccessLevel: accessLevel,
-            CacheKeySalt: cacheKeySalt,
-            CacheKeyHash: cacheKeyHash,
-            EncryptedPassphrase: encryptedPassphrase,
-            EncryptedPurpose: encryptedPurpose,
-            EncryptedCacheKey: encryptedCacheKey,
-            PassphraseID: accessLevel === ACCESS_LEVEL.FULL ? passphraseID : null,
-        };
-
-        const response = await withLoadingCreate(api<CalendarUrlResponse>(createPublicLink(calendarID, params)));
+        const response = await withLoadingCreate(
+            api<CalendarUrlResponse>(
+                createPublicLink(calendarID, {
+                    AccessLevel: accessLevel,
+                    CacheKeySalt: cacheKeySalt,
+                    CacheKeyHash: cacheKeyHash,
+                    EncryptedPassphrase: encryptedPassphrase,
+                    EncryptedPurpose: encryptedPurpose,
+                    EncryptedCacheKey: encryptedCacheKey,
+                    PassphraseID: accessLevel === ACCESS_LEVEL.FULL ? passphraseID : null,
+                })
+            )
+        );
 
         if (!response) {
             // should never fall here as an error should have been thrown before
@@ -212,16 +210,16 @@ const ShareSection = ({ calendars, defaultCalendar }: Props) => {
 
     return (
         <>
-            {defaultSelectedCalendar ? (
+            {calendars.length ? (
                 <>
                     {infoAlert}
                     <ShareTable
                         linksPerCalendar={linksPerCalendar}
-                        isLoading={isLoadingCreate}
+                        isLoadingCreate={isLoadingCreate}
                         disabled={!!isLoadingLinks}
                         calendars={calendars}
                         onCreateLink={handleCreateLink}
-                        defaultSelectedCalendar={defaultSelectedCalendar}
+                        defaultCalendar={defaultCalendar}
                     />
                 </>
             ) : (

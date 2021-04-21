@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { c } from 'ttag';
 import { Nullable, SimpleMap } from 'proton-shared/lib/interfaces/utils';
 import { ACCESS_LEVEL, CalendarLink, CopyLinkParams } from 'proton-shared/lib/interfaces/calendar';
@@ -15,8 +15,10 @@ interface Props {
 
 const sortLinks = (links: CalendarLink[]) => [...links].sort((a, b) => a.CreateTime - b.CreateTime);
 
-const LinkTable = ({ links, onCopyLink, onDelete, onEdit, isLoadingMap }: Props) => {
-    if (!links?.length) {
+const LinkTable = ({ links = [], onCopyLink, onDelete, onEdit, isLoadingMap }: Props) => {
+    const sortedLinks = useMemo(() => sortLinks(links), [links]);
+
+    if (!sortedLinks.length) {
         return null;
     }
 
@@ -33,7 +35,7 @@ const LinkTable = ({ links, onCopyLink, onDelete, onEdit, isLoadingMap }: Props)
                     ]}
                 />
                 <TableBody>
-                    {sortLinks(links).map(
+                    {sortedLinks.map(
                         ({
                             CalendarID,
                             CalendarUrlID,
