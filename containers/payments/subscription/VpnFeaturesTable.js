@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { toMap } from 'proton-shared/lib/helpers/object';
 import { PLANS } from 'proton-shared/lib/constants';
-import { c } from 'ttag';
+import { c, msgid } from 'ttag';
 
 import { Loader } from '../../../components';
 import { usePlans, useVPNCountries } from '../../../hooks';
@@ -51,9 +51,27 @@ const VpnFeaturesTable = ({ cycle, currency }) => {
                 <tbody>
                     <tr>
                         <td className="scroll-if-needed">{c('Feature').t`1 VPN connection`}</td>
-                        <td className="scroll-if-needed">{c('Feature').t`2 VPN connections`}</td>
-                        <td className="scroll-if-needed">{c('Feature').t`10 VPN connections`}</td>
-                        <td className="scroll-if-needed">{c('Feature').t`10 VPN connections`}</td>
+                        <td className="scroll-if-needed">
+                            {c('Feature').ngettext(
+                                msgid`${plansMap[PLANS.VPNBASIC].MaxVPN} VPN connection`,
+                                `${plansMap[PLANS.VPNBASIC].MaxVPN} VPN connections`,
+                                plansMap[PLANS.VPNBASIC].MaxVPN
+                            )}
+                        </td>
+                        <td className="scroll-if-needed">
+                            {c('Feature').ngettext(
+                                msgid`${plansMap[PLANS.VPNPLUS].MaxVPN} VPN connection`,
+                                `${plansMap[PLANS.VPNPLUS].MaxVPN} VPN connections`,
+                                plansMap[PLANS.VPNPLUS].MaxVPN
+                            )}
+                        </td>
+                        <td className="scroll-if-needed">
+                            {c('Feature').ngettext(
+                                msgid`${plansMap[PLANS.VISIONARY].MaxVPN} VPN connection`,
+                                `${plansMap[PLANS.VISIONARY].MaxVPN} VPN connections`,
+                                plansMap[PLANS.VISIONARY].MaxVPN
+                            )}
+                        </td>
                     </tr>
                     <tr>
                         <td className="scroll-if-needed">{c('Feature')

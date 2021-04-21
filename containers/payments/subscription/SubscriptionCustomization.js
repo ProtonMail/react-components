@@ -132,6 +132,7 @@ const SubscriptionCustomization = ({
     const isVPN = APP_NAME === APPS.PROTONVPN_SETTINGS;
 
     const plansMap = toMap(plans, 'Name');
+    const vpnBasicPlan = plans[PLANS.VPNBASIC];
     const plusPlan = plansMap[PLANS.PLUS];
     const visionaryPlan = plansMap[PLANS.VISIONARY];
     const vpnplusPlan = plansMap[PLANS.VPNPLUS];
@@ -193,6 +194,7 @@ const SubscriptionCustomization = ({
         (model.planIDs[memberAddon.ID] || 0) * memberAddon.MaxAddresses + professionalPlan.MaxAddresses;
     const professionalDomains =
         (model.planIDs[domainAddon.ID] || 0) * domainAddon.MaxDomains + professionalPlan.MaxDomains;
+    const vpnPlusVpn = (model.planIDs[vpnAddon.ID] || 0) * vpnAddon.MaxVPN + vpnplusPlan.MaxVPN;
 
     const FEATURES = {
         [FREE]: [
@@ -307,7 +309,15 @@ const SubscriptionCustomization = ({
             />,
         ],
         [PLANS.VPNBASIC]: [
-            <SubscriptionFeatureRow key="connection" icon="vpn-connx" feature={c('Feature').t`2 VPN connections`} />,
+            <SubscriptionFeatureRow
+                key="connection"
+                icon="vpn-connx"
+                feature={c('Feature').ngettext(
+                    msgid`${vpnBasicPlan.MaxVPN} VPN connection`,
+                    `${vpnBasicPlan.MaxVPN} VPN connections`,
+                    vpnBasicPlan.MaxVPN
+                )}
+            />,
             <SubscriptionFeatureRow
                 key="country"
                 icon="servers-country"
@@ -334,7 +344,15 @@ const SubscriptionCustomization = ({
             />,
         ],
         [PLANS.VPNPLUS]: [
-            <SubscriptionFeatureRow key="connection" icon="vpn-connx" feature={c('Feature').t`10 VPN connections`} />,
+            <SubscriptionFeatureRow
+                key="connection"
+                icon="vpn-connx"
+                feature={c('Feature').ngettext(
+                    msgid`${vpnPlusVpn} VPN connection`,
+                    `${vpnPlusVpn} VPN connections`,
+                    vpnPlusVpn
+                )}
+            />,
             <SubscriptionFeatureRow
                 key="exclusive"
                 icon="servers-country"

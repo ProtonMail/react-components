@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { PLAN_NAMES, PLANS, CYCLE, CURRENCIES } from 'proton-shared/lib/constants';
 import { toMap } from 'proton-shared/lib/helpers/object';
-import { c } from 'ttag';
+import { c, msgid } from 'ttag';
 import freePlanSvg from 'design-system/assets/img/pv-images/plans/free-plan.svg';
 import plusPlanSvg from 'design-system/assets/img/pv-images/plans/vpnbasic-plan.svg';
 import professionalPlanSvg from 'design-system/assets/img/pv-images/plans/vpnplus-plan.svg';
@@ -143,7 +143,14 @@ const VpnSubscriptionTable = ({
             imageSrc: plusPlanSvg,
             description: c('Description').t`Basic privacy features`,
             features: [
-                { icon: 'arrow-right', content: c('Feature').t`2 VPN connections` },
+                {
+                    icon: 'arrow-right',
+                    content: c('Feature').ngettext(
+                        msgid`${vpnBasicPlan.MaxVPN} VPN connection`,
+                        `${vpnBasicPlan.MaxVPN} VPN connections`,
+                        vpnBasicPlan.MaxVPN
+                    ),
+                },
                 { icon: 'arrow-right', content: c('Feature').t`Servers in ${vpnCountries.basic.length} countries` },
                 { icon: 'arrow-right', content: c('Feature').t`High speed` },
                 { icon: 'arrow-right', content: c('Feature').t`Strict no-logs policy` },
@@ -233,7 +240,14 @@ const VpnSubscriptionTable = ({
             imageSrc: professionalPlanSvg,
             description: c('Description').t`Advanced security features`,
             features: [
-                { icon: 'arrow-right', content: c('Feature').t`10 VPN connections` },
+                {
+                    icon: 'arrow-right',
+                    content: c('Feature').ngettext(
+                        msgid`${vpnPlusPlan.MaxVPN} VPN connection`,
+                        `${vpnPlusPlan.MaxVPN} VPN connections`,
+                        vpnPlusPlan.MaxVPN
+                    ),
+                },
                 { icon: 'arrow-right', content: c('Feature').t`Servers in ${vpnCountries.all.length} countries` },
                 { icon: 'arrow-right', content: c('Feature').t`Highest speed (up to 10 Gbps)` },
                 { icon: 'arrow-right', content: c('Feature').t`Strict no-logs policy` },
