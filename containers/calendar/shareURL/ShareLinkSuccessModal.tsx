@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { MouseEvent } from 'react';
 import { c } from 'ttag';
 
 import { ACCESS_LEVEL } from 'proton-shared/lib/interfaces/calendar';
@@ -7,7 +7,7 @@ import { Alert, FormModal, Input } from '../../../components';
 
 interface Props {
     link: string;
-    onSubmit: () => void;
+    onSubmit: (e: MouseEvent<HTMLButtonElement>) => void;
     accessLevel: ACCESS_LEVEL;
 }
 

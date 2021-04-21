@@ -1,24 +1,17 @@
-import React, { useState, useMemo } from 'react';
+import { textToClipboard } from 'proton-shared/lib/helpers/browser';
+import React, { MouseEvent, useState } from 'react';
 import { c } from 'ttag';
-import { Calendar, ACCESS_LEVEL, CalendarUrlResponse, CopyLinkParams } from 'proton-shared/lib/interfaces/calendar';
+import { Calendar, ACCESS_LEVEL, CalendarUrlResponse } from 'proton-shared/lib/interfaces/calendar';
 
 import {
-    generateEncryptedPassphrase,
-    generateCacheKeySalt,
-    generateCacheKey,
-    getCacheKeyHash,
-    generateEncryptedCacheKey,
     buildLink,
     generateEncryptedPurpose,
-    getPassphraseKey,
-    decryptCacheKey,
+    getCreatePublicLinkPayload,
 } from 'proton-shared/lib/calendar/shareUrl/helpers';
 import { createPublicLink, deletePublicLink, editPublicLink } from 'proton-shared/lib/api/calendars';
-import { generateSessionKey } from 'pmcrypto';
 import { splitKeys } from 'proton-shared/lib/keys';
-import { AES256 } from 'proton-shared/lib/constants';
 import { Nullable, SimpleMap } from 'proton-shared/lib/interfaces/utils';
-import { useApi, useGetCalendarInfo, useLoading, useModals, useNotifications } from '../../../hooks';
+import { useApi, useGetCalendarInfo, useModals, useNotifications } from '../../../hooks';
 import { useCalendarModelEventManager } from '../../eventManager';
 
 import LinkTable from './LinkTable';
@@ -35,65 +28,35 @@ interface Props {
 }
 
 const ShareSection = ({ calendars, defaultCalendar }: Props) => {
-    const { links, isLoadingLinks } = useCalendarShareUrls(calendars);
-    const [isLoadingCreate, withLoadingCreate] = useLoading(false);
+    const { linksMap, isLoadingLinks } = useCalendarShareUrls(calendars);
+    const [isLoadingCreate, setIsLoadingCreate] = useState(false);
     const [isLoadingMap, setIsLoadingMap] = useState<SimpleMap<boolean>>({});
     const api = useApi();
     const { createNotification } = useNotifications();
     const getCalendarInfo = useGetCalendarInfo();
     const { createModal } = useModals();
     const { call } = useCalendarModelEventManager();
-    const linksPerCalendar = useMemo(
-        () =>
-            links?.reduce<SimpleMap<number>>((acc, link) => {
-                acc[link.CalendarID] = (acc[link.CalendarID] || 0) + 1;
-
-                return acc;
-            }, {}) || {},
-        [links]
-    );
-
     const notifyLinkCopied = () => {
         createNotification({ type: 'info', text: c('Info').t`Link copied to clipboard` });
     };
 
     const handleCreateLink = async ({ accessLevel, calendarID }: { accessLevel: ACCESS_LEVEL; calendarID: string }) => {
+        setIsLoadingCreate(true);
         const { decryptedCalendarKeys, decryptedPassphrase, passphraseID } = await getCalendarInfo(calendarID);
         const { publicKeys } = splitKeys(decryptedCalendarKeys);
 
-        const encryptedPurpose = null;
-        const passphraseKey = await generateSessionKey(AES256);
-        const encryptedPassphrase =
-            accessLevel === ACCESS_LEVEL.FULL
-                ? generateEncryptedPassphrase({ passphraseKey, decryptedPassphrase })
-                : null;
+        const { payload, passphraseKey, cacheKey } = await getCreatePublicLinkPayload({
+            accessLevel,
+            publicKeys,
+            decryptedPassphrase,
+            passphraseID,
+        });
 
-        const cacheKeySalt = generateCacheKeySalt();
-        const cacheKey = generateCacheKey();
-        const cacheKeyHash = await getCacheKeyHash({ cacheKey, cacheKeySalt });
-        const encryptedCacheKey = await generateEncryptedCacheKey({ cacheKey, publicKeys });
-
-        const response = await withLoadingCreate(
-            api<CalendarUrlResponse>(
-                createPublicLink(calendarID, {
-                    AccessLevel: accessLevel,
-                    CacheKeySalt: cacheKeySalt,
-                    CacheKeyHash: cacheKeyHash,
-                    EncryptedPassphrase: encryptedPassphrase,
-                    EncryptedPurpose: encryptedPurpose,
-                    EncryptedCacheKey: encryptedCacheKey,
-                    PassphraseID: accessLevel === ACCESS_LEVEL.FULL ? passphraseID : null,
-                })
-            )
-        );
-
-        if (!response) {
-            // should never fall here as an error should have been thrown before
-            throw new Error('Public link failed to be created');
-        }
-
+        const {
+            CalendarUrl: { CalendarUrlID },
+        } = await api<CalendarUrlResponse>(createPublicLink(calendarID, payload));
         const link = buildLink({
-            urlID: response.CalendarUrl.CalendarUrlID,
+            urlID: CalendarUrlID,
             accessLevel,
             passphraseKey,
             cacheKey,
@@ -101,11 +64,12 @@ const ShareSection = ({ calendars, defaultCalendar }: Props) => {
 
         await call([calendarID]);
         createNotification({ type: 'success', text: c('Info').t`Link created` });
+        setIsLoadingCreate(false);
 
         return createModal(
             <ShareLinkSuccessModal
-                onSubmit={async () => {
-                    await navigator.clipboard.writeText(link);
+                onSubmit={(e: MouseEvent<HTMLButtonElement>) => {
+                    textToClipboard(link, e.currentTarget);
                     notifyLinkCopied();
                 }}
                 accessLevel={accessLevel}
@@ -129,30 +93,9 @@ const ShareSection = ({ calendars, defaultCalendar }: Props) => {
         }
     };
 
-    const handleCopyLink = ({
-        calendarID,
-        urlID,
-        accessLevel,
-        encryptedPassphrase,
-        encryptedCacheKey,
-    }: CopyLinkParams) => {
-        return tryLoadingAction(urlID, async () => {
-            const { decryptedPassphrase: calendarPassphrase, decryptedCalendarKeys } = await getCalendarInfo(
-                calendarID
-            );
-            const { privateKeys } = splitKeys(decryptedCalendarKeys);
-            const cacheKey = await decryptCacheKey({ encryptedCacheKey, privateKeys });
-            const passphraseKey = getPassphraseKey({ encryptedPassphrase, calendarPassphrase });
-            const link = buildLink({
-                urlID,
-                accessLevel,
-                passphraseKey,
-                cacheKey,
-            });
-
-            await navigator.clipboard.writeText(link);
-            notifyLinkCopied();
-        });
+    const handleCopyLink = (link: string, e: MouseEvent<HTMLButtonElement>) => {
+        textToClipboard(link, e.currentTarget);
+        notifyLinkCopied();
     };
 
     const handleEdit = ({
@@ -214,7 +157,7 @@ const ShareSection = ({ calendars, defaultCalendar }: Props) => {
                 <>
                     {infoAlert}
                     <ShareTable
-                        linksPerCalendar={linksPerCalendar}
+                        linksMap={linksMap}
                         isLoadingCreate={isLoadingCreate}
                         disabled={!!isLoadingLinks}
                         calendars={calendars}
@@ -235,7 +178,7 @@ const ShareSection = ({ calendars, defaultCalendar }: Props) => {
             ) : (
                 <LinkTable
                     isLoadingMap={isLoadingMap}
-                    links={links}
+                    linksMap={linksMap}
                     onCopyLink={handleCopyLink}
                     onEdit={handleEdit}
                     onDelete={handleDelete}
