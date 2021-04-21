@@ -132,7 +132,7 @@ const SubscriptionCustomization = ({
     const isVPN = APP_NAME === APPS.PROTONVPN_SETTINGS;
 
     const plansMap = toMap(plans, 'Name');
-    const vpnBasicPlan = plans[PLANS.VPNBASIC];
+    const vpnBasicPlan = plansMap[PLANS.VPNBASIC];
     const plusPlan = plansMap[PLANS.PLUS];
     const visionaryPlan = plansMap[PLANS.VISIONARY];
     const vpnplusPlan = plansMap[PLANS.VPNPLUS];
