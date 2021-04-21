@@ -97,9 +97,7 @@ export const ExportModal = ({ calendar, ...rest }: Props) => {
     useEffect(() => {
         try {
             void (async () => {
-                const { version } = await (
-                    await fetch(`${getAppHref('/assets/version.json', APPS.PROTONCALENDAR)}/assets/version.json`)
-                ).json();
+                const { version } = await (await fetch(getAppHref('/assets/version.json', APPS.PROTONCALENDAR))).json();
 
                 setProdId(getProdIdFromNameAndVersion(getClientID(APPS.PROTONCALENDAR), version));
             })();
