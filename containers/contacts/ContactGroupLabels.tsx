@@ -1,9 +1,9 @@
 import React, { MouseEvent } from 'react';
 import { ContactGroup } from 'proton-shared/lib/interfaces/contacts/Contact';
 
-import LabelStack, { LabelDescription } from '../labelStack/LabelStack';
+import LabelStack, { LabelDescription } from '../../components/labelStack/LabelStack';
 import { useModals } from '../../hooks';
-import ContactGroupDetailsModal from '../../containers/contacts/modals/ContactGroupDetailsModal';
+import ContactGroupDetailsModal from './modals/ContactGroupDetailsModal';
 
 interface Props {
     contactGroups: ContactGroup[];
