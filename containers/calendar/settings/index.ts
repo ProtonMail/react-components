@@ -3,4 +3,3 @@ export { default as CalendarsSection } from './CalendarsSection';
 export { default as CalendarTimeSection } from './CalendarTimeSection';
 export { default as CalendarSecondaryTimezoneSection } from './SecondaryTimezoneSection';
 export { default as CalendarLayoutSection } from './CalendarLayoutSection';
-export { default as ShareSection } from './ShareSection';
