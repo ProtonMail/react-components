@@ -15,14 +15,13 @@ import { getProdIdFromNameAndVersion } from 'proton-shared/lib/calendar/vcalHelp
 import downloadFile from 'proton-shared/lib/helpers/downloadFile';
 import { DEFAULT_CALENDAR_USER_SETTINGS } from 'proton-shared/lib/calendar/calendar';
 import { format } from 'date-fns';
-import { getAppName } from 'proton-shared/lib/apps/helper';
+import { getAppHref, getClientID } from 'proton-shared/lib/apps/helper';
 import { APPS } from 'proton-shared/lib/constants';
-import { getHostname } from 'proton-shared/lib/helpers/url';
 import { Button, FormModal } from '../../../components';
 import { useGetVtimezonesMap } from '../../../hooks/useGetVtimezonesMap';
 import ExportingModalContent from './ExportingModalContent';
 import ExportSummaryModalContent from './ExportSummaryModalContent';
-import { useApi, useCalendarUserSettings } from '../../../hooks';
+import { useCalendarUserSettings } from '../../../hooks';
 
 interface Props {
     calendar: Calendar;
@@ -30,7 +29,6 @@ interface Props {
 }
 
 export const ExportModal = ({ calendar, ...rest }: Props) => {
-    const api = useApi();
     const [prodId, setProdId] = useState<string>();
 
     const getVTimezonesMap = useGetVtimezonesMap();
@@ -99,15 +97,11 @@ export const ExportModal = ({ calendar, ...rest }: Props) => {
     useEffect(() => {
         try {
             void (async () => {
-                const { version } = await api<{ version: string }>({
-                    url: `https://${getHostname(window.location.href).replace(
-                        'account',
-                        'calendar'
-                    )}/assets/version.json`,
-                    method: 'get',
-                });
+                const { version } = await (
+                    await fetch(`${getAppHref('/assets/version.json', APPS.PROTONCALENDAR)}/assets/version.json`)
+                ).json();
 
-                setProdId(getProdIdFromNameAndVersion(getAppName(APPS.PROTONCALENDAR), version));
+                setProdId(getProdIdFromNameAndVersion(getClientID(APPS.PROTONCALENDAR), version));
             })();
         } catch {
             setModel((currentModel) => ({
