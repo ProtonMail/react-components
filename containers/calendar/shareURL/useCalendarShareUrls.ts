@@ -8,7 +8,6 @@ import {
 } from 'proton-shared/lib/calendar/shareUrl/helpers';
 import { EVENT_ACTIONS } from 'proton-shared/lib/constants';
 import { updateItem } from 'proton-shared/lib/helpers/array';
-import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 import { SimpleMap } from 'proton-shared/lib/interfaces';
 import { Calendar, CalendarLink, CalendarUrl, CalendarUrlsResponse } from 'proton-shared/lib/interfaces/calendar';
 import {
@@ -16,6 +15,7 @@ import {
     CalendarUrlEventManager,
     CalendarUrlEventManagerDelete,
 } from 'proton-shared/lib/interfaces/calendar/EventManager';
+import { splitKeys } from 'proton-shared/lib/keys';
 import { useEffect, useMemo, useState } from 'react';
 import { useApi, useEventManager, useGetCalendarInfo, useLoading, useNotifications } from '../../../hooks';
 import { useCalendarModelEventManager } from '../../eventManager';
@@ -58,10 +58,13 @@ const useCalendarShareUrls = (calendars: Calendar[]) => {
         if (!calendar) {
             return;
         }
+        const { decryptedCalendarKeys, decryptedPassphrase } = await getCalendarInfo(CalendarID);
+        const { privateKeys } = splitKeys(decryptedCalendarKeys);
         const link = await transformLinkFromAPI({
             calendarUrl,
             calendar,
-            getCalendarInfo,
+            privateKeys,
+            calendarPassphrase: decryptedPassphrase,
             onError: handleError,
         });
         setLinksMap((linksMap) => {
@@ -84,12 +87,15 @@ const useCalendarShareUrls = (calendars: Calendar[]) => {
             await Promise.all(
                 calendars.map(async (calendar) => {
                     const calendarID = calendar.ID;
+                    const { decryptedCalendarKeys, decryptedPassphrase } = await getCalendarInfo(calendarID);
+                    const { privateKeys } = splitKeys(decryptedCalendarKeys);
                     try {
                         const { CalendarUrls } = await api<CalendarUrlsResponse>(getPublicLinks(calendarID));
                         map[calendarID] = await transformLinksFromAPI({
                             calendarUrls: CalendarUrls,
                             calendar,
-                            getCalendarInfo,
+                            privateKeys,
+                            calendarPassphrase: decryptedPassphrase,
                             onError: handleError,
                         });
                     } catch (e) {
@@ -131,7 +137,7 @@ const useCalendarShareUrls = (calendars: Calendar[]) => {
     }, [calendarIDs]);
 
     return {
-        links: Object.values(linksMap).filter(isTruthy).flat(),
+        linksMap,
         isLoadingLinks: loading,
     };
 };

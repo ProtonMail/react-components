@@ -1,7 +1,7 @@
 import { MAX_LINKS_PER_CALENDAR } from 'proton-shared/lib/calendar/constants';
 import React, { useEffect, useState } from 'react';
 import { c } from 'ttag';
-import { Calendar, ACCESS_LEVEL } from 'proton-shared/lib/interfaces/calendar';
+import { Calendar, ACCESS_LEVEL, CalendarLink } from 'proton-shared/lib/interfaces/calendar';
 import { SimpleMap } from 'proton-shared/lib/interfaces/utils';
 
 import {
@@ -20,24 +20,17 @@ import {
 interface Props {
     calendars: Calendar[];
     defaultCalendar?: Calendar;
+    linksMap: SimpleMap<CalendarLink[]>;
     onCreateLink: ({ accessLevel, calendarID }: { accessLevel: ACCESS_LEVEL; calendarID: string }) => Promise<void>;
     isLoadingCreate: boolean;
     disabled: boolean;
-    linksPerCalendar: SimpleMap<number>;
 }
 
-const ShareTable = ({
-    calendars = [],
-    defaultCalendar,
-    onCreateLink,
-    isLoadingCreate,
-    disabled,
-    linksPerCalendar,
-}: Props) => {
+const ShareTable = ({ calendars = [], defaultCalendar, linksMap, onCreateLink, isLoadingCreate, disabled }: Props) => {
     const fallbackCalendar = defaultCalendar || calendars[0];
     const [selectedCalendarID, setSelectedCalendarID] = useState(fallbackCalendar?.ID);
     const [accessLevel, setAccessLevel] = useState<ACCESS_LEVEL>(ACCESS_LEVEL.LIMITED);
-    const maxLinksPerCalendarReached = linksPerCalendar?.[selectedCalendarID] === MAX_LINKS_PER_CALENDAR;
+    const maxLinksPerCalendarReached = linksMap[selectedCalendarID]?.length === MAX_LINKS_PER_CALENDAR;
     const shouldDisableCreateButton = disabled || maxLinksPerCalendarReached;
 
     useEffect(() => {

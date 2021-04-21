@@ -1,22 +1,23 @@
-import React, { useMemo } from 'react';
+import isTruthy from 'proton-shared/lib/helpers/isTruthy';
+import React, { MouseEvent, useMemo } from 'react';
 import { c } from 'ttag';
 import { Nullable, SimpleMap } from 'proton-shared/lib/interfaces/utils';
-import { ACCESS_LEVEL, CalendarLink, CopyLinkParams } from 'proton-shared/lib/interfaces/calendar';
+import { ACCESS_LEVEL, CalendarLink } from 'proton-shared/lib/interfaces/calendar';
 
 import { Table, TableHeader, TableBody, TableRow, Info, DropdownActions, Icon } from '../../../components';
 
 interface Props {
-    links?: CalendarLink[];
+    linksMap: SimpleMap<CalendarLink[]>;
     onEdit: ({ calendarID, urlID, purpose }: { calendarID: string; urlID: string; purpose: Nullable<string> }) => void;
-    onCopyLink: (params: CopyLinkParams) => void;
+    onCopyLink: (link: string, e: MouseEvent<HTMLButtonElement>) => void;
     onDelete: ({ calendarID, urlID }: { calendarID: string; urlID: string }) => void;
     isLoadingMap: SimpleMap<boolean>;
 }
 
 const sortLinks = (links: CalendarLink[]) => [...links].sort((a, b) => a.CreateTime - b.CreateTime);
 
-const LinkTable = ({ links = [], onCopyLink, onDelete, onEdit, isLoadingMap }: Props) => {
-    const sortedLinks = useMemo(() => sortLinks(links), [links]);
+const LinkTable = ({ linksMap, onCopyLink, onDelete, onEdit, isLoadingMap }: Props) => {
+    const sortedLinks = useMemo(() => sortLinks(Object.values(linksMap).filter(isTruthy).flat()), [linksMap]);
 
     if (!sortedLinks.length) {
         return null;
@@ -40,8 +41,7 @@ const LinkTable = ({ links = [], onCopyLink, onDelete, onEdit, isLoadingMap }: P
                             CalendarID,
                             CalendarUrlID,
                             AccessLevel: accessLevel,
-                            EncryptedPassphrase,
-                            EncryptedCacheKey,
+                            link,
                             color,
                             calendarName,
                             purpose,
@@ -49,14 +49,7 @@ const LinkTable = ({ links = [], onCopyLink, onDelete, onEdit, isLoadingMap }: P
                             const list = [
                                 {
                                     text: c('Action').t`Copy link`,
-                                    onClick: () =>
-                                        onCopyLink({
-                                            calendarID: CalendarID,
-                                            urlID: CalendarUrlID,
-                                            accessLevel,
-                                            encryptedPassphrase: EncryptedPassphrase,
-                                            encryptedCacheKey: EncryptedCacheKey,
-                                        }),
+                                    onClick: (e: MouseEvent<HTMLButtonElement>) => onCopyLink(link, e),
                                 },
                                 {
                                     text: c('Action').t`Edit label`,
