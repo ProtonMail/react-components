@@ -102,14 +102,15 @@ export const ExportModal = ({ calendar, ...rest }: Props) => {
                 setProdId(getProdIdFromNameAndVersion(getClientID(APPS.PROTONCALENDAR), version));
             })();
         } catch {
-            setModel((currentModel) => ({
-                ...currentModel,
-                step: EXPORT_STEPS.FINISHED,
-                totalProcessed: [],
-                erroredEvents: [],
-                totalToProcess: 0,
-                error: EXPORT_ERRORS.NETWORK_ERROR,
-            }));
+            setProdId('beep');
+            // setModel((currentModel) => ({
+            //     ...currentModel,
+            //     step: EXPORT_STEPS.FINISHED,
+            //     totalProcessed: [],
+            //     erroredEvents: [],
+            //     totalToProcess: 0,
+            //     error: EXPORT_ERRORS.NETWORK_ERROR,
+            // }));
         }
     }, []);
 
