@@ -1,15 +1,6 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { c } from 'ttag';
-import {
-    Calendar,
-    ACCESS_LEVEL,
-    CalendarMap,
-    CalendarURL,
-    CalendarLink,
-    CalendarUrlResponse,
-    CalendarUrlsResponse,
-    CopyLinkParams,
-} from 'proton-shared/lib/interfaces/calendar';
+import { Calendar, ACCESS_LEVEL, CalendarUrlResponse, CopyLinkParams } from 'proton-shared/lib/interfaces/calendar';
 
 import {
     generateEncryptedPassphrase,
@@ -17,25 +8,18 @@ import {
     generateCacheKey,
     getCacheKeyHash,
     generateEncryptedCacheKey,
-    decryptPurpose,
     buildLink,
     generateEncryptedPurpose,
     getPassphraseKey,
     decryptCacheKey,
-} from 'proton-shared/lib/keys/calendarSharing';
-import {
-    createPublicLink,
-    CreatePublicLinks,
-    deletePublicLink,
-    editPublicLink,
-    getPublicLinks,
-} from 'proton-shared/lib/api/calendars';
+} from 'proton-shared/lib/calendar/shareUrl/helpers';
+import { createPublicLink, CreatePublicLinks, deletePublicLink, editPublicLink } from 'proton-shared/lib/api/calendars';
 import { generateSessionKey } from 'pmcrypto';
 import { splitKeys } from 'proton-shared/lib/keys';
 import { AES256 } from 'proton-shared/lib/constants';
-import { replace } from 'proton-shared/lib/helpers/array';
 import { Nullable, SimpleMap } from 'proton-shared/lib/interfaces/utils';
-import { useApi, useGetCalendarInfo, useModals, useNotifications } from '../../../hooks';
+import { useApi, useGetCalendarInfo, useLoading, useModals, useNotifications } from '../../../hooks';
+import { useCalendarModelEventManager } from '../../eventManager';
 
 import LinkTable from './LinkTable';
 import ShareTable from './ShareTable';
@@ -43,6 +27,7 @@ import ShareLinkSuccessModal from './ShareLinkSuccessModal';
 import DeleteLinkConfirmationModal from './DeleteLinkConfirmationModal';
 import EditLinkModal from './EditLinkModal';
 import { Alert, Loader } from '../../../components';
+import useCalendarShareUrls from './useCalendarShareUrls';
 
 interface Props {
     defaultCalendar?: Calendar;
@@ -50,26 +35,14 @@ interface Props {
 }
 
 const ShareSection = ({ calendars, defaultCalendar }: Props) => {
-    const [isLoadingLinkList, setIsLoadingLinkList] = useState<boolean>(false);
-    const [isLoadingCreate, setIsLoadingCreate] = useState<boolean>(false);
+    const { links, isLoadingLinks } = useCalendarShareUrls(calendars);
+    const [isLoadingCreate, withLoadingCreate] = useLoading(false);
     const [isLoadingMap, setIsLoadingMap] = useState<SimpleMap<boolean>>({});
-    const [links, setLinks] = useState<CalendarLink[]>();
     const api = useApi();
     const { createNotification } = useNotifications();
     const getCalendarInfo = useGetCalendarInfo();
     const { createModal } = useModals();
-    // const { call } = useEventManager();
-    const calendarsMap = useMemo(
-        () =>
-            calendars.reduce<CalendarMap>((acc, curr) => {
-                acc[curr.ID] = {
-                    ...curr,
-                };
-
-                return acc;
-            }, {}),
-        [calendars]
-    );
+    const { call } = useCalendarModelEventManager();
     const defaultSelectedCalendar = useMemo(() => defaultCalendar || calendars[0], [defaultCalendar, calendars]);
     const linksPerCalendar = useMemo(
         () =>
@@ -80,62 +53,6 @@ const ShareSection = ({ calendars, defaultCalendar }: Props) => {
             }, {}) || {},
         [links]
     );
-
-    const transformAndSetLinksFromAPI = async (linksFromAPI: CalendarURL[]) => {
-        setLinks(
-            (
-                await Promise.all(
-                    linksFromAPI.map(async (link) => {
-                        let purpose = null;
-
-                        if (link.EncryptedPurpose) {
-                            try {
-                                const { decryptedCalendarKeys } = await getCalendarInfo(link.CalendarID);
-                                const { privateKeys } = splitKeys(decryptedCalendarKeys);
-
-                                purpose = await decryptPurpose({
-                                    encryptedPurpose: link.EncryptedPurpose,
-                                    privateKeys,
-                                });
-                            } catch (error) {
-                                createNotification({ type: 'error', text: error.message });
-                                purpose = link.EncryptedPurpose;
-                            }
-                        }
-
-                        return {
-                            ...link,
-                            calendarName: calendarsMap[link.CalendarID].Name,
-                            color: calendarsMap[link.CalendarID].Color,
-                            purpose,
-                        };
-                    })
-                )
-            ).flat()
-        );
-    };
-
-    const getAllLinks = async () => {
-        try {
-            setIsLoadingLinkList(true);
-            const responses = await Promise.all(
-                calendars.map(({ ID }) => api<CalendarUrlsResponse>(getPublicLinks(ID)))
-            );
-            const calendarURLS = responses?.flatMap(({ CalendarUrls }) => CalendarUrls);
-
-            if (calendarURLS) {
-                await transformAndSetLinksFromAPI(calendarURLS);
-            }
-        } catch (error) {
-            createNotification({ type: 'error', text: error.message });
-        } finally {
-            setIsLoadingLinkList(false);
-        }
-    };
-
-    useEffect(() => {
-        void getAllLinks();
-    }, [calendars]);
 
     const notifyLinkCopied = () => {
         createNotification({ type: 'info', text: c('Info').t`Link copied to clipboard` });
@@ -170,39 +87,27 @@ const ShareSection = ({ calendars, defaultCalendar }: Props) => {
             PassphraseID: accessLevel === ACCESS_LEVEL.FULL ? passphraseID : null,
         };
 
-        setIsLoadingCreate(true);
+        const response = await withLoadingCreate(api<CalendarUrlResponse>(createPublicLink(calendarID, params)));
 
-        const {
-            CalendarUrl: { CalendarUrlID },
-        } = await api<CalendarUrlResponse>(createPublicLink(calendarID, params)).finally(() =>
-            setIsLoadingCreate(false)
-        );
+        if (!response) {
+            // should never fall here as an error should have been thrown before
+            throw new Error('Public link failed to be created');
+        }
 
         const link = buildLink({
-            urlID: CalendarUrlID,
+            urlID: response.CalendarUrl.CalendarUrlID,
             accessLevel,
             passphraseKey,
             cacheKey,
         });
 
-        const newLink = {
-            ...params,
-            CalendarID: calendarID,
-            CalendarUrlID,
-            calendarName: calendarsMap[calendarID].Name,
-            color: calendarsMap[calendarID].Color,
-            purpose: null,
-            CreateTime: Math.floor(new Date().getTime() / 1000),
-        };
-
-        setLinks([...(links || []), newLink]);
+        await call([calendarID]);
         createNotification({ type: 'success', text: c('Info').t`Link created` });
 
         return createModal(
             <ShareLinkSuccessModal
                 onSubmit={async () => {
                     await navigator.clipboard.writeText(link);
-
                     notifyLinkCopied();
                 }}
                 accessLevel={accessLevel}
@@ -274,13 +179,7 @@ const ShareSection = ({ calendars, defaultCalendar }: Props) => {
                                 : null;
 
                             await api<void>(editPublicLink({ calendarID, urlID, encryptedPurpose }));
-
-                            const link = links?.find(({ CalendarUrlID }) => urlID === CalendarUrlID);
-
-                            if (links && link) {
-                                setLinks(replace(links, link, { ...link, purpose }));
-                                createNotification({ type: 'success', text: c('Info').t`Label updated` });
-                            }
+                            await call([calendarID]);
                         });
                     }}
                     decryptedPurpose={purpose}
@@ -296,8 +195,7 @@ const ShareSection = ({ calendars, defaultCalendar }: Props) => {
                     onConfirm={() => {
                         return tryLoadingAction(urlID, async () => {
                             await api<void>(deletePublicLink({ calendarID, urlID }));
-
-                            setLinks(links?.filter(({ CalendarUrlID }) => CalendarUrlID !== urlID));
+                            await call([calendarID]);
                             createNotification({ type: 'success', text: c('Info').t`Link deleted` });
                         });
                     }}
@@ -320,7 +218,7 @@ const ShareSection = ({ calendars, defaultCalendar }: Props) => {
                     <ShareTable
                         linksPerCalendar={linksPerCalendar}
                         isLoading={isLoadingCreate}
-                        disabled={isLoadingLinkList}
+                        disabled={!!isLoadingLinks}
                         calendars={calendars}
                         onCreateLink={handleCreateLink}
                         defaultSelectedCalendar={defaultSelectedCalendar}
@@ -332,7 +230,7 @@ const ShareSection = ({ calendars, defaultCalendar }: Props) => {
                     {infoAlert}
                 </>
             )}
-            {isLoadingLinkList ? (
+            {isLoadingLinks ? (
                 <div className="text-center">
                     <Loader />
                 </div>
