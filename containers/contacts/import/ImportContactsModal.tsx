@@ -30,10 +30,12 @@ const { CSV, VCF } = EXTENSION;
 const getInitialState = (): ImportContactsModel => ({
     step: IMPORT_STEPS.ATTACHING,
     parsedVcardContacts: [],
+    importedContacts: [],
     totalEncrypted: 0,
     totalImported: 0,
     errors: [],
     loading: false,
+    categories: [],
 });
 
 interface Props {
@@ -258,7 +260,7 @@ const ImportModal = ({ ...rest }: Props) => {
             const submit = <PrimaryButton type="submit">{c('Action').t`Create`}</PrimaryButton>;
 
             return {
-                content: <ImportGroupsModalContent />,
+                content: <ImportGroupsModalContent model={model} setModel={setModel} />,
                 submit,
                 onSubmit: handleSubmit,
             };
