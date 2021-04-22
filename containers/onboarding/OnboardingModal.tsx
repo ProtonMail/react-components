@@ -5,7 +5,7 @@ import { updateWelcomeFlags, updateThemeType } from 'proton-shared/lib/api/setti
 import { noop } from 'proton-shared/lib/helpers/function';
 import { range } from 'proton-shared/lib/helpers/array';
 import { PROTON_THEMES, ThemeTypes } from 'proton-shared/lib/themes/themes';
-import { getAccountSettingsApp, getAppName } from 'proton-shared/lib/apps/helper';
+import { getAccountSettingsApp } from 'proton-shared/lib/apps/helper';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 import { hasVisionary } from 'proton-shared/lib/helpers/subscription';
 
@@ -20,7 +20,6 @@ import {
     useUser,
     useUserSettings,
     useWelcomeFlags,
-    useConfig,
 } from '../../hooks';
 import { OnboardingStepProps, OnboardingStepRenderCallback } from './interface';
 import OnboardingSetDisplayName from './OnboardingSetDisplayName';
@@ -74,7 +73,6 @@ const OnboardingModal = ({
     const api = useApi();
     const { call } = useEventManager();
     const [welcomeFlags] = useWelcomeFlags();
-    const { APP_NAME } = useConfig();
     const canManageOrganization =
         !loadingOrganization &&
         !loadingSubscription &&
@@ -84,7 +82,6 @@ const OnboardingModal = ({
         organization.UsedMembers === 1 &&
         !hasOrganizationKey &&
         !hasVisionary(subscription);
-    const appName = getAppName(APP_NAME);
     const themes = availableThemes.map(({ identifier, getI18NLabel, src }) => {
         return { identifier, label: getI18NLabel(), src };
     });
@@ -101,6 +98,7 @@ const OnboardingModal = ({
         // eslint-disable-next-line @typescript-eslint/no-use-before-define
         if (isLastStep) {
             rest?.onClose?.();
+            return;
         }
         setStep((step) => step + 1);
     };
@@ -166,7 +164,14 @@ const OnboardingModal = ({
     );
 
     const discoverAppsStep = (
-        <OnboardingStep submit={c('Action').t`Start using ${appName}`} close={null} onSubmit={handleNext}>
+        <OnboardingStep
+            submit={children ? c('Action').t`Next` : c('Action').t`Done`}
+            close={null}
+            onSubmit={() => {
+                void handleUpdateWelcomeFlags();
+                handleNext();
+            }}
+        >
             <OnboardingDiscoverApps />
         </OnboardingStep>
     );
@@ -179,9 +184,9 @@ const OnboardingModal = ({
               hasDisplayNameStep && setDisplayNameStep,
               canManageOrganization && setupOrganizationStep,
               themesStep,
+              discoverAppsStep,
           ].filter(isTruthy)
         : [];
-    const finalGenericSteps = displayGenericSteps ? [discoverAppsStep] : [];
 
     const productSteps = children
         ? (Array.isArray(children) ? children : [children])
@@ -202,7 +207,7 @@ const OnboardingModal = ({
               .filter((x) => x !== null)
         : [];
 
-    const steps = [...genericSteps, ...productSteps, ...finalGenericSteps];
+    const steps = [...genericSteps, ...productSteps];
     const isLastStep = steps.length - 1 === step;
     const childStep = steps[step];
     const hasDots = steps.length > 1 && step < steps.length;
@@ -216,17 +221,7 @@ const OnboardingModal = ({
         throw new Error('Missing step');
     }
 
-    const childStepProps = isLastStep
-        ? {
-              ...childStep.props,
-              onSubmit: () => {
-                  if (isLastStep) {
-                      void handleUpdateWelcomeFlags();
-                  }
-                  rest?.onClose?.();
-              },
-          }
-        : childStep.props;
+    const childStepProps = childStep.props;
 
     return (
         <FormModal
