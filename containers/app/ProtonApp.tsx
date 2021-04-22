@@ -10,6 +10,8 @@ import createSecureSessionStorage from 'proton-shared/lib/authentication/createS
 import createSecureSessionStorage2 from 'proton-shared/lib/authentication/createSecureSessionStorage2';
 import { isSSOMode, MAILBOX_PASSWORD_KEY, UID_KEY, SSO_PATHS, APPS } from 'proton-shared/lib/constants';
 import { getPersistedSession } from 'proton-shared/lib/authentication/persistedSessionStorage';
+import { noop } from 'proton-shared/lib/helpers/function';
+import createListeners from 'proton-shared/lib/helpers/listeners';
 import {
     getBasename,
     getLocalIDFromPathname,
@@ -21,8 +23,6 @@ import { replaceUrl } from 'proton-shared/lib/helpers/browser';
 import { getAppHref } from 'proton-shared/lib/apps/helper';
 import { requestFork } from 'proton-shared/lib/authentication/sessionForking';
 import { FORK_TYPE } from 'proton-shared/lib/authentication/ForkInterface';
-import { getItem } from 'proton-shared/lib/helpers/storage';
-import { deleteDB } from 'idb';
 
 import { Icons } from '../../components';
 import Signout from './Signout';
@@ -94,6 +94,7 @@ interface AuthState {
     localID?: number;
     history: History;
     isLoggingOut?: boolean;
+    consumerLogoutPromise?: Promise<void>;
 }
 
 interface Props {
@@ -141,11 +142,6 @@ const ProtonApp = ({ config, children, hasInitialAuth }: Props) => {
             authentication.setPassword(keyPassword);
             if (newLocalID !== undefined) {
                 authentication.setLocalID(newLocalID);
-            }
-
-            // Remove encrypted search DB in case there is a corrupt leftover
-            if (!getItem(`ES:${User.ID}:Key`)) {
-                void deleteDB(`ES:${User.ID}:DB`).catch(() => undefined);
             }
 
             const oldCache = cacheRef.current;
@@ -215,6 +211,8 @@ const ProtonApp = ({ config, children, hasInitialAuth }: Props) => {
         });
     }, []);
 
+    const logoutListener = useInstance(() => createListeners());
+
     const handleLogout = useCallback((type?: 'soft') => {
         setAuthData((authData) => {
             // Nothing to logout
@@ -227,12 +225,13 @@ const ProtonApp = ({ config, children, hasInitialAuth }: Props) => {
             }
             return {
                 ...authData,
+                consumerLogoutPromise: Promise.all(logoutListener.notify()).then(noop).catch(noop),
                 isLoggingOut: true,
             };
         });
     }, []);
 
-    const { UID, localID, history, isLoggingOut } = authData;
+    const { UID, localID, history, isLoggingOut, consumerLogoutPromise } = authData;
 
     const authenticationValue = useMemo(() => {
         if (!UID) {
@@ -245,6 +244,7 @@ const ProtonApp = ({ config, children, hasInitialAuth }: Props) => {
             localID,
             ...authentication,
             logout: handleLogout,
+            onLogout: logoutListener.subscribe,
         };
     }, [UID]);
 
@@ -282,7 +282,12 @@ const ProtonApp = ({ config, children, hasInitialAuth }: Props) => {
                                                             <GlobalLoader />
                                                             {(() => {
                                                                 if (isLoggingOut) {
-                                                                    return <Signout onDone={handleFinalizeLogout} />;
+                                                                    return (
+                                                                        <Signout
+                                                                            onDone={handleFinalizeLogout}
+                                                                            onLogout={() => consumerLogoutPromise}
+                                                                        />
+                                                                    );
                                                                 }
                                                                 if (pathRef.current) {
                                                                     return null;
