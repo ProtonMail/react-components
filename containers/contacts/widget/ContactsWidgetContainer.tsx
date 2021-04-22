@@ -94,7 +94,7 @@ const ContactsWidgetContainer = ({ onClose, onImport, onCompose }: Props) => {
             const noEmailsContactNamesList = noEmailsContactNames.join(', ');
 
             const text = c('Error').ngettext(
-                msgid`One of the contacts has no email address: ${noEmailsContactNamesList}`, // and has been ignored ?
+                msgid`One of the contacts has no email address: ${noEmailsContactNamesList}`,
                 `Some contacts have no email address: ${noEmailsContactNamesList} `,
                 noEmailsContactNamesCount
             );
