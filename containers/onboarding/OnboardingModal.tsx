@@ -43,6 +43,7 @@ interface Props {
     submit?: string;
     onSubmit?: () => void;
     onClose?: () => void;
+    onDone?: () => void;
     children?: ((props: OnboardingStepRenderCallback) => JSX.Element)[];
     setWelcomeFlags?: boolean;
     showGenericSteps?: boolean;
@@ -56,6 +57,7 @@ const OnboardingModal = ({
     allowClose = false,
     setWelcomeFlags = true,
     hideDisplayName = false,
+    onDone,
     ...rest
 }: Props) => {
     const [user] = useUser();
@@ -184,9 +186,15 @@ const OnboardingModal = ({
     const productSteps = children
         ? (Array.isArray(children) ? children : [children])
               .map(
-                  (renderCallback) =>
+                  (renderCallback, index) =>
                       renderCallback?.({
-                          onNext: handleNext,
+                          onNext() {
+                              const isLastProductStep = productSteps.length - 1 === index;
+                              if (isLastProductStep) {
+                                  onDone?.();
+                              }
+                              handleNext();
+                          },
                           onBack: handleBack,
                           displayGenericSteps,
                       }) ?? null
