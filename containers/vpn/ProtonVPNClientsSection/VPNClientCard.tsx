@@ -41,7 +41,7 @@ const VPNClientCard = ({ title, link, items, icon }: Props) => {
                     </ButtonGroupItem>
                     <SimpleDropdown
                         icon
-                        group
+                        as={ButtonGroupItem}
                         originalPlacement="bottom-right"
                         title={c('Title').t`Open actions dropdown`}
                     >
