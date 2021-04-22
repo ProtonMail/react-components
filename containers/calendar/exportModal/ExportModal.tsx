@@ -48,6 +48,7 @@ export const ExportModal = ({ calendar, ...rest }: Props) => {
     const { content, ...modalProps } = (() => {
         if (model.step === EXPORT_STEPS.EXPORTING) {
             const handleFinish = async (exportedEvents: VcalVeventComponent[], erroredEvents: CalendarEvent[]) => {
+                // we don't catch errors here as they're caught into a NETWORK error on ExportingModalContent
                 const uniqueTimezonesPromise = getUniqueVtimezones({
                     vevents: exportedEvents,
                     tzids: [defaultTzid],
@@ -56,7 +57,10 @@ export const ExportModal = ({ calendar, ...rest }: Props) => {
                 const appVersionPromise = fetch(getAppHref('/assets/version.json', APPS.PROTONCALENDAR))
                     .then((result) => result.json())
                     .then((json) => json.version)
-                    .catch(() => '4.1.11');
+                    .catch(() => {
+                        // TODO: remove when atlas CSP issues are resolved
+                        return '4.1.11';
+                    });
 
                 const [uniqueTimezones, appVersion] = await Promise.all([uniqueTimezonesPromise, appVersionPromise]);
                 const clientId = getClientID(APPS.PROTONCALENDAR);
