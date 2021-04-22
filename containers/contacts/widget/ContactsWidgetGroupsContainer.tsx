@@ -95,6 +95,26 @@ const ContactsWidgetGroupsContainer = ({ onClose, onCompose }: Props) => {
             return;
         }
 
+        const noContactGroupIDs = selectedIDs.filter((groupID) => !groupsEmailsMap[groupID]?.length);
+
+        if (noContactGroupIDs.length) {
+            const noContactsGroupNames = noContactGroupIDs.map(
+                // Looping in all groups is no really performant but should happen rarely
+                (groupID) => groups.find((group) => group.ID === groupID)?.Name
+            );
+
+            const noContactGroupCount = noContactsGroupNames.length;
+            const noContactGroupList = noContactsGroupNames.join(', ');
+
+            const text = c('Error').ngettext(
+                msgid`One of the groups has no contacts: ${noContactGroupList}`,
+                `Some groups have no contacts: ${noContactGroupList} `,
+                noContactGroupCount
+            );
+
+            createNotification({ type: 'warning', text });
+        }
+
         onCompose?.(recipients, []);
         onClose();
     };
