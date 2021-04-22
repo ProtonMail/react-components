@@ -8,7 +8,7 @@ import {
     ExportCalendarModel,
     VcalVeventComponent,
 } from 'proton-shared/lib/interfaces/calendar';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { c } from 'ttag';
 
 import { getProdIdFromNameAndVersion } from 'proton-shared/lib/calendar/vcalHelper';
@@ -29,8 +29,6 @@ interface Props {
 }
 
 export const ExportModal = ({ calendar, ...rest }: Props) => {
-    const [prodId, setProdId] = useState<string>();
-
     const getVTimezonesMap = useGetVtimezonesMap();
     const [calendarUserSettings = DEFAULT_CALENDAR_USER_SETTINGS] = useCalendarUserSettings();
     const { PrimaryTimezone: defaultTzid } = calendarUserSettings;
@@ -50,19 +48,22 @@ export const ExportModal = ({ calendar, ...rest }: Props) => {
     const { content, ...modalProps } = (() => {
         if (model.step === EXPORT_STEPS.EXPORTING) {
             const handleFinish = async (exportedEvents: VcalVeventComponent[], erroredEvents: CalendarEvent[]) => {
-                const uniqueTimezones = await getUniqueVtimezones({
+                const uniqueTimezonesPromise = getUniqueVtimezones({
                     vevents: exportedEvents,
                     tzids: [defaultTzid],
                     getVTimezonesMap,
                 });
+                const appVersionPromise = fetch(getAppHref('/assets/version.json', APPS.PROTONCALENDAR))
+                    .then((result) => result.json())
+                    .then((json) => json.version)
+                    .catch(() => '4.1.11');
 
-                if (!prodId) {
-                    throw new Error('Missing prodId');
-                }
+                const [uniqueTimezones, appVersion] = await Promise.all([uniqueTimezonesPromise, appVersionPromise]);
+                const clientId = getClientID(APPS.PROTONCALENDAR);
 
                 const ics = createExportIcs({
                     calendar,
-                    prodId,
+                    prodId: getProdIdFromNameAndVersion(clientId, appVersion),
                     events: exportedEvents,
                     defaultTzid,
                     vtimezones: uniqueTimezones,
@@ -93,28 +94,6 @@ export const ExportModal = ({ calendar, ...rest }: Props) => {
             },
         };
     })();
-
-    useEffect(() => {
-        const clientId = getClientID(APPS.PROTONCALENDAR);
-
-        try {
-            void (async () => {
-                const { version } = await (await fetch(getAppHref('/assets/version.json', APPS.PROTONCALENDAR))).json();
-
-                setProdId(getProdIdFromNameAndVersion(clientId, version));
-            })();
-        } catch {
-            setProdId(getProdIdFromNameAndVersion(clientId, `4.1.11`));
-            // setModel((currentModel) => ({
-            //     ...currentModel,
-            //     step: EXPORT_STEPS.FINISHED,
-            //     totalProcessed: [],
-            //     erroredEvents: [],
-            //     totalToProcess: 0,
-            //     error: EXPORT_ERRORS.NETWORK_ERROR,
-            // }));
-        }
-    }, []);
 
     return (
         <FormModal title={c('Title').t`Exporting calendar`} {...modalProps} {...rest}>
