@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { classnames, opaqueClassName } from '../../../helpers';
+import { classnames } from '../../../helpers';
 
 interface Props {
     emails: string[];
@@ -16,7 +16,7 @@ const EmailsTableCell = ({ contactID, emails = [], highlightedID, greyedOut }: P
                 'flex',
                 'flex-align-items-center',
                 'max-w100',
-                opaqueClassName(greyedOut),
+                greyedOut && 'color-weak',
                 contactID === highlightedID && 'text-bold',
             ])}
         >
