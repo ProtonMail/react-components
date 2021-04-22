@@ -15,5 +15,3 @@ export const concatStringProp = (strings: (string | boolean | null | undefined)[
 export const classnames = (classNames: (string | boolean | null | undefined)[] = []) => {
     return concatStringProp(classNames);
 };
-
-export const opaqueClassName = (greyedOut: boolean) => (greyedOut ? 'opacity-50' : '');

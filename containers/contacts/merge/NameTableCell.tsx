@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Checkbox } from '../../../components';
-import { classnames, opaqueClassName } from '../../../helpers';
+import { classnames } from '../../../helpers';
 
 interface Props {
     contactID: string;
@@ -30,7 +30,7 @@ const NameTableCell = ({ name, contactID, highlightedID, checked, deleted, greye
                     'max-w100',
                     'inline-block',
                     'text-ellipsis',
-                    opaqueClassName(greyedOut),
+                    greyedOut && 'color-weak',
                     contactID === highlightedID && 'text-bold',
                 ])}
             >
