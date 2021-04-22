@@ -154,7 +154,7 @@ const ContactsWidgetGroupsContainer = ({ onClose, onCompose }: Props) => {
                     allChecked={allChecked}
                     selectedCount={selectedIDs.length}
                     onCheckAll={handleCheckAll}
-                    onCompose={handleCompose}
+                    onCompose={onCompose ? handleCompose : undefined}
                     onCreate={handleCreate}
                     onDelete={handleDelete}
                 />

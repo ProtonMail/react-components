@@ -210,7 +210,7 @@ const ContactsWidgetContainer = ({ onClose, onImport, onCompose }: Props) => {
                     allChecked={hasCheckedAllFiltered}
                     selectedCount={selectedIDs.length}
                     onCheckAll={handleCheckAll}
-                    onCompose={handleCompose}
+                    onCompose={onCompose ? handleCompose : undefined}
                     onForward={handleForward}
                     onCreate={handleCreate}
                     onDelete={handleDelete}
