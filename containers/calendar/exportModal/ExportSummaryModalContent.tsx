@@ -39,7 +39,7 @@ const ExportSummaryModalContent = ({ model }: Props) => {
     const displayMessage = c('Export calendar').ngettext(
         msgid`${totalProcessed.length}/${totalToProcess} event exported`,
         `${totalProcessed.length}/${totalToProcess} events exported`,
-        totalToProcess
+        totalProcessed.length
     );
 
     return (

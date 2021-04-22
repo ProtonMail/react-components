@@ -43,7 +43,7 @@ export const ExportModal = ({ calendar, ...rest }: Props) => {
         calendar,
     });
     const updateModel = (changes: Partial<ExportCalendarModel>) =>
-        setModel((currentModel) => ({ ...currentModel, ...changes }));
+        setModel((currentModel: ExportCalendarModel) => ({ ...currentModel, ...changes }));
 
     const [calendarBlob, setCalendarBlob] = useState<Blob>();
 
@@ -95,14 +95,16 @@ export const ExportModal = ({ calendar, ...rest }: Props) => {
     })();
 
     useEffect(() => {
+        const clientId = getClientID(APPS.PROTONCALENDAR);
+
         try {
             void (async () => {
                 const { version } = await (await fetch(getAppHref('/assets/version.json', APPS.PROTONCALENDAR))).json();
 
-                setProdId(getProdIdFromNameAndVersion(getClientID(APPS.PROTONCALENDAR), version));
+                setProdId(getProdIdFromNameAndVersion(clientId, version));
             })();
         } catch {
-            setProdId('beep');
+            setProdId(getProdIdFromNameAndVersion(clientId, `4.1.11`));
             // setModel((currentModel) => ({
             //     ...currentModel,
             //     step: EXPORT_STEPS.FINISHED,
