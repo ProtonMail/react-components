@@ -1,15 +1,13 @@
 import React, { ChangeEvent } from 'react';
 import { c, msgid } from 'ttag';
-import { APPS } from 'proton-shared/lib/constants';
 
 import { Checkbox, Icon, Button, Tooltip } from '../../../components';
-import { useConfig } from '../../../hooks';
 
 interface Props {
     allChecked: boolean;
     selectedCount: number;
     onCheckAll: (checked: boolean) => void;
-    onCompose: () => void;
+    onCompose?: () => void;
     onForward: () => void;
     onDelete: () => void;
     onCreate: () => void;
@@ -26,8 +24,6 @@ const ContactsWidgetToolbar = ({
     onCreate,
     onMerge,
 }: Props) => {
-    const { APP_NAME } = useConfig();
-    const isMailApp = APP_NAME === APPS.PROTONMAIL;
     const handleCheck = ({ target }: ChangeEvent<HTMLInputElement>) => onCheckAll(target.checked);
     const noSelection = !selectedCount;
     const canMerge = selectedCount > 1;
@@ -54,7 +50,7 @@ const ContactsWidgetToolbar = ({
                     </label>
                 </span>
             </Tooltip>
-            {isMailApp ? (
+            {onCompose ? (
                 <>
                     <Tooltip title={c('Action').t`Compose`}>
                         <Button
