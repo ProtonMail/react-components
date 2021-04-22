@@ -11,7 +11,7 @@ import { useUser, useSubscription, useConfig } from '../../hooks';
 import Hamburger from './Hamburger';
 import MobileAppsLinks from './MobileAppsLinks';
 import { useFocusTrap } from '../focus';
-import ButtonLike from '../button/ButtonLike';
+import { classnames } from '../../helpers';
 
 interface Props {
     logo?: React.ReactNode;
@@ -53,7 +53,17 @@ const Sidebar = ({ expanded = false, onToggleExpand, hasAppLinks = true, logo, p
 
     const storageText = (
         <>
-            {humanSize(UsedSpace)}&nbsp;/&nbsp;{humanSize(MaxSpace)}
+            <span
+                className={classnames([
+                    'used-space text-bold',
+                    spacePercentage <= 50 && 'color-success',
+                    spacePercentage > 50 && spacePercentage <= 80 && 'color-warning',
+                    spacePercentage > 80 && 'color-danger',
+                ])}
+            >
+                {humanSize(UsedSpace)}
+            </span>
+            &nbsp;/&nbsp;<span className="max-space">{humanSize(MaxSpace)}</span>
         </>
     );
 
@@ -72,30 +82,31 @@ const Sidebar = ({ expanded = false, onToggleExpand, hasAppLinks = true, logo, p
             </div>
             {primary ? <div className="pl1 pr1 pb1 flex-item-noshrink">{primary}</div> : null}
             <div className="on-mobile-mt1" aria-hidden="true" />
-            <div className="flex-item-fluid flex-nowrap flex flex-column scroll-if-needed customScrollBar-container pb1">
-                {children}
-            </div>
+            <div className="flex-item-fluid flex-nowrap flex flex-column scroll-if-needed pb1">{children}</div>
             {APP_NAME !== APPS.PROTONVPN_SETTINGS ? (
-                <div className="flex flex-column flex-align-items-center">
-                    {canAddStorage ? (
-                        <Tooltip title={c('Storage').t`Upgrade storage`}>
-                            <ButtonLike
-                                as={SettingsLink}
-                                path="/dashboard"
-                                shape="link"
-                                className="color-inherit hover-same-color text-no-decoration text-xs text-center mb0-5"
-                                title={c('Storage').t`Add storage space`}
-                            >
-                                {storageText}
-                            </ButtonLike>
-                        </Tooltip>
-                    ) : (
-                        <span className="text-xs text-center mt0 mb0-5">{storageText}</span>
-                    )}
-                    <Meter variant="thin" className="mb0-5 w70" value={spacePercentage} />
+                <div className="app-infos">
+                    <Meter variant="thin" className="block" value={spacePercentage} />
+                    <div className="flex flex-nowrap flex-justify-space-between pt0-5 pr1-5 pb0-5 pl1-5">
+                        {canAddStorage ? (
+                            <Tooltip title={c('Storage').t`Upgrade storage`}>
+                                <SettingsLink
+                                    path="/dashboard"
+                                    className="app-infos-storage text-no-decoration text-xs m0"
+                                >
+                                    {storageText}
+                                </SettingsLink>
+                            </Tooltip>
+                        ) : (
+                            <span className="app-infos-storage text-xs m0">{storageText}</span>
+                        )}
+                        {version}
+                    </div>
                 </div>
-            ) : null}
-            {version}
+            ) : (
+                <div className="border-top">
+                    <div className="text-center pt0-5 pr1 pb0-5 pl1">{version}</div>
+                </div>
+            )}
             {hasAppLinks ? <MobileAppsLinks /> : null}
         </div>
     );
