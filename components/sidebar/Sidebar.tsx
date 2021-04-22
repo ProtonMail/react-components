@@ -5,7 +5,7 @@ import { APPS } from 'proton-shared/lib/constants';
 import humanSize from 'proton-shared/lib/helpers/humanSize';
 import { hasMailProfessional, hasVisionary } from 'proton-shared/lib/helpers/subscription';
 import { SettingsLink } from '../link';
-import { Meter } from '../progress';
+import { Meter, MeterValue } from '../progress';
 import { Tooltip } from '../tooltip';
 import { useUser, useSubscription, useConfig } from '../../hooks';
 import Hamburger from './Hamburger';
@@ -33,7 +33,7 @@ const Sidebar = ({ expanded = false, onToggleExpand, hasAppLinks = true, logo, p
     const [user] = useUser();
     const [subscription] = useSubscription();
     const { UsedSpace, MaxSpace, isMember, isSubUser } = user;
-    const spacePercentage = Math.round((UsedSpace * 100) / MaxSpace);
+    const spacePercentage = (UsedSpace * 100) / MaxSpace;
 
     const canAddStorage = useMemo(() => {
         if (!subscription) {
@@ -56,9 +56,9 @@ const Sidebar = ({ expanded = false, onToggleExpand, hasAppLinks = true, logo, p
             <span
                 className={classnames([
                     'used-space text-bold',
-                    spacePercentage <= 50 && 'color-success',
-                    spacePercentage > 50 && spacePercentage <= 80 && 'color-warning',
-                    spacePercentage > 80 && 'color-danger',
+                    spacePercentage <= MeterValue.Low && 'color-success',
+                    spacePercentage > MeterValue.Low && spacePercentage <= MeterValue.High && 'color-warning',
+                    spacePercentage > MeterValue.High && 'color-danger',
                 ])}
             >
                 {humanSize(UsedSpace)}
@@ -85,7 +85,9 @@ const Sidebar = ({ expanded = false, onToggleExpand, hasAppLinks = true, logo, p
             <div className="flex-item-fluid flex-nowrap flex flex-column scroll-if-needed pb1">{children}</div>
             {APP_NAME !== APPS.PROTONVPN_SETTINGS ? (
                 <div className="app-infos">
-                    <Meter variant="thin" className="block" value={spacePercentage} />
+                    <div className="bg-weak">
+                        <Meter variant="thin" className="block" value={Math.ceil(spacePercentage)} />
+                    </div>
                     <div className="flex flex-nowrap flex-justify-space-between pt0-5 pr1-5 pb0-5 pl1-5">
                         {canAddStorage ? (
                             <Tooltip title={c('Storage').t`Upgrade storage`}>
