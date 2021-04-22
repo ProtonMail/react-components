@@ -92,14 +92,22 @@ const ContactsWidgetGroupsContainer = ({ onClose, onCompose }: Props) => {
         onClose();
     };
 
+    const showUpgradeModal = () => createModal(<ContactUpgradeModal />);
+
     const handleDetails = (groupID: string) => {
-        createModal(<ContactGroupDetailsModal contactGroupID={groupID} />);
+        createModal(
+            <ContactGroupDetailsModal
+                hasPaidMail={user.hasPaidMail}
+                showUpgradeModal={showUpgradeModal}
+                contactGroupID={groupID}
+            />
+        );
         onClose();
     };
 
     const handleCreate = () => {
         if (!user.hasPaidMail) {
-            createModal(<ContactUpgradeModal />);
+            showUpgradeModal();
             onClose();
             return;
         }

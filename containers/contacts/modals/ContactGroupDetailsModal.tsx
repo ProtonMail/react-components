@@ -10,9 +10,17 @@ import './ContactGroupDetailsModal.scss';
 interface Props {
     contactGroupID: string;
     onClose?: () => void;
+    hasPaidMail: boolean;
+    showUpgradeModal: () => void;
 }
 
-const ContactGroupDetailsModal = ({ contactGroupID, onClose = noop, ...rest }: Props) => {
+const ContactGroupDetailsModal = ({
+    contactGroupID,
+    onClose = noop,
+    hasPaidMail,
+    showUpgradeModal,
+    ...rest
+}: Props) => {
     const { createModal } = useModals();
     const [contactGroups = [], loadingGroups] = useContactGroups();
     const [contactEmails = [], loadingEmails] = useContactEmails() as [ContactEmail[] | undefined, boolean, any];
@@ -24,6 +32,11 @@ const ContactGroupDetailsModal = ({ contactGroupID, onClose = noop, ...rest }: P
     const emailsCount = emails.length;
 
     const handleEdit = () => {
+        if (!hasPaidMail) {
+            showUpgradeModal();
+            onClose();
+            return;
+        }
         createModal(<ContactGroupModal contactGroupID={contactGroupID} />);
         onClose();
     };
