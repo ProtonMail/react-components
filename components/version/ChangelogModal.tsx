@@ -17,7 +17,7 @@ interface Props {
 
 const ChangelogModal = ({ changelog = '', ...rest }: Props) => {
     const [html] = useState(() => {
-        const modifiedChangelog = changelog.replace(/\[(\d+\.\d+\.\d+[^\]]*)]/g, (match, capture) => {
+        const modifiedChangelog = changelog.toString().replace(/\[(\d+\.\d+\.\d+[^\]]*)]/g, (match, capture) => {
             return `[${getAppVersion(capture)}]`;
         });
         return {
