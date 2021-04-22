@@ -84,7 +84,7 @@ const LinkTable = ({ linksMap, onCopyLink, onDelete, onEdit, isLoadingMap }: Pro
                                         </div>,
                                         <DropdownActions
                                             loading={isLoadingMap[CalendarUrlID]}
-                                            className="button--small"
+                                            size="small"
                                             key="actions"
                                             list={list}
                                         />,
