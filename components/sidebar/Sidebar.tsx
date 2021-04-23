@@ -5,7 +5,7 @@ import { APPS } from 'proton-shared/lib/constants';
 import humanSize from 'proton-shared/lib/helpers/humanSize';
 import { hasMailProfessional, hasVisionary } from 'proton-shared/lib/helpers/subscription';
 import { SettingsLink } from '../link';
-import { Meter, MeterValue } from '../progress';
+import { MeterValue } from '../progress';
 import { Tooltip } from '../tooltip';
 import { useUser, useSubscription, useConfig } from '../../hooks';
 import Hamburger from './Hamburger';
@@ -51,18 +51,14 @@ const Sidebar = ({ expanded = false, onToggleExpand, hasAppLinks = true, logo, p
         return true;
     }, [subscription, user]);
 
+    const valueColor = (prefix: string) =>
+        (spacePercentage <= MeterValue.Low && `${prefix}-success`) ||
+        (spacePercentage > MeterValue.Low && spacePercentage <= MeterValue.High && `${prefix}-warning`) ||
+        (spacePercentage > MeterValue.High && `${prefix}-danger`);
+
     const storageText = (
         <>
-            <span
-                className={classnames([
-                    'used-space text-bold',
-                    spacePercentage <= MeterValue.Low && 'color-success',
-                    spacePercentage > MeterValue.Low && spacePercentage <= MeterValue.High && 'color-warning',
-                    spacePercentage > MeterValue.High && 'color-danger',
-                ])}
-            >
-                {humanSize(UsedSpace)}
-            </span>
+            <span className={classnames(['used-space text-bold', valueColor('color')])}>{humanSize(UsedSpace)}</span>
             &nbsp;/&nbsp;<span className="max-space">{humanSize(MaxSpace)}</span>
         </>
     );
@@ -85,8 +81,12 @@ const Sidebar = ({ expanded = false, onToggleExpand, hasAppLinks = true, logo, p
             <div className="flex-item-fluid flex-nowrap flex flex-column scroll-if-needed pb1">{children}</div>
             {APP_NAME !== APPS.PROTONVPN_SETTINGS ? (
                 <div className="app-infos">
-                    <div className="bg-weak">
-                        <Meter variant="thin" className="block" value={Math.ceil(spacePercentage)} />
+                    <div className="bg-weak" aria-hidden="true">
+                        {/* Did not use the Meter component because of specific squared border style only for this one. */}
+                        <div
+                            className={classnames(['app-infos-fake-meter', valueColor('bg')])}
+                            style={{ width: `${Math.ceil(spacePercentage)}%` }}
+                        />
                     </div>
                     <div className="flex flex-nowrap flex-justify-space-between pt0-5 pr1-5 pb0-5 pl1-5">
                         {canAddStorage ? (
