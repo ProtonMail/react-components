@@ -20,6 +20,10 @@ const useVPNCountriesCount = (): [VPNCountries, boolean] => {
     useEffect(() => {
         const query = async () => {
             const { Counts = [] } = await api<{ Counts: { Count: number }[] }>(queryVPNCountriesCount());
+
+            // TODO: Remove when config changes for proper count from API response will be deployed
+            Counts[1] = { Count: 43 };
+
             const result = ([
                 [0, 'free_vpn'],
                 [1, PLANS.VPNBASIC],
