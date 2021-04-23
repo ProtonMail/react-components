@@ -21,6 +21,7 @@ import DeleteLinkConfirmationModal from './DeleteLinkConfirmationModal';
 import EditLinkModal from './EditLinkModal';
 import { Alert, Loader } from '../../../components';
 import useCalendarShareUrls from './useCalendarShareUrls';
+import { SettingsSection } from '../../account';
 
 interface Props {
     defaultCalendar?: Calendar;
@@ -152,7 +153,7 @@ const ShareSection = ({ calendars, defaultCalendar }: Props) => {
     );
 
     return (
-        <>
+        <SettingsSection>
             {calendars.length ? (
                 <>
                     {infoAlert}
@@ -184,7 +185,7 @@ const ShareSection = ({ calendars, defaultCalendar }: Props) => {
                     onDelete={handleDelete}
                 />
             )}
-        </>
+        </SettingsSection>
     );
 };
 
