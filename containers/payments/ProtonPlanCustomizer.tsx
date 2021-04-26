@@ -21,7 +21,7 @@ import { switchPlan, getSupportedAddons, setQuantity } from 'proton-shared/lib/h
 import { getAppName } from 'proton-shared/lib/apps/helper';
 import { hasBit } from 'proton-shared/lib/helpers/bitset';
 
-import { InlineLinkButton, Icon, Info, Price, ButtonGroup, ButtonGroupItem } from '../../components';
+import { InlineLinkButton, Icon, Info, Price, ButtonGroup, Button } from '../../components';
 
 const MailAddons: ADDON_NAMES[] = [ADDON_NAMES.MEMBER, ADDON_NAMES.SPACE, ADDON_NAMES.ADDRESS, ADDON_NAMES.DOMAIN];
 const VPNAddons: ADDON_NAMES[] = [ADDON_NAMES.VPN];
@@ -65,7 +65,7 @@ const ButtonNumberInput = ({
 }) => {
     return (
         <ButtonGroup>
-            <ButtonGroupItem
+            <Button
                 icon
                 title={c('Action').t`Decrease`}
                 disabled={disabled || value - step < min}
@@ -75,7 +75,7 @@ const ButtonNumberInput = ({
                 }}
             >
                 <Icon name="minus" alt={c('Action').t`Decrease`} />
-            </ButtonGroupItem>
+            </Button>
             {disabled ? (
                 <div className="flex">
                     <span className="w6e mauto text-center color-disabled">{value / divider}</span>
@@ -101,7 +101,7 @@ const ButtonNumberInput = ({
                     </select>
                 </label>
             )}
-            <ButtonGroupItem
+            <Button
                 icon
                 title={c('Action').t`Increase`}
                 disabled={disabled || value + step > max}
@@ -111,7 +111,7 @@ const ButtonNumberInput = ({
                 }}
             >
                 <Icon name="plus" alt={c('Action').t`Increase`} />
-            </ButtonGroupItem>
+            </Button>
         </ButtonGroup>
     );
 };

@@ -1,8 +1,8 @@
 import React, { ReactNode } from 'react';
 import { c } from 'ttag';
 import { Info } from '../link';
-import { ButtonGroup, ButtonGroupItem } from '../button';
 
+import ButtonGroup from '../button/ButtonGroup';
 import Button, { ButtonProps } from '../button/Button';
 import DropdownMenu from './DropdownMenu';
 import DropdownMenuButton, { Props as DropdownMenuButtonProps } from './DropdownMenuButton';
@@ -72,17 +72,11 @@ const DropdownActions = ({
 
     return (
         <ButtonGroup size={size}>
-            <ButtonGroupItem
-                disabled={disabled}
-                loading={loading}
-                className={className}
-                {...restProps}
-                {...restButtonProps}
-            >
+            <Button disabled={disabled} loading={loading} className={className} {...restProps} {...restButtonProps}>
                 {wrapTooltip(text, tooltip)}
-            </ButtonGroupItem>
+            </Button>
             <SimpleDropdown
-                as={ButtonGroupItem}
+                as={Button}
                 icon
                 autoFocus={autoFocus}
                 originalPlacement="bottom-right"

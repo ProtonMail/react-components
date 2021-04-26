@@ -3,7 +3,7 @@ import { c } from 'ttag';
 import PropTypes from 'prop-types';
 import { addDomain, getDomain } from 'proton-shared/lib/api/domains';
 import { VERIFY_STATE, DOMAIN_STATE, SPF_STATE, MX_STATE, DMARC_STATE, DKIM_STATE } from 'proton-shared/lib/constants';
-import { FormModal, ButtonGroup, RoundedIcon, Tooltip, Icon, ButtonGroupItem } from '../../components';
+import { FormModal, ButtonGroup, RoundedIcon, Tooltip, Icon, Button } from '../../components';
 import { useLoading, useApi, useStep, useNotifications, useDomains } from '../../hooks';
 import { classnames } from '../../helpers';
 
@@ -252,7 +252,7 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], ...rest }) =>
         >
             <ButtonGroup className="mb1">
                 {breadcrumbLabels.map((label, index) => (
-                    <ButtonGroupItem
+                    <Button
                         icon
                         key={index}
                         className={classnames([
@@ -268,7 +268,7 @@ const DomainModal = ({ onClose, domain = {}, domainAddresses = [], ...rest }) =>
                     >
                         {breadcrumbIcons[index]}
                         <span className="text-ellipsis max-w100">{label}</span>
-                    </ButtonGroupItem>
+                    </Button>
                 ))}
             </ButtonGroup>
             {section}

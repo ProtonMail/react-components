@@ -10,7 +10,7 @@ import {
 } from 'proton-shared/lib/api/mailSettings';
 import { MESSAGE_BUTTONS, VIEW_MODE, MIME_TYPES, RIGHT_TO_LEFT, STICKY_LABELS } from 'proton-shared/lib/constants';
 
-import { ButtonGroup, Label, Radio, Info, Icon, ButtonGroupItem } from '../../components';
+import { ButtonGroup, Label, Radio, Info, Icon, Button } from '../../components';
 import {
     useEventManager,
     useMailSettings,
@@ -177,12 +177,12 @@ const AppearanceOtherSection = () => {
                             value={READ_UNREAD}
                         >
                             <ButtonGroup className="ml1 no-pointer-events">
-                                <ButtonGroupItem icon title={c('Action').t`Read`}>
+                                <Button icon title={c('Action').t`Read`}>
                                     <Icon name="read" />
-                                </ButtonGroupItem>
-                                <ButtonGroupItem icon title={c('Action').t`Unread`}>
+                                </Button>
+                                <Button icon title={c('Action').t`Unread`}>
                                     <Icon name="unread" />
-                                </ButtonGroupItem>
+                                </Button>
                             </ButtonGroup>
                         </Radio>
                     </div>
@@ -196,12 +196,12 @@ const AppearanceOtherSection = () => {
                             value={UNREAD_READ}
                         >
                             <ButtonGroup className="ml1 no-pointer-events">
-                                <ButtonGroupItem icon title={c('Action').t`Unread`}>
+                                <Button icon title={c('Action').t`Unread`}>
                                     <Icon name="unread" />
-                                </ButtonGroupItem>
-                                <ButtonGroupItem icon title={c('Action').t`Read`}>
+                                </Button>
+                                <Button icon title={c('Action').t`Read`}>
                                     <Icon name="read" />
-                                </ButtonGroupItem>
+                                </Button>
                             </ButtonGroup>
                         </Radio>
                     </div>
