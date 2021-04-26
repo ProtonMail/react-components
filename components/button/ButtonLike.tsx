@@ -75,6 +75,7 @@ const ButtonLike: <E extends React.ElementType = typeof defaultElement>(
             actualShape === 'link' ? 'button-link' : 'button-henlo',
             pill && 'button-pill',
             icon && 'button-for-icon',
+            group && 'button-group-item',
             actualSize !== 'medium' && `button-${actualSize}`,
             `button-${actualShape}-${actualColor}`,
             restProps.as !== 'button' ? 'inline-block text-center' : '',
