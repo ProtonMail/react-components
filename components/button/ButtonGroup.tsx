@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { classnames } from '../../helpers';
 import { Vr } from '../vr';
 
@@ -20,12 +20,13 @@ const ButtonGroup = (
     const childrenWithSeparators = React.Children.toArray(children)
         .filter((x) => x !== null && React.isValidElement(x))
         .map((child, index, array) => {
+            const clonedChild = React.cloneElement(child as ReactElement, { group: true });
             if (index === array.length - 1) {
-                return child;
+                return clonedChild;
             }
             return (
                 <>
-                    {child}
+                    {clonedChild}
                     <Vr aria-hidden="true" />
                 </>
             );
