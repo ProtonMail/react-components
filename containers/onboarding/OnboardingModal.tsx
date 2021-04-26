@@ -5,11 +5,10 @@ import { updateWelcomeFlags, updateThemeType } from 'proton-shared/lib/api/setti
 import { noop } from 'proton-shared/lib/helpers/function';
 import { range } from 'proton-shared/lib/helpers/array';
 import { PROTON_THEMES, ThemeTypes } from 'proton-shared/lib/themes/themes';
-import { getAccountSettingsApp } from 'proton-shared/lib/apps/helper';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 import { hasVisionary } from 'proton-shared/lib/helpers/subscription';
 
-import { Icon, StepDots, StepDot, FormModal, Button, useAppLink } from '../../components';
+import { Icon, StepDots, StepDot, FormModal, Button, useSettingsLink } from '../../components';
 import {
     useApi,
     useEventManager,
@@ -60,7 +59,7 @@ const OnboardingModal = ({
     ...rest
 }: Props) => {
     const [user] = useUser();
-    const goToApp = useAppLink();
+    const goToSettings = useSettingsLink();
     const [userSettings] = useUserSettings();
     const [organization, loadingOrganization] = useOrganization();
     const [subscription, loadingSubscription] = useSubscription();
@@ -149,7 +148,7 @@ const OnboardingModal = ({
                 ).t`Skip`}</Button>
             }
             onSubmit={() => {
-                goToApp('/organization', getAccountSettingsApp());
+                goToSettings('/multi-user-support', undefined, true);
                 handleNext();
             }}
         >
