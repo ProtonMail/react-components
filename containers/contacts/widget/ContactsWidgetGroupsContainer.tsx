@@ -96,8 +96,18 @@ const ContactsWidgetGroupsContainer = ({ onClose, onCompose }: Props) => {
         onClose();
     };
 
+    const showUpgradeModal = () => createModal(<ContactUpgradeModal />);
+
+    const handleEditGroup = (groupID: string) => {
+        if (!user.hasPaidMail) {
+            showUpgradeModal();
+            return;
+        }
+        createModal(<ContactGroupModal contactGroupID={groupID} />);
+    };
+
     const handleDetails = (groupID: string) => {
-        createModal(<ContactGroupDetailsModal contactGroupID={groupID} />);
+        createModal(<ContactGroupDetailsModal contactGroupID={groupID} onEdit={() => handleEditGroup(groupID)} />);
         onClose();
     };
 
@@ -118,7 +128,7 @@ const ContactsWidgetGroupsContainer = ({ onClose, onCompose }: Props) => {
 
     const handleCreate = () => {
         if (!user.hasPaidMail) {
-            createModal(<ContactUpgradeModal />);
+            showUpgradeModal();
             onClose();
             return;
         }

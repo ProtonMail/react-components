@@ -1,3 +1,4 @@
+import { FEATURE_FLAGS } from 'proton-shared/lib/constants';
 import React from 'react';
 import { c } from 'ttag';
 import { getIsCalendarDisabled, getIsCalendarProbablyActive } from 'proton-shared/lib/calendar/calendar';
@@ -5,7 +6,7 @@ import { Calendar } from 'proton-shared/lib/interfaces/calendar';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 import { UserModel } from 'proton-shared/lib/interfaces';
 
-import { Icon, Table, TableHeader, TableBody, TableRow, DropdownActions, Badge } from '../../../components';
+import { Badge, DropdownActions, Icon, Table, TableBody, TableHeader, TableRow } from '../../../components';
 
 interface Props {
     calendars: Calendar[];
@@ -14,9 +15,21 @@ interface Props {
     onEdit: (calendar: Calendar) => void;
     onSetDefault: (id: string) => void;
     onDelete: (calendar: Calendar) => void;
+    onExport: (calendar: Calendar) => void;
     loadingMap: { [key: string]: boolean };
 }
-const CalendarsTable = ({ calendars, defaultCalendarID, user, onEdit, onSetDefault, onDelete, loadingMap }: Props) => {
+const CalendarsTable = ({
+    calendars,
+    defaultCalendarID,
+    user,
+    onEdit,
+    onSetDefault,
+    onDelete,
+    onExport,
+    loadingMap,
+}: Props) => {
+    const showExport = FEATURE_FLAGS.includes('calendar-export');
+
     return (
         <Table className="simple-table--has-actions">
             <TableHeader cells={[c('Header').t`Name`, c('Header').t`Status`, c('Header').t`Actions`]} />
@@ -39,6 +52,10 @@ const CalendarsTable = ({ calendars, defaultCalendarID, user, onEdit, onSetDefau
                                 text: c('Action').t`Set as default`,
                                 onClick: () => onSetDefault(ID),
                             },
+                        showExport && {
+                            text: c('Action').t`Export (.ics)`,
+                            onClick: () => onExport(calendar),
+                        },
                         {
                             text: c('Action').t`Delete`,
                             actionType: 'delete',
