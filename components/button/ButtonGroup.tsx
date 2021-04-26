@@ -18,9 +18,9 @@ const ButtonGroup = (
     ref: React.Ref<HTMLDivElement>
 ) => {
     const childrenWithSeparators = React.Children.toArray(children)
-        .filter((x) => x !== null && React.isValidElement(x))
+        .filter((x): x is ReactElement => x !== null && React.isValidElement(x))
         .map((child, index, array) => {
-            const clonedChild = React.cloneElement(child as ReactElement, { group: true });
+            const clonedChild = React.cloneElement(child, { group: true });
             if (index === array.length - 1) {
                 return clonedChild;
             }
