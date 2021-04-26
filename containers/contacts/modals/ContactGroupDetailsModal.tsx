@@ -3,20 +3,21 @@ import { c, msgid } from 'ttag';
 
 import { ContactEmail } from 'proton-shared/lib/interfaces/contacts/Contact';
 import { noop } from 'proton-shared/lib/helpers/function';
-import { FormModal, ContactGroupTable, Icon, TitleModal, Button } from '../../../components';
-import { useContactEmails, useContactGroups, useModals } from '../../../hooks';
-import ContactGroupModal from './ContactGroupModal';
+import { FormModal, ContactGroupTable, Icon, TitleModal, Button, ContactUpgradeModal } from '../../../components';
+import { useContactEmails, useContactGroups, useModals, useUser } from '../../../hooks';
 import './ContactGroupDetailsModal.scss';
 import Tooltip from '../../../components/tooltip/Tooltip';
 import ContactGroupDeleteModal from './ContactGroupDeleteModal';
+import ContactGroupModal from './ContactGroupModal';
 
 interface Props {
     contactGroupID: string;
     onClose?: () => void;
-    onEdit: () => void;
 }
 
-const ContactGroupDetailsModal = ({ contactGroupID, onClose = noop, onEdit, ...rest }: Props) => {
+const ContactGroupDetailsModal = ({ contactGroupID, onClose = noop, ...rest }: Props) => {
+    const { createModal } = useModals();
+    const [user] = useUser();
     const [contactGroups = [], loadingGroups] = useContactGroups();
     const [contactEmails = [], loadingEmails] = useContactEmails() as [ContactEmail[] | undefined, boolean, any];
 
@@ -27,7 +28,11 @@ const ContactGroupDetailsModal = ({ contactGroupID, onClose = noop, onEdit, ...r
     const emailsCount = emails.length;
 
     const handleEdit = () => {
-        onEdit();
+        if (!user.hasPaidMail) {
+            createModal(<ContactUpgradeModal />);
+            return;
+        }
+        createModal(<ContactGroupModal contactGroupID={contactGroupID} />);
         onClose();
     };
 
