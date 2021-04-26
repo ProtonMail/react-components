@@ -100,7 +100,7 @@ const ShareTable = ({ calendars = [], defaultCalendar, linksMap, onCreateLink, i
                                     value={accessLevel}
                                     onChange={({ value }) => setAccessLevel(value)}
                                 >
-                                    <Option value={0} title={c('Access level').t`Limited view (no event details)`} />
+                                    <Option value={0} title={c('Access level').t`Limited view`} />
                                     <Option value={1} title={c('Access level').t`Full view`} />
                                 </SelectTwo>
                             </div>,
