@@ -23,7 +23,7 @@ import { IMPORT_ERROR_TYPE, ImportFileError } from './ImportFileError';
 import ImportGroupsModalContent from './ImportGroupsModalContent';
 import ImportingModalContent from './ImportingModalContent';
 import WarningModalContent from './WarningModalContent';
-import ImportSummaryModalContent from './ImportSummaryModelContent';
+import ImportSummaryModalContent from './ImportSummaryModalContent';
 
 const { CSV, VCF } = EXTENSION;
 
