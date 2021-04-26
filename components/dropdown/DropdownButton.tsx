@@ -32,6 +32,7 @@ export const DropdownButton: <E extends React.ElementType = typeof defaultElemen
         }: DropdownButtonProps<E>,
         ref: typeof rest.ref
     ) => {
+        console.log({ as: rest.as });
         return (
             <Box
                 as={defaultElement}

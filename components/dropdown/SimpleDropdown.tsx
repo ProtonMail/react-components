@@ -28,6 +28,8 @@ const SimpleDropdown = <E extends React.ElementType>({
 
     const { anchorRef, isOpen, toggle, close } = usePopperAnchor<HTMLButtonElement>();
 
+    console.log({ as: rest.as });
+
     return (
         <>
             <DropdownButton {...rest} ref={anchorRef} isOpen={isOpen} onClick={toggle} hasCaret={hasCaret}>
