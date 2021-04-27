@@ -56,7 +56,7 @@ const LinkTable = ({ linksMap, onCopyLink, onDelete, onEdit, isLoadingMap }: Pro
                                     onClick: () => onEdit({ calendarID: CalendarID, urlID: CalendarUrlID, purpose }),
                                 },
                                 {
-                                    text: <span className="color-global-warning">{c('Action').t`Delete`}</span>,
+                                    text: c('Action').t`Delete`,
                                     actionType: 'delete',
                                     onClick: () => onDelete({ calendarID: CalendarID, urlID: CalendarUrlID }),
                                 } as const,
