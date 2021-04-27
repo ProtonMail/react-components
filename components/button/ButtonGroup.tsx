@@ -26,7 +26,7 @@ const ButtonGroup = (
             }
             return (
                 // eslint-disable-next-line react/no-array-index-key
-                <Fragment key={`separator-${index}`}>
+                <Fragment key={clonedChild.key || index}>
                     {clonedChild}
                     <Vr aria-hidden="true" />
                 </Fragment>
