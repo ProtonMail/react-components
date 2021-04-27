@@ -75,6 +75,8 @@ export const getMeterColor = (
             return 'danger';
         }
     }
+
+    throw new Error(`Misuse of getMeterColor, verify values provided for value, optimum, min, max, low, high`);
 };
 
 const Meter = ({
