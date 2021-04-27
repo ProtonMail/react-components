@@ -45,8 +45,6 @@ const useItemsDraggable = <Item extends AbstractItem>(
     });
 
     const handleDragCanceled = useHandler(() => {
-        clearDragElement();
-
         setDraggedIDs([]);
 
         if (savedCheck) {
@@ -59,7 +57,9 @@ const useItemsDraggable = <Item extends AbstractItem>(
      * Drag end handler to use on the draggable element
      */
     const handleDragEnd = (event: DragEvent) => {
-        if (event.dataTransfer.dropEffect === 'none') {
+        clearDragElement();
+
+        if (event.dataTransfer.dropEffect === 'none' || event.dataTransfer.dropEffect === 'copy') {
             return handleDragCanceled();
         }
     };
