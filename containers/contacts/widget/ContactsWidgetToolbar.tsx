@@ -9,6 +9,7 @@ interface Props {
     noEmailsContactCount: number;
     onCheckAll: (checked: boolean) => void;
     onCompose?: () => void;
+    onCreateEvent?: () => void;
     onForward: () => void;
     onDelete: () => void;
     onCreate: () => void;
@@ -21,6 +22,7 @@ const ContactsWidgetToolbar = ({
     noEmailsContactCount,
     onCheckAll,
     onCompose,
+    onCreateEvent,
     onForward,
     onDelete,
     onCreate,
@@ -76,6 +78,21 @@ const ContactsWidgetToolbar = ({
                             title={c('Action').t`Forward as attachment`}
                         >
                             <Icon name="forward" />
+                        </Button>
+                    </Tooltip>
+                </>
+            ) : null}
+            {onCreateEvent ? (
+                <>
+                    <Tooltip title={c('Action').t`Create event`}>
+                        <Button
+                            icon
+                            className="mr0-5 inline-flex pt0-5 pb0-5"
+                            onClick={onCreateEvent}
+                            disabled={noSelection}
+                            title={c('Action').t`Create event`}
+                        >
+                            <Icon name="calendar" />
                         </Button>
                     </Tooltip>
                 </>

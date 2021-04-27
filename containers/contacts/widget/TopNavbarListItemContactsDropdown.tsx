@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
 import { Recipient } from 'proton-shared/lib/interfaces';
+import { AttendeeModel } from 'proton-shared/lib/interfaces/calendar';
 import { Dropdown, DropdownButton, Icon, Tabs, usePopperAnchor } from '../../../components';
 import { useModals } from '../../../hooks';
 import { generateUID } from '../../../helpers';
@@ -31,9 +32,10 @@ const TopNavbarListItemContactsButton = React.forwardRef(
 interface Props {
     className?: string;
     onCompose?: (emails: Recipient[], attachments: File[]) => void;
+    onCreateEvent?: (emails: AttendeeModel[]) => void;
 }
 
-const TopNavbarListItemContactsDropdown = ({ className, onCompose }: Props) => {
+const TopNavbarListItemContactsDropdown = ({ className, onCompose, onCreateEvent }: Props) => {
     const [uid] = useState(generateUID('dropdown'));
     const { anchorRef, isOpen, toggle, close } = usePopperAnchor<HTMLButtonElement>();
     const [tabIndex, setTabIndex] = useState(0);
@@ -91,6 +93,7 @@ const TopNavbarListItemContactsDropdown = ({ className, onCompose }: Props) => {
                                 <ContactsWidgetContainer
                                     onClose={handleClose}
                                     onCompose={onCompose}
+                                    onCreateEvent={onCreateEvent}
                                     onImport={handleImport}
                                 />
                             ),

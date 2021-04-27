@@ -5,6 +5,8 @@ import { ContactEmail } from 'proton-shared/lib/interfaces/contacts';
 import { exportContacts } from 'proton-shared/lib/contacts/helpers/export';
 import { extractMergeable } from 'proton-shared/lib/contacts/helpers/merge';
 
+import { AttendeeModel } from 'proton-shared/lib/interfaces/calendar';
+import { ICAL_ATTENDEE_ROLE, ICAL_ATTENDEE_RSVP, ICAL_ATTENDEE_STATUS } from 'proton-shared/lib/calendar/constants';
 import { FullLoader, SearchInput } from '../../../components';
 import { useApi, useModals, useNotifications, useUser, useUserKeys, useUserSettings } from '../../../hooks';
 import MergeModal from '../merge/MergeModal';
@@ -21,9 +23,10 @@ interface Props {
     onClose: () => void;
     onImport: () => void;
     onCompose?: (recipients: Recipient[], attachments: File[]) => void;
+    onCreateEvent?: (attendees: AttendeeModel[]) => void;
 }
 
-const ContactsWidgetContainer = ({ onClose, onImport, onCompose }: Props) => {
+const ContactsWidgetContainer = ({ onClose, onImport, onCompose, onCreateEvent }: Props) => {
     const [user, loadingUser] = useUser();
     const [userSettings, loadingUserSettings] = useUserSettings();
     const [userKeysList, loadingUserKeys] = useUserKeys();
@@ -111,6 +114,38 @@ const ContactsWidgetContainer = ({ onClose, onImport, onCompose }: Props) => {
         });
 
         onCompose?.(recipients, []);
+        onClose();
+    };
+
+    const handleCreateEvent = () => {
+        if (selectedIDs.length > 100) {
+            createNotification({
+                type: 'error',
+                text: c('Error').t`You can't invite more than 100 recipients`,
+            });
+            return;
+        }
+
+        const { REQUIRED } = ICAL_ATTENDEE_ROLE;
+        const { TRUE } = ICAL_ATTENDEE_RSVP;
+        const { NEEDS_ACTION } = ICAL_ATTENDEE_STATUS;
+
+        const emailToAttendee = (email: string): AttendeeModel => ({
+            email,
+            cn: email,
+            role: REQUIRED,
+            partstat: NEEDS_ACTION,
+            rsvp: TRUE,
+        });
+
+        const contactEmailsOfContacts = selectedIDs.flatMap(
+            (contactID) => contactEmailsMap[contactID]
+        ) as ContactEmail[];
+        const participants = contactEmailsOfContacts.map(({ Email }) => emailToAttendee(Email));
+
+        console.log(contactEmailsOfContacts, participants);
+
+        onCreateEvent?.(participants);
         onClose();
     };
 
@@ -214,6 +249,7 @@ const ContactsWidgetContainer = ({ onClose, onImport, onCompose }: Props) => {
                     selectedCount={selectedIDs.length}
                     noEmailsContactCount={noEmailsContactIDs.length}
                     onCheckAll={handleCheckAll}
+                    onCreateEvent={onCreateEvent ? handleCreateEvent : undefined}
                     onCompose={onCompose ? handleCompose : undefined}
                     onForward={handleForward}
                     onCreate={handleCreate}
