@@ -6,6 +6,8 @@ import { normalize } from 'proton-shared/lib/helpers/string';
 import { noop } from 'proton-shared/lib/helpers/function';
 import { orderContactGroups } from 'proton-shared/lib/helpers/contactGroups';
 
+import { AttendeeModel } from 'proton-shared/lib/interfaces/calendar';
+import emailToAttendee from 'proton-shared/lib/calendar/emailToAttendee';
 import { ContactUpgradeModal, FullLoader, SearchInput } from '../../../components';
 import {
     useContactEmails,
@@ -26,9 +28,10 @@ import ContactGroupDeleteModal from '../modals/ContactGroupDeleteModal';
 interface Props {
     onClose: () => void;
     onCompose?: (recipients: Recipient[], attachments: File[]) => void;
+    onCreateEvent?: (attendees: AttendeeModel[]) => void;
 }
 
-const ContactsWidgetGroupsContainer = ({ onClose, onCompose }: Props) => {
+const ContactsWidgetGroupsContainer = ({ onClose, onCompose, onCreateEvent }: Props) => {
     const [userSettings, loadingUserSettings] = useUserSettings();
     const { createModal } = useModals();
     const { createNotification } = useNotifications();
@@ -119,6 +122,23 @@ const ContactsWidgetGroupsContainer = ({ onClose, onCompose }: Props) => {
         onClose();
     };
 
+    const handleCreateEvent = () => {
+        const participants = selectedIDs.flatMap((selectedID) => {
+            return groupsEmailsMap[selectedID].map(({ Email }) => emailToAttendee(Email));
+        });
+
+        if (participants.length > 100) {
+            createNotification({
+                type: 'error',
+                text: c('Error').t`You can't send a mail to more than 100 recipients`,
+            });
+            return;
+        }
+
+        onCreateEvent?.(participants);
+        onClose();
+    };
+
     const showUpgradeModal = () => createModal(<ContactUpgradeModal />);
 
     const handleDetails = (groupID: string) => {
@@ -181,6 +201,7 @@ const ContactsWidgetGroupsContainer = ({ onClose, onCompose }: Props) => {
                     numberOfRecipients={recipients.length}
                     onCheckAll={handleCheckAll}
                     onCompose={onCompose ? handleCompose : undefined}
+                    onCreateEvent={onCreateEvent ? handleCreateEvent : undefined}
                     onCreate={handleCreate}
                     onDelete={handleDelete}
                 />

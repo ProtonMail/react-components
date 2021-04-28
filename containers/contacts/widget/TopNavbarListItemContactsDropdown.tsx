@@ -100,7 +100,13 @@ const TopNavbarListItemContactsDropdown = ({ className, onCompose, onCreateEvent
                         },
                         {
                             title: c('Title').t`Groups`,
-                            content: <ContactsWidgetGroupsContainer onClose={handleClose} onCompose={onCompose} />,
+                            content: (
+                                <ContactsWidgetGroupsContainer
+                                    onClose={handleClose}
+                                    onCompose={onCompose}
+                                    onCreateEvent={onCreateEvent}
+                                />
+                            ),
                         },
                         {
                             title: c('Title').t`Settings`,

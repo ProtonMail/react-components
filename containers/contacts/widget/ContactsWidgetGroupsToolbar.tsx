@@ -9,6 +9,7 @@ interface Props {
     numberOfRecipients: number;
     onCheckAll: (checked: boolean) => void;
     onCompose?: () => void;
+    onCreateEvent?: () => void;
     onCreate: () => void;
     onDelete: () => void;
 }
@@ -19,6 +20,7 @@ const ContactsWidgetGroupsToolbar = ({
     numberOfRecipients,
     onCheckAll,
     onCompose,
+    onCreateEvent,
     onCreate,
     onDelete,
 }: Props) => {
@@ -60,6 +62,21 @@ const ContactsWidgetGroupsToolbar = ({
                         <Icon name="email" alt={c('Action').t`Compose`} />
                     </Button>
                 </Tooltip>
+            ) : null}
+            {onCreateEvent ? (
+                <>
+                    <Tooltip title={c('Action').t`Create event`}>
+                        <Button
+                            icon
+                            className="mr0-5 inline-flex pt0-5 pb0-5"
+                            onClick={onCreateEvent}
+                            disabled={noSelection}
+                            title={c('Action').t`Create event`}
+                        >
+                            <Icon name="calendar" />
+                        </Button>
+                    </Tooltip>
+                </>
             ) : null}
             <Tooltip>
                 <Button
