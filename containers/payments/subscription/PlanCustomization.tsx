@@ -6,7 +6,6 @@ import { Currency, Cycle, Organization, Plan, PlanIDs, Subscription } from 'prot
 
 import ProtonPlanPicker from '../ProtonPlanPicker';
 import ProtonPlanCustomizer from '../ProtonPlanCustomizer';
-import { classnames } from '../../../helpers';
 
 interface Props {
     onBack?: (service: PLAN_SERVICES) => void;
@@ -78,7 +77,7 @@ const PlanCustomization = ({
                                 onChangeCycle={onChangeCycle}
                                 onChangePlanIDs={onChangePlanIDs}
                                 onBack={onBack ? () => onBack(service) : undefined}
-                                className={classnames(['pb2 mb2', 'border-bottom'])}
+                                className="pb2 mb2 border-bottom"
                             />
                         )}
                         {currentPlan && hasPlanCustomiser && (
@@ -94,10 +93,7 @@ const PlanCustomization = ({
                                 service={service}
                                 organization={organization}
                                 onChangePlanIDs={onChangePlanIDs}
-                                className={classnames([
-                                    'pb2 mb2',
-                                    index !== services.length - 1 ? 'border-bottom' : '',
-                                ])}
+                                className="pb2 mb2 border-bottom"
                             />
                         )}
                     </React.Fragment>
