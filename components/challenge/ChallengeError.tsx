@@ -16,7 +16,7 @@ const ChallengeError = () => {
     const supportTeam = (
         <InlineLinkButton
             key="support"
-            title="Contact the ProtonMail support team."
+            title="Contact the support team."
             onClick={() => {
                 createModal(<BugModal />);
             }}
