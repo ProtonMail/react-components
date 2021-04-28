@@ -77,7 +77,7 @@ const PlanCustomization = ({
                                 onChangeCycle={onChangeCycle}
                                 onChangePlanIDs={onChangePlanIDs}
                                 onBack={onBack ? () => onBack(service) : undefined}
-                                className="pb2 mb2 border-bottom"
+                                className="pb2 mb2"
                             />
                         )}
                         {currentPlan && hasPlanCustomiser && (
@@ -93,7 +93,7 @@ const PlanCustomization = ({
                                 service={service}
                                 organization={organization}
                                 onChangePlanIDs={onChangePlanIDs}
-                                className="pb2 mb2 border-bottom"
+                                className="pb2 mb2"
                             />
                         )}
                     </React.Fragment>
