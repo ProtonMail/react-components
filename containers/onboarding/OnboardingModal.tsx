@@ -226,6 +226,7 @@ const OnboardingModal = ({
         <FormModal
             {...rest}
             hasClose={allowClose}
+            disableCloseOnOnEscape={allowClose}
             {...childStepProps}
             title={
                 hasBack ? (
