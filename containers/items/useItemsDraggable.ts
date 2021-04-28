@@ -57,8 +57,11 @@ const useItemsDraggable = <Item extends AbstractItem>(
      * Drag end handler to use on the draggable element
      */
     const handleDragEnd = (event: DragEvent) => {
+        // Always clear the drag element no matter why the drag has ended
         clearDragElement();
 
+        // We discover that Chrome initialize the dropEffect to 'copy' and only set it to 'none' just after
+        // We don't use 'copy' at all so both 'none' and 'copy' effects can be considered as canceled drags
         if (event.dataTransfer.dropEffect === 'none' || event.dataTransfer.dropEffect === 'copy') {
             return handleDragCanceled();
         }
