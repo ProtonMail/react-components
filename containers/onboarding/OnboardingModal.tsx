@@ -18,7 +18,6 @@ import {
     useOrganizationKey,
     useSubscription,
     useUser,
-    useUserSettings,
     useWelcomeFlags,
 } from '../../hooks';
 import { OnboardingStepProps, OnboardingStepRenderCallback } from './interface';
@@ -29,8 +28,7 @@ import OnboardingDiscoverApps from './OnboardingDiscoverApps';
 import OnboardingWelcome from './OnboardingWelcome';
 import OnboardingSetupOrganization from './OnboardingSetupOrganization';
 import { getOrganizationKeyInfo } from '../organization/helpers/organizationKeysHelper';
-import { useThemeStyle } from '../themes';
-import { getThemeStyle } from '../themes/ThemeInjector';
+import { useTheme } from '../themes/ThemeProvider';
 
 const availableThemes = Object.values(PROTON_THEMES);
 
@@ -63,14 +61,12 @@ const OnboardingModal = ({
     const history = useHistory();
     const location = useLocation();
     const goToSettings = useSettingsLink();
-    const [userSettings] = useUserSettings();
     const [organization, loadingOrganization] = useOrganization();
     const [subscription, loadingSubscription] = useSubscription();
     const [displayName, setDisplayName] = useState(user.DisplayName || user.Name || '');
     const [organizationKey, loadingOrganizationKey] = useOrganizationKey(organization);
     const { hasOrganizationKey } = getOrganizationKeyInfo(organizationKey);
-    const [, setThemeStyle] = useThemeStyle();
-    const [themeType, setThemeType] = useState(userSettings.ThemeType);
+    const [theme, setTheme] = useTheme();
     const getAddresses = useGetAddresses();
     const api = useApi();
     const { call } = useEventManager();
@@ -110,8 +106,7 @@ const OnboardingModal = ({
     };
 
     const handleThemeChange = async (newThemeType: ThemeTypes) => {
-        setThemeType(newThemeType);
-        setThemeStyle(getThemeStyle(newThemeType));
+        setTheme(newThemeType);
         await api(updateThemeType(newThemeType));
     };
 
@@ -161,7 +156,7 @@ const OnboardingModal = ({
 
     const themesStep = (
         <OnboardingStep submit={c('Action').t`Next`} close={null} onSubmit={handleNext}>
-            <OnboardingThemes themeIdentifier={themeType} themes={themes} onChange={handleThemeChange} />
+            <OnboardingThemes themeIdentifier={theme} themes={themes} onChange={handleThemeChange} />
         </OnboardingStep>
     );
 
