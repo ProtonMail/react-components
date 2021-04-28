@@ -226,16 +226,18 @@ const OnboardingModal = ({
     const childStepProps = childStep.props;
 
     useEffect(() => {
-        // Once the modal is open, clear welcome URL parameter to avoid having this modal appearing after refresh
-        const queryParams = new URLSearchParams(location.search);
+        // Once we reach the last step, we clear the welcome URL parameter to avoid having this modal appearing after refresh
+        if (isLastStep) {
+            const queryParams = new URLSearchParams(location.search);
 
-        if (queryParams.has('welcome')) {
-            queryParams.delete('welcome');
-            history.replace({
-                search: queryParams.toString(),
-            });
+            if (queryParams.has('welcome')) {
+                queryParams.delete('welcome');
+                history.replace({
+                    search: queryParams.toString(),
+                });
+            }
         }
-    }, []);
+    }, [isLastStep]);
 
     return (
         <FormModal
