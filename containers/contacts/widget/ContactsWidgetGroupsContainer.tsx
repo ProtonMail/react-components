@@ -122,7 +122,7 @@ const ContactsWidgetGroupsContainer = ({ onClose, onCompose }: Props) => {
     const showUpgradeModal = () => createModal(<ContactUpgradeModal />);
 
     const handleDetails = (groupID: string) => {
-        createModal(<ContactGroupDetailsModal contactGroupID={groupID} onEdit={() => handleEditGroup(groupID)} />);
+        createModal(<ContactGroupDetailsModal contactGroupID={groupID} />);
         onClose();
     };
 
