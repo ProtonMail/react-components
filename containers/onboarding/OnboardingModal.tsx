@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { c } from 'ttag';
+import { useHistory, useLocation } from 'react-router';
 import { updateAddress } from 'proton-shared/lib/api/addresses';
 import { updateWelcomeFlags, updateThemeType } from 'proton-shared/lib/api/settings';
 import { noop } from 'proton-shared/lib/helpers/function';
@@ -59,6 +60,8 @@ const OnboardingModal = ({
     ...rest
 }: Props) => {
     const [user] = useUser();
+    const history = useHistory();
+    const location = useLocation();
     const goToSettings = useSettingsLink();
     const [userSettings] = useUserSettings();
     const [organization, loadingOrganization] = useOrganization();
@@ -221,6 +224,18 @@ const OnboardingModal = ({
     }
 
     const childStepProps = childStep.props;
+
+    useEffect(() => {
+        // Once the modal is open, clear welcome URL parameter to avoid having this modal appearing after refresh
+        const queryParams = new URLSearchParams(location.search);
+
+        if (queryParams.has('welcome')) {
+            queryParams.delete('welcome');
+            history.replace({
+                search: queryParams.toString(),
+            });
+        }
+    }, []);
 
     return (
         <FormModal
