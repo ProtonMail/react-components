@@ -6,7 +6,6 @@ import {
     PLAN_SERVICES,
     APPS,
     ADDON_NAMES,
-    PLAN_TYPES,
     MAX_SPACE_ADDON,
     MAX_MEMBER_ADDON,
     MAX_DOMAIN_PRO_ADDON,
@@ -15,13 +14,12 @@ import {
     GIGA,
     PLAN_NAMES,
 } from 'proton-shared/lib/constants';
-import { toMap } from 'proton-shared/lib/helpers/object';
 import { range } from 'proton-shared/lib/helpers/array';
 import { switchPlan, getSupportedAddons, setQuantity } from 'proton-shared/lib/helpers/planIDs';
 import { getAppName } from 'proton-shared/lib/apps/helper';
-import { hasBit } from 'proton-shared/lib/helpers/bitset';
 
 import { InlineLinkButton, Icon, Info, Price, ButtonGroup, Button } from '../../components';
+import { classnames } from '../../helpers';
 
 const MailAddons: ADDON_NAMES[] = [ADDON_NAMES.MEMBER, ADDON_NAMES.SPACE, ADDON_NAMES.ADDRESS, ADDON_NAMES.DOMAIN];
 const VPNAddons: ADDON_NAMES[] = [ADDON_NAMES.VPN];
@@ -33,12 +31,15 @@ const AddonKey = {
     [ADDON_NAMES.SPACE]: 'MaxSpace',
 } as const;
 
-interface Props {
+interface Props extends React.ComponentPropsWithoutRef<'div'> {
     cycle: Cycle;
     currency: Currency;
+    currentPlan: Plan;
     planIDs: PlanIDs;
     onChangePlanIDs: (planIDs: PlanIDs) => void;
     plans: Plan[];
+    plansMap: { [key: string]: Plan };
+    plansNameMap: { [key: string]: Plan };
     organization?: Organization;
     service: PLAN_SERVICES;
     loading?: boolean;
@@ -129,23 +130,16 @@ const ProtonPlanCustomizer = ({
     currency,
     onChangePlanIDs,
     planIDs,
+    plansMap,
+    plansNameMap,
     plans,
+    currentPlan,
     organization,
     service,
     loading,
+    className,
+    ...rest
 }: Props) => {
-    const plansMap = toMap(plans);
-    const plansNameMap = toMap(plans, 'Name');
-    const [currentPlanID] =
-        Object.entries(planIDs).find(([planID, planQuantity]) => {
-            if (planQuantity) {
-                const { Services, Type } = plansMap[planID];
-                return hasBit(Services, service) && Type === PLAN_TYPES.PLAN;
-            }
-            return false;
-        }) || [];
-    const currentPlan = currentPlanID && plansMap[currentPlanID];
-
     const vpnAppName = getAppName(APPS.PROTONVPN_SETTINGS);
     const mailAppName = getAppName(APPS.PROTONMAIL);
 
@@ -185,16 +179,8 @@ const ProtonPlanCustomizer = ({
             .t`Number of VPN connections which can be assigned to users. Each connected device consumes one VPN connection.`,
     } as const;
 
-    if (!currentPlan) {
-        return null;
-    }
-
-    if ([PLANS.VPNBASIC, PLANS.VISIONARY].includes(currentPlan.Name as PLANS)) {
-        return null;
-    }
-
     return (
-        <div className="pb2 mb2 border-bottom plan-customiser">
+        <div className={classnames(['plan-customiser', className])} {...rest}>
             <h2 className="text-2xl text-bold">{c('Title').t`${appName} customization`}</h2>
             {service === PLAN_SERVICES.MAIL && planIDs[plansNameMap[PLANS.PLUS].ID] ? (
                 <p>

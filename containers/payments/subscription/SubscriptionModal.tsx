@@ -18,6 +18,7 @@ import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 import { Cycle, Currency, PlanIDs, SubscriptionCheckResponse } from 'proton-shared/lib/interfaces';
 import { Calendar, CalendarUrlsResponse } from 'proton-shared/lib/interfaces/calendar';
 import { MAX_CALENDARS_PER_FREE_USER } from 'proton-shared/lib/calendar/constants';
+import { getFreeCheckResult } from 'proton-shared/lib/subscription/freePlans';
 
 import { Alert, FormModal } from '../../../components';
 import {
@@ -117,17 +118,6 @@ const SubscriptionModal = ({
         planIDs,
     });
 
-    const TOTAL_ZERO = {
-        Amount: 0,
-        AmountDue: 0,
-        CouponDiscount: 0,
-        Currency: model.currency,
-        Cycle: model.cycle,
-        Proration: 0,
-        Gift: 0,
-        Credit: 0,
-    } as SubscriptionCheckResponse;
-
     const getCodes = ({ gift, coupon }: Model) => [gift, coupon].filter(isTruthy);
 
     const handleUnsubscribe = async () => {
@@ -199,7 +189,7 @@ const SubscriptionModal = ({
         const copyNewModel = { ...newModel };
 
         if (!hasPlanIDs(newModel.planIDs)) {
-            setCheckResult(TOTAL_ZERO);
+            setCheckResult(getFreeCheckResult(model.currency, model.cycle));
             setModel(copyNewModel);
             return;
         }
