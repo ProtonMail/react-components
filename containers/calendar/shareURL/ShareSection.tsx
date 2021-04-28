@@ -166,6 +166,7 @@ const ShareSection = ({ calendars, defaultCalendar, user }: Props) => {
                         calendars={calendars}
                         onCreateLink={handleCreateLink}
                         defaultCalendar={defaultCalendar}
+                        user={user}
                     />
                 </>
             ) : (
