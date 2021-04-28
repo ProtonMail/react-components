@@ -8,6 +8,7 @@ import TopNavbarListItemButton, {
 } from '../../components/topnavbar/TopNavbarListItemButton';
 import { useModals } from '../../hooks';
 import { MailShortcutsModal } from '../mail';
+import ThemesModal from '../themes/ThemesModal';
 import EarlyAccessModal from '../earlyAccess/EarlyAccessModal';
 
 const TopNavbarListItemSettingsButton = React.forwardRef(
@@ -33,6 +34,10 @@ const TopNavbarListItemSettingsDropdown = (props: any) => {
         createModal(<EarlyAccessModal />);
     };
 
+    const handleThemeClick = () => {
+        createModal(<ThemesModal />);
+    };
+
     const handleKeyboardShortcutsClick = () => {
         createModal(<MailShortcutsModal />, 'shortcuts-modal');
     };
@@ -53,6 +58,14 @@ const TopNavbarListItemSettingsDropdown = (props: any) => {
                 >
                     {c('Action').t`Early access`}
                     <span>On</span>
+                </DropdownMenuButton>
+
+                <DropdownMenuButton
+                    onClick={handleThemeClick}
+                    className="flex flex-nowrap flex-justify-space-between flex-align-items-center"
+                >
+                    {c('Action').t`Theme`}
+                    <span>Default</span>
                 </DropdownMenuButton>
 
                 <DropdownMenuButton

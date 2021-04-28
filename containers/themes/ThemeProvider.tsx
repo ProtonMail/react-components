@@ -7,7 +7,9 @@ import { useConfig } from '../../hooks';
 
 export const THEME_ID = 'theme-root';
 
-export const ThemeContext = createContext([noop, PROTON_THEMES.DEFAULT.theme]);
+export const ThemeContext = createContext<
+    [ThemeTypes | undefined, React.Dispatch<React.SetStateAction<ThemeTypes | undefined>>]
+>([ThemeTypes.Default, noop]);
 
 interface Props {
     children: React.ReactNode;
