@@ -17,7 +17,7 @@ interface Props {
     describedByID: string;
 }
 
-const DensityRadiosCards = ({ density, onChange, loading, id, describedByID, ...rest }: Props) => {
+const DensityRadiosCards = ({ density, onChange, loading, describedByID, ...rest }: Props) => {
     const layoutCardComfortable = {
         value: COMFORTABLE,
         selected: density === COMFORTABLE,
