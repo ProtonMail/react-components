@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
-import { Recipient } from 'proton-shared/lib/interfaces';
+import { Recipient, SimpleMap } from 'proton-shared/lib/interfaces';
+import { ContactEmail } from 'proton-shared/lib/interfaces/contacts';
 import { Dropdown, DropdownButton, Icon, Tabs, usePopperAnchor } from '../../../components';
 import { useModals } from '../../../hooks';
 import { generateUID } from '../../../helpers';
@@ -12,6 +13,7 @@ import TopNavbarListItemButton, {
     TopNavbarListItemButtonProps,
 } from '../../../components/topnavbar/TopNavbarListItemButton';
 import ImportContactsModal from '../import/ImportContactsModal';
+import useContactList from '../useContactList';
 
 const TopNavbarListItemContactsButton = React.forwardRef(
     (props: Omit<TopNavbarListItemButtonProps<'button'>, 'icon' | 'text' | 'as'>, ref: typeof props.ref) => {
@@ -28,12 +30,31 @@ const TopNavbarListItemContactsButton = React.forwardRef(
     }
 );
 
+enum CONTACT_WIDGET_TABS {
+    CONTACTS,
+    GROUPS,
+}
+
+interface CustomAction {
+    onClick: ({
+        contactList,
+    }: {
+        contactList?: ReturnType<typeof useContactList>;
+        groupsEmailsMap?: SimpleMap<ContactEmail[]>;
+        recipients?: Recipient[];
+    }) => (event: React.MouseEvent<HTMLButtonElement>) => void;
+    title: string;
+    icon: string;
+    tabs: CONTACT_WIDGET_TABS[];
+}
+
 interface Props {
     className?: string;
     onCompose?: (emails: Recipient[], attachments: File[]) => void;
+    customActions?: CustomAction[];
 }
 
-const TopNavbarListItemContactsDropdown = ({ className, onCompose }: Props) => {
+const TopNavbarListItemContactsDropdown = ({ className, onCompose, customActions = [] }: Props) => {
     const [uid] = useState(generateUID('dropdown'));
     const { anchorRef, isOpen, toggle, close } = usePopperAnchor<HTMLButtonElement>();
     const [tabIndex, setTabIndex] = useState(0);
@@ -56,6 +77,9 @@ const TopNavbarListItemContactsDropdown = ({ className, onCompose }: Props) => {
         createModal(<ImportContactsModal />);
         handleClose();
     };
+
+    const actionIncludes = (tab: CONTACT_WIDGET_TABS) => (customAction: CustomAction) =>
+        customAction.tabs.includes(tab);
 
     return (
         <>
@@ -91,12 +115,19 @@ const TopNavbarListItemContactsDropdown = ({ className, onCompose }: Props) => {
                                     onClose={handleClose}
                                     onCompose={onCompose}
                                     onImport={handleImport}
+                                    customActions={customActions.filter(actionIncludes(CONTACT_WIDGET_TABS.CONTACTS))}
                                 />
                             ),
                         },
                         {
                             title: c('Title').t`Groups`,
-                            content: <ContactsWidgetGroupsContainer onClose={handleClose} onCompose={onCompose} />,
+                            content: (
+                                <ContactsWidgetGroupsContainer
+                                    onClose={handleClose}
+                                    onCompose={onCompose}
+                                    customActions={customActions.filter(actionIncludes(CONTACT_WIDGET_TABS.GROUPS))}
+                                />
+                            ),
                         },
                         {
                             title: c('Title').t`Settings`,

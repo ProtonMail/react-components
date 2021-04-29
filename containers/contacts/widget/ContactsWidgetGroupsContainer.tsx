@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { c, msgid } from 'ttag';
-import { Recipient } from 'proton-shared/lib/interfaces';
+import { Recipient, SimpleMap } from 'proton-shared/lib/interfaces';
 import { ContactEmail } from 'proton-shared/lib/interfaces/contacts';
 import { normalize } from 'proton-shared/lib/helpers/string';
 import { noop } from 'proton-shared/lib/helpers/function';
@@ -22,13 +22,33 @@ import ContactGroupModal from '../modals/ContactGroupModal';
 import ContactGroupDetailsModal from '../modals/ContactGroupDetailsModal';
 import ContactsWidgetPlaceholder, { EmptyType } from './ContactsWidgetPlaceholder';
 import ContactGroupDeleteModal from '../modals/ContactGroupDeleteModal';
+import useContactList from '../useContactList';
+
+enum CONTACT_WIDGET_TABS {
+    CONTACTS,
+    GROUPS,
+}
+
+interface CustomAction {
+    onClick: ({
+        contactList,
+    }: {
+        contactList?: ReturnType<typeof useContactList>;
+        groupsEmailsMap?: SimpleMap<ContactEmail[]>;
+        recipients?: Recipient[];
+    }) => (event: React.MouseEvent<HTMLButtonElement>) => void;
+    title: string;
+    icon: string;
+    tabs: CONTACT_WIDGET_TABS[];
+}
 
 interface Props {
     onClose: () => void;
     onCompose?: (recipients: Recipient[], attachments: File[]) => void;
+    customActions: CustomAction[];
 }
 
-const ContactsWidgetGroupsContainer = ({ onClose, onCompose }: Props) => {
+const ContactsWidgetGroupsContainer = ({ onClose, onCompose, customActions }: Props) => {
     const [userSettings, loadingUserSettings] = useUserSettings();
     const { createModal } = useModals();
     const { createNotification } = useNotifications();
@@ -181,6 +201,9 @@ const ContactsWidgetGroupsContainer = ({ onClose, onCompose }: Props) => {
                     numberOfRecipients={recipients.length}
                     onCheckAll={handleCheckAll}
                     onCompose={onCompose ? handleCompose : undefined}
+                    groupsEmailsMap={groupsEmailsMap}
+                    recipients={recipients}
+                    customActions={customActions}
                     onCreate={handleCreate}
                     onDelete={handleDelete}
                 />

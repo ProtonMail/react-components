@@ -1,7 +1,28 @@
 import React, { ChangeEvent } from 'react';
 import { c, msgid } from 'ttag';
 
+import { Recipient, SimpleMap } from 'proton-shared/lib/interfaces';
+import { ContactEmail } from 'proton-shared/lib/interfaces/contacts';
 import { Checkbox, Icon, Button, Tooltip } from '../../../components';
+import useContactList from '../useContactList';
+
+enum CONTACT_WIDGET_TABS {
+    CONTACTS,
+    GROUPS,
+}
+
+interface CustomAction {
+    onClick: ({
+        contactList,
+    }: {
+        contactList?: ReturnType<typeof useContactList>;
+        groupsEmailsMap?: SimpleMap<ContactEmail[]>;
+        recipients?: Recipient[];
+    }) => (event: React.MouseEvent<HTMLButtonElement>) => void;
+    title: string;
+    icon: string;
+    tabs: CONTACT_WIDGET_TABS[];
+}
 
 interface Props {
     allChecked: boolean;
@@ -11,6 +32,9 @@ interface Props {
     onCompose?: () => void;
     onCreate: () => void;
     onDelete: () => void;
+    customActions: CustomAction[];
+    groupsEmailsMap: SimpleMap<ContactEmail[]>;
+    recipients: Recipient[];
 }
 
 const ContactsWidgetGroupsToolbar = ({
@@ -21,6 +45,9 @@ const ContactsWidgetGroupsToolbar = ({
     onCompose,
     onCreate,
     onDelete,
+    customActions,
+    groupsEmailsMap,
+    recipients,
 }: Props) => {
     const handleCheck = ({ target }: ChangeEvent<HTMLInputElement>) => onCheckAll(target.checked);
     const noSelection = !selectedCount || !numberOfRecipients;
@@ -54,6 +81,19 @@ const ContactsWidgetGroupsToolbar = ({
                     </Button>
                 </Tooltip>
             ) : null}
+            {customActions.map((action) => (
+                <Tooltip title={action.title}>
+                    <Button
+                        icon
+                        className="mr0-5 inline-flex pt0-5 pb0-5"
+                        onClick={action.onClick({ groupsEmailsMap, recipients })}
+                        disabled={noSelection}
+                        title={action.title}
+                    >
+                        <Icon name={action.icon} />
+                    </Button>
+                </Tooltip>
+            ))}
             <Tooltip>
                 <Button
                     icon

@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useRef } from 'react';
 import { c, msgid } from 'ttag';
-import { Recipient } from 'proton-shared/lib/interfaces';
+import { Recipient, SimpleMap } from 'proton-shared/lib/interfaces';
 import { ContactEmail } from 'proton-shared/lib/interfaces/contacts';
 import { exportContacts } from 'proton-shared/lib/contacts/helpers/export';
 import { extractMergeable } from 'proton-shared/lib/contacts/helpers/merge';
@@ -17,13 +17,32 @@ import ContactModal from '../modals/ContactModal';
 import ContactsWidgetPlaceholder, { EmptyType } from './ContactsWidgetPlaceholder';
 import MergeContactBanner from './MergeContactBanner';
 
+enum CONTACT_WIDGET_TABS {
+    CONTACTS,
+    GROUPS,
+}
+
+interface CustomAction {
+    onClick: ({
+        contactList,
+    }: {
+        contactList?: ReturnType<typeof useContactList>;
+        groupsEmailsMap?: SimpleMap<ContactEmail[]>;
+        recipients?: Recipient[];
+    }) => (event: React.MouseEvent<HTMLButtonElement>) => void;
+    title: string;
+    icon: string;
+    tabs: CONTACT_WIDGET_TABS[];
+}
+
 interface Props {
     onClose: () => void;
     onImport: () => void;
     onCompose?: (recipients: Recipient[], attachments: File[]) => void;
+    customActions: CustomAction[];
 }
 
-const ContactsWidgetContainer = ({ onClose, onImport, onCompose }: Props) => {
+const ContactsWidgetContainer = ({ onClose, onImport, onCompose, customActions }: Props) => {
     const [user, loadingUser] = useUser();
     const [userSettings, loadingUserSettings] = useUserSettings();
     const [userKeysList, loadingUserKeys] = useUserKeys();
@@ -41,6 +60,11 @@ const ContactsWidgetContainer = ({ onClose, onImport, onCompose }: Props) => {
     // To use when the widget will deal with groups
     const contactGroupID = '';
 
+    const contactList = useContactList({
+        search,
+        contactID,
+        contactGroupID,
+    });
     const {
         formattedContacts,
         checkedIDs,
@@ -54,11 +78,7 @@ const ContactsWidgetContainer = ({ onClose, onImport, onCompose }: Props) => {
         filteredContacts,
         hasCheckedAllFiltered,
         loading: loadingContacts,
-    } = useContactList({
-        search,
-        contactID,
-        contactGroupID,
-    });
+    } = contactList;
 
     const mergeableContacts = useMemo(() => extractMergeable(formattedContacts), [formattedContacts]);
     const countMergeableContacts = mergeableContacts.reduce(
@@ -215,6 +235,8 @@ const ContactsWidgetContainer = ({ onClose, onImport, onCompose }: Props) => {
                     noEmailsContactCount={noEmailsContactIDs.length}
                     onCheckAll={handleCheckAll}
                     onCompose={onCompose ? handleCompose : undefined}
+                    customActions={customActions}
+                    contactList={contactList}
                     onForward={handleForward}
                     onCreate={handleCreate}
                     onDelete={handleDelete}
