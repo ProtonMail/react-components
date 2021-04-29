@@ -32,7 +32,7 @@ export { default as useDocumentTitle } from './useDocumentTitle';
 export { default as useOrganization } from './useOrganization';
 export { default as useSubscription } from './useSubscription';
 export { default as useNextSubscription } from './useNextSubscription';
-export { default as useUserSettings } from './userSettingsModel';
+export { default as useUserSettings } from './useUserSettings';
 export { default as useMemberAddresses } from './useMemberAddresses';
 export { useUserKeys, useGetUserKeys } from './useUserKeys';
 export { useAddressesKeys, useGetAddressesKeys } from './useAddressesKeys';

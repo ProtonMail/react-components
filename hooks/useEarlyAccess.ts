@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import useFeature from './useFeature';
 import useApi from './useApi';
 import useLoading from './useLoading';
-import useUserSettings from './userSettingsModel';
+import useUserSettings from './useUserSettings';
 import { FeatureCode } from '../containers/features';
 
 export type Environment = 'alpha' | 'beta' | 'prod';
