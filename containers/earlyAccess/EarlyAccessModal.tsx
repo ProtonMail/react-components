@@ -1,25 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { c } from 'ttag';
 
 import { Checkbox, FormModal, Label } from '../../components';
 import useEarlyAccess from '../../hooks/useEarlyAccess';
+import useSynchronizingState from '../../hooks/useSynchronizingState';
 
 const EarlyAccessModal = (props: { onClose?: () => void }) => {
     const earlyAccess = useEarlyAccess();
 
-    const [earlyAccessEnabled, setEarlyAccessEnabled] = useState(earlyAccess.value);
-
-    /*
-     * In case value changes after this component has already mounted
-     * (possible scenarios are request completion or event-manager update)
-     * the initial value provided to earlyAccessEnabled is wrong. Let's
-     * update if it differs as soon as we receive the updated value.
-     */
-    useEffect(() => {
-        if (earlyAccess.value !== earlyAccessEnabled) {
-            setEarlyAccessEnabled(earlyAccess.value);
-        }
-    }, [earlyAccess.value]);
+    const [earlyAccessEnabled, setEarlyAccessEnabled] = useSynchronizingState(earlyAccess.value);
 
     const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         setEarlyAccessEnabled(e.target.checked);
