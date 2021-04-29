@@ -24,6 +24,7 @@ const TopNavbarListItemButton: <E extends React.ElementType = typeof defaultElem
 
         return (
             <Box
+                as={defaultElement}
                 className={classnames([
                     'topnav-link inline-flex flex-nowrap flex-align-items-center',
                     hasRedDot && 'relative topnav-link--blackfriday',

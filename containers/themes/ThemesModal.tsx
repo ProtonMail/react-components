@@ -29,7 +29,7 @@ const ThemesModal = (props: any) => {
         <FormModal {...props} close={c('Action').t`Close`} hasSubmit={false}>
             <div className="h2 text-center mb0-5">{c('Title').t`Select a theme`}</div>
             <p className="text-center mt0 mb2">{c('Info').t`You can change this anytime in your settings.`}</p>
-            <ThemeCards list={themes} themeIdentifier={computedTheme} onChange={handleThemeChange} />
+            <ThemeCards liClassName="w33" list={themes} themeIdentifier={computedTheme} onChange={handleThemeChange} />
         </FormModal>
     );
 };

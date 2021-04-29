@@ -20,6 +20,7 @@ const TopNavbarListItemSettingsButton = React.forwardRef(
                 {...props}
                 ref={ref}
                 type="button"
+                as="button"
                 data-test-id="view:general-settings"
                 icon={<Icon name="settings-master" />}
                 text={c('Title').t`Settings`}
