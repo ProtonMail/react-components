@@ -5,6 +5,8 @@ import { Recipient } from 'proton-shared/lib/interfaces';
 import { inputToRecipient } from 'proton-shared/lib/mail/recipient';
 import { SimpleMap } from 'proton-shared/lib/interfaces/utils';
 import { noop } from 'proton-shared/lib/helpers/function';
+import { MatchChunk } from 'proton-shared/lib/helpers/regex';
+import { c, msgid } from 'ttag';
 
 import Input, { Props as InputProps } from '../input/Input';
 import { Option } from '../option';
@@ -17,6 +19,7 @@ import {
     getContactGroupsAutocompleteItems,
     getMajorListAutocompleteItems,
 } from './helper';
+import Icon from '../icon/Icon';
 
 interface Props extends Omit<InputProps, 'value'> {
     id: string;
@@ -57,6 +60,20 @@ const AddressesAutocomplete = React.forwardRef<HTMLInputElement, Props>(
     ) => {
         const [input, setInput] = useState('');
         const [emailError, setEmailError] = useState('');
+
+        const groupsEmailsMap = useMemo(
+            () =>
+                contactEmails?.reduce<{ [groupID: string]: ContactEmail[] }>((acc, contactEmail) => {
+                    contactEmail.LabelIDs.forEach((labelID) => {
+                        if (!acc[labelID]) {
+                            acc[labelID] = [];
+                        }
+                        acc[labelID].push(contactEmail);
+                    });
+                    return acc;
+                }, {}),
+            [contactGroups, contactEmails]
+        );
 
         const [recipientsByAddress, recipientsByGroup] = useMemo(() => {
             return recipients.reduce<[Set<string>, Set<string>]>(
@@ -139,6 +156,14 @@ const AddressesAutocomplete = React.forwardRef<HTMLInputElement, Props>(
 
         const filteredOptions = useAutocompleteFilter(input, options, getData, limit, 1);
 
+        // If a group name is equal to the search input, we want to display it as the first option
+        const exactNameGroup = filteredOptions.find((option) => option.option.label === input);
+
+        // Put the group at the first place if found
+        const filteredAndSortedOptions = exactNameGroup
+            ? [exactNameGroup, ...filteredOptions.filter((option) => option.option.label !== input)]
+            : filteredOptions;
+
         const { getOptionID, inputProps, suggestionProps } = useAutocomplete<AddressesAutocompleteItem>({
             id,
             options: filteredOptions,
@@ -164,6 +189,31 @@ const AddressesAutocomplete = React.forwardRef<HTMLInputElement, Props>(
             }
 
             setInput(newValue);
+        };
+
+        const getOptionDisplay = (text: string, option: any, chunks: MatchChunk[]) => {
+            if (option.type === 'group') {
+                const memberCount = groupsEmailsMap ? groupsEmailsMap[option.value.ID]?.length || 0 : 10;
+
+                // translator: the variable is a positive integer (written in digits) always greater or equal to 0
+                const memberNumberText = c('Info').ngettext(
+                    msgid`(${memberCount} member)`,
+                    `(${memberCount} members)`,
+                    memberCount
+                );
+
+                return (
+                    <>
+                        <Icon name="circle" color={option.value.Color} size={12} className="mr0-5" />
+                        <span className="mr0-5">
+                            <Marks chunks={chunks}>{text}</Marks>
+                        </span>
+                        {memberNumberText}
+                    </>
+                );
+            }
+
+            return <Marks chunks={chunks}>{text}</Marks>;
         };
 
         return (
@@ -197,7 +247,7 @@ const AddressesAutocomplete = React.forwardRef<HTMLInputElement, Props>(
                     error={emailError}
                 />
                 <AutocompleteList anchorRef={anchorRef} {...suggestionProps}>
-                    {filteredOptions.map(({ chunks, text, option }, index) => {
+                    {filteredAndSortedOptions.map(({ chunks, text, option }, index) => {
                         return (
                             <Option
                                 key={option.key}
@@ -207,7 +257,7 @@ const AddressesAutocomplete = React.forwardRef<HTMLInputElement, Props>(
                                 focusOnActive={false}
                                 onChange={handleSelect}
                             >
-                                <Marks chunks={chunks}>{text}</Marks>
+                                {getOptionDisplay(text, option, chunks)}
                             </Option>
                         );
                     })}
