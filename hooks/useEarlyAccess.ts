@@ -1,9 +1,11 @@
 import { updateEarlyAccess } from 'proton-shared/lib/api/settings';
 import { deleteCookie, getCookie, setCookie } from 'proton-shared/lib/helpers/cookies';
 import { useEffect, useState } from 'react';
-import { useApi, useLoading, useUserSettings } from '../../hooks';
-import useFeature from '../../hooks/useFeature';
-import { FeatureCode } from '../features';
+import useFeature from './useFeature';
+import useApi from './useApi';
+import useLoading from './useLoading';
+import useUserSettings from './userSettingsModel';
+import { FeatureCode } from '../containers/features';
 
 export type Environment = 'alpha' | 'beta' | 'prod';
 

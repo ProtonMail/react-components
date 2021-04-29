@@ -2,7 +2,7 @@ import React from 'react';
 import { c } from 'ttag';
 
 import { InlineLinkButton } from '../../components';
-import useEarlyAccess from '../earlyAccess/useEarlyAccess';
+import useEarlyAccess from '../../hooks/useEarlyAccess';
 import TopBanner from './TopBanner';
 
 const EarlyAccessDesynchronizedBanner = () => {

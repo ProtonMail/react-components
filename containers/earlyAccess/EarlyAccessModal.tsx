@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { c } from 'ttag';
 
 import { Checkbox, FormModal, Label } from '../../components';
-import useEarlyAccess from './useEarlyAccess';
+import useEarlyAccess from '../../hooks/useEarlyAccess';
 
 const EarlyAccessModal = (props: { onClose?: () => void }) => {
     const earlyAccess = useEarlyAccess();
