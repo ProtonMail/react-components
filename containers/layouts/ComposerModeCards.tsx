@@ -14,16 +14,13 @@ interface Props {
     composerMode: COMPOSER_MODE;
     onChange: (composerMode: COMPOSER_MODE) => void;
     loading: boolean;
-    id: string;
     describedByID: string;
-    src: string;
 }
 
-const ComposerModeCards = ({ composerMode, onChange, loading, id, describedByID, ...rest }: Props) => {
+const ComposerModeCards = ({ composerMode, onChange, loading, describedByID, ...rest }: Props) => {
     const layoutCardPopup = {
         value: POPUP,
         selected: composerMode === POPUP,
-        id: 'popupRadio',
         disabled: loading,
         name: 'composerMode',
         label: c('Label to change composer mode').t`Normal`,
@@ -36,7 +33,6 @@ const ComposerModeCards = ({ composerMode, onChange, loading, id, describedByID,
     const layoutCardMaximized = {
         value: MAXIMIZED,
         selected: composerMode === MAXIMIZED,
-        id: 'maximizedRadio',
         disabled: loading,
         name: 'composerMode',
         label: c('Label to change composer mode').t`Maximized`,

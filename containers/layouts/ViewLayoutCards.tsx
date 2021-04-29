@@ -14,15 +14,13 @@ interface Props {
     viewLayout: VIEW_LAYOUT;
     onChange: (viewLayout: VIEW_LAYOUT) => void;
     loading: boolean;
-    id: string;
     describedByID: string;
 }
 
-const ViewLayoutCards = ({ viewLayout, onChange, loading, id, describedByID, ...rest }: Props) => {
+const ViewLayoutCards = ({ viewLayout, onChange, loading, describedByID, ...rest }: Props) => {
     const layoutCardColumn = {
         value: COLUMN,
         selected: viewLayout === COLUMN,
-        id: 'columnRadio',
         disabled: loading,
         name: 'viewLayout',
         label: c('Label to change view layout').t`Column`,
@@ -35,7 +33,6 @@ const ViewLayoutCards = ({ viewLayout, onChange, loading, id, describedByID, ...
     const layoutCardRow = {
         value: ROW,
         selected: viewLayout === ROW,
-        id: 'rowRadio',
         disabled: loading,
         name: 'viewLayout',
         label: c('Label to change view layout').t`Row`,

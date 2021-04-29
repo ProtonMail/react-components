@@ -58,7 +58,6 @@ const LayoutsSection = () => {
                             />
                         </span>
                         <ViewLayoutCards
-                            id="layoutMode"
                             describedByID="layoutMode_desc"
                             viewLayout={ViewLayout}
                             onChange={(value) => withLoadingViewLayout(handleChangeViewLayout(value))}
@@ -76,7 +75,6 @@ const LayoutsSection = () => {
                         </span>
 
                         <ComposerModeCards
-                            id="composerMode"
                             describedByID="composerMode_desc"
                             composerMode={ComposerMode}
                             onChange={(value) => withLoadingComposerMode(handleChangeComposerMode(value))}
@@ -93,7 +91,6 @@ const LayoutsSection = () => {
                             describedByID="densityMode_desc"
                             onChange={(value) => withLoadingDensity(handleChangeDensity(value))}
                             loading={loadingDensity}
-                            id="density"
                         />
                     </div>
                 </>

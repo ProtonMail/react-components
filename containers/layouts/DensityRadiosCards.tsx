@@ -14,7 +14,6 @@ interface Props {
     density: DENSITY;
     onChange: (density: DENSITY) => void;
     loading: boolean;
-    id: string;
     describedByID: string;
 }
 
@@ -22,7 +21,6 @@ const DensityRadiosCards = ({ density, onChange, loading, id, describedByID, ...
     const layoutCardComfortable = {
         value: COMFORTABLE,
         selected: density === COMFORTABLE,
-        id: 'comfortableRadio',
         disabled: loading,
         name: 'density',
         label: c('Label to change density').t`Comfortable`,
@@ -35,7 +33,6 @@ const DensityRadiosCards = ({ density, onChange, loading, id, describedByID, ...
     const layoutCardCompact = {
         value: COMPACT,
         selected: density === COMPACT,
-        id: 'compactRadio',
         disabled: loading,
         name: 'density',
         label: c('Label to change density').t`Compact`,
