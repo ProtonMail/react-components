@@ -26,8 +26,9 @@ const ThemesModal = (props: any) => {
     const computedTheme = theme || userThemeType;
 
     return (
-        <FormModal {...props} title={c('Title').t`Select a theme`} close={c('Action').t`Close`} hasSubmit={false}>
-            <div className="mb1">You can change this anytime in your settings</div>
+        <FormModal {...props} close={c('Action').t`Close`} hasSubmit={false}>
+            <div className="h2 text-center mb0-5">{c('Title').t`Select a theme`}</div>
+            <p className="text-center mt0 mb2">{c('Info').t`You can change this anytime in your settings.`}</p>
             <ThemeCards list={themes} themeIdentifier={computedTheme} onChange={handleThemeChange} />
         </FormModal>
     );

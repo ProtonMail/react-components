@@ -38,7 +38,7 @@ const EarlyAccessModal = (props: { onClose?: () => void }) => {
             loading={earlyAccess.loading || !earlyAccess.canUpdate}
             onSubmit={update}
         >
-            <div className="h1">{c('Title').t`Early access`}</div>
+            <div className="h2">{c('Title').t`Early access`}</div>
             <p>
                 {c('Early access description')
                     .t`Early access gives you access to the beta version of Proton which has new features and improvements. Our beta versions undergo the same reliability testing as our public versions, but if you encounter any issues, you can switch off early access.`}
@@ -49,6 +49,9 @@ const EarlyAccessModal = (props: { onClose?: () => void }) => {
                     {c('Label').t`Enable early access`}
                 </Label>
             </div>
+            <p className="mb0-5 color-weak">
+                {c('Refresh on apply warning').t`Note: upon applying a change, the application will be refreshed.`}
+            </p>
         </FormModal>
     );
 };

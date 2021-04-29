@@ -12,7 +12,7 @@ const EarlyAccessDesynchronizedBanner = () => {
         window.location.reload();
     };
 
-    const refreshButton = <InlineLinkButton onClick={handleRefreshClick}>{c('Link').t`here`}</InlineLinkButton>;
+    const refreshButton = <InlineLinkButton onClick={handleRefreshClick}>{c('Action').t`Refresh`}</InlineLinkButton>;
 
     if (!earlyAccess.environmentIsDesynchronized) {
         return null;
@@ -20,11 +20,11 @@ const EarlyAccessDesynchronizedBanner = () => {
 
     return (
         <TopBanner className="bg-info">
-            {c('Info').jt`Your early access setting is ${
-                earlyAccess.value ? c('Early access is enabled').t`enabled` : c('Early access is disabled').t`disabled`
-            } but you were served the ${
-                earlyAccess.currentEnvironment
-            } version of the app. Click ${refreshButton} to refresh your browser and load the correct version of the app.`}
+            {earlyAccess.value
+                ? c('Info')
+                      .jt`You have enabled Early Access. ${refreshButton} the page to use the latest version of [insert name of product].`
+                : c('Info')
+                      .jt`You have disabled Early Access. ${refreshButton} the page to use the stable version of [insert name of product].`}
         </TopBanner>
     );
 };
