@@ -288,7 +288,7 @@ const OnboardingModal = ({
                 <div className="text-center">
                     <StepDots value={step}>
                         {range(0, steps.length).map((index) => (
-                            <StepDot key={index} aria-controls={`onboarding-${index}`} />
+                            <StepDot key={index} index={index} aria-controls={`onboarding-${index}`} />
                         ))}
                     </StepDots>
                 </div>
