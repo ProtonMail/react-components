@@ -58,6 +58,7 @@ const TopNavbarListItemSettingsDropdown = (props: Props) => {
                     as={AppLink}
                     to={to}
                     toApp={toApp}
+                    target="_self"
                     className="flex flex-nowrap flex-justify-space-between flex-align-items-center"
                 >
                     {c('Action').t`Go to settings`}
