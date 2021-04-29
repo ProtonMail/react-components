@@ -4,7 +4,7 @@ import { PROTON_THEMES, ThemeTypes } from 'proton-shared/lib/themes/themes';
 import { updateThemeType } from 'proton-shared/lib/api/settings';
 
 import { FormModal } from '../../components';
-import { useApi, useUserSettings } from '../../hooks';
+import { useApi } from '../../hooks';
 import { ThemeCards, useTheme } from '.';
 import useSynchronizingState from '../../hooks/useSynchronizingState';
 
@@ -16,7 +16,6 @@ const themes = availableThemes.map(({ identifier, getI18NLabel, src }) => {
 
 const ThemesModal = (props: any) => {
     const api = useApi();
-    const [{ ThemeType: userThemeType }] = useUserSettings();
     const [theme, setTheme] = useTheme();
     const [localTheme, setLocalTheme] = useSynchronizingState(theme);
 
@@ -29,8 +28,6 @@ const ThemesModal = (props: any) => {
         api(updateThemeType(localTheme));
     };
 
-    const computedTheme = localTheme || userThemeType;
-
     return (
         <FormModal
             {...props}
@@ -42,12 +39,7 @@ const ThemesModal = (props: any) => {
             <div className="h2 text-center mb0-5">{c('Title').t`Select a theme`}</div>
             <p className="text-center mt0 mb2">{c('Info').t`You can change this anytime in your settings.`}</p>
             <div className="flex">
-                <ThemeCards
-                    liClassName="w33"
-                    list={themes}
-                    themeIdentifier={computedTheme}
-                    onChange={handleThemeChange}
-                />
+                <ThemeCards liClassName="w33" list={themes} themeIdentifier={localTheme} onChange={handleThemeChange} />
             </div>
         </FormModal>
     );
