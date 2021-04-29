@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { ComponentPropsWithoutRef } from 'react';
 import { c } from 'ttag';
 import { PROTON_THEMES } from 'proton-shared/lib/themes/themes';
 
-import { DropdownMenu, DropdownMenuButton, DropdownMenuLink, Icon } from '../../components';
+import { AppLink, DropdownMenu, DropdownMenuButton, DropdownMenuLink, Icon } from '../../components';
 import SimpleDropdown from '../../components/dropdown/SimpleDropdown';
 import TopNavbarListItemButton, {
     TopNavbarListItemButtonProps,
@@ -20,7 +20,6 @@ const TopNavbarListItemSettingsButton = React.forwardRef(
                 {...props}
                 ref={ref}
                 type="button"
-                as="button"
                 data-test-id="view:general-settings"
                 icon={<Icon name="settings-master" />}
                 text={c('Title').t`Settings`}
@@ -29,7 +28,9 @@ const TopNavbarListItemSettingsButton = React.forwardRef(
     }
 );
 
-const TopNavbarListItemSettingsDropdown = (props: any) => {
+interface Props extends ComponentPropsWithoutRef<typeof AppLink> {}
+
+const TopNavbarListItemSettingsDropdown = (props: Props) => {
     const { createModal } = useModals();
     const earlyAccess = useEarlyAccess();
     const [theme] = useTheme();
@@ -47,10 +48,17 @@ const TopNavbarListItemSettingsDropdown = (props: any) => {
         createModal(<MailShortcutsModal />, 'shortcuts-modal');
     };
 
+    const { to, toApp } = props;
+
     return (
-        <SimpleDropdown as={TopNavbarListItemSettingsButton} originalPlacement="bottom" hasCaret={false} {...props}>
+        <SimpleDropdown as={TopNavbarListItemSettingsButton} originalPlacement="bottom" hasCaret={false}>
             <DropdownMenu style={{ minWidth: '16em' }} className="mt0-5 mb0-5">
-                <DropdownMenuLink className="flex flex-nowrap flex-justify-space-between flex-align-items-center">
+                <DropdownMenuLink
+                    as={AppLink}
+                    to={to}
+                    toApp={toApp}
+                    className="flex flex-nowrap flex-justify-space-between flex-align-items-center"
+                >
                     {c('Action').t`Go to settings`}
                     <Icon name="external-link" />
                 </DropdownMenuLink>

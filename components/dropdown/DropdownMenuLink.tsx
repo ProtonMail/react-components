@@ -1,32 +1,23 @@
 import React from 'react';
+
 import { classnames } from '../../helpers';
-import { Box, PolymorphicComponentProps } from '../../helpers/react-polymorphic-box';
+import { Box, PolymorphicComponent } from '../../helpers/react-polymorphic-box';
+import { Href } from '../link';
 
-interface OwnProps extends React.HTMLAttributes<HTMLAnchorElement> {
-    className?: string;
-    children?: React.ReactNode;
-    href?: string;
-    target?: string;
-}
+interface DropdownMenuLinkProps {}
 
-export type DropdownMenuLinkProps = PolymorphicComponentProps<'a', OwnProps>;
+const defaultElement = Href;
 
-const DropdownMenuLink = ({
-    as: asProp,
+const DropdownMenuLink: PolymorphicComponent<DropdownMenuLinkProps, typeof defaultElement> = ({
     className = '',
     children,
-    target = '_blank',
     ...rest
-}: DropdownMenuLinkProps) => {
-    const as = asProp || 'a';
-
+}) => {
     return (
         <Box
-            as={as}
-            className={classnames(['dropdown-item-link w100 pr1 pl1 pt0-5 pb0-5 block text-no-decoration', className])}
-            rel="noopener noreferrer"
-            target={target}
+            as={defaultElement}
             {...rest}
+            className={classnames(['dropdown-item-link w100 pr1 pl1 pt0-5 pb0-5 block text-no-decoration', className])}
         >
             {children}
         </Box>
