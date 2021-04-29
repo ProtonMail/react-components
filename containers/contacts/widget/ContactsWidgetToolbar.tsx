@@ -12,15 +12,13 @@ enum CONTACT_WIDGET_TABS {
 }
 
 interface CustomAction {
-    onClick: ({
+    render: ({
         contactList,
     }: {
         contactList?: ReturnType<typeof useContactList>;
         groupsEmailsMap?: SimpleMap<ContactEmail[]>;
         recipients?: Recipient[];
-    }) => (event: React.MouseEvent<HTMLButtonElement>) => void;
-    title: string;
-    icon: string;
+    }) => React.ReactNode;
     tabs: CONTACT_WIDGET_TABS[];
 }
 
@@ -103,19 +101,7 @@ const ContactsWidgetToolbar = ({
                     </Tooltip>
                 </>
             ) : null}
-            {customActions.map((action) => (
-                <Tooltip title={action.title}>
-                    <Button
-                        icon
-                        className="mr0-5 inline-flex pt0-5 pb0-5"
-                        onClick={action.onClick({ contactList })}
-                        disabled={noSelection}
-                        title={action.title}
-                    >
-                        <Icon name={action.icon} />
-                    </Button>
-                </Tooltip>
-            ))}
+            {customActions.map((action) => action.render({ contactList }))}
             <Tooltip title={c('Action').t`Merge contacts`}>
                 <Button
                     icon

@@ -23,15 +23,13 @@ enum CONTACT_WIDGET_TABS {
 }
 
 interface CustomAction {
-    onClick: ({
+    render: ({
         contactList,
     }: {
         contactList?: ReturnType<typeof useContactList>;
         groupsEmailsMap?: SimpleMap<ContactEmail[]>;
         recipients?: Recipient[];
-    }) => (event: React.MouseEvent<HTMLButtonElement>) => void;
-    title: string;
-    icon: string;
+    }) => React.ReactNode;
     tabs: CONTACT_WIDGET_TABS[];
 }
 
