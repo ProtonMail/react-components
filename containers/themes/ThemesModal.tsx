@@ -6,6 +6,7 @@ import { updateThemeType } from 'proton-shared/lib/api/settings';
 import { FormModal } from '../../components';
 import { useApi, useUserSettings } from '../../hooks';
 import { ThemeCards, useTheme } from '.';
+import useSynchronizingState from '../../hooks/useSynchronizingState';
 
 const availableThemes = Object.values(PROTON_THEMES);
 
@@ -14,22 +15,40 @@ const themes = availableThemes.map(({ identifier, getI18NLabel, src }) => {
 });
 
 const ThemesModal = (props: any) => {
+    const api = useApi();
     const [{ ThemeType: userThemeType }] = useUserSettings();
     const [theme, setTheme] = useTheme();
-    const api = useApi();
+    const [localTheme, setLocalTheme] = useSynchronizingState(theme);
 
     const handleThemeChange = (newThemeType: ThemeTypes) => {
-        setTheme(newThemeType);
-        api(updateThemeType(newThemeType));
+        setLocalTheme(newThemeType);
     };
 
-    const computedTheme = theme || userThemeType;
+    const handleSubmit = async () => {
+        setTheme(localTheme);
+        api(updateThemeType(localTheme));
+    };
+
+    const computedTheme = localTheme || userThemeType;
 
     return (
-        <FormModal {...props} close={c('Action').t`Close`} hasSubmit={false}>
+        <FormModal
+            {...props}
+            intermediate
+            close={c('Action').t`Close`}
+            submit={c('Action').t`Apply`}
+            onSubmit={handleSubmit}
+        >
             <div className="h2 text-center mb0-5">{c('Title').t`Select a theme`}</div>
             <p className="text-center mt0 mb2">{c('Info').t`You can change this anytime in your settings.`}</p>
-            <ThemeCards liClassName="w33" list={themes} themeIdentifier={computedTheme} onChange={handleThemeChange} />
+            <div className="flex">
+                <ThemeCards
+                    liClassName="w33"
+                    list={themes}
+                    themeIdentifier={computedTheme}
+                    onChange={handleThemeChange}
+                />
+            </div>
         </FormModal>
     );
 };

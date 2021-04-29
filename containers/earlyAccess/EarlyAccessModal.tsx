@@ -33,6 +33,7 @@ const EarlyAccessModal = (props: { onClose?: () => void }) => {
     return (
         <FormModal
             {...props}
+            intermediate
             close={c('Action').t`Cancel`}
             submit={c('Action').t`Apply`}
             loading={earlyAccess.loading || !earlyAccess.canUpdate}
