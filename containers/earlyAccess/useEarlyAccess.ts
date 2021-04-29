@@ -77,11 +77,7 @@ const useEarlyAccess = () => {
             return;
         }
 
-        console.log('HENLO');
         await withLoadingUpdate(api(updateEarlyAccess({ EarlyAccess: Number(earlyAccessEnabled) })));
-        console.log(JSON.stringify(earlyAccessScope, null, 2));
-
-        console.log(earlyAccessEnabled ? earlyAccessScopeValue : 'prod');
 
         updateVersionCookie(earlyAccessEnabled ? earlyAccessScopeValue : 'prod');
     };
