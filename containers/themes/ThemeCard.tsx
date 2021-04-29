@@ -1,7 +1,7 @@
 import React from 'react';
 import { c } from 'ttag';
 
-import { ButtonLike } from '../../components';
+import { Button } from '../../components';
 import { classnames } from '../../helpers';
 
 interface Props {
@@ -15,7 +15,7 @@ interface Props {
 
 const ThemeCard = ({ label, id, src, checked, onChange, disabled }: Props) => {
     return (
-        <ButtonLike
+        <Button
             name="themeCard"
             shape="outline"
             color="weak"
@@ -31,7 +31,7 @@ const ThemeCard = ({ label, id, src, checked, onChange, disabled }: Props) => {
                 <img alt="" src={src} className="mb0-5" />
                 <span>{label}</span>
             </span>
-        </ButtonLike>
+        </Button>
     );
 };
 
