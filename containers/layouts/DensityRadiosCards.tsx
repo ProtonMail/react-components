@@ -6,7 +6,7 @@ import { DENSITY } from 'proton-shared/lib/constants';
 import comfortableDensitySvg from 'design-system/assets/img/pm-images/comfortable-density.svg';
 import compactDensitySvg from 'design-system/assets/img/pm-images/compact-density.svg';
 
-import { RadioCards } from '../../components';
+import { LayoutCards } from '../../components';
 
 const { COMFORTABLE, COMPACT } = DENSITY;
 
@@ -18,10 +18,10 @@ interface Props {
     describedByID: string;
 }
 
-const DensityRadios = ({ density, onChange, loading, id, describedByID, ...rest }: Props) => {
-    const radioCardComfortable = {
+const DensityRadiosCards = ({ density, onChange, loading, id, describedByID, ...rest }: Props) => {
+    const layoutCardComfortable = {
         value: COMFORTABLE,
-        checked: density === COMFORTABLE,
+        selected: density === COMFORTABLE,
         id: 'comfortableRadio',
         disabled: loading,
         name: 'density',
@@ -29,11 +29,12 @@ const DensityRadios = ({ density, onChange, loading, id, describedByID, ...rest 
         onChange() {
             onChange(COMFORTABLE);
         },
-        children: <img alt="Comfortable" src={comfortableDensitySvg} />,
+        src: comfortableDensitySvg,
+        describedByID,
     };
-    const radioCardCompact = {
+    const layoutCardCompact = {
         value: COMPACT,
-        checked: density === COMPACT,
+        selected: density === COMPACT,
         id: 'compactRadio',
         disabled: loading,
         name: 'density',
@@ -41,12 +42,11 @@ const DensityRadios = ({ density, onChange, loading, id, describedByID, ...rest 
         onChange() {
             onChange(COMPACT);
         },
-        children: <img alt="Compact" src={compactDensitySvg} />,
+        src: compactDensitySvg,
+        describedByID,
     };
 
-    return (
-        <RadioCards list={[radioCardComfortable, radioCardCompact]} describedByID={describedByID} id={id} {...rest} />
-    );
+    return <LayoutCards list={[layoutCardComfortable, layoutCardCompact]} describedByID={describedByID} {...rest} />;
 };
 
-export default DensityRadios;
+export default DensityRadiosCards;

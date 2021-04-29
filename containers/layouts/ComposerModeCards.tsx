@@ -6,7 +6,7 @@ import { COMPOSER_MODE } from 'proton-shared/lib/constants';
 import composerPopUpSvg from 'design-system/assets/img/pm-images/composer-popup.svg';
 import composerMaximizedSvg from 'design-system/assets/img/pm-images/composer-maximized.svg';
 
-import { RadioCards } from '../../components';
+import { LayoutCards } from '../../components';
 
 const { POPUP, MAXIMIZED } = COMPOSER_MODE;
 
@@ -16,12 +16,13 @@ interface Props {
     loading: boolean;
     id: string;
     describedByID: string;
+    src: string;
 }
 
-const ComposerModeRadios = ({ composerMode, onChange, loading, id, describedByID, ...rest }: Props) => {
-    const radioCardPopup = {
+const ComposerModeCards = ({ composerMode, onChange, loading, id, describedByID, ...rest }: Props) => {
+    const layoutCardPopup = {
         value: POPUP,
-        checked: composerMode === POPUP,
+        selected: composerMode === POPUP,
         id: 'popupRadio',
         disabled: loading,
         name: 'composerMode',
@@ -29,11 +30,12 @@ const ComposerModeRadios = ({ composerMode, onChange, loading, id, describedByID
         onChange() {
             onChange(POPUP);
         },
-        children: <img alt="" src={composerPopUpSvg} />,
+        src: composerPopUpSvg,
+        describedByID,
     };
-    const radioCardMaximized = {
+    const layoutCardMaximized = {
         value: MAXIMIZED,
-        checked: composerMode === MAXIMIZED,
+        selected: composerMode === MAXIMIZED,
         id: 'maximizedRadio',
         disabled: loading,
         name: 'composerMode',
@@ -41,10 +43,11 @@ const ComposerModeRadios = ({ composerMode, onChange, loading, id, describedByID
         onChange() {
             onChange(MAXIMIZED);
         },
-        children: <img alt="" src={composerMaximizedSvg} />,
+        src: composerMaximizedSvg,
+        describedByID,
     };
 
-    return <RadioCards list={[radioCardPopup, radioCardMaximized]} id={id} describedByID={describedByID} {...rest} />;
+    return <LayoutCards list={[layoutCardPopup, layoutCardMaximized]} describedByID={describedByID} {...rest} />;
 };
 
-export default ComposerModeRadios;
+export default ComposerModeCards;
