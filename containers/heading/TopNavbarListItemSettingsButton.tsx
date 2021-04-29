@@ -1,17 +1,15 @@
-import React, { ComponentPropsWithoutRef } from 'react';
+import React from 'react';
 import { c } from 'ttag';
-import { PROTON_THEMES } from 'proton-shared/lib/themes/themes';
 
-import { AppLink, DropdownMenu, DropdownMenuButton, DropdownMenuLink, Icon } from '../../components';
+import { DropdownMenu, DropdownMenuButton, DropdownMenuLink, Icon } from '../../components';
 import SimpleDropdown from '../../components/dropdown/SimpleDropdown';
 import TopNavbarListItemButton, {
     TopNavbarListItemButtonProps,
 } from '../../components/topnavbar/TopNavbarListItemButton';
-import { useEarlyAccess, useMailSettings, useModals } from '../../hooks';
+import { useModals } from '../../hooks';
 import { MailShortcutsModal } from '../mail';
 import ThemesModal from '../themes/ThemesModal';
 import EarlyAccessModal from '../earlyAccess/EarlyAccessModal';
-import { useTheme } from '../themes';
 
 const TopNavbarListItemSettingsButton = React.forwardRef(
     (props: Omit<TopNavbarListItemButtonProps<'button'>, 'icon' | 'text' | 'as'>, ref: typeof props.ref) => {
@@ -29,13 +27,8 @@ const TopNavbarListItemSettingsButton = React.forwardRef(
     }
 );
 
-interface Props extends ComponentPropsWithoutRef<typeof AppLink> {}
-
-const TopNavbarListItemSettingsDropdown = (props: Props) => {
+const TopNavbarListItemSettingsDropdown = (props: any) => {
     const { createModal } = useModals();
-    const earlyAccess = useEarlyAccess();
-    const [theme] = useTheme();
-    const [{ Shortcuts } = { Shortcuts: 0 }] = useMailSettings();
 
     const handleEarlyAccessClick = () => {
         createModal(<EarlyAccessModal />);
@@ -49,25 +42,12 @@ const TopNavbarListItemSettingsDropdown = (props: Props) => {
         createModal(<MailShortcutsModal />, 'shortcuts-modal');
     };
 
-    const { to, toApp } = props;
-
     return (
-        <SimpleDropdown
-            as={TopNavbarListItemSettingsButton}
-            originalPlacement="bottom-left"
-            hasCaret={false}
-            dropdownStyle={{ '--min-width': '16em' }}
-        >
-            <DropdownMenu className="mt0-5 mb0-5">
-                <DropdownMenuLink
-                    as={AppLink}
-                    to={to}
-                    toApp={toApp}
-                    target="_self"
-                    className="flex flex-nowrap flex-justify-space-between flex-align-items-center"
-                >
+        <SimpleDropdown as={TopNavbarListItemSettingsButton} originalPlacement="bottom" hasCaret={false} {...props}>
+            <DropdownMenu style={{ minWidth: '16em' }} className="mt0-5 mb0-5">
+                <DropdownMenuLink className="flex flex-nowrap flex-justify-space-between flex-align-items-center">
                     {c('Action').t`Go to settings`}
-                    <Icon className="ml1" name="external-link" />
+                    <Icon name="external-link" />
                 </DropdownMenuLink>
 
                 <hr className="mt0-5 mb0-5" />
@@ -77,23 +57,23 @@ const TopNavbarListItemSettingsDropdown = (props: Props) => {
                     className="flex flex-nowrap flex-justify-space-between flex-align-items-center"
                 >
                     {c('Action').t`Early access`}
-                    <span className="color-primary ml2">
-                        {earlyAccess.value ? c('Enabled').t`On` : c('Disabled').t`Off`}
-                    </span>
+                    <span>On</span>
                 </DropdownMenuButton>
+
                 <DropdownMenuButton
                     onClick={handleThemeClick}
                     className="flex flex-nowrap flex-justify-space-between flex-align-items-center"
                 >
                     {c('Action').t`Theme`}
-                    <span className="color-primary ml2">{PROTON_THEMES[theme].getI18NLabel()}</span>
+                    <span>Default</span>
                 </DropdownMenuButton>
+
                 <DropdownMenuButton
                     onClick={handleKeyboardShortcutsClick}
                     className="flex flex-nowrap flex-justify-space-between flex-align-items-center"
                 >
                     {c('Action').t`Keyboard shortcuts`}
-                    <span className="color-primary ml2">{Shortcuts ? c('Enabled').t`On` : c('Disabled').t`Off`}</span>
+                    <span>On</span>
                 </DropdownMenuButton>
             </DropdownMenu>
         </SimpleDropdown>

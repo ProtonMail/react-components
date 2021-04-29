@@ -13,6 +13,7 @@ import TopNavbarListItemBlackFridayButton from './TopNavbarListItemBlackFridayBu
 import useBlackFriday from './useBlackFriday';
 import { TopNavbar, TopNavbarList, TopNavbarListItem } from '../../components/topnavbar';
 import TopNavbarListItemButton from '../../components/topnavbar/TopNavbarListItemButton';
+import { Vr } from '../../components/vr';
 
 interface Props extends HeaderProps {
     logo?: React.ReactNode;
@@ -120,6 +121,9 @@ const PrivateHeader = ({
                     {contactsButton ? <TopNavbarListItem noShrink>{contactsButton}</TopNavbarListItem> : null}
                     {settingsButton ? <TopNavbarListItem noShrink>{settingsButton}</TopNavbarListItem> : null}
                     <TopNavbarListItem noShrink>{helpDropdown || <TopNavbarListItemHelpDropdown />}</TopNavbarListItem>
+                    <TopNavbarListItem className="flex-align-self-stretch">
+                        <Vr className="h100" />
+                    </TopNavbarListItem>
                     <TopNavbarListItem className="relative">
                         <UserDropdown />
                     </TopNavbarListItem>

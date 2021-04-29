@@ -1,7 +1,8 @@
 import React from 'react';
 
 import { classnames } from '../../helpers';
-import { Box, PolymorphicComponentProps } from '../../helpers/react-polymorphic-box';
+import { PolymorphicComponentProps } from '../../helpers/react-polymorphic-box';
+import { ButtonLike } from '../button';
 
 interface OwnProps {
     icon: React.ReactElement;
@@ -23,8 +24,11 @@ const TopNavbarListItemButton: <E extends React.ElementType = typeof defaultElem
         const isDisabled = disabled;
 
         return (
-            <Box
+            <ButtonLike
                 as={defaultElement}
+                color="weak"
+                shape="ghost"
+                size="large"
                 className={classnames([
                     'topnav-link inline-flex flex-nowrap flex-align-items-center',
                     hasRedDot && 'relative topnav-link--blackfriday',
@@ -40,7 +44,7 @@ const TopNavbarListItemButton: <E extends React.ElementType = typeof defaultElem
                 })}
                 <span className="navigation-title">{text}</span>
                 {children}
-            </Box>
+            </ButtonLike>
         );
     }
 );
