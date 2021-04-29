@@ -7,24 +7,17 @@ import { useConfig } from '../../hooks';
 
 export const THEME_ID = 'theme-root';
 
-export const ThemeContext = createContext<
-    [ThemeTypes | undefined, React.Dispatch<React.SetStateAction<ThemeTypes | undefined>>]
->([ThemeTypes.Default, noop]);
+export const ThemeContext = createContext<[ThemeTypes, React.Dispatch<React.SetStateAction<ThemeTypes>>]>([
+    ThemeTypes.Default,
+    noop,
+]);
 
 interface Props {
     children: React.ReactNode;
 }
 
 export const getThemeStyle = (themeType: ThemeTypes = ThemeTypes.Default) => {
-    const themeStyle = {
-        [ThemeTypes.Default]: PROTON_THEMES.DEFAULT.theme,
-        [ThemeTypes.Dark]: PROTON_THEMES.DARK.theme,
-        [ThemeTypes.Light]: PROTON_THEMES.LIGHT.theme,
-        [ThemeTypes.Monokai]: PROTON_THEMES.MONOKAI.theme,
-        [ThemeTypes.Contrast]: PROTON_THEMES.CONTRAST.theme,
-        [ThemeTypes.Legacy]: PROTON_THEMES.LEGACY.theme,
-    }[themeType];
-    return themeStyle || PROTON_THEMES.DEFAULT.theme;
+    return PROTON_THEMES[themeType].theme;
 };
 
 export const useTheme = () => {
@@ -34,9 +27,9 @@ export const useTheme = () => {
 const ThemeProvider = ({ children }: Props) => {
     const { APP_NAME } = useConfig();
 
-    const [theme, setTheme] = useState<ThemeTypes>(PROTON_THEMES.DEFAULT.theme);
+    const [theme, setTheme] = useState<ThemeTypes>(ThemeTypes.Default);
 
-    const style = getThemeStyle(APP_NAME === APPS.PROTONVPN_SETTINGS ? PROTON_THEMES.DEFAULT.theme : theme);
+    const style = getThemeStyle(APP_NAME === APPS.PROTONVPN_SETTINGS ? ThemeTypes.Default : theme);
 
     return (
         <ThemeContext.Provider value={[theme, setTheme]}>
