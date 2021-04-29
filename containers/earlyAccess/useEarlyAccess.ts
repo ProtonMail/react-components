@@ -66,7 +66,7 @@ const useEarlyAccess = () => {
     }, [hasLoaded, versionCookie, targetEnvironment]);
 
     /*
-     * Should be able to call update without the request for the EarlyAccessScope
+     * Shouldn't be able to call update without the request for the EarlyAccessScope
      * feature to have completed since the environment is set based on it should
      * earlyAccessEnabled be true
      */
