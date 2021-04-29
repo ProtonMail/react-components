@@ -17,7 +17,7 @@ interface Props {
 }
 
 export const getThemeStyle = (themeType: ThemeTypes = ThemeTypes.Default) => {
-    return PROTON_THEMES[themeType].theme;
+    return PROTON_THEMES[themeType]?.theme || PROTON_THEMES[ThemeTypes.Default].theme;
 };
 
 export const useTheme = () => {
