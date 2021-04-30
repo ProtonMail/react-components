@@ -10,10 +10,6 @@ import useSynchronizingState from '../../hooks/useSynchronizingState';
 
 const availableThemes = Object.values(PROTON_THEMES);
 
-const themes = availableThemes.map(({ identifier, getI18NLabel, src }) => {
-    return { identifier, label: getI18NLabel(), src };
-});
-
 const ThemesModal = (props: any) => {
     const api = useApi();
     const [theme, setTheme] = useTheme();
@@ -27,6 +23,10 @@ const ThemesModal = (props: any) => {
         setTheme(localTheme);
         api(updateThemeType(localTheme));
     };
+
+    const themes = availableThemes.map(({ identifier, getI18NLabel, src }) => {
+        return { identifier, label: getI18NLabel(), src };
+    });
 
     return (
         <FormModal
