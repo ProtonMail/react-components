@@ -1,7 +1,7 @@
 import React from 'react';
 import { c } from 'ttag';
 
-import { Checkbox, FormModal } from '../../components';
+import { Button, Checkbox, FormModal } from '../../components';
 import useEarlyAccess from '../../hooks/useEarlyAccess';
 import useSynchronizingState from '../../hooks/useSynchronizingState';
 
@@ -19,13 +19,24 @@ const EarlyAccessModal = (props: { onClose?: () => void }) => {
         window.location.reload();
     };
 
+    const loading = earlyAccess.loading || !earlyAccess.canUpdate;
+
     return (
         <FormModal
             {...props}
             intermediate
             close={c('Action').t`Cancel`}
-            submit={c('Action').t`Apply`}
-            loading={earlyAccess.loading || !earlyAccess.canUpdate}
+            submit={
+                <Button
+                    type="submit"
+                    color="norm"
+                    loading={loading}
+                    disabled={earlyAccessEnabled === earlyAccess.value}
+                >
+                    {c('Action').t`Apply`}
+                </Button>
+            }
+            loading={loading}
             onSubmit={update}
         >
             <div className="h2">{c('Title').t`Early access`}</div>
