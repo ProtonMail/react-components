@@ -6,22 +6,20 @@ import { updateThemeType } from 'proton-shared/lib/api/settings';
 import { FormModal } from '../../components';
 import { useApi } from '../../hooks';
 import { ThemeCards, useTheme } from '.';
-import useSynchronizingState from '../../hooks/useSynchronizingState';
 
 const availableThemes = Object.values(PROTON_THEMES);
 
-const ThemesModal = (props: any) => {
+const ThemesModal = (props: { onClose: () => void }) => {
     const api = useApi();
     const [theme, setTheme] = useTheme();
-    const [localTheme, setLocalTheme] = useSynchronizingState(theme);
 
     const handleThemeChange = (newThemeType: ThemeTypes) => {
-        setLocalTheme(newThemeType);
+        setTheme(newThemeType);
+        api(updateThemeType(newThemeType));
     };
 
-    const handleSubmit = async () => {
-        setTheme(localTheme);
-        api(updateThemeType(localTheme));
+    const handleSubmit = () => {
+        props.onClose?.();
     };
 
     const themes = availableThemes.map(({ identifier, getI18NLabel, src }) => {
@@ -29,17 +27,15 @@ const ThemesModal = (props: any) => {
     });
 
     return (
-        <FormModal
-            {...props}
-            intermediate
-            close={c('Action').t`Close`}
-            submit={c('Action').t`Apply`}
-            onSubmit={handleSubmit}
-        >
-            <div className="h2 text-center mb0-5">{c('Title').t`Select a theme`}</div>
-            <p className="text-center mt0 mb2">{c('Info').t`You can change this anytime in your settings.`}</p>
+        <FormModal {...props} intermediate close={null} submit={c('Action').t`OK`} onSubmit={handleSubmit}>
+            <div className="h2 text-center mb1">{c('Title').t`Select a theme`}</div>
             <div className="flex">
-                <ThemeCards liClassName="w33" list={themes} themeIdentifier={localTheme} onChange={handleThemeChange} />
+                <ThemeCards
+                    liClassName="w33 flex-flex-children"
+                    list={themes}
+                    themeIdentifier={theme}
+                    onChange={handleThemeChange}
+                />
             </div>
         </FormModal>
     );
