@@ -9,15 +9,15 @@ import useLoading from './useLoading';
 import useUserSettings from './useUserSettings';
 import { FeatureCode } from '../containers/features';
 
-export type Environment = 'alpha' | 'beta' | 'prod';
+export type Environment = 'alpha' | 'beta';
 
 const getTargetEnvironment = (
     versionCookie: Environment | undefined,
     earlyAccessScope: Environment,
     earlyAccessUserSetting: boolean
-): Environment => {
+): Environment | undefined => {
     if (!earlyAccessUserSetting) {
-        return 'prod';
+        return;
     }
 
     return versionCookie || earlyAccessScope;
@@ -42,10 +42,10 @@ const useEarlyAccess = () => {
         Boolean(userSettings.EarlyAccess)
     );
 
-    const updateVersionCookie = (environment: Environment) => {
+    const updateVersionCookie = (environment?: Environment) => {
         setVersionCookie(targetEnvironment);
 
-        if (environment === 'prod') {
+        if (!environment) {
             deleteCookie('Version');
         } else {
             setCookie({
@@ -84,11 +84,10 @@ const useEarlyAccess = () => {
 
         await withLoadingUpdate(api(updateEarlyAccess({ EarlyAccess: Number(earlyAccessEnabled) })));
 
-        updateVersionCookie(earlyAccessEnabled ? earlyAccessScopeValue : 'prod');
+        updateVersionCookie(earlyAccessEnabled ? earlyAccessScopeValue : undefined);
     };
 
-    const currentEnvironment = versionCookieAtLoad || 'prod';
-    const currentEnvironmentMatchesTargetEnvironment = currentEnvironment === targetEnvironment;
+    const currentEnvironmentMatchesTargetEnvironment = versionCookieAtLoad === targetEnvironment;
     const environmentIsDesynchronized = hasLoaded && !currentEnvironmentMatchesTargetEnvironment;
     const loading = earlyAccessScope.loading || loadingUpdate;
 
@@ -100,7 +99,7 @@ const useEarlyAccess = () => {
         loading,
         loadingUpdate,
         environmentIsDesynchronized,
-        currentEnvironment,
+        currentEnvironment: versionCookieAtLoad,
     };
 };
 
