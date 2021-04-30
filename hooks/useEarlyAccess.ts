@@ -1,6 +1,8 @@
+import { useEffect, useState } from 'react';
 import { updateEarlyAccess } from 'proton-shared/lib/api/settings';
 import { deleteCookie, getCookie, setCookie } from 'proton-shared/lib/helpers/cookies';
-import { useEffect, useState } from 'react';
+import { getSecondLevelDomain } from 'proton-shared/lib/helpers/url';
+
 import useFeature from './useFeature';
 import useApi from './useApi';
 import useLoading from './useLoading';
@@ -49,6 +51,7 @@ const useEarlyAccess = () => {
             setCookie({
                 cookieName: 'Version',
                 cookieValue: environment,
+                cookieDomain: `.${getSecondLevelDomain()}`,
                 expirationDate: 'max',
                 path: '/',
             });
