@@ -1,13 +1,14 @@
 import React, { ComponentPropsWithoutRef } from 'react';
 import { c } from 'ttag';
 import { PROTON_THEMES } from 'proton-shared/lib/themes/themes';
+import { APPS } from 'proton-shared/lib/constants';
 
 import { AppLink, DropdownMenu, DropdownMenuButton, DropdownMenuLink, Icon } from '../../components';
 import SimpleDropdown from '../../components/dropdown/SimpleDropdown';
 import TopNavbarListItemButton, {
     TopNavbarListItemButtonProps,
 } from '../../components/topnavbar/TopNavbarListItemButton';
-import { useEarlyAccess, useMailSettings, useModals } from '../../hooks';
+import { useConfig, useEarlyAccess, useMailSettings, useModals } from '../../hooks';
 import { MailShortcutsModal } from '../mail';
 import ThemesModal from '../themes/ThemesModal';
 import EarlyAccessModal from '../earlyAccess/EarlyAccessModal';
@@ -32,6 +33,7 @@ const TopNavbarListItemSettingsButton = React.forwardRef(
 interface Props extends ComponentPropsWithoutRef<typeof AppLink> {}
 
 const TopNavbarListItemSettingsDropdown = (props: Props) => {
+    const { APP_NAME } = useConfig();
     const { createModal } = useModals();
     const earlyAccess = useEarlyAccess();
     const [theme] = useTheme();
@@ -88,13 +90,17 @@ const TopNavbarListItemSettingsDropdown = (props: Props) => {
                     {c('Action').t`Theme`}
                     <span className="color-primary ml2">{PROTON_THEMES[theme].getI18NLabel()}</span>
                 </DropdownMenuButton>
-                <DropdownMenuButton
-                    onClick={handleKeyboardShortcutsClick}
-                    className="flex flex-nowrap flex-justify-space-between flex-align-items-center"
-                >
-                    {c('Action').t`Keyboard shortcuts`}
-                    <span className="color-primary ml2">{Shortcuts ? c('Enabled').t`On` : c('Disabled').t`Off`}</span>
-                </DropdownMenuButton>
+                {APP_NAME === APPS.PROTONMAIL && (
+                    <DropdownMenuButton
+                        onClick={handleKeyboardShortcutsClick}
+                        className="flex flex-nowrap flex-justify-space-between flex-align-items-center"
+                    >
+                        {c('Action').t`Keyboard shortcuts`}
+                        <span className="color-primary ml2">
+                            {Shortcuts ? c('Enabled').t`On` : c('Disabled').t`Off`}
+                        </span>
+                    </DropdownMenuButton>
+                )}
             </DropdownMenu>
         </SimpleDropdown>
     );
