@@ -89,12 +89,15 @@ const ProtonPlanPicker = ({
         <div {...rest}>
             <h2 className="text-2xl text-bold">{service === PLAN_SERVICES.VPN ? vpnAppName : mailAppName} plan</h2>
             {index === 0 && cycle === CYCLE.MONTHLY ? (
+                // translator: <Save 20%> on your subscription by switching to <annual billing>
                 <p>{c('Info').jt`${save20} on your subscription by switching to ${annualBilling}`}</p>
             ) : null}
             {index === 1 && service === PLAN_SERVICES.MAIL ? (
+                // translator: <Save extra 20%> on both Mail and VPN by adding a Mail subscription
                 <p>{c('Info').jt`${save20more} on both Mail and VPN by adding a Mail subscription.`}</p>
             ) : null}
             {index === 1 && service === PLAN_SERVICES.VPN ? (
+                // translator: <Save extra 20%> on both Mail and VPN by adding a Mail subscription
                 <p>{c('Info').jt`${save20more} on both VPN and Mail by adding a VPN subscription.`}</p>
             ) : null}
             <ul className="unstyled">
