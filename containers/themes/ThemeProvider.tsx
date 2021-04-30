@@ -29,10 +29,12 @@ const ThemeProvider = ({ children }: Props) => {
 
     const [theme, setTheme] = useState<ThemeTypes>(ThemeTypes.Default);
 
-    const style = getThemeStyle(APP_NAME === APPS.PROTONVPN_SETTINGS ? ThemeTypes.Default : theme);
+    const computedTheme = Object.values(ThemeTypes).includes(theme) ? theme : ThemeTypes.Default;
+
+    const style = getThemeStyle(APP_NAME === APPS.PROTONVPN_SETTINGS ? ThemeTypes.Default : computedTheme);
 
     return (
-        <ThemeContext.Provider value={[theme, setTheme]}>
+        <ThemeContext.Provider value={[computedTheme, setTheme]}>
             <style id={THEME_ID}>{style}</style>
             {children}
         </ThemeContext.Provider>
