@@ -31,7 +31,7 @@ const ThemesModal = (props: { onClose?: () => void }) => {
             <div className="h2 text-center mb1">{c('Title').t`Select a theme`}</div>
             <div className="flex">
                 <ThemeCards
-                    liClassName="w33 flex-flex-children"
+                    className="theme-modal-list"
                     list={themes}
                     themeIdentifier={theme}
                     onChange={handleThemeChange}
