@@ -81,8 +81,8 @@ const UserDropdown = (rest: Omit<Props, 'user' | 'isOpen' | 'onClick'>) => {
                         onClick={handleLogout}
                         data-cy-header-user-dropdown="logout"
                     >
-                        {c('Action').t`Sign out`}
-                        <Icon className="ml1" name="sign-out-right" />
+                        <span className="mr1">{c('Action').t`Sign out`}</span>
+                        <Icon name="sign-out-right" />
                     </DropdownMenuButton>
                 </DropdownMenu>
             </Dropdown>
