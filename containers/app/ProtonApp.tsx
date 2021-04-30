@@ -89,6 +89,18 @@ const getInitialState = (oldUID?: string, oldLocalID?: number): { UID?: string; 
     }
 };
 
+const setBaseTag = (localBasename = '/') => {
+    let baseTag = document.getElementsByTagName('base')[0];
+    const fullHref = new URL(localBasename, window.location.origin).href;
+    if (baseTag) {
+        baseTag.href = fullHref;
+        return;
+    }
+    baseTag = document.createElement('base');
+    baseTag.href = fullHref;
+    document.head.appendChild(baseTag);
+};
+
 interface AuthState {
     UID?: string;
     localID?: number;
@@ -120,7 +132,9 @@ const ProtonApp = ({ config, children, hasInitialAuth }: Props) => {
             hasInitialAuth === false
                 ? undefined
                 : getInitialState(authentication.getUID(), authentication.getLocalID());
-        const history = createHistory({ basename: getBasename(state?.localID) });
+        const basename = getBasename(state?.localID);
+        const history = createHistory({ basename });
+        setBaseTag(basename);
         return {
             ...state,
             history,
@@ -176,11 +190,13 @@ const ProtonApp = ({ config, children, hasInitialAuth }: Props) => {
             cacheRef.current = cache;
             pathRef.current = getPath(window.location.href, path);
 
+            const basename = getBasename(newLocalID);
             setAuthData({
                 UID: newUID,
                 localID: newLocalID,
-                history: createHistory({ basename: getBasename(newLocalID) }),
+                history: createHistory({ basename }),
             });
+            setBaseTag(basename);
         },
         []
     );
@@ -206,9 +222,11 @@ const ProtonApp = ({ config, children, hasInitialAuth }: Props) => {
             }
             return requestFork(APP_NAME, undefined, FORK_TYPE.SWITCH);
         }
+        const basename = getBasename();
         setAuthData({
-            history: createHistory({ basename: getBasename() }),
+            history: createHistory({ basename }),
         });
+        setBaseTag(basename);
     }, []);
 
     const logoutListener = useInstance(() => createListeners());
