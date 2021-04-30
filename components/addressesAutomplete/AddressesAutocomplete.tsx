@@ -157,7 +157,9 @@ const AddressesAutocomplete = React.forwardRef<HTMLInputElement, Props>(
         const filteredOptions = useAutocompleteFilter(input, options, getData, limit, 1);
 
         // If a group name is equal to the search input, we want to display it as the first option
-        const exactNameGroup = filteredOptions.find((option) => option.option.label === input);
+        const exactNameGroup = filteredOptions.find(
+            (option) => option.option.label === input && option.option.type === 'group'
+        );
 
         // Put the group at the first place if found
         const filteredAndSortedOptions = exactNameGroup
@@ -191,7 +193,7 @@ const AddressesAutocomplete = React.forwardRef<HTMLInputElement, Props>(
             setInput(newValue);
         };
 
-        const getOptionDisplay = (text: string, option: any, chunks: MatchChunk[]) => {
+        const getOptionDisplay = (optionText: string, option: any, chunks: MatchChunk[]) => {
             if (option.type === 'group') {
                 const memberCount = groupsEmailsMap ? groupsEmailsMap[option.value.ID]?.length || 0 : 10;
 
@@ -206,14 +208,14 @@ const AddressesAutocomplete = React.forwardRef<HTMLInputElement, Props>(
                     <>
                         <Icon name="circle" color={option.value.Color} size={12} className="mr0-5" />
                         <span className="mr0-5">
-                            <Marks chunks={chunks}>{text}</Marks>
+                            <Marks chunks={chunks}>{optionText}</Marks>
                         </span>
                         {memberNumberText}
                     </>
                 );
             }
 
-            return <Marks chunks={chunks}>{text}</Marks>;
+            return <Marks chunks={chunks}>{optionText}</Marks>;
         };
 
         return (
