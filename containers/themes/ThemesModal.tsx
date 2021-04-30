@@ -9,7 +9,7 @@ import { ThemeCards, useTheme } from '.';
 
 const availableThemes = Object.values(PROTON_THEMES);
 
-const ThemesModal = (props: { onClose: () => void }) => {
+const ThemesModal = (props: { onClose?: () => void }) => {
     const api = useApi();
     const [theme, setTheme] = useTheme();
 
