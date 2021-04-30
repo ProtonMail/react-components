@@ -5,7 +5,6 @@ import { Recipient } from 'proton-shared/lib/interfaces';
 import { inputToRecipient } from 'proton-shared/lib/mail/recipient';
 import { SimpleMap } from 'proton-shared/lib/interfaces/utils';
 import { noop } from 'proton-shared/lib/helpers/function';
-import { MatchChunk } from 'proton-shared/lib/helpers/regex';
 import { c, msgid } from 'ttag';
 
 import Input, { Props as InputProps } from '../input/Input';
@@ -193,29 +192,11 @@ const AddressesAutocomplete = React.forwardRef<HTMLInputElement, Props>(
             setInput(newValue);
         };
 
-        const getOptionDisplay = (optionText: string, option: any, chunks: MatchChunk[]) => {
-            if (option.type === 'group') {
-                const memberCount = groupsEmailsMap ? groupsEmailsMap[option.value.ID]?.length || 0 : 10;
+        const getNumberOfMembersText = (groupID: string) => {
+            const memberCount = groupsEmailsMap ? groupsEmailsMap[groupID]?.length || 0 : 0;
 
-                // translator: the variable is a positive integer (written in digits) always greater or equal to 0
-                const memberNumberText = c('Info').ngettext(
-                    msgid`(${memberCount} member)`,
-                    `(${memberCount} members)`,
-                    memberCount
-                );
-
-                return (
-                    <>
-                        <Icon name="circle" color={option.value.Color} size={12} className="mr0-5" />
-                        <span className="mr0-5">
-                            <Marks chunks={chunks}>{optionText}</Marks>
-                        </span>
-                        {memberNumberText}
-                    </>
-                );
-            }
-
-            return <Marks chunks={chunks}>{optionText}</Marks>;
+            // translator: the variable is a positive integer (written in digits) always greater or equal to 0
+            return c('Info').ngettext(msgid`(${memberCount} member)`, `(${memberCount} members)`, memberCount);
         };
 
         return (
@@ -259,7 +240,17 @@ const AddressesAutocomplete = React.forwardRef<HTMLInputElement, Props>(
                                 focusOnActive={false}
                                 onChange={handleSelect}
                             >
-                                {getOptionDisplay(text, option, chunks)}
+                                {option.type === 'group' ? (
+                                    <>
+                                        <Icon name="circle" color={option.value.Color} size={12} className="mr0-5" />
+                                        <span className="mr0-5">
+                                            <Marks chunks={chunks}>{text}</Marks>
+                                        </span>
+                                        {getNumberOfMembersText(option.value.ID)}
+                                    </>
+                                ) : (
+                                    <Marks chunks={chunks}>{text}</Marks>
+                                )}
                             </Option>
                         );
                     })}
