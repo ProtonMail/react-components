@@ -77,7 +77,7 @@ const ProtonPlanPicker = ({
             .t`annual billing`}</InlineLinkButton>
     );
     const save20 = <span className="text-semibold color-success" key="save-20">{c('Info').t`Save 20%`}</span>;
-    const save20more = (
+    const saveExtra20 = (
         <span className="text-semibold color-success" key="saveExtra-20">{c('Info').t`Save extra 20%`}</span>
     );
 
@@ -94,11 +94,11 @@ const ProtonPlanPicker = ({
             ) : null}
             {index === 1 && service === PLAN_SERVICES.MAIL ? (
                 // translator: <Save extra 20%> on both Mail and VPN by adding a Mail subscription
-                <p>{c('Info').jt`${save20more} on both Mail and VPN by adding a Mail subscription.`}</p>
+                <p>{c('Info').jt`${saveExtra20} on both Mail and VPN by adding a Mail subscription.`}</p>
             ) : null}
             {index === 1 && service === PLAN_SERVICES.VPN ? (
                 // translator: <Save extra 20%> on both Mail and VPN by adding a Mail subscription
-                <p>{c('Info').jt`${save20more} on both VPN and Mail by adding a VPN subscription.`}</p>
+                <p>{c('Info').jt`${saveExtra20} on both VPN and Mail by adding a VPN subscription.`}</p>
             ) : null}
             <ul className="unstyled">
                 {plansToShow.map((plan) => {
