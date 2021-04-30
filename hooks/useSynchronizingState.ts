@@ -10,16 +10,10 @@ const useSynchronizingState = <V>(value: V) => {
     const [state, setState] = useState<V>(value);
 
     useEffect(() => {
-        if (state !== value) {
-            setState(value);
-        }
+        setState(value);
     }, [value]);
 
-    /*
-     * Typed as a tuple, otherwise typescript thinks the
-     * returned value is an array of either
-     */
-    return [state, setState] as [V, typeof setState];
+    return [state, setState] as const;
 };
 
 export default useSynchronizingState;
