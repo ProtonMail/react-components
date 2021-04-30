@@ -45,7 +45,8 @@ const EarlyAccessModal = (props: { onClose?: () => void }) => {
                 </label>
             </div>
             <p className="mb0-5 color-weak">
-                {c('Refresh on apply warning').t`Note: upon applying a change, the application will be refreshed.`}
+                {c('Refresh on apply warning')
+                    .t`Note: upon clicking the "Apply" button, the application will be reloaded`}
             </p>
         </FormModal>
     );
