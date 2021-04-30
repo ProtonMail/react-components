@@ -8,11 +8,14 @@ import TopBanner from './TopBanner';
 const EarlyAccessDesynchronizedBanner = () => {
     const earlyAccess = useEarlyAccess();
 
-    const handleRefreshClick = () => {
-        window.location.reload();
-    };
-
-    const refreshButton = <InlineLinkButton onClick={handleRefreshClick}>{c('Action').t`Refresh`}</InlineLinkButton>;
+    const refreshButton = (
+        <InlineLinkButton
+            key="refresh-button"
+            onClick={() => {
+                window.location.reload();
+            }}
+        >{c('Action').t`Refresh`}</InlineLinkButton>
+    );
 
     if (!earlyAccess.environmentIsDesynchronized) {
         return null;
