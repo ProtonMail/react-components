@@ -92,7 +92,7 @@ const SubscriptionModal = ({
         [SUBSCRIPTION_STEPS.THANKS]: '',
     };
 
-    const innerRef = useRef();
+    const innerRef = useRef<HTMLDivElement>();
     const api = useApi();
     const { APP_NAME } = useConfig();
     const isVpnApp = APP_NAME === APPS.PROTONVPN_SETTINGS;
@@ -317,7 +317,9 @@ const SubscriptionModal = ({
 
     // Each time the user switch between steps, it takes the user to the top of the modal
     useEffect(() => {
-        innerRef.current?.scrollTop = 0;
+        if (innerRef?.current) {
+            innerRef.current.scrollTop = 0;
+        }
     }, [model.step]);
 
     return (
