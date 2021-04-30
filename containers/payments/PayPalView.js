@@ -58,7 +58,7 @@ const PayPalView = ({ type, amount, currency, paypal, paypalCredit }) => {
                     </div>
                     <Alert>
                         {c('Info')
-                            .jt`You must have a credit card or bank account linked with your PayPal account. If your PayPal account doesn't have that, please click on the button below.`}
+                            .t`You must have a credit card or bank account linked with your PayPal account. If your PayPal account doesn't have that, please click on the button below.`}
                         <br />
                         {clickHere}
                     </Alert>
