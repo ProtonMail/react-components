@@ -1,7 +1,7 @@
 import React from 'react';
 import { c } from 'ttag';
 
-import { Checkbox, FormModal, Label } from '../../components';
+import { Checkbox, FormModal } from '../../components';
 import useEarlyAccess from '../../hooks/useEarlyAccess';
 import useSynchronizingState from '../../hooks/useSynchronizingState';
 
@@ -33,11 +33,16 @@ const EarlyAccessModal = (props: { onClose?: () => void }) => {
                 {c('Early access description')
                     .t`Early access gives you access to the beta version of Proton which has new features and improvements. Our beta versions undergo the same reliability testing as our public versions, but if you encounter any issues, you can switch off early access.`}
             </p>
-            <div className="mb0-5">
-                <Label>
-                    <Checkbox checked={earlyAccessEnabled} onChange={handleChange} />{' '}
+            <div className="mb0-5 flex flex-align-items-center">
+                <label htmlFor="enable-early-access-checkbox">
+                    <Checkbox
+                        id="enable-early-access-checkbox"
+                        checked={earlyAccessEnabled}
+                        onChange={handleChange}
+                        className="mr0-5"
+                    />
                     {c('Label').t`Enable early access`}
-                </Label>
+                </label>
             </div>
             <p className="mb0-5 color-weak">
                 {c('Refresh on apply warning').t`Note: upon applying a change, the application will be refreshed.`}
