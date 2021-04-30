@@ -122,7 +122,7 @@ const PrivateHeader = ({
                     {settingsButton ? <TopNavbarListItem noShrink>{settingsButton}</TopNavbarListItem> : null}
                     <TopNavbarListItem noShrink>{helpDropdown || <TopNavbarListItemHelpDropdown />}</TopNavbarListItem>
                     <TopNavbarListItem className="flex-align-self-stretch">
-                        <Vr className="h100" />
+                        <Vr className="h100 mr1 ml1" />
                     </TopNavbarListItem>
                     <TopNavbarListItem className="relative">
                         <UserDropdown />

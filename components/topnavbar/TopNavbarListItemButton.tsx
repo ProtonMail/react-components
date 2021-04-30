@@ -28,7 +28,6 @@ const TopNavbarListItemButton: <E extends React.ElementType = typeof defaultElem
                 as={defaultElement}
                 color="weak"
                 shape="ghost"
-                size="large"
                 className={classnames([
                     'topnav-link inline-flex flex-nowrap flex-align-items-center',
                     hasRedDot && 'relative topnav-link--blackfriday',
