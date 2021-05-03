@@ -229,13 +229,18 @@ const AddressesAutocomplete = React.forwardRef<HTMLInputElement, Props>(
                                 onChange={handleSelect}
                             >
                                 {option.type === 'group' ? (
-                                    <>
-                                        <Icon name="circle" color={option.value.Color} size={12} className="mr0-5" />
-                                        <span className="mr0-5">
+                                    <div className="flex flex-nowrap flex-flex-align-items-center">
+                                        <Icon
+                                            name="circle"
+                                            color={option.value.Color}
+                                            size={12}
+                                            className="mr0-5 flex-item-noshrink flex-item-centered-vert"
+                                        />
+                                        <span className="mr0-5 text-ellipsis">
                                             <Marks chunks={chunks}>{text}</Marks>
                                         </span>
                                         {getNumberOfMembersText(option.value.ID)}
-                                    </>
+                                    </div>
                                 ) : (
                                     <Marks chunks={chunks}>{text}</Marks>
                                 )}
