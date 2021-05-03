@@ -142,7 +142,12 @@ const AddressesAutocomplete = React.forwardRef<HTMLInputElement, Props>(
             return value.label;
         }, []);
 
-        const filteredOptions = useAutocompleteFilter(input, options, getData, limit, 1);
+        const filteredOptions = useAutocompleteFilter(input, options, getData, limit, 1).filter((option) => {
+            if (option.option.type === 'group' && groupsWithContactsMap) {
+                return groupsWithContactsMap[option.option.value.ID]?.contacts.length > 0;
+            }
+            return option;
+        });
 
         // If a group name is equal to the search input, we want to display it as the first option
         const exactNameGroup = filteredOptions.find(
