@@ -6,7 +6,7 @@ import Progress from './Progress';
 
 interface Props {
     id: string;
-    display: string;
+    display?: string;
     value: number;
     max?: number;
     loading: boolean;
