@@ -29,6 +29,7 @@ interface Props extends Omit<InputProps, 'value'> {
     contactEmails?: ContactEmail[];
     contactGroups?: ContactGroup[];
     contactEmailsMap?: SimpleMap<ContactEmail>;
+    groupsWithContactsMap?: any;
     hasEmailPasting?: boolean;
     hasAddOnBlur?: boolean;
     limit?: number;
@@ -42,6 +43,7 @@ const AddressesAutocomplete = React.forwardRef<HTMLInputElement, Props>(
             contactEmails,
             contactEmailsMap,
             contactGroups,
+            groupsWithContactsMap,
             id,
             onKeyDown,
             recipients,
@@ -59,20 +61,6 @@ const AddressesAutocomplete = React.forwardRef<HTMLInputElement, Props>(
     ) => {
         const [input, setInput] = useState('');
         const [emailError, setEmailError] = useState('');
-
-        const groupsEmailsMap = useMemo(
-            () =>
-                contactEmails?.reduce<{ [groupID: string]: ContactEmail[] }>((acc, contactEmail) => {
-                    contactEmail.LabelIDs.forEach((labelID) => {
-                        if (!acc[labelID]) {
-                            acc[labelID] = [];
-                        }
-                        acc[labelID].push(contactEmail);
-                    });
-                    return acc;
-                }, {}),
-            [contactGroups, contactEmails]
-        );
 
         const [recipientsByAddress, recipientsByGroup] = useMemo(() => {
             return recipients.reduce<[Set<string>, Set<string>]>(
@@ -193,7 +181,7 @@ const AddressesAutocomplete = React.forwardRef<HTMLInputElement, Props>(
         };
 
         const getNumberOfMembersText = (groupID: string) => {
-            const memberCount = groupsEmailsMap ? groupsEmailsMap[groupID]?.length || 0 : 0;
+            const memberCount = groupsWithContactsMap ? groupsWithContactsMap[groupID]?.contacts.length || 0 : 0;
 
             // translator: the variable is a positive integer (written in digits) always greater or equal to 0
             return c('Info').ngettext(msgid`(${memberCount} member)`, `(${memberCount} members)`, memberCount);
