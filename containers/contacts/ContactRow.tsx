@@ -60,7 +60,7 @@ const ContactRow = ({
                 <div className="flex-item-fluid pl1 flex flex-column flex-justify-space-between conversation-titlesender">
                     <div className="flex flex-nowrap flex-align-items-center item-firstline max-w100">
                         <div className={classnames(['flex flex-item-fluid w0', !!LabelIDs.length && 'pr1'])}>
-                            <span className="text-bold inline-block max-w100 text-ellipsis" id={ID} title={Name}>
+                            <span className="text-bold inline-block max-w100 text-ellipsis" id={ID}>
                                 {Name}
                             </span>
                         </div>
