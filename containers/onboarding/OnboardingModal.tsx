@@ -95,6 +95,7 @@ const OnboardingModal = ({
     const handleNext = () => {
         // eslint-disable-next-line @typescript-eslint/no-use-before-define
         if (isLastStep) {
+            onDone?.();
             rest?.onClose?.();
             return;
         }
@@ -188,15 +189,9 @@ const OnboardingModal = ({
     const productSteps = children
         ? (Array.isArray(children) ? children : [children])
               .map(
-                  (renderCallback, index) =>
+                  (renderCallback) =>
                       renderCallback?.({
-                          onNext() {
-                              const isLastProductStep = productSteps.length - 1 === index;
-                              if (isLastProductStep) {
-                                  onDone?.();
-                              }
-                              handleNext();
-                          },
+                          onNext: handleNext,
                           onBack: handleBack,
                           displayGenericSteps,
                       }) ?? null
