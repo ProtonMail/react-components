@@ -151,6 +151,8 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps: initialOAu
     const invalidPortError = useMemo(() => !isNumber(modalModel.port), [modalModel.port]);
 
     const title = useMemo(() => {
+        const totalSteps = gmail2StepsTabIndex === 0 ? 4 : 3;
+
         switch (modalModel.step) {
             case Step.INSTRUCTIONS:
                 if (!providerInstructions) {
@@ -160,10 +162,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps: initialOAu
                 if (providerInstructions === PROVIDER_INSTRUCTIONS.YAHOO) {
                     return c('Title').t`Prepare Yahoo Mail for import`;
                 }
-
-                return c('Title').t`Prepare Gmail for import ${gmailInstructionsStep}/${
-                    gmail2StepsTabIndex === 0 ? 4 : 3
-                }`;
+                return c('Title').t`Prepare Gmail for import ${gmailInstructionsStep}/${totalSteps}`;
             case Step.START:
                 return isReconnectMode ? c('Title').t`Reconnect your account` : c('Title').t`Start a new import`;
             case Step.PREPARE:
