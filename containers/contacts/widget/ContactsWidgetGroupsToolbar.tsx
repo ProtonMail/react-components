@@ -1,29 +1,39 @@
 import React, { ChangeEvent } from 'react';
 import { c, msgid } from 'ttag';
 
+import { Recipient, SimpleMap } from 'proton-shared/lib/interfaces';
+import { ContactEmail } from 'proton-shared/lib/interfaces/contacts';
 import { Checkbox, Icon, Button, Tooltip } from '../../../components';
+import type { CustomAction } from './TopNavbarListItemContactsDropdown';
 
 interface Props {
     allChecked: boolean;
-    selectedCount: number;
+    selected: string[];
     numberOfRecipients: number;
     onCheckAll: (checked: boolean) => void;
     onCompose?: () => void;
-    onCreateEvent?: () => void;
     onCreate: () => void;
     onDelete: () => void;
+    customActions: CustomAction[];
+    groupsEmailsMap: SimpleMap<ContactEmail[]>;
+    recipients: Recipient[];
+    onClose: () => void;
 }
 
 const ContactsWidgetGroupsToolbar = ({
     allChecked,
-    selectedCount,
+    selected,
     numberOfRecipients,
     onCheckAll,
     onCompose,
-    onCreateEvent,
     onCreate,
     onDelete,
+    customActions,
+    groupsEmailsMap,
+    recipients,
+    onClose,
 }: Props) => {
+    const selectedCount = selected.length;
     const handleCheck = ({ target }: ChangeEvent<HTMLInputElement>) => onCheckAll(target.checked);
     const noContactInSelected = !selectedCount || !numberOfRecipients;
     const noSelection = !selectedCount;
@@ -63,21 +73,9 @@ const ContactsWidgetGroupsToolbar = ({
                     </Button>
                 </Tooltip>
             ) : null}
-            {onCreateEvent ? (
-                <>
-                    <Tooltip title={c('Action').t`Create event`}>
-                        <Button
-                            icon
-                            className="mr0-5 inline-flex pt0-5 pb0-5"
-                            onClick={onCreateEvent}
-                            disabled={noSelection}
-                            title={c('Action').t`Create event`}
-                        >
-                            <Icon name="calendar" />
-                        </Button>
-                    </Tooltip>
-                </>
-            ) : null}
+            {customActions.map((action) =>
+                action.render({ groupsEmailsMap, recipients, noSelection, onClose, selected })
+            )}
             <Tooltip>
                 <Button
                     icon

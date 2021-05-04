@@ -6,8 +6,6 @@ import { normalize } from 'proton-shared/lib/helpers/string';
 import { noop } from 'proton-shared/lib/helpers/function';
 import { orderContactGroups } from 'proton-shared/lib/helpers/contactGroups';
 
-import { AttendeeModel } from 'proton-shared/lib/interfaces/calendar';
-import emailToAttendee from 'proton-shared/lib/calendar/emailToAttendee';
 import { ContactUpgradeModal, FullLoader, SearchInput } from '../../../components';
 import {
     useContactEmails,
@@ -24,14 +22,15 @@ import ContactGroupModal from '../modals/ContactGroupModal';
 import ContactGroupDetailsModal from '../modals/ContactGroupDetailsModal';
 import ContactsWidgetPlaceholder, { EmptyType } from './ContactsWidgetPlaceholder';
 import ContactGroupDeleteModal from '../modals/ContactGroupDeleteModal';
+import type { CustomAction } from './TopNavbarListItemContactsDropdown';
 
 interface Props {
     onClose: () => void;
     onCompose?: (recipients: Recipient[], attachments: File[]) => void;
-    onCreateEvent?: (attendees: AttendeeModel[]) => void;
+    customActions: CustomAction[];
 }
 
-const ContactsWidgetGroupsContainer = ({ onClose, onCompose, onCreateEvent }: Props) => {
+const ContactsWidgetGroupsContainer = ({ onClose, onCompose, customActions }: Props) => {
     const [userSettings, loadingUserSettings] = useUserSettings();
     const { createModal } = useModals();
     const { createNotification } = useNotifications();
@@ -122,23 +121,6 @@ const ContactsWidgetGroupsContainer = ({ onClose, onCompose, onCreateEvent }: Pr
         onClose();
     };
 
-    const handleCreateEvent = () => {
-        const participants = selectedIDs.flatMap((selectedID) => {
-            return groupsEmailsMap[selectedID].map(({ Email }) => emailToAttendee(Email));
-        });
-
-        if (participants.length > 100) {
-            createNotification({
-                type: 'error',
-                text: c('Error').t`You can't send a mail to more than 100 recipients`,
-            });
-            return;
-        }
-
-        onCreateEvent?.(participants);
-        onClose();
-    };
-
     const showUpgradeModal = () => createModal(<ContactUpgradeModal />);
 
     const handleDetails = (groupID: string) => {
@@ -197,11 +179,14 @@ const ContactsWidgetGroupsContainer = ({ onClose, onCompose, onCreateEvent }: Pr
             <div className="contacts-widget-toolbar pt1 pb1 border-bottom flex-item-noshrink">
                 <ContactsWidgetGroupsToolbar
                     allChecked={allChecked}
-                    selectedCount={selectedIDs.length}
+                    selected={selectedIDs}
                     numberOfRecipients={recipients.length}
                     onCheckAll={handleCheckAll}
                     onCompose={onCompose ? handleCompose : undefined}
-                    onCreateEvent={onCreateEvent ? handleCreateEvent : undefined}
+                    groupsEmailsMap={groupsEmailsMap}
+                    recipients={recipients}
+                    onClose={onClose}
+                    customActions={customActions}
                     onCreate={handleCreate}
                     onDelete={handleDelete}
                 />

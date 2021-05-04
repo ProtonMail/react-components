@@ -5,8 +5,6 @@ import { ContactEmail } from 'proton-shared/lib/interfaces/contacts';
 import { exportContacts } from 'proton-shared/lib/contacts/helpers/export';
 import { extractMergeable } from 'proton-shared/lib/contacts/helpers/merge';
 
-import { AttendeeModel } from 'proton-shared/lib/interfaces/calendar';
-import emailToAttendee from 'proton-shared/lib/calendar/emailToAttendee';
 import { FullLoader, SearchInput } from '../../../components';
 import { useApi, useModals, useNotifications, useUser, useUserKeys, useUserSettings } from '../../../hooks';
 import MergeModal from '../merge/MergeModal';
@@ -18,15 +16,16 @@ import ContactDeleteModal from '../modals/ContactDeleteModal';
 import ContactModal from '../modals/ContactModal';
 import ContactsWidgetPlaceholder, { EmptyType } from './ContactsWidgetPlaceholder';
 import MergeContactBanner from './MergeContactBanner';
+import type { CustomAction } from './TopNavbarListItemContactsDropdown';
 
 interface Props {
     onClose: () => void;
     onImport: () => void;
     onCompose?: (recipients: Recipient[], attachments: File[]) => void;
-    onCreateEvent?: (attendees: AttendeeModel[]) => void;
+    customActions: CustomAction[];
 }
 
-const ContactsWidgetContainer = ({ onClose, onImport, onCompose, onCreateEvent }: Props) => {
+const ContactsWidgetContainer = ({ onClose, onImport, onCompose, customActions }: Props) => {
     const [user, loadingUser] = useUser();
     const [userSettings, loadingUserSettings] = useUserSettings();
     const [userKeysList, loadingUserKeys] = useUserKeys();
@@ -44,6 +43,12 @@ const ContactsWidgetContainer = ({ onClose, onImport, onCompose, onCreateEvent }
     // To use when the widget will deal with groups
     const contactGroupID = '';
 
+    const contactList = useContactList({
+        search,
+        contactID,
+        contactGroupID,
+    });
+
     const {
         formattedContacts,
         checkedIDs,
@@ -57,11 +62,7 @@ const ContactsWidgetContainer = ({ onClose, onImport, onCompose, onCreateEvent }
         filteredContacts,
         hasCheckedAllFiltered,
         loading: loadingContacts,
-    } = useContactList({
-        search,
-        contactID,
-        contactGroupID,
-    });
+    } = contactList;
 
     const mergeableContacts = useMemo(() => extractMergeable(formattedContacts), [formattedContacts]);
     const countMergeableContacts = mergeableContacts.reduce(
@@ -114,24 +115,6 @@ const ContactsWidgetContainer = ({ onClose, onImport, onCompose, onCreateEvent }
         });
 
         onCompose?.(recipients, []);
-        onClose();
-    };
-
-    const handleCreateEvent = () => {
-        if (selectedIDs.length > 100) {
-            createNotification({
-                type: 'error',
-                text: c('Error').t`You can't invite more than 100 recipients`,
-            });
-            return;
-        }
-
-        const contactEmailsOfContacts = selectedIDs.flatMap(
-            (contactID) => contactEmailsMap[contactID]
-        ) as ContactEmail[];
-        const participants = contactEmailsOfContacts.map(({ Email }) => emailToAttendee(Email));
-
-        onCreateEvent?.(participants);
         onClose();
     };
 
@@ -232,15 +215,17 @@ const ContactsWidgetContainer = ({ onClose, onImport, onCompose, onCreateEvent }
             <div className="contacts-widget-toolbar pt1 pb1 border-bottom flex-item-noshrink">
                 <ContactsWidgetToolbar
                     allChecked={hasCheckedAllFiltered}
-                    selectedCount={selectedIDs.length}
+                    selected={selectedIDs}
                     noEmailsContactCount={noEmailsContactIDs.length}
                     onCheckAll={handleCheckAll}
-                    onCreateEvent={onCreateEvent ? handleCreateEvent : undefined}
                     onCompose={onCompose ? handleCompose : undefined}
+                    customActions={customActions}
+                    contactList={contactList}
                     onForward={handleForward}
                     onCreate={handleCreate}
                     onDelete={handleDelete}
                     onMerge={() => handleMerge(false)}
+                    onClose={onClose}
                 />
             </div>
             <div className="flex-item-fluid w100">
