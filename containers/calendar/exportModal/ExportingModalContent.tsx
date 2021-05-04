@@ -3,14 +3,15 @@ import React, { Dispatch, SetStateAction, useEffect } from 'react';
 import { c } from 'ttag';
 
 import {
-    CalendarEvent,
     EXPORT_ERRORS,
     EXPORT_STEPS,
     ExportCalendarModel,
+    ExportError,
     VcalVeventComponent,
 } from 'proton-shared/lib/interfaces/calendar';
 
 import { getEventsCount } from 'proton-shared/lib/api/calendars';
+import { getDefaultWeekStartsOn } from 'proton-shared/lib/settings/helper';
 import { Alert, DynamicProgress } from '../../../components';
 import useGetCalendarEventPersonal from '../../../hooks/useGetCalendarEventPersonal';
 import {
@@ -25,7 +26,7 @@ import {
 interface Props {
     model: ExportCalendarModel;
     setModel: Dispatch<SetStateAction<ExportCalendarModel>>;
-    onFinish: (vevents: VcalVeventComponent[], erroredEvents: CalendarEvent[]) => void;
+    onFinish: (vevents: VcalVeventComponent[], exportErrors: ExportError[]) => void;
 }
 const ExportingModalContent = ({ model, setModel, onFinish }: Props) => {
     const api = useApi();
@@ -79,7 +80,7 @@ const ExportingModalContent = ({ model, setModel, onFinish }: Props) => {
                     totalToProcess,
                 }));
 
-                const [exportedEvents, erroredEvents, totalEventsFetched] = await processInBatches({
+                const [exportedEvents, exportErrors, totalEventsFetched] = await processInBatches({
                     calendarID: model.calendar.ID,
                     addresses,
                     api: apiWithAbort,
@@ -91,6 +92,7 @@ const ExportingModalContent = ({ model, setModel, onFinish }: Props) => {
                     getCalendarEventPersonal,
                     memberID,
                     totalToProcess,
+                    weekStartsOn: model.weekStartsOn,
                 });
 
                 if (totalToProcess !== totalEventsFetched) {
@@ -104,15 +106,16 @@ const ExportingModalContent = ({ model, setModel, onFinish }: Props) => {
                     return;
                 }
 
-                onFinish(exportedEvents, erroredEvents);
+                onFinish(exportedEvents, exportErrors);
             } catch (error) {
                 setModelWithAbort((currentModel) => ({
                     step: EXPORT_STEPS.FINISHED,
                     calendar: currentModel.calendar,
                     totalProcessed: [],
                     totalToProcess: 0,
-                    erroredEvents: [],
+                    exportErrors: [],
                     error: EXPORT_ERRORS.NETWORK_ERROR,
+                    weekStartsOn: getDefaultWeekStartsOn(),
                 }));
 
                 if (signal.aborted) {
