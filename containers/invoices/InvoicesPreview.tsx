@@ -1,4 +1,4 @@
-import React, { useImperativeHandle, forwardRef, Ref, useState } from 'react';
+import React, { useImperativeHandle, forwardRef, Ref, useState, useRef } from 'react';
 
 import { getInvoice } from 'proton-shared/lib/api/payments';
 
@@ -27,6 +27,8 @@ const InvoicesPreview = (
 ) => {
     const api = useApi();
     const [previewing, setPreviewing] = useState<Preview>();
+
+    const rootRef = useRef<HTMLDivElement>(null);
 
     const handlePreview = async (invoice: Invoice) => {
         setPreviewing({ invoice });
@@ -74,17 +76,25 @@ const InvoicesPreview = (
     };
 
     return (
-        <FilePreview
-            loading={!previewing.contents}
-            contents={previewing.contents}
-            fileName={filename()}
-            mimeType="application/pdf"
-            onClose={handleClose}
-            onSave={handleDownload}
-            navigationControls={
-                <NavigationControl current={current} total={total} onNext={handleNext} onPrev={handlePrevious} />
-            }
-        />
+        <div ref={rootRef}>
+            <FilePreview
+                loading={!previewing.contents}
+                contents={previewing.contents}
+                fileName={filename()}
+                mimeType="application/pdf"
+                onClose={handleClose}
+                onSave={handleDownload}
+                navigationControls={
+                    <NavigationControl
+                        current={current}
+                        total={total}
+                        rootRef={rootRef}
+                        onNext={handleNext}
+                        onPrev={handlePrevious}
+                    />
+                }
+            />
+        </div>
     );
 };
 
