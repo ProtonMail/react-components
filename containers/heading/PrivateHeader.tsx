@@ -95,7 +95,7 @@ const PrivateHeader = ({
                             <TopNavbarListItemBlackFridayButton plans={plans} subscription={subscription} />
                         </TopNavbarListItem>
                     ) : null}
-                    {hasPaidMail || isNarrow || isVPN ? null : (
+                    {hasPaidMail || isVPN ? null : (
                         <TopNavbarListItem noShrink>
                             <TopNavbarListItemButton
                                 as={SettingsLink}
@@ -105,17 +105,18 @@ const PrivateHeader = ({
                                 icon={<Icon name="upgrade" />}
                                 path="/dashboard"
                                 app={APP_NAME}
-                                title={c('Link').t`Upgrade`}
+                                title={c('Link').t`Go to subscription plans`}
                             />
                         </TopNavbarListItem>
                     )}
-                    {hasPaidVpn || isNarrow || !isVPN ? null : (
+                    {hasPaidVpn || !isVPN ? null : (
                         <TopNavbarListItem noShrink>
                             <TopNavbarListItemButton
                                 as={AppLink}
                                 text={c('Link').t`Upgrade`}
                                 icon={<Icon name="upgrade" />}
                                 to="/dashboard"
+                                title={c('Link').t`Go to subscription plans`}
                             />
                         </TopNavbarListItem>
                     )}
@@ -123,9 +124,11 @@ const PrivateHeader = ({
                     {contactsButton ? <TopNavbarListItem noShrink>{contactsButton}</TopNavbarListItem> : null}
                     {settingsButton ? <TopNavbarListItem noShrink>{settingsButton}</TopNavbarListItem> : null}
                     <TopNavbarListItem noShrink>{helpDropdown || <TopNavbarListItemHelpDropdown />}</TopNavbarListItem>
-                    <TopNavbarListItem className="flex-align-self-stretch">
-                        <Vr className="h100 mr1 ml1" />
-                    </TopNavbarListItem>
+                    {!isNarrow && (
+                        <TopNavbarListItem className="flex-align-self-stretch">
+                            <Vr className="h100 mr1 ml1" />
+                        </TopNavbarListItem>
+                    )}
                     <TopNavbarListItem className="relative">
                         <UserDropdown />
                     </TopNavbarListItem>
