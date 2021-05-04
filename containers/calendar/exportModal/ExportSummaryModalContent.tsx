@@ -40,6 +40,7 @@ const ExportSummaryModalContent = ({ model }: Props) => {
             : c('Export calendar').t`Password reset - event cannot be decrypted`,
     };
 
+    const kbLink = 'https://protonmail.com/blog/';
     const getAlertMessage = () => {
         if (isSuccess) {
             return c('Export calendar').t`Calendar successfully exported. You can now save the ICS file.`;
@@ -58,11 +59,8 @@ const ExportSummaryModalContent = ({ model }: Props) => {
                                 .t`You can save an ICS file of the events that were successfully exported.`}
                         </div>
                         <div>
-                            <a
-                                href="https://protonmail.com/blog/"
-                                target="_blank"
-                                rel="noreferrer noopener nofollow"
-                            >{c('Export calendar').t`Learn how to restore encrypted events with old password`}</a>
+                            <a href={kbLink} target="_blank" rel="noreferrer noopener nofollow">{c('Export calendar')
+                                .t`Learn how to restore encrypted events with old password`}</a>
                         </div>
                     </>
                 );
@@ -82,8 +80,25 @@ const ExportSummaryModalContent = ({ model }: Props) => {
                 .t`The internet connection was interrupted, causing the export process to fail. Please try again.`;
         }
 
+        if (hasOnlyPasswordResetErrors) {
+            return (
+                <>
+                    <div>
+                        {c('Export calendar')
+                            .t`Due to a password reset, none of the events can be decrypted and exported.`}
+                    </div>
+                    <div>
+                        <a href={kbLink} target="_blank" rel="noreferrer noopener nofollow">{c('Export calendar')
+                            .t`Learn how to restore encrypted events with old password`}</a>
+                    </div>
+                </>
+            );
+        }
+
         return c('Export calendar').t`None of the events could be exported.`;
     };
+
+    const shouldShowErrorDetails = !!filteredErrors.length && !hasOnlyPasswordResetErrors;
 
     return (
         <>
@@ -97,7 +112,7 @@ const ExportSummaryModalContent = ({ model }: Props) => {
                 success={isSuccess}
                 partialSuccess={isPartialSuccess}
             />
-            {!!filteredErrors.length && (
+            {shouldShowErrorDetails && (
                 <Details>
                     <Summary>{c('Exporting errors summary').t`Details about events that cannot be exported`}</Summary>
                     <Bordered>
