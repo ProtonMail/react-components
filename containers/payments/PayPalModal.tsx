@@ -4,7 +4,7 @@ import { createToken, setPaymentMethod } from 'proton-shared/lib/api/payments';
 import { PAYMENT_METHOD_TYPES } from 'proton-shared/lib/constants';
 
 import { useApi, useEventManager, useLoading, useNotifications } from '../../hooks';
-import { Alert, FormModal, Loader, PrimaryButton } from '../../components';
+import { Alert, Button, FormModal, Loader, PrimaryButton } from '../../components';
 import { process } from './paymentTokenHelper';
 import { PaymentTokenResult } from './interface';
 
@@ -68,8 +68,16 @@ const PayPalModal = (props: any) => {
         <FormModal title={c('Title').t`Add PayPal payment method`} small footer={null} {...props}>
             {loading ? (
                 <>
-                    <Alert>{c('Info').t`Please verify the payment in the new tab.`}</Alert>
+                    <p className="text-center">{c('Info').t`Please verify payment at the new tab which was opened.`}</p>
                     <Loader />
+                    <p className="text-center">
+                        <Button
+                            onClick={() => {
+                                abortRef.current?.abort();
+                            }}
+                        >{c('Action').t`Cancel`}</Button>
+                    </p>
+                    <Alert>{c('Info').t`Verification can take a few minutes.`}</Alert>
                 </>
             ) : (
                 <>
