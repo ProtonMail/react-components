@@ -99,8 +99,10 @@ const PrivateHeader = ({
                         <TopNavbarListItem noShrink>
                             <TopNavbarListItemButton
                                 as={SettingsLink}
+                                shape="outline"
+                                color="norm"
                                 text={c('Link').t`Upgrade`}
-                                icon={<Icon name="upgrade-to-paid" />}
+                                icon={<Icon name="upgrade" />}
                                 path="/dashboard"
                                 app={APP_NAME}
                                 title={c('Link').t`Upgrade`}
@@ -112,7 +114,7 @@ const PrivateHeader = ({
                             <TopNavbarListItemButton
                                 as={AppLink}
                                 text={c('Link').t`Upgrade`}
-                                icon={<Icon name="upgrade-to-paid" />}
+                                icon={<Icon name="upgrade" />}
                                 to="/dashboard"
                             />
                         </TopNavbarListItem>
