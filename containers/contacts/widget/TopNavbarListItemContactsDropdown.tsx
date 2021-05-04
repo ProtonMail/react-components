@@ -65,6 +65,7 @@ const TopNavbarListItemContactsDropdown = ({ className, onCompose }: Props) => {
                 className={className}
                 ref={anchorRef}
                 onClick={handleClickDropdownButton}
+                title={c('Title').t`View contacts`}
             >
                 <></>
             </DropdownButton>

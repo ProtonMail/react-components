@@ -24,7 +24,8 @@ const TopNavbarListItemSettingsButton = React.forwardRef(
                 as="button"
                 data-test-id="view:general-settings"
                 icon={<Icon name="settings" />}
-                text={c('Title').t`Settings`}
+                text={c('Text').t`Settings`}
+                title={c('Title').t`Open settings menu`}
             />
         );
     }

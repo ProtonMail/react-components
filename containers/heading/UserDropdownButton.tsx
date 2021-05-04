@@ -22,6 +22,7 @@ const UserDropdownButton = ({ user, isOpen, ...rest }: Props, ref: React.Ref<HTM
             ref={ref}
             {...rest}
             className="max-w100 flex flex-align-items-center flex-nowrap user-dropdown-button"
+            title={`${nameToDisplay} <${Email}>`}
         >
             {nameToDisplay ? (
                 <span className="text-right flex flex-column mr0-75 lh130 no-mobile">

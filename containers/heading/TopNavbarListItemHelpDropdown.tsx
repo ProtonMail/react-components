@@ -61,6 +61,7 @@ const TopNavbarListItemHelpDropdown = <E extends React.ElementType = typeof defa
             originalPlacement="bottom-left"
             hasCaret={false}
             dropdownStyle={{ '--min-width': '18em' }}
+            title={c('Title').t`Open help menu`}
             {...rest}
         >
             <DropdownMenu>
