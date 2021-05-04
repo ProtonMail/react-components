@@ -303,7 +303,7 @@ export const handleLogin = async ({
     api: Api;
     ignoreUnlock: boolean;
     hasGenerateKeys: boolean;
-    payload: ChallengeResult;
+    payload?: ChallengeResult;
 }): Promise<AuthActionResponse> => {
     const infoResult = await api<InfoResponse>(getInfo(username));
     const { authVersion, result: authResult } = await loginWithFallback({
