@@ -278,9 +278,8 @@ const ChallengeFrame = ({
         <>
             <div
                 ref={renderDivRef}
-                style={{ position: 'absolute', left: '-1000px', top: '-1000px' }}
+                style={{ position: 'absolute', left: '0', top: '0', zIndex: -1 }}
                 aria-hidden="true"
-                className="visibility-hidden"
             >
                 {children}
             </div>
