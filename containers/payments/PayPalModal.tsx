@@ -21,30 +21,6 @@ const PayPalModal = (props: any) => {
     const paypalRef = useRef<PaymentTokenResult | undefined>();
     const paymentMethodType = PAYMENT_METHOD_TYPES.PAYPAL;
 
-    const addPaymentMethod = async (data: any) => {
-        await api(setPaymentMethod(data));
-        await call();
-        props.onClose();
-        createNotification({ text: c('Success').t`Payment method added` });
-    };
-
-    const handleSubmit = async (data: PaymentTokenResult) => {
-        abortRef.current = new AbortController();
-        await process({
-            Token: data.Token,
-            api,
-            ApprovalURL: data.ApprovalURL,
-            ReturnHost: data.ReturnHost,
-            signal: abortRef.current.signal,
-        });
-        return addPaymentMethod({
-            Type: PAYMENT_METHOD_TYPES.TOKEN,
-            Details: {
-                Token: data.Token,
-            },
-        });
-    };
-
     useEffect(() => {
         const run = async () => {
             const result = await api<PaymentTokenResult>(
@@ -63,6 +39,28 @@ const PayPalModal = (props: any) => {
             abortRef.current?.abort();
         };
     }, []);
+
+    const handleSubmit = async (data: PaymentTokenResult) => {
+        abortRef.current = new AbortController();
+        await process({
+            Token: data.Token,
+            api,
+            ApprovalURL: data.ApprovalURL,
+            ReturnHost: data.ReturnHost,
+            signal: abortRef.current.signal,
+        });
+        await api(
+            setPaymentMethod({
+                Type: PAYMENT_METHOD_TYPES.TOKEN,
+                Details: {
+                    Token: data.Token,
+                },
+            })
+        );
+        await call();
+        props.onClose();
+        createNotification({ text: c('Success').t`Payment method added` });
+    };
 
     return (
         <FormModal title={c('Title').t`Add PayPal payment method`} small footer={null} {...props}>
