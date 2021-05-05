@@ -2,6 +2,8 @@ import { ContactEmail, ContactGroup } from 'proton-shared/lib/interfaces/contact
 import { getEmailParts, validateEmailAddress } from 'proton-shared/lib/helpers/email';
 import { MAJOR_DOMAINS } from 'proton-shared/lib/constants';
 import { contactToInput, contactToRecipient, majorToRecipient } from 'proton-shared/lib/mail/recipient';
+import { c, msgid } from 'ttag';
+import { GroupsWithContactsMap } from '../../../proton-calendar/src/app/containers/calendar/ContactEmailsProvider';
 
 export type AddressesAutocompleteItem =
     | {
@@ -117,4 +119,11 @@ export const getMajorListAutocompleteItems = (input: string, filter: (email: str
                 type: 'major',
             } as const;
         });
+};
+
+export const getNumberOfMembersText = (groupID: string, groupsWithContactsMap?: GroupsWithContactsMap) => {
+    const memberCount = groupsWithContactsMap ? groupsWithContactsMap[groupID]?.contacts.length || 0 : 0;
+
+    // translator: number of members of a contact group, the variable is a positive integer (written in digits) always greater or equal to 0
+    return c('Info').ngettext(msgid`(${memberCount} member)`, `(${memberCount} members)`, memberCount);
 };

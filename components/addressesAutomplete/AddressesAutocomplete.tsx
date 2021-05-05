@@ -5,7 +5,6 @@ import { Recipient } from 'proton-shared/lib/interfaces';
 import { inputToRecipient } from 'proton-shared/lib/mail/recipient';
 import { SimpleMap } from 'proton-shared/lib/interfaces/utils';
 import { noop } from 'proton-shared/lib/helpers/function';
-import { c, msgid } from 'ttag';
 
 import Input, { Props as InputProps } from '../input/Input';
 import { Option } from '../option';
@@ -17,8 +16,10 @@ import {
     getContactsAutocompleteItems,
     getContactGroupsAutocompleteItems,
     getMajorListAutocompleteItems,
+    getNumberOfMembersText,
 } from './helper';
 import Icon from '../icon/Icon';
+import { GroupsWithContactsMap } from '../../../proton-calendar/src/app/containers/calendar/ContactEmailsProvider';
 
 interface Props extends Omit<InputProps, 'value'> {
     id: string;
@@ -29,7 +30,7 @@ interface Props extends Omit<InputProps, 'value'> {
     contactEmails?: ContactEmail[];
     contactGroups?: ContactGroup[];
     contactEmailsMap?: SimpleMap<ContactEmail>;
-    groupsWithContactsMap?: any;
+    groupsWithContactsMap?: GroupsWithContactsMap;
     hasEmailPasting?: boolean;
     hasAddOnBlur?: boolean;
     limit?: number;
@@ -145,12 +146,12 @@ const AddressesAutocomplete = React.forwardRef<HTMLInputElement, Props>(
 
         // If a group name is equal to the search input, we want to display it as the first option
         const exactNameGroup = filteredOptions.find(
-            (option) => option.option.label === input && option.option.type === 'group'
+            ({ option: { label, type } }) => label === input && type === 'group'
         );
 
         // Put the group at the first place if found
         const filteredAndSortedOptions = exactNameGroup
-            ? [exactNameGroup, ...filteredOptions.filter((option) => option.option.label !== input)]
+            ? [exactNameGroup, ...filteredOptions.filter(({ option: { label } }) => label !== input)]
             : filteredOptions;
 
         const { getOptionID, inputProps, suggestionProps } = useAutocomplete<AddressesAutocompleteItem>({
@@ -178,13 +179,6 @@ const AddressesAutocomplete = React.forwardRef<HTMLInputElement, Props>(
             }
 
             setInput(newValue);
-        };
-
-        const getNumberOfMembersText = (groupID: string) => {
-            const memberCount = groupsWithContactsMap ? groupsWithContactsMap[groupID]?.contacts.length || 0 : 0;
-
-            // translator: the variable is a positive integer (written in digits) always greater or equal to 0
-            return c('Info').ngettext(msgid`(${memberCount} member)`, `(${memberCount} members)`, memberCount);
         };
 
         return (
@@ -239,7 +233,7 @@ const AddressesAutocomplete = React.forwardRef<HTMLInputElement, Props>(
                                         <span className="mr0-5 text-ellipsis">
                                             <Marks chunks={chunks}>{text}</Marks>
                                         </span>
-                                        {getNumberOfMembersText(option.value.ID)}
+                                        {getNumberOfMembersText(option.value.ID, groupsWithContactsMap)}
                                     </div>
                                 ) : (
                                     <Marks chunks={chunks}>{text}</Marks>
