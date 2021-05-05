@@ -30,8 +30,9 @@ const ContactsGroupsList = ({
     const containerRef = useRef(null);
     const isCompactView = userSettings.Density === DENSITY.COMPACT;
 
-    const contactRowHeightComfort = 64;
-    const contactRowHeightCompact = 48;
+    const rootFontSize = (parseInt(window.getComputedStyle(document.body).fontSize, 10) * 16) / 14;
+    const contactRowHeightComfort = 4 * rootFontSize; // 4 * 16 = 64
+    const contactRowHeightCompact = 3 * rootFontSize; // 3 * 16 = 48
 
     return (
         <div
