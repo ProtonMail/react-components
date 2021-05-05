@@ -50,7 +50,7 @@ const RecoveryPhone = ({ phone, hasReset, defaultCountry, className }: Props) =>
 
     return (
         <form
-            className={classnames(['recovery-phone_container flex flex-wrap on-mobile-flex-column', className])}
+            className={classnames(['flex flex-wrap on-mobile-flex-column', className])}
             onSubmit={(e) => {
                 e.preventDefault();
                 if (onFormSubmit()) {
@@ -62,7 +62,6 @@ const RecoveryPhone = ({ phone, hasReset, defaultCountry, className }: Props) =>
                 <InputFieldTwo
                     as={PhoneInput}
                     id="phoneInput"
-                    className="recovery-phone_phone-input"
                     error={validator([requiredValidator(input)])}
                     disableChange={loading}
                     defaultCountry={defaultCountry}
