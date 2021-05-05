@@ -17,9 +17,9 @@ import {
     getContactGroupsAutocompleteItems,
     getMajorListAutocompleteItems,
     getNumberOfMembersText,
+    GroupsWithContactsMap,
 } from './helper';
 import Icon from '../icon/Icon';
-import { GroupsWithContactsMap } from '../../../proton-calendar/src/app/containers/calendar/ContactEmailsProvider';
 
 interface Props extends Omit<InputProps, 'value'> {
     id: string;

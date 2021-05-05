@@ -3,7 +3,7 @@ import { getEmailParts, validateEmailAddress } from 'proton-shared/lib/helpers/e
 import { MAJOR_DOMAINS } from 'proton-shared/lib/constants';
 import { contactToInput, contactToRecipient, majorToRecipient } from 'proton-shared/lib/mail/recipient';
 import { c, msgid } from 'ttag';
-import { GroupsWithContactsMap } from '../../../proton-calendar/src/app/containers/calendar/ContactEmailsProvider';
+import { SimpleMap } from 'proton-shared/lib/interfaces';
 
 export type AddressesAutocompleteItem =
     | {
@@ -25,6 +25,9 @@ export type AddressesAutocompleteItem =
           label: string;
           key: string;
       };
+
+export type GroupWithContacts = { group: ContactGroup; contacts: ContactEmail[] };
+export type GroupsWithContactsMap = SimpleMap<GroupWithContacts>;
 
 const compare = (item1: AddressesAutocompleteItem, item2: AddressesAutocompleteItem) => {
     if (item1.type === 'contact' && item2.type === 'contact' && item1.score !== item2.score) {
