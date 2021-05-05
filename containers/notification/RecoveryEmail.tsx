@@ -62,7 +62,7 @@ const RecoveryEmail = ({ email, hasReset, hasNotify, className }: Props) => {
 
     return (
         <form
-            className={classnames(['recovery-email_container flex flex-wrap on-mobile-flex-column', className])}
+            className={classnames(['flex flex-wrap on-mobile-flex-column', className])}
             onSubmit={(e) => {
                 e.preventDefault();
                 if (onFormSubmit()) {
@@ -76,7 +76,6 @@ const RecoveryEmail = ({ email, hasReset, hasNotify, className }: Props) => {
                     autoComplete="email"
                     id="recovery-email-input"
                     disableChange={loading}
-                    className="recovery-email_email-input"
                     value={input || ''}
                     placeholder={c('Info').t`Not set`}
                     error={validator([requiredValidator(input), emailValidator(input || '')])}
