@@ -19,7 +19,12 @@ const OnboardingThemes = ({ themes, themeIdentifier, onChange, ...rest }: Props)
             {...rest}
         >
             <div className="flex mb0-5">
-                <ThemeCards liClassName="w33" list={themes} themeIdentifier={themeIdentifier} onChange={onChange} />
+                <ThemeCards
+                    className="theme-modal-list"
+                    list={themes}
+                    themeIdentifier={themeIdentifier}
+                    onChange={onChange}
+                />
             </div>
         </OnboardingContent>
     );
