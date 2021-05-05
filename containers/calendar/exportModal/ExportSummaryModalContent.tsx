@@ -40,7 +40,7 @@ const ExportSummaryModalContent = ({ model }: Props) => {
             : c('Export calendar').t`Password reset - event cannot be decrypted`,
     };
 
-    const kbLink = 'https://protonmail.com/blog/';
+    const kbLink = 'https://protonmail.com/support/categories/calendar/'; // FIXME: add actual link
     const getAlertMessage = () => {
         if (isSuccess) {
             return c('Export calendar').t`Calendar successfully exported. You can now save the ICS file.`;
