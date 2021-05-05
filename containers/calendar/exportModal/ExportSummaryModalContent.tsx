@@ -21,6 +21,7 @@ const ExportSummaryModalContent = ({ model }: Props) => {
         totalToProcess
     );
 
+    // TODO: modularize
     const { exportErrors } = model;
     const passwordResetErrors = exportErrors.filter(
         (exportError) => exportError[1] === EXPORT_EVENT_ERRORS.PASSWORD_RESET
@@ -85,7 +86,7 @@ const ExportSummaryModalContent = ({ model }: Props) => {
                 <>
                     <div>
                         {c('Export calendar')
-                            .t`Due to a password reset, none of the events can be decrypted and exported.`}
+                            .t`Due to a password reset, none of the events could be decrypted and exported.`}
                     </div>
                     <div>
                         <a href={kbLink} target="_blank" rel="noreferrer noopener nofollow">{c('Export calendar')
@@ -114,7 +115,8 @@ const ExportSummaryModalContent = ({ model }: Props) => {
             />
             {shouldShowErrorDetails && (
                 <Details>
-                    <Summary>{c('Exporting errors summary').t`Details about events that cannot be exported`}</Summary>
+                    <Summary>{c('Summary of errors during export calendar')
+                        .t`Details about events that couldn't be exported`}</Summary>
                     <Bordered>
                         {filteredErrors.map(([details, error], index) => (
                             <div key={index}>

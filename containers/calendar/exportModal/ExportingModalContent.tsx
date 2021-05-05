@@ -11,7 +11,6 @@ import {
 } from 'proton-shared/lib/interfaces/calendar';
 
 import { getEventsCount } from 'proton-shared/lib/api/calendars';
-import { getDefaultWeekStartsOn } from 'proton-shared/lib/settings/helper';
 import { Alert, DynamicProgress } from '../../../components';
 import useGetCalendarEventPersonal from '../../../hooks/useGetCalendarEventPersonal';
 import {
@@ -115,7 +114,7 @@ const ExportingModalContent = ({ model, setModel, onFinish }: Props) => {
                     totalToProcess: 0,
                     exportErrors: [],
                     error: EXPORT_ERRORS.NETWORK_ERROR,
-                    weekStartsOn: getDefaultWeekStartsOn(),
+                    weekStartsOn: model.weekStartsOn,
                 }));
 
                 if (signal.aborted) {
