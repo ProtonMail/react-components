@@ -76,25 +76,24 @@ const InvoicesPreview = (
     };
 
     return (
-        <div ref={rootRef}>
-            <FilePreview
-                loading={!previewing.contents}
-                contents={previewing.contents}
-                fileName={filename()}
-                mimeType="application/pdf"
-                onClose={handleClose}
-                onSave={handleDownload}
-                navigationControls={
-                    <NavigationControl
-                        current={current}
-                        total={total}
-                        rootRef={rootRef}
-                        onNext={handleNext}
-                        onPrev={handlePrevious}
-                    />
-                }
-            />
-        </div>
+        <FilePreview
+            loading={!previewing.contents}
+            contents={previewing.contents}
+            fileName={filename()}
+            mimeType="application/pdf"
+            onClose={handleClose}
+            onSave={handleDownload}
+            ref={rootRef}
+            navigationControls={
+                <NavigationControl
+                    current={current}
+                    total={total}
+                    rootRef={rootRef}
+                    onNext={handleNext}
+                    onPrev={handlePrevious}
+                />
+            }
+        />
     );
 };
 
