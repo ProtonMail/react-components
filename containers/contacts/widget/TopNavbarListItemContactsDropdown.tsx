@@ -20,6 +20,15 @@ export enum CONTACT_WIDGET_TABS {
     GROUPS,
 }
 
+export interface CustomActionRenderProps {
+    onClose: () => void;
+    noSelection: boolean;
+    selected: string[];
+    contactList?: ReturnType<typeof useContactList>;
+    groupsEmailsMap?: SimpleMap<ContactEmail[]>;
+    recipients?: Recipient[];
+}
+
 export interface CustomAction {
     render: ({
         onClose,
@@ -28,14 +37,7 @@ export interface CustomAction {
         contactList,
         groupsEmailsMap,
         recipients,
-    }: {
-        onClose: () => void;
-        noSelection: boolean;
-        selected: string[];
-        contactList?: ReturnType<typeof useContactList>;
-        groupsEmailsMap?: SimpleMap<ContactEmail[]>;
-        recipients?: Recipient[];
-    }) => React.ReactNode;
+    }: CustomActionRenderProps) => React.ReactNode;
     tabs: CONTACT_WIDGET_TABS[];
 }
 
