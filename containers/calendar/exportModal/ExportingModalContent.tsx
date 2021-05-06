@@ -114,13 +114,12 @@ const ExportingModalContent = ({ model, setModel, onFinish }: Props) => {
                 onFinish(exportedEvents, exportErrors);
             } catch (error) {
                 setModelWithAbort((currentModel) => ({
+                    ...currentModel,
                     step: EXPORT_STEPS.FINISHED,
-                    calendar: currentModel.calendar,
                     totalProcessed: [],
                     totalToProcess: 0,
                     exportErrors: [],
                     error: EXPORT_ERRORS.NETWORK_ERROR,
-                    weekStartsOn: model.weekStartsOn,
                     defaultTzid: 'UTC',
                 }));
 
