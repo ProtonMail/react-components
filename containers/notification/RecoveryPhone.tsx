@@ -73,13 +73,7 @@ const RecoveryPhone = ({ phone, hasReset, defaultCountry, className }: Props) =>
                 />
             </div>
             <div>
-                <Button
-                    color="norm"
-                    type="submit"
-                    disabled={(phone || '') === input}
-                    loading={loading}
-                    onClick={() => withLoading(handleSubmit())}
-                >
+                <Button color="norm" type="submit" disabled={(phone || '') === input} loading={loading}>
                     {c('Action').t`Update`}
                 </Button>
             </div>
