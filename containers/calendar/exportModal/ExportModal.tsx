@@ -36,7 +36,7 @@ export const ExportModal = ({ calendar, ...rest }: Props) => {
 
     const [model, setModel] = useState<ExportCalendarModel>({
         step: EXPORT_STEPS.EXPORTING,
-        totalProcessed: [],
+        totalProcessed: 0,
         exportErrors: [],
         totalToProcess: 0,
         weekStartsOn,

@@ -61,7 +61,7 @@ const ExportingModalContent = ({ model, setModel, onFinish }: Props) => {
 
             setModelWithAbort((currentModel) => ({
                 ...currentModel,
-                totalProcessed: [...currentModel.totalProcessed, ...veventComponents],
+                totalProcessed: currentModel.totalProcessed + veventComponents.length,
             }));
         };
 
@@ -116,7 +116,7 @@ const ExportingModalContent = ({ model, setModel, onFinish }: Props) => {
                 setModelWithAbort((currentModel) => ({
                     ...currentModel,
                     step: EXPORT_STEPS.FINISHED,
-                    totalProcessed: [],
+                    totalProcessed: 0,
                     totalToProcess: 0,
                     exportErrors: [],
                     error: EXPORT_ERRORS.NETWORK_ERROR,
@@ -136,11 +136,10 @@ const ExportingModalContent = ({ model, setModel, onFinish }: Props) => {
             abortController.abort();
         };
     }, []);
-    const totalProcessedLength = totalProcessed.length;
 
-    const display = !totalProcessedLength
+    const display = !totalProcessed
         ? c('Export calendar').t`Loading events`
-        : c('Export calendar').t`Decrypting events from your calendar: ${totalProcessedLength}/${totalToProcess}`;
+        : c('Export calendar').t`Decrypting events from your calendar: ${totalProcessed}/${totalToProcess}`;
 
     return (
         <>
@@ -149,7 +148,7 @@ const ExportingModalContent = ({ model, setModel, onFinish }: Props) => {
             </Alert>
             <DynamicProgress
                 id="progress-export-calendar"
-                value={totalProcessedLength}
+                value={totalProcessed}
                 display={display}
                 max={totalToProcess}
                 loading
