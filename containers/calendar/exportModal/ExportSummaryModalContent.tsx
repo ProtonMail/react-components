@@ -1,10 +1,26 @@
 import React from 'react';
 import { c, msgid } from 'ttag';
 
-import { EXPORT_ERRORS, EXPORT_EVENT_ERRORS, ExportCalendarModel } from 'proton-shared/lib/interfaces/calendar';
+import {
+    EXPORT_ERRORS,
+    EXPORT_EVENT_ERRORS,
+    ExportCalendarModel,
+    ExportError,
+} from 'proton-shared/lib/interfaces/calendar';
 
 import { SimpleMap } from 'proton-shared/lib/interfaces';
 import { Alert, Bordered, Details, DynamicProgress, Summary } from '../../../components';
+
+const getErrorMessage = (hasMultiplePasswordResetErrors: boolean) => (type: EXPORT_EVENT_ERRORS) => {
+    const errorMessagesMap: SimpleMap<string> = {
+        [EXPORT_EVENT_ERRORS.DECRYPTION_ERROR]: c('Export calendar').t`Error decrypting event`,
+        [EXPORT_EVENT_ERRORS.PASSWORD_RESET]: hasMultiplePasswordResetErrors
+            ? c('Export calendar').t`Password reset - multiple events cannot be decrypted`
+            : c('Export calendar').t`Password reset - event cannot be decrypted`,
+    };
+
+    return errorMessagesMap[type];
+};
 
 interface Props {
     model: ExportCalendarModel;
@@ -21,25 +37,27 @@ const ExportSummaryModalContent = ({ model }: Props) => {
         totalToProcess
     );
 
-    // TODO: modularize
     const { exportErrors } = model;
-    const passwordResetErrors = exportErrors.filter(
-        (exportError) => exportError[1] === EXPORT_EVENT_ERRORS.PASSWORD_RESET
+    const { passwordResetErrors, otherErrors } = exportErrors.reduce<{
+        passwordResetErrors: ExportError[];
+        otherErrors: ExportError[];
+    }>(
+        (acc, exportError) => {
+            if (exportError[1] === EXPORT_EVENT_ERRORS.PASSWORD_RESET) {
+                acc.passwordResetErrors.push(exportError);
+            }
+
+            acc.otherErrors.push(exportError);
+
+            return acc;
+        },
+        { passwordResetErrors: [], otherErrors: [] }
     );
     const hasMultiplePasswordResetErrors = passwordResetErrors.length > 1;
-    const errorsWithoutPasswordReset = hasMultiplePasswordResetErrors
-        ? exportErrors.filter((exportError) => exportError[1] !== EXPORT_EVENT_ERRORS.PASSWORD_RESET)
-        : exportErrors;
     const filteredErrors = hasMultiplePasswordResetErrors
-        ? [...errorsWithoutPasswordReset, ['', EXPORT_EVENT_ERRORS.PASSWORD_RESET]]
+        ? [...otherErrors, ['', EXPORT_EVENT_ERRORS.PASSWORD_RESET] as ExportError]
         : exportErrors;
     const hasOnlyPasswordResetErrors = passwordResetErrors.length === exportErrors.length;
-    const errorMessagesMap: SimpleMap<string> = {
-        [EXPORT_EVENT_ERRORS.DECRYPTION_ERROR]: c('Export calendar').t`Error decrypting event`,
-        [EXPORT_EVENT_ERRORS.PASSWORD_RESET]: hasMultiplePasswordResetErrors
-            ? c('Export calendar').t`Password reset - multiple events cannot be decrypted`
-            : c('Export calendar').t`Password reset - event cannot be decrypted`,
-    };
 
     const kbLink = 'https://protonmail.com/support/knowledge-base/restoring-encrypted-calendar/';
     const getAlertMessage = () => {
@@ -100,6 +118,7 @@ const ExportSummaryModalContent = ({ model }: Props) => {
     };
 
     const shouldShowErrorDetails = !!filteredErrors.length && !hasOnlyPasswordResetErrors;
+    const getError = getErrorMessage(hasMultiplePasswordResetErrors);
 
     return (
         <>
@@ -121,7 +140,7 @@ const ExportSummaryModalContent = ({ model }: Props) => {
                         {filteredErrors.map(([details, error], index) => (
                             <div key={index}>
                                 {details && <span>{details}: </span>}
-                                <span className="color-danger">{errorMessagesMap[error]}</span>
+                                <span className="color-danger">{getError(error)}</span>
                             </div>
                         ))}
                     </Bordered>
