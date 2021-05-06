@@ -26,9 +26,10 @@ interface Props {
 }
 
 const ExportSummaryModalContent = ({ model }: Props) => {
-    const { totalProcessed, totalToProcess, error } = model;
+    const { totalFetched, totalProcessed, totalToProcess, exportErrors, error } = model;
     const isSuccess = totalProcessed === totalToProcess && error === undefined;
     const isPartialSuccess = totalProcessed > 0 && !isSuccess;
+    const totalErrors = exportErrors.length;
 
     const displayMessage = c('Export calendar').ngettext(
         msgid`${totalProcessed}/${totalToProcess} event exported`,
@@ -36,7 +37,6 @@ const ExportSummaryModalContent = ({ model }: Props) => {
         totalToProcess
     );
 
-    const { exportErrors } = model;
     const { passwordResetErrors, otherErrors } = exportErrors.reduce<{
         passwordResetErrors: ExportError[];
         otherErrors: ExportError[];
@@ -124,9 +124,9 @@ const ExportSummaryModalContent = ({ model }: Props) => {
             <Alert type={isSuccess ? 'info' : isPartialSuccess ? 'warning' : 'error'}>{getAlertMessage()}</Alert>
             <DynamicProgress
                 id="progress-export-calendar"
-                value={totalProcessed}
+                value={totalFetched + totalProcessed + totalErrors}
                 display={displayMessage}
-                max={totalToProcess}
+                max={2 * totalToProcess}
                 loading={false}
                 success={isSuccess}
                 partialSuccess={isPartialSuccess}

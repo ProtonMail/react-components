@@ -3,6 +3,7 @@ import React, { Dispatch, SetStateAction, useEffect } from 'react';
 import { c } from 'ttag';
 
 import {
+    CalendarEventWithMetadata,
     EXPORT_ERRORS,
     EXPORT_STEPS,
     ExportCalendarModel,
@@ -38,7 +39,8 @@ const ExportingModalContent = ({ model, setModel, onFinish }: Props) => {
     const getCalendarKeys = useGetCalendarKeys();
     const getCalendarUserSettings = useGetCalendarUserSettings();
 
-    const { totalToProcess, totalProcessed } = model;
+    const { totalFetched, totalToProcess, totalProcessed, exportErrors } = model;
+    const totalErrors = exportErrors.length;
 
     useEffect(() => {
         // Prepare api for allowing cancellation in the middle of the export
@@ -54,14 +56,16 @@ const ExportingModalContent = ({ model, setModel, onFinish }: Props) => {
             setModel(set);
         };
 
-        const handleExportProgress = (veventComponents: VcalVeventComponent[]) => {
-            if (!veventComponents.length) {
-                return;
-            }
-
+        const handleExportProgress = (
+            events: CalendarEventWithMetadata[],
+            veventComponents: VcalVeventComponent[],
+            exportErrors: ExportError[]
+        ) => {
             setModelWithAbort((currentModel) => ({
                 ...currentModel,
+                totalFetched: currentModel.totalFetched + events.length,
                 totalProcessed: currentModel.totalProcessed + veventComponents.length,
+                exportErrors: [...currentModel.exportErrors, ...exportErrors],
             }));
         };
 
@@ -148,9 +152,9 @@ const ExportingModalContent = ({ model, setModel, onFinish }: Props) => {
             </Alert>
             <DynamicProgress
                 id="progress-export-calendar"
-                value={totalProcessed}
+                value={totalFetched + totalProcessed + totalErrors}
                 display={display}
-                max={totalToProcess}
+                max={2 * totalToProcess}
                 loading
             />
         </>
