@@ -3,17 +3,17 @@ import { c, msgid } from 'ttag';
 
 import {
     EXPORT_ERRORS,
-    EXPORT_EVENT_ERRORS,
+    EXPORT_EVENT_ERROR_TYPES,
     ExportCalendarModel,
     ExportError,
 } from 'proton-shared/lib/interfaces/calendar';
 
 import { Alert, Bordered, Details, DynamicProgress, Href, Summary } from '../../../components';
 
-const getErrorMessage = (hasMultiplePasswordResetErrors: boolean) => (type: EXPORT_EVENT_ERRORS) => {
-    const errorMessagesMap: { [key in EXPORT_EVENT_ERRORS]: string } = {
-        [EXPORT_EVENT_ERRORS.DECRYPTION_ERROR]: c('Export calendar').t`Error decrypting event`,
-        [EXPORT_EVENT_ERRORS.PASSWORD_RESET]: hasMultiplePasswordResetErrors
+const getErrorMessage = (hasMultiplePasswordResetErrors: boolean) => (type: EXPORT_EVENT_ERROR_TYPES) => {
+    const errorMessagesMap: { [key in EXPORT_EVENT_ERROR_TYPES]: string } = {
+        [EXPORT_EVENT_ERROR_TYPES.DECRYPTION_ERROR]: c('Export calendar').t`Error decrypting event`,
+        [EXPORT_EVENT_ERROR_TYPES.PASSWORD_RESET]: hasMultiplePasswordResetErrors
             ? c('Export calendar').t`Password reset - multiple events cannot be decrypted`
             : c('Export calendar').t`Password reset - event cannot be decrypted`,
     };
@@ -42,7 +42,7 @@ const ExportSummaryModalContent = ({ model }: Props) => {
         otherErrors: ExportError[];
     }>(
         (acc, exportError) => {
-            if (exportError[1] === EXPORT_EVENT_ERRORS.PASSWORD_RESET) {
+            if (exportError[1] === EXPORT_EVENT_ERROR_TYPES.PASSWORD_RESET) {
                 acc.passwordResetErrors.push(exportError);
             }
 
@@ -54,7 +54,7 @@ const ExportSummaryModalContent = ({ model }: Props) => {
     );
     const hasMultiplePasswordResetErrors = passwordResetErrors.length > 1;
     const filteredErrors: ExportError[] = hasMultiplePasswordResetErrors
-        ? [...otherErrors, ['', EXPORT_EVENT_ERRORS.PASSWORD_RESET]]
+        ? [...otherErrors, ['', EXPORT_EVENT_ERROR_TYPES.PASSWORD_RESET]]
         : exportErrors;
     const hasOnlyPasswordResetErrors = passwordResetErrors.length === exportErrors.length;
 
