@@ -9,7 +9,7 @@ import {
 } from 'proton-shared/lib/interfaces/calendar';
 
 import { SimpleMap } from 'proton-shared/lib/interfaces';
-import { Alert, Bordered, Details, DynamicProgress, Summary } from '../../../components';
+import { Alert, Bordered, Details, DynamicProgress, Href, Summary } from '../../../components';
 
 const getErrorMessage = (hasMultiplePasswordResetErrors: boolean) => (type: EXPORT_EVENT_ERRORS) => {
     const errorMessagesMap: SimpleMap<string> = {
@@ -78,8 +78,8 @@ const ExportSummaryModalContent = ({ model }: Props) => {
                                 .t`You can save an ICS file of the events that were successfully exported.`}
                         </div>
                         <div>
-                            <a href={kbLink} target="_blank" rel="noreferrer noopener">{c('Export calendar')
-                                .t`Learn how to restore encrypted events with old password`}</a>
+                            <Href url={kbLink}>{c('Export calendar')
+                                .t`Learn how to restore encrypted events with old password`}</Href>
                         </div>
                     </>
                 );
