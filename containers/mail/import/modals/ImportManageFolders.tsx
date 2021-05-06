@@ -185,7 +185,7 @@ const ImportManageFolders = ({
         }, {})
     );
 
-    const updateEditModeMapping = (key: string, editMode: boolean) => {
+    const updateEditModeMapping = (key: string, editMode = false) => {
         const newEditModeMap = { ...editModeMap };
         newEditModeMap[key] = editMode;
         setEditModeMap(newEditModeMap);

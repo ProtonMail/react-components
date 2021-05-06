@@ -69,7 +69,7 @@ interface Props {
     folderPathsMap: FolderPathsMap;
     labelsMap: LabelsMap;
     editModeMap: EditModeMap;
-    updateEditModeMapping: (key: string, editMode: boolean) => void;
+    updateEditModeMapping: (key: string, editMode?: boolean) => void;
     getParent: (folderName: string) => string | undefined;
     isSystemSubfolder?: boolean;
     isLabelMapping: boolean;
