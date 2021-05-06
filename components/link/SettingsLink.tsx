@@ -26,7 +26,7 @@ const SettingsLink = ({ path, app, children, ...rest }: Props, ref: React.Ref<HT
     const slug = getSlugFromApp(settingsApp || app || APP_NAME);
 
     return (
-        <AppLink to={`/${slug}${path}`} ref={ref} toApp={APPS.PROTONACCOUNT} {...rest}>
+        <AppLink to={`/${slug}${path}`} ref={ref} toApp={APPS.PROTONACCOUNT} target="_self" {...rest}>
             {children}
         </AppLink>
     );
