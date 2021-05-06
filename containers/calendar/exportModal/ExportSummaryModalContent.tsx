@@ -53,8 +53,8 @@ const ExportSummaryModalContent = ({ model }: Props) => {
         { passwordResetErrors: [], otherErrors: [] }
     );
     const hasMultiplePasswordResetErrors = passwordResetErrors.length > 1;
-    const filteredErrors = hasMultiplePasswordResetErrors
-        ? [...otherErrors, ['', EXPORT_EVENT_ERRORS.PASSWORD_RESET] as ExportError]
+    const filteredErrors: ExportError[] = hasMultiplePasswordResetErrors
+        ? [...otherErrors, ['', EXPORT_EVENT_ERRORS.PASSWORD_RESET]]
         : exportErrors;
     const hasOnlyPasswordResetErrors = passwordResetErrors.length === exportErrors.length;
 
