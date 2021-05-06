@@ -69,7 +69,7 @@ interface Props {
     folderPathsMap: FolderPathsMap;
     labelsMap: LabelsMap;
     editModeMap: EditModeMap;
-    updateEditModeMapping: (key: string, editMode?: boolean) => void;
+    updateEditModeMapping: (key: string, editMode: boolean) => void;
     getParent: (folderName: string) => string | undefined;
     isSystemSubfolder?: boolean;
     isLabelMapping: boolean;
@@ -145,7 +145,7 @@ const ImportManageFoldersRow = ({
         if (DestinationFolder) {
             return false;
         }
-        nameAlreadyExists(inputValue, isLabelMapping ? folders : labels);
+        return nameAlreadyExists(inputValue, isLabelMapping ? folders : labels);
     }, [inputValue, folders, labels]);
 
     const nameTooLongError = useMemo(() => {
