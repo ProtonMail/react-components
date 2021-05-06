@@ -20,6 +20,7 @@ import {
     useGetAddressKeys,
     useGetEncryptionPreferences,
     useGetCalendarKeys,
+    useGetCalendarUserSettings,
 } from '../../../hooks';
 
 interface Props {
@@ -35,6 +36,7 @@ const ExportingModalContent = ({ model, setModel, onFinish }: Props) => {
     const getCalendarInfo = useGetCalendarInfo();
     const getCalendarEventPersonal = useGetCalendarEventPersonal();
     const getCalendarKeys = useGetCalendarKeys();
+    const getCalendarUserSettings = useGetCalendarUserSettings();
 
     const { totalToProcess, totalProcessed } = model;
 
@@ -65,8 +67,11 @@ const ExportingModalContent = ({ model, setModel, onFinish }: Props) => {
 
         const process = async () => {
             try {
-                const addresses = await getAddresses();
-                const { memberID } = await getCalendarInfo(model.calendar.ID);
+                const [addresses, { memberID }, calendarUserSettings] = await Promise.all([
+                    getAddresses(),
+                    getCalendarInfo(model.calendar.ID),
+                    getCalendarUserSettings(),
+                ]);
 
                 if (!addresses) {
                     throw new Error('No addresses');
@@ -92,6 +97,7 @@ const ExportingModalContent = ({ model, setModel, onFinish }: Props) => {
                     memberID,
                     totalToProcess,
                     weekStartsOn: model.weekStartsOn,
+                    defaultTzid: calendarUserSettings.PrimaryTimezone,
                 });
 
                 if (totalToProcess !== totalEventsFetched) {
@@ -115,6 +121,7 @@ const ExportingModalContent = ({ model, setModel, onFinish }: Props) => {
                     exportErrors: [],
                     error: EXPORT_ERRORS.NETWORK_ERROR,
                     weekStartsOn: model.weekStartsOn,
+                    defaultTzid: 'UTC',
                 }));
 
                 if (signal.aborted) {
