@@ -28,6 +28,7 @@ const SettingsLink = ({ path, app, children, ...rest }: Props, ref: React.Ref<HT
     const toSettingsForApp = (app !== APPS.PROTONACCOUNT ? app : undefined) || settingsApp || APP_NAME;
     const slug = getSlugFromApp(toSettingsForApp);
 
+    // If in the "settings app", otherwise if any other app
     const isGoingToSameSettings = settingsApp ? settingsApp === toSettingsForApp : APP_NAME === toSettingsForApp;
 
     return (
