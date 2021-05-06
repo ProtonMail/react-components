@@ -120,7 +120,6 @@ const ExportingModalContent = ({ model, setModel, onFinish }: Props) => {
                     totalToProcess: 0,
                     exportErrors: [],
                     error: EXPORT_ERRORS.NETWORK_ERROR,
-                    defaultTzid: 'UTC',
                 }));
 
                 if (signal.aborted) {

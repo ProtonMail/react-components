@@ -8,21 +8,20 @@ import {
     ExportError,
     VcalVeventComponent,
 } from 'proton-shared/lib/interfaces/calendar';
+import { getWeekStartsOn } from 'proton-shared/lib/settings/helper';
 import React, { useState } from 'react';
 import { c } from 'ttag';
 
 import { getProdIdFromNameAndVersion } from 'proton-shared/lib/calendar/vcalHelper';
 import downloadFile from 'proton-shared/lib/helpers/downloadFile';
-import { DEFAULT_CALENDAR_USER_SETTINGS } from 'proton-shared/lib/calendar/calendar';
 import { format } from 'date-fns';
 import { getAppHref, getClientID } from 'proton-shared/lib/apps/helper';
 import { APPS } from 'proton-shared/lib/constants';
-import { getWeekStartsOn } from 'proton-shared/lib/settings/helper';
 import { Button, FormModal } from '../../../components';
 import { useGetVtimezonesMap } from '../../../hooks/useGetVtimezonesMap';
 import ExportingModalContent from './ExportingModalContent';
 import ExportSummaryModalContent from './ExportSummaryModalContent';
-import { useCalendarUserSettings, useUserSettings } from '../../../hooks';
+import { useGetCalendarUserSettings, useUserSettings } from '../../../hooks';
 
 interface Props {
     calendar: Calendar;
@@ -31,8 +30,7 @@ interface Props {
 
 export const ExportModal = ({ calendar, ...rest }: Props) => {
     const getVTimezonesMap = useGetVtimezonesMap();
-    const [calendarUserSettings = DEFAULT_CALENDAR_USER_SETTINGS] = useCalendarUserSettings();
-    const { PrimaryTimezone: defaultTzid } = calendarUserSettings;
+    const getCalendarUserSettings = useGetCalendarUserSettings();
     const [userSettings] = useUserSettings();
     const weekStartsOn = getWeekStartsOn(userSettings);
 
@@ -53,6 +51,7 @@ export const ExportModal = ({ calendar, ...rest }: Props) => {
         if (model.step === EXPORT_STEPS.EXPORTING) {
             const handleFinish = async (exportedEvents: VcalVeventComponent[], exportErrors: ExportError[]) => {
                 // we don't catch errors here as they're caught into a NETWORK error on ExportingModalContent
+                const { PrimaryTimezone: defaultTzid } = await getCalendarUserSettings();
                 const uniqueTimezonesPromise = getUniqueVtimezones({
                     vevents: exportedEvents,
                     tzids: [defaultTzid],
