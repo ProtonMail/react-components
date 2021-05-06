@@ -78,7 +78,7 @@ const ExportSummaryModalContent = ({ model }: Props) => {
                                 .t`You can save an ICS file of the events that were successfully exported.`}
                         </div>
                         <div>
-                            <a href={kbLink} target="_blank" rel="noreferrer noopener nofollow">{c('Export calendar')
+                            <a href={kbLink} target="_blank" rel="noreferrer noopener">{c('Export calendar')
                                 .t`Learn how to restore encrypted events with old password`}</a>
                         </div>
                     </>
