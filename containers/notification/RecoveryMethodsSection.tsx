@@ -13,6 +13,7 @@ import {
     useEventManager,
     useNotifications,
     useConfig,
+    useMyLocation,
 } from '../../hooks';
 
 import AuthModal from '../password/AuthModal';
@@ -35,6 +36,8 @@ const RecoveryMethodsSection = () => {
     const { call } = useEventManager();
     const api = useApi();
     const { CLIENT_TYPE } = useConfig();
+    const [myLocation] = useMyLocation();
+    const defaultCountry = myLocation?.Country?.toUpperCase();
 
     if (loadingUserSettings || !userSettings) {
         return <Loader />;
@@ -149,7 +152,11 @@ const RecoveryMethodsSection = () => {
                         </SettingsLayoutLeft>
                         <SettingsLayoutRight>
                             <div className="mb1">
-                                <RecoveryPhone phone={userSettings.Phone.Value} hasReset={!!userSettings.Phone.Reset} />
+                                <RecoveryPhone
+                                    defaultCountry={defaultCountry}
+                                    phone={userSettings.Phone.Value}
+                                    hasReset={!!userSettings.Phone.Reset}
+                                />
                             </div>
                             <div className="flex flex-align-items-center">
                                 <Toggle

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
 import { updatePhone } from 'proton-shared/lib/api/settings';
+import { requiredValidator } from 'proton-shared/lib/helpers/formValidators';
 
 import AuthModal from '../password/AuthModal';
-import { ConfirmModal, Alert, IntlTelInput, Button } from '../../components';
+import { ConfirmModal, Alert, Button, InputFieldTwo, PhoneInput, useFormErrors } from '../../components';
 import { useLoading, useModals, useNotifications, useEventManager } from '../../hooks';
 
 import './RecoveryPhone.scss';
@@ -11,16 +12,16 @@ import './RecoveryPhone.scss';
 interface Props {
     phone: string | null;
     hasReset: boolean;
+    defaultCountry?: string;
 }
 
-const RecoveryPhone = ({ phone, hasReset }: Props) => {
+const RecoveryPhone = ({ phone, hasReset, defaultCountry }: Props) => {
     const [input, setInput] = useState(phone || '');
     const [loading, withLoading] = useLoading();
     const { createNotification } = useNotifications();
     const { createModal } = useModals();
     const { call } = useEventManager();
-
-    const handleChange = (status: any, value: any, countryData: any, number: string) => setInput(number);
+    const { validator, onFormSubmit } = useFormErrors();
 
     const handleSubmit = async () => {
         if (!input && hasReset) {
@@ -48,22 +49,33 @@ const RecoveryPhone = ({ phone, hasReset }: Props) => {
     };
 
     return (
-        <div className="recovery-phone_container">
-            <div className="recovery-phone_phone-input">
-                <IntlTelInput
+        <form
+            className="recovery-phone_container"
+            onSubmit={(e) => {
+                e.preventDefault();
+                if (onFormSubmit()) {
+                    withLoading(handleSubmit());
+                }
+            }}
+        >
+            <div className="text-ellipsis mr1">
+                <InputFieldTwo
+                    as={PhoneInput}
                     id="phoneInput"
-                    placeholder={c('Info').t`Not set`}
-                    containerClassName="w100"
-                    inputClassName="w100"
-                    onPhoneNumberChange={handleChange}
-                    defaultValue={input}
-                    dropdownContainer="body"
-                    required
+                    error={validator([requiredValidator(input)])}
+                    disableChange={loading}
+                    autoFocus
+                    defaultCountry={defaultCountry}
+                    value={input}
+                    onChange={(value: string) => {
+                        setInput(value);
+                    }}
                 />
             </div>
             <div>
                 <Button
                     color="norm"
+                    type="submit"
                     disabled={(phone || '') === input}
                     loading={loading}
                     onClick={() => withLoading(handleSubmit())}
@@ -71,7 +83,7 @@ const RecoveryPhone = ({ phone, hasReset }: Props) => {
                     {c('Action').t`Update`}
                 </Button>
             </div>
-        </div>
+        </form>
     );
 };
 
