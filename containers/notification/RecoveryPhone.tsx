@@ -6,6 +6,7 @@ import { requiredValidator } from 'proton-shared/lib/helpers/formValidators';
 import AuthModal from '../password/AuthModal';
 import { ConfirmModal, Alert, Button, InputFieldTwo, PhoneInput, useFormErrors } from '../../components';
 import { useLoading, useModals, useNotifications, useEventManager } from '../../hooks';
+import { classnames } from '../../helpers';
 
 import './RecoveryPhone.scss';
 
@@ -13,9 +14,10 @@ interface Props {
     phone: string | null;
     hasReset: boolean;
     defaultCountry?: string;
+    className?: string;
 }
 
-const RecoveryPhone = ({ phone, hasReset, defaultCountry }: Props) => {
+const RecoveryPhone = ({ phone, hasReset, defaultCountry, className }: Props) => {
     const [input, setInput] = useState(phone || '');
     const [loading, withLoading] = useLoading();
     const { createNotification } = useNotifications();
@@ -50,7 +52,7 @@ const RecoveryPhone = ({ phone, hasReset, defaultCountry }: Props) => {
 
     return (
         <form
-            className="recovery-phone_container"
+            className={classnames(['recovery-phone_container', className])}
             onSubmit={(e) => {
                 e.preventDefault();
                 if (onFormSubmit()) {
@@ -58,18 +60,16 @@ const RecoveryPhone = ({ phone, hasReset, defaultCountry }: Props) => {
                 }
             }}
         >
-            <div className="text-ellipsis mr1">
+            <div className="mr1 flex-item-fluid min-w14e">
                 <InputFieldTwo
                     as={PhoneInput}
                     id="phoneInput"
+                    className="recovery-phone_phone-input"
                     error={validator([requiredValidator(input)])}
                     disableChange={loading}
-                    autoFocus
                     defaultCountry={defaultCountry}
                     value={input}
-                    onChange={(value: string) => {
-                        setInput(value);
-                    }}
+                    onChange={setInput}
                 />
             </div>
             <div>
