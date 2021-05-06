@@ -36,7 +36,7 @@ const ExportingModalContent = ({ model, setModel, onFinish }: Props) => {
     const getCalendarEventPersonal = useGetCalendarEventPersonal();
     const getCalendarKeys = useGetCalendarKeys();
 
-    const { totalToProcess } = model;
+    const { totalToProcess, totalProcessed } = model;
 
     useEffect(() => {
         // Prepare api for allowing cancellation in the middle of the export
@@ -131,11 +131,11 @@ const ExportingModalContent = ({ model, setModel, onFinish }: Props) => {
             abortController.abort();
         };
     }, []);
+    const totalProcessedLength = totalProcessed.length;
 
-    const display = !model.totalProcessed.length
+    const display = !totalProcessedLength
         ? c('Export calendar').t`Loading events`
-        : c('Export calendar')
-              .t`Decrypting events from your calendar: ${model.totalProcessed.length}/${totalToProcess}`;
+        : c('Export calendar').t`Decrypting events from your calendar: ${totalProcessedLength}/${totalToProcess}`;
 
     return (
         <>
@@ -144,7 +144,7 @@ const ExportingModalContent = ({ model, setModel, onFinish }: Props) => {
             </Alert>
             <DynamicProgress
                 id="progress-export-calendar"
-                value={model.totalProcessed.length}
+                value={totalProcessedLength}
                 display={display}
                 max={totalToProcess}
                 loading
