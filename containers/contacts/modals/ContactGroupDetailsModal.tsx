@@ -54,7 +54,7 @@ const ContactGroupDetailsModal = ({ contactGroupID, onClose = noop, ...rest }: P
                         className="contact-group-details-chip rounded50 mr0-5 flex-item-noshrink"
                         style={{ backgroundColor: group?.Color }}
                     />
-                    <span className="text-ellipsis">{group?.Name}</span>
+                    <span className="text-ellipsis" title={group?.Name}>{group?.Name}</span>
                 </TitleModal>
             }
             onClose={onClose}
