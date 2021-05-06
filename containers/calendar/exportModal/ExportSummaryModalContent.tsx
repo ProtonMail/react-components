@@ -8,11 +8,10 @@ import {
     ExportError,
 } from 'proton-shared/lib/interfaces/calendar';
 
-import { SimpleMap } from 'proton-shared/lib/interfaces';
 import { Alert, Bordered, Details, DynamicProgress, Href, Summary } from '../../../components';
 
 const getErrorMessage = (hasMultiplePasswordResetErrors: boolean) => (type: EXPORT_EVENT_ERRORS) => {
-    const errorMessagesMap: SimpleMap<string> = {
+    const errorMessagesMap: { [key in EXPORT_EVENT_ERRORS]: string } = {
         [EXPORT_EVENT_ERRORS.DECRYPTION_ERROR]: c('Export calendar').t`Error decrypting event`,
         [EXPORT_EVENT_ERRORS.PASSWORD_RESET]: hasMultiplePasswordResetErrors
             ? c('Export calendar').t`Password reset - multiple events cannot be decrypted`
