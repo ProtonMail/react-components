@@ -18,8 +18,6 @@ import {
     useGetCalendarInfo,
     useApi,
     useGetAddresses,
-    useGetAddressKeys,
-    useGetEncryptionPreferences,
     useGetCalendarKeys,
     useGetCalendarUserSettings,
 } from '../../../hooks';
@@ -32,8 +30,6 @@ interface Props {
 const ExportingModalContent = ({ model, setModel, onFinish }: Props) => {
     const api = useApi();
     const getAddresses = useGetAddresses();
-    const getAddressKeys = useGetAddressKeys();
-    const getEncryptionPreferences = useGetEncryptionPreferences();
     const getCalendarInfo = useGetCalendarInfo();
     const getCalendarEventPersonal = useGetCalendarEventPersonal();
     const getCalendarKeys = useGetCalendarKeys();
@@ -94,8 +90,6 @@ const ExportingModalContent = ({ model, setModel, onFinish }: Props) => {
                     api: apiWithAbort,
                     signal,
                     onProgress: handleExportProgress,
-                    getAddressKeys,
-                    getEncryptionPreferences,
                     getCalendarKeys,
                     getCalendarEventPersonal,
                     memberID,
