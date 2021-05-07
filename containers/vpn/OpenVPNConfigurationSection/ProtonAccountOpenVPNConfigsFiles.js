@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useMemo, useEffect } from 'react';
 import { c } from 'ttag';
 import { queryVPNLogicalServerInfo, getVPNServerConfig } from 'proton-shared/lib/api/vpn';
@@ -270,48 +271,6 @@ const ProtonAccountOpenVPNConfigsFiles = () => {
                             .t`Download all configurations`}</Button>
                     )}
                 </div>
-                {!loadingPlans && (userVPN.PlanName === 'trial' || !hasPaidVpn) ? (
-                    <div className="bordered p2 text-center">
-                        <h3 className="color-primary mt0 mb1">{c('Title')
-                            .t`Get ProtonVPN Plus to access all servers`}</h3>
-                        <ul className="unstyled inline-flex mt0 mb2 on-mobile-flex-column">
-                            <li className="flex flex-nowrap flex-align-items-center mr1">
-                                <Icon name="on" className="color-success mr0-5" />
-                                <span className="text-bold">{c('Feature').t`Access to all countries`}</span>
-                            </li>
-                            <li className="flex flex-nowrap flex-align-items-center mr1">
-                                <Icon name="on" className="color-success mr0-5" />
-                                <span className="text-bold">{c('Feature').t`Secure Core servers`}</span>
-                            </li>
-                            <li className="flex flex-nowrap flex-align-items-center mr1">
-                                <Icon name="on" className="color-success mr0-5" />
-                                <span className="text-bold">{c('Feature').t`Fastest VPN servers`}</span>
-                            </li>
-                            <li className="flex flex-nowrap flex-align-items-center mr1">
-                                <Icon name="on" className="color-success mr0-5" />
-                                <span className="text-bold">{c('Feature').t`Torrenting support (P2P)`}</span>
-                            </li>
-                            <li className="flex flex-nowrap flex-align-items-center mr1">
-                                <Icon name="on" className="color-success mr0-5" />
-                                <span className="text-bold">{c('Feature')
-                                    .t`Connection for up to ${plusVpnConnections} devices`}</span>
-                            </li>
-                            <li className="flex flex-nowrap flex-align-items-center ">
-                                <Icon name="on" className="color-success mr0-5" />
-                                <span className="text-bold mr0-5">{c('Feature').t`Secure streaming support`}</span>
-                                <Info
-                                    url="https://protonvpn.com/support/streaming-guide/"
-                                    title={c('VPN info')
-                                        .t`Netflix, Amazon Prime Video, BBC iPlayer, ESPN+, Disney+, HBO Now, and more.`}
-                                />
-                            </li>
-                        </ul>
-                        <div>
-                            <ButtonLike as={Link} color="norm" to="/dashboard?plan=vpnplus">{c('Action')
-                                .t`Get ProtonVPN Plus`}</ButtonLike>
-                        </div>
-                    </div>
-                ) : null}
             </Block>
         </>
     );
