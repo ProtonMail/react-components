@@ -1,13 +1,12 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useMemo, useEffect } from 'react';
 import { c } from 'ttag';
 import { queryVPNLogicalServerInfo, getVPNServerConfig } from 'proton-shared/lib/api/vpn';
 import { groupWith } from 'proton-shared/lib/helpers/array';
 import downloadFile from 'proton-shared/lib/helpers/downloadFile';
-import { PLANS, SORT_DIRECTION, VPN_HOSTNAME } from 'proton-shared/lib/constants';
+import { SORT_DIRECTION, VPN_HOSTNAME } from 'proton-shared/lib/constants';
 import { Link } from 'react-router-dom';
-import { Alert, Href, Icon, Info, Button, Block, Tooltip, Radio, RadioGroup, ButtonLike } from '../../../components';
-import { useApiResult, useApiWithoutResult, useUser, useSortedList, useUserVPN, usePlans } from '../../../hooks';
+import { Alert, Href, Button, Block, Tooltip, Radio, RadioGroup } from '../../../components';
+import { useApiResult, useApiWithoutResult, useUser, useSortedList, useUserVPN } from '../../../hooks';
 import { getCountryByAbbr, correctAbbr } from '../../../helpers/countries';
 import ServerConfigs from './ServerConfigs';
 import { isSecureCoreEnabled } from './utils';
@@ -32,7 +31,6 @@ const ProtonAccountOpenVPNConfigsFiles = () => {
     const [protocol, setProtocol] = useState(PROTOCOL.UDP);
     const [category, setCategory] = useState(CATEGORY.SECURE_CORE);
     const { request } = useApiWithoutResult(getVPNServerConfig);
-    const [plans, loadingPlans] = usePlans();
     const { loading, result = {} } = useApiResult(queryVPNLogicalServerInfo, []);
     const { result: vpnResult = {}, loading: vpnLoading, fetch: fetchUserVPN } = useUserVPN();
     const [{ hasPaidVpn }] = useUser();
@@ -99,8 +97,6 @@ const ProtonAccountOpenVPNConfigsFiles = () => {
     useEffect(() => {
         fetchUserVPN();
     }, [hasPaidVpn]);
-
-    const plusVpnConnections = plans?.find(({ Name }) => Name === PLANS.VPNPLUS)?.MaxVPN;
 
     return (
         <>
