@@ -48,7 +48,7 @@ const AppsDropdown = () => {
                 ))}
                 <li>
                     <SettingsLink
-                        path="/downloads"
+                        path="/"
                         app={APPS.PROTONVPN_SETTINGS}
                         title={c('Apps dropdown').t`Go to ${APPS_CONFIGURATION[APPS.PROTONVPN_SETTINGS].bareName}`}
                         className="apps-dropdown-link"
