@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { c, msgid } from 'ttag';
+import { c } from 'ttag';
 import { queryVPNLogicalServerInfo, getVPNServerConfig } from 'proton-shared/lib/api/vpn';
 import { groupWith } from 'proton-shared/lib/helpers/array';
 import downloadFile from 'proton-shared/lib/helpers/downloadFile';
@@ -84,7 +84,6 @@ const OpenVPNConfigurationSection = () => {
     });
 
     const freeServers = allServers.filter(({ Tier }) => Tier === 0).map((server) => ({ ...server, open: true }));
-    const numberOfCountriesForFreeServers = new Set(freeServers.map(({ Country }) => Country)).size;
 
     const isUpgradeRequiredForSecureCore = () => !Object.keys(userVPN).length || !hasPaidVpn || isBasicVPN;
     const isUpgradeRequiredForCountries = () => !Object.keys(userVPN).length || !hasPaidVpn;
@@ -254,14 +253,8 @@ const OpenVPNConfigurationSection = () => {
                 {category === CATEGORY.FREE && (
                     <>
                         <SettingsParagraph>
-                            {numberOfCountriesForFreeServers === 1
-                                ? c('Info')
-                                      .t`Install a Free server configuration file to connect to a specific server in the free location.`
-                                : c('Info').ngettext(
-                                      msgid`Install a Free server configuration file to connect to a specific server in the ${numberOfCountriesForFreeServers} free location.`,
-                                      `Install a Free server configuration file to connect to a specific server in one of the ${numberOfCountriesForFreeServers} free locations.`,
-                                      numberOfCountriesForFreeServers
-                                  )}
+                            {c('Info')
+                                .t`Install a Free server configuration file to connect to a specific server in one of the three free locations.`}
                         </SettingsParagraph>
                         <ServerConfigs
                             category={category}
