@@ -312,7 +312,7 @@ const OpenVPNConfigurationSection = () => {
                             </li>
                         </ul>
                         <div>
-                            <ButtonLike as={Link} color="norm" to="/dashboard?plan=vpnplus">{c('Action')
+                            <ButtonLike as={Link} color="norm" to="dashboard?plan=vpnplus">{c('Action')
                                 .t`Get ProtonVPN Plus`}</ButtonLike>
                         </div>
                     </div>
