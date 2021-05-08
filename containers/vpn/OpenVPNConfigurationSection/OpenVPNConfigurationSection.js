@@ -254,11 +254,14 @@ const OpenVPNConfigurationSection = () => {
                 {category === CATEGORY.FREE && (
                     <>
                         <SettingsParagraph>
-                            {c('Info').ngettext(
-                                msgid`Install a Free server configuration file to connect to a specific server in the free location.`,
-                                `Install a Free server configuration file to connect to a specific server in one of the ${numberOfCountriesForFreeServers} free locations.`,
-                                numberOfCountriesForFreeServers
-                            )}
+                            {numberOfCountriesForFreeServers === 1
+                                ? c('Info')
+                                      .t`Install a Free server configuration file to connect to a specific server in the free location.`
+                                : c('Info').ngettext(
+                                      msgid`Install a Free server configuration file to connect to a specific server in the ${numberOfCountriesForFreeServers} free location.`,
+                                      `Install a Free server configuration file to connect to a specific server in one of the ${numberOfCountriesForFreeServers} free locations.`,
+                                      numberOfCountriesForFreeServers
+                                  )}
                         </SettingsParagraph>
                         <ServerConfigs
                             category={category}
