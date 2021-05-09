@@ -1,12 +1,22 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { c } from 'ttag';
 import { queryVPNLogicalServerInfo, getVPNServerConfig } from 'proton-shared/lib/api/vpn';
 import { groupWith } from 'proton-shared/lib/helpers/array';
 import downloadFile from 'proton-shared/lib/helpers/downloadFile';
 import { PLANS, SORT_DIRECTION, VPN_HOSTNAME } from 'proton-shared/lib/constants';
 
-import { Href, Button, ButtonLike, Icon, Info, Block, Tooltip, Radio, RadioGroup } from '../../../components';
+import {
+    Href,
+    Button,
+    ButtonLike,
+    Icon,
+    Info,
+    Block,
+    Tooltip,
+    Radio,
+    RadioGroup,
+    SettingsLink,
+} from '../../../components';
 import { useApiResult, useApiWithoutResult, useUser, useSortedList, useUserVPN, usePlans } from '../../../hooks';
 import { getCountryByAbbr, correctAbbr } from '../../../helpers/countries';
 import ServerConfigs from './ServerConfigs';
@@ -204,7 +214,7 @@ const OpenVPNConfigurationSection = () => {
                             <SettingsParagraph>
                                 <span className="block">{c('Info')
                                     .t`ProtonVPN Plus or Visionary required for Secure Core feature.`}</span>
-                                <Link to="/dashboard">{c('Link').t`Learn more`}</Link>
+                                <SettingsLink path="/dashboard">{c('Link').t`Learn more`}</SettingsLink>
                             </SettingsParagraph>
                         )}
                         <ConfigsTable
@@ -312,7 +322,7 @@ const OpenVPNConfigurationSection = () => {
                             </li>
                         </ul>
                         <div>
-                            <ButtonLike as={Link} color="norm" to="dashboard?plan=vpnplus">{c('Action')
+                            <ButtonLike as={SettingsLink} color="norm" path="/dashboard?plan=vpnplus">{c('Action')
                                 .t`Get ProtonVPN Plus`}</ButtonLike>
                         </div>
                     </div>
