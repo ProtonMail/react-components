@@ -1,6 +1,6 @@
 import React from 'react';
 import { c } from 'ttag';
-import betaEnabled from 'design-system/assets/img/onboarding/beta-enabled.svg';
+import earlyAccessSvg from 'design-system/assets/img/onboarding/early-access.svg';
 import { noop } from 'proton-shared/lib/helpers/function';
 
 import useEarlyAccess from '../../hooks/useEarlyAccess';
@@ -38,7 +38,7 @@ const BetaOnboardingModal = (props: any) => {
                         title={c('Onboarding Beta').t`Beta enabled`}
                         description={c('Onboarding Beta')
                             .t`To disable beta, open the settings dropdown menu and click on the "early access" option.`}
-                        img={<img src={betaEnabled} alt={c('Onboarding Beta').t`Beta enabled`} />}
+                        img={<img src={earlyAccessSvg} alt={c('Onboarding Beta').t`Beta enabled`} />}
                     />
                 </OnboardingStep>
             )}
