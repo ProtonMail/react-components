@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { c } from 'ttag';
 import betaEnabled from 'design-system/assets/img/onboarding/beta-enabled.svg';
 import { noop } from 'proton-shared/lib/helpers/function';
 
 import useEarlyAccess from '../../hooks/useEarlyAccess';
+import useLoading from '../../hooks/useLoading';
 
 import OnboardingContent from './OnboardingContent';
 import OnboardingStep from './OnboardingStep';
@@ -11,19 +12,28 @@ import OnboardingModal from './OnboardingModal';
 
 const BetaOnboardingModal = (props: any) => {
     const earlyAccess = useEarlyAccess();
-
-    useEffect(() => {
-        earlyAccess.update(true).catch(noop);
-    }, []);
+    const [loading, withLoading] = useLoading();
 
     const handleSubmit = () => {
-        window.location.reload();
+        withLoading(
+            earlyAccess
+                .update(true)
+                .then(() => {
+                    window.location.reload();
+                })
+                .catch(noop)
+        );
     };
 
     return (
         <OnboardingModal setWelcomeFlags={false} showGenericSteps={false} hideDisplayName {...props}>
             {() => (
-                <OnboardingStep close={null} submit={c('Onboarding Beta').t`Got it`} onSubmit={handleSubmit}>
+                <OnboardingStep
+                    close={null}
+                    submit={c('Onboarding Beta').t`Got it`}
+                    onSubmit={handleSubmit}
+                    loading={loading}
+                >
                     <OnboardingContent
                         title={c('Onboarding Beta').t`Beta enabled`}
                         description={c('Onboarding Beta')
