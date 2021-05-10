@@ -57,6 +57,8 @@ export const ExportModal = ({ calendar, ...rest }: Props) => {
                     vevents: exportedEvents,
                     tzids: [defaultTzid],
                     getVTimezonesMap,
+                }).catch(() => {
+                    return [];
                 });
                 const appVersionPromise = fetch(getAppHref('/assets/version.json', APPS.PROTONCALENDAR))
                     .then((result) => result.json())
