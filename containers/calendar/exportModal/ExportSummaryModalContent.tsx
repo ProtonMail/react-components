@@ -8,6 +8,7 @@ import {
     ExportError,
 } from 'proton-shared/lib/interfaces/calendar';
 
+import { partition } from 'proton-shared/lib/helpers/array';
 import { Alert, Bordered, Details, DynamicProgress, Href, Summary } from '../../../components';
 
 const getErrorMessage = (hasMultiplePasswordResetErrors: boolean) => (type: EXPORT_EVENT_ERROR_TYPES) => {
@@ -37,20 +38,9 @@ const ExportSummaryModalContent = ({ model }: Props) => {
         totalToProcess
     );
 
-    const { passwordResetErrors, otherErrors } = exportErrors.reduce<{
-        passwordResetErrors: ExportError[];
-        otherErrors: ExportError[];
-    }>(
-        (acc, exportError) => {
-            if (exportError[1] === EXPORT_EVENT_ERROR_TYPES.PASSWORD_RESET) {
-                acc.passwordResetErrors.push(exportError);
-            }
-
-            acc.otherErrors.push(exportError);
-
-            return acc;
-        },
-        { passwordResetErrors: [], otherErrors: [] }
+    const [passwordResetErrors, otherErrors] = partition<ExportError>(
+        exportErrors,
+        (item): item is ExportError => item[1] === EXPORT_EVENT_ERROR_TYPES.PASSWORD_RESET
     );
     const hasMultiplePasswordResetErrors = passwordResetErrors.length > 1;
     const filteredErrors: ExportError[] = hasMultiplePasswordResetErrors
