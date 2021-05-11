@@ -109,6 +109,7 @@ const useEarlyAccess = () => {
     const loading = earlyAccessScope.loading || loadingUpdate;
 
     return {
+        isEnabled: !earlyAccessScope.loading && Boolean(earlyAccessScope.feature),
         value: Boolean(userSettings.EarlyAccess),
         scope: earlyAccessScopeValue,
         canUpdate,
