@@ -110,9 +110,13 @@ const useEarlyAccess = () => {
     const currentEnvironmentMatchesTargetEnvironment = normalizedVersionCookieAtLoad === targetEnvironment;
     const environmentIsDesynchronized = hasLoaded && !currentEnvironmentMatchesTargetEnvironment;
     const loading = earlyAccessScope.loading || loadingUpdate;
+    const isEnabled =
+        !earlyAccessScope.loading &&
+        Boolean(earlyAccessScope.feature) &&
+        Boolean(earlyAccessScope.feature?.Options?.length);
 
     return {
-        isEnabled: !earlyAccessScope.loading && Boolean(earlyAccessScope.feature),
+        isEnabled,
         value: Boolean(userSettings.EarlyAccess),
         scope: earlyAccessScopeValue,
         canUpdate,
