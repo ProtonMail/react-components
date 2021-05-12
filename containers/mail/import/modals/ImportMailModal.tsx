@@ -549,7 +549,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps: initialOAu
 
     // Initialize AddressID
     useEffect(() => {
-        if (!addresses?.length) {
+        if (!addresses?.length && !modalModel.payload.AddressID) {
             return;
         }
         setModalModel({
