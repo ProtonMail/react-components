@@ -4,6 +4,7 @@ import { List, AutoSizer } from 'react-virtualized';
 import { ContactEmail, ContactGroup } from 'proton-shared/lib/interfaces/contacts';
 import { SimpleMap } from 'proton-shared/lib/interfaces/utils';
 import { UserSettings } from 'proton-shared/lib/interfaces';
+import { rootFontSize } from 'proton-shared/lib/helpers/dom';
 import { classnames } from '../../helpers';
 import ContactGroupRow from './ContactGroupRow';
 
@@ -30,9 +31,8 @@ const ContactsGroupsList = ({
     const containerRef = useRef(null);
     const isCompactView = userSettings.Density === DENSITY.COMPACT;
 
-    const rootFontSize = (parseInt(window.getComputedStyle(document.body).fontSize, 10) * 16) / 14;
-    const contactRowHeightComfort = 4 * rootFontSize; // 4 * 16 = 64
-    const contactRowHeightCompact = 3 * rootFontSize; // 3 * 16 = 48
+    const contactRowHeightComfort = 4 * rootFontSize; // 4 * 16 = we want 64px by default
+    const contactRowHeightCompact = 3 * rootFontSize; // 3 * 16 = we want 48px by default
 
     return (
         <div
