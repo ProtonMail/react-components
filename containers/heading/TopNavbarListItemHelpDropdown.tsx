@@ -54,6 +54,12 @@ const TopNavbarListItemHelpDropdown = <E extends React.ElementType = typeof defa
         createModal(isAuthenticated ? <AuthenticatedBugModal /> : <BugModal />);
     };
 
+    const handleLiveChat = () => {
+        if (window.zE) {
+            window.zE('webWidget', 'show');
+        }
+    };
+
     const handleTourClick = () => {
         createModal(<OnboardingModal showGenericSteps allowClose hideDisplayName />);
     };
@@ -71,7 +77,6 @@ const TopNavbarListItemHelpDropdown = <E extends React.ElementType = typeof defa
                 <DropdownMenuLink
                     className="text-left flex flex-nowrap flex-justify-space-between flex-align-items-center"
                     href={isVPN ? 'https://protonvpn.com/support/' : 'https://protonmail.com/support/'}
-                    // eslint-disable-next-line react/jsx-no-target-blank
                     target="_blank"
                 >
                     {c('Action').t`I have a question`}
@@ -98,6 +103,12 @@ const TopNavbarListItemHelpDropdown = <E extends React.ElementType = typeof defa
                 <DropdownMenuButton className="text-left" onClick={handleBugReportClick}>
                     {c('Action').t`Report a problem`}
                 </DropdownMenuButton>
+
+                {user.hasPaidVpn && APP_NAME === APPS.PROTONVPN_SETTINGS && (
+                    <DropdownMenuButton className="text-left" onClick={handleLiveChat}>
+                        {c('Action').t`Chat with us`}
+                    </DropdownMenuButton>
+                )}
 
                 <hr className="mt0-5 mb0-5" />
 
