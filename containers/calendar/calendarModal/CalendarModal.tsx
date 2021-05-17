@@ -298,20 +298,20 @@ export const CalendarModal = ({
                         </Field>
                     </Row>
                     <Row>
-                        <span className="label">{c('Label').t`Choose a color`}</span>
+                        <Label htmlFor="calendar-color">{c('Label').t`Choose a color`}</Label>
                         <Field>
-                            <ColorPicker color={model.color} onChange={(color) => setModel({ ...model, color })} />
+                            <ColorPicker
+                                id="calendar-color"
+                                color={model.color}
+                                onChange={(color) => setModel({ ...model, color })}
+                            />
                         </Field>
                     </Row>
                     <Row>
-                        <Label htmlFor="calendar-address-select">
-                            <span className="mr0-5">{c('Label').t`Default email`}</span>
-                        </Label>
-                        <Field>
+                        <Label htmlFor="calendar-address-select">{c('Label').t`Default email`}</Label>
+                        <Field className="flex flex-align-items-center">
                             {model.calendarID ? (
-                                <>
-                                    <span className="pt0-5 flex">{addressText}</span>
-                                </>
+                                addressText
                             ) : (
                                 <SelectTwo
                                     id="calendar-address-select"
