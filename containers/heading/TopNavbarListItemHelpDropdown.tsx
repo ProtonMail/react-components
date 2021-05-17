@@ -4,7 +4,7 @@ import { APPS, BRAND_NAME, APP_NAMES } from 'proton-shared/lib/constants';
 import { getAppFromPathnameSafe } from 'proton-shared/lib/apps/slugHelper';
 
 import { Icon, DropdownMenu, DropdownMenuButton, DropdownMenuLink } from '../../components';
-import { useModals, useAuthentication, useConfig } from '../../hooks';
+import { useModals, useAuthentication, useConfig, useUser } from '../../hooks';
 import BugModal from '../support/BugModal';
 import AuthenticatedBugModal from '../support/AuthenticatedBugModal';
 import { OnboardingModal } from '../onboarding';
@@ -47,6 +47,7 @@ const TopNavbarListItemHelpDropdown = <E extends React.ElementType = typeof defa
     const { APP_NAME } = useConfig();
     const { createModal } = useModals();
     const isAuthenticated = !!UID;
+    const [user] = useUser();
     const app = getAppFromPathnameSafe(window.location.pathname);
     const isVPN = APP_NAME === APPS.PROTONVPN_SETTINGS || app === APPS.PROTONVPN_SETTINGS;
 
