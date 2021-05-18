@@ -5,9 +5,10 @@ import { HotkeyTuple } from './useHotkeys';
 interface Context {
     isOpen: boolean;
     rootRef: MutableRefObject<HTMLDivElement | null>;
+    disabled?: boolean;
 }
 
-const useDropdownArrowNavigation = ({ isOpen, rootRef }: Context) => {
+const useDropdownArrowNavigation = ({ isOpen, rootRef, disabled = false }: Context) => {
     /* @todo exclude dependencies */
     const getDropdownMenuItems = () => (rootRef.current ? tabbable(rootRef.current, { includeContainer: false }) : []);
 
@@ -85,10 +86,10 @@ const useDropdownArrowNavigation = ({ isOpen, rootRef }: Context) => {
     ];
 
     useEffect(() => {
-        if (isOpen) {
+        if (isOpen && !disabled) {
             focusOnFirst();
         }
-    }, [isOpen]);
+    }, [isOpen, disabled]);
 
     return {
         shortcutHandlers,

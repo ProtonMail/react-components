@@ -100,7 +100,11 @@ const Dropdown = ({
 
     const focusTrapProps = useFocusTrap({ rootRef, active: isOpen && !disableFocusTrap, enableInitialFocus: false });
 
-    const { shortcutHandlers: arrowNavigationShortcutHandlers } = useDropdownArrowNavigation({ rootRef, isOpen });
+    const { shortcutHandlers: arrowNavigationShortcutHandlers } = useDropdownArrowNavigation({
+        rootRef,
+        isOpen,
+        disabled: disableDefaultArrowNavigation,
+    });
 
     const defaultShortcutHandlers: HotkeyTuple = [
         'Escape',
