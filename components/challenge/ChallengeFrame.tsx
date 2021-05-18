@@ -15,7 +15,7 @@ export interface Props
         'onClick' | 'onError'
     > {
     challengeRef: MutableRefObject<ChallengeRef | undefined>;
-    children: React.ReactNode;
+    children?: React.ReactNode;
     src: string;
     className?: string;
     bodyClassName?: string;
@@ -278,8 +278,9 @@ const ChallengeFrame = ({
         <>
             <div
                 ref={renderDivRef}
-                style={{ position: 'absolute', left: '0', top: '0', zIndex: -1 }}
+                style={{ position: 'absolute', left: '-1000px', top: '-1000px' }}
                 aria-hidden="true"
+                className="visibility-hidden"
             >
                 {children}
             </div>
