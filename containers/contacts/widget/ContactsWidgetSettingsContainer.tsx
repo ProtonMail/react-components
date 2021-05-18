@@ -62,7 +62,7 @@ const ContactsWidgetSettingsContainer = ({ onClose, onImport }: Props) => {
                             {c('Action').t`Import contacts`}
                         </PrimaryButton>
                     </div>
-                    <div>
+                    <div className="mb2">
                         <Label htmlFor="export-contacts-button" className="text-semibold">
                             {c('Label').t`Export contacts`}
                         </Label>
