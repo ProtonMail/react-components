@@ -183,12 +183,12 @@ const BugModal = ({ onClose = noop, username: Username = '', addresses = [], ...
             onSubmit={() => withLoading(handleSubmit())}
             loading={loading}
             submit={c('Action').t`Submit`}
-            title={c('Title').t`Report a problem`}
+            title={c('Title').t`Report bug`}
             {...rest}
         >
             <Alert>{c('Info').jt`Refreshing the page or ${link} will automatically resolve most issues.`}</Alert>
             <Alert type="warning">{c('Warning')
-                .t`Bug reports are not end-to-end encrypted, please do not send any sensitive information.`}</Alert>
+                .t`Reports are not end-to-end encrypted, please do not send any sensitive information.`}</Alert>
             {Username ? null : (
                 <Row>
                     <Label htmlFor="Username">{c('Label').t`Proton username`}</Label>
