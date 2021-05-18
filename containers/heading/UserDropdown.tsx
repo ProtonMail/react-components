@@ -155,7 +155,7 @@ const UserDropdown = (rest: Omit<Props, 'user' | 'isOpen' | 'onClick'>) => {
                                 onClick={handleSwitchAccount}
                             >
                                 {c('Action').t`Switch account`}
-                                <Icon className="ml1" name="account-switch" />
+                                <Icon className="ml1" name="switch" />
                             </DropdownMenuButton>
 
                             <hr className="mt0-5 mb0-5" />
