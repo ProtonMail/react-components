@@ -1,88 +1,54 @@
-import { useEffect } from 'react';
-import { func, string } from 'prop-types';
-import { UserModel } from 'proton-shared/lib/interfaces';
+import React, { useEffect, useState, useRef } from 'react';
+import { getRelativeApiHostname } from 'proton-shared/lib/helpers/url';
+import { useConfig } from '../../hooks';
 
-declare global {
-    interface Window {
-        zE: any;
-        zESettings: any;
-    }
+const getIframeUrl = (apiUrl: string, zendeskKey: string) => {
+    const url = new URL(apiUrl, window.location.origin);
+    url.hostname = getRelativeApiHostname(url.hostname);
+    url.pathname = '/core/v4/resources/zendesk';
+    url.searchParams.set('Key', zendeskKey);
+    return url;
+};
+interface Props {
+    zendeskKey: string;
 }
+const LiveChatZendesk = ({ zendeskKey }: Props) => {
+    const { API_URL } = useConfig();
+    const [style, setStyle] = useState<any>({ position: 'absolute', bottom: 0, right: 0 });
+    const iframeRef = useRef<HTMLIFrameElement>(null);
 
-const insertScript = ({ key, onLoaded }: { key: string; onLoaded: any }) => {
-    const script = document.createElement('script');
-    script.async = true;
-    script.id = 'ze-snippet';
-    script.src = `https://static.zdassets.com/ekr/snippet.js?key=${key}`;
-    script.addEventListener('load', onLoaded);
-    document.body.appendChild(script);
-};
+    const iframeUrl = getIframeUrl(API_URL, zendeskKey);
 
-const removeScript = () => {
-    const elements = [
-        document.querySelector('#ze-snippet'),
-        document.querySelector('iframe[data-product="web_widget"]'),
-        document.querySelector('iframe#webWidget')?.parentNode,
-    ];
-    elements.forEach((element) => (element as HTMLElement)?.remove());
-    delete window.zE;
-    delete window.zESettings;
-};
-
-const setIdentify = (user: UserModel) => {
-    if (window.zE) {
-        window.zE('webWidget', 'identify', {
-            name: user.Name,
-            email: user.Email,
-        });
-    }
-};
-
-// const showWidget = () => {
-//     if (window.zE) {
-//         window.zE('webWidget', 'show');
-//     }
-// };
-
-const showWidget = (show: boolean) => {
-    const command = show ? 'show' : 'hide';
-    if (window.zE) {
-        window.zE('webWidget', command);
-    }
-};
-
-const LiveChatZendesk = ({ zendeskKey, user = {}, onLoad = undefined, ...props }: any) => {
-    const onLoaded = () => {
-        setIdentify(user);
-        showWidget(false);
-        if (onLoad) {
-            onLoad();
-        }
-    };
+    const src = iframeUrl.toString();
+    const targetOrigin = iframeUrl.origin;
 
     useEffect(() => {
-        if (!window.zE) {
-            insertScript({ key: zendeskKey, onLoaded });
-            window.zESettings = props;
-            // showWidget()
-        }
-        return removeScript;
+        const handleMessage = (event: MessageEvent) => {
+            const contentWindow = iframeRef.current?.contentWindow;
+            const { origin, data, source } = event;
+            if (!contentWindow || origin !== targetOrigin || !data || source !== contentWindow) {
+                return;
+            }
+
+            if (data.type === 'rect') {
+                const height = event.payload.height;
+                const width = event.payload.width;
+                setStyle({ ...style, height: `${height}px`, width: `${width}px` });
+            }
+        };
+
+        window.addEventListener('message', handleMessage, false);
+        return () => {
+            window.removeEventListener('message', handleMessage, false);
+        };
     }, []);
 
-    // useEffect(() => {
-    //     setIdentify(user);
-    // }, [user]);
-
-    return null;
-};
-
-LiveChatZendesk.propTypes = {
-    zendeskKey: string.isRequired,
-    onLoad: func,
-};
-
-LiveChatZendesk.defaultProps = {
-    onLoad: null,
-};
-
+    return <iframe
+        title="Zendesk"
+        src={src}
+        style={style}
+        ref={iframeRef}
+        sandbox="allow-scripts allow-same-origin allow-popups"
+    />;
+}
 export default LiveChatZendesk;
