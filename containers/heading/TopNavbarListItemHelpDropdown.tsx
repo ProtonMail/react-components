@@ -4,7 +4,7 @@ import { APPS, BRAND_NAME, APP_NAMES } from 'proton-shared/lib/constants';
 import { getAppFromPathnameSafe } from 'proton-shared/lib/apps/slugHelper';
 
 import { Icon, DropdownMenu, DropdownMenuButton, DropdownMenuLink } from '../../components';
-import { useModals, useAuthentication, useConfig, useUser } from '../../hooks';
+import { useModals, useAuthentication, useConfig } from '../../hooks';
 import BugModal from '../support/BugModal';
 import AuthenticatedBugModal from '../support/AuthenticatedBugModal';
 import { OnboardingModal } from '../onboarding';
@@ -15,6 +15,7 @@ import TopNavbarListItemButton, {
 
 interface OwnProps {
     content?: string;
+    onOpenChat?: () => void;
 }
 
 const TopNavbarListItemHelpButton = React.forwardRef(
@@ -42,23 +43,19 @@ const userVoiceLinks: Partial<{ [key in APP_NAMES]: string }> = {
 const defaultElement = TopNavbarListItemHelpButton;
 type Props<E extends React.ElementType> = OwnProps & Omit<SimpleDropdownProps<E>, 'content'>;
 
-const TopNavbarListItemHelpDropdown = <E extends React.ElementType = typeof defaultElement>({ ...rest }: Props<E>) => {
+const TopNavbarListItemHelpDropdown = <E extends React.ElementType = typeof defaultElement>({
+    onOpenChat,
+    ...rest
+}: Props<E>) => {
     const { UID } = useAuthentication();
     const { APP_NAME } = useConfig();
     const { createModal } = useModals();
     const isAuthenticated = !!UID;
-    const [user] = useUser();
     const app = getAppFromPathnameSafe(window.location.pathname);
     const isVPN = APP_NAME === APPS.PROTONVPN_SETTINGS || app === APPS.PROTONVPN_SETTINGS;
 
     const handleBugReportClick = () => {
         createModal(isAuthenticated ? <AuthenticatedBugModal /> : <BugModal />);
-    };
-
-    const handleLiveChat = () => {
-        if (window.zE) {
-            window.zE('webWidget', 'show');
-        }
     };
 
     const handleTourClick = () => {
@@ -105,8 +102,8 @@ const TopNavbarListItemHelpDropdown = <E extends React.ElementType = typeof defa
                     {c('Action').t`Report a problem`}
                 </DropdownMenuButton>
 
-                {user.hasPaidVpn && APP_NAME === APPS.PROTONVPN_SETTINGS && (
-                    <DropdownMenuButton className="text-left" onClick={handleLiveChat}>
+                {onOpenChat && (
+                    <DropdownMenuButton className="text-left" onClick={onOpenChat}>
                         {c('Action').t`Chat with us`}
                     </DropdownMenuButton>
                 )}

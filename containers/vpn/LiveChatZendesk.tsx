@@ -1,5 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, MutableRefObject, useImperativeHandle } from 'react';
 import { getRelativeApiHostname } from 'proton-shared/lib/helpers/url';
+import { UserModel } from 'proton-shared/lib/interfaces';
 import { useConfig } from '../../hooks';
 
 const getIframeUrl = (apiUrl: string, zendeskKey: string) => {
@@ -9,12 +10,21 @@ const getIframeUrl = (apiUrl: string, zendeskKey: string) => {
     url.searchParams.set('Key', zendeskKey);
     return url;
 };
+
+export interface ZendeskRef {
+    run: (data: object) => void;
+    show: () => void;
+}
+
 interface Props {
     zendeskKey: string;
+    zendeskRef?: MutableRefObject<ZendeskRef | undefined>;
+    user: UserModel;
 }
-const LiveChatZendesk = ({ zendeskKey }: Props) => {
+
+const LiveChatZendesk = ({ zendeskKey, zendeskRef, user }: Props) => {
     const { API_URL } = useConfig();
-    const [style, setStyle] = useState<any>({ position: 'absolute', bottom: 0, right: 0 });
+    const [style] = useState<any>({ position: 'absolute', bottom: 0, right: 0, width: '374px', height: '572px' });
     const iframeRef = useRef<HTMLIFrameElement>(null);
 
     const iframeUrl = getIframeUrl(API_URL, zendeskKey);
@@ -22,18 +32,36 @@ const LiveChatZendesk = ({ zendeskKey }: Props) => {
     const src = iframeUrl.toString();
     const targetOrigin = iframeUrl.origin;
 
+    const handleRun = (data: object) => {
+        const contentWindow = iframeRef.current?.contentWindow;
+        if (!contentWindow) {
+            return;
+        }
+        contentWindow.postMessage(data, targetOrigin);
+    };
+
+    const handleShow = () => {
+        handleRun({ toggle: true });
+    };
+
+    useImperativeHandle(zendeskRef, () => ({
+        run: handleRun,
+        show: handleShow,
+    }));
+
+    useEffect(() => {
+        // TODO: Do this after it's been loaded
+        setTimeout(() => {
+            handleRun({ identify: { name: user.DisplayName || user.Name } });
+        }, 3000);
+    }, []);
+
     useEffect(() => {
         const handleMessage = (event: MessageEvent) => {
             const contentWindow = iframeRef.current?.contentWindow;
             const { origin, data, source } = event;
             if (!contentWindow || origin !== targetOrigin || !data || source !== contentWindow) {
-                return;
-            }
-
-            if (data.type === 'rect') {
-                const height = event.payload.height;
-                const width = event.payload.width;
-                setStyle({ ...style, height: `${height}px`, width: `${width}px` });
+                // return;
             }
         };
 
@@ -43,12 +71,14 @@ const LiveChatZendesk = ({ zendeskKey }: Props) => {
         };
     }, []);
 
-    return <iframe
-        title="Zendesk"
-        src={src}
-        style={style}
-        ref={iframeRef}
-        sandbox="allow-scripts allow-same-origin allow-popups"
-    />;
-}
+    return (
+        <iframe
+            title="Zendesk"
+            src={src}
+            style={style}
+            ref={iframeRef}
+            sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+        />
+    );
+};
 export default LiveChatZendesk;

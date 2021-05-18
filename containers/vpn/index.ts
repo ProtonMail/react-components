@@ -4,3 +4,4 @@ export { default as OpenVPNCredentialsSection } from './OpenVPNCredentialsSectio
 export { default as ProtonVPNResourcesSection } from './ProtonVPNResourcesSection/ProtonVPNResourcesSection';
 export { default as ProtonVPNCredentialsSection } from './ProtonVPNCredentialsSection/ProtonVPNCredentialsSection';
 export { default as LiveChatZendesk } from './LiveChatZendesk';
+export * from './LiveChatZendesk';
