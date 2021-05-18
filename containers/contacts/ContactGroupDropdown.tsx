@@ -147,7 +147,13 @@ const ContactGroupDropdown = ({
                 <div className="flex flex-justify-space-between flex-align-items-center m1 mb0">
                     <strong>{c('Label').t`Add to group`}</strong>
                     <Tooltip title={c('Info').t`Create a new contact group`}>
-                        <Button icon size="small" onClick={handleAdd} className="flex flex-align-items-center">
+                        <Button
+                            icon
+                            size="small"
+                            onClick={handleAdd}
+                            className="flex flex-align-items-center"
+                            data-prevent-arrow-navigation
+                        >
                             <Icon name="contacts-groups" /> +
                         </Button>
                     </Tooltip>
@@ -158,6 +164,7 @@ const ContactGroupDropdown = ({
                         onChange={setKeyword}
                         autoFocus
                         placeholder={c('Placeholder').t`Filter groups`}
+                        data-prevent-arrow-navigation
                     />
                 </div>
                 <div className="scroll-if-needed scroll-smooth-touch mt1 contactGroupDropdown-list-container">
@@ -210,6 +217,7 @@ const ContactGroupDropdown = ({
                         loading={loading}
                         disabled={!filteredContactGroups.length}
                         onClick={() => withLoading(handleApply())}
+                        data-prevent-arrow-navigation
                     >
                         {c('Action').t`Apply`}
                     </Button>

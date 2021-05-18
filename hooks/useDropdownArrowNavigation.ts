@@ -9,8 +9,15 @@ interface Context {
 }
 
 const useDropdownArrowNavigation = ({ isOpen, rootRef, disabled = false }: Context) => {
-    /* @todo exclude dependencies */
-    const getDropdownMenuItems = () => (rootRef.current ? tabbable(rootRef.current, { includeContainer: false }) : []);
+    const getDropdownMenuItems = () => {
+        if (!rootRef.current) {
+            return [];
+        }
+
+        return tabbable(rootRef.current, { includeContainer: false }).filter(
+            (elm) => !elm.dataset.preventArrowNavigation
+        );
+    };
 
     const getFocusIndex = () => getDropdownMenuItems().findIndex((elm) => elm === document.activeElement);
 
