@@ -22,10 +22,10 @@ const getFeatures = (): MailFeature[] => {
         {
             name: 'storage',
             label: c('Mail feature').t`Storage`,
-            free: '0.5 GB',
-            [PLANS.PLUS]: '5 GB *',
+            free: c('Mail feature').t`0.5 GB`,
+            [PLANS.PLUS]: c('Mail feature option').t`5 GB *`,
             [PLANS.PROFESSIONAL]: c('Mail feature option').t`5 GB / user *`,
-            [PLANS.VISIONARY]: '20 GB',
+            [PLANS.VISIONARY]: c('Mail feature').t`20 GB`,
         },
         {
             name: 'addresses',

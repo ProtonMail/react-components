@@ -14,8 +14,8 @@ const getFeatures = (): CalendarFeature[] => {
         {
             name: 'multi',
             label: c('Calendar feature').t`Multiple calendars`,
-            free: `1`,
-            [PLANS.PLUS]: `20`,
+            free: '1',
+            [PLANS.PLUS]: '20',
             [PLANS.PROFESSIONAL]: c('Calendar feature option').t`20 / user *`,
             [PLANS.VISIONARY]: c('Calendar feature option').t`20 / user`,
         },
