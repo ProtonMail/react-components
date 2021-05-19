@@ -51,38 +51,34 @@ const PlanSelectionComparison = ({ service, onChangePlanIDs, plans, planNamesMap
                                 );
                             }}
                         />
-                        <div className="mt1">
-                            <CalendarFeatures
-                                onSelect={(planName) => {
-                                    const plan = plans.find(({ Name }) => Name === planName);
-                                    onChangePlanIDs(
-                                        switchPlan({
-                                            planIDs,
-                                            plans,
-                                            planID: plan?.ID,
-                                            service,
-                                            organization,
-                                        })
-                                    );
-                                }}
-                            />
-                        </div>
-                        <div className="mt1">
-                            <DriveFeatures
-                                onSelect={(planName) => {
-                                    const plan = plans.find(({ Name }) => Name === planName);
-                                    onChangePlanIDs(
-                                        switchPlan({
-                                            planIDs,
-                                            plans,
-                                            planID: plan?.ID,
-                                            service,
-                                            organization,
-                                        })
-                                    );
-                                }}
-                            />
-                        </div>
+                        <CalendarFeatures
+                            onSelect={(planName) => {
+                                const plan = plans.find(({ Name }) => Name === planName);
+                                onChangePlanIDs(
+                                    switchPlan({
+                                        planIDs,
+                                        plans,
+                                        planID: plan?.ID,
+                                        service,
+                                        organization,
+                                    })
+                                );
+                            }}
+                        />
+                        <DriveFeatures
+                            onSelect={(planName) => {
+                                const plan = plans.find(({ Name }) => Name === planName);
+                                onChangePlanIDs(
+                                    switchPlan({
+                                        planIDs,
+                                        plans,
+                                        planID: plan?.ID,
+                                        service,
+                                        organization,
+                                    })
+                                );
+                            }}
+                        />
                         <p className="text-sm mt1 mb0-5 color-weak">
                             * {c('Info concerning plan features').t`Customizable features`}
                         </p>
