@@ -1,14 +1,20 @@
 import { useEffect, MutableRefObject } from 'react';
-import { tabbable } from 'tabbable';
+import { FocusableElement, tabbable } from 'tabbable';
 import { HotkeyTuple } from './useHotkeys';
 
 interface Context {
     isOpen: boolean;
     rootRef: MutableRefObject<HTMLDivElement | null>;
     disabled?: boolean;
+    preventArrowKeyNavigationAutofocus?: boolean;
 }
 
-const useDropdownArrowNavigation = ({ isOpen, rootRef, disabled = false }: Context) => {
+const useDropdownArrowNavigation = ({
+    isOpen,
+    rootRef,
+    disabled = false,
+    preventArrowKeyNavigationAutofocus = false,
+}: Context) => {
     const getDropdownMenuItems = () => {
         if (!rootRef.current) {
             return [];
@@ -23,6 +29,15 @@ const useDropdownArrowNavigation = ({ isOpen, rootRef, disabled = false }: Conte
 
     const findElementAndFocus = (startingIndex: number) => {
         const dropdownMenuItems = getDropdownMenuItems();
+
+        if (
+            !dropdownMenuItems.length ||
+            !document.activeElement ||
+            !dropdownMenuItems.includes(document.activeElement as FocusableElement)
+        ) {
+            return;
+        }
+
         const lastIndex = dropdownMenuItems.length - 1;
         let index = startingIndex;
 
@@ -93,10 +108,11 @@ const useDropdownArrowNavigation = ({ isOpen, rootRef, disabled = false }: Conte
     ];
 
     useEffect(() => {
-        if (isOpen && !disabled) {
-            focusOnFirst();
+        if (isOpen && !disabled && !preventArrowKeyNavigationAutofocus) {
+            const dropdownMenuItems = getDropdownMenuItems();
+            dropdownMenuItems[0]?.focus();
         }
-    }, [isOpen, disabled]);
+    }, [isOpen, disabled, preventArrowKeyNavigationAutofocus]);
 
     return {
         shortcutHandlers,
