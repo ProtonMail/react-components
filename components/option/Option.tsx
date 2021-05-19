@@ -10,6 +10,7 @@ export interface Props<V> extends Omit<React.ComponentPropsWithoutRef<'button'>,
     active?: boolean;
     title: string;
     focusOnActive?: boolean;
+    searchStrings?: string[];
 }
 
 const Option = <V,>({

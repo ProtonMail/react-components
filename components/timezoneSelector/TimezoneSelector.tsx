@@ -40,6 +40,7 @@ export const TimezoneSelector = ({
             onChange={({ value }) => {
                 onChange(value);
             }}
+            search
             {...rest}
         >
             {timezoneOptions}

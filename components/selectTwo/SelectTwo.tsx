@@ -7,6 +7,16 @@ import useControlled from '../../hooks/useControlled';
 import { classnames } from '../../helpers';
 import DropdownCaret from '../dropdown/DropdownCaret';
 import { CircleLoader } from '../loader';
+import { SearchInput } from '../input';
+
+const includesString = (str1: string, str2: string) => str1.toLowerCase().indexOf(str2.toLowerCase()) > -1;
+
+const arrayIncludesString = (arrayToSearch: string[], keyword: string) =>
+    arrayToSearch.some((str) => includesString(str, keyword));
+
+const defaultFilterFunction = <V,>(option: OptionProps<V>, keyword: string) =>
+    (option.title && includesString(option.title, keyword)) ||
+    (option.searchStrings && arrayIncludesString(option.searchStrings, keyword));
 
 export type FakeSelectChangeEvent<V> = {
     value: V;
@@ -45,6 +55,7 @@ export interface Props<V>
     onClose?: () => void;
     onOpen?: () => void;
     loading?: boolean;
+    search?: boolean | ((option: OptionProps<V>) => void);
 }
 
 const SelectTwo = <V extends any>({
@@ -59,15 +70,20 @@ const SelectTwo = <V extends any>({
     clearSearchAfter = 500,
     getSearchableValue,
     loading,
+    search,
     ...rest
 }: Props<V>) => {
     const anchorRef = useRef<HTMLButtonElement | null>(null);
 
     const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
 
-    const [search, setSearch] = useState('');
+    const [searchTyped, setSearchTyped] = useState('');
+    const [searchValue, setSearchValue] = useState('');
 
     const searchClearTimeout = useRef<number | undefined>(undefined);
+
+    const searchContainerRef = useRef<HTMLDivElement>(null);
+    const searchInputRef = useRef<HTMLInputElement>(null);
 
     const [isOpen, setIsOpen] = useControlled(controlledOpen, false);
 
@@ -89,7 +105,7 @@ const SelectTwo = <V extends any>({
     }, [children, value]);
 
     useEffect(() => {
-        if (!search) {
+        if (!searchTyped) {
             return;
         }
 
@@ -100,7 +116,7 @@ const SelectTwo = <V extends any>({
         window.clearTimeout(searchClearTimeout.current);
 
         searchClearTimeout.current = window.setTimeout(() => {
-            setSearch('');
+            setSearchTyped('');
         }, clearSearchAfter);
 
         /*
@@ -109,18 +125,22 @@ const SelectTwo = <V extends any>({
          * type-cast is a safe assumption here
          */
         const indexOfMatchedOption = allOptionValues.findIndex((v) =>
-            (getSearchableValue?.(v) || String(v)).startsWith(search)
+            (getSearchableValue?.(v) || String(v)).startsWith(searchTyped)
         );
 
         if (indexOfMatchedOption !== -1) {
             setFocusedIndex(indexOfMatchedOption);
         }
-    }, [search]);
+    }, [searchTyped]);
 
     const open = () => {
         onOpen?.();
         setIsOpen(true);
         setFocusedIndex(selectedIndex || 0);
+
+        setTimeout(() => {
+            searchInputRef?.current?.focus();
+        }, 0);
     };
 
     const close = () => {
@@ -198,7 +218,7 @@ const SelectTwo = <V extends any>({
         if (isAlphanumeric && isSearchable && e.key.length === 1) {
             const { key } = e;
 
-            setSearch((s) => s + key);
+            setSearchTyped((s) => s + key);
         }
     };
 
@@ -223,6 +243,16 @@ const SelectTwo = <V extends any>({
     const displayedValue = selectedChild?.props?.children || selectedChild?.props?.title || placeholder;
 
     const ariaLabel = selectedChild?.props?.title;
+
+    const getOptions = (options = items) => {
+        if (!search || !searchValue) {
+            return options;
+        }
+
+        const filterFunction = typeof search === 'function' ? search : defaultFilterFunction;
+
+        return options.filter((option) => filterFunction(option.props, searchValue));
+    };
 
     return (
         <>
@@ -256,14 +286,24 @@ const SelectTwo = <V extends any>({
             <Dropdown
                 isOpen={isOpen}
                 anchorRef={anchorRef}
+                searchContainerRef={searchContainerRef}
                 onClose={close}
                 offset={4}
                 noCaret
                 noMaxWidth
                 sameAnchorWidth
             >
+                {!!search && (
+                    <div className="dropdown-search" ref={searchContainerRef}>
+                        <SearchInput
+                            ref={searchInputRef}
+                            value={searchValue}
+                            onInput={(event) => setSearchValue(event.currentTarget.value)}
+                        />
+                    </div>
+                )}
                 <ul className="unstyled m0 p0" onKeyDown={handleMenuKeydown} data-testid="select-list">
-                    {items}
+                    {getOptions()}
                 </ul>
             </Dropdown>
         </>
