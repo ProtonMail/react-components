@@ -28,7 +28,7 @@ const getFeatures = (): CalendarFeature[] => {
             [PLANS.VISIONARY]: <CheckIcon />,
         },
         {
-            name: 'recurringEventss',
+            name: 'recurringEvents',
             label: c('Calendar feature').t`Recurring events`,
             free: <CheckIcon />,
             [PLANS.PLUS]: <CheckIcon />,

@@ -45,7 +45,10 @@ const Features = ({ appName, onSelect, planLabels, features }: Props) => {
                                                     size={20}
                                                     className="color-primary flex-item-noshrink"
                                                 />
-                                                <strong className="ml0-5 flex-item-fluid ellipsis" title={displayName}>
+                                                <strong
+                                                    className="ml0-5 flex-item-fluid text-ellipsis"
+                                                    title={displayName}
+                                                >
                                                     {displayName}
                                                 </strong>
                                             </span>
