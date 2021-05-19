@@ -6,6 +6,8 @@ import { Organization, Plan, PlanIDs } from 'proton-shared/lib/interfaces';
 import { Button, Icon } from '../../../components';
 import MailFeatures from './MailFeatures';
 import VPNFeatures from './VPNFeatures';
+import CalendarFeatures from './CalendarFeatures';
+import DriveFeatures from './DriveFeatures';
 
 interface Props {
     service: PLAN_SERVICES;
@@ -49,10 +51,42 @@ const PlanSelectionComparison = ({ service, onChangePlanIDs, plans, planNamesMap
                                 );
                             }}
                         />
-                        <p className="text-sm mt1 mb1">
+                        <div className="mt1">
+                            <CalendarFeatures
+                                onSelect={(planName) => {
+                                    const plan = plans.find(({ Name }) => Name === planName);
+                                    onChangePlanIDs(
+                                        switchPlan({
+                                            planIDs,
+                                            plans,
+                                            planID: plan?.ID,
+                                            service,
+                                            organization,
+                                        })
+                                    );
+                                }}
+                            />
+                        </div>
+                        <div className="mt1">
+                            <DriveFeatures
+                                onSelect={(planName) => {
+                                    const plan = plans.find(({ Name }) => Name === planName);
+                                    onChangePlanIDs(
+                                        switchPlan({
+                                            planIDs,
+                                            plans,
+                                            planID: plan?.ID,
+                                            service,
+                                            organization,
+                                        })
+                                    );
+                                }}
+                            />
+                        </div>
+                        <p className="text-sm mt1 mb0-5 color-weak">
                             * {c('Info concerning plan features').t`Customizable features`}
                         </p>
-                        <p className="text-sm mt0 mb1">
+                        <p className="text-sm mt0 mb1 color-weak">
                             **{' '}
                             {c('Info concerning plan features')
                                 .t`ProtonMail cannot be used for mass emailing or spamming. Legitimate emails are unlimited.`}

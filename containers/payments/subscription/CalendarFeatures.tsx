@@ -14,10 +14,10 @@ const getFeatures = (): CalendarFeature[] => {
         {
             name: 'multi',
             label: c('Calendar feature').t`Multiple calendars`,
-            free: c('Calendar feature option').t`1 calendar`,
-            [PLANS.PLUS]: c('Calendar feature option').t`25 calendars`,
-            [PLANS.PROFESSIONAL]: c('Calendar feature option').t`25 calendars / user`,
-            [PLANS.VISIONARY]: c('Calendar feature option').t`25 calendars / user`,
+            free: c('Calendar feature option').t`1`,
+            [PLANS.PLUS]: c('Calendar feature option').t`20`,
+            [PLANS.PROFESSIONAL]: c('Calendar feature option').t`20 / user *`,
+            [PLANS.VISIONARY]: c('Calendar feature option').t`20 / user`,
         },
         {
             name: 'import',
@@ -28,7 +28,7 @@ const getFeatures = (): CalendarFeature[] => {
             [PLANS.VISIONARY]: <CheckIcon />,
         },
         {
-            name: 'recurring',
+            name: 'recurringEventss',
             label: c('Calendar feature').t`Recurring events`,
             free: <CheckIcon />,
             [PLANS.PLUS]: <CheckIcon />,
@@ -37,7 +37,7 @@ const getFeatures = (): CalendarFeature[] => {
         },
         {
             name: 'invitation',
-            label: c('Calendar feature').t`Recurring events`,
+            label: c('Calendar feature').t`Invitations`,
             free: <CheckIcon />,
             [PLANS.PLUS]: <CheckIcon />,
             [PLANS.PROFESSIONAL]: <CheckIcon />,
@@ -45,7 +45,7 @@ const getFeatures = (): CalendarFeature[] => {
         },
         {
             name: 'share',
-            label: c('Calendar feature').t`Recurring events`,
+            label: c('Calendar feature').t`Share Calendar via link`,
             free: EmDash,
             [PLANS.PLUS]: <CheckIcon />,
             [PLANS.PROFESSIONAL]: <CheckIcon />,

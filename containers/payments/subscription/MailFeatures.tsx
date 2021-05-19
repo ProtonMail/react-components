@@ -120,7 +120,8 @@ const getFeatures = (): MailFeature[] => {
         },
         {
             name: 'short domain',
-            label: c('Mail feature').t`Short domain`,
+            label: c('Mail feature').t`Use @pm.me address`,
+            tooltip: c('Tooltip').t`Use the personal address username@pm.me to send emails`,
             free: EmDash,
             [PLANS.PLUS]: <CheckIcon />,
             [PLANS.PROFESSIONAL]: <CheckIcon />,
