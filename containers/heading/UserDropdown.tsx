@@ -8,7 +8,7 @@ import { getPlanName, hasLifetime } from 'proton-shared/lib/helpers/subscription
 import { textToClipboard } from 'proton-shared/lib/helpers/browser';
 
 import { useAuthentication, useConfig, useUser, useOrganization, useSubscription, useNotifications } from '../../hooks';
-import { usePopperAnchor, Dropdown, Icon, DropdownMenu, DropdownMenuButton } from '../../components';
+import { usePopperAnchor, Dropdown, Icon, DropdownMenu, DropdownMenuButton, Tooltip, Button } from '../../components';
 import { classnames, generateUID } from '../../helpers';
 import UserDropdownButton, { Props } from './UserDropdownButton';
 
@@ -77,44 +77,61 @@ const UserDropdown = (rest: Omit<Props, 'user' | 'isOpen' | 'onClick'>) => {
                 originalPlacement="bottom-right"
             >
                 <DropdownMenu>
-                    {organizationName && APP_NAME !== APPS.PROTONVPN_SETTINGS ? (
-                        <div className="pt0-25 pr1 pb0-25 pl1 flex flex-nowrap flex-justify-space-between flex-align-items-baseline on-mobile-flex-column">
-                            <div className="text-ellipsis-two-lines text-bold">{organizationName}</div>
-                            {planName ? (
-                                <div className="ml2 on-mobile-ml0 on-mobile-mt0-5 flex-item-noshrink">
-                                    <span className="badge-label-primary">{planName}</span>
-                                </div>
-                            ) : null}
-                        </div>
-                    ) : null}
+                    <div className="pr1 pl1 pt0-25 pb0-25">
+                        {organizationName && APP_NAME !== APPS.PROTONVPN_SETTINGS ? (
+                            <div className="text-ellipsis-two-lines text-bold" title={organizationName}>
+                                {organizationName}
+                            </div>
+                        ) : null}
 
-                    {nameToDisplay ? (
-                        <div className="pt0-25 pr1 pb0-25 pl1 flex flex-nowrap flex-justify-space-between flex-align-items-baseline on-mobile-flex-column">
-                            <div className="text-ellipsis-two-lines">{nameToDisplay}</div>
-                            {planName && (!organizationName || APP_NAME === APPS.PROTONVPN_SETTINGS) ? (
-                                <div className="ml2 on-mobile-ml0 on-mobile-mt0-5 flex-item-noshrink">
-                                    <span className="badge-label-primary">{planName}</span>
-                                </div>
-                            ) : null}
-                        </div>
-                    ) : null}
+                        {nameToDisplay ? (
+                            <div
+                                className={classnames([
+                                    'text-ellipsis-two-lines',
+                                    (!organizationName || APP_NAME === APPS.PROTONVPN_SETTINGS) && 'text-bold',
+                                ])}
+                                title={nameToDisplay}
+                            >
+                                {nameToDisplay}
+                            </div>
+                        ) : null}
 
-                    {planName && !nameToDisplay && (!organizationName || APP_NAME === APPS.PROTONVPN_SETTINGS) ? (
-                        <span className="pt0-25 pr1 pb0-25 pl1 badge-label-primary">{planName}</span>
-                    ) : null}
+                        {Email ? (
+                            <div className="flex flex-nowrap flex-justify-space-between flex-align-items-center button-show-on-hover">
+                                <span
+                                    className={classnames([
+                                        'text-ellipsis user-select',
+                                        !nameToDisplay &&
+                                            (!organizationName || APP_NAME === APPS.PROTONVPN_SETTINGS) &&
+                                            'text-bold',
+                                        (nameToDisplay || (organizationName && APP_NAME !== APPS.PROTONVPN_SETTINGS)) &&
+                                            'color-weak',
+                                    ])}
+                                    title={Email}
+                                >
+                                    {Email}
+                                </span>
+                                <Tooltip title={c('Action').t`Copy email to clipboard`}>
+                                    <Button
+                                        className="flex-item-noshrink ml1 mr-6p button-show-on-hover-element"
+                                        icon
+                                        shape="ghost"
+                                        color="weak"
+                                        size="small"
+                                        onClick={handleCopyEmail}
+                                    >
+                                        <Icon name="copy" alt={c('Action').t`Copy email to clipboard`} />
+                                    </Button>
+                                </Tooltip>
+                            </div>
+                        ) : null}
 
-                    {Email ? (
-                        <DropdownMenuButton
-                            className="flex flex-nowrap flex-justify-space-between flex-align-items-center button-show-on-hover"
-                            onClick={handleCopyEmail}
-                            title={c('Action').t`Copy your email address to clipboard`}
-                        >
-                            <span className={classnames(['text-ellipsis', nameToDisplay && 'text-sm m0 color-weak'])}>
-                                {Email}
-                            </span>
-                            <Icon className="ml1 button-show-on-hover-element" name="copy" />
-                        </DropdownMenuButton>
-                    ) : null}
+                        {planName ? (
+                            <div className="pt0-25">
+                                <span className="badge-label-primary">{planName}</span>
+                            </div>
+                        ) : null}
+                    </div>
 
                     <hr className="mt0-5 mb0-5" />
 
