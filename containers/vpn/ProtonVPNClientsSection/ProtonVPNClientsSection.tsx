@@ -2,7 +2,7 @@ import React from 'react';
 import { c } from 'ttag';
 import VPNClientCard from './VPNClientCard';
 import { DropdownMenuLink, Copy } from '../../../components';
-import { SettingsParagraph, SettingsSectionWide } from '../..';
+import { SettingsParagraph, SettingsSectionWide } from '../../account';
 
 const ProtonVPNClientsSection = () => {
     const androidLinks = [
