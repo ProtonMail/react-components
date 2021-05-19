@@ -60,26 +60,27 @@ const InsertImageModal = ({ onAddUrl, onAddImages, onClose, ...rest }: Props) =>
 
     return (
         <FormModal
-            title={c('Info').t`Insert image`}
+            title={c('Info').t`Edit image`}
             onSubmit={handleSubmit}
             onClose={onClose}
             footer={
                 <>
                     <Button type="reset">{c('Action').t`Cancel`}</Button>
                     <PrimaryButton type="submit" disabled={imageState !== ImageState.Ok}>
-                        {c('Action').t`Insert`}
+                        {c('Action').t`Save`}
                     </PrimaryButton>
                 </>
             }
             {...rest}
         >
             <div className="flex flex-nowrap mb1 on-mobile-flex-column">
-                <Label htmlFor={`editor-image-address-${uid}`}>{c('Info').t`Web address`}</Label>
+                <Label htmlFor={`editor-image-address-${uid}`}>{c('Info').t`Add image URL`}</Label>
                 <div className="flex-item-fluid">
                     <Input
                         id={`editor-image-address-${uid}`}
                         type="text"
                         autoComplete="off"
+                        placeholder={c('Info').t`Image URL`}
                         error={imageState === ImageState.Error ? c('Info').t`Not a valid URL` : undefined}
                         onChange={handleChange}
                     />
