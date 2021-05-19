@@ -31,7 +31,7 @@ const SearchInput = React.forwardRef<HTMLInputElement, Props>(
             setKeywords(value);
         }, [value]);
 
-        return <Input ref={ref} value={keywords} onChange={handleChange} type="search" {...rest} />;
+        return <Input ref={rest.ref || ref} value={keywords} onChange={handleChange} type="search" {...rest} />;
     }
 );
 
