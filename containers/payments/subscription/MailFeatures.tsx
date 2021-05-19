@@ -144,22 +144,16 @@ const getFeatures = (): MailFeature[] => {
             [PLANS.PROFESSIONAL]: <CheckIcon />,
             [PLANS.VISIONARY]: <CheckIcon />,
         },
-        {
-            name: 'vpn',
-            label: 'ProtonVPN',
-            free: c('VPN feature option').t`Optional *`,
-            [PLANS.PLUS]: c('VPN feature option').t`Optional *`,
-            [PLANS.PROFESSIONAL]: c('VPN feature option').t`Optional *`,
-            [PLANS.VISIONARY]: c('VPN feature option').t`Included`,
-        },
     ];
 };
 
 interface Props {
     onSelect: (planName: PLANS | 'free') => void;
+    activeTab: number;
+    onSetActiveTab: (activeTab: number) => void;
 }
 
-const MailFeatures = ({ onSelect }: Props) => {
+const MailFeatures = ({ onSelect, activeTab, onSetActiveTab }: Props) => {
     const features = getFeatures();
     const planLabels = [
         { label: 'Free', key: 'free' } as const,
@@ -167,7 +161,16 @@ const MailFeatures = ({ onSelect }: Props) => {
         { label: 'Professional', key: PLANS.PROFESSIONAL },
         { label: 'Visionary', key: PLANS.VISIONARY },
     ];
-    return <Features appName={APPS.PROTONMAIL} onSelect={onSelect} planLabels={planLabels} features={features} />;
+    return (
+        <Features
+            appName={APPS.PROTONMAIL}
+            onSelect={onSelect}
+            planLabels={planLabels}
+            features={features}
+            activeTab={activeTab}
+            onSetActiveTab={onSetActiveTab}
+        />
+    );
 };
 
 export default MailFeatures;

@@ -40,9 +40,11 @@ const getFeatures = (): DriveFeature[] => {
 
 interface Props {
     onSelect: (planName: PLANS | 'free') => void;
+    activeTab: number;
+    onSetActiveTab: (activeTab: number) => void;
 }
 
-const DriveFeatures = ({ onSelect }: Props) => {
+const DriveFeatures = ({ onSelect, activeTab, onSetActiveTab }: Props) => {
     const features = getFeatures();
     const planLabels = [
         { label: 'Free', key: 'free' } as const,
@@ -50,7 +52,16 @@ const DriveFeatures = ({ onSelect }: Props) => {
         { label: 'Professional', key: PLANS.PROFESSIONAL },
         { label: 'Visionary', key: PLANS.VISIONARY },
     ];
-    return <Features appName={APPS.PROTONDRIVE} onSelect={onSelect} planLabels={planLabels} features={features} />;
+    return (
+        <Features
+            appName={APPS.PROTONDRIVE}
+            onSelect={onSelect}
+            planLabels={planLabels}
+            features={features}
+            activeTab={activeTab}
+            onSetActiveTab={onSetActiveTab}
+        />
+    );
 };
 
 export default DriveFeatures;

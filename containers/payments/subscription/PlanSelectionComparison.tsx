@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { c } from 'ttag';
 import { PLANS, PLAN_SERVICES } from 'proton-shared/lib/constants';
 import { switchPlan } from 'proton-shared/lib/helpers/planIDs';
@@ -34,6 +34,8 @@ const PlanSelectionComparison = ({ service, onChangePlanIDs, plans, planNamesMap
         );
     };
 
+    const [tab, setTab] = useState(0);
+
     return (
         <>
             <p className="text-sm">{c('Info').t`* Customizable features`}</p>
@@ -51,9 +53,9 @@ const PlanSelectionComparison = ({ service, onChangePlanIDs, plans, planNamesMap
             <div ref={featuresRef}>
                 {service === PLAN_SERVICES.MAIL ? (
                     <>
-                        <MailFeatures onSelect={handleSelect} />
-                        <CalendarFeatures onSelect={handleSelect} />
-                        <DriveFeatures onSelect={handleSelect} />
+                        <MailFeatures onSelect={handleSelect} activeTab={tab} onSetActiveTab={setTab} />
+                        <CalendarFeatures onSelect={handleSelect} activeTab={tab} onSetActiveTab={setTab} />
+                        <DriveFeatures onSelect={handleSelect} activeTab={tab} onSetActiveTab={setTab} />
                         <p className="text-sm mt1 mb0-5 color-weak">
                             * {c('Info concerning plan features').t`Customizable features`}
                         </p>
@@ -65,7 +67,12 @@ const PlanSelectionComparison = ({ service, onChangePlanIDs, plans, planNamesMap
                     </>
                 ) : null}
                 {service === PLAN_SERVICES.VPN ? (
-                    <VPNFeatures planNamesMap={planNamesMap} onSelect={handleSelect} />
+                    <VPNFeatures
+                        planNamesMap={planNamesMap}
+                        onSelect={handleSelect}
+                        activeTab={tab}
+                        onSetActiveTab={setTab}
+                    />
                 ) : null}
             </div>
         </>

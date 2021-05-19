@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { c } from 'ttag';
 import { PLANS, APP_NAMES, APPS_CONFIGURATION } from 'proton-shared/lib/constants';
 
@@ -11,13 +11,14 @@ interface Props {
     planLabels: PlanLabel[];
     features: (MailFeature | VPNFeature | CalendarFeature | DriveFeature)[];
     onSelect: (planName: PLANS | 'free') => void;
+    activeTab: number;
+    onSetActiveTab: (activeTab: number) => void;
 }
 
 type UghRest = keyof Omit<MailFeature | VPNFeature | CalendarFeature | DriveFeature, 'name' | 'label' | 'tooltip'>;
 
-const Features = ({ appName, onSelect, planLabels, features }: Props) => {
+const Features = ({ appName, onSelect, planLabels, features, activeTab, onSetActiveTab }: Props) => {
     const { isNarrow } = useActiveBreakpoint();
-    const [tab, setTab] = useState(0);
     const { icon, name } = APPS_CONFIGURATION[appName];
 
     // translator: <ProtonDrive> (beta)
@@ -25,7 +26,7 @@ const Features = ({ appName, onSelect, planLabels, features }: Props) => {
 
     if (isNarrow) {
         return (
-            <Tabs value={tab} onChange={setTab}>
+            <Tabs value={activeTab} onChange={onSetActiveTab}>
                 {planLabels.map(({ label, key }) => ({
                     title: label,
                     content: (
