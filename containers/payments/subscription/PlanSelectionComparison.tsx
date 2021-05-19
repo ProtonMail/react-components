@@ -20,6 +20,20 @@ interface Props {
 
 const PlanSelectionComparison = ({ service, onChangePlanIDs, plans, planNamesMap, organization, planIDs }: Props) => {
     const featuresRef = useRef<HTMLDivElement>(null);
+
+    const handleSelect = (planName: PLANS | 'free') => {
+        const plan = plans.find(({ Name }) => Name === planName);
+        onChangePlanIDs(
+            switchPlan({
+                planIDs,
+                plans,
+                planID: plan?.ID,
+                service,
+                organization,
+            })
+        );
+    };
+
     return (
         <>
             <p className="text-sm">{c('Info').t`* Customizable features`}</p>
@@ -37,48 +51,9 @@ const PlanSelectionComparison = ({ service, onChangePlanIDs, plans, planNamesMap
             <div ref={featuresRef}>
                 {service === PLAN_SERVICES.MAIL ? (
                     <>
-                        <MailFeatures
-                            onSelect={(planName) => {
-                                const plan = plans.find(({ Name }) => Name === planName);
-                                onChangePlanIDs(
-                                    switchPlan({
-                                        planIDs,
-                                        plans,
-                                        planID: plan?.ID,
-                                        service,
-                                        organization,
-                                    })
-                                );
-                            }}
-                        />
-                        <CalendarFeatures
-                            onSelect={(planName) => {
-                                const plan = plans.find(({ Name }) => Name === planName);
-                                onChangePlanIDs(
-                                    switchPlan({
-                                        planIDs,
-                                        plans,
-                                        planID: plan?.ID,
-                                        service,
-                                        organization,
-                                    })
-                                );
-                            }}
-                        />
-                        <DriveFeatures
-                            onSelect={(planName) => {
-                                const plan = plans.find(({ Name }) => Name === planName);
-                                onChangePlanIDs(
-                                    switchPlan({
-                                        planIDs,
-                                        plans,
-                                        planID: plan?.ID,
-                                        service,
-                                        organization,
-                                    })
-                                );
-                            }}
-                        />
+                        <MailFeatures onSelect={handleSelect} />
+                        <CalendarFeatures onSelect={handleSelect} />
+                        <DriveFeatures onSelect={handleSelect} />
                         <p className="text-sm mt1 mb0-5 color-weak">
                             * {c('Info concerning plan features').t`Customizable features`}
                         </p>
@@ -90,21 +65,7 @@ const PlanSelectionComparison = ({ service, onChangePlanIDs, plans, planNamesMap
                     </>
                 ) : null}
                 {service === PLAN_SERVICES.VPN ? (
-                    <VPNFeatures
-                        planNamesMap={planNamesMap}
-                        onSelect={(planName) => {
-                            const plan = plans.find(({ Name }) => Name === planName);
-                            onChangePlanIDs(
-                                switchPlan({
-                                    planIDs,
-                                    plans,
-                                    planID: plan?.ID,
-                                    service,
-                                    organization,
-                                })
-                            );
-                        }}
-                    />
+                    <VPNFeatures planNamesMap={planNamesMap} onSelect={handleSelect} />
                 ) : null}
             </div>
         </>
