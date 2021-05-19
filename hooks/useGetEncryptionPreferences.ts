@@ -1,11 +1,12 @@
 import getPublicKeysVcardHelper from 'proton-shared/lib/api/helpers/getPublicKeysVcardHelper';
-import { MINUTE, RECIPIENT_TYPES } from 'proton-shared/lib/constants';
+import { DOMAIN_STATE, MINUTE, RECIPIENT_TYPES } from 'proton-shared/lib/constants';
 import { canonizeEmail, canonizeInternalEmail } from 'proton-shared/lib/helpers/email';
 import { GetEncryptionPreferences } from 'proton-shared/lib/interfaces/hooks/GetEncryptionPreferences';
 import { splitKeys } from 'proton-shared/lib/keys/keys';
 import { getContactPublicKeyModel } from 'proton-shared/lib/keys/publicKeys';
 import extractEncryptionPreferences from 'proton-shared/lib/mail/encryptionPreferences';
 import { useCallback } from 'react';
+import { hasProtonDomain } from 'proton-shared/lib/helpers/string';
 import { useGetAddresses } from './useAddresses';
 import useApi from './useApi';
 import useCache from './useCache';
@@ -14,6 +15,7 @@ import { useGetAddressKeys } from './useGetAddressKeys';
 import useGetPublicKeys from './useGetPublicKeys';
 import { useGetMailSettings } from './useMailSettings';
 import { useGetUserKeys } from './useUserKeys';
+import { useGetDomains } from './useDomains';
 
 export const CACHE_KEY = 'ENCRYPTION_PREFERENCES';
 
@@ -32,14 +34,28 @@ const useGetEncryptionPreferences = () => {
     const getAddressKeys = useGetAddressKeys();
     const getPublicKeys = useGetPublicKeys();
     const getMailSettings = useGetMailSettings();
+    const getDomains = useGetDomains();
+
+    const getSelfAddress = async (emailAddress: string) => {
+        const [addresses, domains] = await Promise.all([getAddresses(), getDomains()]);
+        const canonicalEmail = canonizeInternalEmail(emailAddress);
+        // List active domains
+        const domainNames = domains
+            .filter((domain) => domain.State === DOMAIN_STATE.DOMAIN_STATE_ACTIVE)
+            .map((domain) => domain.DomainName);
+        const customDomainRegex = new RegExp(`@(${domainNames.join('|')})$`, 'i');
+
+        return (
+            addresses
+                // Ignore addresses on inactive domains, they can be hosted somewhere else
+                .filter(({ Email }) => hasProtonDomain(Email) || customDomainRegex.test(Email))
+                .find(({ Email }) => canonizeInternalEmail(Email) === canonicalEmail)
+        );
+    };
 
     const getEncryptionPreferences = useCallback<GetEncryptionPreferences>(
         async (emailAddress, lifetime, contactEmailsMap) => {
-            const [addresses, mailSettings] = await Promise.all([getAddresses(), getMailSettings()]);
-            const canonicalEmail = canonizeInternalEmail(emailAddress);
-            const selfAddress = addresses
-                .filter(({ Receive }) => !!Receive)
-                .find(({ Email }) => canonizeInternalEmail(Email) === canonicalEmail);
+            const [selfAddress, mailSettings] = await Promise.all([getSelfAddress(emailAddress), getMailSettings()]);
             let selfSend;
             let apiKeysConfig;
             let pinnedKeysConfig;
