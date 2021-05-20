@@ -2,7 +2,7 @@ import React, { ChangeEvent } from 'react';
 import { c, msgid } from 'ttag';
 
 import { Checkbox, Icon, Button, Tooltip } from '../../../components';
-import type { CustomAction } from './TopNavbarListItemContactsDropdown';
+import { CustomAction } from './types';
 import useContactList from '../useContactList';
 
 interface Props {

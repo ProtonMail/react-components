@@ -16,7 +16,7 @@ import ContactDeleteModal from '../modals/ContactDeleteModal';
 import ContactModal from '../modals/ContactModal';
 import ContactsWidgetPlaceholder, { EmptyType } from './ContactsWidgetPlaceholder';
 import MergeContactBanner from './MergeContactBanner';
-import type { CustomAction } from './TopNavbarListItemContactsDropdown';
+import { CustomAction } from './types';
 
 interface Props {
     onClose: () => void;

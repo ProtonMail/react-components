@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
-import { Recipient, SimpleMap } from 'proton-shared/lib/interfaces';
-import { ContactEmail } from 'proton-shared/lib/interfaces/contacts';
+import { Recipient } from 'proton-shared/lib/interfaces';
 import { Dropdown, DropdownButton, Icon, Tabs, usePopperAnchor } from '../../../components';
 import { useModals } from '../../../hooks';
 import { generateUID } from '../../../helpers';
@@ -13,33 +12,7 @@ import TopNavbarListItemButton, {
     TopNavbarListItemButtonProps,
 } from '../../../components/topnavbar/TopNavbarListItemButton';
 import ImportModal from '../import/ImportModal';
-import useContactList from '../useContactList';
-
-export enum CONTACT_WIDGET_TABS {
-    CONTACTS,
-    GROUPS,
-}
-
-export interface CustomActionRenderProps {
-    onClose: () => void;
-    noSelection: boolean;
-    selected: string[];
-    contactList?: ReturnType<typeof useContactList>;
-    groupsEmailsMap?: SimpleMap<ContactEmail[]>;
-    recipients?: Recipient[];
-}
-
-export interface CustomAction {
-    render: ({
-        onClose,
-        noSelection,
-        selected,
-        contactList,
-        groupsEmailsMap,
-        recipients,
-    }: CustomActionRenderProps) => React.ReactNode;
-    tabs: CONTACT_WIDGET_TABS[];
-}
+import { CONTACT_WIDGET_TABS, CustomAction } from './types';
 
 const TopNavbarListItemContactsButton = React.forwardRef(
     (props: Omit<TopNavbarListItemButtonProps<'button'>, 'icon' | 'text' | 'as'>, ref: typeof props.ref) => {

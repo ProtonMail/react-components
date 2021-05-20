@@ -22,7 +22,7 @@ import ContactGroupModal from '../modals/ContactGroupModal';
 import ContactGroupDetailsModal from '../modals/ContactGroupDetailsModal';
 import ContactsWidgetPlaceholder, { EmptyType } from './ContactsWidgetPlaceholder';
 import ContactGroupDeleteModal from '../modals/ContactGroupDeleteModal';
-import type { CustomAction } from './TopNavbarListItemContactsDropdown';
+import { CustomAction } from './types';
 
 interface Props {
     onClose: () => void;
