@@ -104,6 +104,12 @@ const SelectTwo = <V extends any>({
         return index !== -1 ? index : null;
     }, [children, value]);
 
+    const focusSearchInput = () => {
+        setTimeout(() => {
+            searchInputRef?.current?.focus();
+        }, 0);
+    };
+
     useEffect(() => {
         if (!searchTyped) {
             return;
@@ -138,9 +144,7 @@ const SelectTwo = <V extends any>({
         setIsOpen(true);
         setFocusedIndex(selectedIndex || 0);
 
-        setTimeout(() => {
-            searchInputRef?.current?.focus();
-        }, 0);
+        focusSearchInput();
     };
 
     const close = () => {
@@ -254,6 +258,14 @@ const SelectTwo = <V extends any>({
         return options.filter((option) => filterFunction(option.props, searchValue));
     };
 
+    const onSearchChange = (event: React.FormEvent<HTMLInputElement>) => {
+        setSearchValue(event.currentTarget.value);
+
+        if (!event.currentTarget.value) {
+            focusSearchInput();
+        }
+    };
+
     return (
         <>
             <button
@@ -295,11 +307,7 @@ const SelectTwo = <V extends any>({
             >
                 {!!search && (
                     <div className="dropdown-search" ref={searchContainerRef}>
-                        <SearchInput
-                            ref={searchInputRef}
-                            value={searchValue}
-                            onInput={(event) => setSearchValue(event.currentTarget.value)}
-                        />
+                        <SearchInput ref={searchInputRef} value={searchValue} onInput={onSearchChange} />
                     </div>
                 )}
                 <ul className="unstyled m0 p0" onKeyDown={handleMenuKeydown} data-testid="select-list">
