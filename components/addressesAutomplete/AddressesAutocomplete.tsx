@@ -78,6 +78,10 @@ const AddressesAutocomplete = React.forwardRef<HTMLInputElement, Props>(
             );
         }, [recipients]);
 
+        const isGroupEmpty = (groupID: string) => {
+            return groupsWithContactsMap ? (groupsWithContactsMap[groupID]?.contacts.length || 0) <= 0 : false;
+        };
+
         const contactsAutocompleteItems = useMemo(() => {
             return [
                 ...getContactsAutocompleteItems(
@@ -86,7 +90,7 @@ const AddressesAutocomplete = React.forwardRef<HTMLInputElement, Props>(
                 ),
                 ...getContactGroupsAutocompleteItems(
                     contactGroups,
-                    ({ Path, ID }) => !recipientsByGroup.has(Path) && groupsWithContactsMap[ID]?.contacts.length > 0
+                    ({ Path, ID }) => !recipientsByGroup.has(Path) && !isGroupEmpty(ID)
                 ),
             ];
         }, [contactEmails, contactGroups, recipientsByAddress, recipientsByGroup]);
