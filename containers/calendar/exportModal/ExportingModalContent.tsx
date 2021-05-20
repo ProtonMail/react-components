@@ -84,7 +84,7 @@ const ExportingModalContent = ({ model, setModel, onFinish }: Props) => {
                     totalToProcess,
                 }));
 
-                const [exportedEvents, exportErrors] = await processInBatches({
+                const [exportedEvents, exportErrors, totalEventsFetched] = await processInBatches({
                     calendarID: model.calendar.ID,
                     addresses,
                     api: apiWithAbort,
@@ -97,6 +97,13 @@ const ExportingModalContent = ({ model, setModel, onFinish }: Props) => {
                     weekStartsOn: model.weekStartsOn,
                     defaultTzid: calendarUserSettings.PrimaryTimezone,
                 });
+
+                if (totalToProcess !== totalEventsFetched) {
+                    setModelWithAbort((currentModel) => ({
+                        ...currentModel,
+                        totalToProcess: totalEventsFetched,
+                    }));
+                }
 
                 if (signal.aborted) {
                     return;
