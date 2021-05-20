@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import isDeepEqual from 'proton-shared/lib/helpers/isDeepEqual';
+import { c } from 'ttag';
 
 import { Dropdown } from '../dropdown';
 import { Props as OptionProps } from '../option/Option';
@@ -56,6 +57,8 @@ export interface Props<V>
     onOpen?: () => void;
     loading?: boolean;
     search?: boolean | ((option: OptionProps<V>) => void);
+    searchPlaceholder?: string;
+    noSearchResults?: string;
 }
 
 const SelectTwo = <V extends any>({
@@ -71,6 +74,8 @@ const SelectTwo = <V extends any>({
     getSearchableValue,
     loading,
     search,
+    searchPlaceholder,
+    noSearchResults = c('Select search results').t`No results found`,
     ...rest
 }: Props<V>) => {
     const anchorRef = useRef<HTMLButtonElement | null>(null);
@@ -150,6 +155,10 @@ const SelectTwo = <V extends any>({
     const close = () => {
         onClose?.();
         setIsOpen(false);
+
+        setTimeout(() => {
+            setSearchValue('');
+        }, 150); // Matches the CSS transition length
     };
 
     const goToPreviousItem = () => {
@@ -255,7 +264,13 @@ const SelectTwo = <V extends any>({
 
         const filterFunction = typeof search === 'function' ? search : defaultFilterFunction;
 
-        return options.filter((option) => filterFunction(option.props, searchValue));
+        const filteredOptions = options.filter((option) => filterFunction(option.props, searchValue));
+
+        if (!filteredOptions.length) {
+            return <div className="dropdown-search-no-result text-center">{noSearchResults}</div>;
+        }
+
+        return filteredOptions;
     };
 
     const onSearchChange = (event: React.FormEvent<HTMLInputElement>) => {
@@ -307,7 +322,12 @@ const SelectTwo = <V extends any>({
             >
                 {!!search && (
                     <div className="dropdown-search" ref={searchContainerRef}>
-                        <SearchInput ref={searchInputRef} value={searchValue} onInput={onSearchChange} />
+                        <SearchInput
+                            ref={searchInputRef}
+                            value={searchValue}
+                            onInput={onSearchChange}
+                            placeholder={searchPlaceholder}
+                        />
                     </div>
                 )}
                 <ul className="unstyled m0 p0" onKeyDown={handleMenuKeydown} data-testid="select-list">
