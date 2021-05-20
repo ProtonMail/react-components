@@ -152,7 +152,11 @@ const SelectTwo = <V extends any>({
         focusSearchInput();
     };
 
-    const close = () => {
+    const close = (event?: React.MouseEvent<HTMLDivElement> | Event) => {
+        if (event?.target instanceof Node && searchContainerRef?.current?.contains(event.target)) {
+            return;
+        }
+
         onClose?.();
         setIsOpen(false);
 
@@ -313,12 +317,12 @@ const SelectTwo = <V extends any>({
             <Dropdown
                 isOpen={isOpen}
                 anchorRef={anchorRef}
-                searchContainerRef={searchContainerRef}
                 onClose={close}
                 offset={4}
                 noCaret
                 noMaxWidth
                 sameAnchorWidth
+                className={classnames([searchContainerRef?.current && 'dropdown--is-searchable'])}
             >
                 {!!search && (
                     <div className="dropdown-search" ref={searchContainerRef}>

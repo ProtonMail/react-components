@@ -16,11 +16,10 @@ interface ContentProps extends React.HTMLAttributes<HTMLDivElement> {
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
     anchorRef: React.RefObject<HTMLElement>;
-    searchContainerRef?: React.RefObject<HTMLDivElement>;
     children: React.ReactNode;
     className?: string;
     style?: CSSProperties;
-    onClose?: () => void;
+    onClose?: (event?: React.MouseEvent<HTMLDivElement> | Event) => void;
     onClosed?: () => void;
     onContextMenu?: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
     originalPlacement?: string;
@@ -43,7 +42,6 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
 
 const Dropdown = ({
     anchorRef,
-    searchContainerRef,
     children,
     className,
     style,
@@ -85,12 +83,8 @@ const Dropdown = ({
     });
 
     const handleClickContent = (event: React.MouseEvent<HTMLDivElement>) => {
-        if (event.target instanceof Node && searchContainerRef?.current?.contains(event.target)) {
-            return;
-        }
-
         if (autoClose) {
-            onClose();
+            onClose(event);
         }
     };
 
@@ -166,7 +160,6 @@ const Dropdown = ({
         noCaret && 'dropdown--no-caret',
         className,
         'no-outline',
-        searchContainerRef?.current && 'dropdown--is-searchable',
     ]);
 
     if (isClosed && !isOpen) {
