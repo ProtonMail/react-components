@@ -22,6 +22,7 @@ const Option = <V,>({
     title,
     children = title,
     focusOnActive = true,
+    searchStrings,
     ...rest
 }: Props<V>) => {
     const ref = useRef<HTMLButtonElement | null>(null);
