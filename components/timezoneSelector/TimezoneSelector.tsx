@@ -41,6 +41,7 @@ export const TimezoneSelector = ({
                 onChange(value);
             }}
             search
+            searchPlaceholder={c('Timezone search placeholder').t`Search timezones`}
             {...rest}
         >
             {timezoneOptions}
