@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useMemo } from 'react';
 import isDeepEqual from 'proton-shared/lib/helpers/isDeepEqual';
 import { c } from 'ttag';
 
+import { normalize } from 'proton-shared/lib/helpers/string';
 import { Dropdown } from '../dropdown';
 import { Props as OptionProps } from '../option/Option';
 import useControlled from '../../hooks/useControlled';
@@ -10,7 +11,7 @@ import DropdownCaret from '../dropdown/DropdownCaret';
 import { CircleLoader } from '../loader';
 import { SearchInput } from '../input';
 
-const includesString = (str1: string, str2: string) => str1.toLowerCase().indexOf(str2.toLowerCase()) > -1;
+const includesString = (str1: string, str2: string) => normalize(str1, true).indexOf(normalize(str2, true)) > -1;
 
 const arrayIncludesString = (arrayToSearch: string[], keyword: string) =>
     arrayToSearch.some((str) => includesString(str, keyword));
