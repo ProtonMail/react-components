@@ -118,11 +118,11 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
                     }
 
                     const isOffline = getIsOfflineError(e);
-                    const isUnReachable = getIsUnreachableError(e);
+                    const isUnreachable = getIsUnreachableError(e);
 
-                    if (isOffline || isUnReachable) {
+                    if (isOffline || isUnreachable) {
                         setApiStatus({
-                            apiUnreachable: isUnReachable ? errorMessage : '',
+                            apiUnreachable: isUnreachable ? errorMessage : '',
                             offline: isOffline,
                         });
                         throw e;
