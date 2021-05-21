@@ -21,7 +21,7 @@ const OnlineTopBanner = () => {
     const oldRef = useRef(safeOnlineStatus);
     const [backOnline, setBackOnline] = useState(false);
 
-    const handlePing = async () => {
+    const handlePing = () => {
         // Ping can only be used to resolve if the client can establish a connection to the API.
         api(ping()).catch(noop);
     };
@@ -34,7 +34,7 @@ const OnlineTopBanner = () => {
 
         if (!safeOnlineStatus) {
             const handle = window.setInterval(() => {
-                handlePing().catch(noop);
+                handlePing();
             }, 5000);
             return () => window.clearInterval(handle);
         }
@@ -44,7 +44,7 @@ const OnlineTopBanner = () => {
         const handle = window.setTimeout(() => {
             setBackOnline(false);
             // Ensure it's true
-            handlePing().catch(noop);
+            handlePing();
         }, 2000);
 
         return () => window.clearTimeout(handle);
