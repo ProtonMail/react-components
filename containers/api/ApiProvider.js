@@ -52,12 +52,27 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
         const handleUnlock = (missingScopes = [], e) => {
             if (missingScopes.includes('nondelinquent')) {
                 return new Promise((resolve, reject) => {
-                    createModal(<DelinquentModal onClose={() => reject(e)} />);
+                    createModal(
+                        <DelinquentModal
+                            onClose={() => {
+                                e.cancel = true;
+                                reject(e);
+                            }}
+                        />
+                    );
                 });
             }
             if (missingScopes.includes('locked')) {
                 return new Promise((resolve, reject) => {
-                    createModal(<UnlockModal onClose={() => reject(e)} onSuccess={resolve} />);
+                    createModal(
+                        <UnlockModal
+                            onClose={() => {
+                                e.cancel = true;
+                                reject(e);
+                            }}
+                            onSuccess={resolve}
+                        />
+                    );
                 });
             }
             return Promise.reject(e);
@@ -113,7 +128,7 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
                     const { code } = getApiError(e);
                     const errorMessage = getApiErrorMessage(e);
 
-                    if (e.name === 'AbortError') {
+                    if (e.name === 'AbortError' || e.cancel) {
                         throw e;
                     }
 
