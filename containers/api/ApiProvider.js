@@ -87,7 +87,10 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
                         onVerify={onVerify}
                         onSuccess={resolve}
                         onError={reject}
-                        onClose={() => reject(e)}
+                        onClose={() => {
+                            e.cancel = true;
+                            reject(e);
+                        }}
                     />
                 );
             });
