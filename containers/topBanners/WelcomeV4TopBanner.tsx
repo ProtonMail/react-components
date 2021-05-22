@@ -4,10 +4,12 @@ import { c } from 'ttag';
 
 import TopBanner from './TopBanner';
 
+const ELIGIBLE_PATHNAMES = ['/login', '/signup'];
+
 const WelcomeV4TopBanner = () => {
     const location = useLocation();
 
-    if (location.pathname !== '/login') {
+    if (!ELIGIBLE_PATHNAMES.includes(location.pathname)) {
         return null;
     }
 
