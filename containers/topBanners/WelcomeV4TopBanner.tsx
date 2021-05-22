@@ -1,15 +1,16 @@
 import React from 'react';
-import { useLocation } from 'react-router';
 import { c } from 'ttag';
+import { APPS, SSO_PATHS } from 'proton-shared/lib/constants';
 
 import TopBanner from './TopBanner';
+import { useConfig } from '../../hooks';
 
-const ELIGIBLE_PATHNAMES = ['/login', '/signup'];
+const IS_INITIAL_LOGIN = [SSO_PATHS.AUTHORIZE, SSO_PATHS.LOGIN, '/'].includes(window.location.pathname);
 
 const WelcomeV4TopBanner = () => {
-    const location = useLocation();
+    const { APP_NAME } = useConfig();
 
-    if (!ELIGIBLE_PATHNAMES.includes(location.pathname)) {
+    if (!IS_INITIAL_LOGIN || APP_NAME !== APPS.PROTONACCOUNT) {
         return null;
     }
 
