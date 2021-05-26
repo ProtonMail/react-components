@@ -73,6 +73,7 @@ const MiniCalendar = ({
     const [temporaryDate, setTemporaryDate] = useState<Date | undefined>();
 
     const activeDate = temporaryDate || selectedDate;
+    const activeDateDay = isSameMonth(now, activeDate) ? now.getDay() : undefined;
 
     const days = useMemo(() => {
         return getDaysInMonth(activeDate, { weekStartsOn, weeks: numberOfWeeks - 1 });
@@ -133,7 +134,7 @@ const MiniCalendar = ({
                         weekdaysShort={weekdaysShort}
                         weekdaysLong={weekdaysLong}
                         weekStartsOn={weekStartsOn}
-                        now={isSameMonth(now, activeDate) ? now : undefined}
+                        activeDateDay={activeDateDay}
                     />
                     <MonthDays
                         min={min}

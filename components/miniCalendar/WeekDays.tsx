@@ -9,21 +9,20 @@ export interface Props {
     numberOfDays?: number;
     weekdaysLong: string[];
     weekdaysShort: string[];
-    now?: Date;
+    activeDateDay?: number;
 }
 
-const WeekDays = ({ weekdaysShort, weekdaysLong, weekStartsOn = 1, numberOfDays, now }: Props) => {
+const WeekDays = ({ weekdaysShort, weekdaysLong, weekStartsOn = 1, numberOfDays, activeDateDay }: Props) => {
     const style = {
         '--minicalendar-weekdays-numberOfDaysInWeek': numberOfDays,
     };
-    const currentDayInWeek = now && now.getDay();
 
     const weekDaysLabels = useMemo(() => {
         return weekdaysShort.map((el, i) => {
             const idx = (i + weekStartsOn) % 7;
             const label = weekdaysShort[idx];
             const tooltip = weekdaysLong[idx];
-            const isCurrentDay = idx === currentDayInWeek;
+            const isCurrentDay = idx === activeDateDay;
             return (
                 <Tooltip key={label + i} title={tooltip}>
                     <span aria-hidden="true" className={classnames(['text-strong', isCurrentDay && 'color-primary'])}>
@@ -33,7 +32,7 @@ const WeekDays = ({ weekdaysShort, weekdaysLong, weekStartsOn = 1, numberOfDays,
                 </Tooltip>
             );
         });
-    }, [weekdaysShort, weekStartsOn, now]);
+    }, [weekdaysShort, weekStartsOn, activeDateDay]);
 
     return (
         <div className="text-center minicalendar-weekdays" style={style}>
