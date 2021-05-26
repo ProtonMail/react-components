@@ -1,5 +1,6 @@
 import React, { useMemo, useState, useEffect, FormEvent } from 'react';
 import { addMonths, endOfMonth, startOfMonth } from 'date-fns';
+import { isSameMonth } from 'proton-shared/lib/date-fns-utc';
 import { noop } from 'proton-shared/lib/helpers/function';
 
 import { getDaysInMonth } from './helper';
@@ -132,7 +133,7 @@ const MiniCalendar = ({
                         weekdaysShort={weekdaysShort}
                         weekdaysLong={weekdaysLong}
                         weekStartsOn={weekStartsOn}
-                        now={now}
+                        now={isSameMonth(now, activeDate) ? now : undefined}
                     />
                     <MonthDays
                         min={min}

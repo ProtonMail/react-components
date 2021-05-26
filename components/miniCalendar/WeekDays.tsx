@@ -1,5 +1,4 @@
 import React, { useMemo } from 'react';
-import { getDay } from 'date-fns';
 import { WeekStartsOn } from './index.d';
 
 import Tooltip from '../tooltip/Tooltip';
@@ -10,14 +9,14 @@ export interface Props {
     numberOfDays?: number;
     weekdaysLong: string[];
     weekdaysShort: string[];
-    now: Date;
+    now?: Date;
 }
 
 const WeekDays = ({ weekdaysShort, weekdaysLong, weekStartsOn = 1, numberOfDays, now }: Props) => {
     const style = {
         '--minicalendar-weekdays-numberOfDaysInWeek': numberOfDays,
     };
-    const currentDayInWeek = getDay(now);
+    const currentDayInWeek = now && now.getDay();
 
     const weekDaysLabels = useMemo(() => {
         return weekdaysShort.map((el, i) => {
@@ -34,7 +33,7 @@ const WeekDays = ({ weekdaysShort, weekdaysLong, weekStartsOn = 1, numberOfDays,
                 </Tooltip>
             );
         });
-    }, [weekdaysShort, weekStartsOn]);
+    }, [weekdaysShort, weekStartsOn, now]);
 
     return (
         <div className="text-center minicalendar-weekdays" style={style}>
