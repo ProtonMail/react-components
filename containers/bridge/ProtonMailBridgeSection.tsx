@@ -45,7 +45,7 @@ const initialBridgeClients: BridgeClient[] = [
 
 const fetchBridgeVersion = async (bridgeClient: BridgeClient): Promise<BridgeClient> => {
     try {
-        const response = await fetch(`https://protonmail.com/download/bridge/${bridgeClient.versionFile}`);
+        const response = await fetch(`/download/bridge/${bridgeClient.versionFile}`);
         if (!response.ok) {
             throw new Error(response.statusText);
         }
