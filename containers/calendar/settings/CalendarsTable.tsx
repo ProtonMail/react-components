@@ -1,10 +1,11 @@
 import React from 'react';
 import { c } from 'ttag';
 import { getIsCalendarDisabled, getIsCalendarProbablyActive } from 'proton-shared/lib/calendar/calendar';
-import { Calendar } from 'proton-shared/lib/interfaces/calendar';
+import { Calendar, CALENDAR_TYPE } from 'proton-shared/lib/interfaces/calendar';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 import { UserModel } from 'proton-shared/lib/interfaces';
 
+import { omit } from 'proton-shared/lib/helpers/object';
 import { Badge, DropdownActions, Icon, Table, TableBody, TableHeader, TableRow } from '../../../components';
 import useGetCalendarEmail from '../hooks/useGetCalendarEmail';
 
@@ -22,7 +23,7 @@ interface Props {
     loadingMap: { [key: string]: boolean };
 }
 const CalendarsTable = ({
-    calendars,
+    calendars = [],
     defaultCalendarID,
     user,
     onEdit,
@@ -38,33 +39,38 @@ const CalendarsTable = ({
             <TableHeader cells={[c('Header').t`Name`, c('Header').t`Status`, c('Header').t`Actions`]} />
             <TableBody>
                 {(calendars || []).map((calendar, index) => {
-                    const { ID, Name, Color } = calendar;
+                    const { ID, Name, Color, Type } = calendar;
 
                     const isDisabled = getIsCalendarDisabled(calendar);
                     const isActive = getIsCalendarProbablyActive(calendar);
                     const isDefault = ID === defaultCalendarID;
+                    const isSubscribe = Type === CALENDAR_TYPE.SUBSCRIPTION;
 
-                    const list = [
-                        user.hasNonDelinquentScope && {
+                    const list: { text: string; onClick: () => void }[] = [
+                        {
+                            shouldShow: user.hasNonDelinquentScope,
                             text: c('Action').t`Edit`,
                             onClick: () => onEdit(calendar),
                         },
-                        !isDisabled &&
-                            !isDefault &&
-                            user.hasNonDelinquentScope && {
-                                text: c('Action').t`Set as default`,
-                                onClick: () => onSetDefault(ID),
-                            },
                         {
+                            shouldShow: !isSubscribe && !isDisabled && !isDefault && user.hasNonDelinquentScope,
+                            text: c('Action').t`Set as default`,
+                            onClick: () => onSetDefault(ID),
+                        },
+                        {
+                            shouldShow: !isSubscribe,
                             text: c('Action').t`Export ICS`,
                             onClick: () => onExport(calendar),
                         },
                         {
-                            text: c('Action').t`Delete`,
+                            shouldShow: true,
+                            text: isSubscribe ? c('Action').t`Unsubscribe` : c('Action').t`Delete`,
                             actionType: 'delete',
                             onClick: () => onDelete(calendar),
-                        } as const,
-                    ].filter(isTruthy);
+                        },
+                    ]
+                        .flatMap((item) => (isTruthy(item.shouldShow) ? omit(item, ['shouldShow']) : []))
+                        .filter(isTruthy);
 
                     return (
                         <TableRow

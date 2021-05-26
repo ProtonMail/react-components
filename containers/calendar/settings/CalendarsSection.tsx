@@ -1,18 +1,23 @@
-import { MAX_CALENDARS_PER_FREE_USER, MAX_CALENDARS_PER_USER } from 'proton-shared/lib/calendar/constants';
+import {
+    MAX_CALENDARS_PER_FREE_USER,
+    MAX_CALENDARS_PER_USER,
+    SUBSCRIBED_CALENDAR_LIMIT,
+} from 'proton-shared/lib/calendar/constants';
 import React, { useState } from 'react';
 import { c, msgid } from 'ttag';
-import { updateCalendarUserSettings, removeCalendar } from 'proton-shared/lib/api/calendars';
-import { Calendar } from 'proton-shared/lib/interfaces/calendar';
+import { removeCalendar, updateCalendarUserSettings } from 'proton-shared/lib/api/calendars';
+import { Calendar, CALENDAR_TYPE } from 'proton-shared/lib/interfaces/calendar';
 import { Address, UserModel } from 'proton-shared/lib/interfaces';
 
 import { useApi, useEventManager, useModals, useNotifications } from '../../../hooks';
-import { Card, Alert, ConfirmModal, ButtonLike, ErrorButton, PrimaryButton, SettingsLink } from '../../../components';
+import { Alert, ButtonLike, Card, ConfirmModal, ErrorButton, PrimaryButton, SettingsLink } from '../../../components';
 
 import { SettingsParagraph, SettingsSection } from '../../account';
 
 import CalendarsTable from './CalendarsTable';
 import { CalendarModal } from '../calendarModal';
 import { ExportModal } from '../exportModal';
+import SubscribeCalendarModal from '../subscribeCalendarModal/SubscribeCalendarModal';
 
 interface Props {
     activeAddresses: Address[];
@@ -24,10 +29,10 @@ interface Props {
 }
 const CalendarsSection = ({
     activeAddresses,
-    calendars,
+    calendars = [],
     defaultCalendar,
-    disabledCalendars,
-    activeCalendars,
+    disabledCalendars = [],
+    activeCalendars = [],
     user,
 }: Props) => {
     const api = useApi();
@@ -36,15 +41,25 @@ const CalendarsSection = ({
     const { createModal } = useModals();
     const [loadingMap, setLoadingMap] = useState({});
 
-    const defaultCalendarID = defaultCalendar ? defaultCalendar.ID : undefined;
+    const defaultCalendarID = defaultCalendar?.ID;
     const hasDisabledCalendar = disabledCalendars.length > 0;
 
+    const isOtherCalendarSection = calendars[0]?.Type !== CALENDAR_TYPE.PERSONAL;
+
     const handleCreate = () => {
-        createModal(<CalendarModal activeCalendars={activeCalendars} defaultCalendarID={defaultCalendarID} />);
+        if (isOtherCalendarSection) {
+            return createModal(<SubscribeCalendarModal />);
+        }
+
+        return createModal(<CalendarModal activeCalendars={activeCalendars} defaultCalendarID={defaultCalendarID} />);
     };
 
     const handleEdit = (calendar: Calendar) => {
-        createModal(<CalendarModal calendar={calendar} />);
+        if (isOtherCalendarSection) {
+            return createModal(<SubscribeCalendarModal calendar={calendar} />);
+        }
+
+        return createModal(<CalendarModal calendar={calendar} />);
     };
 
     const handleSetDefault = async (calendarID: string) => {
@@ -109,10 +124,17 @@ const CalendarsSection = ({
 
     const handleExport = (calendar: Calendar) => createModal(<ExportModal calendar={calendar} />);
 
-    const calendarsLimitPerUser = user.isFree ? MAX_CALENDARS_PER_FREE_USER : MAX_CALENDARS_PER_USER;
-    const calendarsLimit = MAX_CALENDARS_PER_USER;
-    const isBelowLimit = calendars.length < calendarsLimitPerUser;
+    const calendarsLimit = isOtherCalendarSection
+        ? SUBSCRIBED_CALENDAR_LIMIT
+        : user.isFree
+        ? MAX_CALENDARS_PER_FREE_USER
+        : MAX_CALENDARS_PER_USER;
+    const isBelowLimit = calendars.length < calendarsLimit;
     const canAddCalendar = activeAddresses.length > 0 && isBelowLimit && user.hasNonDelinquentScope;
+
+    const addCalendarString = isOtherCalendarSection
+        ? c('Action').t`Subscribe to calendar`
+        : c('Action').t`Add calendar`;
 
     return (
         <SettingsSection>
@@ -138,7 +160,7 @@ const CalendarsSection = ({
                     disabled={!canAddCalendar}
                     onClick={handleCreate}
                 >
-                    {c('Action').t`Add calendar`}
+                    {addCalendarString}
                 </PrimaryButton>
             </div>
             {hasDisabledCalendar ? (
@@ -147,16 +169,18 @@ const CalendarsSection = ({
                         .t`A calendar is marked as disabled when it is linked to a disabled email address or a free @pm.me address. You can still access your disabled calendar and view events in read-only mode or delete them. You can enable the calendar by re-enabling the email address or upgrading your plan to use @pm.me addresses.`}
                 </SettingsParagraph>
             ) : null}
-            <CalendarsTable
-                calendars={calendars}
-                defaultCalendarID={defaultCalendarID}
-                user={user}
-                onEdit={handleEdit}
-                onSetDefault={handleSetDefault}
-                onDelete={handleDelete}
-                onExport={handleExport}
-                loadingMap={loadingMap}
-            />
+            {!!calendars.length && (
+                <CalendarsTable
+                    calendars={calendars}
+                    defaultCalendarID={defaultCalendarID}
+                    user={user}
+                    onEdit={handleEdit}
+                    onSetDefault={handleSetDefault}
+                    onDelete={handleDelete}
+                    onExport={handleExport}
+                    loadingMap={loadingMap}
+                />
+            )}
         </SettingsSection>
     );
 };
