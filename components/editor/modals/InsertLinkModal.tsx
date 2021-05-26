@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState, ChangeEvent, useRef } from 'react';
 import { c } from 'ttag';
 import { LINK_TYPES } from 'proton-shared/lib/constants';
 import { linkToType, addLinkPrefix } from 'proton-shared/lib/helpers/url';
@@ -14,6 +14,7 @@ import Href from '../../link/Href';
 import { Select } from '../../select';
 
 import { LinkData } from '../squireConfig';
+import { useLinkHandler } from '../../../hooks/useLinkHandler';
 
 interface Props {
     inputLink: LinkData;
@@ -25,6 +26,9 @@ const EditorLinkModal = ({ inputLink, onSubmit, onClose, ...rest }: Props) => {
     const [url, setUrl] = useState(inputLink.link);
     const [label, setLabel] = useState(inputLink.title);
     const [type, setType] = useState(linkToType(inputLink.link) || LINK_TYPES.WEB);
+    const modalContentRef = useRef<HTMLDivElement>(null);
+
+    useLinkHandler(modalContentRef);
 
     const typesOptions = [
         { value: LINK_TYPES.WEB, text: c('Info').t`Web URL` },
@@ -77,6 +81,7 @@ const EditorLinkModal = ({ inputLink, onSubmit, onClose, ...rest }: Props) => {
             }
             onSubmit={handleSubmit}
             onClose={onClose}
+            innerRef={modalContentRef}
             {...rest}
         >
             <Alert>{c('Info').t`Please select the type of link you want to insert and fill in all the fields.`}</Alert>

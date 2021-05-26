@@ -22,10 +22,11 @@ interface Props {
     onClose: () => void;
     onImport: () => void;
     onCompose?: (recipients: Recipient[], attachments: File[]) => void;
+    onComposeLink?: () => void;
     customActions: CustomAction[];
 }
 
-const ContactsWidgetContainer = ({ onClose, onImport, onCompose, customActions }: Props) => {
+const ContactsWidgetContainer = ({ onClose, onImport, onCompose, onComposeLink, customActions }: Props) => {
     const [user, loadingUser] = useUser();
     const [userSettings, loadingUserSettings] = useUserSettings();
     const [userKeysList, loadingUserKeys] = useUserKeys();
@@ -145,7 +146,7 @@ const ContactsWidgetContainer = ({ onClose, onImport, onCompose, customActions }
     };
 
     const handleDetails = (contactID: string) => {
-        createModal(<ContactDetailsModal contactID={contactID} />);
+        createModal(<ContactDetailsModal contactID={contactID} onCompose={onComposeLink} />);
         onClose();
     };
 

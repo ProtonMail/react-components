@@ -32,10 +32,11 @@ const TopNavbarListItemContactsButton = React.forwardRef(
 interface Props {
     className?: string;
     onCompose?: (emails: Recipient[], attachments: File[]) => void;
+    onComposeLink?: () => void;
     customActions?: CustomAction[];
 }
 
-const TopNavbarListItemContactsDropdown = ({ className, onCompose, customActions = [] }: Props) => {
+const TopNavbarListItemContactsDropdown = ({ className, onCompose, onComposeLink, customActions = [] }: Props) => {
     const [uid] = useState(generateUID('dropdown'));
     const { anchorRef, isOpen, toggle, close } = usePopperAnchor<HTMLButtonElement>();
     const [tabIndex, setTabIndex] = useState(0);
@@ -97,6 +98,7 @@ const TopNavbarListItemContactsDropdown = ({ className, onCompose, customActions
                                 <ContactsWidgetContainer
                                     onClose={handleClose}
                                     onCompose={onCompose}
+                                    onComposeLink={onComposeLink}
                                     onImport={handleImport}
                                     customActions={customActions.filter(actionIncludes(CONTACT_WIDGET_TABS.CONTACTS))}
                                 />
