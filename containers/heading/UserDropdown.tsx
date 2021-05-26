@@ -168,7 +168,7 @@ const UserDropdown = (rest: Omit<Props, 'user' | 'isOpen' | 'onClick'>) => {
                         data-cy-header-user-dropdown="logout"
                     >
                         <span className="mr1">{c('Action').t`Sign out`}</span>
-                        <Icon name="sign-out-right" />
+                        <Icon name="sign-out-right" className="on-rtl-mirror" />
                     </DropdownMenuButton>
                 </DropdownMenu>
             </Dropdown>

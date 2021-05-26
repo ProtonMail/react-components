@@ -75,7 +75,7 @@ const TopNavbarListItemHelpDropdown = <E extends React.ElementType = typeof defa
                     target="_blank"
                 >
                     {c('Action').t`I have a question`}
-                    <Icon className="ml1" name="external-link" />
+                    <Icon className="ml1 on-rtl-mirror" name="external-link" />
                 </DropdownMenuLink>
 
                 {APP_NAME !== APPS.PROTONVPN_SETTINGS && (
@@ -92,7 +92,7 @@ const TopNavbarListItemHelpDropdown = <E extends React.ElementType = typeof defa
                     target="_blank"
                 >
                     {c('Action').t`Request a feature`}
-                    <Icon className="ml1" name="external-link" />
+                    <Icon className="ml1 on-rtl-mirror" name="external-link" />
                 </DropdownMenuLink>
 
                 <DropdownMenuButton className="text-left" onClick={handleBugReportClick}>
@@ -107,7 +107,7 @@ const TopNavbarListItemHelpDropdown = <E extends React.ElementType = typeof defa
                     target="_blank"
                 >
                     {c('Action').t`${BRAND_NAME} shop`}
-                    <Icon className="ml1" name="external-link" />
+                    <Icon className="ml1 on-rtl-mirror" name="external-link" />
                 </DropdownMenuLink>
             </DropdownMenu>
         </SimpleDropdown>

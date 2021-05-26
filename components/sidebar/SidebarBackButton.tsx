@@ -15,7 +15,7 @@ const SidebarBackButton = ({ children, ...rest }: LinkProps) => {
             className="mt0-25 flex flex-align-items-center flex-justify-center"
             {...rest}
         >
-            <Icon name="arrow-left" />
+            <Icon name="arrow-left" className="on-rtl-mirror" />
             <span className="ml0-5">{children}</span>
         </ButtonLike>
     );
