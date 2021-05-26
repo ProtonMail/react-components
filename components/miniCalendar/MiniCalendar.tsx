@@ -132,6 +132,7 @@ const MiniCalendar = ({
                         weekdaysShort={weekdaysShort}
                         weekdaysLong={weekdaysLong}
                         weekStartsOn={weekStartsOn}
+                        now={now}
                     />
                     <MonthDays
                         min={min}
