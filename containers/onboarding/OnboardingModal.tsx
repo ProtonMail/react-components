@@ -121,7 +121,7 @@ const OnboardingModal = ({
             }
             await Promise.all(
                 [
-                    welcomeFlags.isWelcomeFlow && api(updateFlags({ Welcomed: 1 })),
+                    welcomeFlags.isWelcomeFlow && api(updateFlags({ Welcomed: 1 })).catch(noop),
                     api(
                         updateAddress(firstAddress.ID, { DisplayName: displayName, Signature: firstAddress.Signature })
                     ),
