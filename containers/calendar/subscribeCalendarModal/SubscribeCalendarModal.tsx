@@ -238,6 +238,7 @@ const SubscribeCalendarModal = ({ calendar: initialCalendar, ...rest }: Props) =
                     <p>{c('Subscribe to calendar modal')
                         .t`You can subscribe to someone else's calendar by pasting its URL below. This will give you access to a read-only version of this calendar.`}</p>
                     <InputFieldTwo
+                        autoFocus
                         hint={
                             <span className={classnames([isURLMaxLength && 'color-warning'])}>
                                 {calendarURLLength}/{CALENDAR_URL_MAX_LENGTH}

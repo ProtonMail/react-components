@@ -160,6 +160,11 @@ const CalendarsSection = ({
                     </div>
                 </Card>
             )}
+            {!user.isFree && !canAddCalendar && (
+                <Alert type="warning">
+                    {c('Calendar limit warning').t`You have reached the maximum number of ${calendarsLimit} calendars.`}
+                </Alert>
+            )}
             <div className="mb1">
                 <PrimaryButton
                     data-test-id="calendar-setting-page:add-calendar"
