@@ -4,9 +4,9 @@ import psl from 'psl';
 import { MailSettings } from 'proton-shared/lib/interfaces';
 import { isIE11, isEdge } from 'proton-shared/lib/helpers/browser';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
-import { PROTON_DOMAINS, MESSAGE_ACTIONS } from 'proton-shared/lib/constants';
+import { PROTON_DOMAINS } from 'proton-shared/lib/constants';
 
-import { mailtoParser, isExternal, isSubDomain, getHostname } from '../helpers/url';
+import { isExternal, isSubDomain, getHostname } from '../helpers/url';
 import { useModals, useNotifications, useMailSettings, useHandler } from './index';
 import LinkConfirmationModal from '../components/notifications/LinkConfirmationModal';
 
@@ -17,7 +17,7 @@ interface LinkSource {
     encoded?: string;
 }
 
-export const useLinkHandler = (wrapperRef: RefObject<HTMLDivElement>, onCompose?: (arg: any) => void) => {
+export const useLinkHandler = (wrapperRef: RefObject<HTMLDivElement>, onMailTo?: (src: string) => void) => {
     const [mailSettings] = useMailSettings() as [MailSettings | undefined, boolean, Error];
     const { createModal } = useModals();
     const { createNotification } = useNotifications();
@@ -106,17 +106,15 @@ export const useLinkHandler = (wrapperRef: RefObject<HTMLDivElement>, onCompose?
         }
 
         // We only handle anchor that begins with `mailto:`
-        if (src.raw.toLowerCase().startsWith('mailto:') && onCompose) {
+        if (src.raw.toLowerCase().startsWith('mailto:') && onMailTo) {
             event.preventDefault();
             event.stopPropagation(); // Required for Safari
-
-            const referenceMessage = mailtoParser(src.raw);
 
             /*
              * Open the composer with the given mailto address
              * position isAfter true as the user can choose to set a body
              */
-            onCompose({ action: MESSAGE_ACTIONS.NEW, referenceMessage });
+            onMailTo(src.raw);
         }
 
         const askForConfirmation = mailSettings?.ConfirmLink === undefined ? 1 : mailSettings?.ConfirmLink;

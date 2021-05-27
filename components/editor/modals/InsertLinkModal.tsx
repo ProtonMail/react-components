@@ -20,15 +20,16 @@ interface Props {
     inputLink: LinkData;
     onSubmit: (link: LinkData) => void;
     onClose?: () => void;
+    onMailTo?: (src: string) => void;
 }
 
-const EditorLinkModal = ({ inputLink, onSubmit, onClose, ...rest }: Props) => {
+const EditorLinkModal = ({ inputLink, onSubmit, onClose, onMailTo, ...rest }: Props) => {
     const [url, setUrl] = useState(inputLink.link);
     const [label, setLabel] = useState(inputLink.title);
     const [type, setType] = useState(linkToType(inputLink.link) || LINK_TYPES.WEB);
     const modalContentRef = useRef<HTMLDivElement>(null);
 
-    useLinkHandler(modalContentRef);
+    useLinkHandler(modalContentRef, onMailTo);
 
     const typesOptions = [
         { value: LINK_TYPES.WEB, text: c('Info').t`Web URL` },
