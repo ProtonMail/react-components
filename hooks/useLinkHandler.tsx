@@ -16,8 +16,8 @@ interface LinkSource {
     raw: string;
     encoded?: string;
 }
-// TODO: Oncompose as type of onCompose
-export const useLinkHandler = (wrapperRef: RefObject<HTMLDivElement>, onCompose?: any) => {
+
+export const useLinkHandler = (wrapperRef: RefObject<HTMLDivElement>, onCompose?: (arg: any) => void) => {
     const [mailSettings] = useMailSettings() as [MailSettings | undefined, boolean, Error];
     const { createModal } = useModals();
     const { createNotification } = useNotifications();
@@ -111,7 +111,6 @@ export const useLinkHandler = (wrapperRef: RefObject<HTMLDivElement>, onCompose?
             event.stopPropagation(); // Required for Safari
 
             const referenceMessage = mailtoParser(src.raw);
-            console.log(referenceMessage);
 
             /*
              * Open the composer with the given mailto address

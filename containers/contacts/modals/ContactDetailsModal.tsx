@@ -3,6 +3,7 @@ import { c } from 'ttag';
 import { toMap } from 'proton-shared/lib/helpers/object';
 import { noop } from 'proton-shared/lib/helpers/function';
 import { ContactEmail } from 'proton-shared/lib/interfaces/contacts';
+import { Recipient } from 'proton-shared/lib/interfaces';
 import ContactContainer from '../ContactContainer';
 import { useModals, useContactGroups, useAddresses, useUserKeys } from '../../../hooks';
 import useContactList from '../useContactList';
@@ -18,6 +19,7 @@ import { useLinkHandler } from '../../../hooks/useLinkHandler';
 interface Props {
     contactID: string;
     onClose?: () => void;
+    onCompose?: (recipients: Recipient[], attachments: File[]) => void;
 }
 
 const ContactDetailsModal = ({ contactID, onClose = noop, ...rest }: Props) => {

@@ -1,9 +1,9 @@
 import React, { useState, useMemo, useRef } from 'react';
 import { c, msgid } from 'ttag';
-import { Recipient } from 'proton-shared/lib/interfaces';
 import { ContactEmail } from 'proton-shared/lib/interfaces/contacts';
 import { exportContacts } from 'proton-shared/lib/contacts/helpers/export';
 import { extractMergeable } from 'proton-shared/lib/contacts/helpers/merge';
+import { MESSAGE_ACTIONS } from 'proton-shared/lib/constants';
 
 import { FullLoader, SearchInput } from '../../../components';
 import { useApi, useModals, useNotifications, useUser, useUserKeys, useUserSettings } from '../../../hooks';
@@ -21,12 +21,11 @@ import { CustomAction } from './types';
 interface Props {
     onClose: () => void;
     onImport: () => void;
-    onCompose?: (recipients: Recipient[], attachments: File[]) => void;
-    onComposeLink?: () => void;
+    onCompose?: (arg: any) => void;
     customActions: CustomAction[];
 }
 
-const ContactsWidgetContainer = ({ onClose, onImport, onCompose, onComposeLink, customActions }: Props) => {
+const ContactsWidgetContainer = ({ onClose, onImport, onCompose, customActions }: Props) => {
     const [user, loadingUser] = useUser();
     const [userSettings, loadingUserSettings] = useUserSettings();
     const [userKeysList, loadingUserKeys] = useUserKeys();
@@ -115,7 +114,10 @@ const ContactsWidgetContainer = ({ onClose, onImport, onCompose, onComposeLink, 
             return { Name: contactEmail.Name, Address: contactEmail.Email };
         });
 
-        onCompose?.(recipients, []);
+        onCompose?.({
+            action: MESSAGE_ACTIONS.NEW,
+            referenceMessage: { data: { ToList: recipients }, initialAttachments: [] },
+        });
         onClose();
     };
 
@@ -135,7 +137,10 @@ const ContactsWidgetContainer = ({ onClose, onImport, onCompose, onComposeLink, 
                 ({ name, vcard }) => new File([vcard], name, { type: 'data:text/plain;charset=utf-8;' })
             );
 
-            onCompose?.([], files);
+            onCompose?.({
+                action: MESSAGE_ACTIONS.NEW,
+                referenceMessage: { data: { ToList: [] }, initialAttachments: files },
+            });
         } catch {
             createNotification({
                 type: 'error',
@@ -146,7 +151,7 @@ const ContactsWidgetContainer = ({ onClose, onImport, onCompose, onComposeLink, 
     };
 
     const handleDetails = (contactID: string) => {
-        createModal(<ContactDetailsModal contactID={contactID} onCompose={onComposeLink} />);
+        createModal(<ContactDetailsModal contactID={contactID} onCompose={onCompose} />);
         onClose();
     };
 
