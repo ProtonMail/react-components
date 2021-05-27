@@ -82,6 +82,12 @@ const CalendarsSection = ({
             ? (firstRemainingCalendar && firstRemainingCalendar.ID) || null
             : undefined;
 
+        const title = isOtherCalendarSection ? c('Title').t`Unsubscribe from calendar` : c('Title').t`Delete calendar`;
+        const confirmText = isOtherCalendarSection ? c('Action').t`Unsubscribe` : c('Action').t`Delete`;
+        const alertText = isOtherCalendarSection
+            ? c('Info').t`The calendar will be deleted and won’t be synchronised anymore with the link provided.`
+            : c('Info').t`Are you sure you want to delete this calendar?`;
+
         await new Promise<void>((resolve, reject) => {
             const calendarName = firstRemainingCalendar ? (
                 <span key="calendar-name" className="text-break">
@@ -92,12 +98,12 @@ const CalendarsSection = ({
             );
             createModal(
                 <ConfirmModal
-                    title={c('Title').t`Delete calendar`}
-                    confirm={<ErrorButton type="submit">{c('Action').t`Delete`}</ErrorButton>}
+                    title={title}
+                    confirm={<ErrorButton type="submit">{confirmText}</ErrorButton>}
                     onClose={reject}
                     onConfirm={resolve}
                 >
-                    <Alert type="error">{c('Info').t`Are you sure you want to delete this calendar?`}</Alert>
+                    <Alert type="error">{alertText}</Alert>
                     {isDeleteDefaultCalendar && firstRemainingCalendar && (
                         <Alert type="warning">{c('Info').jt`${calendarName} will be set as default calendar.`}</Alert>
                     )}
