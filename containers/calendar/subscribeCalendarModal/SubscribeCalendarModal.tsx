@@ -60,6 +60,7 @@ const SubscribeCalendarModal = ({ calendar: initialCalendar, ...rest }: Props) =
 
     const isURLValid = isURL(calendarURL);
 
+    // TODO: consider extracting creating/updating logicfrom here and CalendarModal to a hook
     useEffect(() => {
         const initializeEmptyCalendar = async () => {
             const activeAdresses = getActiveAddresses(await getAddresses());

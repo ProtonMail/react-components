@@ -14,7 +14,11 @@ import { getActiveAddresses } from 'proton-shared/lib/helpers/address';
 import { noop } from 'proton-shared/lib/helpers/function';
 import { loadModels } from 'proton-shared/lib/models/helper';
 import { CalendarsModel } from 'proton-shared/lib/models';
-import { Calendar, CalendarSettings } from 'proton-shared/lib/interfaces/calendar';
+import {
+    CALENDAR_TYPE,
+    CalendarSettings,
+    CalendarWithPossibleSubscriptionParameters,
+} from 'proton-shared/lib/interfaces/calendar';
 import { dedupeNotifications, sortNotificationsByAscendingTrigger } from 'proton-shared/lib/calendar/alarms';
 
 import { MAX_DEFAULT_NOTIFICATIONS, MAX_LENGTHS } from 'proton-shared/lib/calendar/constants';
@@ -54,8 +58,8 @@ import { GenericError } from '../../error';
 import Notifications from '../notifications/Notifications';
 
 interface Props {
-    calendar?: Calendar;
-    activeCalendars?: Calendar[];
+    calendar?: CalendarWithPossibleSubscriptionParameters;
+    activeCalendars?: CalendarWithPossibleSubscriptionParameters[];
     defaultCalendarID?: string;
     defaultColor?: boolean;
     onClose?: () => void;
@@ -88,6 +92,8 @@ export const CalendarModal = ({
         const option = model.addressOptions.find(({ value: ID }) => ID === model.addressID);
         return (option && option.text) || '';
     }, [model.addressID, model.addressOptions]);
+
+    const isOtherCalendar = initialCalendar?.Type !== CALENDAR_TYPE.PERSONAL;
 
     useEffect(() => {
         const initializeEmptyCalendar = async () => {
@@ -154,7 +160,7 @@ export const CalendarModal = ({
         const {
             Calendar,
             Calendar: { ID: newCalendarID },
-        } = await api<{ Calendar: Calendar }>(
+        } = await api<{ Calendar: CalendarWithPossibleSubscriptionParameters }>(
             createCalendar({
                 ...calendarPayload,
                 AddressID: addressID,
@@ -196,8 +202,8 @@ export const CalendarModal = ({
     };
 
     const handleUpdateCalendar = async (
-        calendar: Calendar,
-        calendarPayload: Partial<Calendar>,
+        calendar: CalendarWithPossibleSubscriptionParameters,
+        calendarPayload: Partial<CalendarWithPossibleSubscriptionParameters>,
         calendarSettingsPayload: Partial<CalendarSettings>
     ) => {
         const calendarID = calendar.ID;
@@ -307,24 +313,26 @@ export const CalendarModal = ({
                             />
                         </Field>
                     </Row>
-                    <Row>
-                        <Label htmlFor="calendar-address-select">{c('Label').t`Default email`}</Label>
-                        <Field className="flex flex-align-items-center">
-                            {model.calendarID ? (
-                                addressText
-                            ) : (
-                                <SelectTwo
-                                    id="calendar-address-select"
-                                    value={model.addressID}
-                                    onChange={({ value }) => setModel({ ...model, addressID: value })}
-                                >
-                                    {model.addressOptions.map(({ value, text }) => (
-                                        <Option key={value} value={value} title={text} />
-                                    ))}
-                                </SelectTwo>
-                            )}
-                        </Field>
-                    </Row>
+                    {!isOtherCalendar && (
+                        <Row>
+                            <Label htmlFor="calendar-address-select">{c('Label').t`Default email`}</Label>
+                            <Field className="flex flex-align-items-center">
+                                {model.calendarID ? (
+                                    addressText
+                                ) : (
+                                    <SelectTwo
+                                        id="calendar-address-select"
+                                        value={model.addressID}
+                                        onChange={({ value }) => setModel({ ...model, addressID: value })}
+                                    >
+                                        {model.addressOptions.map(({ value, text }) => (
+                                            <Option key={value} value={value} title={text} />
+                                        ))}
+                                    </SelectTwo>
+                                )}
+                            </Field>
+                        </Row>
+                    )}
                     <Row>
                         <Label htmlFor="calendar-display-toggle">{c('Label').t`Display`}</Label>
                         <Field>
@@ -354,26 +362,36 @@ export const CalendarModal = ({
                             />
                         </Field>
                     </Row>
-                    <Row>
-                        <Label htmlFor="duration-select">{c('Label').t`Default event duration`}</Label>
-                        <Field>
-                            <SelectTwo
-                                id="duration-select"
-                                data-test-id="create-calendar/event-settings:event-duration"
-                                value={model.duration}
-                                onChange={({ value }) => setModel({ ...model, duration: +value })}
-                            >
-                                {[
-                                    { text: c('Duration').t`30 minutes`, value: 30 },
-                                    { text: c('Duration').t`60 minutes`, value: 60 },
-                                    { text: c('Duration').t`90 minutes`, value: 90 },
-                                    { text: c('Duration').t`120 minutes`, value: 120 },
-                                ].map(({ value, text }) => (
-                                    <Option key={value} value={value} title={text} />
-                                ))}
-                            </SelectTwo>
-                        </Field>
-                    </Row>
+                    {!isOtherCalendar && (
+                        <Row>
+                            <Label htmlFor="duration-select">{c('Label').t`Default event duration`}</Label>
+                            <Field>
+                                <SelectTwo
+                                    id="duration-select"
+                                    data-test-id="create-calendar/event-settings:event-duration"
+                                    value={model.duration}
+                                    onChange={({ value }) => setModel({ ...model, duration: +value })}
+                                >
+                                    {[
+                                        { text: c('Duration').t`30 minutes`, value: 30 },
+                                        { text: c('Duration').t`60 minutes`, value: 60 },
+                                        { text: c('Duration').t`90 minutes`, value: 90 },
+                                        { text: c('Duration').t`120 minutes`, value: 120 },
+                                    ].map(({ value, text }) => (
+                                        <Option key={value} value={value} title={text} />
+                                    ))}
+                                </SelectTwo>
+                            </Field>
+                        </Row>
+                    )}
+                    {isOtherCalendar && (
+                        <>
+                            <Row>
+                                <Label>{c('Label').t`URL`}</Label>
+                                <span>{initialCalendar?.SubscriptionParameters?.URL}</span>
+                            </Row>
+                        </>
+                    )}
                     <Row>
                         <Label>{c('Label').t`Default notifications`}</Label>
                         <div

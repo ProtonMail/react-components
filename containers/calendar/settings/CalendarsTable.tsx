@@ -1,7 +1,7 @@
 import React from 'react';
 import { c } from 'ttag';
 import { getIsCalendarDisabled, getIsCalendarProbablyActive } from 'proton-shared/lib/calendar/calendar';
-import { Calendar, CALENDAR_TYPE } from 'proton-shared/lib/interfaces/calendar';
+import { CALENDAR_TYPE, CalendarWithPossibleSubscriptionParameters } from 'proton-shared/lib/interfaces/calendar';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 import { UserModel } from 'proton-shared/lib/interfaces';
 
@@ -13,13 +13,13 @@ import './CalendarsTable.scss';
 import { classnames } from '../../../helpers';
 
 interface Props {
-    calendars: Calendar[];
+    calendars: CalendarWithPossibleSubscriptionParameters[];
     defaultCalendarID?: string;
     user: UserModel;
-    onEdit: (calendar: Calendar) => void;
+    onEdit: (calendar: CalendarWithPossibleSubscriptionParameters) => void;
     onSetDefault: (id: string) => void;
-    onDelete: (calendar: Calendar) => void;
-    onExport: (calendar: Calendar) => void;
+    onDelete: (calendar: CalendarWithPossibleSubscriptionParameters) => void;
+    onExport: (calendar: CalendarWithPossibleSubscriptionParameters) => void;
     loadingMap: { [key: string]: boolean };
 }
 const CalendarsTable = ({
