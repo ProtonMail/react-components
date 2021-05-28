@@ -82,7 +82,7 @@ const CalendarsSection = ({
 
             setEnhancedCalendars(normalCalendars);
         })();
-    }, []);
+    }, [normalCalendars]);
 
     const handleCreate = () => {
         if (isOtherCalendarSection) {
