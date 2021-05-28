@@ -1,6 +1,7 @@
 import React, { useMemo, useState, useEffect, FormEvent } from 'react';
 import { addMonths, endOfMonth, startOfMonth } from 'date-fns';
-import { isSameMonth } from 'proton-shared/lib/date-fns-utc';
+import { format, isSameMonth } from 'proton-shared/lib/date-fns-utc';
+import { dateLocale } from 'proton-shared/lib/i18n';
 import { noop } from 'proton-shared/lib/helpers/function';
 
 import { getDaysInMonth } from './helper';
@@ -11,6 +12,7 @@ import WeekNumbers from './WeekNumbers';
 import Icon from '../icon/Icon';
 import { DateTuple, WeekStartsOn } from './index.d';
 import { Button } from '../button';
+import { Tooltip } from '../tooltip';
 
 export interface Props {
     hasCursors?: boolean;
@@ -21,7 +23,6 @@ export interface Props {
     max?: Date;
     markers?: { [ts: number]: boolean };
     displayWeekNumbers?: boolean;
-    displayedOnDarkBackground?: boolean;
     months?: string[];
     nextMonth?: string;
     prevMonth?: string;
@@ -68,7 +69,6 @@ const MiniCalendar = ({
     numberOfDays = 7,
     numberOfWeeks = 6,
     displayWeekNumbers = false,
-    displayedOnDarkBackground = false,
 }: Props) => {
     const [temporaryDate, setTemporaryDate] = useState<Date | undefined>();
 
@@ -82,6 +82,10 @@ const MiniCalendar = ({
     const monthLabel = useMemo(() => {
         return `${months[activeDate.getMonth()]} ${activeDate.getFullYear()}`;
     }, [activeDate, months]);
+
+    const todayTitle = useMemo(() => {
+        return format(now, 'PP', { locale: dateLocale });
+    }, [now, dateLocale]);
 
     const handleSwitchMonth = (direction: -1 | 1) => {
         const newDate = addMonths(activeDate, direction);
@@ -100,58 +104,67 @@ const MiniCalendar = ({
         setTemporaryDate(undefined);
     }, [selectedDate]);
 
-    const classWeekNumber = displayWeekNumbers ? 'minicalendar-grid--display-week-number' : '';
-    const classDark = displayedOnDarkBackground ? 'minicalendar--on-dark-background' : '';
-
     const preventLeaveFocus = (e: FormEvent<HTMLElement>) => e.preventDefault();
 
     return (
-        <div
-            className={classnames(['minicalendar', classDark])}
-            onMouseDown={preventLeaveFocus}
-            aria-label={monthLabel}
-        >
+        <div className="minicalendar" onMouseDown={preventLeaveFocus} aria-label={monthLabel}>
             <div className="flex flex-align-items-center flex-nowrap p1">
                 <span className="text-bold flex-item-fluid text-ellipsis">{monthLabel}</span>
                 {hasCursors ? (
                     <>
-                        <Button icon shape="ghost" color="weak" title={prevMonth} onClick={() => handleSwitchMonth(-1)}>
-                            <Icon name="caret" className="rotateZ-90 minicalendar-icon" />
-                            <span className="sr-only">{prevMonth}</span>
-                        </Button>
-                        <Button icon shape="ghost" color="weak" title={nextMonth} onClick={() => handleSwitchMonth(1)}>
-                            <Icon name="caret" className="rotateZ-270 minicalendar-icon" />
-                            <span className="sr-only">{nextMonth}</span>
-                        </Button>
+                        <Tooltip title={todayTitle}>
+                            <Button icon shape="ghost" color="weak" onClick={() => onSelectDate(now)}>
+                                <Icon name="calendar-today" className="minicalendar-icon" />
+                                <span className="sr-only">{todayTitle}</span>
+                            </Button>
+                        </Tooltip>
+                        <Tooltip title={prevMonth}>
+                            <Button icon shape="ghost" color="weak" onClick={() => handleSwitchMonth(-1)}>
+                                <Icon name="caret" className="rotateZ-90 minicalendar-icon" />
+                                <span className="sr-only">{prevMonth}</span>
+                            </Button>
+                        </Tooltip>
+                        <Tooltip title={nextMonth}>
+                            <Button icon shape="ghost" color="weak" onClick={() => handleSwitchMonth(1)}>
+                                <Icon name="caret" className="rotateZ-270 minicalendar-icon" />
+                                <span className="sr-only">{nextMonth}</span>
+                            </Button>
+                        </Tooltip>
                     </>
                 ) : null}
             </div>
-            <div className={classnames(['minicalendar-grid pl0-75 pr0-75 pb1', classWeekNumber])}>
+
+            <div
+                className={classnames([
+                    'minicalendar-grid pl0-75 pr0-75 pb1',
+                    displayWeekNumbers && 'with-weeknumbers',
+                ])}
+            >
                 {displayWeekNumbers ? <WeekNumbers numberOfWeeks={numberOfWeeks} days={days} /> : null}
-                <div>
-                    <WeekDays
-                        numberOfDays={numberOfDays}
-                        weekdaysShort={weekdaysShort}
-                        weekdaysLong={weekdaysLong}
-                        weekStartsOn={weekStartsOn}
-                        activeDateDay={activeDateDay}
-                    />
-                    <MonthDays
-                        min={min}
-                        max={max}
-                        markers={markers}
-                        numberOfWeeks={numberOfWeeks}
-                        numberOfDays={numberOfDays}
-                        days={days}
-                        formatDay={formatDay}
-                        dateRange={dateRange}
-                        onSelectDate={onSelectDate}
-                        onSelectDateRange={onSelectDateRange}
-                        now={now}
-                        activeDate={activeDate}
-                        selectedDate={selectedDate}
-                    />
-                </div>
+
+                <WeekDays
+                    numberOfDays={numberOfDays}
+                    weekdaysShort={weekdaysShort}
+                    weekdaysLong={weekdaysLong}
+                    weekStartsOn={weekStartsOn}
+                    activeDateDay={activeDateDay}
+                />
+
+                <MonthDays
+                    min={min}
+                    max={max}
+                    markers={markers}
+                    numberOfWeeks={numberOfWeeks}
+                    numberOfDays={numberOfDays}
+                    days={days}
+                    formatDay={formatDay}
+                    dateRange={dateRange}
+                    onSelectDate={onSelectDate}
+                    onSelectDateRange={onSelectDateRange}
+                    now={now}
+                    activeDate={activeDate}
+                    selectedDate={selectedDate}
+                />
             </div>
         </div>
     );
