@@ -47,8 +47,8 @@ const MonthDays = ({
     const rangeEndRef = useRef<Date | undefined>(undefined);
 
     const style = {
-        '--minicalendar-days-numberOfDays': numberOfDays,
-        '--minicalendar-days-numberOfWeeks': numberOfWeeks,
+        '--cols': numberOfDays,
+        '--rows': numberOfWeeks,
     };
 
     const handleMouseDown = ({ target }: React.MouseEvent<HTMLUListElement>) => {
@@ -106,7 +106,7 @@ const MonthDays = ({
 
     return (
         <ul
-            className="unstyled m0 text-center minicalendar-days"
+            className="minicalendar-monthdays unstyled m0 text-center"
             style={style}
             onClick={handleClick}
             onMouseDown={handleMouseDown}
