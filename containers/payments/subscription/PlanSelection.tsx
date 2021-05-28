@@ -163,7 +163,7 @@ const getFeatures = (plan: Plan, service: PLAN_SERVICES, vpnCountries: VPNCountr
     };
 
     const accessProtonDrive = {
-        // translator: Access to <ProtonDrive>
+        // translator: Access to <ProtonDrive> (beta)
         content: c('Plan feature').t`Access to ${driveAppName} (beta)`,
     };
 
