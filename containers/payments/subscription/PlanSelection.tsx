@@ -164,7 +164,7 @@ const getFeatures = (plan: Plan, service: PLAN_SERVICES, vpnCountries: VPNCountr
 
     const accessProtonDrive = {
         // translator: Access to <ProtonDrive>
-        content: c('Plan feature').t`Access to ${driveAppName}`,
+        content: c('Plan feature').t`Access to ${driveAppName} (beta)`,
     };
 
     if (planName === 'free_mail') {
