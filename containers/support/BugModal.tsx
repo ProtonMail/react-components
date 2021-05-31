@@ -31,9 +31,10 @@ interface Props {
     username?: string;
     addresses?: { Email: string }[];
     onClose?: () => void;
+    chatAlert?: boolean;
 }
 
-const BugModal = ({ onClose = noop, username: Username = '', addresses = [], ...rest }: Props) => {
+const BugModal = ({ onClose = noop, username: Username = '', addresses = [], chatAlert, ...rest }: Props) => {
     const api = useApi();
     const location = useLocation();
     const [loading, withLoading] = useLoading();
@@ -112,10 +113,10 @@ const BugModal = ({ onClose = noop, username: Username = '', addresses = [], ...
     const { state: showDetails, toggle: toggleDetails } = useToggle(false);
     const [images, setImages] = useState([]);
     const link = <Href key="linkClearCache" url={clearCacheLink}>{c('Link').t`clearing your browser cache`}</Href>;
-    const handleChange = (key: string) => ({
-        target,
-    }: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
-        update({ ...model, [key]: target.value });
+    const handleChange =
+        (key: string) =>
+        ({ target }: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>
+            update({ ...model, [key]: target.value });
 
     const handleSubmit = async () => {
         const getParameters = () => {
@@ -186,9 +187,17 @@ const BugModal = ({ onClose = noop, username: Username = '', addresses = [], ...
             title={c('Title').t`Report a problem`}
             {...rest}
         >
-            <Alert>{c('Info').jt`Refreshing the page or ${link} will automatically resolve most issues.`}</Alert>
-            <Alert type="warning">{c('Warning')
-                .t`Reports are not end-to-end encrypted, please do not send any sensitive information.`}</Alert>
+            {chatAlert ? (
+                <Alert type="warning">{c('Warning')
+                    .t`Live chat is only available for paid users. Please open a ticket instead.`}</Alert>
+            ) : (
+                <>
+                    <Alert>{c('Info')
+                        .jt`Refreshing the page or ${link} will automatically resolve most issues.`}</Alert>
+                    <Alert type="warning">{c('Warning')
+                        .t`Reports are not end-to-end encrypted, please do not send any sensitive information.`}</Alert>
+                </>
+            )}
             {Username ? null : (
                 <Row>
                     <Label htmlFor="Username">{c('Label').t`Proton username`}</Label>
@@ -249,9 +258,7 @@ const BugModal = ({ onClose = noop, username: Username = '', addresses = [], ...
                     <AttachScreenshot id="Attachments" onUpload={setImages} onReset={() => setImages([])} />
                 </Field>
             </Row>
-
             {model.OSArtificial && OSAndOSVersionFields}
-
             <Row>
                 <Label>{c('Label').t`System information`}</Label>
                 <Field className="inline-flex">
