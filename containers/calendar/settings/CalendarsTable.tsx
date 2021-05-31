@@ -68,9 +68,7 @@ const CalendarsTable = ({
                             actionType: 'delete',
                             onClick: () => onDelete(calendar),
                         },
-                    ]
-                        .flatMap((item) => (isTruthy(item.shouldShow) ? omit(item, ['shouldShow']) : []))
-                        .filter(isTruthy);
+                    ].flatMap((item) => (isTruthy(item.shouldShow) ? omit(item, ['shouldShow']) : []));
 
                     return (
                         <TableRow

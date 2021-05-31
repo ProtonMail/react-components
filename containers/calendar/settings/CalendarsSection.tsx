@@ -8,7 +8,6 @@ import { c, msgid } from 'ttag';
 import { getSubscriptionParameters, removeCalendar, updateCalendarUserSettings } from 'proton-shared/lib/api/calendars';
 import {
     Calendar,
-    CALENDAR_TYPE,
     CalendarWithPossibleSubscriptionParameters,
     CalendarSubscription,
 } from 'proton-shared/lib/interfaces/calendar';
@@ -40,6 +39,7 @@ interface Props {
     activeCalendars: Calendar[];
     defaultCalendar?: Calendar;
     user: UserModel;
+    isOtherCalendarSection?: boolean;
 }
 const CalendarsSection = ({
     activeAddresses,
@@ -48,6 +48,7 @@ const CalendarsSection = ({
     disabledCalendars = [],
     activeCalendars = [],
     user,
+    isOtherCalendarSection = false,
 }: Props) => {
     const api = useApi();
     const { call } = useEventManager();
@@ -58,8 +59,6 @@ const CalendarsSection = ({
 
     const defaultCalendarID = defaultCalendar?.ID;
     const hasDisabledCalendar = disabledCalendars.length > 0;
-
-    const isOtherCalendarSection = normalCalendars[0]?.Type !== CALENDAR_TYPE.PERSONAL;
 
     useEffect(() => {
         (async () => {
