@@ -25,6 +25,9 @@ import { GenericError } from '../../error';
 import Notifications from '../notifications/Notifications';
 import useGetCalendarSetup from '../hooks/useGetCalendarSetup';
 import useGetCalendarActions from '../hooks/useGetCalendarActions';
+import TruncateText from '../../../components/truncateText/TruncateText';
+
+const URL_MAX_DISPLAY_LENGTH = 100;
 
 interface Props {
     calendar?: CalendarWithPossibleSubscriptionParameters;
@@ -225,11 +228,15 @@ export const CalendarModal = ({
                             </Field>
                         </Row>
                     )}
-                    {isOtherCalendar && (
+                    {isOtherCalendar && initialCalendar?.SubscriptionParameters?.URL && (
                         <>
                             <Row>
                                 <Label>{c('Label').t`URL`}</Label>
-                                <span>{initialCalendar?.SubscriptionParameters?.URL}</span>
+                                <span style={{ wordBreak: 'break-all' }}>
+                                    <TruncateText maxChars={URL_MAX_DISPLAY_LENGTH}>
+                                        {initialCalendar?.SubscriptionParameters?.URL}
+                                    </TruncateText>
+                                </span>
                             </Row>
                         </>
                     )}
