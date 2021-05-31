@@ -10,7 +10,7 @@ interface Props {
     maxChars: number;
 }
 
-const TruncateText = ({ children, maxChars }: Props) => {
+const TruncatedText = ({ children, maxChars }: Props) => {
     const [isShowingMore, setIsShowingMore] = useState(false);
     const childLength = children.length;
     const lengthToShow = isShowingMore ? childLength : maxChars;
@@ -32,4 +32,4 @@ const TruncateText = ({ children, maxChars }: Props) => {
     );
 };
 
-export default TruncateText;
+export default TruncatedText;

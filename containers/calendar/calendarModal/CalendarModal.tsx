@@ -25,7 +25,7 @@ import { GenericError } from '../../error';
 import Notifications from '../notifications/Notifications';
 import useGetCalendarSetup from '../hooks/useGetCalendarSetup';
 import useGetCalendarActions from '../hooks/useGetCalendarActions';
-import { TruncateText } from '../../../components/truncateText';
+import { TruncatedText } from '../../../components/truncatedText';
 
 const URL_MAX_DISPLAY_LENGTH = 100;
 
@@ -233,9 +233,9 @@ export const CalendarModal = ({
                             <Row>
                                 <Label>{c('Label').t`URL`}</Label>
                                 <span style={{ wordBreak: 'break-all' }}>
-                                    <TruncateText maxChars={URL_MAX_DISPLAY_LENGTH}>
+                                    <TruncatedText maxChars={URL_MAX_DISPLAY_LENGTH}>
                                         {initialCalendar?.SubscriptionParameters?.URL}
-                                    </TruncateText>
+                                    </TruncatedText>
                                 </span>
                             </Row>
                         </>
