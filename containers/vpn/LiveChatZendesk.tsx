@@ -34,9 +34,10 @@ interface Props {
     name?: string;
     email?: string;
     onLoaded: () => void;
+    locale: string;
 }
 
-const LiveChatZendesk = ({ zendeskKey, zendeskRef, name, email, onLoaded }: Props) => {
+const LiveChatZendesk = ({ zendeskKey, zendeskRef, name, email, onLoaded, locale }: Props) => {
     const { API_URL } = useConfig();
     const [style, setStyle] = useState({
         position: 'absolute',
@@ -48,7 +49,7 @@ const LiveChatZendesk = ({ zendeskKey, zendeskRef, name, email, onLoaded }: Prop
     });
     const [loaded, setLoaded] = useState(false);
     const iframeRef = useRef<HTMLIFrameElement>(null);
-    const pendingLoadingRef = useRef<{ show?: boolean }>({});
+    const pendingLoadingRef = useRef<{ show?: boolean; locale?: string }>({});
 
     const iframeUrl = getIframeUrl(API_URL, zendeskKey);
 
@@ -79,6 +80,13 @@ const LiveChatZendesk = ({ zendeskKey, zendeskRef, name, email, onLoaded }: Prop
         }
         handleRun({ identify: { name, email } });
     }, [loaded, name, email]);
+
+    useEffect(() => {
+        if (!loaded) {
+            return;
+        }
+        handleRun({ setLocale: locale });
+    }, [loaded, locale]);
 
     useEffect(() => {
         if (!loaded || !pendingLoadingRef.current) {
