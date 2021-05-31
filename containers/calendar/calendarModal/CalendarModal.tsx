@@ -25,7 +25,7 @@ import { GenericError } from '../../error';
 import Notifications from '../notifications/Notifications';
 import useGetCalendarSetup from '../hooks/useGetCalendarSetup';
 import useGetCalendarActions from '../hooks/useGetCalendarActions';
-import TruncateText from '../../../components/truncateText/TruncateText';
+import { TruncateText } from '../../../components/truncateText';
 
 const URL_MAX_DISPLAY_LENGTH = 100;
 
