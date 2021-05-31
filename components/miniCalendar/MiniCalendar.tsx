@@ -140,12 +140,12 @@ const MiniCalendar = ({
                 {hasCursors ? (
                     <>
                         <Tooltip title={prevMonth}>
-                            <Button icon shape="ghost" color="weak" size="small" onClick={() => handleSwitchMonth(-1)}>
+                            <Button icon shape="ghost" className="on-rtl-mirror" color="weak" size="small" onClick={() => handleSwitchMonth(-1)}>
                                 <Icon name="caret" className="rotateZ-90 minicalendar-icon" alt={prevMonth} />
                             </Button>
                         </Tooltip>
                         <Tooltip title={nextMonth}>
-                            <Button icon shape="ghost" color="weak" size="small" onClick={() => handleSwitchMonth(1)}>
+                            <Button icon shape="ghost" className="on-rtl-mirror" color="weak" size="small" onClick={() => handleSwitchMonth(1)}>
                                 <Icon name="caret" className="rotateZ-270 minicalendar-icon" alt={nextMonth} />
                             </Button>
                         </Tooltip>
