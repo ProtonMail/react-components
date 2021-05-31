@@ -20,6 +20,7 @@ const INITIAL_STATE = {
 
 export const useIndicator = (tabs: Tab[], currentTabIndex: number) => {
     const tabsRef = useRef<HTMLUListElement>(null);
+    const rtl = false; // to provide at global level
 
     const [{ scale, translate }, setIndicatorParams] = useState(INITIAL_STATE);
 
@@ -59,7 +60,7 @@ export const useIndicator = (tabs: Tab[], currentTabIndex: number) => {
         // indicator scale is proportion to whole container width
         setIndicatorParams({
             scale: width / getWidth(tabsEl),
-            translate: `${offset}px`,
+            translate: rtl ? `-${offset}px` : `${offset}px`,
         });
     }, [tabs, currentTabIndex]);
 
