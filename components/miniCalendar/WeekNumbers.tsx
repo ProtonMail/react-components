@@ -1,10 +1,19 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import { c } from 'ttag';
 import { getISOWeek } from 'date-fns';
+
+const getTargetWeek = (target: any) => {
+    const idx = parseInt(target?.dataset?.i || '', 10);
+    if (idx >= 0 && idx <= 53) {
+        return idx;
+    }
+};
 
 export interface Props {
     days: Date[];
     numberOfWeeks: number;
+    onClickWeekNumber: (weekNumber: number) => void;
+    onSelectWeekRange?: (arg: [number, number]) => void;
 }
 
 const getMonday = (days: Date[], start: number, end: number) => {
@@ -16,31 +25,101 @@ const getMonday = (days: Date[], start: number, end: number) => {
     }
 };
 
-const WeekNumbers = ({ days, numberOfWeeks }: Props) => {
+const WeekNumbers = ({ days, numberOfWeeks, onClickWeekNumber, onSelectWeekRange }: Props) => {
     const style = {
         '--week-count': numberOfWeeks + 1,
     };
+    const [temporaryWeekRange, setTemporaryWeekRange] = useState<[number, number | undefined] | undefined>(undefined);
+    const rangeStartRef = useRef<number | undefined>(undefined);
+    const rangeEndRef = useRef<number | undefined>(undefined);
+
+    const handleMouseDown = ({ target }: React.MouseEvent<HTMLUListElement>) => {
+        const targetWeek = getTargetWeek(target);
+        if (rangeStartRef.current || !targetWeek || !onSelectWeekRange) {
+            return;
+        }
+
+        setTemporaryWeekRange([targetWeek, undefined]);
+        rangeStartRef.current = targetWeek;
+
+        const handleMouseUp = () => {
+            if (rangeEndRef.current && rangeStartRef.current) {
+                onSelectWeekRange(
+                    rangeEndRef.current > rangeStartRef.current
+                        ? [rangeStartRef.current, rangeEndRef.current]
+                        : [rangeEndRef.current, rangeStartRef.current]
+                );
+            }
+
+            setTemporaryWeekRange(undefined);
+            rangeStartRef.current = undefined;
+            rangeEndRef.current = undefined;
+
+            document.removeEventListener('mouseup', handleMouseUp);
+        };
+
+        document.addEventListener('mouseup', handleMouseUp);
+    };
+
+    const handleMouseOver = ({ target }: React.MouseEvent<HTMLUListElement>) => {
+        const targetWeek = getTargetWeek(target);
+        if (!rangeStartRef.current || !targetWeek || !onSelectWeekRange) {
+            return;
+        }
+        rangeEndRef.current = targetWeek;
+
+        setTemporaryWeekRange(
+            targetWeek > rangeStartRef.current
+                ? [rangeStartRef.current, targetWeek]
+                : [targetWeek, rangeStartRef.current]
+        );
+    };
+
+    const handleFocus = () => {};
 
     const weekNumberLabels = useMemo(() => {
         return Array.from({ length: numberOfWeeks }, (a, i) => {
             const idx = i * 7;
             const monday = getMonday(days, idx, idx + 7) || days[idx];
             const weekNumber = getISOWeek(monday);
-            return (
-                <span className="minicalendar-weeknumbers-number text-italic" key={+monday}>
-                    <span>{weekNumber}</span>
-                </span>
-            );
+            return {
+                monday,
+                weekNumber,
+            };
         });
     }, [days]);
 
     return (
-        <div className="minicalendar-weeknumbers" style={style}>
-            <span>
+        <ul
+            className="minicalendar-weeknumbers unstyled m0 text-center"
+            style={style}
+            onMouseDown={handleMouseDown}
+            onMouseOver={handleMouseOver}
+            onFocus={handleFocus}
+        >
+            <li>
                 <span className="sr-only">{c('Info').t`Week`}</span>
-            </span>
-            {weekNumberLabels}
-        </div>
+            </li>
+            {weekNumberLabels.map(({ monday, weekNumber }) => {
+                const isPressed = !temporaryWeekRange
+                    ? false
+                    : weekNumber >= temporaryWeekRange[0] &&
+                      weekNumber <= (temporaryWeekRange[1] || temporaryWeekRange[0]);
+                return (
+                    <li key={+monday}>
+                        <button
+                            data-i={weekNumber}
+                            aria-pressed={isPressed}
+                            type="button"
+                            className="minicalendar-weeknumber text-italic"
+                            onClick={() => onClickWeekNumber(weekNumber)}
+                        >
+                            <span className="no-pointer-events">{weekNumber}</span>
+                        </button>
+                    </li>
+                );
+            })}
+        </ul>
     );
 };
 

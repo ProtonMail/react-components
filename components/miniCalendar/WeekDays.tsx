@@ -25,7 +25,7 @@ const WeekDays = ({ weekdaysShort, weekdaysLong, weekStartsOn = 1, numberOfDays,
             const isCurrentDay = idx === activeDateDay;
             return (
                 <Tooltip key={label + i} title={tooltip}>
-                    <span aria-hidden="true" className={classnames(['text-strong', isCurrentDay && 'color-primary'])}>
+                    <span aria-hidden="true" className={classnames([isCurrentDay && 'color-primary text-strong'])}>
                         {label}
                         <span className="sr-only">{tooltip}</span>
                     </span>

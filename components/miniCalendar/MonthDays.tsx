@@ -1,5 +1,5 @@
 import { isBefore, isAfter, isSameDay, isSameMonth, isWithinInterval } from 'date-fns';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, Ref } from 'react';
 
 import { classnames } from '../../helpers';
 import { DateTuple } from './index.d';
@@ -13,7 +13,6 @@ const getTargetDate = (target: any, days: Date[]) => {
 
 export interface Props {
     days: Date[];
-    markers: { [ts: string]: boolean };
     onSelectDate: (a1: Date) => void;
     onSelectDateRange: (a1: DateTuple) => void;
     now: Date;
@@ -25,12 +24,12 @@ export interface Props {
     formatDay: (a1: Date) => string;
     numberOfDays: number;
     numberOfWeeks: number;
+    cellRef: Ref<HTMLLIElement>;
 }
 
 const MonthDays = ({
     days,
     onSelectDate,
-    markers = {},
     onSelectDateRange,
     dateRange,
     formatDay,
@@ -41,6 +40,7 @@ const MonthDays = ({
     activeDate,
     numberOfDays,
     numberOfWeeks,
+    cellRef,
 }: Props) => {
     const [temporaryDateRange, setTemporaryDateRange] = useState<[Date, Date | undefined] | undefined>(undefined);
     const rangeStartRef = useRef<Date | undefined>(undefined);
@@ -122,8 +122,6 @@ const MonthDays = ({
                 const isInterval =
                     (rangeStart && rangeEnd && isWithinInterval(dayDate, { start: rangeStart, end: rangeEnd })) ||
                     (rangeStart && isSameDay(rangeStart, dayDate));
-                const isIntervalBound =
-                    rangeStart && rangeEnd ? isSameDay(rangeStart, dayDate) || isSameDay(rangeEnd, dayDate) : false;
                 const isPressed = selectedDate ? isSameDay(selectedDate, dayDate) || isInterval : false;
 
                 // only for CSS layout: beginning/end of week OR beginning/end of interval in week
@@ -135,12 +133,9 @@ const MonthDays = ({
                     (isInterval && rangeEnd && isSameDay(rangeEnd, dayDate)) ||
                     (!rangeEnd && isIntervalBoundBegin);
 
-                const hasMarker = markers[dayDate.getTime()];
-
                 const className = classnames([
                     'minicalendar-day no-pointer-events-children',
                     !isActiveMonth && 'minicalendar-day--inactive-month',
-                    isIntervalBound && 'minicalendar-day--range-bound',
                     isIntervalBoundBegin && 'minicalendar-day--range-bound-begin',
                     isIntervalBoundEnd && 'minicalendar-day--range-bound-end',
                     isInterval && 'minicalendar-day--range',
@@ -148,7 +143,7 @@ const MonthDays = ({
                 ]);
 
                 return (
-                    <li key={dayDate.toString()}>
+                    <li key={dayDate.toString()} ref={i === 0 ? cellRef : undefined}>
                         <button
                             disabled={isOutsideMinMax}
                             aria-label={formatDay(dayDate)}
@@ -160,7 +155,6 @@ const MonthDays = ({
                             type="button"
                         >
                             <span className="minicalendar-day-inner">{dayDate.getDate()}</span>
-                            {hasMarker ? <span className="minicalendar-day--marker" /> : null}
                         </button>
                     </li>
                 );
