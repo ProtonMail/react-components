@@ -111,7 +111,7 @@ const WeekNumbers = ({ days, numberOfWeeks, onClickWeekNumber, onSelectWeekRange
                             data-i={weekNumber}
                             aria-pressed={isPressed}
                             type="button"
-                            className="minicalendar-weeknumber text-italic"
+                            className="minicalendar-weeknumber"
                             onClick={() => onClickWeekNumber(weekNumber)}
                         >
                             <span className="no-pointer-events">{weekNumber}</span>
