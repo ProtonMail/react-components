@@ -190,6 +190,7 @@ const TimeInput = ({ onChange, value, interval = 30, min, displayDuration = fals
                 disableFocusTrap
                 autoClose={false}
                 autoCloseOutside={false}
+                sameAnchorWidth
                 contentProps={{
                     onMouseDown: (event: React.MouseEvent<HTMLDivElement>) => {
                         // Prevent default to stop the input getting blurred.
@@ -208,6 +209,7 @@ const TimeInput = ({ onChange, value, interval = 30, min, displayDuration = fals
                                 key={i}
                                 isSelected={isSelected}
                                 style={{ pointerEvents: 'auto' }} // Lets the user select the time during typing
+                                className="text-left"
                                 onClick={() => {
                                     handleSelectDate(otherValue);
                                     close();
