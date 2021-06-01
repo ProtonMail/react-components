@@ -151,10 +151,9 @@ const MonthDays = ({
                             aria-pressed={isPressed ? true : undefined}
                             className={className}
                             data-i={i}
-                            data-current-day={dayDate.getDate()}
                             type="button"
                         >
-                            <span className="minicalendar-day-inner">{dayDate.getDate()}</span>
+                            <span className="minicalendar-day-number">{dayDate.getDate()}</span>
                         </button>
                     </li>
                 );
