@@ -135,9 +135,9 @@ const getFeatures = (plan: Plan, service: PLAN_SERVICES, vpnCountries: VPNCountr
             },
             vpnConnections,
             { content: c('Plan feature').t`Highest speed (up to 10 Gbps)` },
+            streamingService,
             adBlocker,
             secureCore,
-            streamingService,
         ];
     }
 
