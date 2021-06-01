@@ -110,8 +110,8 @@ const ContactsList = ({
                                 />
                             )}
                             rowCount={contacts.length}
-                            height={mergeContactBannerHeight ? height - mergeContactBannerHeight : height}
-                            width={width - 1}
+                            height={height}
+                            width={width}
                             rowHeight={isCompactView ? contactRowHeightCompact : contactRowHeightComfort}
                         />
                     )}
