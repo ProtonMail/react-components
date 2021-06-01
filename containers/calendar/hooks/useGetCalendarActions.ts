@@ -105,7 +105,11 @@ const useGetCalendarActions = ({
 
         onClose?.();
 
-        createNotification({ text: c('Success').t`Calendar created` });
+        createNotification({
+            text: isOtherCalendar
+                ? c('Success').t`Calendar created. It might take a few minutes to sync.`
+                : c('Success').t`Calendar created`,
+        });
     };
 
     const handleUpdateCalendar = async (
