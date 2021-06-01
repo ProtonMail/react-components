@@ -8,6 +8,7 @@ import { getEditableFields, getOtherInformationFields } from 'proton-shared/lib/
 import { API_CODES } from 'proton-shared/lib/constants';
 import { OVERWRITE, CATEGORIES } from 'proton-shared/lib/contacts/constants';
 import {
+    ContactEmail,
     ContactProperties,
     ContactProperty,
     ContactPropertyChange,
@@ -17,6 +18,7 @@ import { useUserKeys, useApi, useNotifications, useLoading, useEventManager } fr
 import { FormModal, PrimaryButton } from '../../../components';
 import { generateUID } from '../../../helpers';
 import ContactModalRow from '../../../components/contacts/ContactModalRow';
+import useContactList from '../useContactList';
 
 const DEFAULT_MODEL = [
     { field: 'fn', value: '' },
@@ -72,6 +74,8 @@ const ContactModal = ({
     const [userKeysList, loadingUserKeys] = useUserKeys();
     const [allProperties, setAllProperties] = useState<ContactProperties>(formatModel(initialProperties));
     const nameFieldRef = useRef<HTMLInputElement>(null);
+    const { contactEmailsMap } = useContactList({});
+    const contactEmails: ContactEmail[] = contactID && contactEmailsMap[contactID];
 
     const title = contactID ? c('Title').t`Edit contact` : c('Title').t`Create contact`;
 
@@ -94,6 +98,8 @@ const ContactModal = ({
         const nameFilled = !!nameProperty?.value;
         return nameFilled;
     };
+
+    const saveContactGroups = () => {};
 
     const handleRemove = (propertyUID: string) => {
         const property = allProperties.find(({ uid }) => uid === propertyUID);
@@ -159,6 +165,9 @@ const ContactModal = ({
         if (!contactID) {
             onAdd();
         }
+
+        saveContactGroups();
+
         onClose();
         createNotification({ text: c('Success').t`Contact saved` });
     };
@@ -244,6 +253,7 @@ const ContactModal = ({
                 onRemove={handleRemove}
                 onOrderChange={handleOrderChange}
                 onAdd={handleAdd('email')}
+                contactEmails={contactEmails}
             />
             <ContactModalProperties
                 properties={properties}

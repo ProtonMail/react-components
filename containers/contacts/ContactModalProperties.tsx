@@ -3,7 +3,7 @@ import { c } from 'ttag';
 
 import { move } from 'proton-shared/lib/helpers/array';
 import { OTHER_INFORMATION_FIELDS } from 'proton-shared/lib/contacts/constants';
-import { ContactPropertyChange, ContactProperties } from 'proton-shared/lib/interfaces/contacts';
+import { ContactPropertyChange, ContactProperties, ContactEmail } from 'proton-shared/lib/interfaces/contacts';
 
 import { EXACTLY_ONE_MAY_BE_PRESENT, PROPERTIES } from 'proton-shared/lib/contacts/vcard';
 import { Button, Icon, OrderableContainer, OrderableElement } from '../../components';
@@ -34,10 +34,20 @@ interface Props {
     onAdd?: () => void;
     onRemove: (value: string) => void;
     isSubmitted?: boolean;
+    contactEmails?: ContactEmail[];
 }
 
 const ContactModalProperties = (
-    { properties: allProperties, field, onChange, onOrderChange, onAdd, onRemove, isSubmitted = false }: Props,
+    {
+        properties: allProperties,
+        field,
+        onChange,
+        onOrderChange,
+        onAdd,
+        onRemove,
+        isSubmitted = false,
+        contactEmails,
+    }: Props,
     ref: Ref<HTMLInputElement>
 ) => {
     const title = field ? TITLES[field] : TITLES.other;
@@ -66,6 +76,7 @@ const ContactModalProperties = (
                     // Accept the currently set type
                     filteredTypes.filter((type) => property.field !== type)
                 }
+                contactEmails={contactEmails}
             />
         ));
     }, [properties, onChange, onRemove, onAdd, !!onOrderChange]);
