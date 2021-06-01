@@ -1,7 +1,12 @@
 import React, { forwardRef, Ref, useEffect, useRef } from 'react';
 import { c } from 'ttag';
 import { clearType, getType } from 'proton-shared/lib/contacts/property';
-import { ContactEmail, ContactProperty, ContactPropertyChange } from 'proton-shared/lib/interfaces/contacts';
+import {
+    ContactEmail,
+    ContactEmailModel,
+    ContactProperty,
+    ContactPropertyChange,
+} from 'proton-shared/lib/interfaces/contacts';
 import { classnames } from '../../helpers';
 import ContactFieldProperty from './ContactFieldProperty';
 import ContactModalLabel from './ContactModalLabel';
@@ -25,7 +30,8 @@ interface Props {
     fixedType?: boolean;
     labelWidthClassName?: string;
     filteredTypes?: string[];
-    contactEmails?: ContactEmail[];
+    contactEmail?: ContactEmailModel;
+    onContactEmailChange?: (contactEmail: ContactEmailModel) => void;
 }
 
 const ContactModalRow = (
@@ -40,7 +46,8 @@ const ContactModalRow = (
         labelWidthClassName,
         fixedType,
         filteredTypes,
-        contactEmails,
+        contactEmail,
+        onContactEmailChange,
     }: Props,
     ref: Ref<HTMLInputElement>
 ) => {
@@ -53,9 +60,6 @@ const ContactModalRow = (
     const fieldsToReset = ['bday', 'anniversary', 'photo', 'logo'];
 
     const list = [];
-
-    const contactEmail = contactEmails?.filter((email) => email.Email === property.value);
-    const updatedContactEmail = contactEmail ? [...contactEmail] : [];
 
     // Delete is always available (except when primary and no image). Primary name has action row disabled.
     if (canDelete) {
@@ -72,16 +76,16 @@ const ContactModalRow = (
     }
 
     const handleUpdateContactGroups = (changes: { [groupID: string]: boolean }) => {
-        if (updatedContactEmail) {
+        if (contactEmail && onContactEmailChange) {
+            let LabelIDs = [...contactEmail.LabelIDs];
             Object.entries(changes).forEach(([groupID, checked]) => {
                 if (checked) {
-                    updatedContactEmail[0].LabelIDs.push(groupID);
+                    LabelIDs.push(groupID);
                 } else {
-                    updatedContactEmail[0].LabelIDs = updatedContactEmail[0].LabelIDs.filter(
-                        (id: string) => id !== groupID
-                    );
+                    LabelIDs = contactEmail.LabelIDs.filter((id: string) => id !== groupID);
                 }
             });
+            onContactEmailChange({ ...contactEmail, LabelIDs, changes: { ...contactEmail.changes, ...changes } });
         }
     };
 
@@ -157,14 +161,16 @@ const ContactModalRow = (
                                             'flex-align-items-start',
                                     ])}
                                 >
-                                    {field === 'email' ? (
-                                        hasPaidMail ? (
+                                    {field === 'email' &&
+                                        (hasPaidMail ? (
                                             <ContactGroupDropdown
                                                 icon
                                                 color="weak"
                                                 shape="outline"
                                                 className="mr0-5"
-                                                contactEmails={updatedContactEmail ? [...updatedContactEmail] : []}
+                                                contactEmails={
+                                                    ((contactEmail ? [contactEmail] : []) as any) as ContactEmail[]
+                                                }
                                                 onDelayedSave={handleUpdateContactGroups}
                                                 tooltip={c('Title').t`Contact group`}
                                             >
@@ -180,8 +186,7 @@ const ContactModalRow = (
                                                     <Icon name="contacts-groups" alt={c('Action').t`Contact group`} />
                                                 </Button>
                                             </Tooltip>
-                                        )
-                                    ) : null}
+                                        ))}
                                     <DropdownActions icon list={list} />
                                 </div>
                             )}

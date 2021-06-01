@@ -1,11 +1,10 @@
 import React, { useCallback, useMemo, forwardRef, Ref } from 'react';
 import { c } from 'ttag';
-
 import { move } from 'proton-shared/lib/helpers/array';
 import { OTHER_INFORMATION_FIELDS } from 'proton-shared/lib/contacts/constants';
-import { ContactPropertyChange, ContactProperties, ContactEmail } from 'proton-shared/lib/interfaces/contacts';
-
+import { ContactPropertyChange, ContactProperties, ContactEmailModel } from 'proton-shared/lib/interfaces/contacts';
 import { EXACTLY_ONE_MAY_BE_PRESENT, PROPERTIES } from 'proton-shared/lib/contacts/vcard';
+import { SimpleMap } from 'proton-shared/lib/interfaces';
 import { Button, Icon, OrderableContainer, OrderableElement } from '../../components';
 import ContactModalRow from '../../components/contacts/ContactModalRow';
 import EncryptedIcon from '../../components/contacts/EncryptedIcon';
@@ -34,7 +33,8 @@ interface Props {
     onAdd?: () => void;
     onRemove: (value: string) => void;
     isSubmitted?: boolean;
-    contactEmails?: ContactEmail[];
+    contactEmails?: SimpleMap<ContactEmailModel>;
+    onContactEmailChange?: (contactEmail: ContactEmailModel) => void;
 }
 
 const ContactModalProperties = (
@@ -47,6 +47,7 @@ const ContactModalProperties = (
         onRemove,
         isSubmitted = false,
         contactEmails,
+        onContactEmailChange,
     }: Props,
     ref: Ref<HTMLInputElement>
 ) => {
@@ -76,7 +77,8 @@ const ContactModalProperties = (
                     // Accept the currently set type
                     filteredTypes.filter((type) => property.field !== type)
                 }
-                contactEmails={contactEmails}
+                contactEmail={contactEmails?.[property.value as string]}
+                onContactEmailChange={onContactEmailChange}
             />
         ));
     }, [properties, onChange, onRemove, onAdd, !!onOrderChange]);
