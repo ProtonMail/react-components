@@ -1,10 +1,10 @@
-import React, { useMemo, useState, useEffect, FormEvent } from 'react';
-import { addMonths, endOfMonth, startOfMonth } from 'date-fns';
-import { format, isSameMonth } from 'proton-shared/lib/date-fns-utc';
+import React, { useMemo, useState, useEffect, FormEvent, useRef } from 'react';
+import { addMonths, endOfMonth, startOfMonth, format, isSameMonth } from 'date-fns';
 import { dateLocale } from 'proton-shared/lib/i18n';
 import { noop } from 'proton-shared/lib/helpers/function';
 
-import { getDaysInMonth } from './helper';
+import { useElementRect } from '../../hooks';
+import { getDaysInMonth, getDateTupleFromWeekNumber } from './helper';
 import { classnames } from '../../helpers';
 import MonthDays from './MonthDays';
 import WeekDays from './WeekDays';
@@ -13,6 +13,7 @@ import Icon from '../icon/Icon';
 import { DateTuple, WeekStartsOn } from './index.d';
 import { Button } from '../button';
 import { Tooltip } from '../tooltip';
+import { Vr } from '../vr';
 
 export interface Props {
     hasCursors?: boolean;
@@ -21,7 +22,6 @@ export interface Props {
     dateRange?: DateTuple;
     min?: Date;
     max?: Date;
-    markers?: { [ts: number]: boolean };
     displayWeekNumbers?: boolean;
     months?: string[];
     nextMonth?: string;
@@ -51,7 +51,6 @@ const MiniCalendar = ({
     weekdaysShort = ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
     nextMonth = 'Next month',
     prevMonth = 'Previous month',
-    markers = {},
     months = [
         'January',
         'February',
@@ -71,6 +70,8 @@ const MiniCalendar = ({
     displayWeekNumbers = false,
 }: Props) => {
     const [temporaryDate, setTemporaryDate] = useState<Date | undefined>();
+    const cellRef = useRef<HTMLLIElement>(null);
+    const cellRect = useElementRect(cellRef);
 
     const activeDate = temporaryDate || selectedDate;
     const activeDateDay = isSameMonth(now, activeDate) ? now.getDay() : undefined;
@@ -100,6 +101,16 @@ const MiniCalendar = ({
         setTemporaryDate(newDate);
     };
 
+    const handleClickWeekNumber = (weekNumber: number) => {
+        onSelectDateRange(getDateTupleFromWeekNumber(activeDate, weekNumber, weekStartsOn));
+    };
+
+    const handleSelectWeekRange = ([startWeekNumber, endWeekNuber]: [number, number]) => {
+        const [start] = getDateTupleFromWeekNumber(activeDate, startWeekNumber, weekStartsOn);
+        const [, end] = getDateTupleFromWeekNumber(activeDate, endWeekNuber, weekStartsOn);
+        onSelectDateRange([start, end]);
+    };
+
     useEffect(() => {
         setTemporaryDate(undefined);
     }, [selectedDate]);
@@ -113,19 +124,19 @@ const MiniCalendar = ({
                 {hasCursors ? (
                     <>
                         <Tooltip title={todayTitle}>
-                            <Button icon shape="ghost" color="weak" onClick={() => onSelectDate(now)}>
+                            <Button icon shape="ghost" color="weak" size="small" onClick={() => onSelectDate(now)}>
                                 <Icon name="calendar-today" className="minicalendar-icon" />
                                 <span className="sr-only">{todayTitle}</span>
                             </Button>
                         </Tooltip>
                         <Tooltip title={prevMonth}>
-                            <Button icon shape="ghost" color="weak" onClick={() => handleSwitchMonth(-1)}>
+                            <Button icon shape="ghost" color="weak" size="small" onClick={() => handleSwitchMonth(-1)}>
                                 <Icon name="caret" className="rotateZ-90 minicalendar-icon" />
                                 <span className="sr-only">{prevMonth}</span>
                             </Button>
                         </Tooltip>
                         <Tooltip title={nextMonth}>
-                            <Button icon shape="ghost" color="weak" onClick={() => handleSwitchMonth(1)}>
+                            <Button icon shape="ghost" color="weak" size="small" onClick={() => handleSwitchMonth(1)}>
                                 <Icon name="caret" className="rotateZ-270 minicalendar-icon" />
                                 <span className="sr-only">{nextMonth}</span>
                             </Button>
@@ -135,12 +146,29 @@ const MiniCalendar = ({
             </div>
 
             <div
+                style={
+                    cellRect
+                        ? {
+                              '--cell-width': `${cellRect.width}px`,
+                          }
+                        : undefined
+                }
                 className={classnames([
                     'minicalendar-grid pl0-75 pr0-75 pb1',
                     displayWeekNumbers && 'with-weeknumbers',
                 ])}
             >
-                {displayWeekNumbers ? <WeekNumbers numberOfWeeks={numberOfWeeks} days={days} /> : null}
+                {displayWeekNumbers ? (
+                    <>
+                        <WeekNumbers
+                            numberOfWeeks={numberOfWeeks}
+                            days={days}
+                            onClickWeekNumber={handleClickWeekNumber}
+                            onSelectWeekRange={handleSelectWeekRange}
+                        />
+                        <Vr className="minicalendar-vr" aria-hidden="true" />
+                    </>
+                ) : null}
 
                 <WeekDays
                     numberOfDays={numberOfDays}
@@ -153,7 +181,6 @@ const MiniCalendar = ({
                 <MonthDays
                     min={min}
                     max={max}
-                    markers={markers}
                     numberOfWeeks={numberOfWeeks}
                     numberOfDays={numberOfDays}
                     days={days}
@@ -164,6 +191,7 @@ const MiniCalendar = ({
                     now={now}
                     activeDate={activeDate}
                     selectedDate={selectedDate}
+                    cellRef={cellRef}
                 />
             </div>
         </div>

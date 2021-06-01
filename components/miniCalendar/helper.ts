@@ -1,5 +1,14 @@
-import { addWeeks, subWeeks, eachDayOfInterval, endOfWeek, startOfMonth, startOfWeek, isSameDay } from 'date-fns';
-import { WeekStartsOn } from './index.d';
+import {
+    addWeeks,
+    subWeeks,
+    eachDayOfInterval,
+    startOfMonth,
+    isSameDay,
+    setISOWeek,
+    startOfWeek,
+    endOfWeek,
+} from 'date-fns';
+import { DateTuple, WeekStartsOn } from './index.d';
 
 /**
  * Get all days to display in the mini calendar for a given date.
@@ -18,4 +27,11 @@ export const getDaysInMonth = (
     const end = endOfWeek(addWeeks(start, weeks), { weekStartsOn });
 
     return eachDayOfInterval({ start, end });
+};
+
+export const getDateTupleFromWeekNumber = (date: Date, weekNumber: number, weekStartsOn?: WeekStartsOn): DateTuple => {
+    const dateInWeek = setISOWeek(date, weekNumber);
+    const startDateInWeek = startOfWeek(dateInWeek, { weekStartsOn });
+    const endDateInWeek = endOfWeek(dateInWeek, { weekStartsOn });
+    return [startDateInWeek, endDateInWeek];
 };
