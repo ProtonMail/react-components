@@ -81,6 +81,16 @@ const getFeatures = (plan: Plan, service: PLAN_SERVICES, vpnCountries: VPNCountr
         ),
     };
 
+    const accessBlocked = {
+        content: c('Plan feature').t`Access blocked content`,
+        info: (
+            <Info
+                title={c('Info')
+                    .jt`Access blocked content, like social media, news, Wikipedia, YouTube, and many others, no matter where you are.`}
+            />
+        ),
+    };
+
     const vpnConnections = { content: getVpnConnectionsText(plan.MaxVPN) };
 
     if (planName === 'free_vpn') {
@@ -94,9 +104,7 @@ const getFeatures = (plan: Plan, service: PLAN_SERVICES, vpnCountries: VPNCountr
             },
             vpnConnections,
             { content: c('Plan feature').t`Medium speed` },
-            { ...adBlocker, notIncluded: true },
-            { ...secureCore, notIncluded: true },
-            { ...streamingService, notIncluded: true },
+            accessBlocked,
         ];
     }
 
@@ -111,9 +119,8 @@ const getFeatures = (plan: Plan, service: PLAN_SERVICES, vpnCountries: VPNCountr
             },
             vpnConnections,
             { content: c('Plan feature').t`High speed` },
-            { ...adBlocker, notIncluded: true },
-            { ...secureCore, notIncluded: true },
-            { ...streamingService, notIncluded: true },
+            accessBlocked,
+            adBlocker,
         ];
     }
 

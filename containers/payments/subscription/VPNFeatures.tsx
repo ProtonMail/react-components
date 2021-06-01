@@ -54,7 +54,7 @@ const getFeatures = (vpnCountries: VPNCountries, planNamesMap: { [key: string]: 
             tooltip: c('Tooltip')
                 .t`NetShield protects your device and speeds up your browsing by blocking ads, trackers, and malware.`,
             free: EmDash,
-            [PLANS.VPNBASIC]: EmDash,
+            [PLANS.VPNBASIC]: <CheckIcon />,
             [PLANS.VPNPLUS]: <CheckIcon />,
             [PLANS.VISIONARY]: <CheckIcon />,
         },
@@ -68,8 +68,8 @@ const getFeatures = (vpnCountries: VPNCountries, planNamesMap: { [key: string]: 
             [PLANS.VISIONARY]: <CheckIcon />,
         },
         {
-            name: 'content',
-            label: c('VPN feature').t`Specific content unlocking`,
+            name: 'streaming',
+            label: c('VPN feature').t`Streaming service support`,
             tooltip: c('Tooltip')
                 .t`Access geo-blocked content (Netflix, Amazon Prime Video, BBC iPlayer, Wikipedia, Facebook, YouTube, etc) no matter where you are.`,
             free: EmDash,
@@ -125,8 +125,8 @@ const getFeatures = (vpnCountries: VPNCountries, planNamesMap: { [key: string]: 
         {
             name: 'access blocked content',
             label: c('VPN feature').t`Access blocked content`,
-            free: EmDash,
-            [PLANS.VPNBASIC]: EmDash,
+            free: <CheckIcon />,
+            [PLANS.VPNBASIC]: <CheckIcon />,
             [PLANS.VPNPLUS]: <CheckIcon />,
             [PLANS.VISIONARY]: <CheckIcon />,
         },
