@@ -161,6 +161,7 @@ const MergeContactPreview = ({
                     beMergedModel={beMergedModel}
                     beDeletedModel={beDeletedModel}
                     totalBeMerged={beMergedIDs.length}
+                    totalBeDeleted={beDeletedIDs.length}
                     onFinish={handleFinish}
                 />
             ),
