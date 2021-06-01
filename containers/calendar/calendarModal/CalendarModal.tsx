@@ -56,7 +56,7 @@ export const CalendarModal = ({
         return (option && option.text) || '';
     }, [model.addressID, model.addressOptions]);
 
-    const isOtherCalendar = initialCalendar?.Type !== CALENDAR_TYPE.PERSONAL;
+    const isOtherCalendar = initialCalendar && initialCalendar.Type !== CALENDAR_TYPE.PERSONAL;
 
     const { error: setupError, loading: loadingSetup } = useGetCalendarSetup({ calendar: initialCalendar, setModel });
     const { handleCreateCalendar, handleUpdateCalendar } = useGetCalendarActions({
