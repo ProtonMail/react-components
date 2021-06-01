@@ -17,6 +17,7 @@ import { Vr } from '../vr';
 
 export interface Props {
     hasCursors?: boolean;
+    hasToday?: boolean;
     now?: Date;
     date: Date;
     dateRange?: DateTuple;
@@ -38,6 +39,7 @@ export interface Props {
 
 const MiniCalendar = ({
     hasCursors = true,
+    hasToday = false,
     now = new Date(),
     date: selectedDate,
     min,
@@ -121,14 +123,18 @@ const MiniCalendar = ({
         <div className="minicalendar" onMouseDown={preventLeaveFocus} aria-label={monthLabel}>
             <div className="flex flex-align-items-center flex-nowrap p1">
                 <span className="text-bold flex-item-fluid text-ellipsis">{monthLabel}</span>
+
+                {hasToday ? (
+                    <Tooltip title={todayTitle}>
+                        <Button icon shape="ghost" color="weak" size="small" onClick={() => onSelectDate(now)}>
+                            <Icon name="calendar-today" className="minicalendar-icon" />
+                            <span className="sr-only">{todayTitle}</span>
+                        </Button>
+                    </Tooltip>
+                ) : null}
+
                 {hasCursors ? (
                     <>
-                        <Tooltip title={todayTitle}>
-                            <Button icon shape="ghost" color="weak" size="small" onClick={() => onSelectDate(now)}>
-                                <Icon name="calendar-today" className="minicalendar-icon" />
-                                <span className="sr-only">{todayTitle}</span>
-                            </Button>
-                        </Tooltip>
                         <Tooltip title={prevMonth}>
                             <Button icon shape="ghost" color="weak" size="small" onClick={() => handleSwitchMonth(-1)}>
                                 <Icon name="caret" className="rotateZ-90 minicalendar-icon" />
