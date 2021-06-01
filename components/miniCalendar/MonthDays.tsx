@@ -124,21 +124,21 @@ const MonthDays = ({
                     (rangeStart && isSameDay(rangeStart, dayDate));
                 const isPressed = selectedDate ? isSameDay(selectedDate, dayDate) || isInterval : false;
 
-                // only for CSS layout: beginning/end of week OR beginning/end of interval in week
-                const isIntervalBoundBegin =
+                // only for CSS layout: start/end of week OR start/end of interval in week
+                const isIntervalBoundStart =
                     (isInterval && i % numberOfDays === 0) ||
                     (isInterval && rangeStart && isSameDay(rangeStart, dayDate));
                 const isIntervalBoundEnd =
                     (isInterval && i % numberOfDays === numberOfDays - 1) ||
                     (isInterval && rangeEnd && isSameDay(rangeEnd, dayDate)) ||
-                    (!rangeEnd && isIntervalBoundBegin);
+                    (!rangeEnd && isIntervalBoundStart);
 
                 const className = classnames([
                     'minicalendar-day no-pointer-events-children',
-                    !isActiveMonth && 'minicalendar-day--inactive-month',
-                    isIntervalBoundBegin && 'minicalendar-day--range-bound-begin',
-                    isIntervalBoundEnd && 'minicalendar-day--range-bound-end',
+                    !isActiveMonth && 'minicalendar-day--out-of-month',
                     isInterval && 'minicalendar-day--range',
+                    isIntervalBoundStart && 'minicalendar-day--range-bound-start',
+                    isIntervalBoundEnd && 'minicalendar-day--range-bound-end',
                     selectedDate && isSameDay(selectedDate, dayDate) && 'minicalendar-day--selected',
                 ]);
 
