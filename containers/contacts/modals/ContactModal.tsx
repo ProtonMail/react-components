@@ -89,8 +89,6 @@ const ContactModal = ({
     const [modelContactEmails, setModelContactEmails] = useState<SimpleMap<ContactEmailModel>>({});
     const applyGroups = useApplyGroups();
 
-    console.log('ContactModal', allProperties, modelContactEmails);
-
     const title = contactID ? c('Title').t`Edit contact` : c('Title').t`Create contact`;
 
     const nameProperty = useMemo(
