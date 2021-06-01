@@ -115,16 +115,18 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
             const config = UID ? rest : withLocaleHeaders(localeCode, rest);
             return callWithApiHandlers(config)
                 .then((response) => {
+                    setApiStatus(defaultApiStatus);
                     const serverTime = getDateHeader(response.headers);
                     if (serverTime) {
+                        setApiStatus({ serverTime });
                         updateServerTime(serverTime);
                     }
-                    setApiStatus(defaultApiStatus);
                     return output === 'stream' ? response.body : response[output]();
                 })
                 .catch((e) => {
                     const serverTime = e.response?.headers ? getDateHeader(e.response.headers) : undefined;
                     if (serverTime) {
+                        setApiStatus({ serverTime });
                         updateServerTime(serverTime);
                     }
 
