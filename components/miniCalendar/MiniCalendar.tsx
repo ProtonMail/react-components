@@ -35,6 +35,7 @@ export interface Props {
     formatDay?: (a1: Date) => string;
     weekStartsOn?: WeekStartsOn;
     numberOfDays?: number;
+    fixedSize?: boolean;
 }
 
 const MiniCalendar = ({
@@ -70,6 +71,7 @@ const MiniCalendar = ({
     numberOfDays = 7,
     numberOfWeeks = 6,
     displayWeekNumbers = false,
+    fixedSize = false,
 }: Props) => {
     const [temporaryDate, setTemporaryDate] = useState<Date | undefined>();
     const cellRef = useRef<HTMLLIElement>(null);
@@ -152,16 +154,11 @@ const MiniCalendar = ({
             </div>
 
             <div
-                style={
-                    cellRect
-                        ? {
-                              '--cell-width': `${cellRect.width}px`,
-                          }
-                        : undefined
-                }
+                style={cellRect ? { '--computed-cell-width': `${cellRect.width}px` } : undefined}
                 className={classnames([
                     'minicalendar-grid pl0-75 pr0-75 pb1',
                     displayWeekNumbers && 'with-weeknumbers',
+                    fixedSize && 'is-fixed-size',
                 ])}
             >
                 {displayWeekNumbers ? (
