@@ -11,12 +11,11 @@ import MergingModalContent from './MergingModalContent';
 
 interface Props extends ComponentProps<typeof FormModal> {
     contacts: ContactFormatted[][];
-    contactID: string;
     userKeysList: DecryptedKey[];
     onMerged: () => void;
 }
 
-const MergeModal = ({ contacts, contactID, userKeysList, onMerged, ...rest }: Props) => {
+const MergeModal = ({ contacts, userKeysList, onMerged, ...rest }: Props) => {
     const { call } = useEventManager();
 
     const [isMerging, setIsMerging] = useState(false);
@@ -94,7 +93,6 @@ const MergeModal = ({ contacts, contactID, userKeysList, onMerged, ...rest }: Pr
                 title: c('Title').t`Merge contacts`,
                 content: (
                     <MergeModalContent
-                        contactID={contactID}
                         userKeysList={userKeysList}
                         model={model}
                         updateModel={setModel}
@@ -126,7 +124,6 @@ const MergeModal = ({ contacts, contactID, userKeysList, onMerged, ...rest }: Pr
             hasClose: false,
             content: (
                 <MergingModalContent
-                    contactID={contactID}
                     userKeysList={userKeysList}
                     beMergedModel={beMergedModel}
                     beDeletedModel={beDeletedModel}

@@ -37,15 +37,11 @@ const ContactsWidgetContainer = ({ onClose, onImport, onCompose, onMailTo, custo
 
     const [search, setSearch] = useState('');
 
-    // There is no contact "opened" in the widget
-    const contactID = '';
-
     // To use when the widget will deal with groups
     const contactGroupID = '';
 
     const contactList = useContactList({
         search,
-        contactID,
         contactGroupID,
     });
 
@@ -178,7 +174,6 @@ const ContactsWidgetContainer = ({ onClose, onImport, onCompose, onMailTo, custo
         createModal(
             <MergeModal
                 contacts={contacts}
-                contactID={contactID}
                 userKeysList={userKeysList}
                 onMerged={() => handleCheckAll(false)} // Unselect all contacts
             />
@@ -245,7 +240,6 @@ const ContactsWidgetContainer = ({ onClose, onImport, onCompose, onMailTo, custo
                 ) : null}
                 {showList ? (
                     <ContactsList
-                        contactID={contactID}
                         totalContacts={contactsLength}
                         contacts={formattedContacts}
                         contactGroupsMap={contactGroupsMap}

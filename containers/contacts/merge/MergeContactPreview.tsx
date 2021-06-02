@@ -155,7 +155,6 @@ const MergeContactPreview = ({
             hasClose: false,
             content: (
                 <MergingModalContent
-                    contactID={contactID}
                     userKeysList={userKeysList}
                     alreadyMerged={model.mergedContact as ContactProperties}
                     beMergedModel={beMergedModel}

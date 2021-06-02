@@ -1,6 +1,5 @@
 import { processApiRequestsSafe } from 'proton-shared/lib/api/helpers/safeApiRequests';
 import React, { useState, useEffect, useMemo } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
 import { c } from 'ttag';
 import { getContact, addContacts, deleteContacts } from 'proton-shared/lib/api/contacts';
 import { splitKeys } from 'proton-shared/lib/keys/keys';
@@ -27,7 +26,6 @@ const { SINGLE_SUCCESS } = API_CODES;
 type Signal = { signal: AbortSignal };
 
 interface Props {
-    contactID: string;
     userKeysList: DecryptedKey[];
     alreadyMerged?: ContactProperties;
     beMergedModel: { [ID: string]: string[] };
@@ -38,7 +36,6 @@ interface Props {
 }
 
 const MergingModalContent = ({
-    contactID,
     userKeysList,
     alreadyMerged,
     beMergedModel = {},
@@ -47,8 +44,6 @@ const MergingModalContent = ({
     totalBeDeleted = 0,
     onFinish,
 }: Props) => {
-    const history = useHistory();
-    const location = useLocation();
     const api = useApi();
     const { privateKeys, publicKeys } = useMemo(() => splitKeys(userKeysList), []);
 
@@ -199,10 +194,6 @@ const MergingModalContent = ({
                         setModel((model) => ({ ...model, submitted: [...model.submitted, ...groupIDs] }));
                     }
                     beDeletedBatchIDs.push(...beDeletedAfterMergeIDs);
-                    if (!signal.aborted && beDeletedAfterMergeIDs.includes(contactID)) {
-                        // if the current contact is merged, update URL
-                        history.replace({ ...location, state: { ignoreClose: true }, pathname: `/${ID}` });
-                    }
                 } else if (!signal.aborted) {
                     setModel((model) => ({ ...model, failedOnSubmit: [...model.failedOnSubmit, ...groupIDs] }));
                 }
@@ -243,13 +234,6 @@ const MergingModalContent = ({
             if (!signal.aborted && !!beDeletedIDs.length) {
                 setModel((model) => ({ ...model, deleted: [...model.deleted, ...beDeletedIDs] }));
                 await apiWithAbort(deleteContacts(beDeletedIDs));
-            }
-            if (!signal.aborted && beDeletedIDs.includes(contactID)) {
-                history.replace({
-                    ...location,
-                    state: { ignoreClose: true },
-                    pathname: `/${beDeletedModel[contactID]}`,
-                });
             }
         };
 
