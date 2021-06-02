@@ -5,11 +5,7 @@ import { Props as OptionProps } from '../option/Option';
 import SelectOptions from './SelectOptions';
 import useSelect, { SelectProvider } from './useSelect';
 import SelectButton from './SelectButton';
-
-export type FakeSelectChangeEvent<V> = {
-    value: V;
-    selectedIndex: number;
-};
+import { SelectChangeEvent } from './select';
 
 export interface Props<V>
     extends Omit<
@@ -39,10 +35,10 @@ export interface Props<V>
      * that instance of the Select.
      */
     getSearchableValue?: (value: V) => string;
-    onChange?: (e: FakeSelectChangeEvent<V>) => void;
+    loading?: boolean;
+    onChange?: (e: SelectChangeEvent<V>) => void;
     onClose?: () => void;
     onOpen?: () => void;
-    loading?: boolean;
 }
 
 const SelectTwo = <V extends any>({
@@ -65,39 +61,55 @@ const SelectTwo = <V extends any>({
 
     const searchClearTimeout = useRef<number | undefined>(undefined);
 
-    const selectedIndex = useMemo(() => {
-        const index = children.findIndex((child) => child.props.value === value);
-
-        return index !== -1 ? index : null;
-    }, [children, value]);
+    const allOptionValues = children.map((child) => child.props.value);
 
     const select = useSelect({
+        value,
+        options: allOptionValues,
+        numberOfItems: children.length,
         onChange,
         onOpen,
         onClose,
-        selected: selectedIndex,
-        numberOfItems: children.length,
     });
 
-    const { isOpen, open, close, setFocusedIndex, handleChange } = select;
-
-    const allOptionValues = children.map((child) => child.props.value);
+    const { isOpen, selectedIndex, open, close, setFocusedIndex, handleChange } = select;
 
     /*
      * Natural search-ability determined by whether or not all option values
-     * from the passed children are strings, there's also "unnatural" search-ability
-     * if the prop "getSearchableValue" is passed
+     * from the passed children are strings, there's also "unnatural" search-
+     * ability if the prop "getSearchableValue" is passed
+     *
+     * Another valid condition for the natural search-ability of the options
+     * is whether or not they all have a "title" attribute
      */
-    const isNaturallySearchable = allOptionValues.every((child) => typeof child === 'string');
+    const [allOptionChildrenAreStrings, allOptionsHaveTitles] = useMemo(
+        () => [
+            children.every((child) => typeof child.props.children === 'string'),
+            children.every((child) => Boolean(child.props.title)),
+        ],
+        [children]
+    );
+
+    const isNaturallySearchable = allOptionChildrenAreStrings || allOptionsHaveTitles;
 
     const isSearchable = isNaturallySearchable || Boolean(getSearchableValue);
 
-    useEffect(() => {
-        if (!search) {
-            return;
+    const searchableItems = useMemo(() => {
+        if (isNaturallySearchable) {
+            return allOptionChildrenAreStrings
+                ? (children.map((child) => child.props.children) as string[])
+                : children.map((child) => child.props.title);
         }
 
-        if (!isSearchable) {
+        if (getSearchableValue) {
+            return allOptionValues.map(getSearchableValue);
+        }
+
+        return [];
+    }, [allOptionChildrenAreStrings, children]);
+
+    useEffect(() => {
+        if (!search || !isSearchable) {
             return;
         }
 
@@ -107,14 +119,7 @@ const SelectTwo = <V extends any>({
             setSearch('');
         }, clearSearchAfter);
 
-        /*
-         * either getSearchableValue is provided or the values are naturally
-         * searchable meaning that they are all strings, therefore this
-         * type-cast is a safe assumption here
-         */
-        const indexOfMatchedOption = allOptionValues.findIndex((v) =>
-            (getSearchableValue?.(v) || String(v)).startsWith(search)
-        );
+        const indexOfMatchedOption = searchableItems.findIndex((v) => v.startsWith(search));
 
         if (indexOfMatchedOption !== -1) {
             setFocusedIndex(indexOfMatchedOption);

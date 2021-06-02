@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
 import useControlled from '../../hooks/useControlled';
 import { SelectChangeEvent } from './select';
 
 interface UseSelectOptions<V> {
+    value?: V;
+    options: V[];
     isOpen?: boolean;
-    selected: number | null;
     numberOfItems: number;
     onChange?: (e: SelectChangeEvent<V>) => void;
     onClose?: () => void;
@@ -13,10 +14,11 @@ interface UseSelectOptions<V> {
 }
 
 interface UseSelectOutput<V> {
-    open: () => void;
-    close: () => void;
     isOpen: boolean;
     focusedIndex: number | null;
+    selectedIndex: number | null;
+    open: () => void;
+    close: () => void;
     setFocusedIndex: (index: number) => void;
     focusPreviousIndex: () => void;
     focusNextIndex: () => void;
@@ -24,8 +26,9 @@ interface UseSelectOutput<V> {
 }
 
 const useSelect = <V,>({
+    value,
+    options,
     isOpen: controlledOpen,
-    selected,
     numberOfItems,
     onOpen,
     onClose,
@@ -35,10 +38,16 @@ const useSelect = <V,>({
 
     const [focusedIndex, setFocusedIndex] = useState<UseSelectOutput<V>['focusedIndex']>(null);
 
+    const selectedIndex = useMemo(() => {
+        const index = options.findIndex((option) => option === value);
+
+        return index !== -1 ? index : null;
+    }, [options, value]);
+
     const open = () => {
         onOpen?.();
         setIsOpen(true);
-        setFocusedIndex(selected || 0);
+        setFocusedIndex(selectedIndex || 0);
     };
 
     const close = () => {
@@ -71,6 +80,7 @@ const useSelect = <V,>({
         focusPreviousIndex,
         focusNextIndex,
         handleChange,
+        selectedIndex,
     };
 };
 
