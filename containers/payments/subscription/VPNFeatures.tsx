@@ -16,15 +16,6 @@ const EmDash = '—';
 const getFeatures = (vpnCountries: VPNCountries, planNamesMap: { [key: string]: Plan }): VPNFeature[] => {
     const mailAppName = getAppName(APPS.PROTONMAIL);
 
-    const basicCountries = vpnCountries[PLANS.VPNBASIC].count.toString().split('');
-    const basicCountriesDisplayCount = parseInt(
-        basicCountries.reduce((acc, curr, index) => {
-            acc += index === 0 ? curr : '0';
-            return acc;
-        }, ''),
-        10
-    );
-
     return [
         {
             name: 'connections',
@@ -40,7 +31,7 @@ const getFeatures = (vpnCountries: VPNCountries, planNamesMap: { [key: string]: 
             free: c('VPN feature option').t`Medium`,
             [PLANS.VPNBASIC]: c('VPN feature option').t`High`,
             [PLANS.VPNPLUS]: c('VPN feature option').t`Highest (up to 10 Gbps)`,
-            [PLANS.VISIONARY]: c('VPN feature option').t`Highest (10 Gbps)`,
+            [PLANS.VISIONARY]: c('VPN feature option').t`Highest (up to 10 Gbps)`,
         },
         {
             name: 'servers',
@@ -54,7 +45,7 @@ const getFeatures = (vpnCountries: VPNCountries, planNamesMap: { [key: string]: 
             name: 'countries',
             label: c('VPN feature').t`Locations/Countries`,
             free: `${vpnCountries.free_vpn.count} (US, NL, JP)`,
-            [PLANS.VPNBASIC]: `${basicCountriesDisplayCount}+`,
+            [PLANS.VPNBASIC]: `${vpnCountries[PLANS.VPNBASIC].count}+`,
             [PLANS.VPNPLUS]: vpnCountries[PLANS.VPNPLUS].count,
             [PLANS.VISIONARY]: vpnCountries[PLANS.VPNPLUS].count,
         },
