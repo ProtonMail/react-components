@@ -37,6 +37,7 @@ export interface Props<V>
     getSearchableValue?: (value: V) => string;
     loading?: boolean;
     onChange?: (e: SelectChangeEvent<V>) => void;
+    onValue?: (value: V) => void;
     onClose?: () => void;
     onOpen?: () => void;
 }
@@ -50,6 +51,7 @@ const SelectTwo = <V extends any>({
     onClose,
     onOpen,
     onChange,
+    onValue,
     clearSearchAfter = 500,
     getSearchableValue,
     loading,
@@ -68,6 +70,7 @@ const SelectTwo = <V extends any>({
         options: allOptionValues,
         numberOfItems: children.length,
         onChange,
+        onValue,
         onOpen,
         onClose,
     });

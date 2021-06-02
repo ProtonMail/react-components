@@ -9,6 +9,7 @@ interface UseSelectOptions<V> {
     isOpen?: boolean;
     numberOfItems: number;
     onChange?: (e: SelectChangeEvent<V>) => void;
+    onValue?: (value: V) => void;
     onClose?: () => void;
     onOpen?: () => void;
 }
@@ -33,6 +34,7 @@ const useSelect = <V,>({
     onOpen,
     onClose,
     onChange,
+    onValue,
 }: UseSelectOptions<V>): UseSelectOutput<V> => {
     const [isOpen, setIsOpen] = useControlled(controlledOpen, false);
 
@@ -69,6 +71,7 @@ const useSelect = <V,>({
 
     const handleChange: UseSelectOutput<V>['handleChange'] = (e) => {
         onChange?.(e);
+        onValue?.(e.value);
     };
 
     return {
