@@ -37,12 +37,8 @@ const ContactsWidgetContainer = ({ onClose, onImport, onCompose, onMailTo, custo
 
     const [search, setSearch] = useState('');
 
-    // To use when the widget will deal with groups
-    const contactGroupID = '';
-
     const contactList = useContactList({
         search,
-        contactGroupID,
     });
 
     const {
