@@ -101,14 +101,14 @@ const SearchableSelect = <V extends any>({
             }
 
             close();
-
-            setTimeout(() => {
-                setSearchValue('');
-            }, 150); // Matches the CSS transition length
         } else {
             open();
             setFocusedIndex(selectedIndex || 0);
         }
+    };
+
+    const handleClosed = () => {
+        setSearchValue('');
     };
 
     const handleDropdownContentKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -145,6 +145,7 @@ const SearchableSelect = <V extends any>({
 
             <Dropdown
                 isOpen={isOpen}
+                onClosed={handleClosed}
                 anchorRef={anchorRef}
                 onClose={close}
                 offset={4}
