@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
 import { HOUR } from 'proton-shared/lib/constants';
-import LearnMore from '../../components/link/LearnMore';
+import { captureMessage } from 'proton-shared/lib/helpers/sentry';
+import { Severity } from '@sentry/types';
+import { getBrowserLocale } from 'proton-shared/lib/i18n/helper';
 import TopBanner from './TopBanner';
 
 import useApiStatus from '../../hooks/useApiStatus';
@@ -19,7 +21,9 @@ const isOutOfSync = (serverTime?: Date) => {
 
 const TimeOutOfSyncTopBanner = () => {
     const [ignore, setIgnore] = useState(false);
-    const { serverTime } = useApiStatus();
+    const [logged, setLogged] = useState(false);
+
+    const { serverTime }: { serverTime?: Date } = useApiStatus();
 
     // We warn the user if the server time is too far off from local time.
     // We do not want the server to set arbitrary times, to avoid signature replay issues and more
@@ -27,10 +31,23 @@ const TimeOutOfSyncTopBanner = () => {
         return null;
     }
 
+    // Log warning to have an idea of how many clients might be affected
+    if (!logged) {
+        captureMessage('Client time difference larger than 24 hours', {
+            level: Severity.Info,
+            extra: {
+                locale: getBrowserLocale(),
+                localTime: new Date().toString(),
+                serverTime: serverTime!.toString(),
+            },
+        });
+        setLogged(true);
+    }
+
+    // TODO add 'Learn More' link once KB article is ready
     return (
         <TopBanner onClose={() => setIgnore(true)} className="bg-warning">
-            <span>{c('Warning').jt`Your local date & time settings seem to be out of sync.`} </span>
-            <LearnMore url="#TODO" />
+            {c('Warning').jt`Your local date & time settings seem to be out of sync.`}
         </TopBanner>
     );
 };
