@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { c } from 'ttag';
-import { Href } from '../../components';
+import { HOUR } from 'proton-shared/lib/constants';
+import LearnMore from '../../components/link/LearnMore';
 import TopBanner from './TopBanner';
 
 import useApiStatus from '../../hooks/useApiStatus';
 
-const MILLISECONDS_24_HOURS = 24 * 3600 * 1000;
 const isOutOfSync = (serverTime?: Date) => {
     if (serverTime === undefined) {
         return false;
@@ -14,7 +14,7 @@ const isOutOfSync = (serverTime?: Date) => {
     const timeDifference = Math.abs(serverTime.getTime() - Date.now());
     // We should allow at least a 14-hour time difference,
     // because of potential internal clock issues when using dual-boot with Windows and a different OS
-    return timeDifference > MILLISECONDS_24_HOURS;
+    return timeDifference > 24 * HOUR;
 };
 
 const TimeOutOfSyncTopBanner = () => {
@@ -27,14 +27,9 @@ const TimeOutOfSyncTopBanner = () => {
         return null;
     }
 
-    const learnMoreLink = (
-        <Href key="time-sync-learn-more-link" className="underline inline-block color-inherit" url="#TODO">{c('Link')
-            .t`Learn more`}</Href>
-    );
-
     return (
         <TopBanner onClose={() => setIgnore(true)} className="bg-warning">
-            {c('Warning').jt`Your local date & time settings seem to be out of sync. ${learnMoreLink}`}
+            {c('Warning').jt`Your local date & time settings seem to be out of sync. ${(<LearnMore url="#TODO" />)}`}
         </TopBanner>
     );
 };
