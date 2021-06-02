@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { c } from 'ttag';
 
-import { Select, Icon, ButtonLike, SettingsLink } from '../../components';
+import { Select, Icon, ButtonLike, SettingsLink, Card } from '../../components';
 import { useUser } from '../../hooks';
 
 import { SettingsParagraph, SettingsSectionWide } from '../account';
@@ -153,9 +153,14 @@ const ProtonMailBridgeSection = () => {
                 {c('Info').t`Restricted to desktop email clients e.g. Outlook, Apple Mail, Thunderbird.`}
             </SettingsParagraph>
 
-            <ButtonLike color="norm" as={SettingsLink} path="/dashboard" className="mt0-5">
-                {c('Action').t`Upgrade`}
-            </ButtonLike>
+            <Card className="flex flex-align-items-center mt1">
+                <p className="m0 mr2 flex-item-fluid">
+                    {c('Info').t`Upgrade to a paid plan to unlock IMAP/STMP support through ProtonMail Bridge.`}
+                </p>
+                <ButtonLike color="norm" as={SettingsLink} path="/dashboard">
+                    {c('Action').t`Upgrade`}
+                </ButtonLike>
+            </Card>
         </>
     );
 };
