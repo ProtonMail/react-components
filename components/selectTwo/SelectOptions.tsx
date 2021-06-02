@@ -7,10 +7,18 @@ import { SelectContext } from './useSelect';
 interface SelectOptionsProps<V> extends Omit<React.ComponentPropsWithoutRef<'ul'>, 'onChange'> {
     selected: number | null;
     children: React.ReactElement<OptionProps<V>>[];
+    disableFocusOnActive?: boolean;
     onChange: (e: SelectChangeEvent<V>) => void;
 }
 
-const SelectOptions = <V,>({ children, selected, onChange, onKeyDown, ...rest }: SelectOptionsProps<V>) => {
+const SelectOptions = <V,>({
+    children,
+    disableFocusOnActive = false,
+    selected,
+    onChange,
+    onKeyDown,
+    ...rest
+}: SelectOptionsProps<V>) => {
     const { focusedIndex, focusPreviousIndex, focusNextIndex, close } = useContext(SelectContext);
 
     const handleMenuKeydown = (e: React.KeyboardEvent<HTMLUListElement>) => {
@@ -49,6 +57,7 @@ const SelectOptions = <V,>({ children, selected, onChange, onKeyDown, ...rest }:
 
     const items = React.Children.map(children, (child, index) => {
         return React.cloneElement(child, {
+            disableFocusOnActive,
             selected: selected === index,
             active: focusedIndex === index,
             onChange: handleChildChange(index),

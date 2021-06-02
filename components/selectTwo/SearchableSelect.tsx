@@ -91,9 +91,7 @@ const SearchableSelect = <V extends any>({
     const { isOpen, selectedIndex, open, close, setFocusedIndex, handleChange } = select;
 
     const focusSearchInput = () => {
-        setTimeout(() => {
-            searchInputRef?.current?.focus();
-        }, 0);
+        searchInputRef?.current?.focus();
     };
 
     const handleAnchorClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -110,7 +108,6 @@ const SearchableSelect = <V extends any>({
         } else {
             open();
             setFocusedIndex(selectedIndex || 0);
-            focusSearchInput();
         }
     };
 
@@ -159,6 +156,7 @@ const SearchableSelect = <V extends any>({
                 <div onKeyDown={handleDropdownContentKeyDown}>
                     <div className="dropdown-search" ref={searchContainerRef}>
                         <SearchInput
+                            autoFocus
                             ref={searchInputRef}
                             value={searchValue}
                             onInput={onSearchChange}
@@ -169,7 +167,7 @@ const SearchableSelect = <V extends any>({
                     {options.length === 0 ? (
                         <div className="dropdown-search-no-result text-center">{noSearchResults}</div>
                     ) : (
-                        <SelectOptions selected={selectedIndex} onChange={handleChange}>
+                        <SelectOptions disableFocusOnActive selected={selectedIndex} onChange={handleChange}>
                             {options}
                         </SelectOptions>
                     )}
