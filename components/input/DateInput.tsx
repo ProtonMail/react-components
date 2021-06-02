@@ -170,6 +170,8 @@ const DateInput = ({
                     onSelectDate={handleClickDate}
                     displayWeekNumbers={displayWeekNumbers}
                     weekStartsOn={weekStartsOn}
+                    fixedSize
+                    hasToday
                 />
             </Dropdown>
         </>
