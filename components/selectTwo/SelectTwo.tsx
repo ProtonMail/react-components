@@ -1,29 +1,11 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import isDeepEqual from 'proton-shared/lib/helpers/isDeepEqual';
-import { c } from 'ttag';
 
-import { normalize } from 'proton-shared/lib/helpers/string';
 import { Dropdown } from '../dropdown';
 import { Props as OptionProps } from '../option/Option';
-import useControlled from '../../hooks/useControlled';
-import { classnames } from '../../helpers';
-import DropdownCaret from '../dropdown/DropdownCaret';
-import { CircleLoader } from '../loader';
-import { SearchInput } from '../input';
-
-const includesString = (str1: string, str2: string) => normalize(str1, true).indexOf(normalize(str2, true)) > -1;
-
-const arrayIncludesString = (arrayToSearch: string[], keyword: string) =>
-    arrayToSearch.some((str) => includesString(str, keyword));
-
-const defaultFilterFunction = <V,>(option: OptionProps<V>, keyword: string) =>
-    (option.title && includesString(option.title, keyword)) ||
-    (option.searchStrings && arrayIncludesString(option.searchStrings, keyword));
-
-export type FakeSelectChangeEvent<V> = {
-    value: V;
-    selectedIndex: number;
-};
+import SelectOptions from './SelectOptions';
+import useSelect, { SelectProvider } from './useSelect';
+import SelectButton from './SelectButton';
+import { SelectChangeEvent } from './select';
 
 export interface Props<V>
     extends Omit<
@@ -53,13 +35,11 @@ export interface Props<V>
      * that instance of the Select.
      */
     getSearchableValue?: (value: V) => string;
-    onChange?: (e: FakeSelectChangeEvent<V>) => void;
+    loading?: boolean;
+    onChange?: (e: SelectChangeEvent<V>) => void;
+    onValue?: (value: V) => void;
     onClose?: () => void;
     onOpen?: () => void;
-    loading?: boolean;
-    search?: boolean | ((option: OptionProps<V>) => void);
-    searchPlaceholder?: string;
-    noSearchResults?: string;
 }
 
 const SelectTwo = <V extends any>({
@@ -70,113 +50,84 @@ const SelectTwo = <V extends any>({
     isOpen: controlledOpen,
     onClose,
     onOpen,
-    onChange: onChangeProp,
+    onChange,
+    onValue,
     clearSearchAfter = 500,
     getSearchableValue,
     loading,
-    search,
-    searchPlaceholder,
-    noSearchResults = c('Select search results').t`No results found`,
     ...rest
 }: Props<V>) => {
     const anchorRef = useRef<HTMLButtonElement | null>(null);
 
-    const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
-
-    const [searchTyped, setSearchTyped] = useState('');
-    const [searchValue, setSearchValue] = useState('');
+    const [search, setSearch] = useState('');
 
     const searchClearTimeout = useRef<number | undefined>(undefined);
 
-    const searchContainerRef = useRef<HTMLDivElement>(null);
-    const searchInputRef = useRef<HTMLInputElement>(null);
-
-    const [isOpen, setIsOpen] = useControlled(controlledOpen, false);
-
     const allOptionValues = children.map((child) => child.props.value);
+
+    const select = useSelect({
+        value,
+        options: allOptionValues,
+        numberOfItems: children.length,
+        onChange,
+        onValue,
+        onOpen,
+        onClose,
+    });
+
+    const { isOpen, selectedIndex, open, close, setFocusedIndex, handleChange } = select;
 
     /*
      * Natural search-ability determined by whether or not all option values
-     * from the passed children are strings, there's also "unnatural" search-ability
-     * if the prop "getSearchableValue" is passed
+     * from the passed children are strings, there's also "unnatural" search-
+     * ability if the prop "getSearchableValue" is passed
+     *
+     * Another valid condition for the natural search-ability of the options
+     * is whether or not they all have a "title" attribute
      */
-    const isNaturallySearchable = allOptionValues.every((child) => typeof child === 'string');
+    const [allOptionChildrenAreStrings, allOptionsHaveTitles] = useMemo(
+        () => [
+            children.every((child) => typeof child.props.children === 'string'),
+            children.every((child) => Boolean(child.props.title)),
+        ],
+        [children]
+    );
+
+    const isNaturallySearchable = allOptionChildrenAreStrings || allOptionsHaveTitles;
 
     const isSearchable = isNaturallySearchable || Boolean(getSearchableValue);
 
-    const selectedIndex = useMemo(() => {
-        const index = children.findIndex((child) => child.props.value === value);
-
-        return index !== -1 ? index : null;
-    }, [children, value]);
-
-    const focusSearchInput = () => {
-        setTimeout(() => {
-            searchInputRef?.current?.focus();
-        }, 0);
-    };
-
-    useEffect(() => {
-        if (!searchTyped) {
-            return;
+    const searchableItems = useMemo(() => {
+        if (isNaturallySearchable) {
+            return allOptionChildrenAreStrings
+                ? (children.map((child) => child.props.children) as string[])
+                : children.map((child) => child.props.title);
         }
 
-        if (!isSearchable) {
+        if (getSearchableValue) {
+            return allOptionValues.map(getSearchableValue);
+        }
+
+        return [];
+    }, [allOptionChildrenAreStrings, children]);
+
+    useEffect(() => {
+        if (!search || !isSearchable) {
             return;
         }
 
         window.clearTimeout(searchClearTimeout.current);
 
         searchClearTimeout.current = window.setTimeout(() => {
-            setSearchTyped('');
+            setSearch('');
         }, clearSearchAfter);
 
-        /*
-         * either getSearchableValue is provided or the values are naturally
-         * searchable meaning that they are all strings, therefore this
-         * type-cast is a safe assumption here
-         */
-        const indexOfMatchedOption = allOptionValues.findIndex((v) =>
-            (getSearchableValue?.(v) || String(v)).startsWith(searchTyped)
-        );
+        const indexOfMatchedOption = searchableItems.findIndex((v) => v.startsWith(search));
 
         if (indexOfMatchedOption !== -1) {
             setFocusedIndex(indexOfMatchedOption);
         }
-    }, [searchTyped]);
-
-    const open = () => {
-        onOpen?.();
-        setIsOpen(true);
-        setFocusedIndex(selectedIndex || 0);
-
-        focusSearchInput();
-    };
-
-    const close = (event?: React.MouseEvent<HTMLDivElement> | Event) => {
-        if (event?.target instanceof Node && searchContainerRef?.current?.contains(event.target)) {
-            return;
-        }
-
-        onClose?.();
-        setIsOpen(false);
-
-        setTimeout(() => {
-            setSearchValue('');
-        }, 150); // Matches the CSS transition length
-    };
-
-    const goToPreviousItem = () => {
-        if (focusedIndex !== null && focusedIndex !== 0) {
-            setFocusedIndex(focusedIndex - 1);
-        }
-    };
-
-    const goToNextItem = () => {
-        if (focusedIndex !== null && focusedIndex !== children.length - 1) {
-            setFocusedIndex(focusedIndex + 1);
-        }
-    };
+    }, [search]);
 
     const handleAnchorClick = () => {
         if (isOpen) {
@@ -186,42 +137,11 @@ const SelectTwo = <V extends any>({
         }
     };
 
-    const handleAnchorKeydown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
-        switch (e.key) {
-            case ' ': {
-                open();
-                break;
-            }
-
-            default:
-        }
-    };
-
-    const handleChange = (event: FakeSelectChangeEvent<V>) => {
-        onChangeProp?.(event);
-    };
-
     const handleMenuKeydown = (e: React.KeyboardEvent<HTMLUListElement>) => {
-        switch (e.key) {
-            case 'ArrowUp': {
-                e.preventDefault();
-                goToPreviousItem();
-                break;
-            }
-
-            case 'ArrowDown': {
-                e.preventDefault();
-                goToNextItem();
-                break;
-            }
-
-            case 'Escape': {
-                close();
-                anchorRef.current?.focus();
-                break;
-            }
-
-            default:
+        if (e.key === 'Escape') {
+            close();
+            anchorRef.current?.focus();
+            return;
         }
 
         const isAlphanumeric = /^[a-z0-9]+$/i.test(e.key);
@@ -236,25 +156,9 @@ const SelectTwo = <V extends any>({
         if (isAlphanumeric && isSearchable && e.key.length === 1) {
             const { key } = e;
 
-            setSearchTyped((s) => s + key);
+            setSearch((s) => s + key);
         }
     };
-
-    const handleChildChange = (index: number) => (value: V) => {
-        handleChange({ value, selectedIndex: index });
-    };
-
-    const items = React.Children.map(children, (child, index) => {
-        const childValue = children[index].props.value;
-
-        const selected = isDeepEqual(childValue, value);
-
-        return React.cloneElement(child, {
-            selected,
-            active: focusedIndex === index,
-            onChange: handleChildChange(index),
-        });
-    });
 
     const selectedChild = selectedIndex || selectedIndex === 0 ? children[selectedIndex] : null;
 
@@ -262,58 +166,18 @@ const SelectTwo = <V extends any>({
 
     const ariaLabel = selectedChild?.props?.title;
 
-    const getOptions = (options = items) => {
-        if (!search || !searchValue) {
-            return options;
-        }
-
-        const filterFunction = typeof search === 'function' ? search : defaultFilterFunction;
-
-        const filteredOptions = options.filter((option) => filterFunction(option.props, searchValue));
-
-        if (!filteredOptions.length) {
-            return <div className="dropdown-search-no-result text-center">{noSearchResults}</div>;
-        }
-
-        return filteredOptions;
-    };
-
-    const onSearchChange = (event: React.FormEvent<HTMLInputElement>) => {
-        setSearchValue(event.currentTarget.value);
-
-        if (!event.currentTarget.value) {
-            focusSearchInput();
-        }
-    };
-
     return (
-        <>
-            <button
-                type="button"
-                className={classnames([
-                    'no-outline select field w100 flex flex-justify-space-between flex-align-items-center flex-nowrap',
-                    className,
-                ])}
-                ref={anchorRef}
+        <SelectProvider {...select}>
+            <SelectButton
+                isOpen={isOpen}
+                onOpen={open}
                 onClick={handleAnchorClick}
-                onKeyDown={handleAnchorKeydown}
-                aria-expanded={isOpen}
-                aria-busy={loading}
-                aria-live="assertive"
-                aria-atomic="true"
                 aria-label={ariaLabel}
+                ref={anchorRef}
                 {...rest}
             >
-                <span className="flex-item-fluid text-ellipsis text-left">{displayedValue}</span>
-                {loading ? (
-                    <CircleLoader className={classnames(['flex-item-noshrink', children ? 'ml0-5' : ''])} />
-                ) : (
-                    <DropdownCaret
-                        className={classnames(['flex-item-noshrink', children ? 'ml0-5' : ''])}
-                        isOpen={isOpen}
-                    />
-                )}
-            </button>
+                {displayedValue}
+            </SelectButton>
 
             <Dropdown
                 isOpen={isOpen}
@@ -323,23 +187,12 @@ const SelectTwo = <V extends any>({
                 noCaret
                 noMaxWidth
                 sameAnchorWidth
-                className={classnames([searchContainerRef?.current && 'dropdown--is-searchable'])}
             >
-                {!!search && (
-                    <div className="dropdown-search" ref={searchContainerRef}>
-                        <SearchInput
-                            ref={searchInputRef}
-                            value={searchValue}
-                            onInput={onSearchChange}
-                            placeholder={searchPlaceholder}
-                        />
-                    </div>
-                )}
-                <ul className="unstyled m0 p0" onKeyDown={handleMenuKeydown} data-testid="select-list">
-                    {getOptions()}
-                </ul>
+                <SelectOptions selected={selectedIndex} onKeyDown={handleMenuKeydown} onChange={handleChange}>
+                    {children}
+                </SelectOptions>
             </Dropdown>
-        </>
+        </SelectProvider>
     );
 };
 
