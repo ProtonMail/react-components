@@ -44,7 +44,7 @@ export interface Props<V>
     noSearchResults?: string;
 }
 
-const SelectTwo = <V extends any>({
+const SearchableSelect = <V extends any>({
     children,
     value,
     placeholder,
@@ -75,24 +75,20 @@ const SelectTwo = <V extends any>({
         const filteredOptions = children.filter((child) => filterFunction(child.props, searchValue));
 
         return filteredOptions;
-    }, [children, search]);
+    }, [children, search, searchValue]);
 
-    const selectedIndex = useMemo(() => {
-        const index = children.findIndex((child) => child.props.value === value);
-
-        return index !== -1 ? index : null;
-    }, [children, value]);
+    const optionValues = options.map((option) => option.props.value);
 
     const select = useSelect<V>({
         value,
-        options: options.map((option) => option.props.value),
+        options: optionValues,
         numberOfItems: children.length,
         onChange,
         onClose,
         onOpen,
     });
 
-    const { isOpen, open, close, setFocusedIndex, handleChange } = select;
+    const { isOpen, selectedIndex, open, close, setFocusedIndex, handleChange } = select;
 
     const focusSearchInput = () => {
         setTimeout(() => {
@@ -183,4 +179,4 @@ const SelectTwo = <V extends any>({
     );
 };
 
-export default SelectTwo;
+export default SearchableSelect;
