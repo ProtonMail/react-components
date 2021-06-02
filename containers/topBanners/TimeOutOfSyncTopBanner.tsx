@@ -29,7 +29,8 @@ const TimeOutOfSyncTopBanner = () => {
 
     return (
         <TopBanner onClose={() => setIgnore(true)} className="bg-warning">
-            {c('Warning').jt`Your local date & time settings seem to be out of sync. ${(<LearnMore url="#TODO" />)}`}
+            <span>{c('Warning').jt`Your local date & time settings seem to be out of sync.`} </span>
+            <LearnMore url="#TODO" />
         </TopBanner>
     );
 };
