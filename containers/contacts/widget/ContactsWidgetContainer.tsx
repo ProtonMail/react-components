@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef } from 'react';
+import React, { useState, useMemo } from 'react';
 import { c, msgid } from 'ttag';
 import { Recipient } from 'proton-shared/lib/interfaces';
 import { ContactEmail } from 'proton-shared/lib/interfaces/contacts';
@@ -33,7 +33,6 @@ const ContactsWidgetContainer = ({ onClose, onImport, onCompose, customActions }
     const { createModal } = useModals();
     const { createNotification } = useNotifications();
     const api = useApi();
-    const mergeContactBannerRef = useRef<HTMLDivElement>(null);
 
     const [search, setSearch] = useState('');
 
@@ -228,9 +227,7 @@ const ContactsWidgetContainer = ({ onClose, onImport, onCompose, customActions }
                     onClose={onClose}
                 />
             </div>
-            {showList && countMergeableContacts ? (
-                <MergeContactBanner mergeContactBannerRef={mergeContactBannerRef} onMerge={() => handleMerge(true)} />
-            ) : null}
+            {showList && countMergeableContacts ? <MergeContactBanner onMerge={() => handleMerge(true)} /> : null}
             <div className="flex-item-fluid w100">
                 {loading ? (
                     <div className="flex h100">
@@ -259,7 +256,6 @@ const ContactsWidgetContainer = ({ onClose, onImport, onCompose, customActions }
                         onCheck={handleCheck}
                         onClick={handleDetails}
                         activateDrag={false}
-                        mergeContactBannerRef={mergeContactBannerRef}
                     />
                 ) : null}
             </div>
