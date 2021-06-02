@@ -115,18 +115,20 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
             const config = UID ? rest : withLocaleHeaders(localeCode, rest);
             return callWithApiHandlers(config)
                 .then((response) => {
-                    setApiStatus(defaultApiStatus);
                     const serverTime = getDateHeader(response.headers);
-                    if (serverTime) {
-                        setApiStatus({ serverTime });
-                        updateServerTime(serverTime);
+                    if (serverTime === undefined) {
+                        // The HTTP Date header is mandatory, so this should never occur.
+                        // We need the server time for proper time sync:
+                        // falling back to the local time can result in e.g. unverifiable signatures
+                        throw new Error('Could not fetch server time');
                     }
+                    updateServerTime(serverTime);
+                    setApiStatus({ ...defaultApiStatus, serverTime });
                     return output === 'stream' ? response.body : response[output]();
                 })
                 .catch((e) => {
                     const serverTime = e.response?.headers ? getDateHeader(e.response.headers) : undefined;
-                    if (serverTime) {
-                        setApiStatus({ serverTime });
+                    if (serverTime !== undefined) {
                         updateServerTime(serverTime);
                     }
 
@@ -140,12 +142,14 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
                         setApiStatus({
                             apiUnreachable: isUnreachable ? errorMessage : '',
                             offline: isOffline,
+                            serverTime,
                         });
                         throw e;
                     }
                     setApiStatus({
                         apiUnreachable: defaultApiStatus.apiUnreachable,
                         offline: defaultApiStatus.offline,
+                        serverTime,
                     });
 
                     if (e.name === 'AbortError' || e.cancel) {
