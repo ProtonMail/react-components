@@ -38,7 +38,15 @@ const getFeatures = (plan: Plan, service: PLAN_SERVICES, vpnCountries: VPNCountr
     const primeVideo = <b key={3}>{c('Prime Video').t`Prime Video`}</b>;
     const many = <b key={4}>{c('Many Others').t`and many others`}</b>;
     const freeCountries = vpnCountries.free_vpn.count;
-    const basicCountries = vpnCountries[PLANS.VPNBASIC].count;
+    const basicCountries = vpnCountries[PLANS.VPNBASIC].count.toString().split('');
+    const basicCountriesDisplayCount = parseInt(
+        basicCountries.reduce((acc, curr, index) => {
+            acc += index === 0 ? curr : '0';
+            return acc;
+        }, ''),
+        10
+    );
+
     const plusCountries = vpnCountries[PLANS.VPNPLUS].count;
 
     const mailAppName = getAppName(APPS.PROTONMAIL);
@@ -112,9 +120,9 @@ const getFeatures = (plan: Plan, service: PLAN_SERVICES, vpnCountries: VPNCountr
         return [
             {
                 content: c('Plan feature').ngettext(
-                    msgid`350+ servers in ${basicCountries} country`,
-                    `350+ servers in ${basicCountries} countries`,
-                    basicCountries
+                    msgid`350+ servers in ${basicCountriesDisplayCount} country`,
+                    `350+ servers in ${basicCountriesDisplayCount}+ countries`,
+                    basicCountriesDisplayCount
                 ),
             },
             vpnConnections,
