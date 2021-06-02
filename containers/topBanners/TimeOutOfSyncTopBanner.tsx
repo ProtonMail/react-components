@@ -5,21 +5,23 @@ import TopBanner from './TopBanner';
 
 import useApiStatus from '../../hooks/useApiStatus';
 
-const MILLISECONDS_12_HOURS = 12 * 3600 * 1000;
+const MILLISECONDS_24_HOURS = 24 * 3600 * 1000;
 const isOutOfSync = (serverTime?: Date) => {
     if (serverTime === undefined) {
         return false;
     }
 
     const timeDifference = Math.abs(serverTime.getTime() - Date.now());
-    return timeDifference > MILLISECONDS_12_HOURS;
+    // We should allow at least a 14-hour time difference,
+    // because of potential internal clock issues when using dual-boot with Windows and a different OS
+    return timeDifference > MILLISECONDS_24_HOURS;
 };
 
 const TimeOutOfSyncTopBanner = () => {
     const [ignore, setIgnore] = useState(false);
     const { serverTime } = useApiStatus();
 
-    // We warn the user if the server time is too far off from local time
+    // We warn the user if the server time is too far off from local time.
     // We do not want the server to set arbitrary times, to avoid signature replay issues and more
     if (ignore || !isOutOfSync(serverTime)) {
         return null;
