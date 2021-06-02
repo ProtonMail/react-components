@@ -193,7 +193,7 @@ const ContactsWidgetContainer = ({ onClose, onImport, onCompose, customActions }
     const showList = !showPlaceholder;
 
     return (
-        <div className="flex-no-min-children flex-column flex-nowrap h100">
+        <div className="flex flex-column flex-nowrap h100">
             <div className="contacts-widget-search-container flex-item-noshrink">
                 <label htmlFor="id_contact-widget-search" className="sr-only">{c('Placeholder')
                     .t`Search for name or email`}</label>
