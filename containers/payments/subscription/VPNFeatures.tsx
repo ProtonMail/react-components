@@ -15,6 +15,16 @@ const EmDash = '—';
 
 const getFeatures = (vpnCountries: VPNCountries, planNamesMap: { [key: string]: Plan }): VPNFeature[] => {
     const mailAppName = getAppName(APPS.PROTONMAIL);
+
+    const basicCountries = vpnCountries[PLANS.VPNBASIC].count.toString().split('');
+    const basicCountriesDisplayCount = parseInt(
+        basicCountries.reduce((acc, curr, index) => {
+            acc += index === 0 ? curr : '0';
+            return acc;
+        }, ''),
+        10
+    );
+
     return [
         {
             name: 'connections',
@@ -44,7 +54,7 @@ const getFeatures = (vpnCountries: VPNCountries, planNamesMap: { [key: string]: 
             name: 'countries',
             label: c('VPN feature').t`Locations/Countries`,
             free: `${vpnCountries.free_vpn.count} (US, NL, JP)`,
-            [PLANS.VPNBASIC]: vpnCountries[PLANS.VPNBASIC].count,
+            [PLANS.VPNBASIC]: `${basicCountriesDisplayCount}+`,
             [PLANS.VPNPLUS]: vpnCountries[PLANS.VPNPLUS].count,
             [PLANS.VISIONARY]: vpnCountries[PLANS.VPNPLUS].count,
         },
