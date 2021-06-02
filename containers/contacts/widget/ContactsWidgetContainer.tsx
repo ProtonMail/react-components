@@ -189,7 +189,7 @@ const ContactsWidgetContainer = ({ onClose, onImport, onCompose, customActions }
 
     const loading = loadingContacts || loadingUser || loadingUserSettings || loadingUserKeys;
     const showPlaceholder = !loading && !contactsCount;
-    const showList = !showPlaceholder;
+    const showList = !loading && !showPlaceholder;
 
     return (
         <div className="flex flex-column flex-nowrap h100">
