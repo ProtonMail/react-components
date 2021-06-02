@@ -1,14 +1,9 @@
 @import '~design-system/scss/config/';
 
 .contacts-widget {
-	.dropdown-content {
-		/*min-height: 550px;
-		overflow: hidden;
-		min-width: 500px;
-		@include respond-to($breakpoint-small) {
-			min-width: 100%;
-		}*/
-	}
+	--min-width: 500px;
+	--min-height: 550px;
+
 	&-search-container,
 	&-toolbar,
 	.item-container {
