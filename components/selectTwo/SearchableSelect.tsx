@@ -84,11 +84,12 @@ const SelectTwo = <V extends any>({
     }, [children, value]);
 
     const select = useSelect<V>({
+        value,
+        options: options.map((option) => option.props.value),
+        numberOfItems: children.length,
         onChange,
         onClose,
         onOpen,
-        selected: selectedIndex,
-        numberOfItems: children.length,
     });
 
     const { isOpen, open, close, setFocusedIndex, handleChange } = select;
