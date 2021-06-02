@@ -5,7 +5,9 @@ import RightToLeftContext from './context';
 
 const Provider = ({ children }) => {
     // TODO: get initial state from settings, or derive from locale
-    const [isRTL, setRTL] = useState(false);
+    const [isRTL, setRTL] = useState(document.documentElement.lang === 'fa');
+
+    // console.log(document.documentElement.lang === 'fa');
 
     useEffect(() => {
         if (isRTL) {

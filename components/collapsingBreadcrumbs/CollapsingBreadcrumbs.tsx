@@ -43,7 +43,7 @@ const CollapsingBreadcrumbs = ({ breadcrumbs }: Props) => {
     );
 
     return (
-        <ul className="collapsing-breadcrumbs">
+        <ul className="collapsing-breadcrumbs unstyled">
             {groupedBreadcrumbs.map((group, i, arr) => {
                 const { key, text, highlighted, ...breadcrumbProps } = group instanceof Array ? group[0] : group;
                 const isLast = i === arr.length - 1;
