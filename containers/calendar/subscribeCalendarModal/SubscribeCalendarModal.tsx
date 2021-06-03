@@ -102,6 +102,7 @@ const SubscribeCalendarModal = ({ calendar: initialCalendar, ...rest }: Props) =
                                 {calendarURLLength}/{CALENDAR_URL_MAX_LENGTH}
                             </span>
                         }
+                        error={calendarURL && !isURLValid && c('Error message').t`Invalid URL`}
                         maxLength={CALENDAR_URL_MAX_LENGTH}
                         label={c('Subscribe to calendar modal').t`Calendar URL`}
                         value={calendarURL}
