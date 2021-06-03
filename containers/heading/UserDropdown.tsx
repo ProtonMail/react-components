@@ -39,7 +39,7 @@ const UserDropdown = (rest: Omit<Props, 'user' | 'isOpen' | 'onClick'>) => {
             const href = getAppHref(SSO_PATHS.SWITCH, APPS.PROTONACCOUNT);
             const settingsApp = getAppFromPathnameSafe(window.location.pathname);
             const settingsSlug = settingsApp ? getSlugFromApp(settingsApp) : undefined;
-            const searchParams = `?service=${settingsSlug}`;
+            const searchParams = settingsSlug ? `?service=${settingsSlug}` : '';
             return document.location.assign(`${href}${searchParams}`);
         }
         return requestFork(APP_NAME, undefined, FORK_TYPE.SWITCH);
