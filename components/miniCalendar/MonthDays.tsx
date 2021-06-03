@@ -13,8 +13,8 @@ const getTargetDate = (target: any, days: Date[]) => {
 
 export interface Props {
     days: Date[];
-    onSelectDate: (a1: Date) => void;
-    onSelectDateRange: (a1: DateTuple) => void;
+    onSelectDate?: (a1: Date) => void;
+    onSelectDateRange?: (a1: DateTuple) => void;
     now: Date;
     selectedDate?: Date;
     activeDate: Date;
@@ -98,7 +98,7 @@ const MonthDays = ({
     const handleClick = ({ target }: React.MouseEvent<HTMLUListElement>) => {
         const value = getTargetDate(target, days);
         if (value) {
-            onSelectDate(value);
+            onSelectDate?.(value);
         }
     };
 

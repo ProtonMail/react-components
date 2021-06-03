@@ -1,7 +1,6 @@
 import React, { useMemo, useState, useEffect, FormEvent, useRef } from 'react';
 import { addMonths, endOfMonth, startOfMonth, format, isSameMonth } from 'date-fns';
 import { dateLocale } from 'proton-shared/lib/i18n';
-import { noop } from 'proton-shared/lib/helpers/function';
 
 import { useElementRect } from '../../hooks';
 import { getDaysInMonth, getDateTupleFromWeekNumber } from './helper';
@@ -46,8 +45,8 @@ const MiniCalendar = ({
     min,
     max,
     dateRange,
-    onSelectDate = noop,
-    onSelectDateRange = noop,
+    onSelectDate,
+    onSelectDateRange,
     formatDay = (date) => date.toString(),
     weekStartsOn = 1,
     weekdaysLong = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
@@ -105,15 +104,19 @@ const MiniCalendar = ({
         setTemporaryDate(newDate);
     };
 
-    const handleClickWeekNumber = (weekNumber: number) => {
-        onSelectDateRange(getDateTupleFromWeekNumber(activeDate, weekNumber, weekStartsOn));
-    };
+    const handleClickWeekNumber =
+        onSelectDateRange &&
+        ((weekNumber: number) => {
+            onSelectDateRange?.(getDateTupleFromWeekNumber(activeDate, weekNumber, weekStartsOn));
+        });
 
-    const handleSelectWeekRange = ([startWeekNumber, endWeekNuber]: [number, number]) => {
-        const [start] = getDateTupleFromWeekNumber(activeDate, startWeekNumber, weekStartsOn);
-        const [, end] = getDateTupleFromWeekNumber(activeDate, endWeekNuber, weekStartsOn);
-        onSelectDateRange([start, end]);
-    };
+    const handleSelectWeekRange =
+        onSelectDateRange &&
+        (([startWeekNumber, endWeekNuber]: [number, number]) => {
+            const [start] = getDateTupleFromWeekNumber(activeDate, startWeekNumber, weekStartsOn);
+            const [, end] = getDateTupleFromWeekNumber(activeDate, endWeekNuber, weekStartsOn);
+            onSelectDateRange?.([start, end]);
+        });
 
     useEffect(() => {
         setTemporaryDate(undefined);
@@ -128,7 +131,7 @@ const MiniCalendar = ({
 
                 {hasToday ? (
                     <Tooltip title={todayTitle}>
-                        <Button icon shape="ghost" color="weak" size="small" onClick={() => onSelectDate(now)}>
+                        <Button icon shape="ghost" color="weak" size="small" onClick={() => onSelectDate?.(now)}>
                             <Icon name="calendar-today" className="minicalendar-icon" />
                             <span className="sr-only">{todayTitle}</span>
                         </Button>
@@ -154,7 +157,7 @@ const MiniCalendar = ({
             </div>
 
             <div
-                style={cellRect ? { '--computed-cell-width': `${cellRect.width}px` } : undefined}
+                style={!fixedSize && cellRect ? { '--computed-cell-width': `${cellRect.width}px` } : undefined}
                 className={classnames([
                     'minicalendar-grid pl0-75 pr0-75 pb1',
                     displayWeekNumbers && 'with-weeknumbers',

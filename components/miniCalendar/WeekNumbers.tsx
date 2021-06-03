@@ -1,6 +1,7 @@
 import React, { useMemo, useRef, useState } from 'react';
 import { c } from 'ttag';
 import { getISOWeek } from 'date-fns';
+import { classnames } from '../../helpers';
 
 const getTargetWeek = (target: any) => {
     const idx = parseInt(target?.dataset?.i || '', 10);
@@ -12,7 +13,7 @@ const getTargetWeek = (target: any) => {
 export interface Props {
     days: Date[];
     numberOfWeeks: number;
-    onClickWeekNumber: (weekNumber: number) => void;
+    onClickWeekNumber?: (weekNumber: number) => void;
     onSelectWeekRange?: (arg: [number, number]) => void;
 }
 
@@ -91,7 +92,10 @@ const WeekNumbers = ({ days, numberOfWeeks, onClickWeekNumber, onSelectWeekRange
 
     return (
         <ul
-            className="minicalendar-weeknumbers unstyled m0 text-center"
+            className={classnames([
+                'minicalendar-weeknumbers unstyled m0 text-center',
+                !onSelectWeekRange && 'no-pointer-events-children',
+            ])}
             style={style}
             onMouseDown={handleMouseDown}
             onMouseOver={handleMouseOver}
@@ -111,8 +115,11 @@ const WeekNumbers = ({ days, numberOfWeeks, onClickWeekNumber, onSelectWeekRange
                             data-i={weekNumber}
                             aria-pressed={isPressed}
                             type="button"
-                            className="minicalendar-weeknumber"
-                            onClick={() => onClickWeekNumber(weekNumber)}
+                            className={classnames([
+                                'minicalendar-weeknumber',
+                                !onClickWeekNumber && 'no-pointer-events',
+                            ])}
+                            onClick={() => onClickWeekNumber?.(weekNumber)}
                         >
                             <span className="no-pointer-events">{weekNumber}</span>
                         </button>
