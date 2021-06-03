@@ -9,7 +9,6 @@ import {
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 import { UserModel } from 'proton-shared/lib/interfaces';
 
-import { omit } from 'proton-shared/lib/helpers/object';
 import { Badge, DropdownActions, Icon, Info, Table, TableBody, TableHeader, TableRow } from '../../../components';
 import useGetCalendarEmail from '../hooks/useGetCalendarEmail';
 
@@ -62,28 +61,27 @@ const CalendarsTable = ({
                         isSubscribe && calendar.SubscriptionParameters?.Status !== CALENDAR_SUBSCRIPTION_STATUS.OK;
 
                     const list: { text: string; onClick: () => void }[] = [
-                        {
-                            shouldShow: user.hasNonDelinquentScope,
+                        user.hasNonDelinquentScope && {
                             text: c('Action').t`Edit`,
                             onClick: () => onEdit(calendar),
                         },
-                        {
-                            shouldShow: !isSubscribe && !isDisabled && !isDefault && user.hasNonDelinquentScope,
-                            text: c('Action').t`Set as default`,
-                            onClick: () => onSetDefault(ID),
-                        },
-                        {
-                            shouldShow: !isSubscribe,
+                        !isSubscribe &&
+                            !isDisabled &&
+                            !isDefault &&
+                            user.hasNonDelinquentScope && {
+                                text: c('Action').t`Set as default`,
+                                onClick: () => onSetDefault(ID),
+                            },
+                        !isSubscribe && {
                             text: c('Action').t`Export ICS`,
                             onClick: () => onExport(calendar),
                         },
                         {
-                            shouldShow: true,
                             text: isSubscribe ? c('Action').t`Unsubscribe` : c('Action').t`Delete`,
                             actionType: 'delete',
                             onClick: () => onDelete(calendar),
                         },
-                    ].flatMap((item) => (isTruthy(item.shouldShow) ? omit(item, ['shouldShow']) : []));
+                    ].filter(isTruthy);
 
                     return (
                         <TableRow
