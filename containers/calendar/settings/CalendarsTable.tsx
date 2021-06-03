@@ -1,7 +1,11 @@
 import React from 'react';
 import { c } from 'ttag';
 import { getIsCalendarDisabled, getIsCalendarProbablyActive } from 'proton-shared/lib/calendar/calendar';
-import { CALENDAR_TYPE, CalendarWithPossibleSubscriptionParameters } from 'proton-shared/lib/interfaces/calendar';
+import {
+    CALENDAR_SUBSCRIPTION_STATUS,
+    CALENDAR_TYPE,
+    CalendarWithPossibleSubscriptionParameters,
+} from 'proton-shared/lib/interfaces/calendar';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 import { UserModel } from 'proton-shared/lib/interfaces';
 
@@ -54,7 +58,8 @@ const CalendarsTable = ({
                     const isActive = getIsCalendarProbablyActive(calendar);
                     const isDefault = ID === defaultCalendarID;
                     const isSubscribe = Type === CALENDAR_TYPE.SUBSCRIPTION;
-                    const isNotSynced = isSubscribe && calendar.SubscriptionParameters?.Status !== 0;
+                    const isNotSynced =
+                        isSubscribe && calendar.SubscriptionParameters?.Status !== CALENDAR_SUBSCRIPTION_STATUS.OK;
 
                     const list: { text: string; onClick: () => void }[] = [
                         {

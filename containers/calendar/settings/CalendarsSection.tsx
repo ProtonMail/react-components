@@ -1,7 +1,7 @@
 import {
     MAX_CALENDARS_PER_FREE_USER,
     MAX_CALENDARS_PER_USER,
-    SUBSCRIBED_CALENDAR_LIMIT,
+    MAX_SUBSCRIBED_CALENDARS_PER_USER,
 } from 'proton-shared/lib/calendar/constants';
 import React, { useEffect, useState } from 'react';
 import { c, msgid } from 'ttag';
@@ -168,7 +168,7 @@ const CalendarsSection = ({
     }
 
     const calendarsLimit = isOtherCalendarSection
-        ? SUBSCRIBED_CALENDAR_LIMIT
+        ? MAX_SUBSCRIBED_CALENDARS_PER_USER
         : user.isFree
         ? MAX_CALENDARS_PER_FREE_USER
         : MAX_CALENDARS_PER_USER;
