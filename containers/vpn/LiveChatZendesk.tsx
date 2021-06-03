@@ -78,7 +78,7 @@ const LiveChatZendesk = ({ zendeskKey, zendeskRef, name, email, onLoaded, locale
         if (!loaded) {
             return;
         }
-        handleRun({ identify: { name, email } });
+        handleRun({ prefill: { name: { value: name, readOnly: true }, email: { value: email, readOnly: true } } });
     }, [loaded, name, email]);
 
     useEffect(() => {
@@ -117,6 +117,10 @@ const LiveChatZendesk = ({ zendeskKey, zendeskRef, name, email, onLoaded, locale
             if (data.type === 'loaded') {
                 onLoaded();
                 setLoaded(true);
+                contentWindow.postMessage(
+                    { updateSettings: { webWidget: { color: { theme: '#02811A' } } } },
+                    targetOrigin
+                );
             }
         };
         window.addEventListener('message', handleMessage, false);
