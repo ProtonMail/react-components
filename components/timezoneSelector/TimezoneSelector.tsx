@@ -5,7 +5,7 @@ import { getTimeZoneOptions } from 'proton-shared/lib/date/timezone';
 
 import { Props as SelectProps } from '../selectTwo/SelectTwo';
 import { Option } from '../option';
-import { SelectTwo } from '../selectTwo';
+import { SearchableSelect } from '../selectTwo';
 
 interface Props extends Omit<SelectProps<string>, 'onChange' | 'children'> {
     timezone?: string;
@@ -32,7 +32,7 @@ export const TimezoneSelector = ({
     }, [date]);
 
     return (
-        <SelectTwo
+        <SearchableSelect
             disabled={loading || disabled}
             className={className}
             title={c('Action').t`Select timezone`}
@@ -45,7 +45,7 @@ export const TimezoneSelector = ({
             {...rest}
         >
             {timezoneOptions}
-        </SelectTwo>
+        </SearchableSelect>
     );
 };
 
