@@ -12,13 +12,11 @@ interface Props {
 
 const TruncatedText = ({ children, maxChars }: Props) => {
     const [isShowingMore, setIsShowingMore] = useState(false);
-    const childLength = children.length;
-    const lengthToShow = isShowingMore ? childLength : maxChars;
 
     return (
         <>
-            {isShowingMore ? children : truncate(children, lengthToShow)}{' '}
-            {childLength > maxChars && (
+            {isShowingMore ? children : truncate(children, maxChars)}{' '}
+            {children.length > maxChars && (
                 <InlineLinkButton
                     color="norm"
                     onClick={() => setIsShowingMore((prevState) => !prevState)}
