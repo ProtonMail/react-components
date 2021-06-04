@@ -65,19 +65,7 @@ const SearchableSelect = <V extends any>({
     const searchContainerRef = useRef<HTMLDivElement>(null);
     const searchInputRef = useRef<HTMLInputElement>(null);
 
-    const options = useMemo(() => {
-        if (!searchValue) {
-            return children;
-        }
-
-        const filterFunction = typeof search === 'function' ? search : defaultFilterFunction;
-
-        const filteredOptions = children.filter((child) => filterFunction(child.props, searchValue));
-
-        return filteredOptions;
-    }, [children, search, searchValue]);
-
-    const optionValues = options.map((option) => option.props.value);
+    const optionValues = children.map((option) => option.props.value);
 
     const select = useSelect<V>({
         value,
@@ -137,6 +125,23 @@ const SearchableSelect = <V extends any>({
 
     const ariaLabel = selectedChild?.props?.title;
 
+    const filteredOptions = useMemo(() => {
+        if (!searchValue) {
+            return children;
+        }
+
+        const filterFunction = typeof search === 'function' ? search : defaultFilterFunction;
+
+        const filteredOptions = children.filter((child) => filterFunction(child.props, searchValue));
+
+        return filteredOptions;
+    }, [children, search, searchValue]);
+
+    const selectedIndexInFilteredOptions =
+        typeof selectedIndex === 'number'
+            ? filteredOptions.findIndex((option) => children[selectedIndex] === option)
+            : null;
+
     return (
         <SelectProvider {...select}>
             <SelectButton isOpen={isOpen} onClick={handleAnchorClick} aria-label={ariaLabel} ref={anchorRef} {...rest}>
@@ -165,11 +170,15 @@ const SearchableSelect = <V extends any>({
                         />
                     </div>
 
-                    {options.length === 0 ? (
+                    {filteredOptions.length === 0 ? (
                         <div className="dropdown-search-no-result text-center">{noSearchResults}</div>
                     ) : (
-                        <SelectOptions disableFocusOnActive selected={selectedIndex} onChange={handleChange}>
-                            {options}
+                        <SelectOptions
+                            disableFocusOnActive
+                            selected={selectedIndexInFilteredOptions}
+                            onChange={handleChange}
+                        >
+                            {filteredOptions}
                         </SelectOptions>
                     )}
                 </div>
