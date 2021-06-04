@@ -115,7 +115,7 @@ const MiniCalendar = ({
         (([startWeekNumber, endWeekNumber]: [number, number]) => {
             const [start] = getDateTupleFromWeekNumber(activeDate, startWeekNumber, weekStartsOn);
             const [, end] = getDateTupleFromWeekNumber(activeDate, endWeekNuber, weekStartsOn);
-            onSelectDateRange?.([start, end]);
+            onSelectDateRange([start, end]);
         });
 
     useEffect(() => {
