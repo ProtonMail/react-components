@@ -240,44 +240,49 @@ export const CalendarModal = ({
                             </Row>
                         </>
                     )}
-                    <Row>
-                        <Label>{c('Label').t`Default notifications`}</Label>
-                        <div
-                            data-test-id="create-calendar/event-settings:default-notification"
-                            className="flex-item-fluid"
-                        >
-                            <Notifications
-                                notifications={model.partDayNotifications}
-                                canAdd={model.partDayNotifications.length < MAX_DEFAULT_NOTIFICATIONS}
-                                defaultNotification={model.defaultPartDayNotification}
-                                onChange={(notifications) => {
-                                    setModel({
-                                        ...model,
-                                        partDayNotifications: notifications,
-                                    });
-                                }}
-                            />
-                        </div>
-                    </Row>
-                    <Row>
-                        <Label>{c('Label').t`Default full day notifications`}</Label>
-                        <div
-                            data-test-id="create-calendar/event-settings:default-full-day-notification"
-                            className="flex-item-fluid"
-                        >
-                            <Notifications
-                                notifications={model.fullDayNotifications}
-                                canAdd={model.fullDayNotifications.length < MAX_DEFAULT_NOTIFICATIONS}
-                                defaultNotification={model.defaultFullDayNotification}
-                                onChange={(notifications) => {
-                                    setModel({
-                                        ...model,
-                                        fullDayNotifications: notifications,
-                                    });
-                                }}
-                            />
-                        </div>
-                    </Row>
+
+                    {!isOtherCalendar && (
+                        <>
+                            <Row>
+                                <Label>{c('Label').t`Default notifications`}</Label>
+                                <div
+                                    data-test-id="create-calendar/event-settings:default-notification"
+                                    className="flex-item-fluid"
+                                >
+                                    <Notifications
+                                        notifications={model.partDayNotifications}
+                                        canAdd={model.partDayNotifications.length < MAX_DEFAULT_NOTIFICATIONS}
+                                        defaultNotification={model.defaultPartDayNotification}
+                                        onChange={(notifications) => {
+                                            setModel({
+                                                ...model,
+                                                partDayNotifications: notifications,
+                                            });
+                                        }}
+                                    />
+                                </div>
+                            </Row>
+                            <Row>
+                                <Label>{c('Label').t`Default full day notifications`}</Label>
+                                <div
+                                    data-test-id="create-calendar/event-settings:default-full-day-notification"
+                                    className="flex-item-fluid"
+                                >
+                                    <Notifications
+                                        notifications={model.fullDayNotifications}
+                                        canAdd={model.fullDayNotifications.length < MAX_DEFAULT_NOTIFICATIONS}
+                                        defaultNotification={model.defaultFullDayNotification}
+                                        onChange={(notifications) => {
+                                            setModel({
+                                                ...model,
+                                                fullDayNotifications: notifications,
+                                            });
+                                        }}
+                                    />
+                                </div>
+                            </Row>
+                        </>
+                    )}
                 </>
             )}
         </FormModal>
