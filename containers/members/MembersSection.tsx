@@ -3,6 +3,7 @@ import { c, msgid } from 'ttag';
 import { normalize } from 'proton-shared/lib/helpers/string';
 import { DOMAIN_STATE } from 'proton-shared/lib/constants';
 import { Organization as tsOrganization, Domain, CachedOrganizationKey } from 'proton-shared/lib/interfaces';
+import { getOrganizationKeyInfo } from 'proton-shared/lib/organization/helper';
 import {
     Table,
     TableCell,
@@ -32,7 +33,6 @@ import MemberFeatures from './MemberFeatures';
 import MemberRole from './MemberRole';
 import RestoreAdministratorPrivileges from '../organization/RestoreAdministratorPrivileges';
 import MemberModal from './MemberModal';
-import { getOrganizationKeyInfo } from '../organization/helpers/organizationKeysHelper';
 import useDomainsAddresses from '../../hooks/useDomainsAddresses';
 
 const validateAddUser = (

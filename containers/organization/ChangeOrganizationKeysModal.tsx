@@ -24,11 +24,13 @@ interface Props {
     onClose?: () => void;
     hasOtherAdmins: boolean;
     nonPrivateMembers: Member[];
-    organizationKey: OpenPGPKey;
+    organizationKey?: OpenPGPKey;
+    mode?: 'reset';
 }
 
 const ChangeOrganizationKeysModal = ({
     onClose,
+    mode,
     hasOtherAdmins,
     nonPrivateMembers,
     organizationKey,
@@ -53,16 +55,12 @@ const ChangeOrganizationKeysModal = ({
         }
         setConfirmError('');
 
-        const {
-            privateKey,
-            privateKeyArmored,
-            backupKeySalt,
-            backupArmoredPrivateKey,
-        } = await generateOrganizationKeys({
-            keyPassword: authentication.getPassword(),
-            backupPassword: newPassword,
-            encryptionConfig: ENCRYPTION_CONFIGS[encryptionType],
-        });
+        const { privateKey, privateKeyArmored, backupKeySalt, backupArmoredPrivateKey } =
+            await generateOrganizationKeys({
+                keyPassword: authentication.getPassword(),
+                backupPassword: newPassword,
+                encryptionConfig: ENCRYPTION_CONFIGS[encryptionType],
+            });
 
         // Check this case for safety.
         if (nonPrivateMembers.length >= 1 && !organizationKey) {
@@ -75,12 +73,14 @@ const ChangeOrganizationKeysModal = ({
             )
         );
 
-        const tokens = await reEncryptOrganizationTokens({
-            nonPrivateMembers,
-            nonPrivateMembersAddresses,
-            oldOrganizationKey: organizationKey,
-            newOrganizationKey: privateKey,
-        });
+        const tokens = organizationKey
+            ? await reEncryptOrganizationTokens({
+                  nonPrivateMembers,
+                  nonPrivateMembersAddresses,
+                  oldOrganizationKey: organizationKey,
+                  newOrganizationKey: privateKey,
+              })
+            : [];
 
         const apiConfig = updateOrganizationKeys({
             PrivateKey: privateKeyArmored,
@@ -177,7 +177,7 @@ const ChangeOrganizationKeysModal = ({
 
     return (
         <FormModal
-            title={c('Title').t`Change organization keys`}
+            title={mode === 'reset' ? c('Title').t`Reset organization keys` : c('Title').t`Change organization keys`}
             close={c('Action').t`Close`}
             submit={c('Action').t`Save`}
             onClose={onClose}
