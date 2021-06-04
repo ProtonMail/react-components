@@ -122,16 +122,17 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
                         // falling back to the local time can result in e.g. unverifiable signatures
                         throw new Error('Could not fetch server time');
                     }
-                    updateServerTime(serverTime);
-                    setApiStatus({ ...defaultApiStatus, serverTimeUpdated: true });
+                    setApiStatus({
+                        ...defaultApiStatus,
+                        serverTime: updateServerTime(serverTime),
+                    });
                     return output === 'stream' ? response.body : response[output]();
                 })
                 .catch((e) => {
                     const serverTime = e.response?.headers ? getDateHeader(e.response.headers) : undefined;
-                    let serverTimeUpdated = false;
+                    const apiStatus = {};
                     if (serverTime) {
-                        updateServerTime(serverTime);
-                        serverTimeUpdated = true;
+                        apiStatus.serverTime = updateServerTime(serverTime);
                     }
 
                     const { code } = getApiError(e);
@@ -142,16 +143,16 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
 
                     if (isOffline || isUnreachable) {
                         setApiStatus({
+                            ...apiStatus,
                             apiUnreachable: isUnreachable ? errorMessage : '',
                             offline: isOffline,
-                            serverTimeUpdated,
                         });
                         throw e;
                     }
                     setApiStatus({
+                        ...apiStatus,
                         apiUnreachable: defaultApiStatus.apiUnreachable,
                         offline: defaultApiStatus.offline,
-                        serverTimeUpdated,
                     });
 
                     if (e.name === 'AbortError' || e.cancel) {

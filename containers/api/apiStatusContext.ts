@@ -4,7 +4,7 @@ export const defaultApiStatus = {
     offline: false,
     apiUnreachable: '',
     appVersionBad: false,
-    serverTimeUpdated: false,
+    serverTime: undefined,
 };
 
 export default createContext(defaultApiStatus);

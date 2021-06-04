@@ -3,7 +3,6 @@ import { c } from 'ttag';
 import { HOUR } from 'proton-shared/lib/constants';
 import { captureMessage } from 'proton-shared/lib/helpers/sentry';
 import { Severity } from '@sentry/types';
-import { serverTime } from 'pmcrypto';
 import TopBanner from './TopBanner';
 
 import useApiStatus from '../../hooks/useApiStatus';
@@ -17,12 +16,12 @@ const isOutOfSync = (serverTime: Date) => {
 
 const TimeOutOfSyncTopBanner = () => {
     const [ignore, setIgnore] = useState(false);
-    const { serverTimeUpdated }: { serverTimeUpdated: boolean } = useApiStatus();
+    const { serverTime }: { serverTime?: Date } = useApiStatus();
 
     // We warn the user if the server time is too far off from local time.
     // We do not want the server to set arbitrary times (either past or future), to avoid signature replay issues and more.
-    const showWarning = !ignore && serverTimeUpdated && isOutOfSync(serverTime());
 
+    const showWarning = !ignore && serverTime && isOutOfSync(serverTime);
     // Log warning to have an idea of how many clients might be affected
     const onceRef = useRef(false);
     useEffect(() => {
