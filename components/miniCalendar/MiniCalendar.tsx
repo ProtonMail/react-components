@@ -107,14 +107,14 @@ const MiniCalendar = ({
     const handleClickWeekNumber =
         onSelectDateRange &&
         ((weekNumber: number) => {
-            onSelectDateRange?.(getDateTupleFromWeekNumber(activeDate, weekNumber, weekStartsOn));
+            onSelectDateRange(getDateTupleFromWeekNumber(activeDate, weekNumber, weekStartsOn));
         });
 
     const handleSelectWeekRange =
         onSelectDateRange &&
         (([startWeekNumber, endWeekNumber]: [number, number]) => {
             const [start] = getDateTupleFromWeekNumber(activeDate, startWeekNumber, weekStartsOn);
-            const [, end] = getDateTupleFromWeekNumber(activeDate, endWeekNuber, weekStartsOn);
+            const [, end] = getDateTupleFromWeekNumber(activeDate, endWeekNumber, weekStartsOn);
             onSelectDateRange([start, end]);
         });
 
