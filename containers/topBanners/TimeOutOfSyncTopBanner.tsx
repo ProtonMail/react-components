@@ -3,7 +3,6 @@ import { c } from 'ttag';
 import { HOUR } from 'proton-shared/lib/constants';
 import { captureMessage } from 'proton-shared/lib/helpers/sentry';
 import { Severity } from '@sentry/types';
-import { getBrowserLocale } from 'proton-shared/lib/i18n/helper';
 import { serverTime } from 'pmcrypto';
 import TopBanner from './TopBanner';
 
@@ -33,11 +32,6 @@ const TimeOutOfSyncTopBanner = () => {
         onceRef.current = true;
         captureMessage('Client time difference larger than 24 hours', {
             level: Severity.Info,
-            extra: {
-                locale: getBrowserLocale(),
-                localTime: new Date().toString(),
-                serverTime: serverTime!.toString(),
-            },
         });
     }, []);
 
