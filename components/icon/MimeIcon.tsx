@@ -7,28 +7,28 @@ interface Props {
 }
 
 const sizesNamingMap = {
-    'small': 'sm',
-    'medium': 'md',
-    'large': 'lg'
-}
+    small: 'sm',
+    medium: 'md',
+    large: 'lg',
+};
+const viewboxMap = {
+    small: 16,
+    medium: 24,
+    large: 48,
+};
 const sizeMap = {
-    'small': 16,
-    'medium': 24,
-    'large': 48
-}
+    small: 16,
+    medium: 24,
+    large: 56,
+};
 
 const nameSpaceSvg = 'mime';
 
-
-const MimeIcon = (
-    { name, size = 'small', ...rest }: Props) => {
-
+const MimeIcon = ({ name, size = 'small', ...rest }: Props) => {
     const nameIcon = `${sizesNamingMap[size]}-${name}`;
-    const viewBox = `0 0 ${sizeMap[size]} ${sizeMap[size]}`;
+    const viewBox = `0 0 ${viewboxMap[size]} ${viewboxMap[size]}`;
 
-    return (
-            <Icon name={nameIcon} size={sizeMap[size]} viewBox={viewBox} nameSpaceSvg={nameSpaceSvg} {...rest} />
-    );
+    return <Icon name={nameIcon} size={sizeMap[size]} viewBox={viewBox} nameSpaceSvg={nameSpaceSvg} {...rest} />;
 };
 
 export default MimeIcon;
