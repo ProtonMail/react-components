@@ -5,12 +5,8 @@ import {
 } from 'proton-shared/lib/calendar/constants';
 import React, { useEffect, useState } from 'react';
 import { c, msgid } from 'ttag';
-import { getSubscriptionParameters, removeCalendar, updateCalendarUserSettings } from 'proton-shared/lib/api/calendars';
-import {
-    Calendar,
-    CalendarWithPossibleSubscriptionParameters,
-    CalendarSubscription,
-} from 'proton-shared/lib/interfaces/calendar';
+import { removeCalendar, updateCalendarUserSettings } from 'proton-shared/lib/api/calendars';
+import { Calendar, CalendarWithPossibleSubscriptionParameters } from 'proton-shared/lib/interfaces/calendar';
 import { Address, UserModel } from 'proton-shared/lib/interfaces';
 
 import { useApi, useEventManager, useModals, useNotifications } from '../../../hooks';
@@ -31,6 +27,7 @@ import CalendarsTable from './CalendarsTable';
 import { CalendarModal } from '../calendarModal';
 import { ExportModal } from '../exportModal';
 import SubscribeCalendarModal from '../subscribeCalendarModal/SubscribeCalendarModal';
+import { useGetCalendarSubscription } from '../hooks/useGetCalendarSubscription';
 
 interface Props {
     activeAddresses: Address[];
@@ -56,6 +53,7 @@ const CalendarsSection = ({
     const { createModal } = useModals();
     const [loadingMap, setLoadingMap] = useState({});
     const [enhancedCalendars, setEnhancedCalendars] = useState<CalendarWithPossibleSubscriptionParameters[]>();
+    const getCalendarSubscription = useGetCalendarSubscription();
 
     const defaultCalendarID = defaultCalendar?.ID;
     const hasDisabledCalendar = disabledCalendars.length > 0;
@@ -65,9 +63,7 @@ const CalendarsSection = ({
             if (isOtherCalendarSection) {
                 const enhanced = await Promise.all(
                     normalCalendars.map(async (calendar) => {
-                        const response = await api<{
-                            CalendarSubscription: CalendarSubscription;
-                        }>(getSubscriptionParameters(calendar.ID));
+                        const response = await getCalendarSubscription(calendar.ID);
 
                         return {
                             ...calendar,
