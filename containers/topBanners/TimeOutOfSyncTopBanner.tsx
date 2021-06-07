@@ -20,8 +20,8 @@ const TimeOutOfSyncTopBanner = () => {
 
     // We warn the user if the server time is too far off from local time.
     // We do not want the server to set arbitrary times (either past or future), to avoid signature replay issues and more.
-
     const showWarning = !ignore && serverTime && isOutOfSync(serverTime);
+
     // Log warning to have an idea of how many clients might be affected
     const onceRef = useRef(false);
     useEffect(() => {
@@ -32,7 +32,7 @@ const TimeOutOfSyncTopBanner = () => {
         captureMessage('Client time difference larger than 24 hours', {
             level: Severity.Info,
         });
-    }, []);
+    }, [showWarning]);
 
     if (!showWarning) {
         return null;
