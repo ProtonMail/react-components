@@ -159,16 +159,12 @@ const CalendarsSection = ({
 
     const handleExport = (calendar: Calendar) => createModal(<ExportModal calendar={calendar} />);
 
-    if (!enhancedCalendars) {
-        return <CircleLoader />;
-    }
-
     const calendarsLimit = isOtherCalendarSection
         ? MAX_SUBSCRIBED_CALENDARS_PER_USER
         : user.isFree
         ? MAX_CALENDARS_PER_FREE_USER
         : MAX_CALENDARS_PER_USER;
-    const isBelowLimit = enhancedCalendars.length < calendarsLimit;
+    const isBelowLimit = normalCalendars.length < calendarsLimit;
     const canAddCalendar = activeAddresses.length > 0 && isBelowLimit && user.hasNonDelinquentScope;
 
     const addCalendarString = isOtherCalendarSection
@@ -213,17 +209,23 @@ const CalendarsSection = ({
                         .t`A calendar is marked as disabled when it is linked to a disabled email address or a free @pm.me address. You can still access your disabled calendar and view events in read-only mode or delete them. You can enable the calendar by re-enabling the email address or upgrading your plan to use @pm.me addresses.`}
                 </SettingsParagraph>
             ) : null}
-            {!!enhancedCalendars.length && (
-                <CalendarsTable
-                    calendars={enhancedCalendars}
-                    defaultCalendarID={defaultCalendarID}
-                    user={user}
-                    onEdit={handleEdit}
-                    onSetDefault={handleSetDefault}
-                    onDelete={handleDelete}
-                    onExport={handleExport}
-                    loadingMap={loadingMap}
-                />
+            {!enhancedCalendars ? (
+                <div className="flex flex-justify-center">
+                    <CircleLoader />
+                </div>
+            ) : (
+                !!enhancedCalendars.length && (
+                    <CalendarsTable
+                        calendars={enhancedCalendars}
+                        defaultCalendarID={defaultCalendarID}
+                        user={user}
+                        onEdit={handleEdit}
+                        onSetDefault={handleSetDefault}
+                        onDelete={handleDelete}
+                        onExport={handleExport}
+                        loadingMap={loadingMap}
+                    />
+                )
             )}
         </SettingsSection>
     );
