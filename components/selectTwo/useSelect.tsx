@@ -90,7 +90,7 @@ const useSelect = <V,>({
 export default useSelect;
 
 /*
- * This purpose of this provider is merely to pass the value returned from
+ * The purpose of this provider is merely to pass the value returned from
  * useSelect down the tree for any composed children to consume.
  * As far as I'm aware there is no context provider api in pure hook fashion
  * so we have to use a component here.
