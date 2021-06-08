@@ -3,7 +3,7 @@ import {
     MAX_CALENDARS_PER_USER,
     MAX_SUBSCRIBED_CALENDARS_PER_USER,
 } from 'proton-shared/lib/calendar/constants';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { c, msgid } from 'ttag';
 import { removeCalendar, updateCalendarUserSettings } from 'proton-shared/lib/api/calendars';
 import { Calendar, CalendarWithPossibleSubscriptionParameters } from 'proton-shared/lib/interfaces/calendar';
@@ -27,7 +27,7 @@ import CalendarsTable from './CalendarsTable';
 import { CalendarModal } from '../calendarModal';
 import { ExportModal } from '../exportModal';
 import SubscribeCalendarModal from '../subscribeCalendarModal/SubscribeCalendarModal';
-import { useGetCalendarSubscription } from '../hooks/useGetCalendarSubscription';
+import useGetCalendarsWithSubscribe from '../hooks/useGetCalendarsWithSubscribe';
 
 interface Props {
     activeAddresses: Address[];
@@ -52,32 +52,10 @@ const CalendarsSection = ({
     const { createNotification } = useNotifications();
     const { createModal } = useModals();
     const [loadingMap, setLoadingMap] = useState({});
-    const [enhancedCalendars, setEnhancedCalendars] = useState<CalendarWithPossibleSubscriptionParameters[]>();
-    const getCalendarSubscription = useGetCalendarSubscription();
+    const enhancedCalendars = useGetCalendarsWithSubscribe(normalCalendars, isOtherCalendarSection);
 
     const defaultCalendarID = defaultCalendar?.ID;
     const hasDisabledCalendar = disabledCalendars.length > 0;
-
-    useEffect(() => {
-        (async () => {
-            if (isOtherCalendarSection) {
-                const enhanced = await Promise.all(
-                    normalCalendars.map(async (calendar) => {
-                        const response = await getCalendarSubscription(calendar.ID);
-
-                        return {
-                            ...calendar,
-                            SubscriptionParameters: response.CalendarSubscription,
-                        };
-                    })
-                );
-
-                return setEnhancedCalendars(enhanced);
-            }
-
-            setEnhancedCalendars(normalCalendars);
-        })();
-    }, [normalCalendars]);
 
     const handleCreate = () => {
         if (isOtherCalendarSection) {
