@@ -15,10 +15,16 @@ interface Props {
 }
 const ImportCsvTableRows = ({ preVcards, onToggle, onChangeField, onChangeType }: Props) => {
     const { field, type, display } = toVcard(preVcards) || {};
+    let formattedDisplay = display;
 
     if (field === 'n' || field === 'categories') {
         // Do not display N or CATEGORIES vcard fields since they cannot be edited from the contact modal
         return null;
+    }
+
+    // Display the date on a readable format
+    if (display && (field === 'bday' || field === 'anniversary')) {
+        formattedDisplay = display.slice(0, 10);
     }
 
     return (
@@ -39,8 +45,8 @@ const ImportCsvTableRows = ({ preVcards, onToggle, onChangeField, onChangeType }
                                     ) : null}
                                 </div>
                             </td>
-                            <td rowSpan={preVcards.length} className="text-ellipsis" title={display}>
-                                {display}
+                            <td rowSpan={preVcards.length} className="text-ellipsis" title={formattedDisplay}>
+                                {formattedDisplay}
                             </td>
                         </>
                     ) : null}
