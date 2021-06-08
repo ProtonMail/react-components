@@ -1,4 +1,4 @@
-import React, { useReducer, useRef } from 'react';
+import React, { useReducer, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import xhr from 'proton-shared/lib/fetch/fetch';
 import configureApi from 'proton-shared/lib/api';
@@ -17,6 +17,7 @@ import { withLocaleHeaders } from 'proton-shared/lib/fetch/headers';
 
 import ApiContext from './apiContext';
 import ApiStatusContext, { defaultApiStatus } from './apiStatusContext';
+import ApiServerTimeContext from './apiServerTimeContext';
 import { useModals, useNotifications } from '../../hooks';
 import UnlockModal from '../login/UnlockModal';
 import DelinquentModal from './DelinquentModal';
@@ -46,6 +47,7 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
     const { createNotification } = useNotifications();
     const { createModal } = useModals();
     const [apiStatus, setApiStatus] = useReducer(reducer, defaultApiStatus);
+    const [apiServerTime, setApiServerTime] = useState(undefined);
     const apiRef = useRef();
 
     if (!apiRef.current) {
@@ -122,17 +124,14 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
                         // falling back to the local time can result in e.g. unverifiable signatures
                         throw new Error('Could not fetch server time');
                     }
-                    setApiStatus({
-                        ...defaultApiStatus,
-                        serverTime: updateServerTime(serverTime),
-                    });
+                    setApiServerTime(updateServerTime(serverTime));
+                    setApiStatus(defaultApiStatus);
                     return output === 'stream' ? response.body : response[output]();
                 })
                 .catch((e) => {
                     const serverTime = e.response?.headers ? getDateHeader(e.response.headers) : undefined;
-                    const apiStatus = {};
                     if (serverTime) {
-                        apiStatus.serverTime = updateServerTime(serverTime);
+                        setApiServerTime(updateServerTime(serverTime));
                     }
 
                     const { code } = getApiError(e);
@@ -143,14 +142,12 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
 
                     if (isOffline || isUnreachable) {
                         setApiStatus({
-                            ...apiStatus,
                             apiUnreachable: isUnreachable ? errorMessage : '',
                             offline: isOffline,
                         });
                         throw e;
                     }
                     setApiStatus({
-                        ...apiStatus,
                         apiUnreachable: defaultApiStatus.apiUnreachable,
                         offline: defaultApiStatus.offline,
                     });
@@ -185,7 +182,9 @@ const ApiProvider = ({ config, onLogout, children, UID }) => {
 
     return (
         <ApiContext.Provider value={apiRef.current}>
-            <ApiStatusContext.Provider value={apiStatus}>{children}</ApiStatusContext.Provider>
+            <ApiStatusContext.Provider value={apiStatus}>
+                <ApiServerTimeContext.Provider value={apiServerTime}>{children}</ApiServerTimeContext.Provider>
+            </ApiStatusContext.Provider>
         </ApiContext.Provider>
     );
 };
