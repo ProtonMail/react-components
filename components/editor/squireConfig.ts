@@ -315,7 +315,7 @@ const wrapInsertHTML = (squire: any) => {
 
 export const initSquire = async (document: Document, onEllipseClick: () => void): Promise<any> => {
     insertCustomStyle(document);
-    const { default: Squire } = await import('squire-rte');
+    const { default: Squire } = await import('squire-rte/build/squire-raw');
 
     // Good old HTML management because there is no React or anything inside the iframe
     const title = c('Title').t`Expand content`;
