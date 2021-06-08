@@ -46,7 +46,6 @@ const SelectTwo = <V extends any>({
     children,
     value,
     placeholder,
-    className,
     isOpen: controlledOpen,
     onClose,
     onOpen,
