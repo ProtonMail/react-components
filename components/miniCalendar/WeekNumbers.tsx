@@ -2,6 +2,7 @@ import React, { useMemo, useRef, useState } from 'react';
 import { c } from 'ttag';
 import { getISOWeek } from 'date-fns';
 import { classnames } from '../../helpers';
+import { Tooltip } from '../tooltip';
 
 const getTargetWeek = (target: any) => {
     const idx = parseInt(target?.dataset?.i || '', 10);
@@ -111,18 +112,20 @@ const WeekNumbers = ({ days, numberOfWeeks, onClickWeekNumber, onSelectWeekRange
                       weekNumber <= (temporaryWeekRange[1] || temporaryWeekRange[0]);
                 return (
                     <li key={+monday}>
-                        <button
-                            data-i={weekNumber}
-                            aria-pressed={isPressed}
-                            type="button"
-                            className={classnames([
-                                'minicalendar-weeknumber',
-                                !onClickWeekNumber && 'no-pointer-events',
-                            ])}
-                            onClick={() => onClickWeekNumber?.(weekNumber)}
-                        >
-                            <span className="no-pointer-events">{weekNumber}</span>
-                        </button>
+                        <Tooltip title={`${c('Info').t`Week`} ${weekNumber}`} originalPlacement="bottom">
+                            <button
+                                data-i={weekNumber}
+                                aria-pressed={isPressed}
+                                type="button"
+                                className={classnames([
+                                    'minicalendar-weeknumber',
+                                    !onClickWeekNumber && 'no-pointer-events',
+                                ])}
+                                onClick={() => onClickWeekNumber?.(weekNumber)}
+                            >
+                                <span className="no-pointer-events">{weekNumber}</span>
+                            </button>
+                        </Tooltip>
                     </li>
                 );
             })}
