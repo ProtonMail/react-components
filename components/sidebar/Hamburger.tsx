@@ -3,9 +3,7 @@ import { c } from 'ttag';
 import Icon from '../icon/Icon';
 import Button, { ButtonProps } from '../button/Button';
 
-export type ErrorButtonProps = Omit<ButtonProps, 'color'>;
-
-interface Props extends React.HTMLAttributes<HTMLButtonElement> {
+interface Props extends ButtonProps {
     onToggle?: () => void;
     expanded?: boolean;
     sidebarId?: string;
