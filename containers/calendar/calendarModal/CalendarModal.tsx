@@ -1,8 +1,9 @@
+import { getIsSubscribedCalendar } from 'proton-shared/lib/calendar/subscribe/helpers';
 import React, { useState, useMemo, ChangeEvent } from 'react';
 import { c } from 'ttag';
 
 import { noop } from 'proton-shared/lib/helpers/function';
-import { CALENDAR_TYPE, CalendarWithPossibleSubscriptionParameters } from 'proton-shared/lib/interfaces/calendar';
+import { Calendar, SubscribedCalendar } from 'proton-shared/lib/interfaces/calendar';
 import { dedupeNotifications, sortNotificationsByAscendingTrigger } from 'proton-shared/lib/calendar/alarms';
 
 import { MAX_DEFAULT_NOTIFICATIONS, MAX_LENGTHS } from 'proton-shared/lib/calendar/constants';
@@ -30,8 +31,8 @@ import { TruncatedText } from '../../../components/truncatedText';
 const URL_MAX_DISPLAY_LENGTH = 100;
 
 interface Props {
-    calendar?: CalendarWithPossibleSubscriptionParameters;
-    activeCalendars?: CalendarWithPossibleSubscriptionParameters[];
+    calendar?: Calendar | SubscribedCalendar;
+    activeCalendars?: Calendar[];
     defaultCalendarID?: string;
     defaultColor?: boolean;
     onClose?: () => void;
@@ -56,7 +57,11 @@ export const CalendarModal = ({
         return (option && option.text) || '';
     }, [model.addressID, model.addressOptions]);
 
-    const isOtherCalendar = initialCalendar && initialCalendar.Type !== CALENDAR_TYPE.PERSONAL;
+    const isSubscribedCalendar = initialCalendar && getIsSubscribedCalendar(initialCalendar);
+    const subscribeURL =
+        initialCalendar && getIsSubscribedCalendar(initialCalendar)
+            ? initialCalendar.SubscriptionParameters.URL
+            : undefined;
 
     const { error: setupError, loading: loadingSetup } = useGetCalendarSetup({ calendar: initialCalendar, setModel });
     const { handleCreateCalendar, handleUpdateCalendar } = useGetCalendarActions({
@@ -157,7 +162,7 @@ export const CalendarModal = ({
                             />
                         </Field>
                     </Row>
-                    {!isOtherCalendar && (
+                    {!isSubscribedCalendar && (
                         <Row>
                             <Label htmlFor="calendar-address-select">{c('Label').t`Default email`}</Label>
                             <Field className="flex flex-align-items-center">
@@ -206,7 +211,7 @@ export const CalendarModal = ({
                             />
                         </Field>
                     </Row>
-                    {!isOtherCalendar && (
+                    {!isSubscribedCalendar && (
                         <Row>
                             <Label htmlFor="duration-select">{c('Label').t`Default event duration`}</Label>
                             <Field>
@@ -228,20 +233,18 @@ export const CalendarModal = ({
                             </Field>
                         </Row>
                     )}
-                    {isOtherCalendar && initialCalendar?.SubscriptionParameters?.URL && (
+                    {subscribeURL && (
                         <>
                             <Row>
                                 <Label>{c('Label').t`URL`}</Label>
                                 <span style={{ wordBreak: 'break-all' }}>
-                                    <TruncatedText maxChars={URL_MAX_DISPLAY_LENGTH}>
-                                        {initialCalendar?.SubscriptionParameters?.URL}
-                                    </TruncatedText>
+                                    <TruncatedText maxChars={URL_MAX_DISPLAY_LENGTH}>{subscribeURL}</TruncatedText>
                                 </span>
                             </Row>
                         </>
                     )}
 
-                    {!isOtherCalendar && (
+                    {!isSubscribedCalendar && (
                         <>
                             <Row>
                                 <Label>{c('Label').t`Default notifications`}</Label>

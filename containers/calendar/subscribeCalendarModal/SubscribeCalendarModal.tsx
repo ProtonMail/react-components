@@ -1,3 +1,5 @@
+import { MAX_LENGTHS } from 'proton-shared/lib/calendar/constants';
+import { truncateMore } from 'proton-shared/lib/helpers/string';
 import React, { useState } from 'react';
 import { c } from 'ttag';
 
@@ -15,12 +17,11 @@ import useGetCalendarActions from '../hooks/useGetCalendarActions';
 const CALENDAR_URL_MAX_LENGTH = 10000;
 
 interface Props {
-    calendar?: Calendar;
     onClose?: () => void;
 }
 
-const SubscribeCalendarModal = ({ calendar: initialCalendar, ...rest }: Props) => {
-    const [calendar, setCalendar] = useState(initialCalendar);
+const SubscribeCalendarModal = ({ ...rest }: Props) => {
+    const [, setCalendar] = useState<Calendar | undefined>();
     const [calendarURL, setCalendarURL] = useState('');
     const [model, setModel] = useState(() => getDefaultModel(false));
     const [error, setError] = useState(false);
@@ -29,9 +30,8 @@ const SubscribeCalendarModal = ({ calendar: initialCalendar, ...rest }: Props) =
 
     const isURLValid = isURL(calendarURL);
 
-    const { error: setupError, loading: loadingSetup } = useGetCalendarSetup({ calendar: initialCalendar, setModel });
-    const { handleCreateCalendar, handleUpdateCalendar } = useGetCalendarActions({
-        calendar: initialCalendar,
+    const { error: setupError, loading: loadingSetup } = useGetCalendarSetup({ setModel });
+    const { handleCreateCalendar } = useGetCalendarActions({
         setCalendar,
         setError,
         onClose: rest?.onClose,
@@ -41,15 +41,11 @@ const SubscribeCalendarModal = ({ calendar: initialCalendar, ...rest }: Props) =
     const handleProcessCalendar = async () => {
         const formattedModel = {
             ...model,
-            name: calendarURL.substring(0, 99),
+            name: truncateMore({ string: calendarURL, charsToDisplay: MAX_LENGTHS.CALENDAR_NAME }),
             url: calendarURL,
         };
         const calendarPayload = getCalendarPayload(formattedModel);
         const calendarSettingsPayload = getCalendarSettingsPayload(formattedModel);
-
-        if (calendar) {
-            return handleUpdateCalendar(calendar, calendarPayload, calendarSettingsPayload);
-        }
 
         return handleCreateCalendar(formattedModel.addressID, calendarPayload, calendarSettingsPayload);
     };
@@ -70,12 +66,11 @@ const SubscribeCalendarModal = ({ calendar: initialCalendar, ...rest }: Props) =
             };
         }
 
-        const isEdit = !!initialCalendar;
         const loading = loadingSetup || loadingAction;
 
         return {
-            title: isEdit ? c('Title').t`Update calendar` : c('Title').t`Subscribe to calendar`,
-            submit: isEdit ? c('Action').t`Update` : c(`Action`).t`Subscribe`,
+            title: c('Title').t`Subscribe to calendar`,
+            submit: c(`Action`).t`Subscribe`,
             loading,
             hasClose: true,
             submitProps: {

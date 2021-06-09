@@ -1,5 +1,5 @@
 import { CalendarCreateData } from 'proton-shared/lib/interfaces/calendar/Api';
-import { CalendarSettings, CalendarWithPossibleSubscriptionParameters } from 'proton-shared/lib/interfaces/calendar';
+import { Calendar, CalendarSettings, SubscribedCalendar } from 'proton-shared/lib/interfaces/calendar';
 import { getPrimaryKey } from 'proton-shared/lib/keys';
 import { c } from 'ttag';
 import {
@@ -22,12 +22,12 @@ import {
 import { useCalendarModelEventManager } from '../../eventManager';
 
 interface Props {
-    calendar?: CalendarWithPossibleSubscriptionParameters;
-    setCalendar: React.Dispatch<React.SetStateAction<CalendarWithPossibleSubscriptionParameters | undefined>>;
+    calendar?: Calendar | SubscribedCalendar;
+    setCalendar: React.Dispatch<React.SetStateAction<Calendar | undefined>>;
     setError: React.Dispatch<React.SetStateAction<boolean>>;
     defaultCalendarID?: string;
     onClose?: () => void;
-    activeCalendars?: CalendarWithPossibleSubscriptionParameters[];
+    activeCalendars?: Calendar[];
     isOtherCalendar?: boolean;
 }
 
@@ -65,7 +65,7 @@ const useGetCalendarActions = ({
         const {
             Calendar,
             Calendar: { ID: newCalendarID },
-        } = await api<{ Calendar: CalendarWithPossibleSubscriptionParameters }>(
+        } = await api<{ Calendar: SubscribedCalendar }>(
             createCalendar({
                 ...calendarPayload,
                 AddressID: addressID,
@@ -113,8 +113,8 @@ const useGetCalendarActions = ({
     };
 
     const handleUpdateCalendar = async (
-        calendar: CalendarWithPossibleSubscriptionParameters,
-        calendarPayload: Partial<CalendarWithPossibleSubscriptionParameters>,
+        calendar: Calendar,
+        calendarPayload: Partial<SubscribedCalendar>,
         calendarSettingsPayload: Partial<CalendarSettings>
     ) => {
         const calendarID = calendar.ID;

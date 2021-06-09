@@ -1,13 +1,14 @@
+import {
+    getCalendarHasSubscriptionParameters,
+    getCalendarIsSynced,
+    getIsSubscribedCalendar,
+} from 'proton-shared/lib/calendar/subscribe/helpers';
 import React from 'react';
 import { c } from 'ttag';
 import { getIsCalendarDisabled, getIsCalendarProbablyActive } from 'proton-shared/lib/calendar/calendar';
-import {
-    CALENDAR_SUBSCRIPTION_STATUS,
-    CALENDAR_TYPE,
-    CalendarWithPossibleSubscriptionParameters,
-} from 'proton-shared/lib/interfaces/calendar';
+import { Calendar, SubscribedCalendar } from 'proton-shared/lib/interfaces/calendar';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
-import { UserModel } from 'proton-shared/lib/interfaces';
+import { SimpleMap, UserModel } from 'proton-shared/lib/interfaces';
 
 import { Badge, DropdownActions, Icon, Info, Table, TableBody, TableHeader, TableRow } from '../../../components';
 import useGetCalendarEmail from '../hooks/useGetCalendarEmail';
@@ -16,14 +17,14 @@ import './CalendarsTable.scss';
 import { classnames } from '../../../helpers';
 
 interface Props {
-    calendars: CalendarWithPossibleSubscriptionParameters[];
+    calendars: (Calendar | SubscribedCalendar)[];
     defaultCalendarID?: string;
     user: UserModel;
-    onEdit: (calendar: CalendarWithPossibleSubscriptionParameters) => void;
-    onSetDefault: (id: string) => void;
-    onDelete: (calendar: CalendarWithPossibleSubscriptionParameters) => void;
-    onExport: (calendar: CalendarWithPossibleSubscriptionParameters) => void;
-    loadingMap: { [key: string]: boolean };
+    onEdit: (calendar: Calendar) => void;
+    onSetDefault?: (id: string) => void;
+    onDelete: (id: string) => void;
+    onExport?: (calendar: Calendar) => void;
+    loadingMap: SimpleMap<boolean>;
 }
 const CalendarsTable = ({
     calendars = [],
@@ -35,6 +36,7 @@ const CalendarsTable = ({
     onExport,
     loadingMap,
 }: Props) => {
+    const { hasNonDelinquentScope } = user;
     const calendarAddressMap = useGetCalendarEmail(calendars);
 
     return (
@@ -51,35 +53,36 @@ const CalendarsTable = ({
             />
             <TableBody>
                 {(calendars || []).map((calendar, index) => {
-                    const { ID, Name, Color, Type } = calendar;
+                    const { ID, Name, Color } = calendar;
 
                     const isDisabled = getIsCalendarDisabled(calendar);
                     const isActive = getIsCalendarProbablyActive(calendar);
                     const isDefault = ID === defaultCalendarID;
-                    const isSubscribe = Type === CALENDAR_TYPE.SUBSCRIPTION;
-                    const isNotSynced =
-                        isSubscribe && calendar.SubscriptionParameters?.Status !== CALENDAR_SUBSCRIPTION_STATUS.OK;
+                    const isSubscribed = getIsSubscribedCalendar(calendar);
+                    const isNotSynced = getCalendarHasSubscriptionParameters(calendar) && getCalendarIsSynced(calendar);
 
                     const list: { text: string; onClick: () => void }[] = [
-                        user.hasNonDelinquentScope && {
+                        hasNonDelinquentScope && {
                             text: c('Action').t`Edit`,
                             onClick: () => onEdit(calendar),
                         },
-                        !isSubscribe &&
+                        !isSubscribed &&
                             !isDisabled &&
                             !isDefault &&
-                            user.hasNonDelinquentScope && {
+                            hasNonDelinquentScope &&
+                            onSetDefault && {
                                 text: c('Action').t`Set as default`,
                                 onClick: () => onSetDefault(ID),
                             },
-                        !isSubscribe && {
-                            text: c('Action').t`Export ICS`,
-                            onClick: () => onExport(calendar),
-                        },
+                        !isSubscribed &&
+                            onExport && {
+                                text: c('Action').t`Export ICS`,
+                                onClick: () => onExport(calendar),
+                            },
                         {
-                            text: isSubscribe ? c('Action').t`Unsubscribe` : c('Action').t`Delete`,
+                            text: isSubscribed ? c('Action').t`Unsubscribe` : c('Action').t`Delete`,
                             actionType: 'delete',
-                            onClick: () => onDelete(calendar),
+                            onClick: () => onDelete(ID),
                         },
                     ].filter(isTruthy);
 
@@ -108,7 +111,9 @@ const CalendarsTable = ({
                                     {isDefault && <Badge type="primary">{c('Calendar status').t`Default`}</Badge>}
                                     {isActive && <Badge type="success">{c('Calendar status').t`Active`}</Badge>}
                                     {isDisabled && <Badge type="warning">{c('Calendar status').t`Disabled`}</Badge>}
-                                    {isNotSynced && <Badge type="warning">{c('Calendar status').t`Not synced`}</Badge>}
+                                    {isSubscribed && isNotSynced && (
+                                        <Badge type="warning">{c('Calendar status').t`Not synced`}</Badge>
+                                    )}
                                 </div>,
                                 <DropdownActions
                                     className="button--small"

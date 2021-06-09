@@ -1,11 +1,11 @@
 import { useCallback } from 'react';
 
-import { CalendarSubscription } from 'proton-shared/lib/interfaces/calendar';
+import { CalendarSubscriptionResponse } from 'proton-shared/lib/interfaces/calendar';
 import { getSubscriptionParameters } from 'proton-shared/lib/api/calendars';
 import createCache from 'proton-shared/lib/helpers/cache';
 
-import { getPromiseValue } from '../../../hooks/useCachedModelResult';
-import { useApi, useCache } from '../../../hooks';
+import { getPromiseValue } from './useCachedModelResult';
+import { useApi, useCache } from './index';
 
 export const KEY = 'CALENDAR_SUBSCRIPTION';
 
@@ -17,7 +17,7 @@ export const useGetCalendarSubscription = () => {
             if (!calendarID) {
                 return Promise.resolve();
             }
-            return api<CalendarSubscription>(getSubscriptionParameters(calendarID));
+            return api<CalendarSubscriptionResponse>(getSubscriptionParameters(calendarID));
         },
         [api]
     );

@@ -2,16 +2,13 @@ import { useEffect, useState } from 'react';
 import { c } from 'ttag';
 
 import { getActiveAddresses } from 'proton-shared/lib/helpers/address';
-import {
-    CalendarViewModelFull,
-    CalendarWithPossibleSubscriptionParameters,
-} from 'proton-shared/lib/interfaces/calendar';
+import { Calendar, CalendarViewModelFull, SubscribedCalendar } from 'proton-shared/lib/interfaces/calendar';
 
 import { getCalendarModel } from '../calendarModal/calendarModalState';
 import { useGetAddresses, useGetCalendarBootstrap, useLoading, useNotifications } from '../../../hooks';
 
 interface Props {
-    calendar?: CalendarWithPossibleSubscriptionParameters;
+    calendar?: Calendar | SubscribedCalendar;
     setModel: React.Dispatch<React.SetStateAction<CalendarViewModelFull>>;
 }
 
