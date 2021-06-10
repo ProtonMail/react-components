@@ -1,8 +1,8 @@
 @import '~design-system/scss/config/';
 
 .contacts-widget {
-	--min-width: 500px;
-	--min-height: 550px;
+	--min-width: #{em(500)};
+	--min-height: #{em(550)};
 
 	&-search-container,
 	&-toolbar,
