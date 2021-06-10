@@ -29,11 +29,11 @@ function renderComponent({ customActions }: { customActions: CustomAction[] }) {
 describe('TopNavbarListItemContactsDropdown', () => {
     it('should display custom actions', () => {
         const customAction1 = {
-            render: () => <p>custom action 1</p>,
+            render: jest.fn(() => <p>custom action 1</p>),
             tabs: [CONTACT_WIDGET_TABS.CONTACTS],
         };
         const customAction2 = {
-            render: () => <p>custom action 2</p>,
+            render: jest.fn(() => <p>custom action 2</p>),
             tabs: [CONTACT_WIDGET_TABS.GROUPS],
         };
         const customActions = [customAction1];
@@ -45,6 +45,13 @@ describe('TopNavbarListItemContactsDropdown', () => {
         fireEvent.click(screen.getByTitle('View contacts'));
 
         expect(screen.getByText('custom action 1')).toBeInTheDocument();
+        expect(customAction1.render).toHaveBeenCalledWith({
+            contactList: expect.any(Object),
+            noSelection: true,
+            onClose: expect.any(Function),
+            selected: [],
+        });
+        expect(customAction2.render).not.toHaveBeenCalled();
 
         customActions.push(customAction2);
 
@@ -55,6 +62,13 @@ describe('TopNavbarListItemContactsDropdown', () => {
 
         fireEvent.click(screen.getByText('Groups'));
 
+        expect(customAction2.render).toHaveBeenCalledWith({
+            groupsEmailsMap: {},
+            noSelection: true,
+            onClose: expect.any(Function),
+            recipients: [],
+            selected: [],
+        });
         expect(screen.queryByText('custom action 1')).toBeFalsy();
         expect(screen.getByText('custom action 2')).toBeInTheDocument();
     });
