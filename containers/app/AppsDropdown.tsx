@@ -25,7 +25,6 @@ const AppsDropdown = () => {
             dropdownClassName="apps-dropdown"
             originalPlacement="bottom-left"
             title={c('Apps dropdown').t`Proton applications`}
-            disableDefaultArrowNavigation
         >
             <ul className="apps-dropdown-list unstyled m1 scroll-if-needed">
                 {apps.map(({ id, icon, title }, index) => (

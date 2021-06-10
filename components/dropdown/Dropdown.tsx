@@ -6,7 +6,7 @@ import useRightToLeft from '../../containers/rightToLeft/useRightToLeft';
 import { usePopper } from '../popper';
 import { ALL_PLACEMENTS, Position } from '../popper/utils';
 import Portal from '../portal/Portal';
-import { useCombinedRefs, useHotkeys, useDropdownArrowNavigation, HotkeyTuple } from '../../hooks';
+import { useCombinedRefs, useHotkeys } from '../../hooks';
 import { useFocusTrap } from '../focus';
 import useIsClosing from './useIsClosing';
 
@@ -37,8 +37,6 @@ interface Props extends React.HTMLAttributes<HTMLDivElement> {
     autoCloseOutside?: boolean;
     autoCloseOutsideAnchor?: boolean;
     contentProps?: ContentProps;
-    disableDefaultArrowNavigation?: boolean;
-    preventArrowKeyNavigationAutofocus?: boolean;
     UNSTABLE_AUTO_HEIGHT?: boolean;
 }
 
@@ -65,8 +63,6 @@ const Dropdown = ({
     autoCloseOutside = true,
     autoCloseOutsideAnchor = true,
     contentProps,
-    disableDefaultArrowNavigation = false,
-    preventArrowKeyNavigationAutofocus = false,
     UNSTABLE_AUTO_HEIGHT,
     ...rest
 }: Props) => {
@@ -102,28 +98,21 @@ const Dropdown = ({
 
     const focusTrapProps = useFocusTrap({ rootRef, active: isOpen && !disableFocusTrap, enableInitialFocus: false });
 
-    const { shortcutHandlers: arrowNavigationShortcutHandlers } = useDropdownArrowNavigation({
+    useHotkeys(
         rootRef,
-        isOpen,
-        disabled: disableDefaultArrowNavigation,
-        preventArrowKeyNavigationAutofocus,
-    });
-
-    const defaultShortcutHandlers: HotkeyTuple = [
-        'Escape',
-        (e) => {
-            e.stopPropagation();
-            onClose?.();
-        },
-    ];
-
-    const hotkeyTuples = disableDefaultArrowNavigation
-        ? [defaultShortcutHandlers]
-        : [...arrowNavigationShortcutHandlers, defaultShortcutHandlers];
-
-    useHotkeys(rootRef, hotkeyTuples, {
-        dependencies: [isOpen],
-    });
+        [
+            [
+                'Escape',
+                (e) => {
+                    e.stopPropagation();
+                    onClose?.();
+                },
+            ],
+        ],
+        {
+            dependencies: [isOpen],
+        }
+    );
 
     useLayoutEffect(() => {
         if (!isOpen) {

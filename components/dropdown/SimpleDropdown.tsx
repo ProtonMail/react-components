@@ -13,7 +13,6 @@ interface OwnProps {
     autoClose?: boolean;
     dropdownClassName?: string;
     dropdownStyle?: React.CSSProperties;
-    disableDefaultArrowNavigation?: boolean;
 }
 
 export type Props<T extends React.ElementType> = OwnProps & DropdownButtonProps<T>;
@@ -28,7 +27,6 @@ const SimpleDropdown = React.forwardRef(
             hasCaret = true,
             dropdownClassName,
             dropdownStyle,
-            disableDefaultArrowNavigation = false,
             ...rest
         }: Props<E>,
         ref: typeof rest.ref
@@ -57,7 +55,6 @@ const SimpleDropdown = React.forwardRef(
                     onClose={close}
                     className={dropdownClassName}
                     style={dropdownStyle}
-                    disableDefaultArrowNavigation={disableDefaultArrowNavigation}
                 >
                     {children}
                 </Dropdown>

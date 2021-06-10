@@ -197,7 +197,6 @@ const TimeInput = ({ onChange, value, interval = 30, min, displayDuration = fals
                     },
                     ref: scrollRef,
                 }}
-                disableDefaultArrowNavigation
             >
                 <DropdownMenu listRef={listRef}>
                     {filteredOptions.map(({ label, value: otherValue }, i) => {
