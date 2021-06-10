@@ -261,6 +261,7 @@ const SelectTwo = <V extends any>({
                 noCaret
                 noMaxWidth
                 sameAnchorWidth
+                disableDefaultArrowNavigation
             >
                 <ul className="unstyled m0 p0" onKeyDown={handleMenuKeydown} data-testid="select-list">
                     {items}

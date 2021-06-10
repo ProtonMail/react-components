@@ -84,6 +84,7 @@ const TopNavbarListItemContactsDropdown = ({ className, onCompose, customActions
                 className="contacts-widget"
                 noMaxWidth
                 noMaxHeight
+                disableDefaultArrowNavigation
             >
                 <Tabs
                     className="flex flex-column flex-nowrap"
