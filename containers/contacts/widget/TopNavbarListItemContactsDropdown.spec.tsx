@@ -40,7 +40,7 @@ describe('TopNavbarListItemContactsDropdown', () => {
 
         const { rerender } = render(renderComponent({ customActions }));
 
-        expect(screen.queryByText('custom action')).toBeFalsy();
+        expect(screen.queryByText('custom action 1')).toBeFalsy();
 
         fireEvent.click(screen.getByTitle('View contacts'));
 
