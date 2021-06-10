@@ -229,7 +229,7 @@ describe('FocusTrap', () => {
         });
         openerButton2.click();
         await wait(() => {
-            expect(openerButton2).toHaveFocus();
+            expect(document.body).toHaveFocus();
         });
     });
 
