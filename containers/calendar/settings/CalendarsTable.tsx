@@ -5,7 +5,17 @@ import { Calendar } from 'proton-shared/lib/interfaces/calendar';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 import { UserModel } from 'proton-shared/lib/interfaces';
 
-import { Badge, DropdownActions, Icon, Table, TableBody, TableHeader, TableRow } from '../../../components';
+import {
+    Badge,
+    DropdownActions,
+    EllipsisLoader,
+    Icon,
+    Table,
+    TableBody,
+    TableHeader,
+    TableRow,
+} from '../../../components';
+import useGetCalendarEmail from '../hooks/useGetCalendarEmail';
 
 interface Props {
     calendars: Calendar[];
@@ -27,6 +37,8 @@ const CalendarsTable = ({
     onExport,
     loadingMap,
 }: Props) => {
+    const calendarAddressMap = useGetCalendarEmail(calendars);
+
     return (
         <Table className="simple-table--has-actions">
             <TableHeader cells={[c('Header').t`Name`, c('Header').t`Status`, c('Header').t`Actions`]} />
@@ -64,11 +76,16 @@ const CalendarsTable = ({
                         <TableRow
                             key={ID}
                             cells={[
-                                <div key="id" className="flex flex-nowrap flex-align-items-center">
-                                    <Icon name="calendar" color={Color} className="mr0-5 flex-item-noshrink" />
-                                    <span className="text-ellipsis" title={Name}>
-                                        {Name}
-                                    </span>
+                                <div key="id">
+                                    <div className="grid-align-icon">
+                                        <Icon name="calendar" color={Color} className="mr0-5 flex-item-noshrink" />
+                                        <div className="text-ellipsis" title={Name}>
+                                            {Name}
+                                        </div>
+                                        <div className="calendar-email text-ellipsis text-sm m0 color-weak">
+                                            {calendarAddressMap[ID] || <EllipsisLoader />}
+                                        </div>
+                                    </div>
                                 </div>,
                                 <div data-test-id="calendar-settings-page:calendar-status" key="status">
                                     {isDefault && <Badge type="primary">{c('Calendar status').t`Default`}</Badge>}
