@@ -1,13 +1,14 @@
 import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 
+import createCache from 'proton-shared/lib/helpers/cache';
+
 import ApiContext from '../../api/apiContext';
 import TopNavbarListItemContactsDropdown from './TopNavbarListItemContactsDropdown';
 import { ModalsProvider } from '../../modals';
 import NotificationsProvider from '../../notifications/Provider';
 import { CONTACT_WIDGET_TABS, CustomAction } from './types';
 import { CacheProvider } from '../../cache';
-import createCache from '../../../../shared/lib/helpers/cache';
 
 jest.mock('../../../hooks/useUserSettings', () => () => [{}, jest.fn()]);
 
