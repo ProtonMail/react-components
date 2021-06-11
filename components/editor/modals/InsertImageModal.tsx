@@ -60,7 +60,7 @@ const InsertImageModal = ({ onAddUrl, onAddImages, onClose, ...rest }: Props) =>
 
     return (
         <FormModal
-            title={c('Info').t`Edit image`}
+            title={c('Info').t`Insert image`}
             onSubmit={handleSubmit}
             onClose={onClose}
             footer={
