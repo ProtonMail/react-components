@@ -41,6 +41,17 @@ const useCalendarShareUrls = (calendars: Calendar[]) => {
         });
     };
 
+    const handleUpdateCalendar = (calendar: Calendar) => {
+        setLinksMap((linksMap) => ({
+            ...linksMap,
+            [calendar.ID]: linksMap?.[calendar.ID]?.map((calendarLink) => ({
+                ...calendarLink,
+                color: calendar.Color,
+                calendarName: calendar.Name,
+            })),
+        }));
+    };
+
     const handleDeleteLink = ({ ID }: CalendarUrlEventManagerDelete) => {
         setLinksMap((linksMap) => {
             return Object.fromEntries(
@@ -111,9 +122,13 @@ const useCalendarShareUrls = (calendars: Calendar[]) => {
     // subscribe to general event loop
     useEffect(() => {
         return standardSubscribe(({ Calendars = [] }: { Calendars?: CalendarEventManager[] }) => {
-            Calendars.forEach(({ ID, Action }) => {
+            Calendars.forEach(({ ID, Action, Calendar }) => {
                 if (Action === EVENT_ACTIONS.DELETE) {
                     handleDeleteCalendar(ID);
+                }
+
+                if (Action === EVENT_ACTIONS.UPDATE) {
+                    handleUpdateCalendar(Calendar);
                 }
             });
         });
