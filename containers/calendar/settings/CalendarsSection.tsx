@@ -46,7 +46,7 @@ const CalendarsSection = ({
 }: Props) => {
     return (
         <SettingsSection>
-            {!canAdd && (
+            {!canAdd && user.hasNonDelinquentScope && (
                 <Alert type="warning">
                     {c('Calendar limit warning').ngettext(
                         msgid`You have reached the maximum number of ${calendarsLimit} calendar.`,
