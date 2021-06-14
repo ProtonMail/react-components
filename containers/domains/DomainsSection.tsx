@@ -20,7 +20,9 @@ const DomainsSection = () => {
     const [loading, withLoading] = useLoading();
     const { createModal } = useModals();
 
-    if (loadingDomains || loadingDomainsAddressesMap || loadingOrganization) {
+    const allModelsArePresent = domains && domainsAddressesMap && organization;
+
+    if (!allModelsArePresent && (loadingDomains || loadingDomainsAddressesMap || loadingOrganization)) {
         return <Loader />;
     }
 
@@ -41,8 +43,9 @@ const DomainsSection = () => {
                 <Button color="norm" onClick={() => createModal(<DomainModal />)} className="mr1">
                     {c('Action').t`Add domain`}
                 </Button>
-                <Button loading={loading} onClick={() => withLoading(handleRefresh())}>{c('Action')
-                    .t`Refresh status`}</Button>
+                <Button loading={loading || loadingDomainsAddressesMap} onClick={() => withLoading(handleRefresh())}>{c(
+                    'Action'
+                ).t`Refresh status`}</Button>
             </div>
             {!domains.length ? null : <DomainsTable domains={domains} domainsAddressesMap={domainsAddressesMap} />}
             <div className="mb1 color-weak">
