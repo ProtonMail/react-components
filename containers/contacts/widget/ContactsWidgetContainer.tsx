@@ -236,7 +236,6 @@ const ContactsWidgetContainer = ({ onClose, onImport, onCompose, onMailTo, custo
                 ) : null}
                 {showList ? (
                     <ContactsList
-                        totalContacts={contactsLength}
                         contacts={formattedContacts}
                         contactGroupsMap={contactGroupsMap}
                         user={user}
