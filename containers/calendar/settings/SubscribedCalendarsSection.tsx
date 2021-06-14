@@ -80,6 +80,7 @@ const SubscribedCalendarsSection = ({ activeAddresses, calendars = [], user }: P
             onAdd={handleCreate}
             onEdit={handleEdit}
             onDelete={handleDelete}
+            canUpgradeLimit={false}
         />
     );
 };

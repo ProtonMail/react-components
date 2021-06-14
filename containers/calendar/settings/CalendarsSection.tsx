@@ -3,6 +3,7 @@ import { c, msgid } from 'ttag';
 import { Calendar, SubscribedCalendar } from 'proton-shared/lib/interfaces/calendar';
 import { SimpleMap, UserModel } from 'proton-shared/lib/interfaces';
 
+import { MAX_CALENDARS_PER_USER } from 'proton-shared/lib/calendar/constants';
 import { Alert, ButtonLike, Card, CircleLoader, PrimaryButton, SettingsLink } from '../../../components';
 
 import { SettingsParagraph, SettingsSection } from '../../account';
@@ -24,6 +25,7 @@ interface Props {
     onEdit: (calendar: Calendar) => Promise<void>;
     onDelete: (id: string) => Promise<void>;
     onExport?: (calendar: Calendar) => void;
+    canUpgradeLimit?: boolean;
 }
 const CalendarsSection = ({
     calendars = [],
@@ -40,17 +42,27 @@ const CalendarsSection = ({
     onSetDefault,
     onDelete,
     onExport,
+    canUpgradeLimit = true,
 }: Props) => {
     return (
         <SettingsSection>
-            {user.isFree && !canAdd && (
+            {!canAdd && (
+                <Alert type="warning">
+                    {c('Calendar limit warning').ngettext(
+                        msgid`You have reached the maximum number of ${calendarsLimit} calendar.`,
+                        `You have reached the maximum number of ${calendarsLimit} calendars.`,
+                        calendarsLimit
+                    )}
+                </Alert>
+            )}
+            {user.isFree && canUpgradeLimit && !canAdd && (
                 <Card className="mb1">
                     <div className="flex flex-nowrap flex-align-items-center">
                         <p className="flex-item-fluid mt0 mb0 pr2">
                             {c('Upgrade notice').ngettext(
-                                msgid`Upgrade to a paid plan to create up to ${calendarsLimit} calendar, allowing you to make calendars for work, to share with friends, and just for yourself.`,
-                                `Upgrade to a paid plan to create up to ${calendarsLimit} calendars, allowing you to make calendars for work, to share with friends, and just for yourself.`,
-                                calendarsLimit
+                                msgid`Upgrade to a paid plan to create up to ${MAX_CALENDARS_PER_USER} calendar, allowing you to make calendars for work, to share with friends, and just for yourself.`,
+                                `Upgrade to a paid plan to create up to ${MAX_CALENDARS_PER_USER} calendars, allowing you to make calendars for work, to share with friends, and just for yourself.`,
+                                MAX_CALENDARS_PER_USER
                             )}
                         </p>
                         <ButtonLike as={SettingsLink} path="/dashboard" color="norm" shape="solid" size="small">
@@ -58,11 +70,6 @@ const CalendarsSection = ({
                         </ButtonLike>
                     </div>
                 </Card>
-            )}
-            {!user.isFree && !canAdd && (
-                <Alert type="warning">
-                    {c('Calendar limit warning').t`You have reached the maximum number of ${calendarsLimit} calendars.`}
-                </Alert>
             )}
             <div className="mb1">
                 <PrimaryButton data-test-id="calendar-setting-page:add-calendar" disabled={!canAdd} onClick={onAdd}>
