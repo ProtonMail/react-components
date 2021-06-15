@@ -4,28 +4,29 @@ import { c } from 'ttag';
 import {
     getAuthenticationMethod,
     createMailImport,
-    createJobImport,
+    startMailImportJob,
     getMailImportFolders,
     getMailImport,
     updateMailImport,
-    resumeMailImport,
-} from 'proton-shared/lib/api/mailImport';
+    resumeMailImportJob,
+} from 'proton-shared/lib/api/importAssistant/mail';
 import { noop } from 'proton-shared/lib/helpers/function';
 import { validateEmailAddress } from 'proton-shared/lib/helpers/email';
 import { isNumber } from 'proton-shared/lib/helpers/validators';
 
 import { useLoading, useAddresses, useModals, useApi, useEventManager, useNotifications } from '../../../../hooks';
-import useOAuthPopup from '../../../../hooks/useOAuthPopup';
+import useOAuthPopup, { getOAuthAuthorizationUrl } from '../../../../hooks/useOAuthPopup';
 
 import { ConfirmModal, FormModal, Button, PrimaryButton, Alert, useDebounceInput } from '../../../../components';
 
 import Wizard from '../../../../components/wizard/Wizard';
 
 import { IMAPS } from '../constants';
+import { G_OAUTH_SCOPE_MAIL } from '../../constants';
 
 import {
     Step,
-    ImportModalModel,
+    ImportMailModalModel,
     IMPORT_ERROR,
     MailImportFolder,
     FolderMapping,
@@ -33,10 +34,10 @@ import {
     TIME_UNIT,
     PROVIDER_INSTRUCTIONS,
     GMAIL_INSTRUCTIONS,
-    OAUTH_PROVIDER,
-    OAuthProps,
     AuthenticationMethod,
 } from '../interfaces';
+
+import { OAUTH_PROVIDER, OAuthProps } from '../../interfaces';
 
 import ImportInstructionsStep from './steps/ImportInstructionsStep';
 import ImportStartStep from './steps/ImportStartStep';
@@ -44,7 +45,6 @@ import ImportPrepareStep from './steps/ImportPrepareStep';
 import ImportStartedStep from './steps/ImportStartedStep';
 
 import { classnames } from '../../../../helpers';
-import { getOAuthRedirectURL as getRedirectURL, getOAuthAuthorizationUrl as getAuthorizationUrl } from '../helpers';
 
 import './ImportMailModal.scss';
 
@@ -79,6 +79,7 @@ interface ImporterFromServer {
     };
     Sasl: AuthenticationMethod;
 }
+
 interface Props {
     currentImport?: Importer;
     onClose?: () => void;
@@ -97,7 +98,10 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps: initialOAu
     const { createModal } = useModals();
     const { createNotification } = useNotifications();
     const [addresses, loadingAddresses] = useAddresses();
-    const { triggerOAuthPopup } = useOAuthPopup({ getRedirectURL, getAuthorizationUrl });
+
+    const { triggerOAuthPopup } = useOAuthPopup({
+        authorizationUrl: getOAuthAuthorizationUrl({ scope: G_OAUTH_SCOPE_MAIL }),
+    });
 
     const [providerInstructions, setProviderInstructions] = useState<PROVIDER_INSTRUCTIONS>();
     const [gmailInstructionsStep, setGmailInstructionsStep] = useState(GMAIL_INSTRUCTIONS.IMAP);
@@ -109,13 +113,16 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps: initialOAu
     const changeGmail2StepsTabIndex = (index: number) => setGmail2StepsTabIndex(index);
 
     const initialStep = () => {
+        if (oauthProps) {
+            return Step.PREPARE;
+        }
         if (isReconnectMode) {
-            return oauthProps ? Step.PREPARE : Step.START;
+            return Step.START;
         }
         return Step.INSTRUCTIONS;
     };
 
-    const [modalModel, setModalModel] = useState<ImportModalModel>({
+    const [modalModel, setModalModel] = useState<ImportMailModalModel>({
         step: initialStep(),
         importID: currentImport?.ID || '',
         email: currentImport?.Email || '',
@@ -290,7 +297,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps: initialOAu
                         RedirectUri: oauthProps?.redirectURI,
                     })
                 );
-                await api(resumeMailImport(importID));
+                await api(resumeMailImportJob(importID));
                 await call();
 
                 onClose();
@@ -341,7 +348,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps: initialOAu
         const { importID, payload } = modalModel;
 
         await api(
-            createJobImport(importID, {
+            startMailImportJob(importID, {
                 ...payload,
                 StartTime: payload.StartTime ? dateToTimestamp(payload.StartTime) : undefined,
                 Mapping: payload.Mapping.filter(({ checked }: FolderMapping) => checked).map(
@@ -370,7 +377,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps: initialOAu
                 Sasl: AuthenticationMethod.PLAIN,
             })
         );
-        await api(resumeMailImport(modalModel.importID));
+        await api(resumeMailImportJob(modalModel.importID));
         await call();
         onClose();
     };
@@ -500,7 +507,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps: initialOAu
                     return (
                         <PrimaryButton
                             onClick={() => {
-                                triggerOAuthPopup(OAUTH_PROVIDER.GMAIL, setOauthProps);
+                                triggerOAuthPopup(OAUTH_PROVIDER.GOOGLE, setOauthProps);
                             }}
                         >
                             {c('Action').t`Reconnect`}
@@ -607,7 +614,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps: initialOAu
             {modalModel.step === Step.START && (
                 <ImportStartStep
                     modalModel={modalModel}
-                    updateModalModel={(newModel: ImportModalModel) => setModalModel(newModel)}
+                    updateModalModel={(newModel: ImportMailModalModel) => setModalModel(newModel)}
                     needAppPassword={needAppPassword}
                     showPassword={showPassword}
                     currentImport={currentImport}
@@ -618,7 +625,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps: initialOAu
                 <ImportPrepareStep
                     addresses={addresses}
                     modalModel={modalModel}
-                    updateModalModel={(newModel: ImportModalModel) => setModalModel(newModel)}
+                    updateModalModel={(newModel: ImportMailModalModel) => setModalModel(newModel)}
                 />
             )}
             {modalModel.step === Step.STARTED && !loadingAddresses && addresses.length && (

@@ -5,11 +5,11 @@ import { Alert, Row, Label, Field, PasswordInput, EmailInput, Input, Href } from
 
 import { IMAPS } from '../../constants';
 
-import { Importer, ImportMailError, ImportModalModel, IMPORT_ERROR } from '../../interfaces';
+import { Importer, ImportMailError, ImportMailModalModel, IMPORT_ERROR } from '../../interfaces';
 
 interface Props {
-    modalModel: ImportModalModel;
-    updateModalModel: (newModel: ImportModalModel) => void;
+    modalModel: ImportMailModalModel;
+    updateModalModel: (newModel: ImportMailModalModel) => void;
     needAppPassword: boolean;
     showPassword: boolean;
     currentImport?: Importer;
@@ -63,7 +63,7 @@ const ImportStartStep = ({
         );
 
         switch (modalModel.imap) {
-            case IMAPS.GMAIL:
+            case IMAPS.GOOGLE:
                 if (isReconnect) {
                     // translator: the variable here is a HTML tag, here is the complete sentence: "If 2-step verification is disabled in Gmail (default settings), please make sure that:"
                     const twoStepsDisabledMessage = c('Import error')

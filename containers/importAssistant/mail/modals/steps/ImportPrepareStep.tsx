@@ -18,7 +18,7 @@ import {
     TextLoader,
 } from '../../../../../components';
 
-import { ImportModalModel, MailImportFolder, DestinationFolder, IMPORT_ERROR } from '../../interfaces';
+import { ImportMailModalModel, MailImportFolder, DestinationFolder, IMPORT_ERROR } from '../../interfaces';
 import { IMAPS, timeUnitLabels } from '../../constants';
 import {
     escapeSlashes,
@@ -37,8 +37,8 @@ interface LabelColorMap {
 }
 
 interface Props {
-    modalModel: ImportModalModel;
-    updateModalModel: (newModel: ImportModalModel) => void;
+    modalModel: ImportMailModalModel;
+    updateModalModel: (newModel: ImportMailModalModel) => void;
     addresses: Address[];
 }
 
@@ -51,7 +51,7 @@ enum CustomFieldsBitmap {
 const ImportPrepareStep = ({ modalModel, updateModalModel, addresses }: Props) => {
     const availableAddresses = addresses.filter((addr) => addr.Receive && addr.Send && addr.Keys.some((k) => k.Active));
 
-    const initialModel = useRef<ImportModalModel>(modalModel);
+    const initialModel = useRef<ImportMailModalModel>(modalModel);
     const [user, userLoading] = useUser();
     const { createModal } = useModals();
     const { providerFolders, password } = modalModel;
@@ -59,7 +59,7 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, addresses }: Props) =
     const [folders = [], foldersLoading] = useFolders();
     const [labels = [], labelsLoading] = useLabels();
 
-    const isLabelMapping = modalModel.imap === IMAPS.GMAIL;
+    const isLabelMapping = modalModel.imap === IMAPS.GOOGLE;
 
     const { payload, selectedPeriod } = modalModel;
 
