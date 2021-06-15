@@ -5,6 +5,7 @@ import {
     startOfMonth,
     isSameDay,
     setISOWeek,
+    setDay,
     startOfWeek,
     endOfWeek,
 } from 'date-fns';
@@ -30,7 +31,7 @@ export const getDaysInMonth = (
 };
 
 export const getDateTupleFromWeekNumber = (date: Date, weekNumber: number, weekStartsOn?: WeekStartsOn): DateTuple => {
-    const dateInWeek = setISOWeek(date, weekNumber);
+    const dateInWeek = setISOWeek(setDay(date, 1), weekNumber);
     const startDateInWeek = startOfWeek(dateInWeek, { weekStartsOn });
     const endDateInWeek = endOfWeek(dateInWeek, { weekStartsOn });
     return [startDateInWeek, endDateInWeek];
