@@ -189,7 +189,7 @@ const BugModal = ({ onClose = noop, username: Username = '', addresses = [], cha
         >
             {chatAlert ? (
                 <Alert type="warning">{c('Warning')
-                    .t`Live chat is only available for paid users. Please open a ticket instead.`}</Alert>
+                    .t`Live chat is only available for users with a paid plan. Please open a ticket instead.`}</Alert>
             ) : (
                 <>
                     <Alert>{c('Info')
