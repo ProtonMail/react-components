@@ -121,7 +121,7 @@ export interface LinkData {
 
 export const getSquireRef = (ref: Ref<SquireType>) => (ref as RefObject<SquireType>).current as SquireType;
 export const setSquireRef = (ref: Ref<SquireType>, squire: any) => {
-    ((ref as any) as MutableRefObject<any>).current = squire;
+    (ref as any as MutableRefObject<any>).current = squire;
 };
 
 export const SQUIRE_CONFIG = {
@@ -268,8 +268,6 @@ export const insertCustomStyle = (document: Document) => {
             min-width: 38px;
         }
 
-        .protonmail_signature_block-empty { display: none }
-
         .protonmail_quote {
             position: relative;
         }
@@ -298,7 +296,7 @@ const wrapInsertHTML = (squire: any) => {
         if (isPaste) {
             try {
                 const fragment = SQUIRE_CONFIG.sanitizeToDOMFragment(html, isPaste, squire);
-                const { firstElementChild: first, lastElementChild: last } = (fragment as any) as ParentNode;
+                const { firstElementChild: first, lastElementChild: last } = fragment as any as ParentNode;
 
                 // Check if it is just one image being pasted.
                 // If so, block normal insertion because it will be added as embedded image.
