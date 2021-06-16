@@ -89,12 +89,8 @@ const SearchableSelect = <V extends any>({
         searchInputRef?.current?.focus();
     };
 
-    const handleAnchorClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const handleAnchorClick = () => {
         if (isOpen) {
-            if (event?.target instanceof Node && searchContainerRef?.current?.contains(event.target)) {
-                return;
-            }
-
             close();
         } else {
             open();
