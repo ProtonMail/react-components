@@ -98,9 +98,12 @@ const ContactGroupModal = ({ contactGroupID, onClose = noop, selectedContactEmai
             const toCreate = model.contactEmails.filter(({ ID }) => !isTruthy(ID));
             const toRemove = contactGroupID ? diff(existingContactEmails, toAdd) : [];
 
+            // Need to remove all \ at the end of a group name to avoid group being splitted when dealing with vCards
+            const updatedName = model.name.replace(/(\\)+$/, '');
+
             await updateGroup({
                 groupID: contactGroupID,
-                name: model.name,
+                name: updatedName,
                 color: model.color,
                 toAdd,
                 toRemove,
