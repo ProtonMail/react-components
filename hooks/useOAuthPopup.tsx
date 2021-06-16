@@ -2,8 +2,6 @@ import React, { useRef } from 'react';
 import { c } from 'ttag';
 
 import { generateProtonWebUID } from 'proton-shared/lib/helpers/uid';
-import { isSSOMode, APPS } from 'proton-shared/lib/constants';
-import { getAppHref } from 'proton-shared/lib/apps/helper';
 
 import useNotifications from './useNotifications';
 
@@ -15,19 +13,15 @@ const WINDOW_HEIGHT = 600;
 
 const POLLING_INTERVAL = 100;
 
-const OAuthRedirectURL = () => {
-    if (!isSSOMode) {
-        const { protocol, host } = window.location;
-        return `${protocol}//${host}${G_OAUTH_REDIRECT_PATH}`;
-    }
-
-    return getAppHref(G_OAUTH_REDIRECT_PATH, APPS.PROTONACCOUNT);
+const getOAuthRedirectURL = () => {
+    const { protocol, host } = window.location;
+    return `${protocol}//${host}${G_OAUTH_REDIRECT_PATH}`;
 };
 
 export const getOAuthAuthorizationUrl = ({ scope, login_hint }: { scope: string; login_hint?: string }) => {
     const params = new URLSearchParams();
 
-    params.append('redirect_uri', OAuthRedirectURL());
+    params.append('redirect_uri', getOAuthRedirectURL());
     params.append('response_type', 'code');
     params.append('access_type', 'offline');
     params.append('client_id', G_OAUTH_CLIENT_ID);
@@ -54,7 +48,7 @@ const useOAuthPopup = ({ authorizationUrl }: OAuthHookContext) => {
         callback: (oauthProps: OAuthProps) => void | Promise<void>
     ) => {
         let interval: number;
-        const redirectURI = OAuthRedirectURL();
+        const redirectURI = getOAuthRedirectURL();
 
         const uid = generateProtonWebUID();
         stateId.current = uid;
