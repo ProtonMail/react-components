@@ -31,6 +31,7 @@ import {
 } from '../../helpers';
 
 import CustomizeImportModal from '../CustomizeImportModal';
+import { OAUTH_PROVIDER } from '../../../interfaces';
 
 interface LabelColorMap {
     [key: string]: string;
@@ -59,7 +60,7 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, addresses }: Props) =
     const [folders = [], foldersLoading] = useFolders();
     const [labels = [], labelsLoading] = useLabels();
 
-    const isLabelMapping = modalModel.imap === IMAPS.GOOGLE;
+    const isLabelMapping = modalModel.imap === IMAPS[OAUTH_PROVIDER.GOOGLE];
 
     const { payload, selectedPeriod } = modalModel;
 

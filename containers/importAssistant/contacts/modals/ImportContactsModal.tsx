@@ -101,7 +101,6 @@ const ImportContactsModal = ({ onClose = noop, oauthProps: initialOAuthProps, ..
                 ...createContactsImport({
                     Code: oauthProps?.code,
                     RedirectUri: oauthProps?.redirectURI,
-                    Provider: oauthProps?.provider,
                 }),
                 silence: true,
             });

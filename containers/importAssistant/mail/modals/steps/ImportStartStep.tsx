@@ -2,6 +2,7 @@ import React, { ChangeEvent, useEffect } from 'react';
 import { c } from 'ttag';
 
 import { Alert, Row, Label, Field, PasswordInput, EmailInput, Input, Href } from '../../../../../components';
+import { OAUTH_PROVIDER } from '../../../interfaces';
 
 import { IMAPS } from '../../constants';
 
@@ -63,7 +64,7 @@ const ImportStartStep = ({
         );
 
         switch (modalModel.imap) {
-            case IMAPS.GOOGLE:
+            case IMAPS[OAUTH_PROVIDER.GOOGLE]:
                 if (isReconnect) {
                     // translator: the variable here is a HTML tag, here is the complete sentence: "If 2-step verification is disabled in Gmail (default settings), please make sure that:"
                     const twoStepsDisabledMessage = c('Import error')

@@ -1,4 +1,5 @@
 import { c } from 'ttag';
+import { OAUTH_PROVIDER } from '../interfaces';
 import { TIME_UNIT } from './interfaces';
 
 export const timeUnitLabels = {
@@ -9,6 +10,6 @@ export const timeUnitLabels = {
 };
 
 export const IMAPS = {
-    GOOGLE: 'imap.gmail.com',
+    [OAUTH_PROVIDER.GOOGLE]: 'imap.gmail.com',
     YAHOO: 'imap.mail.yahoo.com',
 };
