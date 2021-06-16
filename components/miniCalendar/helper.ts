@@ -31,7 +31,7 @@ export const getDaysInMonth = (
 };
 
 export const getDateTupleFromWeekNumber = (date: Date, weekNumber: number, weekStartsOn?: WeekStartsOn): DateTuple => {
-    const dateInWeek = setISOWeek(setDay(date, 1), weekNumber);
+    const dateInWeek = setISOWeek(setDay(date, 1, { weekStartsOn }), weekNumber);
     const startDateInWeek = startOfWeek(dateInWeek, { weekStartsOn });
     const endDateInWeek = endOfWeek(dateInWeek, { weekStartsOn });
     return [startDateInWeek, endDateInWeek];
