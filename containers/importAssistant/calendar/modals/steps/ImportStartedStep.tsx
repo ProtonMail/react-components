@@ -3,7 +3,7 @@ import { c } from 'ttag';
 
 import { Address } from 'proton-shared/lib/interfaces';
 
-import importStartedSvg from 'design-system/assets/img/onboarding/import-assistant.svg';
+// import importStartedSvg from 'design-system/assets/img/onboarding/import-assistant.svg';
 
 import { ImportCalendarModalModel } from '../../interfaces';
 
@@ -17,9 +17,9 @@ const ImportStartedStep = ({ modalModel, addresses }: Props) => {
 
     return (
         <div className="text-center">
-            <img src={importStartedSvg} alt="" className="max-w80" />
+            {/* <img src={importStartedSvg} alt="" className="max-w80" /> */}
             <h3>{c('Info').t`Your import has started!`}</h3>
-            <div className="mt1">{c('Info').t`Your messages are being imported from`}</div>
+            <div className="mt1">{c('Info').t`Your events are being imported from`}</div>
             <div className="mt1">
                 <strong>{modalModel.email}</strong>
             </div>
