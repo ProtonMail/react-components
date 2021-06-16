@@ -5,17 +5,11 @@ import { Calendar } from 'proton-shared/lib/interfaces/calendar';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 import { UserModel } from 'proton-shared/lib/interfaces';
 
-import {
-    Badge,
-    DropdownActions,
-    EllipsisLoader,
-    Icon,
-    Table,
-    TableBody,
-    TableHeader,
-    TableRow,
-} from '../../../components';
+import { Badge, DropdownActions, Icon, Table, TableBody, TableHeader, TableRow } from '../../../components';
 import useGetCalendarEmail from '../hooks/useGetCalendarEmail';
+
+import './CalendarsTable.scss';
+import { classnames } from '../../../helpers';
 
 interface Props {
     calendars: Calendar[];
@@ -43,7 +37,7 @@ const CalendarsTable = ({
         <Table className="simple-table--has-actions">
             <TableHeader cells={[c('Header').t`Name`, c('Header').t`Status`, c('Header').t`Actions`]} />
             <TableBody>
-                {(calendars || []).map((calendar) => {
+                {(calendars || []).map((calendar, index) => {
                     const { ID, Name, Color } = calendar;
 
                     const isDisabled = getIsCalendarDisabled(calendar);
@@ -82,8 +76,14 @@ const CalendarsTable = ({
                                         <div className="text-ellipsis" title={Name}>
                                             {Name}
                                         </div>
-                                        <div className="calendar-email text-ellipsis text-sm m0 color-weak">
-                                            {calendarAddressMap[ID] || <EllipsisLoader />}
+                                        <div
+                                            className={classnames([
+                                                'text-ellipsis text-sm m0 color-weak',
+                                                !calendarAddressMap[ID] && 'calendar-email',
+                                            ])}
+                                            style={{ '--index': index }}
+                                        >
+                                            {calendarAddressMap[ID] || ''}
                                         </div>
                                     </div>
                                 </div>,
