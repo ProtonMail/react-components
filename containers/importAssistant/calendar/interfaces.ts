@@ -16,6 +16,7 @@ export enum IMPORT_ERROR {
 export interface ImportCalendarModalModel {
     step: Step;
     importID: string;
+    email: string;
     payload: ImportPayloadModel;
     errorCode: number;
     errorLabel: string;
@@ -24,6 +25,4 @@ export interface ImportCalendarModalModel {
 
 export interface ImportPayloadModel {
     AddressID: string;
-    Code?: string;
-    Provider: number;
 }

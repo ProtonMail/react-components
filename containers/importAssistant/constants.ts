@@ -2,12 +2,17 @@
 export const G_OAUTH_CLIENT_ID = '192543898962-v1mvc6s9jlfn71tms865ercsun7crnk4.apps.googleusercontent.com';
 
 export const G_OAUTH_REDIRECT_PATH = '/oauth/callback';
-export const G_OAUTH_SCOPE_MAIL = ['email', 'openid', 'https://mail.google.com/'].join(' ');
+
+const G_OAUTH_SCOPE_DEFAULT = ['email', 'openid'];
+
+export const G_OAUTH_SCOPE_MAIL = [...G_OAUTH_SCOPE_DEFAULT, 'https://mail.google.com/'].join(' ');
 export const G_OAUTH_SCOPE_CONTACTS = [
+    ...G_OAUTH_SCOPE_DEFAULT,
     'https://www.googleapis.com/auth/contacts.other.readonly',
     'https://www.googleapis.com/auth/contacts.readonly',
 ].join(' ');
 export const G_OAUTH_SCOPE_CALENDAR = [
+    ...G_OAUTH_SCOPE_DEFAULT,
     'https://www.googleapis.com/auth/calendar.readonly',
     'https://www.googleapis.com/auth/calendar.events.readonly',
 ].join(' ');

@@ -21,14 +21,9 @@ import ImportPrepareStep from './steps/ImportPrepareStep';
 import ImportStartedStep from './steps/ImportStartedStep';
 
 interface ImporterFromServer {
-    Email: string;
     ID: string;
-    ImapHost: string;
-    ImapPort: number;
-    MailboxSize: {
-        [key: string]: number;
-    };
-    Sasl: string;
+    Account: string;
+    Provider: OAUTH_PROVIDER;
 }
 
 interface Props {
@@ -54,12 +49,12 @@ const ImportContactsModal = ({ onClose = noop, oauthProps: initialOAuthProps, ..
 
     const [modalModel, setModalModel] = useState<ImportContactsModalModel>({
         step: Step.PREPARE,
+        email: '',
         importID: '',
         errorCode: 0,
         errorLabel: '',
         payload: {
             AddressID: addresses?.length ? addresses[0].ID : '',
-            Provider: OAUTH_PROVIDER.GOOGLE,
         },
         isPayloadInvalid: false,
     });
@@ -86,6 +81,7 @@ const ImportContactsModal = ({ onClose = noop, oauthProps: initialOAuthProps, ..
     const moveToPrepareStep = (Importer: ImporterFromServer) => {
         setModalModel({
             ...modalModel,
+            email: Importer.Account,
             importID: Importer.ID,
             step: Step.PREPARE,
             errorCode: 0,
@@ -101,6 +97,7 @@ const ImportContactsModal = ({ onClose = noop, oauthProps: initialOAuthProps, ..
                 ...createContactsImport({
                     Code: oauthProps?.code,
                     RedirectUri: oauthProps?.redirectURI,
+                    Provider: oauthProps?.provider,
                 }),
                 silence: true,
             });
@@ -243,7 +240,6 @@ const ImportContactsModal = ({ onClose = noop, oauthProps: initialOAuthProps, ..
         setModalModel({
             ...modalModel,
             payload: {
-                ...modalModel.payload,
                 AddressID: addresses[0].ID,
             },
         });

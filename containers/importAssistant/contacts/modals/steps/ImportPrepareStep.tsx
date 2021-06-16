@@ -30,7 +30,7 @@ const ImportPrepareStep = ({ modalModel, addresses }: Props) => {
         return (
             <div className="p1 text-center w100">
                 <FullLoader size={100} />
-                <TextLoader>{c('Loading info').t`Connecting to your mailbox`}</TextLoader>
+                <TextLoader>{c('Loading info').t`Connecting to your contacts provider`}</TextLoader>
             </div>
         );
     }

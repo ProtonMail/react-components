@@ -21,14 +21,10 @@ import ImportPrepareStep from './steps/ImportPrepareStep';
 import ImportStartedStep from './steps/ImportStartedStep';
 
 interface ImporterFromServer {
-    Email: string;
+    Account: string;
     ID: string;
-    ImapHost: string;
-    ImapPort: number;
-    MailboxSize: {
-        [key: string]: number;
-    };
-    Sasl: string;
+    Provider: OAUTH_PROVIDER;
+    UserID: string;
 }
 
 interface Props {
@@ -54,12 +50,12 @@ const ImportCalendarModal = ({ onClose = noop, oauthProps: initialOAuthProps, ..
 
     const [modalModel, setModalModel] = useState<ImportCalendarModalModel>({
         step: Step.PREPARE,
+        email: '',
         importID: '',
         errorCode: 0,
         errorLabel: '',
         payload: {
             AddressID: addresses?.length ? addresses[0].ID : '',
-            Provider: OAUTH_PROVIDER.GOOGLE,
         },
         isPayloadInvalid: false,
     });
@@ -87,6 +83,7 @@ const ImportCalendarModal = ({ onClose = noop, oauthProps: initialOAuthProps, ..
         setModalModel({
             ...modalModel,
             importID: Importer.ID,
+            email: Importer.Account,
             step: Step.PREPARE,
             errorCode: 0,
             errorLabel: '',
@@ -244,7 +241,6 @@ const ImportCalendarModal = ({ onClose = noop, oauthProps: initialOAuthProps, ..
         setModalModel({
             ...modalModel,
             payload: {
-                ...modalModel.payload,
                 AddressID: addresses[0].ID,
             },
         });

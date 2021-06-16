@@ -1,5 +1,3 @@
-import { OAUTH_PROVIDER } from '../interfaces';
-
 export enum Step {
     PREPARE = 1,
     STARTED = 2,
@@ -18,6 +16,7 @@ export enum IMPORT_ERROR {
 export interface ImportContactsModalModel {
     step: Step;
     importID: string;
+    email: string;
     payload: ImportPayloadModel;
     errorCode: number;
     errorLabel: string;
@@ -26,6 +25,4 @@ export interface ImportContactsModalModel {
 
 export interface ImportPayloadModel {
     AddressID: string;
-    Code?: string;
-    Provider: OAUTH_PROVIDER;
 }

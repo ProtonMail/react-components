@@ -79,16 +79,15 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, addresses }: Props) =
 
     const importSize = useMemo(() => selectedFolders.reduce((acc, { Size = 0 }) => acc + Size, 0), [selectedFolders]);
 
-    const showSizeWarning = useMemo(() => importSize + user.UsedSpace >= user.MaxSpace * 2, [
-        importSize,
-        user.UsedSpace,
-        user.MaxSpace,
-    ]);
+    const showSizeWarning = useMemo(
+        () => importSize + user.UsedSpace >= user.MaxSpace * 2,
+        [importSize, user.UsedSpace, user.MaxSpace]
+    );
 
-    const showMaxFoldersError = useMemo(() => selectedFolders.length + folders.length >= 500, [
-        selectedFolders,
-        folders,
-    ]);
+    const showMaxFoldersError = useMemo(
+        () => selectedFolders.length + folders.length >= 500,
+        [selectedFolders, folders]
+    );
 
     const showUnavailableNamesError = useMemo(
         () => mappingHasUnavailableNames(payload.Mapping, isLabelMapping ? folders : labels, isLabelMapping),
@@ -298,7 +297,7 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, addresses }: Props) =
         return (
             <div className="p1 text-center w100">
                 <FullLoader size={100} />
-                <TextLoader>{c('Loading info').t`Connecting to your mailbox`}</TextLoader>
+                <TextLoader>{c('Loading info').t`Connecting to your email provider`}</TextLoader>
             </div>
         );
     }
