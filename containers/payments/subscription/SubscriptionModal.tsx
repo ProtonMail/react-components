@@ -10,10 +10,12 @@ import { hasPlanIDs } from 'proton-shared/lib/helpers/planIDs';
 import { API_CUSTOM_ERROR_CODES } from 'proton-shared/lib/errors';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 import { Currency, Cycle, PlanIDs, SubscriptionCheckResponse } from 'proton-shared/lib/interfaces';
-import { Calendar, CALENDAR_TYPE, CalendarUrlsResponse } from 'proton-shared/lib/interfaces/calendar';
+import { Calendar, CalendarUrlsResponse } from 'proton-shared/lib/interfaces/calendar';
 import { MAX_CALENDARS_PER_FREE_USER } from 'proton-shared/lib/calendar/constants';
 import { getFreeCheckResult } from 'proton-shared/lib/subscription/freePlans';
 import { getAppFromPathnameSafe } from 'proton-shared/lib/apps/slugHelper';
+import { unary } from 'proton-shared/lib/helpers/function';
+import { getIsPersonalCalendar } from 'proton-shared/lib/calendar/subscribe/helpers';
 
 import { Alert, FormModal } from '../../../components';
 import {
@@ -119,7 +121,7 @@ const SubscriptionModal = ({
 
     const handleUnsubscribe = async () => {
         const calendars: Calendar[] = await getCalendars(api);
-        const personalCalendars = calendars.filter(({ Type }) => Type === CALENDAR_TYPE.PERSONAL);
+        const personalCalendars = calendars.filter(unary(getIsPersonalCalendar));
         const hasLinks = !!(
             await Promise.all(
                 personalCalendars.map((calendar) => api<CalendarUrlsResponse>(getPublicLinks(calendar.ID)))
