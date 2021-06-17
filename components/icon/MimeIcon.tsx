@@ -1,34 +1,37 @@
 import React from 'react';
-import Icon from './Icon';
-
-interface Props {
-    name: string;
-    size?: 'small' | 'medium' | 'large';
-}
-
-const sizesNamingMap = {
-    small: 'sm',
-    medium: 'md',
-    large: 'lg',
-};
-const viewboxMap = {
-    small: 16,
-    medium: 24,
-    large: 48,
-};
-const sizeMap = {
-    small: 16,
-    medium: 24,
-    large: 56,
-};
+import Icon, { Props as IconProps } from './Icon';
 
 const nameSpaceSvg = 'mime';
 
-const MimeIcon = ({ name, size = 'small', ...rest }: Props) => {
-    const nameIcon = `${sizesNamingMap[size]}-${name}`;
-    const viewBox = `0 0 ${viewboxMap[size]} ${viewboxMap[size]}`;
+const viewboxMap = {
+    sm: 16,
+    md: 24,
+    lg: 48,
+};
 
-    return <Icon name={nameIcon} size={sizeMap[size]} viewBox={viewBox} nameSpaceSvg={nameSpaceSvg} {...rest} />;
+const getIconSize = (size: number) => {
+    if (size < 20) {
+        return 'sm';
+    }
+    if (size < 40) {
+        return 'md';
+    }
+    return 'lg';
+};
+
+/**
+ * Component to render SVG file icons.
+ * Use it the same way as Icon, just without need to specify name space
+ * (automatically mime is used), and proper size is chosen based on the
+ * passed size parameter: mime icons have three different shapes to fit
+ * any space the best way.
+ */
+const MimeIcon = ({ name, size = 16, ...rest }: IconProps) => {
+    const iconSize = getIconSize(size);
+    const fullName = `${iconSize}-${name}`;
+    const viewBox = `0 0 ${viewboxMap[iconSize]} ${viewboxMap[iconSize]}`;
+
+    return <Icon name={fullName} size={size} viewBox={viewBox} nameSpaceSvg={nameSpaceSvg} {...rest} />;
 };
 
 export default MimeIcon;
