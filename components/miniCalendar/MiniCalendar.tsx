@@ -30,7 +30,7 @@ export interface Props {
     weekdaysLong?: string[];
     weekdaysShort?: string[];
     onSelectDate?: (a1: Date) => void;
-    onSelectDateRange?: (a1: DateTuple) => void;
+    onSelectDateRange?: (a1: DateTuple, resetRange?: boolean) => void;
     formatDay?: (a1: Date) => string;
     weekStartsOn?: WeekStartsOn;
     numberOfDays?: number;
@@ -107,7 +107,7 @@ const MiniCalendar = ({
     const handleClickWeekNumber =
         onSelectDateRange &&
         ((weekNumber: number) => {
-            onSelectDateRange(getDateTupleFromWeekNumber(activeDate, weekNumber, weekStartsOn));
+            onSelectDateRange(getDateTupleFromWeekNumber(activeDate, weekNumber, weekStartsOn), true);
         });
 
     const handleSelectWeekRange =
