@@ -1,7 +1,7 @@
 import React, { useState, useMemo, FormEvent, useEffect } from 'react';
 import { c } from 'ttag';
 
-import { createContactsImport, startContactsImportJob } from 'proton-shared/lib/api/importAssistant/contacts';
+import { createContactsImport, startContactsImportJob } from 'proton-shared/lib/api/contactsImport';
 import { noop } from 'proton-shared/lib/helpers/function';
 import { Address } from 'proton-shared/lib/interfaces';
 

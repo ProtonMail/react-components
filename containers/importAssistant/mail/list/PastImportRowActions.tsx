@@ -1,7 +1,7 @@
 import React from 'react';
 import { c } from 'ttag';
 
-import { deleteMailImportReport, deleteSource } from 'proton-shared/lib/api/importAssistant/mail';
+import { deleteMailImportReport, deleteSource } from 'proton-shared/lib/api/mailImport';
 import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 
 import { ConfirmModal, Button, Alert, DropdownActions } from '../../../../components';

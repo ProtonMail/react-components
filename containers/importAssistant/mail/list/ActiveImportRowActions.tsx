@@ -1,6 +1,6 @@
 import React from 'react';
 import { c } from 'ttag';
-import { resumeMailImportJob, cancelMailImportJob, updateMailImport } from 'proton-shared/lib/api/importAssistant/mail';
+import { resumeMailImportJob, cancelMailImportJob, updateMailImport } from 'proton-shared/lib/api/mailImport';
 
 import { Alert, ConfirmModal, DropdownActions, Button } from '../../../../components';
 import { useApi, useLoading, useNotifications, useEventManager, useModals, useAddresses } from '../../../../hooks';

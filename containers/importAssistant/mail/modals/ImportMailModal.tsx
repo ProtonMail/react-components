@@ -9,7 +9,7 @@ import {
     getMailImport,
     updateMailImport,
     resumeMailImportJob,
-} from 'proton-shared/lib/api/importAssistant/mail';
+} from 'proton-shared/lib/api/mailImport';
 import { noop } from 'proton-shared/lib/helpers/function';
 import { validateEmailAddress } from 'proton-shared/lib/helpers/email';
 import { isNumber } from 'proton-shared/lib/helpers/validators';
