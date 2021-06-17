@@ -43,15 +43,10 @@ const CalendarImportSection = ({ activeCalendars, defaultCalendar, user }: Props
     };
 
     const oauthImportRenderer = () => (
-        <div>
-            <PrimaryButton
-                onClick={handleOAuthClick}
-                className="inline-flex flex-justify-center flex-align-items-center"
-            >
-                <Icon name="calendar" className="mr0-5" />
-                {c('Action').t`Continue with Google`}
-            </PrimaryButton>
-        </div>
+        <PrimaryButton onClick={handleOAuthClick} className="inline-flex flex-justify-center flex-align-items-center">
+            <Icon name="calendar" className="mr0-5" />
+            {c('Action').t`Continue with Google`}
+        </PrimaryButton>
     );
 
     const classicImportRenderer = () => (
@@ -63,11 +58,9 @@ const CalendarImportSection = ({ activeCalendars, defaultCalendar, user }: Props
                 {c('Info')
                     .t`You can import ICS files from another calendar to ${CALENDAR_APP_NAME}. This lets you quickly import one event or your entire agenda.`}
             </SettingsParagraph>
-            <div>
-                <PrimaryButton onClick={handleImport} disabled={!canImport}>
-                    {c('Action').t`Import calendar`}
-                </PrimaryButton>
-            </div>
+            <PrimaryButton onClick={handleImport} disabled={!canImport}>
+                {c('Action').t`Import calendar`}
+            </PrimaryButton>
         </>
     );
 

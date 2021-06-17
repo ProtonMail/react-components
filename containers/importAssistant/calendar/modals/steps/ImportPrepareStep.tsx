@@ -13,6 +13,8 @@ interface Props {
 }
 
 const ImportPrepareStep = ({ modalModel, addresses }: Props) => {
+    const isLoading = !modalModel.importID;
+
     if (modalModel.errorCode === IMPORT_ERROR.IMAP_CONNECTION_ERROR) {
         return (
             <div className="p1 text-center w100 color-danger">
@@ -26,7 +28,7 @@ const ImportPrepareStep = ({ modalModel, addresses }: Props) => {
         );
     }
 
-    if (!modalModel.importID) {
+    if (isLoading) {
         return (
             <div className="p1 text-center w100">
                 <FullLoader size={100} />
@@ -53,7 +55,7 @@ const ImportPrepareStep = ({ modalModel, addresses }: Props) => {
             </div>
 
             <div className="pb1 mb1 border-bottom">
-                <div className="mb1 flex flex-align-items-center">
+                <div className="flex flex-align-items-center">
                     <Icon className="mr0-5" name="calendar" />
                     {c('Info').t`Import calendars`}
                 </div>

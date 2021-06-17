@@ -58,7 +58,9 @@ const ImportContactsModal = ({ onClose = noop, oauthProps: initialOAuthProps, ..
         },
         isPayloadInvalid: false,
     });
+
     const api = useApi();
+    const silentApi = <T,>(config: any) => api<T>({ ...config, silence: true });
     const { call } = useEventManager();
 
     const wizardSteps = [
@@ -93,13 +95,12 @@ const ImportContactsModal = ({ onClose = noop, oauthProps: initialOAuthProps, ..
         setOauthLoading(true);
 
         try {
-            const { Importer } = await api({
+            const { Importer } = await silentApi({
                 ...createContactsImport({
                     Code: oauthProps?.code,
                     RedirectUri: oauthProps?.redirectURI,
                     Provider: oauthProps?.provider,
                 }),
-                silence: true,
             });
             await call();
 
@@ -217,20 +218,8 @@ const ImportContactsModal = ({ onClose = noop, oauthProps: initialOAuthProps, ..
     }, [modalModel.step, modalModel.isPayloadInvalid, loading, oauthError, oauthProps]);
 
     useEffect(() => {
-        if (!oauthProps) {
-            return;
-        }
-
-        setModalModel({
-            ...modalModel,
-            step: Step.PREPARE,
-            errorCode: 0,
-            errorLabel: '',
-        });
-        setOauthError(false);
-
         void submitOAuth();
-    }, [oauthProps]);
+    }, []);
 
     // Initialize AddressID
     useEffect(() => {
