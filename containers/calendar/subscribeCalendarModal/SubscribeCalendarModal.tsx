@@ -101,7 +101,9 @@ const SubscribeCalendarModal = ({ ...rest }: Props) => {
                         maxLength={CALENDAR_URL_MAX_LENGTH}
                         label={c('Subscribe to calendar modal').t`Calendar URL`}
                         value={calendarURL}
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCalendarURL(e.target.value)}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                            setCalendarURL(e.target.value.trimStart())
+                        }
                     />
                 </>
             )}
