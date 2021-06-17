@@ -154,7 +154,11 @@ const MiniCalendar = ({
             </div>
 
             <div
-                style={!fixedSize && cellRect ? { '--computed-cell-width': `${cellRect.width}px` } : undefined}
+                style={
+                    !fixedSize && cellRect && cellRect.width > 0
+                        ? { '--computed-cell-width': `${cellRect.width}px` }
+                        : undefined
+                }
                 className={classnames([
                     'minicalendar-grid pl0-75 pr0-75 pb1',
                     displayWeekNumbers && 'with-weeknumbers',
