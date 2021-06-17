@@ -304,6 +304,12 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, addresses }: Props) =
 
     const addressToDisplay = addresses.find((addr) => addr.ID === modalModel.payload.AddressID);
 
+    const fromEmailAddress = <strong>{modalModel.email}</strong>;
+    const toEmailAddress = <strong>{addressToDisplay?.Email}</strong>;
+
+    const from = c('Label').jt`From: ${fromEmailAddress}`;
+    const to = c('Label').jt`To: ${toEmailAddress}`;
+
     return (
         <>
             <Alert type={showSizeWarning ? 'warning' : 'info'} className="mt1 mb1">
@@ -345,16 +351,8 @@ const ImportPrepareStep = ({ modalModel, updateModalModel, addresses }: Props) =
             )}
 
             <div className="flex pb1 mb1 border-bottom">
-                <div className="flex-item-fluid text-ellipsis mr0-5">
-                    <span>{c('Label').t`From`}</span>
-                    {`: `}
-                    <strong>{modalModel.email}</strong>
-                </div>
-                <div className="flex-item-fluid text-ellipsis ml0-5 text-right">
-                    <span>{c('Label').t`To`}</span>
-                    {`: `}
-                    <strong>{addressToDisplay?.Email}</strong>
-                </div>
+                <div className="flex-item-fluid text-ellipsis mr0-5">{from}</div>
+                <div className="flex-item-fluid text-ellipsis ml0-5 text-right">{to}</div>
             </div>
 
             <div className="pb1 mb1 border-bottom">
