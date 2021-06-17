@@ -88,7 +88,7 @@ const SubscribeCalendarModal = ({ ...rest }: Props) => {
                 <Loader />
             ) : (
                 <>
-                    <p>{c('Subscribe to calendar modal')
+                    <p className="mt0">{c('Subscribe to calendar modal')
                         .t`You can subscribe to someone else's calendar by pasting its URL below. This will give you access to a read-only version of this calendar.`}</p>
                     <InputFieldTwo
                         autoFocus
