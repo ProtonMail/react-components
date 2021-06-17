@@ -2,7 +2,7 @@ import React from 'react';
 import { c } from 'ttag';
 
 import { Label, Field, Info, Icon, PrimaryButton, FullLoader, Tooltip } from '../../../components';
-import { useContacts, useMailSettings, useModals, useUser, useUserKeys } from '../../../hooks';
+import { useAddresses, useContacts, useMailSettings, useModals, useUser, useUserKeys } from '../../../hooks';
 import useOAuthPopup, { getOAuthAuthorizationUrl } from '../../../hooks/useOAuthPopup';
 import AutoSaveContactsToggle from '../../general/AutoSaveContactsToggle';
 import { G_OAUTH_SCOPE_CONTACTS, OAUTH_TEST_IDS } from '../../importAssistant/constants';
@@ -22,6 +22,7 @@ const ContactsWidgetSettingsContainer = ({ onClose, onImport }: Props) => {
     const { createModal } = useModals();
     const [userKeysList, loadingUserKeys] = useUserKeys();
     const [contacts, loadingContacts] = useContacts();
+    const [addresses, loadingAddresses] = useAddresses();
 
     const hasNoContacts = !contacts?.length;
 
@@ -44,7 +45,7 @@ const ContactsWidgetSettingsContainer = ({ onClose, onImport }: Props) => {
 
     const handleOAuthClick = () => {
         triggerOAuthPopup(OAUTH_PROVIDER.GOOGLE, (oauthProps: OAuthProps) => {
-            createModal(<ImportContactsModal oauthProps={oauthProps} />);
+            createModal(<ImportContactsModal addresses={addresses} oauthProps={oauthProps} />);
         });
     };
 
@@ -74,6 +75,7 @@ const ContactsWidgetSettingsContainer = ({ onClose, onImport }: Props) => {
                                 <PrimaryButton
                                     onClick={handleOAuthClick}
                                     className="inline-flex flex-justify-center flex-align-items-center"
+                                    disabled={loadingAddresses}
                                 >
                                     <Icon name="contacts" className="mr0-5" />
                                     {c('Action').t`Continue with Google`}

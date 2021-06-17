@@ -6,7 +6,7 @@ import { getAppName } from 'proton-shared/lib/apps/helper';
 import { APPS } from 'proton-shared/lib/constants';
 
 import { Alert, PrimaryButton, Icon } from '../../../components';
-import { useModals } from '../../../hooks';
+import { useAddresses, useModals } from '../../../hooks';
 
 import { ImportModal } from '../importModal';
 import { SettingsParagraph, SettingsSection } from '../../account';
@@ -27,6 +27,8 @@ const CalendarImportSection = ({ activeCalendars, defaultCalendar, user }: Props
     const canImport = !!activeCalendars.length && user.hasNonDelinquentScope;
     const showAlert = !activeCalendars.length && user.hasNonDelinquentScope;
     const { createModal } = useModals();
+    const [addresses, loadingAddresses] = useAddresses();
+
     const handleImport = () =>
         canImport && defaultCalendar
             ? createModal(<ImportModal defaultCalendar={defaultCalendar} calendars={activeCalendars} />)
@@ -38,12 +40,16 @@ const CalendarImportSection = ({ activeCalendars, defaultCalendar, user }: Props
 
     const handleOAuthClick = () => {
         triggerOAuthPopup(OAUTH_PROVIDER.GOOGLE, (oauthProps: OAuthProps) => {
-            createModal(<ImportCalendarModal oauthProps={oauthProps} />);
+            createModal(<ImportCalendarModal addresses={addresses} oauthProps={oauthProps} />);
         });
     };
 
     const oauthImportRenderer = () => (
-        <PrimaryButton onClick={handleOAuthClick} className="inline-flex flex-justify-center flex-align-items-center">
+        <PrimaryButton
+            onClick={handleOAuthClick}
+            className="inline-flex flex-justify-center flex-align-items-center"
+            disabled={loadingAddresses}
+        >
             <Icon name="calendar" className="mr0-5" />
             {c('Action').t`Continue with Google`}
         </PrimaryButton>

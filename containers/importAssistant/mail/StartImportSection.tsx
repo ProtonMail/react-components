@@ -1,7 +1,7 @@
 import React from 'react';
 import { c } from 'ttag';
 
-import { useModals, useUser } from '../../../hooks';
+import { useAddresses, useModals, useUser } from '../../../hooks';
 import useOAuthPopup, { getOAuthAuthorizationUrl } from '../../../hooks/useOAuthPopup';
 import { Icon, PrimaryButton } from '../../../components';
 
@@ -14,16 +14,17 @@ import { G_OAUTH_SCOPE_MAIL, OAUTH_TEST_IDS } from '../constants';
 const StartImportSection = () => {
     const [user] = useUser();
     const { createModal } = useModals();
+    const [addresses, loadingAddresses] = useAddresses();
 
     const { triggerOAuthPopup } = useOAuthPopup({
         authorizationUrl: getOAuthAuthorizationUrl({ scope: G_OAUTH_SCOPE_MAIL }),
     });
 
-    const handleClick = () => createModal(<ImportMailModal />);
+    const handleClick = () => createModal(<ImportMailModal addresses={addresses} />);
 
     const handleOAuthClick = () => {
         triggerOAuthPopup(OAUTH_PROVIDER.GOOGLE, (oauthProps: OAuthProps) => {
-            createModal(<ImportMailModal oauthProps={oauthProps} />);
+            createModal(<ImportMailModal addresses={addresses} oauthProps={oauthProps} />);
         });
     };
 
@@ -39,6 +40,7 @@ const StartImportSection = () => {
                     <PrimaryButton
                         className="inline-flex flex-justify-center flex-align-items-center mt0-5 mr1"
                         onClick={handleOAuthClick}
+                        disabled={loadingAddresses}
                     >
                         <Icon name="gmail" className="mr0-5" />
                         {c('Action').t`Continue with Google`}
@@ -47,6 +49,7 @@ const StartImportSection = () => {
                     <PrimaryButton
                         className="inline-flex flex-justify-center flex-align-items-center mt0-5"
                         onClick={handleClick}
+                        disabled={loadingAddresses}
                     >
                         {c('Action').t`Start import`}
                     </PrimaryButton>

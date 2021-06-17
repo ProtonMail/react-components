@@ -3,7 +3,7 @@ import { c } from 'ttag';
 import { resumeMailImportJob, cancelMailImportJob, updateMailImport } from 'proton-shared/lib/api/importAssistant/mail';
 
 import { Alert, ConfirmModal, DropdownActions, Button } from '../../../../components';
-import { useApi, useLoading, useNotifications, useEventManager, useModals } from '../../../../hooks';
+import { useApi, useLoading, useNotifications, useEventManager, useModals, useAddresses } from '../../../../hooks';
 import useOAuthPopup, { getOAuthAuthorizationUrl } from '../../../../hooks/useOAuthPopup';
 import ImportMailModal from '../modals/ImportMailModal';
 import { Importer, ImportMailStatus, ImportMailError, AuthenticationMethod } from '../interfaces';
@@ -21,6 +21,7 @@ const ActiveImportRowActions = ({ currentImport }: Props) => {
     const { call } = useEventManager();
     const { createModal } = useModals();
     const { createNotification } = useNotifications();
+    const [addresses, loadingAddresses] = useAddresses();
     const [loadingPrimaryAction, withLoadingPrimaryAction] = useLoading();
     const [loadingSecondaryAction, withLoadingSecondaryAction] = useLoading();
 
@@ -51,7 +52,7 @@ const ActiveImportRowActions = ({ currentImport }: Props) => {
     };
 
     const handleReconnect = async () => {
-        await createModal(<ImportMailModal currentImport={currentImport} />);
+        await createModal(<ImportMailModal addresses={addresses} currentImport={currentImport} />);
     };
 
     const handleCancel = async (importID: string) => {
@@ -93,6 +94,7 @@ const ActiveImportRowActions = ({ currentImport }: Props) => {
                 return withLoadingSecondaryAction(handleResume(ID));
             },
             loading: loadingSecondaryAction,
+            disabled: loadingAddresses,
         });
     }
 

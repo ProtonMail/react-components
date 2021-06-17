@@ -13,8 +13,9 @@ import {
 import { noop } from 'proton-shared/lib/helpers/function';
 import { validateEmailAddress } from 'proton-shared/lib/helpers/email';
 import { isNumber } from 'proton-shared/lib/helpers/validators';
+import { Address } from 'proton-shared/lib/interfaces';
 
-import { useLoading, useAddresses, useModals, useApi, useEventManager, useNotifications } from '../../../../hooks';
+import { useLoading, useModals, useApi, useEventManager, useNotifications } from '../../../../hooks';
 import useOAuthPopup, { getOAuthAuthorizationUrl } from '../../../../hooks/useOAuthPopup';
 
 import { ConfirmModal, FormModal, Button, PrimaryButton, Alert, useDebounceInput } from '../../../../components';
@@ -84,9 +85,16 @@ interface Props {
     currentImport?: Importer;
     onClose?: () => void;
     oauthProps?: OAuthProps;
+    addresses: Address[];
 }
 
-const ImportMailModal = ({ onClose = noop, currentImport, oauthProps: initialOAuthProps, ...rest }: Props) => {
+const ImportMailModal = ({
+    onClose = noop,
+    currentImport,
+    oauthProps: initialOAuthProps,
+    addresses,
+    ...rest
+}: Props) => {
     const [oauthError, setOauthError] = useState(false);
     const [oauthProps, setOauthProps] = useState<OAuthProps | undefined>(initialOAuthProps);
     const isReconnectMode = !!currentImport;
@@ -97,7 +105,6 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps: initialOAu
 
     const { createModal } = useModals();
     const { createNotification } = useNotifications();
-    const [addresses, loadingAddresses] = useAddresses();
 
     const { triggerOAuthPopup } = useOAuthPopup({
         authorizationUrl: getOAuthAuthorizationUrl({ scope: G_OAUTH_SCOPE_MAIL }),
@@ -135,7 +142,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps: initialOAu
         needIMAPDetails: false,
         selectedPeriod: TIME_UNIT.BIG_BANG,
         payload: {
-            AddressID: addresses?.length ? addresses[0].ID : '',
+            AddressID: addresses[0].ID,
             Mapping: [],
             CustomFields: 0,
         },
@@ -574,20 +581,6 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps: initialOAu
         }
     }, [modalModel.email]);
 
-    // Initialize AddressID
-    useEffect(() => {
-        if (!addresses?.length && !modalModel.payload.AddressID) {
-            return;
-        }
-        setModalModel({
-            ...modalModel,
-            payload: {
-                ...modalModel.payload,
-                AddressID: addresses[0].ID,
-            },
-        });
-    }, [addresses]);
-
     return (
         <FormModal
             title={title}
@@ -628,9 +621,7 @@ const ImportMailModal = ({ onClose = noop, currentImport, oauthProps: initialOAu
                     updateModalModel={(newModel: ImportMailModalModel) => setModalModel(newModel)}
                 />
             )}
-            {modalModel.step === Step.STARTED && !loadingAddresses && addresses.length && (
-                <ImportStartedStep addresses={addresses} modalModel={modalModel} />
-            )}
+            {modalModel.step === Step.STARTED && <ImportStartedStep addresses={addresses} modalModel={modalModel} />}
         </FormModal>
     );
 };

@@ -3,8 +3,9 @@ import { c } from 'ttag';
 
 import { createCalendarImport, startCalendarImportJob } from 'proton-shared/lib/api/importAssistant/calendar';
 import { noop } from 'proton-shared/lib/helpers/function';
+import { Address } from 'proton-shared/lib/interfaces';
 
-import { useLoading, useAddresses, useModals, useApi, useEventManager, useNotifications } from '../../../../hooks';
+import { useLoading, useModals, useApi, useEventManager, useNotifications } from '../../../../hooks';
 import useOAuthPopup, { getOAuthAuthorizationUrl } from '../../../../hooks/useOAuthPopup';
 
 import { ConfirmModal, FormModal, Button, PrimaryButton, Alert } from '../../../../components';
@@ -30,9 +31,11 @@ interface ImporterFromServer {
 interface Props {
     onClose?: () => void;
     oauthProps?: OAuthProps;
+
+    addresses: Address[];
 }
 
-const ImportCalendarModal = ({ onClose = noop, oauthProps: initialOAuthProps, ...rest }: Props) => {
+const ImportCalendarModal = ({ onClose = noop, oauthProps: initialOAuthProps, addresses, ...rest }: Props) => {
     const [oauthError, setOauthError] = useState(false);
     const [oauthProps, setOauthProps] = useState<OAuthProps | undefined>(initialOAuthProps);
 
@@ -42,7 +45,6 @@ const ImportCalendarModal = ({ onClose = noop, oauthProps: initialOAuthProps, ..
 
     const { createModal } = useModals();
     const { createNotification } = useNotifications();
-    const [addresses, loadingAddresses] = useAddresses();
 
     const { triggerOAuthPopup } = useOAuthPopup({
         authorizationUrl: getOAuthAuthorizationUrl({ scope: G_OAUTH_SCOPE_CALENDAR }),
@@ -70,16 +72,12 @@ const ImportCalendarModal = ({ onClose = noop, oauthProps: initialOAuthProps, ..
         c('Wizard step').t`Import`,
     ];
 
-    const title = useMemo(() => {
-        switch (modalModel.step) {
-            case Step.PREPARE:
-                return c('Title').t`Start import process`;
-            case Step.STARTED:
-                return c('Title').t`Import in progress`;
-            default:
-                return '';
-        }
-    }, [modalModel.step]);
+    const modalTitles = {
+        [Step.PREPARE]: c('Title').t`Start import process`,
+        [Step.STARTED]: c('Title').t`Import in progress`,
+    };
+
+    const title = modalTitles[modalModel.step] || '';
 
     const moveToPrepareStep = (Importer: ImporterFromServer) => {
         setModalModel({
@@ -247,9 +245,7 @@ const ImportCalendarModal = ({ onClose = noop, oauthProps: initialOAuthProps, ..
         >
             <Wizard step={modalModel.step} steps={wizardSteps} />
             {modalModel.step === Step.PREPARE && <ImportPrepareStep addresses={addresses} modalModel={modalModel} />}
-            {modalModel.step === Step.STARTED && !loadingAddresses && addresses.length && (
-                <ImportStartedStep addresses={addresses} modalModel={modalModel} />
-            )}
+            {modalModel.step === Step.STARTED && <ImportStartedStep addresses={addresses} modalModel={modalModel} />}
         </FormModal>
     );
 };
