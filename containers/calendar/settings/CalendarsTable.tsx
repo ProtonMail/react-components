@@ -6,7 +6,7 @@ import isTruthy from 'proton-shared/lib/helpers/isTruthy';
 import { UserModel } from 'proton-shared/lib/interfaces';
 
 import { Badge, DropdownActions, Icon, Table, TableBody, TableHeader, TableRow } from '../../../components';
-import useGetCalendarEmail from '../hooks/useGetCalendarEmail';
+import useGetCalendarsEmails from '../hooks/useGetCalendarsEmails';
 
 import './CalendarsTable.scss';
 import { classnames } from '../../../helpers';
@@ -31,7 +31,7 @@ const CalendarsTable = ({
     onExport,
     loadingMap,
 }: Props) => {
-    const calendarAddressMap = useGetCalendarEmail(calendars);
+    const calendarAddressMap = useGetCalendarsEmails(calendars);
 
     return (
         <Table className="simple-table--has-actions">
