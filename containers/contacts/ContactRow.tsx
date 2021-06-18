@@ -62,7 +62,7 @@ const ContactRow = ({
                         <div className={classnames(['flex flex-item-fluid w0', !!LabelIDs.length && 'pr1'])}>
                             <span
                                 role="heading"
-                                aria-level="2"
+                                aria-level={2}
                                 className="text-bold inline-block max-w100 text-ellipsis"
                                 id={ID}
                             >

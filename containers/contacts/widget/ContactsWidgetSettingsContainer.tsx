@@ -69,7 +69,7 @@ const ContactsWidgetSettingsContainer = ({ onClose, onImport }: Props) => {
                     </div>
                     <div className="mb2">
                         <Label htmlFor="import-contacts-button" className="text-semibold">
-                            <span role="heading" aria-level="2">{c('Label').t`Import contacts`}</span>
+                            <span role="heading" aria-level={2}>{c('Label').t`Import contacts`}</span>
                         </Label>
                         {OAUTH_TEST_IDS.includes(user.ID) ? (
                             <div className="mt1">
