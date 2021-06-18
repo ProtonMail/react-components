@@ -92,6 +92,7 @@ const TopNavbarListItemContactsDropdown = ({ className, onCompose, onMailTo, cus
                 noMaxHeight
                 disableDefaultArrowNavigation
             >
+                <h1 className="sr-only">{c('Header').t`Contacts, groups and settings`}</h1>
                 <Tabs
                     className="flex flex-column flex-item-fluid flex-nowrap"
                     containerClassName="contacts-widget-tabs flex-item-noshrink"
