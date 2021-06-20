@@ -13,7 +13,7 @@ import {
     ImportCalendarModel,
     StoredEncryptedEvent,
 } from 'proton-shared/lib/interfaces/calendar';
-import { ImportEventError } from 'proton-shared/lib/calendar/import/ImportEventError';
+import { ImportEventError } from 'proton-shared/lib/calendar/icsSurgery/ImportEventError';
 import { extractTotals, processInBatches } from 'proton-shared/lib/calendar/import/encryptAndSubmit';
 
 import { Alert, DynamicProgress } from '../../../components';

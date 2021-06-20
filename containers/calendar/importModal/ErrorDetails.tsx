@@ -2,7 +2,7 @@ import React from 'react';
 import { c } from 'ttag';
 import { truncateMore } from 'proton-shared/lib/helpers/string';
 import { MAX_UID_CHARS_DISPLAY } from 'proton-shared/lib/calendar/constants';
-import { ImportEventError } from 'proton-shared/lib/calendar/import/ImportEventError';
+import { ImportEventError } from 'proton-shared/lib/calendar/icsSurgery/ImportEventError';
 import { Bordered, Details, Summary } from '../../../components';
 
 const getComponentText = (component: string) => {
