@@ -1,3 +1,3 @@
 import { createContext } from 'react';
 
-export default createContext({ isRTL: false });
+export default createContext({ isRTL: document.documentElement.lang === 'fa' });

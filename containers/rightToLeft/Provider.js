@@ -7,10 +7,10 @@ const Provider = ({ children }) => {
     // TODO: get initial state from settings, or derive from locale
     const [isRTL, setRTL] = useState(document.documentElement.lang === 'fa');
 
-    // console.log(document.documentElement.lang === 'fa');
+    console.log(document.documentElement.lang === 'fa');
 
     useEffect(() => {
-        if (isRTL) {
+        if (document.documentElement.lang === 'fa') {
             document.documentElement.dir = 'rtl';
         } else {
             document.documentElement.dir = 'ltr';
