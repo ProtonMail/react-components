@@ -5,7 +5,6 @@ import { PAYMENT_METHOD_TYPES } from 'proton-shared/lib/constants';
 
 import treeDSecureSvg from 'design-system/assets/img/bank-icons/3d-secure.svg';
 import americanExpressSafekeySvg from 'design-system/assets/img/bank-icons/amex-safekey.svg';
-import discoverProtectBuySvg from 'design-system/assets/img/bank-icons/discover-protectbuy.svg';
 import mastercardSecurecodeSvg from 'design-system/assets/img/bank-icons/mastercard-securecode.svg';
 import verifiedByVisaSvg from 'design-system/assets/img/bank-icons/visa-secure.svg';
 import paypalSvg from 'design-system/assets/img/bank-icons/paypal.svg';
@@ -13,7 +12,6 @@ import paypalSvg from 'design-system/assets/img/bank-icons/paypal.svg';
 const getImage = (type) => {
     const images = {
         'american-express': americanExpressSafekeySvg,
-        discover: discoverProtectBuySvg,
         mastercard: mastercardSecurecodeSvg,
         visa: verifiedByVisaSvg,
     };
