@@ -7,6 +7,8 @@ import { useApi, useLoading, useEventManager, useNotifications, useMailSettings 
 import { FormModal } from '../../components';
 import ViewLayoutCards from '../layouts/ViewLayoutCards';
 
+import './ModalSettingsLayoutCards.scss';
+
 interface Props {
     onClose?: () => void;
 }
@@ -38,6 +40,8 @@ const MailViewLayoutModal = ({ ...rest }: Props) => {
                     viewLayout={ViewLayout}
                     onChange={(value) => withLoading(handleChangeViewLayout(value))}
                     loading={loading}
+                    liClassName="w100"
+                    className="layoutCards-two-per-row"
                 />
             </div>
         </FormModal>

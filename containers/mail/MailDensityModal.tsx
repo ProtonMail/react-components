@@ -7,6 +7,8 @@ import { useUserSettings, useApi, useLoading, useEventManager, useNotifications 
 import { FormModal } from '../../components';
 import DensityRadiosCards from '../layouts/DensityRadiosCards';
 
+import './ModalSettingsLayoutCards.scss';
+
 interface Props {
     onClose?: () => void;
 }
@@ -38,6 +40,8 @@ const MailDensityModal = ({ ...rest }: Props) => {
                     describedByID="densityMode_desc"
                     onChange={(value) => withLoading(handleChangeDensity(value))}
                     loading={loading}
+                    liClassName="w100"
+                    className="layoutCards-two-per-row"
                 />
             </div>
         </FormModal>

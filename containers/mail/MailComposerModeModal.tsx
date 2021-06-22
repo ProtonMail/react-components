@@ -7,6 +7,8 @@ import { useApi, useLoading, useEventManager, useNotifications, useMailSettings 
 import { FormModal } from '../../components';
 import ComposerModeCards from '../layouts/ComposerModeCards';
 
+import './ModalSettingsLayoutCards.scss';
+
 interface Props {
     onClose?: () => void;
 }
@@ -38,6 +40,8 @@ const MailComposerModeModal = ({ ...rest }: Props) => {
                     composerMode={ComposerMode}
                     onChange={(value) => withLoading(handleChangeComposerMode(value))}
                     loading={loading}
+                    liClassName="w100"
+                    className="layoutCards-two-per-row"
                 />
             </div>
         </FormModal>
