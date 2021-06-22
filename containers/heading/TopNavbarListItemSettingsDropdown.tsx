@@ -119,7 +119,7 @@ const TopNavbarListItemSettingsDropdown = (props: Props) => {
                         </DropdownMenuButton>
                         <DropdownMenuButton
                             onClick={handleViewLayoutClick}
-                            className="flex flex-nowrap flex-justify-space-between flex-align-items-center"
+                            className="flex flex-nowrap flex-justify-space-between flex-align-items-center no-mobile"
                         >
                             {c('Action').t`Mailbox layout`}
                             <span className="color-primary ml1">
@@ -141,7 +141,7 @@ const TopNavbarListItemSettingsDropdown = (props: Props) => {
                         </DropdownMenuButton>
                         <DropdownMenuButton
                             onClick={handleComposerModeClick}
-                            className="flex flex-nowrap flex-justify-space-between flex-align-items-center"
+                            className="flex flex-nowrap flex-justify-space-between flex-align-items-center no-mobile"
                         >
                             {c('Action').t`Composer mode`}
                             <span className="color-primary ml1">
