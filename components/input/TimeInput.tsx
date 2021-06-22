@@ -40,9 +40,19 @@ interface Props extends Omit<InputProps, 'onChange' | 'min' | 'max' | 'value'> {
     displayDuration?: boolean;
     base?: Date;
     interval?: number;
+    preventNextDayOverflow?: boolean;
 }
 
-const TimeInput = ({ onChange, value, interval = 30, min, displayDuration = false, max, ...rest }: Props) => {
+const TimeInput = ({
+    onChange,
+    value,
+    interval = 30,
+    min,
+    displayDuration = false,
+    max,
+    preventNextDayOverflow = false,
+    ...rest
+}: Props) => {
     const [uid] = useState(generateUID('dropdown'));
     const { anchorRef, isOpen, open, close } = usePopperAnchor<HTMLInputElement>();
     const [temporaryInput, setTemporaryInput] = useState(() => toFormatted(value, dateLocale));
@@ -90,6 +100,12 @@ const TimeInput = ({ onChange, value, interval = 30, min, displayDuration = fals
         setTemporaryInput(toFormatted(value, dateLocale));
     };
 
+    // Get minutes from midnight to prevent having options going further than 11:30 PM (when prevent preventNextDayOverflow prop is active)
+    const getBaseDateMinutes = () => {
+        const minutes = base.getMinutes() < 30 ? 0 : 0.5;
+        return (24 - base.getHours() - minutes) * 60;
+    };
+
     const handleBlur = () => {
         parseAndSetDate(temporaryInput);
         close();
@@ -116,7 +132,8 @@ const TimeInput = ({ onChange, value, interval = 30, min, displayDuration = fals
     const listRef = useRef<HTMLUListElement>(null);
 
     const options = useMemo(() => {
-        const length = Math.floor(MAX_MINUTES / interval);
+        const totalMinutes = preventNextDayOverflow ? getBaseDateMinutes() : MAX_MINUTES;
+        const length = Math.floor(totalMinutes / interval);
         const minutes = Array.from({ length }, (a, i) => i * interval);
 
         return minutes.map((minutes) => {
