@@ -102,8 +102,14 @@ const TimeInput = ({
 
     // Get minutes from midnight to prevent having options going further than 11:30 PM (when prevent preventNextDayOverflow prop is active)
     const getBaseDateMinutes = () => {
-        const minutes = base.getMinutes() < 30 ? 0 : 0.5;
-        return (24 - base.getHours() - minutes) * 60;
+        const baseMinutes = base.getMinutes();
+        let minutes = 0;
+        if (baseMinutes > interval) {
+            // calculate minutes to remove depending on the interval
+            minutes = Math.floor(baseMinutes / interval) * interval;
+        }
+
+        return (24 - base.getHours()) * 60 - minutes;
     };
 
     const handleBlur = () => {
