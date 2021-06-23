@@ -4,9 +4,8 @@ import { c } from 'ttag';
 import { getActiveAddresses } from 'proton-shared/lib/helpers/address';
 import { Calendar, CalendarViewModelFull, SubscribedCalendar } from 'proton-shared/lib/interfaces/calendar';
 
-import { UserModel } from 'proton-shared/lib/interfaces';
 import { getCalendarModel } from '../calendarModal/calendarModalState';
-import { useGetAddresses, useGetCalendarBootstrap, useLoading, useNotifications, useUser } from '../../../hooks';
+import { useGetAddresses, useGetCalendarBootstrap, useLoading, useNotifications } from '../../../hooks';
 
 interface Props {
     calendar?: Calendar | SubscribedCalendar;
@@ -16,7 +15,6 @@ interface Props {
 const useGetCalendarSetup = ({ calendar: initialCalendar, setModel }: Props) => {
     const getAddresses = useGetAddresses();
     const getCalendarBootstrap = useGetCalendarBootstrap();
-    const user = useUser() as never as UserModel;
 
     const [loading, withLoading] = useLoading(true);
     const { createNotification } = useNotifications();
@@ -31,14 +29,10 @@ const useGetCalendarSetup = ({ calendar: initialCalendar, setModel }: Props) => 
                 return createNotification({ text: c('Error').t`No valid address found`, type: 'error' });
             }
 
-            const filteredActive = activeAdresses.filter(
-                ({ Email }) => !(!user.hasPaidMail && /@pm\..+$/i.test(Email))
-            );
-
             setModel((prev) => ({
                 ...prev,
-                addressID: filteredActive[0].ID,
-                addressOptions: filteredActive.map(({ ID, Email = '' }) => ({ value: ID, text: Email })),
+                addressID: activeAdresses[0].ID,
+                addressOptions: activeAdresses.map(({ ID, Email = '' }) => ({ value: ID, text: Email })),
             }));
         };
 
