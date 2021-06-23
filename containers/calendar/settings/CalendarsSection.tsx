@@ -87,16 +87,18 @@ const CalendarsSection = ({
                     <CircleLoader />
                 </div>
             ) : (
-                <CalendarsTable
-                    calendars={calendars}
-                    defaultCalendarID={defaultCalendarID}
-                    user={user}
-                    onEdit={onEdit}
-                    onSetDefault={onSetDefault}
-                    onDelete={onDelete}
-                    onExport={onExport}
-                    loadingMap={loadingMap}
-                />
+                !!calendars.length && (
+                    <CalendarsTable
+                        calendars={calendars}
+                        defaultCalendarID={defaultCalendarID}
+                        user={user}
+                        onEdit={onEdit}
+                        onSetDefault={onSetDefault}
+                        onDelete={onDelete}
+                        onExport={onExport}
+                        loadingMap={loadingMap}
+                    />
+                )
             )}
         </SettingsSection>
     );
