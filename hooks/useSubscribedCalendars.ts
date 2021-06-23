@@ -14,8 +14,9 @@ import {
 } from 'proton-shared/lib/interfaces/calendar/EventManager';
 import { removeItem, updateItem } from 'proton-shared/lib/helpers/array';
 import { Calendar, CalendarSubscription, SubscribedCalendar } from 'proton-shared/lib/interfaces/calendar';
-import { useEventManager, useLoading } from './index';
-import { useCalendarModelEventManager } from '../containers';
+import useLoading from './useLoading';
+import useEventManager from './useEventManager';
+import { useCalendarModelEventManager } from '../containers/eventManager/calendar/ModelEventManagerProvider';
 import { useGetCalendarSubscription } from './useGetCalendarSubscription';
 
 const useSubscribedCalendars = (calendars: Calendar[]) => {
