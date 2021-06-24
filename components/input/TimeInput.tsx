@@ -81,7 +81,7 @@ const TimeInput = ({
             base.getMonth(),
             base.getDate(),
             0,
-            minMinutes + (diffMinutes < 0 ? diffMinutes + MAX_MINUTES : diffMinutes)
+            minMinutes + (diffMinutes < 0 && !preventNextDayOverflow ? diffMinutes + MAX_MINUTES : diffMinutes)
         );
 
         onChange(normalizedDate);
