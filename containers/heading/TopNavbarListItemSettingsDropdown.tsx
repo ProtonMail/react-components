@@ -42,9 +42,8 @@ const TopNavbarListItemSettingsDropdown = (props: Props) => {
     const earlyAccess = useEarlyAccess();
     const [theme] = useTheme();
     const [{ Density }] = useUserSettings();
-    const [
-        { Shortcuts, ComposerMode, ViewLayout } = { Shortcuts: 0, ComposerMode: 0, ViewLayout: 0 },
-    ] = useMailSettings();
+    const [{ Shortcuts, ComposerMode, ViewLayout } = { Shortcuts: 0, ComposerMode: 0, ViewLayout: 0 }] =
+        useMailSettings();
 
     const handleEarlyAccessClick = () => {
         createModal(<EarlyAccessModal />);
@@ -103,7 +102,6 @@ const TopNavbarListItemSettingsDropdown = (props: Props) => {
                     className="flex flex-nowrap flex-justify-space-between flex-align-items-center"
                 >
                     {c('Action').t`Theme`}
-
                     <span className="color-primary ml1">{PROTON_THEMES[theme].label}</span>
                 </DropdownMenuButton>
                 {APP_NAME === APPS.PROTONMAIL && (
