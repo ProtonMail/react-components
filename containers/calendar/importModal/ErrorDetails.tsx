@@ -31,11 +31,9 @@ const getComponentText = (component: string) => {
 };
 
 const getErrorIdentifierText = (error: ImportEventError) => {
-    const halfUidCharsToDisplay = Math.floor((MAX_UID_CHARS_DISPLAY - 3) / 2);
     const shortUID = truncateMore({
         string: error.componentId,
-        charsToDisplayStart: halfUidCharsToDisplay,
-        charsToDisplayEnd: halfUidCharsToDisplay,
+        charsToDisplay: MAX_UID_CHARS_DISPLAY,
     });
     return `${getComponentText(error.component)} ${shortUID}`;
 };
