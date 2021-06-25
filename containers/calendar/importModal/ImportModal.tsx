@@ -121,7 +121,7 @@ const ImportModal = ({ calendars, defaultCalendar, ...rest }: Props) => {
                     setModel({ ...model, loading: true });
                     const { components, calscale, xWrTimezone } = await parseIcs(fileAttached);
                     const { errors, rest: parsed } = splitErrors(
-                        getSupportedEvents({ components, calscale, xWrTimezone })
+                        await Promise.all(getSupportedEvents({ components, calscale, xWrTimezone }))
                     );
                     if (!parsed.length && !errors.length) {
                         throw new ImportFileError(IMPORT_ERROR_TYPE.NO_EVENTS, fileAttached.name);
