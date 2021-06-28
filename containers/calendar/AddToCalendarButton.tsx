@@ -1,12 +1,7 @@
 import { CALENDAR_APP_NAME } from 'proton-shared/lib/calendar/constants';
-import { API_CODES } from 'proton-shared/lib/constants';
+import { ImportEventError } from 'proton-shared/lib/calendar/icsSurgery/ImportEventError';
 import { noop } from 'proton-shared/lib/helpers/function';
-import {
-    CalendarWidgetData,
-    ImportErrorData,
-    SavedImportData,
-    VcalVeventComponent,
-} from 'proton-shared/lib/interfaces/calendar';
+import { CalendarWidgetData, ImportedEvent, VcalVeventComponent } from 'proton-shared/lib/interfaces/calendar';
 import React, { useCallback } from 'react';
 import { c } from 'ttag';
 import { processInBatches } from 'proton-shared/lib/calendar/import/encryptAndSubmit';
@@ -16,8 +11,8 @@ import { useApi, useLoading } from '../../hooks';
 interface Props {
     events: VcalVeventComponent[];
     calendarData?: CalendarWidgetData;
-    onSuccess: (data: SavedImportData[]) => void;
-    onError: (data: ImportErrorData[]) => void;
+    onSuccess: (data: ImportedEvent[]) => void;
+    onError: (data: ImportEventError[]) => void;
     className?: string;
 }
 
@@ -32,7 +27,7 @@ const AddToCalendarButton = ({ events, calendarData, onSuccess, onError, classNa
         if (!calendar || isCalendarDisabled || !calendarKeys || !memberID || !addressKeys) {
             return noop();
         }
-        const encryptedEvents = await processInBatches({
+        const { importedEvents, importErrors } = await processInBatches({
             events,
             api,
             memberID,
@@ -40,28 +35,11 @@ const AddToCalendarButton = ({ events, calendarData, onSuccess, onError, classNa
             calendarID: calendar.ID,
             calendarKeys,
         });
-        const { successData, errorData } = encryptedEvents.reduce<{
-            successData: SavedImportData[];
-            errorData: ImportErrorData[];
-        }>(
-            (acc, { component, response }) => {
-                const {
-                    Response: { Code, Event, Error },
-                } = response;
-                if (Code === API_CODES.SINGLE_SUCCESS && Event) {
-                    acc.successData.push({ savedVevent: component, savedEvent: Event });
-                } else {
-                    acc.errorData.push({ vevent: component, error: Error || 'Unknown error' });
-                }
-                return acc;
-            },
-            { successData: [], errorData: [] }
-        );
-        if (successData.length) {
-            onSuccess(successData);
+        if (importedEvents.length) {
+            onSuccess(importedEvents);
         }
-        if (errorData.length) {
-            onError(errorData);
+        if (importErrors.length) {
+            onError(importErrors);
         }
     }, [events, api, calendar, memberID, addressKeys, calendar]);
 
