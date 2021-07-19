@@ -3,12 +3,14 @@ import { APPS } from 'proton-shared/lib/constants';
 import { c } from 'ttag';
 
 import { AppLink, Hamburger, Icon, SettingsLink } from '../../components';
-import { useConfig, useUser } from '../../hooks';
+import { useConfig, useUser, usePlans, useSubscription } from '../../hooks';
 import Header, { Props as HeaderProps } from '../../components/header/Header';
 
 import UserDropdown from './UserDropdown';
 import { AppsDropdown } from '../app';
-import TopNavbarListItemHelpDropdown from './TopNavbarListItemHelpDropdown';
+import TopNavbarListItemBlackFridayButton from './TopNavbarListItemBlackFridayButton';
+import useBlackFriday from './useBlackFriday';
+
 import { TopNavbar, TopNavbarList, TopNavbarListItem } from '../../components/topnavbar';
 import TopNavbarListItemButton from '../../components/topnavbar/TopNavbarListItemButton';
 import { Vr } from '../../components/vr';
@@ -22,7 +24,6 @@ interface Props extends HeaderProps {
     floatingButton?: React.ReactNode;
     searchBox?: React.ReactNode;
     searchDropdown?: React.ReactNode;
-    helpDropdown?: React.ReactNode;
     hasAppsDropdown?: boolean;
     title: string;
     expanded: boolean;
@@ -40,14 +41,16 @@ const PrivateHeader = ({
     backUrl,
     searchBox,
     searchDropdown,
-    helpDropdown,
     floatingButton,
     expanded,
     onToggleExpand,
     title,
 }: Props) => {
     const [{ hasPaidMail, hasPaidVpn }] = useUser();
+    const [plans = []] = usePlans();
+    const [subscription] = useSubscription();
     const { APP_NAME } = useConfig();
+    const showBlackFridayButton = useBlackFriday();
 
     if (backUrl) {
         return (
@@ -84,8 +87,13 @@ const PrivateHeader = ({
             <TopNavbar>
                 <TopNavbarList>
                     {isNarrow && searchDropdown ? <TopNavbarListItem>{searchDropdown}</TopNavbarListItem> : null}
-                    {hasPaidMail || isVPN ? null : (
+                    {showBlackFridayButton ? (
                         <TopNavbarListItem noShrink>
+                            <TopNavbarListItemBlackFridayButton plans={plans} subscription={subscription} />
+                        </TopNavbarListItem>
+                    ) : null}
+                    {hasPaidMail || isVPN ? null : (
+                        <TopNavbarListItem noShrink collapsedOnDesktop={false}>
                             <TopNavbarListItemButton
                                 as={SettingsLink}
                                 shape="outline"
@@ -98,7 +106,7 @@ const PrivateHeader = ({
                         </TopNavbarListItem>
                     )}
                     {hasPaidVpn || !isVPN ? null : (
-                        <TopNavbarListItem noShrink>
+                        <TopNavbarListItem noShrink collapsedOnDesktop={false}>
                             <TopNavbarListItemButton
                                 as={AppLink}
                                 text={c('Link').t`Upgrade`}
@@ -111,7 +119,6 @@ const PrivateHeader = ({
                     {feedbackButton ? <TopNavbarListItem noShrink>{feedbackButton}</TopNavbarListItem> : null}
                     {contactsButton ? <TopNavbarListItem noShrink>{contactsButton}</TopNavbarListItem> : null}
                     {settingsButton ? <TopNavbarListItem noShrink>{settingsButton}</TopNavbarListItem> : null}
-                    <TopNavbarListItem noShrink>{helpDropdown || <TopNavbarListItemHelpDropdown />}</TopNavbarListItem>
                     {!isNarrow && (
                         <TopNavbarListItem noShrink className="flex-align-self-stretch topnav-vr">
                             <Vr className="h100 mr1 ml1" />
