@@ -104,12 +104,13 @@ const useBlackFriday = () => {
         }
     }, [feature, isProductPayerPeriod, subscription, plans]);
 
-    return (
+    const x =
         !loading &&
         plans.length &&
         !isDelinquent &&
-        ((isBlackFridayPeriod && isEligible) || (isProductPayerPeriod && isProductPayer(subscription)))
-    );
+        ((isBlackFridayPeriod && isEligible) || (isProductPayerPeriod && isProductPayer(subscription)));
+    console.log({ ipp: isProductPayer(subscription), x });
+    return x;
 };
 
 export default useBlackFriday;
